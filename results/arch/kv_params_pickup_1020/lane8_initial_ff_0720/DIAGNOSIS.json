@@ -1,0 +1,959 @@
+{
+  "status": "INITIAL_ROUTE_FAILURE_PRESERVED_EXISTING_DAEMON_ECO_PENDING_NOT_FINAL",
+  "job": "ot_qkh_lane8_nc32c-g1-68c8bea30",
+  "source": "68c8bea3006981ddd4400e67d8a8acf50ccd0119",
+  "generated": "2026-10-20T08:01:00.046659-07:00",
+  "original_corner_results": {
+    "TTsetup_ps": 138.97,
+    "FFhold_ps": -5.22,
+    "DRC": 0,
+    "SSsensitivity_ps": -191.05,
+    "final_qualified": false
+  },
+  "existing_ecoworkflow": "Daemon hold_eco.a1 already launched07:56:56 after routedIOreSTA219/179; preserve, no duplicate/reroute. Await actual postECOsignoff/nativePG/clock/reach before closure claim.",
+  "all_negative_paths": [
+    {
+      "start": "u_ot_pr_core.rst_a.region[53].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[721]$_DFF_PN0_/RESETN",
+      "slack_ps": -4.123563
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[53].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[733]$_DFF_PN0_/RESETN",
+      "slack_ps": -4.071632
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[130].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[130].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -3.808828
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[73].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[1201]$_DFF_PN0_/RESETN",
+      "slack_ps": -2.92906
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[73].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[1202]$_DFF_PN0_/RESETN",
+      "slack_ps": -2.928796
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[73].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[1203]$_DFF_PN0_/RESETN",
+      "slack_ps": -2.910824
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[137].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.q[56]$_DFF_PN0_/RESETN",
+      "slack_ps": -2.726874
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[81].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[81].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -2.420592
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[110].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s2[4][2]$_DFF_PN0_/RESETN",
+      "slack_ps": -2.327041
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[42].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[476]$_DFF_PN0_/RESETN",
+      "slack_ps": -2.16975
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[106].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[106].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -2.130476
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[42].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[464]$_DFF_PN0_/RESETN",
+      "slack_ps": -2.117764
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[88].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[1567]$_DFF_PN0_/RESETN",
+      "slack_ps": -1.778577
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[17].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[17].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -1.765005
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[88].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[1566]$_DFF_PN0_/RESETN",
+      "slack_ps": -1.76413
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[0].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.gf$_DFF_PN0_/RESETN",
+      "slack_ps": -1.731573
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[0].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.kpv$_DFF_PN0_/RESETN",
+      "slack_ps": -1.688899
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[38].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[38].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -1.377912
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[154].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.q[156]$_DFF_PN0_/RESETN",
+      "slack_ps": -1.143349
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[27].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[27].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -1.079845
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[28].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[137]$_DFF_PN0_/RESETN",
+      "slack_ps": -1.070449
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[28].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[138]$_DFF_PN0_/RESETN",
+      "slack_ps": -1.050243
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[14].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[14].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -1.005723
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[28].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[139]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.980216
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[114].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[114].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.954292
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[131].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[131].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.886971
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[107].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s1[0][0]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.882391
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[45].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[45].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.870498
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[159].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[159].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.708059
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[178].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[178].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.700065
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[196].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[196].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.638781
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[108].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s2[1][2]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.636116
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[129].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.q[11]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.632494
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[162].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[162].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.627817
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[179].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[179].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.627096
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[78].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[78].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.597994
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[23].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[23].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.592124
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[108].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s2[0][2]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.5803
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[64].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[64].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.573014
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[135].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[135].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.571654
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[51].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[680]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.553946
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[74].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[74].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.514921
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[151].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[151].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.473691
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[96].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[96].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.43808
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[150].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[150].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.405578
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[101].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[101].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.403469
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[144].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.q[101]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.372355
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[171].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[171].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.363709
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[37].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[37].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.360226
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[144].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.q[98]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.34861
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[128].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.q[2]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.341366
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[33].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[33].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.32567
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[107].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[107].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.323422
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[198].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[198].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.323366
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[206].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[206].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.31683
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[120].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s3[17][2]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.305839
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[119].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[119].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.302161
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[128].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.q[5]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.284009
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[62].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[944]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.276737
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[112].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[112].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.274544
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[129].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[129].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.26476
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[193].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.g_d[7].u_a/err[1]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.250633
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[120].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s3[16][2]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.240488
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[113].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[113].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.239572
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[161].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[161].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.225153
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[62].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[956]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.221323
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[55].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[55].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.210415
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[52].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[52].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.167491
+    },
+    {
+      "start": "rst_n__ot_rl1$_DFF_P_/QN",
+      "end": "u_ot_pr_core.rst_a.reset_root[4]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.158429
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[67].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[67].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.157527
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[195].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[195].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.149158
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[193].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[193].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.137404
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[108].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s2[1][1]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.130687
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[61].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[920]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.118072
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[112].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s3[0][2]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.106512
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[77].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[77].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.100156
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[70].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[70].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.090511
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[194].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[194].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.080366
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[57].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[57].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.078687
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[61].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[932]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.046241
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[56].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[56].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.037567
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[112].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s3[1][2]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.015432
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[119].leaf$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.ct_tree.s3[14][1]$_DFF_PN0_/RESETN",
+      "slack_ps": -0.005246
+    },
+    {
+      "start": "u_ot_pr_core.rst_a.region[18].second$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.rst_a.region[18].leaf$_DFF_PN0_/RESETN",
+      "slack_ps": -0.004594
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s3[2][5]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[413]$_DFF_PN0_/D",
+      "slack_ps": -5.221879
+    },
+    {
+      "start": "u_ot_pr_core.g_d[4].u_a/s1_sub$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_a/t_sub$_DFF_P_/D",
+      "slack_ps": -3.689576
+    },
+    {
+      "start": "u_ot_pr_core.g_d[4].u_a/u_code[0]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_a/y[0]$_DFF_PN0_/D",
+      "slack_ps": -3.599496
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s3[2][6]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[1566]$_DFF_PN0_/D",
+      "slack_ps": -3.506973
+    },
+    {
+      "start": "u_ot_pr_core.g_d[7].u_a/y[19]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.g_d[7].g_pad.u_pad.q[19]$_DFF_P_/D",
+      "slack_ps": -3.346684
+    },
+    {
+      "start": "u_ot_pr_core.g_d[2].u_p/s3_y[19]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[2].u_p/y[19]$_DFF_PN0_/D",
+      "slack_ps": -3.346656
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[1]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[1]$_DFF_P_/D",
+      "slack_ps": -3.287648
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[26]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[26]$_DFF_P_/D",
+      "slack_ps": -3.192058
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s3[2][6]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[414]$_DFF_PN0_/D",
+      "slack_ps": -3.179484
+    },
+    {
+      "start": "u_ot_pr_core.g_d[4].u_a/u_code[7]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_a/y[7]$_DFF_PN0_/D",
+      "slack_ps": -3.049019
+    },
+    {
+      "start": "u_ot_pr_core.g_d[6].u_a/t_byp$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[6].u_a/w_byp$_DFF_P_/D",
+      "slack_ps": -2.959896
+    },
+    {
+      "start": "u_ot_pr_core.g_d[2].u_a/u_code[26]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[2].u_a/y[26]$_DFF_PN0_/D",
+      "slack_ps": -2.817052
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s3[11][4]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[1288]$_DFF_PN0_/D",
+      "slack_ps": -2.786063
+    },
+    {
+      "start": "u_ot_pr_core.g_d[2].u_a/y[24]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.g_d[2].g_pad.u_pad.q[24]$_DFF_P_/D",
+      "slack_ps": -2.613229
+    },
+    {
+      "start": "u_ot_pr_core.g_d[2].u_a/w_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[2].u_a/s2_nf$_DFF_P_/D",
+      "slack_ps": -2.451178
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[2]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[2]$_DFF_P_/D",
+      "slack_ps": -2.387215
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_a/x_sub$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_a/s1_sub$_DFF_P_/D",
+      "slack_ps": -2.360959
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_p/s3_y[7]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_p/y[7]$_DFF_PN0_/D",
+      "slack_ps": -2.348524
+    },
+    {
+      "start": "u_ot_pr_core.g_d[2].u_b/x_bexp[6]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[2].u_b/s1_exp[6]$_DFF_P_/D",
+      "slack_ps": -2.239125
+    },
+    {
+      "start": "u_ot_pr_core.g_d[2].u_b/x_bexp[4]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[2].u_b/s1_exp[4]$_DFF_P_/D",
+      "slack_ps": -2.137374
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_p/s1_p[1]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_p/s2_p[1]$_DFF_P_/D",
+      "slack_ps": -2.065237
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[13]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[13]$_DFF_P_/D",
+      "slack_ps": -2.059394
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[17]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[17]$_DFF_P_/D",
+      "slack_ps": -1.893791
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_p/s3_y[9]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_p/y[9]$_DFF_PN0_/D",
+      "slack_ps": -1.873571
+    },
+    {
+      "start": "u_ot_pr_core.g_d[4].u_a/s2_exp[5]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_a/u_exp[5]$_DFF_P_/D",
+      "slack_ps": -1.839959
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[8]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[8]$_DFF_P_/D",
+      "slack_ps": -1.783421
+    },
+    {
+      "start": "u_ot_pr_core.g_d[2].u_a/w_byp$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[2].u_a/s2_byp$_DFF_P_/D",
+      "slack_ps": -1.709674
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_p/s3_y[2]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_p/y[2]$_DFF_PN0_/D",
+      "slack_ps": -1.668818
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_a/w_byp$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_a/s2_byp$_DFF_P_/D",
+      "slack_ps": -1.558864
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[9]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[9]$_DFF_P_/D",
+      "slack_ps": -1.413467
+    },
+    {
+      "start": "u_ot_pr_core.g_d[6].u_a/s2_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[6].u_a/u_nf$_DFF_P_/D",
+      "slack_ps": -1.333017
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[27]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[27]$_DFF_P_/D",
+      "slack_ps": -1.317752
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s3[19][1]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[997]$_DFF_PN0_/D",
+      "slack_ps": -1.279199
+    },
+    {
+      "start": "u_ot_pr_core.g_d[6].u_b/u_hc/q[23]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[6].u_b/w_dif[23]$_DFF_P_/D",
+      "slack_ps": -1.26181
+    },
+    {
+      "start": "u_ot_pr_core.g_d[7].u_a/s2_zero$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[7].u_a/u_zero$_DFF_P_/D",
+      "slack_ps": -1.247391
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_b/u_v$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_b/valid_out$_DFF_PN0_/D",
+      "slack_ps": -1.243131
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_b/x_bexp[7]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_b/s1_exp[7]$_DFF_P_/D",
+      "slack_ps": -1.23615
+    },
+    {
+      "start": "row_in__ot_q[51]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.row3[51]$_DFF_P_/D",
+      "slack_ps": -1.231501
+    },
+    {
+      "start": "u_ot_pr_core.g_d[6].u_b/u_hc/q[25]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[6].u_b/w_dif[25]$_DFF_P_/D",
+      "slack_ps": -1.212794
+    },
+    {
+      "start": "u_ot_pr_core.g_d[4].u_b/u_code[17]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_b/y[17]$_DFF_PN0_/D",
+      "slack_ps": -1.158351
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_p/s3_y[10]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_p/y[10]$_DFF_PN0_/D",
+      "slack_ps": -1.111847
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_b/x_bexp[6]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_b/s1_exp[6]$_DFF_P_/D",
+      "slack_ps": -1.00199
+    },
+    {
+      "start": "u_ot_pr_core.g_d[4].u_b/s2_sign$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_b/u_sign$_DFF_P_/D",
+      "slack_ps": -0.997202
+    },
+    {
+      "start": "u_ot_pr_core.g_d[4].u_a/s1_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_a/t_nf$_DFF_P_/D",
+      "slack_ps": -0.9832
+    },
+    {
+      "start": "u_ot_pr_core.g_d[4].u_b/u_code[22]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_b/y[22]$_DFF_PN0_/D",
+      "slack_ps": -0.728126
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/s1_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/t_nf$_DFF_P_/D",
+      "slack_ps": -0.710404
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_p/s3_y[7]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_p/y[7]$_DFF_PN0_/D",
+      "slack_ps": -0.705283
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_code[11]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/y[11]$_DFF_PN0_/D",
+      "slack_ps": -0.664024
+    },
+    {
+      "start": "u_ot_pr_core.g_d[4].u_b/u_code[0]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_b/y[0]$_DFF_PN0_/D",
+      "slack_ps": -0.638337
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_b/s2_exp[4]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_b/u_exp[4]$_DFF_P_/D",
+      "slack_ps": -0.634534
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[5]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[5]$_DFF_P_/D",
+      "slack_ps": -0.626013
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_a/s2_v$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_a/u_v$_DFF_PN0_/D",
+      "slack_ps": -0.621267
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_a/s2_exp[5]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_a/u_exp[5]$_DFF_P_/D",
+      "slack_ps": -0.584047
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_a/w_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_a/s2_nf$_DFF_P_/D",
+      "slack_ps": -0.565298
+    },
+    {
+      "start": "u_ot_pr_core.g_d[2].u_b/u_hc/q[12]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[2].u_b/w_dif[12]$_DFF_P_/D",
+      "slack_ps": -0.556166
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s3[6][11]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[2003]$_DFF_PN0_/D",
+      "slack_ps": -0.522998
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.q[960]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.g_d[4].u_b/x_v$_DFF_PN0_/D",
+      "slack_ps": -0.518183
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s3[1][5]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[401]$_DFF_PN0_/D",
+      "slack_ps": -0.508052
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[11]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[11]$_DFF_P_/D",
+      "slack_ps": -0.478118
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s3[6][9]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[2001]$_DFF_PN0_/D",
+      "slack_ps": -0.460798
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_a/t_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_a/w_nf$_DFF_P_/D",
+      "slack_ps": -0.440439
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_b/u_code[2]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_b/y[2]$_DFF_PN0_/D",
+      "slack_ps": -0.431155
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_a/t_sign$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_a/w_sign$_DFF_P_/D",
+      "slack_ps": -0.402609
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_b/s2_exp[6]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_b/u_exp[6]$_DFF_P_/D",
+      "slack_ps": -0.391714
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_b/t_byp$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_b/w_byp$_DFF_P_/D",
+      "slack_ps": -0.374437
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_a/u_hc/q[27]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_a/w_dif[27]$_DFF_P_/D",
+      "slack_ps": -0.353453
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_b/u_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_b/err[0]$_DFF_PN0_/D",
+      "slack_ps": -0.351566
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/s1_sign$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/t_sign$_DFF_P_/D",
+      "slack_ps": -0.350081
+    },
+    {
+      "start": "u_ot_pr_core.g_d[7].u_a/u_hc/q[33]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[7].u_a/w_exp[5]$_DFF_P_/D",
+      "slack_ps": -0.339728
+    },
+    {
+      "start": "u_ot_pr_core.g_d[7].u_a/u_hc/q[32]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[7].u_a/w_exp[4]$_DFF_P_/D",
+      "slack_ps": -0.29951
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_a/u_hc/q[4]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_a/w_dif[4]$_DFF_P_/D",
+      "slack_ps": -0.280165
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s3[7][9]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.q[2013]$_DFF_PN0_/D",
+      "slack_ps": -0.276626
+    },
+    {
+      "start": "row_in__ot_q[52]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.row3[52]$_DFF_P_/D",
+      "slack_ps": -0.25803
+    },
+    {
+      "start": "u_ot_pr_core.g_d[6].u_b/s1_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[6].u_b/t_nf$_DFF_P_/D",
+      "slack_ps": -0.256226
+    },
+    {
+      "start": "u_ot_pr_core.g_d[7].u_a/u_code[26]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[7].u_a/y[26]$_DFF_PN0_/D",
+      "slack_ps": -0.246456
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_b/s2_zero$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_b/u_zero$_DFF_P_/D",
+      "slack_ps": -0.196912
+    },
+    {
+      "start": "u_ot_pr_core.g_d[6].u_a/u_hc/q[20]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[6].u_a/w_dif[20]$_DFF_P_/D",
+      "slack_ps": -0.189432
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_b/s1_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_b/t_nf$_DFF_P_/D",
+      "slack_ps": -0.175124
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_b/s2_exp[4]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_b/u_exp[4]$_DFF_P_/D",
+      "slack_ps": -0.172737
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_b/s2_exp[0]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_b/u_exp[0]$_DFF_P_/D",
+      "slack_ps": -0.160177
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s2[5][1]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.s3[22][1]$_DFF_PN0_/D",
+      "slack_ps": -0.157457
+    },
+    {
+      "start": "u_ot_pr_core.g_d[5].u_a/s1_small[2]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[5].u_a/sum[2]$_DFF_P_/D",
+      "slack_ps": -0.141637
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_p/s3_y[5]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_p/y[5]$_DFF_PN0_/D",
+      "slack_ps": -0.141318
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_a/s2_byp$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_a/u_byp_dist[2]$_DFF_P_/D",
+      "slack_ps": -0.129841
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_b/u_code[18]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_b/y[18]$_DFF_PN0_/D",
+      "slack_ps": -0.129521
+    },
+    {
+      "start": "u_ot_pr_core.lt_tree.s2[5][1]$_DFF_PN0_/QN",
+      "end": "u_ot_pr_core.lt_tree.s3[23][1]$_DFF_PN0_/D",
+      "slack_ps": -0.127356
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_p/s2_zero$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_p/s3_zero$_DFF_P_/D",
+      "slack_ps": -0.08693
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_b/u_hc/q[26]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_b/w_dif[26]$_DFF_P_/D",
+      "slack_ps": -0.081782
+    },
+    {
+      "start": "u_ot_pr_core.g_d[6].u_b/s2_exp[2]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[6].u_b/u_exp[2]$_DFF_P_/D",
+      "slack_ps": -0.079756
+    },
+    {
+      "start": "u_ot_pr_core.g_d[0].u_p/s2_zero$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[0].u_p/s3_zero$_DFF_P_/D",
+      "slack_ps": -0.071956
+    },
+    {
+      "start": "u_ot_pr_core.g_d[3].u_b/w_sign$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[3].u_b/s2_sign$_DFF_P_/D",
+      "slack_ps": -0.067127
+    },
+    {
+      "start": "u_ot_pr_core.g_d[6].u_b/s2_exp[3]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[6].u_b/u_exp[3]$_DFF_P_/D",
+      "slack_ps": -0.062506
+    },
+    {
+      "start": "u_ot_pr_core.g_d[1].u_a/u_nf$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[1].u_a/err[0]$_DFF_PN0_/D",
+      "slack_ps": -0.055234
+    },
+    {
+      "start": "q_data_in__ot_q[116]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.qd3[116]$_DFF_P_/D",
+      "slack_ps": -0.048364
+    },
+    {
+      "start": "u_ot_pr_core.g_d[2].u_b/u_code[20]$_DFF_P_/QN",
+      "end": "u_ot_pr_core.g_d[2].u_b/y[20]$_DFF_PN0_/D",
+      "slack_ps": -0.031974
+    }
+  ],
+  "path_counts": {
+    "RESETN": 84,
+    "D": 95
+  },
+  "worst_data": {
+    "start": "u_ot_pr_core.lt_tree.s3[2][5]$_DFF_PN0_/QN",
+    "end": "u_ot_pr_core.lt_tree.q[413]$_DFF_PN0_/D",
+    "slack_ps": -5.221879,
+    "launch_clock_ps": 157.24,
+    "capture_clock_ps": 177.67,
+    "skew_ps": 20.43,
+    "clk_to_Q_ps": 37.98,
+    "inverter_ps": 10.64,
+    "wire_ps": 0.27,
+    "uncertainty_ps": 25,
+    "CRPR_ps": -3.26,
+    "hold_requirement_ps": 11.94,
+    "physical_cause": "Same-clock internal publication FF->FF short path; launch-to-capture clock skew plus hold/uncertainty exceeds minimum data delay. It is neither an IO boundary path nor an unpriced additional token edge."
+  },
+  "worst_reset": {
+    "start": "u_ot_pr_core.rst_a.region[53].leaf$_DFF_PN0_/QN",
+    "end": "u_ot_pr_core.lt_tree.q[721]$_DFF_PN0_/RESETN",
+    "slack_ps": -4.123563,
+    "check": "actual async removal check, not genericdatahold; preserved and counted"
+  },
+  "boundaries": {
+    "input_to_register_hold_min_ps": 30.820581,
+    "output_hold_min_ps": 55.212975,
+    "FFpinflopreference": "q_data_in__ot_q[51]$_DFF_P_/CLK",
+    "reference_clock_max_ps": 182.085205,
+    "reference_clock_min_ps": 170.584854,
+    "no_boundary_budget_relaxation": "Internal register/removal paths cannot be fixed by changing external IO compensation; no constraint relaxation proposed."
+  },
+  "conditional_successor_obligations_if_terminal_ECO_fails": [
+    "Classify every95data and84reset path by actualsource stage/clockplacement and registerpublication cohort; not only the single worst path.",
+    "Source/geometry structural model first: keep real stages/native32/fullface pins and price any extra data/reset/clock-region edges before implementation.",
+    "No blindreroute, false-path/multicycle/uncertainty relief, rawASR exemption, or oldH13/hardenedview alias."
+  ],
+  "source_binding": {
+    "physical.json": "28935458dcc39adeb10e98873d04ed8128e45aa4661f5bd748976fc823734af1",
+    "status": "5bb5d9867f9a86488fa0e9746a35929b9294e1e9cb29b209c5d9fbf3d1661d12",
+    "w18_sta_ff.tcl": "bbb4564cabfbe4e0798bbeefd5dcea3cde83f6eac524e218b4c6039ae4c732ea",
+    "STATUS": "b89de8df656b32210963e18e2d744d930f3c34494d545f12dc18ba4b1b021884",
+    "sta.log": "027ba36234e18263d874f042357f60a2f3e5bcc136e35b521bf4b0ff941003f7",
+    "w18_sta_ff.log": "66d34936823926b28a0f936f06b4d00b7adb88345a79694d865fb5defbbe72db",
+    "corner_sta.json": "2a17f06abb672c9a16193c8a1d50b14e882c43ea2cb1f58ff9d34829b1e0088c",
+    "signoff.sdc": "cf4900de7564ce7d10de9266d52691109f25a8fe828bfda954fa54b1051ddbdf"
+  }
+}

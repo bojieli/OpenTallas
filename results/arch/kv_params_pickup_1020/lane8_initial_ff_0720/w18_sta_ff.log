@@ -1,0 +1,300 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 236 input pin flops (0 hard-child clock pins at +insertion), median arrival 182.085205 (range 171.469879 .. 187.517654)
+QDM reference pin q_data_in__ot_q[51]$_DFF_P_/CLK clock arrival max 182.085205 min 170.584854 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 170.584854 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_CORNER ff
+OT_WS -5.2218784851731925e-12
+OT_TNS -1.846083425016687e-10
+Startpoint: u_ot_pr_core.rst_a.region[53].leaf$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ot_pr_core.lt_tree.q[721]$_DFF_PN0_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  33.07   33.07 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.07   56.14 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.12   81.26 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.76  107.02 ^ clkbuf_4_13_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.50  131.52 ^ clkbuf_6_54__f_clk/Y (BUFx24_ASAP7_75t_R)
+  24.03  155.55 ^ clkbuf_leaf_301_clk/Y (BUFx24_ASAP7_75t_R)
+   0.70  156.25 ^ u_ot_pr_core.rst_a.region[53].leaf$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  37.27  193.52 v u_ot_pr_core.rst_a.region[53].leaf$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  22.10  215.62 ^ _24112_/Y (INVx1_ASAP7_75t_R)
+   1.28  216.90 ^ u_ot_pr_core.lt_tree.q[721]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         216.90   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  34.39   34.39 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.94   58.33 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.19   84.52 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.70  111.22 ^ clkbuf_4_15_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.73  135.95 ^ clkbuf_6_60__f_clk/Y (BUFx24_ASAP7_75t_R)
+  38.99  174.95 ^ clkbuf_leaf_298_clk/Y (BUFx24_ASAP7_75t_R)
+   1.46  176.40 ^ u_ot_pr_core.lt_tree.q[721]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00  201.40   clock uncertainty
+  -3.26  198.14   clock reconvergence pessimism
+  22.88  221.02   library removal time
+         221.02   data required time
+---------------------------------------------------------
+         221.02   data required time
+        -216.90   data arrival time
+---------------------------------------------------------
+          -4.12   slack (VIOLATED)
+
+
+Startpoint: u_ot_pr_core.lt_tree.s3[2][5]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_ot_pr_core.lt_tree.q[413]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  33.07   33.07 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.07   56.14 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.12   81.26 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  25.76  107.02 ^ clkbuf_4_13_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.50  131.52 ^ clkbuf_6_54__f_clk/Y (BUFx24_ASAP7_75t_R)
+  24.94  156.46 ^ clkbuf_leaf_300_clk/Y (BUFx24_ASAP7_75t_R)
+   0.78  157.24 ^ u_ot_pr_core.lt_tree.s3[2][5]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  37.98  195.22 ^ u_ot_pr_core.lt_tree.s3[2][5]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  10.64  205.86 v _23647_/Y (INVx1_ASAP7_75t_R)
+   0.27  206.13 v u_ot_pr_core.lt_tree.q[413]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+         206.13   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  34.39   34.39 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  23.94   58.33 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.19   84.52 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  26.70  111.22 ^ clkbuf_4_15_0_clk/Y (BUFx24_ASAP7_75t_R)
+  24.73  135.95 ^ clkbuf_6_60__f_clk/Y (BUFx24_ASAP7_75t_R)
+  39.01  174.96 ^ clkbuf_leaf_297_clk/Y (BUFx24_ASAP7_75t_R)
+   2.71  177.67 ^ u_ot_pr_core.lt_tree.q[413]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00  202.67   clock uncertainty
+  -3.26  199.41   clock reconvergence pessimism
+  11.94  211.35   library hold time
+         211.35   data required time
+---------------------------------------------------------
+         211.35   data required time
+        -206.13   data arrival time
+---------------------------------------------------------
+          -5.22   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 95
+OT_WS_REG_D -5.221879
+OT_WS_OUT 55.212975
+OT_WS_R2R -5.221879
+OT_WS_I2R 30.820581
+OT_PATH u_ot_pr_core.rst_a.region[53].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[721]$_DFF_PN0_/RESETN -4.123563
+OT_PATH u_ot_pr_core.rst_a.region[53].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[733]$_DFF_PN0_/RESETN -4.071632
+OT_PATH u_ot_pr_core.rst_a.region[130].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[130].leaf$_DFF_PN0_/RESETN -3.808828
+OT_PATH u_ot_pr_core.rst_a.region[73].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[1201]$_DFF_PN0_/RESETN -2.929060
+OT_PATH u_ot_pr_core.rst_a.region[73].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[1202]$_DFF_PN0_/RESETN -2.928796
+OT_PATH u_ot_pr_core.rst_a.region[73].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[1203]$_DFF_PN0_/RESETN -2.910824
+OT_PATH u_ot_pr_core.rst_a.region[137].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.q[56]$_DFF_PN0_/RESETN -2.726874
+OT_PATH u_ot_pr_core.rst_a.region[81].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[81].leaf$_DFF_PN0_/RESETN -2.420592
+OT_PATH u_ot_pr_core.rst_a.region[110].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s2[4][2]$_DFF_PN0_/RESETN -2.327041
+OT_PATH u_ot_pr_core.rst_a.region[42].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[476]$_DFF_PN0_/RESETN -2.169750
+OT_PATH u_ot_pr_core.rst_a.region[106].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[106].leaf$_DFF_PN0_/RESETN -2.130476
+OT_PATH u_ot_pr_core.rst_a.region[42].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[464]$_DFF_PN0_/RESETN -2.117764
+OT_PATH u_ot_pr_core.rst_a.region[88].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[1567]$_DFF_PN0_/RESETN -1.778577
+OT_PATH u_ot_pr_core.rst_a.region[17].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[17].leaf$_DFF_PN0_/RESETN -1.765005
+OT_PATH u_ot_pr_core.rst_a.region[88].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[1566]$_DFF_PN0_/RESETN -1.764130
+OT_PATH u_ot_pr_core.rst_a.region[0].leaf$_DFF_PN0_/QN u_ot_pr_core.gf$_DFF_PN0_/RESETN -1.731573
+OT_PATH u_ot_pr_core.rst_a.region[0].leaf$_DFF_PN0_/QN u_ot_pr_core.kpv$_DFF_PN0_/RESETN -1.688899
+OT_PATH u_ot_pr_core.rst_a.region[38].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[38].leaf$_DFF_PN0_/RESETN -1.377912
+OT_PATH u_ot_pr_core.rst_a.region[154].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.q[156]$_DFF_PN0_/RESETN -1.143349
+OT_PATH u_ot_pr_core.rst_a.region[27].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[27].leaf$_DFF_PN0_/RESETN -1.079845
+OT_PATH u_ot_pr_core.rst_a.region[28].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[137]$_DFF_PN0_/RESETN -1.070449
+OT_PATH u_ot_pr_core.rst_a.region[28].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[138]$_DFF_PN0_/RESETN -1.050243
+OT_PATH u_ot_pr_core.rst_a.region[14].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[14].leaf$_DFF_PN0_/RESETN -1.005723
+OT_PATH u_ot_pr_core.rst_a.region[28].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[139]$_DFF_PN0_/RESETN -0.980216
+OT_PATH u_ot_pr_core.rst_a.region[114].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[114].leaf$_DFF_PN0_/RESETN -0.954292
+OT_PATH u_ot_pr_core.rst_a.region[131].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[131].leaf$_DFF_PN0_/RESETN -0.886971
+OT_PATH u_ot_pr_core.rst_a.region[107].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s1[0][0]$_DFF_PN0_/RESETN -0.882391
+OT_PATH u_ot_pr_core.rst_a.region[45].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[45].leaf$_DFF_PN0_/RESETN -0.870498
+OT_PATH u_ot_pr_core.rst_a.region[159].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[159].leaf$_DFF_PN0_/RESETN -0.708059
+OT_PATH u_ot_pr_core.rst_a.region[178].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[178].leaf$_DFF_PN0_/RESETN -0.700065
+OT_PATH u_ot_pr_core.rst_a.region[196].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[196].leaf$_DFF_PN0_/RESETN -0.638781
+OT_PATH u_ot_pr_core.rst_a.region[108].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s2[1][2]$_DFF_PN0_/RESETN -0.636116
+OT_PATH u_ot_pr_core.rst_a.region[129].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.q[11]$_DFF_PN0_/RESETN -0.632494
+OT_PATH u_ot_pr_core.rst_a.region[162].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[162].leaf$_DFF_PN0_/RESETN -0.627817
+OT_PATH u_ot_pr_core.rst_a.region[179].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[179].leaf$_DFF_PN0_/RESETN -0.627096
+OT_PATH u_ot_pr_core.rst_a.region[78].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[78].leaf$_DFF_PN0_/RESETN -0.597994
+OT_PATH u_ot_pr_core.rst_a.region[23].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[23].leaf$_DFF_PN0_/RESETN -0.592124
+OT_PATH u_ot_pr_core.rst_a.region[108].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s2[0][2]$_DFF_PN0_/RESETN -0.580300
+OT_PATH u_ot_pr_core.rst_a.region[64].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[64].leaf$_DFF_PN0_/RESETN -0.573014
+OT_PATH u_ot_pr_core.rst_a.region[135].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[135].leaf$_DFF_PN0_/RESETN -0.571654
+OT_PATH u_ot_pr_core.rst_a.region[51].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[680]$_DFF_PN0_/RESETN -0.553946
+OT_PATH u_ot_pr_core.rst_a.region[74].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[74].leaf$_DFF_PN0_/RESETN -0.514921
+OT_PATH u_ot_pr_core.rst_a.region[151].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[151].leaf$_DFF_PN0_/RESETN -0.473691
+OT_PATH u_ot_pr_core.rst_a.region[96].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[96].leaf$_DFF_PN0_/RESETN -0.438080
+OT_PATH u_ot_pr_core.rst_a.region[150].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[150].leaf$_DFF_PN0_/RESETN -0.405578
+OT_PATH u_ot_pr_core.rst_a.region[101].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[101].leaf$_DFF_PN0_/RESETN -0.403469
+OT_PATH u_ot_pr_core.rst_a.region[144].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.q[101]$_DFF_PN0_/RESETN -0.372355
+OT_PATH u_ot_pr_core.rst_a.region[171].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[171].leaf$_DFF_PN0_/RESETN -0.363709
+OT_PATH u_ot_pr_core.rst_a.region[37].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[37].leaf$_DFF_PN0_/RESETN -0.360226
+OT_PATH u_ot_pr_core.rst_a.region[144].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.q[98]$_DFF_PN0_/RESETN -0.348610
+OT_PATH u_ot_pr_core.rst_a.region[128].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.q[2]$_DFF_PN0_/RESETN -0.341366
+OT_PATH u_ot_pr_core.rst_a.region[33].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[33].leaf$_DFF_PN0_/RESETN -0.325670
+OT_PATH u_ot_pr_core.rst_a.region[107].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[107].leaf$_DFF_PN0_/RESETN -0.323422
+OT_PATH u_ot_pr_core.rst_a.region[198].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[198].leaf$_DFF_PN0_/RESETN -0.323366
+OT_PATH u_ot_pr_core.rst_a.region[206].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[206].leaf$_DFF_PN0_/RESETN -0.316830
+OT_PATH u_ot_pr_core.rst_a.region[120].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s3[17][2]$_DFF_PN0_/RESETN -0.305839
+OT_PATH u_ot_pr_core.rst_a.region[119].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[119].leaf$_DFF_PN0_/RESETN -0.302161
+OT_PATH u_ot_pr_core.rst_a.region[128].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.q[5]$_DFF_PN0_/RESETN -0.284009
+OT_PATH u_ot_pr_core.rst_a.region[62].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[944]$_DFF_PN0_/RESETN -0.276737
+OT_PATH u_ot_pr_core.rst_a.region[112].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[112].leaf$_DFF_PN0_/RESETN -0.274544
+OT_PATH u_ot_pr_core.rst_a.region[129].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[129].leaf$_DFF_PN0_/RESETN -0.264760
+OT_PATH u_ot_pr_core.rst_a.region[193].leaf$_DFF_PN0_/QN u_ot_pr_core.g_d[7].u_a/err[1]$_DFF_PN0_/RESETN -0.250633
+OT_PATH u_ot_pr_core.rst_a.region[120].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s3[16][2]$_DFF_PN0_/RESETN -0.240488
+OT_PATH u_ot_pr_core.rst_a.region[113].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[113].leaf$_DFF_PN0_/RESETN -0.239572
+OT_PATH u_ot_pr_core.rst_a.region[161].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[161].leaf$_DFF_PN0_/RESETN -0.225153
+OT_PATH u_ot_pr_core.rst_a.region[62].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[956]$_DFF_PN0_/RESETN -0.221323
+OT_PATH u_ot_pr_core.rst_a.region[55].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[55].leaf$_DFF_PN0_/RESETN -0.210415
+OT_PATH u_ot_pr_core.rst_a.region[52].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[52].leaf$_DFF_PN0_/RESETN -0.167491
+OT_PATH rst_n__ot_rl1$_DFF_P_/QN u_ot_pr_core.rst_a.reset_root[4]$_DFF_PN0_/RESETN -0.158429
+OT_PATH u_ot_pr_core.rst_a.region[67].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[67].leaf$_DFF_PN0_/RESETN -0.157527
+OT_PATH u_ot_pr_core.rst_a.region[195].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[195].leaf$_DFF_PN0_/RESETN -0.149158
+OT_PATH u_ot_pr_core.rst_a.region[193].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[193].leaf$_DFF_PN0_/RESETN -0.137404
+OT_PATH u_ot_pr_core.rst_a.region[108].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s2[1][1]$_DFF_PN0_/RESETN -0.130687
+OT_PATH u_ot_pr_core.rst_a.region[61].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[920]$_DFF_PN0_/RESETN -0.118072
+OT_PATH u_ot_pr_core.rst_a.region[112].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s3[0][2]$_DFF_PN0_/RESETN -0.106512
+OT_PATH u_ot_pr_core.rst_a.region[77].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[77].leaf$_DFF_PN0_/RESETN -0.100156
+OT_PATH u_ot_pr_core.rst_a.region[70].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[70].leaf$_DFF_PN0_/RESETN -0.090511
+OT_PATH u_ot_pr_core.rst_a.region[194].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[194].leaf$_DFF_PN0_/RESETN -0.080366
+OT_PATH u_ot_pr_core.rst_a.region[57].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[57].leaf$_DFF_PN0_/RESETN -0.078687
+OT_PATH u_ot_pr_core.rst_a.region[61].leaf$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[932]$_DFF_PN0_/RESETN -0.046241
+OT_PATH u_ot_pr_core.rst_a.region[56].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[56].leaf$_DFF_PN0_/RESETN -0.037567
+OT_PATH u_ot_pr_core.rst_a.region[112].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s3[1][2]$_DFF_PN0_/RESETN -0.015432
+OT_PATH u_ot_pr_core.rst_a.region[119].leaf$_DFF_PN0_/QN u_ot_pr_core.ct_tree.s3[14][1]$_DFF_PN0_/RESETN -0.005246
+OT_PATH u_ot_pr_core.rst_a.region[18].second$_DFF_PN0_/QN u_ot_pr_core.rst_a.region[18].leaf$_DFF_PN0_/RESETN -0.004594
+OT_PATH u_ot_pr_core.lt_tree.s3[2][5]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[413]$_DFF_PN0_/D -5.221879
+OT_PATH u_ot_pr_core.g_d[4].u_a/s1_sub$_DFF_P_/QN u_ot_pr_core.g_d[4].u_a/t_sub$_DFF_P_/D -3.689576
+OT_PATH u_ot_pr_core.g_d[4].u_a/u_code[0]$_DFF_P_/QN u_ot_pr_core.g_d[4].u_a/y[0]$_DFF_PN0_/D -3.599496
+OT_PATH u_ot_pr_core.lt_tree.s3[2][6]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[1566]$_DFF_PN0_/D -3.506973
+OT_PATH u_ot_pr_core.g_d[7].u_a/y[19]$_DFF_PN0_/QN u_ot_pr_core.g_d[7].g_pad.u_pad.q[19]$_DFF_P_/D -3.346684
+OT_PATH u_ot_pr_core.g_d[2].u_p/s3_y[19]$_DFF_P_/QN u_ot_pr_core.g_d[2].u_p/y[19]$_DFF_PN0_/D -3.346656
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[1]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[1]$_DFF_P_/D -3.287648
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[26]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[26]$_DFF_P_/D -3.192058
+OT_PATH u_ot_pr_core.lt_tree.s3[2][6]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[414]$_DFF_PN0_/D -3.179484
+OT_PATH u_ot_pr_core.g_d[4].u_a/u_code[7]$_DFF_P_/QN u_ot_pr_core.g_d[4].u_a/y[7]$_DFF_PN0_/D -3.049019
+OT_PATH u_ot_pr_core.g_d[6].u_a/t_byp$_DFF_P_/QN u_ot_pr_core.g_d[6].u_a/w_byp$_DFF_P_/D -2.959896
+OT_PATH u_ot_pr_core.g_d[2].u_a/u_code[26]$_DFF_P_/QN u_ot_pr_core.g_d[2].u_a/y[26]$_DFF_PN0_/D -2.817052
+OT_PATH u_ot_pr_core.lt_tree.s3[11][4]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[1288]$_DFF_PN0_/D -2.786063
+OT_PATH u_ot_pr_core.g_d[2].u_a/y[24]$_DFF_PN0_/QN u_ot_pr_core.g_d[2].g_pad.u_pad.q[24]$_DFF_P_/D -2.613229
+OT_PATH u_ot_pr_core.g_d[2].u_a/w_nf$_DFF_P_/QN u_ot_pr_core.g_d[2].u_a/s2_nf$_DFF_P_/D -2.451178
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[2]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[2]$_DFF_P_/D -2.387215
+OT_PATH u_ot_pr_core.g_d[5].u_a/x_sub$_DFF_P_/QN u_ot_pr_core.g_d[5].u_a/s1_sub$_DFF_P_/D -2.360959
+OT_PATH u_ot_pr_core.g_d[3].u_p/s3_y[7]$_DFF_P_/QN u_ot_pr_core.g_d[3].u_p/y[7]$_DFF_PN0_/D -2.348524
+OT_PATH u_ot_pr_core.g_d[2].u_b/x_bexp[6]$_DFF_P_/QN u_ot_pr_core.g_d[2].u_b/s1_exp[6]$_DFF_P_/D -2.239125
+OT_PATH u_ot_pr_core.g_d[2].u_b/x_bexp[4]$_DFF_P_/QN u_ot_pr_core.g_d[2].u_b/s1_exp[4]$_DFF_P_/D -2.137374
+OT_PATH u_ot_pr_core.g_d[1].u_p/s1_p[1]$_DFF_P_/QN u_ot_pr_core.g_d[1].u_p/s2_p[1]$_DFF_P_/D -2.065237
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[13]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[13]$_DFF_P_/D -2.059394
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[17]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[17]$_DFF_P_/D -1.893791
+OT_PATH u_ot_pr_core.g_d[5].u_p/s3_y[9]$_DFF_P_/QN u_ot_pr_core.g_d[5].u_p/y[9]$_DFF_PN0_/D -1.873571
+OT_PATH u_ot_pr_core.g_d[4].u_a/s2_exp[5]$_DFF_P_/QN u_ot_pr_core.g_d[4].u_a/u_exp[5]$_DFF_P_/D -1.839959
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[8]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[8]$_DFF_P_/D -1.783421
+OT_PATH u_ot_pr_core.g_d[2].u_a/w_byp$_DFF_P_/QN u_ot_pr_core.g_d[2].u_a/s2_byp$_DFF_P_/D -1.709674
+OT_PATH u_ot_pr_core.g_d[3].u_p/s3_y[2]$_DFF_P_/QN u_ot_pr_core.g_d[3].u_p/y[2]$_DFF_PN0_/D -1.668818
+OT_PATH u_ot_pr_core.g_d[5].u_a/w_byp$_DFF_P_/QN u_ot_pr_core.g_d[5].u_a/s2_byp$_DFF_P_/D -1.558864
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[9]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[9]$_DFF_P_/D -1.413467
+OT_PATH u_ot_pr_core.g_d[6].u_a/s2_nf$_DFF_P_/QN u_ot_pr_core.g_d[6].u_a/u_nf$_DFF_P_/D -1.333017
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[27]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[27]$_DFF_P_/D -1.317752
+OT_PATH u_ot_pr_core.lt_tree.s3[19][1]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[997]$_DFF_PN0_/D -1.279199
+OT_PATH u_ot_pr_core.g_d[6].u_b/u_hc/q[23]$_DFF_P_/QN u_ot_pr_core.g_d[6].u_b/w_dif[23]$_DFF_P_/D -1.261810
+OT_PATH u_ot_pr_core.g_d[7].u_a/s2_zero$_DFF_P_/QN u_ot_pr_core.g_d[7].u_a/u_zero$_DFF_P_/D -1.247391
+OT_PATH u_ot_pr_core.g_d[5].u_b/u_v$_DFF_PN0_/QN u_ot_pr_core.g_d[5].u_b/valid_out$_DFF_PN0_/D -1.243131
+OT_PATH u_ot_pr_core.g_d[0].u_b/x_bexp[7]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_b/s1_exp[7]$_DFF_P_/D -1.236150
+OT_PATH row_in__ot_q[51]$_DFF_P_/QN u_ot_pr_core.row3[51]$_DFF_P_/D -1.231501
+OT_PATH u_ot_pr_core.g_d[6].u_b/u_hc/q[25]$_DFF_P_/QN u_ot_pr_core.g_d[6].u_b/w_dif[25]$_DFF_P_/D -1.212794
+OT_PATH u_ot_pr_core.g_d[4].u_b/u_code[17]$_DFF_P_/QN u_ot_pr_core.g_d[4].u_b/y[17]$_DFF_PN0_/D -1.158351
+OT_PATH u_ot_pr_core.g_d[5].u_p/s3_y[10]$_DFF_P_/QN u_ot_pr_core.g_d[5].u_p/y[10]$_DFF_PN0_/D -1.111847
+OT_PATH u_ot_pr_core.g_d[0].u_b/x_bexp[6]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_b/s1_exp[6]$_DFF_P_/D -1.001990
+OT_PATH u_ot_pr_core.g_d[4].u_b/s2_sign$_DFF_P_/QN u_ot_pr_core.g_d[4].u_b/u_sign$_DFF_P_/D -0.997202
+OT_PATH u_ot_pr_core.g_d[4].u_a/s1_nf$_DFF_P_/QN u_ot_pr_core.g_d[4].u_a/t_nf$_DFF_P_/D -0.983200
+OT_PATH u_ot_pr_core.g_d[4].u_b/u_code[22]$_DFF_P_/QN u_ot_pr_core.g_d[4].u_b/y[22]$_DFF_PN0_/D -0.728126
+OT_PATH u_ot_pr_core.g_d[0].u_a/s1_nf$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/t_nf$_DFF_P_/D -0.710404
+OT_PATH u_ot_pr_core.g_d[5].u_p/s3_y[7]$_DFF_P_/QN u_ot_pr_core.g_d[5].u_p/y[7]$_DFF_PN0_/D -0.705283
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_code[11]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/y[11]$_DFF_PN0_/D -0.664024
+OT_PATH u_ot_pr_core.g_d[4].u_b/u_code[0]$_DFF_P_/QN u_ot_pr_core.g_d[4].u_b/y[0]$_DFF_PN0_/D -0.638337
+OT_PATH u_ot_pr_core.g_d[0].u_b/s2_exp[4]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_b/u_exp[4]$_DFF_P_/D -0.634534
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[5]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[5]$_DFF_P_/D -0.626013
+OT_PATH u_ot_pr_core.g_d[1].u_a/s2_v$_DFF_PN0_/QN u_ot_pr_core.g_d[1].u_a/u_v$_DFF_PN0_/D -0.621267
+OT_PATH u_ot_pr_core.g_d[1].u_a/s2_exp[5]$_DFF_P_/QN u_ot_pr_core.g_d[1].u_a/u_exp[5]$_DFF_P_/D -0.584047
+OT_PATH u_ot_pr_core.g_d[1].u_a/w_nf$_DFF_P_/QN u_ot_pr_core.g_d[1].u_a/s2_nf$_DFF_P_/D -0.565298
+OT_PATH u_ot_pr_core.g_d[2].u_b/u_hc/q[12]$_DFF_P_/QN u_ot_pr_core.g_d[2].u_b/w_dif[12]$_DFF_P_/D -0.556166
+OT_PATH u_ot_pr_core.lt_tree.s3[6][11]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[2003]$_DFF_PN0_/D -0.522998
+OT_PATH u_ot_pr_core.lt_tree.q[960]$_DFF_PN0_/QN u_ot_pr_core.g_d[4].u_b/x_v$_DFF_PN0_/D -0.518183
+OT_PATH u_ot_pr_core.lt_tree.s3[1][5]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[401]$_DFF_PN0_/D -0.508052
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[11]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[11]$_DFF_P_/D -0.478118
+OT_PATH u_ot_pr_core.lt_tree.s3[6][9]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[2001]$_DFF_PN0_/D -0.460798
+OT_PATH u_ot_pr_core.g_d[3].u_a/t_nf$_DFF_P_/QN u_ot_pr_core.g_d[3].u_a/w_nf$_DFF_P_/D -0.440439
+OT_PATH u_ot_pr_core.g_d[3].u_b/u_code[2]$_DFF_P_/QN u_ot_pr_core.g_d[3].u_b/y[2]$_DFF_PN0_/D -0.431155
+OT_PATH u_ot_pr_core.g_d[3].u_a/t_sign$_DFF_P_/QN u_ot_pr_core.g_d[3].u_a/w_sign$_DFF_P_/D -0.402609
+OT_PATH u_ot_pr_core.g_d[5].u_b/s2_exp[6]$_DFF_P_/QN u_ot_pr_core.g_d[5].u_b/u_exp[6]$_DFF_P_/D -0.391714
+OT_PATH u_ot_pr_core.g_d[1].u_b/t_byp$_DFF_P_/QN u_ot_pr_core.g_d[1].u_b/w_byp$_DFF_P_/D -0.374437
+OT_PATH u_ot_pr_core.g_d[1].u_a/u_hc/q[27]$_DFF_P_/QN u_ot_pr_core.g_d[1].u_a/w_dif[27]$_DFF_P_/D -0.353453
+OT_PATH u_ot_pr_core.g_d[3].u_b/u_nf$_DFF_P_/QN u_ot_pr_core.g_d[3].u_b/err[0]$_DFF_PN0_/D -0.351566
+OT_PATH u_ot_pr_core.g_d[0].u_a/s1_sign$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/t_sign$_DFF_P_/D -0.350081
+OT_PATH u_ot_pr_core.g_d[7].u_a/u_hc/q[33]$_DFF_P_/QN u_ot_pr_core.g_d[7].u_a/w_exp[5]$_DFF_P_/D -0.339728
+OT_PATH u_ot_pr_core.g_d[7].u_a/u_hc/q[32]$_DFF_P_/QN u_ot_pr_core.g_d[7].u_a/w_exp[4]$_DFF_P_/D -0.299510
+OT_PATH u_ot_pr_core.g_d[0].u_a/u_hc/q[4]$_DFF_P_/QN u_ot_pr_core.g_d[0].u_a/w_dif[4]$_DFF_P_/D -0.280165
+OT_PATH u_ot_pr_core.lt_tree.s3[7][9]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.q[2013]$_DFF_PN0_/D -0.276626
+OT_PATH row_in__ot_q[52]$_DFF_P_/QN u_ot_pr_core.row3[52]$_DFF_P_/D -0.258030
+OT_PATH u_ot_pr_core.g_d[6].u_b/s1_nf$_DFF_P_/QN u_ot_pr_core.g_d[6].u_b/t_nf$_DFF_P_/D -0.256226
+OT_PATH u_ot_pr_core.g_d[7].u_a/u_code[26]$_DFF_P_/QN u_ot_pr_core.g_d[7].u_a/y[26]$_DFF_PN0_/D -0.246456
+OT_PATH u_ot_pr_core.g_d[5].u_b/s2_zero$_DFF_P_/QN u_ot_pr_core.g_d[5].u_b/u_zero$_DFF_P_/D -0.196912
+OT_PATH u_ot_pr_core.g_d[6].u_a/u_hc/q[20]$_DFF_P_/QN u_ot_pr_core.g_d[6].u_a/w_dif[20]$_DFF_P_/D -0.189432
+OT_PATH u_ot_pr_core.g_d[3].u_b/s1_nf$_DFF_P_/QN u_ot_pr_core.g_d[3].u_b/t_nf$_DFF_P_/D -0.175124
+OT_PATH u_ot_pr_core.g_d[5].u_b/s2_exp[4]$_DFF_P_/QN u_ot_pr_core.g_d[5].u_b/u_exp[4]$_DFF_P_/D -0.172737
+OT_PATH u_ot_pr_core.g_d[1].u_b/s2_exp[0]$_DFF_P_/QN u_ot_pr_core.g_d[1].u_b/u_exp[0]$_DFF_P_/D -0.160177
+OT_PATH u_ot_pr_core.lt_tree.s2[5][1]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.s3[22][1]$_DFF_PN0_/D -0.157457
+OT_PATH u_ot_pr_core.g_d[5].u_a/s1_small[2]$_DFF_P_/QN u_ot_pr_core.g_d[5].u_a/sum[2]$_DFF_P_/D -0.141637
+OT_PATH u_ot_pr_core.g_d[3].u_p/s3_y[5]$_DFF_P_/QN u_ot_pr_core.g_d[3].u_p/y[5]$_DFF_PN0_/D -0.141318
+OT_PATH u_ot_pr_core.g_d[3].u_a/s2_byp$_DFF_P_/QN u_ot_pr_core.g_d[3].u_a/u_byp_dist[2]$_DFF_P_/D -0.129841
+OT_PATH u_ot_pr_core.g_d[1].u_b/u_code[18]$_DFF_P_/QN u_ot_pr_core.g_d[1].u_b/y[18]$_DFF_PN0_/D -0.129521
+OT_PATH u_ot_pr_core.lt_tree.s2[5][1]$_DFF_PN0_/QN u_ot_pr_core.lt_tree.s3[23][1]$_DFF_PN0_/D -0.127356
+OT_PATH u_ot_pr_core.g_d[3].u_p/s2_zero$_DFF_P_/QN u_ot_pr_core.g_d[3].u_p/s3_zero$_DFF_P_/D -0.086930
+OT_PATH u_ot_pr_core.g_d[1].u_b/u_hc/q[26]$_DFF_P_/QN u_ot_pr_core.g_d[1].u_b/w_dif[26]$_DFF_P_/D -0.081782
+OT_PATH u_ot_pr_core.g_d[6].u_b/s2_exp[2]$_DFF_P_/QN u_ot_pr_core.g_d[6].u_b/u_exp[2]$_DFF_P_/D -0.079756
+OT_PATH u_ot_pr_core.g_d[0].u_p/s2_zero$_DFF_P_/QN u_ot_pr_core.g_d[0].u_p/s3_zero$_DFF_P_/D -0.071956
+OT_PATH u_ot_pr_core.g_d[3].u_b/w_sign$_DFF_P_/QN u_ot_pr_core.g_d[3].u_b/s2_sign$_DFF_P_/D -0.067127
+OT_PATH u_ot_pr_core.g_d[6].u_b/s2_exp[3]$_DFF_P_/QN u_ot_pr_core.g_d[6].u_b/u_exp[3]$_DFF_P_/D -0.062506
+OT_PATH u_ot_pr_core.g_d[1].u_a/u_nf$_DFF_P_/QN u_ot_pr_core.g_d[1].u_a/err[0]$_DFF_PN0_/D -0.055234
+OT_PATH q_data_in__ot_q[116]$_DFF_P_/QN u_ot_pr_core.qd3[116]$_DFF_P_/D -0.048364
+OT_PATH u_ot_pr_core.g_d[2].u_b/u_code[20]$_DFF_P_/QN u_ot_pr_core.g_d[2].u_b/y[20]$_DFF_PN0_/D -0.031974
