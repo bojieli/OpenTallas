@@ -8,7 +8,7 @@
 //   pass side  : pins -> face ROOT bank (v / kind / dst / sid copies) -> LEAF bank (pe/pw relay, te/tw table tap,
 //                xe/xw x tap, ubad) -> relay / tap registers.  The payload is carried one extra edge (sw_q0 -> sw_q1)
 //                so header and payload stay coherent.  (+1 edge on every pass / tap path against t2.)
-//   own writes : face (we / addr in two decoder copies / data / write-any root) -> P1 (BF16 RNE into 4 kept lane
+//   own writes : face (we / addr in four decoder copies / data / write-any root) -> P1 (BF16 RNE into 4 kept lane
 //                copies, registered slot x lane one-hot select, per-tree slot-hit copies, partial faults) -> P2: the
 //                beat assembly xb and NK = 9 independent "complete" trees, each on its own kept copy of the mask xm,
 //                the open bit op and the slot hit, each tree driving <= 27 kept P2 leaves (relay insertion E / W,
@@ -72,7 +72,7 @@ module qfd_dv_stream_tile #(
     localparam integer LPT = (NL2 + NK - 1) / NK;      // P2 leaves per tree (27)
     wire [1087:0] sw_i = {sw_v, sw_hi, sw_lo};
     wire [1087:0] se_i = {se_v, se_hi, se_lo};
-    integer gi;
+    integer gi, li, qi;
     // ================================================================================================ face: roots
     reg [1086:0] sw_q0, se_q0, sw_q1, se_q1;   // payload + header, carried two edges (no reset)
     reg [3:0]    sid_q0, sid_q1;
@@ -161,53 +161,46 @@ module qfd_dv_stream_tile #(
         end
     endfunction
     // ---------------------------------------------------------------------------------------------- face
-    (* keep = "true" *) reg [7:0]  we_a, we_b;               // lane enables: decoder copy A (slots 0..31) / B (32..63)
-    (* keep = "true" *) reg [47:0] wd_a, wd_b;               // lane slot digits addr[5:0], copies A / B
+    // decoder copy c = 2 * (s / 32) + (s % 8) / 4 serves 16 slots (each digit term -> 4 slots)
+    (* keep = "true" *) reg [31:0]  we_c;                    // lane enables per decoder copy: [8c + l]
+    (* keep = "true" *) reg [191:0] wd_c;                    // lane slot digits addr[5:0] per copy: [48c + 6l +: 6]
     reg [127:0] wb_q;                                         // lane beat addresses addr[21:6]
     reg [255:0] wd_q;
     (* keep = "true" *) reg        wy_r;                     // write-any root
     always @(posedge ck) begin
         for (gi = 0; gi < 8; gi = gi + 1) begin
-            wd_a[6*gi +: 6] <= xw_addr[24*gi +: 6];
-            wd_b[6*gi +: 6] <= xw_addr[24*gi +: 6];
+            for (qi = 0; qi < 4; qi = qi + 1) wd_c[48*qi + 6*gi +: 6] <= xw_addr[24*gi +: 6];
             wb_q[16*gi +: 16] <= xw_addr[24*gi + 6 +: 16];
         end
         wd_q <= xw_data;
     end
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin we_a <= 8'd0; we_b <= 8'd0; wy_r <= 1'b0; end
-        else begin we_a <= xw_we; we_b <= xw_we; wy_r <= xw_we != 8'd0; end
+        if (!rst_n) begin we_c <= 32'd0; wy_r <= 1'b0; end
+        else begin we_c <= {4{xw_we}}; wy_r <= xw_we != 8'd0; end
     // ---------------------------------------------------------------------------------------------- P1 (comb)
     genvar l, d, s, b, k;
     wire [511:0] sel_n;                                       // [8*s + l]: lane l writes slot s (highest lane wins)
     wire [63:0]  sh_n, dup_n;
     wire [7:0]   beat_bad;
-    wire [63:0]  lo_a, lo_b;
-    wire [31:0]  hi_a, hi_b;
+    wire [255:0] lo_c, hi_c;                                  // [64c + 8l + d]
     generate
         for (l = 0; l < 8; l = l + 1) begin: g_bb
-            assign beat_bad[l] = we_a[l] && (!we_a[0] || wb_q[16*l +: 16] != wb_q[0 +: 16]);
+            assign beat_bad[l] = we_c[l] && (!we_c[0] || wb_q[16*l +: 16] != wb_q[0 +: 16]);
         end
-        // two-level decode per lane and per copy: low digit addr[2:0] (8 terms, each -> 4 slots), high digit
-        // addr[5:3] with the lane enable (4 terms per copy, each -> 8 slots)
-        for (l = 0; l < 8; l = l + 1) begin: g_decode
-            for (d = 0; d < 8; d = d + 1) begin: g_lo
-                assign lo_a[8*l+d] = (wd_a[6*l +: 3] == d);
-                assign lo_b[8*l+d] = (wd_b[6*l +: 3] == d);
-            end
-            for (d = 0; d < 4; d = d + 1) begin: g_hi
-                assign hi_a[4*l+d] = we_a[l] && (wd_a[6*l+3 +: 3] == d);
-                assign hi_b[4*l+d] = we_b[l] && (wd_b[6*l+3 +: 3] == d + 4);
+        // two-level decode per lane and per copy: low digit addr[2:0], high digit addr[5:3] with the lane enable;
+        // a copy uses 4 low and 4 high terms, each term -> 4 slots (x the ~4 priority / duplicate uses of a hit)
+        for (k = 0; k < 4; k = k + 1) begin: g_copy
+            for (l = 0; l < 8; l = l + 1) begin: g_decode
+                for (d = 0; d < 8; d = d + 1) begin: g_digit
+                    assign lo_c[64*k + 8*l + d] = (wd_c[48*k + 6*l +: 3] == d);
+                    assign hi_c[64*k + 8*l + d] = we_c[8*k + l] && (wd_c[48*k + 6*l + 3 +: 3] == d);
+                end
             end
         end
         for (s = 0; s < 64; s = s + 1) begin: g_slot1
             wire [7:0] hit;
             for (l = 0; l < 8; l = l + 1) begin: g_lane
-                if (s < 32) begin: g_a
-                    assign hit[l] = lo_a[8*l + s % 8] && hi_a[4*l + s / 8];
-                end else begin: g_b
-                    assign hit[l] = lo_b[8*l + s % 8] && hi_b[4*l + s / 8 - 4];
-                end
+                assign hit[l] = lo_c[64*(2*(s/32) + (s%8)/4) + 8*l + s % 8] && hi_c[64*(2*(s/32) + (s%8)/4) + 8*l + s / 8];
                 if (l == 7) begin: g_top
                     assign sel_n[8*s+l] = hit[l];
                 end else begin: g_low
@@ -228,9 +221,9 @@ module qfd_dv_stream_tile #(
     (* keep = "true" *) reg [NK+1:0] wa1;                    // write-any leaves: [k] tree k op update, [NK+h] xbeat half h
     reg         dupq, bbq, w0q;
     reg [15:0]  abq;
-    integer li, qi;
+
     always @(posedge ck) begin
-        selq <= sel_n; dupq <= |dup_n; bbq <= |beat_bad; w0q <= we_a[0]; abq <= wb_q[0 +: 16];
+        selq <= sel_n; dupq <= |dup_n; bbq <= |beat_bad; w0q <= we_c[0]; abq <= wb_q[0 +: 16];
         for (qi = 0; qi < NK; qi = qi + 1) shq_t[64*qi +: 64] <= sh_n;
         shq_b <= {sh_n, sh_n};
         for (qi = 0; qi < 4; qi = qi + 1)

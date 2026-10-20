@@ -83,7 +83,7 @@ def spec(name, w, h, tag, why_outline):
             "pins, combinational tap predicates, the complete AND driving 69 copies, lane-1 decode): every wide select "
             "is a kept 14-bit LEAF (<= 28 pins), pass-side leaves fed by kept ROOT banks at the face (+1 pass / tap "
             "edge), own-write completion from 9 independent complete trees on kept mask / open / slot-hit copies "
-            "(<= 27 leaves each), insertion from the assembly word directly (own path -1 edge vs t2), two decoder "
+            "(<= 27 leaves each), insertion from the assembly word directly (own path -1 edge vs t2), four decoder "
             "copies; yosys 0.68 keep-regs mapped census (14-bit leaves): 39,042 roots, max 30 apart from rst_n (397 "
             "drivers at 28, zero role errors), rst_n 725 loads -> 28 landed copies."),
         "job": {

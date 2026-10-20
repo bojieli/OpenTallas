@@ -17,7 +17,7 @@ decode wa_q[26] 36 / hi_hit 33, wa1_c[32] 37. A CLOSED route does not release a 
 - Pass side: face ROOT bank (3 kept copies per leaf family of v / kind / dst / sid; tw / x-tap / ubad roots) -> select
   LEAF bank one edge later (<= 27 leaves per root, predicate per root) -> relay / tap registers. Payload carried one
   extra edge (sw_q0 -> sw_q1) so header and payload stay coherent.
-- Own writes: two decoder copies (slots 0..31 / 32..63) with a two-level digit decode; P1 = BF16 RNE into 4 kept lane
+- Own writes: four decoder copies (16 slots each, every digit term -> 4 slots) with a two-level digit decode; P1 = BF16 RNE into 4 kept lane
   copies (16 loads), registered one-hot select (16 loads), slot-hit copies per tree; P2 = assembly xb plus NK = 9
   independent complete trees, each on its own kept copy of the mask xm / open bit (3 copies) / slot hit, each driving
   <= 27 kept P2 leaves (insertion E / W with the direction copy of that tree, eword enables, ebeat, x-tap emit). No

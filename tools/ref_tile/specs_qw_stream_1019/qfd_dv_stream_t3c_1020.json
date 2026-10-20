@@ -212,7 +212,7 @@
    "group_max": 1
   }
  },
- "structural_change": "QW-STREAM3 10-20: native-32 successor of qfd_dv_stream_t2_1019 (CLOSED s2/c2-49ac29c7e FAIL the actual mapped native census: 211 drivers > 32, max 69 -- 32-bit select groups at 2 mux pins per bit, raw valid pins, combinational tap predicates, the complete AND driving 69 copies, lane-1 decode): every wide select is a kept 14-bit LEAF (<= 28 pins), pass-side leaves fed by kept ROOT banks at the face (+1 pass / tap edge), own-write completion from 9 independent complete trees on kept mask / open / slot-hit copies (<= 27 leaves each), insertion from the assembly word directly (own path -1 edge vs t2), two decoder copies; yosys 0.68 keep-regs mapped census (14-bit leaves): 39,042 roots, max 30 apart from rst_n (397 drivers at 28, zero role errors), rst_n 725 loads -> 28 landed copies.",
+ "structural_change": "QW-STREAM3 10-20: native-32 successor of qfd_dv_stream_t2_1019 (CLOSED s2/c2-49ac29c7e FAIL the actual mapped native census: 211 drivers > 32, max 69 -- 32-bit select groups at 2 mux pins per bit, raw valid pins, combinational tap predicates, the complete AND driving 69 copies, lane-1 decode): every wide select is a kept 14-bit LEAF (<= 28 pins), pass-side leaves fed by kept ROOT banks at the face (+1 pass / tap edge), own-write completion from 9 independent complete trees on kept mask / open / slot-hit copies (<= 27 leaves each), insertion from the assembly word directly (own path -1 edge vs t2), four decoder copies; yosys 0.68 keep-regs mapped census (14-bit leaves): 39,042 roots, max 30 apart from rst_n (397 drivers at 28, zero role errors), rst_n 725 loads -> 28 landed copies.",
  "job": {
   "owner": "Claude:LEAD4-QW/QW-STREAM3",
   "branch": "claude/qw-stream3-1020",
