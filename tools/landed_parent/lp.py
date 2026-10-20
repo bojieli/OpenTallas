@@ -125,6 +125,7 @@ LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
+LIB_PORTS['ot_pl_land_reset_forest3'] = dict(LIB_PORTS['ot_pl_pad'])
 
 
 
@@ -519,6 +520,15 @@ class Parent:
             raise SystemExit("landing_reset_forest must be an explicit boolean")
         if self.reset_forest and not self.chunk_bits:
             raise SystemExit("landing_reset_forest requires explicit landing_chunk_bits")
+        # S81-FRAME4 10-19: landing_reset_forest_children -- every scalar child reset pad (u_lprc_<inst>) takes its OWN kept
+        # forest leaf instead of the regional run end (one flop -> ~90-140 child reset pins per S81 frame region, SAFE 3);
+        # regions with > 1024 leaves use the three-level forest (ot_pl_land_reset_forest3, same reset age, DEPTH >= 3).
+        # Opt-in (absent = byte-identical, and the > 1024 refusal stays for specs without it).
+        self.forest_children = spec.get("landing_reset_forest_children", False)
+        if type(self.forest_children) is not bool:
+            raise SystemExit("landing_reset_forest_children must be an explicit boolean")
+        if self.forest_children and not self.reset_forest:
+            raise SystemExit("landing_reset_forest_children requires landing_reset_forest")
         if self.chunk_bits and not 1 <= self.chunk_bits <= 24:
             raise SystemExit("landing_chunk_bits must be 1..24 (kept local selector fanout)")
         if self.direct_timing and (self.D != 4 or self.E != 2):
@@ -852,20 +862,39 @@ class Parent:
                     chunks=count, first_expr='+'.join(row['terms']), chunks_expr=count_expr))
                 row['leaves'] += count
                 row['terms'].append(count_expr)
+        if self.forest_children:
+            kids = [ins['inst'] for ins in self.insts if any(
+                self.cports[ins['module']][pin] == 'in' and pin in (self.S.get('reset_pins') or []) and ex.strip() == self.rst
+                for pin, ex in ins['conns'].items())]
+            for region, row in regions.items():
+                mine = [k for k in kids if self.region[k] == region]
+                row['child_first_expr'] = '+'.join(row['terms'])
+                row['children'] = {k: j for j, k in enumerate(mine)}
+                row['leaves'] += len(mine)
+                row['terms'].append(str(len(mine)))
         for region, row in regions.items():
-            if row['leaves'] > 1024:
+            three = self.forest_children and row['leaves'] > 1024
+            if row['leaves'] > (32768 if self.forest_children else 1024):
                 raise SystemExit(f'landing_reset_forest {region}: {row["leaves"]} leaves exceeds1024')
+            if three and depth < 3:
+                raise SystemExit(f'landing_reset_forest {region}: {row["leaves"]} leaves need the three-level forest (DEPTH >= 3)')
+            row['levels'] = 3 if three else 2
             row['branches'] = math.ceil(row['leaves'] / 32)
-            row['FFs'] = depth - 2 + row['branches'] + row['leaves']
+            if three:
+                row['top_branches'] = math.ceil(row['branches'] / 32)
+            row['FFs'] = depth - row['levels'] + row.get('top_branches', 0) + row['branches'] + row['leaves']
             scalar_uses = sum(self.region[ins['inst']] == region and any(
                 pin in (self.S.get('reset_pins') or []) and ex.strip() == self.rst
                 for pin, ex in ins['conns'].items()) for ins in self.insts)
             scalar_uses += sum(binding['regions'].count(region) for binding in self.regional_bindings.values()
                                if binding['role'] == 'resets')
+            if self.forest_children:
+                scalar_uses -= len(row['children'])
             row['scalar_child_pad_port_uses'] = scalar_uses
             if scalar_uses > 32:
                 raise SystemExit(f'landing_reset_forest {region} scalar child reset boundary has {scalar_uses} ports; partition still required')
-        root_loads = sum(v['branches'] if depth == 2 else 1 for v in regions.values())
+        root_loads = sum((v['top_branches'] if v['levels'] == 3 else v['branches']) if depth == v['levels'] else 1
+                         for v in regions.values())
         if root_loads > 32:
             raise SystemExit(f'landing_reset_forest root has {root_loads} registered loads; no added edge credited')
         return dict(regional_stages=depth, root_D_loads=root_loads, regions=regions,
@@ -929,12 +958,16 @@ class Parent:
             for r in self.regions:
                 expression = '+'.join(forest['regions'][r]['terms'])
                 w(f'    localparam integer LPR_LEAVES_{r} = {expression};')
-            root_load_expr = ('+'.join(f'((LPR_LEAVES_{r}+31)/32)' for r in self.regions)
-                              if RB-1 == 2 else str(len(self.regions)))
+            if self.forest_children:
+                root_load_expr = str(forest['root_D_loads'])
+            else:
+                root_load_expr = ('+'.join(f'((LPR_LEAVES_{r}+31)/32)' for r in self.regions)
+                                  if RB-1 == 2 else str(len(self.regions)))
         for r in self.regions:
             if forest:
                 w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
-                w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
+                fm = 'ot_pl_land_reset_forest3' if forest['regions'][r].get('levels') == 3 else 'ot_pl_land_reset_forest'
+                w(f'    {fm} #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
                   f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
             elif self.rports is not None:
                 w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N({RB})) u_lpr_{r} (.ck(ck_{r}), .d({self.rst}_{r}), .q(lpr_{r}));"
@@ -1002,7 +1035,9 @@ class Parent:
             if any(self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items()):
                 m4 = int(S.get("mut4_stages", 1))
                 kk = f"(MUT == 4) ? {tc + m4} : {tc}" if i == mc and mut else f"{tc}"
-                w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d(lpr_{r}), .q(lpr_c_{i}));"
+                src = (f"lpr_{r}_leaves[({forest['regions'][r]['child_first_expr']})+{forest['regions'][r]['children'][i]}]"
+                       if self.forest_children else f"lpr_{r}")
+                w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d({src}), .q(lpr_c_{i}));"
                   + (f"   // t({i}) = {tc}" if not self.reference else f"   // reference schedule: held {tc} past the landing epochs"))
                 rsub[i] = f"lpr_c_{i}"
         # Internal regional reset ports receive the same logical child delay as

@@ -48,6 +48,8 @@ CORE = 2.16
 RES = 2.16           # occupancy bitmap resolution
 REC = 'results/arch/s81_dv_1016/frame_l4_cluster'
 LPDIR = 'rtl/dsrom_sys/s81_dv/frame_lp'
+# S81-FRAME4 10-19: kept-copy reset forest primitives (lp landing_reset_forest), synthesised with the frame
+LP_FOREST_RTL = ['rtl/common/landed_parent/ot_pl_land_field_copies.sv', 'rtl/common/landed_parent/ot_pl_land_reset_forest.sv']
 ROM = 'ot_rom_4096x72_m8'
 ROM_VIEW = 'physical/asap7_memory_macros_v2/ot_rom_4096x72_m8'
 
@@ -387,6 +389,7 @@ def main():
     ap.add_argument('--png')
     ap.add_argument('--small-lat', type=float, default=LAT, help='origin lattice of the small hard children (default 43.2)')
     ap.add_argument('--soft', action='append', default=[], help='regex of masters synthesised in the frame (not hard)')
+    ap.add_argument('--kit-suffix', help='kit name suffix (default _sr with --soft, else none): a parallel variant kit')
     a = ap.parse_args()
     r = place(a.master, a.height, soft=tuple(a.soft), small_lat=a.small_lat)
     if not r['ok']:
@@ -398,7 +401,7 @@ def main():
         png(r, a.png)
     if a.cmd == 'place':
         return
-    kit(a.master, r, spec, tuple(a.soft))
+    kit(a.master, r, spec, tuple(a.soft), a.kit_suffix)
 
 
 # ------------------------------------------------------------------------------------------------ kit
@@ -427,7 +430,7 @@ def kit_rtl(master, hard):
     return [str(out.relative_to(ROOT)), str(bo.relative_to(ROOT))], hashlib.sha256(t.encode()).hexdigest()
 
 
-def kit(master, r, spec, soft=()):
+def kit(master, r, spec, soft=(), suffix=None):
     import subprocess
     # 1. region centres -> lp spec -> LP RTL re-emitted with measured reset-hop runs
     for reg in spec['regions']:
@@ -471,7 +474,7 @@ def kit(master, r, spec, soft=()):
         else:
             inst = f"{k}.{SUBINST[v['master']]}" if v['master'] in SUBINST else k
             children.append(dict(view=view_of(v['master']), inst=inst, at=[v['x'], v['y']], orient=v['orient']))
-    name = f's81frame_{master}' + ('_sr' if soft else '')
+    name = f's81frame_{master}' + (suffix if suffix is not None else ('_sr' if soft else ''))
     soft_src = []
     if soft:
         # relays synthesised in the frame (soft): the RTL the benches compiled (lp spec child_sources), minus files that
@@ -485,7 +488,8 @@ def kit(master, r, spec, soft=()):
     over = r['H'] > H_SLOT[master] + 1e-6
     ks = dict(
         name=name, top=f'{master}_l4_lp', kind='cluster',
-        sources=['rtl/common/landed_parent/ot_pl_land.sv'] + soft_src + srcs + [f'{ROM_VIEW}/{ROM}_bb.v'],
+        sources=['rtl/common/landed_parent/ot_pl_land.sv'] + (LP_FOREST_RTL if spec.get('landing_reset_forest') else [])
+                + soft_src + srcs + [f'{ROM_VIEW}/{ROM}_bb.v'],
         params={}, defines=[],
         clock='multiple_cts_roots', clock_port='ck_r0', clock_ports=['ck_r0', 'ck_r1', 'ck_r2'],
         clock_data_paths='related_same_frequency',

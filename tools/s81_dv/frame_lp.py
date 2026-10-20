@@ -19,7 +19,7 @@ sys.path[:0] = [str(ROOT / 'tools/s81_dv'), str(ROOT / 'tools/landed_parent')]
 import frame_regions as FR
 import lp
 
-def emit(master):
+def emit(master, reset_forest=False):
     r, cut, H = FR.frame(master, Path(W+'/rtl/dsrom_sys/s81_dv/frame_l4'))
     # re-derive yc per inst (frame() keeps it local): patch by recomputing
     import re, gzip, statistics
@@ -74,6 +74,11 @@ def emit(master):
                 mut_child='u_e0', mut4_stages=400,
                 out_dir=out, record_dir=rec,
                 regions=[dict(name=n, insts=sorted(v)) for n, v in sorted(regions.items())])
+    if reset_forest:
+        # S81-FRAME4 10-19 (SAFE 3, kept copies): each region's reset run end drove EVERY landing half rq (h9 r1 3,017 /
+        # r2 1,613 / r0 1,404) plus ~90-140 child reset pads from ONE flop.  The same-age kept-copy forest gives every
+        # landing half and every child reset pad its own leaf, <= 32 loads per stage (3 levels above 1,024 leaves).
+        spec.update(landing_chunk_bits=24, landing_reset_forest=True, landing_reset_forest_children=True)
     d = ROOT / rec
     d.mkdir(parents=True, exist_ok=True)
     sp = d / f'{master}_spec.json'
@@ -100,4 +105,6 @@ endmodule
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--master', choices=['col_h9', 'col_h10'], required=True)
-    emit(ap.parse_args().master)
+    ap.add_argument('--reset-forest', action='store_true', help='kept-copy reset forest (lp landing_reset_forest[_children])')
+    a = ap.parse_args()
+    emit(a.master, a.reset_forest)

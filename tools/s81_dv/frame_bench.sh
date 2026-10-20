@@ -31,6 +31,8 @@ if [ "${FRAME_LP:-0}" = 1 ]; then
   case "$MUT" in 0) LM=0;; unland) LM=1;; landread) LM=2;; reset) LM=4;; *) echo "Unknown landed mutant $MUT"; exit 3;; esac
   DFR=${MASTER}_l4_lp_b; SFX=_l4_lp
   TOPF="$FR/${MASTER}_l4_lp_b.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv rtl/common/landed_parent/ot_pl_land.sv"
+  # S81-FRAME4 10-19: an LP spec with landing_reset_forest instantiates the kept-copy forest primitives
+  grep -q ot_pl_land_reset_forest $FR/${MASTER}_l4_lp.sv && TOPF="$TOPF rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
   VFLAGS="${VFLAGS:-} -DLP_MUT=$LM -DLK=${LK:-2} -DTB_FWD_GATE -DTB_LDLY=${LDLY:-0}"
   LANDE="--land-e ${LK:-2} --frame-schedule results/arch/s81_dv_1016/frame_l4_cluster/compiler/${MASTER}_schedule.json"
 elif [ "${L4:-0}" = 1 ]; then

@@ -82,3 +82,42 @@ module ot_pl_land_vector_reset_r #(
 `endif
 endmodule
 `default_nettype wire
+
+// S81-FRAME4 10-19: three-level variant for a region with more than 1024 reset leaves (S81 frames: 1.4k-3.1k landing
+// halves + ~90-140 child reset pads per region).  Same reset age as ot_pl_pad #(.N(DEPTH)): DEPTH-3 prefix stages, one
+// top branch layer (<= 32 loads on the last prefix stage), one mid branch layer (<= 32 per top branch), the leaves
+// (<= 32 per mid branch).  Every stage is a kept copy (distinct ID -> distinct module: never merged back by opt_merge).
+`default_nettype none
+module ot_pl_land_reset_forest3 #(
+    parameter integer DEPTH=8, LEAVES=2048, ROOT_LOADS=1
+)(input wire ck,d, output wire [LEAVES-1:0] q);
+    localparam integer MID=(LEAVES+31)/32;
+    localparam integer TOP=(MID+31)/32;
+    wire [DEPTH-3:0] prefix;
+    wire [TOP-1:0] top;
+    wire [MID-1:0] mid;
+    assign prefix[0]=d;
+    generate if(DEPTH<3 || LEAVES<1025 || LEAVES>32768 || ROOT_LOADS<1 || ROOT_LOADS>32) begin:g_invalid_shape
+        OT_LAND_RESET_FOREST3_REQUIRES_DEPTH3_LEAVES1025_TO32768 u_bad();
+    end endgenerate
+    generate for(genvar s=0;s<DEPTH-3;s=s+1) begin:g_prefix
+        (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(s)) u_ff(
+            .ck(ck),.d(prefix[s]),.q(prefix[s+1]));
+    end
+    for(genvar b=0;b<TOP;b=b+1) begin:g_top
+        (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(1024+b)) u_ff(
+            .ck(ck),.d(prefix[DEPTH-3]),.q(top[b]));
+    end
+    for(genvar b=0;b<MID;b=b+1) begin:g_mid
+        (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(2048+b)) u_ff(
+            .ck(ck),.d(top[b/32]),.q(mid[b]));
+    end
+    for(genvar l=0;l<LEAVES;l=l+1) begin:g_leaf
+        (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(4096+l)) u_ff(
+            .ck(ck),.d(mid[l/32]),.q(q[l]));
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if(DEPTH<3 || LEAVES<1025 || LEAVES>32768 || ROOT_LOADS<1 || ROOT_LOADS>32) $fatal(1,"LAND_RESET_FOREST3_SHAPE");
+`endif
+endmodule
+`default_nettype wire
