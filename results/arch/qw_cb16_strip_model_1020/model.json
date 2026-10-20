@@ -1,6 +1,6 @@
 {
   "source_prerequisite": "47e3ef899 pairedfullshape plus actualfailedgate ccfa620ee",
-  "status": "MODEL_ONLY_BEFORE_RTL, no newphysicalgate untiltypednative resetproof",
+  "status": "NATIVE32/SOURCE_RTLPROVEN; modelrefinedbeforefences; typedresetprofileblocksnewphysicalgate",
   "full_production_half_bits": [
     257,
     258
@@ -11,11 +11,11 @@
     1032
   ],
   "outline_um": [
-    43.2,
+    51.84,
     51.84
   ],
   "core_um": [
-    38.88,
+    47.52,
     47.52
   ],
   "fullW258_FF": 1672,
@@ -50,8 +50,8 @@
     "last_group_rows": 6,
     "row_height_um": 0.27,
     "total_rows": 176,
-    "fullgroup_area_um2": 104.97600000000001,
-    "lastgroup_area_um2": 62.985600000000005,
+    "fullgroup_area_um2": 110.808,
+    "lastgroup_area_um2": 66.4848,
     "source_mapping": "each fifteenactualbusbits maps onecompletewriter+readerunit, no bankbus exposed; actualcells mustbelonguniquegroup; allunmatchedtopcells explicitrootlogic only"
   },
   "wire_plan": "Eachgroup input15 ->fourbankwrite captures throughlocalCE, fourbankslots feedlocalreaderAND/ORbefore15longoutputpaths. Shareddata/control producers remainregistered sameedges; no crossgroup functional select. Fences span wholecorewidth, pinbit order followsstrip order, allfaceFFs legal-row allocated insidegroup. No arbitraryoutlinegrowth/densityknob reroute.",
@@ -62,5 +62,26 @@
     "physical pinfirstcapture/fence/collision and setuphold/clockGRT",
     "fullparent118fixedintersection18joint2infeasible needredesign"
   ],
-  "arithmetic": "none; data forwardedbitexact"
+  "arithmetic": "none; data forwardedbitexact",
+  "clock_reset_corridor_um": {
+    "x0": 22.68,
+    "x1": 29.16,
+    "y0": 2.16,
+    "y1": 49.68,
+    "area_um2": 307.92960000000005,
+    "reason": "Reserve actuallegalspace for8unownedroots+CTS/resizerbornbuffers; 18exclusivegroups cannotconsumeallcore."
+  },
+  "fullgroup_synth_area_um2": 55.56435294117647,
+  "regional_fullgroup_util": 0.5014471242254753,
+  "native_strip1": {
+    "cells": 6971,
+    "FF": 1672,
+    "maxfanout": 30,
+    "over32": 0,
+    "arraybankbits": 1032,
+    "groups17_full_cells": 402,
+    "lastgroup_cells": 129,
+    "unowned_root_cells": 8
+  },
+  "source_RTL_proof": "4width/phasecases4963outputchecks+allfirstbankcaptureeachwriteredgePASS,wrongKFAIL41,noimportedLibmodel"
 }
