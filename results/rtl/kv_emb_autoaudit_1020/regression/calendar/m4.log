@@ -1,0 +1,11 @@
+FAIL scale data
+FAIL scale data
+FAIL scale data
+FAIL scale data
+FAIL scale data
+FAIL faults root 0 station 00000000000000000000000000000000 merge 00800001a0800021a0800021a0000020 train 00000000000000000000000000000000 join 1
+FAIL MUT 4 errors 6
+- rtl/test/qwen_static_kv/tb_kvjc3_emb_player.sv:186: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.166 s; speed 47.236 us/s
+- Verilator: cpu 0.166 s on 1 threads; allocated 9 MB

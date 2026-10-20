@@ -1,0 +1,80 @@
+{
+  "status": "HAND_BACK_CLAUDE_IS_BACK_NO_NEW_WORK",
+  "main_audited": "c0768b96a8f6c54fa061c73e8cd1e0e982bc9e05",
+  "pre_auto_merge": "ba8416fa8b03b733ba1f9fecf1ebb411de63b2a9",
+  "merge": "6dde51081692989f671ae1765de63c74feb52d4f",
+  "closed_source": "801bce13604f1a7d7113415ba3508af43296ad28",
+  "component_job": "qkd_embedding_row_tx_ctx_n32c-n32c-801bce136",
+  "tests": {
+    "premerge_default_miter": "PASS14000 comparisons/47starts/2overlap/1malformed",
+    "current_default_parent": "m0PASS; causal mutants1-4FAIL",
+    "calendar": "m0PASS5tokens*65words exactedges/data; mutants3/4/6FAIL"
+  },
+  "final_native": {
+    "status": "PASS",
+    "roots": 5502,
+    "max_loads": 32,
+    "role_errors": 0,
+    "loaded_liberties": 6
+  },
+  "final_pg": {
+    "status": "PASS",
+    "checked": 176242,
+    "unbound": 0,
+    "protected_unbound": 0,
+    "fixed_unbound": 0
+  },
+  "geometry": {
+    "conservative_signal_bbox_max_um": 322.488,
+    "worst_net": "memory_q[16]",
+    "outline_um": [
+      237.6,
+      151.2
+    ],
+    "scope": "signal-net incident instance rectangles and port shapes; no parent reach or routed wirelength claim"
+  },
+  "boundary": {
+    "status": "PASS_OWN_MEASURED_CHILD_REFERENCE",
+    "R_tt_ps": 290.1,
+    "R_ff_ps": 229.0,
+    "launch_ps": 181.6,
+    "capture_ps": 84.2,
+    "spread_tt_ps": 36.0,
+    "spread_ff_ps": 33.5,
+    "comb_pins": 0,
+    "parent_relative": "OPEN"
+  },
+  "timing_scope": {
+    "TT_setup_ps": 131.01,
+    "FF_hold_ps": 4.88,
+    "DRC": 0,
+    "SS_sensitivity_ps": -159.87,
+    "claim": "TT component CLOSED; not SS headline closure"
+  },
+  "caller_default_audit": {
+    "actual_rtl_instances": 18,
+    "positional_parameter_callers": 0,
+    "shared_helper_diff": [],
+    "default_native32": 0,
+    "default_pipe_join": 0,
+    "api_note": "NATIVE32 inserted before MIN_GAP, dormant positional API risk; no source declaration edit"
+  },
+  "parent": {
+    "status": "HOLD_MODEL_ONLY",
+    "fixed_source": "4bd2cb156",
+    "old_auto_merged_native_opt_in": "known33-load ctx source remains unqualified; use isolated fixed successor only",
+    "child_placement": [
+      86.4,
+      86.4
+    ],
+    "orientation": "R0_ONLY_NO_LEF_SYMMETRY",
+    "max_record_pin_to_planned_parent_ff_um": 295.242,
+    "new_cycles": 0,
+    "plan": "r0_parent_plan.json; no kit generated or gate launched"
+  },
+  "audit_tools": {
+    "native_census_sha256": "a83ebec367621669b737b2921421eada914ae57801e56fd875dc8fe7b2e19bda",
+    "native_pin_audit_sha256": "6aa73631d11c0d6886acbad30b67015dbfec5c38bbdad1e21636536e87653f9f"
+  },
+  "running_jobs": "No owned local audit/test clients remain; preserve original attention job3 and all external fleet jobs; no termination performed"
+}

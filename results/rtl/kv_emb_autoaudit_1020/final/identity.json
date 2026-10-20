@@ -1,0 +1,40 @@
+{
+  "source_commit": "801bce13604f1a7d7113415ba3508af43296ad28",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "base": "/srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_n32c-n32c-801bce136/routes/qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/work/orfs/results/asap7/opentallas_qkd_embedding_row_tx_ctx_native32_asap7_ref_qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/base",
+  "liberty": [
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+    "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+    "/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib"
+  ],
+  "files": [
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_n32c-n32c-801bce136/routes/qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/work/orfs/results/asap7/opentallas_qkd_embedding_row_tx_ctx_native32_asap7_ref_qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/base/6_final.odb",
+      "sha256": "df848e186d4487ad33cc176425322c245166a551d56bb9f43432c8ff9d52551d"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_n32c-n32c-801bce136/routes/qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/work/orfs/results/asap7/opentallas_qkd_embedding_row_tx_ctx_native32_asap7_ref_qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/base/6_final.v",
+      "sha256": "c543ee4ddbc3ad623a99147d0f0dc6ecefc1bc0f13d538e2374ced65cc9d63bd"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_n32c-n32c-801bce136/routes/qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/work/orfs/results/asap7/opentallas_qkd_embedding_row_tx_ctx_native32_asap7_ref_qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/base/6_final.sdc",
+      "sha256": "5bfe7744ec2fd7d3f8eeb8503ed397d0629b01f701258d70495a34ad5abc1b49"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_n32c-n32c-801bce136/routes/qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/work/orfs/results/asap7/opentallas_qkd_embedding_row_tx_ctx_native32_asap7_ref_qkd_embedding_row_tx_ctx_n32c_n32c_801bce136/base/6_final.spef",
+      "sha256": "2d4d35ca98894ec2e6d275633d8da442baa6b48161e41caa2bc205be3c879193"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_n32c-n32c-801bce136/cl/native_pg_binding.tcl",
+      "sha256": "ecc2257f9b66cb0f6087712304151411efd1c51a7bf3c0635979c6878af13fb8"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_n32c-n32c-801bce136/cl/helper_overlay_plan.json",
+      "sha256": "5173878e99ed3590b0ec82c3e842e0e7ca331352ad6670a015f21aba33cab3a3"
+    }
+  ],
+  "geometry_scope": "conservative signal-net bounding boxes include complete incident instance rectangles and port shapes; not route-wire-length or parent-crossing qualification"
+}

@@ -8,7 +8,10 @@ if [[ $group == premerge ]];then
  "$out/obj/Vtb_qkd_kvs_emb_ctx_lockstep" > "$out/run.log" 2>&1
  grep '^KVS_EMB_CTX PASS' "$out/run.log"
 elif [[ $group == ctx ]];then
- for m in 0 1 2 3 4;do bash tools/qwen_kv_die/kvs_emb_ctx_bench.sh "$out/m$m" "$m";done
+ for m in 1 2 3 4;do
+ if bash tools/qwen_kv_die/kvs_emb_ctx_bench.sh "$out/m$m" "$m";then echo "FAIL mutant$m unexpectedly passes";exit 1;fi
+ grep "^KVS_EMB_CTX FAIL" "$out/m$m/m$m.log"
+ done
 elif [[ $group == calendar ]];then
  python3 tools/qwen_kv_die/kvjc3_pc_chain.py --ctrl-lat 92 --out "$out/model"
  S=rtl/qwen_sys/static_kv_20261014

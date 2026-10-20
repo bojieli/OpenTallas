@@ -6,11 +6,11 @@ ylog=list((work/'logs/asap7').glob('*/base/1_1_yosys_canonicalize.log'));assert 
 libs=sorted(set(re.findall(r'Executing Liberty frontend: (.+)',ylog[0].read_text())))
 assert len(libs)>=6,libs
 image=subprocess.check_output(['docker','image','inspect','openroad/orfs:latest','--format','{{.Id}}'],text=True).strip()
-mount=['docker','run','--rm','--memory=4g','--memory-swap=4g','-v',str(p/'src')+':/src:ro','-v',str(work)+':/work:ro','-v',str(o)+':/out',image]
+mount=['docker','run','--rm','--memory=4g','--memory-swap=4g','-v',str(p/'src')+':/src:ro','-v',str(work)+':/work:ro','-v',str(o)+':/out','-v',str(p/'cl')+':/cl:ro',image]
 args=['python3','/out/tools/ref_tile/native_census.py','--netlist','/work/'+str((base/'6_final.v').relative_to(work)),'--top','qkd_embedding_row_tx_ctx_native32','--out','/out/native_final.json']
 for lib in libs:args+=['--liberty',lib]
 r=subprocess.run(mount+args,capture_output=True,text=True);(o/'native_final.log').write_text(r.stdout+r.stderr);print('NATIVE',r.returncode,r.stdout[-600:],flush=True)
-s='source /src/physical/common_flow/native_pg_binding.tcl\nread_db /work/'+str((base/'6_final.odb').relative_to(work))+'\n'
+s='source /cl/native_pg_binding.tcl\nread_db /work/'+str((base/'6_final.odb').relative_to(work))+'\n'
 s+=r'''
 ot_pg_audit_snapshot [ord::get_db_block] /out/pg_final.json
 set f [open /out/net_geometry.tsv w]
@@ -51,6 +51,7 @@ exit
 '''
 (o/'final.tcl').write_text(s)
 r2=subprocess.run(mount+['/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad','-no_init','-exit','/out/final.tcl'],capture_output=True,text=True);(o/'final.log').write_text(r2.stdout+r2.stderr);print(r2.stdout[-2000:],r2.stderr[-1000:],flush=True)
-files=[base/'6_final.odb',base/'6_final.v',base/'6_final.sdc',base/'6_final.spef',p/'src/rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx_native32.sv',p/'cl/helper_overlay_plan.json']
+files=[base/'6_final.odb',base/'6_final.v',base/'6_final.sdc',base/'6_final.spef',p/'cl/native_pg_binding.tcl',p/'cl/helper_overlay_plan.json']
+plan=json.loads((p/'cl/helper_overlay_plan.json').read_text());entry=[x for x in plan['files'] if x['path']=='physical/common_flow/native_pg_binding.tcl'];assert len(entry)==1;assert hashlib.sha256((p/'cl/native_pg_binding.tcl').read_bytes()).hexdigest()==entry[0]['sha256']
 (o/'identity.json').write_text(json.dumps(dict(source_commit='801bce13604f1a7d7113415ba3508af43296ad28',image=image,base=str(base),liberty=libs,files=[dict(path=str(f),sha256=hashlib.sha256(f.read_bytes()).hexdigest()) for f in files],geometry_scope='conservative signal-net bounding boxes include complete incident instance rectangles and port shapes; not route-wire-length or parent-crossing qualification'),indent=2)+'\n')
 raise SystemExit(max(r.returncode,r2.returncode))
