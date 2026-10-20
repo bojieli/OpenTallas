@@ -1,0 +1,3 @@
+# Original mu5r GRT failure snapshot
+
+Copied read-only05:07PT fromep7 /srv/opentallas-scratch/claude/s81-mu5/case_mu5r. GRTextra30 terminalFAIL4090822overflow, wire506715024um,4076979nets,runtime16978s. Perlayers M2 1038688/M3 554430/M4 1242834/M5 553686/M6 502034/M7 199150. Process2134815 remainsLIVE postGRTresize7687/blocked6748; STA/clock not yetterminal at05:07. Originalchain/bytes unchanged, no retry. run.log is a timestampedsnapshot of stillgrowing original; manifest pins collectedbytes. die.v hash pinsremote frozen copiedsource only (not duplicated inthispacket). Do not inferfullchainterminal fromGRTFAIL or laterprocessRC0.

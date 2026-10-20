@@ -1,0 +1,381 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1R03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1L01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_lk_WN1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_15.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1L13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2R10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6L01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_562_WE.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_562_EW.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7R11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_5S.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_512_EW.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_05.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0L11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4L12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6R11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5R10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0L13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_276_SN.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7L03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6R10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_04.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0R10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_08.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_07.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4L10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_3N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvland_70.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_14.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7L13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6R13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_04.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_08.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4R01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1R10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2R12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3R11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_512_WE.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3L11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_lk_WS1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5L03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_0N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_70_SN.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1R02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_6N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3L10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0L12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_6S.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_3S.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_70_NS.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5R03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2R03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2L00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0R02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4R03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6L12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7L02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7R00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6L00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_0S.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5L10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4L01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_276_NS.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_15.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_09.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5R12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1R13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7L10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0L01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6L11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_682_EW.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1R11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5R00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4L03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_276_EW.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7R01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_lk_EN1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3R03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_7S.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6L02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_276_WE.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1R01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_gunit.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_7N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5L13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_09.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5R02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7R13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5L01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_lk_WS0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_07.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6L10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2L13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4L11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5L11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7L12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2R01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2L11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_06.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_2N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5L02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0L02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_bk_sel.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsdv_bk_col.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvland_276l.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_lk_WN0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5R11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_seqhost.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_682_WE.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0L00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7L01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2L10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3R10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_06.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1L00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7R10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_lk_ES0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6R01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0L10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2L12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2L02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_lk_ES1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0R12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_rly_1_WN.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6R03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4L13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6R02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0R01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4R02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6R12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_5N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_14.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2R02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3L13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4R12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0R00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4R10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3R01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_562_SN.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6L13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2L03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2R13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7L11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7L00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1L03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4R11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6L03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_4S.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvland_562.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvland_512.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1R00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5L12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3L01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3L12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_lk_EN0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0R11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7R12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0R03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7R02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3L02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_1S.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3R02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_4N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4L02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1L12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1L10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0L03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3R13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_1N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1R12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2L01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvland_276.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_0R13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_6R00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_7R03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_s_2S.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1L11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_ctrl_12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvrlyh_682_NS.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3R12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_3L03.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_1L02.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_4R13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5R01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvland_682.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_5R13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_f_2R11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_phy_hbm.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/rv_rsv_05.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/views/dsfd_dvland_pvrd.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_276_EW.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_276_EW.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_512_WE.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_512_WE.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_70_NS.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_70_NS.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_682_NS.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_682_NS.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_562_WE.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_562_WE.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_276_WE.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_276_WE.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_276_SN.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_276_SN.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_682_EW.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_682_EW.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_276_NS.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_276_NS.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_562_EW.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_562_EW.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_562_SN.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_562_SN.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_70_SN.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_70_SN.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_512_EW.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_512_EW.lib line 98, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_682_WE.lib line 78, timing group from output port.
+[WARNING STA-1212] /work/views/dsfd_dvrlyh_682_WE.lib line 98, timing group from output port.
+[INFO IFP-0001] Added 92584 rows of 591969 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 31968.500 25000.000 ) um
+[INFO IFP-0101] Core BBox: (  1.080  1.080 ) ( 31967.406 24998.760 ) um
+[INFO IFP-0102] Core area:                    799083988.124 um^2
+[INFO IFP-0103] Total instances area:         613401904.271 um^2
+[INFO IFP-0104] Effective utilization:                0.768
+[INFO IFP-0105] Number of instances:                  12971
+OT_PLACE_S 0 insts 12971
+OT_CLUSTER_LEGAL_MODE snap gsites=54.81
+OT_CLUSTER_SNAP_LEGAL std_cells=4258 moved=4258 still_on_macro=0
+OT_CLUSTER_LEGAL place
+OT_DIE_REP spread placed=3962 unplaced=0 util=0.30/0.60 hard=24 on_obstacle=643 bin_um=8.64 bins=3615 full=0 max_ring=6 mean_disp_um=7.60 max_disp_um=61.04 s=5
+OT_TIES placed=3962 noload=0 unplaced=0
+OT_SPECIAL_TOP_NETS 9053
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz line 34, library asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 already exists.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib line 35, library asap7sc7p5t_SEQ_RVT_TT_nldm_220123 already exists.
+OT_DIE_REP pre instances=12971 masters=209
+OT_DIE_REP skip nets=9553 (sigtype 9053, clock pins 3893; repeated forwarded clocks 3393) dont_touch=9553
+OT_DIE_REP long wires (odb census) scanned=1257503 port_nets=0 longest_um=5568.6 over_reach(405)=29188
+[WARNING RSZ-0065] max wire length less than 226u increases wire delays.
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |   1427568
+    final |     +0.1% |       0 | 2818987 |       1086739 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 856778 slew violations.
+[INFO RSZ-0036] Found 215190 capacitance violations.
+[INFO RSZ-0037] Found 1086700 long wires.
+[INFO RSZ-0038] Inserted 2818987 buffers in 1086739 nets.
+[INFO RSZ-0504] Runtime: 468.66s
+OT_DIE_REP corridor macros=8713 chains=1082774 moved=2803102 trees=4603 port_rooted=0 all_blocked=0 max_seg_um=4112.1 seg>reach(405)=17540 seg>1.25*max_wire=17721 s=9391
+OT_DIE_REP spread placed=2818987 unplaced=0 util=0.30/0.60 hard=267219 on_obstacle=3255 bin_um=8.64 bins=1409401 full=2295 max_ring=97 mean_disp_um=34.87 max_disp_um=841.81 s=982
+OT_DIE_REP WARNING repeater displaced 841.8 um > max_wire/2 = 80.0 um by the spread: a die lane likely runs over a block (check the plan path; post-GRT slew decides)
+OT_DIE_REP post-legal segments scanned=4076490 longest_um=4626.6 over_reach(405)=17918
+OT_DIE_REP post-repair violators slew=18986 cap=19997 (on untouched clock/reset/skip nets: 404)
+OT_DIE_REP PASS repeaters=2818987 violations=0 over_reach=29188 post_seg_over_reach=17918 legalize=(spread util=0.30 bin_um=8.64 passes=2818987 unplaced=0) s=16105
+OT_DIE_REP_FCLK fclk_nets=3393 broadcast_nets=0 hops=3393 judged=3393 mismatch_over_1=0 pairing_errors=0 vacuous=0
+OT_DIE_REP_FCLK_EQ hops=0 buffers=0 unfixable=0 unplaced=0
+OT_DIE_REP_FCLK fclk_nets=3393 broadcast_nets=0 hops=3393 judged=3393 mismatch_over_1=0 pairing_errors=0 vacuous=0
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.6400  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.6400  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.1100
+[INFO GRT-0003] Macros: 8713
+[INFO GRT-0004] Blockages: 5251445
+[INFO GRT-0019] Found 444 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 7
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal   30265327      14128330          53.32%
+M3         Vertical     30232381      14638888          51.58%
+M4         Horizontal   398873975      280777063          29.61%
+M5         Vertical     402259836      282312283          29.82%
+M6         Horizontal   304967067      243968767          20.00%
+M7         Vertical     306545163      245214974          20.01%
+M8         Horizontal   1040309171      1040309171          0.00%
+M9         Vertical     1040171815      1040171815          0.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[INFO GRT-0102] Start extra iteration 19/30
+[INFO GRT-0102] Start extra iteration 20/30
+[INFO GRT-0102] Start extra iteration 21/30
+[INFO GRT-0102] Start extra iteration 22/30
+[INFO GRT-0102] Start extra iteration 23/30
+[INFO GRT-0102] Start extra iteration 24/30
+[INFO GRT-0102] Start extra iteration 25/30
+[INFO GRT-0102] Start extra iteration 26/30
+[INFO GRT-0102] Start extra iteration 27/30
+[INFO GRT-0102] Start extra iteration 28/30
+[INFO GRT-0102] Start extra iteration 29/30
+[INFO GRT-0102] Start extra iteration 30/30
+[INFO GRT-0197] Via related to pin nodes: 23845789
+[INFO GRT-0198] Via related Steiner nodes: 2507
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 32681970
+[INFO GRT-0112] Final usage 3D: 145410069
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2            14128330       2117008           14.98%            99 /  0 / 1038688
+M3            14638888       2473273           16.90%             0 / 118 / 554430
+M4           280777063       17491601            6.23%            220 /  0 / 1242834
+M5           282312283       19481751            6.90%             1 / 393 / 553686
+M6           243968767       3308468            1.36%            115 /  0 / 502034
+M7           245214974       2491989            1.02%             0 / 113 / 199150
+M8           1040309171            69            0.00%             0 /  0 /  0
+M9           1040171815             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        -1133446005       47364159           -4.18%            435 / 624 / 4090822
+
+[INFO GRT-0018] Total wirelength: 506715024 um
+[INFO GRT-0014] Routed nets: 4076979
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+[INFO GRT-0303] Global routing runtime = 04:42:58
+OT_GRT_S 16978
+OT_DIE_REP post-GRT resize: resized=7687 blocked=6748 driver_not_a_repeater=16588 at_ladder_top=0
