@@ -1,0 +1,112 @@
+{
+ "name": "qfd_dv_s5_red",
+ "top": "qfd_dv_s5_red",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_sfu_q.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_vreduce.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 151.2,
+  "h": 151.2
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n",
+   "l_ov",
+   "l_out",
+   "l_red0",
+   "l_redsq0",
+   "l_last0",
+   "l_raddr0"
+  ],
+  "S": [
+   "red_we",
+   "red_addr",
+   "red_data",
+   "rd_v",
+   "busy",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "pin_regs": {
+  "enable": true
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: qfd_dv_s5_rst2 (rs1 -> rs2) then the su8 control reset register rc"
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:QW-SLICE6-SCRED",
+  "branch": "claude/qw-slice6-scred-1019",
+  "tag": "s5red",
+  "purpose": "QW-SLICE6 Q.STA.SLICE.2 new leaf: the SU reducer (rd_* + ot_hdc_vreduce SW 8 LV 4, R-ARITH) of the hardened one-level slice",
+  "extra_paths": [
+   "rtl",
+   "tools/hdc_golden.py",
+   "tools/hdc_program.py",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros_v2"
+  ],
+  "benches": [
+   {
+    "name": "s5_flat0_eq",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/eq eq 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "S5_EQ PASS"
+   },
+   {
+    "name": "s5_flat0_b2",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/b2 b2 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "bench2 \\(o\\) MUT=0: PASS"
+   },
+   {
+    "name": "s5_mut_red",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/m eq red",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "S5_EQ FAIL",
+    "fail_witness": "results/arch/qw_slice6_1019/witness/red_mut.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_s5_red/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_s5_red"
+ }
+}
