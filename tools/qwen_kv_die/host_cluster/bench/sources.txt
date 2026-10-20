@@ -121,6 +121,9 @@ rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_ctrl_token_service_packet_co
 rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_link_rr.sv
 rtl/qwen_sys/host_cluster_20261017/peer_rr/qkd_host_peer_root_mux_pl_rr.sv
 rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd.sv
+rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_ctrl_token_service_packet_collected_pd2.sv
+rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_peer_coordinator_codec_pd.sv
+rtl/qwen_sys/host_cluster_20261017/peer_pd/qkd_host_tp8_coordinator_pd.sv
 rtl/test/qwen_host/tb_hkv_peer_pd_equiv.sv
 rtl/qwen_sys/host_cluster_20261017/prompt_pd/ot_hkv_cnt_la.sv
 rtl/qwen_sys/host_cluster_20261017/prompt_pd/ot_host_if_pb2_observed_pd.sv

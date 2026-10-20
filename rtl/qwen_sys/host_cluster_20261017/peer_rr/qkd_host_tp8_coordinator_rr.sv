@@ -5,7 +5,9 @@
 // the member's reset, spread over its flops at synthesis by physical/common_flow/ot_rst_split.tcl (<= ~200 loads a copy).
 // Assert asynchronous and immediate, RELEASE 3 ck_codec edges after the pin, as every reset consumer of the child.
 // rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv is unchanged.  QKD_HR_PE_RR_MUTANT (bench only): relays bypassed.
+// inner member qkd_host_tp8_coordinator_pd (same ports; see its header / generator).
 // Input stage (+1 ck_codec edge): engine_result_v, engine_result_tag, engine_result_gen, engine_result_done, engine_result_fault, engine_result_cause, engine_result_token, engine_result_value, engine_result_cycles.  QKD_HR_PE_STAGE_MUTANT (bench only): stage bypassed.
+// Output stage (+1 ck_codec edge): dispatch_valid.  QKD_HR_PE_STAGE_MUTANT (bench only): stage bypassed.
 module qkd_host_tp8_coordinator_rr(
  input wire ck_codec,
  input wire ck_lifecycle,
@@ -120,7 +122,18 @@ module qkd_host_tp8_coordinator_rr(
  assign engine_result_value_s = engine_result_value_r;
  assign engine_result_cycles_s = engine_result_cycles_r;
 `endif
- qkd_host_tp8_coordinator  u_m(
+ // KV-HOST/PEER r6 output stage: one plain register per listed output (no reset), +1 ck_codec edge
+ wire dispatch_valid_m;
+ reg dispatch_valid_o;
+ always @(posedge ck_codec) begin
+  dispatch_valid_o <= dispatch_valid_m;
+ end
+`ifdef QKD_HR_PE_STAGE_MUTANT
+ assign dispatch_valid = dispatch_valid_m;
+`else
+ assign dispatch_valid = dispatch_valid_o;
+`endif
+ qkd_host_tp8_coordinator_pd  u_m(
   .ck_codec(ck_codec),
   .ck_lifecycle(ck_lifecycle),
   .ck_post(ck_post),
@@ -146,7 +159,7 @@ module qkd_host_tp8_coordinator_rr(
   .allocated_valid(allocated_valid),
   .allocated_delivered(allocated_delivered),
   .engine_admit_ready(engine_admit_ready),
-  .dispatch_valid(dispatch_valid),
+  .dispatch_valid(dispatch_valid_m),
   .dispatched(dispatched),
   .cohort_tag(cohort_tag),
   .cohort_gen(cohort_gen),

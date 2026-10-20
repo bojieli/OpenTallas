@@ -34,6 +34,18 @@ KV-PEER5 r5 (REFILL-1330 10-19, SAFE-AUDIT-KV: r4 checklist fails 3/4/7):
      one edge in the bench, every output every edge); QKD_HR_PE_STAGE_MUTANT bypasses the stages (must FAIL).
  (c) the root mux wrapper's inner member is qkd_host_peer_root_mux_pl2 (registered one-hot TX grant + RX/TX slices).
 
+KV-HOST/PEER r6 (10-19; r5 gate dece9760a CTS-stage STA wns -135.2 / tns -142.4 ns over 2,806 endpoints, SAFE item 4):
+ (d) the token service wrapper's inner member is _pd2 (peer_pd/qkd_host_ctrl_token_service_packet_collected_pd2.sv:
+     data-only head flags, parallel per-source sequence compares, one-edge-ahead status_changed, delayed output arrays
+     tk8/kst8/boot8/seen/service_epoch8 (+1 edge) with registered one-hot KEPT enable copies; bench peer_pd2_equiv.sh);
+ (e) the coordinator wrapper's inner member is qkd_host_tp8_coordinator_pd (class9 codec _pd: allocation stage +1 edge and
+     a registered per-rank allocation-change test; bench rtl/test/qwen_host/hr_peer_codec_pd_1019);
+ (f) OUTPUT STAGE (STAGE_OUT): listed member outputs pass one plain register before the wrapper port (+1 edge):
+     coordinator dispatch_valid (cohort compare -> E-face pin flop -76.1 ps; an observation level: the cohort's own
+     handshake with engine_admit_ready (a level) stays inside the member, dispatched is unchanged).
+ The stage bench reference is the INNER member (so the bench checks only the wrapper: relays + stages); the inner
+ forks carry their own benches.
+
 usage: gen_peer_rr.py [--check]      (writes rtl/qwen_sys/host_cluster_20261017/peer_rr/*_rr.sv and the stage benches)
 """
 import re
@@ -57,7 +69,9 @@ WRAP = {
 }
 # HKV-PROMPT6 (10-19): the relay wrapper's inner member is the bit/cycle-exact timing fork of gen_peer_pd.py
 # KV-PEER5 (10-19): the root mux wrapper's inner member is _pl2 (same ports as _pl / the source)
-INNER = {'qkd_host_ctrl_token_service_packet_collected': 'qkd_host_ctrl_token_service_packet_collected_pd',
+# KV-HOST/PEER r6 (10-19): token service -> _pd2, coordinator -> _pd (codec allocation stage)
+INNER = {'qkd_host_ctrl_token_service_packet_collected': 'qkd_host_ctrl_token_service_packet_collected_pd2',
+         'qkd_host_tp8_coordinator': 'qkd_host_tp8_coordinator_pd',
          'qkd_host_peer_root_mux_pl': 'qkd_host_peer_root_mux_pl2'}
 # KV-PEER5: relay copies per reset pin, sized from the PRE-optimisation async loads the synthesis hook counts
 # (r5 canonicalize, ot_rst_split.tcl; they run 1.3-4x the final-netlist count), <= ~235 a copy
@@ -78,6 +92,8 @@ STAGE = {
                                  'links_drained', 'link_reset_seen', 'retrained', 'program_ready', 'program_epoch',
                                  'program_digest'],
 }
+# KV-HOST/PEER r6: member outputs registered one edge in the wrapper (see (f) above)
+STAGE_OUT = {'qkd_host_tp8_coordinator': ['dispatch_valid']}
 BENCH = ROOT / 'rtl/test/qwen_host/hr_peer_stage_1019'
 # flat member type -> wrapper type (gen_cluster --wrap-only + bench/flat_wraps.json)
 WRAPS = {
@@ -130,7 +146,10 @@ def wrapper(mod, src, ck, rsts):
     ptxt = (' #(\n  ' + ',\n  '.join(' '.join(x.split()) for x in G.split_top(params) if x.strip()) + '\n)') if pn else ''
     decl = ',\n '.join(f'{d} wire {r + " " if r else ""}{n}' for d, r, n in ps)
     pass_p = ('#(' + ','.join(f'.{n}({n})' for n in pn) + ')') if pn else ''
-    conns = ',\n  '.join(f'.{n}({n + "_q" if n in rsts else (n + "_s" if n in stage else n)})' for n in names)
+    so = STAGE_OUT.get(mod, [])
+    assert all(pdir.get(s, ('',))[0] == 'output' for s in so), (mod, so)
+    conns = ',\n  '.join(f'.{n}({n + "_q" if n in rsts else (n + "_s" if n in stage else (n + "_m" if n in so else n))})'
+                          for n in names)
     lps = re.findall(r'\blocalparam\s+(?:integer\s+)?(\w+)\s*=\s*([^;]+);', body)
     used, rng = [], ' '.join(r for _, r, _ in ps)
     for nm, ex in lps:
@@ -152,6 +171,14 @@ def wrapper(mod, src, ck, rsts):
                f' always @(posedge {ck}) begin\n' + ''.join(f'  {s}_r <= {s};\n' for s in stage) + ' end\n'
                '`ifdef QKD_HR_PE_STAGE_MUTANT\n' + ''.join(f' assign {s}_s = {s};\n' for s in stage) + '`else\n' +
                ''.join(f' assign {s}_s = {s}_r;\n' for s in stage) + '`endif\n')
+    sto = ''
+    if so:
+        sto = (f' // KV-HOST/PEER r6 output stage: one plain register per listed output (no reset), +1 {ck} edge\n' +
+               ''.join(f' wire {pdir[s][1] + " " if pdir[s][1] else ""}{s}_m;\n reg {pdir[s][1] + " " if pdir[s][1] else ""}{s}_o;\n'
+                       for s in so) +
+               f' always @(posedge {ck}) begin\n' + ''.join(f'  {s}_o <= {s}_m;\n' for s in so) + ' end\n'
+               '`ifdef QKD_HR_PE_STAGE_MUTANT\n' + ''.join(f' assign {s} = {s}_m;\n' for s in so) + '`else\n' +
+               ''.join(f' assign {s} = {s}_o;\n' for s in so) + '`endif\n')
     copies = ', '.join(f'{r} x{kk[r]}' for r in rsts)
     return f"""`timescale 1ns/1ps
 // GENERATED by tools/qwen_kv_die/host_cluster/gen_peer_rr.py (KV-HROOT-PEER 10-18, KV-PEER5 r5 10-19) -- do not edit.
@@ -160,13 +187,14 @@ def wrapper(mod, src, ck, rsts):
 // the member's reset, spread over its flops at synthesis by physical/common_flow/ot_rst_split.tcl (<= ~200 loads a copy).
 // Assert asynchronous and immediate, RELEASE 3 {ck} edges after the pin, as every reset consumer of the child.
 // {src} is unchanged.  QKD_HR_PE_RR_MUTANT (bench only): relays bypassed.{inner_note}
-""" + (f"// Input stage (+1 {ck} edge): {', '.join(stage)}.  QKD_HR_PE_STAGE_MUTANT (bench only): stage bypassed.\n" if stage else '') + f"""module {mod}_rr{ptxt}(
+""" + (f"// Input stage (+1 {ck} edge): {', '.join(stage)}.  QKD_HR_PE_STAGE_MUTANT (bench only): stage bypassed.\n" if stage else '') + (
+        f"// Output stage (+1 {ck} edge): {', '.join(so)}.  QKD_HR_PE_STAGE_MUTANT (bench only): stage bypassed.\n" if so else '') + f"""module {mod}_rr{ptxt}(
  {decl}
 );
 {lp}{rel}`ifdef QKD_HR_PE_RR_MUTANT
 {mut}`else
 {rly}`endif
-{stg} {inner} {pass_p} u_m(
+{stg}{sto} {inner} {pass_p} u_m(
   {conns});
 endmodule
 """
@@ -178,6 +206,8 @@ def stage_bench(mod, src, ck, rsts):
     body, params, plist = header(src, mod)
     ps = G.ports(plist)
     stage = STAGE[mod]
+    so = STAGE_OUT.get(mod, [])
+    inner = INNER.get(mod, mod)
     clks = [n for d, r, n in ps if d == 'input' and re.fullmatch(r'ck\w*|clk', n)]
     ins = [(r, n) for d, r, n in ps if d == 'input' and n not in clks and n not in rsts]
     outs = [(r, n) for d, r, n in ps if d == 'output']
@@ -190,8 +220,9 @@ def stage_bench(mod, src, ck, rsts):
     tb = f'tb_{mod}_stage'
     L = [f"`timescale 1ns/1ps",
          f"// GENERATED by tools/qwen_kv_die/host_cluster/gen_peer_rr.py (KV-PEER5 10-19) -- do not edit.",
-         f"// {mod}_rr (relay copies + input stage) vs the unchanged {mod} with the same ot_rst_relay and the inputs",
-         f"// {', '.join(stage)} delayed one edge here.  Every output compared after every edge (4-state !==).",
+         f"// {mod}_rr (relay copies + input stage) vs its inner member {inner} with the same ot_rst_relay and the inputs",
+         f"// {', '.join(stage)} delayed one edge here" + (f" (outputs {', '.join(so)} of the inner member delayed one edge here)" if so else '') + ".",
+         "// Every output compared after every edge (4-state !==).",
          f"module {tb};",
          " parameter integer NCYC=200000, SEED=1019;",
          " reg ck=0; reg rst=0; always #5 ck=~ck;"]
@@ -209,9 +240,12 @@ def stage_bench(mod, src, ck, rsts):
         c += [f'.{n}({n + "_d" if (ref and n in stage) else n})' for _, n in ins]
         c += [f'.{n}({pref}_{n})' for _, n in outs]
         return ','.join(c)
-    L.append(f" {mod} ua({conn('a', True)});")
+    L.append(f" {inner} ua({conn('a', True)});")
+    for s in so:
+        r = dict((n, rr) for rr, n in outs)[s]
+        L.append(f" reg {r + ' ' if r else ''}a_{s}_d; always @(posedge ck) a_{s}_d <= a_{s};")
     L.append(f" {mod}_rr ub({conn('b', False)});")
-    va = ','.join(f'a_{n}' for _, n in outs)
+    va = ','.join(f'a_{n}_d' if n in so else f'a_{n}' for _, n in outs)
     vb = ','.join(f'b_{n}' for _, n in outs)
     L.append(f" wire [{sum(w(r) for r, _ in outs) - 1}:0] va={{{va}}}, vb={{{vb}}};")
     L.append(" integer seed, cyc, mism=0, first=-1, resets=0, act=0;")

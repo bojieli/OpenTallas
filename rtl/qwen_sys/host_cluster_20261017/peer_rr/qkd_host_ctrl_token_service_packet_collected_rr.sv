@@ -5,7 +5,7 @@
 // the member's reset, spread over its flops at synthesis by physical/common_flow/ot_rst_split.tcl (<= ~200 loads a copy).
 // Assert asynchronous and immediate, RELEASE 3 ck edges after the pin, as every reset consumer of the child.
 // rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv is unchanged.  QKD_HR_PE_RR_MUTANT (bench only): relays bypassed.
-// inner member qkd_host_ctrl_token_service_packet_collected_pd (same ports; see its header / generator).
+// inner member qkd_host_ctrl_token_service_packet_collected_pd2 (same ports; see its header / generator).
 module qkd_host_ctrl_token_service_packet_collected_rr #(
   parameter integer DIE=0,
   MUT=0,
@@ -96,7 +96,7 @@ module qkd_host_ctrl_token_service_packet_collected_rr #(
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_por_n(.clk(ck),.rst_n_in(por_n),.rst_n(por_n_qv));
  ot_rst_relay #(.REGIONS(12),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay_rst_n(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_n_qv));
 `endif
- qkd_host_ctrl_token_service_packet_collected_pd #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN)) u_m(
+ qkd_host_ctrl_token_service_packet_collected_pd2 #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN)) u_m(
   .ck(ck),
   .rst_n(rst_n_q),
   .die_id(die_id),
