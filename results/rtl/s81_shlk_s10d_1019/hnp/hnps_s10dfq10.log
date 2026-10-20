@@ -1,0 +1,9 @@
+case raw FAIL descs=1 fenced=1 hing=FAIL vis_err=0 ck_cycles=1074
+case v41_win FAIL descs=1 fenced=1 hing=FAIL vis_err=0 ck_cycles=9288
+case raw_fenced_b2b FAIL descs=8 fenced=8 hing=FAIL vis_err=0 ck_cycles=538
+case raw_fenced_mixed FAIL descs=10 fenced=6 hing=FAIL vis_err=0 ck_cycles=639
+case raw_fenced_stall FAIL descs=8 fenced=6 hing=FAIL vis_err=0 ck_cycles=1282
+case raw_b16 FAIL descs=5 fenced=4 hing=FAIL vis_err=0 ck_cycles=722
+case ikey_cross_sb FAIL descs=1 fenced=1 hing=FAIL vis_err=0 ck_cycles=4634
+case raw_fenced_stall_boot FAIL marks=1 mark_bad=0
+HNP_NEG_DETECTED

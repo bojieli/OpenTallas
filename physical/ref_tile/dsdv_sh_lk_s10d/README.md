@@ -15,8 +15,9 @@ KEPT register copies. Same values on the same edges; no edge added (HSH 8, MU-DI
 | p_wv && fq_wr == e -> fq[e] (288 flops), 4 x OR3 558 | rtl/hdc/ingest/ot_hdc_kv_ingest.sv g_sp | 9 copies `p_wv_c` + 9 one-hot write-pointer copies `fq_wh` (32 b each); `fq_nz` = registered fq_n != 0 (pop / sp_acc enable; the s10c GRT worst endpoint was sp_acc[31] -40.5 ps @770) |
 
 Simulation guards (`ifndef SYNTHESIS`): every copy is checked against its master each cycle ($fatal on divergence).
-Mutants: seqhost 22 `OT_S81_SH_MUT_S10DOX` (ox payload enable copy 2 stuck 0), 23 `OT_S81_SH_MUT_S10DHW` (svc payload
-copy 4 decodes we 0), 24 `OT_ING_MUT_S10DFQ` (fq write-pointer copy 5 stalls); hnp s10dox10 / s10dfq10. Seqhost 14
+Mutants: hnp s10dox10 `OT_S81_SH_MUT_S10DOX` (ox payload enable copy 2 stuck 0; seqhost 22 builds but its stream leaves
+o_d bits 58..86 constant, so it is not exercised there), seqhost 23 `OT_S81_SH_MUT_S10DHW` (svc payload
+copy 4 decodes we 0), 24 `OT_ING_MUT_S10DFQ` (fq write-pointer copy 5 stalls; also hnp s10dfq10). Seqhost 14
 (HQSTALE) has an s10d form (pop-edge emit). Witnesses: results/rtl/s81_shlk_s10d_1019.
 
 ---

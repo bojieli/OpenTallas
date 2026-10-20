@@ -51,9 +51,10 @@ case "${VL_EXTRA:-}" in *OT_S81_SH_S10B*) MUTS="$MUTS 16 19";; esac
 # 21 = registered issue counter also counts the IKEY scale-capture step (p_sc), so done counts run high
 # (20 / 21 are not exercised here -- the seqhost stream base/offset pairs and done timing do not expose them; they are
 # caught by physical/sys_takeover/host_native_pipe_bench.py s10cwa10 / s10ciss10 with HNP_S10B=1 HNP_S10C=1)
-# S81-SHLK s10d (VL_EXTRA has -DOT_S81_SH_S10D): kept enable copies; 22 = die-face ox payload enable copy 2 stuck 0,
-# 23 = svc stack-write payload copy 4 decodes we 0 (slice dropped), 24 = output-FIFO write-pointer copy 5 stalls
-case "${VL_EXTRA:-}" in *OT_S81_SH_S10D*) MUTS="$MUTS 22 23 24";; esac
+# S81-SHLK s10d (VL_EXTRA has -DOT_S81_SH_S10D): kept enable copies; 23 = svc stack-write payload copy 4 decodes we 0
+# (slice dropped), 24 = output-FIFO write-pointer copy 5 stalls.  (22 = die-face ox payload enable copy 2 stuck 0 is not
+# exercised here -- the seqhost stream leaves o_d bits 58..86 constant; caught by host_native_pipe_bench.py s10dox10)
+case "${VL_EXTRA:-}" in *OT_S81_SH_S10D*) MUTS="$MUTS 23 24";; esac
 if [ "${3:-}" = base ]; then
   build base || exit 2
   for seed in $SEEDS; do
