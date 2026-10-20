@@ -2,6 +2,8 @@
 set -euo pipefail
 G=${1:?graph output directory}
 G=$(cd "$G" && pwd)
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
+cd "$ROOT"
 O=$G/verify
 mkdir -p "$O"
 # Functional primitive models come from exactly the mapped RVT TT libraries.

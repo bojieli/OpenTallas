@@ -14,7 +14,13 @@ import json
 from pathlib import Path
 
 
-def bound(data, top, limit=24):
+class ReplicationFrontier(AssertionError):
+    def __init__(self, report):
+        self.report=report
+        super().__init__(report['reason']+' '+json.dumps(report))
+
+
+def bound(data, top, limit=24, clock_ports=('clk',)):
     m=deepcopy(data['modules'][top])
     original=deepcopy(m['cells'])
     aliases={}
@@ -45,15 +51,14 @@ def bound(data, top, limit=24):
     for n,c in cells.items():
         outs=[b for p,bs in c['connections'].items()
               if c['port_directions'][p]=='output' for b in bs]
-        assert len(outs)==1,(n,c['type'],'requires single-output primitive')
-        drivers[outs[0]]=n;families[outs[0]]=outs[0]
+        for b in outs:drivers[b]=n;families[b]=b
         inputs[n]={p:[norm(b) for b in bs] for p,bs in c['connections'].items()
                    if c['port_directions'][p]=='input'}
     outputs={p:[norm(b) for b in v['bits']] for p,v in m['ports'].items()
              if v['direction']=='output'}
     nextbit=max([b for c in cells.values() for bs in c['connections'].values()
                  for b in bs if isinstance(b,int)]+[1])+1
-    clock=set(m['ports']['clk']['bits'])
+    clock={b for p in clock_ports for b in m['ports'].get(p,{}).get('bits',[])}
     clones=0
     while True:
         loads=defaultdict(list)
@@ -68,8 +73,19 @@ def bound(data, top, limit=24):
         bad=[(len(s),b,s) for b,s in loads.items() if len(s)>limit]
         if not bad:break
         _,b,sinks=max(bad)
-        assert b in drivers,('unregistered port needs RTL distribution',b,len(sinks))
+        if b not in drivers:
+            ports=[p+'[%d]'%i for p,v in m['ports'].items() if v['direction']=='input'
+                   for i,pb in enumerate(v['bits']) if norm(pb)[0]==b]
+            raise ReplicationFrontier(dict(reason='unregistered port needs RTL distribution',
+                net=b,ports=ports,loads=len(sinks),limit=limit,clones_so_far=clones,
+                cells_so_far=len(cells),original_cells=len(original)))
         src=drivers[b];cell=cells[src]
+        outbits=[ob for p,bs in cell['connections'].items()
+                 if cell['port_directions'][p]=='output' for ob in bs]
+        if len(outbits)!=1:
+            raise ReplicationFrontier(dict(reason='multi-output hard primitive needs explicit model/partition',
+                cell=src,type=cell['type'],net=b,loads=len(sinks),limit=limit,
+                clones_so_far=clones,cells_so_far=len(cells),original_cells=len(original)))
         outport=next(p for p in cell['connections'] if cell['port_directions'][p]=='output')
         for k in range(limit,len(sinks),limit):
             fresh=nextbit;nextbit+=1;clones+=1
@@ -143,9 +159,21 @@ def main():
     a.add_argument('mapped_json');a.add_argument('--top',required=True)
     a.add_argument('--name',required=True);a.add_argument('--out',required=True)
     a.add_argument('--limit',type=int,default=24)
+    a.add_argument('--clock-port',action='append',default=['clk'])
+    a.add_argument('--budget-only',action='store_true',help='report resource/frontier only, emit no RTL')
     args=a.parse_args()
     raw=Path(args.mapped_json).read_bytes();d=json.loads(raw)
-    m,c,i,o,origins,n=bound(d,args.top,args.limit)
+    try:
+        m,c,i,o,origins,n=bound(d,args.top,args.limit,args.clock_port)
+    except ReplicationFrontier as e:
+        Path(args.out+'.blocked.json').write_text(json.dumps(e.report,indent=2)+'\n')
+        print('SVC7_GRAPH BLOCKED '+json.dumps(e.report))
+        raise SystemExit(2)
+    if args.budget_only:
+        report=dict(status='bounded graph exists; MODEL ONLY',clones=n,
+                    original_cells=len(m['cells']),final_cells=len(c),limit=args.limit)
+        Path(args.out+'.budget.json').write_text(json.dumps(report,indent=2)+'\n')
+        print(json.dumps(report));return
     text=emit(m,c,i,o,args.name)
     Path(args.out).write_text(text)
     ledger=dict(source_sha256=hashlib.sha256(raw).hexdigest(),
