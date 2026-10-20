@@ -8,12 +8,13 @@
 // What changes (SAFE-DESIGN item 5: delay lines >= 3 deep become SRAM rings; no flop->flop hold chains):
 //   * operand/bank skew: the k operand and the bank select are SHARED by the 4 heads (chunk c of every head reads
 //     lanes 8c..8c+7), so the skew is built ONCE: one ring per lane position p = 2..7 (D = FPL*(p-1) = 4..24)
-//     holding the 4 lanes p, p+8, p+16, p+24 (4 x 18 b) + the bank (3 b) = 75 b -> 6 x ot_sram_1r1w_32x128_m1.
+//     holding the 4 lanes p, p+8, p+16, p+24 (4 x 18 b) + the bank (3 b) = 75 b -> 2 x ot_sram_1r1w_32x64_m1 each
+//     (the 32x128 macro's E/W pin faces would be ~9.6 pins/um).
 //     (old: 32 lanes x 18 b + 8 bank lines as flop chains, 2,148 bit-stages x up to 24.)
 //   * dequant-fault delay (FML 6, per lane, identical in the 4 heads) -> one shared 33 b ring (32 lanes + valid).
 //   * per head: the 28 chunk-chain and 3 tree fault delays (FPL 4) -> one 31 b ring per head; head 0's ring also
 //     carries the valid through the 9 sequential FPL stages (6 + 9 x 4 = 42 = LAT_CORE), so ov follows the data
-//     pipeline; no 42-deep valid chain.  Total 6 x 32x128 + 5 x 32x64 = 11 macros per group.
+//     pipeline; no 42-deep valid chain.  Total 17 x ot_sram_1r1w_32x64_m1 per group (12 skew + 1 dequant-fault + 4 fault).
 //   * fanout: every driver is bounded to <= 32 loads after synthesis by the SCC-aware mapped-graph replicator
 //     (tools/s81_dv/svc_rs/svc7_bound_graph.py, same input functions/clock/reset per copy); reset: the kit lands
 //     rst_n in 2 stages at the face and the replicator builds the equal-age leaf copies.
@@ -110,9 +111,13 @@ module ot_s81svc8_hgrp_s81 (
                 assign lo = li;
                 assign sk_bank[gp*BW +: BW] = d1_bank;
             end else begin : g_r
+                // two 32x64 rings per position (32x128 E/W faces would carry ~9.6 pins/um > 6): lanes p, p+8 + bank
+                // (39 b) and lanes p+16, p+24 (36 b), same D
                 wire [BW-1:0] bo;
-                ot_s81svc8_ring #(.W(4*18 + BW), .D(FPL * (gp - 1)), .M(128)) u_ring (
-                    .clk(clk), .rst_n(rst_l), .i({d1_bank, li}), .o({bo, lo}));
+                ot_s81svc8_ring #(.W(2*18 + BW), .D(FPL * (gp - 1)), .M(64)) u_ra (
+                    .clk(clk), .rst_n(rst_l), .i({d1_bank, li[0 +: 36]}), .o({bo, lo[0 +: 36]}));
+                ot_s81svc8_ring #(.W(2*18), .D(FPL * (gp - 1)), .M(64)) u_rb (
+                    .clk(clk), .rst_n(rst_l), .i(li[36 +: 36]), .o(lo[36 +: 36]));
 `ifdef SVC8_MUT_BANK
                 if (gp == 3) begin : g_mb
                     assign sk_bank[gp*BW +: BW] = sk_bank[2*BW +: BW];
