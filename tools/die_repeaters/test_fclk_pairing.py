@@ -138,3 +138,17 @@ def test_fclk_equalize_runs_before_the_audit():
     t = step.tcl_call('s81', '/work/die_repeaters.json', repeat_nets=['n*_fck*'], fclk_policy='fail', fclk_equalize=1)
     assert t.index('ot_die_rep_fclk_equalize') < t.index('set ot_die_rep_fb [ot_die_rep_fclk_audit')
     assert 'ot_die_rep_fclk_equalize' not in step.tcl_call('s81', '/work/die_repeaters.json', repeat_nets=['n*_fck*'])
+
+
+def test_shallow_payload_buffer_plan(tmp_path):
+    script = 'source {' + str(Path(__file__).with_name('fclk_audit.tcl')) + '}\n'
+    script += r'''
+foreach {clock depth expected} {3 1 1 3 2 0 3 3 0 1 3 0 0 0 0} {
+  set got [ot_die_rep_fclk_data_eq_plan $clock $depth]
+  if {$got != $expected} {error "plan clock=$clock data=$depth expected=$expected got=$got"}
+  if {$got > 0 && abs($clock - ($depth + $got)) > 1} {error "unbalanced"}
+}
+puts PASS
+'''
+    r = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+    assert r.returncode == 0 and 'PASS' in r.stdout and not r.stderr, r.stdout + r.stderr

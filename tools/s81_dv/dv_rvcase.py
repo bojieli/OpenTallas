@@ -373,6 +373,7 @@ def main():
     ap.add_argument('--pin-window', type=float, default=3.0)
     ap.add_argument('--die-repair', action='store_true')
     ap.add_argument('--dieflow-ref', default='origin/main')
+    ap.add_argument('--signal-top-layer', choices=('M7', 'M8'), default='M7', help='M8 is die signals only; M9 stays clock/PG')
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
     ap.add_argument('--corners', nargs='+', choices=('tt', 'ff', 'ss'), default=['tt', 'ff'])
     ap.add_argument('--congestion-iterations', type=int, default=30)
@@ -708,7 +709,7 @@ def main():
     no_model = [r['link'] for r in LP['links'] if r['link'] not in link_pins and f'ld_{r["link"]}' not in loc]
 
     # ------------------------------------------------------------------ GRT run
-    repair = DC.die_repair_tcl(out, a.dieflow_ref, skip=()) if a.die_repair else '# no die repair\n'
+    repair = DC.die_repair_tcl(out, a.dieflow_ref, rc_layer='M8' if a.signal_top_layer == 'M8' else 'M4', skip=()) if a.die_repair else '# no die repair\n'
     # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
     # synchronous reset tree, not payload. Declare the width as well as the port
     # so a missing/disconnected payload bit fails the structural audit.
@@ -780,7 +781,7 @@ puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 {CB.legalize_tcl('place', max_dpl_gsites=2.0)}
 {tie_step}write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer M6
+set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
 # top-port nets (regional clock roots, rst_n, PMA, land_fault): special = not die-top routing (DIE-CLOCK roots ideal here)
 set nsp 0
 foreach bt [[ord::get_db_block] getBTerms] {{ set n [$bt getNet]; if {{$n ne "NULL"}} {{ $n setSpecial; incr nsp }} }}
@@ -791,10 +792,10 @@ puts "OT_SPECIAL_TOP_NETS $nsp"
 # 108 > data-1 -> fclk_mismatch FAIL).  Clock / reset distribution stays untouched by the step's own skip list
 # (clock-pin + sigtype + glob dont_touch); no step check reads the SDC clock.
 {repair}{clocks_sdc}
-set_routing_layers -signal M2-M7 -clock M5-M9
+set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-M7 0.20
+set_global_routing_layer_adjustment M6-{a.signal_top_layer} 0.20
 set t0 [clock seconds]
 global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
@@ -835,7 +836,7 @@ foreach f [glob /work/views/sta/*_{c}.lib] {{ read_liberty $f }}
 foreach f [glob /work/views/rv_*.lib] {{ read_liberty $f }}
 read_db /work/out/grt.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer M6
+set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
 {clocks_sdc}
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
