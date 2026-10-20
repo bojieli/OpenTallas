@@ -463,7 +463,7 @@
     "h": 542.16
    },
    "origin": {
-    "x": 7833.456,
+    "x": 7876.656,
     "y": 9791.712,
     "orient": "MY"
    },
@@ -878,6 +878,12 @@
     "from_x": 7790.256,
     "to_x": 7833.456,
     "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
+   },
+   "fp_channel_shift_1019_step2": {
+    "dx_um": 43.2,
+    "from_x": 7833.456,
+    "to_x": 7876.656,
+    "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
    }
   },
   {
@@ -890,7 +896,7 @@
     "h": 542.16
    },
    "origin": {
-    "x": 8022.456,
+    "x": 8065.656,
     "y": 21301.92,
     "orient": "MY"
    },
@@ -1304,6 +1310,12 @@
     "dx_um": 43.2,
     "from_x": 7979.256,
     "to_x": 8022.456,
+    "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
+   },
+   "fp_channel_shift_1019_step2": {
+    "dx_um": 43.2,
+    "from_x": 8022.456,
+    "to_x": 8065.656,
     "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
    }
   },
@@ -16919,7 +16931,7 @@
    "version": 7,
    "grant": "universal_calendar_candidate_2330",
    "origin": {
-    "x": 8329.608,
+    "x": 8372.808,
     "y": 10393.92,
     "orient": "R0"
    },
@@ -16955,7 +16967,13 @@
     "to_x": 8329.608,
     "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
    },
-   "fp_cell_sync_1019": "hfd_hgi_vm_calendar -> hfd_hgi_vm_calendar_f20 (contract master)"
+   "fp_cell_sync_1019": "hfd_hgi_vm_calendar -> hfd_hgi_vm_calendar_f20 (contract master)",
+   "fp_channel_shift_1019_step2": {
+    "dx_um": 43.2,
+    "from_x": 8329.608,
+    "to_x": 8372.808,
+    "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
+   }
   },
   {
    "name": "calendar_SE",
@@ -17832,7 +17850,7 @@
     "h": 432.0
    },
    "origin": {
-    "x": 7878.168,
+    "x": 7921.368,
     "y": 10391.76,
     "orient": "R0"
    },
@@ -17861,6 +17879,12 @@
     "dx_um": 43.2,
     "from_x": 7834.968,
     "to_x": 7878.168,
+    "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
+   },
+   "fp_channel_shift_1019_step2": {
+    "dx_um": 43.2,
+    "from_x": 7878.168,
+    "to_x": 7921.368,
     "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
    }
   },
@@ -17914,7 +17938,7 @@
     "h": 432.0
    },
    "origin": {
-    "x": 11889.72,
+    "x": 11846.52,
     "y": 10551.6,
     "orient": "R0"
    },
@@ -17943,6 +17967,12 @@
     "dx_um": -43.2,
     "from_x": 11932.92,
     "to_x": 11889.72,
+    "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
+   },
+   "fp_channel_shift_1019_step2": {
+    "dx_um": -43.2,
+    "from_x": 11889.72,
+    "to_x": 11846.52,
     "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
    }
   },
@@ -17996,7 +18026,7 @@
     "h": 432.0
    },
    "origin": {
-    "x": 8067.384,
+    "x": 8110.584,
     "y": 20841.84,
     "orient": "R0"
    },
@@ -18025,6 +18055,12 @@
     "dx_um": 43.2,
     "from_x": 8024.184,
     "to_x": 8067.384,
+    "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
+   },
+   "fp_channel_shift_1019_step2": {
+    "dx_um": 43.2,
+    "from_x": 8067.384,
+    "to_x": 8110.584,
     "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
    }
   },
@@ -18078,7 +18114,7 @@
     "h": 432.0
    },
    "origin": {
-    "x": 11889.72,
+    "x": 11846.52,
     "y": 20789.784,
     "orient": "R0"
    },
@@ -18107,6 +18143,12 @@
     "dx_um": -43.2,
     "from_x": 11932.92,
     "to_x": 11889.72,
+    "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
+   },
+   "fp_channel_shift_1019_step2": {
+    "dx_um": -43.2,
+    "from_x": 11889.72,
+    "to_x": 11846.52,
     "why": "L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes"
    }
   },
@@ -29985,6 +30027,43 @@
    "hc_SE": [
     11932.92,
     11889.72
+   ]
+  },
+  "overlaps_before": 20,
+  "overlaps_after": 20,
+  "new_overlaps": [],
+  "decision": "LEAD3-HBM 10-19 22:57"
+ },
+ "fp_channel_shift_1019_step2": {
+  "step_um": 43.2,
+  "moved": {
+   "hb_dbk_NW": [
+    8022.456,
+    8065.656
+   ],
+   "hc_NW": [
+    8067.384,
+    8110.584
+   ],
+   "hb_dbk_SW": [
+    7833.456,
+    7876.656
+   ],
+   "hc_SW": [
+    7878.168,
+    7921.368
+   ],
+   "calendar_SW": [
+    8329.608,
+    8372.808
+   ],
+   "hc_NE": [
+    11889.72,
+    11846.52
+   ],
+   "hc_SE": [
+    11889.72,
+    11846.52
    ]
   },
   "overlaps_before": 20,

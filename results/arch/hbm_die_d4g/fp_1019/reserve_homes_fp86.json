@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.hbm.reserved_reset_homes.v1",
+ "tag": "fp86",
+ "grants": "results/arch/hbm_die_d4g/grants_d4g.json",
+ "tile_um": [
+  12.96,
+  6.48
+ ],
+ "decision": "LEAD3-HBM 10-19 23:22 (1b fprsv reserved homes, 2 hbm SW hard sync slot x4)",
+ "sites": [
+  {
+   "name": "rsv_hbm_sync_S3_0",
+   "x": 9477.04,
+   "y": 2025.864,
+   "w": 25.92,
+   "h": 19.44,
+   "kind": "hbm_sync_grant",
+   "slide_um": 43.2,
+   "why": "hbm reset-sync grant slot in the PHY-SM strip by sm_SW3 (12.96x6.48 hard tile + halo); basis: hhKR hbm SW rejects at (9490, 2656) / (11498, 2048)"
+  },
+  {
+   "name": "rsv_hbm_sync_S4_0",
+   "x": 11485.04,
+   "y": 2025.864,
+   "w": 25.92,
+   "h": 19.44,
+   "kind": "hbm_sync_grant",
+   "slide_um": 43.2,
+   "why": "hbm reset-sync grant slot in the PHY-SM strip by sm_SW4 (12.96x6.48 hard tile + halo); basis: hhKR hbm SW rejects at (9490, 2656) / (11498, 2048)"
+  },
+  {
+   "name": "rsv_hbm_sync_S7_0",
+   "x": 18815.8,
+   "y": 2025.864,
+   "w": 25.92,
+   "h": 19.44,
+   "kind": "hbm_sync_grant",
+   "slide_um": 43.2,
+   "why": "hbm reset-sync grant slot in the PHY-SM strip by sm_SW7 (12.96x6.48 hard tile + halo); basis: hhKR hbm SW rejects at (9490, 2656) / (11498, 2048)"
+  },
+  {
+   "name": "rsv_hbm_sync_S7_1",
+   "x": 18484.088,
+   "y": 2025.864,
+   "w": 25.92,
+   "h": 19.44,
+   "kind": "hbm_sync_grant",
+   "slide_um": 43.2,
+   "why": "hbm reset-sync grant slot in the PHY-SM strip by sm_SW7 (12.96x6.48 hard tile + halo); basis: hhKR hbm SW rejects at (9490, 2656) / (11498, 2048)"
+  },
+  {
+   "name": "rsv_hbm_sync_N3_0",
+   "x": 9477.04,
+   "y": 29728.296,
+   "w": 25.92,
+   "h": 19.44,
+   "kind": "hbm_sync_grant",
+   "slide_um": 43.2,
+   "why": "hbm reset-sync grant slot in the PHY-SM strip by sm_NW3 (12.96x6.48 hard tile + halo); basis: hhKR hbm SW rejects at (9490, 2656) / (11498, 2048)"
+  },
+  {
+   "name": "rsv_hbm_sync_N4_0",
+   "x": 11485.04,
+   "y": 29728.296,
+   "w": 25.92,
+   "h": 19.44,
+   "kind": "hbm_sync_grant",
+   "slide_um": 43.2,
+   "why": "hbm reset-sync grant slot in the PHY-SM strip by sm_NW4 (12.96x6.48 hard tile + halo); basis: hhKR hbm SW rejects at (9490, 2656) / (11498, 2048)"
+  },
+  {
+   "name": "rsv_hbm_sync_N7_0",
+   "x": 18815.8,
+   "y": 29728.296,
+   "w": 25.92,
+   "h": 19.44,
+   "kind": "hbm_sync_grant",
+   "slide_um": 43.2,
+   "why": "hbm reset-sync grant slot in the PHY-SM strip by sm_NW7 (12.96x6.48 hard tile + halo); basis: hhKR hbm SW rejects at (9490, 2656) / (11498, 2048)"
+  },
+  {
+   "name": "rsv_hbm_sync_N7_1",
+   "x": 18484.088,
+   "y": 29728.296,
+   "w": 25.92,
+   "h": 19.44,
+   "kind": "hbm_sync_grant",
+   "slide_um": 43.2,
+   "why": "hbm reset-sync grant slot in the PHY-SM strip by sm_NW7 (12.96x6.48 hard tile + halo); basis: hhKR hbm SW rejects at (9490, 2656) / (11498, 2048)"
+  }
+ ]
+}

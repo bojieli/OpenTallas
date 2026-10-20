@@ -17,7 +17,9 @@ Usage: d4g_fp_channel_shift.py in_grants.json out_grants.json [in_plan.json out_
 """
 import json, sys
 
-STEP = 43.2
+import os
+STEP = float(os.environ.get('FP_STEP', '43.2'))   # L2H-GEN2D-FP2 fp86: applied twice (FP_STEP=43.2 on the fp grants) = 86.4 um
+KEY = os.environ.get('FP_KEY', 'fp_channel_shift_1019')   # fp86 second step: fp_channel_shift_1019_step2 (first record kept)
 PLAN_SHIFT = {'dbk_NW': STEP, 'hc_NW': STEP, 'dbk_SW': STEP, 'hc_SW': STEP, 'hc_NE': -STEP, 'hc_SE': -STEP}
 CELL_SYNC = {f'calendar_{q}': ('hfd_hgi_vm_calendar', 'hfd_hgi_vm_calendar_f20') for q in ('SW', 'SE', 'NW', 'NE')}
 CELL_SYNC.update({f'fs_{q}': ('ot_hbm_fault_leaf', 'ot_hbm_fault_leaf_n8_s0') for q in ('SW', 'NW')})
@@ -55,12 +57,14 @@ def main():
     for n, dx in SHIFT.items():
         s = by[n]; x0 = s['origin']['x']
         s['origin']['x'] = round(x0 + dx, 3)
-        s['fp_channel_shift_1019'] = dict(dx_um=dx, from_x=x0, to_x=s['origin']['x'],
+        s[KEY] = dict(dx_um=dx, from_x=x0, to_x=s['origin']['x'],
                                           why='L2H-GEN2D-FP: widen sfucore<->hb_dbk/hc channel by one 43.2 um lattice step for reset forest stage homes')
         moved[n] = [x0, s['origin']['x']]
         if s['origin']['x'] < 0 or (W and s['origin']['x'] + s['outline']['w'] > W):
             raise SystemExit(f'{n} leaves the die')
     for n, (old, new) in CELL_SYNC.items():
+        if by[n].get('cell') == new:      # already synced (second application, fp86)
+            continue
         if by[n].get('cell') != old:
             raise SystemExit(f'{n}: cell {by[n].get("cell")} != expected {old}')
         by[n]['cell'] = new; by[n]['fp_cell_sync_1019'] = f'{old} -> {new} (contract master)'
@@ -68,15 +72,14 @@ def main():
     new = sorted(after - before)
     if new:
         raise SystemExit(f'new slot overlaps: {new}')
-    g.setdefault('fp_channel_shift_1019', {})
-    g['fp_channel_shift_1019'] = dict(step_um=STEP, moved=moved, overlaps_before=len(before), overlaps_after=len(after),
+    g[KEY] = dict(step_um=STEP, moved=moved, overlaps_before=len(before), overlaps_after=len(after),
                                       new_overlaps=new, decision='LEAD3-HBM 10-19 22:57')
     json.dump(g, open(sys.argv[2], 'w'), indent=1)
     if len(sys.argv) > 4:
         p = json.load(open(sys.argv[3])); pm = {}
         for n, dx in PLAN_SHIFT.items():
             b = p[n]; x0 = b['x']; b['x'] = round(x0 + dx, 3); pm[n] = [x0, b['x']]
-        p['fp_channel_shift_1019'] = dict(step_um=STEP, moved=pm, decision='LEAD3-HBM 10-19 22:57')
+        p[KEY] = dict(step_um=STEP, moved=pm, decision='LEAD3-HBM 10-19 22:57')
         json.dump(p, open(sys.argv[4], 'w'), indent=1)
         print('FP_PLAN_SHIFT', json.dumps(pm))
     print('FP_SHIFT', json.dumps(dict(moved=moved, overlaps_before=len(before), overlaps_after=len(after), new=new)))
