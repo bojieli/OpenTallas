@@ -2,6 +2,15 @@
 // +NPH phases from <OT_ROM_DIR>/seq.hex (word = {ops[15:0], ph[15:0]}), go i planned at go0 + i x +PER edges (GO <i> <edge>
 // <ph> printed; if the spine is not ready at the planned edge the go waits and GO_LATE is printed).  NPH 1 = the
 // original single-phase bench (go0 at the same edge).  Bench-only change; DUT / spine / lane encoder untouched.
+// +RETIRE=1 (2nd FGU agent 10-19): the spine retires an op only when all its rows are written back (r_v, tag in
+// r_row[15:14]); with r_v tied 0 only 4 ops (tags 0..3) can ever be in flight and go 4 waits forever (job 3 hang).
+// With +RETIRE the bench counts the frame's RET words per phase (<OT_ROM_DIR>/seqw.hex = the phase's calendar word
+// count) and, once a phase's last word arrived, writes its rows back to the spine (one row per edge, tag = i mod 4).
+// Only the spine's slot release moves; the DUT and the measured go -> RET edges are unchanged.
+// +PHASE_VM=1 (TOKSIM-S81C/FSEQ 10-19; same idea as Codex tb_toksim_fsmall_retire): the BF router phases each carry their own
+// K segment of x at the same VM addresses (toksim_fsmall_gen: one vm.hex per phase); the bench reloads the VM from
+// <OT_ROM_DIR>/p<ph>/vm.hex at the negedge of each go (VMLOAD printed).  A premature overwrite of a still-streaming
+// phase's x would fail that phase's golden check.  Default 0 = unchanged bench.
 // Original header: tb_s81dv_frame: exact frame bench of the S81-DV frame master (FRAME = col_h9 / col_h10), tools/s81_dv/frame_bench.py.
 // Driver = the die's own x path: ot_v41_spine_pq_static_w17w10 (PQ 1, R 1, its phase / stream ROMs and a vector
 // memory, +OT_ROM_DIR) -> f_bus -> dsfd_pq_lx (+DSFD_PQ_STATIC_X2 +DSFD_PQ_HAS_BF_X2: the packed static lane word xw)
@@ -24,6 +33,9 @@ module tb_toksim_fgu_seq;
     integer T, K, OPS, PH, NPH, PER, edge_n = 0;
     reg [31:0] seq [0:255];
     reg [15:0] cur_ph, cur_ops;   // PH: the field phase the spine runs (+PH, default 0; TOK-S81-GAPS/XS multi-phase fields)
+    integer RETIRE = 0, wdone = 0, wc = 0, pp = 0, pr = 0, PHASE_VM = 0;
+    reg [15:0] seqw [0:255];
+    reg rv_q = 1'b0; reg [15:0] rrow_q = 16'd0;
     // ---------------- spine + vector memory (as ot_v41_fieldtop_pq_static_w17w10)
     reg [31:0] vm [0:(1 << VAW) - 1];
     reg [8*1024-1:0] rom_dir;
@@ -39,6 +51,10 @@ module tb_toksim_fgu_seq;
         if (!$value$plusargs("PER=%d", PER)) PER = 1000;
         for (ii = 0; ii < 256; ii = ii + 1) seq[ii] = {OPS[15:0], PH[15:0]};
         if (NPH > 1) $readmemh({rom_dir, "/seq.hex"}, seq);
+        if (!$value$plusargs("RETIRE=%d", RETIRE)) RETIRE = 0;
+        if (!$value$plusargs("PHASE_VM=%d", PHASE_VM)) PHASE_VM = 0;
+        for (ii = 0; ii < 256; ii = ii + 1) seqw[ii] = 16'hffff;
+        if (RETIRE != 0) $readmemh({rom_dir, "/seqw.hex"}, seqw);
         cur_ph = seq[0][15:0]; cur_ops = seq[0][31:16];
     end
     wire x_re; wire [VAW-1:0] x_addr; reg [64*32-1:0] x_q;
@@ -53,7 +69,7 @@ module tb_toksim_fgu_seq;
         .x_addr(x_addr), .x_q(x_q), .w_we(w_we), .w_addr(w_addr), .w_data(w_data),
         .f_cfg_go(), .f_cfg_ph(), .f_cfg_np(), .f_go(), .f_go_bf(), .f_go_tag(), .f_xs_v(), .f_xs_p(), .f_xs_b(), .f_xs_sv(),
         .f_xs_q0(), .f_xs_e0(), .f_xs_q1(), .f_xs_e1(), .f_xs_pos(), .f_xb_pos(), .f_xb_v(), .f_xb_b(), .f_xb_sv(), .f_xb_u(),
-        .f_xb_d(), .f_bus(f_bus), .r_v(1'b0), .r_row(16'd0), .r_pos(3'd0), .r_fp32(32'd0), .r_bf16(16'd0), .r_e(1'b0),
+        .f_xb_d(), .f_bus(f_bus), .r_v(rv_q), .r_row(rrow_q), .r_pos(3'd0), .r_fp32(32'd0), .r_bf16(16'd0), .r_e(1'b0),
         .f_fault(1'b0), .fault(sp_fault), .phase_cycles(phase_cycles), .ev_go(ev_go), .ev_end(ev_end), .ev_tag(ev_tag));
     // ---------------- the die lane encoder and the slice x-chain word
     wire [1100:0] xw, xe_unused; wire lx_fault;
@@ -109,6 +125,17 @@ module tb_toksim_fgu_seq;
         if (x[1] || x[2]) $display("DBG edge %0d x v=%b go=%b cfg=%b ph=%0d", edge_n, x[1], x[551], x[552], x[562:553]);
     end
 `endif
+    // ---------------- +RETIRE: rows of a phase written back to the spine after the phase's last RET word
+    always @(posedge clk) begin
+        if (RETIRE != 0 && rst_n && ret[1] && wdone < NPH) begin
+            if (wc + 1 >= 32'(seqw[wdone])) begin wdone <= wdone + 1; wc <= 0; end else wc <= wc + 1;
+        end
+        rv_q <= 1'b0;
+        if (pp < wdone) begin
+            rv_q <= 1'b1; rrow_q <= {pp[1:0], pr[13:0]};
+            if (pr + 1 >= 32'(seq[pp][31:16])) begin pp <= pp + 1; pr <= 0; end else pr <= pr + 1;
+        end
+    end
     // ---------------- checks / capture
     reg [1103:0] x_d; reg live = 1'b0; integer xo_checked = 0, nret = 0, nflt = 0, g0 = 0, gi = 0;
     always @(posedge clk) begin
@@ -136,7 +163,10 @@ module tb_toksim_fgu_seq;
                 $display("GO_LATE %0d planned %0d", gi, g0 + gi * PER);
                 while (!sp_ready) @(posedge clk);
             end
-            @(negedge clk) begin cur_ph = seq[gi][15:0]; cur_ops = seq[gi][31:16]; go = 1'b1; end
+            @(negedge clk) begin cur_ph = seq[gi][15:0]; cur_ops = seq[gi][31:16];
+                if (PHASE_VM != 0) begin $readmemh($sformatf("%0s/p%0d/vm.hex", rom_dir, cur_ph), vm);
+                    $display("VMLOAD %0d %0d %0d", gi, edge_n, cur_ph); end
+                go = 1'b1; end
             $display("GO %0d %0d %0d %0d", gi, edge_n, cur_ph, cur_ops);
             @(negedge clk) go = 1'b0;
         end
