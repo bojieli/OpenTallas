@@ -293,6 +293,30 @@ V143_CENTER = __import__('os').environ.get('OT_KV_V143_CENTER', '0') == '1'   # 
 V143_N_UP = float(__import__('os').environ.get('OT_KV_V143_NUP', '1404.0'))                             # N groups' top may rise this far into the empty top (the rest grows down)
 V143_FT = dict(ftg=(356.4, 191.7), fts=(685.8, 191.7))                                       # near head-local (R0)
 HGS, HSS = (324.0, 21.6), (21.6, 21.6)
+# KV-BIND12 10-20 (OT_KV_QKH_SAFE32=1 only; default byte-identical): the safe32 heads bind ot_qkh_lane8_nc32c (172.8^2) and
+# ot_qkh_ktree_lk_nc32c (172.8 x 129.6); the v1.1 grid's 43.2 / 21.6 gaps vanish (kv_expand: 'overlapping closed leaves
+# g_t[11].u_stk / g_t[11].u_l8').  Both heads take the safe32 plans (head_native_plan_r4.py --safe32 + head_lane_perm.py
+# SAFE32=1, results/arch/qwen_kv_die/head_safe32): the slot outlines, lane / station / ktree / score homes and the near head's
+# feed-through T1 / S2 homes all come from the plan JSON, so the frame, TILE_Y bands and clock pins follow it.
+QKH_SAFE32 = __import__('os').environ.get('OT_KV_QKH_SAFE32', '0') == '1'
+if QKH_SAFE32:
+    # OT_KV_QKH_SAFE32_PLANS: another committed plan pair (e.g. head_safe32/alt_5x4: reach <= 400, die-height cost) for comparison
+    _S32_DIR = __import__('os').environ.get('OT_KV_QKH_SAFE32_PLANS', 'results/arch/qwen_kv_die/head_safe32')
+    HEAD_R4_PLAN, HEAD_FT_PLAN = f'{_S32_DIR}/head_r4_plan.json', f'{_S32_DIR}/head_ft_plan.json'
+    _S32 = [json.loads((ROOT / p_).read_text()) for p_ in (HEAD_R4_PLAN, HEAD_FT_PLAN)]
+    SPLIT_HEAD_V11, SPLIT_HEAD_FT = (tuple(d_['slot_outline_um']) for d_ in _S32)
+    V143_FT = {k_: tuple(v_) for k_, v_ in _S32[1]['feedthrough_channel']['stage_xy_um'].items()}
+
+
+def _head_rst_y(ys, h, old):
+    """the head frame's W-face rst_n pin: v1.1 y (440 / 456) unless safe32, where it sits h - 52.48 (the v1.1 offset from the
+    top), moved down to keep >= 1.2 um from every clock entry pin"""
+    if not QKH_SAFE32:
+        return old
+    y = round(h - 52.48, 3)
+    while any(abs(y - v) < 1.2 for v in ys.values()):
+        y = round(y - 1.2, 3)
+    return y
 # ---- v1.4.4 (Q-KVSYS-PV 2026-10-16, OT_KV_V144=1 on top of OT_KV_V143C=1): the PV16 WIDE PAIRS (owner 10-15: PV 16
 # rows/cycle, KV die +8.3 mm2 approved).  Two wires-only groups ot_qwen_tp8_pv_wide_pair (PAIR 0 = WS+ES, PAIR 1 = WN+EN)
 # whose 289 children (256 x ot_qwen_tp8_pv_slice_t, 32 x ot_qwen_tp8_pv_join_t, 1 x ot_qwen_tp8_pv_wide_ctl) are placed
@@ -4208,7 +4232,7 @@ def _split_pins(M, m=None):
             for p_, y_ in ys_.items():
                 hm.ports[p_] = ('face', 1, 'W', 'M4', round(y_, 3), 1)
             if 'rst_n' in hm.ports:
-                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 440.0, 1)
+                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', _head_rst_y(ys_, HEAD[1], 440.0), 1)
         if 'qkd_rhead_ft' in M:
             # v1.4.3 near head: the r4 head pins (children from HEAD_FT_PLAN: lane rows >= 1 sit 16.2 um higher) + the
             # far neighbour's feed-through: ft_ti_a / ft_e_a on the S (control) face and ft_ti_b / ft_e_b on the N face
@@ -4241,7 +4265,7 @@ def _split_pins(M, m=None):
             for p_, y_ in ys_.items():
                 hm.ports[p_] = ('face', 1, 'W', 'M4', round(y_, 3), 1)
             if 'rst_n' in hm.ports:
-                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 456.0, 1)
+                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', _head_rst_y(ys_, SPLIT_HEAD_FT[1], 456.0), 1)
     # v1.4.3 closed stage views: the die abstract takes the real LEF pin centres (gather: ti 13.5 + 0.192 i S -> N on
     # M5, e at 312.8..315.7, clock W M4 y 10.8; sstage: s_a W / s_b E on M4, clock S M5 x 9)
     if 'qkd_hgs' in M:
