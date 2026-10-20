@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       admits   980 GB (avail 799, growth 113, headroom 0, waiters 0/0 GB) load 62/128 running 42 disk 318 GB 
+ot-run: ot-epyc5       admits   790 GB (avail 666, growth 113, headroom 0, waiters 0/0 GB) load 84/128 running 26 disk 741 GB 
+ot-run: ot-epyc6       admits  1151 GB (avail 919, growth 113, headroom 0, waiters 0/0 GB) load 73/128 running 35 disk 5526 GB 
+ot-run: ot-epyc7       admits   642 GB (avail 550, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 23 disk 6099 GB 
+ot-run: ot-epyc8       admits  1156 GB (avail 888, growth 79, headroom 0, waiters 0/0 GB) load 26/128 running 15 disk 37 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-p3-cmtp-successor-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-p3-cmtp-successor-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-287256-1792456695 after 0 s
+selftest pre_ph0            expect PASS got PASS [] ok
+selftest post_ph0           expect PASS got PASS [] ok
+selftest post_ph5           expect PASS got PASS [] ok
+selftest pre_ph3            expect FAIL got FAIL ['F3'] ok
+selftest pre_ph1            expect FAIL got FAIL ['F3'] ok
+selftest pre_gain_hbm       expect FAIL got FAIL ['F1'] ok
+selftest pre_o_phase        expect FAIL got FAIL ['F2', 'F3'] ok
+selftest post_o_phase       expect FAIL got FAIL ['F2'] ok
+selftest post_c_unaligned   expect FAIL got FAIL ['F2'] ok
+selftest pre_rsA_8          expect FAIL got FAIL ['F2'] ok
+selftest pre_rsB_nonzero    expect FAIL got FAIL ['F4'] ok
+CMTP_SUCCESSOR_CHECK PASS; six original images remain REFUSED by I7
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-287256-1792456695): exit 0

@@ -19,6 +19,7 @@ token-wide VM map; this checker reads the image bytes (+ its emitter.json) and F
   I5 VM bounds  every VM operand's rows (base + r x rs, r < N, + its descriptor extent) stay below 2^19 words.
   I6 one map    emitter.json token: every compiled record emitted (0 emit errors), no live-ins, every pinned interval at one base in every segment, no host-preloaded
                 word; aux tables inside 2^19 and disjoint.
+  I7 FUSED      native FUSED bank-phase, operand-space, alignment and gain-broadcast rules (F1-F4).
 
     PYTHONPATH=tools python3 tools/hbm_next/image_check.py --dir results/arch/hbm_next_1019/cmtp/emitter/whole/mtp_N6
     PYTHONPATH=tools python3 tools/hbm_next/image_check.py --selftest DIR      (mutants must FAIL)
@@ -39,6 +40,7 @@ sys.path.insert(0, str(TOOLS))
 sys.path.insert(0, str(TOOLS / "hbm_next"))
 
 import isa_rows as IR  # noqa: E402
+from fused_phase_check import check_fused  # noqa: E402
 
 VM_LIMIT = 1 << 19
 ATT_BUDGET = 128
@@ -85,6 +87,8 @@ def check_image(recs, table, meta, mode, N, P=4):
             IR.check(r, rx)
         except Exception as e:                                           # noqa: BLE001
             bad("I1", off, f"{r.unit}.{r.op}: {type(e).__name__}: {e}"[:200])
+        for rule, msg in check_fused(r, rx):
+            bad("I7", off, f"{r.unit}.{r.op} {rule}: {msg}")
     # I2 frame
     ends = [n for n, (_, r, _, _) in enumerate(recs) if r.unit == "CTL" and r.op == "END"]
     if ends != [len(recs) - 1]:
@@ -251,7 +255,12 @@ def mutants(recs, meta):
             rr = remake(fn)
             # segment table offsets shift with sizes: rebuild by record index ratio (sizes are unchanged except noend)
             V, _ = check_image(rr, meta["token"]["segments"], meta, meta["mode"], meta["N"], meta.get("P", 4))
-            out[name] = dict(fails=bool(V), first=V[0] if V else None)
+            # A pre-existing FUSED failure cannot witness an unrelated mutant.
+            expected = {"loop_count_word": "I3", "kv_budget_256": "I4", "loop_rtab": "I3",
+                        "no_end": "I2", "vm_past_2p19": "I5"}[name]
+            matched = [v for v in V if v["check"] == expected]
+            out[name] = dict(fails=bool(matched), expected_check=expected,
+                             first=matched[0] if matched else None)
         except StopIteration:
             out[name] = dict(fails=None, note="record kind absent in this image")
     return out
@@ -284,7 +293,8 @@ def main():
               ("mutants " + json.dumps({k: v["fails"] for k, v in ent.get("mutants", {}).items()})), flush=True)
     res["PASS"] = ok
     res["sources_sha256"] = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest()
-                             for p in ("tools/hbm_next/image_check.py", "tools/hbm_next/isa_rows.py")}
+                             for p in ("tools/hbm_next/image_check.py", "tools/hbm_next/isa_rows.py",
+                                       "tools/hbm_next/fused_phase_check.py")}
     if a.out:
         a.out.parent.mkdir(parents=True, exist_ok=True)
         a.out.write_text(json.dumps(res, indent=1, default=str) + "\n")

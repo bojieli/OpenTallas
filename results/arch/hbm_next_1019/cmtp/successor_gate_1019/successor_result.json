@@ -1,0 +1,441 @@
+{
+  "fused_synthetic": {
+    "pre_ph0": {
+      "expect": "PASS",
+      "got": "PASS",
+      "rules": [],
+      "ok": true
+    },
+    "post_ph0": {
+      "expect": "PASS",
+      "got": "PASS",
+      "rules": [],
+      "ok": true
+    },
+    "post_ph5": {
+      "expect": "PASS",
+      "got": "PASS",
+      "rules": [],
+      "ok": true
+    },
+    "pre_ph3": {
+      "expect": "FAIL",
+      "got": "FAIL",
+      "rules": [
+        "F3"
+      ],
+      "ok": true
+    },
+    "pre_ph1": {
+      "expect": "FAIL",
+      "got": "FAIL",
+      "rules": [
+        "F3"
+      ],
+      "ok": true
+    },
+    "pre_gain_hbm": {
+      "expect": "FAIL",
+      "got": "FAIL",
+      "rules": [
+        "F1"
+      ],
+      "ok": true
+    },
+    "pre_o_phase": {
+      "expect": "FAIL",
+      "got": "FAIL",
+      "rules": [
+        "F2",
+        "F3"
+      ],
+      "ok": true
+    },
+    "post_o_phase": {
+      "expect": "FAIL",
+      "got": "FAIL",
+      "rules": [
+        "F2"
+      ],
+      "ok": true
+    },
+    "post_c_unaligned": {
+      "expect": "FAIL",
+      "got": "FAIL",
+      "rules": [
+        "F2"
+      ],
+      "ok": true
+    },
+    "pre_rsA_8": {
+      "expect": "FAIL",
+      "got": "FAIL",
+      "rules": [
+        "F2"
+      ],
+      "ok": true
+    },
+    "pre_rsB_nonzero": {
+      "expect": "FAIL",
+      "got": "FAIL",
+      "rules": [
+        "F4"
+      ],
+      "ok": true
+    }
+  },
+  "images": {
+    "ar_N1": {
+      "sha256": "09b394e917ba720629f875825fd6f0f067952b6a3a1a09fc570e9f076bbd9ba1",
+      "records": 3954,
+      "before_violations": 0,
+      "i7_violations": 363,
+      "admitted": false,
+      "first_i7": {
+        "check": "I7",
+        "offset": 0,
+        "segment": "0",
+        "msg": "FUSED.HC_PRE_NORM F1: B in HBM, not VM"
+      },
+      "mutants": {
+        "loop_count_word": {
+          "fails": null,
+          "note": "record kind absent in this image"
+        },
+        "kv_budget_256": {
+          "fails": null,
+          "note": "record kind absent in this image"
+        },
+        "loop_rtab": {
+          "fails": null,
+          "note": "record kind absent in this image"
+        },
+        "no_end": {
+          "fails": true,
+          "expected_check": "I2",
+          "first": {
+            "check": "I2",
+            "offset": 0,
+            "segment": "0",
+            "msg": "CTL.END at [], records 3953"
+          }
+        },
+        "vm_past_2p19": {
+          "fails": null,
+          "note": "record kind absent in this image"
+        }
+      }
+    },
+    "mtp_N6": {
+      "sha256": "fc4429481250b5e1f936896a5fde828e974138c2ed86723542bbf1fdc6690311",
+      "records": 3715,
+      "before_violations": 0,
+      "i7_violations": 403,
+      "admitted": false,
+      "first_i7": {
+        "check": "I7",
+        "offset": 0,
+        "segment": "0",
+        "msg": "FUSED.HC_PRE_NORM F1: B in HBM, not VM"
+      },
+      "mutants": {
+        "loop_count_word": {
+          "fails": true,
+          "expected_check": "I3",
+          "first": {
+            "check": "I3",
+            "offset": 7120,
+            "segment": "0",
+            "msg": "CTL.LOOP count word 483617 != IDX.UNION D[0] 483616"
+          }
+        },
+        "kv_budget_256": {
+          "fails": true,
+          "expected_check": "I4",
+          "first": {
+            "check": "I4",
+            "offset": 2800,
+            "segment": "0",
+            "msg": "KVUNION line budget 256 != 128"
+          }
+        },
+        "loop_rtab": {
+          "fails": true,
+          "expected_check": "I3",
+          "first": {
+            "check": "I3",
+            "offset": 7136,
+            "segment": "0",
+            "msg": "loop body SM.MATVEC: rsel 1 n 6 rtab 483680 != IDX.UNION R 483648"
+          }
+        },
+        "no_end": {
+          "fails": true,
+          "expected_check": "I2",
+          "first": {
+            "check": "I2",
+            "offset": 0,
+            "segment": "0",
+            "msg": "CTL.END at [], records 3714"
+          }
+        },
+        "vm_past_2p19": {
+          "fails": true,
+          "expected_check": "I5",
+          "first": {
+            "check": "I5",
+            "offset": 7136,
+            "segment": "0",
+            "msg": "SM.MATVEC A VM [524284, 555004) outside 2^19"
+          }
+        }
+      }
+    },
+    "mu_N1": {
+      "sha256": "ae4ef0c90c26103435cf9101b92eb16c98c8c660bd0e638edc360eab2f505098",
+      "records": 3955,
+      "before_violations": 0,
+      "i7_violations": 363,
+      "admitted": false,
+      "first_i7": {
+        "check": "I7",
+        "offset": 80,
+        "segment": "0",
+        "msg": "FUSED.HC_PRE_NORM F1: B in HBM, not VM"
+      },
+      "mutants": {
+        "loop_count_word": {
+          "fails": null,
+          "note": "record kind absent in this image"
+        },
+        "kv_budget_256": {
+          "fails": null,
+          "note": "record kind absent in this image"
+        },
+        "loop_rtab": {
+          "fails": null,
+          "note": "record kind absent in this image"
+        },
+        "no_end": {
+          "fails": true,
+          "expected_check": "I2",
+          "first": {
+            "check": "I2",
+            "offset": 0,
+            "segment": "users_prologue",
+            "msg": "CTL.END at [], records 3954"
+          }
+        },
+        "vm_past_2p19": {
+          "fails": null,
+          "note": "record kind absent in this image"
+        }
+      }
+    },
+    "mu_N2": {
+      "sha256": "c8c3c44d2955e3e6726da6096f05d7c5d0e27d87a4cf22944dd264d94a344f35",
+      "records": 3595,
+      "before_violations": 0,
+      "i7_violations": 403,
+      "admitted": false,
+      "first_i7": {
+        "check": "I7",
+        "offset": 80,
+        "segment": "0",
+        "msg": "FUSED.HC_PRE_NORM F1: B in HBM, not VM"
+      },
+      "mutants": {
+        "loop_count_word": {
+          "fails": true,
+          "expected_check": "I3",
+          "first": {
+            "check": "I3",
+            "offset": 6832,
+            "segment": "0",
+            "msg": "CTL.LOOP count word 176097 != IDX.UNION D[0] 176096"
+          }
+        },
+        "kv_budget_256": {
+          "fails": true,
+          "expected_check": "I4",
+          "first": {
+            "check": "I4",
+            "offset": 2880,
+            "segment": "0",
+            "msg": "KVUNION line budget 256 != 128"
+          }
+        },
+        "loop_rtab": {
+          "fails": true,
+          "expected_check": "I3",
+          "first": {
+            "check": "I3",
+            "offset": 6848,
+            "segment": "0",
+            "msg": "loop body SM.MATVEC: rsel 1 n 2 rtab 176160 != IDX.UNION R 176128"
+          }
+        },
+        "no_end": {
+          "fails": true,
+          "expected_check": "I2",
+          "first": {
+            "check": "I2",
+            "offset": 0,
+            "segment": "users_prologue",
+            "msg": "CTL.END at [], records 3594"
+          }
+        },
+        "vm_past_2p19": {
+          "fails": true,
+          "expected_check": "I5",
+          "first": {
+            "check": "I5",
+            "offset": 6848,
+            "segment": "0",
+            "msg": "SM.MATVEC A VM [524284, 534524) outside 2^19"
+          }
+        }
+      }
+    },
+    "mu_N3": {
+      "sha256": "e807cb37a0f753a823caf7df36291e92bc765ba668bd78363ab40582aadb6704",
+      "records": 3595,
+      "before_violations": 0,
+      "i7_violations": 403,
+      "admitted": false,
+      "first_i7": {
+        "check": "I7",
+        "offset": 80,
+        "segment": "0",
+        "msg": "FUSED.HC_PRE_NORM F1: B in HBM, not VM"
+      },
+      "mutants": {
+        "loop_count_word": {
+          "fails": true,
+          "expected_check": "I3",
+          "first": {
+            "check": "I3",
+            "offset": 6832,
+            "segment": "0",
+            "msg": "CTL.LOOP count word 252993 != IDX.UNION D[0] 252992"
+          }
+        },
+        "kv_budget_256": {
+          "fails": true,
+          "expected_check": "I4",
+          "first": {
+            "check": "I4",
+            "offset": 2880,
+            "segment": "0",
+            "msg": "KVUNION line budget 256 != 128"
+          }
+        },
+        "loop_rtab": {
+          "fails": true,
+          "expected_check": "I3",
+          "first": {
+            "check": "I3",
+            "offset": 6848,
+            "segment": "0",
+            "msg": "loop body SM.MATVEC: rsel 1 n 3 rtab 253056 != IDX.UNION R 253024"
+          }
+        },
+        "no_end": {
+          "fails": true,
+          "expected_check": "I2",
+          "first": {
+            "check": "I2",
+            "offset": 0,
+            "segment": "users_prologue",
+            "msg": "CTL.END at [], records 3594"
+          }
+        },
+        "vm_past_2p19": {
+          "fails": true,
+          "expected_check": "I5",
+          "first": {
+            "check": "I5",
+            "offset": 6848,
+            "segment": "0",
+            "msg": "SM.MATVEC A VM [524284, 539644) outside 2^19"
+          }
+        }
+      }
+    },
+    "mu_N4": {
+      "sha256": "d4bb66ec494bf4e38aa64b500b66afaa11a5d6c7764840aac51d4b660b6f949d",
+      "records": 3715,
+      "before_violations": 0,
+      "i7_violations": 403,
+      "admitted": false,
+      "first_i7": {
+        "check": "I7",
+        "offset": 80,
+        "segment": "0",
+        "msg": "FUSED.HC_PRE_NORM F1: B in HBM, not VM"
+      },
+      "mutants": {
+        "loop_count_word": {
+          "fails": true,
+          "expected_check": "I3",
+          "first": {
+            "check": "I3",
+            "offset": 7200,
+            "segment": "0",
+            "msg": "CTL.LOOP count word 329857 != IDX.UNION D[0] 329856"
+          }
+        },
+        "kv_budget_256": {
+          "fails": true,
+          "expected_check": "I4",
+          "first": {
+            "check": "I4",
+            "offset": 2880,
+            "segment": "0",
+            "msg": "KVUNION line budget 256 != 128"
+          }
+        },
+        "loop_rtab": {
+          "fails": true,
+          "expected_check": "I3",
+          "first": {
+            "check": "I3",
+            "offset": 7216,
+            "segment": "0",
+            "msg": "loop body SM.MATVEC: rsel 1 n 4 rtab 329920 != IDX.UNION R 329888"
+          }
+        },
+        "no_end": {
+          "fails": true,
+          "expected_check": "I2",
+          "first": {
+            "check": "I2",
+            "offset": 0,
+            "segment": "users_prologue",
+            "msg": "CTL.END at [], records 3714"
+          }
+        },
+        "vm_past_2p19": {
+          "fails": true,
+          "expected_check": "I5",
+          "first": {
+            "check": "I5",
+            "offset": 7216,
+            "segment": "0",
+            "msg": "SM.MATVEC A VM [524284, 544764) outside 2^19"
+          }
+        }
+      }
+    }
+  },
+  "native_execution": false,
+  "gq_s3": {
+    "fire_from_launch": 4,
+    "delta_per_descriptor": 1,
+    "calendar_events_compared": 3620,
+    "row_ii_unchanged": true,
+    "default_unchanged": true,
+    "coverage": "COLL.ROW_GATHER only; other native COLL lowering remains unbound"
+  },
+  "PASS": true
+}

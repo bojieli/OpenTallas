@@ -13,7 +13,7 @@ HBM-COLLQ (10-18): compiler model of the per-quadrant COLL gather master (rtl/..
 
 The two-ring x all-gather of d4g plan (b) on the canonical static schedule the master expands from one descriptor:
   global flit i -> ring r = i % R, ring index k = i // R, direction d = k & 1 (0 = CW), ttl 3, tag k % 8;
-  issue edge IE(k) = FE + 1 + 3 (k >> 1) + (k & 1)  (FE = descriptor fire edge = launch sample edge + 3 + l*period + t_start)
+  issue edge IE(k) = FE + 1 + 3 (k >> 1) + (k & 1)  (FE = descriptor fire edge = launch sample edge + 4 + l*period + t_start; HNX-GQ s3, was + 3)
   ring-A inject edge c(k) = IE(k) + 29; arrivals c + 2h (h = 1..3), src = PREV^h(q) on CW, NEXT^h(q) on CCW.
 VM reservations the quadrant calendar must make (bank sample edges, COLL read group / COLL kq write group):
   QBG code flit i: reads src + 4 i + w (w 0..3) at IE + 1;  plain flit i: read src + i at IE + 16
@@ -55,7 +55,7 @@ STAGES = {
     "publish_capture": "30+2h", "kq_reg": "31+2h", "publish_kq_pin": "32+2h", "publish_write_sample": "34+2h",
     "kq_share_edges": 2,
 }
-FIRE_FROM_LAUNCH = 3          # launch_v sampled at L -> fire edge L + 3 + l*period + t_start
+FIRE_FROM_LAUNCH = 4          # launch_v sampled at L -> fire edge L + 4 + l*period + t_start (HNX-GQ s3: registered descriptor read, was 3)
 ISA_RING_A_EXTRA_EDGES = 2    # every ISA ring-A command and rc_d: +2 edges vs the v5 parent
 KQ_SHARE_EDGES = 2            # HBM-NSFIX/KQS 10-18: registered kq share (writer pin flops + vm_kq flops), A and B alike
 

@@ -237,6 +237,9 @@ FUSED_TREE_CYC = 37.0
 MEAS["sm3"] = ("SM P=3 tile hnx_rp3lp3x (P3-SM, claude/hbm-next-1019@217fff8b6): +4 cycles (2 gather relay stages a "
                "half) on EVERY SM.MATVEC record incl. AR, and x 1.008 on N-row SM.MATVEC records (measured throughput "
                "1.002x K16 / 1.008x K4 of the P1 time for 3 results; the worse K4 figure taken)")
+MEAS["gq_s3"] = ("GQ s3 registered descriptor read (claude/hnx-gq-s3-1019@7a7f7112a): launch->fire 3->4, "
+                  "+1 cycle per COLL.ROW_GATHER descriptor including AR; further-row II unchanged. Other COLL "
+                  "lowering remains unbound; opt-in source cost, not native dispatcher qualification")
 SM3_CYC, SM3_TPUT = 4.0, 1.008
 MEAS_ALL2 = ("idxn", "idx_topk", "idx_union", "su_vop2", "kvwb", "argmax2", "coll_rg", "coll_am", "att4", "sm4skew",
              "fused")
@@ -370,10 +373,18 @@ def apply_frames(out, kn: Knobs):
     their further rows ((npos - 1) x II, re-applied by apply_meas / meas_post from the new c1)."""
     ms = set(kn.meas)
     notes = {}
-    if not ({"idx_frame", "fused_frame", "fused_tree", "sm3"} & ms):
+    if not ({"idx_frame", "fused_frame", "fused_tree", "sm3", "gq_s3"} & ms):
         return notes
     for c in out:
         op = getattr(c, "orig_op", "")
+        if op == "COLL.ROW_GATHER" and "gq_s3" in ms:
+            # GQ s3 registers its descriptor read: launch->fire 3->4.
+            # Charge once per descriptor, preserving further-row II.
+            if getattr(c, "ii", None) is not None:
+                c.c1 += 1.0
+            c.base_cost += 1.0
+            notes[op] = round(notes.get(op, 0.0) + 1.0, 1)
+            continue
         if op == "SM.MATVEC" and "sm3" in ms:
             d = SM3_CYC                     # the x 1.008 N-row throughput factor is applied in apply_meas (after post_sm)
             if getattr(c, "ii", None) is not None:
