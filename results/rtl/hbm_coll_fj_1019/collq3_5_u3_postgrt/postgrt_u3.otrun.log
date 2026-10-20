@@ -1,0 +1,14 @@
+ot-run: ot-epyc9       admits   500 GB (avail 553, growth 203, headroom 0, waiters 0/0 GB) load 74/128 running 45 disk 156 GB 
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2070307-1792489365 after 1 s
+FJ3 RC=0
+ODB /old/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_fj_n2s1_r128_asap7_ref_gate/base/5_1_grt.odb
+3 PASS 8808 32 errors 0 violations 0
+NATIVE_RC=0
+FJ_PROTECTED_PG_MISSING n=448 groups={HB2xp67_ASAP7_75t_R PLACED} 448 examples=ot_inhold_00000 ot_inhold_00001 ot_inhold_00002 ot_inhold_00003 ot_inhold_00004 ot_inhold_00005 ot_inhold_00006 ot_inhold_00007 ot_inhold_00008 ot_inhold_00009 ot_inhold_00010 ot_inhold_00011 ot_inhold_00012 ot_inhold_00013 ot_inhold_00014 ot_inhold_00015 ot_inhold_00016 ot_inhold_00017 ot_inhold_00018 ot_inhold_00019
+FJ2 RC=0
+ODB /old/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_fj_q2_r128_asap7_ref_gate/base/5_1_grt.odb
+2 PASS 8841 32 errors 0 violations 0
+NATIVE_RC=0
+FJ_PROTECTED_PG_MISSING n=455 groups={HB2xp67_ASAP7_75t_R PLACED} 455 examples=ot_inhold_00000 ot_inhold_00001 ot_inhold_00002 ot_inhold_00003 ot_inhold_00004 ot_inhold_00005 ot_inhold_00006 ot_inhold_00007 ot_inhold_00008 ot_inhold_00009 ot_inhold_00010 ot_inhold_00011 ot_inhold_00012 ot_inhold_00013 ot_inhold_00014 ot_inhold_00015 ot_inhold_00016 ot_inhold_00017 ot_inhold_00018 ot_inhold_00019
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2070307-1792489365): exit 0
