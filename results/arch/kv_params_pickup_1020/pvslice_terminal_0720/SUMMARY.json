@@ -1,0 +1,40 @@
+{
+  "pvslice_dw_rp0.audit.json": {
+    "proven": false,
+    "parameters": {
+      "RESET_PIN": 0
+    },
+    "state": {
+      "gate_only": 1,
+      "gold_only": 433,
+      "gold_regs": 15289,
+      "paired": 14857,
+      "rst_copy_alias_pairs": 0
+    },
+    "equiv": {
+      "cells": 16675,
+      "proven_cells": 13659,
+      "unproven_cells": 3016,
+      "rc": 1
+    }
+  },
+  "pvslice_dw_pos.audit.json": {
+    "proven": false,
+    "parameters": {
+      "RESET_PIN": 1
+    },
+    "state": {
+      "gate_only": 0,
+      "gold_only": 433,
+      "gold_regs": 15290,
+      "paired": 14858,
+      "rst_copy_alias_pairs": 0
+    },
+    "equiv": {
+      "cells": 16676,
+      "proven_cells": 14288,
+      "unproven_cells": 2388,
+      "rc": 1
+    }
+  }
+}

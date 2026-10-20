@@ -1,0 +1,1204 @@
+{
+ "archive_run": "/srv/opentallas-scratch/claude/kv-params3-1020/arch/ot_qwen_tp8_pv_slice_t/qkd_pv_slice_rstpin_r5-r5rr-fa546b7f3",
+ "closed": {
+  "commit": "fa546b7f3cc079bd89bb1b01d882cfb2ca45d844",
+  "final_v_sha256": "41b0c57ce8220eab244d1eb6f16594724f879abe5194860b3965f8002febd733",
+  "job": "qkd_pv_slice_rstpin_r5-r5rr-fa546b7f3",
+  "lef_sha256": "704c4fac0060f5a07f386e68533c8d921ff8411111111045b17bd90babaca47b",
+  "physical_json_sha256": "6d28ce5d63484bbdcd4bc17377e10bf96d0a9ac12551325026dbe72b05b16e42",
+  "spec_params": {
+   "RESET_PIN": 1
+  },
+  "synth_sources": {
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+   "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+   "rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv": "9baa5bf9bfdf0e4655ad4d940ae08bc6dd2d6e6ed942be1794854168a4de00e9",
+   "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+   "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+   "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+   "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+  },
+  "top": "ot_qwen_tp8_pv_slice_t",
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "closed_spec_diff": {
+  "RESET_PIN": [
+   1,
+   0
+  ]
+ },
+ "dup_witness": {
+  "constant": 28,
+  "count": 197,
+  "gold2_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "gold_only": 433,
+  "joint": true,
+  "list": [
+   {
+    "gold": "u_slice.cp[0][4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[0][5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[0][6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[1][4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[1][5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[1][6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[2][4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[2][5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[2][6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[3][4]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[3][5]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.cp[3][6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "cv",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[0].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[10]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[10].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[11]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[11].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[12]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[12].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[13]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[13].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[14]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[14].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[15]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[15].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[1]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[1].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.g_lane[2].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[2].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[2].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[2].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[2].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[3]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[3].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[4]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[4].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[5]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[5].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[6]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[6].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[7]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[7].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[8]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[8].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   },
+   {
+    "gold": "u_slice.av[9]",
+    "why": "merged into u_slice.av[2] (opt_merge -share_all)",
+    "witness": "u_slice.av[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_add.s2_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s2_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s2_v"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_add.s1_v",
+    "why": "merged into u_slice.g_lane[2].u_add.s1_v (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.s1_v"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_add.a2_in[118]",
+    "why": "merged into u_slice.g_lane[2].u_add.a2_in[118] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.a2_in[118]"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_add.b2_in[101]",
+    "why": "merged into u_slice.g_lane[2].u_add.b2_in[101] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.b2_in[101]"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_add.c2_in[70]",
+    "why": "merged into u_slice.g_lane[2].u_add.c2_in[70] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.c2_in[70]"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_add.d2_in[6]",
+    "why": "constant (opt_dff -sat)",
+    "witness": "1'0"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_add.d2_in[107]",
+    "why": "merged into u_slice.g_lane[2].u_add.d2_in[107] (opt_merge -share_all)",
+    "witness": "u_slice.g_lane[2].u_add.d2_in[107]"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_prod.valid_out",
+    "why": "merged into fc[3] (opt_merge -share_all)",
+    "witness": "fc[3]"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_prod.v3",
+    "why": "merged into fc[2] (opt_merge -share_all)",
+    "witness": "fc[2]"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_prod.v2",
+    "why": "merged into fc[1] (opt_merge -share_all)",
+    "witness": "fc[1]"
+   },
+   {
+    "gold": "u_slice.g_lane[9].u_prod.v1",
+    "why": "merged into fc[0] (opt_merge -share_all)",
+    "witness": "fc[0]"
+   }
+  ],
+  "merged": 169,
+  "unwitnessed": 236
+ },
+ "equiv": {
+  "cells": 16675,
+  "log_sha256": "fce17150967749f34ebc7497529bb1af7ac56b47deb4444929e5b63ff3a8c7ee",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct -seq 4; macro cut points ['ot_sram_1r1w_32x128_m1']",
+  "proven_cells": 13659,
+  "rc": 1,
+  "seconds": [
+   8.4,
+   7722.4
+  ],
+  "unproven_cells": 3016,
+  "unproven_sample": [
+   "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$557409: \\fault_gold \\fault_gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$557401: \\S__mc_u_slice_g_mem_0__u_mem_in_w_ce_in_gold \\S__mc_u_slice_g_mem_0__u_mem_in_w_ce_in_gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$557400: \\S__mc_u_slice_g_mem_0__u_mem_in_w_addr_in_gold [4] \\S__mc_u_slice_g_mem_0__u_mem_in_w_addr_in_gate [4]",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$557132: \\S__mc_u_slice_g_mem_1__u_mem_in_w_ce_in_gold \\S__mc_u_slice_g_mem_1__u_mem_in_w_ce_in_gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$557131: \\S__mc_u_slice_g_mem_1__u_mem_in_w_addr_in_gold [4] \\S__mc_u_slice_g_mem_1__u_mem_in_w_addr_in_gate [4]",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556863: \\S__mc_u_slice_g_mem_2__u_mem_in_w_ce_in_gold \\S__mc_u_slice_g_mem_2__u_mem_in_w_ce_in_gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556862: \\S__mc_u_slice_g_mem_2__u_mem_in_w_addr_in_gold [4] \\S__mc_u_slice_g_mem_2__u_mem_in_w_addr_in_gate [4]",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556594: \\S__mc_u_slice_g_mem_3__u_mem_in_w_ce_in_gold \\S__mc_u_slice_g_mem_3__u_mem_in_w_ce_in_gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556593: \\S__mc_u_slice_g_mem_3__u_mem_in_w_addr_in_gold [4] \\S__mc_u_slice_g_mem_3__u_mem_in_w_addr_in_gate [4]",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556277: \\S__fault_gold \\S__fault_gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556276: \\S__fault__rep__ot_prs_00000_ff_gold \\S__fault__rep__ot_prs_00000_ff_gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556275: \\S__fc_0__gold \\S__fc_0__gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556274: \\S__fc_10__gold \\S__fc_10__gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556273: \\S__fc_1__gold \\S__fc_1__gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556272: \\S__fc_2__gold \\S__fc_2__gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556271: \\S__fc_3__gold \\S__fc_3__gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556270: \\S__fc_4__gold \\S__fc_4__gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556269: \\S__fc_5__gold \\S__fc_5__gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556268: \\S__fc_6__gold \\S__fc_6__gate",
+   "Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$556267: \\S__fc_7__gold \\S__fc_7__gate"
+  ]
+ },
+ "expect": "fail",
+ "gate": {
+  "flops": 14858,
+  "macros": {
+   "u_slice.g_mem[0].u_mem": "ot_sram_1r1w_32x128_m1",
+   "u_slice.g_mem[1].u_mem": "ot_sram_1r1w_32x128_m1",
+   "u_slice.g_mem[2].u_mem": "ot_sram_1r1w_32x128_m1",
+   "u_slice.g_mem[3].u_mem": "ot_sram_1r1w_32x128_m1"
+  },
+  "replicas": 1
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "2b57effb1dce2e024148c9ab701873b1e83dd76b0ef203ccbb020ea605ccbbdb",
+   "child_lint.json": "b7c61beeb4601c5dae7864c036ba268e3414092111076b638617cf8100168300",
+   "export_ff.log": "4386e8e64774e7953f0cc03b3c2202369a92b0f48811ccb46c6544374eed15f2",
+   "export_ff.tcl": "04a3556fa1285717018f3bc2fbe0d7dcd114494bfb087ec09e03d3b47c0f293e",
+   "export_ss.log": "1180da6d784a958e6ee372b69f5b7545e4e852725fe7e1ae81daf8f0a62aea06",
+   "export_ss.tcl": "698e354958076d54edb59f43ac17ab492be7589ff763a576752cfa60c64fb27a",
+   "export_tt.log": "bf0e17b84c158e7cecdb6f11a3721dce8053073b72ce3bdea68870883d0584e4",
+   "export_tt.tcl": "ec4cbaedec1767e401dbc58e0ee461c0883d882b1564ae64a935db3ebd690ddf",
+   "insertion.json": "0113ba46b0372b04cdd00c845ca87ea41103e73764bfd8d41d6142fd79bf0172",
+   "ot_qwen_tp8_pv_slice_t.lef": "704c4fac0060f5a07f386e68533c8d921ff8411111111045b17bd90babaca47b",
+   "ot_qwen_tp8_pv_slice_t_ff.lib": "6af8a3819a252e48b4a3d9db0ca58c63732b6a0bf4159973a3636ac923792d73",
+   "ot_qwen_tp8_pv_slice_t_ss.lib": "205eaf81eda7318f5f0a3554bac8797956624a540a415b0ce75e514ff8c4d78f",
+   "ot_qwen_tp8_pv_slice_t_tt.lib": "661a28bd0a3c79311acbdbbd9fa1c1caf2705a6ebe4b703507be5f2847e0ed97"
+  },
+  "rtl": {
+   "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+   "sha256": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6"
+  },
+  "view": "physical/ref_tile/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t"
+ },
+ "macro_cut_points": {
+  "compared_input_bits": 1076,
+  "compared_inputs": 28,
+  "free_output_bits": 512,
+  "free_outputs": 4
+ },
+ "macro_cuts": {
+  "ot_sram_1r1w_32x128_m1": {
+   "instances": [
+    "u_slice.g_mem[0].u_mem",
+    "u_slice.g_mem[1].u_mem",
+    "u_slice.g_mem[2].u_mem",
+    "u_slice.g_mem[3].u_mem"
+   ],
+   "path": "/srv/opentallas-scratch/claude/kv-params3-1020/work/pvslice_cut_n2/ot_sram_1r1w_32x128_m1_cut.v",
+   "sha256": "f15719b5f53131533a05e64a6033cbd999a29dceaa7229c44b544f65d8e70ae2"
+  }
+ },
+ "macro_models": {},
+ "macro_state_pairs": 0,
+ "module": "ot_qwen_tp8_pv_slice_t",
+ "observe_zero": {
+  "ge": [],
+  "gold1_il_sha256": "7ad32783541ffcf06421edb1e0614f7a3d3f2f2610975f96658331707cf1e3de",
+  "regex": "\\.(x|s1|t|w|s2|u|p|q|r)_err\\[1\\]$",
+  "signals": [
+   "u_slice.g_lane[0].u_add.s1_err[1]",
+   "u_slice.g_lane[0].u_add.s2_err[1]",
+   "u_slice.g_lane[10].u_add.s1_err[1]",
+   "u_slice.g_lane[10].u_add.s2_err[1]",
+   "u_slice.g_lane[11].u_add.s1_err[1]",
+   "u_slice.g_lane[11].u_add.s2_err[1]",
+   "u_slice.g_lane[12].u_add.s1_err[1]",
+   "u_slice.g_lane[12].u_add.s2_err[1]",
+   "u_slice.g_lane[13].u_add.s1_err[1]",
+   "u_slice.g_lane[13].u_add.s2_err[1]",
+   "u_slice.g_lane[14].u_add.s1_err[1]",
+   "u_slice.g_lane[14].u_add.s2_err[1]",
+   "u_slice.g_lane[15].u_add.s1_err[1]",
+   "u_slice.g_lane[15].u_add.s2_err[1]",
+   "u_slice.g_lane[1].u_add.s1_err[1]",
+   "u_slice.g_lane[1].u_add.s2_err[1]",
+   "u_slice.g_lane[2].u_add.s1_err[1]",
+   "u_slice.g_lane[2].u_add.s2_err[1]",
+   "u_slice.g_lane[3].u_add.s1_err[1]",
+   "u_slice.g_lane[3].u_add.s2_err[1]",
+   "u_slice.g_lane[4].u_add.s1_err[1]",
+   "u_slice.g_lane[4].u_add.s2_err[1]",
+   "u_slice.g_lane[5].u_add.s1_err[1]",
+   "u_slice.g_lane[5].u_add.s2_err[1]",
+   "u_slice.g_lane[6].u_add.s1_err[1]",
+   "u_slice.g_lane[6].u_add.s2_err[1]",
+   "u_slice.g_lane[7].u_add.s1_err[1]",
+   "u_slice.g_lane[7].u_add.s2_err[1]",
+   "u_slice.g_lane[8].u_add.s1_err[1]",
+   "u_slice.g_lane[8].u_add.s2_err[1]",
+   "u_slice.g_lane[9].u_add.s1_err[1]",
+   "u_slice.g_lane[9].u_add.s2_err[1]"
+  ]
+ },
+ "parameters": {
+  "RESET_PIN": 0
+ },
+ "proven": false,
+ "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+ "schema": "opentallas.kv_param_native_audit.v1",
+ "sources": {
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv": "9baa5bf9bfdf0e4655ad4d940ae08bc6dd2d6e6ed942be1794854168a4de00e9",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+ },
+ "sources_changed_since_closure": [],
+ "state": {
+  "gate_only": 1,
+  "gate_only_sample": [
+   "g_reset_pin.rst_q"
+  ],
+  "gold_only": 433,
+  "gold_only_sample": [
+   "cc[4]",
+   "cc[5]",
+   "cc[6]",
+   "cv",
+   "u_slice.av[10]",
+   "u_slice.av[11]",
+   "u_slice.av[12]",
+   "u_slice.av[13]",
+   "u_slice.av[14]",
+   "u_slice.av[15]",
+   "u_slice.av[1]",
+   "u_slice.av[3]",
+   "u_slice.av[4]",
+   "u_slice.av[5]",
+   "u_slice.av[6]",
+   "u_slice.av[7]",
+   "u_slice.av[8]",
+   "u_slice.av[9]",
+   "u_slice.cp[0][4]",
+   "u_slice.cp[0][5]"
+  ],
+  "gold_regs": 15289,
+  "paired": 14857,
+  "rst_copy_alias_pairs": 0
+ },
+ "view": "physical/ref_tile/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t"
+}
