@@ -102,3 +102,21 @@ def test_reach_check_flags_long_net():
     assert r['verdict'] == 'FAIL' and r['over_limit'] == 1 and r['over_by_driver_type'] == {'L': 1}
     m['sinks']['a/ck'] = dict(x=150.0, y=10.0)
     assert crc.check(m)['verdict'] == 'PASS'
+
+
+def test_regional_spec_safe_and_neighbours(tmp_path):
+    import json
+    import subprocess
+    spec = dict(note='', trees=[dict(name='r0', root='clk_rx/pll_r0[0]', period=833.333333, sinks=5),
+                                dict(name='r1', root='clk_rx/pll_r1[0]', period=833.333333, sinks=3)])
+    pairs = dict(gap_root_pairs=[], land_owed=[dict(src_root=['clk_rx/pll_r0[0]'], dst_root=['clk_rx/pll_r1[0]'],
+                                                    src_master='a', dst_master='b', bus='n_x', bits=8)])
+    (tmp_path / 's.json').write_text(json.dumps(spec)); (tmp_path / 'p.json').write_text(json.dumps(pairs))
+    out = subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'qwen_regional_spec.py'),
+                          '--spec', str(tmp_path / 's.json'), '--pairs', str(tmp_path / 'p.json'),
+                          '--out-spec', str(tmp_path / 'o.json'), '--out-families', str(tmp_path / 'f.json'),
+                          '--out-owed', str(tmp_path / 'w.json'), '--grid-center', '--safe-tree', '--neighbours'],
+                         capture_output=True, text=True, check=True).stdout
+    o = json.loads((tmp_path / 'o.json').read_text())
+    assert o['safe_tree'] and o['grid_center'] and o['neighbours'] == [['r0', 'r1']] and o['spine']['balance'] is False
+    assert 'neighbour_pairs 1' in out

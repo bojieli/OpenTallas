@@ -55,12 +55,6 @@ def main():
         sp['safe_tree'] = True
     if not a.ideal:
         sp['spine'] = dict(source=src, period=a.period, balance=bool(a.balance_spine))
-    sp['note'] = (sp.get('note', '') + ' QW-DIECLK regional: local trees at regional entries (sink median)' +
-                  (' on ideal entries (control)' if a.ideal else f', fed by ONE forwarded unpadded spine from {src} '
-                   '(balance false: no pads, no region compensation)') +
-                  '; every region its own family; cross-region crossings LANDED (land_owed lists the GEN debt).' +
-                  (f' QW-DIECLK3 neighbour trim: {len(nb)} unlanded region pairs <= {a.neighbour_budget} ps TT+FF.' if nb else '') +
-                  (' Safe tree (segments <= 220 um, never over blocks).' if a.safe_tree else ''))
     lp = json.load(open(a.pairs))
     owed = lp.get('land_owed', [])
     nb = set()
@@ -70,6 +64,12 @@ def main():
         rp += [(x, y) for o in owed for x in o.get('src_root', []) for y in o.get('dst_root', [])]
         nb = {tuple(sorted((name[x], name[y]))) for x, y in rp if x in name and y in name and name[x] != name[y]}
         sp['neighbours'] = sorted(map(list, nb)); sp['neighbour_budget_ps'] = a.neighbour_budget
+    sp['note'] = (sp.get('note', '') + ' QW-DIECLK regional: local trees at regional entries (sink median)' +
+                  (' on ideal entries (control)' if a.ideal else f', fed by ONE forwarded unpadded spine from {src} '
+                   '(balance false: no pads, no region compensation)') +
+                  '; every region its own family; cross-region crossings LANDED (land_owed lists the GEN debt).' +
+                  (f' QW-DIECLK3 neighbour trim: {len(nb)} unlanded region pairs <= {a.neighbour_budget} ps TT+FF.' if nb else '') +
+                  (' Safe tree (segments <= 220 um, never over blocks).' if a.safe_tree else ''))
     json.dump(sp, open(a.out_spec, 'w'), indent=1)
     json.dump({t['name']: [t['root']] for t in sp['trees']}, open(a.out_families, 'w'), indent=1)
     by = {}
