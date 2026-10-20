@@ -226,5 +226,7 @@
       "K_bits": 4,
       "epoch_modulus": 16
     }
-  ]
+  ],
+  "generic_D8_extra_worst_case_receiver_startup_edges_vs_D4": 8,
+  "first_use_scope": "Measured generic D8 W3 bench; physical SRAM/native-safe adapters may add separately priced reset/receiver edges."
 }
