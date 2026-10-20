@@ -115,7 +115,7 @@ With R4 the smb kinds L00/L02 get new set sequences: the old ones re-opened a se
 - **Integration (LEAD2-HBM compiler mainline)**: the DS / Qwen program compilers must place embedding lookups as tokens of the first layer's stream (`hbm_table_images.layout_stream`). Engram rows stay indexed-DMA sector rows.
 - **KV and other streams.** The KV write-back / DMA linear byte streams follow the kport law (the set changes every 128 words per PC), so they are rotated by construction. They are single-row writes per token, not block streams.
 
-## ML (10-19 23:00-23:40, HBM-ROTLAYOUT-ML): embedding + Engram placed by the mainline compilers
+## ML (10-19 23:00-23:20, HBM-ROTLAYOUT-ML): embedding + Engram placed by the mainline compilers
 
 Branches: `claude/hbm-rotlayout-ml-1019` (on `claude/hbm-rotlayout-tbl-1019` 865daf0c4) for DS, and
 `claude/toksim-hbm-smhbm-rotchk-ml-1019` (on rotchk bf2cea8c0) for Qwen `compile_qwen`. Evidence is in `ml/`.
