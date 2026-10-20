@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_btab",
+ "enable": false,
+ "reason": "bt_re / bt_word / tw_* enter the SRAM macros' own input registers (and the t1_bank flop) directly; bt_q is the capture flop btcap + the 4:1 bank select by flop t2_bank. A flow pin register would add an edge to the closed stnrgc BT_LAT 1 round trip"
+}

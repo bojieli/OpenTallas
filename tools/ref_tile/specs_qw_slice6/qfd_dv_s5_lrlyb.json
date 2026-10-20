@@ -1,0 +1,199 @@
+{
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "children": [],
+ "inter": [],
+ "name": "qfd_dv_s5_lrlyb",
+ "top": "qfd_dv_s5_lrly",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6
+ },
+ "pins": {
+  "W": [
+   "gb",
+   "gv",
+   "lv1",
+   "pd1",
+   "va_q",
+   "vb_q",
+   "vc_q",
+   "cr_q"
+  ],
+  "S": [
+   "va_re",
+   "vb_re",
+   "vc_re",
+   "wrom_re",
+   "crom_re",
+   "vm_we",
+   "kv_we",
+   "l_ov",
+   "l_last",
+   "retire",
+   "l_fault",
+   "l_redsq",
+   "va_addr",
+   "vb_addr",
+   "vc_addr",
+   "wrom_addr",
+   "crom_addr",
+   "vm_waddr",
+   "kv_waddr",
+   "l_raddr",
+   "vm_wdata",
+   "kv_wdata",
+   "l_out",
+   "l_red",
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "h_rst_n",
+   "c_emit0",
+   "c_live",
+   "c_ilast",
+   "c_accept",
+   "c_i",
+   "c_fin_th",
+   "c_cura",
+   "c_curb",
+   "c_curc",
+   "c_curd",
+   "c_rrow",
+   "c_asi",
+   "c_bsi",
+   "c_csi",
+   "c_dsi",
+   "c_asrc",
+   "c_bsrc",
+   "c_csrc",
+   "c_mc",
+   "c_md",
+   "c_redsq",
+   "c_ma",
+   "c_mb",
+   "c_dst",
+   "c_red",
+   "c_ad",
+   "c_cls",
+   "c_isfu",
+   "c_imm1",
+   "c_imm2",
+   "c_va",
+   "c_vb",
+   "c_vc",
+   "c_wrom",
+   "c_crom"
+  ],
+  "N": [
+   "h_va_re",
+   "h_vb_re",
+   "h_vc_re",
+   "h_wrom_re",
+   "h_crom_re",
+   "h_vm_we",
+   "h_kv_we",
+   "h_l_ov",
+   "h_l_redsq",
+   "h_l_last",
+   "h_retire",
+   "h_l_fault",
+   "h_va_addr",
+   "h_vb_addr",
+   "h_vc_addr",
+   "h_wrom_addr",
+   "h_crom_addr",
+   "h_vm_waddr",
+   "h_kv_waddr",
+   "h_l_raddr",
+   "h_vm_wdata",
+   "h_kv_wdata",
+   "h_l_out",
+   "h_l_red"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL is pure relay registers: every input lands in its first relay / IREG flop, every output is a relay / OREG flop Q (qfd_dv_su8_entries LTD relays + qfd_dv_su_lane IREG/OREG); flow pin registers would add unpriced edges to the RD 2 round trip"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in 2 registered stages (qfd_dv_s5_rst2) then the su8 lane reset register rl and the su_lane rsr (h_rst_n to the lane group)"
+ },
+ "fill_reason": {
+  "pin_bound": "2,127 signal pins on all four faces (<= 4.4/um) of a square 129.6 tile; 2.1k relay flops"
+ },
+ "job": {
+  "owner": "Claude:QW-SLICE6-LRLY",
+  "branch": "claude/qw-slice6-lrly-1019",
+  "tag": "lrlyb",
+  "purpose": "QW-SLICE6 qfd_dv_s5_lrly parallel fallback: square, pins on 4 faces (suvm side W+S, lane-head side E+N)",
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_dv",
+   "tools/hdc_golden.py",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1"
+  ],
+  "benches": [
+   {
+    "name": "s5_lockstep_eq0",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/s5 eq 0",
+    "expect": "pass",
+    "pass_regex": "EQ M=0: S5_EQ PASS",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "s5_lockstep_mut_lrly",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/s5m eq lrly",
+    "expect": "fail",
+    "fail_regex": "S5_EQ FAIL",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice6_1019/witness/lrly_mut.log"
+   }
+  ]
+ }
+}

@@ -553,6 +553,13 @@ def landed_sdc(spec, root):
                 " }\n}\n" + seam)
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
+    if impl.get("no_data_multicycle"):
+        # QW-CTLM3 10-19 (lp.py landing_mcp false): no exception at all -- every ring -> read cone (slot data, valid,
+        # selectors, reset-adjacent) is timed single-cycle at full STA, which is conservative for a read K >= 1 edges
+        # after the slot write.  Tightening only: nothing is relaxed relative to the default related-root analysis.
+        return (f"# ---- PL-KIT landed cluster ({spec['landed_record']}): {len(names)} landings, NO data multicycle "
+                f"(single-cycle full STA, D {D} / K {E})\n"
+                f'puts "OT_LP_LAND_SDC 0 of {len(names)} landings multicycled (no_data_multicycle)"\n' + seam)
     # TW2-PSLICE2 10-19 (lp.py share_rings): a landing may read ANOTHER landing's ring ("ring": "u_lpl_<g>_w (ck_<r>)")
     ring = {L["name"]: (str(L.get("ring") or "").split() or [""])[0] for L in rec.get("landings") or []}
     ring = {n: (g[6:-2] if g.startswith("u_lpl_") and g.endswith("_w") else n) for n, g in ring.items()}

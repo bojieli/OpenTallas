@@ -1,0 +1,153 @@
+{
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "children": [],
+ "inter": [],
+ "name": "qfd_dv_s5_btabb",
+ "top": "qfd_dv_s5_btab",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "reset_ports": [],
+ "outline": {
+  "w": 285.12,
+  "h": 194.4
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?0?*u_m",
+   "at": [
+    38.88,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?1?*u_m",
+   "at": [
+    38.88,
+    127.488
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?2?*u_m",
+   "at": [
+    164.16,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?3?*u_m",
+   "at": [
+    164.16,
+    127.488
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "S": [
+   "bt_re",
+   "bt_word",
+   "bt_q",
+   "ck"
+  ],
+  "W": [
+   "tw_we",
+   "tw_kind",
+   "tw_addr"
+  ],
+  "E": [
+   "tw_data"
+  ],
+  "N": []
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "bt_re / bt_word / tw_* enter the SRAM macros' own input registers (and the t1_bank flop) directly; bt_q is the capture flop btcap + the 4:1 bank select by flop t2_bank. A flow pin register would add an edge to the closed stnrgc BT_LAT 1 round trip"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "no reset port: pure data path (macros + capture flops, no state that outlives a word; valids live in the station)"
+ },
+ "job": {
+  "owner": "Claude:QW-SLICE6-LRLY",
+  "branch": "claude/qw-slice6-lrly-1019",
+  "tag": "btabb",
+  "purpose": "QW-SLICE6 qfd_dv_s5_btab parallel fallback: 2x2 (two abutted stacks, read pins facing a centre capture channel), bt_q on S",
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_dv",
+   "tools/hdc_golden.py",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1"
+  ],
+  "benches": [
+   {
+    "name": "s5_lockstep_eq0",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/s5 eq 0",
+    "expect": "pass",
+    "pass_regex": "EQ M=0: S5_EQ PASS",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "s5_lockstep_mut_btab",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/s5m eq btab",
+    "expect": "fail",
+    "fail_regex": "S5_EQ FAIL",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/qw_slice6_1019/witness/btab_mut.log"
+   }
+  ]
+ }
+}
