@@ -12,7 +12,7 @@ from pathlib import Path
 COMB = ('and', 'or', 'xor', 'not', 'mux')
 
 
-def generate(repo):
+def generate(repo, record_only=False):
     repo = Path(repo)
     rtl = repo / 'rtl/qwen_split'
     inputs = [rtl / p for p in ('qfd_sys_face_n32_bounded.sv',
@@ -26,10 +26,14 @@ def generate(repo):
         comb_helpers.append(matches[0].replace('(* keep_hierarchy="yes" *) ', '', 1)
                             .replace('qfd_bmath_', 'qfd_syslogic_'))
         pattern = rf'\(\* keep=1, keep_hierarchy="yes" \*\) qfd_bmath_{name}\b'
-        top = re.sub(pattern, f'(* keep=1 *) qfd_syslogic_{name}', top)
+        if not record_only:
+            top = re.sub(pattern, f'(* keep=1 *) qfd_syslogic_{name}', top)
     top = top.replace('module qfd_sys_face_n32_bounded(', 'module qfd_sys_face_n32_opt(', 1)
     top = top.replace('qfd_sys_face_record_port_n32 ', 'qfd_sys_face_record_port_n32_opt ')
     record = record.replace('qfd_sys_face_record_port_n32(', 'qfd_sys_face_record_port_n32_opt(', 1)
+    if record_only:
+        record = record.replace('module qfd_sys_face_record_port_n32_opt(',
+                                '(* keep_hierarchy="yes" *) module qfd_sys_face_record_port_n32_opt(', 1)
     record = record.replace('qfd_record32_', 'qfd_recordlogic_')
     for name in COMB:
         record = record.replace(f'(* keep_hierarchy="yes" *) module qfd_recordlogic_{name} ',
@@ -49,6 +53,7 @@ def generate(repo):
         path.write_text(text)
     receipt = {'schema': 'opentallas.sysface_logic_groups.v1',
                'scope': 'Source-only opt-in file-list twin; no default source or kit changes.',
+               'record_only': record_only,
                'extra_data_edges': 0, 'extra_boot_edges_relative_to_n32o': 0,
                'sequential_instances_preserved': {'parent': len(seq(top)), 'record': len(seq(record))},
                'inputs': {str(p.relative_to(repo)): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},
@@ -65,4 +70,6 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--repo', type=Path, required=True)
-    generate(parser.parse_args().repo)
+    parser.add_argument('--record-only', action='store_true')
+    args = parser.parse_args()
+    generate(args.repo, args.record_only)

@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.sysface_logic_groups.v1",
+  "scope": "Source-only opt-in file-list twin; no default source or kit changes.",
+  "record_only": true,
+  "extra_data_edges": 0,
+  "extra_boot_edges_relative_to_n32o": 0,
+  "sequential_instances_preserved": {
+    "parent": 4979,
+    "record": 1244
+  },
+  "inputs": {
+    "rtl/qwen_split/qfd_sys_face_n32_bounded.sv": "7dcb938b16f3239ac3e86e099748790bbeb65a312ac4a7d9311c1b2e74bfdbf9",
+    "rtl/qwen_split/qfd_sysface32_helpers.sv": "860aab547428308ac559df2084a5588948766a0cb1cf3342e09aaae04e3ccd15",
+    "rtl/qwen_split/qfd_sys_face_record_port_n32.sv": "cf7147081b7cec40583d8849a51d3669e63253307fd02f8576873fc4282b1da0"
+  },
+  "outputs": {
+    "rtl/qwen_split/qfd_sys_face_n32_opt.sv": "8671d1b50329c8cd534b90231bad643a659a548c968e21839a22c9362f075a42",
+    "rtl/qwen_split/qfd_sysface_logic_helpers.sv": "c8a3b1933968429d69642d06acf05f94ac12baf559fedabe6d2a4b0bb7a07e66",
+    "rtl/qwen_split/qfd_sys_face_record_port_n32_opt.sv": "e430c431b8bdcda56423def8fa0aef35db800c9985dd59e433e3740fc2509118"
+  },
+  "physical_qualification": false,
+  "next": "Full actual native synthesis/census/depth and real first-epoch wrapper protocol with causal clock negative."
+}
