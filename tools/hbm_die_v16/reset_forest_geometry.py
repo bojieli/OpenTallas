@@ -418,8 +418,9 @@ class Geometry:
         rest = None   # L2H-GEN2D-RST ROUTE_REUSE: unconsumed suffix of the last routed path
         while md(point, end) > lim:
             a, b = self.grid.cell(*point), self.grid.cell(*end)
+            reused = False
             if ROUTE_REUSE and rest and md(point, self.grid.xy(rest[0])) <= 2 * self.radius + 2 * GRID:
-                path, rest = rest, None
+                path, rest, reused = rest, None, True
             else:
                 path = None
             # Leave room for the current relay reservation and endpoint pin offsets; never use the clock router's 3x
@@ -448,8 +449,15 @@ class Geometry:
                 t = self.host_hop(point, end, points, run, hop_lim)
             if t is not None:
                 pass
+            elif reused and not options:
+                continue   # ROUTE_REUSE: the stale suffix has no free stage cell -> fresh route from here (rest is None)
             elif options:
-                t = self.reserve('hop', points[options[-1]], max_distance=0)
+                try:
+                    t = self.reserve('hop', points[options[-1]], max_distance=0)
+                except GeometryError:
+                    if not reused:
+                        raise
+                    continue   # ROUTE_REUSE: fresh route
                 rest = path[options[-1]:]
             else:
                 # FOREST2: the routed cells within the budget are all OCCUPIED by earlier relay reservations (wires
@@ -468,6 +476,8 @@ class Geometry:
                         rest = path[i:]
                         break
                     self.unreserve(cand)
+                if t is None and reused:
+                    continue   # ROUTE_REUSE: retry this stage on a fresh route before host fallback / failure
                 if t is None and self.host_mode == 'fallback':
                     t = self.host_hop(point, end, points, run, hop_lim)
                 if t is None:
