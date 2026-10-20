@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc=62 ov 1/1 oy ad480000fb2280765d63d0007619c000 / ad480000fb2280005d63d0007619c000 of f / f
+MISMATCH cyc=63 ov 1/1 oy 4e403000db4990002e3640002b718000 / 4e40300072c0900049b870002b718000 of f / f
+MISMATCH cyc=65 ov 1/1 oy 656724005d898000ee54d000d7760000 / 656724005d898000beb64000d7760000 of f / f
+SVC8LOCK cycles=6000 mismatches=3081 ov=4485 invalid_diff=972 seed=1 gid=1
+[12001000] %Fatal: tb_svc8_hgrp.sv:86: Assertion failed in tb_svc8_hgrp: SVC8LOCK FAIL mismatches=3081 ov=4485
+%Error: tools/s81_dv/svc_rs/tb_svc8_hgrp.sv:86: Verilog $stop
+Aborting...
+SVC8_BENCH FAIL tag=mbank run=1:1:4:3 rc=1 MISMATCH cyc=58 ov 1/1 oy 00000000000000000000000000000000 / 849900007931c000502a4000849c0000 of f / f MISMATCH cyc=61 ov 1/1 oy cd0cf0005a13d0000567000002dd6000 / cd0cf000f5de3000ccd4d00002f5c000 of f / f 
