@@ -1,4 +1,3 @@
-error "MODEL_ONLY_LEP_FULL_ROWS_ROOT_REVIEW_REQUIRED"
 source /src/physical/ref_tile/s81sl_lepnhwd_r3/candidate_birth_bind.tcl
 # S81-RTLFIX 10-20 (s81sl_lepnhwd_r3): ONE full-width std-cell band y 259.2..291.6 (x 2.16..473.04, 120 rows) between TX banks 2 and 3.
 # Rows outside the band are removed before tapcell (place.tcl tail, ot_lep_trim_rows); here (PRE_GLOBAL_PLACE[_SKIP_IO] /

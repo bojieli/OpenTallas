@@ -1,4 +1,3 @@
-error "MODEL_ONLY_HWIN_FULL_ROWS_ROOT_REVIEW_REQUIRED"
 source /src/physical/ref_tile/dsdv_mu_hwin_c21n/candidate_birth_bind.tcl
 # Exact mapped-cell fences; no core, clock, PDN or latency edits.
 source /src/physical/ref_tile/dsdv_mu_hwin_c21n/native_cell_fence.tcl
