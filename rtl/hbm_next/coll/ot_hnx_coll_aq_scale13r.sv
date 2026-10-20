@@ -26,6 +26,7 @@ module ot_hnx_coll_aq_mul13r (
     input  wire        rst_n,
     input  wire        valid_in,
     input  wire [31:0] a,
+    input  wire [31:0] a2,     // HNX-GQ s4 r7: kept copy of a (census r7: s2_amax bits 33..43)
     input  wire [31:0] b,
     output reg  [31:0] y,
     output reg  [1:0]  err,
@@ -70,7 +71,7 @@ module ot_hnx_coll_aq_mul13r (
     // s4 r4 (census r4: a shared a_power net drove 41 loads): the exponent sum is formed twice in kept hierarchy
     wire signed [11:0] pw_k [0:1];
     ot_hnx_coll_aq_pw u_pw0(.a(a), .b(b), .p(pw_k[0]));
-    ot_hnx_coll_aq_pw u_pw1(.a(a), .b(b), .p(pw_k[1]));
+    ot_hnx_coll_aq_pw u_pw1(.a(a2), .b(b), .p(pw_k[1]));
     always @(posedge clk or negedge rst_n)
         if (!rst_n) s1_v <= 1'b0; else s1_v <= valid_in;
     always @(posedge clk) begin
@@ -110,8 +111,8 @@ module ot_hnx_coll_aq_mul13r (
     // (r6: and in two output halves each, census r6: a shift-count net inside one anorm drove 35)
     ot_hnx_coll_aq_anorm #(.LO(0),.W(12))  u_an0(.a(a),.q(an_k[0][11:0]));
     ot_hnx_coll_aq_anorm #(.LO(12),.W(12)) u_an0h(.a(a),.q(an_k[0][23:12]));
-    ot_hnx_coll_aq_anorm #(.LO(0),.W(12))  u_an1(.a(a),.q(an_k[1][11:0]));
-    ot_hnx_coll_aq_anorm #(.LO(12),.W(12)) u_an1h(.a(a),.q(an_k[1][23:12]));
+    ot_hnx_coll_aq_anorm #(.LO(0),.W(12))  u_an1(.a(a2),.q(an_k[1][11:0]));
+    ot_hnx_coll_aq_anorm #(.LO(12),.W(12)) u_an1h(.a(a2),.q(an_k[1][23:12]));
     generate for(genvar g=0;g<6;g=g+1)begin:g_s1_operand_copy
         ot_hnx_coll_scale_data_ff u_ff(.clk(clk),
 `ifdef OT_GQ_MUT_SCALE_DATA
@@ -248,9 +249,10 @@ module ot_hnx_coll_aq_mul13r (
 endmodule
 
 // Only the two actual AQ coefficient operands are legal in this distinct pipe.
-module ot_hnx_coll_aq_scale13r(input wire clk,rst_n,v,input wire [31:0] a,b,output wire [31:0] y,output wire fault);
+// HNX-GQ s4 r7: a2 = a kept register copy of a (equal on every edge), read by the second exponent / normalise copies
+module ot_hnx_coll_aq_scale13r(input wire clk,rst_n,v,input wire [31:0] a,a2,b,output wire [31:0] y,output wire fault);
  wire [1:0] err;wire vo;
- ot_hnx_coll_aq_mul13r u(.clk(clk),.rst_n(rst_n),.valid_in(v),.a(a),.b(b),.y(y),.err(err),.valid_out(vo));
+ ot_hnx_coll_aq_mul13r u(.clk(clk),.rst_n(rst_n),.valid_in(v),.a(a),.a2(a2),.b(b),.y(y),.err(err),.valid_out(vo));
  assign fault=vo&&(err!=0);
 `ifndef SYNTHESIS
  always @(posedge clk)if(rst_n&&v&&b!=32'h3b124925&&b!=32'h3e2aaaab)$fatal(1,"AQ_SCALE_COEFFICIENT_UNSUPPORTED");
