@@ -31,9 +31,16 @@ SCHEMA = "opentallas.hwin.planning_birth_budget.v1"
 def source_contract(spec):
     fields = ("top", "sources", "params", "defines", "pin_regs", "reset_landing",
               "reset_relays", "clock_port", "reset_ports", "recipe", "inhold", "outhold",
-              "keep_pin_regs", "pin_reg_split", "io_flop_at_pins", "reset_relay_split")
+              "keep_pin_regs", "pin_reg_split", "io_flop_at_pins", "reset_relay_split",
+              "kind", "clock", "clock_ports", "hold_budget", "hold_pad",
+              "pin_hook_before_flops", "pin_hook_after_flops")
     result = {k: spec.get(k) for k in fields}
     result["synth_keep_modules"] = (spec.get("route") or {}).get("synth_keep_modules")
+    # Only the candidate's placement fences may change. Other ORFS overrides
+    # can change the elaborated/mapped source and cannot inherit this budget.
+    placement_hooks = {"PRE_GLOBAL_PLACE_TCL", "PRE_GLOBAL_PLACE_SKIP_IO_TCL", "PRE_DETAIL_PLACE_TCL"}
+    result["source_orfs_vars"] = {k: v for k, v in (spec.get("orfs_vars") or {}).items()
+                                  if k not in placement_hooks}
     return result
 
 
