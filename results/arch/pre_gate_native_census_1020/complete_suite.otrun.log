@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-epyc9       admits   384 GB (avail 441, growth 172, headroom 0, waiters 0/0 GB) load 67/128 running 35 disk 166 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-346716-1792485030 after 0 s
+completebase closure_loop rc=1 19 failed, 1151 passed, 17 skipped, 195 subtests passed in 127.47s (0:02:07)
+completecand closure_loop rc=1 19 failed, 1151 passed, 17 skipped, 195 subtests passed in 127.44s (0:02:07)
+NEW closure_loop []
+FIXED closure_loop []
+completebase ref_tile rc=1 73 failed, 622 passed, 24 skipped, 309 subtests passed in 252.20s (0:04:12)
+completecand ref_tile rc=1 73 failed, 643 passed, 24 skipped, 309 subtests passed in 255.51s (0:04:15)
+NEW ref_tile []
+FIXED ref_tile []
+completebase fleet rc=1 7 failed, 52 passed, 1 deselected in 8.61s
+completecand fleet rc=1 7 failed, 52 passed, 1 deselected in 9.31s
+NEW fleet []
+FIXED fleet []
+completebase landed_parent rc=0 12 passed in 0.38s
+completecand landed_parent rc=0 12 passed in 0.31s
+NEW landed_parent []
+FIXED landed_parent []
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-346716-1792485030): exit 0
