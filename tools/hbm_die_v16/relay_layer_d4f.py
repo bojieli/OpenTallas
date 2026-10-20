@@ -164,6 +164,33 @@ def main():
         rowbits[bi].sort()
     for di, v in unmatched.items():
         notes.append(f'{di}: {v} driver bits with no list row of the same sink set (not relayed: local or new sink set)')
+    duplicate_empty_rows = set()
+    if a.port_age_land:
+        # The station inventory can contain overlapping route proposals for one
+        # actual driver bit/sink set. New routing can make formerly local rows
+        # acquire stations. Select ONE physical route per real bit before
+        # emitting registers, otherwise splice creates duplicate data drivers.
+        owners = collections.defaultdict(list)
+        for bi, bits in rowbits.items():
+            di = st['rows'][bi]['driver'].split('.', 1)[0]
+            for p, k, _ in bits:
+                owners[di, p, k].append(bi)
+        def route_quality(bi):
+            r = st['rows'][bi]
+            hops = [x.get('hop_um', 0) for x in r['stations']]
+            return (sum(x > R + .5 for x in hops), max(hops, default=0),
+                    max(r['sink_depths'], default=0), len(r['stations']), bi)
+        winners = {key: min(bis, key=route_quality) for key, bis in owners.items()}
+        removed = 0
+        for bi, bits in rowbits.items():
+            di = st['rows'][bi]['driver'].split('.', 1)[0]
+            unique = [(p, k, ls) for p, k, ls in bits if winners[di, p, k] == bi]
+            removed += len(bits) - len(unique)
+            if bits and not unique:
+                duplicate_empty_rows.add(bi)
+            rowbits[bi] = unique
+        notes.append(f'PORT-AGE-LAND: {removed} duplicate route-bit proposals resolved to one physical owner; '
+                     f'{len(duplicate_empty_rows)} redundant rows omitted')
     # HBM-DIE7 10-20 PORT-AGE: one producer->consumer port path carried by SEVERAL rows (the lane plan splits a driver port by sink
     # set, e.g. sucore_NW.red_tag[0:7] also feeds stl_NW (rf1176, 12 edges) while red_tag[8:31] + red_sv go p2p (rf1262,
     # 11 edges)) must see every bit at ONE age, else the word reaches the consumer torn (d4g_functional_bind 'unequal relay
@@ -227,6 +254,8 @@ def main():
         if di not in inst:
             problems.append(f'{r["driver"]}: driver not in contract'); continue
         bits = rowbits[bi]
+        if not bits and bi in duplicate_empty_rows:
+            continue
         if not bits:
             problems.append(f'{r["driver"]}: no contract bits (list {r["bits"]})'); continue
         if len(bits) != r['bits']:
