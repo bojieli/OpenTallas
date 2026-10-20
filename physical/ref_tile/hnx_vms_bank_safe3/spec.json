@@ -226,7 +226,7 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "count": 1,
-   "inst": "*bank.u_a",
+   "inst": "u_ot_pr_core.bank.u_a",
    "at": [
     43.2,
     43.2
@@ -236,7 +236,7 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "count": 1,
-   "inst": "*bank.u_b",
+   "inst": "u_ot_pr_core.bank.u_b",
    "at": [
     259.2,
     43.2
@@ -246,7 +246,7 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "count": 1,
-   "inst": "*bank.u_c",
+   "inst": "u_ot_pr_core.bank.u_c",
    "at": [
     43.2,
     172.8
@@ -256,7 +256,7 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "count": 1,
-   "inst": "*bank.u_a1",
+   "inst": "u_ot_pr_core.bank.u_a1",
    "at": [
     259.2,
     172.8
@@ -487,5 +487,30 @@
   "enable": true,
   "stages": 2,
   "clock": "clk"
+ },
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_1024x256_m2_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "u_ot_pr_core.bank.u_a": {
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "clk"
+  },
+  "u_ot_pr_core.bank.u_b": {
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "clk"
+  },
+  "u_ot_pr_core.bank.u_c": {
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "clk"
+  },
+  "u_ot_pr_core.bank.u_a1": {
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "clk"
+  }
  }
 }
