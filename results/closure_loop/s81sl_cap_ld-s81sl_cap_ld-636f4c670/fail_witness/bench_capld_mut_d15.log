@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_cap_ld-s81sl_cap_ld-636f4c670 bench bench_capld_mut_d15 host ot-epyc9 run /srv/opentallas-scratch/claude/closure-loop/s81sl_cap_ld-s81sl_cap_ld-636f4c670 log cl/bench_capld_mut_d15.a1b1.log captured 2026-10-19T18:33:23-07:00
+# fail_regex '^TB_CAP_LD FAIL checks [0-9]+ errs [0-9]+ D 16 DUT 15$'
+TB_CAP_LD FAIL checks 0 errs 283 D 16 DUT 15
