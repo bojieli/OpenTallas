@@ -251,7 +251,9 @@ ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0,
 # its <master>_fl view, which must be CLOSED (face_land_require_closed fails closed on a missing view); the compiler takes
 # the edges of the selected tiles only (kv_static_programme._face_land) and kv_static_params checks die.v per tile.
 FACE_LAND_TILES = {'kvs_attn': dict(master='qkd_kvs_attn', kit='qkd_kvs_attn', rst_release=3, fin=1, i_ctl=1),
-                   'astk_rly_296': dict(master='qkd_astk_rly_296', kit='qkd_astk_rly_296', rst_release=3),
+                   # KV-BIND3 10-19: rc1 view (qkd_astk_rly_296-rc1-1b6976095, 10 KEPT reset relay copies): reset release =
+                   # flow reset_landing 2 stages + ot_rst_relay SYNC 2 + TREE 1 = 5 edges (startup calendar; COORD 18:16).
+                   'astk_rly_296': dict(master='qkd_astk_rly_296', kit='qkd_astk_rly_296', rst_release=5),
                    'hr_core_queue': dict(master='qkd_hr_core_queue', kit='qkd_hr_core_queue', rst_release=3)}
 if os.environ.get('OT_KV_BOOT_AGES', '0') == '1':     # KV-BOOTAGE 10-19: the boot-age attention tile's landed view
     FACE_LAND_TILES['kvs_attn'] = dict(FACE_LAND_TILES['kvs_attn'], kit='qkd_kvs_attn_ba1')

@@ -22,6 +22,8 @@ PARENTS={'qkd_rhead':'ot_qkh_head_native_r4_s','qkd_rhead_ft':'ot_qkh_head_nativ
 # KV-GEN9 10-19: the expanded parameter ledger (main 00170ccbe) records EVERY expanded leaf's evaluated parameters, so a
 # lane8 child carries a row {ADD_LAT, LTW}.  The role stays exact only when that row is the module's own defaults (no
 # override): any other value, an unknown name or an unparsable literal still refuses.
+# KV-BIND3 10-19: the expander also materialises that same row as the bound instance's #(...) list (die_bound.v), so the
+# instance parameters are judged by the same default-only rule (3923bb422 gen9d still refused head_EN_0_0__g_t_0__u_l8).
 LANE8_RTL=('rtl/hdc/nearhbm/ot_qkh_subtiles.sv','22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8')
 
 
@@ -69,7 +71,7 @@ def derive(run,die,root=ROOT,existing=None):
             if inst not in cells:raise ValueError('static lane child missing '+inst)
             master,prm,cm=cells[inst]
             expected=[(net,k)for k in reversed(range(64*lane,64*(lane+1)))]
-            if master!='ot_qkh_lane8' or prm or not lane8_default_row(params.get(inst),root) or P.expr_bits(cm.get('nb',''),nets)!=expected:
+            if master!='ot_qkh_lane8' or not lane8_default_row(prm,root) or not lane8_default_row(params.get(inst),root) or P.expr_bits(cm.get('nb',''),nets)!=expected:
                 raise ValueError('static child nb identity/role changed '+inst)
             targets[inst]=master
     if target_nets & (top_inputs | top_outputs):raise ValueError('node-beat net is exposed at a top face')

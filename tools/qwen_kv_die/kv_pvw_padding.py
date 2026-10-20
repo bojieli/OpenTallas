@@ -20,7 +20,9 @@ SOURCES={
  O.RTL:O.RTL_SHA,
 }
 BOOTAGE_SOURCES={
- 'tools/qwen_kv_die/kv_bootage.py':'bc8a613dadec056a89d72a50082c3d03c3b440093f0780cae4a667615d101d46',
+# KV-BIND3 10-19: re-pinned after e4eb15c83 (one line: attn_cal STATUS_DELAY default 0 in boot_ages_join; the attention
+# calendar tile, not a PV trunk/replica row -- previous pin bc8a613d...).
+ 'tools/qwen_kv_die/kv_bootage.py':'9e5721ba45a8521a1dcb92e8fa756b2ac60f84f1dbc7e54d97f378ade6d5ebfe',
  'rtl/qwen_sys/split_20261014/qkd_pvw_die_t_ba.sv':'b15daa62c06da889ee7e0db600b08079e45862397208329b9d2e886b26ba5dad',
 }
 
