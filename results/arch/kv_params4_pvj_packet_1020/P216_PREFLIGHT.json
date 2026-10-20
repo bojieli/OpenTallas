@@ -44,7 +44,7 @@
   "actual_custom_plan_max_total_density": 5.864197530864197,
   "no_required_actual_check_skipped": "rawDEF fp_margin_lint+native census+textbook+DBpinflop hooks unchanged; exactIO skips pinfit estimate on old+new; ANYonlyskips predictivefaceoflopWARN, recreatedhere",
   "bench_source_identity": "unchanged2882c6196 RTL, V5.050 cold3seeds/mut1+3 failwitnesses in committedresults/arch/kv_params4_pvj_1020",
-  "gate": "NOTYETLAUNCHED",
+  "gate": "readycurrentmappednativecensusbeforelayout",
   "same_source_vs_original_gate": {
     "rtl/hdc/nearhbm/ot_qwen_tp8_pv_join_s32_t.sv": true,
     "rtl/lib/ot_rst_relay_bounded32.sv": true,
@@ -55,5 +55,13 @@
     "rtl/hdc/ot_hdc_delay.sv": true,
     "rtl/hdc/ot_hdc_fastfp.sv": true
   },
-  "bench_status": "freshV5.050 same-source cold3seed+mut1/3 scheduledbeforelayoutgate"
+  "bench_status": "V5.050 PASS3coldrandomseeds12003checks/300valid each, MUT1+3FAIL (status0 1 1)",
+  "bench_source_commit": "55067763b",
+  "bench_archive_sha256": "e105a31bddb6ac96feb432cc84439f54cce4a3af3ff03c8559222da1cad4bb02",
+  "bench_log_sha256": {
+    "status": "ce05c204ff512d9fc2b2c25b2c1dbcbb5d731d6e8652bf35ee798862fdea29d8",
+    "m0.log": "481b791d5adb911e24eb3d88d2c6f702f295744ebe338b16dcc048501e8f896a",
+    "m3.log": "6db5d6d3788a0ee4e8fe9a150d31d934eff7e836afa460c4af7b37b7942d91f2",
+    "m1.log": "c459677909b37b74888aa85551c978d4f98828de0dbe848be5862a67adb6f593"
+  }
 }

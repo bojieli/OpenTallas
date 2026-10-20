@@ -81,7 +81,7 @@
      "verilator"
     ],
     "fail_regex": "PV_JOIN_S32 FAIL",
-    "fail_witness": "results/arch/kv_params4_pvj_1020/pvj_m3/verdict_331.log"
+    "fail_witness": "results/arch/kv_params4_pvj_packet_1020/p216_benches/m3.log"
    },
    {
     "name": "pvj32_mut1",
@@ -93,7 +93,7 @@
      "verilator"
     ],
     "fail_regex": "PV_JOIN_S32 FAIL",
-    "fail_witness": "results/arch/kv_params4_pvj_1020/pvj_m1/verdict_331.log"
+    "fail_witness": "results/arch/kv_params4_pvj_packet_1020/p216_benches/m1.log"
    }
   ],
   "extra_paths": [
