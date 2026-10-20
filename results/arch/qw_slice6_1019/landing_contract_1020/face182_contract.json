@@ -280,6 +280,21 @@
   "historical_input_sha256": "5bf6744e8414025f27dcf9adc61bc0060babd5c10b3b71619ab2765681f314f5",
   "historical_links": 182,
   "nominal_sram_edges_vs_flop": 2,
+  "partial_price": {
+    "area_basis": "98x171um immutable LANDW master outlines, no packing overlap",
+    "composed_layer_cycles": null,
+    "instances_by_width": {
+      "151": 30,
+      "173": 74,
+      "182": 27,
+      "183": 127
+    },
+    "note": "Partial hard area only; remaining exact-width masters, adapter/clock/reset logic and reach corridors unpriced",
+    "qualified_partition_area_um2": 4323564,
+    "qualified_partition_instances": 258,
+    "remaining_unqualified_units": 44,
+    "total_face_area_um2": null
+  },
   "qualified_sram_widths_native32": [
     151,
     173,

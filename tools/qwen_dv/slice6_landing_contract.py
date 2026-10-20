@@ -60,7 +60,13 @@ def face():
     for u in units:
         u['nominal_added_edges']=5 if u['sram_slice_widths_low_to_high'] else None
         u['K']=None;u['phase_proof']=None;u['reset_first_use_proof']=None
-    return {'schema':'opentallas.qw_slice6.face_contract.v1','status':'MODEL_ONLY_NO_RTL_BIND_OR_K_EMIT',
+    counts=collections.Counter(w for u in units for w in u['sram_slice_widths_low_to_high'] or [])
+    price={'qualified_partition_instances':sum(counts.values()),'instances_by_width':dict(counts),
+      'qualified_partition_area_um2':sum(counts.values())*98*171,'area_basis':'98x171um immutable LANDW master outlines, no packing overlap',
+      'remaining_unqualified_units':sum(not u['sram_slice_widths_low_to_high'] for u in units),
+      'total_face_area_um2':None,'composed_layer_cycles':None,
+      'note':'Partial hard area only; remaining exact-width masters, adapter/clock/reset logic and reach corridors unpriced'}
+    return {'schema':'opentallas.qw_slice6.face_contract.v1','partial_price':price,'status':'MODEL_ONLY_NO_RTL_BIND_OR_K_EMIT',
      'historical_input_sha256':sha(p),'historical_input_provenance':old['inputs'],
      'historical_links':len(links),'historical_bits':sum(x['bits'] for x in links),'clock_groups':old['face_port_groups'],
      'units':units,'qualified_sram_widths_native32':[151,173,174,182,183],
