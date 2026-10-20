@@ -266,34 +266,27 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         kd["_layout_args"] = (recs, nonexp, exp_blocks, L)
         kd["recs"] = recs
         kinds.append(kd)
-    # ---- HBM-ROTLAYOUT: lay every kind out rotated; pass 1 finds every kind's tail sets, pass 2 phases each kind's
-    # first block off the union of tails (any kind may follow any kind), then every stream and every kind boundary is
-    # checked -- an unrotated stream is a compile refusal
-    def lay(avoid):
-        top = 0
-        for kd in kinds:
-            recs_, nonexp_, exp_, L_ = kd["_layout_args"]
-            layout_bw(kd, recs_, nonexp_, exp_, L_, avoid_first=avoid)
-            top = kd["row_top_after"](top)
-        return top
-    lay(())
-    avoid = set().union(*[BL.tail_sets(BL.kind_seq([b for r in kd["recs"] for b in r["blocks"]])) for kd in kinds])
-    row_top = lay(avoid)
-    rot = []
-    seqs = {}
+    # ---- HBM-ROTLAYOUT: lay every kind out rotated (hbm_bank_layout.assign_sets: starts on sets 0,1,2, ends so any kind
+    # may follow it), then check every kind's fetch order, its non-expert and routed sub-streams and every kind -> kind
+    # boundary -- an unrotated stream is a compile refusal (SystemExit)
+    row_top = 0
     for kd in kinds:
-        del kd["_layout_args"]
-        sq = BL.kind_seq([b for r in kd["recs"] for b in r["blocks"]])
+        recs_, nonexp_, exp_, L_ = kd.pop("_layout_args")
+        layout_bw(kd, recs_, nonexp_, exp_, L_)
+        row_top = kd["row_top_after"](row_top)
+    rot, seqs = [], {}
+    for kd in kinds:
+        order = [b for r in kd["recs"] for b in r["blocks"]]
+        sq = BL.kind_seq(order)
         seqs[kd["name"]] = sq
-        nex = [x for x, b in zip(sq, [b for r in kd["recs"] for b in r["blocks"]]) if not b.get("runtime_row")]
         cls = "embed_head" if kd["name"] == "head" else "weights"
-        rot.append(BL.check_stream(cls, nex, f"{kd['name']} non-expert"))
-        if kd["exp"]:
-            rx = [x for x, b in zip(sq, [b for r in kd["recs"] for b in r["blocks"]]) if b.get("runtime_row")]
-            rot.append(BL.check_stream("experts", rx, f"{kd['name']} routed"))
-        rot.append(BL.check_stream(cls, sq, f"{kd['name']} fetch order"))
+        rot.append(BL.check_wrapped(cls, sq, f"{kd['name']} fetch order"))
+        if kd["exp"]:                              # routed blocks are checked IN the fetch order (sets by position)
+            rot.append(dict(BL.check_wrapped("experts", sq, f"{kd['name']} fetch order (routed positions)"),
+                            routed_blocks=sum(1 for b in order if b.get("runtime_row"))))
     rot += BL.check_sequence_pairs(seqs)
-    rotlayout = dict(avoid_first=sorted(avoid), **BL.require_all(rot), checks=len(rot))
+    rotlayout = dict(**BL.require_all(rot), checks=len(rot),
+                     per_kind={kd["name"]: kd["rotlayout"] for kd in kinds})
     if row_top >= BLK_MAX:
         raise SystemExit(f"block addresses exhausted ({row_top})")
     # ---- issue order of a layer = record order (weights.json k order), blocks in wave order; one descriptor a block

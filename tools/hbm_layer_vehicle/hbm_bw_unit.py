@@ -94,61 +94,81 @@ def gen(pattern, n_layers, seed):
 # with the production shapes of that class.  (row, set, words, runtime_row)
 import hbm_bank_layout as BL  # noqa: E402
 QWEN_SM = (("qkv", 4096, 1536), ("o", 1024, 4096), ("gu", 4096, 6144), ("down", 3072, 4096))  # (tag, K, m per die)
-CLASS_PATTERNS = ("ds_rot", "weights", "experts", "kv", "embed_head", "qwen", "tables")
+CLASS_PATTERNS = ("ds_rot", "weights", "experts", "kv", "embed_head", "qwen", "tables", "tables_home", "rand_rot", "tables_seq",
+                  "tables_rot")
 PATTERN_CLASS = dict(ds_rot="weights", ds="weights", ds_nodup="weights", packed="weights", asbuilt="weights", rand="weights",
                      weights="weights", experts="experts", kv="kv", embed_head="embed_head", qwen="weights",
-                     tables="tables")
+                     tables="tables", tables_home="tables", tables_seq="tables", tables_rot="tables", rand_rot="weights")
 
 
-def _packed_lines(base, line_list):
-    return [(a >> 3, a & 7, words(n), False) for a, n in zip(BL.packed(base, len(line_list)), line_list)]
+def _run(base, line_list, cls, what):
+    addrs, _ = BL.static_run(base, line_list, cls, what)
+    return [(a >> 3, a & 7, words(n), False) for a, n in zip(addrs, line_list)], (addrs[-1] // 8 + 1) * 8
+
+
+def _lines(nl):
+    return [min(64, nl - 64 * b) for b in range(-(-nl // 64))]
 
 
 def gen_class(pattern, n_layers, rng):
     out = []
     if pattern == "ds_rot":
         out = gen_ds_rot(n_layers, rng)
-    elif pattern == "weights":                       # DS non-expert L14 blocks (incl. shared expert), slot-packed run
+    elif pattern == "weights":                     # DS non-expert L14 blocks (incl. shared w2), one rotated run a layer
         ne = [n for (_, b, l) in L14 for n in split(b, l)] + [SH2]
         base = 100 * 8
         for L in range(n_layers):
-            out += _packed_lines(base, ne)
-            base += -(-len(ne) // 8) * 8 + 8
-    elif pattern == "experts":                     # DS routed w1+w3 / w2, random ids, copies alternate by position
-        for L in range(n_layers):
+            blk, base = _run(base, ne, "weights", f"weights L{L}")
+            out += blk
+    elif pattern == "experts":                     # STRESS (refused by R2): routed blocks only, back to back, the
+        for L in range(n_layers):                  # production copy triples w1+w3 1/2/3, w2 5/6/7 by position
             ids = rng.sample(range(384), 6)
             for p, e in enumerate(ids):
-                out.append((2048 + (L * 384 + e) % 18000, BL.expert_set(0, p), words(R13), True))
+                out.append((2048 + (L * 384 + e) % 18000, (1, 2, 3)[p % 3], words(R13), True))
             for p, e in enumerate(rng.sample(ids, 6)):
-                out.append((2048 + (L * 384 + e) % 18000, BL.expert_set(1, p), words(R2), True))
-    elif pattern == "kv":                          # DS attention KV of one SM: per layer a contiguous window run
+                out.append((2048 + (L * 384 + e) % 18000, (5, 6, 7)[p % 3], words(R2), True))
+    elif pattern == "kv":                          # DS attention KV of one SM: per layer one rotated window run
         base = 0x4000 * 8
         for L in range(n_layers):
-            nl = 64 * 37 + 23 + 16 * L             # partial last block, different length per layer
-            out += _packed_lines(base, [min(64, nl - 64 * b) for b in range(-(-nl // 64))])
-            base += -(-(-(-nl // 64)) // 8) * 8 + 8
-    elif pattern == "embed_head":                  # LM head / output projection: one long slot-packed run of full blocks
-        out += _packed_lines(9000 * 8, [64] * (64 * n_layers))
+            blk, base = _run(base, _lines(64 * 37 + 23 + 16 * L), "kv", f"kv L{L}")
+            out += blk
+    elif pattern == "embed_head":                  # LM head / output projection: one long rotated run of full blocks
+        out, _ = _run(9000 * 8, [64] * (64 * n_layers), "embed_head", "head")
     elif pattern == "qwen":                        # Qwen3-8B INT8 per-SM rows ceil(m/16) x K codes, 128 codes a line
         base = 100 * 8
         for L in range(n_layers):
-            for (_, K, m) in QWEN_SM:
-                nl = -(-m // 16) * (K // 128)
-                out += _packed_lines(base, [min(64, nl - 64 * b) for b in range(-(-nl // 64))])
-                base += -(-nl // 64)
-            base = -(-base // 8) * 8
-    elif pattern == "tables":                      # runtime-indexed rows (embedding / engram shape: 64 + 42 lines)
-        for _ in range(32 * n_layers):
-            e = rng.randrange(100000)
-            for a, n in zip(BL.table_entry(20000 * 8, e, 2), (64, 42)):
+            ls = [n for (_, K, m) in QWEN_SM for n in _lines(-(-m // 16) * (K // 128))]
+            blk, base = _run(base, ls, "weights", f"qwen L{L}")
+            out += blk
+    elif pattern == "tables":                      # runtime-indexed 2-block rows (embedding / engram shape 64 + 42 lines),
+        for p in range(32 * n_layers):             # lookup p reads phase copy p mod 4 (table_entry)
+            e = rng.randrange(17000)
+            for a, n in zip(BL.table_entry(2000, e, 2, p), (64, 42)):
                 out.append((a >> 3, a & 7, words(n), True))
+    elif pattern == "tables_home":                 # REFUSED: the same lookups, every entry on its home sets only
+        for _ in range(32 * n_layers):
+            e = rng.randrange(70000)
+            for k, n in enumerate((64, 42)):
+                a = 2000 * 8 + e * 2 + k
+                out.append((a >> 3, a & 7, words(n), True))
+    elif pattern == "rand_rot":                    # DIAGNOSTIC: one full block per RANDOM row, set = i mod 8 (rotated)
+        for i in range(64 * n_layers):
+            out.append((2000 + rng.randrange(17000), i % 8, 68, True))
+    elif pattern == "tables_seq":                  # DIAGNOSTIC: table entries read in index order (rows ascend)
+        for i in range(32 * n_layers):
+            for a, n in zip(BL.table_entry(2000 * 8, i, 2), (64, 42)):
+                out.append((a >> 3, a & 7, words(n), True))
+    elif pattern == "tables_rot":                  # DIAGNOSTIC: random rows, 2-block entries, sets rotate continuously
+        for i in range(32 * n_layers):
+            r = 2000 + rng.randrange(17000)
+            out += [(r, (2 * i) % 8, words(64), True), (r, (2 * i + 1) % 8, words(42), True)]
     return out
 
 
 def gen_ds_rot(n_layers, rng):
-    """DS V4.1 L14 layer stream laid out by THE compiler function (hbm_bank_layout.layout_bw = smb_unit.layout_bw) with
-    the ROTLAYOUT kind-boundary phasing (first block off every kind's tail sets).  (row, set, words, runtime_row)"""
-    def layer(L, avoid):
+    """DS V4.1 L14 layer stream laid out by THE compiler function (hbm_bank_layout.layout_bw = smb_unit.layout_bw) (every
+    kind starts on sets 0,1,2 and ends ...,5,6,7, so the next layer follows rotated).  (row, set, words, runtime_row)"""
+    def layer(L):
         recs = []
         for (tag, b, l) in L14:
             recs.append(dict(tag=tag, slot=None, eid=None, blocks=[dict(n_lines=n) for n in split(b, l)]))
@@ -164,13 +184,12 @@ def gen_ds_rot(n_layers, rng):
             if r["slot"] is not None:
                 exp_blocks.setdefault(r["slot"], []).extend(r["blocks"])
         kd = dict(name="L14")
-        BL.layout_bw(kd, recs, nonexp, exp_blocks, 0, avoid_first=avoid)
+        BL.layout_bw(kd, recs, nonexp, exp_blocks, 0)
         kd["row_top_after"](800 + 8000 * L)          # one disjoint region per bench layer (row = addr >> 3 < 2^15)
         return [b for r in recs for b in r["blocks"]]
-    avoid = BL.tail_sets(BL.kind_seq(layer(0, ())))
     out = []
     for L in range(n_layers):
-        for b in layer(L, avoid):
+        for b in layer(L):
             out.append((b["dram_row"] >> 3, b["dram_row"] & 7, words(b["n_lines"]), b["runtime_row"]))
     return out
 

@@ -372,9 +372,9 @@ def kv_image(rec, ops, row0=KV_ROW0):
     sector o of a block -> lane o&3 (PC pcs[lane]), t = o>>2, bank {t[9:7], t[1:0]}, col t[6:2], row = row_base; 136-B
     lines packed contiguously per block (w19_payload_loader.compact_sectors: little-endian 32-B sectors, last padded),
     total = ceil(rows*136/128)*4 sectors (issuer rule).  QK and PV of an SM read the SAME blocks (DS K = V).
-    HBM-ROTLAYOUT (owner rule 10-19): KV blocks are SLOT-PACKED -- block b at block address row0*8 + b, i.e. DRAM row
-    row0 + b // 8 on bank set b % 8 (descriptor base[9:7] = set, rel owner t[9:7] | slot), so consecutive KV blocks
-    rotate over the eight bank sets; the stream is refused by hbm_bank_layout.check_stream unless rotated."""
+    HBM-ROTLAYOUT (owner rule 10-19): KV blocks are laid out by hbm_bank_layout.static_run from block address row0*8
+    (set sequence 0,1,2,... rotating, DRAM row = address >> 3, set = address & 7 = descriptor base[9:7]), so
+    consecutive KV blocks rotate over the eight bank sets; check_addrs refuses the image unless rotated."""
     sys.path.insert(0, str(ROOT / "tools"))
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from hbm_svc_packed136_image import sector_address, sector_pc  # noqa: E402
@@ -390,9 +390,9 @@ def kv_image(rec, ops, row0=KV_ROW0):
         lines = op_lines(rec, rows)
         alloc = dict(pcs=[4 * s + k for k in range(4)], row_base=0, stack_bytes=1 << 35)
         nblk = -(-len(lines) // BLOCK_LINES)
-        addrs = BL.packed(row0 * 8, nblk)
-        BL.check_addrs("kv", addrs, [BL.words(min(BLOCK_LINES, len(lines) - BLOCK_LINES * b)) for b in range(nblk)],
-                       f"{SM_NAMES[s]} KV")
+        nls = [min(BLOCK_LINES, len(lines) - BLOCK_LINES * b) for b in range(nblk)]
+        addrs, _ = BL.static_run(row0 * 8, nls, "kv", f"{SM_NAMES[s]} KV")
+        BL.check_addrs("kv", addrs, [BL.words(n) for n in nls], f"{SM_NAMES[s]} KV")
         for b in range(nblk):
             blk = lines[BLOCK_LINES * b:BLOCK_LINES * (b + 1)]
             raw = b"".join(x.to_bytes(136, "little") for x in blk)
@@ -451,14 +451,14 @@ def cmd_image(a):
                file="phy_SW.hex (+HBM_IMG_DIR: ot_hbm3e_phy_rc_e8p5 DRAM model, lines '<sector30 hex> <256-b hex>')",
                phy_hex_sha256=hashlib.sha256((out / "phy_SW.hex").read_bytes()).hexdigest(), sectors=len(hexlines),
                allocation=dict(row0=KV_ROW0, block_lines=BLOCK_LINES,
-                               law="svg_SW<k> (id_sm k) PCs 4k..4k+3; block b at block address KV_ROW0*8+b = DRAM row "
-                                   "KV_ROW0+b//8, bank set b%8 (HBM-ROTLAYOUT slot-packed); "
+                               law="svg_SW<k> (id_sm k) PCs 4k..4k+3; block b at block address hbm_bank_layout.static_run("
+                                   "KV_ROW0*8) = DRAM row addr>>3, bank set addr&7 (HBM-ROTLAYOUT); "
                                    "hbm_svc_packed136_image.sector_address == overlap_owner_id k_addr"),
                readback="every in-slice SM's image decodes to exactly the 136-B line stream of the unit pre-check "
                         "(op_lines), whose rows decode bit-exact to the fixture K rows (kv8/kv4_encode)",
                blocks=blocks,
-               descriptor_note="issuer descriptor per block: rows = lines, row_base = KV_ROW0 + b//8, base[9:7] = b%8 "
-                               "(bank set), pcs = the SM's own "
+               descriptor_note="issuer descriptor per block: rows = lines, row_base = block_address>>3, base[9:7] = "
+                               "bank_set, pcs = the SM's own "
                                "four PCs, total = ceil(rows*136/128)*4 (sm_images.py / VEH-FMT-SM2 owns the row ABI)")
     (out / "kv_image.json").write_text(json.dumps(doc, indent=1, default=int) + "\n")
     print(f"PASS HBM_VEH_ATT_IMAGE sectors={len(hexlines)} blocks={sum(b['in_slice'] for b in blocks)} "
