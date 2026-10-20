@@ -1,0 +1,5137 @@
+{
+  "schema": "opentallas.s3d.actual_clock_polarity.v1",
+  "odb_sha256": "5612d74ede2a09f93dc81f91abc4f4b3e3d2e7d779b0a96a4e8ebe0d770bcc78",
+  "source_port": "clk",
+  "actual_clock_pins": 466,
+  "positive_ff_clocked_on_and_positive_root_phase": 466,
+  "violations": [],
+  "rows": [
+    {
+      "instance": "rst_n__ot_rl0$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "rst_n__ot_rl1$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_qf\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_qf\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_qf\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_qf\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[15\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[16\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[17\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[18\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[19\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[20\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[21\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[22\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[23\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[24\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[0\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[15\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[16\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[17\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[18\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[19\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[20\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[21\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[22\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[23\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[24\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[1\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[15\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[16\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[17\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[18\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[19\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[20\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[21\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[22\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[23\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[24\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[2\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[15\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[16\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[17\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[18\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[19\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[20\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[21\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[22\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[23\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[24\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.a_ret\\[3\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_addr\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_addr\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_addr\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_addr\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_addr\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_addr\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[15\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_all\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_clr$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[0\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[1\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[2\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_h\\[3\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_pass\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_pass\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[1\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[2\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[15\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_s\\[3\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.b_v$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.cw_r\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_go\\[0\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_go\\[1\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_go\\[2\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_go\\[3\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[0\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[1\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[2\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_h\\[3\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_r\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[1\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[2\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[10\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[11\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[12\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[13\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[14\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[15\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.d_s\\[3\\]\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.fault$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.found$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[0\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[1\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[2\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[3\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[4\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[5\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[6\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[7\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[8\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.k_r\\[9\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[0\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[1\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[2\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[3\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[4\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[5\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[6\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[0\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[10\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[11\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[12\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[13\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[1\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[2\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[3\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[4\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[5\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[6\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[7\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[8\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[9\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[0\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[10\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[11\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[12\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[13\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[14\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[15\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[1\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[2\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[3\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[4\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[5\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[6\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[7\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[8\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[9\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[0\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[10\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[11\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[12\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[13\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[1\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[2\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[3\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[4\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[5\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[6\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[7\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[8\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[9\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[0\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[10\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[11\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[12\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[13\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[1\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[2\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[3\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[4\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[5\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[6\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[7\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[8\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[9\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[0\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[10\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[11\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[12\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[13\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[1\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[2\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[3\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[4\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[5\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[6\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[7\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[8\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[9\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[0\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[10\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[11\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[12\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[13\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[1\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[2\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[3\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[4\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[5\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[6\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[7\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[8\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[9\\]$_DFFE_PN0P_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[0\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[1\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[2\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[3\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[4\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[5\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.sync_q\\[0\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.sync_q\\[1\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    },
+    {
+      "instance": "u_ot_pr_core.z_clr$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "clock_pin": "CLK",
+      "root_clk_phase": [
+        0
+      ],
+      "actual_liberty_ff_clocked_on": [
+        "CLK"
+      ]
+    }
+  ],
+  "authority": "Actual Liberty ff.clocked_on and unary function parity, forward connectivity from actual native clk port; no names used as role authority."
+}
