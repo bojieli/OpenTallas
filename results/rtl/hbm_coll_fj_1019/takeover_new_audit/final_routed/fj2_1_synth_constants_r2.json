@@ -1,0 +1,116 @@
+{
+  "odb": "/frozen/routes/hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/work/orfs/results/asap7/opentallas_ot_hgi_coll_fj_q2_r128_asap7_ref_hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/base/1_synth.odb",
+  "sha256": "ee3f1a94bd847e612200efc50dab0c406da535fc56678ed06aeccc5a0ae36cf8",
+  "pins": {
+    "fault_cause[15]": {
+      "direct": [
+        {
+          "inst": "_16669_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "Y",
+          "net": "fault_cause[15]"
+        }
+      ],
+      "constant_path": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "inst": "_16669_",
+        "pin": "Y",
+        "net": "fault_cause[15]",
+        "upstream": {
+          "master": "TIELOx1_ASAP7_75t_R",
+          "inst": "_16666_",
+          "pin": "L",
+          "net": "_09376_"
+        }
+      }
+    },
+    "fault_cause[14]": {
+      "direct": [
+        {
+          "inst": "_16668_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "Y",
+          "net": "fault_cause[14]"
+        }
+      ],
+      "constant_path": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "inst": "_16668_",
+        "pin": "Y",
+        "net": "fault_cause[14]",
+        "upstream": {
+          "master": "TIELOx1_ASAP7_75t_R",
+          "inst": "_16666_",
+          "pin": "L",
+          "net": "_09376_"
+        }
+      }
+    },
+    "fault_cause[8]": {
+      "direct": [
+        {
+          "inst": "_16667_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "Y",
+          "net": "fault_cause[8]"
+        }
+      ],
+      "constant_path": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "inst": "_16667_",
+        "pin": "Y",
+        "net": "fault_cause[8]",
+        "upstream": {
+          "master": "TIELOx1_ASAP7_75t_R",
+          "inst": "_16666_",
+          "pin": "L",
+          "net": "_09376_"
+        }
+      }
+    },
+    "issuer_cfg[35]": {
+      "direct": [
+        {
+          "inst": "_16671_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "Y",
+          "net": "issuer_cfg[35]"
+        }
+      ],
+      "constant_path": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "inst": "_16671_",
+        "pin": "Y",
+        "net": "issuer_cfg[35]",
+        "upstream": {
+          "master": "TIELOx1_ASAP7_75t_R",
+          "inst": "_16666_",
+          "pin": "L",
+          "net": "_09376_"
+        }
+      }
+    },
+    "issuer_cfg[34]": {
+      "direct": [
+        {
+          "inst": "_16670_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "pin": "Y",
+          "net": "issuer_cfg[34]"
+        }
+      ],
+      "constant_path": {
+        "master": "BUFx2_ASAP7_75t_R",
+        "inst": "_16670_",
+        "pin": "Y",
+        "net": "issuer_cfg[34]",
+        "upstream": {
+          "master": "TIELOx1_ASAP7_75t_R",
+          "inst": "_16666_",
+          "pin": "L",
+          "net": "_09376_"
+        }
+      }
+    }
+  }
+}
