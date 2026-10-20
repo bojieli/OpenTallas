@@ -1,0 +1,350 @@
+{
+ "kind": "tile",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "recipe": 4,
+ "layer_cap": "M5",
+ "hold_budget": "die",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is flop-first at every pin (QW-N59-4 split children: every input lands in a p_* pin register, every output is a flop or a 2-slot AND-OR of slot flops as in the r1 block; the split edge contract is benched with these edges); OT_PIN_REGS would add a second edge and break it"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 32
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)rst_cp_[a-z0-9]+$"
+ },
+ "name": "qfd_n59_qbank6_c",
+ "top": "qfd_native59_qbank",
+ "sources": [
+  "rtl/qwen_split/qfd_native59_qbank.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_bb.v"
+ ],
+ "params": {
+  "QB_ALIGN": 1,
+  "QB_LOCAL32": 1
+ },
+ "outline": {
+  "w": 518.4,
+  "h": 388.8,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "qb_row",
+   "qb_v",
+   "qb_beat",
+   "qb_full",
+   "qb_committed",
+   "qb_bad",
+   "lcv_o",
+   "stage_o",
+   "dd_o"
+  ],
+  "S": [
+   "dd_i",
+   "layer_context_v",
+   "command_stage",
+   "ck",
+   "rst_n",
+   "q_slot",
+   "q_slot_beat"
+  ],
+  "E": [],
+  "W": []
+ },
+ "pin_ranges": {
+  "ck": [
+   257.7,
+   260.7
+  ],
+  "qb_row": [
+   1.05,
+   240.875
+  ],
+  "qb_v": [
+   240.975,
+   243.686
+  ],
+  "qb_beat": [
+   243.786,
+   246.498
+  ],
+  "qb_full": [
+   246.598,
+   249.309
+  ],
+  "qb_committed": [
+   249.409,
+   252.121
+  ],
+  "qb_bad": [
+   252.221,
+   254.933
+  ],
+  "lcv_o": [
+   255.033,
+   257.744
+  ],
+  "stage_o": [
+   257.844,
+   260.556
+  ],
+  "dd_o": [
+   260.656,
+   517.35
+  ],
+  "dd_i": [
+   1.05,
+   251.171
+  ],
+  "layer_context_v": [
+   251.271,
+   253.91
+  ],
+  "command_stage": [
+   254.01,
+   256.65
+  ],
+  "rst_n": [
+   261.75,
+   274.417
+  ],
+  "q_slot": [
+   274.517,
+   287.183
+  ],
+  "q_slot_beat": [
+   287.283,
+   299.95
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?0?*u_mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?1?*u_mem",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?2?*u_mem",
+   "at": [
+    43.2,
+    119.376
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?3?*u_mem",
+   "at": [
+    302.4,
+    119.376
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?4?*u_mem",
+   "at": [
+    43.2,
+    195.552
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?5?*u_mem",
+   "at": [
+    302.4,
+    195.552
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?6?*u_mem",
+   "at": [
+    43.2,
+    271.728
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?7?*u_mem",
+   "at": [
+    302.4,
+    271.728
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "sink_clustering": false,
+   "extra": "-no_obstruction_aware"
+  }
+ },
+ "slot_change_request": {
+  "reason": "QW-N59-4 hardened split: Q-seat bank child of native59 (8 x 167.4 x 76.14 SRAMs, two N-S stacks of 4 abutted at the 76.176 um track-legal pitch (0.036 um gap, no pins on the touching faces); column 0 mirrored MY so both columns' rd_out faces the 91.8 um middle gather channel, write faces outward); sits in the S part of the 518.4 x 648 native59 slot under the service child",
+  "requested_outline_um": [
+   518.4,
+   388.8
+  ]
+ },
+ "job": {
+  "owner": "Claude:QW-N59-6",
+  "branch": "claude/qw-n59-6-1020",
+  "tag": "qb6c",
+  "purpose": "QW-N59-6 v6 (10-20): qbank5 RTL/floorplan unchanged; CTS tree rebuilt straight over the SRAM stacks (centre-fed H-tree, -no_obstruction_aware) because qbank5 TT pin-flop spread was 140 ps (N face corners 555-598 vs S face 458-483: obstruction detours); Q-seat SRAM bank child of the hardened native59 split (Q.STA.N59): Codex N59v5 R3 source eab8ff8d2 with QB_LOCAL32=1 QB_ALIGN=1 (per-lane kept face control/predecode, third kept face publication); strict mapped native census PASS (all data/reset drivers <=32, 10596 FF / 8 SRAM, pins 0/0, ties 0, 405.1 ps lint depth; evidence 722cd9bda); zero added edges vs v4 (SOFF3/BOFF0/ROFF4); own root, landed into the parent by lp.py.",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "results/rtl/mu_qwen_1018/n59_split4v2"
+  ],
+  "benches": [
+   {
+    "name": "split_dv_positive",
+    "cmd": "SPLIT_ONLY=dv_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/dv_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^dv_positive OK \\(pass\\)"
+   },
+   {
+    "name": "split_mu_ovl_positive",
+    "cmd": "SPLIT_ONLY=mu_ovl_positive bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/mu_ovl_positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^mu_ovl_positive OK \\(pass\\)"
+   },
+   {
+    "name": "split_rnd_s1",
+    "cmd": "SPLIT_ONLY=rnd_s1 bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/rnd_s1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^rnd_s1 OK \\(pass\\)"
+   },
+   {
+    "name": "split_m1_q_lane",
+    "cmd": "SPLIT_ONLY=m1_q_lane bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m1_q_lane",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4v2/m1_q_lane.log"
+   },
+   {
+    "name": "split_m7_owner",
+    "cmd": "SPLIT_ONLY=m7_owner bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/m7_owner",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4v2/m7_owner.log"
+   },
+   {
+    "name": "split_qb1_unreg",
+    "cmd": "SPLIT_ONLY=qb1_unreg bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/qb1_unreg",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4v2/qb1_unreg.log"
+   },
+   {
+    "name": "split_rnd_qb1_unreg",
+    "cmd": "SPLIT_ONLY=rnd_qb1_unreg bash rtl/test/qwen_split/run_native59_split_bench.sh {RUN}/bench/rnd_qb1_unreg",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59SPLIT_FAIL",
+    "fail_witness": "results/rtl/mu_qwen_1018/n59_split4v2/rnd_qb1_unreg.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_n59_qbank6_c/views",
+  "record_to": "results/rtl/ref_tile/qfd_n59_qbank6_c"
+ }
+}
