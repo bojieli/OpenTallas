@@ -49,3 +49,14 @@ Native census (pre-gate rule 10-19 23:45): taken from this gate's synthesized-ne
 `--cts`); record the numbers here when the gate result lands. Owed before submit_exact: a mutant bench
 (MUT=1 k_qc slot) with its committed fail witness, and the standard LEC receipt after the route closes (strict-bind
 profile for `ot_qwen_tp8_pv_wide_ctl_tbf`).
+
+## Gate 1 (10-20 13:32, pre_route_gate --remote auto --cts, ot-pve1): FAIL — native census refused at floorplan
+
+Mapped-netlist census (limit 32 loads, 3119 roots): 6 violations, max 277 — the CLOSED tb1 structure fails today's census
+(tb1 predates it): reset `g_reset_pin.rst_q` 277 RESETN loads; `start_r` 70; comb `_3968_` 79 + `_5112_` 33 (state /
+FEED-end decode); `pid` 36; `age[1]` 33. No waiver exists (tools/ref_tile/native_census.py), so the same-outline drop-in
+cannot be gated. Structural rebuild owed (r2, same ports / same scheduled edges): datapath unreset (owner 10-20 09:05:
+reset control/valid bits only) + ot_rst_relay kept leaves <= 32; kept replicated copies of start_r / pid / age (check
+Yosys did not merge: paramod names); registered one-hot state/phase decode copies feeding <= 32 loads each. Then
+pv_floor_bench (bit-exact, P0 == P1) + a mutant witness, re-gate. Until then the die runs DIAGNOSTIC with
+OT_KV_PVFIN_FLOOR_STANDIN=1 (closed tb1 view renamed).
