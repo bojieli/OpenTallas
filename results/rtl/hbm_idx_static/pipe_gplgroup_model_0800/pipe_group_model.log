@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-agidock128  admits    74 GB (avail 65, growth 13, headroom 0, waiters 0/0 GB) load 16/64 running 8 disk 240 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-279515-1792508275 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+MODEL_CANONICAL_EXISTING_RULES_BIND 7940
+IDX_REGION_COMPLETE stage=model_group_creation functional=46554 added=46554 grouped=46554 group_region_exact=PASS actual_area_um2=6584.896619997945 PG_bindings_preserved=PASS unbound_stage=0 graph_DNT_identity=PASS
+IDX_REGION_COMPLETE stage=model_group_idempotence functional=46554 added=0 grouped=0 group_region_exact=PASS actual_area_um2=6584.896619997945 PG_bindings_preserved=PASS unbound_stage=0 graph_DNT_identity=PASS
+ACTUAL_GROUP_MEMBERS 46554 region=codex_idx_lower_band
+IDX_GROUP_METADATA_MODEL_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-279515-1792508275): exit 0

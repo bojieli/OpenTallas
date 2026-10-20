@@ -1,0 +1,141 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446
+ot-run: ot-agidock128  admits    74 GB (avail 64, growth 13, headroom 0, waiters 0/0 GB) load 16/64 running 8 disk 240 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-280671-1792508333 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 343.440 343.440 ) um
+[INFO GPL-0016] Core area:                  116472.038 um^2
+[INFO GPL-0036] Movable instances area:       6584.897 um^2
+[INFO GPL-0037] Total instances area:        28299.459 um^2
+[INFO GPL-0035] Pin density area adjust:       742.984 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             12212
+[INFO GPL-0007] Movable instances:                   0
+[INFO GPL-0008] Fixed instances:                 10043
+[INFO GPL-0009] Dummy instances:                  2169
+[INFO GPL-0010] Number of nets:                  47960
+[INFO GPL-0011] Number of pins:                 158552
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 345.600 345.600 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 343.440 343.440 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                116472.038 um^2
+[INFO GPL-0017] Fixed instances area:        39069.326 um^2
+[INFO GPL-0018] Movable instances area:          0.000 um^2
+[INFO GPL-0019] Utilization:                     0.000 %
+[INFO GPL-0020] Standard cells area:             0.000 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: codex_idx_lower_group
+[INFO GPL-0006] Number of instances:             47920
+[INFO GPL-0007] Movable instances:               46554
+[INFO GPL-0008] Fixed instances:                  1366
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  47960
+[INFO GPL-0011] Number of pins:                 158552
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 345.600 345.600 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 343.440 45.360 ) um
+[INFO GPL-0014] Region name: codex_idx_lower_group.
+[INFO GPL-0015] Region area:                 14743.296 um^2
+[INFO GPL-0017] Fixed instances area:           39.833 um^2
+[INFO GPL-0018] Movable instances area:       7327.881 um^2
+[INFO GPL-0019] Utilization:                    49.838 %
+[INFO GPL-0020] Standard cells area:          7327.881 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[WARNING GPL-0123] No placeable instances in the top-level region. Removing it.
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 0	Region center = 46554
+[INFO GPL-0033] ---- Initialize Nesterov Region: codex_idx_lower_group
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.157 um^2
+[INFO GPL-0025] Ideal bin area:                  0.315 um^2
+[INFO GPL-0026] Ideal bin count:                 46832
+[INFO GPL-0027] Total bin area:              14743.296 um^2
+[INFO GPL-0028] Bin count (X, Y):         256 ,     64
+[INFO GPL-0029] Bin size (W * H):       1.333 *  0.675 um
+[INFO GPL-0030] Number of bins:                  16384
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+        0 |   0.9883 |  6.289504e+05 |   +0.00% |  2.29e-13 |  (codex_idx_lower_group)
+       10 |   0.8739 |  6.502164e+05 |   +3.38% |  3.72e-13 |  (codex_idx_lower_group)
+       20 |   0.8381 |  6.553940e+05 |   +0.80% |  6.06e-13 |  (codex_idx_lower_group)
+       30 |   0.8334 |  6.561350e+05 |   +0.11% |  9.87e-13 |  (codex_idx_lower_group)
+       40 |   0.8372 |  6.550986e+05 |   -0.16% |  1.61e-12 |  (codex_idx_lower_group)
+       50 |   0.8417 |  6.529344e+05 |   -0.33% |  2.62e-12 |  (codex_idx_lower_group)
+       60 |   0.8431 |  6.506361e+05 |   -0.35% |  4.27e-12 |  (codex_idx_lower_group)
+       70 |   0.8428 |  6.493975e+05 |   -0.19% |  6.95e-12 |  (codex_idx_lower_group)
+       80 |   0.8431 |  6.480052e+05 |   -0.21% |  1.13e-11 |  (codex_idx_lower_group)
+       90 |   0.8436 |  6.460483e+05 |   -0.30% |  1.84e-11 |  (codex_idx_lower_group)
+      100 |   0.8441 |  6.444583e+05 |   -0.25% |  3.00e-11 |  (codex_idx_lower_group)
+      110 |   0.8431 |  6.437232e+05 |   -0.11% |  4.89e-11 |  (codex_idx_lower_group)
+      120 |   0.8412 |  6.436024e+05 |   -0.02% |  7.97e-11 |  (codex_idx_lower_group)
+      130 |   0.8384 |  6.437776e+05 |   +0.03% |  1.30e-10 |  (codex_idx_lower_group)
+      140 |   0.8348 |  6.443952e+05 |   +0.10% |  2.12e-10 |  (codex_idx_lower_group)
+      150 |   0.8276 |  6.457490e+05 |   +0.21% |  3.44e-10 |  (codex_idx_lower_group)
+      160 |   0.8191 |  6.480419e+05 |   +0.36% |  5.61e-10 |  (codex_idx_lower_group)
+      170 |   0.8077 |  6.518493e+05 |   +0.59% |  9.13e-10 |  (codex_idx_lower_group)
+      180 |   0.7911 |  6.569570e+05 |   +0.78% |  1.49e-09 |  (codex_idx_lower_group)
+      190 |   0.7679 |  6.626150e+05 |   +0.86% |  2.42e-09 |  (codex_idx_lower_group)
+      200 |   0.7418 |  6.694435e+05 |   +1.03% |  3.94e-09 |  (codex_idx_lower_group)
+      210 |   0.7093 |  6.810791e+05 |   +1.74% |  6.41e-09 |  (codex_idx_lower_group)
+      220 |   0.6712 |  6.988840e+05 |   +2.61% |  1.04e-08 |  (codex_idx_lower_group)
+      230 |   0.6294 |  7.284347e+05 |   +4.23% |  1.69e-08 |  (codex_idx_lower_group)
+      240 |   0.5897 |  7.642020e+05 |   +4.91% |  2.75e-08 |  (codex_idx_lower_group)
+      250 |   0.5630 |  7.876638e+05 |   +3.07% |  4.46e-08 |  (codex_idx_lower_group)
+      260 |   0.5349 |  7.873629e+05 |   -0.04% |  7.26e-08 |  (codex_idx_lower_group)
+      270 |   0.4940 |  7.872376e+05 |   -0.02% |  1.18e-07 |  (codex_idx_lower_group)
+      280 |   0.4496 |  7.882206e+05 |   +0.12% |  1.93e-07 |  (codex_idx_lower_group)
+      290 |   0.4103 |  7.713282e+05 |   -2.14% |  3.14e-07 |  (codex_idx_lower_group)
+      300 |   0.3605 |  7.969131e+05 |   +3.32% |  5.10e-07 |  (codex_idx_lower_group)
+      310 |   0.3307 |  7.916519e+05 |   -0.66% |  7.89e-07 |  (codex_idx_lower_group)
+      320 |   0.2997 |  7.867673e+05 |   -0.62% |  1.16e-06 |  (codex_idx_lower_group)
+      330 |   0.2664 |  7.876008e+05 |   +0.11% |  1.71e-06 |  (codex_idx_lower_group)
+      340 |   0.2350 |  7.837072e+05 |   -0.49% |  2.52e-06 |  (codex_idx_lower_group)
+      350 |   0.2071 |  7.832550e+05 |   -0.06% |  3.71e-06 |  (codex_idx_lower_group)
+      360 |   0.1834 |  7.823397e+05 |   -0.12% |  5.47e-06 |  (codex_idx_lower_group)
+      370 |   0.1597 |  7.819565e+05 |   -0.05% |  8.06e-06 |  (codex_idx_lower_group)
+      380 |   0.1394 |  7.812860e+05 |   -0.09% |  1.19e-05 |  (codex_idx_lower_group)
+      390 |   0.1196 |  7.825540e+05 |   +0.16% |  1.75e-05 |  (codex_idx_lower_group)
+      400 |   0.1030 |  7.833677e+05 |   +0.10% |  2.57e-05 |  (codex_idx_lower_group)
+      403 |   0.0996 |  7.831278e+05 |          |  3.01e-05 | codex_idx_lower_group
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'codex_idx_lower_group' placement finished at iteration 403
+[INFO GPL-1002] Placed Cell Area             7327.8806
+[INFO GPL-1003] Available Free Area         14703.4634
+[INFO GPL-1004] Minimum Feasible Density        0.5000 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.5538
+[INFO GPL-1008]     - For 80% usage of free space: 0.6230
+[INFO GPL-1009]     - For 50% usage of free space: 0.9968
+[INFO GPL-1014] Final placement area: 7327.88 (+0.00%)
+ACTUAL_GPL_GROUP_RESULT group=codex_idx_lower_group region=codex_idx_lower_band members=46554 outside=0 fixedoutside=0 PG_unbound=0 graph_DNT_identity=PASS
+ACTUAL_GPL_GROUP_CONSUMPTION_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-280671-1792508333): exit 0

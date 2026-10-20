@@ -1,0 +1,2 @@
+source /src/physical/ref_tile/hidx_sel_s3p_c/region_complete.tcl
+ot_idx_region_refresh before_global_placement

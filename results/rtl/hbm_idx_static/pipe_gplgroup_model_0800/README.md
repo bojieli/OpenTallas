@@ -1,0 +1,11 @@
+# Actual GPL group consumption proof
+
+Primary mechanism physical/hbm_accel_die_views/stations/bench/stn_meso_fence.tcl:157–162: global placement consumes dbGroup created UNDER dbRegion; region-only constrains legalizer. Diagnostic s3p_b left immutable/running; no files changed there. Distinct C uses the same already-priced43.2um band/density0.50/345.6square/R0 lattice/fullS pinplan. No GPL mask, density tuning, hook relaxation or RTL change.
+
+Actual original A3_place checkpoint is read-only. Private model setup uses current canonical existing-rule batch PG bind (7940 ordinary pre-final inserted-buffer terms), recreates only the intended43.2um region and attaches group. This does NOT classify original pre-final unbound terms as defects and does NOT relabel old physical artifacts. All46554 current functional standard instances, including3970 inserted buffers, belong to exact group and exact owning region. Second membership update changes0. Full ITerm+BTerm net identities, all cell/net DNT flags and PGbindings unchanged. Model PG0; no net/PG/DNT edits in production membership hook.
+
+Actual GPL session59183/unit280671-1792508333 consumes namedregion codex_idx_lower_group, finishes iteration403/overflow0.0996. All46554 actual native cell bboxes inside exact lower43.2um band; outside0/fixedoutside0. All graph/PG/DNT identities preserved. Output model_group_gpl.odb retained remote under agidock ref_gate/hidx_sel_s3p_a-20261020-050446/codex_region_audit_0720, never substituted for a routed view.
+
+Independent read-only validator: nominal session40211/unit288885 PASS46554/outside0; actual group deletion session16207/unit288807 FAIL MISSINGGROUP; actual movable-cell relocation above band session96222/unit288853 FAIL OUTSIDECELL1. Both negative fixtures preserve ALL pin/net/PG/DNT identities, and use actual native objects. First CLI argument attempts were infrastructure-only (OpenROAD Tcl accepts a commandfile, not trailing arguments); wrapper files fixed invocation without changing predicate.
+
+These results prove model/source constraint consumption only. Actual new-source native/CTS/GRT/PG0/full405/TTFF/PNG qualification still owed. C launch remains HELD during ROOT drain until runtimeREADY and exact current source hashes verified. Existing B and r5v jobs preserved.
