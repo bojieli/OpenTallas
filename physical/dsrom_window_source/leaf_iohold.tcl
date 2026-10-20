@@ -78,14 +78,16 @@ foreach bt [$ot_oh_blk getBTerms] {
   # internal net before moving the BTerm; all ITerm/BTerm connections remain
   # unchanged. Reserve both net and port namespaces, including escaped/indexed
   # names and another output sharing the same original net.
-  set ot_oh_src_stem [format "ot_outhold_src%05d" $ot_oh_n]
-  set ot_oh_src_name $ot_oh_src_stem; set ot_oh_src_suffix 0
-  while {[$ot_oh_blk findNet $ot_oh_src_name] ne "NULL" || [$ot_oh_blk findBTerm $ot_oh_src_name] ne "NULL"} {
-    incr ot_oh_src_suffix
-    set ot_oh_src_name ${ot_oh_src_stem}_${ot_oh_src_suffix}
+  if {[$ot_oh_blk findBTerm [$net getName]] ne "NULL"} {
+    set ot_oh_src_stem [format "ot_outhold_src%05d" $ot_oh_n]
+    set ot_oh_src_name $ot_oh_src_stem; set ot_oh_src_suffix 0
+    while {[$ot_oh_blk findNet $ot_oh_src_name] ne "NULL" || [$ot_oh_blk findBTerm $ot_oh_src_name] ne "NULL"} {
+      incr ot_oh_src_suffix
+      set ot_oh_src_name ${ot_oh_src_stem}_${ot_oh_src_suffix}
+    }
+    $net rename $ot_oh_src_name
+    if {[$net getName] ne $ot_oh_src_name} { error "OUTHOLD: internal net rename failed" }
   }
-  $net rename $ot_oh_src_name
-  if {[$net getName] ne $ot_oh_src_name} { error "OUTHOLD: internal net rename failed" }
   set ot_oh_p_stem [format "ot_outhold_p%05d" $ot_oh_n]
   set ot_oh_p_name $ot_oh_p_stem; set ot_oh_p_suffix 0
   while {[$ot_oh_blk findNet $ot_oh_p_name] ne "NULL" || [$ot_oh_blk findBTerm $ot_oh_p_name] ne "NULL"} {
