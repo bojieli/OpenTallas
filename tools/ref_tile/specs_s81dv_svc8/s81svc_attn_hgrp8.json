@@ -1,0 +1,313 @@
+{
+ "name": "s81svc_attn_hgrp8",
+ "top": "ot_s81svc8_hgrp_s81_bounded",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/v41x/svc8_hgrp8_bounded.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508214",
+   "count": 1,
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508215",
+   "count": 1,
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508216",
+   "count": 1,
+   "at": [
+    172.8,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508217",
+   "count": 1,
+   "at": [
+    259.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508218",
+   "count": 1,
+   "at": [
+    172.8,
+    129.60000000000002
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508219",
+   "count": 1,
+   "at": [
+    259.2,
+    129.60000000000002
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508220",
+   "count": 1,
+   "at": [
+    172.8,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508221",
+   "count": 1,
+   "at": [
+    259.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508222",
+   "count": 1,
+   "at": [
+    172.8,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508223",
+   "count": 1,
+   "at": [
+    259.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508224",
+   "count": 1,
+   "at": [
+    172.8,
+    259.20000000000005
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508225",
+   "count": 1,
+   "at": [
+    259.2,
+    259.20000000000005
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508226",
+   "count": 1,
+   "at": [
+    172.8,
+    302.40000000000003
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508227",
+   "count": 1,
+   "at": [
+    259.2,
+    302.40000000000003
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508228",
+   "count": 1,
+   "at": [
+    172.8,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508229",
+   "count": 1,
+   "at": [
+    259.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "inst": "c508230",
+   "count": 1,
+   "at": [
+    172.8,
+    388.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "ld_w"
+  ],
+  "N": [
+   "ld_wp",
+   "ld_v",
+   "ld_mode",
+   "ld_bank",
+   "ld_grp",
+   "ld_w2v",
+   "gid",
+   "clk",
+   "rst_n"
+  ],
+  "S": [
+   "ib",
+   "iv",
+   "ibank"
+  ],
+  "E": [
+   "ov",
+   "oy",
+   "oflt"
+  ]
+ },
+ "clock": "cts",
+ "layer_cap": "M5",
+ "inhold": false,
+ "outhold": false,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 160,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Same-edge source ingress capture: data/bank fields registered at R0; normal/low/high stationary-write predicates decode before R0 and remain at the same capture edge; all functional outputs registered. Added flow pin stages would change the score contract. Upper half ld_w is reserved by the inherited PWORDS2 interface, matching the original group."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "outline": {
+  "w": 432,
+  "h": 432
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "SVC8: same-cycle SRAM-ring successor + opt-in stationary-write predecode + exact mapped graph replication; 17 SRAM32x64, all native mapped dynamic drivers <=32 required before generation/gate.",
+ "job": {
+  "owner": "Codex:S81-SVC8",
+  "branch": "codex/svc8-recover-1020",
+  "tag": "s81svc_attn_hgrp8",
+  "purpose": "Same-cycle native32 S81 head group:17SRAM rings, predecoded stationary writes, exact replicated mapped graph; strict retained census PASS max32.",
+  "extra_paths": [
+   "rtl/hdc/v41x",
+   "tools/s81_dv/svc_rs",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "results/rtl/s81_dv_1016/svc_rs/svc8_codex_1020",
+   "tools/textbook_lint.py",
+   "tools/hier_contract",
+   "tools/closure_loop",
+   "physical/common_flow"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_s81svc8_hgrp_s81_bounded rtl/hdc/v41x/svc8_hgrp8_bounded.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "svc8_m0",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/svc8_hgrp_bench.sh {RUN}/svc8 m0 '-DSVC8_WRITE_PREDECODE ' 20000 '1:1:4:3 2:3:0:2 3:0:2:1' ",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "pass_regex": "SVC8_BENCH PASS tag=m0",
+    "pass_witness": "results/rtl/s81_dv_1016/svc_rs/svc8_codex_1020/predecode/out_codex_predecode_bench.m0.log"
+   },
+   {
+    "name": "svc8_mbank",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/svc8_hgrp_bench.sh {RUN}/svc8 mbank '-DSVC8_WRITE_PREDECODE -DSVC8_MUT_BANK' 6000 '1:1:4:3' ",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "fail_regex": "SVC8_BENCH FAIL tag=mbank",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs/svc8_codex_1020/predecode/out_codex_predecode_bench.mbank.log"
+   },
+   {
+    "name": "svc8_maddr",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/svc8_hgrp_bench.sh {RUN}/svc8 maddr '-DSVC8_WRITE_PREDECODE -DSVC8_RING_MUT_ADDR' 6000 '1:1:4:3' ",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "fail_regex": "SVC8_BENCH FAIL tag=maddr",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs/svc8_codex_1020/predecode/out_codex_predecode_bench.maddr.log"
+   },
+   {
+    "name": "svc8_mflt",
+    "cmd": "VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash tools/s81_dv/svc_rs/svc8_hgrp_bench.sh {RUN}/svc8 mflt '-DSVC8_WRITE_PREDECODE -DSVC8_HGRP_MUT=2' 6000 '1:1:4:3' ",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "fail_regex": "SVC8_BENCH FAIL tag=mflt",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs/svc8_codex_1020/predecode/out_codex_predecode_bench.mflt.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81svc_attn_hgrp8/views",
+  "record_to": "results/rtl/ref_tile/s81svc_attn_hgrp8"
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "std_area_um2": 63344.23884
+}

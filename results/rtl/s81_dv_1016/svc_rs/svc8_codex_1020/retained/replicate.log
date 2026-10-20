@@ -1,0 +1,24 @@
+SVC7_GRAPH clones=4775 final_cells=513006 structural_invariant=PASS
+	Command being timed: "python3 tools/s81_dv/svc_rs/svc7_bound_graph.py /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/map/flat.json --top ot_s81svc8_hgrp_s81 --name ot_s81svc8_hgrp_s81_bounded --out /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/bound/bounded.v --limit 32 --incremental"
+	User time (seconds): 34.45
+	System time (seconds): 8.35
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:42.83
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4001696
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2491222
+	Voluntary context switches: 1
+	Involuntary context switches: 95
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 246312
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

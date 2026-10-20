@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81svc8_hgrp_s81_bounded",
+ "enable": false,
+ "reason": "Same-edge source ingress capture: data/bank fields registered at R0; normal/low/high stationary-write predicates decode before R0 and remain at the same capture edge; all functional outputs registered. Added flow pin stages would change the score contract. Upper half ld_w is reserved by the inherited PWORDS2 interface, matching the original group."
+}

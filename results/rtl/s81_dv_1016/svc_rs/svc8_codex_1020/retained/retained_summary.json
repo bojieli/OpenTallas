@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "liberty": [
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/retained/lib/AO.lib",
+      "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/retained/lib/INVBUF.lib",
+      "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/retained/lib/MACRO128.lib",
+      "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/retained/lib/MACRO64.lib",
+      "sha256": "89e8a678c954a540f86a2c2571edfa312f8ff1ac3171a08556a7eeaa23670672"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/retained/lib/OA.lib",
+      "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/retained/lib/SEQ.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/retained/lib/SIMPLE.lib",
+      "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    }
+  ],
+  "netlist": {
+    "path": "/srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_predecode_resume2/retained/mapped.v",
+    "sha256": "6cc7756384633bed7fc0c70e636ca605e2e19e274df720c92d2244bcc6062e43"
+  },
+  "top": "ot_s81svc8_hgrp_s81_bounded",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 515961,
+  "max_dynamic_loads": 32,
+  "constant_output_bits": [],
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true,
+  "role_errors": [],
+  "violations": [],
+  "driver_count": 498623,
+  "violation_count": 0
+}
