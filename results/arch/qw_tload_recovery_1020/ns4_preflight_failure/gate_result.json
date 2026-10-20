@@ -1,0 +1,65 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 39% = (macros/children 30656 + std 1860) / outline 83981 um2 < 50%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers on every data input and output (+1 cycle each; kit pin_regs.json)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "sources",
+   "message": "1 referenced file(s) do not exist: ['results/arch/qwen_programme_store_1019/table_manifest.json']",
+   "fix": "commit them / fix the path"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc5 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_dv_slice_tload_ns4_20261020-013248.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_dv_slice_tload_ns4_20261020-013248.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/qfd_dv_slice_tload_ns4-20261020-013248",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook_execution",
+   "message": "missing unique actual textbook verdict or failed lint execution; RC=[]",
+   "fix": "inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate"
+  },
+  {
+   "severity": "FAIL",
+   "check": "floorplan_run",
+   "message": "synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS synthesis failed with exit 2:",
+   "fix": "read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL"
+  },
+  {
+   "severity": "WARN",
+   "check": "layout_images",
+   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
+   "fix": ""
+  }
+ ]
+}
