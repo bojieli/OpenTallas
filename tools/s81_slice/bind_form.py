@@ -16,11 +16,25 @@ hdr_end = body.index(");")
 hdr, rest = body[:hdr_end], body[hdr_end + 2:]
 hdr = re.sub(r"#\s*\(\s*parameter[^)]*\)", "", hdr, count=1).strip().lstrip("(")
 MUT = 0
+# S81-LEPENH2 10-20: lp.py chunked / reset-forest parents declare localparams (LPR_LEAVES_<r>) and index leaf vectors with
+# [(a) +: (b)]: evaluate both to literal ranges (integer arithmetic) so die_port_bind sees plain [hi:lo] selects.
+ENV = {"MUT": MUT}
+def ival(x):
+    return int(eval(re.sub(r"(?<![/])/(?![/])", "//", x), dict(ENV)))
+for lp_ in re.finditer(r"\blocalparam\s+(?:integer\s+)?(\w+)\s*=\s*([^;]+);", rest):
+    ENV[lp_.group(1)] = ival(lp_.group(2))
+rest = re.sub(r"\blocalparam\s+[^;]*;", "", rest)
+def plusc(s):   # name[(a) +: (b)] -> name[a+b-1:a]
+    pat = re.compile(r"\[([^\[\]]*?)\+:([^\[\]]*)\]")
+    def one(m):
+        lo, n = ival(m.group(1)), ival(m.group(2))
+        return f"[{lo + n - 1}:{lo}]"
+    return pat.sub(one, s)
 def ev(x):
     return str(int(eval(x.replace("MUT", str(MUT)).replace("?", " if ").replace(":", " else ") if False else x, {"MUT": MUT})))
 def rng(r):
     a, b = r[1:-1].split(":", 1) if r.count(":") == 1 else (None, None)
-    return f"[{int(eval(a, {'MUT': MUT}))}:{int(eval(b, {'MUT': MUT}))}]"
+    return f"[{ival(a)}:{ival(b)}]"
 def tern(s):   # (MUT == k) ? a : b  -> pick at MUT 0
     pat = re.compile(r"\(\s*MUT\s*==\s*(\d+)\s*\)\s*\?\s*([^:,()]+?)\s*:\s*([^,;()]+)")
     while True:
@@ -45,7 +59,7 @@ def evparams(s):   # .NAME(<arithmetic>) inside #( ... ): evaluate balanced-pare
     def one(seg):
         n = re.match(r"\s*\.(\w+)\((.*)\)\s*$", seg, re.S)
         try:
-            return f".{n.group(1)}({int(eval(n.group(2), {'MUT': MUT}))})"
+            return f".{n.group(1)}({ival(n.group(2))})"
         except Exception:
             return seg.strip()
     segs, d, cur = [], 0, ""
@@ -70,6 +84,12 @@ L += [f"    {d} {r + ' ' if r else ''}{n};" for d, r, n in ports]
 for st in [s.strip() for s in rest.split(";") if s.strip()]:
     st = re.sub(r"\s+", " ", st)
     w = re.match(r"wire\s*(\[[^\]]*\])?\s*(.*)$", st)
+    if w and "=" in w.group(2):     # wire x = expr  ->  wire x; assign x = expr (folded below)
+        r = rng(w.group(1)) + " " if w.group(1) else ""
+        nm, ex = w.group(2).split("=", 1)
+        L.append(f"    wire {r}{nm.strip()};")
+        L.append(f"    assign {nm.strip()} = {plusc(ex.strip())};")
+        continue
     if w:
         r = rng(w.group(1)) + " " if w.group(1) else ""
         for n in w.group(2).split(","):
@@ -77,6 +97,7 @@ for st in [s.strip() for s in rest.split(";") if s.strip()]:
         continue
     st = tern(st)
     st = evparams(st)
+    st = plusc(st)
     L.append(f"    {st};")
 # assigns are not drivers in die_port_bind: fold them into the instance connections
 outs = {n for d, _, n in ports if d == "output"}
