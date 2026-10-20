@@ -1,0 +1,119 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "clock_span",
+   "message": "32.4 x 1296.0 um: one clock root over > 600 um",
+   "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: outputs score0/score1/fault are registers (as the flat quarter); inputs land in the keep ring / tail / meta input stages and the settle/online/fault registers (E glue verbatim)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hidx_score_qe4_648_w324_20261019-180817.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hidx_score_qe4_648_w324_20261019-180817.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hidx_score_qe4_648_w324-20261019-180817",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 184 s (gate total 801 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 1478, 'pin_rectangles': 1478, 'pin_track_checked': 1478, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 11087aefdd43d24c1b082d69beebeeed89ff4ef058b541ae5505147612c6a7ec",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 17321 um2 + macros 0 in core 36270: util 48%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_idx_score_qe_r4 cells 144,542 flops 23,222 depth 351.7 ps util 0.4211 reach 55.2 um (3.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk_e0: 11,676 flops > 8,000 spread over a 28 x 1292 um outline (> 600 um) (+0 ICGs, 0 macro clock pins; e.g. fault$_DFFE_PN0P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk_e1: 11,546 flops > 8,000 spread over a 28 x 1292 um outline (> 600 um) (+0 ICGs, 0 macro clock pins; e.g. ge[1].fault_q$_DFFE_PN0P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 42.1% outside 45%-65% (std 15274 + macro 0 um2 in 36270 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.550 vs spec PD 0.55",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "cross_clock",
+   "message": "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)",
+   "fix": "fix the signoff SDC read and re-gate with --cts"
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/l2h-idxscore-1019/physical/ref_tile/hidx_score_qe4_648_w324/gate_layout/floorplan.png",
+   "fix": ""
+  }
+ ]
+}

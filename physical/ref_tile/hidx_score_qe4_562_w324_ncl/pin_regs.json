@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_idx_score_qe_r4",
+ "enable": false,
+ "reason": "outputs score0/score1/fault are registers (as the flat quarter); inputs land in the keep ring / tail / meta input stages and the settle/online/fault registers (E glue verbatim)"
+}

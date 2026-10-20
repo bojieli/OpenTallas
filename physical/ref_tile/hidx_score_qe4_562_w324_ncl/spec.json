@@ -1,0 +1,259 @@
+{
+ "kind": "tile",
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "pd": 0.55,
+  "cts_sink": {
+   "sink_clustering": false
+  }
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "job": {
+  "owner": "Claude LEAD2-HBM/L2H-IDXSCORE 1019",
+  "purpose": "IDX quarter scorer E glue tile r4 (wires-only quarter wo2, x4 per die)",
+  "branch": "claude/l2h-idxscore-1019",
+  "benches": [
+   {
+    "name": "qsplit_r4_pos",
+    "cmd": "bash rtl/test/hbm_idx_static/run_quarter_split_r4.sh {RUN}/qs_pos pos",
+    "expect": "pass",
+    "pass_regex": "^IDX_QUARTER_SPLIT_GATE_PASS$",
+    "pass_witness": "results/rtl/hbm_idx_quarter_split_1018/qs_r4/pos.log",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_r4_keyline",
+    "cmd": "QS_BENCH=1 bash rtl/test/hbm_idx_static/run_quarter_split_r4.sh {RUN}/qs_keyline keyline",
+    "expect": "fail",
+    "fail_regex": "^\\[keyline\\] QSPLIT_BAD cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/qs_r4/keyline.log",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_r4_auxearly",
+    "cmd": "QS_BENCH=1 bash rtl/test/hbm_idx_static/run_quarter_split_r4.sh {RUN}/qs_auxearly auxearly",
+    "expect": "fail",
+    "fail_regex": "^\\[auxearly\\] QSPLIT_BAD cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/qs_r4/auxearly.log",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qsplit_r4_rowswap",
+    "cmd": "QS_BENCH=1 bash rtl/test/hbm_idx_static/run_quarter_split_r4.sh {RUN}/qs_rowswap rowswap",
+    "expect": "fail",
+    "fail_regex": "^\\[rowswap\\] QSPLIT_BAD cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/qs_r4/rowswap.log",
+    "threads": 16,
+    "peak_ram_gb": 54,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "name": "hidx_score_qe4_562_w324_ncl",
+ "top": "ot_hbm_idx_score_qe_r4",
+ "sources": [
+  "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_wo2.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_score_leaf_c1.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_l.sv",
+  "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_rst_relay_l.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_delay_auto.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {},
+ "outline": {
+  "w": 32.4,
+  "h": 1123.2,
+  "exact": true
+ },
+ "structural_change": "L2H-IDXSCORE 2026-10-19 successor of hidx_score_qe_1018 (r3 FAIL: ONE root over 1.12 mm, TT/FF pin-flop spread 177.7 / 156.8 ps; reset_landing 3; util 16%): row clocks clk_e0 / clk_e1 (die clk_tail[0/1]) beside each row's E glue, per-row score registers + pins (score0 / score1, the parent re-assembles the flat 306-bit bus), keep delay as ring buffer, landed reset ot_rst_relay_l, width cut toward 40% util. Same cycles. CTS variant ncl: route.cts_sink {\"sink_clustering\": false} (pin-band boundary sinks).",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rst_n reaches only the 2 synchroniser flops of ot_rst_relay_l (relay copies clear from the last stage); physical stages would shift the scheduled reset release"
+ },
+ "clock_port": "clk_e0",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk_e0",
+  "clk_e1"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_e0"
+   ],
+   "inputs": [
+    "rst_n",
+    "r0_qv",
+    "r0_kv",
+    "r0_aux",
+    "r0_bus"
+   ],
+   "outputs": [
+    "score0",
+    "fault"
+   ]
+  },
+  "r1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_e1"
+   ],
+   "inputs": [
+    "r1_qv",
+    "r1_kv",
+    "r1_aux",
+    "r1_bus"
+   ],
+   "outputs": [
+    "score1"
+   ]
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 2,
+  "allow_none": true
+ },
+ "pins": {
+  "W": [
+   "clk_e0",
+   "clk_e1",
+   "rst_n",
+   "r0_qv",
+   "r0_kv",
+   "r0_aux",
+   "r0_bus",
+   "r1_qv",
+   "r1_kv",
+   "r1_aux",
+   "r1_bus"
+  ],
+  "E": [
+   "score0",
+   "fault",
+   "score1"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "outputs score0/score1/fault are registers (as the flat quarter); inputs land in the keep ring / tail / meta input stages and the settle/online/fault registers (E glue verbatim)"
+ },
+ "pin_ranges": {
+  "r0_qv": [
+   2.16,
+   3.24
+  ],
+  "r0_kv": [
+   97.857,
+   98.937
+  ],
+  "r0_aux": [
+   462.491,
+   467.489
+  ],
+  "r0_bus": [
+   467.489,
+   559.44
+  ],
+  "r1_qv": [
+   563.76,
+   564.84
+  ],
+  "r1_kv": [
+   659.457,
+   660.537
+  ],
+  "r1_aux": [
+   1024.091,
+   1029.089
+  ],
+  "r1_bus": [
+   1029.089,
+   1121.04
+  ],
+  "clk_e0": [
+   250.017,
+   251.097
+  ],
+  "rst_n": [
+   260.017,
+   261.097
+  ],
+  "clk_e1": [
+   811.617,
+   812.697
+  ],
+  "score0": [
+   407.489,
+   467.489
+  ],
+  "fault": [
+   404.249,
+   405.329
+  ],
+  "score1": [
+   969.089,
+   1029.089
+  ]
+ }
+}
