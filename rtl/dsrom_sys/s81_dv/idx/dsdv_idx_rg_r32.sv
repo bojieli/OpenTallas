@@ -174,9 +174,13 @@ module dsdv_idx_rg_r32 #(
     reg  [511:0] q_d1;
     (* keep = "true" *) reg [7:0] q_kind;
     reg  [7:0] qe_head;
-    (* keep = "true" *) reg [16:0] hg;        // hgo copies for the field / state loads
-    (* keep = "true" *) reg [15:0] qe_h;      // even-word hold enable copies
-    (* keep = "true" *) reg [17:0] qe_l;      // odd-word load enable copies
+    (* keep = "true" *) reg [21:0] hg;        // hgo copies for the field / state loads
+    (* keep = "true" *) reg [31:0] qe_h;      // even-word hold enable copies
+    (* keep = "true" *) reg [34:0] qe_l;
+    (* keep = "true" *) reg qe_l_valid;
+    wire qodd_a,qodd_b;
+    dsdv_idx_query_odd u_qa(.p(pay_job),.pw(pw),.y(qodd_a));
+    dsdv_idx_query_odd u_qb(.p(pay_job),.pw(pw),.y(qodd_b));      // odd-word load enable copies
     reg  [511:0] qhold;
     reg  [511:0] ql_c;
     reg  [31:0]  ql_s;
@@ -199,25 +203,35 @@ module dsdv_idx_rg_r32 #(
     always @(posedge ck) begin : g_stb
         integer k;
         q_d1 <= q_d; q_kind <= {8{q_d[511]}};
-        hgo <= hdr_go; hg <= {17{hdr_go}};
-        qe_h <= {16{q_ld0}}; qe_l <= {18{q_ld1}};
+        hgo <= hdr_go; hg <= {22{hdr_go}};
+        qe_h <= {32{q_ld0}}; qe_l <= {{17{qodd_b}},{18{qodd_a}}}; qe_l_valid <= qodd_a;
         qe_head <= 8'(pw[6:1]);
-        ql_v <= qe_l[0]; ql_h <= qe_head;
-        for (k = 0; k < 16; k = k + 1) begin
-            if (qe_h[k]) qhold[32 * k +: 32] <= q_d1[32 * k +: 32];
-            if (qe_l[k]) ql_c[32 * k +: 32] <= qhold[32 * k +: 32];
+        ql_v <= qe_l_valid; ql_h <= qe_head;
+        for (k = 0; k < 32; k = k + 1) begin
+            if (qe_h[k]) qhold[16*k+:16] <= q_d1[16*k+:16];
+            if (qe_l[k]) ql_c[16*k+:16] <= qhold[16*k+:16];
         end
-        if (qe_l[16]) ql_s <= q_d1[31:0];
-        if (qe_l[17]) ql_w <= q_d1[47:32];
-        if (hg[0]) begin gat <= q_kind[3]; jb <= q_d1[19:0]; ik <= q_d1[103:101]; om <= q_d1[106:104]; end
-        if (hg[1]) begin jn <= b_n; jk <= q_d1[50:41]; end
-        if (hg[2]) kb <= q_d1[80:51];
-        if (hg[3]) begin t0 <= q_d1[96:81]; pp <= q_d1[100:97]; tg <= q_d1[502:495]; end
+        if(qe_l[32]) ql_s[15:0] <= q_d1[15:0];
+        if(qe_l[33]) ql_s[31:16] <= q_d1[31:16];
+        if(qe_l[34]) ql_w <= q_d1[47:32];
+        if (hg[0]) begin gat <= q_kind[3]; ik <= q_d1[103:101]; om <= q_d1[106:104]; end
+        if(hg[9]) jb[9:0] <= q_d1[9:0];
+        if(hg[10]) jb[19:10] <= q_d1[19:10];
+        if(hg[1]) jn[10:0] <= b_n[10:0];
+        if(hg[11]) jn[20:11] <= b_n[20:11];
+        if(hg[12]) jk <= q_d1[50:41];
+        if(hg[2]) kb[14:0] <= q_d1[65:51];
+        if(hg[13]) kb[29:15] <= q_d1[80:66];
+        if(hg[3]) t0 <= q_d1[96:81];
+        if(hg[17]) begin pp <= q_d1[100:97]; tg <= q_d1[502:495];end
         if (hg[4]) j0 <= b_j0;
         if (hg[5]) j1 <= b_j1;
-        if (hg[6]) begin nw <= b_nw; nlw <= q_kind[4] ? 16'((b_n + 21'd15) >> 4) : 16'd0; end
-        if (hg[7]) jend <= 21'(q_d1[19:0]) + b_n;
-        if (hg[8]) begin j1p <= b_j1 + 16'd1; nwm1 <= b_nw - 16'd1; end
+        if(hg[6]) nw <= b_nw;
+        if(hg[18]) nlw <= q_kind[4] ? 16'((b_n + 21'd15) >> 4) : 16'd0;
+        if(hg[7]) jend[10:0] <= (21'(q_d1[19:0]) + b_n);
+        if(hg[19]) jend[20:11] <= (21'(q_d1[19:0]) + b_n) >> 11;
+        if(hg[8]) j1p <= b_j1 + 16'd1;
+        if(hg[20]) nwm1 <= b_nw - 16'd1;
         if (!rl[R_JOB]) begin hgo <= 1'b0; ql_v <= 1'b0; end
     end
 
@@ -920,6 +934,7 @@ module dsdv_idx_rg_r32 #(
     reg  [15:0]  pp_loh, pp_w, pp_sc;
     (* keep = "true" *) reg [7:0] pp_n0, pp_n1;   // "new word" clears a buffer (copies, 2 lanes each)
     (* keep = "true" *) reg [1:0] pp_vl, pp_vm;   // lane / meta write a buffer
+    (* keep = "true" *) reg [3:0] take_pe;
     reg          take_d;                     // emission took buffer pe (one edge after the decision)
     always @(posedge ck) begin : g_asm
         integer k, b;
@@ -947,7 +962,7 @@ module dsdv_idx_rg_r32 #(
                               pa <= 1'b0; bv <= 2'd0; pe <= 1'b0; end
     end
     always @(posedge ck) begin
-        if(take_d) pe_k <= ~pe_k;
+        for(integer n=0;n<4;n=n+1) if(take_pe[n]) pe_k[8*n+:8] <= ~pe_k[8*n+:8];
         if(!rl[R_ASM_PEK]) pe_k <= 32'd0;
     end
     // tb trace aliases (the record names)
@@ -1022,12 +1037,15 @@ module dsdv_idx_rg_r32 #(
         e_ohd <= {e_oh[8:0], ended && !wdk[1] && tc + 20'd2 == th};
         hb_q <= hb_n; hv_q <= |ec;
         slot_q <= slot_e; slot_k <= {9{slot_e}};
-        tk_k <= {9{take_e}}; take_d <= take_e;
+        tk_k <= {9{take_e}}; take_d <= take_e; take_pe <= {4{take_e}};
         lv_q <= blv[pe]; f_q <= bf[pe]; late_q <= late_e; last_q <= ew == nwm1;
         for (k = 0; k < 32; k = k + 1) d0_q[8 * k +: 8] <= pe_k[k] ? bs[1][8 * k +: 8] : bs[0][8 * k +: 8];
         if (hg[14]) ew <= 16'd0; else if (slot_g[0]) ew <= ew + 16'd1;
         if (hg[15]) ej <= b_ej; else if (slot_g[1]) ej <= ej + 16'd1;
-        if (hg[16]) etm <= 20'(q_d1[96:81]) + 20'd9; else if (slot_g[2]) etm <= etm + 20'(pp);
+        if(hg[16]) etm[9:0] <= (20'(q_d1[96:81])+20'd9);
+        else if(slot_g[2]) etm[9:0] <= etm + 20'(pp);
+        if(hg[21]) etm[19:10] <= (20'(q_d1[96:81])+20'd9) >> 10;
+        else if(slot_g[2]) etm[19:10] <= (etm + 20'(pp)) >> 10;
         // the beat edge: part 1 follows part 0 by one edge
         p1 <= slot_q; p1_k <= {9{slot_q}}; p1_d <= p1; p1d_k <= p1_k;
         if (slot_q) begin p1_lv <= tk_k[8] ? lv_q : 16'd0; p1_f <= (tk_k[8] && f_q) || late_q || fault; p1_last <= last_q; end
@@ -1043,7 +1061,7 @@ module dsdv_idx_rg_r32 #(
         end
         if (hgo) begin wdone <= 1'b0; wdk <= 4'h0; end
         if (!rl[R_EOH]) begin e_oh <= 10'd0; e_ohc <= 10'd0; e_ohd <= 10'd0; hv_q <= 1'b0; end
-        if (!rl[R_SLT]) begin slot_q <= 1'b0; slot_k <= 9'd0; tk_k <= 9'd0; take_d <= 1'b0; end
+        if (!rl[R_SLT]) begin slot_q <= 1'b0; slot_k <= 9'd0; tk_k <= 9'd0; take_d <= 1'b0; take_pe <= 4'd0; end
         if (!rl[R_P1]) begin p1 <= 1'b0; p1_k <= 9'd0; p1_d <= 1'b0; p1d_k <= 9'd0; end
         if (!rl[R_WD]) begin wdone <= 1'b0; wdk <= 4'h0; wdone_p <= 1'b0; fc_set <= 8'd0; end
     end
@@ -1206,4 +1224,10 @@ module dsdv_idx_m1k_r32 #(
         end
         assign rd = q;
     end endgenerate
+endmodule
+
+// Independent combinational copies avoid a single odd-payload predicate driving36 captures.
+// keep_hierarchy preserves actual Boolean-driver populations through the ABC partition.
+(* keep_hierarchy = "yes" *) module dsdv_idx_query_odd(input wire p,input wire[11:0]pw,output wire y);
+assign y=p && pw<12'd64 && pw[0];
 endmodule
