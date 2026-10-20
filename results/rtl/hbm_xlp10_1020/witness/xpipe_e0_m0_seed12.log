@@ -1,0 +1,31 @@
+XPIPE SEED=12 N=24 EARLY=0 DMUT=0 RD_LAT=2d2b37351d1b2725
+ref 0 {fmt 1 P 1 K 7168 xb 35}: ISS 224 beats 112 FIRST 95 LAST 314
+ref 1 {fmt 1 P 1 K 7168 xb 102}: ISS 224 beats 112 FIRST 95 LAST 314
+ref 2 {fmt 2 P 1 K 7168 xb 112}: ISS 192 beats 64 FIRST 99 LAST 282
+ref 3 {fmt 2 P 1 K 2048 xb 33}: ISS 48 beats 16 FIRST 99 LAST 138
+ref 4 {fmt 0 P 1 K 512 xb 89}: ISS 16 beats 16 FIRST 92 LAST 107
+ref 5 {fmt 1 P 1 K 1536 xb 42}: ISS 64 beats 32 FIRST 95 LAST 154
+ref 6 {fmt 0 P 1 K 7168 xb 52}: ISS 224 beats 224 FIRST 92 LAST 315
+ref 7 {fmt 1 P 1 K 1024 xb 82}: ISS 32 beats 16 FIRST 95 LAST 122
+ref 8 {fmt 2 P 1 K 4096 xb 93}: ISS 96 beats 32 FIRST 99 LAST 186
+ref 9 {fmt 1 P 1 K 512 xb 49}: ISS 32 beats 16 FIRST 95 LAST 122
+ref 10 {fmt 2 P 1 K 7168 xb 54}: ISS 192 beats 64 FIRST 99 LAST 282
+ref 11 {fmt 0 P 1 K 2048 xb 110}: ISS 64 beats 64 FIRST 92 LAST 155
+ref 12 {fmt 2 P 1 K 1440 xb 64}: ISS 48 beats 16 FIRST 99 LAST 138
+ref 13 {fmt 0 P 3 K 507 xb 48}: ISS 40 beats 40 FIRST 108 LAST 147
+ref 14 {fmt 0 P 1 K 1441 xb 18}: ISS 48 beats 48 FIRST 92 LAST 139
+ref 15 {fmt 2 P 1 K 992 xb 96}: ISS 48 beats 16 FIRST 99 LAST 138
+ref 16 {fmt 0 P 5 K 1165 xb 122}: ISS 192 beats 192 FIRST 124 LAST 315
+ref 17 {fmt 1 P 4 K 672 xb 34}: ISS 80 beats 56 FIRST 95 LAST 171
+ref 18 {fmt 0 P 6 K 513 xb 69}: ISS 160 beats 160 FIRST 132 LAST 291
+ref 19 {fmt 2 P 3 K 64 xb 122}: ISS 112 beats 40 FIRST 99 LAST 202
+ref 20 {fmt 1 P 6 K 1728 xb 66}: ISS 224 beats 160 FIRST 95 LAST 315
+ref 21 {fmt 2 P 4 K 256 xb 64}: ISS 144 beats 56 FIRST 99 LAST 234
+ref 22 {fmt 2 P 8 K 1664 xb 100}: ISS 272 beats 104 FIRST 99 LAST 362
+ref 23 {fmt 2 P 8 K 2016 xb 7}: ISS 272 beats 104 FIRST 99 LAST 362
+XPIPE dut span 3234 edges (last slot 2870) for 24 loads (cl2 serial slots would span 4989); 23 of 23 slots overlap the previous load's emission; beats 1760 / 1760, mismatches 0; x_done ref 24 dut 24; fault ref 0 dut 0; lanefault 0/0
+XLOAD_XPIPE PASS N=24
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_xpipe.sv:239: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 19us; walltime 0.572 s; speed 32.695 us/s
+- Verilator: cpu 0.572 s on 1 threads; allocated 34 MB
