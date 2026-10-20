@@ -1,0 +1,8 @@
+MISMATCH edge 371 row 2 lo 0 k 2 n 4 got 47884022/0 want 478937c1/0
+MISMATCH edge 372 row 3 lo 0 k 2 n 4 got 48453850/0 want 4845254c/0
+MISMATCH edge 379 row 4 lo 0 k 1 n 4 got c76931a8/0 want c76943eb/0
+MISMATCH edge 380 row 5 lo 0 k 1 n 4 got 467dbce0/0 want 467cafa7/0
+MISMATCH edge 386 row 4 lo 2 k 1 n 4 got 478346f7/0 want 4774a8f0/0
+MISMATCH edge 387 row 5 lo 2 k 1 n 4 got c784d82a/0 want c784d5b9/0
+PLAN_MISMATCH predicted 10 ret words, got 10; first diff ((371, 2, (0, 2, 4), 1200175041, 0), (371, 2, (0, 2, 4), 1200111650, 0))
+FRAME_BENCH FAIL col_h10 errors=7 words=10 rows=6

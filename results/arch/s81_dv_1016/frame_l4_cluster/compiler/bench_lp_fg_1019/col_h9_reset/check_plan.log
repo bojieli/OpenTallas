@@ -1,0 +1,4 @@
+COVERAGE row 2 segments [0, 1, 2] of 4
+COVERAGE row 3 segments [0, 1, 2] of 4
+PLAN_MISMATCH predicted 14 ret words, got 14; first diff ((363, 2, (2, 1, 4), 1193479934, 0), (365, 2, (2, 0, 4), 1157593452, 0))
+FRAME_BENCH FAIL col_h9 errors=3 words=14 rows=6
