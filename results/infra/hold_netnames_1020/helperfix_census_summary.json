@@ -1,0 +1,117 @@
+{
+  "before_fix": {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "liberty": [
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      },
+      {
+        "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_tt.lib",
+        "sha256": "377809475797959b18e910d6c8a1e83dec27faf9de9eb7ee98bef9d96a9510e9"
+      }
+    ],
+    "netlist": {
+      "path": "/w/preflight/iohold.v",
+      "sha256": "db5262fe25427efa4bb4a01f925f4386cc7de6b8573fdfc3d2ceb35f8f0103a3"
+    },
+    "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face",
+    "status": "FAIL",
+    "limit": 32,
+    "roots_examined": 34906,
+    "max_dynamic_loads": 32,
+    "functional_pin_contract": "NOT_EVALUATED",
+    "pin_registration_contract": "NOT_EVALUATED",
+    "storage_contract": "NOT_EVALUATED",
+    "independent_source_contract_audit_required": true,
+    "violations": [],
+    "role_error_count": 615,
+    "role_error_examples": [
+      "multiple drivers net col_bank[0]",
+      "multiple drivers net col_bank[1]",
+      "multiple drivers net col_bank[2]",
+      "multiple drivers net col_bank[3]",
+      "multiple drivers net col_bank[4]",
+      "multiple drivers net col_col[0]",
+      "multiple drivers net col_col[1]",
+      "multiple drivers net col_col[2]"
+    ],
+    "full_report_sha256": "01781a24e00c77a4cc75bc7192ac62069d8b2652cd9bc25eee0767d33a4ec980",
+    "full_report_path": "/srv/opentallas-scratch/claude/codex-hbm-mc3-v6-833-1020/preflight/current_native_census.json"
+  },
+  "after_fix": {
+    "schema": "opentallas.pre_gate_native_census.v1",
+    "liberty": [
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      },
+      {
+        "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_tt.lib",
+        "sha256": "377809475797959b18e910d6c8a1e83dec27faf9de9eb7ee98bef9d96a9510e9"
+      }
+    ],
+    "netlist": {
+      "path": "/w/preflight_fixed/iohold.v",
+      "sha256": "f10b11089c2782ed04ab14b9b8401a5686ac0412b7bc4c29bec67c5182fe2e0f"
+    },
+    "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face",
+    "status": "PASS",
+    "limit": 32,
+    "roots_examined": 34906,
+    "max_dynamic_loads": 32,
+    "functional_pin_contract": "NOT_EVALUATED",
+    "pin_registration_contract": "NOT_EVALUATED",
+    "storage_contract": "NOT_EVALUATED",
+    "independent_source_contract_audit_required": true,
+    "violations": [],
+    "role_error_count": 0,
+    "role_error_examples": [],
+    "full_report_sha256": "f6378640fa8e848451ece5e3d3ea225080c1ac19f861e8180ae1045dd4f75cb2",
+    "full_report_path": "/srv/opentallas-scratch/claude/codex-hbm-mc3-v6-833-1020/preflight_fixed/current_native_census.json"
+  },
+  "SDC": {
+    "before_sha256": "659c90cc1c619076841119ac1367457b07394cc0b55a97de572b99fc22c7bd07",
+    "after_sha256": "659c90cc1c619076841119ac1367457b07394cc0b55a97de572b99fc22c7bd07",
+    "exact_text_equal": true,
+    "input_delay_ports": 613,
+    "output_delay_ports": 615,
+    "clocks": 1,
+    "explicit_get_nets_in_source": false,
+    "scope": "Actual833clock.sdc evaluated before hold insertion; identical named port binding lists before/after; no explicit get_nets in source. Coupon confirms unrelated named internal net and dont_touch survive."
+  },
+  "source_commit": "5a3a675c5",
+  "remote_run": "ot-agidock128:/srv/opentallas-scratch/claude/codex-hbm-mc3-v6-833-1020"
+}

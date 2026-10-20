@@ -1,0 +1,39 @@
+F
+======================================================================
+FAIL: test_native_roundtrip_shared_escaped_indexed_and_collisions (__main__.HoldNetNames)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/src/tools/ref_tile/tests/test_leaf_iohold_netnames.py", line 97, in test_native_roundtrip_shared_escaped_indexed_and_collisions
+    (base/'flow.tcl').write_text(flow);run(['-exit',str(base/'flow.tcl')],'flow.log')
+  File "/src/tools/ref_tile/tests/test_leaf_iohold_netnames.py", line 56, in run
+    (base/log).write_text(r.stdout);self.assertEqual(r.returncode,0,r.stdout[-3000:])
+AssertionError: 1 != 0 : _RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO IFP-0001] Added 144 rows of 720 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 43.200 43.200 ) um
+[INFO IFP-0101] Core BBox: (  2.160  2.160 ) ( 41.040 41.040 ) um
+[INFO IFP-0102] Core area:                         1511.654 um^2
+[INFO IFP-0103] Total instances area:                 0.671 um^2
+[INFO IFP-0104] Effective utilization:                0.000
+[INFO IFP-0105] Number of instances:                      4
+[INFO PPL-0070] Pin clk placed at (0.04um, 10.04um) instead of (0.00um, 10.04um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin d placed at (0.04um, 12.06um) instead of (0.00um, 12.06um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin escaped.pin\[3\] placed at (9.04um, 0.04um) instead of (9.04um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin ot_outhold_n00000_0 placed at (0.04um, 16.09um) instead of (0.00um, 16.09um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin ot_outhold_p00000 placed at (0.04um, 18.11um) instead of (0.00um, 18.11um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin ot_outhold_src00000 placed at (0.04um, 20.12um) instead of (0.00um, 20.12um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin y[0] placed at (17.10um, 0.04um) instead of (17.10um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin y[1] placed at (19.12um, 0.04um) instead of (19.12um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[ERROR ODB-0440] Attempt to connect iterm ot_ohdrv_00000_0/Y to a null net
+Error: flow.tcl, 67 ODB-0440
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.684s
+
+FAILED (failures=1)

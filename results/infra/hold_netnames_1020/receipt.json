@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "ports": 8,
+  "cells": 13,
+  "edges": 18,
+  "cases": [
+    "shared_output_source",
+    "indexed_ports",
+    "escaped_identifier",
+    "existing_net_names",
+    "existing_BTerm_names",
+    "unrelated_explicit_get_nets",
+    "dont_touch",
+    "clock_and_delay_port_bindings",
+    "exact_native_Verilog_roundtrip"
+  ]
+}
