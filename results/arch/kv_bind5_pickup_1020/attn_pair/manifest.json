@@ -1,0 +1,30 @@
+{
+  "source_commit": "72500899326ef05c25e1b5342c79e546f9d9de56",
+  "source_sha256": {
+    "tools/qwen_kv_die/attn_rv_1019/rv_pair_bench_gen9.sh": "0f7b69aaf0db9d96b94effda9f72659384f38c538b3bda44b7d9406399eeefcd",
+    "rtl/test/kv_bootage_1019/tb_kvs_attn_rv_pair.sv": "99c72e62255b1cc225d2f22fd16cda788448c54df29254001dce336964c9ee2f",
+    "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32",
+    "rtl/lib/face_land/qkd_kvs_attn_fl_ba.sv": "529fcf3924991cba9f88c4865b28a120cb9de3136e60878bc9f37cb283268220",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv": "7f5753645aa0129d8c696804d3ad49378fe7224fcd69c41624f673f3e077c5bf",
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv": "df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97",
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv": "6bd41c4aea6b90fc02faf31878ce8f4cd609ab6679e789474ea2e244e17fa2d8"
+  },
+  "fleet_run": "ot-epyc5:/srv/opentallas-scratch/claude/kv-bind4-1019/attn",
+  "parameters": {
+    "RS": 1,
+    "SD": 213
+  },
+  "positive": {
+    "MUT": 0,
+    "modes": 11,
+    "checks": 172913,
+    "fails": 0,
+    "verdict": "PASS"
+  },
+  "negative": {
+    "MUT": 4,
+    "fails": 5,
+    "verdict": "FAIL"
+  },
+  "qualification": "behavioural pair only; no native parameter receipt, die timing or full token claim"
+}
