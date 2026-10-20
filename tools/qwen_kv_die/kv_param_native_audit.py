@@ -230,6 +230,11 @@ def dup_witnesses(a, work, regs, bit_of, hit):
     [(gold_name, twin_gold_name | None, const | None, why)]."""
     (work / 'gold2.ys').write_text('\n'.join([
         'read_rtlil gold1.il'] + ['opt_expr -full', 'opt_dff -sat', 'opt_merge -share_all', 'opt_clean'] * 4
+        # KV-PARAMS6 10-20 (--witness-fixpoint): four fixed rounds stop 4 flops deep, so a constant (or twin) that has to
+        # travel down an unreset shift chain (pv_slice cp[0..10]/wp[0..6] address high bits) is only found for its first
+        # 4 stages and the rest stay FREE (2388 unproven).  `opt -sat -share_all` iterates the same passes to a fixpoint.
+        # Classification only: every witness is still a compared miter output, so a wrong class fails the proof.
+        + (['opt -full -sat -share_all', 'opt_clean'] if getattr(a, 'witness_fixpoint', False) else [])
         + ['write_json gold2.json', '']))
     rc, _t = run([a.yosys, '-q', '-s', 'gold2.ys'], work, 'gold2.log', a.timeout)
     if rc:
@@ -533,7 +538,7 @@ def audit(a):
             wit_rec.append(dict(gold=nm, witness=(twin if cst is None else f"1'{cst}"), why=why))
         if gate_side:   # the gate twin is ALSO a compared output at every checked step: dup == kept flop is proven
             wit_lines += ['cd', 'cd gate'] + gate_side + ['cd', 'cd gold']
-        res['dup_witness'] = dict(count=len(wit_rec), merged=sum(1 for w in wit_rec if w['why'].startswith('merged')),
+        res['dup_witness'] = dict(fixpoint=bool(a.witness_fixpoint), count=len(wit_rec), merged=sum(1 for w in wit_rec if w['why'].startswith('merged')),
                                   constant=sum(1 for w in wit_rec if w['why'].startswith('constant')),
                                   gold2_log_sha256=sha(work / 'gold2.log'),
                                   gold_only=len(gold_only), unwitnessed=len(gold_only) - len(wit_rec), list=wit_rec)
@@ -747,6 +752,8 @@ def main(argv=None):
     a1.add_argument('--reset-base', type=int, default=0, help='N: paired-initial reset base after N reset edges')
     a1.add_argument('--dup-witness', action='store_true',
                     help='reset base: merged-duplicate / constant gold-only registers take their kept twin / constant')
+    a1.add_argument('--witness-fixpoint', action='store_true',
+                    help='with --dup-witness: run the gold classifier passes to a fixpoint (opt -full -sat -share_all)')
     a1.add_argument('--witness-joint', action='store_true',
                     help='with --dup-witness: the witnesses are also induction $equiv points (proven jointly)')
     a1.add_argument('--reset-port', default='rst_n')
