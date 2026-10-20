@@ -113,7 +113,6 @@
   }
  },
  "sources": [
-  "rtl/physical/ot_qw_land4.sv",
   "rtl/physical/ot_qw_land4_n32.sv",
   "rtl/physical/ot_qw_land4_n32_select.sv",
   "rtl/physical/ot_qwen_rom_tile_die.sv",
@@ -441,7 +440,7 @@
  },
  "refglob": "*",
  "inter": [],
- "structural_change": "QW-CB16A0-3 10-20 rc11: qfd_tile_nk_romleaf_rc10 with the Codex A0 land32 V6 source (d458ed683: ot_qwen_rom_tile_w12_land32 / ot_qwen_w12_matvec_land32 / ot_qw_land4_n32 bounded-fanout landing writers, SPLIT_CP same-edge split copy under REGROOT 9; 0 added data/reset edges, +6 t_out retained) and ALL landing data SINGLE-CYCLE (land_mcp.sdc removed, ROOT 07:32). V6 full NK native census PASS max32/148004 roots/0 viol; full positive 29899 checks PASS; MUT60-65 all FAIL. Prior: REGROOT 9: the three inter-root seams (ROM group roots -> ck_dw/de operand, rung 0 hub ck + ck_dw/de -> ck_tx[g], leaf result/fault return ck_tx[g] -> ck) are LANDED 4-slot rings (K=2, MCP setup 2 / hold 3) instead of ~34k CTS hold buffers; x delay line -> ring (item 5). Priced: +2 memory cycles (RX; x/KV follow) and +4 leaf cycles (XTD): t_out +6 edges vs REGROOT 8. Same outline/pins/macros/reset landing.",
+ "structural_change": "QW-CB16A0-3 10-20 rc11: qfd_tile_nk_romleaf_rc10 with the Codex A0 land32 V6 source (d458ed683: ot_qwen_rom_tile_w12_land32 / ot_qwen_w12_matvec_land32 / ot_qw_land4_n32 (+_select, replaces ot_qw_land4.sv) bounded-fanout landing writers, SPLIT_CP same-edge split copy under REGROOT 9; 0 added data/reset edges, +6 t_out retained) and ALL landing data SINGLE-CYCLE (land_mcp.sdc removed, ROOT 07:32). V6 full NK native census PASS max32/148004 roots/0 viol; full positive 29899 checks PASS; MUT60-65 all FAIL. Prior: REGROOT 9: the three inter-root seams (ROM group roots -> ck_dw/de operand, rung 0 hub ck + ck_dw/de -> ck_tx[g], leaf result/fault return ck_tx[g] -> ck) are LANDED 4-slot rings (K=2, MCP setup 2 / hold 3) instead of ~34k CTS hold buffers; x delay line -> ring (item 5). Priced: +2 memory cycles (RX; x/KV follow) and +4 leaf cycles (XTD): t_out +6 edges vs REGROOT 8. Same outline/pins/macros/reset landing.",
  "job": {
   "owner": "Claude:QW-CB16A0-2",
   "branch": "claude/qw-a0-rc10-1020",
