@@ -2,8 +2,9 @@
 // QW-N59-4 (10-19): service child of the hardened native59 split; edge contract and rationale in qfd_native59_qbank.sv.
 // ----------------------------------------------------------------------------------------------------------------------
 // Service child: qfd_native59_dv_service (SAFE 2, ROOTS 1, RST_FOREST 1) with the Q-seat section replaced by the bank's
-// registered qb_* words.  dd_i / layer_context_v / command_stage are the bank's two-edge relays (this child runs two edges
-// behind the bank ports: see qfd_native59_qbank.sv).  svc2: the record codec captures rx data on every edge (RX_FREE 1).
+// registered qb_* words.  dd_i / layer_context_v / command_stage are the bank's three-edge relays (this child runs three edges
+// behind the bank ports: see qfd_native59_qbank.sv).  svc2: the record codec captures rx data on every edge (RX_FREE 1);
+// svc3: tx payload too (TX_FREE, MCTX 1) and the DV fault as four sticky flops.
 module qfd_native59_svc #(
  parameter integer MUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
  parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,EMB_RELAY=0
@@ -219,7 +220,9 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  assign vm_write_v=vmw_v;assign vm_write_word=vmw_word;assign vm_write_beat=vmw_beat;assign vm_write_tag=vmw_tag;assign vm_write_data=vmw_data;
  assign native_tx_v=ntx_v;assign native_tx_payload=ntx_p;
  wire visibility_fault=p_cs&&!(|(s_vis_seen&sel_b));
- reg dv_fault;
+ // svc3 (QW-N59-4): the sticky DV fault as four sticky flops, each beside its own cone (v2 placed STA: one flop for all
+ // terms, -149 ps); dv_fault = their OR on the same edge (exact).
+ reg[3:0]dvf;wire dv_fault=|dvf;
  wire src_fault=context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault;
  reg dr_s;                            // slot whose VM write is in dr_o (the landing fence of that slot checks it)
  genvar gs;
@@ -245,7 +248,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   .vm_write_v(s_vm_write_v[gs]),.vm_write_word(s_vm_write_word[gs]),.vm_write_beat(s_vm_write_beat[gs]),.vm_write_tag(s_vm_write_tag[gs]),.vm_write_data(s_vm_write_data[gs]),
   .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
   .complete_slot(p_cs&&b),.completed(s_completed[gs]),.active(s_active[gs]),.fault(s_svc_fault[gs]),.native_ret(s_ret[gs]));
-  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT),.RX_FREE(1))u_record(   // QW-N59-4 svc2: free rx capture (output-exact)
+  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT),.RX_FREE(1),.TX_FREE(MCTX!=0))u_record(   // QW-N59-4: free rx (svc2) / tx (svc3, MCTX 1: payload merged under tx_v) capture, output-exact
   .ck(ck),.rst_n(rst_rec),.operation_tag(s_optag[gs]),.kernel_request_v(s_req_v[gs]),.kernel_request_tag(req_tag),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
   .tx_slot(p_ts&&f),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(s_tx_v[gs]),.tx_payload(s_tx_payload[gs]),
@@ -313,8 +316,13 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  end endgenerate
  // ---------------------------------------------------------------- sticky DV boundary faults and the fault pin
  always @(posedge ck or negedge rst_top)
-  if(!rst_top)dv_fault<=0;
-  else if(dd_form_bad||q_in_bad||kv_in_bad||q_miss||(g0&&g1)||(emb_go&&emb_act)||cmd_bad||vmw_two)dv_fault<=1;
+  if(!rst_top)dvf<=0;
+  else begin
+   if(dd_form_bad||kv_in_bad)dvf[0]<=1;
+   if(q_in_bad||q_miss)dvf[1]<=1;
+   if((g0&&g1)||(emb_go&&emb_act)||cmd_bad)dvf[2]<=1;
+   if(vmw_two)dvf[3]<=1;
+  end
  always @(posedge ck or negedge rst_top)
   if(!rst_top)fault<=0;
   else fault<=svc_fault|context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault;

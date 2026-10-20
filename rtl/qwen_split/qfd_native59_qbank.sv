@@ -9,19 +9,19 @@
 //   qfd_native59_qbank  face registers (every port, S face) + the 8 Q-seat SRAMs (qfd_native59_qseat_sram function) in
 //                       16 LANE SLICES (slice l = the 32 seats {16 b + l}: its scatter replica, owner / seen state, read
 //                       select) + qctx / dup / range checks.  Every output is a flop: qb_* = the flat block's
-//                       combinational Q value two edges earlier; dd_o / lcv_o / stage_o = two-edge relays.
+//                       combinational Q value three edges earlier; dd_o / lcv_o / stage_o = three-edge relays.
 //   qfd_native59_svc    everything else (command context, formatter, x3, static services, codecs, dr landing, embedding,
 //                       dr_o), the same RTL text as qfd_native59_dv_service with the Q bank replaced by the qb_* inputs.
 //   qfd_native59_split_flat  wires-only parent (lp.py input): u_qb + u_svc.
 // EDGE CONTRACT of the flat split vs qfd_native59_dv_service_r1 (lockstep: rtl/test/qwen_split/run_native59_split_bench.sh):
 //   bank ports (dd_i, layer_context_v, command_stage, q_slot, q_slot_beat) at the r1 edge (offset 0);
-//   every other input port presented TWO edges later than at r1, every output TWO edges later.  (v2, QW-N59-4 22:55: the
-//   bank lands every port in ONE face register stage at its S face and runs its whole Q-seat section one edge behind it
-//   (+1); its registered outputs add the second edge.)
-//   => compiler: native59 is r1 with q_slot / q_slot_beat / dd_i / context TWO edges EARLIER relative to the rest of the
-//   face (equivalently: every non-bank port +2 edges).  Q write -> Q read (Q-ready age) relation unchanged (both bank).
+//   every other input port presented THREE edges later than at r1, every output THREE edges later.  (v2, QW-N59-4 22:55:
+//   the bank lands every port in ONE face register stage at its S face and runs its whole Q-seat section one edge behind
+//   it (+1); v3 23:55: two registered output stages (lane-side partials, then the N-face reductions / flops) (+2).)
+//   => compiler: native59 is r1 with q_slot / q_slot_beat / dd_i / context THREE edges EARLIER relative to the rest of the
+//   face (equivalently: every non-bank port +3 edges).  Q write -> Q read (Q-ready age) relation unchanged (both bank).
 //   The landed parent (lp.py) adds E + 1 = 3 more edges on every service port (record: results/arch/landed_parent_1018/
-//   qfd_native59_split_flat): +5 in all.  Reset: both children release on the same edge (the service's view: one edge earlier);
+//   qfd_native59_split_flat): +6 in all.  Reset: both children release on the same edge (the service's view: one edge earlier);
 //   the static calendar has no event within 8 edges of reset release, so the offset is unobservable (bench idle window).
 // Static schedule only: no ready / credit; every fault stays a sticky fault.
 
@@ -145,14 +145,17 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0)(
  reg[547:0]f_dd;reg f_lcv;reg[5:0]f_stage;reg f_qs;reg[4:0]f_qb;
  always @(posedge ck)begin f_dd<=dd_i;f_lcv<=layer_context_v;f_stage<=command_stage;f_qs<=q_slot;f_qb<=q_slot_beat;end
  // relays to the service: face register + one more stage (two edges)
+ // relays to the service: face register + two more stages (three edges, as every v3 bank output)
+ reg[547:0]dd_m;reg lcv_m;reg[5:0]stage_m;
+ always @(posedge ck)dd_m<=f_dd;
  generate if(QB_MUT!=2)begin:g_relay
-  always @(posedge ck)dd_o<=f_dd;
+  always @(posedge ck)dd_o<=dd_m;
  end else begin:g_m2
-  always @*dd_o=f_dd;
+  always @*dd_o=dd_m;
  end endgenerate
  always @(posedge ck or negedge rst_pin)
-  if(!rst_pin)begin lcv_o<=0;stage_o<=0;end
-  else begin lcv_o<=f_lcv;stage_o<=f_stage;end
+  if(!rst_pin)begin lcv_m<=0;stage_m<=0;lcv_o<=0;stage_o<=0;end
+  else begin lcv_m<=f_lcv;stage_m<=f_stage;lcv_o<=lcv_m;stage_o<=stage_m;end
  // ---------------------------------------------------------------- the flat block's Q-seat section (SAFE 2), on f_*
  reg[547:89]p_dd;reg p_lcv;reg[5:0]p_stage;reg p_qs;reg[4:0]p_qb;
  always @(posedge ck or negedge rst_pin)
@@ -204,23 +207,31 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0)(
   .elem_l(elem_l),.valid_l(valid_l),.seen_clear_l(clr_l),.read_v_l(rv_l),.read_oh_l(roh_l),.read_beat_l(rb_l),
   .read_v_m(rv_m),.read_beat_m(rb_m),.bypass_beat_c(bb_c),
   .read_data(qrow),.seen_rd_l(seen_rd_l),.all_seen_l(all_seen_l),.dup_l(dup_l));
- // full: the 16 seats of the read beat (the flat block's full_q, registered on the read edge)
- reg full_q;
- always @(posedge ck)full_q<=!begin_slot&&(&seen_rd_l);
  reg q_read_valid;reg[4:0]q_read_beat;
  always @(posedge ck or negedge rst_pin)
   if(!rst_pin)begin q_read_valid<=0;q_read_beat<=0;end
   else begin q_read_valid<=p_qs;q_read_beat<=p_qb;end
- // ---------------------------------------------------------------- registered outputs
- reg[511:0]qrow_r;
- always @(posedge ck)qrow_r<=qrow;
- assign qb_row=(QB_MUT==1)?qrow:qrow_r;
+ // ---------------------------------------------------------------- output pipeline (v3: two registered stages)
+ // stage A, beside the lane slices / the gather: q row, per-slice reductions, read valid / beat, begin
+ // stage B, at the N face: the final 16-way reductions and the output flops.  Every output = the flat block's value of
+ // the corresponding edge, one edge later than v2 (uniform: the service runs three edges behind the bank ports).
+ reg[511:0]qrow_a;reg[15:0]sr_a,as_a,dup_a;reg beg_a,qctx_a,qhi_a,qv_a;reg[4:0]qbt_a;
+ always @(posedge ck)begin qrow_a<=qrow;sr_a<=seen_rd_l;beg_a<=begin_slot;end
  always @(posedge ck or negedge rst_top)
-  if(!rst_top)begin qb_v<=0;qb_beat<=0;qb_full<=0;qb_committed<=0;qb_bad<=0;end
+  if(!rst_top)begin as_a<=0;dup_a<=0;qctx_a<=0;qhi_a<=0;qv_a<=0;qbt_a<=0;end
+  else begin as_a<=all_seen_l;dup_a<=dup_l;qctx_a<=qctx;qhi_a<=|qhi_bad;qv_a<=q_read_valid;qbt_a<=q_read_beat;end
+ reg full_q;   // the flat block's full_q (seats of the read beat all seen, not on a begin edge), one edge later
+ always @(posedge ck)full_q<=!beg_a&&(&sr_a);
+ reg[511:0]qrow_r;
+ always @(posedge ck)qrow_r<=qrow_a;
+ assign qb_row=(QB_MUT==1)?qrow_a:qrow_r;
+ reg qv_b;reg[4:0]qbt_b;
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin qv_b<=0;qbt_b<=0;qb_v<=0;qb_beat<=0;qb_full<=0;qb_committed<=0;qb_bad<=0;end
   else begin
-   qb_v<=q_read_valid;qb_beat<=q_read_beat;qb_full<=full_q;
-   qb_committed<=qctx&&(&all_seen_l);
-   qb_bad<=(|qhi_bad)||(|dup_l);
+   qv_b<=qv_a;qbt_b<=qbt_a;qb_v<=qv_b;qb_beat<=qbt_b;qb_full<=full_q;
+   qb_committed<=qctx_a&&(&as_a);
+   qb_bad<=qhi_a||(|dup_a);
   end
  initial if(MUT!=0&&MUT!=1&&MUT!=7)$fatal(1,"qfd_native59_qbank: MUT %0d (bank mutants 1 Q lane packing, 7 owner)",MUT);
 endmodule

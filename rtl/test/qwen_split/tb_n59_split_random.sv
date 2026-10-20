@@ -8,7 +8,7 @@
 // absolute edge as its bank: one service edge earlier, unobservable under the static calendar's idle window).
 // Pass line N59RND_PASS; any mismatch N59RND_FAIL (+ $fatal).
 module tb_n59_split_random #(parameter integer SAFE=2,EMBR=1,SEED=1,CYCLES=40000,NU=4,MCTX=1,SPLIT_MUT=0,QB_MUT=0,LP_MUT=0,
-                              SPL_SOFF=2,SPL_BOFF=0,SPL_ROFF=2,RST_EVERY=400,QUIET=12)(input wire clk);
+                              SPL_SOFF=3,SPL_BOFF=0,SPL_ROFF=3,RST_EVERY=400,QUIET=12)(input wire clk);
  localparam[379:0]TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
  reg[31:0]cyc=0;
  always @(posedge clk)cyc<=cyc+1;

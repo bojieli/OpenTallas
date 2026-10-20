@@ -3,7 +3,7 @@
 // the typed codec. Historical x3 Q is not a second attention-service source.
 // operation_tag is captured at the actual accepted CMD, held through all
 // returned results/done. Epoch/layer/beat are checked before restoring TAG59.
-module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0)(  // RX_FREE: qkd_native_attention_record (QW-N59-4)
+module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX_FREE=0)(  // RX_FREE / TX_FREE: qkd_native_attention_record (QW-N59-4)
  input wire ck,rst_n,
  input wire [58:0] operation_tag,
  input wire kernel_request_v,input wire [58:0] kernel_request_tag,
@@ -25,7 +25,7 @@ module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0)( 
  wire [511:0] cmd_data={493'd0,5'd0,kernel_request_tag[18:6],1'b1};
  wire rv;wire[3:0]rk;wire[15:0]re;wire[5:0]rl;wire[4:0]rb;wire[511:0]rd;
  wire codec_fault;wire[3:0]fault_cause;reg local_fault;
- qkd_native_attention_record #(.KV_SIDE(0),.MUT(CODEC_MUT),.RX_FREE(RX_FREE))u_codec(
+ qkd_native_attention_record #(.KV_SIDE(0),.MUT(CODEC_MUT),.RX_FREE(RX_FREE),.TX_FREE(TX_FREE))u_codec(
  .ck(ck),.rst_n(rst_n),.tx_event(kernel_request_v||kernel_q_v),.tx_expected(tx_slot),
  .tx_kind(request?4'd1:4'd2),.tx_expected_kind(tx_slot_kind),
  .tx_epoch(actual_tag[58:43]),.tx_expected_epoch(operation_tag[58:43]),
