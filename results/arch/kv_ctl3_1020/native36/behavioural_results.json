@@ -1,0 +1,33 @@
+{
+  "source_commit": "1b33a6eeb",
+  "verilator": "5.050",
+  "cases": {
+    "module/c2.log": [
+      "PASS KV_LPRG_MU5_LOCKSTEP mismatches0 boots140 cycles959774 events231227 stage_done39361 tokens 254/274/242/249 gap1 648 gap2 646 chaos_faults 60 (codes 5 11 0 28 16)"
+    ],
+    "module/c1.log": [
+      "PASS KV_LPRG_MU5_LOCKSTEP mismatches0 boots140 cycles959774 events231227 stage_done39361 tokens 254/274/242/249 gap1 648 gap2 646 chaos_faults 60 (codes 5 11 0 28 16)"
+    ],
+    "module/c_m_priority.stdout": [
+      "FAIL KV_LPRG_MU5_LOCKSTEP mismatches815284 faultsA0 tokens 254/274/242/249 gap1 648 gap2 646 chaos_faults 60"
+    ],
+    "boot/m_priority.log": [
+      "FAIL MU_KV_BOOT: user 0 differs from MU 0 (metadata) cyc 1020 (rel 4) mu mask 080 ref mask 080 epoch 0000 lprg fault 00 boot fault 00"
+    ],
+    "boot/m_cnt.log": [
+      "FAIL MU_KV_BOOT: event kinds differ from the compiled list cyc 5941 (rel 4925) mu mask 000 ref mask 000 epoch 0000 lprg fault 00 boot fault 00"
+    ],
+    "boot/kb.log": [
+      "PASS MU_KV_BOOT: 471-word MU image through the boot dispatcher; 10 starts (4 users, 2 frames), 2660 event edges equal the compiled list, 10 tokens done, user 0 == MU 0 on 1012 edges, no fault"
+    ],
+    "boot/kb_first.log": [
+      "PASS MU_KV_BOOT: 471-word MU image through the boot dispatcher; 10 starts (4 users, 2 frames), 2660 event edges equal the compiled list, 10 tokens done, user 0 == MU 0 on 1012 edges, no fault"
+    ],
+    "boot/kb_first2.log": [
+      "PASS MU_KV_BOOT: 471-word MU image through the boot dispatcher; 10 starts (4 users, 2 frames), 2660 event edges equal the compiled list, 10 tokens done, user 0 == MU 0 on 1012 edges, no fault"
+    ],
+    "boot/kb_ctl2.log": [
+      "PASS MU_KV_BOOT: 471-word MU image through the boot dispatcher; 10 starts (4 users, 2 frames), 2660 event edges equal the compiled list, 10 tokens done, user 0 == MU 0 on 1012 edges, no fault"
+    ]
+  }
+}
