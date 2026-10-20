@@ -1,0 +1,2328 @@
+{
+  "status": "CONTROL_COMPONENT_PASS_ARITHMETIC_BLOCKED",
+  "roots": 49744,
+  "non_tie_over32": 230,
+  "violations_by_kind": {
+    "ff": 178,
+    "comb": 52
+  },
+  "nonmath_ff_over32": 0,
+  "reset_over32": 0,
+  "ff_roots": 14958,
+  "baseline_ff_roots": 14920,
+  "delta_ff_roots": 38,
+  "stdarea_um2": 8803.43,
+  "baseline_stdarea_um2": 8796.65,
+  "delta_stdarea_um2": 6.78,
+  "added_edges": 0,
+  "tests_pass": [
+    "reduce_8w_x16",
+    "fault_nan",
+    "gather_1w_x6",
+    "gather_4w_x4",
+    "mixed_8w_x24"
+  ],
+  "mutant_qualification": "PENDING",
+  "remaining_violations": [
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "51",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_32896_/B,g_pf_fan32.u_pf/_32879_/A,g_pf_fan32.u_pf/_32529_/B,g_pf_fan32.u_pf/_32888_/A1,g_pf_fan32.u_pf/_32884_/A,g_pf_fan32.u_pf/_32838_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "49",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_32878_/A,g_pf_fan32.u_pf/_32889_/A,g_pf_fan32.u_pf/_32810_/A,g_pf_fan32.u_pf/_32644_/A,g_pf_fan32.u_pf/_32620_/A,g_pf_fan32.u_pf/_32609_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_31226_/A,g_pf_fan32.u_pf/_31216_/A,g_pf_fan32.u_pf/_31210_/A,g_pf_fan32.u_pf/_30882_/A,g_pf_fan32.u_pf/_31173_/A,g_pf_fan32.u_pf/_31147_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "50",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_31209_/A,g_pf_fan32.u_pf/_31204_/A,g_pf_fan32.u_pf/_31145_/A,g_pf_fan32.u_pf/_31118_/A,g_pf_fan32.u_pf/_31060_/A,g_pf_fan32.u_pf/_31038_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "49",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_29529_/A,g_pf_fan32.u_pf/_29156_/B,g_pf_fan32.u_pf/_29514_/A,g_pf_fan32.u_pf/_29453_/A,g_pf_fan32.u_pf/_29278_/A,g_pf_fan32.u_pf/_29265_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "50",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_29532_/A,g_pf_fan32.u_pf/_29530_/A1,g_pf_fan32.u_pf/_29515_/B,g_pf_fan32.u_pf/_29451_/A,g_pf_fan32.u_pf/_29424_/A,g_pf_fan32.u_pf/_29318_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_27837_/A,g_pf_fan32.u_pf/_27834_/A,g_pf_fan32.u_pf/_27829_/A,g_pf_fan32.u_pf/_27825_/A1,g_pf_fan32.u_pf/_27810_/A,g_pf_fan32.u_pf/_27799_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "51",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_27833_/A,g_pf_fan32.u_pf/_27471_/A,g_pf_fan32.u_pf/_27845_/B,g_pf_fan32.u_pf/_27770_/A,g_pf_fan32.u_pf/_27728_/A,g_pf_fan32.u_pf/_27713_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_44570_/A,g_pf_fan32.u_pf/_44537_/A,g_pf_fan32.u_pf/_44264_/A1,g_pf_fan32.u_pf/_33554_/A1,g_pf_fan32.u_pf/_33431_/A,g_pf_fan32.u_pf/_33491_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_44852_/A1,g_pf_fan32.u_pf/_44571_/A,g_pf_fan32.u_pf/_44564_/A,g_pf_fan32.u_pf/_31892_/A1,g_pf_fan32.u_pf/_31797_/A,g_pf_fan32.u_pf/_31826_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_27983_/A,g_pf_fan32.u_pf/_27981_/A,g_pf_fan32.u_pf/_27979_/A,g_pf_fan32.u_pf/_27977_/A,g_pf_fan32.u_pf/_27975_/A,g_pf_fan32.u_pf/_27973_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_29672_/A,g_pf_fan32.u_pf/_29670_/A,g_pf_fan32.u_pf/_29668_/A,g_pf_fan32.u_pf/_29666_/A,g_pf_fan32.u_pf/_29664_/A,g_pf_fan32.u_pf/_29662_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_31359_/A,g_pf_fan32.u_pf/_31357_/A,g_pf_fan32.u_pf/_31355_/A,g_pf_fan32.u_pf/_31353_/A,g_pf_fan32.u_pf/_31351_/A,g_pf_fan32.u_pf/_31349_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_33024_/A,g_pf_fan32.u_pf/_33022_/A,g_pf_fan32.u_pf/_33020_/A,g_pf_fan32.u_pf/_33018_/A,g_pf_fan32.u_pf/_33016_/A,g_pf_fan32.u_pf/_33014_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_28111_/A,g_pf_fan32.u_pf/_46314_/A1,g_pf_fan32.u_pf/_46313_/A,g_pf_fan32.u_pf/_28332_/A1,g_pf_fan32.u_pf/_28106_/A,g_pf_fan32.u_pf/_28091_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_29799_/A,g_pf_fan32.u_pf/_45591_/A1,g_pf_fan32.u_pf/_45590_/A,g_pf_fan32.u_pf/_30020_/A1,g_pf_fan32.u_pf/_29794_/A,g_pf_fan32.u_pf/_29779_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_33149_/A,g_pf_fan32.u_pf/_44278_/A1,g_pf_fan32.u_pf/_44277_/A,g_pf_fan32.u_pf/_33372_/A1,g_pf_fan32.u_pf/_33144_/A,g_pf_fan32.u_pf/_33129_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_31487_/A,g_pf_fan32.u_pf/_44866_/A1,g_pf_fan32.u_pf/_44865_/A,g_pf_fan32.u_pf/_31708_/A1,g_pf_fan32.u_pf/_31482_/A,g_pf_fan32.u_pf/_31467_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "55",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_28430_/A,g_pf_fan32.u_pf/_28426_/A,g_pf_fan32.u_pf/_28423_/A,g_pf_fan32.u_pf/_28419_/A,g_pf_fan32.u_pf/_28412_/A,g_pf_fan32.u_pf/_28410_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "58",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_30078_/A,g_pf_fan32.u_pf/_30132_/A,g_pf_fan32.u_pf/_30129_/A,g_pf_fan32.u_pf/_30127_/A,g_pf_fan32.u_pf/_30121_/A,g_pf_fan32.u_pf/_30118_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "55",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_31765_/A,g_pf_fan32.u_pf/_31888_/A,g_pf_fan32.u_pf/_31885_/A,g_pf_fan32.u_pf/_31795_/A,g_pf_fan32.u_pf/_31787_/A,g_pf_fan32.u_pf/_31784_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_33478_/A,g_pf_fan32.u_pf/_33472_/A,g_pf_fan32.u_pf/_33470_/A,g_pf_fan32.u_pf/_33461_/A,g_pf_fan32.u_pf/_33459_/A,g_pf_fan32.u_pf/_33446_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "36",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_45577_/A1,g_pf_fan32.u_pf/_44565_/A,g_pf_fan32.u_pf/_44539_/B,g_pf_fan32.u_pf/_30099_/A,g_pf_fan32.u_pf/_30098_/B,g_pf_fan32.u_pf/_30077_/B"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_46299_/A1,g_pf_fan32.u_pf/_44572_/A,g_pf_fan32.u_pf/_44541_/B,g_pf_fan32.u_pf/_28520_/A1,g_pf_fan32.u_pf/_28432_/B,g_pf_fan32.u_pf/_28458_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "156",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_29420_/A,g_pf_fan32.u_pf/_29200_/A,g_pf_fan32.u_pf/_29197_/A,g_pf_fan32.u_pf/_29181_/A,g_pf_fan32.u_pf/_29168_/A,g_pf_fan32.u_pf/_29421_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "145",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_32538_/A,g_pf_fan32.u_pf/_32521_/A,g_pf_fan32.u_pf/_32590_/A1,g_pf_fan32.u_pf/_32546_/A1,g_pf_fan32.u_pf/_32539_/A1,g_pf_fan32.u_pf/_32522_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "148",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_30890_/A,g_pf_fan32.u_pf/_30874_/A,g_pf_fan32.u_pf/_30871_/A,g_pf_fan32.u_pf/_30859_/A,g_pf_fan32.u_pf/_30855_/A,g_pf_fan32.u_pf/_31227_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "152",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_27594_/A,g_pf_fan32.u_pf/_27511_/A,g_pf_fan32.u_pf/_27493_/A,g_pf_fan32.u_pf/_27480_/A,g_pf_fan32.u_pf/_27465_/A,g_pf_fan32.u_pf/_27771_/C"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/_27607_/Y",
+      "kind": "comb",
+      "loads": "36",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_27894_/B,g_pf_fan32.u_pf/_27883_/A2,g_pf_fan32.u_pf/_27874_/B,g_pf_fan32.u_pf/_27873_/B,g_pf_fan32.u_pf/_27850_/B,g_pf_fan32.u_pf/_27839_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/_29169_/Y",
+      "kind": "comb",
+      "loads": "40",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_29548_/C,g_pf_fan32.u_pf/_29546_/B,g_pf_fan32.u_pf/_29524_/C,g_pf_fan32.u_pf/_29586_/B,g_pf_fan32.u_pf/_29578_/C,g_pf_fan32.u_pf/_29560_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/_29201_/Y",
+      "kind": "comb",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_29548_/B,g_pf_fan32.u_pf/_29526_/B,g_pf_fan32.u_pf/_29525_/A2,g_pf_fan32.u_pf/_29482_/C,g_pf_fan32.u_pf/_29202_/B,g_pf_fan32.u_pf/_29562_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/_30856_/Y",
+      "kind": "comb",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_31275_/A1,g_pf_fan32.u_pf/_31251_/A1,g_pf_fan32.u_pf/_31245_/A1,g_pf_fan32.u_pf/_31230_/A1,g_pf_fan32.u_pf/_31177_/C,g_pf_fan32.u_pf/_31219_/B"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/_30872_/Y",
+      "kind": "comb",
+      "loads": "40",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_31258_/C,g_pf_fan32.u_pf/_31230_/B,g_pf_fan32.u_pf/_30876_/A,g_pf_fan32.u_pf/_31278_/C2,g_pf_fan32.u_pf/_31274_/A1,g_pf_fan32.u_pf/_31272_/A2"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/_30875_/Y",
+      "kind": "comb",
+      "loads": "38",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_30876_/B,g_pf_fan32.u_pf/_31275_/A2,g_pf_fan32.u_pf/_31273_/A2,g_pf_fan32.u_pf/_31269_/A2,g_pf_fan32.u_pf/_31268_/B2,g_pf_fan32.u_pf/_31266_/B"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/_32522_/Y",
+      "kind": "comb",
+      "loads": "41",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_32930_/C,g_pf_fan32.u_pf/_32923_/B,g_pf_fan32.u_pf/_32858_/A,g_pf_fan32.u_pf/_32938_/B,g_pf_fan32.u_pf/_32937_/B,g_pf_fan32.u_pf/_32929_/B"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/_32539_/Y",
+      "kind": "comb",
+      "loads": "55",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_32945_/A2,g_pf_fan32.u_pf/_32938_/D,g_pf_fan32.u_pf/_32930_/B,g_pf_fan32.u_pf/_32892_/A,g_pf_fan32.u_pf/_32882_/B1,g_pf_fan32.u_pf/_32881_/C"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/_32590_/Y",
+      "kind": "comb",
+      "loads": "40",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_32941_/D,g_pf_fan32.u_pf/_32930_/A2,g_pf_fan32.u_pf/_32882_/A2,g_pf_fan32.u_pf/_32938_/C,g_pf_fan32.u_pf/_32936_/C,g_pf_fan32.u_pf/_32929_/A2"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_33080_/A,g_pf_fan32.u_pf/_33075_/A,g_pf_fan32.u_pf/_44281_/C,g_pf_fan32.u_pf/_33317_/C,g_pf_fan32.u_pf/_33315_/C,g_pf_fan32.u_pf/_33312_/C"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_33104_/A,g_pf_fan32.u_pf/_33073_/A,g_pf_fan32.u_pf/_33317_/A1,g_pf_fan32.u_pf/_33315_/A1,g_pf_fan32.u_pf/_33269_/A,g_pf_fan32.u_pf/_33250_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_44286_/A1,g_pf_fan32.u_pf/_33356_/A,g_pf_fan32.u_pf/_33257_/A1,g_pf_fan32.u_pf/_33245_/A,g_pf_fan32.u_pf/_33199_/A,g_pf_fan32.u_pf/_33105_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[0\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_44286_/C,g_pf_fan32.u_pf/_33394_/C,g_pf_fan32.u_pf/_33257_/C,g_pf_fan32.u_pf/_33234_/C,g_pf_fan32.u_pf/_33215_/C,g_pf_fan32.u_pf/_33111_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_31415_/A,g_pf_fan32.u_pf/_31410_/A,g_pf_fan32.u_pf/_44869_/C,g_pf_fan32.u_pf/_31653_/C,g_pf_fan32.u_pf/_31651_/C,g_pf_fan32.u_pf/_31648_/C"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_31631_/A,g_pf_fan32.u_pf/_31408_/A,g_pf_fan32.u_pf/_31653_/A1,g_pf_fan32.u_pf/_31651_/A1,g_pf_fan32.u_pf/_31605_/A,g_pf_fan32.u_pf/_31586_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_44874_/A1,g_pf_fan32.u_pf/_31692_/A,g_pf_fan32.u_pf/_31593_/A1,g_pf_fan32.u_pf/_31581_/A,g_pf_fan32.u_pf/_31535_/A,g_pf_fan32.u_pf/_31444_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[1\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_44874_/C,g_pf_fan32.u_pf/_31730_/C,g_pf_fan32.u_pf/_31593_/C,g_pf_fan32.u_pf/_31570_/C,g_pf_fan32.u_pf/_31551_/C,g_pf_fan32.u_pf/_31447_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_29727_/A,g_pf_fan32.u_pf/_29722_/A,g_pf_fan32.u_pf/_45594_/C,g_pf_fan32.u_pf/_29965_/C,g_pf_fan32.u_pf/_29963_/C,g_pf_fan32.u_pf/_29960_/C"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_29943_/A,g_pf_fan32.u_pf/_29720_/A,g_pf_fan32.u_pf/_29965_/A1,g_pf_fan32.u_pf/_29963_/A1,g_pf_fan32.u_pf/_29917_/A,g_pf_fan32.u_pf/_29898_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_45599_/A1,g_pf_fan32.u_pf/_30004_/A,g_pf_fan32.u_pf/_29905_/A1,g_pf_fan32.u_pf/_29893_/A,g_pf_fan32.u_pf/_29847_/A,g_pf_fan32.u_pf/_29756_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[2\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_45599_/C,g_pf_fan32.u_pf/_30042_/C,g_pf_fan32.u_pf/_29905_/C,g_pf_fan32.u_pf/_29882_/C,g_pf_fan32.u_pf/_29863_/C,g_pf_fan32.u_pf/_29759_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_28039_/A,g_pf_fan32.u_pf/_28034_/A,g_pf_fan32.u_pf/_46317_/C,g_pf_fan32.u_pf/_28277_/C,g_pf_fan32.u_pf/_28275_/C,g_pf_fan32.u_pf/_28272_/C"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_28255_/A,g_pf_fan32.u_pf/_28032_/A,g_pf_fan32.u_pf/_28277_/A1,g_pf_fan32.u_pf/_28275_/A1,g_pf_fan32.u_pf/_28229_/A,g_pf_fan32.u_pf/_28210_/A1"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_46322_/A1,g_pf_fan32.u_pf/_28316_/A,g_pf_fan32.u_pf/_28217_/A1,g_pf_fan32.u_pf/_28205_/A,g_pf_fan32.u_pf/_28159_/A,g_pf_fan32.u_pf/_28068_/A"
+    },
+    {
+      "root": "g_pf_fan32.u_pf/g_st\\[1\\].g_lane\\[3\\].g_legacy_add.u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_pf_fan32.u_pf/_46322_/C,g_pf_fan32.u_pf/_28354_/C,g_pf_fan32.u_pf/_28217_/C,g_pf_fan32.u_pf/_28194_/C,g_pf_fan32.u_pf/_28175_/C,g_pf_fan32.u_pf/_28071_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "51",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_26968_/A,g_xf_legacy.u_xf/_26904_/A,g_xf_legacy.u_xf/_26930_/A1,g_xf_legacy.u_xf/_26916_/A,g_xf_legacy.u_xf/_26818_/A,g_xf_legacy.u_xf/_26794_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "52",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_26980_/A,g_xf_legacy.u_xf/_26973_/A1,g_xf_legacy.u_xf/_26623_/B,g_xf_legacy.u_xf/_26984_/A,g_xf_legacy.u_xf/_26927_/A,g_xf_legacy.u_xf/_26901_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_45671_/A,g_xf_legacy.u_xf/_45316_/B,g_xf_legacy.u_xf/_45688_/B,g_xf_legacy.u_xf/_45521_/A,g_xf_legacy.u_xf/_45498_/A,g_xf_legacy.u_xf/_45481_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_45681_/A,g_xf_legacy.u_xf/_45672_/B,g_xf_legacy.u_xf/_45626_/A,g_xf_legacy.u_xf/_45613_/A,g_xf_legacy.u_xf/_45399_/A,g_xf_legacy.u_xf/_45365_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_43998_/A,g_xf_legacy.u_xf/_43741_/A,g_xf_legacy.u_xf/_43660_/B,g_xf_legacy.u_xf/_44016_/B,g_xf_legacy.u_xf/_43971_/B,g_xf_legacy.u_xf/_43905_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "51",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_43933_/A,g_xf_legacy.u_xf/_43972_/B,g_xf_legacy.u_xf/_43907_/A1,g_xf_legacy.u_xf/_43839_/A1,g_xf_legacy.u_xf/_43829_/A1,g_xf_legacy.u_xf/_43817_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "48",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_41970_/B,g_xf_legacy.u_xf/_42316_/A,g_xf_legacy.u_xf/_42261_/A,g_xf_legacy.u_xf/_42239_/A,g_xf_legacy.u_xf/_42083_/A,g_xf_legacy.u_xf/_42074_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "49",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42178_/A,g_xf_legacy.u_xf/_42169_/A,g_xf_legacy.u_xf/_42135_/A1,g_xf_legacy.u_xf/_42095_/A1,g_xf_legacy.u_xf/_42073_/A1,g_xf_legacy.u_xf/_42046_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40652_/A,g_xf_legacy.u_xf/_40680_/A,g_xf_legacy.u_xf/_40671_/B,g_xf_legacy.u_xf/_40661_/B,g_xf_legacy.u_xf/_40613_/A,g_xf_legacy.u_xf/_40532_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40681_/A1,g_xf_legacy.u_xf/_40665_/A,g_xf_legacy.u_xf/_40685_/B3,g_xf_legacy.u_xf/_40660_/A,g_xf_legacy.u_xf/_40616_/A,g_xf_legacy.u_xf/_40602_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "54",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_38910_/A,g_xf_legacy.u_xf/_38563_/B,g_xf_legacy.u_xf/_38841_/A,g_xf_legacy.u_xf/_38826_/A,g_xf_legacy.u_xf/_38776_/A1,g_xf_legacy.u_xf/_38766_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_38957_/A,g_xf_legacy.u_xf/_38932_/B,g_xf_legacy.u_xf/_38609_/A,g_xf_legacy.u_xf/_38911_/B,g_xf_legacy.u_xf/_38884_/A,g_xf_legacy.u_xf/_38869_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "50",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_36908_/B,g_xf_legacy.u_xf/_37262_/B,g_xf_legacy.u_xf/_37251_/A,g_xf_legacy.u_xf/_37212_/A,g_xf_legacy.u_xf/_37198_/A,g_xf_legacy.u_xf/_37159_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "52",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_37210_/A,g_xf_legacy.u_xf/_37196_/A,g_xf_legacy.u_xf/_37234_/B,g_xf_legacy.u_xf/_37053_/A1,g_xf_legacy.u_xf/_37023_/A1,g_xf_legacy.u_xf/_37002_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "58",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35618_/A,g_xf_legacy.u_xf/_35613_/A1,g_xf_legacy.u_xf/_35609_/A,g_xf_legacy.u_xf/_35278_/A,g_xf_legacy.u_xf/_35622_/B,g_xf_legacy.u_xf/_35554_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35619_/A,g_xf_legacy.u_xf/_35606_/A,g_xf_legacy.u_xf/_35552_/A,g_xf_legacy.u_xf/_35515_/A,g_xf_legacy.u_xf/_35512_/A,g_xf_legacy.u_xf/_35275_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "54",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_28685_/A,g_xf_legacy.u_xf/_28619_/A,g_xf_legacy.u_xf/_28481_/A,g_xf_legacy.u_xf/_28400_/A,g_xf_legacy.u_xf/_28368_/A,g_xf_legacy.u_xf/_28675_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "54",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_28695_/A,g_xf_legacy.u_xf/_28674_/A,g_xf_legacy.u_xf/_28621_/A,g_xf_legacy.u_xf/_28370_/A,g_xf_legacy.u_xf/_28308_/B,g_xf_legacy.u_xf/_28707_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_33931_/B,g_xf_legacy.u_xf/_33925_/A,g_xf_legacy.u_xf/_33922_/A1,g_xf_legacy.u_xf/_33883_/A,g_xf_legacy.u_xf/_33793_/A,g_xf_legacy.u_xf/_33761_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "54",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_33953_/B,g_xf_legacy.u_xf/_33921_/A,g_xf_legacy.u_xf/_33885_/A,g_xf_legacy.u_xf/_33791_/A,g_xf_legacy.u_xf/_33759_/A,g_xf_legacy.u_xf/_33733_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "38",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_33953_/C,g_xf_legacy.u_xf/_33927_/A2,g_xf_legacy.u_xf/_33921_/B,g_xf_legacy.u_xf/_33912_/B,g_xf_legacy.u_xf/_33810_/A,g_xf_legacy.u_xf/_33751_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_32144_/A,g_xf_legacy.u_xf/_32172_/B,g_xf_legacy.u_xf/_32052_/A,g_xf_legacy.u_xf/_32011_/A,g_xf_legacy.u_xf/_31985_/A,g_xf_legacy.u_xf/_31958_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_31860_/A,g_xf_legacy.u_xf/_31840_/A,g_xf_legacy.u_xf/_32163_/A2,g_xf_legacy.u_xf/_32131_/A,g_xf_legacy.u_xf/_32024_/A1,g_xf_legacy.u_xf/_31978_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[8\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30464_/A,g_xf_legacy.u_xf/_30463_/A1,g_xf_legacy.u_xf/_30453_/A1,g_xf_legacy.u_xf/_30445_/A,g_xf_legacy.u_xf/_30474_/B,g_xf_legacy.u_xf/_30415_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30454_/A,g_xf_legacy.u_xf/_30447_/A,g_xf_legacy.u_xf/_30386_/A,g_xf_legacy.u_xf/_30206_/A,g_xf_legacy.u_xf/_30418_/A1,g_xf_legacy.u_xf/_30357_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "46",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30477_/B,g_xf_legacy.u_xf/_30454_/B,g_xf_legacy.u_xf/_30447_/B,g_xf_legacy.u_xf/_30337_/A,g_xf_legacy.u_xf/_30054_/A2,g_xf_legacy.u_xf/_30311_/A2"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_60060_/A,g_xf_legacy.u_xf/_59505_/A,g_xf_legacy.u_xf/_56243_/A1,g_xf_legacy.u_xf/_46364_/A1,g_xf_legacy.u_xf/_46271_/A,g_xf_legacy.u_xf/_46298_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_61157_/A,g_xf_legacy.u_xf/_60611_/A,g_xf_legacy.u_xf/_56800_/A1,g_xf_legacy.u_xf/_44684_/A1,g_xf_legacy.u_xf/_44553_/A,g_xf_legacy.u_xf/_44622_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_62279_/A,g_xf_legacy.u_xf/_61700_/A,g_xf_legacy.u_xf/_57348_/A1,g_xf_legacy.u_xf/_43004_/A1,g_xf_legacy.u_xf/_42907_/A,g_xf_legacy.u_xf/_42938_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_57870_/A1,g_xf_legacy.u_xf/_56242_/A,g_xf_legacy.u_xf/_56240_/A,g_xf_legacy.u_xf/_41342_/A1,g_xf_legacy.u_xf/_41219_/A,g_xf_legacy.u_xf/_41277_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30605_/A,g_xf_legacy.u_xf/_30603_/A,g_xf_legacy.u_xf/_30601_/A,g_xf_legacy.u_xf/_30599_/A,g_xf_legacy.u_xf/_30597_/A,g_xf_legacy.u_xf/_30595_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_32300_/A,g_xf_legacy.u_xf/_32298_/A,g_xf_legacy.u_xf/_32296_/A,g_xf_legacy.u_xf/_32294_/A,g_xf_legacy.u_xf/_32292_/A,g_xf_legacy.u_xf/_32290_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_34069_/A,g_xf_legacy.u_xf/_34067_/A,g_xf_legacy.u_xf/_34065_/A,g_xf_legacy.u_xf/_34063_/A,g_xf_legacy.u_xf/_34061_/A,g_xf_legacy.u_xf/_34059_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35766_/A,g_xf_legacy.u_xf/_35764_/A,g_xf_legacy.u_xf/_35762_/A,g_xf_legacy.u_xf/_35760_/A,g_xf_legacy.u_xf/_35758_/A,g_xf_legacy.u_xf/_35756_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_28833_/A,g_xf_legacy.u_xf/_28831_/A,g_xf_legacy.u_xf/_28829_/A,g_xf_legacy.u_xf/_28827_/A,g_xf_legacy.u_xf/_28825_/A,g_xf_legacy.u_xf/_28823_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_37409_/A,g_xf_legacy.u_xf/_37407_/A,g_xf_legacy.u_xf/_37405_/A,g_xf_legacy.u_xf/_37403_/A,g_xf_legacy.u_xf/_37401_/A,g_xf_legacy.u_xf/_37399_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_27124_/A,g_xf_legacy.u_xf/_27122_/A,g_xf_legacy.u_xf/_27120_/A,g_xf_legacy.u_xf/_27118_/A,g_xf_legacy.u_xf/_27116_/A,g_xf_legacy.u_xf/_27114_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_39078_/A,g_xf_legacy.u_xf/_39076_/A,g_xf_legacy.u_xf/_39074_/A,g_xf_legacy.u_xf/_39072_/A,g_xf_legacy.u_xf/_39070_/A,g_xf_legacy.u_xf/_39068_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40813_/A,g_xf_legacy.u_xf/_40811_/A,g_xf_legacy.u_xf/_40809_/A,g_xf_legacy.u_xf/_40807_/A,g_xf_legacy.u_xf/_40805_/A,g_xf_legacy.u_xf/_40803_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42478_/A,g_xf_legacy.u_xf/_42476_/A,g_xf_legacy.u_xf/_42474_/A,g_xf_legacy.u_xf/_42472_/A,g_xf_legacy.u_xf/_42470_/A,g_xf_legacy.u_xf/_42468_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_44149_/A,g_xf_legacy.u_xf/_44147_/A,g_xf_legacy.u_xf/_44145_/A,g_xf_legacy.u_xf/_44143_/A,g_xf_legacy.u_xf/_44141_/A,g_xf_legacy.u_xf/_44139_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_cb.genblk1.g_rv.rd\\[55\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "53",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_45838_/A,g_xf_legacy.u_xf/_45836_/A,g_xf_legacy.u_xf/_45834_/A,g_xf_legacy.u_xf/_45832_/A,g_xf_legacy.u_xf/_45830_/A,g_xf_legacy.u_xf/_45828_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35889_/A,g_xf_legacy.u_xf/_59522_/A1,g_xf_legacy.u_xf/_36113_/A1,g_xf_legacy.u_xf/_35884_/A,g_xf_legacy.u_xf/_35878_/A,g_xf_legacy.u_xf/_35871_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_37531_/A,g_xf_legacy.u_xf/_58976_/A1,g_xf_legacy.u_xf/_37755_/A1,g_xf_legacy.u_xf/_37526_/A,g_xf_legacy.u_xf/_37520_/A,g_xf_legacy.u_xf/_37513_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_62294_/A1,g_xf_legacy.u_xf/_27248_/A,g_xf_legacy.u_xf/_27243_/A,g_xf_legacy.u_xf/_27236_/A,g_xf_legacy.u_xf/_27229_/A1,g_xf_legacy.u_xf/_27212_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_39201_/A,g_xf_legacy.u_xf/_58432_/A1,g_xf_legacy.u_xf/_39425_/A1,g_xf_legacy.u_xf/_39196_/A,g_xf_legacy.u_xf/_39190_/A,g_xf_legacy.u_xf/_39183_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40935_/A,g_xf_legacy.u_xf/_57884_/A1,g_xf_legacy.u_xf/_41159_/A1,g_xf_legacy.u_xf/_40930_/A,g_xf_legacy.u_xf/_40924_/A,g_xf_legacy.u_xf/_40917_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_61715_/A1,g_xf_legacy.u_xf/_28956_/A,g_xf_legacy.u_xf/_28951_/A,g_xf_legacy.u_xf/_28944_/A,g_xf_legacy.u_xf/_28937_/A1,g_xf_legacy.u_xf/_28921_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42603_/A,g_xf_legacy.u_xf/_57362_/A1,g_xf_legacy.u_xf/_42827_/A1,g_xf_legacy.u_xf/_42598_/A,g_xf_legacy.u_xf/_42592_/A,g_xf_legacy.u_xf/_42585_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_44272_/A,g_xf_legacy.u_xf/_56814_/A1,g_xf_legacy.u_xf/_44496_/A1,g_xf_legacy.u_xf/_44267_/A,g_xf_legacy.u_xf/_44261_/A,g_xf_legacy.u_xf/_44254_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_56257_/A1,g_xf_legacy.u_xf/_45960_/A,g_xf_legacy.u_xf/_45955_/A,g_xf_legacy.u_xf/_45948_/A,g_xf_legacy.u_xf/_45941_/A1,g_xf_legacy.u_xf/_45924_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_34192_/A,g_xf_legacy.u_xf/_60078_/A1,g_xf_legacy.u_xf/_34416_/A1,g_xf_legacy.u_xf/_34187_/A,g_xf_legacy.u_xf/_34181_/A,g_xf_legacy.u_xf/_34174_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_32423_/A,g_xf_legacy.u_xf/_60628_/A1,g_xf_legacy.u_xf/_32647_/A1,g_xf_legacy.u_xf/_32418_/A,g_xf_legacy.u_xf/_32412_/A,g_xf_legacy.u_xf/_32405_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[105\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30728_/A,g_xf_legacy.u_xf/_61172_/A1,g_xf_legacy.u_xf/_30952_/A1,g_xf_legacy.u_xf/_30723_/A,g_xf_legacy.u_xf/_30717_/A,g_xf_legacy.u_xf/_30710_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "56",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_29284_/A,g_xf_legacy.u_xf/_29282_/A,g_xf_legacy.u_xf/_29278_/A,g_xf_legacy.u_xf/_29276_/A,g_xf_legacy.u_xf/_29271_/A1,g_xf_legacy.u_xf/_29256_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_31048_/A,g_xf_legacy.u_xf/_31060_/A,g_xf_legacy.u_xf/_31057_/A,g_xf_legacy.u_xf/_31054_/A,g_xf_legacy.u_xf/_31043_/A1,g_xf_legacy.u_xf/_31025_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "58",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_32710_/A,g_xf_legacy.u_xf/_32704_/A1,g_xf_legacy.u_xf/_32856_/A,g_xf_legacy.u_xf/_32852_/A,g_xf_legacy.u_xf/_32848_/A,g_xf_legacy.u_xf/_32844_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "55",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_34470_/A,g_xf_legacy.u_xf/_34602_/A,g_xf_legacy.u_xf/_34599_/A,g_xf_legacy.u_xf/_34526_/A,g_xf_legacy.u_xf/_34524_/A1,g_xf_legacy.u_xf/_34518_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "58",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_27532_/A,g_xf_legacy.u_xf/_27527_/A1,g_xf_legacy.u_xf/_27590_/A,g_xf_legacy.u_xf/_27589_/A,g_xf_legacy.u_xf/_27586_/A,g_xf_legacy.u_xf/_27581_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "55",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_36176_/A,g_xf_legacy.u_xf/_36287_/A,g_xf_legacy.u_xf/_36284_/A,g_xf_legacy.u_xf/_36193_/A,g_xf_legacy.u_xf/_36190_/A1,g_xf_legacy.u_xf/_36187_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "54",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_37812_/A,g_xf_legacy.u_xf/_37937_/A,g_xf_legacy.u_xf/_37934_/A,g_xf_legacy.u_xf/_37862_/A1,g_xf_legacy.u_xf/_37839_/A,g_xf_legacy.u_xf/_37835_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_39532_/A1,g_xf_legacy.u_xf/_39526_/A,g_xf_legacy.u_xf/_39522_/A,g_xf_legacy.u_xf/_39520_/A,g_xf_legacy.u_xf/_39515_/A,g_xf_legacy.u_xf/_39512_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_41252_/A,g_xf_legacy.u_xf/_41211_/A,g_xf_legacy.u_xf/_41340_/A,g_xf_legacy.u_xf/_41337_/A,g_xf_legacy.u_xf/_41265_/A1,g_xf_legacy.u_xf/_41260_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "54",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42881_/A,g_xf_legacy.u_xf/_43002_/A,g_xf_legacy.u_xf/_42999_/A,g_xf_legacy.u_xf/_42996_/A,g_xf_legacy.u_xf/_42905_/A,g_xf_legacy.u_xf/_42899_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_44610_/A,g_xf_legacy.u_xf/_44605_/A,g_xf_legacy.u_xf/_44600_/A,g_xf_legacy.u_xf/_44599_/A1,g_xf_legacy.u_xf/_44592_/A,g_xf_legacy.u_xf/_44589_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_cc.genblk1.g_rv.rd\\[0\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "55",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_46261_/A,g_xf_legacy.u_xf/_46360_/A,g_xf_legacy.u_xf/_46357_/A,g_xf_legacy.u_xf/_46269_/A,g_xf_legacy.u_xf/_46257_/B2,g_xf_legacy.u_xf/_46252_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "155",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40321_/A,g_xf_legacy.u_xf/_40308_/A,g_xf_legacy.u_xf/_40296_/A,g_xf_legacy.u_xf/_40328_/A1,g_xf_legacy.u_xf/_40322_/A1,g_xf_legacy.u_xf/_40309_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "153",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_26646_/A,g_xf_legacy.u_xf/_26858_/A1,g_xf_legacy.u_xf/_26635_/A1,g_xf_legacy.u_xf/_26631_/A1,g_xf_legacy.u_xf/_26629_/A1,g_xf_legacy.u_xf/_26930_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "166",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_33953_/A,g_xf_legacy.u_xf/_33931_/A,g_xf_legacy.u_xf/_33554_/A,g_xf_legacy.u_xf/_33550_/A1,g_xf_legacy.u_xf/_33549_/A,g_xf_legacy.u_xf/_33545_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "155",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_45688_/A,g_xf_legacy.u_xf/_45672_/A,g_xf_legacy.u_xf/_45338_/A,g_xf_legacy.u_xf/_45326_/A,g_xf_legacy.u_xf/_45321_/A,g_xf_legacy.u_xf/_45318_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "151",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_28375_/A,g_xf_legacy.u_xf/_28346_/A,g_xf_legacy.u_xf/_28313_/A,g_xf_legacy.u_xf/_28347_/A1,g_xf_legacy.u_xf/_28620_/C,g_xf_legacy.u_xf/_28482_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "153",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_36927_/A,g_xf_legacy.u_xf/_36915_/A,g_xf_legacy.u_xf/_36910_/A,g_xf_legacy.u_xf/_36908_/A,g_xf_legacy.u_xf/_36900_/A,g_xf_legacy.u_xf/_37286_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "146",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42017_/A,g_xf_legacy.u_xf/_41995_/A,g_xf_legacy.u_xf/_41984_/A,g_xf_legacy.u_xf/_41979_/A,g_xf_legacy.u_xf/_41974_/A,g_xf_legacy.u_xf/_41970_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "147",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_43986_/A,g_xf_legacy.u_xf/_43668_/A,g_xf_legacy.u_xf/_43662_/A,g_xf_legacy.u_xf/_43649_/A,g_xf_legacy.u_xf/_43643_/A,g_xf_legacy.u_xf/_43669_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "151",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_31811_/A,g_xf_legacy.u_xf/_31807_/A,g_xf_legacy.u_xf/_31828_/A1,g_xf_legacy.u_xf/_32092_/C,g_xf_legacy.u_xf/_31999_/C,g_xf_legacy.u_xf/_31864_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "162",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35238_/A,g_xf_legacy.u_xf/_35617_/A1,g_xf_legacy.u_xf/_35306_/A,g_xf_legacy.u_xf/_35254_/A1,g_xf_legacy.u_xf/_35244_/A1,g_xf_legacy.u_xf/_35234_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "174",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30079_/A,g_xf_legacy.u_xf/_30053_/A,g_xf_legacy.u_xf/_30463_/B3,g_xf_legacy.u_xf/_30387_/C,g_xf_legacy.u_xf/_30080_/A1,g_xf_legacy.u_xf/_30065_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[119\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "157",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_38932_/A,g_xf_legacy.u_xf/_38581_/A,g_xf_legacy.u_xf/_38571_/A,g_xf_legacy.u_xf/_38566_/A,g_xf_legacy.u_xf/_38563_/A,g_xf_legacy.u_xf/_38554_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_58417_/A1,g_xf_legacy.u_xf/_56799_/B,g_xf_legacy.u_xf/_56797_/A,g_xf_legacy.u_xf/_39607_/A1,g_xf_legacy.u_xf/_39480_/B,g_xf_legacy.u_xf/_39544_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_61701_/A1,g_xf_legacy.u_xf/_58416_/B,g_xf_legacy.u_xf/_58414_/A,g_xf_legacy.u_xf/_29364_/A1,g_xf_legacy.u_xf/_29237_/B,g_xf_legacy.u_xf/_29301_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_61158_/A1,g_xf_legacy.u_xf/_60063_/B,g_xf_legacy.u_xf/_60061_/A,g_xf_legacy.u_xf/_31136_/A1,g_xf_legacy.u_xf/_31009_/B,g_xf_legacy.u_xf/_31072_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_59507_/B,g_xf_legacy.u_xf/_59506_/A,g_xf_legacy.u_xf/_32745_/A1,g_xf_legacy.u_xf/_32732_/A1,g_xf_legacy.u_xf/_32728_/A1,g_xf_legacy.u_xf/_32724_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "36",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_34469_/B,g_xf_legacy.u_xf/_34501_/B2,g_xf_legacy.u_xf/_34497_/B2,g_xf_legacy.u_xf/_34491_/B2,g_xf_legacy.u_xf/_34486_/B,g_xf_legacy.u_xf/_34481_/B2"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "36",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_27537_/B,g_xf_legacy.u_xf/_62280_/A1,g_xf_legacy.u_xf/_58959_/A,g_xf_legacy.u_xf/_58413_/B,g_xf_legacy.u_xf/_27664_/A1,g_xf_legacy.u_xf/_27661_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_59508_/A1,g_xf_legacy.u_xf/_57869_/B,g_xf_legacy.u_xf/_57867_/A,g_xf_legacy.u_xf/_36289_/A1,g_xf_legacy.u_xf/_36195_/B,g_xf_legacy.u_xf/_36223_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_cc.genblk1.g_rv.rd\\[69\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_58962_/A1,g_xf_legacy.u_xf/_57347_/B,g_xf_legacy.u_xf/_57345_/A,g_xf_legacy.u_xf/_37939_/A1,g_xf_legacy.u_xf/_37841_/B,g_xf_legacy.u_xf/_37873_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_26629_/Y",
+      "kind": "comb",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_27024_/A,g_xf_legacy.u_xf/_27006_/A1,g_xf_legacy.u_xf/_26983_/A1,g_xf_legacy.u_xf/_26962_/A,g_xf_legacy.u_xf/_26933_/C,g_xf_legacy.u_xf/_26633_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_26635_/Y",
+      "kind": "comb",
+      "loads": "41",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_27001_/C,g_xf_legacy.u_xf/_26987_/A,g_xf_legacy.u_xf/_26983_/A2,g_xf_legacy.u_xf/_26976_/A,g_xf_legacy.u_xf/_27039_/A2,g_xf_legacy.u_xf/_27038_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_28314_/Y",
+      "kind": "comb",
+      "loads": "41",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_28750_/A,g_xf_legacy.u_xf/_28720_/A1,g_xf_legacy.u_xf/_28713_/B,g_xf_legacy.u_xf/_28683_/B,g_xf_legacy.u_xf/_28752_/A1,g_xf_legacy.u_xf/_28741_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_28329_/Y",
+      "kind": "comb",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_28749_/A1,g_xf_legacy.u_xf/_28742_/B,g_xf_legacy.u_xf/_28740_/A1,g_xf_legacy.u_xf/_28727_/A1,g_xf_legacy.u_xf/_28716_/B,g_xf_legacy.u_xf/_28703_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_28347_/Y",
+      "kind": "comb",
+      "loads": "38",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_28651_/A,g_xf_legacy.u_xf/_28611_/B,g_xf_legacy.u_xf/_28607_/B,g_xf_legacy.u_xf/_28595_/C,g_xf_legacy.u_xf/_28566_/A,g_xf_legacy.u_xf/_28549_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_28358_/Y",
+      "kind": "comb",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_28545_/A,g_xf_legacy.u_xf/_28511_/A,g_xf_legacy.u_xf/_28386_/B,g_xf_legacy.u_xf/_28582_/A,g_xf_legacy.u_xf/_28577_/A,g_xf_legacy.u_xf/_28536_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_30049_/Y",
+      "kind": "comb",
+      "loads": "36",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30522_/A1,g_xf_legacy.u_xf/_30519_/A1,g_xf_legacy.u_xf/_30496_/A,g_xf_legacy.u_xf/_30489_/A1,g_xf_legacy.u_xf/_30470_/A1,g_xf_legacy.u_xf/_30421_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_30054_/Y",
+      "kind": "comb",
+      "loads": "43",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30420_/C,g_xf_legacy.u_xf/_30376_/A2,g_xf_legacy.u_xf/_30371_/A2,g_xf_legacy.u_xf/_30255_/A2,g_xf_legacy.u_xf/_30522_/A2,g_xf_legacy.u_xf/_30326_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_30060_/Y",
+      "kind": "comb",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30519_/B,g_xf_legacy.u_xf/_30511_/A,g_xf_legacy.u_xf/_30509_/A1,g_xf_legacy.u_xf/_30481_/A,g_xf_legacy.u_xf/_30470_/A3,g_xf_legacy.u_xf/_30457_/A2"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_30065_/Y",
+      "kind": "comb",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30520_/A1,g_xf_legacy.u_xf/_30512_/A1,g_xf_legacy.u_xf/_30509_/A2,g_xf_legacy.u_xf/_30508_/A1,g_xf_legacy.u_xf/_30503_/A2,g_xf_legacy.u_xf/_30523_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_31812_/Y",
+      "kind": "comb",
+      "loads": "47",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_32181_/B,g_xf_legacy.u_xf/_32208_/A,g_xf_legacy.u_xf/_32189_/B,g_xf_legacy.u_xf/_32188_/B,g_xf_legacy.u_xf/_32174_/A1,g_xf_legacy.u_xf/_32171_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_31864_/Y",
+      "kind": "comb",
+      "loads": "39",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_32181_/D,g_xf_legacy.u_xf/_32227_/A1,g_xf_legacy.u_xf/_32216_/A1,g_xf_legacy.u_xf/_32210_/A1,g_xf_legacy.u_xf/_32149_/B,g_xf_legacy.u_xf/_32043_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_33546_/Y",
+      "kind": "comb",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_33978_/B,g_xf_legacy.u_xf/_33971_/C,g_xf_legacy.u_xf/_33946_/A1,g_xf_legacy.u_xf/_33942_/A,g_xf_legacy.u_xf/_33933_/A1,g_xf_legacy.u_xf/_33552_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_33550_/Y",
+      "kind": "comb",
+      "loads": "37",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_33955_/A3,g_xf_legacy.u_xf/_33841_/A2,g_xf_legacy.u_xf/_33836_/A2,g_xf_legacy.u_xf/_33789_/A,g_xf_legacy.u_xf/_33778_/A2,g_xf_legacy.u_xf/_33773_/A2"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_33555_/Y",
+      "kind": "comb",
+      "loads": "58",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_33955_/B1,g_xf_legacy.u_xf/_33950_/B,g_xf_legacy.u_xf/_33986_/A1,g_xf_legacy.u_xf/_33985_/C,g_xf_legacy.u_xf/_33980_/B,g_xf_legacy.u_xf/_33963_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_35234_/Y",
+      "kind": "comb",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35647_/A1,g_xf_legacy.u_xf/_35645_/A,g_xf_legacy.u_xf/_35636_/A,g_xf_legacy.u_xf/_35583_/C,g_xf_legacy.u_xf/_35666_/A,g_xf_legacy.u_xf/_35655_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_35239_/Y",
+      "kind": "comb",
+      "loads": "46",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35647_/A2,g_xf_legacy.u_xf/_35582_/A,g_xf_legacy.u_xf/_35481_/A2,g_xf_legacy.u_xf/_35425_/A2,g_xf_legacy.u_xf/_35423_/A2,g_xf_legacy.u_xf/_35420_/A2"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_35244_/Y",
+      "kind": "comb",
+      "loads": "33",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35683_/A1,g_xf_legacy.u_xf/_35652_/A1,g_xf_legacy.u_xf/_35647_/B,g_xf_legacy.u_xf/_35625_/C,g_xf_legacy.u_xf/_35616_/A,g_xf_legacy.u_xf/_35679_/B2"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_36901_/Y",
+      "kind": "comb",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_37305_/A,g_xf_legacy.u_xf/_37288_/A2,g_xf_legacy.u_xf/_37282_/A1,g_xf_legacy.u_xf/_37277_/B,g_xf_legacy.u_xf/_37237_/C,g_xf_legacy.u_xf/_37226_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_36916_/Y",
+      "kind": "comb",
+      "loads": "43",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_37320_/B,g_xf_legacy.u_xf/_37313_/A2,g_xf_legacy.u_xf/_37306_/B,g_xf_legacy.u_xf/_37282_/B,g_xf_legacy.u_xf/_37275_/A2,g_xf_legacy.u_xf/_37273_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_38555_/Y",
+      "kind": "comb",
+      "loads": "37",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_38989_/B,g_xf_legacy.u_xf/_38988_/A1,g_xf_legacy.u_xf/_38969_/A1,g_xf_legacy.u_xf/_38966_/A1,g_xf_legacy.u_xf/_38945_/A,g_xf_legacy.u_xf/_38939_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_38567_/Y",
+      "kind": "comb",
+      "loads": "36",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_38969_/A2,g_xf_legacy.u_xf/_38939_/A2,g_xf_legacy.u_xf/_38887_/A,g_xf_legacy.u_xf/_38717_/A,g_xf_legacy.u_xf/_38712_/B,g_xf_legacy.u_xf/_38612_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_38572_/Y",
+      "kind": "comb",
+      "loads": "41",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_38984_/A,g_xf_legacy.u_xf/_38969_/B,g_xf_legacy.u_xf/_38968_/A1,g_xf_legacy.u_xf/_38990_/B,g_xf_legacy.u_xf/_38978_/A1,g_xf_legacy.u_xf/_38963_/B2"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_38582_/Y",
+      "kind": "comb",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_38994_/C,g_xf_legacy.u_xf/_38973_/B,g_xf_legacy.u_xf/_38968_/B,g_xf_legacy.u_xf/_38966_/B,g_xf_legacy.u_xf/_38965_/A,g_xf_legacy.u_xf/_38956_/A2"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_40297_/Y",
+      "kind": "comb",
+      "loads": "49",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40715_/C,g_xf_legacy.u_xf/_40742_/B,g_xf_legacy.u_xf/_40731_/B,g_xf_legacy.u_xf/_40721_/A2,g_xf_legacy.u_xf/_40702_/C,g_xf_legacy.u_xf/_40701_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_40322_/Y",
+      "kind": "comb",
+      "loads": "36",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40710_/D,g_xf_legacy.u_xf/_40689_/B,g_xf_legacy.u_xf/_40641_/A,g_xf_legacy.u_xf/_40630_/C,g_xf_legacy.u_xf/_40560_/A,g_xf_legacy.u_xf/_40533_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_40328_/Y",
+      "kind": "comb",
+      "loads": "39",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40714_/C,g_xf_legacy.u_xf/_40701_/A2,g_xf_legacy.u_xf/_40698_/A2,g_xf_legacy.u_xf/_40689_/C,g_xf_legacy.u_xf/_40678_/A2,g_xf_legacy.u_xf/_40677_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_41975_/Y",
+      "kind": "comb",
+      "loads": "47",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42390_/A2,g_xf_legacy.u_xf/_42391_/B,g_xf_legacy.u_xf/_42386_/A,g_xf_legacy.u_xf/_42372_/B,g_xf_legacy.u_xf/_42371_/A1,g_xf_legacy.u_xf/_42352_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_41980_/Y",
+      "kind": "comb",
+      "loads": "36",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42391_/C,g_xf_legacy.u_xf/_42390_/A3,g_xf_legacy.u_xf/_42352_/A2,g_xf_legacy.u_xf/_42294_/C,g_xf_legacy.u_xf/_42097_/A,g_xf_legacy.u_xf/_42043_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_41985_/Y",
+      "kind": "comb",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42392_/A1,g_xf_legacy.u_xf/_42391_/D,g_xf_legacy.u_xf/_42390_/B1,g_xf_legacy.u_xf/_42374_/A2,g_xf_legacy.u_xf/_42352_/B,g_xf_legacy.u_xf/_42335_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_41996_/Y",
+      "kind": "comb",
+      "loads": "37",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42397_/A2,g_xf_legacy.u_xf/_42394_/B,g_xf_legacy.u_xf/_42392_/A2,g_xf_legacy.u_xf/_42390_/B2,g_xf_legacy.u_xf/_42361_/B,g_xf_legacy.u_xf/_42355_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_43650_/Y",
+      "kind": "comb",
+      "loads": "39",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_43682_/A,g_xf_legacy.u_xf/_44075_/B,g_xf_legacy.u_xf/_44060_/A1,g_xf_legacy.u_xf/_44044_/A2,g_xf_legacy.u_xf/_44012_/A2,g_xf_legacy.u_xf/_44010_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_43663_/Y",
+      "kind": "comb",
+      "loads": "35",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_43963_/C,g_xf_legacy.u_xf/_43949_/C,g_xf_legacy.u_xf/_43889_/A,g_xf_legacy.u_xf/_43783_/A,g_xf_legacy.u_xf/_43737_/A,g_xf_legacy.u_xf/_43726_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_43669_/Y",
+      "kind": "comb",
+      "loads": "54",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_44065_/A2,g_xf_legacy.u_xf/_44054_/A,g_xf_legacy.u_xf/_44010_/B,g_xf_legacy.u_xf/_44008_/A,g_xf_legacy.u_xf/_44001_/A2,g_xf_legacy.u_xf/_43994_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_45319_/Y",
+      "kind": "comb",
+      "loads": "43",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_45740_/B,g_xf_legacy.u_xf/_45716_/A,g_xf_legacy.u_xf/_45713_/A,g_xf_legacy.u_xf/_45708_/A,g_xf_legacy.u_xf/_45696_/A1,g_xf_legacy.u_xf/_45743_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_45322_/Y",
+      "kind": "comb",
+      "loads": "39",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_45368_/B,g_xf_legacy.u_xf/_45740_/C,g_xf_legacy.u_xf/_45723_/A2,g_xf_legacy.u_xf/_45710_/A2,g_xf_legacy.u_xf/_45708_/B,g_xf_legacy.u_xf/_45576_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_45327_/Y",
+      "kind": "comb",
+      "loads": "45",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_45761_/B,g_xf_legacy.u_xf/_45750_/A2,g_xf_legacy.u_xf/_45733_/B,g_xf_legacy.u_xf/_45723_/B,g_xf_legacy.u_xf/_45719_/B,g_xf_legacy.u_xf/_45713_/B"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_47261_/Y",
+      "kind": "comb",
+      "loads": "34",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_57206_/A2,g_xf_legacy.u_xf/_47322_/A2,g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_ca.genblk1.g_rv.rd\\[115\\]$_DFF_P_/D,g_xf_legacy.u_xf/_47280_/A,g_xf_legacy.u_xf/_47309_/A,g_xf_legacy.u_xf/_47307_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_47452_/Y",
+      "kind": "comb",
+      "loads": "34",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_57258_/A2,g_xf_legacy.u_xf/_47513_/A2,g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_ca.genblk1.g_rv.rd\\[115\\]$_DFF_P_/D,g_xf_legacy.u_xf/_47471_/A,g_xf_legacy.u_xf/_47500_/A,g_xf_legacy.u_xf/_47489_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_47712_/Y",
+      "kind": "comb",
+      "loads": "35",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_57101_/A2,g_xf_legacy.u_xf/_47773_/A2,g_xf_legacy.u_xf/_47772_/A2,g_xf_legacy.u_xf/_47771_/A2,g_xf_legacy.u_xf/_47731_/A,g_xf_legacy.u_xf/_60595_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_47721_/Y",
+      "kind": "comb",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_47747_/A,g_xf_legacy.u_xf/_47745_/A2,g_xf_legacy.u_xf/_47742_/A2,g_xf_legacy.u_xf/_47731_/B,g_xf_legacy.u_xf/_60595_/B,g_xf_legacy.u_xf/_47750_/A3"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_47780_/Y",
+      "kind": "comb",
+      "loads": "35",
+      "flop_loads": "1",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_57067_/A2,g_xf_legacy.u_xf/_47841_/A2,g_xf_legacy.u_xf/_47840_/A2,g_xf_legacy.u_xf/_47839_/A2,g_xf_legacy.u_xf/_47799_/A,g_xf_legacy.u_xf/_61685_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/_47789_/Y",
+      "kind": "comb",
+      "loads": "34",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_47815_/A,g_xf_legacy.u_xf/_47813_/A2,g_xf_legacy.u_xf/_47810_/A2,g_xf_legacy.u_xf/_47799_/B,g_xf_legacy.u_xf/_61685_/B,g_xf_legacy.u_xf/_47818_/A3"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "58",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_46121_/C,g_xf_legacy.u_xf/_45894_/A,g_xf_legacy.u_xf/_45889_/A,g_xf_legacy.u_xf/_56260_/C,g_xf_legacy.u_xf/_46115_/C,g_xf_legacy.u_xf/_46077_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "72",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_46081_/A,g_xf_legacy.u_xf/_45915_/A,g_xf_legacy.u_xf/_45888_/A,g_xf_legacy.u_xf/_46117_/A1,g_xf_legacy.u_xf/_46115_/A1,g_xf_legacy.u_xf/_46092_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "63",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_45916_/A,g_xf_legacy.u_xf/_45897_/A,g_xf_legacy.u_xf/_45884_/A,g_xf_legacy.u_xf/_56265_/A1,g_xf_legacy.u_xf/_46166_/A,g_xf_legacy.u_xf/_46159_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_56265_/C,g_xf_legacy.u_xf/_46068_/C,g_xf_legacy.u_xf/_46027_/C,g_xf_legacy.u_xf/_45919_/A,g_xf_legacy.u_xf/_45896_/A,g_xf_legacy.u_xf/_45885_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_44203_/A,g_xf_legacy.u_xf/_44198_/A,g_xf_legacy.u_xf/_56817_/C,g_xf_legacy.u_xf/_44441_/C,g_xf_legacy.u_xf/_44439_/C,g_xf_legacy.u_xf/_44436_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_44229_/A,g_xf_legacy.u_xf/_44196_/A,g_xf_legacy.u_xf/_44441_/A1,g_xf_legacy.u_xf/_44439_/A1,g_xf_legacy.u_xf/_44391_/A,g_xf_legacy.u_xf/_44372_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_44206_/A,g_xf_legacy.u_xf/_56822_/A1,g_xf_legacy.u_xf/_44480_/A,g_xf_legacy.u_xf/_44379_/A1,g_xf_legacy.u_xf/_44367_/A,g_xf_legacy.u_xf/_44337_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_56822_/C,g_xf_legacy.u_xf/_44518_/C,g_xf_legacy.u_xf/_44379_/C,g_xf_legacy.u_xf/_44356_/C,g_xf_legacy.u_xf/_44337_/C,g_xf_legacy.u_xf/_44303_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42534_/A,g_xf_legacy.u_xf/_42529_/A,g_xf_legacy.u_xf/_57365_/C,g_xf_legacy.u_xf/_42772_/C,g_xf_legacy.u_xf/_42770_/C,g_xf_legacy.u_xf/_42767_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42560_/A,g_xf_legacy.u_xf/_42527_/A,g_xf_legacy.u_xf/_42772_/A1,g_xf_legacy.u_xf/_42770_/A1,g_xf_legacy.u_xf/_42722_/A,g_xf_legacy.u_xf/_42703_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_42537_/A,g_xf_legacy.u_xf/_57370_/A1,g_xf_legacy.u_xf/_42811_/A,g_xf_legacy.u_xf/_42710_/A1,g_xf_legacy.u_xf/_42698_/A,g_xf_legacy.u_xf/_42668_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_57370_/C,g_xf_legacy.u_xf/_42849_/C,g_xf_legacy.u_xf/_42710_/C,g_xf_legacy.u_xf/_42687_/C,g_xf_legacy.u_xf/_42668_/C,g_xf_legacy.u_xf/_42634_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40867_/A,g_xf_legacy.u_xf/_40862_/A,g_xf_legacy.u_xf/_57887_/C,g_xf_legacy.u_xf/_41104_/C,g_xf_legacy.u_xf/_41102_/C,g_xf_legacy.u_xf/_41099_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40891_/A,g_xf_legacy.u_xf/_40860_/A,g_xf_legacy.u_xf/_41104_/A1,g_xf_legacy.u_xf/_41102_/A1,g_xf_legacy.u_xf/_41054_/A,g_xf_legacy.u_xf/_41035_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_40870_/A,g_xf_legacy.u_xf/_57892_/A1,g_xf_legacy.u_xf/_41143_/A,g_xf_legacy.u_xf/_41042_/A1,g_xf_legacy.u_xf/_41030_/A,g_xf_legacy.u_xf/_41000_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[1\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_57892_/C,g_xf_legacy.u_xf/_41181_/C,g_xf_legacy.u_xf/_41042_/C,g_xf_legacy.u_xf/_41019_/C,g_xf_legacy.u_xf/_41000_/C,g_xf_legacy.u_xf/_40966_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_39132_/A,g_xf_legacy.u_xf/_39127_/A,g_xf_legacy.u_xf/_58435_/C,g_xf_legacy.u_xf/_39370_/C,g_xf_legacy.u_xf/_39368_/C,g_xf_legacy.u_xf/_39365_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_39158_/A,g_xf_legacy.u_xf/_39125_/A,g_xf_legacy.u_xf/_39370_/A1,g_xf_legacy.u_xf/_39368_/A1,g_xf_legacy.u_xf/_39320_/A,g_xf_legacy.u_xf/_39301_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_39135_/A,g_xf_legacy.u_xf/_58440_/A1,g_xf_legacy.u_xf/_39409_/A,g_xf_legacy.u_xf/_39308_/A1,g_xf_legacy.u_xf/_39296_/A,g_xf_legacy.u_xf/_39266_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_58440_/C,g_xf_legacy.u_xf/_39447_/C,g_xf_legacy.u_xf/_39308_/C,g_xf_legacy.u_xf/_39285_/C,g_xf_legacy.u_xf/_39266_/C,g_xf_legacy.u_xf/_39232_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_37463_/A,g_xf_legacy.u_xf/_37458_/A,g_xf_legacy.u_xf/_58979_/C,g_xf_legacy.u_xf/_37700_/C,g_xf_legacy.u_xf/_37698_/C,g_xf_legacy.u_xf/_37695_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_37487_/A,g_xf_legacy.u_xf/_37456_/A,g_xf_legacy.u_xf/_37700_/A1,g_xf_legacy.u_xf/_37698_/A1,g_xf_legacy.u_xf/_37650_/A,g_xf_legacy.u_xf/_37631_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_37466_/A,g_xf_legacy.u_xf/_58984_/A1,g_xf_legacy.u_xf/_37739_/A,g_xf_legacy.u_xf/_37638_/A1,g_xf_legacy.u_xf/_37626_/A,g_xf_legacy.u_xf/_37596_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_58984_/C,g_xf_legacy.u_xf/_37777_/C,g_xf_legacy.u_xf/_37638_/C,g_xf_legacy.u_xf/_37615_/C,g_xf_legacy.u_xf/_37596_/C,g_xf_legacy.u_xf/_37562_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35821_/A,g_xf_legacy.u_xf/_35816_/A,g_xf_legacy.u_xf/_59525_/C,g_xf_legacy.u_xf/_36058_/C,g_xf_legacy.u_xf/_36056_/C,g_xf_legacy.u_xf/_36053_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35845_/A,g_xf_legacy.u_xf/_35814_/A,g_xf_legacy.u_xf/_36058_/A1,g_xf_legacy.u_xf/_36056_/A1,g_xf_legacy.u_xf/_36008_/A,g_xf_legacy.u_xf/_35989_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_35824_/A,g_xf_legacy.u_xf/_59530_/A1,g_xf_legacy.u_xf/_36097_/A,g_xf_legacy.u_xf/_35996_/A1,g_xf_legacy.u_xf/_35984_/A,g_xf_legacy.u_xf/_35954_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_59530_/C,g_xf_legacy.u_xf/_36135_/C,g_xf_legacy.u_xf/_35996_/C,g_xf_legacy.u_xf/_35973_/C,g_xf_legacy.u_xf/_35954_/C,g_xf_legacy.u_xf/_35920_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_34124_/A,g_xf_legacy.u_xf/_34119_/A,g_xf_legacy.u_xf/_60081_/C,g_xf_legacy.u_xf/_34361_/C,g_xf_legacy.u_xf/_34359_/C,g_xf_legacy.u_xf/_34356_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_34148_/A,g_xf_legacy.u_xf/_34117_/A,g_xf_legacy.u_xf/_34361_/A1,g_xf_legacy.u_xf/_34359_/A1,g_xf_legacy.u_xf/_34311_/A,g_xf_legacy.u_xf/_34292_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_34127_/A,g_xf_legacy.u_xf/_60086_/A1,g_xf_legacy.u_xf/_34400_/A,g_xf_legacy.u_xf/_34299_/A1,g_xf_legacy.u_xf/_34287_/A,g_xf_legacy.u_xf/_34257_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[2\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_60086_/C,g_xf_legacy.u_xf/_34438_/C,g_xf_legacy.u_xf/_34299_/C,g_xf_legacy.u_xf/_34276_/C,g_xf_legacy.u_xf/_34257_/C,g_xf_legacy.u_xf/_34223_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_32354_/A,g_xf_legacy.u_xf/_32349_/A,g_xf_legacy.u_xf/_60631_/C,g_xf_legacy.u_xf/_32592_/C,g_xf_legacy.u_xf/_32590_/C,g_xf_legacy.u_xf/_32587_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_32380_/A,g_xf_legacy.u_xf/_32347_/A,g_xf_legacy.u_xf/_32592_/A1,g_xf_legacy.u_xf/_32590_/A1,g_xf_legacy.u_xf/_32542_/A,g_xf_legacy.u_xf/_32523_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_32357_/A,g_xf_legacy.u_xf/_60636_/A1,g_xf_legacy.u_xf/_32631_/A,g_xf_legacy.u_xf/_32530_/A1,g_xf_legacy.u_xf/_32518_/A,g_xf_legacy.u_xf/_32488_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[0\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_60636_/C,g_xf_legacy.u_xf/_32669_/C,g_xf_legacy.u_xf/_32530_/C,g_xf_legacy.u_xf/_32507_/C,g_xf_legacy.u_xf/_32488_/C,g_xf_legacy.u_xf/_32454_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "57",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30659_/A,g_xf_legacy.u_xf/_30654_/A,g_xf_legacy.u_xf/_61175_/C,g_xf_legacy.u_xf/_30897_/C,g_xf_legacy.u_xf/_30895_/C,g_xf_legacy.u_xf/_30892_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "71",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30685_/A,g_xf_legacy.u_xf/_30652_/A,g_xf_legacy.u_xf/_30897_/A1,g_xf_legacy.u_xf/_30895_/A1,g_xf_legacy.u_xf/_30847_/A,g_xf_legacy.u_xf/_30828_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "61",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_30662_/A,g_xf_legacy.u_xf/_61180_/A1,g_xf_legacy.u_xf/_30936_/A,g_xf_legacy.u_xf/_30835_/A1,g_xf_legacy.u_xf/_30823_/A,g_xf_legacy.u_xf/_30793_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[1\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_61180_/C,g_xf_legacy.u_xf/_30974_/C,g_xf_legacy.u_xf/_30835_/C,g_xf_legacy.u_xf/_30812_/C,g_xf_legacy.u_xf/_30793_/C,g_xf_legacy.u_xf/_30759_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "58",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_29117_/C,g_xf_legacy.u_xf/_28891_/A,g_xf_legacy.u_xf/_28886_/A,g_xf_legacy.u_xf/_61718_/C,g_xf_legacy.u_xf/_29111_/C,g_xf_legacy.u_xf/_29073_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "72",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_29077_/A,g_xf_legacy.u_xf/_28910_/A,g_xf_legacy.u_xf/_28885_/A,g_xf_legacy.u_xf/_29113_/A1,g_xf_legacy.u_xf/_29111_/A1,g_xf_legacy.u_xf/_29088_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "63",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_28911_/A,g_xf_legacy.u_xf/_28894_/A,g_xf_legacy.u_xf/_28881_/A,g_xf_legacy.u_xf/_61723_/A1,g_xf_legacy.u_xf/_29162_/A,g_xf_legacy.u_xf/_29155_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[2\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_61723_/C,g_xf_legacy.u_xf/_29064_/C,g_xf_legacy.u_xf/_29023_/C,g_xf_legacy.u_xf/_28917_/A,g_xf_legacy.u_xf/_28893_/A,g_xf_legacy.u_xf/_28882_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[1\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "58",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_27409_/C,g_xf_legacy.u_xf/_27182_/A,g_xf_legacy.u_xf/_27177_/A,g_xf_legacy.u_xf/_62297_/C,g_xf_legacy.u_xf/_27403_/C,g_xf_legacy.u_xf/_27365_/C"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[2\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "72",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_27369_/A,g_xf_legacy.u_xf/_27203_/A,g_xf_legacy.u_xf/_27176_/A,g_xf_legacy.u_xf/_27405_/A1,g_xf_legacy.u_xf/_27403_/A1,g_xf_legacy.u_xf/_27380_/A1"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[3\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "63",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_27204_/A,g_xf_legacy.u_xf/_27185_/A,g_xf_legacy.u_xf/_27172_/A,g_xf_legacy.u_xf/_62302_/A1,g_xf_legacy.u_xf/_27454_/A,g_xf_legacy.u_xf/_27447_/A"
+    },
+    {
+      "root": "g_xf_legacy.u_xf/g_st\\[3\\].g_lane\\[3\\].u_add.u_cd.genblk1.g_rv.rd\\[4\\]$_DFF_P_/QN",
+      "kind": "ff",
+      "loads": "44",
+      "flop_loads": "0",
+      "macro_loads": "0",
+      "reset_loads": "0",
+      "ports": "0",
+      "examples": "g_xf_legacy.u_xf/_62302_/C,g_xf_legacy.u_xf/_27356_/C,g_xf_legacy.u_xf/_27315_/C,g_xf_legacy.u_xf/_27207_/A,g_xf_legacy.u_xf/_27184_/A,g_xf_legacy.u_xf/_27173_/A"
+    }
+  ]
+}

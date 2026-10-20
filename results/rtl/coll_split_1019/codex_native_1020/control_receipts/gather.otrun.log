@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits   928 GB (avail 763, growth 113, headroom 0, waiters 0/0 GB) load 55/128 running 27 disk 109 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-coll-control-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-coll-control-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-coll-control-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-coll-control-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-coll-control-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2366286-1792484646 after 0 s
+case gather_1w_x6 kind=pos latu=66 lats=391 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=384 compiled_span=512
+case gather_4w_x4 kind=pos latu=66 lats=391 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=1024 compiled_span=592
+case mixed_8w_x24 kind=pos latu=66 lats=391 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=6016 compiled_span=1520
+COLL_TP8S PASS cases=3 latu=66 lats=391
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2366286-1792484646): exit 0
