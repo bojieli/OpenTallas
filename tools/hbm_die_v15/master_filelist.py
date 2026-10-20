@@ -73,7 +73,8 @@ def resolve(root, top, bb=(), prefer=()):
         if not cands:
             unresolved.append(m)
             continue
-        bbv = [c for c in cands if c.endswith("_bb.v")]
+        bbv = sorted((c for c in cands if c.endswith("_bb.v")),
+                     key=lambda c: (not c.startswith("physical/asap7_memory_macros_v2/"), c))
         if bbv:                      # a mapped memory macro: read its black-box view only (-lib)
             macros.append(dict(module=m, file=bbv[0]))
             continue

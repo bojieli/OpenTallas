@@ -123,7 +123,7 @@ def expected_memory_macros(commit):
     result = subprocess.run(['git', '-C', str(root), 'grep', '-n', '-E',
                              r'module[[:space:]]+[A-Za-z_]', commit, '--',
                              ':(glob)physical/asap7_memory_macros_v2/*/*_bb.v',
-                             ':(glob)physical/asap7_memory_macros/*/*_bb.v'],
+                             ':(glob)physical/asap7_memory_macros/ot_sram_*/*_bb.v'],
                             capture_output=True, text=True)
     if result.returncode not in (0, 1):
         raise ValueError('Cannot resolve expected mapped memory definitions from Git')
@@ -136,6 +136,12 @@ def expected_memory_macros(commit):
                 continue
             previous = catalog.setdefault(module, path)
             if previous != path:
+                # Preserve the existing v2 canonical catalog for duplicate names.
+                if previous.startswith('physical/asap7_memory_macros/') and path.startswith('physical/asap7_memory_macros_v2/'):
+                    catalog[module] = path
+                    continue
+                if previous.startswith('physical/asap7_memory_macros_v2/') and path.startswith('physical/asap7_memory_macros/'):
+                    continue
                 raise ValueError(f'Ambiguous expected physical memory: {module}: {previous}, {path}')
     return catalog
 
