@@ -1,0 +1,6 @@
+textbook_lint: REFUSE ot_rp4_g1_capture cells 398 flops 149 depth 50.0 ps util None reach None um (0.0 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":4,"flops":0,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=149 root=port:clk rule=PASS: 149 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: REFUSE high_fanout: net _552_/QN (DFFHQNx1_ASAP7_75t_R): 96 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN reset_landing: reset port rst_n: 4 sinks (0 flops, 0 hard-child / macro pins, e.g. _303_/B) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile "reset_landing": {"enable": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth
+TEXTBOOK_LINT: high_fanout: net _552_/QN (DFFHQNx1_ASAP7_75t_R): 96 loads > 32

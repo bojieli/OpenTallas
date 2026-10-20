@@ -1,0 +1,9 @@
+{"flops": 15381, "max_loads": 142, "flop_outputs_over_32": 160, "flop_outputs_over_24": 293, "kept_copy_flops": {"reset_first": 2, "reset_second": 8, "reset_core": 54, "event_first": 5, "event_second": 137, "first_tag_copy": 66, "first_tag": 0, "fd0_k": 0, "fd1_k": 0, "qb_k": 0, "qck_k": 0, "qn0_k": 0, "wn_k": 0, "sum1": 0, "sum2": 0}}
+64 u_core.g_safe.g_madd[].u_m.lz_w[] 66
+16 u_core.g_safe.g_madd[].u_m.a1_swap 142
+16 u_core.g_safe.g_madd[].u_m.a1[] 75
+16 u_core.g_safe.g_madd[].u_m.sum_w[] 53
+16 u_core.g_safe.g_madd[].u_m.u_rnd.g[][] 53
+16 u_core.g_safe.g_madd[].u_m.b2_in[] 48
+16 u_core.g_safe.g_madd[].u_m.s2_byp 35
+named max (32, 'g_reset_core[53].u._2_')

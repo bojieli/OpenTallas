@@ -1,0 +1,4 @@
+textbook_lint: PASS ot_rp4_g1_capture cells 412 flops 156 depth 50.0 ps util None reach None um (0.0 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":4,"flops":0,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=156 root=port:clk rule=PASS: 156 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: WAIVED reset_landing: reset port rst_n: 4 sinks (0 flops, 0 hard-child / macro pins, e.g. _409_/B) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile "reset_landing": {"enable": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth

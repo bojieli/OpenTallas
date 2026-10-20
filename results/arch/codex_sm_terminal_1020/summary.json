@@ -1,0 +1,176 @@
+[
+  {
+    "kit": "smh_rp4hn_a1019",
+    "verdict": "FAIL",
+    "generated": "2026-10-19T23:38:45-0700",
+    "tt_spread": 143.7,
+    "ff_spread": 175.7,
+    "overflow": null,
+    "fails": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "13,435 sinks on the largest root; measured TT insertion 2284.1 ps, FF insertion 1884.5 ps, TT pin-flop spread 143.7 ps, FF pin-flop spread 175.7 ps; TT pin-flop spread 143.7 ps > 80 and FF pin-flop spread 175.7 ps > 80",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "FAIL",
+        "check": "fill",
+        "message": "fill 32% = (hard macros 128873.2 + synthesized std cells 4685.7) / outline 415425.0 um2; pin demand per face: S 2221 pins over 449.0/457.9 um (98%), N 126 pins over 69.7/457.9 um (15%), W 2929 pins over 600.2/907.2 um (66%), E 2929 pins over 600.2/907.2 um (66%) (< 35%)",
+        "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+      },
+      {
+        "severity": "FAIL",
+        "check": "trial_route",
+        "message": "trial global route produced no congestion table (GATE_GRT_RC=137)",
+        "fix": "read the remote grt.log"
+      }
+    ]
+  },
+  {
+    "kit": "smh_rp4hn_b1019",
+    "verdict": "FAIL",
+    "generated": "2026-10-19T22:41:18-0700",
+    "tt_spread": 150.0,
+    "ff_spread": 158.4,
+    "overflow": null,
+    "fails": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "21,709 sinks on the largest root; measured TT insertion 1603.9 ps, FF insertion 1349.3 ps, TT pin-flop spread 150.0 ps, FF pin-flop spread 158.4 ps; TT pin-flop spread 150.0 ps > 80 and FF pin-flop spread 158.4 ps > 80",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "FAIL",
+        "check": "fill",
+        "message": "fill 30% = (hard macros 110210.8 + synthesized std cells 7612.0) / outline 395642.9 um2; pin demand per face: S 2221 pins over 449.0/457.9 um (98%), N 126 pins over 69.7/457.9 um (15%), W 2929 pins over 559.2/864.0 um (65%), E 2929 pins over 559.2/864.0 um (65%) (< 35%)",
+        "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+      },
+      {
+        "severity": "FAIL",
+        "check": "trial_route",
+        "message": "trial global route produced no congestion table (GATE_GRT_RC=137)",
+        "fix": "read the remote grt.log"
+      }
+    ]
+  },
+  {
+    "kit": "smh_rp4hs_a1019",
+    "verdict": "FAIL",
+    "generated": "2026-10-19T22:11:36-0700",
+    "tt_spread": 115.8,
+    "ff_spread": 126.5,
+    "overflow": null,
+    "fails": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "7,845 sinks on the largest root; measured TT insertion 1262.0 ps, FF insertion 1043.4 ps, TT pin-flop spread 115.8 ps, FF pin-flop spread 126.5 ps; TT pin-flop spread 115.8 ps > 80 and FF pin-flop spread 126.5 ps > 80",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "FAIL",
+        "check": "trial_route",
+        "message": "trial global route produced no congestion table (GATE_GRT_RC=137)",
+        "fix": "read the remote grt.log"
+      }
+    ]
+  },
+  {
+    "kit": "smh_rp4hs_a_km32",
+    "verdict": "WARN",
+    "generated": "2026-10-20T00:09:01-0700",
+    "tt_spread": 47.0,
+    "ff_spread": 37.0,
+    "overflow": 0,
+    "fails": []
+  },
+  {
+    "kit": "smh_rp4hs_a_km64",
+    "verdict": "WARN",
+    "generated": "2026-10-19T23:51:01-0700",
+    "tt_spread": 33.5,
+    "ff_spread": 28.0,
+    "overflow": 0,
+    "fails": []
+  },
+  {
+    "kit": "smh_rp4hs_b1019",
+    "verdict": "FAIL",
+    "generated": "2026-10-19T22:13:06-0700",
+    "tt_spread": 111.6,
+    "ff_spread": 124.2,
+    "overflow": null,
+    "fails": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "7,845 sinks on the largest root; measured TT insertion 1350.5 ps, FF insertion 1130.6 ps, TT pin-flop spread 111.6 ps, FF pin-flop spread 124.2 ps; TT pin-flop spread 111.6 ps > 80 and FF pin-flop spread 124.2 ps > 80",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "FAIL",
+        "check": "fill",
+        "message": "fill 34% = (hard macros 110210.8 + synthesized std cells 2650.1) / outline 336296.4 um2; pin demand per face: S 226 pins over 121.6/457.9 um (27%), N 2221 pins over 449.0/457.9 um (98%), W 860 pins over 362.7/734.4 um (49%), E 860 pins over 362.7/734.4 um (49%) (< 35%)",
+        "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+      },
+      {
+        "severity": "FAIL",
+        "check": "trial_route",
+        "message": "trial global route produced no congestion table (GATE_GRT_RC=137)",
+        "fix": "read the remote grt.log"
+      }
+    ]
+  },
+  {
+    "kit": "smh_rp4hs_b_km32",
+    "verdict": "FAIL",
+    "generated": "2026-10-19T23:35:36-0700",
+    "tt_spread": 77.9,
+    "ff_spread": 69.7,
+    "overflow": 0,
+    "fails": [
+      {
+        "severity": "FAIL",
+        "check": "fill",
+        "message": "fill 34% = (hard macros 110210.8 + synthesized std cells 2650.1) / outline 336296.4 um2; pin demand per face: S 226 pins over 121.6/457.9 um (27%), N 2220 pins over 449.0/457.9 um (98%), W 861 pins over 362.7/734.4 um (49%), E 860 pins over 362.7/734.4 um (49%) (< 35%)",
+        "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+      }
+    ]
+  },
+  {
+    "kit": "smh_rp4hs_b_km64",
+    "verdict": "FAIL",
+    "generated": "2026-10-19T23:55:18-0700",
+    "tt_spread": 50.7,
+    "ff_spread": 36.7,
+    "overflow": 0,
+    "fails": [
+      {
+        "severity": "FAIL",
+        "check": "fill",
+        "message": "fill 34% = (hard macros 110210.8 + synthesized std cells 2650.1) / outline 336296.4 um2; pin demand per face: S 226 pins over 121.6/457.9 um (27%), N 2220 pins over 449.0/457.9 um (98%), W 861 pins over 362.7/734.4 um (49%), E 860 pins over 362.7/734.4 um (49%) (< 35%)",
+        "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+      }
+    ]
+  },
+  {
+    "kit": "smh_pvm_ref_s5a",
+    "verdict": "WARN",
+    "generated": "2026-10-19T22:48:00-0700",
+    "tt_spread": 37.3,
+    "ff_spread": 35.5,
+    "overflow": 0,
+    "fails": []
+  },
+  {
+    "kit": "smh_pvm_ref_s5b",
+    "verdict": "WARN",
+    "generated": "2026-10-19T23:23:15-0700",
+    "tt_spread": 23.4,
+    "ff_spread": 22.9,
+    "overflow": 0,
+    "fails": []
+  }
+]

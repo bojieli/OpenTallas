@@ -1,0 +1,11 @@
+G1_CAPTURE_MISMATCH cycle=3 gv=1 gf=0
+G1_CAPTURE_MISMATCH cycle=5 gv=0 gf=0
+G1_CAPTURE_MISMATCH cycle=8 gv=1 gf=0
+G1_CAPTURE_MISMATCH cycle=12 gv=0 gf=1
+G1_CAPTURE_MISMATCH cycle=13 gv=1 gf=0
+G1_CAPTURE_MISMATCH cycle=20 gv=0 gf=1
+G1_CAPTURE_MISMATCH cycle=22 gv=1 gf=0
+G1_CAPTURE_MISMATCH cycle=29 gv=0 gf=1
+[40966000] %Fatal: tb_ot_rp4_g1_capture.sv:43: Assertion failed in tb_ot_rp4_g1_capture: G1_CAPTURE FAIL errors=1549 checked=4094
+%Error: tb_ot_rp4_g1_capture.sv:43: Verilog $stop
+Aborting...
