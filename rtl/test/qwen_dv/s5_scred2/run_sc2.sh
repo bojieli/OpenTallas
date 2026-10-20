@@ -39,5 +39,6 @@ run eq66 6 6 15 57 0 7 || st=1
 run eq76 7 6 20 66 0 7 || st=1
 run eq76s2 7 6 20 66 0 11 || st=1
 run mut76 7 6 20 66 1 7 || st=1
+run eq79 7 9 20 96 0 7 || st=1
 echo "SC2_BENCH_DONE status=$st"
 exit $st

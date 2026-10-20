@@ -1,0 +1,16 @@
+MISMATCH stream 0 count ref=2236 dut=2271
+MISMATCH stream 0 ev 3 ref t=46 0000a00097baa457 dut t=50 000099a4c2551de3 off=4
+MISMATCH stream 0 ev 4 ref t=48 000099a4c2551de3 dut t=51 0000bae0b95c57ed off=3
+MISMATCH stream 0 ev 5 ref t=49 0000bae0b95c57ed dut t=52 00009671a857c901 off=3
+MISMATCH stream 0 ev 6 ref t=50 00009671a857c901 dut t=53 0000d3346ae6f537 off=3
+MISMATCH stream 0 ev 7 ref t=51 0000d3346ae6f537 dut t=54 0000a000d8c756c1 off=3
+MISMATCH stream 0 ev 16 ref t=98 0000a000c1c382d6 dut t=101 0000bdcb478c84fd off=3
+MISMATCH stream 0 ev 17 ref t=99 0000bdcb478c84fd dut t=104 0000ab26ab5f3bb2 off=5
+MISMATCH stream 0 ev 18 ref t=102 0000ab26ab5f3bb2 dut t=107 00009c102da8357d off=5
+MISMATCH stream 0 ev 19 ref t=105 00009c102da8357d dut t=113 0000c55f8158723b off=8
+MISMATCH stream 0 ev 20 ref t=111 0000c55f8158723b dut t=114 0000a38d2f7a83d2 off=3
+MISMATCH stream 1 count ref=2125 dut=2160
+SC2_EQ FAIL errors=4222
+[194690000] %Fatal: tb_sc2.sv:135: Assertion failed in tb_sc2: SC2_EQ FAIL
+%Error: rtl/test/qwen_dv/s5_scred2/tb_sc2.sv:135: Verilog $stop
+Aborting...

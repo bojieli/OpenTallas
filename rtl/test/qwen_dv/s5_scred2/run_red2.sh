@@ -34,6 +34,7 @@ run eq45 4 5 15 0 || st=1
 run eq66 6 6 38 0 || st=1
 run eq76 7 6 49 0 || st=1
 run mut76 7 6 49 1 || st=1
+run eq79 7 9 52 0 || st=1
 run mut44 4 4 14 1 || st=1
 echo "RED2_BENCH_DONE status=$st"
 exit $st

@@ -1,0 +1,11 @@
+MISMATCH result 0 ref t=73 d411724dce53c8 dut t=87 d411724d6ef4fc
+MISMATCH result 1 ref t=89 26c729c6c7dcae dut t=103 26c7294561b840
+MISMATCH result 2 ref t=101 e701b54e36554b dut t=115 e701b54d6fb82f
+MISMATCH result 3 ref t=113 a77d2f4c6fdad6 dut t=127 a77d2f4d073bc3
+MISMATCH result 4 ref t=126 13d8f54e7deec5 dut t=140 13d8f54d58f3ec
+MISMATCH result 5 ref t=136 4f5c38470bb5fb dut t=150 4f5c38464acd88
+MISMATCH result 6 ref t=141 384e80c4867358 dut t=155 384e80462598a4
+RED2_EQ FAIL errors=2981 results=3000
+[290990000] %Fatal: tb_red2.sv:70: Assertion failed in tb_red2: RED2_EQ FAIL
+%Error: rtl/test/qwen_dv/s5_scred2/tb_red2.sv:70: Verilog $stop
+Aborting...

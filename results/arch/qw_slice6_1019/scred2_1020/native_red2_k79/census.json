@@ -1,0 +1,48 @@
+{
+  "top": "qfd_dv_s5_red2_k79_c8",
+  "sha256": "b0add102910015af289201ff699258f96bafd5dbd5cae0e39e193c9133b3ee6e",
+  "nonclock_drivers_over32": 0,
+  "flop_drivers_over32": 0,
+  "raw_ports_over32": 0,
+  "max_nonclock_loads": 24,
+  "rst_n_loads": 8,
+  "metrics": {
+    "clock_roots": [
+      {
+        "root": "port:ck[0]",
+        "ff": 34272,
+        "icg": 0,
+        "macro_pins": 0,
+        "example": "u_0._2_"
+      }
+    ],
+    "hier_subblocks": 0,
+    "clock_max_root_sinks": 34272,
+    "clock_max_root": "port:ck[0]",
+    "high_fanout_top": [],
+    "hf_max_port": 0,
+    "hf_max_reset": 0,
+    "hf_max_net": 0,
+    "reset_landing": [
+      {
+        "port": "rst_n[0]",
+        "sinks": 8,
+        "flops": 8,
+        "macros": 0
+      }
+    ],
+    "in_to_out_bits": 0,
+    "in_to_reg_levels": 0,
+    "reg_to_out_levels": 0,
+    "icg_enable_from_port": 0,
+    "depth_ps": 556.8,
+    "depth_path": [
+      "u_10840._2_",
+      "u_3885._2_/D"
+    ],
+    "depth_levels": 17
+  },
+  "violations": [],
+  "verdict": "PASS_FANOUT_ONLY",
+  "qualification": "Mapped fanout census only; reset landing/pins/reach/storage still require their own proof"
+}

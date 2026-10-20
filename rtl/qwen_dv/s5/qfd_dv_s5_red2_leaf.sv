@@ -1,4 +1,29 @@
 `timescale 1ns/1ps
-// QW-SLICE7-LEAVES kit top: scalar-port wrapper of the bounded constructor netlist qfd_dv_s5_red2_b76 (generated from
-// qfd_dv_s5_red2 #(LA 7, LM 6) by tools/qwen_dv/bound_math_netlist.py, flags in rtl/test/qwen_dv/s5_scred2/native.sh).
-// OT_S5_SCRED2_MUT_NETLIST (bench only): the constructed mutant netlist instead.
+// QW-SLICE7-LEAVES kit top: scalar-port wrapper of the bounded netlist qfd_dv_s5_red2_k79 = qfd_dv_s5_red2 #(LA 7, LM 9)
+// (rtl/qwen_dv/s5/qfd_dv_s5_red2.sv) through tools/qwen_dv/bound_math_netlist.py --load-cap 8 --transparent-inverters
+// --retain-mux --shared-helpers --retain-keep (helpers renamed qfd_r2_bmath_*).  Census: results/arch/qw_slice6_1019/scred2_1020.
+// OT_S5_SCRED2_MUT_NETLIST (bench only): the constructed OT_S5_RED2_MUT netlist qfd_dv_s5_red2_k79_mut instead.
+module qfd_dv_s5_red2_leaf (
+    input  wire           ck,
+    input  wire           rst_n,
+    input  wire [7:0]     l_ov,
+    input  wire [8*32-1:0] l_out,
+    input  wire [1:0]     l_red0,
+    input  wire           l_redsq0,
+    input  wire           l_last0,
+    input  wire [23:0]    l_raddr0,
+    output wire           red_we,
+    output wire [23:0]    red_addr,
+    output wire [31:0]    red_data,
+    output wire           rd_v,
+    output wire           busy,
+    output wire           fault
+);
+`ifdef OT_S5_SCRED2_MUT_NETLIST
+    qfd_dv_s5_red2_k79_mut u (
+`else
+    qfd_dv_s5_red2_k79 u (
+`endif
+        .ck(ck), .rst_n(rst_n), .l_ov(l_ov), .l_out(l_out), .l_red0(l_red0), .l_redsq0(l_redsq0), .l_last0(l_last0),
+        .l_raddr0(l_raddr0), .red_we(red_we), .red_addr(red_addr), .red_data(red_data), .rd_v(rd_v), .busy(busy), .fault(fault));
+endmodule

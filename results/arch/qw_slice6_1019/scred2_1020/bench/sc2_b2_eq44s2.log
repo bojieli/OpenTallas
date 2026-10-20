@@ -1,0 +1,5 @@
+SC2_EQ PASS dn=2191 up=2196 w1=523 tok=649 (merges 160, psum 786, rsqrt 21, total 19) OFF0=2 DT=5 DR=19
+- rtl/test/qwen_dv/s5_scred2/tb_sc2.sv:138: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 192us; walltime 0.671 s; speed 286.007 us/s
+- Verilator: cpu 0.666 s on 1 threads; allocated 10 MB
