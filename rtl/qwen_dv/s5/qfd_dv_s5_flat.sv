@@ -41,7 +41,7 @@ module qfd_dv_s5_flat (
     wire [3:0] sid; wire [28:0] stn_cfg; wire [100:0] sc_cfg; wire [30:0] stm_cfg; wire [9:0] su_cmd;
     wire am_v; wire [23:0] am_idx; wire [31:0] am_val; wire [1:0] am_u;
     wire w16_we; wire [23:0] w16_addr; wire [511:0] w16_data; wire w1_we; wire [23:0] w1_addr; wire [31:0] w1_data;
-    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; wire [4*516-1:0] cw_s_c;
+    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; 
     wire su_nr, su_idle, su_fault, vm_fault; wire [15:0] su_prog, su_rows;
     wire red_we, rd_v, red_busy, red_fault; wire [23:0] red_addr; wire [31:0] red_data;
     wire sc_w1_we, tok_v, tok_own, sc_busy, sc_fault; wire [23:0] sc_w1_addr, tok_idx; wire [31:0] sc_w1_data, tok_val;
@@ -103,9 +103,9 @@ module qfd_dv_s5_flat (
         .st_up_c(so_e), .st_up_o(st_up_o), .sc_up_c(sc_up_c), .sc_up_o(sc_up_o), .hr_c(hr_q), .hr_o(hr_o),
         .chr_c(chd_q), .ch_up_o(ch_up_o), .treq_c(treq_q), .treq_o(treq_o),
         .l9_c({oc0, l9d7, l9d6, l9d5, l9d4, l9d3, l9d2, l9d1, l9d0}), .l9_o(l9_o));
-    qfd_dv_s5_fn u_fn (.rs_n(rs_n), .rs_n_r(rsn_r));
-    qfd_dv_s5_frs u_frs (.rs_s(rs_s), .rs_s_r(rss_r));
-    qfd_dv_s5_fs u_fs (.cw_s_c(cw_s_c), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
+    qfd_dv_s5_fn u_fn (.ck(ck), .rs_n(rs_n), .rs_n_r(rsn_r));
+    qfd_dv_s5_frs u_frs (.ck(ck), .rs_s(rs_s), .rs_s_r(rss_r));
+    qfd_dv_s5_fs u_fs (.ck(ck), .cs0(cs0), .cs1(cs1), .cs2(cs2), .cs3(cs3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
     qfd_dv_s5_ctl u_ctl (.ck(ck), .rst_n(rst_n), .cmd_q(cmd_q), .chd_q(chd_q),
         .r_v(rv0), .r_idx(ri0), .r_last(rl0), .r_d({r_d7, r_d6, r_d5, r_d4, r_d3, r_d2, r_d1, r_d0}), .l9o_v(oc0[0]),
         .stn_fault(fl0),
@@ -746,7 +746,6 @@ module qfd_dv_s5_flat (
         .r_d(r_d7), .flt_bank_i(flt_b5), .flt_vld_i(flt_v5), .flt_bank_o(flt_b7), .flt_vld_o(flt_v7), .fault(fl7));
     qfd_dv_s5_tap u_tap (.ck(ck), .rst_n(rst_n), .sid(sid), .hr_q(hr_q), .xt_v(xt_v), .xt_a(xt_a), .xt_d(xt_d),
         .xt_bad(xt_bad), .lq_bad({lqb3, lqb2, lqb1, lqb0}), .hw(hw), .cid(cid), .tap_fault(tap_fault));
-    assign cw_s_c = {cs3, cs2, cs1, cs0};
     // ---- column 0: xhead + 8 x leaves (two write chains of 4)
     wire [1:0] lw_v0, lw_ep0, lc_v0, lc_ep0; wire [11:0] lw_off0; wire [127:0] lw_m0; wire [2047:0] lw_d0;
     wire [143:0] lw_ctl0; wire [7:0] lr_v0, lr_t0, lr_ep0, lq_v0; wire [223:0] lr_p0; wire [511:0] lq0; wire lrst0;
@@ -761,25 +760,41 @@ module qfd_dv_s5_flat (
     wire x00cv4, x00cep4, x00wv4, x00wep4; wire [5:0] x00woff4; wire [63:0] x00wm4; wire [1023:0] x00wd4; wire [71:0] x00wc4;
     assign x00cv0 = lc_v0[0]; assign x00cep0 = lc_ep0[0]; assign x00wv0 = lw_v0[0]; assign x00wep0 = lw_ep0[0];
     assign x00woff0 = lw_off0[5:0]; assign x00wm0 = lw_m0[63:0]; assign x00wd0 = lw_d0[1023:0]; assign x00wc0 = lw_ctl0[71:0];
-    ot_qfd_xs_leaf u_xl0_0 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl0_0 (.clk(ck), .rst_n(rst_n),
         .w_v(x00wv0), .w_ep(x00wep0), .w_off(x00woff0), .w_m(x00wm0), .w_d(x00wd0), .w_ctl(x00wc0),
         .c_v(x00cv0), .c_ep(x00cep0), .wo_v(x00wv1), .wo_ep(x00wep1), .wo_off(x00woff1),
         .wo_m(x00wm1), .wo_d(x00wd1), .wo_ctl(x00wc1), .co_v(x00cv1), .co_ep(x00cep1),
         .r_v(lr_v0[0]), .r_t(lr_t0[0]), .r_ep(lr_ep0[0]), .r_p(lr_p0[27:0]),
         .q_v(lq_v0[0]), .q(lq0[63:0]), .q_bad(lqb0[0]));
-    ot_qfd_xs_leaf u_xl0_1 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl0_1 (.clk(ck), .rst_n(rst_n),
         .w_v(x00wv1), .w_ep(x00wep1), .w_off(x00woff1), .w_m(x00wm1), .w_d(x00wd1), .w_ctl(x00wc1),
         .c_v(x00cv1), .c_ep(x00cep1), .wo_v(x00wv2), .wo_ep(x00wep2), .wo_off(x00woff2),
         .wo_m(x00wm2), .wo_d(x00wd2), .wo_ctl(x00wc2), .co_v(x00cv2), .co_ep(x00cep2),
         .r_v(lr_v0[1]), .r_t(lr_t0[1]), .r_ep(lr_ep0[1]), .r_p(lr_p0[55:28]),
         .q_v(lq_v0[1]), .q(lq0[127:64]), .q_bad(lqb0[1]));
-    ot_qfd_xs_leaf u_xl0_2 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl0_2 (.clk(ck), .rst_n(rst_n),
         .w_v(x00wv2), .w_ep(x00wep2), .w_off(x00woff2), .w_m(x00wm2), .w_d(x00wd2), .w_ctl(x00wc2),
         .c_v(x00cv2), .c_ep(x00cep2), .wo_v(x00wv3), .wo_ep(x00wep3), .wo_off(x00woff3),
         .wo_m(x00wm3), .wo_d(x00wd3), .wo_ctl(x00wc3), .co_v(x00cv3), .co_ep(x00cep3),
         .r_v(lr_v0[2]), .r_t(lr_t0[2]), .r_ep(lr_ep0[2]), .r_p(lr_p0[83:56]),
         .q_v(lq_v0[2]), .q(lq0[191:128]), .q_bad(lqb0[2]));
-    ot_qfd_xs_leaf u_xl0_3 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl0_3 (.clk(ck), .rst_n(rst_n),
         .w_v(x00wv3), .w_ep(x00wep3), .w_off(x00woff3), .w_m(x00wm3), .w_d(x00wd3), .w_ctl(x00wc3),
         .c_v(x00cv3), .c_ep(x00cep3), .wo_v(x00wv4), .wo_ep(x00wep4), .wo_off(x00woff4),
         .wo_m(x00wm4), .wo_d(x00wd4), .wo_ctl(x00wc4), .co_v(x00cv4), .co_ep(x00cep4),
@@ -792,25 +807,41 @@ module qfd_dv_s5_flat (
     wire x01cv4, x01cep4, x01wv4, x01wep4; wire [5:0] x01woff4; wire [63:0] x01wm4; wire [1023:0] x01wd4; wire [71:0] x01wc4;
     assign x01cv0 = lc_v0[1]; assign x01cep0 = lc_ep0[1]; assign x01wv0 = lw_v0[1]; assign x01wep0 = lw_ep0[1];
     assign x01woff0 = lw_off0[11:6]; assign x01wm0 = lw_m0[127:64]; assign x01wd0 = lw_d0[2047:1024]; assign x01wc0 = lw_ctl0[143:72];
-    ot_qfd_xs_leaf u_xl0_4 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl0_4 (.clk(ck), .rst_n(rst_n),
         .w_v(x01wv0), .w_ep(x01wep0), .w_off(x01woff0), .w_m(x01wm0), .w_d(x01wd0), .w_ctl(x01wc0),
         .c_v(x01cv0), .c_ep(x01cep0), .wo_v(x01wv1), .wo_ep(x01wep1), .wo_off(x01woff1),
         .wo_m(x01wm1), .wo_d(x01wd1), .wo_ctl(x01wc1), .co_v(x01cv1), .co_ep(x01cep1),
         .r_v(lr_v0[4]), .r_t(lr_t0[4]), .r_ep(lr_ep0[4]), .r_p(lr_p0[139:112]),
         .q_v(lq_v0[4]), .q(lq0[319:256]), .q_bad(lqb0[4]));
-    ot_qfd_xs_leaf u_xl0_5 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl0_5 (.clk(ck), .rst_n(rst_n),
         .w_v(x01wv1), .w_ep(x01wep1), .w_off(x01woff1), .w_m(x01wm1), .w_d(x01wd1), .w_ctl(x01wc1),
         .c_v(x01cv1), .c_ep(x01cep1), .wo_v(x01wv2), .wo_ep(x01wep2), .wo_off(x01woff2),
         .wo_m(x01wm2), .wo_d(x01wd2), .wo_ctl(x01wc2), .co_v(x01cv2), .co_ep(x01cep2),
         .r_v(lr_v0[5]), .r_t(lr_t0[5]), .r_ep(lr_ep0[5]), .r_p(lr_p0[167:140]),
         .q_v(lq_v0[5]), .q(lq0[383:320]), .q_bad(lqb0[5]));
-    ot_qfd_xs_leaf u_xl0_6 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl0_6 (.clk(ck), .rst_n(rst_n),
         .w_v(x01wv2), .w_ep(x01wep2), .w_off(x01woff2), .w_m(x01wm2), .w_d(x01wd2), .w_ctl(x01wc2),
         .c_v(x01cv2), .c_ep(x01cep2), .wo_v(x01wv3), .wo_ep(x01wep3), .wo_off(x01woff3),
         .wo_m(x01wm3), .wo_d(x01wd3), .wo_ctl(x01wc3), .co_v(x01cv3), .co_ep(x01cep3),
         .r_v(lr_v0[6]), .r_t(lr_t0[6]), .r_ep(lr_ep0[6]), .r_p(lr_p0[195:168]),
         .q_v(lq_v0[6]), .q(lq0[447:384]), .q_bad(lqb0[6]));
-    ot_qfd_xs_leaf u_xl0_7 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl0_7 (.clk(ck), .rst_n(rst_n),
         .w_v(x01wv3), .w_ep(x01wep3), .w_off(x01woff3), .w_m(x01wm3), .w_d(x01wd3), .w_ctl(x01wc3),
         .c_v(x01cv3), .c_ep(x01cep3), .wo_v(x01wv4), .wo_ep(x01wep4), .wo_off(x01woff4),
         .wo_m(x01wm4), .wo_d(x01wd4), .wo_ctl(x01wc4), .co_v(x01cv4), .co_ep(x01cep4),
@@ -830,25 +861,41 @@ module qfd_dv_s5_flat (
     wire x10cv4, x10cep4, x10wv4, x10wep4; wire [5:0] x10woff4; wire [63:0] x10wm4; wire [1023:0] x10wd4; wire [71:0] x10wc4;
     assign x10cv0 = lc_v1[0]; assign x10cep0 = lc_ep1[0]; assign x10wv0 = lw_v1[0]; assign x10wep0 = lw_ep1[0];
     assign x10woff0 = lw_off1[5:0]; assign x10wm0 = lw_m1[63:0]; assign x10wd0 = lw_d1[1023:0]; assign x10wc0 = lw_ctl1[71:0];
-    ot_qfd_xs_leaf u_xl1_0 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl1_0 (.clk(ck), .rst_n(rst_n),
         .w_v(x10wv0), .w_ep(x10wep0), .w_off(x10woff0), .w_m(x10wm0), .w_d(x10wd0), .w_ctl(x10wc0),
         .c_v(x10cv0), .c_ep(x10cep0), .wo_v(x10wv1), .wo_ep(x10wep1), .wo_off(x10woff1),
         .wo_m(x10wm1), .wo_d(x10wd1), .wo_ctl(x10wc1), .co_v(x10cv1), .co_ep(x10cep1),
         .r_v(lr_v1[0]), .r_t(lr_t1[0]), .r_ep(lr_ep1[0]), .r_p(lr_p1[27:0]),
         .q_v(lq_v1[0]), .q(lq1[63:0]), .q_bad(lqb1[0]));
-    ot_qfd_xs_leaf u_xl1_1 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl1_1 (.clk(ck), .rst_n(rst_n),
         .w_v(x10wv1), .w_ep(x10wep1), .w_off(x10woff1), .w_m(x10wm1), .w_d(x10wd1), .w_ctl(x10wc1),
         .c_v(x10cv1), .c_ep(x10cep1), .wo_v(x10wv2), .wo_ep(x10wep2), .wo_off(x10woff2),
         .wo_m(x10wm2), .wo_d(x10wd2), .wo_ctl(x10wc2), .co_v(x10cv2), .co_ep(x10cep2),
         .r_v(lr_v1[1]), .r_t(lr_t1[1]), .r_ep(lr_ep1[1]), .r_p(lr_p1[55:28]),
         .q_v(lq_v1[1]), .q(lq1[127:64]), .q_bad(lqb1[1]));
-    ot_qfd_xs_leaf u_xl1_2 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl1_2 (.clk(ck), .rst_n(rst_n),
         .w_v(x10wv2), .w_ep(x10wep2), .w_off(x10woff2), .w_m(x10wm2), .w_d(x10wd2), .w_ctl(x10wc2),
         .c_v(x10cv2), .c_ep(x10cep2), .wo_v(x10wv3), .wo_ep(x10wep3), .wo_off(x10woff3),
         .wo_m(x10wm3), .wo_d(x10wd3), .wo_ctl(x10wc3), .co_v(x10cv3), .co_ep(x10cep3),
         .r_v(lr_v1[2]), .r_t(lr_t1[2]), .r_ep(lr_ep1[2]), .r_p(lr_p1[83:56]),
         .q_v(lq_v1[2]), .q(lq1[191:128]), .q_bad(lqb1[2]));
-    ot_qfd_xs_leaf u_xl1_3 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl1_3 (.clk(ck), .rst_n(rst_n),
         .w_v(x10wv3), .w_ep(x10wep3), .w_off(x10woff3), .w_m(x10wm3), .w_d(x10wd3), .w_ctl(x10wc3),
         .c_v(x10cv3), .c_ep(x10cep3), .wo_v(x10wv4), .wo_ep(x10wep4), .wo_off(x10woff4),
         .wo_m(x10wm4), .wo_d(x10wd4), .wo_ctl(x10wc4), .co_v(x10cv4), .co_ep(x10cep4),
@@ -861,25 +908,41 @@ module qfd_dv_s5_flat (
     wire x11cv4, x11cep4, x11wv4, x11wep4; wire [5:0] x11woff4; wire [63:0] x11wm4; wire [1023:0] x11wd4; wire [71:0] x11wc4;
     assign x11cv0 = lc_v1[1]; assign x11cep0 = lc_ep1[1]; assign x11wv0 = lw_v1[1]; assign x11wep0 = lw_ep1[1];
     assign x11woff0 = lw_off1[11:6]; assign x11wm0 = lw_m1[127:64]; assign x11wd0 = lw_d1[2047:1024]; assign x11wc0 = lw_ctl1[143:72];
-    ot_qfd_xs_leaf u_xl1_4 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl1_4 (.clk(ck), .rst_n(rst_n),
         .w_v(x11wv0), .w_ep(x11wep0), .w_off(x11woff0), .w_m(x11wm0), .w_d(x11wd0), .w_ctl(x11wc0),
         .c_v(x11cv0), .c_ep(x11cep0), .wo_v(x11wv1), .wo_ep(x11wep1), .wo_off(x11woff1),
         .wo_m(x11wm1), .wo_d(x11wd1), .wo_ctl(x11wc1), .co_v(x11cv1), .co_ep(x11cep1),
         .r_v(lr_v1[4]), .r_t(lr_t1[4]), .r_ep(lr_ep1[4]), .r_p(lr_p1[139:112]),
         .q_v(lq_v1[4]), .q(lq1[319:256]), .q_bad(lqb1[4]));
-    ot_qfd_xs_leaf u_xl1_5 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl1_5 (.clk(ck), .rst_n(rst_n),
         .w_v(x11wv1), .w_ep(x11wep1), .w_off(x11woff1), .w_m(x11wm1), .w_d(x11wd1), .w_ctl(x11wc1),
         .c_v(x11cv1), .c_ep(x11cep1), .wo_v(x11wv2), .wo_ep(x11wep2), .wo_off(x11woff2),
         .wo_m(x11wm2), .wo_d(x11wd2), .wo_ctl(x11wc2), .co_v(x11cv2), .co_ep(x11cep2),
         .r_v(lr_v1[5]), .r_t(lr_t1[5]), .r_ep(lr_ep1[5]), .r_p(lr_p1[167:140]),
         .q_v(lq_v1[5]), .q(lq1[383:320]), .q_bad(lqb1[5]));
-    ot_qfd_xs_leaf u_xl1_6 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl1_6 (.clk(ck), .rst_n(rst_n),
         .w_v(x11wv2), .w_ep(x11wep2), .w_off(x11woff2), .w_m(x11wm2), .w_d(x11wd2), .w_ctl(x11wc2),
         .c_v(x11cv2), .c_ep(x11cep2), .wo_v(x11wv3), .wo_ep(x11wep3), .wo_off(x11woff3),
         .wo_m(x11wm3), .wo_d(x11wd3), .wo_ctl(x11wc3), .co_v(x11cv3), .co_ep(x11cep3),
         .r_v(lr_v1[6]), .r_t(lr_t1[6]), .r_ep(lr_ep1[6]), .r_p(lr_p1[195:168]),
         .q_v(lq_v1[6]), .q(lq1[447:384]), .q_bad(lqb1[6]));
-    ot_qfd_xs_leaf u_xl1_7 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl1_7 (.clk(ck), .rst_n(rst_n),
         .w_v(x11wv3), .w_ep(x11wep3), .w_off(x11woff3), .w_m(x11wm3), .w_d(x11wd3), .w_ctl(x11wc3),
         .c_v(x11cv3), .c_ep(x11cep3), .wo_v(x11wv4), .wo_ep(x11wep4), .wo_off(x11woff4),
         .wo_m(x11wm4), .wo_d(x11wd4), .wo_ctl(x11wc4), .co_v(x11cv4), .co_ep(x11cep4),
@@ -899,25 +962,41 @@ module qfd_dv_s5_flat (
     wire x20cv4, x20cep4, x20wv4, x20wep4; wire [5:0] x20woff4; wire [63:0] x20wm4; wire [1023:0] x20wd4; wire [71:0] x20wc4;
     assign x20cv0 = lc_v2[0]; assign x20cep0 = lc_ep2[0]; assign x20wv0 = lw_v2[0]; assign x20wep0 = lw_ep2[0];
     assign x20woff0 = lw_off2[5:0]; assign x20wm0 = lw_m2[63:0]; assign x20wd0 = lw_d2[1023:0]; assign x20wc0 = lw_ctl2[71:0];
-    ot_qfd_xs_leaf u_xl2_0 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl2_0 (.clk(ck), .rst_n(rst_n),
         .w_v(x20wv0), .w_ep(x20wep0), .w_off(x20woff0), .w_m(x20wm0), .w_d(x20wd0), .w_ctl(x20wc0),
         .c_v(x20cv0), .c_ep(x20cep0), .wo_v(x20wv1), .wo_ep(x20wep1), .wo_off(x20woff1),
         .wo_m(x20wm1), .wo_d(x20wd1), .wo_ctl(x20wc1), .co_v(x20cv1), .co_ep(x20cep1),
         .r_v(lr_v2[0]), .r_t(lr_t2[0]), .r_ep(lr_ep2[0]), .r_p(lr_p2[27:0]),
         .q_v(lq_v2[0]), .q(lq2[63:0]), .q_bad(lqb2[0]));
-    ot_qfd_xs_leaf u_xl2_1 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl2_1 (.clk(ck), .rst_n(rst_n),
         .w_v(x20wv1), .w_ep(x20wep1), .w_off(x20woff1), .w_m(x20wm1), .w_d(x20wd1), .w_ctl(x20wc1),
         .c_v(x20cv1), .c_ep(x20cep1), .wo_v(x20wv2), .wo_ep(x20wep2), .wo_off(x20woff2),
         .wo_m(x20wm2), .wo_d(x20wd2), .wo_ctl(x20wc2), .co_v(x20cv2), .co_ep(x20cep2),
         .r_v(lr_v2[1]), .r_t(lr_t2[1]), .r_ep(lr_ep2[1]), .r_p(lr_p2[55:28]),
         .q_v(lq_v2[1]), .q(lq2[127:64]), .q_bad(lqb2[1]));
-    ot_qfd_xs_leaf u_xl2_2 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl2_2 (.clk(ck), .rst_n(rst_n),
         .w_v(x20wv2), .w_ep(x20wep2), .w_off(x20woff2), .w_m(x20wm2), .w_d(x20wd2), .w_ctl(x20wc2),
         .c_v(x20cv2), .c_ep(x20cep2), .wo_v(x20wv3), .wo_ep(x20wep3), .wo_off(x20woff3),
         .wo_m(x20wm3), .wo_d(x20wd3), .wo_ctl(x20wc3), .co_v(x20cv3), .co_ep(x20cep3),
         .r_v(lr_v2[2]), .r_t(lr_t2[2]), .r_ep(lr_ep2[2]), .r_p(lr_p2[83:56]),
         .q_v(lq_v2[2]), .q(lq2[191:128]), .q_bad(lqb2[2]));
-    ot_qfd_xs_leaf u_xl2_3 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl2_3 (.clk(ck), .rst_n(rst_n),
         .w_v(x20wv3), .w_ep(x20wep3), .w_off(x20woff3), .w_m(x20wm3), .w_d(x20wd3), .w_ctl(x20wc3),
         .c_v(x20cv3), .c_ep(x20cep3), .wo_v(x20wv4), .wo_ep(x20wep4), .wo_off(x20woff4),
         .wo_m(x20wm4), .wo_d(x20wd4), .wo_ctl(x20wc4), .co_v(x20cv4), .co_ep(x20cep4),
@@ -930,25 +1009,41 @@ module qfd_dv_s5_flat (
     wire x21cv4, x21cep4, x21wv4, x21wep4; wire [5:0] x21woff4; wire [63:0] x21wm4; wire [1023:0] x21wd4; wire [71:0] x21wc4;
     assign x21cv0 = lc_v2[1]; assign x21cep0 = lc_ep2[1]; assign x21wv0 = lw_v2[1]; assign x21wep0 = lw_ep2[1];
     assign x21woff0 = lw_off2[11:6]; assign x21wm0 = lw_m2[127:64]; assign x21wd0 = lw_d2[2047:1024]; assign x21wc0 = lw_ctl2[143:72];
-    ot_qfd_xs_leaf u_xl2_4 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl2_4 (.clk(ck), .rst_n(rst_n),
         .w_v(x21wv0), .w_ep(x21wep0), .w_off(x21woff0), .w_m(x21wm0), .w_d(x21wd0), .w_ctl(x21wc0),
         .c_v(x21cv0), .c_ep(x21cep0), .wo_v(x21wv1), .wo_ep(x21wep1), .wo_off(x21woff1),
         .wo_m(x21wm1), .wo_d(x21wd1), .wo_ctl(x21wc1), .co_v(x21cv1), .co_ep(x21cep1),
         .r_v(lr_v2[4]), .r_t(lr_t2[4]), .r_ep(lr_ep2[4]), .r_p(lr_p2[139:112]),
         .q_v(lq_v2[4]), .q(lq2[319:256]), .q_bad(lqb2[4]));
-    ot_qfd_xs_leaf u_xl2_5 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl2_5 (.clk(ck), .rst_n(rst_n),
         .w_v(x21wv1), .w_ep(x21wep1), .w_off(x21woff1), .w_m(x21wm1), .w_d(x21wd1), .w_ctl(x21wc1),
         .c_v(x21cv1), .c_ep(x21cep1), .wo_v(x21wv2), .wo_ep(x21wep2), .wo_off(x21woff2),
         .wo_m(x21wm2), .wo_d(x21wd2), .wo_ctl(x21wc2), .co_v(x21cv2), .co_ep(x21cep2),
         .r_v(lr_v2[5]), .r_t(lr_t2[5]), .r_ep(lr_ep2[5]), .r_p(lr_p2[167:140]),
         .q_v(lq_v2[5]), .q(lq2[383:320]), .q_bad(lqb2[5]));
-    ot_qfd_xs_leaf u_xl2_6 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl2_6 (.clk(ck), .rst_n(rst_n),
         .w_v(x21wv2), .w_ep(x21wep2), .w_off(x21woff2), .w_m(x21wm2), .w_d(x21wd2), .w_ctl(x21wc2),
         .c_v(x21cv2), .c_ep(x21cep2), .wo_v(x21wv3), .wo_ep(x21wep3), .wo_off(x21woff3),
         .wo_m(x21wm3), .wo_d(x21wd3), .wo_ctl(x21wc3), .co_v(x21cv3), .co_ep(x21cep3),
         .r_v(lr_v2[6]), .r_t(lr_t2[6]), .r_ep(lr_ep2[6]), .r_p(lr_p2[195:168]),
         .q_v(lq_v2[6]), .q(lq2[447:384]), .q_bad(lqb2[6]));
-    ot_qfd_xs_leaf u_xl2_7 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl2_7 (.clk(ck), .rst_n(rst_n),
         .w_v(x21wv3), .w_ep(x21wep3), .w_off(x21woff3), .w_m(x21wm3), .w_d(x21wd3), .w_ctl(x21wc3),
         .c_v(x21cv3), .c_ep(x21cep3), .wo_v(x21wv4), .wo_ep(x21wep4), .wo_off(x21woff4),
         .wo_m(x21wm4), .wo_d(x21wd4), .wo_ctl(x21wc4), .co_v(x21cv4), .co_ep(x21cep4),
@@ -968,25 +1063,41 @@ module qfd_dv_s5_flat (
     wire x30cv4, x30cep4, x30wv4, x30wep4; wire [5:0] x30woff4; wire [63:0] x30wm4; wire [1023:0] x30wd4; wire [71:0] x30wc4;
     assign x30cv0 = lc_v3[0]; assign x30cep0 = lc_ep3[0]; assign x30wv0 = lw_v3[0]; assign x30wep0 = lw_ep3[0];
     assign x30woff0 = lw_off3[5:0]; assign x30wm0 = lw_m3[63:0]; assign x30wd0 = lw_d3[1023:0]; assign x30wc0 = lw_ctl3[71:0];
-    ot_qfd_xs_leaf u_xl3_0 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl3_0 (.clk(ck), .rst_n(rst_n),
         .w_v(x30wv0), .w_ep(x30wep0), .w_off(x30woff0), .w_m(x30wm0), .w_d(x30wd0), .w_ctl(x30wc0),
         .c_v(x30cv0), .c_ep(x30cep0), .wo_v(x30wv1), .wo_ep(x30wep1), .wo_off(x30woff1),
         .wo_m(x30wm1), .wo_d(x30wd1), .wo_ctl(x30wc1), .co_v(x30cv1), .co_ep(x30cep1),
         .r_v(lr_v3[0]), .r_t(lr_t3[0]), .r_ep(lr_ep3[0]), .r_p(lr_p3[27:0]),
         .q_v(lq_v3[0]), .q(lq3[63:0]), .q_bad(lqb3[0]));
-    ot_qfd_xs_leaf u_xl3_1 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl3_1 (.clk(ck), .rst_n(rst_n),
         .w_v(x30wv1), .w_ep(x30wep1), .w_off(x30woff1), .w_m(x30wm1), .w_d(x30wd1), .w_ctl(x30wc1),
         .c_v(x30cv1), .c_ep(x30cep1), .wo_v(x30wv2), .wo_ep(x30wep2), .wo_off(x30woff2),
         .wo_m(x30wm2), .wo_d(x30wd2), .wo_ctl(x30wc2), .co_v(x30cv2), .co_ep(x30cep2),
         .r_v(lr_v3[1]), .r_t(lr_t3[1]), .r_ep(lr_ep3[1]), .r_p(lr_p3[55:28]),
         .q_v(lq_v3[1]), .q(lq3[127:64]), .q_bad(lqb3[1]));
-    ot_qfd_xs_leaf u_xl3_2 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl3_2 (.clk(ck), .rst_n(rst_n),
         .w_v(x30wv2), .w_ep(x30wep2), .w_off(x30woff2), .w_m(x30wm2), .w_d(x30wd2), .w_ctl(x30wc2),
         .c_v(x30cv2), .c_ep(x30cep2), .wo_v(x30wv3), .wo_ep(x30wep3), .wo_off(x30woff3),
         .wo_m(x30wm3), .wo_d(x30wd3), .wo_ctl(x30wc3), .co_v(x30cv3), .co_ep(x30cep3),
         .r_v(lr_v3[2]), .r_t(lr_t3[2]), .r_ep(lr_ep3[2]), .r_p(lr_p3[83:56]),
         .q_v(lq_v3[2]), .q(lq3[191:128]), .q_bad(lqb3[2]));
-    ot_qfd_xs_leaf u_xl3_3 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl3_3 (.clk(ck), .rst_n(rst_n),
         .w_v(x30wv3), .w_ep(x30wep3), .w_off(x30woff3), .w_m(x30wm3), .w_d(x30wd3), .w_ctl(x30wc3),
         .c_v(x30cv3), .c_ep(x30cep3), .wo_v(x30wv4), .wo_ep(x30wep4), .wo_off(x30woff4),
         .wo_m(x30wm4), .wo_d(x30wd4), .wo_ctl(x30wc4), .co_v(x30cv4), .co_ep(x30cep4),
@@ -999,25 +1110,41 @@ module qfd_dv_s5_flat (
     wire x31cv4, x31cep4, x31wv4, x31wep4; wire [5:0] x31woff4; wire [63:0] x31wm4; wire [1023:0] x31wd4; wire [71:0] x31wc4;
     assign x31cv0 = lc_v3[1]; assign x31cep0 = lc_ep3[1]; assign x31wv0 = lw_v3[1]; assign x31wep0 = lw_ep3[1];
     assign x31woff0 = lw_off3[11:6]; assign x31wm0 = lw_m3[127:64]; assign x31wd0 = lw_d3[2047:1024]; assign x31wc0 = lw_ctl3[143:72];
-    ot_qfd_xs_leaf u_xl3_4 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl3_4 (.clk(ck), .rst_n(rst_n),
         .w_v(x31wv0), .w_ep(x31wep0), .w_off(x31woff0), .w_m(x31wm0), .w_d(x31wd0), .w_ctl(x31wc0),
         .c_v(x31cv0), .c_ep(x31cep0), .wo_v(x31wv1), .wo_ep(x31wep1), .wo_off(x31woff1),
         .wo_m(x31wm1), .wo_d(x31wd1), .wo_ctl(x31wc1), .co_v(x31cv1), .co_ep(x31cep1),
         .r_v(lr_v3[4]), .r_t(lr_t3[4]), .r_ep(lr_ep3[4]), .r_p(lr_p3[139:112]),
         .q_v(lq_v3[4]), .q(lq3[319:256]), .q_bad(lqb3[4]));
-    ot_qfd_xs_leaf u_xl3_5 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl3_5 (.clk(ck), .rst_n(rst_n),
         .w_v(x31wv1), .w_ep(x31wep1), .w_off(x31woff1), .w_m(x31wm1), .w_d(x31wd1), .w_ctl(x31wc1),
         .c_v(x31cv1), .c_ep(x31cep1), .wo_v(x31wv2), .wo_ep(x31wep2), .wo_off(x31woff2),
         .wo_m(x31wm2), .wo_d(x31wd2), .wo_ctl(x31wc2), .co_v(x31cv2), .co_ep(x31cep2),
         .r_v(lr_v3[5]), .r_t(lr_t3[5]), .r_ep(lr_ep3[5]), .r_p(lr_p3[167:140]),
         .q_v(lq_v3[5]), .q(lq3[383:320]), .q_bad(lqb3[5]));
-    ot_qfd_xs_leaf u_xl3_6 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl3_6 (.clk(ck), .rst_n(rst_n),
         .w_v(x31wv2), .w_ep(x31wep2), .w_off(x31woff2), .w_m(x31wm2), .w_d(x31wd2), .w_ctl(x31wc2),
         .c_v(x31cv2), .c_ep(x31cep2), .wo_v(x31wv3), .wo_ep(x31wep3), .wo_off(x31woff3),
         .wo_m(x31wm3), .wo_d(x31wd3), .wo_ctl(x31wc3), .co_v(x31cv3), .co_ep(x31cep3),
         .r_v(lr_v3[6]), .r_t(lr_t3[6]), .r_ep(lr_ep3[6]), .r_p(lr_p3[195:168]),
         .q_v(lq_v3[6]), .q(lq3[447:384]), .q_bad(lqb3[6]));
-    ot_qfd_xs_leaf u_xl3_7 (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_leaf
+`ifndef OT_S5_HARD
+        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))
+`endif
+        u_xl3_7 (.clk(ck), .rst_n(rst_n),
         .w_v(x31wv3), .w_ep(x31wep3), .w_off(x31woff3), .w_m(x31wm3), .w_d(x31wd3), .w_ctl(x31wc3),
         .c_v(x31cv3), .c_ep(x31cep3), .wo_v(x31wv4), .wo_ep(x31wep4), .wo_off(x31woff4),
         .wo_m(x31wm4), .wo_d(x31wd4), .wo_ctl(x31wc4), .co_v(x31cv4), .co_ep(x31cep4),

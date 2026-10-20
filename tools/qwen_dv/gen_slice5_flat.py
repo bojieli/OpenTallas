@@ -104,7 +104,7 @@ def gen(hard):
     w("    wire [3:0] sid; wire [28:0] stn_cfg; wire [100:0] sc_cfg; wire [30:0] stm_cfg; wire [9:0] su_cmd;")
     w("    wire am_v; wire [23:0] am_idx; wire [31:0] am_val; wire [1:0] am_u;")
     w("    wire w16_we; wire [23:0] w16_addr; wire [511:0] w16_data; wire w1_we; wire [23:0] w1_addr; wire [31:0] w1_data;")
-    w("    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; wire [4*516-1:0] cw_s_c;")
+    w("    wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; ")
     w("    wire su_nr, su_idle, su_fault, vm_fault; wire [15:0] su_prog, su_rows;")
     w("    wire red_we, rd_v, red_busy, red_fault; wire [23:0] red_addr; wire [31:0] red_data;")
     w("    wire sc_w1_we, tok_v, tok_own, sc_busy, sc_fault; wire [23:0] sc_w1_addr, tok_idx; wire [31:0] sc_w1_data, tok_val;")
@@ -136,9 +136,9 @@ def gen(hard):
     w("        .st_up_c(so_e), .st_up_o(st_up_o), .sc_up_c(sc_up_c), .sc_up_o(sc_up_o), .hr_c(hr_q), .hr_o(hr_o),")
     w("        .chr_c(chd_q), .ch_up_o(ch_up_o), .treq_c(treq_q), .treq_o(treq_o),")
     w("        .l9_c({oc0, l9d7, l9d6, l9d5, l9d4, l9d3, l9d2, l9d1, l9d0}), .l9_o(l9_o));")
-    w("    qfd_dv_s5_fn u_fn (.rs_n(rs_n), .rs_n_r(rsn_r));")
-    w("    qfd_dv_s5_frs u_frs (.rs_s(rs_s), .rs_s_r(rss_r));")
-    w("    qfd_dv_s5_fs u_fs (.cw_s_c(cw_s_c), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));")
+    w("    qfd_dv_s5_fn u_fn (.ck(ck), .rs_n(rs_n), .rs_n_r(rsn_r));")
+    w("    qfd_dv_s5_frs u_frs (.ck(ck), .rs_s(rs_s), .rs_s_r(rss_r));")
+    w("    qfd_dv_s5_fs u_fs (.ck(ck), .cs0(cs0), .cs1(cs1), .cs2(cs2), .cs3(cs3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));")
     if not hard:
         w("    qfd_dv_s5_spin u_spin (.ck(ck), .rst_n(rst_n), .rs_s(rss_r), .rs_n(rsn_r), .l9_i(nb_r), .rss_q(rss_q), .rsn_q(rsn_q),")
         w("        .nb_q(nb_q), .stn_rst_n(stn_rst));")
@@ -228,9 +228,10 @@ def gen(hard):
     tm = "" if hard else " #(.HARD(0), .MUT(MUT))"
     w(f"    qfd_dv_s5_tap{tm} u_tap (.ck(ck), .rst_n({R('rst_n')}), .sid(sid), .hr_q(hr_q), .xt_v(xt_v), .xt_a(xt_a), .xt_d(xt_d),")
     w("        .xt_bad(xt_bad), .lq_bad({lqb3, lqb2, lqb1, lqb0}), .hw(hw), .cid(cid), .tap_fault(tap_fault));")
-    leafp = "" if hard else " #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))"
+    # hard: the closed w130 view's configuration only in simulation (the gate binds the view: no #() under OT_S5_HARD)
+    leafp = ("\n`ifndef OT_S5_HARD\n        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))\n`endif\n       " if hard
+             else " #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))")
     fchn = ["fch0", "fch1", "fch2", "fch3", "tap_fault"]
-    w("    assign cw_s_c = {cs3, cs2, cs1, cs0};")
     for c in range(4):
         w(f"    // ---- column {c}: xhead + 8 x leaves (two write chains of 4)")
         w(f"    wire [1:0] lw_v{c}, lw_ep{c}, lc_v{c}, lc_ep{c}; wire [11:0] lw_off{c}; wire [127:0] lw_m{c}; wire [2047:0] lw_d{c};")

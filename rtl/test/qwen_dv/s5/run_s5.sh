@@ -5,6 +5,7 @@
 #           (random / +quiet / +hronly / +legal).  M = 0 must print S5_EQ PASS; M = d10 (SETID unincremented),
 #           loff (lane offset twice), lrly (lane answers one relay stage short) must print S5_EQ FAIL.
 #   b2 [M]  dv_bench2 f j k q m n o (B2=...) on FACE 3 (qfd_dv_s5_flat0: programme benches vs the golden); M as eq
+#   lp <M>  landed parent vs lagref lockstep (SPEC=qfd_dv_s5|qfd_dv_s5b), lp.py MUT M;  audit: lp.py audits + unland mutants
 #   lint    Verilator lint of qfd_dv_s5_flat (the HARDENED composition, closed lane head safe2 RTL)
 #   bash rtl/test/qwen_dv/s5/run_s5.sh OUTDIR eq|b2|lint [M]
 set -u
@@ -48,6 +49,22 @@ case $KIND in
       sc) D="+define+OT_S5_SC_MUT";; xh) D="+define+OT_S5_XH_MUT";; btab) D="+define+OT_S5_BTAB_MUT";; esac
     MU=""; case $M in d*) MU="--mut ${M#d}";; esac
     python3 rtl/test/qwen_dv/dv_bench2.py ${B2:-f j k q m n o} $MU --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=3 $D" --work "$OUT/b2";;
+  lp)
+    # landed parent (lp.py) vs its lagref (the flat parent with every cross-region reader pin delayed E+1), lp.py MUT M
+    # (0 PASS; 1 landing bypassed, 2 landing read K+1, 4 mut_child reset run long: FAIL).  SPEC=qfd_dv_s5 | qfd_dv_s5b
+    SP=${SPEC:-qfd_dv_s5}; LPD=rtl/qwen_dv/s5/lp
+    "$V" $VF +define+OT_S5_HARD -Wno-WIDTHCONCAT -GMUT=$M --top-module tb_${SP}_lp $COMMON rtl/qwen_dv/qfd_dv_head_safe1.sv \
+      physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v rtl/qwen_dv/s5/qfd_dv_s5_flat.sv \
+      $LPD/${SP}_flat_lagref.sv $LPD/${SP}_lp.sv $LPD/tb_${SP}_lp.sv -Mdir "$OUT/obj_lp$M" > "$OUT/build_lp$M.log" 2>&1 \
+      || { echo "BUILD FAIL"; grep -m20 '%Error' "$OUT/build_lp$M.log"; }
+    "$OUT/obj_lp$M/Vtb_${SP}_lp" > "$OUT/lp$M.log" 2>&1
+    grep -m4 LP_MISMATCH "$OUT/lp$M.log"; r=$(grep -o 'LP_LOCKSTEP [A-Z]*' "$OUT/lp$M.log" | head -1); echo "LP $SP MUT=$M: ${r:-NO_RESULT}";;
+  audit)
+    for SP in qfd_dv_s5 qfd_dv_s5b; do
+      python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/$SP.json > "$OUT/audit_$SP.log" 2>&1 && echo "AUDIT $SP PASS" || echo "AUDIT $SP FAIL"
+      python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/$SP.json --rtl "$OUT/unland_$SP.sv" --make-unland \
+        > "$OUT/audit_unland_$SP.log" 2>&1 && echo "AUDIT-UNLAND $SP PASSED (should FAIL)" || echo "AUDIT-UNLAND $SP FAIL (expected)"
+    done;;
   lint)
     "$V" --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD +define+OT_STATION_REGIONAL --top-module qfd_dv_s5_flat \
       $COMMON rtl/qwen_dv/qfd_dv_head_safe1.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v rtl/qwen_dv/s5/qfd_dv_s5_flat.sv > "$OUT/lint.log" 2>&1; echo "LINT rc=$?"; grep -m20 "%Error" "$OUT/lint.log";;

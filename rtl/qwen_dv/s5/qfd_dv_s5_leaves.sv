@@ -140,6 +140,7 @@ endmodule
 // regions (S band); the column heads' cw_s words leave at the S face.  In the landed slice the landing ring half sits in
 // the face region (flop at the pin) and the read half beside the reader.
 module qfd_dv_s5_fn (
+    input  wire           ck,             // region membership (the landing halves of this entry run on it); no logic here
     input  wire [1027:0]  rs_n,
     output wire [8*132-1:0] rs_n_r          // per station region k: {c 4, hi 64, lo 64}
 );
@@ -150,6 +151,7 @@ module qfd_dv_s5_fn (
 endmodule
 // the S-face entry of rs_s (directly under the station row): the same per-region split
 module qfd_dv_s5_frs (
+    input  wire           ck,             // region membership (the landing halves of this entry run on it); no logic here
     input  wire [1027:0]  rs_s,
     output wire [8*132-1:0] rs_s_r
 );
@@ -159,10 +161,11 @@ module qfd_dv_s5_frs (
     end endgenerate
 endmodule
 module qfd_dv_s5_fs (
-    input  wire [4*516-1:0] cw_s_c,
+    input  wire           ck,             // region membership (the landing halves of this entry run on it); no logic here
+    input  wire [515:0]   cs0, cs1, cs2, cs3,
     output wire [515:0]   cw_s0, cw_s1, cw_s2, cw_s3
 );
-    assign {cw_s3, cw_s2, cw_s1, cw_s0} = cw_s_c;
+    assign cw_s0 = cs0; assign cw_s1 = cs1; assign cw_s2 = cs2; assign cw_s3 = cs3;
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------- spin
