@@ -1978,7 +1978,7 @@ wire [9:0] head_first = head_first__qv[9:0];
  end
 endmodule
 
-// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 55 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2), rb[5]x3(4) ----
+// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 61 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2), rb[5]x3(4) ----
 module ot_qkd_static_kv_timing_kvpc_s #(
   parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
   parameter integer SQD = 4,                  // static queue entries (power of two)
@@ -2220,14 +2220,14 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     (* keep *) reg [4:0] lead_qv;   // KV-PC6: 3 / 4 = blk lo / hi (i4b census: copy 0 drove 38)
     always @(posedge clk or negedge rst_n)
       if (!rst_n) lead_qv <= {5{RW'(RPH + PERIOD) == RW'(LEAD)}}; else lead_qv <= {5{ref_n == RW'(LEAD)}};
-    wire [17:0] desc_acc_c;
+    wire [19:0] desc_acc_c;   // KV-PC7: 18 / 19 = rd_oh bytes 1 / 3
     wire [31:0] open_nx;
     assign open_nx[15:0] = (row_gnt && ev_qv[84]) ? (open[15:0] | c_oh[15:0]) : (row_gnt && ev_qv[85]) ? (open[15:0] & ~c_oh[15:0]) :
                            (row_gnt && ev_qv[86]) ? 16'b0 : open[15:0];
     assign open_nx[31:16] = (row_gnt && ev_qv[90]) ? (open[31:16] | c_oh[31:16]) : (row_gnt && ev_qv[91]) ? (open[31:16] & ~c_oh[31:16]) :
                             (row_gnt && ev_qv[92]) ? 16'b0 : open[31:16];
     wire rd_ok;
-    wire [18:0] rd_ok_c;   // KV-PC5: kept leaf copies of rd_ok (0 = rd_ok)
+    wire [20:0] rd_ok_c;   // KV-PC5: kept leaf copies of rd_ok (0 = rd_ok; KV-PC7: 19 / 20 = rd_oh bytes 1 / 3)
 
     // ---- per-bank timing state (down-counters; 0 = allowed) ------------------------------
     wire [31:0] rcd_z, ras_z, rtp_z, aok_z, aok_busy, rcdw_z;
@@ -2392,7 +2392,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire legal_rd = rd_ok0 && !s_go_c[0] && !(|(rd_oh & s_pblk));          // (the schedule-fault check)
     // KV-PC7 (4): rd_ok == legal_rd && reserved, with !s_go moved into the last kept gate
     wire rd_x = rd_ok0 && !(|(rd_oh & s_pblk)) && (PROFILE == 1 || reserved_rd);
-    for (genvar q = 0; q < 19; q = q + 1) begin : g_rd_ok_c
+    for (genvar q = 0; q < 21; q = q + 1) begin : g_rd_ok_c
       ot_kvpc5_and2 u_l (.a(rd_x), .b(!s_go_c[18]), .y(rd_ok_c[q]));
     end
     assign rd_ok = rd_ok_c[0];
@@ -2456,7 +2456,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire [4:0] pre_sel = ffs32(pre_cand);
     wire forced_pre = REF_MODE && ref_pend && |(blk & open & ras_z & rtp_z);
     // next-cycle k and last (the same updates as j and last below)
-    for (genvar q = 0; q < 18; q = q + 1) begin : g_desc_acc_c
+    for (genvar q = 0; q < 20; q = q + 1) begin : g_desc_acc_c
       ot_kvpc5_and2 u_l (.a(desc_v), .b(!streaming && !fault_r), .y(desc_acc_c[q]));
     end
     wire desc_acc = desc_acc_c[0];
@@ -2467,7 +2467,12 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     for (genvar q = 0; q < 32; q = q + 1) begin : g_rd_oh_d
       ot_kvpc5_and2 u_l (.a(rd_ohd_lo[q & 3]), .b(rd_ohd_hi[q >> 2]), .y(rd_oh_d[q]));
     end
-    wire [31:0] rd_oh_j = 32'b1 << {j_p1[9:7], j_p1[1:0]};
+    wire [3:0] rd_ohj_lo = 4'b1 << j_p1[1:0];
+    wire [7:0] rd_ohj_hi = 8'b1 << j_p1[9:7];
+    wire [31:0] rd_oh_j;                                      // == 32'b1 << {j_p1[9:7], j_p1[1:0]}
+    for (genvar q = 0; q < 32; q = q + 1) begin : g_rd_oh_j
+      ot_kvpc5_and2 u_l (.a(rd_ohj_lo[q & 3]), .b(rd_ohj_hi[q >> 2]), .y(rd_oh_j[q]));
+    end
     wire k_step = rd_ok_c[2] && (j[6:0] == 7'h7f);
     wire v_set_flip=v_consumer_order && rd_ok_c[2] && j[2:0]==3'd7;
     // KV-PC7 (5): k_n per case (the read-step candidate k_r1 shared with k1v; census s9: a duplicate j decode put 33 loads on j[9])
@@ -2754,8 +2759,10 @@ module ot_qkd_static_kv_timing_kvpc_s #(
                    & {32{!(row_gnt && ev_qv[116])}};
         end
         // KV-PC5: rd_oh lo / hi and rd_bgoh each from their own desc_acc / rd_ok copies
-        if (desc_acc_c[3]) rd_oh[15:0] <= rd_oh_d[15:0]; else if (rd_ok_c[6]) rd_oh[15:0] <= rd_oh_j[15:0];
-        if (desc_acc_c[4]) rd_oh[31:16] <= rd_oh_d[31:16]; else if (rd_ok_c[7]) rd_oh[31:16] <= rd_oh_j[31:16];
+        if (desc_acc_c[3]) rd_oh[7:0] <= rd_oh_d[7:0]; else if (rd_ok_c[6]) rd_oh[7:0] <= rd_oh_j[7:0];
+        if (desc_acc_c[18]) rd_oh[15:8] <= rd_oh_d[15:8]; else if (rd_ok_c[19]) rd_oh[15:8] <= rd_oh_j[15:8];
+        if (desc_acc_c[4]) rd_oh[23:16] <= rd_oh_d[23:16]; else if (rd_ok_c[7]) rd_oh[23:16] <= rd_oh_j[23:16];
+        if (desc_acc_c[19]) rd_oh[31:24] <= rd_oh_d[31:24]; else if (rd_ok_c[20]) rd_oh[31:24] <= rd_oh_j[31:24];
         if (desc_acc_c[5]) rd_bgoh <= 4'b1 << first_sector[1:0]; else if (rd_ok_c[8]) rd_bgoh <= 4'b1 << j_p1[1:0];
 
         koh <= koh_n; k1v <= desc_acc ? k1v_d : (rd_ok_c[2] ? k1v_r1 : k1v_r0);   // KV-PC7 (5)

@@ -837,6 +837,26 @@ TIM_PC7 = [
     for (genvar q = 0; q < 32; q = q + 1) begin : g_rd_oh_d
       ot_kvpc5_and2 u_l (.a(rd_ohd_lo[q & 3]), .b(rd_ohd_hi[q >> 2]), .y(rd_oh_d[q]));
     end'''),
+    # KV-PC7 (census sr9 r6 103218: desc_acc_c[3]/[4] 33 and j[7] 34 on rd_oh): rd_oh per byte from its own desc_acc /
+    # rd_ok copy, onehot(j_p1) via predecode + kept leaves
+    ('''    wire [17:0] desc_acc_c;''', '''    wire [19:0] desc_acc_c;   // KV-PC7: 18 / 19 = rd_oh bytes 1 / 3'''),
+    ('''    for (genvar q = 0; q < 18; q = q + 1) begin : g_desc_acc_c''', '''    for (genvar q = 0; q < 20; q = q + 1) begin : g_desc_acc_c'''),
+    ('''    wire [18:0] rd_ok_c;   // KV-PC5: kept leaf copies of rd_ok (0 = rd_ok)''',
+     '''    wire [20:0] rd_ok_c;   // KV-PC5: kept leaf copies of rd_ok (0 = rd_ok; KV-PC7: 19 / 20 = rd_oh bytes 1 / 3)'''),
+    ('''    for (genvar q = 0; q < 19; q = q + 1) begin : g_rd_ok_c''', '''    for (genvar q = 0; q < 21; q = q + 1) begin : g_rd_ok_c'''),
+    ('''    wire [31:0] rd_oh_j = 32'b1 << {j_p1[9:7], j_p1[1:0]};''',
+     '''    wire [3:0] rd_ohj_lo = 4'b1 << j_p1[1:0];
+    wire [7:0] rd_ohj_hi = 8'b1 << j_p1[9:7];
+    wire [31:0] rd_oh_j;                                      // == 32'b1 << {j_p1[9:7], j_p1[1:0]}
+    for (genvar q = 0; q < 32; q = q + 1) begin : g_rd_oh_j
+      ot_kvpc5_and2 u_l (.a(rd_ohj_lo[q & 3]), .b(rd_ohj_hi[q >> 2]), .y(rd_oh_j[q]));
+    end'''),
+    ('''        if (desc_acc_c[3]) rd_oh[15:0] <= rd_oh_d[15:0]; else if (rd_ok_c[6]) rd_oh[15:0] <= rd_oh_j[15:0];
+        if (desc_acc_c[4]) rd_oh[31:16] <= rd_oh_d[31:16]; else if (rd_ok_c[7]) rd_oh[31:16] <= rd_oh_j[31:16];''',
+     '''        if (desc_acc_c[3]) rd_oh[7:0] <= rd_oh_d[7:0]; else if (rd_ok_c[6]) rd_oh[7:0] <= rd_oh_j[7:0];
+        if (desc_acc_c[18]) rd_oh[15:8] <= rd_oh_d[15:8]; else if (rd_ok_c[19]) rd_oh[15:8] <= rd_oh_j[15:8];
+        if (desc_acc_c[4]) rd_oh[23:16] <= rd_oh_d[23:16]; else if (rd_ok_c[7]) rd_oh[23:16] <= rd_oh_j[23:16];
+        if (desc_acc_c[19]) rd_oh[31:24] <= rd_oh_d[31:24]; else if (rd_ok_c[20]) rd_oh[31:24] <= rd_oh_j[31:24];'''),
     ('''wq_ne_qv <= {3{wq_n_nx != 1, wq_n_nx != 0}};''',
      '''wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}};'''),
 ]
