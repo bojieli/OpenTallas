@@ -67,6 +67,10 @@ module ot_hnx_coll_aq_mul13r (
     reg [1:0]  s1_err;
     reg [23:0] s1_a;
     (* keep = "true" *) reg signed [11:0] s1_pw [0:3];   // HNX-GQ s4: kept copies of s1_power
+    // s4 r4 (census r4: a shared a_power net drove 41 loads): the exponent sum is formed twice in kept hierarchy
+    wire signed [11:0] pw_k [0:1];
+    ot_hnx_coll_aq_pw u_pw0(.a(a), .b(b), .p(pw_k[0]));
+    ot_hnx_coll_aq_pw u_pw1(.a(a), .b(b), .p(pw_k[1]));
     always @(posedge clk or negedge rst_n)
         if (!rst_n) s1_v <= 1'b0; else s1_v <= valid_in;
     always @(posedge clk) begin
@@ -75,7 +79,7 @@ module ot_hnx_coll_aq_mul13r (
         s1_err <= s1_nonfinite ? E_NONFINITE : E_NONE;
         s1_sign <= a[31] ^ b[31];
         s1_a <= a_raw << a_shift;
-        for (integer k = 0; k < 4; k = k + 1) s1_pw[k] <= a_power + b_power;
+        for (integer k = 0; k < 4; k = k + 1) s1_pw[k] <= pw_k[k / 2];
     end
 
     // -- stage 2: three 24x8 partial products; both exponent decisions, PRE-DECODED ------------------------------
@@ -267,4 +271,23 @@ module ot_hnx_coll_scale_data_ff(input wire clk,input wire[23:0]d,output wire[23
     (* keep="true",dont_touch="true" *)reg[23:0]r;
     always @(posedge clk)r<=d;
     assign q=r;
+endmodule
+
+// HNX-GQ s4: a_power + b_power of ot_hnx_coll_aq_mul13r stage 1 (same expressions), one instance per s1_pw copy pair
+(* keep_hierarchy = "yes" *)
+module ot_hnx_coll_aq_pw(input wire [31:0] a, b, output wire signed [11:0] p);
+    function automatic [4:0] lead_shift_24(input [23:0] value);
+        reg [4:0] shift;
+        begin
+            shift = 5'd23;
+            for (integer bit_index = 0; bit_index <= 23; bit_index = bit_index + 1)
+                if (value[bit_index]) shift = 5'd23 - bit_index[4:0];
+            lead_shift_24 = shift;
+        end
+    endfunction
+    wire [7:0] af = a[30:23], bf = b[30:23];
+    wire [4:0] ash = lead_shift_24({(af != 8'd0), a[22:0]}), bsh = lead_shift_24({(bf != 8'd0), b[22:0]});
+    wire signed [11:0] ap = (af == 8'd0) ? (-12'sd149 - {7'd0, ash}) : ($signed({4'd0, af}) - 12'sd150);
+    wire signed [11:0] bp = (bf == 8'd0) ? (-12'sd149 - {7'd0, bsh}) : ($signed({4'd0, bf}) - 12'sd150);
+    assign p = ap + bp;
 endmodule
