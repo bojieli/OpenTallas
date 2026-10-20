@@ -1,0 +1,53 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc9       admits   714 GB (avail 683, growth 183, headroom 0, waiters 0/0 GB) load 53/128 running 38 disk 161 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3038252-1792497987 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+FP32_N32 PASS checks=20030 valid=14789 seed=1
+- rtl/test/hbm_qcore_physical_1016/tb_fp32_n32.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.027 s; speed 7.437 ms/s
+- Verilator: cpu 0.027 s on 1 threads; allocated 7 MB
+FP32_N32 PASS checks=20030 valid=14791 seed=17
+- rtl/test/hbm_qcore_physical_1016/tb_fp32_n32.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.027 s; speed 7.476 ms/s
+- Verilator: cpu 0.027 s on 1 threads; allocated 7 MB
+FP32_N32 PASS checks=20030 valid=14868 seed=91
+- rtl/test/hbm_qcore_physical_1016/tb_fp32_n32.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.028 s; speed 7.266 ms/s
+- Verilator: cpu 0.028 s on 1 threads; allocated 7 MB
+Verilator 5.050 2026-07-01 rev v5.050
+FP32_N32 mismatch cyc=6 y=00000000/00000000 e=1/0 v=0/0
+FP32_N32 mismatch cyc=8 y=00000000/00000000 e=2/1 v=0/0
+FP32_N32 mismatch cyc=9 y=00000000/00000000 e=0/2 v=0/0
+FP32_N32 mismatch cyc=10 y=00000001/00000000 e=0/0 v=0/0
+FP32_N32 FAIL errors=19634 checks=20030 valid=14789
+- rtl/test/hbm_qcore_physical_1016/tb_fp32_n32.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.027 s; speed 7.365 ms/s
+- Verilator: cpu 0.027 s on 1 threads; allocated 7 MB
+FP32_N32 mismatch cyc=6 y=00000000/00000000 e=1/0 v=0/0
+FP32_N32 mismatch cyc=8 y=00000000/00000000 e=2/1 v=0/0
+FP32_N32 mismatch cyc=9 y=00000000/00000000 e=0/2 v=1/0
+FP32_N32 mismatch cyc=10 y=00000001/00000000 e=0/0 v=1/1
+FP32_N32 FAIL errors=19617 checks=20030 valid=14791
+- rtl/test/hbm_qcore_physical_1016/tb_fp32_n32.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.027 s; speed 7.420 ms/s
+- Verilator: cpu 0.027 s on 1 threads; allocated 7 MB
+FP32_N32 mismatch cyc=6 y=00000000/00000000 e=1/0 v=0/0
+FP32_N32 mismatch cyc=8 y=00000000/00000000 e=2/1 v=0/0
+FP32_N32 mismatch cyc=9 y=00000000/00000000 e=0/2 v=0/0
+FP32_N32 mismatch cyc=10 y=00000001/00000000 e=0/0 v=1/0
+FP32_N32 FAIL errors=19641 checks=20030 valid=14868
+- rtl/test/hbm_qcore_physical_1016/tb_fp32_n32.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.028 s; speed 7.232 ms/s
+- Verilator: cpu 0.028 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3038252-1792497987): exit 0
