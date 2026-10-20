@@ -6,12 +6,20 @@ read_liberty -lib /out/lib/INVBUF.lib
 read_liberty -lib /out/lib/OA.lib
 read_liberty -lib /out/lib/SEQ.lib
 read_liberty -lib /out/lib/SIMPLE.lib
-read_verilog -sv -DSYNTHESIS /src/rtl/lib/ot_rst_relay.sv
-read_verilog -sv -DSYNTHESIS /src/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv
-chparam -set ENG 1 -set SRAM_MACRO 1 -set SQD 256 dsdv_idx_rg_r32
-hierarchy -check -top dsdv_idx_rg_r32
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD /src/rtl/lib/ot_rst_relay.sv
+read_verilog -sv -DSYNTHESIS -DOT_IDX_HSLICE_HARD /src/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/hdc/ot_hdc_fastfp.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/hdc/ot_hdc_prefix.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/hdc/ot_hdc_fp32_add_lat.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/hdc/v41x/ot_hdc_v41x_idx.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv
+read_verilog -sv /src/results/rtl/s81_l20rd_recovery_1020/native_top.sv
+hierarchy -check -top idxrg_r32_native_top
 tcl /src/physical/common_flow/ot_keep_regs.tcl
-synth -top dsdv_idx_rg_r32 -flatten -noshare
+synth -top idxrg_r32_native_top -flatten -noshare
 dfflibmap -liberty /out/lib/SEQ.lib
 abc -liberty /out/lib/AO.lib -liberty /out/lib/INVBUF.lib -liberty /out/lib/OA.lib -liberty /out/lib/SEQ.lib -liberty /out/lib/SIMPLE.lib
 opt_clean

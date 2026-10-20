@@ -1,0 +1,6 @@
+QUERY_ALIGNMENT before_valid=32 before_mismatch=32 after_valid=32 after_mismatch=0
+QUERY PASS source-sliced actual g_stb32heads; original mismatch detected; repaired same-data valid
+- tb_query.sv:23: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 780ps; walltime 0.000 s; speed 11.344 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

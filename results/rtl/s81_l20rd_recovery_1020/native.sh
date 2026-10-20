@@ -12,4 +12,4 @@ docker run --rm -v "$PWD:/src:ro" -v "$O:/out" -w /src openroad/orfs:latest bash
  yosys -l /out/synth.log -s /out/native.ys > /out/synth.stdout 2>&1
 '
 args=();for f in "$O"/lib/*.lib physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/views/ot_hdc_v41x_idx_hslice/ot_hdc_v41x_idx_hslice_tt.lib physical/ref_tile/hidx_tail_native_rr/views/ot_hbm_idx_tail_native/ot_hbm_idx_tail_native_tt.lib physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib;do args+=(--liberty "$f");done
-python3 tools/ref_tile/native_census.py --netlist "$O/mapped.v" --top dsdv_idx_rg_r32 --out "$O/census.json" "${args[@]}" > "$O/census.log" 2>&1
+python3 tools/ref_tile/native_census.py --netlist "$O/mapped.v" --top idxrg_r32_native_top --out "$O/census.json" "${args[@]}" > "$O/census.log" 2>&1

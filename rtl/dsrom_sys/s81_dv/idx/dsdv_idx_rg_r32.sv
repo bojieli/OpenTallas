@@ -54,13 +54,25 @@ module dsdv_idx_rg_r32 #(
     localparam integer IQW = $clog2(IQD), SQW = $clog2(SQD), LFW = $clog2(LFD);
 
     // ------------------------------------------------------------------ reset: regional leaves
-    localparam integer NRL = 32;
+    localparam integer NRL = 40;
+    localparam integer R_ASM_PEK = 32;
     localparam integer R_PIN = 0, R_JOB = 1, R_HBM = 2, R_RSP = 3, R_SLOT = 4, R_RJW0 = 5, R_RJW1 = 6, R_ISS = 7,
                        R_RJR0 = 8, R_RJR1 = 9, R_WALK = 10, R_LIST = 11, R_HEAD = 12, R_CONS = 13, R_ENG = 14,
                        R_MQ = 21, R_SQ = 22, R_SH = 23, R_ASM = 24, R_EOH = 25, R_SLT = 26, R_P1 = 27, R_WD = 28,
                        R_FC = 29, R_WALK2 = 30, R_WALK3 = 31;
     wire [NRL-1:0] rl;
-    ot_rst_relay #(.REGIONS(NRL), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst), .rst_n(rl));
+    // Two coarse roots drive20 asynchronous leaf clears each; raw rst sees4 pins.
+    // Release now takes4 edges (was3), before any job/slot is accepted.
+    wire [1:0] r_coarse;
+    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst), .rst_n(r_coarse));
+    (* keep = "true", dont_touch = "true" *) reg [NRL-1:0] r_leaf;
+    genvar rg;
+    generate for(rg=0;rg<NRL;rg=rg+1) begin:g_rst_leaf
+        always @(posedge ck or negedge r_coarse[rg/20]) begin
+            if(!r_coarse[rg/20]) r_leaf[rg]<=1'b0; else r_leaf[rg]<=1'b1;
+        end
+    end endgenerate
+    assign rl=r_leaf;
     // sid strap copies (one per use group); the strap is static, so no reset
     (* keep = "true" *) reg [3:0] me_v, me_o, me_g, me_w, me_e;
     always @(posedge ck) begin me_v <= sid; me_o <= sid; me_g <= sid; me_w <= sid; me_e <= sid; end
@@ -160,6 +172,8 @@ module dsdv_idx_rg_r32 #(
 
     // ------------------------------------------------------------------ STAGE B: header capture + query load (+1 edge)
     reg  [511:0] q_d1;
+    (* keep = "true" *) reg [7:0] q_kind;
+    reg  [7:0] qe_head;
     (* keep = "true" *) reg [16:0] hg;        // hgo copies for the field / state loads
     (* keep = "true" *) reg [15:0] qe_h;      // even-word hold enable copies
     (* keep = "true" *) reg [17:0] qe_l;      // odd-word load enable copies
@@ -179,28 +193,29 @@ module dsdv_idx_rg_r32 #(
     reg  [15:0]  j0, j1, j1p, nw, nwm1, nlw;
     wire [20:0]  b_n = q_d1[40:20];
     wire [20:0]  b_end = 21'(q_d1[19:0]) + b_n - 21'd1;
-    wire [15:0]  b_j0 = q_d1[511] ? 16'd0 : q_d1[19:4];
-    wire [15:0]  b_j1 = q_d1[511] ? 16'(((b_n + 21'd1) >> 1) - 21'd1) : b_end[19:4];
-    wire [15:0]  b_nw = q_d1[511] ? 16'((b_n + 21'd1) >> 1) : 16'(b_end[19:4] - q_d1[19:4] + 16'd1);
+    wire [15:0]  b_j0 = q_kind[0] ? 16'd0 : q_d1[19:4];
+    wire [15:0]  b_j1 = q_kind[1] ? 16'(((b_n + 21'd1) >> 1) - 21'd1) : b_end[19:4];
+    wire [15:0]  b_nw = q_kind[2] ? 16'((b_n + 21'd1) >> 1) : 16'(b_end[19:4] - q_d1[19:4] + 16'd1);
     always @(posedge ck) begin : g_stb
         integer k;
-        q_d1 <= q_d;
+        q_d1 <= q_d; q_kind <= {8{q_d[511]}};
         hgo <= hdr_go; hg <= {17{hdr_go}};
         qe_h <= {16{q_ld0}}; qe_l <= {18{q_ld1}};
-        ql_v <= q_ld1; ql_h <= 8'(pw[6:1]);
+        qe_head <= 8'(pw[6:1]);
+        ql_v <= qe_l[0]; ql_h <= qe_head;
         for (k = 0; k < 16; k = k + 1) begin
             if (qe_h[k]) qhold[32 * k +: 32] <= q_d1[32 * k +: 32];
             if (qe_l[k]) ql_c[32 * k +: 32] <= qhold[32 * k +: 32];
         end
         if (qe_l[16]) ql_s <= q_d1[31:0];
         if (qe_l[17]) ql_w <= q_d1[47:32];
-        if (hg[0]) begin gat <= q_d1[511]; jb <= q_d1[19:0]; ik <= q_d1[103:101]; om <= q_d1[106:104]; end
+        if (hg[0]) begin gat <= q_kind[3]; jb <= q_d1[19:0]; ik <= q_d1[103:101]; om <= q_d1[106:104]; end
         if (hg[1]) begin jn <= b_n; jk <= q_d1[50:41]; end
         if (hg[2]) kb <= q_d1[80:51];
         if (hg[3]) begin t0 <= q_d1[96:81]; pp <= q_d1[100:97]; tg <= q_d1[502:495]; end
         if (hg[4]) j0 <= b_j0;
         if (hg[5]) j1 <= b_j1;
-        if (hg[6]) begin nw <= b_nw; nlw <= q_d1[511] ? 16'((b_n + 21'd15) >> 4) : 16'd0; end
+        if (hg[6]) begin nw <= b_nw; nlw <= q_kind[4] ? 16'((b_n + 21'd15) >> 4) : 16'd0; end
         if (hg[7]) jend <= 21'(q_d1[19:0]) + b_n;
         if (hg[8]) begin j1p <= b_j1 + 16'd1; nwm1 <= b_nw - 16'd1; end
         if (!rl[R_JOB]) begin hgo <= 1'b0; ql_v <= 1'b0; end
@@ -599,7 +614,7 @@ module dsdv_idx_rg_r32 #(
     reg  [2:0]  ws_n;
     always @* begin
         ws_n = ws;
-        if (hgo) ws_n = q_d1[511] ? 3'd3 : 3'd1;
+        if (hgo) ws_n = q_kind[5] ? 3'd3 : 3'd1;
         else case (ws)
             3'd1: ws_n = (wg > {4'd0, j1[15:4]}) ? 3'd5 : 3'd4;
             3'd4: ws_n = (wvm == 16'd0) ? 3'd1 : (s_cond ? 3'd2 : 3'd4);
@@ -774,11 +789,11 @@ module dsdv_idx_rg_r32 #(
     wire           room = infl < (SQW+1)'(SQD - 2);
     assign ipop = h_ready && q_done && room && act;
     // stage c (macro read edge), stage f (data), stage k (engine input register); data registers load every cycle
-    reg  [15:0]  c_w; reg [3:0] c_ln; reg c_lw; reg c_pc; reg [2:0] c_l3;
+    reg  [15:0]  c_w; reg [3:0] c_ln; reg c_lw; (* keep = "true" *) reg [3:0] c_pck; reg [2:0] c_l3;
     reg  [7:0]   c_s0, c_s1;
     (* keep = "true" *) reg [1:0] c_vk;
     reg          f1; reg [15:0] f_w; reg [3:0] f_ln; reg f_lw;
-    (* keep = "true" *) reg [16:0] f_pck;      // PC select copies (code 512 b + scale 32 b)
+    (* keep = "true" *) reg [67:0] f_pck;      // PC select copies (code 512 b + scale 32 b)
     (* keep = "true" *) reg [7:0]  f_lo0, f_lo1; // scale lane one-hot a PC
     reg          k_v;
     (* keep = "true" *) reg [3:0] k_vc;        // k_v copies (valid ring)
@@ -790,18 +805,20 @@ module dsdv_idx_rg_r32 #(
         lr_e <= ipop ? (h_pc ? 4'b1100 : 4'b0011) : 4'b0000;
         sre <= ipop ? (h_pc ? 2'b10 : 2'b01) : 2'b00;
         lr_a <= {h_sl, h_cl}; sra <= {h_sl, h_cl[3]};
-        c_w <= ih[20:5]; c_ln <= ih[4:1]; c_lw <= ih[0]; c_pc <= h_pc; c_l3 <= h_cl[2:0];
+        c_w <= ih[20:5]; c_ln <= ih[4:1]; c_lw <= ih[0]; c_pck <= {4{h_pc}}; c_l3 <= h_cl[2:0];
         c_s0 <= h_s0; c_s1 <= h_s1;
         rel[0] <= c_vk[0] ? c_s0 : 8'd0; rel[1] <= c_vk[1] ? c_s1 : 8'd0;
         f1 <= c_v; f_w <= c_w; f_ln <= c_ln; f_lw <= c_lw;
-        f_pck <= {17{c_pc}}; f_lo0 <= oh8(c_l3); f_lo1 <= oh8(c_l3);
+        for(k=0;k<68;k=k+1) f_pck[k] <= c_pck[k/17]; f_lo0 <= oh8(c_l3); f_lo1 <= oh8(c_l3);
         k_v <= f1; k_vc <= {4{f1}};
         k_m <= {f_w, f_ln, f_lw};
-        for (k = 0; k < 8; k = k + 1) begin
-            k_key[32 * k +: 32] <= f_pck[k] ? lr_d[2][32 * k +: 32] : lr_d[0][32 * k +: 32];
-            k_key[256 + 32 * k +: 32] <= f_pck[k] ? lr_d[3][32 * k +: 32] : lr_d[1][32 * k +: 32];
+        for(k=0;k<64;k=k+1) begin
+            if(k<32) k_key[8*k+:8] <= f_pck[k] ? lr_d[2][8*k+:8] : lr_d[0][8*k+:8];
+            else k_key[8*k+:8] <= f_pck[k] ? lr_d[3][8*(k-32)+:8] : lr_d[1][8*(k-32)+:8];
         end
-        k_key[543:512] <= f_pck[16] ? sel8l(sr_d[1], f_lo1) : sel8l(sr_d[0], f_lo0);
+        for(k=0;k<4;k=k+1) begin
+            k_key[512+8*k+:8] <= f_pck[64+k] ? (sel8l(sr_d[1],f_lo1) >> (8*k)) : (sel8l(sr_d[0],f_lo0) >> (8*k));
+        end
         if (!rl[R_CONS]) begin c_v <= 1'b0; lr_e <= 4'd0; sre <= 2'd0; rel[0] <= 8'd0; rel[1] <= 8'd0; f1 <= 1'b0;
                                k_v <= 1'b0; end
     end
@@ -897,7 +914,7 @@ module dsdv_idx_rg_r32 #(
     reg  [255:0] bs [0:1];
     reg  [1:0]   bf;
     reg          pe;                         // next buffer to emit
-    (* keep = "true" *) reg [7:0] pe_k;      // its copies (score select), kept identical to pe
+    (* keep = "true" *) reg [31:0] pe_k;      // its copies (score select), kept identical to pe
     reg          pp_last, pp_f;
     (* keep = "true" *) reg [1:0] pp_nw;     // "new word" a buffer (copies)
     reg  [15:0]  pp_loh, pp_w, pp_sc;
@@ -925,9 +942,13 @@ module dsdv_idx_rg_r32 #(
             if (pp_nw[b]) bw[b] <= pp_w;
             if (pp_last) bv[b] <= 1'b1;
         end
-        if (take_d) begin bv[pe] <= 1'b0; pe <= ~pe; pe_k <= ~pe_k; end
+        if (take_d) begin bv[pe] <= 1'b0; pe <= ~pe; end
         if (!rl[R_ASM]) begin infl <= '0; pp_vl <= 2'd0; pp_vm <= 2'd0; pp_n0 <= 8'd0; pp_n1 <= 8'd0; aa <= 1'b0;
-                              pa <= 1'b0; bv <= 2'd0; pe <= 1'b0; pe_k <= 8'd0; end
+                              pa <= 1'b0; bv <= 2'd0; pe <= 1'b0; end
+    end
+    always @(posedge ck) begin
+        if(take_d) pe_k <= ~pe_k;
+        if(!rl[R_ASM_PEK]) pe_k <= 32'd0;
     end
     // tb trace aliases (the record names)
     wire          r_v = bv[pe];
@@ -990,7 +1011,7 @@ module dsdv_idx_rg_r32 #(
     end
     wire [20:0]  my_pos = {1'b0, ej, me_e ^ hj(ej)};
     wire [19:0]  th = 20'(t0);
-    wire [15:0]  b_ej = q_d1[511] ? 16'd0 : q_d1[19:4];
+    wire [15:0]  b_ej = q_kind[6] ? 16'd0 : q_d1[19:4];
     always @(posedge ck) begin : g_emit
         integer k;
         fc_set <= 8'd0; wdone_p <= 1'b0;
@@ -1003,7 +1024,7 @@ module dsdv_idx_rg_r32 #(
         slot_q <= slot_e; slot_k <= {9{slot_e}};
         tk_k <= {9{take_e}}; take_d <= take_e;
         lv_q <= blv[pe]; f_q <= bf[pe]; late_q <= late_e; last_q <= ew == nwm1;
-        for (k = 0; k < 16; k = k + 1) d0_q[16 * k +: 16] <= pe_k[k / 2] ? bs[1][16 * k +: 16] : bs[0][16 * k +: 16];
+        for (k = 0; k < 32; k = k + 1) d0_q[8 * k +: 8] <= pe_k[k] ? bs[1][8 * k +: 8] : bs[0][8 * k +: 8];
         if (hg[14]) ew <= 16'd0; else if (slot_g[0]) ew <= ew + 16'd1;
         if (hg[15]) ej <= b_ej; else if (slot_g[1]) ej <= ej + 16'd1;
         if (hg[16]) etm <= 20'(q_d1[96:81]) + 20'd9; else if (slot_g[2]) etm <= etm + 20'(pp);
