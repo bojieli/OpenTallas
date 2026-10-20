@@ -1,0 +1,34 @@
+Terminal collection 2026-10-20 00:31+, all four floorplan PNGs inspected.
+FAIL evidence only; no REVIEW or submit. Actual result+source binding retained.
+
+SAFE3: CTS GATE_STALL14400s in OT_CDC_SEAM enumeration, no clock measurement.
+216x259.2 um, no macros, 9% fill, pins full perimeter, roots W/E near bottom.
+Native source census historically0roots>32 and0input/output boundary logic.
+Exact mapped gate census is being collected independently before a rerun.
+CDC per-path constraints+queries invalidate STA each pair; neutral batch fix
+codex/cdc-batch-1020 c9601c494 retains all pairs and max/min finite checks.
+This is not a failed physical route and does not justify RTL timing changes.
+
+PGLG lg4: CTS fails actual raw-clock cotiming16 pins (55.0..81.3ps vs50 limit).
+Anchor bug fix passed the other raw/cotimed pins, but bank6/7 clk_macro3..5
+remain late. 64 children on regular rows, full-width middle stdcell corridor;
+1235.5x3045.6um aspect2.47, fill67.7% (violates target40..60), clock roots
+on W/S/N. Existing 4,181-load read-slot counter root plus OR2~3470 still
+violates safe design; registered pos and ck_s23943 regional split are owed.
+No rerun permitted on layout/tap tuning alone: design sliced kept reader
+controls/counters, bounded reset/valid, then map all drivers<=32 first.
+
+SVG fg2/fg2w: CTS SRAM-root admission passes with24 raw-SRAM bindings;
+actual TT stream_clk pin spread263.9/299.9ps across12294 sinks (4054boundary).
+648x604.8/691.2x648um,24macros, fill40.1/35.0%, aspect1.07/1.07. Macro rows
+and full-face pins visible; top SRAM rows sit well below north face leaving
+large standard-cell band; roots are W face. The run terminates before FF.
+No successful CTS/route/hold qualification. Generic family roots do not
+provide sufficiently local stream tree; regional hard children/landed
+crossings or measured fenced regions needed. reset_pipe6696+4k logic roots,
+run_v12-level boundary and84-level fault cone also require source repair.
+No gate successor until mapped full fanout/reset/storage/pin census passes.
+
+Shared obligations: actual reach>=405um needs landed/registered hops;
+mutable stores>2kb use SRAM; static fixed calendar with every new edge priced;
+no timing exceptions added by this pickup. No live Claude jobs were stopped.
