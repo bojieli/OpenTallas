@@ -9,3 +9,19 @@ r6 is a copy of r5 (RTL 5d4cc226a/cd7a2f865 + kit 445ac5e26). It resumes at the 
    `pvm_cts_release.tcl` (PRE_CTS) releases dont_touch on the 10064 protected SEQUENTIAL kernel cells only, and records every non-clock term->net binding first. It wraps clock_tree_synthesis so that `pvm_cts_restore.tcl` runs right after CTS, before repair_timing. The restore re-protects the same set and refuses on any non-clock binding change. Result: PASS, 10064 re-protected, bindings identical.
 3. r6b 4_1_cts EST-0104 at repair_timing. Standard-mode ot_protect_clock_tree PG-binds 5 new CTS cells after cts.tcl's estimate_parasitics, and only strict mode re-estimates. As a run-local fix, the release hook re-estimates placement RC after ot_protect_clock_tree. This needs a common_flow fix.
 r6c = r6b with fix 3, running 4_1_cts -> 4_cts -> 5_1_grt.
+
+## r7a audit-only rerun on r6c 5_1_grt + r8 kernel hold fix (HBM-SMATT9 10-20)
+r6c 4_1_cts/4_cts/5_1_grt rc 0; GRT overflow 0 (12.4% usage). The two r6c audit failures were invocation errors:
+- post_grt_audit: asserted native PG BEFORE the final global_connect (helper says "run after final global_connect").
+  18028 unbound terms = resizer hold/wire buffers only, dont_touch 0. r7a/pg_audit2.tcl: global_connect in memory -> OT_PG_FINAL_PASS 206730.
+- post_grt_native32: mapped-netlist census run on a post-CTS netlist: walks clk -> wire9654 (repair_clock_nets) -> CTS tree (635) and
+  flags 8531 TAPCELLs. r7a/fanout_audit.py (clock network + PG excluded): max 32 dynamic; only >32 = TIEHI _33678_ constant (112).
+Facts at 5_1_grt (r7a): sequential reach max 444.8 um, 8 >405 (one source g_first_tag1[1] -> g_first_tag[54..63], meets TT);
+CTS insertion TT 350..419 (all, spread 69) / boundary 358..401 (43); FF 283..347 (64) / boundary 291..331 (40);
+TT setup @833.333 worst -5.16 (pv_y outputs, route-SDC IO; reg paths met; route @770 -25.65);
+FF hold reg->reg -50.04 ps, 448 endpoints, ALL inside g_native7.u_native (cX/QN -> inv -> cY/D, ~82 ps local skew):
+REAL defect - repair_timing cannot buffer dont_touch kernel flops/nets (r6b released them for CTS only).
+Input-port hold (-147 sum->sum1, -111 rst_n) = diagnostic SDC artifact (5_1_grt.sdc w/o die-context re-reference; route repair saw kernel worst).
+r8 (bf8/work copy of bf/work, r6c verdicts kept): sequential kernel cells + their input nets stay released through 4_1_cts/5_1_grt
+so hold repair can buffer D inputs; comb kernel cells stay dont_touch; restore+change report at POST_GLOBAL_ROUTE (owner 10-20 09:05:
+standard equivalence + strict bind). Then fixed audits; 5_2_route + 5_3_fillcell only if PG binds and FF reg hold >= -5 ps.

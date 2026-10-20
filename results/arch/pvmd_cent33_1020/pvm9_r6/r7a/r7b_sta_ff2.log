@@ -1,0 +1,113 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+R7_FF_HOLD from=reg violating_endpoints=448 worst=-50.038502
+R7_FF_PATH reg -50.038502 u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2663/QN -> u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2444/D
+R7_FF_PATH reg -48.919312 u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2263/QN -> u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2793/D
+R7_FF_PATH reg -45.981190 u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2664/QN -> u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2445/D
+R7_FF_PATH reg -45.637939 u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2755/QN -> u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2261/D
+R7_FF_PATH reg -43.821171 u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2480/QN -> u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2381/D
+R7_FF_PATH reg -43.785698 u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2480/QN -> u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2831/D
+R7_FF_HOLD from=in violating_endpoints=548 worst=-111.225166
+R7_FF_PATH in -111.225166 rst_n -> g_reset_first[1].u/q$_DFF_PN0_/RESETN
+R7_FF_PATH in -111.202606 rst_n -> g_reset_first[0].u/q$_DFF_PN0_/RESETN
+R7_FF_PATH in -147.320908 sum[297] -> sum1[297]$_DFF_P_/D
+R7_FF_PATH in -146.933853 sum[315] -> sum1[315]$_DFF_P_/D
+R7_FF_PATH in -146.804962 sum[302] -> sum1[302]$_DFF_P_/D
+R7_FF_PATH in -146.761749 sum[326] -> sum1[326]$_DFF_P_/D
+Startpoint: g_reset_second[0].u/q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_event_second[96].u/q$_DFF_PN0_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00   clock core_clk (rise edge)
+                 296.75  296.75   clock network delay (propagated)
+          12.02    0.00  296.75 ^ g_reset_second[0].u/q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+   0.62   13.42   38.06  334.81 v g_reset_second[0].u/q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+   2.61   10.12   17.82  352.64 v g_reset_second[0].u/hold15111/Y (BUFx2_ASAP7_75t_R)
+  44.59   59.72   16.59  369.22 ^ g_reset_second[0].u/_2_/Y (INVx5_ASAP7_75t_R)
+         143.93   44.20  413.43 ^ g_event_second[96].u/q$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                         413.43   data arrival time
+
+                   0.00    0.00   clock core_clk (rise edge)
+                 333.42  333.42   clock network delay (propagated)
+                  25.00  358.42   clock uncertainty
+                  -3.18  355.25   clock reconvergence pessimism
+                         355.25 ^ g_event_second[96].u/q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                  31.63  386.88   library removal time
+                         386.88   data required time
+-----------------------------------------------------------------------
+                         386.88   data required time
+                        -413.43   data arrival time
+-----------------------------------------------------------------------
+                          26.55   slack (MET)
+
+
+Startpoint: u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2663
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2444
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00   clock core_clk (rise edge)
+                 312.76  312.76   clock network delay (propagated)
+          19.00    0.00  312.76 ^ u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2663/CLK (DFFHQNx1_ASAP7_75t_R)
+   0.86   13.28   38.28  351.04 ^ u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2663/QN (DFFHQNx1_ASAP7_75t_R)
+   0.83    7.67    6.80  357.84 v u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.inv507/Y (INVx1_ASAP7_75t_R)
+           7.67    0.08  357.92 v u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2444/D (DFFHQNx1_ASAP7_75t_R)
+                         357.92   data arrival time
+
+                   0.00    0.00   clock core_clk (rise edge)
+                 378.51  378.51   clock network delay (propagated)
+                  25.00  403.51   clock uncertainty
+                  -9.02  394.50   clock reconvergence pessimism
+                         394.50 ^ u_core.g_safe.g_madd[6].g_fan32.u_m.genblk1.g_native7.u_native.c2444/CLK (DFFHQNx1_ASAP7_75t_R)
+                  13.45  407.95   library hold time
+                         407.95   data required time
+-----------------------------------------------------------------------
+                         407.95   data required time
+                        -357.92   data arrival time
+-----------------------------------------------------------------------
+                         -50.04   slack (VIOLATED)
+
+

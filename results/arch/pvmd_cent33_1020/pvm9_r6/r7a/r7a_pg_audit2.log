@@ -1,0 +1,28 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+R7_PG_PRE failures=18028 checked=206730 dont_touch_unbound=0
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:hold 10916
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[6\].u_opr/hold 546
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[7\].u_opr/hold 492
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[9\].u_opr/hold 452
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[11\].u_opr/hold 436
+R7_PG_PRE_CLASS BUFx16f_ASAP7_75t_R:wire 422
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[1\].u_opr/hold 418
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[15\].u_opr/hold 404
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[0\].u_opr/hold 348
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[5\].u_opr/hold 340
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[4\].u_opr/hold 328
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[13\].u_opr/hold 318
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[12\].u_opr/hold 310
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[3\].u_opr/hold 298
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[8\].u_opr/hold 294
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[10\].u_opr/hold 288
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[14\].u_opr/hold 286
+R7_PG_PRE_CLASS BUFx2_ASAP7_75t_R:u_core.g_safe.g_madd\[2\].u_opr/hold 196
+R7_PG_PRE_CLASS BUFx4f_ASAP7_75t_R:wire 114
+R7_PG_PRE_CLASS BUFx12f_ASAP7_75t_R:wire 110
+R7_PG_RULES 5
+OT_PG_FINAL_PASS native_pg_terminals=206730
+R7_PG_POST_CONNECT_ALL_BOUND
