@@ -67,17 +67,28 @@ module qkd_pv_fin_s32 #(
  wire [15:0] D0m=(MUT==2&&D0<SKEW)?D0+16'd1:D0;
  wire [511:0] opa,opb;
  (* keep="true",dont_touch="true" *) reg [15:0] start_lane;
+ // R10 (KV-PARAMS5): the operand-select decodes are lane-invariant, so one shared decode node drove all
+ // 64 select flops (R9 census). Each group of four lanes now decodes its own kept copy of cal[31:0]
+ // (captured on the same edge as cal_q), mux-free: max(a,b)-a==0 <=> a>=b; ==j (j>=1) <=> b==a+j.
+ (* keep="true",dont_touch="true" *) reg [31:0] cal_sel_q[0:3];
+ generate for(genvar sg=0;sg<4;sg=sg+1)begin:g_cal_sel
+  always @(posedge ck)cal_sel_q[sg]<=cal[31:0];
+ end endgenerate
+ function automatic sel_eq(input [15:0] a,input [15:0] b,input integer j);   // (max(a,b)-a)==j
+  sel_eq=(j==0)?(a>=b):({1'b0,b}=={1'b0,a}+17'(j));
+ endfunction
  genvar sl;
  generate for(sl=0;sl<16;sl=sl+1)begin:g_start_lane
   always @(posedge ck)start_lane[sl]<=start;
   (* keep="true",dont_touch="true" *) reg [SKEW:0] select0[0:1],select1[0:1];
-  localparam integer DELTA_MUT=(MUT==2)?1:0;
-  wire [15:0] c_d0=c_lastp-c0;
+  wire [15:0] g0=cal_sel_q[sl/4][15:0],g1=cal_sel_q[sl/4][31:16];
+  wire [15:0] c_d0=((g0>g1)?g0:g1)-g0;
   wire [15:0] c_d0m=(MUT==2&&c_d0<SKEW)?c_d0+1:c_d0;
   for(genvar part=0;part<2;part=part+1)begin:g_select_part
    for(genvar jt=0;jt<=SKEW;jt=jt+1)begin:g_select
+    wire s0=(MUT==2)?(c_d0m==jt):sel_eq(g0,g1,jt);
     always @(posedge ck)if(start_lane[sl])begin
-     select0[part][jt]<=c_d0m==jt;select1[part][jt]<=(c_lastp-c1)==jt;
+     select0[part][jt]<=s0;select1[part][jt]<=sel_eq(g1,g0,jt);
     end
    end
   end
