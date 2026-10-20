@@ -132,7 +132,17 @@
     "extra_gsum_edges": 2,
     "extra_group_query_edges": 3,
     "extra_busy_edges": 3,
-    "reset_startup_edges_extra": 3,
-    "composition_status": "new soft/wires shell, not bound into releasequarter; multicast/reach regions and compiler price still owed beyond these explicit shell edges"
+    "reset_startup_edges_extra": 6,
+    "composition_status": "new soft/wires shell, not bound into releasequarter; multicast/reach regions and compiler price still owed beyond these explicit shell edges",
+    "source_control_copy_budget": {
+      "parent_raw_reset_loads": 10,
+      "parent_leaf_maxresetload": 25,
+      "clear_port_D_loads": 8,
+      "gsel_bit_port_D_loads": 8,
+      "each_gsel_copy_drives": 16,
+      "each_clear_copy_drives": 17,
+      "parent_reset_release_edges": 3,
+      "child_reset_release_edges": 3
+    }
   }
 }
