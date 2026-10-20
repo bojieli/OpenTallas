@@ -1,0 +1,22 @@
+{
+  "source_commit": "eab8ff8d2",
+  "archive_sha256": "0962ac453baa5d9dc67b3ba7f8889650c5900a4d556b06071edeb783bd72d766",
+  "source_archive": "/home/ubuntu/scratch/codex-qw-n59v5-qbank-r3-1020.tgz",
+  "native_helpers": "7eb7cfb48",
+  "remote": "/srv/opentallas-scratch/claude/codex-qw-n59v5-qbank-r3-1020",
+  "functional_model": "RTL Verilator5.050 + behavioral SRAM only; no importedASR native functional simulation",
+  "parameters": {
+    "QB_LOCAL32": 1,
+    "QB_ALIGN": 1,
+    "SVC_RECV": 1,
+    "NU": 4,
+    "MCTX": 1,
+    "EMB_RELAY": 1
+  },
+  "edge_contract": {
+    "SOFF": 3,
+    "BOFF": 0,
+    "ROFF": 4,
+    "v5_added_edges": 0
+  }
+}

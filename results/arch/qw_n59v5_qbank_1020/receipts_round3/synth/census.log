@@ -1,0 +1,3 @@
+textbook_lint: PASS qfd_native59_qbank cells 58,945 flops 10,596 depth 405.1 ps util None reach None um (2.0 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=10604 root=port:ck rule=PASS: 10,604 sinks on the largest root; no measured clock tree (no --cts gate evidence)
