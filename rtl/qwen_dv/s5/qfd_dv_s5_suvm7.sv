@@ -86,8 +86,9 @@ module qfd_dv_s5_suvm7 #(parameter integer HARD = 1, parameter integer MUT = 0) 
 
     // ---------------------------------------------------------------------------------------------- su_go (c_su + 2)
     localparam integer NFA = 31;               // accept-only field chunks (12 b)
-    localparam integer NCH = 23;               // active-updated register chunks
-    localparam integer NACC = NFA + NCH + 8;   // + act_next, vl_next, ol_next/gvr, first_mark, su_prog, r_mark, su_rows, su_go
+    localparam integer NCH = 32;               // active-updated register chunks (8 b: cur 12, row 12, rrow 3, v 2, o 2, cls 1)
+    localparam integer NXS = 8;                // lane copies of the stride fields (12 b select groups)
+    localparam integer NACC = NFA + NCH + 8 + NXS; // + act_next, vl_next, ol_next/gvr, first_mark, su_prog, r_mark, su_rows, su_go
     wire c_su = su_cmd[9];
     wire [2:0] sg0;
     generate for (gi = 0; gi < 3; gi = gi + 1) begin : g_sg0
@@ -138,8 +139,8 @@ module qfd_dv_s5_suvm7 #(parameter integer HARD = 1, parameter integer MUT = 0) 
     wire [31:0]   imm1 = fa[63:32], imm2 = fa[31:0];
 
     // ---------------------------------------------------------------------------------------------- active / v_last
-    localparam integer NACT = NCH + 5;          // chunk users + emit (inflight, counters, gvr), idle, ready
-    localparam integer NVL  = NCH + 3;
+    localparam integer NACT = NCH + 6;          // chunk users + emit (inflight, counters, gvr), idle, ready, next-B source
+    localparam integer NVL  = NCH + 4;
     wire [NACT-1:0] act_k;
     wire [NVL-1:0]  vl_k;
     wire            o_last_r;
@@ -147,18 +148,21 @@ module qfd_dv_s5_suvm7 #(parameter integer HARD = 1, parameter integer MUT = 0) 
     reg  [7:0]      inflight;
     wire            act0 = act_k[NACT-1], vl0 = vl_k[NVL-1];
     wire            acc0 = acc_k[NFA + NCH];
-    wire act_next = acc0 ? 1'b1 : (act0 && vl0 && o_last_r) ? 1'b0 : act0;
+    // two structurally distinct copies of the next-state net (different source replicas: never merged), <= 19 D pins each
+    wire act_nextA = acc0 ? 1'b1 : (act0 && vl0 && o_last_r) ? 1'b0 : act0;
+    wire act_nextB = acc_k[NFA + NCH + 3] ? 1'b1 : (act_k[NACT-6] && vl_k[NVL-4] && o_last_r) ? 1'b0 : act_k[NACT-6];
     generate for (gi = 0; gi < NACT; gi = gi + 1) begin : g_act
-        qfd_dv_s7_kffr #(.W(1), .ID(400 + gi)) u (.ck(ck), .rn(rc_k[gi % 4]), .d(act_next), .q(act_k[gi]));
+        qfd_dv_s7_kffr #(.W(1), .ID(400 + gi)) u (.ck(ck), .rn(rc_k[gi % 4]), .d((gi % 2) ? act_nextB : act_nextA), .q(act_k[gi]));
     end endgenerate
     // the active-updated registers (chunked, each chunk with its own accept / active / v_last copies)
     reg  [NW-1:0] o, v;
     reg  [AW-1:0] rowa, rowb, rowc, rowd, cura, curb, curc, curd, rrow;
     wire          acc1 = acc_k[NFA + NCH + 1];
-    wire          vl_next = acc1 ? (nvec_in == 1) : act_k[NACT-2] ? (!vl_k[NVL-2] ? (v + 2 == nvec_r) : (nvec_r == 1))
-                                                   : vl_k[NVL-2];
+    wire          vl_stepA = (v + 2 == nvec_r), vl_one = (nvec_r == 1), vl_inA = (nvec_in == 1);
+    wire          vl_nextA = acc1 ? vl_inA : act_k[NACT-2] ? (!vl_k[NVL-2] ? vl_stepA : vl_one) : vl_k[NVL-2];
+    wire          vl_nextB = acc_k[NFA + NCH + 4] ? vl_inA : act_k[NACT-6] ? (!vl_k[NVL-4] ? vl_stepA : vl_one) : vl_k[NVL-4];
     generate for (gi = 0; gi < NVL; gi = gi + 1) begin : g_vl
-        qfd_dv_s7_kff #(.W(1), .ID(500 + gi)) u (.ck(ck), .d(vl_next), .q(vl_k[gi]));
+        qfd_dv_s7_kff #(.W(1), .ID(500 + gi)) u (.ck(ck), .d((gi % 2) ? vl_nextB : vl_nextA), .q(vl_k[gi]));
     end endgenerate
     wire          acc2 = acc_k[NFA + NCH + 2];
     wire          ol_next = acc2 ? (i_nout == 1) : (act_k[NACT-3] && vl_k[NVL-3]) ? (o + 2 == nout_r) : o_last_r;
@@ -170,37 +174,58 @@ module qfd_dv_s5_suvm7 #(parameter integer HARD = 1, parameter integer MUT = 0) 
         assign s_vec[gi] = act_k[gi] && !vl_k[gi];
         assign s_row[gi] = act_k[gi] && vl_k[gi];
     end endgenerate
-    // 12-bit chunk register update: base on accept, vector step / row step while active
-`define S7_CH(R, LO, C, BASE, VSTEP, RSTEP) \
-    always @(posedge ck) \
-        if (s_acc[C]) R[LO +: 12] <= BASE; \
-        else if (s_vec[C]) R[LO +: 12] <= VSTEP; \
-        else if (s_row[C]) R[LO +: 12] <= RSTEP;
+    // 8-bit chunk next-state nets: base on accept, vector step / row step while active, else hold
+`define S7_CH(R, RN, LO, C, BASE, VSTEP, RSTEP) \
+    assign RN[LO +: 8] = s_acc[C] ? BASE : s_vec[C] ? VSTEP : s_row[C] ? RSTEP : R[LO +: 8];
     wire [AW-1:0] cura_v = cura + (asi << LS), curb_v = curb + (bsi << LS), curc_v = curc + (csi << LS), curd_v = curd + (dsi << LS);
     wire [AW-1:0] rowa_n = rowa + aso, rowb_n = rowb + bso, rowc_n = rowc + cso, rowd_n = rowd + dso, rrow_n = rrow + rso;
-    `S7_CH(cura, 0, 0, i_abase[11:0], cura_v[11:0], rowa_n[11:0])   `S7_CH(cura, 12, 1, i_abase[23:12], cura_v[23:12], rowa_n[23:12])
-    `S7_CH(curb, 0, 2, i_bbase[11:0], curb_v[11:0], rowb_n[11:0])   `S7_CH(curb, 12, 3, i_bbase[23:12], curb_v[23:12], rowb_n[23:12])
-    `S7_CH(curc, 0, 4, i_cbase[11:0], curc_v[11:0], rowc_n[11:0])   `S7_CH(curc, 12, 5, i_cbase[23:12], curc_v[23:12], rowc_n[23:12])
-    `S7_CH(curd, 0, 6, i_dbase[11:0], curd_v[11:0], rowd_n[11:0])   `S7_CH(curd, 12, 7, i_dbase[23:12], curd_v[23:12], rowd_n[23:12])
-    `S7_CH(rowa, 0, 8, i_abase[11:0], rowa[11:0], rowa_n[11:0])     `S7_CH(rowa, 12, 9, i_abase[23:12], rowa[23:12], rowa_n[23:12])
-    `S7_CH(rowb, 0, 10, i_bbase[11:0], rowb[11:0], rowb_n[11:0])    `S7_CH(rowb, 12, 11, i_bbase[23:12], rowb[23:12], rowb_n[23:12])
-    `S7_CH(rowc, 0, 12, i_cbase[11:0], rowc[11:0], rowc_n[11:0])    `S7_CH(rowc, 12, 13, i_cbase[23:12], rowc[23:12], rowc_n[23:12])
-    `S7_CH(rowd, 0, 14, i_dbase[11:0], rowd[11:0], rowd_n[11:0])    `S7_CH(rowd, 12, 15, i_dbase[23:12], rowd[23:12], rowd_n[23:12])
-    `S7_CH(rrow, 0, 16, i_rbase[11:0], rrow[11:0], rrow_n[11:0])    `S7_CH(rrow, 12, 17, i_rbase[23:12], rrow[23:12], rrow_n[23:12])
+    wire [AW-1:0] cura_nx, curb_nx, curc_nx, curd_nx, rowa_nx, rowb_nx, rowc_nx, rowd_nx, rrow_nx;
+    genvar gc;
+    generate for (gc = 0; gc < 3; gc = gc + 1) begin : g_ch
+        `S7_CH(cura, cura_nx, 8*gc, 0 + gc, i_abase[8*gc +: 8], cura_v[8*gc +: 8], rowa_n[8*gc +: 8])
+        `S7_CH(curb, curb_nx, 8*gc, 3 + gc, i_bbase[8*gc +: 8], curb_v[8*gc +: 8], rowb_n[8*gc +: 8])
+        `S7_CH(curc, curc_nx, 8*gc, 6 + gc, i_cbase[8*gc +: 8], curc_v[8*gc +: 8], rowc_n[8*gc +: 8])
+        `S7_CH(curd, curd_nx, 8*gc, 9 + gc, i_dbase[8*gc +: 8], curd_v[8*gc +: 8], rowd_n[8*gc +: 8])
+        `S7_CH(rowa, rowa_nx, 8*gc, 12 + gc, i_abase[8*gc +: 8], rowa[8*gc +: 8], rowa_n[8*gc +: 8])
+        `S7_CH(rowb, rowb_nx, 8*gc, 15 + gc, i_bbase[8*gc +: 8], rowb[8*gc +: 8], rowb_n[8*gc +: 8])
+        `S7_CH(rowc, rowc_nx, 8*gc, 18 + gc, i_cbase[8*gc +: 8], rowc[8*gc +: 8], rowc_n[8*gc +: 8])
+        `S7_CH(rowd, rowd_nx, 8*gc, 21 + gc, i_dbase[8*gc +: 8], rowd[8*gc +: 8], rowd_n[8*gc +: 8])
+        `S7_CH(rrow, rrow_nx, 8*gc, 24 + gc, i_rbase[8*gc +: 8], rrow[8*gc +: 8], rrow_n[8*gc +: 8])
+    end endgenerate
 `undef S7_CH
+    always @(posedge ck) begin
+        cura <= cura_nx; curb <= curb_nx; curc <= curc_nx; curd <= curd_nx;
+        rowa <= rowa_nx; rowb <= rowb_nx; rowc <= rowc_nx; rowd <= rowd_nx; rrow <= rrow_nx;
+    end
     // v (vector index): 0 on accept, +1 per vector step, 0 on row step; o (row index): 0 on accept, +1 per row step
     wire [NW-1:0] v_p1 = v + 1'b1, o_p1 = o + 1'b1;
     always @(posedge ck) begin
-        if (s_acc[18]) v[8:0] <= 9'd0; else if (s_vec[18]) v[8:0] <= v_p1[8:0]; else if (s_row[18]) v[8:0] <= 9'd0;
-        if (s_acc[19]) v[17:9] <= 9'd0; else if (s_vec[19]) v[17:9] <= v_p1[17:9]; else if (s_row[19]) v[17:9] <= 9'd0;
-        if (s_acc[20]) o[8:0] <= 9'd0; else if (s_row[20]) o[8:0] <= o_p1[8:0];
-        if (s_acc[21]) o[17:9] <= 9'd0; else if (s_row[21]) o[17:9] <= o_p1[17:9];
+        if (s_acc[27]) v[8:0] <= 9'd0; else if (s_vec[27]) v[8:0] <= v_p1[8:0]; else if (s_row[27]) v[8:0] <= 9'd0;
+        if (s_acc[28]) v[17:9] <= 9'd0; else if (s_vec[28]) v[17:9] <= v_p1[17:9]; else if (s_row[28]) v[17:9] <= 9'd0;
+        if (s_acc[29]) o[8:0] <= 9'd0; else if (s_row[29]) o[8:0] <= o_p1[8:0];
+        if (s_acc[30]) o[17:9] <= 9'd0; else if (s_row[30]) o[17:9] <= o_p1[17:9];
     end
-    // chunk 22: the sfu class (reset register, accept-loaded)
+    // chunk 31: the sfu class (reset register, accept-loaded)
     always @(posedge ck or negedge rc_k[0]) begin
         if (!rc_k[0]) cls <= 3'd0;
-        else if (s_acc[22]) cls <= i_sfu;
+        else if (s_acc[31]) cls <= i_sfu;
     end
+    // per-lane-pair copies of the current addresses and per-lane copies of the strides (lane offset adders)
+    wire [4*AW-1:0] cur_nx = {cura_nx, curb_nx, curc_nx, curd_nx};
+    wire [4*AW-1:0] xs_cur = {asi, bsi, csi, dsi};
+    wire [4*AW-1:0] xs_in  = {i_asi, i_bsi, i_csi, i_dsi};
+    wire [4*AW-1:0] xs_nx;
+    generate for (gc = 0; gc < NXS; gc = gc + 1) begin : g_xs
+        assign xs_nx[12*gc +: 12] = acc_k[NFA + NCH + 8 + gc] ? xs_in[12*gc +: 12] : xs_cur[12*gc +: 12];
+    end endgenerate
+    wire [4*AW-1:0] cur_l [0:3];
+    wire [4*AW-1:0] xs_l [0:7];
+    generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_curl
+        qfd_dv_s7_kff #(.W(4*AW), .ID(650 + gc)) u (.ck(ck), .d(cur_nx), .q(cur_l[gc]));
+    end
+    for (gc = 0; gc < 8; gc = gc + 1) begin : g_xsl
+        qfd_dv_s7_kff #(.W(4*AW), .ID(660 + gc)) u (.ck(ck), .d(xs_nx), .q(xs_l[gc]));
+    end endgenerate
     wire retire = l_retire[0];
     wire emit_i = act_k[NACT-4];                 // inflight
     wire emit_c = act_k[NACT-5];                 // counters + group relay valid
@@ -228,8 +253,10 @@ module qfd_dv_s5_suvm7 #(parameter integer HARD = 1, parameter integer MUT = 0) 
     genvar gl;
     generate for (gl = 0; gl < SW; gl = gl + 1) begin : g_lane
         wire live = ({1'b0, v} << LS) + gl < {1'b0, nin_r};
-        wire [AW-1:0] tcura = cura + gl * asi + LMUT * gl * asi, tcurb = curb + gl * bsi;
-        wire [AW-1:0] tcurc = curc + gl * csi, tcurd = curd + gl * dsi;
+        wire [AW-1:0] lcura = cur_l[gl/2][72 +: 24], lcurb = cur_l[gl/2][48 +: 24], lcurc = cur_l[gl/2][24 +: 24], lcurd = cur_l[gl/2][0 +: 24];
+        wire [AW-1:0] lasi = xs_l[gl][72 +: 24], lbsi = xs_l[gl][48 +: 24], lcsi = xs_l[gl][24 +: 24], ldsi = xs_l[gl][0 +: 24];
+        wire [AW-1:0] tcura = lcura + gl * lasi + LMUT * gl * lasi, tcurb = lcurb + gl * lbsi;
+        wire [AW-1:0] tcurc = lcurc + gl * lcsi, tcurd = lcurd + gl * ldsi;
         qfd_dv_s7_kffr #(.W(1), .ID(700 + gl)) u_lv (.ck(ck), .rn(rc_k[2 + (gl % 2)]), .d(live), .q(lv1[gl]));
         reg [4*AW-1:0] pdr;
         always @(posedge ck) pdr <= {tcura, tcurb, tcurc, tcurd};
@@ -347,13 +374,21 @@ module qfd_dv_s5_vm7 #(parameter integer MUT = 0) (
     wire [1:0] w1b_r;
     assign w1b_r[0] = !w16_we && w1_we && !w1_bank_r && !(su_any_r && !su_bank_r);
     assign w1b_r[1] = !w16_we && w1_we && w1_bank_r && !(su_any_r && su_bank_r);
+    // bank-qualified lane enables first (sub_r: 8 loads each), then the slot decode (one-hot offset: 2 banks each)
+    reg [7:0] lwe_b [0:1];
+    reg [7:0] off_oh [0:7];
     always @(*) begin
+        for (l = 0; l < 8; l = l + 1) begin
+            lwe_b[0][l] = sub_r[0] && vm_we[l];
+            lwe_b[1][l] = sub_r[1] && vm_we[l];
+            off_oh[l] = 8'd1 << su_waddr[24*l +: 3];
+        end
         for (l = 0; l < 8; l = l + 1)
-            for (s = 0; s < 8; s = s + 1) hit_r[l][s] = su_we_r[l] && su_waddr[24*l +: 3] == s[2:0];
+            for (s = 0; s < 8; s = s + 1) hit_r[l][s] = su_we_r[l] && off_oh[l][s];
         for (b = 0; b < 2; b = b + 1)
             for (s = 0; s < 8; s = s + 1) begin
                 for (l = 0; l < 8; l = l + 1) begin
-                    win_r[b][s][l] = sub_r[b] && hit_r[l][s];
+                    win_r[b][s][l] = lwe_b[b][l] && off_oh[l][s];
 `ifdef OT_S7_WPRI_MUT
                     for (k = 0; k < l; k = k + 1) if (hit_r[k][s]) win_r[b][s][l] = 1'b0;   // bench mutant: EARLIER lane wins (must FAIL)
 `else
