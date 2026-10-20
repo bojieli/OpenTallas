@@ -1,0 +1,108 @@
+{
+  "schema": "opentallas.forwarded_clock.routed.v1",
+  "corners": {
+    "tt": {
+      "corner": "tt",
+      "input_pin": "ck",
+      "output_pin": "ck_o",
+      "driver_cell": "INVx3_ASAP7_75t_R",
+      "driver_instance": "b0",
+      "direct_root_buffer": false,
+      "chain": [
+        {
+          "cell": "INVx3_ASAP7_75t_R",
+          "instance": "b0"
+        }
+      ],
+      "timing_sense": "negative_unate",
+      "root_waveform_ps": [
+        22.99999956631913,
+        376.9999882906165
+      ],
+      "output_rise_input_edge": "fall",
+      "output_fall_input_edge": "rise",
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 81.57247899999999,
+        "arrival_min_rise": 81.21469100000002,
+        "arrival_max_fall": 72.26181,
+        "arrival_min_fall": 71.908318,
+        "slew_max_rise": 194.030258,
+        "slew_max_fall": 175.49675
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 34.25143400000002,
+        "arrival_min_rise": 33.86050399999999,
+        "arrival_max_fall": 24.188750999999996,
+        "arrival_min_fall": 23.790515999999997,
+        "slew_max_rise": 144.005798,
+        "slew_max_fall": 116.714821
+      },
+      "input_absolute_ps": {
+        "arrival_max_rise": 40.0,
+        "arrival_min_rise": 40.0,
+        "arrival_max_fall": 394.0,
+        "arrival_min_fall": 394.0,
+        "slew_max_rise": 20.0,
+        "slew_max_fall": 20.0
+      },
+      "output_absolute_ps": {
+        "arrival_max_rise": 475.572479,
+        "arrival_min_rise": 475.214691,
+        "arrival_max_fall": 112.26181,
+        "arrival_min_fall": 111.908318,
+        "slew_max_rise": 194.030258,
+        "slew_max_fall": 175.49675
+      },
+      "driver_absolute_ps": {
+        "arrival_max_rise": 428.251434,
+        "arrival_min_rise": 427.860504,
+        "arrival_max_fall": 64.188751,
+        "arrival_min_fall": 63.790516,
+        "slew_max_rise": 144.005798,
+        "slew_max_fall": 116.714821
+      },
+      "input_phase_normalized_ps": {
+        "arrival_max_rise": 17.00000043368087,
+        "arrival_min_rise": 17.00000043368087,
+        "arrival_max_fall": 17.0000117093835,
+        "arrival_min_fall": 17.0000117093835,
+        "slew_max_rise": 20.0,
+        "slew_max_fall": 20.0
+      },
+      "output_phase_normalized_ps": {
+        "arrival_max_rise": 98.57249070938349,
+        "arrival_min_rise": 98.21470270938352,
+        "arrival_max_fall": 89.26181043368086,
+        "arrival_min_fall": 88.90831843368086,
+        "slew_max_rise": 194.030258,
+        "slew_max_fall": 175.49675
+      },
+      "driver_phase_normalized_ps": {
+        "arrival_max_rise": 51.25144570938352,
+        "arrival_min_rise": 50.86051570938349,
+        "arrival_max_fall": 41.188751433680864,
+        "arrival_min_fall": 40.790516433680864,
+        "slew_max_rise": 144.005798,
+        "slew_max_fall": 116.714821
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 47.32104499999997,
+        "arrival_min_rise": 47.354187000000024,
+        "arrival_max_fall": 48.073059,
+        "arrival_min_fall": 48.117802,
+        "slew_max_rise": 50.024460000000005,
+        "slew_max_fall": 58.78192899999999
+      },
+      "measured_at": "physical output STA terminal including routed SPEF; propagated original primary clock",
+      "odb_sha256": "fed788597ee3a55f470d44979bdf0f950fb5e11bbbaa1bd9e5c0df0aa3ca5098",
+      "spef_sha256": "2d6f0b77c2ce3e9115aed30d64f578e10bcb56096e175f91730c140a4e00ec00",
+      "native_signoff_sdc_sha256": "a967393a4a816d53491cc072d05afc50362dfdf7b84d3b002f8c971d2696d55f",
+      "native_combinational_lib_sha256": "974dde8afd9d97c87a34a788a85e0829bbb45c4792f8365cdc6551606ec592f4",
+      "sequential_etm_before_merge_sha256": "77d482467c2c3b40182c9432688bf41323fe59565ed05ed897e07595b5e86be9",
+      "exported_etm_sha256": "5549541158eae1e0e0485fb0d08699c8b7f43cab1ccd518a792a520018758f2c",
+      "extraction_tcl_sha256": "63aadfd244a7c7c7b9f93374c1b9d2572374da7a653f69e2f187ccf9fbbae4eb"
+    }
+  },
+  "scope": "clock arc only; actual communicating-pair setup/hold remains a die check"
+}
