@@ -1,0 +1,269 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/s81-c199-pinreg/gate_run/routes/compact199_pinreg_gate/work/orfs/results/asap7/opentallas_ot_v41_bf_col_asap7_compact199_pinreg_gate/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 839,
+   "mean": 779.0,
+   "min": 741.6,
+   "max": 845.2
+  },
+  "all": {
+   "n": 53495,
+   "mean": 797.5,
+   "min": 733.6,
+   "max": 955.4
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 797.5,
+   "max_slew": 102.1,
+   "max_late": -58.4,
+   "pins": [
+    {
+     "pin": "g_pp.u_rom0/clk",
+     "arr": 739.1,
+     "slew": 102.1,
+     "late": -58.4,
+     "net": "clknet_1_0_0_g_ch3.u_c0.clk"
+    },
+    {
+     "pin": "g_pp.u_rom1/clk",
+     "arr": 738.0,
+     "slew": 98.0,
+     "late": -59.5,
+     "net": "clknet_1_1_0_g_ch3.u_c0.clk"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 839,
+    "mean": 779.0,
+    "min": 741.6,
+    "max": 845.2
+   },
+   "all": {
+    "n": 53495,
+    "mean": 797.5,
+    "min": 733.6,
+    "max": 955.4
+   },
+   "refs": {
+    "ot_rom_4096x274_m8": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 839,
+     "mean": 779.0,
+     "min": 741.6,
+     "max": 845.2
+    },
+    "all": {
+     "n": 53493,
+     "mean": 797.5,
+     "min": 733.6,
+     "max": 955.4
+    }
+   }
+  }
+ },
+ "tt": {
+  "boundary": {
+   "n": 839,
+   "mean": 591.7,
+   "min": 554.0,
+   "max": 622.2
+  },
+  "all": {
+   "n": 53495,
+   "mean": 590.9,
+   "min": 546.8,
+   "max": 731.9
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 590.9,
+   "max_slew": 101.8,
+   "max_late": -40.5,
+   "pins": [
+    {
+     "pin": "g_pp.u_rom0/clk",
+     "arr": 550.4,
+     "slew": 101.8,
+     "late": -40.5,
+     "net": "clknet_1_0_0_g_ch3.u_c0.clk"
+    },
+    {
+     "pin": "g_pp.u_rom1/clk",
+     "arr": 549.3,
+     "slew": 97.5,
+     "late": -41.6,
+     "net": "clknet_1_1_0_g_ch3.u_c0.clk"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 839,
+    "mean": 591.7,
+    "min": 554.0,
+    "max": 622.2
+   },
+   "all": {
+    "n": 53495,
+    "mean": 590.9,
+    "min": 546.8,
+    "max": 731.9
+   },
+   "refs": {
+    "ot_rom_4096x274_m8": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 839,
+     "mean": 591.7,
+     "min": 554.0,
+     "max": 622.2
+    },
+    "all": {
+     "n": 53493,
+     "mean": 590.9,
+     "min": 546.8,
+     "max": 731.9
+    }
+   }
+  }
+ },
+ "ff": {
+  "boundary": {
+   "n": 839,
+   "mean": 477.2,
+   "min": 442.8,
+   "max": 491.7
+  },
+  "all": {
+   "n": 53495,
+   "mean": 468.7,
+   "min": 432.0,
+   "max": 595.5
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 468.7,
+   "max_slew": 105.9,
+   "max_late": -28.2,
+   "pins": [
+    {
+     "pin": "g_pp.u_rom0/clk",
+     "arr": 440.5,
+     "slew": 105.9,
+     "late": -28.2,
+     "net": "clknet_1_0_0_g_ch3.u_c0.clk"
+    },
+    {
+     "pin": "g_pp.u_rom1/clk",
+     "arr": 439.4,
+     "slew": 101.4,
+     "late": -29.3,
+     "net": "clknet_1_1_0_g_ch3.u_c0.clk"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 839,
+    "mean": 477.2,
+    "min": 442.8,
+    "max": 491.7
+   },
+   "all": {
+    "n": 53495,
+    "mean": 468.7,
+    "min": 432.0,
+    "max": 595.5
+   },
+   "refs": {
+    "ot_rom_4096x274_m8": {
+     "basis": "no reference: raw pin arrival",
+     "ref_ps": 0.0,
+     "pins": 2
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 839,
+     "mean": 477.2,
+     "min": 442.8,
+     "max": 491.7
+    },
+    "all": {
+     "n": 53493,
+     "mean": 468.7,
+     "min": 432.0,
+     "max": 595.5
+    }
+   }
+  }
+ },
+ "route_corner": "TC",
+ "macro_clk": {
+  "n": 2,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 592,
+  "CK_SS_ALL_MEAN": 591,
+  "CK_SS_MIN": 554,
+  "CK_SS_ALL_MIN": 547,
+  "CK_SS_MAX": 622,
+  "CK_SS_ALL_MAX": 732,
+  "CK_TT_MEAN": 592,
+  "CK_TT_ALL_MEAN": 591,
+  "CK_TT_MIN": 554,
+  "CK_TT_ALL_MIN": 547,
+  "CK_TT_MAX": 622,
+  "CK_TT_ALL_MAX": 732,
+  "CK_FF_MEAN": 477,
+  "CK_FF_ALL_MEAN": 469,
+  "CK_FF_MIN": 443,
+  "CK_FF_ALL_MIN": 432,
+  "CK_FF_MAX": 492,
+  "CK_FF_ALL_MAX": 596,
+  "CK_SSLIB_MEAN": 779,
+  "CK_SSLIB_MIN": 742,
+  "CK_SSLIB_MAX": 845,
+  "CK_SSLIB_ALL_MEAN": 798,
+  "CK_SSLIB_ALL_MIN": 734,
+  "CK_SSLIB_ALL_MAX": 955,
+  "CK_ROUTE_REF": "TT"
+ }
+}

@@ -1,0 +1,191 @@
+{
+ "name": "hbm_su_pg_lgtap_rt18_1019-b1-56a614ca4",
+ "block": "ot_hbm_su_static_pg_lg_tap",
+ "ref_tile": true,
+ "owner": "Claude:HBM-BANKLAT-SU",
+ "purpose": "d4g SU LG pair tap at the bank-latency budget 18/15 (faces bank pin flop + GEN2c/GEN2d lanes)",
+ "threads": 4,
+ "peak_ram_gb": 6,
+ "source": {
+  "branch": "claude/hbm-banklat-su-1019",
+  "commit": "56a614ca4",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/run_lg_chain_banklat.sh",
+   "rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_lg_chain_banklat.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv",
+   "rtl/test/hbm_accel/generic/tb_hbm_su_pg_lg_tap_rsync.sv",
+   "tools/hbm_static/su_pg_lg_tap_rsync_run.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_pg_lg_tap #(.READ_RETURN(18), .WRITE_RETURN(15)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rsync_lockstep",
+    "cmd": "bash tools/hbm_static/su_pg_lg_tap_rsync_run.sh {RUN}/bench/pos 0",
+    "expect": "pass",
+    "pass_regex": "PG_LG_TAP_RSYNC PASS",
+    "pass_witness": "results/rtl/nf3_lgtap_1018/pg_lg_tap_pos.log",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "rsync_mutant",
+    "cmd": "bash tools/hbm_static/su_pg_lg_tap_rsync_run.sh {RUN}/bench/mut 1",
+    "expect": "fail",
+    "fail_regex": "PG_LG_TAP_RSYNC FAIL",
+    "fail_witness": "results/rtl/nf3_lgtap_1018/pg_lg_tap_mut1.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "split_mutant1",
+    "cmd": "bash tools/hbm_static/su_pg_lg_tap_rsync_run.sh {RUN}/bench/smut1 0 1",
+    "expect": "fail",
+    "fail_regex": "PG_LG_TAP_RSYNC FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/nf3_lgtap_1018/pg_lg_tap_smut1.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "split_mutant2",
+    "cmd": "bash tools/hbm_static/su_pg_lg_tap_rsync_run.sh {RUN}/bench/smut2 0 2",
+    "expect": "fail",
+    "fail_regex": "PG_LG_TAP_RSYNC FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/nf3_lgtap_1018/pg_lg_tap_smut2.log",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "chain_budget",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/static_su/top/run_lg_chain_banklat.sh {RUN}/bench budget -GPIN=1 -GLQ=4 -GLR=3 -GFQ=1 -GFR=1 -GHQ=2 -GHR=2 -GRR_SU=18 -GWR_SU=15 -GRR_SFU=24 -GWR_SFU=21 -GRR_HC=32 -GWR_HC=29",
+    "expect": "pass",
+    "pass_regex": "^CHAIN PASS",
+    "pass_witness": "results/rtl/hbm_banklat_su_1019/chain_budget.log",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chain_mut_old",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/static_su/top/run_lg_chain_banklat.sh {RUN}/bench mut_old -GPIN=1 -GLQ=4 -GLR=3 -GFQ=1 -GFR=1 -GHQ=2 -GHR=2",
+    "expect": "fail",
+    "fail_regex": "^CHAIN FAIL",
+    "fail_witness": "results/rtl/hbm_banklat_su_1019/chain_mut_old.log",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chain_mut_lane",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/static_su/top/run_lg_chain_banklat.sh {RUN}/bench mut_lane -GRR_SU=18 -GWR_SU=15 -GRR_SFU=24 -GWR_SFU=21 -GRR_HC=32 -GWR_HC=29 -GPIN=1 -GLQ=4 -GLR=2 -GFQ=1 -GFR=1 -GHQ=2 -GHR=2",
+    "expect": "fail",
+    "fail_regex": "^CHAIN FAIL",
+    "fail_witness": "results/rtl/hbm_banklat_su_1019/chain_mut_lane.log",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_pg_lgtap_rt18_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_pg_lgtap_rt18_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 6
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_pg_lgtap_rt18_1019 --out {RUN}/record/views/ot_hbm_su_static_pg_lg_tap  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_su_pg_lgtap_rt18_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_su_pg_lgtap_rt18_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_su_pg_lgtap_rt18_1019/hbm_su_pg_lgtap_rt18_1019-b1-56a614ca4"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HBM-BANKLAT-SU 10-19: SU LG pair tap budget variant of the CLOSED hbm_su_pg_lgtap_1017 for the d4g faces bank (pin flop +1) and die lanes: READ_RETURN/WRITE_RETURN 18/15 (calendar depth only; RTL, outline, pins, clocking unchanged). Budget/pads results/arch/hbm_banklat_1019/su_sfu_hc_budget_gen2c.json; LAT rule tools/hbm_die_v16/d4g_bank_latency.py TAP_CHAIN; chain bench tb_hbm_su_lg_chain_banklat (budget PASS, old values / one lane short FAIL).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "vs": "hbm_su_pg_lgtap_1017-r1-139da60d3 (CLOSED record f7388bdeb)",
+  "source": "claude/owners-hbm-native-1018 61ccb4897:results/arch/owners_hbm_1018/owners_hbm_native_audit.json (NATIVE-3 claude/native-3-1017 73adc87ea:results/arch/native_3_1017/native_3_audit.json)",
+  "cell": "ot_hbm_su_static_pg_lg_tap",
+  "launch_ps": 319.2,
+  "capture_ps": 236.3,
+  "why": "OWNERS-HBM native audit (claude/owners-hbm-native-1018 61ccb4897, lanes/OWNERS-HBM_logs/NATIVE-HBM.md; = NATIVE-3 claude/native-3-1017 73adc87ea): local_rr[490] 319.2 ps (154 of 514 local_rr bits 290-319), local_rq[16] 236.3 / local_rq[33] 225.9 / local_wq[561] 219.1 capture -> per-face local return register + pin-register-fed calendars (LOCAL_SPLIT=1, 0 cycles); native_launch does not apply because the RTL changes",
+  "fix": "LOCAL_SPLIT=1: local_rr from its own kept return register at the S face (far_rr keeps return_d at the W face); calendar head from the local valid/select pin registers so each local request pin has one capture flop; 0 added edges, lockstep bit-identical; LGTAP2 10-18: ot_hbm_vm_lg_keep_reg unparameterised so SYNTH_KEEP_MODULES matches it (r2 gate CTS probe: the \\$paramod copy was flattened and folded into return_d, local_rr 329.7 ps from the W face)"
+ }
+}

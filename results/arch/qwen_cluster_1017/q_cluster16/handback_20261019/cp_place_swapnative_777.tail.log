@@ -1,0 +1,30 @@
+#583   3632.90s best:63257095 next:[0,63257094] packing_square_lns (d=2.96e-02 s=29788 t=0.15 p=0.50 stall=24 h=base) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63257.095 violations 230 wall 3632.899534049
+#584   3672.12s best:63149131 next:[0,63149130] packing_square_lns (d=2.90e-02 s=30172 t=0.15 p=0.50 stall=32 h=base) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63149.131 violations 230 wall 3672.121066697
+#585   3683.64s best:63128571 next:[0,63128570] packing_square_lns (d=2.90e-02 s=30282 t=0.15 p=0.50 stall=9 h=base) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63128.571 violations 231 wall 3683.6402986820003
+#586   3716.76s best:63124527 next:[0,63124526] graph_arc_lns (d=1.41e-01 s=30570 t=0.12 p=0.50 stall=63 h=base) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63124.527 violations 230 wall 3716.7565750790004
+#587   3782.05s best:63113993 next:[0,63113992] packing_square_lns (d=2.79e-02 s=31147 t=0.15 p=0.50 stall=65 h=stalling) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63113.993 violations 231 wall 3782.0508336400003
+#588   3802.13s best:63095129 next:[0,63095128] packing_square_lns (d=2.69e-02 s=31325 t=0.15 p=0.50 stall=13 h=stalling) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63095.129 violations 232 wall 3802.131562162
+#589   4242.35s best:63069777 next:[0,63069776] packing_square_lns (d=2.74e-02 s=35165 t=0.17 p=0.50 stall=288 h=stalling) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63069.777 violations 227 wall 4242.3455121160005
+#590   4331.11s best:63069591 next:[0,63069590] packing_square_lns (d=2.65e-02 s=35882 t=0.17 p=0.50 stall=46 h=base) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63069.591 violations 227 wall 4331.114297921
+#591   4382.41s best:63005941 next:[0,63005940] packing_swap_lns (d=2.74e-02 s=36332 t=0.17 p=0.50 stall=415 h=base) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63005.941 violations 224 wall 4382.411314317001
+#592   4383.14s best:63000457 next:[0,63000456] graph_dec_lns (d=5.73e-01 s=36336 t=0.10 p=0.50 stall=5 h=base) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 63000.457 violations 223 wall 4383.143613991
+#593   4507.57s best:62600839 next:[0,62600838] graph_arc_lns (d=1.80e-01 s=37389 t=0.12 p=0.50 stall=41 h=stalling) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 62600.839 violations 221 wall 4507.572998472
+#594   4553.90s best:62479377 next:[0,62479376] packing_slice_lns (d=4.38e-02 s=37815 t=0.17 p=0.50 stall=263 h=stalling) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 62479.377 violations 219 wall 4553.900993123
+#595   4556.39s best:62329899 next:[0,62329898] rnd_var_lns (d=5.44e-01 s=37845 t=0.10 p=0.50 stall=2 h=base) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 62329.899 violations 219 wall 4556.389980236
+#596   4556.53s best:62321837 next:[0,62321836] ls_restart_decay_perturb(batch:1 lin{mvs:4 evals:877} #w_updates:0 #perturb:0) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 62321.837 violations 218 wall 4556.530413618
+#597   4562.97s best:62321679 next:[0,62321678] packing_square_lns (d=2.74e-02 s=37902 t=0.17 p=0.50 stall=141 h=base) (fixed_bools=0/6115)
+CP_SOFT_WITNESS overrun_um 62321.679 violations 218 wall 4562.969485336001

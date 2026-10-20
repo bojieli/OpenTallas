@@ -8,18 +8,22 @@ TARGET_WORDS={1:327,2:181,3:4,4:192,5:192,6:1024,7:1024,8:1024,9:1024,
  # 10 = pre-boot die configuration (32 ECTL + NRST 43 reset delays + seal), 11 = link-end calendar (2*32+2),
  # 12 = PC chain players' constants, 13 = join4 beat calendar (8 segments)
  10:32+43+2,11:66,12:1024,13:8}
+# MU-KV-BOOT 10-19: qkd_static_kv_boot_dispatch_mu MU 1 + qkd_static_kv_layer_programme_mu: target 1 in the MU form
+# (rows, digest, epoch, GAP[4][36] at 326..469, seal at 470)
+TARGET_WORDS_MU={**TARGET_WORDS,1:471}
 MAX_TARGET=13
 PREBOOT=(10,)            # pass 1 (POR, unaligned release): loaded alone, then the HOST re-asserts the functional resets
 OPTIONAL=(10,11,12,13)
 MASK64=(1<<64)-1
 
-def encode_image(target:int,epoch:int,program:list[int],descriptors:list[int])->dict:
+def encode_image(target:int,epoch:int,program:list[int],descriptors:list[int],mu:bool=False)->dict:
+ words=TARGET_WORDS_MU if mu else TARGET_WORDS
  for label,value,limit in [('target',target,MAX_TARGET),('epoch',epoch,65535)]:
   if type(value) is not int or not 0<=value<=limit:raise ValueError(f'{label} out of range')
  if not 1<=len(program)<=1024:raise ValueError('program word count must be 1..1024')
  if target==0:
   if not 1<=len(descriptors)<=8:raise ValueError('ISA image requires 1..8 descriptors')
- elif len(program)!=TARGET_WORDS[target] or descriptors:raise ValueError('configuration target has wrong count or descriptors')
+ elif len(program)!=words[target] or descriptors:raise ValueError('configuration target has wrong count or descriptors')
  if any(type(w) is not int or not 0<=w<=MASK64 for w in program+descriptors):raise ValueError('all image words must be unsigned64 integers')
  frames=[(8<<524)|1|(epoch<<8)|(len(program)<<24)|(len(descriptors)<<35)|(target<<39)]
  digest=0x51484f5354505247^target
@@ -32,7 +36,7 @@ def encode_image(target:int,epoch:int,program:list[int],descriptors:list[int])->
  return {'target':target,'epoch':epoch,'program_words':len(program),'descriptor_words':len(descriptors),'digest':f'{digest:016x}','frames528':[f'{f:0132x}' for f in frames]}
 
 
-def encode_boot_bundle(epoch:int,images:list[dict])->dict:
+def encode_boot_bundle(epoch:int,images:list[dict],mu:bool=False)->dict:
  indexed={}
  for image in images:
   target=image['target']
@@ -44,8 +48,8 @@ def encode_boot_bundle(epoch:int,images:list[dict])->dict:
  # 1..9, 11, 12, 13, 0 (the ISA target 0 last); targets 10..13 are optional (a die without DIECFG/LINKCFG/ESCFG)
  pre=[t for t in PREBOOT if t in indexed]
  order=list(range(1,10))+[t for t in (11,12,13) if t in indexed]+[0]
- encoded=[encode_image(t,epoch,indexed[t]['program'],indexed[t]['descriptors']) for t in pre+order]
- out={'epoch':epoch,'target_order':pre+order,'images':encoded,'frames528':[f for image in encoded for f in image['frames528']]}
+ encoded=[encode_image(t,epoch,indexed[t]['program'],indexed[t]['descriptors'],mu) for t in pre+order]
+ out={'epoch':epoch,**({'layer_form':'MU'} if mu else {}),'target_order':pre+order,'images':encoded,'frames528':[f for image in encoded for f in image['frames528']]}
  if pre:
   n=sum(len(image['frames528']) for image in encoded[:len(pre)])
   out['passes']=[{'targets':pre,'frames':n,'then':'HOST re-asserts and releases the functional resets (die cfg kept, POR-reset only)'},

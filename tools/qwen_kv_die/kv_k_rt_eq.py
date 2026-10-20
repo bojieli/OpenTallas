@@ -75,3 +75,119 @@ def equalize(K, m, target=None):
                         natural_max=max(v['round_trip'] for v in nat.values()),
                         natural_min=min(v['round_trip'] for v in nat.values()))
     return m
+
+
+# KVR-DERIVE 10-19 (QW-KVATTN2 finding 2): qkd_pv16_vport has ONE RT for both of its sides (vq0 -> group {k, 0} -> i0 and
+# vq1 -> group {k, 1} -> i1), so the two V round trips 9 + vq + rs of a port must be equal.  The shorter side's 15-b V get
+# chain (vport.vq<g> -> slg.vreq) is padded at its sink end (kv_bundle_eq machinery, core-clock pads).  The port's RT is
+# then 9 + the common relay count; the kit's hard RT (kv_static_die.tile_ages VPORT_RT) is checked by kv_static_params.
+def vport_side_eq_on():
+    return os.environ.get('OT_KV_VPORT_SIDE_EQ', '1') == '1'
+
+
+def equalize_vport_sides(K, m):
+    by = {i.name: i for i in m['insts']}
+    bundles = {}
+    for st in KSD.STACKS:
+        for k in range(4):
+            vp = f'vport_{st}_{k}'
+            if vp in by and all(f'slg_{st}_{2 * k + g}' in by for g in (0, 1)):
+                bundles[f'V.rt_{st}_{k}'] = [(vp, f'vq{g}', f'slg_{st}_{2 * k + g}') for g in (0, 1)]
+    if not bundles:
+        return m
+    nat = {}
+
+    def plan_fn(name, stages, walk):
+        tot = {}
+        for (vp, port, s), q in stages.items():
+            hits = [v[0] for kk, v in walk((s, 'rsp')).items() if kk[0] == vp]
+            if len(hits) != 1:
+                raise ValueError(f'kv_vport_side_eq: {s}.rsp reaches {vp} {len(hits)} times')
+            tot[(vp, port, s)] = q + hits[0]
+        t = max(tot.values())
+        nat[name] = dict(sides=[tot[x] for x in sorted(tot, key=lambda x: x[1])], RT=KSD.VPORT_RT_SEG + t)
+        return {x: t - v for x, v in tot.items()}
+    m = BEQ.equalize(K, m, bundles=bundles, plan_fn=plan_fn, record_key='vport_side_eq',
+                     rule='every V port: vq0 + rs0 == vq1 + rs1 (pads on the shorter 15-b V get chain at its sink end; '
+                          'tools/qwen_kv_die/kv_k_rt_eq.py equalize_vport_sides)')
+    m['vport_side_eq'].update(natural=nat, RT={n_[2:]: v['RT'] for n_, v in nat.items()})
+    return m
+
+
+# KV-PVFST 10-19 (MU-DIE-KV fail class: static schedule PVFIN_START_ALIGN = -1): qkd_pv_fin_s takes its start word on
+# ks_pvfst (kvs_attn.pvfst -> pvfin.fs, 65 b) and the pair result trunks on ks_pvp<p> (pvw_p.pr -> pvfin.p<p>); its slot
+# ages assume the start lands exactly when the pair streams do:  D(ks_pvfst) - PV_LEAD - D(ks_pvp_p) == 0
+# (kv_static_params.schedule pvfin_start_align, PV_LEAD = max D(ks_pvst) to pvw_0 / pvw_1).  Not boot-programmable
+# (KV-BOOTAGE): the generator pads every member up to T = max(D(ks_pvfst) - PV_LEAD, D(ks_pvp_0), D(ks_pvp_1)) with
+# core-clock relay stations at its sink end (kv_bundle_eq machinery: the launch pin's clock trunk, every hop within reach,
+# legal free frames; kv_fwd_lanes / kv_lane_stations then give them their lane roles like every other pad).  The start
+# word gets T - (D(ks_pvfst) - PV_LEAD), a shorter pair trunk T - D(ks_pvp_p) (kvs14r-bccc561e3-pvfst plan: pvp_0 = pvp_1 + 1,
+# so a pvfst-only pad moved the skew to pair 1).  The pass fails closed if the plan is not [0, 0] after it.  Every
+# consumer of D(ks_pvfst) (F_DLY, the hub's FR_OFS, the boot-age image) reads the padded relay_stages / the post-station
+# netlist table, never a constant.
+def pvfin_align_on():
+    return os.environ.get('OT_KV_PVFIN_ALIGN', '1') == '1'
+
+
+def equalize_pv_start(K, m):
+    """One PV_LEAD register controls both pairs: physically pad the faster start branch."""
+    by = {i.name: i for i in m['insts']}
+    if not all(x in by for x in ('kvs_attn', 'pvw_0', 'pvw_1')):
+        return m
+    members = [('kvs_attn', 'pvst', f'pvw_{p}') for p in (0, 1)]
+    m = BEQ.equalize(K, m, bundles={'PV.start': members}, record_key='pv_start_eq',
+                     rule='both PV start branches physically padded to their maximum age; one shared PV_LEAD')
+    # Read the actual resulting relay graph. A fork starts at the source,
+    # independently of the trunk, and its pads must update its own age.
+    by = {i.name: i for i in m['insts']}
+    reached = BEQ._walk(m, by, ('kvs_attn', 'pvst'))
+    ages = [reached[(f'pvw_{p}', 'st')][0] for p in (0, 1)]
+    if ages[0] != ages[1]:
+        raise ValueError(f'kv_pv_start_eq: unequal physical start ages after padding: {ages}')
+    m.setdefault('relay_stages', {})['ks_pvst'] = ages[0]
+    for q, endpoint in enumerate(m.get('forks', {}).get('ks_pvst', [])):
+        if tuple(endpoint) == ('pvw_1', 'st'):
+            m.setdefault('fork_stages', {})[f'ks_pvst__f{q}'] = ages[1]
+    m['pv_start_eq']['ages'] = ages
+    return m
+
+
+def pvfin_pads(paths):
+    """{path key: age} (kv_static_params.plan_paths / table_paths) -> ({'pvfst'|'pvp_0'|'pvp_1': pads}, align per pair before).
+    Target T = max(D(ks_pvfst) - PV_LEAD, D(ks_pvp_0), D(ks_pvp_1)); every member is padded up to it, so the start word and
+    BOTH pair trunks land on the same edge (pvp0 == pvp1 is a structural equality: one pvfin slot law for both pairs)."""
+    import kv_static_params as KSP
+    al = KSP.schedule(paths)['attn']['pvfin_start_align']
+    if None in al:
+        return None, al
+    PL = max(paths['pvst_0'], paths['pvst_1'])
+    s0 = paths['pvfst'] - PL
+    T = max(s0, paths['pvp_0'], paths['pvp_1'])
+    return dict(pvfst=T - s0, pvp_0=T - paths['pvp_0'], pvp_1=T - paths['pvp_1']), al
+
+
+def equalize_pvfin_start(K, m):
+    import kv_static_params as KSP
+    by = {i.name: i for i in m['insts']}
+    if not all(x in by for x in ('kvs_attn', 'pvfin', 'pvw_0', 'pvw_1')):
+        return m
+    pads, before = pvfin_pads(KSP.plan_paths(m))
+    if pads is None:
+        raise ValueError(f'kv_pvfin_align: unresolved pvfin start path (align {before}): fail closed')
+    mem = {('kvs_attn', 'pvfst', 'pvfin'): 'pvfst', ('pvw_0', 'pr', 'pvfin'): 'pvp_0', ('pvw_1', 'pr', 'pvfin'): 'pvp_1'}
+    walk_ = {}
+
+    def plan_fn(name, stages, walk):
+        walk_.update({mem[k]: v for k, v in stages.items()})
+        return {k: pads[mem[k]] for k in stages}
+    if any(pads.values()):
+        m = BEQ.equalize(K, m, bundles={'PV.fin_start': list(mem)}, plan_fn=plan_fn, record_key='pvfin_align',
+                         rule='pvfin start aligned: D(ks_pvfst) - PV_LEAD == D(ks_pvp_0) == D(ks_pvp_1); the shorter members '
+                              'padded at their sink end (tools/qwen_kv_die/kv_k_rt_eq.py equalize_pvfin_start)')
+    else:
+        m['pvfin_align'] = dict(bundles={}, added=[])
+    after = KSP.schedule(KSP.plan_paths(m))['attn']['pvfin_start_align']
+    m['pvfin_align'].update(before=before, pads=pads, after=after, walk=walk_)
+    if after != [0, 0]:
+        raise ValueError(f'kv_pvfin_align: pvfin start still misaligned after the pads: {before} -> {after} ({pads})')
+    return m

@@ -1,0 +1,66 @@
+{
+  "qkd_kv_front_cal": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv",
+    "sha256": "f129cee5d99da65162b1b5b13bbd3145611bcc74c163011a8fa96a97f97c619c"
+  },
+  "qkd_static_kv_landing_seg": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv",
+    "sha256": "9bbead632adeee9507813055a1c0c0e7579721a90cef44adc6f2de0f3fb2607e"
+  },
+  "qkd_static_kv_phase_launch": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv",
+    "sha256": "b742a8c7f368eea709d9b56e112aba620db2a28e357492d2be1f35e64015a4b4"
+  },
+  "qkd_static_kv_drain_guard4": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+    "sha256": "03ac4b75902bd881078c98315c9bdca48170472397170bb6e4231a8cbd26114f"
+  },
+  "qkd_kv_cfault_node": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+    "sha256": "5b4d58fe2f09921694bb2a7acedddf3f035b54ef5e2592a7b07bb21922b3250e"
+  },
+  "qkd_static_kv_boot_cdc": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+    "sha256": "85b5ffdac787f5d626b6421d9f4578031e84a852d74117ef37663c7c3dc16e31"
+  },
+  "qkd_kv_landing_cal": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv",
+    "sha256": "a2b7d492094464d587f1b35fe2b520bd79d0ad4dc48813c813d6bdbb984eac9e"
+  },
+  "ot_async_fifo": {
+    "path": "rtl/lib/ot_async_fifo.sv",
+    "sha256": "47f52e445bf50ee8e61f97d78f0c88ed28806bed04bf0ffc8e173dc41a50185a"
+  },
+  "ot_reset_sync": {
+    "path": "rtl/lib/ot_reset_sync.sv",
+    "sha256": "479e98d7ccfb78bb3b7fb6bb998da4d36c0c32d56ba6b5ff0b1dcff6c00fcc7c"
+  },
+  "ot_async_fifo_select_copy": {
+    "path": "rtl/lib/ot_async_fifo.sv",
+    "sha256": "31957690fde093cd5f8099a7ecae83f6d31f2bebe9f3cc729a6b592e069e3650"
+  },
+  "qkd_static_kv_hop295": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv",
+    "sha256": "1d8dce7b0c562657576e29fa1bd7b9924538fc6558902a2dc06fb7b5ae6cb4ef"
+  },
+  "qkd_static_kv_hop38": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv",
+    "sha256": "57bd1c9be419339133a096e6309e213ffaf7859c17843f54918bc87d5220f305"
+  },
+  "qkd_static_kv_landing_pc": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv",
+    "sha256": "13063a8c7fdf07c0389f9b910b2b578bd107b68364fc39e7790d0dbb92ea41cb"
+  },
+  "qkd_static_kv_rowctl": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv",
+    "sha256": "590401038b237c59cf14135d88ff809f06d9ccacdb59621a443a2ed631010b34"
+  },
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+    "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "qkd_static_kv_hop": {
+    "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv",
+    "sha256": "4f1df4c15769044e18b2a250612c27ec6ff8c61b4feb6f6d327040d1490f1e6c"
+  }
+}

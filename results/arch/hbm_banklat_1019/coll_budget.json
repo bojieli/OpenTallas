@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.hbm_banklat.client_budget.v1",
+ "lane": "HBM-BANKLAT-COLL",
+ "date": "2026-10-19",
+ "source_table": "results/arch/hbm_banklat_1019/gen2c_client_table.json (GEN2c contract_pre)",
+ "form": "SCALAR for every client in this group: each client reads several banks in ONE edge and needs their answers together (COLL ctl assembles bank pairs; gather master QBG reads 4 banks/ring/edge; host QDQ reads 4 consecutive banks). The die pads the short banks' REQUEST lanes (17 b per bank) to the budget, never the 257-b response lanes.",
+ "uniform_over_quadrants": "the four gather masters run ONE symmetric timeline (ot_hgi_coll_gq header), so all quadrants take the slowest quadrant's budget; one hardened view per master",
+ "rule": "share BANK_RT = 6 + faces pin 1 + lane(rq) + lane(rr) (equal over 8 banks after pads); client VM_RT = BANK_RT - 6 + face_extra (0 REG0 share, 2 REG1 leaf_r) + client<->share lanes (rq+rr, equal over the 4 bank pairs after pads); QDQ RL = 7 + same excess",
+ "budgets": {
+  "hcollrs_NE/NW/SE/SW": {"master": "ot_hbm_idx_vm_share2_static", "param": "BANK_RT", "value": 72, "default": 6,
+                          "gen2c_need": {"NE": 43, "NW": 43, "SE": 55, "SW": 68}, "die_pads": "every bank's rq lane to round trip 72 (pad_b = 72 - RT_b)"},
+  "hb_coll_NE/NW/SE/SW": {"master": "ot_hfd_coll_q2_hard_v8g (NE/NW/SE) / ot_hfd_coll_q3_hard_v8x (SW)", "param": "VM_RT", "value": 74, "default": 0,
+                          "gen2c_need": {"NE": 43, "NW": 40, "SE": 52, "SW": 68}, "die_pads": "COLL<->hcollrs lanes to 8 edges total (REG0 share) or 6 (REG1 leaf_r)",
+                          "rtl": "fork branch claude/hbm-banklat-collctl-1019 (ctl_v5 critical: coordinator review)"},
+  "hcollgi_NE/NW/SE/SW": {"master": "ot_hgi_coll_gq_issue (in ot_hgi_coll_gq)", "param": "VM_RT", "value": 74, "default": 0,
+                          "gen2c_need": {"NE": 42, "NW": 39, "SE": 55, "SW": 62}, "die_pads": "hcollgi<->hcollrs lanes to 8 total (REG0) / 6 (REG1)",
+                          "compiler": "tools/hgi_sim/collq_gather_1018.py --vm-rt 74 (inject 29+74, writes +74, span +74)"},
+  "hb_idx__nwsh": {"master": "ot_hbm_idx_vm_share2_static (REG0) or ot_hbm_idx_vm_share2_static_r (REG1, NSFIX rebind)", "param": "BANK_RT", "value": 40, "default": 6,
+                   "gen2c_need": 36, "die_pads": "every NW bank's rq3 lane to round trip 40"},
+  "hb_quant_NW": {"master": "ot_hgi_qdq_host_split", "param": "RL (existing; no new param)", "value": 45, "default": 7,
+                  "gen2c_need": 37, "die_pads": "hb_quant_NW<->nwsh lanes to 4 total (REG0) / 2 (REG1): RL = 7 + 34 + face_extra + lanes = 45"},
+  "hb_idx__op_NW": {"owner": "HBM-BANKLAT-IDX", "note": "behind nwsh: share excess at budget = 34 (+2 face extra if REG1); VM_RT_EXTRA = 4 + 34 + extra + lanes - 2"}
+ },
+ "headroom": "hcollrs 72 vs GEN2c 68 (+4), nwsh 40 vs 36 (+4), client lanes padded to 8/4. GEN2d (ring blocks beside the VM banks) is expected to SHORTEN these lanes; the die pads up to the budget, so the hardened views need not change. A later re-harden at a smaller budget is a pure latency gain (each gather +74 edges at this budget; COLL VM reads +74).",
+ "cost": "gather master: +74 x (event 11 b + rd expectation 8 b + fire 1 b) flops + ld_desc from held state; share2: owner pipeline 4 b x (BANK_RT-6) per leaf; die: request-lane pads 17 b per bank per padded edge."
+}

@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.hbm_expert3x_capacity_1019.v1",
+ "source": "HBM-BW9e8fcf77e tools/hbm_layer_vehicle/smb_unit.py layout_bw; main e248c89e7 smb_unit alloc stack_bytes1<<35; HBM d4g16SM2stacks; DS43layers384experts",
+ "assumption": "Production routed shape is two <=64-line blocks per expert (layout_bw asserts <=len(RSETS)=2);43layer bound. Full-model other-region allocation not measured.",
+ "stack_bytes": 34359738368,
+ "stacks_per_die": 2,
+ "sms_per_die": 16,
+ "bytes_per_sm": 4294967296,
+ "bytes_reserved_per_row_per_sm": 131072,
+ "row_index_limit": 32768,
+ "routed_old_rows": 33024,
+ "routed_old_reserved_bytes": 4328521728,
+ "routed_new_rows": 16512,
+ "routed_new_reserved_bytes": 2164260864,
+ "routed_new_payload_upper_bytes": 862322688,
+ "routed_row_slots_used": 6,
+ "routed_row_slots_total": 8,
+ "remaining_rows": 16256,
+ "remaining_bytes": 2130706432,
+ "qwen_added_expert_copy_bytes": 0,
+ "conclusion": "Three copies fit routed reserved-row allocation and halve old row footprint. Full HBM image residency (nonexpert,KV/attention/tables and all layers) remains conditional; this is not a full-model capacity proof.",
+ "nonexpert_fixture_evidence": "SMB pos L0/L2/L14/head:17/20/27/54 nonexpert blocks; no claim those four shapes bound all43layers"
+}

@@ -203,6 +203,11 @@ def main():
         rec = dv_bind.emit(plan, out / 'bind', Path(a.bind_table), sdir, chain_pts,
                            land_plan=Path(a.land_plan) if a.land_plan else None)
         print(json.dumps({k: v for k, v in rec.items() if k in ('relay_masters', 'clock_forward_cells', 'reset', 'port_bind_rc')}, indent=1))
+        # A caller must never launch physical work after a failed strict bind.
+        # emit() keeps its failure record; propagate that verdict to the shell.
+        rc = rec.get('port_bind_rc')
+        if rc != 0:
+            raise SystemExit(rc if isinstance(rc, int) and rc > 0 else 1)
         return
     # ------------------------------------------------------------------ abstracts (one master per kept instance)
     for i in sorted(keep):

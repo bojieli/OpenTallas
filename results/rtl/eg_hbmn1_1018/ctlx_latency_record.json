@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.latency_record.v1",
+ "lane": "ELEM-GAPS/HBMN1-ctlx",
+ "date": "2026-10-18",
+ "master": "ot_hgi_sm_xload_cl2_ctlx",
+ "closed_view_before": "physical/ref_tile/hgi_sm_xl2_ctlx/views/ot_hgi_sm_xload_cl2_ctlx (hgi_sm_xl2_ctlx-q1-7af6f4406)",
+ "native_fail_before": "launch 403.3 > 220 (580 of 2048 l_d_o pins), capture rst_n 455.7 > 190",
+ "changes": [
+  {
+   "port": "l_d_o[2047:0]",
+   "change": "driven by a dedicated (* keep *) register copy of L1 (D = l0_d) instead of l_d, which also feeds the C stage",
+   "edges": 0
+  },
+  {
+   "port": "rst_n",
+   "change": "pin drives one kept async-clear flop rp1 (D=1); rp2, rq_n plain release flops; issuer (ot_static_cmd_target_core) and ctl body clear from rq_n (ctl RST_PRE=1: no second relay)",
+   "edges": {
+    "assert_issuer": "0 -> +2",
+    "assert_ctl_body": "0 -> +2",
+    "release_issuer": "0 -> +3",
+    "release_ctl_body": "3 -> 3",
+    "rn_o": "3 -> 3 (assert 0 -> +2)"
+   },
+   "compiler_note": "no data/command/schedule edge changes; host must not configure the target within 3 edges of release (already true: ingress/host relays release later); rst_n must be held low >= 2 edges"
+  },
+  {
+   "rev": "n2",
+   "port": "l_d_o / C stage",
+   "change": "opt_merge had folded plain l_d into the kept l_dpo (one flop for E pins + W C stage); C stage now reads its own kept copy l_dc (D = l0_d, same edge)",
+   "edges": 0
+  },
+  {
+   "rev": "n2",
+   "port": "rn_o",
+   "change": "own kept flop rn_q (D = rp2, same edge as rq_n) instead of the rq_n reset net",
+   "edges": 0
+  }
+ ],
+ "data_command_edges_changed": 0,
+ "shared_source_note": "ot_hgi_sm_xload_cl2_ctl / _ctlw gain PIN_NATIVE / RST_PRE parameters (default 0 = unchanged for every other master). HBM-COLLQ's cl2p copy (ot_hgi_sm_xload_cl2p_ctl, kit hgi_sm_xl2p_ctlx_1018, branch claude/hbm-collq-1018) has the same two structures and needs the same edit if it becomes the bound successor.",
+ "bench": "rtl/hbm_accel/generic/adapters/tb/run_xload_xql_quad_lock.sh with XQL_OLDREF=1: reference ref_w/ref_e = CLOSED q1 ctlx function (xql CTL_OLD 1), unit quad_w/quad_e = native ctlx"
+}

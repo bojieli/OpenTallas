@@ -1,0 +1,229 @@
+{
+ "schema": "opentallas.native_pin_audit.view_receipt.v1",
+ "verdict": "FAIL",
+ "verdict_per_child_clock": "PASS (clock rule): pin-flop spread at the child flops per child clock TT/FF = A ck[0] 39.2/32.4, B ck[1] 34.1/24.4, C ck[2] 22.2/22.1 ps (<= 80); the parent adds one wire per clock (1.1 ps, n=1 sink each), comb pins 0",
+ "job": "qkd_ectl3_kiss_st-e5-188da89ab",
+ "closure": "CLOSED TT +69.78 / FF +21.06 ps DRC 0 (record 33af4c4a5, on main 5694b0fb4)",
+ "geometry_sha256": "43b17022 (approved review)",
+ "view": "physical/ref_tile/qkd_ectl3_kiss_st/views/qkd_ectl3_kiss_st",
+ "view_sha256": {
+  "qkd_ectl3_kiss_st.lef": "596a96cb6f0ac6e341373f18798afae8a18923f4ca73eda30f7075312233b71c",
+  "qkd_ectl3_kiss_st_tt.lib": "0e70d5d0f26fcc7ff1ebded2b2813a7e7eb193a28176af2fcc03510ad5505c05",
+  "qkd_ectl3_kiss_st_ff.lib": "bd5f3dd2d482dc59601da3fe3565e9c60390cb56384695f3d33bdecce71fdd2a",
+  "qkd_ectl3_kiss_st_ss.lib": "0f59a632682b4dfef89d521ba1928781aaf032d624402422b4c68abd5d4d3390",
+  "insertion.json": "d8e64b4024e47e0e3354f369e71e89948ae52f28a5c1da54a5d6f57cb0035b35",
+  "abstract.json": "65e53c0a54e193648768b9de52353ee9b7e1bb349b705fcc8a6d8deb3a562cf3"
+ },
+ "tool": "tools/hier_contract/native_pin_audit.py --view physical/ref_tile/qkd_ectl3_kiss_st/views/qkd_ectl3_kiss_st (own-R mode: per clock pin R = insertion.json clock_measurements child_flop boundary mean)",
+ "tool_source": "5694b0fb4b8fc19e5898a6367a50194471ba77f9",
+ "record": {
+  "cell": "qkd_ectl3_kiss_st",
+  "view": "physical/ref_tile/qkd_ectl3_kiss_st/views/qkd_ectl3_kiss_st",
+  "lib_cell": "qkd_ectl3_kiss_st",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json child_flop boundary mean"
+  ],
+  "R_ps": 183.1,
+  "spread_ps": 0.0,
+  "outputs": 3490,
+  "inputs": 1796,
+  "launch_ps": 235.4,
+  "launch_pin": "t1[1178]",
+  "capture_ps": 427.1,
+  "capture_pin": "cfg[4]",
+  "launch_over": 107,
+  "capture_over": 522,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 0.0,
+  "ff_launch_min_ps": 80.8,
+  "ff_hold_need_ps": -67.7,
+  "pass": false,
+  "fail_why": "launch 235.40806 > 220 (107 pins); capture 427.11638 > 190 (522 pins)"
+ },
+ "per_clock": {
+  "tt": {
+   "refs": {
+    "ck[2]": {
+     "R_ps": 183.1,
+     "src": "insertion.json child_flop boundary mean",
+     "spread_ps": 0.0
+    },
+    "ck[1]": {
+     "R_ps": 358.4,
+     "src": "insertion.json child_flop boundary mean",
+     "spread_ps": 0.0
+    },
+    "ck[0]": {
+     "R_ps": 302.3,
+     "src": "insertion.json child_flop boundary mean",
+     "spread_ps": 0.0
+    }
+   },
+   "per_clock": {
+    "ck[0]": {
+     "outs": 1061,
+     "ins": 1091,
+     "launch": 163.3,
+     "launch_pin": "req_epoch[13]",
+     "capture": 427.1,
+     "capture_pin": "cfg[4]",
+     "launch_over": 0,
+     "capture_over": 7,
+     "lmin": 113.3,
+     "hold": -90.1,
+     "comb": 0
+    },
+    "ck[1]": {
+     "outs": 1056,
+     "ins": 6,
+     "launch": 226.0,
+     "launch_pin": "t1[1006]",
+     "capture": 427.1,
+     "capture_pin": "cfg[4]",
+     "launch_over": 2,
+     "capture_over": 6,
+     "lmin": 173.2,
+     "hold": -218.9,
+     "comb": 0
+    },
+    "ck[2]": {
+     "outs": 1373,
+     "ins": 711,
+     "launch": 235.4,
+     "launch_pin": "t1[1178]",
+     "capture": 427.1,
+     "capture_pin": "cfg[4]",
+     "launch_over": 105,
+     "capture_over": 521,
+     "lmin": 180.8,
+     "hold": -139.3,
+     "comb": 0
+    }
+   }
+  },
+  "ff": {
+   "refs": {
+    "ck[2]": {
+     "R_ps": 152.9,
+     "src": "insertion.json child_flop boundary mean",
+     "spread_ps": 0.0
+    },
+    "ck[1]": {
+     "R_ps": 290.2,
+     "src": "insertion.json child_flop boundary mean",
+     "spread_ps": 0.0
+    },
+    "ck[0]": {
+     "R_ps": 241.3,
+     "src": "insertion.json child_flop boundary mean",
+     "spread_ps": 0.0
+    }
+   },
+   "per_clock": {
+    "ck[0]": {
+     "outs": 1061,
+     "ins": 1091,
+     "launch": 115.6,
+     "launch_pin": "req_epoch[13]",
+     "capture": 348.8,
+     "capture_pin": "cfg[4]",
+     "launch_over": 0,
+     "capture_over": 7,
+     "lmin": 80.8,
+     "hold": -67.7,
+     "comb": 0
+    },
+    "ck[1]": {
+     "outs": 1056,
+     "ins": 6,
+     "launch": 163.0,
+     "launch_pin": "t1[1006]",
+     "capture": 348.8,
+     "capture_pin": "cfg[4]",
+     "launch_over": 0,
+     "capture_over": 6,
+     "lmin": 122.7,
+     "hold": -158.6,
+     "comb": 0
+    },
+    "ck[2]": {
+     "outs": 1373,
+     "ins": 711,
+     "launch": 172.0,
+     "launch_pin": "t1[1178]",
+     "capture": 348.8,
+     "capture_pin": "cfg[4]",
+     "launch_over": 0,
+     "capture_over": 6,
+     "lmin": 128.5,
+     "hold": -99.6,
+     "comb": 0
+    }
+   }
+  }
+ },
+ "child_spread_ps": {
+  "ck[0] A qkd_static_ectla_k4": {
+   "tt": 39.2,
+   "ff": 32.4
+  },
+  "ck[1] B qkd_ectl_b_tp8_direct_rt80": {
+   "tt": 34.1,
+   "ff": 24.4
+  },
+  "ck[2] C qkd_ectl_c_st_rt80": {
+   "tt": 22.2,
+   "ff": 22.1
+  }
+ },
+ "over_budget_by_bus": {
+  "tt": {
+   "launch_over_220": {
+    "t1": 107
+   },
+   "capture_over_190": {
+    "si": 408,
+    "s0": 30,
+    "s1": 14,
+    "s2": 29,
+    "s3": 34,
+    "cfg": 5,
+    "rst_n": 1,
+    "rsp_v": 1
+   },
+   "worst": {
+    "t1": 235.4,
+    "si": 209.6,
+    "s0": 203.5,
+    "s1": 206.3,
+    "s2": 212.2,
+    "s3": 206.7,
+    "cfg": 427.1,
+    "rst_n": 401.5,
+    "rsp_v": 284.9
+   }
+  },
+  "ff": {
+   "launch_over_220": {},
+   "capture_over_190": {
+    "cfg": 5,
+    "rst_n": 1,
+    "rsp_v": 1
+   },
+   "worst": {
+    "cfg": 348.8,
+    "rst_n": 326.5,
+    "rsp_v": 221.2
+   }
+  }
+ },
+ "classification": [
+  "Clock rule (owner 10-17 0dq, judged per child clock at the child flops, TT and FF <= 80): PASS for all three domains.",
+  "TT data budget overruns t1 (launch <= 235.4, +15 ps) and s0..s3/si (capture <= 212.2, +22 ps), C domain (ck[2], R 183.1): wires-only parent, child pin registers sit up to ~700 um inside the 725.76 um frame; parent wire delay on the pass-through, FF clean. Guidance budgets (die standard: only the five are mandatory); the die STA on the bound view is the check.",
+  "cfg[*] (5 pins, 427.1 TT / 348.8 FF): broadcast to all three children; quasi-static config, candidate for --case in the die SDC if the die ties / holds it constant (die obligation, not claimed here).",
+  "rst_n (401.5 TT / 326.5 FF): reset_landing opt-out (each child lands its own rst_n in its own domain, max_sinks 3); the die reset landing times it, not the native data budget.",
+  "rsp_v (284.9 TT / 221.2 FF, 1 pin): single data pin, +95 ps over the 190 guidance with 833 ps period. Die STA watch item; if the die STA names it, land it in the parent (one flop) in an e6 kit."
+ ]
+}

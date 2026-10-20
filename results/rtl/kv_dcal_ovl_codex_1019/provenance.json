@@ -1,0 +1,15 @@
+{
+  "base": "origin/main47c0b67c45",
+  "bootcfg_source": "7167b4ab7",
+  "ovl_source": "95d11133f",
+  "shared_release_source": "1a73e1e7a",
+  "sha256": {
+    "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_ovl_bootcfg.sv": "88a3a14a831cbda8def1bc9e8005e2769285b6d08790f0154366d7fcbad67906",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv": "c95d2e34a217a5eb15051de213c28e5c7917ba415ef899603d2db83bb62a01e9",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688",
+    "rtl/test/qwen_split/tb_kv_dcal_ovl_bc.sv": "668b45588cf5cfba607114edc720b14da303b92c2cbf320be6d973e067166078",
+    "tools/qwen_static_kv/run_dcal_ovl_bc.sh": "27e682a1cb5efca15907ed05ae2da08b5c11022e9be0bf38050b0cf59c1db409"
+  },
+  "ovl_rewind_source": "510c0cd51",
+  "bench_scope": "fullF16+wrap+halt/new_epoch restart; modes1..6 fail; mode6 MUT_HALT_REWIND reproducesoldlistpointer"
+}

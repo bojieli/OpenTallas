@@ -1,0 +1,98 @@
+{
+  "observed_utc": "2026-10-19T22:54:35.076156+00:00",
+  "scope_stdout": "ActiveState=active\nSubState=running\n",
+  "scope_stderr": "",
+  "scope_returncode": 0,
+  "phases": [
+    {
+      "name": "run_phase0.log",
+      "bytes": 4742,
+      "sha256": "2c9287177c6a9516a96f9695b2e15a173c2398b5f247b1b3d97cce79fe10c432",
+      "complete_pass": true,
+      "failed": false
+    },
+    {
+      "name": "run_phase1.log",
+      "bytes": 4742,
+      "sha256": "b2649e823c1dd85d4322397cefcaad6d59610151acd09eb0f9d69e03d351db99",
+      "complete_pass": true,
+      "failed": false
+    },
+    {
+      "name": "run_phase2.log",
+      "bytes": 4742,
+      "sha256": "6cdee3fbf66334215b95e50afba891301026a6605a37d933054e2da84b3035be",
+      "complete_pass": true,
+      "failed": false
+    },
+    {
+      "name": "run_phase3.log",
+      "bytes": 4742,
+      "sha256": "a084d5369fc28150d799a692bc1687f2ce9eb952a3d76104509d804c79cd4aaf",
+      "complete_pass": true,
+      "failed": false
+    },
+    {
+      "name": "run_phase4.log",
+      "bytes": 4742,
+      "sha256": "d647dfa5d1223890571d64b08a53dc69df7405f47c13f039e6568a0c73cafcfd",
+      "complete_pass": true,
+      "failed": false
+    },
+    {
+      "name": "run_phase5.log",
+      "bytes": 4742,
+      "sha256": "4ad8551ccf9e1e7992ebb8c82e95e4aff180d44e414a99b3d86567331d504b85",
+      "complete_pass": true,
+      "failed": false
+    },
+    {
+      "name": "run_phase6.log",
+      "bytes": 4742,
+      "sha256": "cc1632c82cc53b220d55567dfdcc294b65c129f6b5a98211cbb7d4db656345ab",
+      "complete_pass": true,
+      "failed": false
+    },
+    {
+      "name": "run_phase7.log",
+      "bytes": 4742,
+      "sha256": "5d6448f07717fa2be9dcc2562cecfcdb0b84415648e3595d867fee5992fdc9a0",
+      "complete_pass": true,
+      "failed": false
+    },
+    {
+      "name": "run_phase8.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_pass": false,
+      "failed": false
+    }
+  ],
+  "source_hashes": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v": "ede8a6df34ed12b5ae0ae79592bb415c601562b07f38e6c11551506ff7f04e61",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv": "f873e75f22462d16fc8fbd9b6c22f07a35db5e0f86c42b11dcd893e5a95a66ba",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv": "9b8eab1dbce7870d2ce3f9e5f74ad8036fafadefea54660b9ba7839d66aca0ba",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem.sv": "6034771d826ddcadf9fdfab3247e92d13e991b66d424316851161cb3b7e91e25",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_mem_early_capture.sv": "1897b3fec1576743fd284f4622277082b05dcdeadfaba3a8f9069c5f633e00dd",
+    "rtl/dsrom_sys/s81_dv/unit/test/run_mu_hwin_early_capture.sh": "91eccce2aadfd817e70e942a0bc6f1e518c31f7d75a01526423604eb7e405dfd",
+    "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv": "07bfd11bd1d80c9f542e8b0ea554ac6b84b0f6a38e22ff3e00834add5cb02b3c",
+    "rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_mem_early_capture.sv": "ee9aa1ef4556e60958389f8f50af86c9517d0c6bc18cf99a7c9a5a625e3c4fb3",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  "compiled_input_hashes": {
+    "binding_audit.json": "f5d7efe50f0f00dd71bec37d1b27708a38196b485160a078dba561789f0db701",
+    "dsdv_mu_hwin.sv": "da7b429a6d6994afc000ae0f548fc748259ebc2a19bff31e6446086595fdaeee",
+    "dsdv_mu_hwin.sv.diff": "4c505fa9db2f8a928987c3e256cfddf033cbbcaf8ea33045c460c8d3cfa9eaf2",
+    "dsdv_mu_mem.sv": "7bedbfca718772aa8f710339666fde77a2f03df8702fc2024641b7abce8fcc42",
+    "dsdv_mu_mem.sv.diff": "c0d70d9b058bc4ae3e50c0bef01c047cf2ca79f5468a7389d87a012de9b954f3",
+    "dsdv_mu_mem_early_capture.sv": "daafb38f767bdaba4f426a2bd5f0c461134046293ff4b6c06e54570f1c1420d6",
+    "dsdv_mu_mem_early_capture.sv.diff": "8f8c58801df2d670fd9d0178198337fe679eb97a83ac30aa9361c47df719e10e",
+    "iverilog_version.txt": "f9199cc8658f4afcec3edeb93f29f23bb2aebf66d3eeb217cdc728aaa692f946",
+    "parser_projection.json": "c02472b19bf7fb0ddfa4fb3c962cef768f23e6bcf6054b501c2ec96e54681534",
+    "primitive_probe.log": "2ca707bd2a10b89e31ae47432a9356595b085b248edc6ae99194ba51de2124e8",
+    "primitive_probe.sv": "554982f4fdbad7180af629edbb4b9722c93b62e8f416f4a67ac377d176243208",
+    "tb.vvp": "7ac9b424e974a3f67d0981e07447734bf4385fe8e0f3a3b8665c074030428e48"
+  }
+}

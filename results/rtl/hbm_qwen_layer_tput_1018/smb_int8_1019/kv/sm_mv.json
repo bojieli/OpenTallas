@@ -1,0 +1,209 @@
+{
+ "schema": "opentallas.hbm_qwen_sm_mv_kv.v1",
+ "lane": "SMB-INT8",
+ "stage": "L0",
+ "position": 8191,
+ "ranks": [
+  0
+ ],
+ "records": [
+  {
+   "rank": 0,
+   "L": 0,
+   "op": "SM.MATVEC",
+   "fmt": 3,
+   "tag": "qkv",
+   "m": 768,
+   "K": 4096,
+   "A_bf16_exact": true,
+   "arrays": {
+    "A": {
+     "key": "d0.L0.qkv.A",
+     "shape": [
+      4096
+     ],
+     "dtype": "float32",
+     "sha256": "3f1fd5641ae64d72da9b4554bcc3dd8377d33f509c8f082f5d52f32ccf8d8b9a"
+    },
+    "W": {
+     "key": "d0.L0.qkv.W",
+     "shape": [
+      768,
+      4096
+     ],
+     "dtype": "int8",
+     "sha256": "0f5c292510c4754da152107e48304f79901afa69fbbbe1b07cf273ceffa695c4"
+    },
+    "O": {
+     "key": "d0.L0.qkv.O",
+     "shape": [
+      768
+     ],
+     "dtype": "float32",
+     "sha256": "7c6b60141bc34c98d5236c1c725e4f137f024ef80efcf831883fad4fa07c7580"
+    }
+   },
+   "priced_d4g8": [
+    {
+     "i": 4,
+     "start": 379.2,
+     "end": 3797.8,
+     "cost": 3418.6,
+     "base_cost": 3418.6
+    }
+   ]
+  },
+  {
+   "rank": 0,
+   "L": 0,
+   "op": "SM.MATVEC",
+   "fmt": 3,
+   "tag": "o",
+   "m": 4096,
+   "K": 512,
+   "A_bf16_exact": false,
+   "arrays": {
+    "A": {
+     "key": "d0.L0.o.A",
+     "shape": [
+      512
+     ],
+     "dtype": "float32",
+     "sha256": "2fbba9d9282e4efbf187c45aba6c30ebb54a0e7428008f8a691dc47c37957b58"
+    },
+    "W": {
+     "key": "d0.L0.o.W",
+     "shape": [
+      4096,
+      512
+     ],
+     "dtype": "int8",
+     "sha256": "348447d46d60cfaba4e4a0c9042cc94b1afb86bb5b63aa3ed9ab61a49d410102"
+    },
+    "O": {
+     "key": "d0.L0.o.O",
+     "shape": [
+      4096
+     ],
+     "dtype": "float32",
+     "sha256": "a52f8e51108aae38f9023ee2b862d0e425707e847a2063c3f07f7488bb441e8c"
+    }
+   },
+   "priced_d4g8": [
+    {
+     "i": 20,
+     "start": 7389.5,
+     "end": 9784.1,
+     "cost": 2394.6,
+     "base_cost": 2394.6
+    }
+   ]
+  },
+  {
+   "rank": 0,
+   "L": 0,
+   "op": "SM.MATVEC",
+   "fmt": 3,
+   "tag": "gu",
+   "m": 3072,
+   "K": 4096,
+   "A_bf16_exact": true,
+   "arrays": {
+    "A": {
+     "key": "d0.L0.gu.A",
+     "shape": [
+      4096
+     ],
+     "dtype": "float32",
+     "sha256": "d8ed848a5232c9a93580995fe2cfb1d5ed8c3db2cb535bebeacedcbafd3e7839"
+    },
+    "W": {
+     "key": "d0.L0.gu.W",
+     "shape": [
+      3072,
+      4096
+     ],
+     "dtype": "int8",
+     "sha256": "f4fc05857890553fcb7ef6f0436c37e8e5eb8057acba11f530a9750877330714"
+    },
+    "O": {
+     "key": "d0.L0.gu.O",
+     "shape": [
+      3072
+     ],
+     "dtype": "float32",
+     "sha256": "bc6f5a31f8b6deec891e5d171291c7dc6576cc79d1b38fbe86cff44722aefc66"
+    }
+   },
+   "priced_d4g8": [
+    {
+     "i": 25,
+     "start": 11479.0,
+     "end": 24113.6,
+     "cost": 12634.6,
+     "base_cost": 12634.6
+    }
+   ]
+  },
+  {
+   "rank": 0,
+   "L": 0,
+   "op": "SM.MATVEC",
+   "fmt": 3,
+   "tag": "down",
+   "m": 2048,
+   "K": 3072,
+   "A_bf16_exact": true,
+   "arrays": {
+    "A": {
+     "key": "d0.L0.down.A",
+     "shape": [
+      3072
+     ],
+     "dtype": "float32",
+     "sha256": "6471f07c1c096fe65bbfd6366e64182e9a2c27cd8991129fcb76daab8fdef9db"
+    },
+    "W": {
+     "key": "d0.L0.down.W",
+     "shape": [
+      2048,
+      3072
+     ],
+     "dtype": "int8",
+     "sha256": "1d4f1373eec8a33c43077eb88cff0e4be4d71873bec4659d0b077688dcc8362b"
+    },
+    "O": {
+     "key": "d0.L0.down.O",
+     "shape": [
+      2048
+     ],
+     "dtype": "float32",
+     "sha256": "71684128f5b774586a7c5430b697cd8e4a9f0608d7c56efdffb518de8d4fbb08"
+    }
+   },
+   "priced_d4g8": [
+    {
+     "i": 30,
+     "start": 25180.1,
+     "end": 31670.7,
+     "cost": 6490.6,
+     "base_cost": 6490.6
+    }
+   ]
+  }
+ ],
+ "proof_pass": true,
+ "proof_failures": [],
+ "image_sha256": "b271dc1bf41883d5e71e99f31e32f566d65da343d72b5e7f7598615103c0ffaf",
+ "npz_sha256": "5fbf3de7deaf2d253e991f416b94e56c5dd7dd75022d01c9867eff68008faa6b",
+ "source_sha256": {
+  "hgi_sim/machine.py": "3afa99805a7ca0fdf0a006f84b73802f074646599f5046a23a1a8cd2e7788877",
+  "hgi_sim/qwen_compiler.py": "e31a03e5318f3aa9599a958014acf7f805dc3ff59d9a7613483bb0a5d49991c1",
+  "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+  "hbm_qwen_layer/qwen_d4g_proof.py": "570c8a8a22c4d5deac4f5955762691f634d92b3326c7f53cd071538929a68e50",
+  "qwen_r25_golden.py": "2a376d8a2c473efec9f62ba8b13ff75387cd8fde311e2ae1dcff2982e28f0867",
+  "hbm_layer_vehicle/qwen_sm_mv_kv.py": "9808a07bd62258a7a0697dd2fe80856e404dd94cc53265dc506e8f7028634db6"
+ },
+ "wall_s": 29.9,
+ "note": "captured at the SM.MATVEC unit call of the D4G8 programme (qwen_d4g_proof.run_stage); every capture reproduces the unit's raw FP32 O bit for bit (hgi_sim.lib.sm_int8)"
+}

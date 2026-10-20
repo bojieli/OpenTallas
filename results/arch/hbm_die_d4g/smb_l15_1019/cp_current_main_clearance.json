@@ -1,0 +1,192 @@
+{
+ "schema": "opentallas.hbm.cp_grant_current_census.v1",
+ "main_revision": "5a070059047e4e71e7a94681511d695a6abbdb0b",
+ "main_grants_sha256": "6a12a711c8c1e3e296bdae0a37bfb030166a34061374a32de1040cc7e4f2a84d",
+ "contract_sha256": "dc95a75aee00bee01212318ab75678c91a2d54a752400b5cb79663c6777fcad0",
+ "case_a_manifest_sha256": "a47934a5b49e77ab30a1028fd0955e4469a3b7a26a60ef4f815a8338d4cd555e",
+ "candidate_report_sha256": "64d1aaa65d75d12d48b586efde404cd171cfc629dc4d8c6b39212f6d0b39d452",
+ "checked_active_grants": 207,
+ "checked_prior_actual_placements": 1206,
+ "cp_instances": 16,
+ "required_clearance_um": 21.6,
+ "minima": [
+  {
+   "instance": "cp_svg_NW0",
+   "current_grant_nearest": [
+    22.89599999999973,
+    "fs_NW"
+   ],
+   "prior_case_a_nearest": [
+    22.89599999999973,
+    "fs_NW"
+   ]
+  },
+  {
+   "instance": "cp_svg_NW1",
+   "current_grant_nearest": [
+    127.22400000000198,
+    "sm_NW2"
+   ],
+   "prior_case_a_nearest": [
+    25.279999999998836,
+    "svg_NW1"
+   ]
+  },
+  {
+   "instance": "cp_svg_NW2",
+   "current_grant_nearest": [
+    127.22400000000198,
+    "sm_NW3"
+   ],
+   "prior_case_a_nearest": [
+    25.279999999998836,
+    "svg_NW2"
+   ]
+  },
+  {
+   "instance": "cp_svg_NW3",
+   "current_grant_nearest": [
+    127.22400000000198,
+    "sm_NW3"
+   ],
+   "prior_case_a_nearest": [
+    25.279999999998836,
+    "svg_NW3"
+   ]
+  },
+  {
+   "instance": "cp_svg_NW4",
+   "current_grant_nearest": [
+    127.22400000000198,
+    "sm_NW4"
+   ],
+   "prior_case_a_nearest": [
+    25.279999999998836,
+    "svg_NW4"
+   ]
+  },
+  {
+   "instance": "cp_svg_NW5",
+   "current_grant_nearest": [
+    127.22400000000198,
+    "sm_NW4"
+   ],
+   "prior_case_a_nearest": [
+    25.279999999998836,
+    "svg_NW5"
+   ]
+  },
+  {
+   "instance": "cp_svg_NW6",
+   "current_grant_nearest": [
+    127.22400000000198,
+    "sm_NW5"
+   ],
+   "prior_case_a_nearest": [
+    25.279999999998836,
+    "svg_NW6"
+   ]
+  },
+  {
+   "instance": "cp_svg_NW7",
+   "current_grant_nearest": [
+    127.22400000000198,
+    "sm_NW5"
+   ],
+   "prior_case_a_nearest": [
+    25.279999999998836,
+    "svg_NW7"
+   ]
+  },
+  {
+   "instance": "cp_svg_SW0",
+   "current_grant_nearest": [
+    22.89599999999973,
+    "fs_SW"
+   ],
+   "prior_case_a_nearest": [
+    22.89599999999973,
+    "fs_SW"
+   ]
+  },
+  {
+   "instance": "cp_svg_SW1",
+   "current_grant_nearest": [
+    129.3839999999998,
+    "sm_SW2"
+   ],
+   "prior_case_a_nearest": [
+    23.200000000000045,
+    "svg_SW1"
+   ]
+  },
+  {
+   "instance": "cp_svg_SW2",
+   "current_grant_nearest": [
+    129.3839999999998,
+    "sm_SW3"
+   ],
+   "prior_case_a_nearest": [
+    23.200000000000045,
+    "svg_SW2"
+   ]
+  },
+  {
+   "instance": "cp_svg_SW3",
+   "current_grant_nearest": [
+    129.3839999999998,
+    "sm_SW3"
+   ],
+   "prior_case_a_nearest": [
+    23.200000000000045,
+    "svg_SW3"
+   ]
+  },
+  {
+   "instance": "cp_svg_SW4",
+   "current_grant_nearest": [
+    129.3839999999998,
+    "sm_SW4"
+   ],
+   "prior_case_a_nearest": [
+    23.200000000000045,
+    "svg_SW4"
+   ]
+  },
+  {
+   "instance": "cp_svg_SW5",
+   "current_grant_nearest": [
+    129.3839999999998,
+    "sm_SW4"
+   ],
+   "prior_case_a_nearest": [
+    23.200000000000045,
+    "svg_SW5"
+   ]
+  },
+  {
+   "instance": "cp_svg_SW6",
+   "current_grant_nearest": [
+    129.3839999999998,
+    "sm_SW5"
+   ],
+   "prior_case_a_nearest": [
+    23.200000000000045,
+    "svg_SW6"
+   ]
+  },
+  {
+   "instance": "cp_svg_SW7",
+   "current_grant_nearest": [
+    129.3839999999998,
+    "sm_SW5"
+   ],
+   "prior_case_a_nearest": [
+    23.200000000000045,
+    "svg_SW7"
+   ]
+  }
+ ],
+ "violations": [],
+ "qualification": "CP16 grant-only static occupancy proof against currentmain active grants and prior actual GEN2e placement. Fresh complete successor GEN after source-bound synthesis/lanes is still required; native/routed view admission remains separate."
+}

@@ -1,0 +1,13 @@
+# leg ctlm_mu mem 32 threads 8 2026-10-19T06:06:06-07:00
+# cmd: bash rtl/test/mu_qwen_seq/run_mu_ctlm.sh /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/ctlm_mu/w mu
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-pve1        admits    62 GB (avail 87, growth 43, headroom 0, waiters 0/0 GB) load 10/28 running 7 disk 1227 GB 
+ot-run: ot-agidock128  admits    81 GB (avail 81, growth 24, headroom 0, waiters 0/0 GB) load 11/64 running 8 disk 310 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-621666-1792415166 after 1 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-621666-1792415166): exit 0
+# ot-run rc=0 2026-10-19T06:07:13-07:00

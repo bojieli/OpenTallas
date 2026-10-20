@@ -1,0 +1,253 @@
+#!/usr/bin/env python3
+"""QLB-GEN 10-18 (LAYERBENCH-QWEN G-C1): compiler-assigned elaboration parameters of the Qwen compute-die masters.
+
+The die netlist names every hardened master by its base module (OpenSTA reads no #(...) overrides), so the parameters a
+master is elaborated with go to the sidecar DIE_V.params.json (tools/die_port_bind.py --params; the GEN writes it from
+m['die_master_params'], tools/qwen_tp8/relay_data_run.py).  Two compute-die masters carry a SENTINEL default that traps
+elaboration until the compiler assigns the value from the die as built:
+
+  qfd_tt_ctlm_dv.XPF_TRANSPORT_EDGES (default -1 -> g_unassigned_arm_route $error at t = 0, LAYERBENCH G-C1)
+      = the die pipeline from the xpf registered pins to the tap in the W5 slice column: the hr pin register (one edge,
+        rtl/qwen_dv/qfd_tt_ctlm_dv.sv header: 'XPF_TRANSPORT_EDGES included') + the lane cycles of the tt_ctlm.hr ->
+        dvs_W5 bus as built (tools/qwen_split/lane_groups.lane_cycles: forwarded lane E + 1 landing o register, plain
+        relay chain n, direct 0).  ot_qfd_xpf_static_schedule checks every compiled arm cycle >= issue + this + 3.
+  qfd_d2d_static.TXDP (default 0 with PR 1 -> D2D_TXDP_NOT_COMPILED module trap, QXF-LINK 6ef1a097f)
+      = the compiler's per-TX-port producer capture latency, D2D_TXDP_C of the production die-sequencer image
+        rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh (tools/qwen_split/d2d_cal_image_production.sh); the image
+        records the die seam stages it was compiled with, and the layer compiler (tools/qwen_layerbench/layer_compile.py)
+        re-derives TXD from the die-run table -- a die whose seam stages moved needs a recompiled image.
+
+    die_params.py audit DIE_V --port-bind port_bind.json [--params DIE_V.params.json] [--lanes fwd_lanes.json] --out A.json
+        fail closed (exit 1): (a) every die master whose RTL traps a sentinel-default parameter (a generate-if whose body
+        raises $error / $fatal or instantiates a *NOT_COMPILED* / *__set_* trap module) must get that parameter from the
+        sidecar, with a non-sentinel value; (b) XPF_TRANSPORT_EDGES == 1 + the hr lane cycles re-derived from die.v (+
+        fwd_lanes.json E); (c) TXDP == D2D_TXDP_C of the committed image (all four bytes nonzero).
+"""
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(ROOT / 'tools'))
+import lane_groups as LG  # noqa: E402
+
+TT_MASTER, TT_PORT, TT_SINK = 'qfd_tt_ctlm_dv', 'hr', 'dvs_W5'
+HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one register after xpf (header 'hr -> W5 hr_wi')
+D2D_MASTER = 'qfd_d2d_static'
+IMAGE = ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+TRAP_BODY = re.compile(r'\$error|\$fatal|\w*NOT_COMPILED\w*|\w+__set_\w+')
+GEN_IF = re.compile(r'generate\s+if\s*\(', re.S)
+SENTINELS = (-1, 0)
+
+
+# ------------------------------------------------------------------------------------------------------------ values
+def lane_age(row):
+    """core edges a bus adds between its two blocks (None = reset lane: no data age)."""
+    if row is None:
+        return 0
+    return LG.lane_cycles(row)
+
+
+def xpf_transport_edges(hr_rows):
+    """hr_rows: [(bid, row-or-None)] -- every bus leaving tt_ctlm.hr toward the W5 column (row None = direct wire).
+    -> (T, record).  One bus, one latency: hr feeds ONE consumer column; several sink buses must agree."""
+    if not hr_rows:
+        raise ValueError(f'{TT_MASTER}.{TT_PORT}: no bus from the hr pins (no XPF transport to assign)')
+    ages = {bid: lane_age(r) for bid, r in hr_rows}
+    if None in ages.values() or len(set(ages.values())) != 1:
+        raise ValueError(f'{TT_MASTER}.{TT_PORT}: hr buses arrive on different edges {ages} (one latency per bus)')
+    age = next(iter(ages.values()))
+    rows = [dict(bid=bid, kind='direct' if r is None else ('fwd' if r.get('E') is not None else 'plain'),
+                 n=None if r is None else r.get('n'), E=None if r is None else r.get('E'),
+                 K=None if r is None else r.get('K'), lane_cycles=ages[bid]) for bid, r in hr_rows]
+    return HR_PIN_REG + age, dict(XPF_TRANSPORT_EDGES=HR_PIN_REG + age, hr_pin_register=HR_PIN_REG, lane_cycles=age,
+                                  buses=rows, rule='1 (hr pin register) + lane_groups.lane_cycles(hr bus): fwd E + 1, '
+                                                   'plain n, direct 0')
+
+
+def txdp_from_image(path=IMAGE):
+    t = Path(path).read_text()
+    m = re.search(r"localparam\s*\[31:0\]\s*D2D_TXDP_C\s*=\s*32'h([0-9a-fA-F_]+)\s*;(.*)", t)
+    if not m:
+        raise ValueError(f'{path}: no D2D_TXDP_C line')
+    v = int(m.group(1).replace('_', ''), 16)
+    if any(((v >> (8 * p)) & 0xff) == 0 for p in range(4)):
+        raise ValueError(f'{path}: D2D_TXDP_C {v:#010x} has an uncompiled (0) port')
+    st = re.search(r"die stages (\{.*\})", m.group(2))
+    return v, dict(TXDP=v, image=str(Path(path).relative_to(ROOT)) if str(path).startswith(str(ROOT)) else str(path),
+                   ports=[(v >> (8 * p)) & 0xff for p in range(4)], die_stages=st.group(1) if st else None)
+
+
+def gen_params(insts, hr_rows, image=IMAGE):
+    """the GEN's assignments: insts = [(name, master)] of the die model -> {master: {param: value, _source}}."""
+    masters = {mst for _, mst in insts}
+    out, rec = {}, {}
+    if TT_MASTER in masters:
+        T, r = xpf_transport_edges(hr_rows)
+        out[TT_MASTER] = dict(XPF_TRANSPORT_EDGES=T, _source='QLB-GEN G-C1: 1 hr pin register + hr lane cycles as built '
+                              f"({', '.join(f'{b[0]} {b[1]}' for b in [(x['bid'], x['kind']) for x in r['buses']])})")
+        rec['xpf'] = r
+    if D2D_MASTER in masters:
+        v, r = txdp_from_image(image)
+        out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")
+        rec['txdp'] = r
+    return out, rec
+
+
+# ------------------------------------------------------------------------------------------------------------ RTL traps
+def trapped_params(mod):
+    """sentinel-default parameters a module traps on: identifiers of a generate-if condition whose body raises."""
+    import die_port_bind as DPB
+    body = DPB.strip_comments(mod.body)
+    env = mod.env()
+    out = {}
+    for m in GEN_IF.finditer(body):
+        j = m.end() - 1
+        k = DPB._closing_paren(body, j)
+        cond = body[j + 1:k]
+        blk = body[k + 1:k + 400]
+        end = re.search(r'\bend\b', blk)
+        if not TRAP_BODY.search(blk[:end.start() if end else len(blk)]):
+            continue
+        for p in sorted(set(re.findall(r'[A-Za-z_]\w*', cond)) & set(mod.params)):
+            if env.get(p) in SENTINELS:
+                out[p] = dict(default=mod.params[p], condition=' '.join(cond.split()))
+    return out
+
+
+def seam_txd_c(st):
+    """Compute TXD from the same seam stages used by compiler and bind."""
+    import d2d_link_calendar as DLC
+    full = dict(st, **{k: 0 for k in DLC.STAGE_NAMES if k not in st})
+    return [x + q for x, q in zip(DLC.producer_txd_c(full), DLC.PINREG_EXT['C'])]
+
+
+def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, compiled=None):
+    import die_port_bind as DPB
+    import lane_latency_audit as LLA
+    pj = Path(params) if params else Path(str(die_v) + '.params.json')
+    prm = json.loads(pj.read_text()).get('masters', {}) if pj.exists() else {}
+    pb = json.loads(Path(port_bind).read_text())
+    fails, req = [], {}
+    for mst, r in sorted(pb['masters'].items()):
+        path = r.get('rtl')
+        if not path:
+            continue                                   # model / no RTL (die_port_bind reports it)
+        path = str(path if Path(path).is_absolute() else Path(src) / path)
+        if not Path(path).exists():
+            fails.append(f'{mst}: RTL {path} not found (cannot audit its parameters)')
+            continue
+        mods = {m_.name: m_ for m_ in DPB.parse_modules(Path(path).read_text(errors='replace'), path)}
+        if mst not in mods:
+            continue
+        tp = trapped_params(mods[mst])
+        if not tp:
+            continue
+        req[mst] = tp
+        for p, d in tp.items():
+            v = prm.get(mst, {}).get(p)
+            if v is None:
+                fails.append(f'{mst}.{p}: trapped sentinel parameter (default {d["default"]}, trap if {d["condition"]}) '
+                             f'not assigned in {pj.name if pj.exists() else "the params sidecar (missing)"}')
+            elif v in SENTINELS:
+                fails.append(f'{mst}.{p} = {v}: the sentinel value')
+    # (b) XPF re-derived from the netlist as built
+    text = Path(die_v).read_text()
+    ins = {m.group(2): (m.group(1), dict(re.findall(r'\.(\w+)\(([^()]*)\)', m.group(3))))
+           for m in re.finditer(r'^\s*(\w+)\s+(\w+)\s*\((.*)\);\s*$', text, re.M)}
+    xr = None
+    tt = [(n, c) for n, (mst, c) in ins.items() if mst == TT_MASTER]
+    if tt:
+        net = LLA.parse(die_v)
+        fl = {r['bid']: r for r in (json.loads(Path(lanes).read_text()).get('lanes', []) if lanes and Path(lanes).exists() else [])}
+        hr_net = tt[0][1].get(TT_PORT)
+        rows = []
+        if hr_net is None:
+            fails.append(f'{TT_MASTER}.{TT_PORT} not connected in die.v')
+        else:
+            bid = hr_net[2:] if hr_net.startswith('n_') else hr_net
+            sink = [(n, p) for n, (mst, c) in ins.items() if n != tt[0][0] and not n.startswith('rly_')
+                    for p, x in c.items() if re.sub(r'__r\d+$', '', x) == hr_net]
+            L = net.get(bid)
+            if L is None:
+                rows.append((bid, None))
+            elif 'fwd' in L['kind']:
+                E = (fl.get(bid) or {}).get('E')
+                if E is None:
+                    fails.append(f'{bid}: forwarded hr lane without an E (no fwd_lanes.json record)')
+                rows.append((bid, dict(n=L['n'], E=E, K=L['K'])))
+            else:
+                rows.append((bid, dict(n=L['n'], E=None, K=None)))
+            if not sink:
+                fails.append(f'{bid}: no consumer of the hr bus in die.v')
+        try:
+            T, xr = xpf_transport_edges(rows) if rows and all(r is None or r.get('E') is not None or r.get('n') for _, r in rows) else (None, None)
+        except ValueError as e:
+            T = None
+            fails.append(str(e))
+        if xr is not None:
+            xr['sinks'] = [f'{n}.{p}' for n, p in sink]
+        got = prm.get(TT_MASTER, {}).get('XPF_TRANSPORT_EDGES')
+        if T is not None and got is not None and int(got) != T:
+            fails.append(f'{TT_MASTER}.XPF_TRANSPORT_EDGES {got} != {T} re-derived from die.v (1 hr reg + lane cycles '
+                         f'{xr["lane_cycles"]})')
+    # (c) TXDP == the committed production image
+    tr = None
+    if any(mst == D2D_MASTER for mst, _ in ins.values()):
+        try:
+            v, tr = txdp_from_image(image)
+            got = prm.get(D2D_MASTER, {}).get('TXDP')
+            if got is not None and int(got) != v:
+                fails.append(f'{D2D_MASTER}.TXDP {int(got):#010x} != image D2D_TXDP_C {v:#010x}')
+        except ValueError as e:
+            fails.append(str(e))
+    # (d) the layer compiler's TXD for THIS die (tools/qwen_layerbench/layer_compile.py manifest on this die's table):
+    # the image's die stages must be this die's seam ages, else the D2D calendar is compiled for another die
+    if compiled and tr is not None:
+        man = json.loads(Path(compiled).read_text())
+        want = man['txd']['C']
+        wv = sum(int(x) << (8 * i) for i, x in enumerate(want))
+        tr.update(compiled_txd_c=want, compiled_stages=man.get('stages'), compiled_manifest=str(compiled))
+        got = prm.get(D2D_MASTER, {}).get('TXDP')
+        if got is not None and int(got) != wv:
+            fails.append(f'{D2D_MASTER}.TXDP {int(got):#010x} != {wv:#010x} = the layer compiler\'s TXD {want} for this die '
+                         f'(stages {man.get("stages")}); recompile the image: D2D_DIE_STAGES=<these stages> '
+                         'tools/qwen_split/d2d_cal_image_production.sh')
+    return dict(schema='opentallas.qwen_split.die_param_audit.v1', die_v=str(die_v), params=str(pj) if pj.exists() else None,
+                lanes=str(lanes) if lanes else None, trapped=req, xpf=xr, txdp=tr,
+                assigned={m: {k: v for k, v in p.items() if not k.startswith('_')} for m, p in prm.items()},
+                verdict='FAIL' if fails else 'PASS', fails=fails)
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sp = ap.add_subparsers(dest='cmd', required=True)
+    a_ = sp.add_parser('audit')
+    a_.add_argument('die_v')
+    a_.add_argument('--port-bind', required=True)
+    a_.add_argument('--params')
+    a_.add_argument('--lanes')
+    a_.add_argument('--image', default=str(IMAGE))
+    a_.add_argument('--src', default=str(ROOT), help='source root the port-bind record\'s relative RTL paths resolve against')
+    a_.add_argument('--compiled', help='layer_compile.py manifest.json compiled on this die (TXD check)')
+    a_.add_argument('--out')
+    a = ap.parse_args(argv)
+    lanes = a.lanes or (str(Path(a.die_v).parent / 'fwd_lanes.json') if (Path(a.die_v).parent / 'fwd_lanes.json').exists() else None)
+    rec = audit(a.die_v, a.port_bind, a.params, lanes, a.image, a.src, a.compiled)
+    if a.out:
+        Path(a.out).write_text(json.dumps(rec, indent=1) + '\n')
+    for f in rec['fails']:
+        print('FAIL ' + f)
+    x = rec['xpf'] or {}
+    print(f"DIE_PARAM_AUDIT {rec['verdict']} trapped={sum(len(v) for v in rec['trapped'].values())} "
+          f"XPF_TRANSPORT_EDGES={x.get('XPF_TRANSPORT_EDGES')} TXDP={hex(rec['txdp']['TXDP']) if rec['txdp'] else None} "
+          f"fails={len(rec['fails'])}")
+    return 0 if rec['verdict'] == 'PASS' else 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

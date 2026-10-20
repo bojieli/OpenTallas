@@ -1,0 +1,68 @@
+--- a/rtl/qwen_dv/qfd_dv_slice2.sv	2026-10-18 23:49:31.833341554 -0700
++++ b/rtl/qwen_dv/qfd_dv_slice2.sv	2026-10-18 23:49:31.850341877 -0700
+@@ -32,6 +32,7 @@
+ module qfd_dv_slice2 #(
+     parameter integer MUT = 0,
+     parameter integer SU_TLS = 1,
++    parameter integer MU_NU = 1,               // MU-QWEN R4: users of the LM-head running argmax (1 = single-user, today)
+     parameter integer DIR = 0                   // documentation of the face wrapper (0 W row, 1 E row); no logic
+ ) (
+     input  wire           ck,
+@@ -197,41 +198,16 @@
+         .tok_own(tok_own), .tok_val(tok_val),
+         .busy(sc_busy), .fault(sc_fault));
+     // ------------------------------------------------------------------ LM-head running argmax (max, lowest index)
+-    // Station results of an op armed with STN amax (cmd[50]) enter a 16-leaf, 4-level registered compare tree (the
+-    // ot_qwen_me_spport_w12 key order: okey(v) = v[31] ? ~v : {1, v[30:0]}; equal keys -> the lower row index), then
+-    // the running best.  AMAX command (kind 6): [4] clear, [5] emit the running best as this slice's candidate.
+-    reg stn_amax;
+-    always @(posedge ck or negedge rst) if (!rst) stn_amax <= 1'b0; else if (c_stn) stn_amax <= cmd_q[50];
++    // qfd_dv_amax_mu (rtl/qwen_dv/mu): MU_NU = 1 is the former in-line block statement for statement (tree, running best,
++    // AMAX [4] clear / [5] emit); MU_NU 2..4 (MU-QWEN R4) keeps one running best per user for the chunked LM head
++    // (STN user cmd[52:51], AMAX user cmd[9:8]; schedule violations are a sticky port fault).
+     function automatic [31:0] okey(input [31:0] v);
+         okey = v[31] ? ~v : {1'b1, v[30:0]};
+     endfunction
+-    function automatic [56:0] amb(input [56:0] a, input [56:0] b);   // {valid, idx 24, value 32}
+-        amb = (a[56] && (!b[56] || okey(a[31:0]) > okey(b[31:0]) ||
+-               (okey(a[31:0]) == okey(b[31:0]) && a[55:32] < b[55:32]))) ? a : b;
+-    endfunction
+-    reg [16*57-1:0] al0;
+-    reg [8*57-1:0]  al1;
+-    reg [4*57-1:0]  al2;
+-    reg [2*57-1:0]  al3;
+-    reg [56:0]      al4, am_run;
+-    integer q;
+-    always @(posedge ck or negedge rst)
+-        if (!rst) begin al0 <= 0; al1 <= 0; al2 <= 0; al3 <= 0; al4 <= 0; am_run <= 0; end
+-        else begin
+-            for (q = 0; q < 16; q = q + 1)
+-                al0[57*q +: 57] <= {r_v && stn_amax, r_addr + 24'(q), r_d[32*q +: 32]};
+-            for (q = 0; q < 8; q = q + 1) al1[57*q +: 57] <= amb(al0[57*(2*q) +: 57], al0[57*(2*q+1) +: 57]);
+-            for (q = 0; q < 4; q = q + 1) al2[57*q +: 57] <= amb(al1[57*(2*q) +: 57], al1[57*(2*q+1) +: 57]);
+-            for (q = 0; q < 2; q = q + 1) al3[57*q +: 57] <= amb(al2[57*(2*q) +: 57], al2[57*(2*q+1) +: 57]);
+-            al4 <= amb(al3[56:0], al3[113:57]);
+-            if (go && kind == 3'd6 && cmd_q[4]) am_run <= 57'd0;
+-            else am_run <= amb(am_run, al4);
+-        end
+-    reg am_emit;
+-    always @(posedge ck or negedge rst) if (!rst) am_emit <= 1'b0; else am_emit <= go && kind == 3'd6 && cmd_q[5];
+-    assign am_v = am_emit && am_run[56];
+-    assign am_idx = am_run[55:32];
+-    assign am_val = am_run[31:0];
++    wire am_emit_empty, am_mu_fault;
++    qfd_dv_amax_mu #(.NU(MU_NU)) u_amax (.ck(ck), .rst(rst), .c_stn(c_stn), .stn_amax_bit(cmd_q[50]), .stn_user(cmd_q[52:51]),
++        .r_v(r_v), .r_addr(r_addr), .r_d(r_d), .c_am(go && kind == 3'd6), .am_clr(cmd_q[4]), .am_emit_cmd(cmd_q[5]),
++        .am_user(cmd_q[9:8]), .am_v(am_v), .am_idx(am_idx), .am_val(am_val), .emit_empty(am_emit_empty), .mu_fault(am_mu_fault));
+     // ------------------------------------------------------------------ stream
+     wire        tw_we, stm_fault, xt_v, xt_bad;
+     wire [23:0] xt_a;
+@@ -345,7 +321,7 @@
+         if (!rst) begin port_fault <= 1'b0; ar_rank <= 3'd0; ar_last <= 1'b0; end
+         else begin
+             port_fault <= port_fault | w16_coll | w1_coll | win_bad | red_bad | dd_bad | (ar_v && ar_q[516]) |
+-                          (c_xc && cmd_q[5:4] != 2'd0) | (am_emit && !am_run[56]) | (su_go && !su_ready) |
++                          (c_xc && cmd_q[5:4] != 2'd0) | am_emit_empty | am_mu_fault | (su_go && !su_ready) |
+                           g_fault | (c_am && cmd_q[7] && g_arm);
+             if (ar_v) begin ar_rank <= ar_q[515:513]; ar_last <= ar_q[512]; end
+         end

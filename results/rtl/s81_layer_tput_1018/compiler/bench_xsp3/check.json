@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.s81_dv.bench_xsp.v1",
+ "bench": "tools/s81_dv/layer_prog/xs/xs_bench.sh (+PH)",
+ "lowering": "tools/s81_dv/layer_prog/xs_place.py",
+ "host": "ot-epyc4",
+ "die_frame": "u_f_0L00",
+ "runs": [
+  {
+   "name": "p44",
+   "op": "ffn.down",
+   "mat": "shared.w2",
+   "fmt": "fp8",
+   "field_phase": 44,
+   "nphases": 65,
+   "calendar": "calendar_unmeasured",
+   "elem_class": [
+    "fp8",
+    1,
+    2
+   ],
+   "mutant": null,
+   "words": 10,
+   "fixture_rows": 4,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    -12,
+    -4,
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp3/run_p44.log",
+   "pass": false
+  },
+  {
+   "name": "p45",
+   "op": "ffn.down",
+   "mat": "shared.w2",
+   "fmt": "fp8",
+   "field_phase": 45,
+   "nphases": 65,
+   "calendar": "calendar_unmeasured",
+   "elem_class": [
+    "fp8",
+    1,
+    2
+   ],
+   "mutant": null,
+   "words": 10,
+   "fixture_rows": 4,
+   "value_errors": [],
+   "ret_edge_offsets_vs_plan": [
+    -12,
+    -4,
+    0
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp3/run_p45.log",
+   "pass": false
+  }
+ ],
+ "base_pass": false,
+ "mutants_fail": true,
+ "measurements": [
+  {
+   "name": "p44",
+   "elem_class": [
+    "fp8",
+    1,
+    2
+   ],
+   "offsets": [
+    -12,
+    -4,
+    0
+   ],
+   "values_exact": true
+  },
+  {
+   "name": "p45",
+   "elem_class": [
+    "fp8",
+    1,
+    2
+   ],
+   "offsets": [
+    -12,
+    -4,
+    0
+   ],
+   "values_exact": true
+  }
+ ],
+ "pass": false
+}

@@ -1,0 +1,11 @@
+# leg ctlm_nsl12 mem 96 threads 8 2026-10-19T12:29:03-07:00
+# cmd: bash rtl/test/mu_qwen_seq/run_mu_ctlm.sh /srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w ctlm
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc7       admits   912 GB (avail 739, growth 101, headroom 0, waiters 0/0 GB) load 54/96 running 49 disk 6318 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4123857-1792438143 after 1 s

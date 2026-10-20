@@ -7,13 +7,13 @@
  "pinreg": true,
  "txd": {
   "C": [
-   6,
+   8,
    3,
    1,
    9
   ],
   "K": [
-   23,
+   24,
    4,
    3,
    3
@@ -21,13 +21,13 @@
  },
  "raw_txd": {
   "C": [
-   4,
+   6,
    1,
    1,
    7
   ],
   "K": [
-   21,
+   22,
    2,
    1,
    1
@@ -38,7 +38,7 @@
   "CS_RXV": 2,
   "CS_RXP": 2,
   "CS_X3S": 2,
-  "SC_TX": 0,
+  "SC_TX": 2,
   "SC_X3": 2,
   "KS_RXV": 11,
   "KS_RXP": 11,
@@ -55,22 +55,23 @@
   "qknorm_rope": 101,
   "attn_kv": 1816
  },
- "attn_extend_X": 5,
+ "attn_extend_X": 7,
  "extension": {
-  "X": 5,
+  "X": 7,
   "q0": 599,
-  "arr_cmd": 617,
-  "cmd_at_programme": 630,
-  "r0_needed": 2369,
+  "arr_cmd": 619,
+  "cmd_at_programme": 632,
+  "r0_needed": 2371,
   "r0_priced": 2364,
-  "kv_run": 627
+  "kv_run": 629
  },
  "kv_programme": {
   "RX_CMD": 2,
   "SERVICE_END": 1777,
   "STRETCH": 1,
   "TX_FIRST": 1750,
-  "source": "f05f9338f:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv u_attn_cal",
+  "KV_CODEC": 2,
+  "source": "7495ad559:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv u_attn_cal",
   "law": "TX_FIRST = RX_CMD + 2 + SERVICE_END - 31 (qkd_attn_cal_gen STRETCH = 1; TOKEN-XDIE-QWEN measured)"
  },
  "entries": {
@@ -88,9 +89,9 @@
    "rx_port": 0,
    "kind": 1,
    "beat": 0,
-   "arrive": 617,
-   "rx_out": 619,
-   "wr": 605
+   "arrive": 619,
+   "rx_out": 621,
+   "wr": 607
   },
   {
    "seg": 0,
@@ -100,9 +101,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 0,
-   "arrive": 618,
-   "rx_out": 620,
-   "wr": 606
+   "arrive": 620,
+   "rx_out": 622,
+   "wr": 608
   },
   {
    "seg": 0,
@@ -112,9 +113,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 1,
-   "arrive": 619,
-   "rx_out": 621,
-   "wr": 607
+   "arrive": 621,
+   "rx_out": 623,
+   "wr": 609
   },
   {
    "seg": 0,
@@ -124,9 +125,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 2,
-   "arrive": 620,
-   "rx_out": 622,
-   "wr": 608
+   "arrive": 622,
+   "rx_out": 624,
+   "wr": 610
   },
   {
    "seg": 0,
@@ -136,9 +137,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 3,
-   "arrive": 621,
-   "rx_out": 623,
-   "wr": 609
+   "arrive": 623,
+   "rx_out": 625,
+   "wr": 611
   },
   {
    "seg": 0,
@@ -148,9 +149,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 4,
-   "arrive": 622,
-   "rx_out": 624,
-   "wr": 610
+   "arrive": 624,
+   "rx_out": 626,
+   "wr": 612
   },
   {
    "seg": 0,
@@ -160,9 +161,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 5,
-   "arrive": 623,
-   "rx_out": 625,
-   "wr": 611
+   "arrive": 625,
+   "rx_out": 627,
+   "wr": 613
   },
   {
    "seg": 0,
@@ -172,9 +173,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 6,
-   "arrive": 624,
-   "rx_out": 626,
-   "wr": 612
+   "arrive": 626,
+   "rx_out": 628,
+   "wr": 614
   },
   {
    "seg": 0,
@@ -184,9 +185,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 7,
-   "arrive": 625,
-   "rx_out": 627,
-   "wr": 613
+   "arrive": 627,
+   "rx_out": 629,
+   "wr": 615
   },
   {
    "seg": 0,
@@ -196,9 +197,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 8,
-   "arrive": 626,
-   "rx_out": 628,
-   "wr": 614
+   "arrive": 628,
+   "rx_out": 630,
+   "wr": 616
   },
   {
    "seg": 0,
@@ -208,9 +209,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 9,
-   "arrive": 627,
-   "rx_out": 629,
-   "wr": 615
+   "arrive": 629,
+   "rx_out": 631,
+   "wr": 617
   },
   {
    "seg": 0,
@@ -220,9 +221,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 10,
-   "arrive": 628,
-   "rx_out": 630,
-   "wr": 616
+   "arrive": 630,
+   "rx_out": 632,
+   "wr": 618
   },
   {
    "seg": 0,
@@ -232,9 +233,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 11,
-   "arrive": 629,
-   "rx_out": 631,
-   "wr": 617
+   "arrive": 631,
+   "rx_out": 633,
+   "wr": 619
   },
   {
    "seg": 0,
@@ -244,9 +245,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 12,
-   "arrive": 630,
-   "rx_out": 632,
-   "wr": 618
+   "arrive": 632,
+   "rx_out": 634,
+   "wr": 620
   },
   {
    "seg": 0,
@@ -256,9 +257,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 13,
-   "arrive": 631,
-   "rx_out": 633,
-   "wr": 619
+   "arrive": 633,
+   "rx_out": 635,
+   "wr": 621
   },
   {
    "seg": 0,
@@ -268,9 +269,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 14,
-   "arrive": 632,
-   "rx_out": 634,
-   "wr": 620
+   "arrive": 634,
+   "rx_out": 636,
+   "wr": 622
   },
   {
    "seg": 0,
@@ -280,9 +281,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 15,
-   "arrive": 633,
-   "rx_out": 635,
-   "wr": 621
+   "arrive": 635,
+   "rx_out": 637,
+   "wr": 623
   },
   {
    "seg": 0,
@@ -292,9 +293,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 16,
-   "arrive": 634,
-   "rx_out": 636,
-   "wr": 622
+   "arrive": 636,
+   "rx_out": 638,
+   "wr": 624
   },
   {
    "seg": 0,
@@ -304,9 +305,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 17,
-   "arrive": 635,
-   "rx_out": 637,
-   "wr": 623
+   "arrive": 637,
+   "rx_out": 639,
+   "wr": 625
   },
   {
    "seg": 0,
@@ -316,9 +317,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 18,
-   "arrive": 636,
-   "rx_out": 638,
-   "wr": 624
+   "arrive": 638,
+   "rx_out": 640,
+   "wr": 626
   },
   {
    "seg": 0,
@@ -328,9 +329,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 19,
-   "arrive": 637,
-   "rx_out": 639,
-   "wr": 625
+   "arrive": 639,
+   "rx_out": 641,
+   "wr": 627
   },
   {
    "seg": 0,
@@ -340,9 +341,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 20,
-   "arrive": 638,
-   "rx_out": 640,
-   "wr": 626
+   "arrive": 640,
+   "rx_out": 642,
+   "wr": 628
   },
   {
    "seg": 0,
@@ -352,9 +353,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 21,
-   "arrive": 639,
-   "rx_out": 641,
-   "wr": 627
+   "arrive": 641,
+   "rx_out": 643,
+   "wr": 629
   },
   {
    "seg": 0,
@@ -364,9 +365,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 22,
-   "arrive": 640,
-   "rx_out": 642,
-   "wr": 628
+   "arrive": 642,
+   "rx_out": 644,
+   "wr": 630
   },
   {
    "seg": 0,
@@ -376,9 +377,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 23,
-   "arrive": 641,
-   "rx_out": 643,
-   "wr": 629
+   "arrive": 643,
+   "rx_out": 645,
+   "wr": 631
   },
   {
    "seg": 0,
@@ -388,9 +389,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 24,
-   "arrive": 642,
-   "rx_out": 644,
-   "wr": 630
+   "arrive": 644,
+   "rx_out": 646,
+   "wr": 632
   },
   {
    "seg": 0,
@@ -400,9 +401,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 25,
-   "arrive": 643,
-   "rx_out": 645,
-   "wr": 631
+   "arrive": 645,
+   "rx_out": 647,
+   "wr": 633
   },
   {
    "seg": 0,
@@ -412,9 +413,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 26,
-   "arrive": 644,
-   "rx_out": 646,
-   "wr": 632
+   "arrive": 646,
+   "rx_out": 648,
+   "wr": 634
   },
   {
    "seg": 0,
@@ -424,9 +425,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 27,
-   "arrive": 645,
-   "rx_out": 647,
-   "wr": 633
+   "arrive": 647,
+   "rx_out": 649,
+   "wr": 635
   },
   {
    "seg": 0,
@@ -436,9 +437,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 28,
-   "arrive": 646,
-   "rx_out": 648,
-   "wr": 634
+   "arrive": 648,
+   "rx_out": 650,
+   "wr": 636
   },
   {
    "seg": 0,
@@ -448,9 +449,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 29,
-   "arrive": 647,
-   "rx_out": 649,
-   "wr": 635
+   "arrive": 649,
+   "rx_out": 651,
+   "wr": 637
   },
   {
    "seg": 0,
@@ -460,9 +461,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 30,
-   "arrive": 648,
-   "rx_out": 650,
-   "wr": 636
+   "arrive": 650,
+   "rx_out": 652,
+   "wr": 638
   },
   {
    "seg": 0,
@@ -472,9 +473,9 @@
    "rx_port": 0,
    "kind": 2,
    "beat": 31,
-   "arrive": 649,
-   "rx_out": 651,
-   "wr": 637
+   "arrive": 651,
+   "rx_out": 653,
+   "wr": 639
   },
   {
    "seg": 0,
@@ -539,38 +540,14 @@
   {
    "seg": 0,
    "src": "K",
-   "cyc": 2369,
-   "tx_port": 0,
-   "rx_port": 0,
-   "kind": 3,
-   "beat": 0,
-   "arrive": 2404,
-   "rx_out": 2406,
-   "wr": 2392
-  },
-  {
-   "seg": 0,
-   "src": "K",
-   "cyc": 2370,
-   "tx_port": 0,
-   "rx_port": 0,
-   "kind": 3,
-   "beat": 1,
-   "arrive": 2405,
-   "rx_out": 2407,
-   "wr": 2393
-  },
-  {
-   "seg": 0,
-   "src": "K",
    "cyc": 2371,
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 2,
-   "arrive": 2406,
-   "rx_out": 2408,
-   "wr": 2394
+   "beat": 0,
+   "arrive": 2407,
+   "rx_out": 2409,
+   "wr": 2395
   },
   {
    "seg": 0,
@@ -579,10 +556,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 3,
-   "arrive": 2407,
-   "rx_out": 2409,
-   "wr": 2395
+   "beat": 1,
+   "arrive": 2408,
+   "rx_out": 2410,
+   "wr": 2396
   },
   {
    "seg": 0,
@@ -591,10 +568,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 4,
-   "arrive": 2408,
-   "rx_out": 2410,
-   "wr": 2396
+   "beat": 2,
+   "arrive": 2409,
+   "rx_out": 2411,
+   "wr": 2397
   },
   {
    "seg": 0,
@@ -603,10 +580,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 5,
-   "arrive": 2409,
-   "rx_out": 2411,
-   "wr": 2397
+   "beat": 3,
+   "arrive": 2410,
+   "rx_out": 2412,
+   "wr": 2398
   },
   {
    "seg": 0,
@@ -615,10 +592,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 6,
-   "arrive": 2410,
-   "rx_out": 2412,
-   "wr": 2398
+   "beat": 4,
+   "arrive": 2411,
+   "rx_out": 2413,
+   "wr": 2399
   },
   {
    "seg": 0,
@@ -627,10 +604,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 7,
-   "arrive": 2411,
-   "rx_out": 2413,
-   "wr": 2399
+   "beat": 5,
+   "arrive": 2412,
+   "rx_out": 2414,
+   "wr": 2400
   },
   {
    "seg": 0,
@@ -639,10 +616,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 8,
-   "arrive": 2412,
-   "rx_out": 2414,
-   "wr": 2400
+   "beat": 6,
+   "arrive": 2413,
+   "rx_out": 2415,
+   "wr": 2401
   },
   {
    "seg": 0,
@@ -651,10 +628,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 9,
-   "arrive": 2413,
-   "rx_out": 2415,
-   "wr": 2401
+   "beat": 7,
+   "arrive": 2414,
+   "rx_out": 2416,
+   "wr": 2402
   },
   {
    "seg": 0,
@@ -663,10 +640,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 10,
-   "arrive": 2414,
-   "rx_out": 2416,
-   "wr": 2402
+   "beat": 8,
+   "arrive": 2415,
+   "rx_out": 2417,
+   "wr": 2403
   },
   {
    "seg": 0,
@@ -675,10 +652,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 11,
-   "arrive": 2415,
-   "rx_out": 2417,
-   "wr": 2403
+   "beat": 9,
+   "arrive": 2416,
+   "rx_out": 2418,
+   "wr": 2404
   },
   {
    "seg": 0,
@@ -687,10 +664,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 12,
-   "arrive": 2416,
-   "rx_out": 2418,
-   "wr": 2404
+   "beat": 10,
+   "arrive": 2417,
+   "rx_out": 2419,
+   "wr": 2405
   },
   {
    "seg": 0,
@@ -699,10 +676,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 13,
-   "arrive": 2417,
-   "rx_out": 2419,
-   "wr": 2405
+   "beat": 11,
+   "arrive": 2418,
+   "rx_out": 2420,
+   "wr": 2406
   },
   {
    "seg": 0,
@@ -711,10 +688,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 14,
-   "arrive": 2418,
-   "rx_out": 2420,
-   "wr": 2406
+   "beat": 12,
+   "arrive": 2419,
+   "rx_out": 2421,
+   "wr": 2407
   },
   {
    "seg": 0,
@@ -723,10 +700,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 15,
-   "arrive": 2419,
-   "rx_out": 2421,
-   "wr": 2407
+   "beat": 13,
+   "arrive": 2420,
+   "rx_out": 2422,
+   "wr": 2408
   },
   {
    "seg": 0,
@@ -735,10 +712,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 16,
-   "arrive": 2420,
-   "rx_out": 2422,
-   "wr": 2408
+   "beat": 14,
+   "arrive": 2421,
+   "rx_out": 2423,
+   "wr": 2409
   },
   {
    "seg": 0,
@@ -747,10 +724,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 17,
-   "arrive": 2421,
-   "rx_out": 2423,
-   "wr": 2409
+   "beat": 15,
+   "arrive": 2422,
+   "rx_out": 2424,
+   "wr": 2410
   },
   {
    "seg": 0,
@@ -759,10 +736,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 18,
-   "arrive": 2422,
-   "rx_out": 2424,
-   "wr": 2410
+   "beat": 16,
+   "arrive": 2423,
+   "rx_out": 2425,
+   "wr": 2411
   },
   {
    "seg": 0,
@@ -771,10 +748,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 19,
-   "arrive": 2423,
-   "rx_out": 2425,
-   "wr": 2411
+   "beat": 17,
+   "arrive": 2424,
+   "rx_out": 2426,
+   "wr": 2412
   },
   {
    "seg": 0,
@@ -783,10 +760,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 20,
-   "arrive": 2424,
-   "rx_out": 2426,
-   "wr": 2412
+   "beat": 18,
+   "arrive": 2425,
+   "rx_out": 2427,
+   "wr": 2413
   },
   {
    "seg": 0,
@@ -795,10 +772,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 21,
-   "arrive": 2425,
-   "rx_out": 2427,
-   "wr": 2413
+   "beat": 19,
+   "arrive": 2426,
+   "rx_out": 2428,
+   "wr": 2414
   },
   {
    "seg": 0,
@@ -807,10 +784,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 22,
-   "arrive": 2426,
-   "rx_out": 2428,
-   "wr": 2414
+   "beat": 20,
+   "arrive": 2427,
+   "rx_out": 2429,
+   "wr": 2415
   },
   {
    "seg": 0,
@@ -819,10 +796,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 23,
-   "arrive": 2427,
-   "rx_out": 2429,
-   "wr": 2415
+   "beat": 21,
+   "arrive": 2428,
+   "rx_out": 2430,
+   "wr": 2416
   },
   {
    "seg": 0,
@@ -831,10 +808,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 24,
-   "arrive": 2428,
-   "rx_out": 2430,
-   "wr": 2416
+   "beat": 22,
+   "arrive": 2429,
+   "rx_out": 2431,
+   "wr": 2417
   },
   {
    "seg": 0,
@@ -843,10 +820,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 25,
-   "arrive": 2429,
-   "rx_out": 2431,
-   "wr": 2417
+   "beat": 23,
+   "arrive": 2430,
+   "rx_out": 2432,
+   "wr": 2418
   },
   {
    "seg": 0,
@@ -855,10 +832,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 26,
-   "arrive": 2430,
-   "rx_out": 2432,
-   "wr": 2418
+   "beat": 24,
+   "arrive": 2431,
+   "rx_out": 2433,
+   "wr": 2419
   },
   {
    "seg": 0,
@@ -867,10 +844,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 27,
-   "arrive": 2431,
-   "rx_out": 2433,
-   "wr": 2419
+   "beat": 25,
+   "arrive": 2432,
+   "rx_out": 2434,
+   "wr": 2420
   },
   {
    "seg": 0,
@@ -879,10 +856,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 28,
-   "arrive": 2432,
-   "rx_out": 2434,
-   "wr": 2420
+   "beat": 26,
+   "arrive": 2433,
+   "rx_out": 2435,
+   "wr": 2421
   },
   {
    "seg": 0,
@@ -891,10 +868,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 29,
-   "arrive": 2433,
-   "rx_out": 2435,
-   "wr": 2421
+   "beat": 27,
+   "arrive": 2434,
+   "rx_out": 2436,
+   "wr": 2422
   },
   {
    "seg": 0,
@@ -903,10 +880,10 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 30,
-   "arrive": 2434,
-   "rx_out": 2436,
-   "wr": 2422
+   "beat": 28,
+   "arrive": 2435,
+   "rx_out": 2437,
+   "wr": 2423
   },
   {
    "seg": 0,
@@ -915,10 +892,22 @@
    "tx_port": 0,
    "rx_port": 0,
    "kind": 3,
-   "beat": 31,
-   "arrive": 2435,
-   "rx_out": 2437,
-   "wr": 2423
+   "beat": 29,
+   "arrive": 2436,
+   "rx_out": 2438,
+   "wr": 2424
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2401,
+   "tx_port": 0,
+   "rx_port": 0,
+   "kind": 3,
+   "beat": 30,
+   "arrive": 2437,
+   "rx_out": 2439,
+   "wr": 2425
   },
   {
    "seg": 0,
@@ -926,11 +915,23 @@
    "cyc": 2402,
    "tx_port": 0,
    "rx_port": 0,
+   "kind": 3,
+   "beat": 31,
+   "arrive": 2438,
+   "rx_out": 2440,
+   "wr": 2426
+  },
+  {
+   "seg": 0,
+   "src": "K",
+   "cyc": 2404,
+   "tx_port": 0,
+   "rx_port": 0,
    "kind": 4,
    "beat": 0,
-   "arrive": 2437,
-   "rx_out": 2439,
-   "wr": 2425
+   "arrive": 2440,
+   "rx_out": 2442,
+   "wr": 2428
   }
  ]
 }

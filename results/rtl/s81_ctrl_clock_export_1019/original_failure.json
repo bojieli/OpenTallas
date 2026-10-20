@@ -1,0 +1,12 @@
+{
+  "name": "s81ctrl_rg2_np-np-d169b1906",
+  "failure_lines": [
+    "  \"2026-10-19T11:38:28-07:00 route crashed (rc=1 ok-check failed;; first error: s81ctrl_rg2_np_np_d169b1906/flow.log: Error: ff_ioref_last.sdc, 236 OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source [step do-4_1_cts]) -> retry once on the same host\",",
+    "  \"2026-10-19T11:49:48-07:00 NEEDS_HUMAN: route crashed twice (rc=1 ok-check failed;; first error: s81ctrl_rg2_np_np_d169b1906/flow.log: Error: ff_ioref_last.sdc, 236 OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source [step do-4_1_cts]; resource=False)\",",
+    " \"reason\": \"route crashed twice (rc=1 ok-check failed;; first error: s81ctrl_rg2_np_np_d169b1906/flow.log: Error: ff_ioref_last.sdc, 236 OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source [step do-4_1_cts]; resource=False)\",",
+    "   \"why\": \"rc=1 ok-check failed;; first error: s81ctrl_rg2_np_np_d169b1906/flow.log: Error: ff_ioref_last.sdc, 236 OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source [step do-4_1_cts]\",",
+    "   \"first_error\": \"s81ctrl_rg2_np_np_d169b1906/flow.log: Error: ff_ioref_last.sdc, 236 OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source [step do-4_1_cts]\"",
+    "   \"why\": \"rc=1 ok-check failed;; first error: s81ctrl_rg2_np_np_d169b1906/flow.log: Error: ff_ioref_last.sdc, 236 OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source [step do-4_1_cts]\",",
+    "   \"first_error\": \"s81ctrl_rg2_np_np_d169b1906/flow.log: Error: ff_ioref_last.sdc, 236 OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source [step do-4_1_cts]\""
+  ]
+}

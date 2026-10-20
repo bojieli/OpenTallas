@@ -1,0 +1,65 @@
+{
+  "inputs": {
+    "owned_model.json": "9658670de3c57729e32f989c4b9f5a6cf5d5fe13f2a1bdc6d9e1b2a51d4a1584",
+    "asap7_tech.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "a3_inventory.json.gz": "181b125c7c99102b3588d391d63930958066f437779d3e9f5607e751fd043602",
+    "trunk_model.json": "12d3d57ca095603b80ad5a9528c0d81ccde982a1e157006ab6a1737baf99b7dc"
+  },
+  "families": {
+    "qwen": {
+      "signal_geometry_unchanged": true,
+      "all_owned_supply_box_multiset_exact": true,
+      "counts": {
+        "signal_nets": 206,
+        "signal_vias": 408,
+        "supply_rails_and_M1_ports": 44,
+        "supply_vias": 176,
+        "wire_shapes": 998,
+        "actual_decoded_boxes_expected": 2750,
+        "external_supply_port_subsets": 4,
+        "OBS_reservations": 6,
+        "lower_exclusions": 44,
+        "layer_boxes": {
+          "M4": 1156,
+          "M5": 658,
+          "M1": 88,
+          "M2": 132,
+          "M3": 132,
+          "V4": 452,
+          "V1": 44,
+          "V2": 44,
+          "V3": 44
+        }
+      }
+    },
+    "sc2": {
+      "signal_geometry_unchanged": true,
+      "all_owned_supply_box_multiset_exact": true,
+      "counts": {
+        "signal_nets": 437,
+        "signal_vias": 870,
+        "supply_rails_and_M1_ports": 77,
+        "supply_vias": 308,
+        "wire_shapes": 2491,
+        "actual_decoded_boxes_expected": 6025,
+        "external_supply_port_subsets": 4,
+        "OBS_reservations": 6,
+        "lower_exclusions": 77,
+        "layer_boxes": {
+          "M4": 2847,
+          "M5": 1384,
+          "M1": 154,
+          "M2": 231,
+          "M3": 231,
+          "V4": 947,
+          "V1": 77,
+          "V2": 77,
+          "V3": 77
+        }
+      }
+    }
+  },
+  "A3_input_immutable": true,
+  "repairs_or_translations": false,
+  "no_engine_run": true
+}

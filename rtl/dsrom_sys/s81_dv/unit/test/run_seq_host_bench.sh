@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # S81U-SEQ: dsdv_seq_host exact bench (lock-step vs the reused dsfd_host_c STATIC + ot_s81_fixed_issue goldens, SEEDS
-# seeds), the illegal-collision run (must fault), the W-half region-live drop (must fault; RTL-BUILD-S81), 6 mutants
-# that must FAIL (5: W svc half dropped from the merge, 6: host writes routed by the wrong PC bit), verilator lint.  Prints SEQHOST_GATE PASS/FAIL.
-# Usage: run_seq_host_bench.sh [outdir] [seeds] [mutant 1..6: build + run that mutant only]
+# seeds), the illegal-collision run (must fault), the W-half region-live drop (must fault; RTL-BUILD-S81), 9 mutants
+# that must FAIL (5: W svc half dropped from the merge, 6: host writes routed by the wrong PC bit, 7 / 8: see mdef), verilator lint.  Prints SEQHOST_GATE PASS/FAIL.
+# Usage: run_seq_host_bench.sh [outdir] [seeds] [mutant 1..9: build + run that mutant only]
 set -u
 R=$(cd "$(dirname "$0")/../../../../.." && pwd)
 O=${1:-$(mktemp -d)}; SEEDS=${2:-"1 2 3 4"}; mkdir -p "$O"
@@ -13,7 +13,7 @@ F="$R/rtl/lib/ot_async_fifo.sv $R/rtl/lib/ot_reset_sync.sv $R/rtl/lib/ot_rst_rel
    $R/rtl/hdc/ingest/ot_rom_host_ingest.sv $R/physical/rom_host_ingest/rtl/dsfd_host.sv
    $R/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv
    $R/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv $R/rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv
-   $R/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
+   $R/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv $U/ot_dsdv_fixed_issue.sv $U/ot_dsdv_walk_issue.sv $U/ot_dsdv_vstop.sv $U/dsdv_sh_sd.sv $U/dsdv_seq_host.sv
    $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
 build() { l=$1; shift
   verilator --binary --timing -j 16 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT +define+DSFD_HOST_C_STATIC \
@@ -21,8 +21,13 @@ build() { l=$1; shift
     || { echo "BUILD_FAIL $l (see $O/build_$l.log)"; return 2; }
 }
 bad=0
-if [ -n "${3:-}" ]; then   # single-mutant mode for closure-loop benches: run_seq_host_bench.sh OUT SEED <1..4>; prints the SEQHOST lines
-  m=$3; build mut$m +define+MUT=$m || exit 2
+# mutant defines: 1..6 = the unit's MUT; 7 = ingest registered head stays valid after a pop (OT_ING_MUT_HREGV), 8 = engine
+# realigner pointer copy 0 stalls (OT_ING_MUT_RAC) -- the APIPE 7 additions (S81-SHLK 10-18; the back-to-back refill
+# mutant OT_ING_MUT_HREG needs a full-rate host stream: physical/sys_takeover/host_native_pipe_bench.py hreg7)
+# 9 = the unit MUT 9: the L0 rung landing dropped (S81-SHLK2 10-18; rung one edge short)
+mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MUT_RAC;; *) echo +define+MUT=$1;; esac; }
+if [ -n "${3:-}" ]; then   # single-mutant mode for closure-loop benches: run_seq_host_bench.sh OUT SEED <1..9>; prints the SEQHOST lines
+  m=$3; build mut$m $(mdef $m) || exit 2
   "$O/mut$m/tb" +seed=${SEEDS%% *} > "$O/run_mut$m.log" 2>&1; grep '^SEQHOST' "$O/run_mut$m.log"; exit 0
 fi
 build base || exit 2
@@ -30,12 +35,16 @@ for s in $SEEDS; do
   "$O/base/tb" +seed=$s > "$O/run_s$s.log" 2>&1
   grep '^SEQHOST seed' "$O/run_s$s.log"; grep -q '^SEQHOST PASS' "$O/run_s$s.log" || { echo "golden seed $s FAIL"; bad=1; }
 done
+for s in $SEEDS; do   # S81-SAFE-FIX/SH: two calendar rows on one edge (word-aligned and straddling pairs) through the walker
+  "$O/base/tb" +seed=$s +pair=1 > "$O/run_pair_s$s.log" 2>&1
+  echo "PAIR $(grep '^SEQHOST seed' "$O/run_pair_s$s.log")"; grep -q '^SEQHOST PASS' "$O/run_pair_s$s.log" || { echo "golden pair seed $s FAIL"; bad=1; }
+done
 "$O/base/tb" +seed=7 +collide=1 > "$O/run_collide.log" 2>&1
 grep '^SEQHOST COLLIDE' "$O/run_collide.log"; grep -q 'PASS (fault raised)' "$O/run_collide.log" || { echo "collision not faulted"; bad=1; }
 "$O/base/tb" +seed=3 +stdrop=1 > "$O/run_stdrop.log" 2>&1
 grep '^SEQHOST STDROP' "$O/run_stdrop.log"; grep -q 'PASS (fault raised)' "$O/run_stdrop.log" || { echo "W region drop not faulted"; bad=1; }
-for m in 1 2 3 4 5 6; do
-  build mut$m +define+MUT=$m || { bad=1; continue; }
+for m in 1 2 3 4 5 6 7 8 9 10; do
+  build mut$m $(mdef $m) || { bad=1; continue; }
   "$O/mut$m/tb" +seed=1 > "$O/run_mut$m.log" 2>&1
   if grep -q '^SEQHOST PASS' "$O/run_mut$m.log"; then echo "mutant $m NOT detected"; bad=1
   else echo "mutant $m detected: $(grep -m1 '^SEQHOST seed' "$O/run_mut$m.log" | grep -o 'mism.*')"; fi

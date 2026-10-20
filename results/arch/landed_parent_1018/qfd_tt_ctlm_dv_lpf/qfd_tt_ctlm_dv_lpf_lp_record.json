@@ -372,6 +372,23 @@
    "read": "u_lpl_19_r (ck_hr)",
    "added_edges": 3,
    "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
+  },
+  {
+   "name": "20",
+   "net": "g_tl",
+   "src_region": "core",
+   "dst_region": "hr",
+   "src_nodes": [
+    "u_gi"
+   ],
+   "width": 1088,
+   "readers": [
+    "u_thru.tl_i"
+   ],
+   "ring": "u_lpl_20_w (ck_core)",
+   "read": "u_lpl_20_r (ck_hr)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
   }
  ],
  "pads": [],
@@ -386,7 +403,7 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 3490,
+  "landing": 8943,
   "pads": 0,
   "reset": 14
  },
@@ -409,6 +426,7 @@
   "input_port_offset_edges": {
    "pw": 0,
    "dh": 0,
+   "dh_user": 0,
    "kok": 0,
    "kwd": 0,
    "fab": 0,
@@ -430,11 +448,14 @@
    "native_cmd": 3,
    "hr": 3,
    "cmd": 3,
+   "tl": 3,
    "emb_start": 3,
    "emb_token": 3,
    "cf": 3
   },
   "reset_release_added_edges": 3,
+  "schedule": "offsets",
+  "ref_params": null,
   "max_added_edges": 3
  },
  "warnings": [],
@@ -446,7 +467,7 @@
  ],
  "audit": {
   "ok": true,
-  "landings": 20,
+  "landings": 21,
   "reset_hops": 1,
   "fails": []
  }
