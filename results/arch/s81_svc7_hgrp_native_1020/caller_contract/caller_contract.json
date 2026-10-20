@@ -1,0 +1,29 @@
+{
+  "status": "CALLER_SCOPE_EVIDENCE_ONLY_NOT_ADOPTION",
+  "source": [
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+      "source_commit": "5dd12f995",
+      "sha256": "4dd240ddd3f0d3ca98b255dc70ec3cfb3af92919498342ff90d1be858d366b5e"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn_hgrp_s81.sv",
+      "source_commit": "5dd12f995",
+      "sha256": "ed8112e68b6423dc19c8591a574145df991d2292190536b443a7685f4c3dc052"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+      "source_commit": "5dd12f995",
+      "sha256": "7303ddd5c733c3e7356814d949560c54374df3a303459afbd7d25c5fba50dd09"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/svc_rs/attw/lp/dsdv_svc_attw_f_lp.sv",
+      "source_commit": "5dd12f995",
+      "sha256": "279834f1a92403ec5c057253e8041118222fd7203f8f32639814ffa3435be994"
+    }
+  ],
+  "reset_expression": "u_hdp.rst_n = rst_n directly; no additional2stage reset exists between original hgrp and hdp. LP parent localrst is lpr_c_u_tN from ordinary1+3+7 synchronous plain hops, already at group port.",
+  "existing_observation": "Original hgrp ov asynchronously clears on the SAME local rst_n; tile ov=gov[0]; score lane valid derives t_ov[0]&&!t_pv and P.V merge iv=t_ov[gk]&&t_pv. oy/oflt may be captured each clock but have no production validity while localreset is asserted.",
+  "component_difference": "New experimental chunk ov is internal native arithmetic metadata, absent on original hdp interface. It may remain1 for first2assertedlocalreset edges; standalone unqualified comparator FAIL2 retained. This is not equivalent to original production hgrp ov and must not replace it.",
+  "permitted_followup_scope": "Keep existing parent raw-local-reset qualified valid pipeline; compare ALL validity edges after release and data/fault whenever that existing parent valid is1. Do not delay original reference reset or add output masks to candidate. Full parent integration/sourceproof still owed."
+}
