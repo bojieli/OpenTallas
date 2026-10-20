@@ -150,7 +150,7 @@ endmodule
 
 // ============================ Q: one 128-bit data slice ============================
 module ot_coll_split_q #(
-    parameter integer LU = 66, LS = 391, ADD_LAT = 7, QI = 0, CQW = 42
+    parameter integer LU = 66, LS = 391, ADD_LAT = 7, QI = 0, CQW = 42, FAN32 = 0, ADD_FAN32 = 0
 ) (
     input  wire              clk,           // the slice's one local CTS root (glue, both soft folds, its SRAM natives)
     input  wire              rst_n,
@@ -196,6 +196,16 @@ module ot_coll_split_q #(
     ot_csp_rep_reg #(.W(21), .ID(QI*256 + 1), .RST(1)) u_tok (.clk(clk), .rst_n(rs_t0), .d(c_tok[20:0]), .q(tok_r[20:0]));
     ot_csp_rep_reg #(.W(CQW - 21), .ID(QI*256 + 2), .RST(1)) u_tok1 (.clk(clk), .rst_n(rs_t1), .d(c_tok[CQW-1:21]),
         .q(tok_r[CQW-1:21]));
+    wire [CQW-1:0] tok_half;
+    generate if(FAN32 != 0) begin:g_token_half
+        wire r0,r1;
+        ot_csp_rep_reg #(.W(1),.ID(QI*256+204),.RST(1)) u_r0(.clk(clk),.rst_n(rs),.d(1'b1),.q(r0));
+        ot_csp_rep_reg #(.W(1),.ID(QI*256+205),.RST(1)) u_r1(.clk(clk),.rst_n(rs),.d(1'b1),.q(r1));
+        ot_csp_rep_reg #(.W(21),.ID(QI*256+206),.RST(1)) u_t0(.clk(clk),.rst_n(r0),.d(c_tok[20:0]),.q(tok_half[20:0]));
+        ot_csp_rep_reg #(.W(CQW-21),.ID(QI*256+207),.RST(1)) u_t1(.clk(clk),.rst_n(r1),.d(c_tok[CQW-1:21]),.q(tok_half[CQW-1:21]));
+    end else begin:g_token_legacy
+        assign tok_half=tok_r;
+    end endgenerate
     wire [7:0]  tbv_r = tok_r[41:34];
     wire        red_r = tok_r[33];
     wire [3:0]  tcv_r = tok_r[32:29], gd_r = tok_r[28:25];
@@ -205,9 +215,12 @@ module ot_coll_split_q #(
     // straps: one pin flop each, then static replicated copies
     reg [1:0] pk_q; reg di_q;
     always @(posedge clk) begin pk_q <= pkg_s; di_q <= die_ps; end
-    wire [7:0] di_r;
-    generate for (k = 0; k < 8; k = k + 1) begin : g_r8
+    wire [15:0] di_r;
+    generate for (k = 0; k < (FAN32 ? 16 : 8); k = k + 1) begin : g_r8
         ot_csp_rep_reg #(.W(1), .ID(QI*256 + 8 + k), .RST(0)) u_di (.clk(clk), .rst_n(1'b1), .d(di_q), .q(di_r[k]));
+    end endgenerate
+    generate if(FAN32==0) begin:g_di_legacy_unused
+        assign di_r[15:8]=8'd0;
     end endgenerate
     // static rank select per (rank, 32-bit group): registered from the registered strap
     wire [63:0] sel_r;
@@ -232,23 +245,52 @@ module ot_coll_split_q #(
     always @(posedge clk) dpr_q <= dp_data;
     reg [127:0] lo_q, hi_q;
     generate for (k = 0; k < 8; k = k + 1) begin : g_lohi
+        if(FAN32!=0) begin:g_half
+            for(genvar h=0;h<2;h=h+1) begin:g_h
+                wire en=h ? tok_half[34+k] : tbv_r[k];
+                always @(posedge clk) if(en)begin
+                    lo_q[k*16+h*8+:8] <= !di_r[k*2+h] ? pr_rd[k*16+h*8+:8] : dpr_q[k*16+h*8+:8];
+                    hi_q[k*16+h*8+:8] <= !di_r[k*2+h] ? dpr_q[k*16+h*8+:8] : pr_rd[k*16+h*8+:8];
+                end
+            end
+        end else begin:g_legacy
         always @(posedge clk) if (tbv_r[k]) begin
             lo_q[k*16 +: 16] <= !di_r[k] ? pr_rd[k*16 +: 16] : dpr_q[k*16 +: 16];
             hi_q[k*16 +: 16] <= !di_r[k] ? dpr_q[k*16 +: 16] : pr_rd[k*16 +: 16];
         end
+        end
     end endgenerate
-    wire ps_v, ps_e; wire [127:0] ps_sum;
-    (* keep_hierarchy *) ot_coll_fold_slice #(.DLRING(1), .NLIVE(2), .ADRST(0), .RSTSPLIT(1)) u_pf (.clk(clk),
-        .rst_n(rs), .red_in(red_r),
-        .src({256'd0, hi_q, lo_q}), .sum(ps_sum), .v_out(ps_v), .e_out(ps_e));
+    wire ps_v, ps_e; wire[3:0]ps_e_lane; wire [127:0] ps_sum;
+    generate if(FAN32!=0 || ADD_FAN32!=0)begin:g_pf_fan32
+        (* keep_hierarchy *) ot_coll_fold_slice_fan32 #(.DLRING(1), .NLIVE(2), .ADRST(0), .RSTSPLIT(1), .FAN32(FAN32), .ADD_FAN32(ADD_FAN32)) u_pf (.clk(clk),
+            .rst_n(rs), .red_in(red_r), .src({256'd0,hi_q,lo_q}), .sum(ps_sum), .v_out(ps_v), .e_out(ps_e), .e_lane(ps_e_lane));
+    end else begin:g_pf_legacy
+        (* keep_hierarchy *) ot_coll_fold_slice #(.DLRING(1), .NLIVE(2), .ADRST(0), .RSTSPLIT(1)) u_pf (.clk(clk),
+            .rst_n(rs), .red_in(red_r), .src({256'd0,hi_q,lo_q}), .sum(ps_sum), .v_out(ps_v), .e_out(ps_e));
+        assign ps_e_lane={4{ps_e}};
+    end endgenerate
 
     // ---- C / W: package word, S ring data write, SerDes data send ----
     reg [127:0] pf_q;
-    always @(posedge clk) pf_q <= ps_e ? {4{32'h7fc00000}} : ps_sum;
+    generate if(FAN32!=0)begin:g_pf_lane
+        for(genvar p=0;p<4;p=p+1)begin:g_p
+            always @(posedge clk)pf_q[p*32+:32]<=ps_e_lane[p]?32'h7fc00000:ps_sum[p*32+:32];
+        end
+    end else begin:g_pf_legacy
+        always @(posedge clk) pf_q <= ps_e ? {4{32'h7fc00000}} : ps_sum;
+    end endgenerate
     always @(posedge clk or negedge rs_g) if (!rs_g) q_pe <= 1'b0; else q_pe <= ps_e & ps_v;
     wire [127:0] w_d;
     generate for (k = 0; k < 4; k = k + 1) begin : g_wd
+        if(FAN32!=0)begin:g_half
+            for(genvar h=0;h<2;h=h+1)begin:g_h
+                wire tv=h?tok_half[29+k]:tcv_r[k];
+                wire gd=h?tok_half[25+k]:gd_r[k];
+                assign w_d[k*32+h*16+:16]=tv?pf_q[k*32+h*16+:16]:(gd?hi_q[k*32+h*16+:16]:lo_q[k*32+h*16+:16]);
+            end
+        end else begin:g_legacy
         assign w_d[k*32 +: 32] = tcv_r[k] ? pf_q[k*32 +: 32] : (gd_r[k] ? hi_q[k*32 +: 32] : lo_q[k*32 +: 32]);
+        end
     end endgenerate
     wire [127:0] sx_q [0:2];
     assign sx0_data = sx_q[0]; assign sx1_data = sx_q[1]; assign sx2_data = sx_q[2];
@@ -280,9 +322,13 @@ module ot_coll_split_q #(
     wire [4*128-1:0] xs = xsrc;
 `endif
     wire xs_v, xs_e; wire [127:0] xs_sum;
-    (* keep_hierarchy *) ot_coll_fold_slice #(.DLRING(1), .ADRST(0), .RSTSPLIT(1)) u_xf (.clk(clk), .rst_n(rs),
-        .red_in(red2_r), .src(xs),
-        .sum(xs_sum), .v_out(xs_v), .e_out(xs_e));
+    generate if(ADD_FAN32!=0)begin:g_xf_fan32
+        (* keep_hierarchy *) ot_coll_fold_slice_fan32 #(.DLRING(1), .ADRST(0), .RSTSPLIT(1), .FAN32(FAN32), .ADD_FAN32(ADD_FAN32)) u_xf (.clk(clk),.rst_n(rs),
+            .red_in(red2_r),.src(xs),.sum(xs_sum),.v_out(xs_v),.e_out(xs_e),.e_lane());
+    end else begin:g_xf_legacy
+        (* keep_hierarchy *) ot_coll_fold_slice #(.DLRING(1), .ADRST(0), .RSTSPLIT(1)) u_xf (.clk(clk),.rst_n(rs),
+            .red_in(red2_r),.src(xs),.sum(xs_sum),.v_out(xs_v),.e_out(xs_e));
+    end endgenerate
     wire [127:0] g_out;
     generate for (k = 0; k < 4; k = k + 1) begin : g_go
         wire [3:0] s = gs_r[k*4 +: 4];
@@ -311,9 +357,19 @@ module ot_coll_split_q #(
     reg [127:0] drr_q, od_q;
     always @(posedge clk) drr_q <= dr_data;
     integer kq;
+    generate if(FAN32!=0)begin:g_od_half
+        for(genvar p=0;p<4;p=p+1)begin:g_p
+            for(genvar h=0;h<2;h=h+1)begin:g_h
+                wire tv=h?tok_half[4+p]:tfv_r[p];
+                wire to_=h?tok_half[p]:tfo_r[p];
+                always @(posedge clk)od_q[p*32+h*16+:16]<=tv?(to_?rr_rd[p*32+h*16+:16]:drr_q[p*32+h*16+:16]):g_out[p*32+h*16+:16];
+            end
+        end
+    end else begin:g_od_legacy
     always @(posedge clk)
         for (kq = 0; kq < 4; kq = kq + 1)
             od_q[kq*32 +: 32] <= tfv_r[kq] ? (tfo_r[kq] ? rr_rd[kq*32 +: 32] : drr_q[kq*32 +: 32]) : g_out[kq*32 +: 32];
+    end endgenerate
     assign out_data = od_q;
 endmodule
 
@@ -626,7 +682,10 @@ endmodule
 `else
 `define OT_CSP_LS 391
 `endif
-module qfd_io_collective_split #(parameter integer LU = `OT_CSP_LU, parameter integer LS = `OT_CSP_LS) (
+`ifndef OT_QFDS_FAN32
+`define OT_QFDS_FAN32 0
+`endif
+module qfd_io_collective_split #(parameter integer LU = `OT_CSP_LU, parameter integer LS = `OT_CSP_LS, parameter integer FAN32 = `OT_QFDS_FAN32) (
     input  wire          clk,
     input  wire          clk_q0, clk_q1, clk_q2, clk_q3,
     input  wire          rst_n,
@@ -691,7 +750,7 @@ module qfd_io_collective_split #(parameter integer LU = `OT_CSP_LU, parameter in
         .q_pe(q_pe), .q_xe(q_xe));
     genvar q;
     generate for (q = 0; q < NQ; q = q + 1) begin : g_q
-        ot_coll_split_q #(.LU(LU), .LS(LS), .QI(0)) u_q (.clk(cq[q]),
+        ot_coll_split_q #(.LU(LU), .LS(LS), .QI(0), .FAN32(FAN32)) u_q (.clk(cq[q]),
             .rst_n(rst_n), .pkg_s(pkg_s), .die_ps(die_ps),
             .in_data(in_data[q*128 +: 128]), .up_data(up_d[q*128 +: 128]), .dp_data(dp_rec[q*128 +: 128]),
             .ur_data(ur_d[q*128 +: 128]), .dr_data(dr_rec[q*128 +: 128]),

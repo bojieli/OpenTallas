@@ -143,7 +143,7 @@ def vectors(path: Path, nwords, prog, seed, big=False):
 
 
 def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd: bool = False, pr_b4: bool = False,
-          split: bool = False) -> Path:
+          split: bool = False, safe_fan32: bool = False) -> Path:
     obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}{'_qfd' if qfd else ''}{('_' + define) if define else ''}{'_b4' if pr_b4 else ''}{'_split' if split else ''}"
     h = out / "harness.cpp"
     h.write_text('#include "Vtb_coll_tp8_static.h"\n#include "verilated.h"\n'
@@ -155,6 +155,10 @@ def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd
            "-Wno-TIMESCALEMOD", "--top-module", "tb_coll_tp8_static", f"-GLATU={lu}", f"-GLATS={ls}", f"-GXU={xu}",
            f"-GXS={xs}", f"-GPR_B4={int(pr_b4)}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", os.environ.get("OT_BENCH_J", "16")]
+    if safe_fan32:
+        if not split:
+            raise ValueError("--safe-fan32 requires --split")
+        cmd += ["+define+OT_QFDS_FAN32=1", "rtl/rom/ot_coll_fold_slice_fan32.sv"]
     if pr_b4:
         cmd += ["+define+OT_COLL_B4_NATIVE"]
     if split:
@@ -180,6 +184,7 @@ def main():
     ap.add_argument("--qfd", action="store_true", help="bench the die-name master qfd_io_collective_static")
     ap.add_argument("--pr-b4", action="store_true", help="opt-in four P/R logical groups with useful-width native64 storage")
     ap.add_argument("--split", action="store_true", help="bench the regional split qfd_io_collective_split (C + 4 Q, B4)")
+    ap.add_argument("--safe-fan32", action="store_true", help="opt-in same-edge Q token/strap/error copies; arithmetic remains original")
     a = ap.parse_args()
     global EX
     if a.split:
@@ -198,7 +203,7 @@ def main():
         cases = [c for c in cases if re.search(a.only, c[0])]
     if a.xu or a.xs:   # link-latency negative control: one positive shape, every die must flag the link schedule
         cases = [("link_longer_than_compiled", 4, 8, "m", "link", {})]
-    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define, a.qfd, a.pr_b4, a.split)
+    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define, a.qfd, a.pr_b4, a.split, a.safe_fan32)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
