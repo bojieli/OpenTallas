@@ -1,0 +1,313 @@
+{
+ "name": "s81sl_lepnh_w",
+ "top": "ot_s81sl_lep_nh",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 518.4,
+  "h": 518.4
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.u_m.g_sram.g_t?0?.u_m",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.u_m.g_sram.g_t?1?.u_m",
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.u_m.g_sram.g_t?2?.u_m",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.u_m.g_sram.g_t?3?.u_m",
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.u_m.g_sram.g_t?4?.u_m",
+   "at": [
+    43.2,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.u_m.g_sram.g_t?0?.u_m",
+   "at": [
+    302.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.u_m.g_sram.g_t?1?.u_m",
+   "at": [
+    302.4,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.u_m.g_sram.g_t?2?.u_m",
+   "at": [
+    302.4,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.u_m.g_sram.g_t?3?.u_m",
+   "at": [
+    302.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.u_m.g_sram.g_t?4?.u_m",
+   "at": [
+    302.4,
+    432.0
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "E": [
+   "ro",
+   "ri"
+  ],
+  "W": [
+   "lo0_v",
+   "lo0_r",
+   "lo0_d",
+   "li0_v",
+   "li0_r",
+   "li0_d",
+   "lo1_v",
+   "lo1_r",
+   "lo1_d",
+   "li1_v",
+   "li1_r",
+   "li1_d",
+   "rxv",
+   "l0_f",
+   "l1_f"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "sl_f",
+   "fault"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.045,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "S81-LEPV (owner 10-18 \"remove ties where cheap\"): HOST_EN 0 variant of the end-slice link-port leaf s81sl_lep for the three endpoints without the host plane (s_0S / s_0N via dsdv_slice_lepw, s_7S via dsdv_slice_lepe_nh). Same macros, placement, outline and E / W / S faces as s81sl_lep; NO N face: t_host / t_kd / f_host / f_lf / f_ks and l0_st / l1_st are not ports, the THOST / TKD pending registers, host pin flops and f_host / f_ks / f_lf registers are generated out; a HOST / KS frame arriving here is a protocol fault. Replaces 3 x 131 b of tied die pads. HOURLY-S81/LEP 10-19 (after --cts gate 20261018-175853 FAIL clock_rule pin-flop spread TT 128.8 / FF 115.9, GRT 0, timing met): 16 per-region clock roots by 2-D k-means (physical/common_flow/clock_split_km.tcl, OT_CKKM_K 16, proven on s81sl_xr1 128/113 -> 48.6/46.4); io_hold_margin 0.025 (KITS rule 10-18); bench min_count_regex gains its capture group. Same RTL, ports, cycles, SDC. S81-FIX3 10-19 (route s81sl_lepnh-90fc20580 NEEDS_RTL TT -55.92 / FF -7.15, DRC 0): CLASSIFIED -- all 66 TT setup violators are lane-1 TX SRAM rd_out (macro clk->q 421 ps TT) -> WREG forward mux AO21 -> ~265 ps buffered wire across the lane-0 column -> lo1_d output pin flop (distance from macro to pin face; not fanout, not logic depth, not IO: input/output slack +356/+320); FF hold -7.15 = WREG wd_q -> SRAM wd_in (macro clock 5 CTS delay buffers later than the wd_q leaf). Fix: RTL TXRP 1 = one read pipeline register beside the SRAM column (odr; lo_v / lo_d +1 edge, credit round trip ~8 <= CRED 8, full rate); hold_margin 0.03 -> 0.045 for the macro write pins; io_hold_margin 0.025 -> 0.03 (KITS rule); reset_landing 2 stages (route probe rst_n capture 195 ps; ROOT-RST, reset release +2). Outline, macros, pins unchanged. S81-SLICE3-LEP 10-19 (lep 90fc20580 route TT -44.76 and d77e88ef6 regate FAIL: TT pin-flop spread 84.8 > 80, real reg->reg -58.97 ps rpc -> 8:1 head mux -> h0 decode -> 514-bit fh_d enable; lepnh 90fc20580 TT -55.92 and fx3 regate FAIL spread 90.1): STRUCTURAL successor. RTL 23fd77ae5: TXRP 1 (TX read pipeline register beside each SRAM column, +1 lo edge) + RXSA 1 (18 grouped RX landing slices with kept one-hot enables / head pointer / pop copies, show-ahead head register, kind pre-decoded per row, registered one-hot select copies rid 35 / fh_d 17 / fk_d 2 loaded from the next state: 0 edges). Floorplan: 10 SRAM on the 43.2 lattice (x 43.2 / 259.2 columns, rows at 86.4 pitch), every gap >= 41.9 um, full-width standard rows between every macro row (no islands, PDN-connected), clock entry centred on the S face, regional km16 roots, pin_reg_split, reset_landing 2, io_hold_margin 0.03. FALLBACK variant (parallel, owner 10-19 PARALLEL): 518.4 square, centre channel 85 um, rows at 86.4 pitch starting 86.4.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (RTL-BUILD-S81): ro lands in pin flops (rov/roq), ri / lo_v / lo_d / li_r / rxv / fault leave flops, li handshake + data land in hq / dq flops, sl_f / l*_f land in slq / lfq; recipe pin_regs would add an unpriced stage."
+ },
+ "job": {
+  "owner": "Claude:S81-SLICE3-LEP",
+  "branch": "claude/s81-slice3-lep-1019",
+  "tag": "s3w",
+  "purpose": "S81-LEPV: host-less end-slice link-port leaf (HOST_EN 0, s_0S / s_0N / s_7S) to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "tools/s81_slice",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "results/rtl/s81_slice3_lep_1019"
+  ],
+  "benches": [
+   {
+    "name": "lepnh_ring",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_ring none 1 lep_nhr",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "pass_regex": "^BENCH_PASS lep_nhr MUT=none seed 1$",
+    "min_count_regex": "^PASS lep: (\\d+) \\+ \\d+ beats"
+   },
+   {
+    "name": "lepnh_ring_s7",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_ring_s7 none 7 lep_nhr",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "pass_regex": "^BENCH_PASS lep_nhr MUT=none seed 7$"
+   },
+   {
+    "name": "lepnh_proto",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_proto none 5 lep_nh",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "pass_regex": "^BENCH_PASS lep_nh MUT=none seed 5$"
+   },
+   {
+    "name": "lepnh_proto_s11",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_proto_s11 none 11 lep_nh",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "pass_regex": "^BENCH_PASS lep_nh MUT=none seed 11$"
+   },
+   {
+    "name": "lepnh_mut_swap",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_mut_swap swap 1 lep_nhr",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "fail_regex": "^FAIL lep: mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_slice3_lep_1019/nhr_mut_swap.log"
+   },
+   {
+    "name": "lepnh_mut_nopair",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_mut_nopair nopair 1 lep_nhr",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "fail_regex": "^FAIL lep: mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_slice3_lep_1019/nhr_mut_nopair.log"
+   },
+   {
+    "name": "lepnh_mut_noovf",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_mut_noovf noovf 1 lep_nhr",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "fail_regex": "^FAIL lep: .*overflow_fault 0$",
+    "fail_witness": "results/rtl/s81_slice3_lep_1019/nhr_mut_noovf.log"
+   },
+   {
+    "name": "lepnh_mut_txrpv",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_mut_txrpv txrpv 1 lep_nhr",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "fail_regex": "^FAIL lep: .*fault_main 1",
+    "fail_witness": "results/rtl/s81_slice3_lep_1019/nhr_mut_txrpv.log"
+   },
+   {
+    "name": "lepnh_mut_rxsel",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_mut_rxsel rxsel 1 lep_nhr",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "fail_regex": "^FAIL lep: mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_slice3_lep_1019/nhr_mut_rxsel.log"
+   },
+   {
+    "name": "lepnh_mut_rxbyp",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_mut_rxbyp rxbyp 1 lep_nhr",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "fail_regex": "^FAIL lep: mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_slice3_lep_1019/nhr_mut_rxbyp.log"
+   },
+   {
+    "name": "lepnh_mut_nhacc",
+    "cmd": "bash tools/s81_slice/lep_bench.sh {RUN}/lepnh_mut_nhacc nhacc 5 lep_nh",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "fail_regex": "^FAIL lep_nh: .*HOST 0 KS 0$",
+    "fail_witness": "results/rtl/s81_slice3_lep_1019/nh_mut_nhacc.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_lepnh_w/views",
+  "record_to": "results/rtl/ref_tile/s81sl_lepnh_w"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "std_area_um2": 9200.0,
+ "fill_reason": {
+  "pin_bound": "Pin-bound: W ~2,310 lane lo/li pins, E 2,208 ring ro/ri; 518.4 um faces give 4.46/um (<= 6/um); fill = (10 SRAM 51776 + std ~9.2k) / 268739 = 23%: the outline is set by the W/E pin faces and the 43.2-lattice macro columns with >= 20-um channels, not by std-cell area (SAFE item 6 util waived: pin/lattice-bound)."
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "16"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "pin_reg_split": true,
+ "pin_ranges": {
+  "clk": [
+   257.0,
+   261.0
+  ],
+  "rst_n": [
+   261.0,
+   265.0
+  ]
+ }
+}
