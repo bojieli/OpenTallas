@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-attn-safe-control-1019/tools/qwen_kv_die/attn_safe_control_1019/check_emitted.py", line 27, in <module>
+    for pn,tok in pins.items():assert canonical(toknet(tok))==bp[pn][0],(ci,pn,'equation binding')
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (1053, 'D', 'equation binding')

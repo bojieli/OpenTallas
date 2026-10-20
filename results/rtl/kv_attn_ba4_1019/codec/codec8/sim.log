@@ -1,0 +1,8 @@
+CODEC_BA4_MISMATCH check=2 ref=001/6 new=101/6
+CODEC_BA4_MISMATCH check=466 ref=001/2 new=101/2
+CODEC_BA4_MISMATCH check=498 ref=001/4 new=101/4
+CODEC_BA4_MISMATCH check=930 ref=001/2 new=101/2
+KVBA_CODEC_BA4 FAIL checks=8800 errors=160 accepted=1602 rejected=598
+[88006000] %Fatal: tb_kvba_codec_ba4.sv:44: Assertion failed in tb_kvba_codec_ba4
+%Error: /srv/opentallas-scratch/claude/codex-attn-ba4/rtl/test/kv_bootage_1019/tb_kvba_codec_ba4.sv:44: Verilog $stop
+Aborting...

@@ -1,0 +1,4 @@
+PR_EQ_MISMATCH ff n7022 trial=0 cycle=5
+[16000] %Fatal: tb_pr.sv:1418: Assertion failed in tb_pr.chk
+%Error: /srv/opentallas-scratch/claude/kv-attn-1019/eq/run_m2/tb_pr.sv:1418: Verilog $stop
+Aborting...

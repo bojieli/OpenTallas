@@ -1,0 +1,8 @@
+CODEC_BA3_MISMATCH check=2 ref=001/6 new=000/6
+CODEC_BA3_MISMATCH check=118 ref=001/2 new=000/2
+CODEC_BA3_MISMATCH check=234 ref=001/2 new=000/2
+CODEC_BA3_MISMATCH check=350 ref=001/2 new=000/2
+KVBA_CODEC_BA3 FAIL checks=8800 errors=598 accepted=1602 rejected=598
+[88006000] %Fatal: tb_kvba_codec_ba3.sv:44: Assertion failed in tb_kvba_codec_ba3
+%Error: /srv/opentallas-scratch/claude/codex-attn-b3/src/rtl/test/kv_bootage_1019/tb_kvba_codec_ba3.sv:44: Verilog $stop
+Aborting...

@@ -1,0 +1,424 @@
+{
+  "schema": "opentallas.attn_balanced27_model.v1",
+  "source_sha256": "8b4bec803a414206357c445865111f94292af06282dfc60e539223a0375530fb",
+  "root": "n6774",
+  "truth": "old INV(OR27(INV(landed_QN))) == AND27(landed_QN)",
+  "old_or_levels": 4,
+  "old_gate_levels_from_qn": 6,
+  "new_gate_levels_from_qn": 3,
+  "serial_edge_delta": 0,
+  "added_ff": 0,
+  "removed_cells": [
+    "cprc1324",
+    "cprc1326",
+    "cprc1328",
+    "cprc1330",
+    "cprc1332",
+    "cprc1334",
+    "cprc1336",
+    "cprc1338",
+    "cpro1339"
+  ],
+  "removed_masters": {
+    "OR5x1_ASAP7_75t_R": 2,
+    "INVx1_ASAP7_75t_R": 1,
+    "OR4x1_ASAP7_75t_R": 6
+  },
+  "added_masters": {
+    "AND4x1_ASAP7_75t_R": 7,
+    "AND3x1_ASAP7_75t_R": 2,
+    "AND2x2_ASAP7_75t_R": 1
+  },
+  "leaves": {
+    "n3954": {
+      "ff": "c14113",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1069",
+        "QN": "n3954"
+      },
+      "input_inverse": "cprl1296"
+    },
+    "n3956": {
+      "ff": "c14080",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1072",
+        "QN": "n3956"
+      },
+      "input_inverse": "cprl1302"
+    },
+    "n5071": {
+      "ff": "c14224",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1059",
+        "QN": "n5071"
+      },
+      "input_inverse": "cprl22"
+    },
+    "n5081": {
+      "ff": "c14191",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1062",
+        "QN": "n5081"
+      },
+      "input_inverse": "cprl28"
+    },
+    "n5069": {
+      "ff": "c14258",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1056",
+        "QN": "n5069"
+      },
+      "input_inverse": "cprl16"
+    },
+    "n5073": {
+      "ff": "c14235",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1058",
+        "QN": "n5073"
+      },
+      "input_inverse": "cprl20"
+    },
+    "n5067": {
+      "ff": "c14247",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1057",
+        "QN": "n5067"
+      },
+      "input_inverse": "cprl18"
+    },
+    "n5077": {
+      "ff": "c14213",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1060",
+        "QN": "n5077"
+      },
+      "input_inverse": "cprl24"
+    },
+    "n5089": {
+      "ff": "c14147",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1066",
+        "QN": "n5089"
+      },
+      "input_inverse": "cprl36"
+    },
+    "n5083": {
+      "ff": "c14158",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1065",
+        "QN": "n5083"
+      },
+      "input_inverse": "cprl34"
+    },
+    "n5091": {
+      "ff": "c14124",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1068",
+        "QN": "n5091"
+      },
+      "input_inverse": "cprl40"
+    },
+    "n5075": {
+      "ff": "c14202",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1061",
+        "QN": "n5075"
+      },
+      "input_inverse": "cprl26"
+    },
+    "n5085": {
+      "ff": "c14169",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1064",
+        "QN": "n5085"
+      },
+      "input_inverse": "cprl32"
+    },
+    "n5079": {
+      "ff": "c14180",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1063",
+        "QN": "n5079"
+      },
+      "input_inverse": "cprl30"
+    },
+    "n5087": {
+      "ff": "c14136",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1067",
+        "QN": "n5087"
+      },
+      "input_inverse": "cprl38"
+    },
+    "n3958": {
+      "ff": "c14091",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1071",
+        "QN": "n3958"
+      },
+      "input_inverse": "cprl1300"
+    },
+    "n5094": {
+      "ff": "c14058",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1074",
+        "QN": "n5094"
+      },
+      "input_inverse": "cprl1306"
+    },
+    "n3960": {
+      "ff": "c14069",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1073",
+        "QN": "n3960"
+      },
+      "input_inverse": "cprl1304"
+    },
+    "n5096": {
+      "ff": "c14047",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1075",
+        "QN": "n5096"
+      },
+      "input_inverse": "cprl1308"
+    },
+    "n5106": {
+      "ff": "c14539",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1080",
+        "QN": "n5106"
+      },
+      "input_inverse": "cprl1318"
+    },
+    "n5104": {
+      "ff": "c14550",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1079",
+        "QN": "n5104"
+      },
+      "input_inverse": "cprl1316"
+    },
+    "n5110": {
+      "ff": "c14517",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1082",
+        "QN": "n5110"
+      },
+      "input_inverse": "cprl1322"
+    },
+    "n5108": {
+      "ff": "c14528",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1081",
+        "QN": "n5108"
+      },
+      "input_inverse": "cprl1320"
+    },
+    "n3952": {
+      "ff": "c14102",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1070",
+        "QN": "n3952"
+      },
+      "input_inverse": "cprl1298"
+    },
+    "n5098": {
+      "ff": "c14036",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1076",
+        "QN": "n5098"
+      },
+      "input_inverse": "cprl1310"
+    },
+    "n5102": {
+      "ff": "c14561",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1078",
+        "QN": "n5102"
+      },
+      "input_inverse": "cprl1314"
+    },
+    "n5100": {
+      "ff": "c14025",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pins": {
+        "CLK": "n4",
+        "D": "n1077",
+        "QN": "n5100"
+      },
+      "input_inverse": "cprl1312"
+    }
+  },
+  "nodes": [
+    {
+      "name": "cpr27_1_0",
+      "master": "AND4x1_ASAP7_75t_R",
+      "inputs": [
+        "n3952",
+        "n3954",
+        "n3956",
+        "n3958"
+      ],
+      "output": "npr27_1_0",
+      "level": 1
+    },
+    {
+      "name": "cpr27_1_1",
+      "master": "AND4x1_ASAP7_75t_R",
+      "inputs": [
+        "n3960",
+        "n5067",
+        "n5069",
+        "n5071"
+      ],
+      "output": "npr27_1_1",
+      "level": 1
+    },
+    {
+      "name": "cpr27_1_2",
+      "master": "AND4x1_ASAP7_75t_R",
+      "inputs": [
+        "n5073",
+        "n5075",
+        "n5077",
+        "n5079"
+      ],
+      "output": "npr27_1_2",
+      "level": 1
+    },
+    {
+      "name": "cpr27_1_3",
+      "master": "AND4x1_ASAP7_75t_R",
+      "inputs": [
+        "n5081",
+        "n5083",
+        "n5085",
+        "n5087"
+      ],
+      "output": "npr27_1_3",
+      "level": 1
+    },
+    {
+      "name": "cpr27_1_4",
+      "master": "AND4x1_ASAP7_75t_R",
+      "inputs": [
+        "n5089",
+        "n5091",
+        "n5094",
+        "n5096"
+      ],
+      "output": "npr27_1_4",
+      "level": 1
+    },
+    {
+      "name": "cpr27_1_5",
+      "master": "AND4x1_ASAP7_75t_R",
+      "inputs": [
+        "n5098",
+        "n5100",
+        "n5102",
+        "n5104"
+      ],
+      "output": "npr27_1_5",
+      "level": 1
+    },
+    {
+      "name": "cpr27_1_6",
+      "master": "AND3x1_ASAP7_75t_R",
+      "inputs": [
+        "n5106",
+        "n5108",
+        "n5110"
+      ],
+      "output": "npr27_1_6",
+      "level": 1
+    },
+    {
+      "name": "cpr27_2_0",
+      "master": "AND4x1_ASAP7_75t_R",
+      "inputs": [
+        "npr27_1_0",
+        "npr27_1_1",
+        "npr27_1_2",
+        "npr27_1_3"
+      ],
+      "output": "npr27_2_0",
+      "level": 2
+    },
+    {
+      "name": "cpr27_2_1",
+      "master": "AND3x1_ASAP7_75t_R",
+      "inputs": [
+        "npr27_1_4",
+        "npr27_1_5",
+        "npr27_1_6"
+      ],
+      "output": "npr27_2_1",
+      "level": 2
+    },
+    {
+      "name": "cpr27_3_0",
+      "master": "AND2x2_ASAP7_75t_R",
+      "inputs": [
+        "npr27_2_0",
+        "npr27_2_1"
+      ],
+      "output": "n6774",
+      "level": 3
+    }
+  ],
+  "clock": "same existing n4; no clock/constraint changes",
+  "first_last_registers": "same existing landing FFs and output-launch FFs"
+}
