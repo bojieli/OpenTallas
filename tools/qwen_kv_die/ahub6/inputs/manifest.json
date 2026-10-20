@@ -1,0 +1,55 @@
+{
+ "commit": "6feabc28437514b815f6954cbf2351335a50ad77",
+ "files": [
+  {
+   "source": "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv",
+   "file": "qkd_ahub_static_dw_safe.sv",
+   "sha256": "0ccf66945dbb58e5a2aae049ba407c71adebaac87de7de6a1d692f62b94606fe"
+  },
+  {
+   "source": "rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g3_lp.sv",
+   "file": "qkd_ahub_static_dw_g3_lp.sv",
+   "sha256": "900add719eb2f6c1cec62b871b08be915f2513073d2e46dd609739fd289e163b"
+  },
+  {
+   "source": "rtl/hdc/nearhbm/qkd_ahub_static_dw_g3.sv",
+   "file": "qkd_ahub_static_dw_g3.sv",
+   "sha256": "a39e7b140996689fa1560801c955120495da804b2c40bd790caf36032a268fe9"
+  },
+  {
+   "source": "tools/qwen_kv_die/ahub4/g3_bench.sh",
+   "file": "g3_bench.sh",
+   "sha256": "e74e6ebe0641013dfa7a1e1476994821c08bf02e5c45ca666da1ab6b23dda9b6"
+  },
+  {
+   "source": "rtl/test/qwen_kv_die/tb_qkd_ahub_static_dw_g3.sv",
+   "file": "tb_qkd_ahub_static_dw_g3.sv",
+   "sha256": "d0eb394b7ce35f670b1d5c7fe5a8f6124f20554632ccd3738b378e61ac9a8f5b"
+  },
+  {
+   "source": "results/arch/kv_ahub4_1019/qkd_ahub_static_dw_g3_lp_record.json",
+   "file": "qkd_ahub_static_dw_g3_lp_record.json",
+   "sha256": "a49da34cb68dd11dd557392dd63c14517a59e10658b43e013f8ab06102ec92b9"
+  },
+  {
+   "source": "physical/ref_tile/qkd_ahub_g4a/spec.json",
+   "file": "qkd_ahub_g4a_spec.json",
+   "sha256": "14bad7d34d8fd92f4fbb0cdf453fa1f211bad1d7b7a9ce2e1a0003ef9005119f"
+  },
+  {
+   "source": "physical/ref_tile/qkd_ahub_g4a/lp_fences.tcl",
+   "file": "lp_fences.tcl",
+   "sha256": "3cbd6caec8748b9a07c3479fc1735cc5d7299de3440705fb863813227053629d"
+  },
+  {
+   "source": "physical/ref_tile/qkd_ahub_g4a/lp_fences_release.tcl",
+   "file": "lp_fences_release.tcl",
+   "sha256": "8be10db19b5b1e010ad9437018928529c5a05f460bd995ee59a2aaf5b4a02de0"
+  },
+  {
+   "source": "physical/ref_tile/qkd_ahub_g4b/spec.json",
+   "file": "qkd_ahub_g4b_spec.json",
+   "sha256": "9a33a078ca7566e89a3ed51022cb4f5f88223bfaadf4dff3d514ae96566c1a07"
+  }
+ ]
+}

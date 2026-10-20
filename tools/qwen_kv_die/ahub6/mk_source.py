@@ -7,8 +7,8 @@ import re
 import subprocess
 import sys
 ROOT=Path(__file__).resolve().parents[3]
-src=ROOT/'rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g3_lp.sv'
-dst=src.with_name('qkd_ahub_static_dw_g6_lp.sv')
+src=ROOT/'tools/qwen_kv_die/ahub6/inputs/qkd_ahub_static_dw_g3_lp.sv'
+dst=ROOT/'rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g6_lp.sv'
 s=src.read_text()
 assert s.count('module qkd_ahub_static_dw_g3_lp #(')==1
 assert s.count('.CHUNK_BITS(8)')==30

@@ -4,8 +4,8 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-BASE = ROOT / 'rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv'
-OUT = BASE.with_name('qkd_ahub6_controls.sv')
+BASE = ROOT / 'tools/qwen_kv_die/ahub6/inputs/qkd_ahub_static_dw_safe.sv'
+OUT = ROOT/'rtl/hdc/nearhbm/qkd_ahub6_controls.sv'
 
 
 def replace(s, a, b):
@@ -238,6 +238,44 @@ def main():
     core=core.replace('    reg [31:0] rz[0:3];', '    wire [31:0] rz[0:3];')
     core=replace(core, '''            always @(posedge clk)
                 if(recip_return && ret_sel[sl][rh])rz[rh][8*sl+:8]<=rc_y[8*sl+:8];''', '''            ot_ahub6_rz_word #(.ID(rh*4+sl)) u_word(.ck(clk),.en(recip_return),.sel(ret_sel[sl][rh]),.d(rc_y[8*sl+:8]),.q(rz[rh][8*sl+:8]));''')
+    core=core.replace('.en(recip_return),.sel(ret_sel[sl][rh])', '.en(return_enable_copy[rh*4+sl]),.sel(ret_sel[sl][rh])')
+    core=replace(core, '    wire [31:0] rz[0:3];', '''    wire [15:0] return_enable_copy;
+    wire return_enable_next=start_all[29]?(c_rra<=16'd1):n_rr;
+    for(genvar c=0;c<16;c=c+1)begin:g_return_enable
+        ot_ahub6_async_copy #(.ID(700+c)) u_ff(.ck(clk),.rn(rn[21]),.d(return_enable_next),.q(return_enable_copy[c]));
+    end
+    wire [31:0] rz[0:3];''')
+    core=core.replace('.ck(clk),.en(lm_b[a]),.head(hh_b[2*a+:2]),.d(data_b[32*a+8*c+:8])', '.ck(clk),.rn(rn[24+a]),.start(start_all[(a==0)?0:(a==1)?9:(a==2)?10:30]),.en(lm_slot[a]),.head(slot_h[2*a+:2]),.d(data_b[32*a+8*c+:8])')
+    core=replace(core, '''    always @(posedge clk or negedge rn[6])
+        if(!rn[6])begin epoch<=0;parity<=0;layer<=0;end
+        else if(start_all[27])begin epoch<=request_epoch;parity<=active_layer_parity;layer<=active_layer;end''', '''    always @(posedge clk or negedge rn[6])
+        if(!rn[6])epoch[7:0]<=0;else if(start_all[27])epoch[7:0]<=request_epoch[7:0];
+    always @(posedge clk or negedge rn[6])
+        if(!rn[6])epoch[15:8]<=0;else if(start_all[31])epoch[15:8]<=request_epoch[15:8];
+    always @(posedge clk or negedge rn[6])
+        if(!rn[6])begin parity<=0;layer<=0;end
+        else if(start_all[4])begin parity<=active_layer_parity;layer<=active_layer;end''')
+    core=core.replace('lm_slot=first_q?', 'lm_slot=first_copy[1]?').replace('z_slot=first_q?', 'z_slot=first_copy[3]?')
+    core=replace(core, '''    wire [32:0] m01=fmax2(ma_x[31:0],ma_a[0],ma_x[63:32],ma_a[1]);
+    wire [32:0] m23=fmax2(ma_x[95:64],ma_a[2],ma_x[127:96],ma_a[3]);
+    wire [32:0] mfin=fmax2(mb_x[31:0],mb_a[0],mb_x[63:32],mb_a[1]);''', '''    wire [32:0] m01,m23,mfin;
+    wire [15:0] ma_available;
+    wire [7:0] mb_available;
+    assign m01[32]=ma_a[0] || ma_a[1];
+    assign m23[32]=ma_a[2] || ma_a[3];
+    assign mfin[32]=mb_a[0] || mb_a[1];
+    for(genvar a=0;a<4;a=a+1)begin:g_max_available
+        for(genvar c=0;c<4;c=c+1)begin:g_chunk
+            ot_ahub6_word #(.W(1),.ID(800+a*4+c)) u_ff(.ck(clk),.d(lany[4*a+mh]),.q(ma_available[4*a+c]));
+        end
+    end
+    for(genvar c=0;c<4;c=c+1)begin:g_max_chunk
+        ot_ahub6_word #(.W(1),.ID(820+c)) u_av0(.ck(clk),.d(m01[32]),.q(mb_available[c]));
+        ot_ahub6_word #(.W(1),.ID(824+c)) u_av1(.ck(clk),.d(m23[32]),.q(mb_available[4+c]));
+        ot_ahub6_max_bits #(.BASE(8*c),.ID(c)) u_pair0(.x(ma_x[31:0]),.y(ma_x[63:32]),.ax(ma_available[c]),.ay(ma_available[4+c]),.q(m01[8*c+:8]));
+        ot_ahub6_max_bits #(.BASE(8*c),.ID(4+c)) u_pair1(.x(ma_x[95:64]),.y(ma_x[127:96]),.ax(ma_available[8+c]),.ay(ma_available[12+c]),.q(m23[8*c+:8]));
+        ot_ahub6_max_bits #(.BASE(8*c),.ID(8+c)) u_final(.x(mb_x[31:0]),.y(mb_x[63:32]),.ax(mb_available[c]),.ay(mb_available[4+c]),.q(mfin[8*c+:8]));
+    end''')
     result = '\n\n'.join((io, dec, core))
     for name in names:
         result = result.replace(name, name.replace('qkd_ahub_static_', 'qkd_ahub6_static_'))
@@ -257,9 +295,13 @@ module ot_ahub6_word #(parameter integer W=24,ID=0)(input wire ck,input wire [W-
 endmodule
 
 (* keep_hierarchy="yes" *)
-module ot_ahub6_lm_word #(parameter integer HEAD=0,ID=0)(input wire ck,en,input wire [1:0] head,input wire [7:0] d,output wire [7:0] q);
+module ot_ahub6_lm_word #(parameter integer HEAD=0,ID=0)(input wire ck,rn,start,en,input wire [1:0] head,input wire [7:0] d,output wire [7:0] q);
+    (* keep=1 *) reg local_en;
+    (* keep=1 *) reg [1:0] local_head;
+    always @(posedge ck or negedge rn)if(!rn)local_en<=0;else local_en<=en && !start;
+    always @(posedge ck)local_head<=head;
     (* keep=1 *) reg [7:0] value;
-    always @(posedge ck)if(en && head==2'(HEAD))value<=d;
+    always @(posedge ck)if(local_en && local_head==2'(HEAD))value<=d;
     assign q=value;
 endmodule
 
@@ -268,6 +310,13 @@ module ot_ahub6_rz_word #(parameter integer ID=0)(input wire ck,en,sel,input wir
     (* keep=1 *) reg [7:0] value;
     always @(posedge ck)if(en && sel)value<=d;
     assign q=value;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_ahub6_max_bits #(parameter integer BASE=0,ID=0)(input wire [31:0] x,y,input wire ax,ay,output wire [7:0] q);
+    wire greater=(y[31]!=x[31])?!y[31]:(!y[31]?(y[30:0]>x[30:0]):(y[30:0]<x[30:0]));
+    wire choose_y=!ax || (ay && greater);
+    assign q=choose_y?y[BASE+:8]:x[BASE+:8];
 endmodule
 
 (* keep_hierarchy="yes" *)
