@@ -58,7 +58,12 @@ def validate_native_forwarding(master, corner, lib, read):
     digest = hashlib.sha256(lib.encode()).hexdigest()
     if digest != fc['exported_etm_sha256'] or digest != abstract['files'][f'{master}_{corner}.lib']:
         raise ValueError('native exported Liberty identity mismatch')
-    if (fc['input_pin'], fc['output_pin']) != ('ck', 'ck_o'):
+    # Relay stations forward ck -> ck_o; other hard children (e.g. the S81 PHY controller dsfd_ctrl_rg2, ck_o = clk
+    # through its kept inverter pair) declare their own scalar clock input in the native export receipt.
+    relay = master.startswith(('dsfd_dvrlyh_', 'dsfd_dvrly_'))
+    if fc['output_pin'] != 'ck_o' or (relay and fc['input_pin'] != 'ck') \
+            or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', fc['input_pin'] or '') \
+            or not re.search(r'\bpin\s*\(\s*"?' + re.escape(fc['input_pin']) + r'"?\s*\)', lib):
         raise ValueError('native forwarding scalar pin contract mismatch')
     sense = fc['timing_sense']
     if master.startswith('dsfd_dvrlyh_') and sense != 'negative_unate':
@@ -66,7 +71,7 @@ def validate_native_forwarding(master, corner, lib, read):
     if sense not in ('positive_unate', 'negative_unate'):
         raise ValueError('unknown native forwarding polarity')
     group = _group(lib, 'ck_o')
-    if re.findall(r'related_pin\s*:\s*"([^"]+)"', group) != ['ck'] or re.findall(r'timing_type\s*:\s*(\w+)', group) != ['combinational'] or re.findall(r'timing_sense\s*:\s*(\w+)', group) != [sense]:
+    if re.findall(r'related_pin\s*:\s*"([^"]+)"', group) != [fc['input_pin']] or re.findall(r'timing_type\s*:\s*(\w+)', group) != ['combinational'] or re.findall(r'timing_sense\s*:\s*(\w+)', group) != [sense]:
         raise ValueError('legacy SELF/relabelled forwarding arc refused')
     comb = checked(f'forwarded_{corner}.lib.raw', fc['native_combinational_lib_sha256'])
     if _group(comb, 'ck_o') != group:
