@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       admits   996 GB (avail 810, growth 113, headroom 0, waiters 0/0 GB) load 46/128 running 31 disk 15 GB disk 15 GB < 20
+ot-run: ot-epyc6       admits   652 GB (avail 569, growth 113, headroom 0, waiters 0/0 GB) load 117/128 running 60 disk 4411 GB 
+ot-run: ot-epyc7       admits   657 GB (avail 561, growth 101, headroom 0, waiters 0/0 GB) load 68/96 running 24 disk 5652 GB 
+ot-run: ot-epyc9       admits   725 GB (avail 682, growth 175, headroom 0, waiters 0/0 GB) load 122/128 running 42 disk 142 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-pglg3/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-pglg3/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2358729-1792490779 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+PGLG_H2 bench MUT=0 LK=1 RT=10 IR=1 SWQ=16 EDGES=1200
+PGLG_H2 errors serial=0 fault=0 stream=0 vm_write=0 lg_fault=0
+PGLG_H2 PASS checks=29952 resets=2 data_edges=2319 vm_writes=1786 ref_fault_edges=2496
+- rtl/test/hbm_accel/generic/tb_hbm_su_pglg_h2.sv:203: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 5.136 s; speed 622.837 ns/s
+- Verilator: cpu 5.134 s on 1 threads; allocated 65 MB
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2358729-1792490779): exit 0

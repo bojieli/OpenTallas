@@ -466,7 +466,7 @@ def kit_spec(half, variant):
     other = "hi" if lo else "lo"
     return dict(
         name=name, top=top, kind="cluster", sources=srcs,
-        params=dict(QID=1, G=2, STRAP=1, PRETREE=0, GMUT=0, MUT=0, SMUT=0),
+        params=dict(QID=1, G=2, STRAP=1, PRETREE=0, GMUT=0, MUT=0, **({"SMUT": 0} if lo else {})),
         clock_port="ck_s", reset_ports=["rst_n"],
         outline=dict(w=w_out, h=h_out, exact=True),
         slot_change_request=(f"{LANE} 10-20 -> HBM-DIE6 / H-D4G: LIGHT su_<q>2/3 slice = TWO landed halves stacked in one "

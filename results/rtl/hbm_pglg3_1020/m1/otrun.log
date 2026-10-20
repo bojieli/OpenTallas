@@ -1,0 +1,24 @@
+ot-run: ot-epyc5       admits   996 GB (avail 810, growth 113, headroom 0, waiters 0/0 GB) load 46/128 running 31 disk 15 GB disk 15 GB < 20
+ot-run: ot-epyc6       admits   651 GB (avail 569, growth 113, headroom 0, waiters 0/0 GB) load 117/128 running 60 disk 4411 GB 
+ot-run: ot-epyc7       admits   657 GB (avail 561, growth 101, headroom 0, waiters 0/0 GB) load 68/96 running 24 disk 5652 GB 
+ot-run: ot-epyc9       admits   725 GB (avail 682, growth 175, headroom 0, waiters 0/0 GB) load 122/128 running 42 disk 142 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-pglg3/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-pglg3/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2358739-1792490779 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+LOCKSTEP MISMATCH serial(sx/iq/to) P1 t=88201 ks=73 kp=98
+LOCKSTEP MISMATCH serial(sx/iq/to) P0 t=89401 ks=74 kp=99
+LOCKSTEP MISMATCH serial(sx/iq/to) P1 t=89401 ks=74 kp=99
+LOCKSTEP MISMATCH serial(sx/iq/to) P0 t=90601 ks=75 kp=100
+LOCKSTEP MISMATCH serial(sx/iq/to) P1 t=90601 ks=75 kp=100
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=95101 ks=79 kp=105
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P1 t=95101 ks=79 kp=105
+LOCKSTEP MISMATCH serial(sx/iq/to) P0 t=184201 ks=153 kp=204
+PGLG_H2 errors serial=962 fault=0 stream=0 vm_write=404 lg_fault=0
+PGLG_H2 FAIL errors=1366 class_ok=1 checks=8352 data_edges=536 vm_writes=452
+- rtl/test/hbm_accel/generic/tb_hbm_su_pglg_h2.sv:203: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 1.490 s; speed 697.249 ns/s
+- Verilator: cpu 1.489 s on 1 threads; allocated 65 MB
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2358739-1792490779): exit 0
