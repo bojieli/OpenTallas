@@ -1,0 +1,49 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: ot-epyc9       admits  1253 GB (avail 936, growth 60, headroom 0, waiters 0/0 GB) load 21/128 running 15 disk 657 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1081528-1792470443 after 0 s
+ex_n2_P600 rc=0
+ex_n3_P600 rc=0
+ex_n4_P600 rc=0
+ex_n6_P600 rc=124
+ex_n8_P600 rc=124
+ex_n12_P600 rc=124
+ex_n24_P600 rc=124
+sh_P40 rc=0
+sh_P60 rc=0
+sh_P80 rc=0
+sh_P100 rc=0
+sh_P120 rc=0
+sh_P140 rc=0
+sh_P160 rc=0
+sh_P180 rc=0
+== run_ex_n12_P600.log: 24 RET; GO_LATE 4 planned 2462  lastGO: GO 3 1863 23 1
+== run_ex_n24_P600.log: 24 RET; GO_LATE 4 planned 2462  lastGO: GO 3 1863 23 1
+== run_ex_n2_P600.log: 12 RET; END edges=2263 ret_words=12 xo_checked=2261 fault=0 spine_fault=0  lastGO: GO 1 663 21 1
+== run_ex_n3_P600.log: 22 RET; END edges=2863 ret_words=22 xo_checked=2861 fault=0 spine_fault=0  lastGO: GO 2 1263 22 4
+== run_ex_n4_P600.log: 24 RET; END edges=3463 ret_words=24 xo_checked=3461 fault=0 spine_fault=0  lastGO: GO 3 1863 23 1
+== run_ex_n6_P600.log: 24 RET; GO_LATE 4 planned 2462  lastGO: GO 3 1863 23 1
+== run_ex_n8_P600.log: 24 RET; GO_LATE 4 planned 2462  lastGO: GO 3 1863 23 1
+== run_sh_P100.log: 25 RET; FAULT edge 268 status 11 lx 0 FAULT edge 269 status 11 lx 0 FAULT edge 270 status 11 lx 0  lastGO: GO 3 363 19 1
+== run_sh_P120.log: 24 RET; FAULT edge 275 status 11 lx 0 FAULT edge 276 status 11 lx 0 FAULT edge 277 status 11 lx 0  lastGO: GO 3 423 19 1
+== run_sh_P140.log: 24 RET; FAULT edge 437 status 11 lx 0 FAULT edge 438 status 11 lx 0 FAULT edge 439 status 11 lx 0  lastGO: GO 3 483 19 1
+== run_sh_P160.log: 24 RET; END edges=2143 ret_words=24 xo_checked=2141 fault=0 spine_fault=0  lastGO: GO 3 543 19 1
+== run_sh_P180.log: 24 RET; END edges=2203 ret_words=24 xo_checked=2201 fault=0 spine_fault=0  lastGO: GO 3 603 19 1
+== run_sh_P40.log: 25 RET; FAULT edge 268 status 11 lx 0 FAULT edge 269 status 11 lx 0 FAULT edge 270 status 11 lx 0  lastGO: GO 3 183 19 1
+== run_sh_P60.log: 25 RET; FAULT edge 268 status 11 lx 0 FAULT edge 269 status 11 lx 0 FAULT edge 270 status 11 lx 0  lastGO: GO 3 243 19 1
+== run_sh_P80.log: 25 RET; FAULT edge 268 status 11 lx 0 FAULT edge 269 status 11 lx 0 FAULT edge 270 status 11 lx 0  lastGO: GO 3 303 19 1
+TOKSIM_FGU_SEQ PASS op ffn.shared_gu PER 180 phases 4 rows 10 fixture_rows 10 go0 63 last_ret 963 span 900 errors 0 []
+TOKSIM_FGU_SEQ PASS op ffn.shared_gu PER 160 phases 4 rows 10 fixture_rows 10 go0 63 last_ret 903 span 840 errors 0 []
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 140 phases 4 rows 10 fixture_rows 10 go0 63 last_ret 843 span 780 errors 6 ['FAULT edge 437 status 11 lx 0', 'FAULT edge 438 status 11 lx 0', 'FAULT edge 439 status 11 lx 0']
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 120 phases 4 rows 10 fixture_rows 10 go0 63 last_ret 806 span 743 errors 19 ['FAULT edge 275 status 11 lx 0', 'FAULT edge 276 status 11 lx 0', 'FAULT edge 277 status 11 lx 0']
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 100 phases 4 rows 10 fixture_rows 10 go0 63 last_ret 786 span 723 errors 20 ['FAULT edge 268 status 11 lx 0', 'FAULT edge 269 status 11 lx 0', 'FAULT edge 270 status 11 lx 0']
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 80 phases 4 rows 10 fixture_rows 10 go0 63 last_ret 780 span 717 errors 22 ['FAULT edge 268 status 11 lx 0', 'FAULT edge 269 status 11 lx 0', 'FAULT edge 270 status 11 lx 0']
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 60 phases 4 rows 10 fixture_rows 10 go0 63 last_ret 780 span 717 errors 22 ['FAULT edge 268 status 11 lx 0', 'FAULT edge 269 status 11 lx 0', 'FAULT edge 270 status 11 lx 0']
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 40 phases 4 rows 10 fixture_rows 10 go0 63 last_ret 780 span 717 errors 21 ['FAULT edge 268 status 11 lx 0', 'FAULT edge 269 status 11 lx 0', 'FAULT edge 270 status 11 lx 0']
+TOKSIM_FGU_DIAG_DONE
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1081528-1792470443): exit 0

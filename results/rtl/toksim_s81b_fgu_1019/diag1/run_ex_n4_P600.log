@@ -1,0 +1,41 @@
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_experts_gu/f_e14b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_experts_gu/f_e14b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_experts_gu/f_e14_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_experts_gu/f_e14_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_experts_gu/f_e12b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_experts_gu/f_e12b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_experts_gu/f_e12_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_experts_gu/f_e12_0.viamap.hex:0: $readmem file not found
+GO 0 63 20 4
+RET 388 07b1720c01000008b
+RET 389 07edf82781000408b
+RET 392 17cb7c4201000804b
+RET 393 07c9919801000c04b
+RET 398 17bc973b01000844b
+RET 399 17c6586581000c44b
+RET 405 17cf3db201000888b
+RET 406 07c3343001000c88b
+RET 408 07b3e2ac01000088b
+RET 409 07ce96b801000488b
+GO 1 663 21 1
+RET 991 17bbe37702000008b
+RET 1008 0798e50802000088b
+GO 2 1263 22 4
+RET 1588 179e6d1403000008b
+RET 1589 17dd497603000408b
+RET 1592 07c54a3803000804b
+RET 1593 17a6f0e003000c04b
+RET 1598 07c2e1ba03000844b
+RET 1599 17d0b0ed23000c44b
+RET 1605 07bd2f3803000888b
+RET 1606 17a2851803000c88b
+RET 1608 07a4be1803000088b
+RET 1609 17cab8f403000488b
+GO 3 1863 23 1
+RET 2191 07ddcfc8a0000008b
+RET 2208 07ce626800000088b
+END edges=3463 ret_words=24 xo_checked=3461 fault=0 spine_fault=0
+- tools/s81_dv/layer_prog/qf_producer/tb_toksim_fgu_seq.sv:146: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 10.344 s; speed 335.323 ns/s
+- Verilator: cpu 10.338 s on 1 threads; allocated 46 MB

@@ -1,0 +1,41 @@
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e14b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e14b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e14_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e14_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e12b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e12b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e12_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e12_0.viamap.hex:0: $readmem file not found
+GO 0 63 16 4
+GO 1 243 17 1
+RET 403 07cafa18c1000008b
+RET 404 17a287c0c1000408b
+RET 407 07715eab01000804b
+RET 408 07b237c381000c04b
+RET 413 07b5b8bd01000844b
+RET 414 17a6991961000c44b
+RET 420 17a7c9fec1000888b
+RET 421 17accc83a1000c88b
+GO 2 423 18 4
+RET 423 07b82a1101000088b
+RET 424 078474f9c1000488b
+RET 586 17a1a95f82000008b
+GO 3 603 19 1
+RET 603 17c033f582000088b
+RET 763 07d425ad23000008b
+RET 764 17b060dae3000408b
+RET 767 07c8065603000804b
+RET 768 07b2916203000c04b
+RET 773 1792eea6e3000844b
+RET 774 17a5f24cc3000c44b
+RET 780 17a40632e3000888b
+RET 781 0721f40003000c88b
+RET 783 07b0cd7a23000088b
+RET 784 179fb4c803000488b
+RET 946 07c4adb080000008b
+RET 963 17a370d880000088b
+END edges=2203 ret_words=24 xo_checked=2201 fault=0 spine_fault=0
+- tools/s81_dv/layer_prog/qf_producer/tb_toksim_fgu_seq.sv:146: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 10.109 s; speed 218.469 ns/s
+- Verilator: cpu 10.108 s on 1 threads; allocated 46 MB

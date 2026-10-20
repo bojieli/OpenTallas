@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: ot-epyc9       admits  1106 GB (avail 863, growth 89, headroom 0, waiters 0/0 GB) load 41/128 running 19 disk 618 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fgu/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1415027-1792471061 after 0 s
+TOKSIM_FGU_SEQALL 28
+seq_experts_gu_P141_R1 rc=0 TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 141 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3651 span 3588 errors 26 ['FAULT edge 437 status 11 lx 0', 'FAULT edge 438 status 11 lx 0', 'FAULT edge 439 status 11 lx 0']
+seq_experts_gu_P142_R1 rc=0 TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 142 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3674 span 3611 errors 26 ['FAULT edge 439 status 11 lx 0', 'FAULT edge 440 status 11 lx 0', 'FAULT edge 441 status 11 lx 0']
+seq_experts_gu_P143_R1 rc=0 TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 143 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3697 span 3634 errors 26 ['FAULT edge 441 status 11 lx 0', 'FAULT edge 442 status 11 lx 0', 'FAULT edge 443 status 11 lx 0']
+seq_experts_gu_P144_R1 rc=0 TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 144 phases 24 rows 60 fixture_rows 60 go0 63 last_ret 3720 span 3657 errors 4 ['FAULT edge 467 status 11 lx 0', 'FAULT edge 468 status 11 lx 0', 'FAULT edge 469 status 11 lx 0']
+seq_gu_all_P145_R1 rc=0 TOKSIM_FGU_SEQ FAIL op ffn.shared_gu+ffn.experts_gu PER 145 phases 28 rows 70 fixture_rows 70 go0 63 last_ret 4323 span 4260 errors 4 ['FAULT edge 469 status 11 lx 0', 'FAULT edge 470 status 11 lx 0', 'FAULT edge 471 status 11 lx 0']
+seq_gu_all_P147_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.shared_gu+ffn.experts_gu PER 147 phases 28 rows 70 fixture_rows 70 go0 63 last_ret 4377 span 4314 errors 0 []
+seq_gu_all_P150_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.shared_gu+ffn.experts_gu PER 150 phases 28 rows 70 fixture_rows 70 go0 63 last_ret 4458 span 4395 errors 0 []
+seq_gu_all_P160_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.shared_gu+ffn.experts_gu PER 160 phases 28 rows 70 fixture_rows 70 go0 63 last_ret 4728 span 4665 errors 0 []
+seq_gu_all_P200_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.shared_gu+ffn.experts_gu PER 200 phases 28 rows 70 fixture_rows 70 go0 63 last_ret 5808 span 5745 errors 0 []
+seq_shared_gu_P146_R1 rc=0 TOKSIM_FGU_SEQ PASS op ffn.shared_gu PER 146 phases 4 rows 10 fixture_rows 10 go0 63 last_ret 861 span 798 errors 0 []
+TOKSIM_FGU_SEQ5_DONE
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1415027-1792471061): exit 0

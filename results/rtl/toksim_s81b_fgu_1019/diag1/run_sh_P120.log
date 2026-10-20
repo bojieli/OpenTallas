@@ -1,0 +1,45 @@
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e14b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e14b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e14_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e14_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e12b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e12b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e12_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/toksim-s81b-fgu/vec/seq_shared_gu/f_e12_0.viamap.hex:0: $readmem file not found
+GO 0 63 16 4
+GO 1 183 17 1
+FAULT edge 275 status 11 lx 0
+FAULT edge 276 status 11 lx 0
+FAULT edge 277 status 11 lx 0
+FAULT edge 278 status 11 lx 0
+GO 2 303 18 4
+RET 403 07cafa18c1000008b
+RET 404 17a287c0c1000408b
+RET 407 07715eab01000804b
+RET 408 07b237c381000c04b
+RET 413 07b5b8bd01000844b
+RET 414 17a6991961000c44b
+RET 420 17a7c9fec1000888b
+RET 421 17accc83a1000c88b
+GO 3 423 19 1
+RET 423 07b82a1101000088b
+RET 424 078474f9c1000488b
+RET 526 17c7d8a922000008b
+RET 543 07b82a1102000088b
+RET 666 07c5ccd443000008b
+RET 667 0758b87003000408b
+RET 670 07c76dc0c3000804b
+RET 671 074c93c003000c04b
+RET 676 0000000003000844b
+RET 677 0000000003000c44b
+RET 683 0000000003000888b
+RET 684 0000000003000c88b
+RET 686 17c033f583000088b
+RET 687 0000000003000488b
+RET 789 07c0f1ff00000008b
+RET 806 07b0cd7a20000088b
+END edges=2023 ret_words=24 xo_checked=2021 fault=4 spine_fault=0
+- tools/s81_dv/layer_prog/qf_producer/tb_toksim_fgu_seq.sv:146: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 10.090 s; speed 201.045 ns/s
+- Verilator: cpu 10.086 s on 1 threads; allocated 46 MB

@@ -1,0 +1,82 @@
+{
+ "op": "ffn.shared_gu",
+ "frame": "u_f_0L00",
+ "per": 141,
+ "nph": 4,
+ "rows": 10,
+ "go0": 63,
+ "last_go": 486,
+ "first_ret": 403,
+ "last_ret": 846,
+ "words": 24,
+ "go0_to_last_ret": 783,
+ "fixture_rows": 10,
+ "errors": [
+  "FAULT edge 437 status 11 lx 0",
+  "FAULT edge 438 status 11 lx 0",
+  "FAULT edge 439 status 11 lx 0",
+  "FAULT edge 440 status 11 lx 0",
+  "PHASE_FAIL p18: ['MISMATCH edge 403 row 0 lo 0 k 2 got 3e2e66a2/0 want 3ea12d69/0', 'MISMATCH edge 404 row 1 lo 0 k 2 got 3ac5c380/0 want bd8306d7/0']",
+  "PHASE_FAIL p19: ['MISMATCH edge 406 row 0 lo 0 k 2 got 3e078ff8/0 want 3e256d84/0', 'MISMATCH edge 423 row 0 lo 4 k 2 got 3d866bd1/0 want bd1b86c4/0']"
+ ],
+ "phases": [
+  {
+   "i": 0,
+   "vec": "p16",
+   "phase": 16,
+   "mat": "shared.w1",
+   "rows": 4,
+   "go": 63,
+   "shift": 0,
+   "words": 10,
+   "first_ret": 403,
+   "last_ret": 424,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 1,
+   "vec": "p17",
+   "phase": 17,
+   "mat": "shared.w1",
+   "rows": 1,
+   "go": 204,
+   "shift": 141,
+   "words": 2,
+   "first_ret": 547,
+   "last_ret": 564,
+   "fixture_rows": 1,
+   "pass_": true
+  },
+  {
+   "i": 2,
+   "vec": "p18",
+   "phase": 18,
+   "mat": "shared.w3",
+   "rows": 4,
+   "go": 345,
+   "shift": 282,
+   "words": 10,
+   "first_ret": 685,
+   "last_ret": 706,
+   "fixture_rows": 4,
+   "pass_": false
+  },
+  {
+   "i": 3,
+   "vec": "p19",
+   "phase": 19,
+   "mat": "shared.w3",
+   "rows": 1,
+   "go": 486,
+   "shift": 423,
+   "words": 2,
+   "first_ret": 829,
+   "last_ret": 846,
+   "fixture_rows": 1,
+   "pass_": false
+  }
+ ],
+ "end": "END edges=2086 ret_words=24 xo_checked=2084 fault=4 spine_fault=0",
+ "pass": false
+}

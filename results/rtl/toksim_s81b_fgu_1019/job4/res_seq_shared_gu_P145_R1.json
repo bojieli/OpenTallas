@@ -1,0 +1,80 @@
+{
+ "op": "ffn.shared_gu",
+ "frame": "u_f_0L00",
+ "per": 145,
+ "nph": 4,
+ "rows": 10,
+ "go0": 63,
+ "last_go": 498,
+ "first_ret": 403,
+ "last_ret": 858,
+ "words": 24,
+ "go0_to_last_ret": 795,
+ "fixture_rows": 10,
+ "errors": [
+  "FAULT edge 469 status 11 lx 0",
+  "FAULT edge 470 status 11 lx 0",
+  "FAULT edge 471 status 11 lx 0",
+  "FAULT edge 472 status 11 lx 0"
+ ],
+ "phases": [
+  {
+   "i": 0,
+   "vec": "p16",
+   "phase": 16,
+   "mat": "shared.w1",
+   "rows": 4,
+   "go": 63,
+   "shift": 0,
+   "words": 10,
+   "first_ret": 403,
+   "last_ret": 424,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 1,
+   "vec": "p17",
+   "phase": 17,
+   "mat": "shared.w1",
+   "rows": 1,
+   "go": 208,
+   "shift": 145,
+   "words": 2,
+   "first_ret": 551,
+   "last_ret": 568,
+   "fixture_rows": 1,
+   "pass_": true
+  },
+  {
+   "i": 2,
+   "vec": "p18",
+   "phase": 18,
+   "mat": "shared.w3",
+   "rows": 4,
+   "go": 353,
+   "shift": 290,
+   "words": 10,
+   "first_ret": 693,
+   "last_ret": 714,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 3,
+   "vec": "p19",
+   "phase": 19,
+   "mat": "shared.w3",
+   "rows": 1,
+   "go": 498,
+   "shift": 435,
+   "words": 2,
+   "first_ret": 841,
+   "last_ret": 858,
+   "fixture_rows": 1,
+   "pass_": true
+  }
+ ],
+ "end": "END edges=2098 ret_words=24 xo_checked=2096 fault=4 spine_fault=0",
+ "pass": false
+}

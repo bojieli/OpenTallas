@@ -1,0 +1,23 @@
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style -Wno-MULTIDRIVEN -DLK=5 -DTB_FWD_GATE -DTB_LDLY=3 -DFRAME=col_h9_l4_nx_b -DDSFD_PQ_STATIC_X2 -DDSFD_PQ_HAS_BF_X2 --top-module tb_toksim_fgu_seq -Mdir /srv/opentallas-scratch/claude/toksim-s81b-fgu/out4/obj -f tools/s81_dv/frame_bench.f rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4_nx.sv rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4_nx_b.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv tools/s81_dv/layer_prog/qf_producer/tb_toksim_fgu_seq.sv --build-jobs 16 -MAKEFLAGS OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0"
+	User time (seconds): 655.33
+	System time (seconds): 27.94
+	Percent of CPU this job got: 330%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:26.77
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 5543880
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 8252686
+	Voluntary context switches: 552
+	Involuntary context switches: 1441
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1751768
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
