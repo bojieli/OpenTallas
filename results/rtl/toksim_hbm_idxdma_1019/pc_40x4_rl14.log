@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc9       admits  1205 GB (avail 938, growth 94, headroom 0, waiters 0/0 GB) load 81/128 running 17 disk 710 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-208595-1792460333 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+TOKSIM_PC rec 0 reqs 40 len 4 k_v_edge 608 first_beat 656 last_beat 858 hbm_edges_first 48 hbm_edges_last 250
+TOKSIM_PC rec 1 reqs 40 len 4 k_v_edge 1378 first_beat 1426 last_beat 1614 hbm_edges_first 48 hbm_edges_last 236
+TOKSIM_PC rec 2 reqs 40 len 4 k_v_edge 2154 first_beat 2216 last_beat 2414 hbm_edges_first 62 hbm_edges_last 260
+TOKSIM_PC rec 3 reqs 40 len 4 k_v_edge 2954 first_beat 3002 last_beat 3200 hbm_edges_first 48 hbm_edges_last 246
+TOKSIM_PC rec 4 reqs 40 len 4 k_v_edge 3740 first_beat 3788 last_beat 4165 hbm_edges_first 48 hbm_edges_last 425
+TOKSIM_PC rec 5 reqs 40 len 4 k_v_edge 4705 first_beat 4752 last_beat 5166 hbm_edges_first 47 hbm_edges_last 461
+TOKSIM_PC_LOAD RL 14 reqs 40 len 4 records 6 beats 960 errors 0 first min 47 max 62 mean 50.17 last min 236 max 461 mean 313.00 (HBM 1024 ps edges)
+TOKSIM_PC_LOAD PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-208595-1792460333): exit 0

@@ -1,0 +1,17 @@
+BANKLAT die bank0: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank1: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank2: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank3: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank4: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank5: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank6: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+BANKLAT die bank7: rq lane 0 + pad 0, bank 7, rr lane 0 -> round trip 7
+TOKSIM_DMA move 0 nsec 64 rows 1 doorbell 13 issue_at 21 drain_at 31 done 48 cycles_issue_to_done 27 cycles_doorbell_to_done 35
+TOKSIM_DMA move 1 nsec 64 rows 1 doorbell 53 issue_at 61 drain_at 71 done 88 cycles_issue_to_done 27 cycles_doorbell_to_done 35
+TOKSIM_DMA move 2 nsec 64 rows 1 doorbell 93 issue_at 101 drain_at 111 done 128 cycles_issue_to_done 27 cycles_doorbell_to_done 35
+TOKSIM_DMA move 3 nsec 64 rows 1 doorbell 133 issue_at 141 drain_at 151 done 168 cycles_issue_to_done 27 cycles_doorbell_to_done 35
+BANKLAT PASS RR_RT_die=7 faces_D=7 lanes=0 moves=4 beats=256 checks=167 lag=10 (every landing slot through the real landing SRAMs, wd on drain_at+3+chunk)
+- rtl/test/toksim_idxdma/tb_toksim_dma_store.sv:131: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.003 s; speed 585.486 us/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

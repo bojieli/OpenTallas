@@ -1,0 +1,12 @@
+TOKSIM_PC rec 0 reqs 40 len 4 k_v_edge 608 first_beat 665 last_beat 875 hbm_edges_first 57 hbm_edges_last 267
+TOKSIM_PC rec 1 reqs 40 len 4 k_v_edge 1378 first_beat 1435 last_beat 1631 hbm_edges_first 57 hbm_edges_last 253
+TOKSIM_PC rec 2 reqs 40 len 4 k_v_edge 2162 first_beat 2225 last_beat 2423 hbm_edges_first 63 hbm_edges_last 261
+TOKSIM_PC rec 3 reqs 40 len 4 k_v_edge 2954 first_beat 3011 last_beat 3209 hbm_edges_first 57 hbm_edges_last 255
+TOKSIM_PC rec 4 reqs 40 len 4 k_v_edge 3740 first_beat 3797 last_beat 4174 hbm_edges_first 57 hbm_edges_last 434
+TOKSIM_PC rec 5 reqs 40 len 4 k_v_edge 4705 first_beat 4761 last_beat 5183 hbm_edges_first 56 hbm_edges_last 478
+TOKSIM_PC_LOAD RL 23 reqs 40 len 4 records 6 beats 960 errors 0 first min 56 max 63 mean 57.83 last min 253 max 478 mean 324.67 (HBM 1024 ps edges)
+TOKSIM_PC_LOAD PASS
+- rtl/test/toksim_idxdma/tb_toksim_pc_load.sv:67: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.020 s; speed 283.259 us/s
+- Verilator: cpu 0.020 s on 1 threads; allocated 7 MB

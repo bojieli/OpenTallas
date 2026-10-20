@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc9       admits  1238 GB (avail 945, growth 78, headroom 0, waiters 0/0 GB) load 64/128 running 15 disk 726 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-151952-1792460142 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+toksim_idx_vectors argmax N 1347 records 4 sectors 676
+TOKSIM_REC rec 0 go_edge 16 done_edge 345 cycles 329
+TOKSIM_REC rec 1 go_edge 348 done_edge 677 cycles 329
+TOKSIM_REC rec 2 go_edge 680 done_edge 1009 cycles 329
+TOKSIM_REC rec 3 go_edge 1012 done_edge 1341 cycles 329
+TOKSIM_IDX kind ARGMAX VM_RT 65 CR_RT 36 VMX 77 ACK 52 LAQ 4 LAR 3 records 4 done 4 fault 0 share_fault 0 errors 0 cycles_min 329 cycles_max 329
+TOKSIM_IDX PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-151952-1792460142): exit 0

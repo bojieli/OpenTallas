@@ -1,0 +1,7 @@
+TOKSIM_REC rec 0 go_edge 16 done_edge 4813 cycles 4797
+TOKSIM_IDX kind ARGMAX VM_RT 0 CR_RT 0 VMX 5 ACK 13 LAQ 0 LAR 0 records 1 done 1 fault 0 share_fault 0 errors 0 cycles_min 4797 cycles_max 4797
+TOKSIM_IDX PASS
+- rtl/test/toksim_idxdma/tb_toksim_idx.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.108 s; speed 88.918 us/s
+- Verilator: cpu 0.108 s on 1 threads; allocated 9 MB

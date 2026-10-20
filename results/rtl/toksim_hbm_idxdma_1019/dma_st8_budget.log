@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-epyc9       admits  1205 GB (avail 938, growth 94, headroom 0, waiters 0/0 GB) load 81/128 running 17 disk 710 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-idxdma/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-208875-1792460333 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+TOKSIM_DMA move 0 nsec 8 rows 1 doorbell 13 issue_at 21 drain_at 104 done 114 cycles_issue_to_done 93 cycles_doorbell_to_done 101
+TOKSIM_DMA move 1 nsec 8 rows 1 doorbell 119 issue_at 127 drain_at 210 done 220 cycles_issue_to_done 93 cycles_doorbell_to_done 101
+TOKSIM_DMA move 2 nsec 8 rows 1 doorbell 225 issue_at 233 drain_at 316 done 326 cycles_issue_to_done 93 cycles_doorbell_to_done 101
+TOKSIM_DMA move 3 nsec 8 rows 1 doorbell 331 issue_at 339 drain_at 422 done 432 cycles_issue_to_done 93 cycles_doorbell_to_done 101
+BANKLAT PASS RR_RT_die=80 faces_D=8 lanes=1 moves=4 beats=32 checks=431 lag=83 (every landing slot through the real landing SRAMs, wd on drain_at+3+chunk)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-208875-1792460333): exit 0
