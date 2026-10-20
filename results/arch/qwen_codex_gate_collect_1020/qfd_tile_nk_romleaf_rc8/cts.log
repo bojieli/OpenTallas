@@ -1,0 +1,2499 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_tt.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_ff.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_ff.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_ff.lib
+read_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_global_place_pre_gpl.tcl
+OT_PRS: 1028 output pins already on a dedicated flop, 0 pins split onto a cloned flop (0 cells added, 0 load-less cells removed), 2 outputs not flop-driven
+INHOLD: 1315 input hold cells (HB2xp67_ASAP7_75t_R; 0 strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver 'BUFx4f_ASAP7_75t_R', 2630 FIRM for GPL), 277 inputs skipped (clock / reset-only / non-DFF)
+OUTHOLD: 1028 output hold stages (BUF + HB2xp67_ASAP7_75t_R + BUF FIRM at the pin, 0 with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), 2 outputs skipped (not flop-driven), 0 QN inverters absorbed FIRM at the pin
+QRL_REGION land_rq FREE sinks=34
+QRL_REGION land_fault FREE sinks=77
+QRL_REGION tx0 EXCLUSIVE sinks=861 area=251.33003999999585 capacity=1790.9424000000085
+QRL_REGION tx1 EXCLUSIVE sinks=861 area=251.33003999999585 capacity=1790.9424000000226
+QRL_REGION tx2 EXCLUSIVE sinks=861 area=251.33003999999585 capacity=1790.9424000000254
+QRL_REGION tx3 EXCLUSIVE sinks=861 area=251.33003999999585 capacity=1790.9424000000245
+QRL_REGION tx4 EXCLUSIVE sinks=861 area=251.33003999999585 capacity=1733.6592000000007
+QRL_REGION tx5 EXCLUSIVE sinks=861 area=251.33003999999585 capacity=1733.6591999999907
+QRL_REGION tx6 EXCLUSIVE sinks=861 area=251.33003999999585 capacity=1733.6591999999905
+QRL_REGION tx7 EXCLUSIVE sinks=861 area=251.33003999999585 capacity=1733.6591999999894
+QRL_REGION rsw EXCLUSIVE sinks=515 area=150.4364399999999 capacity=3620.5427199999463
+QRL_REGION rnw EXCLUSIVE sinks=514 area=150.0573599999999 capacity=4182.68319999991
+QRL_REGION rse EXCLUSIVE sinks=515 area=150.4364399999999 capacity=3516.542720000024
+QRL_REGION rne EXCLUSIVE sinks=514 area=150.0573599999999 capacity=4062.6832000000045
+QRL_REGION dw EXCLUSIVE sinks=544 area=158.63039999999955 capacity=3715.169279999937
+QRL_REGION de EXCLUSIVE sinks=544 area=158.63039999999955 capacity=3611.169280000016
+QRL_REGION land_top FREE sinks=2
+QRL_REGION hub EXCLUSIVE sinks=3833 area=1126.3633200000459 capacity=3872.000000000011
+ROMLEAF_PARENT_REGIONS_PASS 18 groups
+OT_ANCHOR_PACK: legally packed 8057 owned anchors; maximum Manhattan displacement 2010.0 DBU
+OT_IOFLOP fixed 1028 output-port and 1315 input-port flops at their pins (279 ports not single-flop)
+Took 13 seconds: source /work/hooks/pre_global_place_pre_gpl.tcl
+[INFO RSZ-0026] Removed 2199 buffers.
+global_placement -density 0.5 -pad_left 0 -pad_right 0 -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 818.640 905.040 ) um
+[INFO GPL-0016] Core area:                  737183.462 um^2
+[INFO GPL-0036] Movable instances area:       6176.963 um^2
+[INFO GPL-0037] Total instances area:       331950.398 um^2
+[INFO GPL-0035] Pin density area adjust:        80.106 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            121847
+[INFO GPL-0007] Movable instances:               26784
+[INFO GPL-0008] Fixed instances:                 61393
+[INFO GPL-0009] Dummy instances:                 33670
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 818.640 905.040 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                737183.462 um^2
+[INFO GPL-0017] Fixed instances area:       388574.744 um^2
+[INFO GPL-0018] Movable instances area:       2604.399 um^2
+[INFO GPL-0019] Utilization:                     0.747 %
+[INFO GPL-0020] Standard cells area:          2604.399 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_tx0
+[INFO GPL-0006] Number of instances:              1381
+[INFO GPL-0007] Movable instances:                 861
+[INFO GPL-0008] Fixed instances:                   520
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 359.392 129.600 ) ( 373.800 270.000 ) um
+[INFO GPL-0014] Region name: qrl_tx0.
+[INFO GPL-0015] Region area:                  2022.883 um^2
+[INFO GPL-0017] Fixed instances area:           15.163 um^2
+[INFO GPL-0018] Movable instances area:        226.382 um^2
+[INFO GPL-0019] Utilization:                    11.276 %
+[INFO GPL-0020] Standard cells area:           226.382 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_tx1
+[INFO GPL-0006] Number of instances:              1381
+[INFO GPL-0007] Movable instances:                 861
+[INFO GPL-0008] Fixed instances:                   520
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 359.392 302.400 ) ( 373.800 442.800 ) um
+[INFO GPL-0014] Region name: qrl_tx1.
+[INFO GPL-0015] Region area:                  2022.883 um^2
+[INFO GPL-0017] Fixed instances area:           15.163 um^2
+[INFO GPL-0018] Movable instances area:        226.382 um^2
+[INFO GPL-0019] Utilization:                    11.276 %
+[INFO GPL-0020] Standard cells area:           226.382 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_tx2
+[INFO GPL-0006] Number of instances:              1381
+[INFO GPL-0007] Movable instances:                 861
+[INFO GPL-0008] Fixed instances:                   520
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 359.392 475.200 ) ( 373.800 615.600 ) um
+[INFO GPL-0014] Region name: qrl_tx2.
+[INFO GPL-0015] Region area:                  2022.883 um^2
+[INFO GPL-0017] Fixed instances area:           15.163 um^2
+[INFO GPL-0018] Movable instances area:        226.382 um^2
+[INFO GPL-0019] Utilization:                    11.276 %
+[INFO GPL-0020] Standard cells area:           226.382 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_tx3
+[INFO GPL-0006] Number of instances:              1381
+[INFO GPL-0007] Movable instances:                 861
+[INFO GPL-0008] Fixed instances:                   520
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 359.392 648.000 ) ( 373.800 788.400 ) um
+[INFO GPL-0014] Region name: qrl_tx3.
+[INFO GPL-0015] Region area:                  2022.883 um^2
+[INFO GPL-0017] Fixed instances area:           15.163 um^2
+[INFO GPL-0018] Movable instances area:        226.382 um^2
+[INFO GPL-0019] Utilization:                    11.276 %
+[INFO GPL-0020] Standard cells area:           226.382 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_tx4
+[INFO GPL-0006] Number of instances:              1641
+[INFO GPL-0007] Movable instances:                 861
+[INFO GPL-0008] Fixed instances:                   780
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 460.800 129.600 ) ( 474.800 270.000 ) um
+[INFO GPL-0014] Region name: qrl_tx4.
+[INFO GPL-0015] Region area:                  1965.600 um^2
+[INFO GPL-0017] Fixed instances area:           22.745 um^2
+[INFO GPL-0018] Movable instances area:        226.382 um^2
+[INFO GPL-0019] Utilization:                    11.652 %
+[INFO GPL-0020] Standard cells area:           226.382 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_tx5
+[INFO GPL-0006] Number of instances:              1641
+[INFO GPL-0007] Movable instances:                 861
+[INFO GPL-0008] Fixed instances:                   780
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 460.800 302.400 ) ( 474.800 442.800 ) um
+[INFO GPL-0014] Region name: qrl_tx5.
+[INFO GPL-0015] Region area:                  1965.600 um^2
+[INFO GPL-0017] Fixed instances area:           22.745 um^2
+[INFO GPL-0018] Movable instances area:        226.382 um^2
+[INFO GPL-0019] Utilization:                    11.652 %
+[INFO GPL-0020] Standard cells area:           226.382 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_tx6
+[INFO GPL-0006] Number of instances:              1641
+[INFO GPL-0007] Movable instances:                 861
+[INFO GPL-0008] Fixed instances:                   780
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 460.800 475.200 ) ( 474.800 615.600 ) um
+[INFO GPL-0014] Region name: qrl_tx6.
+[INFO GPL-0015] Region area:                  1965.600 um^2
+[INFO GPL-0017] Fixed instances area:           22.745 um^2
+[INFO GPL-0018] Movable instances area:        226.382 um^2
+[INFO GPL-0019] Utilization:                    11.652 %
+[INFO GPL-0020] Standard cells area:           226.382 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_tx7
+[INFO GPL-0006] Number of instances:              1641
+[INFO GPL-0007] Movable instances:                 861
+[INFO GPL-0008] Fixed instances:                   780
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 460.800 648.000 ) ( 474.800 788.400 ) um
+[INFO GPL-0014] Region name: qrl_tx7.
+[INFO GPL-0015] Region area:                  1965.600 um^2
+[INFO GPL-0017] Fixed instances area:           22.745 um^2
+[INFO GPL-0018] Movable instances area:        226.382 um^2
+[INFO GPL-0019] Utilization:                    11.652 %
+[INFO GPL-0020] Standard cells area:           226.382 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_rsw
+[INFO GPL-0006] Number of instances:              1371
+[INFO GPL-0007] Movable instances:                 515
+[INFO GPL-0008] Fixed instances:                   856
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 216.400 40.000 ) ( 231.600 300.000 ) um
+[INFO GPL-0014] Region name: qrl_rsw.
+[INFO GPL-0015] Region area:                  3952.000 um^2
+[INFO GPL-0017] Fixed instances area:           24.931 um^2
+[INFO GPL-0018] Movable instances area:        135.503 um^2
+[INFO GPL-0019] Utilization:                     3.450 %
+[INFO GPL-0020] Standard cells area:           135.503 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_rnw
+[INFO GPL-0006] Number of instances:              1494
+[INFO GPL-0007] Movable instances:                 514
+[INFO GPL-0008] Fixed instances:                   980
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 216.400 560.000 ) ( 231.600 860.000 ) um
+[INFO GPL-0014] Region name: qrl_rnw.
+[INFO GPL-0015] Region area:                  4560.000 um^2
+[INFO GPL-0017] Fixed instances area:           28.575 um^2
+[INFO GPL-0018] Movable instances area:        135.162 um^2
+[INFO GPL-0019] Utilization:                     2.983 %
+[INFO GPL-0020] Standard cells area:           135.162 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_rse
+[INFO GPL-0006] Number of instances:              1744
+[INFO GPL-0007] Movable instances:                 515
+[INFO GPL-0008] Fixed instances:                  1229
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 589.600 40.000 ) ( 604.400 300.000 ) um
+[INFO GPL-0014] Region name: qrl_rse.
+[INFO GPL-0015] Region area:                  3848.000 um^2
+[INFO GPL-0017] Fixed instances area:           35.786 um^2
+[INFO GPL-0018] Movable instances area:        135.503 um^2
+[INFO GPL-0019] Utilization:                     3.554 %
+[INFO GPL-0020] Standard cells area:           135.503 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_rne
+[INFO GPL-0006] Number of instances:              1736
+[INFO GPL-0007] Movable instances:                 514
+[INFO GPL-0008] Fixed instances:                  1222
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 589.600 560.000 ) ( 604.400 860.000 ) um
+[INFO GPL-0014] Region name: qrl_rne.
+[INFO GPL-0015] Region area:                  4440.000 um^2
+[INFO GPL-0017] Fixed instances area:           35.629 um^2
+[INFO GPL-0018] Movable instances area:        135.162 um^2
+[INFO GPL-0019] Utilization:                     3.069 %
+[INFO GPL-0020] Standard cells area:           135.162 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_dw
+[INFO GPL-0006] Number of instances:              1294
+[INFO GPL-0007] Movable instances:                 544
+[INFO GPL-0008] Fixed instances:                   750
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 216.400 300.000 ) ( 231.600 560.000 ) um
+[INFO GPL-0014] Region name: qrl_dw.
+[INFO GPL-0015] Region area:                  3952.000 um^2
+[INFO GPL-0017] Fixed instances area:           21.840 um^2
+[INFO GPL-0018] Movable instances area:        142.885 um^2
+[INFO GPL-0019] Utilization:                     3.636 %
+[INFO GPL-0020] Standard cells area:           142.885 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_de
+[INFO GPL-0006] Number of instances:              1509
+[INFO GPL-0007] Movable instances:                 544
+[INFO GPL-0008] Fixed instances:                   965
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 589.600 300.000 ) ( 604.400 560.000 ) um
+[INFO GPL-0014] Region name: qrl_de.
+[INFO GPL-0015] Region area:                  3848.000 um^2
+[INFO GPL-0017] Fixed instances area:           28.079 um^2
+[INFO GPL-0018] Movable instances area:        142.885 um^2
+[INFO GPL-0019] Utilization:                     3.741 %
+[INFO GPL-0020] Standard cells area:           142.885 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: qrl_hub
+[INFO GPL-0006] Number of instances:              4160
+[INFO GPL-0007] Movable instances:                3833
+[INFO GPL-0008] Fixed instances:                   327
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  57031
+[INFO GPL-0011] Number of pins:                 147292
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 820.800 907.200 ) um
+[INFO GPL-0013] Placement BBox: ( 395.000 338.000 ) ( 439.000 426.000 ) um
+[INFO GPL-0014] Region name: qrl_hub.
+[INFO GPL-0015] Region area:                  3872.000 um^2
+[INFO GPL-0017] Fixed instances area:            9.504 um^2
+[INFO GPL-0018] Movable instances area:       1014.516 um^2
+[INFO GPL-0019] Utilization:                    26.266 %
+[INFO GPL-0020] Standard cells area:          1014.516 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 26784	Region center = 13867
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00152911 HPWL: 14293126008
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00014388 HPWL: 6685721260
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00004754 HPWL: 6403917897
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00003778 HPWL: 6441516160
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00003674 HPWL: 6549215767
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00003418 HPWL: 6550314114
+[InitialPlace]  Iter: 7 conjugate gradient residual: 0.00003441 HPWL: 6568842933
+[InitialPlace]  Iter: 8 conjugate gradient residual: 0.00002955 HPWL: 6609568511
+[InitialPlace]  Iter: 9 conjugate gradient residual: 0.00003124 HPWL: 6634175940
+[InitialPlace]  Iter: 10 conjugate gradient residual: 0.00002962 HPWL: 6638759052
+[InitialPlace]  Iter: 11 conjugate gradient residual: 0.00003222 HPWL: 6673977607
+[InitialPlace]  Iter: 12 conjugate gradient residual: 0.00003116 HPWL: 6632325192
+[InitialPlace]  Iter: 13 conjugate gradient residual: 0.00002884 HPWL: 6644570620
+[InitialPlace]  Iter: 14 conjugate gradient residual: 0.00003316 HPWL: 6656047610
+[InitialPlace]  Iter: 15 conjugate gradient residual: 0.00003677 HPWL: 6625066074
+[InitialPlace]  Iter: 16 conjugate gradient residual: 0.00003688 HPWL: 6606614981
+[InitialPlace]  Iter: 17 conjugate gradient residual: 0.00003508 HPWL: 6620623487
+[InitialPlace]  Iter: 18 conjugate gradient residual: 0.00003264 HPWL: 6613883580
+[InitialPlace]  Iter: 19 conjugate gradient residual: 0.00003398 HPWL: 6610359326
+[InitialPlace]  Iter: 20 conjugate gradient residual: 0.00003685 HPWL: 6589607954
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.097 um^2
+[INFO GPL-0025] Ideal bin area:                  0.194 um^2
+[INFO GPL-0026] Ideal bin count:               3790653
+[INFO GPL-0027] Total bin area:             737183.462 um^2
+[INFO GPL-0028] Bin count (X, Y):        1024 ,   1024
+[INFO GPL-0029] Bin size (W * H):       0.797 *  0.882 um
+[INFO GPL-0030] Number of bins:                1048576
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_tx0
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  3846
+[INFO GPL-0027] Total bin area:               2022.883 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.900 *  1.097 um
+[INFO GPL-0030] Number of bins:                   2048
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_tx1
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  3846
+[INFO GPL-0027] Total bin area:               2022.883 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.900 *  1.097 um
+[INFO GPL-0030] Number of bins:                   2048
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_tx2
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  3846
+[INFO GPL-0027] Total bin area:               2022.883 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.900 *  1.097 um
+[INFO GPL-0030] Number of bins:                   2048
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_tx3
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  3846
+[INFO GPL-0027] Total bin area:               2022.883 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.900 *  1.097 um
+[INFO GPL-0030] Number of bins:                   2048
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_tx4
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  3737
+[INFO GPL-0027] Total bin area:               1965.600 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.875 *  1.097 um
+[INFO GPL-0030] Number of bins:                   2048
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_tx5
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  3737
+[INFO GPL-0027] Total bin area:               1965.600 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.875 *  1.097 um
+[INFO GPL-0030] Number of bins:                   2048
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_tx6
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  3737
+[INFO GPL-0027] Total bin area:               1965.600 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.875 *  1.097 um
+[INFO GPL-0030] Number of bins:                   2048
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_tx7
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  3737
+[INFO GPL-0027] Total bin area:               1965.600 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.875 *  1.097 um
+[INFO GPL-0030] Number of bins:                   2048
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_rsw
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  7510
+[INFO GPL-0027] Total bin area:               3952.000 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.950 *  1.016 um
+[INFO GPL-0030] Number of bins:                   4096
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_rnw
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  8670
+[INFO GPL-0027] Total bin area:               4560.000 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.950 *  1.172 um
+[INFO GPL-0030] Number of bins:                   4096
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_rse
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  7312
+[INFO GPL-0027] Total bin area:               3848.000 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.925 *  1.016 um
+[INFO GPL-0030] Number of bins:                   4096
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_rne
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.526 um^2
+[INFO GPL-0026] Ideal bin count:                  8442
+[INFO GPL-0027] Total bin area:               4440.000 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.925 *  1.172 um
+[INFO GPL-0030] Number of bins:                   4096
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_dw
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.525 um^2
+[INFO GPL-0026] Ideal bin count:                  7523
+[INFO GPL-0027] Total bin area:               3952.000 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.950 *  1.016 um
+[INFO GPL-0030] Number of bins:                   4096
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_de
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.263 um^2
+[INFO GPL-0025] Ideal bin area:                  0.525 um^2
+[INFO GPL-0026] Ideal bin count:                  7325
+[INFO GPL-0027] Total bin area:               3848.000 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.925 *  1.016 um
+[INFO GPL-0030] Number of bins:                   4096
+[INFO GPL-0033] ---- Initialize Nesterov Region: qrl_hub
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.265 um^2
+[INFO GPL-0025] Ideal bin area:                  0.529 um^2
+[INFO GPL-0026] Ideal bin count:                  7314
+[INFO GPL-0027] Total bin area:               3872.000 um^2
+[INFO GPL-0028] Bin count (X, Y):          32 ,     64
+[INFO GPL-0029] Bin size (W * H):       1.375 *  1.375 um
+[INFO GPL-0030] Number of bins:                   2048
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9079 |  3.200055e+06 |   +0.00% |  3.18e-13 |      
+        0 |   0.5905 |  3.200055e+06 |   +0.00% |  1.15e-11 |  (qrl_tx0)
+        0 |   0.6057 |  3.200055e+06 |   +0.00% |  1.02e-11 |  (qrl_tx1)
+        0 |   0.5526 |  3.200055e+06 |   +0.00% |  1.04e-11 |  (qrl_tx2)
+        0 |   0.5339 |  3.200055e+06 |   +0.00% |  9.79e-12 |  (qrl_tx3)
+        0 |   0.5192 |  3.200055e+06 |   +0.00% |  1.08e-11 |  (qrl_tx4)
+        0 |   0.5322 |  3.200055e+06 |   +0.00% |  7.92e-12 |  (qrl_tx5)
+        0 |   0.4917 |  3.200055e+06 |   +0.00% |  8.05e-12 |  (qrl_tx6)
+        0 |   0.4615 |  3.200055e+06 |   +0.00% |  1.05e-11 |  (qrl_tx7)
+        0 |   0.7739 |  3.200055e+06 |   +0.00% |  1.81e-12 |  (qrl_rsw)
+        0 |   0.8313 |  3.200055e+06 |   +0.00% |  3.14e-13 |  (qrl_rnw)
+        0 |   0.8308 |  3.200055e+06 |   +0.00% |  1.99e-12 |  (qrl_rse)
+        0 |   0.7829 |  3.200055e+06 |   +0.00% |  5.79e-13 |  (qrl_rne)
+        0 |   0.6182 |  3.200055e+06 |   +0.00% |  9.84e-12 |  (qrl_dw)
+        0 |   0.6502 |  3.200055e+06 |   +0.00% |  8.80e-12 |  (qrl_de)
+        0 |   0.9515 |  3.200055e+06 |   +0.00% |  5.64e-12 |  (qrl_hub)
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 6, overflow: 0.633, keep resizer changes at: 1, HPWL: 2992341706
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     57031
+    final |     +1.4% |    4230 |   16460 |          8315 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 6736 slew violations.
+[INFO RSZ-0036] Found 15 capacitance violations.
+[INFO RSZ-0037] Found 7431 long wires.
+[INFO RSZ-0039] Resized 4230 instances.
+[INFO RSZ-0038] Inserted 16460 buffers in 8315 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     49488
+     4900 |     +0.0% |      29 |      265 |     44588
+     9800 |     -0.1% |    1675 |     1705 |     39688
+    14700 |     -0.1% |    1675 |     1705 |     34788
+    19600 |     -0.2% |    3254 |     3230 |     29888
+    24500 |     -0.2% |    4064 |     4074 |     24988
+    29400 |     -0.2% |    4139 |     4364 |     20088
+    34300 |     -0.3% |    5026 |     5347 |     15188
+    39200 |     -0.3% |    6858 |     7600 |     10288
+    44100 |     -0.6% |   12418 |    13450 |      5388
+    49000 |     -0.8% |   16460 |    17002 |       488
+    final |     -0.8% |   16460 |    17002 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -6.011927e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 1991.822 um^2 (+76.48%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 33462, deleted: 16460
+[INFO GPL-0110] Timing-driven: new target density: 0.50571364
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17002 (+41.82%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+       10 |   0.8169 |  2.986537e+06 |   -6.67% |  5.15e-13 |      
+       10 |   0.3868 |  2.986537e+06 |   -6.67% |  1.86e-11 |  (qrl_tx0)
+       10 |   0.4177 |  2.986537e+06 |   -6.67% |  1.66e-11 |  (qrl_tx1)
+       10 |   0.3454 |  2.986537e+06 |   -6.67% |  1.69e-11 |  (qrl_tx2)
+       10 |   0.3303 |  2.986537e+06 |   -6.67% |  1.59e-11 |  (qrl_tx3)
+       10 |   0.3228 |  2.986537e+06 |   -6.67% |  1.74e-11 |  (qrl_tx4)
+       10 |   0.3824 |  2.986537e+06 |   -6.67% |  1.28e-11 |  (qrl_tx5)
+       10 |   0.3061 |  2.986537e+06 |   -6.67% |  1.28e-11 |  (qrl_tx6)
+       10 |   0.3318 |  2.986537e+06 |   -6.67% |  1.67e-11 |  (qrl_tx7)
+       10 |   0.7098 |  2.986537e+06 |   -6.67% |  2.94e-12 |  (qrl_rsw)
+       10 |   0.6514 |  2.986537e+06 |   -6.67% |  5.09e-13 |  (qrl_rnw)
+       10 |   0.7655 |  2.986537e+06 |   -6.67% |  3.22e-12 |  (qrl_rse)
+       10 |   0.6693 |  2.986537e+06 |   -6.67% |  9.38e-13 |  (qrl_rne)
+       10 |   0.6899 |  2.986537e+06 |   -6.67% |  1.59e-11 |  (qrl_dw)
+       10 |   0.6470 |  2.986537e+06 |   -6.67% |  1.43e-11 |  (qrl_de)
+       10 |   0.9523 |  2.986537e+06 |   -6.67% |  9.13e-12 |  (qrl_hub)
+       20 |   0.8187 |  2.829807e+06 |   -5.25% |  8.39e-13 |      
+       20 |   0.3695 |  2.829807e+06 |   -5.25% |  2.85e-11 |  (qrl_tx0)
+       20 |   0.4600 |  2.829807e+06 |   -5.25% |  2.70e-11 |  (qrl_tx1)
+       20 |   0.3776 |  2.829807e+06 |   -5.25% |  2.48e-11 |  (qrl_tx2)
+       20 |   0.3463 |  2.829807e+06 |   -5.25% |  2.34e-11 |  (qrl_tx3)
+       20 |   0.3384 |  2.829807e+06 |   -5.25% |  2.57e-11 |  (qrl_tx4)
+       20 |   0.3957 |  2.829807e+06 |   -5.25% |  1.89e-11 |  (qrl_tx5)
+       20 |   0.3579 |  2.829807e+06 |   -5.25% |  1.88e-11 |  (qrl_tx6)
+       20 |   0.3832 |  2.829807e+06 |   -5.25% |  2.46e-11 |  (qrl_tx7)
+       20 |   0.7235 |  2.829807e+06 |   -5.25% |  4.78e-12 |  (qrl_rsw)
+       20 |   0.5931 |  2.829807e+06 |   -5.25% |  8.28e-13 |  (qrl_rnw)
+       20 |   0.7465 |  2.829807e+06 |   -5.25% |  5.25e-12 |  (qrl_rse)
+       20 |   0.6597 |  2.829807e+06 |   -5.25% |  1.53e-12 |  (qrl_rne)
+       20 |   0.7579 |  2.829807e+06 |   -5.25% |  2.59e-11 |  (qrl_dw)
+       20 |   0.6918 |  2.829807e+06 |   -5.25% |  2.32e-11 |  (qrl_de)
+       20 |   0.9523 |  2.829807e+06 |   -5.25% |  1.49e-11 |  (qrl_hub)
+       30 |   0.8194 |  2.773135e+06 |   -2.00% |  1.37e-12 |      
+       30 |   0.4016 |  2.773135e+06 |   -2.00% |  4.20e-11 |  (qrl_tx0)
+       30 |   0.4393 |  2.773135e+06 |   -2.00% |  4.39e-11 |  (qrl_tx1)
+       30 |   0.4241 |  2.773135e+06 |   -2.00% |  3.66e-11 |  (qrl_tx2)
+       30 |   0.3903 |  2.773135e+06 |   -2.00% |  3.44e-11 |  (qrl_tx3)
+       30 |   0.3926 |  2.773135e+06 |   -2.00% |  3.78e-11 |  (qrl_tx4)
+       30 |   0.4023 |  2.773135e+06 |   -2.00% |  2.78e-11 |  (qrl_tx5)
+       30 |   0.4259 |  2.773135e+06 |   -2.00% |  2.77e-11 |  (qrl_tx6)
+       30 |   0.4604 |  2.773135e+06 |   -2.00% |  3.63e-11 |  (qrl_tx7)
+       30 |   0.6936 |  2.773135e+06 |   -2.00% |  7.79e-12 |  (qrl_rsw)
+       30 |   0.5367 |  2.773135e+06 |   -2.00% |  1.35e-12 |  (qrl_rnw)
+       30 |   0.6859 |  2.773135e+06 |   -2.00% |  8.54e-12 |  (qrl_rse)
+       30 |   0.6029 |  2.773135e+06 |   -2.00% |  2.49e-12 |  (qrl_rne)
+       30 |   0.7981 |  2.773135e+06 |   -2.00% |  4.23e-11 |  (qrl_dw)
+       30 |   0.6237 |  2.773135e+06 |   -2.00% |  3.78e-11 |  (qrl_de)
+       30 |   0.9390 |  2.773135e+06 |   -2.00% |  2.42e-11 |  (qrl_hub)
+       40 |   0.8240 |  2.737954e+06 |   -1.27% |  2.23e-12 |      
+       40 |   0.3957 |  2.737954e+06 |   -1.27% |  6.18e-11 |  (qrl_tx0)
+       40 |   0.4113 |  2.737954e+06 |   -1.27% |  7.15e-11 |  (qrl_tx1)
+       40 |   0.4104 |  2.737954e+06 |   -1.27% |  5.39e-11 |  (qrl_tx2)
+       40 |   0.4092 |  2.737954e+06 |   -1.27% |  5.07e-11 |  (qrl_tx3)
+       40 |   0.3477 |  2.737954e+06 |   -1.27% |  5.57e-11 |  (qrl_tx4)
+       40 |   0.3819 |  2.737954e+06 |   -1.27% |  4.10e-11 |  (qrl_tx5)
+       40 |   0.3900 |  2.737954e+06 |   -1.27% |  4.08e-11 |  (qrl_tx6)
+       40 |   0.4331 |  2.737954e+06 |   -1.27% |  5.34e-11 |  (qrl_tx7)
+       40 |   0.6442 |  2.737954e+06 |   -1.27% |  1.27e-11 |  (qrl_rsw)
+       40 |   0.4821 |  2.737954e+06 |   -1.27% |  2.20e-12 |  (qrl_rnw)
+       40 |   0.6692 |  2.737954e+06 |   -1.27% |  1.39e-11 |  (qrl_rse)
+       40 |   0.6495 |  2.737954e+06 |   -1.27% |  4.06e-12 |  (qrl_rne)
+       40 |   0.7915 |  2.737954e+06 |   -1.27% |  6.88e-11 |  (qrl_dw)
+       40 |   0.6678 |  2.737954e+06 |   -1.27% |  6.16e-11 |  (qrl_de)
+       40 |   0.9077 |  2.737954e+06 |   -1.27% |  3.95e-11 |  (qrl_hub)
+       50 |   0.8470 |  2.721578e+06 |   -0.60% |  3.63e-12 |      
+       50 |   0.3962 |  2.721578e+06 |   -0.60% |  9.11e-11 |  (qrl_tx0)
+       50 |   0.4130 |  2.721578e+06 |   -0.60% |  1.16e-10 |  (qrl_tx1)
+       50 |   0.4085 |  2.721578e+06 |   -0.60% |  7.93e-11 |  (qrl_tx2)
+       50 |   0.4002 |  2.721578e+06 |   -0.60% |  7.47e-11 |  (qrl_tx3)
+       50 |   0.3608 |  2.721578e+06 |   -0.60% |  8.20e-11 |  (qrl_tx4)
+       50 |   0.3940 |  2.721578e+06 |   -0.60% |  6.04e-11 |  (qrl_tx5)
+       50 |   0.3827 |  2.721578e+06 |   -0.60% |  6.02e-11 |  (qrl_tx6)
+       50 |   0.4350 |  2.721578e+06 |   -0.60% |  7.87e-11 |  (qrl_tx7)
+       50 |   0.6503 |  2.721578e+06 |   -0.60% |  2.07e-11 |  (qrl_rsw)
+       50 |   0.4942 |  2.721578e+06 |   -0.60% |  3.58e-12 |  (qrl_rnw)
+       50 |   0.6614 |  2.721578e+06 |   -0.60% |  2.27e-11 |  (qrl_rse)
+       50 |   0.6021 |  2.721578e+06 |   -0.60% |  6.60e-12 |  (qrl_rne)
+       50 |   0.8333 |  2.721578e+06 |   -0.60% |  1.12e-10 |  (qrl_dw)
+       50 |   0.6598 |  2.721578e+06 |   -0.60% |  1.00e-10 |  (qrl_de)
+       50 |   0.8788 |  2.721578e+06 |   -0.60% |  6.43e-11 |  (qrl_hub)
+       60 |   0.8452 |  2.720236e+06 |   -0.05% |  5.91e-12 |      
+       60 |   0.4001 |  2.720236e+06 |   -0.05% |  1.34e-10 |  (qrl_tx0)
+       60 |   0.4137 |  2.720236e+06 |   -0.05% |  1.90e-10 |  (qrl_tx1)
+       60 |   0.4098 |  2.720236e+06 |   -0.05% |  1.17e-10 |  (qrl_tx2)
+       60 |   0.4005 |  2.720236e+06 |   -0.05% |  1.10e-10 |  (qrl_tx3)
+       60 |   0.3576 |  2.720236e+06 |   -0.05% |  1.21e-10 |  (qrl_tx4)
+       60 |   0.3873 |  2.720236e+06 |   -0.05% |  8.90e-11 |  (qrl_tx5)
+       60 |   0.3739 |  2.720236e+06 |   -0.05% |  8.86e-11 |  (qrl_tx6)
+       60 |   0.4227 |  2.720236e+06 |   -0.05% |  1.16e-10 |  (qrl_tx7)
+       60 |   0.6666 |  2.720236e+06 |   -0.05% |  3.37e-11 |  (qrl_rsw)
+       60 |   0.5122 |  2.720236e+06 |   -0.05% |  5.83e-12 |  (qrl_rnw)
+       60 |   0.6631 |  2.720236e+06 |   -0.05% |  3.69e-11 |  (qrl_rse)
+       60 |   0.5741 |  2.720236e+06 |   -0.05% |  1.08e-11 |  (qrl_rne)
+       60 |   0.8179 |  2.720236e+06 |   -0.05% |  1.83e-10 |  (qrl_dw)
+       60 |   0.6969 |  2.720236e+06 |   -0.05% |  1.63e-10 |  (qrl_de)
+       60 |   0.8551 |  2.720236e+06 |   -0.05% |  1.05e-10 |  (qrl_hub)
+       70 |   0.8444 |  2.713188e+06 |   -0.26% |  9.62e-12 |      
+       70 |   0.3969 |  2.713188e+06 |   -0.26% |  1.98e-10 |  (qrl_tx0)
+       70 |   0.4184 |  2.713188e+06 |   -0.26% |  3.09e-10 |  (qrl_tx1)
+       70 |   0.4084 |  2.713188e+06 |   -0.26% |  1.72e-10 |  (qrl_tx2)
+       70 |   0.3988 |  2.713188e+06 |   -0.26% |  1.62e-10 |  (qrl_tx3)
+       70 |   0.3562 |  2.713188e+06 |   -0.26% |  1.78e-10 |  (qrl_tx4)
+       70 |   0.3880 |  2.713188e+06 |   -0.26% |  1.31e-10 |  (qrl_tx5)
+       70 |   0.3797 |  2.713188e+06 |   -0.26% |  1.31e-10 |  (qrl_tx6)
+       70 |   0.4298 |  2.713188e+06 |   -0.26% |  1.71e-10 |  (qrl_tx7)
+       70 |   0.6405 |  2.713188e+06 |   -0.26% |  5.48e-11 |  (qrl_rsw)
+       70 |   0.5175 |  2.713188e+06 |   -0.26% |  9.50e-12 |  (qrl_rnw)
+       70 |   0.6868 |  2.713188e+06 |   -0.26% |  6.01e-11 |  (qrl_rse)
+       70 |   0.5504 |  2.713188e+06 |   -0.26% |  1.75e-11 |  (qrl_rne)
+       70 |   0.8476 |  2.713188e+06 |   -0.26% |  2.97e-10 |  (qrl_dw)
+       70 |   0.6856 |  2.713188e+06 |   -0.26% |  2.66e-10 |  (qrl_de)
+       70 |   0.8468 |  2.713188e+06 |   -0.26% |  1.71e-10 |  (qrl_hub)
+       80 |   0.8456 |  2.710372e+06 |   -0.10% |  1.57e-11 |      
+       80 |   0.3997 |  2.710372e+06 |   -0.10% |  2.91e-10 |  (qrl_tx0)
+       80 |   0.4192 |  2.710372e+06 |   -0.10% |  5.03e-10 |  (qrl_tx1)
+       80 |   0.4115 |  2.710372e+06 |   -0.10% |  2.54e-10 |  (qrl_tx2)
+       80 |   0.3950 |  2.710372e+06 |   -0.10% |  2.39e-10 |  (qrl_tx3)
+       80 |   0.3563 |  2.710372e+06 |   -0.10% |  2.62e-10 |  (qrl_tx4)
+       80 |   0.3930 |  2.710372e+06 |   -0.10% |  1.93e-10 |  (qrl_tx5)
+       80 |   0.3859 |  2.710372e+06 |   -0.10% |  1.92e-10 |  (qrl_tx6)
+       80 |   0.4347 |  2.710372e+06 |   -0.10% |  2.52e-10 |  (qrl_tx7)
+       80 |   0.6430 |  2.710372e+06 |   -0.10% |  8.93e-11 |  (qrl_rsw)
+       80 |   0.5319 |  2.710372e+06 |   -0.10% |  1.55e-11 |  (qrl_rnw)
+       80 |   0.6731 |  2.710372e+06 |   -0.10% |  9.79e-11 |  (qrl_rse)
+       80 |   0.5606 |  2.710372e+06 |   -0.10% |  2.85e-11 |  (qrl_rne)
+       80 |   0.8347 |  2.710372e+06 |   -0.10% |  4.84e-10 |  (qrl_dw)
+       80 |   0.7028 |  2.710372e+06 |   -0.10% |  4.33e-10 |  (qrl_de)
+       80 |   0.8594 |  2.710372e+06 |   -0.10% |  2.78e-10 |  (qrl_hub)
+       90 |   0.8478 |  2.707473e+06 |   -0.11% |  2.55e-11 |      
+       90 |   0.3953 |  2.707473e+06 |   -0.11% |  4.29e-10 |  (qrl_tx0)
+       90 |   0.4178 |  2.707473e+06 |   -0.11% |  8.20e-10 |  (qrl_tx1)
+       90 |   0.4187 |  2.707473e+06 |   -0.11% |  3.74e-10 |  (qrl_tx2)
+       90 |   0.4114 |  2.707473e+06 |   -0.11% |  3.51e-10 |  (qrl_tx3)
+       90 |   0.3561 |  2.707473e+06 |   -0.11% |  3.86e-10 |  (qrl_tx4)
+       90 |   0.3899 |  2.707473e+06 |   -0.11% |  2.84e-10 |  (qrl_tx5)
+       90 |   0.3876 |  2.707473e+06 |   -0.11% |  2.83e-10 |  (qrl_tx6)
+       90 |   0.4350 |  2.707473e+06 |   -0.11% |  3.71e-10 |  (qrl_tx7)
+       90 |   0.6321 |  2.707473e+06 |   -0.11% |  1.45e-10 |  (qrl_rsw)
+       90 |   0.5268 |  2.707473e+06 |   -0.11% |  2.52e-11 |  (qrl_rnw)
+       90 |   0.6774 |  2.707473e+06 |   -0.11% |  1.59e-10 |  (qrl_rse)
+       90 |   0.5470 |  2.707473e+06 |   -0.11% |  4.65e-11 |  (qrl_rne)
+       90 |   0.8539 |  2.707473e+06 |   -0.11% |  7.89e-10 |  (qrl_dw)
+       90 |   0.7434 |  2.707473e+06 |   -0.11% |  7.06e-10 |  (qrl_de)
+       90 |   0.8748 |  2.707473e+06 |   -0.11% |  4.52e-10 |  (qrl_hub)
+      100 |   0.8475 |  2.705159e+06 |   -0.09% |  4.16e-11 |      
+      100 |   0.3912 |  2.705159e+06 |   -0.09% |  6.32e-10 |  (qrl_tx0)
+      100 |   0.4147 |  2.705159e+06 |   -0.09% |  1.34e-09 |  (qrl_tx1)
+      100 |   0.4210 |  2.705159e+06 |   -0.09% |  5.50e-10 |  (qrl_tx2)
+      100 |   0.4169 |  2.705159e+06 |   -0.09% |  5.18e-10 |  (qrl_tx3)
+      100 |   0.3564 |  2.705159e+06 |   -0.09% |  5.69e-10 |  (qrl_tx4)
+      100 |   0.3874 |  2.705159e+06 |   -0.09% |  4.19e-10 |  (qrl_tx5)
+      100 |   0.3868 |  2.705159e+06 |   -0.09% |  4.17e-10 |  (qrl_tx6)
+      100 |   0.4379 |  2.705159e+06 |   -0.09% |  5.46e-10 |  (qrl_tx7)
+      100 |   0.6325 |  2.705159e+06 |   -0.09% |  2.37e-10 |  (qrl_rsw)
+      100 |   0.5281 |  2.705159e+06 |   -0.09% |  4.10e-11 |  (qrl_rnw)
+      100 |   0.6712 |  2.705159e+06 |   -0.09% |  2.60e-10 |  (qrl_rse)
+      100 |   0.5281 |  2.705159e+06 |   -0.09% |  7.57e-11 |  (qrl_rne)
+      100 |   0.8586 |  2.705159e+06 |   -0.09% |  1.29e-09 |  (qrl_dw)
+      100 |   0.7394 |  2.705159e+06 |   -0.09% |  1.15e-09 |  (qrl_de)
+      100 |   0.8758 |  2.705159e+06 |   -0.09% |  7.37e-10 |  (qrl_hub)
+      110 |   0.8479 |  2.705844e+06 |   +0.03% |  6.77e-11 |      
+      110 |   0.3988 |  2.705844e+06 |   +0.03% |  9.30e-10 |  (qrl_tx0)
+      110 |   0.4118 |  2.705844e+06 |   +0.03% |  2.17e-09 |  (qrl_tx1)
+      110 |   0.4166 |  2.705844e+06 |   +0.03% |  8.10e-10 |  (qrl_tx2)
+      110 |   0.4130 |  2.705844e+06 |   +0.03% |  7.63e-10 |  (qrl_tx3)
+      110 |   0.3592 |  2.705844e+06 |   +0.03% |  8.38e-10 |  (qrl_tx4)
+      110 |   0.3855 |  2.705844e+06 |   +0.03% |  6.17e-10 |  (qrl_tx5)
+      110 |   0.3856 |  2.705844e+06 |   +0.03% |  6.14e-10 |  (qrl_tx6)
+      110 |   0.4298 |  2.705844e+06 |   +0.03% |  8.04e-10 |  (qrl_tx7)
+      110 |   0.6206 |  2.705844e+06 |   +0.03% |  3.86e-10 |  (qrl_rsw)
+      110 |   0.5295 |  2.705844e+06 |   +0.03% |  6.68e-11 |  (qrl_rnw)
+      110 |   0.6821 |  2.705844e+06 |   +0.03% |  4.23e-10 |  (qrl_rse)
+      110 |   0.5279 |  2.705844e+06 |   +0.03% |  1.23e-10 |  (qrl_rne)
+      110 |   0.8444 |  2.705844e+06 |   +0.03% |  2.09e-09 |  (qrl_dw)
+      110 |   0.7301 |  2.705844e+06 |   +0.03% |  1.87e-09 |  (qrl_de)
+      110 |   0.8708 |  2.705844e+06 |   +0.03% |  1.20e-09 |  (qrl_hub)
+      120 |   0.8431 |  2.704989e+06 |   -0.03% |  1.10e-10 |      
+      120 |   0.3986 |  2.704989e+06 |   -0.03% |  1.37e-09 |  (qrl_tx0)
+      120 |   0.4090 |  2.704989e+06 |   -0.03% |  3.54e-09 |  (qrl_tx1)
+      120 |   0.4088 |  2.704989e+06 |   -0.03% |  1.19e-09 |  (qrl_tx2)
+      120 |   0.4013 |  2.704989e+06 |   -0.03% |  1.12e-09 |  (qrl_tx3)
+      120 |   0.3612 |  2.704989e+06 |   -0.03% |  1.23e-09 |  (qrl_tx4)
+      120 |   0.3847 |  2.704989e+06 |   -0.03% |  9.09e-10 |  (qrl_tx5)
+      120 |   0.3836 |  2.704989e+06 |   -0.03% |  9.05e-10 |  (qrl_tx6)
+      120 |   0.4247 |  2.704989e+06 |   -0.03% |  1.18e-09 |  (qrl_tx7)
+      120 |   0.6413 |  2.704989e+06 |   -0.03% |  6.28e-10 |  (qrl_rsw)
+      120 |   0.5295 |  2.704989e+06 |   -0.03% |  1.09e-10 |  (qrl_rnw)
+      120 |   0.6885 |  2.704989e+06 |   -0.03% |  6.89e-10 |  (qrl_rse)
+      120 |   0.5492 |  2.704989e+06 |   -0.03% |  2.01e-10 |  (qrl_rne)
+      120 |   0.8316 |  2.704989e+06 |   -0.03% |  3.41e-09 |  (qrl_dw)
+      120 |   0.7308 |  2.704989e+06 |   -0.03% |  3.05e-09 |  (qrl_de)
+      120 |   0.8757 |  2.704989e+06 |   -0.03% |  1.95e-09 |  (qrl_hub)
+      130 |   0.8395 |  2.705019e+06 |   +0.00% |  1.80e-10 |      
+      130 |   0.3960 |  2.705019e+06 |   +0.00% |  2.02e-09 |  (qrl_tx0)
+      130 |   0.4092 |  2.705019e+06 |   +0.00% |  5.77e-09 |  (qrl_tx1)
+      130 |   0.4068 |  2.705019e+06 |   +0.00% |  1.76e-09 |  (qrl_tx2)
+      130 |   0.3955 |  2.705019e+06 |   +0.00% |  1.65e-09 |  (qrl_tx3)
+      130 |   0.3604 |  2.705019e+06 |   +0.00% |  1.82e-09 |  (qrl_tx4)
+      130 |   0.3872 |  2.705019e+06 |   +0.00% |  1.34e-09 |  (qrl_tx5)
+      130 |   0.3815 |  2.705019e+06 |   +0.00% |  1.33e-09 |  (qrl_tx6)
+      130 |   0.4252 |  2.705019e+06 |   +0.00% |  1.74e-09 |  (qrl_tx7)
+      130 |   0.6473 |  2.705019e+06 |   +0.00% |  1.02e-09 |  (qrl_rsw)
+      130 |   0.5307 |  2.705019e+06 |   +0.00% |  1.77e-10 |  (qrl_rnw)
+      130 |   0.6881 |  2.705019e+06 |   +0.00% |  1.12e-09 |  (qrl_rse)
+      130 |   0.5544 |  2.705019e+06 |   +0.00% |  3.27e-10 |  (qrl_rne)
+      130 |   0.8434 |  2.705019e+06 |   +0.00% |  5.55e-09 |  (qrl_dw)
+      130 |   0.7489 |  2.705019e+06 |   +0.00% |  4.97e-09 |  (qrl_de)
+      130 |   0.8726 |  2.705019e+06 |   +0.00% |  3.18e-09 |  (qrl_hub)
+      140 |   0.8388 |  2.706125e+06 |   +0.04% |  2.92e-10 |      
+      140 |   0.3949 |  2.706125e+06 |   +0.04% |  2.97e-09 |  (qrl_tx0)
+      140 |   0.4092 |  2.706125e+06 |   +0.04% |  9.39e-09 |  (qrl_tx1)
+      140 |   0.4122 |  2.706125e+06 |   +0.04% |  2.59e-09 |  (qrl_tx2)
+      140 |   0.4033 |  2.706125e+06 |   +0.04% |  2.44e-09 |  (qrl_tx3)
+      140 |   0.3578 |  2.706125e+06 |   +0.04% |  2.68e-09 |  (qrl_tx4)
+      140 |   0.3867 |  2.706125e+06 |   +0.04% |  1.97e-09 |  (qrl_tx5)
+      140 |   0.3830 |  2.706125e+06 |   +0.04% |  1.96e-09 |  (qrl_tx6)
+      140 |   0.4292 |  2.706125e+06 |   +0.04% |  2.57e-09 |  (qrl_tx7)
+      140 |   0.5953 |  2.706125e+06 |   +0.04% |  1.67e-09 |  (qrl_rsw)
+      140 |   0.5332 |  2.706125e+06 |   +0.04% |  2.89e-10 |  (qrl_rnw)
+      140 |   0.6559 |  2.706125e+06 |   +0.04% |  1.83e-09 |  (qrl_rse)
+      140 |   0.5525 |  2.706125e+06 |   +0.04% |  5.33e-10 |  (qrl_rne)
+      140 |   0.8464 |  2.706125e+06 |   +0.04% |  9.04e-09 |  (qrl_dw)
+      140 |   0.7434 |  2.706125e+06 |   +0.04% |  8.09e-09 |  (qrl_de)
+      140 |   0.8568 |  2.706125e+06 |   +0.04% |  5.18e-09 |  (qrl_hub)
+      150 |   0.8398 |  2.709138e+06 |   +0.11% |  4.76e-10 |      
+      150 |   0.3852 |  2.709138e+06 |   +0.11% |  4.38e-09 |  (qrl_tx0)
+      150 |   0.4030 |  2.709138e+06 |   +0.11% |  1.53e-08 |  (qrl_tx1)
+      150 |   0.4081 |  2.709138e+06 |   +0.11% |  3.81e-09 |  (qrl_tx2)
+      150 |   0.3924 |  2.709138e+06 |   +0.11% |  3.59e-09 |  (qrl_tx3)
+      150 |   0.3528 |  2.709138e+06 |   +0.11% |  3.94e-09 |  (qrl_tx4)
+      150 |   0.3840 |  2.709138e+06 |   +0.11% |  2.90e-09 |  (qrl_tx5)
+      150 |   0.3833 |  2.709138e+06 |   +0.11% |  2.89e-09 |  (qrl_tx6)
+      150 |   0.4305 |  2.709138e+06 |   +0.11% |  3.78e-09 |  (qrl_tx7)
+      150 |   0.6029 |  2.709138e+06 |   +0.11% |  2.71e-09 |  (qrl_rsw)
+      150 |   0.5244 |  2.709138e+06 |   +0.11% |  4.70e-10 |  (qrl_rnw)
+      150 |   0.6644 |  2.709138e+06 |   +0.11% |  2.98e-09 |  (qrl_rse)
+      150 |   0.5279 |  2.709138e+06 |   +0.11% |  8.67e-10 |  (qrl_rne)
+      150 |   0.8272 |  2.709138e+06 |   +0.11% |  1.47e-08 |  (qrl_dw)
+      150 |   0.7741 |  2.709138e+06 |   +0.11% |  1.32e-08 |  (qrl_de)
+      150 |   0.8308 |  2.709138e+06 |   +0.11% |  8.44e-09 |  (qrl_hub)
+      160 |   0.8394 |  2.718705e+06 |   +0.35% |  7.75e-10 |      
+      160 |   0.3940 |  2.718705e+06 |   +0.35% |  6.45e-09 |  (qrl_tx0)
+      160 |   0.4002 |  2.718705e+06 |   +0.35% |  2.49e-08 |  (qrl_tx1)
+      160 |   0.4035 |  2.718705e+06 |   +0.35% |  5.62e-09 |  (qrl_tx2)
+      160 |   0.3892 |  2.718705e+06 |   +0.35% |  5.28e-09 |  (qrl_tx3)
+      160 |   0.3531 |  2.718705e+06 |   +0.35% |  5.81e-09 |  (qrl_tx4)
+      160 |   0.3832 |  2.718705e+06 |   +0.35% |  4.28e-09 |  (qrl_tx5)
+      160 |   0.3764 |  2.718705e+06 |   +0.35% |  4.26e-09 |  (qrl_tx6)
+      160 |   0.4248 |  2.718705e+06 |   +0.35% |  5.57e-09 |  (qrl_tx7)
+      160 |   0.6287 |  2.718705e+06 |   +0.35% |  4.42e-09 |  (qrl_rsw)
+      160 |   0.5251 |  2.718705e+06 |   +0.35% |  7.65e-10 |  (qrl_rnw)
+      160 |   0.6613 |  2.718705e+06 |   +0.35% |  4.84e-09 |  (qrl_rse)
+      160 |   0.5506 |  2.718705e+06 |   +0.35% |  1.41e-09 |  (qrl_rne)
+      160 |   0.8074 |  2.718705e+06 |   +0.35% |  2.40e-08 |  (qrl_dw)
+      160 |   0.7358 |  2.718705e+06 |   +0.35% |  2.14e-08 |  (qrl_de)
+      160 |   0.7928 |  2.718705e+06 |   +0.35% |  1.37e-08 |  (qrl_hub)
+      170 |   0.8364 |  2.751212e+06 |   +1.20% |  1.26e-09 |      
+      170 |   0.3833 |  2.751212e+06 |   +1.20% |  9.47e-09 |  (qrl_tx0)
+      170 |   0.3903 |  2.751212e+06 |   +1.20% |  4.04e-08 |  (qrl_tx1)
+      170 |   0.3946 |  2.751212e+06 |   +1.20% |  8.25e-09 |  (qrl_tx2)
+      170 |   0.3753 |  2.751212e+06 |   +1.20% |  7.76e-09 |  (qrl_tx3)
+      170 |   0.3470 |  2.751212e+06 |   +1.20% |  8.53e-09 |  (qrl_tx4)
+      170 |   0.3792 |  2.751212e+06 |   +1.20% |  6.28e-09 |  (qrl_tx5)
+      170 |   0.3700 |  2.751212e+06 |   +1.20% |  6.26e-09 |  (qrl_tx6)
+      170 |   0.4236 |  2.751212e+06 |   +1.20% |  8.18e-09 |  (qrl_tx7)
+      170 |   0.6169 |  2.751212e+06 |   +1.20% |  7.17e-09 |  (qrl_rsw)
+      170 |   0.4839 |  2.751212e+06 |   +1.20% |  1.24e-09 |  (qrl_rnw)
+      170 |   0.6427 |  2.751212e+06 |   +1.20% |  7.86e-09 |  (qrl_rse)
+      170 |   0.5515 |  2.751212e+06 |   +1.20% |  2.29e-09 |  (qrl_rne)
+      170 |   0.7941 |  2.751212e+06 |   +1.20% |  3.89e-08 |  (qrl_dw)
+      170 |   0.7278 |  2.751212e+06 |   +1.20% |  3.48e-08 |  (qrl_de)
+      170 |   0.7265 |  2.751212e+06 |   +1.20% |  2.23e-08 |  (qrl_hub)
+      180 |   0.8208 |  2.841482e+06 |   +3.28% |  2.03e-09 |      
+      180 |   0.3828 |  2.841482e+06 |   +3.28% |  1.39e-08 |  (qrl_tx0)
+      180 |   0.3833 |  2.841482e+06 |   +3.28% |  6.53e-08 |  (qrl_tx1)
+      180 |   0.3767 |  2.841482e+06 |   +3.28% |  1.21e-08 |  (qrl_tx2)
+      180 |   0.3837 |  2.841482e+06 |   +3.28% |  1.14e-08 |  (qrl_tx3)
+      180 |   0.3468 |  2.841482e+06 |   +3.28% |  1.25e-08 |  (qrl_tx4)
+      180 |   0.3797 |  2.841482e+06 |   +3.28% |  9.19e-09 |  (qrl_tx5)
+      180 |   0.3684 |  2.841482e+06 |   +3.28% |  9.15e-09 |  (qrl_tx6)
+      180 |   0.4148 |  2.841482e+06 |   +3.28% |  1.20e-08 |  (qrl_tx7)
+      180 |   0.5741 |  2.841482e+06 |   +3.28% |  1.16e-08 |  (qrl_rsw)
+      180 |   0.3947 |  2.841482e+06 |   +3.28% |  2.01e-09 |  (qrl_rnw)
+      180 |   0.6042 |  2.841482e+06 |   +3.28% |  1.27e-08 |  (qrl_rse)
+      180 |   0.4838 |  2.841482e+06 |   +3.28% |  3.70e-09 |  (qrl_rne)
+      180 |   0.7472 |  2.841482e+06 |   +3.28% |  6.28e-08 |  (qrl_dw)
+      180 |   0.6931 |  2.841482e+06 |   +3.28% |  5.62e-08 |  (qrl_de)
+      180 |   0.6444 |  2.841482e+06 |   +3.28% |  3.60e-08 |  (qrl_hub)
+      190 |   0.8102 |  2.900075e+06 |   +2.06% |  3.28e-09 |      
+      190 |   0.3853 |  2.900075e+06 |   +2.06% |  2.03e-08 |  (qrl_tx0)
+      190 |   0.3775 |  2.900075e+06 |   +2.06% |  1.05e-07 |  (qrl_tx1)
+      190 |   0.3743 |  2.900075e+06 |   +2.06% |  1.77e-08 |  (qrl_tx2)
+      190 |   0.3707 |  2.900075e+06 |   +2.06% |  1.66e-08 |  (qrl_tx3)
+      190 |   0.3408 |  2.900075e+06 |   +2.06% |  1.83e-08 |  (qrl_tx4)
+      190 |   0.3736 |  2.900075e+06 |   +2.06% |  1.35e-08 |  (qrl_tx5)
+      190 |   0.3585 |  2.900075e+06 |   +2.06% |  1.34e-08 |  (qrl_tx6)
+      190 |   0.4109 |  2.900075e+06 |   +2.06% |  1.75e-08 |  (qrl_tx7)
+      190 |   0.5205 |  2.900075e+06 |   +2.06% |  1.87e-08 |  (qrl_rsw)
+      190 |   0.4290 |  2.900075e+06 |   +2.06% |  3.24e-09 |  (qrl_rnw)
+      190 |   0.5640 |  2.900075e+06 |   +2.06% |  2.05e-08 |  (qrl_rse)
+      190 |   0.4912 |  2.900075e+06 |   +2.06% |  5.98e-09 |  (qrl_rne)
+      190 |   0.7098 |  2.900075e+06 |   +2.06% |  1.02e-07 |  (qrl_dw)
+      190 |   0.6543 |  2.900075e+06 |   +2.06% |  9.09e-08 |  (qrl_de)
+      190 |   0.5501 |  2.900075e+06 |   +2.06% |  5.82e-08 |  (qrl_hub)
+      200 |   0.8056 |  2.890802e+06 |   -0.32% |  5.34e-09 |      
+      200 |   0.3546 |  2.890802e+06 |   -0.32% |  2.98e-08 |  (qrl_tx0)
+      200 |   0.3590 |  2.890802e+06 |   -0.32% |  1.71e-07 |  (qrl_tx1)
+      200 |   0.3555 |  2.890802e+06 |   -0.32% |  2.60e-08 |  (qrl_tx2)
+      200 |   0.3471 |  2.890802e+06 |   -0.32% |  2.45e-08 |  (qrl_tx3)
+      200 |   0.3181 |  2.890802e+06 |   -0.32% |  2.69e-08 |  (qrl_tx4)
+      200 |   0.3684 |  2.890802e+06 |   -0.32% |  1.98e-08 |  (qrl_tx5)
+      200 |   0.3477 |  2.890802e+06 |   -0.32% |  1.97e-08 |  (qrl_tx6)
+      200 |   0.3987 |  2.890802e+06 |   -0.32% |  2.58e-08 |  (qrl_tx7)
+      200 |   0.5127 |  2.890802e+06 |   -0.32% |  3.04e-08 |  (qrl_rsw)
+      200 |   0.4302 |  2.890802e+06 |   -0.32% |  5.27e-09 |  (qrl_rnw)
+      200 |   0.5364 |  2.890802e+06 |   -0.32% |  3.34e-08 |  (qrl_rse)
+      200 |   0.5049 |  2.890802e+06 |   -0.32% |  9.72e-09 |  (qrl_rne)
+      200 |   0.6601 |  2.890802e+06 |   -0.32% |  1.65e-07 |  (qrl_dw)
+      200 |   0.6094 |  2.890802e+06 |   -0.32% |  1.48e-07 |  (qrl_de)
+      200 |   0.4881 |  2.890802e+06 |   -0.32% |  9.46e-08 |  (qrl_hub)
+      210 |   0.8110 |  2.884409e+06 |   -0.22% |  8.69e-09 |      
+      210 |   0.3304 |  2.884409e+06 |   -0.22% |  4.39e-08 |  (qrl_tx0)
+      210 |   0.3396 |  2.884409e+06 |   -0.22% |  2.68e-07 |  (qrl_tx1)
+      210 |   0.3268 |  2.884409e+06 |   -0.22% |  3.83e-08 |  (qrl_tx2)
+      210 |   0.3227 |  2.884409e+06 |   -0.22% |  3.60e-08 |  (qrl_tx3)
+      210 |   0.3071 |  2.884409e+06 |   -0.22% |  3.96e-08 |  (qrl_tx4)
+      210 |   0.3726 |  2.884409e+06 |   -0.22% |  2.91e-08 |  (qrl_tx5)
+      210 |   0.3326 |  2.884409e+06 |   -0.22% |  2.90e-08 |  (qrl_tx6)
+      210 |   0.3945 |  2.884409e+06 |   -0.22% |  3.79e-08 |  (qrl_tx7)
+      210 |   0.5145 |  2.884409e+06 |   -0.22% |  4.95e-08 |  (qrl_rsw)
+      210 |   0.4855 |  2.884409e+06 |   -0.22% |  8.57e-09 |  (qrl_rnw)
+      210 |   0.5340 |  2.884409e+06 |   -0.22% |  5.43e-08 |  (qrl_rse)
+      210 |   0.4852 |  2.884409e+06 |   -0.22% |  1.58e-08 |  (qrl_rne)
+      210 |   0.5739 |  2.884409e+06 |   -0.22% |  2.69e-07 |  (qrl_dw)
+      210 |   0.5528 |  2.884409e+06 |   -0.22% |  2.40e-07 |  (qrl_de)
+      210 |   0.4458 |  2.884409e+06 |   -0.22% |  1.54e-07 |  (qrl_hub)
+      220 |   0.8129 |  2.895063e+06 |   +0.37% |  1.41e-08 |      
+      220 |   0.3282 |  2.895063e+06 |   +0.37% |  6.46e-08 |  (qrl_tx0)
+      220 |   0.3283 |  2.895063e+06 |   +0.37% |  3.94e-07 |  (qrl_tx1)
+      220 |   0.3266 |  2.895063e+06 |   +0.37% |  5.62e-08 |  (qrl_tx2)
+      220 |   0.3181 |  2.895063e+06 |   +0.37% |  5.29e-08 |  (qrl_tx3)
+      220 |   0.3006 |  2.895063e+06 |   +0.37% |  5.81e-08 |  (qrl_tx4)
+      220 |   0.3657 |  2.895063e+06 |   +0.37% |  4.28e-08 |  (qrl_tx5)
+      220 |   0.3266 |  2.895063e+06 |   +0.37% |  4.26e-08 |  (qrl_tx6)
+      220 |   0.3749 |  2.895063e+06 |   +0.37% |  5.58e-08 |  (qrl_tx7)
+      220 |   0.4678 |  2.895063e+06 |   +0.37% |  8.04e-08 |  (qrl_rsw)
+      220 |   0.4461 |  2.895063e+06 |   +0.37% |  1.39e-08 |  (qrl_rnw)
+      220 |   0.4806 |  2.895063e+06 |   +0.37% |  8.82e-08 |  (qrl_rse)
+      220 |   0.5015 |  2.895063e+06 |   +0.37% |  2.57e-08 |  (qrl_rne)
+      220 |   0.5141 |  2.895063e+06 |   +0.37% |  4.36e-07 |  (qrl_dw)
+      220 |   0.5117 |  2.895063e+06 |   +0.37% |  3.90e-07 |  (qrl_de)
+      220 |   0.4148 |  2.895063e+06 |   +0.37% |  2.50e-07 |  (qrl_hub)
+      230 |   0.8127 |  2.876464e+06 |   -0.64% |  2.29e-08 |      
+      230 |   0.3272 |  2.876464e+06 |   -0.64% |  9.50e-08 |  (qrl_tx0)
+      230 |   0.2943 |  2.876464e+06 |   -0.64% |  5.80e-07 |  (qrl_tx1)
+      230 |   0.3002 |  2.876464e+06 |   -0.64% |  8.28e-08 |  (qrl_tx2)
+      230 |   0.3168 |  2.876464e+06 |   -0.64% |  7.79e-08 |  (qrl_tx3)
+      230 |   0.3041 |  2.876464e+06 |   -0.64% |  8.56e-08 |  (qrl_tx4)
+      230 |   0.3569 |  2.876464e+06 |   -0.64% |  6.30e-08 |  (qrl_tx5)
+      230 |   0.3106 |  2.876464e+06 |   -0.64% |  6.27e-08 |  (qrl_tx6)
+      230 |   0.3454 |  2.876464e+06 |   -0.64% |  8.21e-08 |  (qrl_tx7)
+      230 |   0.4749 |  2.876464e+06 |   -0.64% |  1.31e-07 |  (qrl_rsw)
+      230 |   0.4642 |  2.876464e+06 |   -0.64% |  2.27e-08 |  (qrl_rnw)
+      230 |   0.4569 |  2.876464e+06 |   -0.64% |  1.43e-07 |  (qrl_rse)
+      230 |   0.4899 |  2.876464e+06 |   -0.64% |  4.18e-08 |  (qrl_rne)
+      230 |   0.4183 |  2.876464e+06 |   -0.64% |  7.10e-07 |  (qrl_dw)
+      230 |   0.4334 |  2.876464e+06 |   -0.64% |  6.35e-07 |  (qrl_de)
+      230 |   0.3780 |  2.876464e+06 |   -0.64% |  4.07e-07 |  (qrl_hub)
+      240 |   0.8148 |  2.862469e+06 |   -0.49% |  3.73e-08 |      
+      240 |   0.3206 |  2.862469e+06 |   -0.49% |  1.40e-07 |  (qrl_tx0)
+      240 |   0.2665 |  2.862469e+06 |   -0.49% |  8.53e-07 |  (qrl_tx1)
+      240 |   0.3102 |  2.862469e+06 |   -0.49% |  1.22e-07 |  (qrl_tx2)
+      240 |   0.3083 |  2.862469e+06 |   -0.49% |  1.15e-07 |  (qrl_tx3)
+      240 |   0.2904 |  2.862469e+06 |   -0.49% |  1.26e-07 |  (qrl_tx4)
+      240 |   0.3273 |  2.862469e+06 |   -0.49% |  9.27e-08 |  (qrl_tx5)
+      240 |   0.2828 |  2.862469e+06 |   -0.49% |  9.23e-08 |  (qrl_tx6)
+      240 |   0.3159 |  2.862469e+06 |   -0.49% |  1.21e-07 |  (qrl_tx7)
+      240 |   0.4369 |  2.862469e+06 |   -0.49% |  2.13e-07 |  (qrl_rsw)
+      240 |   0.4639 |  2.862469e+06 |   -0.49% |  3.68e-08 |  (qrl_rnw)
+      240 |   0.4302 |  2.862469e+06 |   -0.49% |  2.33e-07 |  (qrl_rse)
+      240 |   0.5056 |  2.862469e+06 |   -0.49% |  6.80e-08 |  (qrl_rne)
+      240 |   0.3337 |  2.862469e+06 |   -0.49% |  1.15e-06 |  (qrl_dw)
+      240 |   0.3257 |  2.862469e+06 |   -0.49% |  1.02e-06 |  (qrl_de)
+      240 |   0.3133 |  2.862469e+06 |   -0.49% |  6.42e-07 |  (qrl_hub)
+      250 |   0.8037 |  2.850487e+06 |   -0.42% |  6.08e-08 |      
+      250 |   0.3157 |  2.850487e+06 |   -0.42% |  2.06e-07 |  (qrl_tx0)
+      250 |   0.2318 |  2.850487e+06 |   -0.42% |  1.26e-06 |  (qrl_tx1)
+      250 |   0.2897 |  2.850487e+06 |   -0.42% |  1.79e-07 |  (qrl_tx2)
+      250 |   0.2909 |  2.850487e+06 |   -0.42% |  1.69e-07 |  (qrl_tx3)
+      250 |   0.2770 |  2.850487e+06 |   -0.42% |  1.85e-07 |  (qrl_tx4)
+      250 |   0.3052 |  2.850487e+06 |   -0.42% |  1.37e-07 |  (qrl_tx5)
+      250 |   0.2430 |  2.850487e+06 |   -0.42% |  1.36e-07 |  (qrl_tx6)
+      250 |   0.2761 |  2.850487e+06 |   -0.42% |  1.78e-07 |  (qrl_tx7)
+      250 |   0.3997 |  2.850487e+06 |   -0.42% |  3.46e-07 |  (qrl_rsw)
+      250 |   0.4817 |  2.850487e+06 |   -0.42% |  6.00e-08 |  (qrl_rnw)
+      250 |   0.3792 |  2.850487e+06 |   -0.42% |  3.80e-07 |  (qrl_rse)
+      250 |   0.5066 |  2.850487e+06 |   -0.42% |  1.11e-07 |  (qrl_rne)
+      250 |   0.2632 |  2.850487e+06 |   -0.42% |  1.70e-06 |  (qrl_dw)
+      250 |   0.2706 |  2.850487e+06 |   -0.42% |  1.51e-06 |  (qrl_de)
+      250 |   0.2589 |  2.850487e+06 |   -0.42% |  9.45e-07 |  (qrl_hub)
+      260 |   0.7828 |  2.833052e+06 |   -0.61% |  9.89e-08 |      
+      260 |   0.2592 |  2.833052e+06 |   -0.61% |  3.03e-07 |  (qrl_tx0)
+      260 |   0.1977 |  2.833052e+06 |   -0.61% |  1.85e-06 |  (qrl_tx1)
+      260 |   0.2661 |  2.833052e+06 |   -0.61% |  2.64e-07 |  (qrl_tx2)
+      260 |   0.2762 |  2.833052e+06 |   -0.61% |  2.48e-07 |  (qrl_tx3)
+      260 |   0.2635 |  2.833052e+06 |   -0.61% |  2.73e-07 |  (qrl_tx4)
+      260 |   0.2709 |  2.833052e+06 |   -0.61% |  2.01e-07 |  (qrl_tx5)
+      260 |   0.2599 |  2.833052e+06 |   -0.61% |  2.00e-07 |  (qrl_tx6)
+      260 |   0.2439 |  2.833052e+06 |   -0.61% |  2.62e-07 |  (qrl_tx7)
+      260 |   0.3992 |  2.833052e+06 |   -0.61% |  5.64e-07 |  (qrl_rsw)
+      260 |   0.4378 |  2.833052e+06 |   -0.61% |  9.77e-08 |  (qrl_rnw)
+      260 |   0.3724 |  2.833052e+06 |   -0.61% |  6.18e-07 |  (qrl_rse)
+      260 |   0.5312 |  2.833052e+06 |   -0.61% |  1.80e-07 |  (qrl_rne)
+      260 |   0.2069 |  2.833052e+06 |   -0.61% |  2.50e-06 |  (qrl_dw)
+      260 |   0.2221 |  2.833052e+06 |   -0.61% |  2.22e-06 |  (qrl_de)
+      260 |   0.2554 |  2.833052e+06 |   -0.61% |  1.39e-06 |  (qrl_hub)
+      270 |   0.7614 |  2.820276e+06 |   -0.45% |  1.61e-07 |      
+      270 |   0.2442 |  2.820276e+06 |   -0.45% |  4.46e-07 |  (qrl_tx0)
+      270 |   0.1340 |  2.820276e+06 |   -0.45% |  2.72e-06 |  (qrl_tx1)
+      270 |   0.2513 |  2.820276e+06 |   -0.45% |  3.89e-07 |  (qrl_tx2)
+      270 |   0.2592 |  2.820276e+06 |   -0.45% |  3.66e-07 |  (qrl_tx3)
+      270 |   0.2329 |  2.820276e+06 |   -0.45% |  4.02e-07 |  (qrl_tx4)
+      270 |   0.2581 |  2.820276e+06 |   -0.45% |  2.96e-07 |  (qrl_tx5)
+      270 |   0.2185 |  2.820276e+06 |   -0.45% |  2.95e-07 |  (qrl_tx6)
+      270 |   0.2318 |  2.820276e+06 |   -0.45% |  3.86e-07 |  (qrl_tx7)
+      270 |   0.3527 |  2.820276e+06 |   -0.45% |  8.82e-07 |  (qrl_rsw)
+      270 |   0.4752 |  2.820276e+06 |   -0.45% |  1.59e-07 |  (qrl_rnw)
+      270 |   0.3482 |  2.820276e+06 |   -0.45% |  9.97e-07 |  (qrl_rse)
+      270 |   0.5306 |  2.820276e+06 |   -0.45% |  2.93e-07 |  (qrl_rne)
+      270 |   0.1717 |  2.820276e+06 |   -0.45% |  3.69e-06 |  (qrl_dw)
+      270 |   0.1660 |  2.820276e+06 |   -0.45% |  3.27e-06 |  (qrl_de)
+      270 |   0.2444 |  2.820276e+06 |   -0.45% |  2.05e-06 |  (qrl_hub)
+      280 |   0.7346 |  2.810601e+06 |   -0.34% |  2.62e-07 |      
+      280 |   0.2368 |  2.810601e+06 |   -0.34% |  6.57e-07 |  (qrl_tx0)
+      280 |   0.1120 |  2.810601e+06 |   -0.34% |  4.01e-06 |  (qrl_tx1)
+      280 |   0.2852 |  2.810601e+06 |   -0.34% |  5.72e-07 |  (qrl_tx2)
+      280 |   0.2737 |  2.810601e+06 |   -0.34% |  5.39e-07 |  (qrl_tx3)
+      280 |   0.2179 |  2.810601e+06 |   -0.34% |  5.92e-07 |  (qrl_tx4)
+      280 |   0.2191 |  2.810601e+06 |   -0.34% |  4.36e-07 |  (qrl_tx5)
+      280 |   0.1874 |  2.810601e+06 |   -0.34% |  4.34e-07 |  (qrl_tx6)
+      280 |   0.2194 |  2.810601e+06 |   -0.34% |  5.68e-07 |  (qrl_tx7)
+      280 |   0.3124 |  2.810601e+06 |   -0.34% |  1.30e-06 |  (qrl_rsw)
+      280 |   0.4421 |  2.810601e+06 |   -0.34% |  2.59e-07 |  (qrl_rnw)
+      280 |   0.3346 |  2.810601e+06 |   -0.34% |  1.47e-06 |  (qrl_rse)
+      280 |   0.4932 |  2.810601e+06 |   -0.34% |  4.77e-07 |  (qrl_rne)
+      280 |   0.1301 |  2.810601e+06 |   -0.34% |  5.43e-06 |  (qrl_dw)
+      280 |   0.1129 |  2.810601e+06 |   -0.34% |  4.81e-06 |  (qrl_de)
+      280 |   0.2243 |  2.810601e+06 |   -0.34% |  3.02e-06 |  (qrl_hub)
+      281 |   0.0988 |  2.807911e+06 |          |  5.19e-06 | qrl_de
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_de' placement finished at iteration 281
+[INFO GPL-1002] Placed Cell Area              142.8849
+[INFO GPL-1003] Available Free Area          3819.9211
+[INFO GPL-1004] Minimum Feasible Density        0.0400 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0416
+[INFO GPL-1008]     - For 80% usage of free space: 0.0468
+[INFO GPL-1009]     - For 50% usage of free space: 0.0748
+      285 |   0.0990 |  2.807245e+06 |          |  5.06e-06 | qrl_tx1
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_tx1' placement finished at iteration 285
+[INFO GPL-1002] Placed Cell Area              226.3818
+[INFO GPL-1003] Available Free Area          2007.7200
+[INFO GPL-1004] Minimum Feasible Density        0.1200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.1253
+[INFO GPL-1008]     - For 80% usage of free space: 0.1409
+[INFO GPL-1009]     - For 50% usage of free space: 0.2255
+      288 |   0.0956 |  2.805826e+06 |          |  7.68e-06 | qrl_dw
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_dw' placement finished at iteration 288
+[INFO GPL-1002] Placed Cell Area              142.8849
+[INFO GPL-1003] Available Free Area          3930.1602
+[INFO GPL-1004] Minimum Feasible Density        0.0400 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0404
+[INFO GPL-1008]     - For 80% usage of free space: 0.0454
+[INFO GPL-1009]     - For 50% usage of free space: 0.0727
+      290 |   0.6891 |  2.803217e+06 |   -0.26% |  4.27e-07 |      
+      290 |   0.1999 |  2.803217e+06 |   -0.26% |  9.67e-07 |  (qrl_tx0)
+      290 |   0.2422 |  2.803217e+06 |   -0.26% |  8.43e-07 |  (qrl_tx2)
+      290 |   0.2370 |  2.803217e+06 |   -0.26% |  7.93e-07 |  (qrl_tx3)
+      290 |   0.1784 |  2.803217e+06 |   -0.26% |  8.71e-07 |  (qrl_tx4)
+      290 |   0.1867 |  2.803217e+06 |   -0.26% |  6.42e-07 |  (qrl_tx5)
+      290 |   0.1675 |  2.803217e+06 |   -0.26% |  6.39e-07 |  (qrl_tx6)
+      290 |   0.1922 |  2.803217e+06 |   -0.26% |  8.36e-07 |  (qrl_tx7)
+      290 |   0.2830 |  2.803217e+06 |   -0.26% |  1.91e-06 |  (qrl_rsw)
+      290 |   0.4341 |  2.803217e+06 |   -0.26% |  4.21e-07 |  (qrl_rnw)
+      290 |   0.2912 |  2.803217e+06 |   -0.26% |  2.16e-06 |  (qrl_rse)
+      290 |   0.4522 |  2.803217e+06 |   -0.26% |  7.77e-07 |  (qrl_rne)
+      290 |   0.1942 |  2.803217e+06 |   -0.26% |  4.44e-06 |  (qrl_hub)
+      300 |   0.6541 |  2.793414e+06 |   -0.35% |  6.95e-07 |      
+      300 |   0.1718 |  2.793414e+06 |   -0.35% |  1.42e-06 |  (qrl_tx0)
+      300 |   0.1858 |  2.793414e+06 |   -0.35% |  1.24e-06 |  (qrl_tx2)
+      300 |   0.2138 |  2.793414e+06 |   -0.35% |  1.17e-06 |  (qrl_tx3)
+      300 |   0.1629 |  2.793414e+06 |   -0.35% |  1.28e-06 |  (qrl_tx4)
+      300 |   0.1505 |  2.793414e+06 |   -0.35% |  9.45e-07 |  (qrl_tx5)
+      300 |   0.1637 |  2.793414e+06 |   -0.35% |  9.41e-07 |  (qrl_tx6)
+      300 |   0.1770 |  2.793414e+06 |   -0.35% |  1.23e-06 |  (qrl_tx7)
+      300 |   0.2662 |  2.793414e+06 |   -0.35% |  2.81e-06 |  (qrl_rsw)
+      300 |   0.4069 |  2.793414e+06 |   -0.35% |  6.86e-07 |  (qrl_rnw)
+      300 |   0.2361 |  2.793414e+06 |   -0.35% |  3.18e-06 |  (qrl_rse)
+      300 |   0.3536 |  2.793414e+06 |   -0.35% |  1.27e-06 |  (qrl_rne)
+      300 |   0.1733 |  2.793414e+06 |   -0.35% |  6.54e-06 |  (qrl_hub)
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 309, overflow: 0.195, keep resizer changes at: 1, HPWL: 2786251229
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     74033
+    final |     +0.3% |     260 |    4019 |          3455 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1693 slew violations.
+[INFO RSZ-0036] Found 3 capacitance violations.
+[INFO RSZ-0037] Found 3193 long wires.
+[INFO RSZ-0039] Resized 260 instances.
+[INFO RSZ-0038] Inserted 4019 buffers in 3455 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     49488
+     4900 |     -0.0% |     265 |        1 |     44588
+     9800 |     -0.0% |    1977 |      972 |     39688
+    14700 |     -0.0% |    1977 |      972 |     34788
+    19600 |     -0.1% |    4156 |     2499 |     29888
+    24500 |     -0.1% |    5377 |     3168 |     24988
+    29400 |     -0.1% |    5670 |     3177 |     20088
+    34300 |     -0.2% |    6765 |     3779 |     15188
+    39200 |     -0.2% |    9397 |     5848 |     10288
+    44100 |     -0.3% |   16586 |    11815 |      5388
+    49000 |     -0.3% |   21021 |    15612 |       488
+    final |     -0.3% |   21021 |    15612 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -6.0733707e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: -129.177 um^2 (-2.85%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 19631, deleted: 21021
+[INFO GPL-0110] Timing-driven: new target density: 0.50514346
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5013874
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.50143373
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.50283724
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5024589
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5029228
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5025298
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.5
+[INFO GPL-0107] Timing-driven: repair_design delta area: 0.000 um^2 (+0.00%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -1390 (-2.41%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 0, deleted: 0
+[INFO GPL-0110] Timing-driven: new target density: 0.50503695
+      309 |   0.0994 |  2.784421e+06 |          |  1.39e-06 | qrl_tx5
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_tx5' placement finished at iteration 309
+[INFO GPL-1002] Placed Cell Area              226.3818
+[INFO GPL-1003] Available Free Area          1942.8552
+[INFO GPL-1004] Minimum Feasible Density        0.1200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.1295
+[INFO GPL-1008]     - For 80% usage of free space: 0.1457
+[INFO GPL-1009]     - For 50% usage of free space: 0.2330
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      310 |   0.7069 |  2.762874e+06 |   -1.09% |  1.13e-06 |      
+      310 |   0.1786 |  2.762874e+06 |   -1.09% |  2.10e-06 |  (qrl_tx0)
+      310 |   0.1453 |  2.762874e+06 |   -1.09% |  1.83e-06 |  (qrl_tx2)
+      310 |   0.1713 |  2.762874e+06 |   -1.09% |  1.72e-06 |  (qrl_tx3)
+      310 |   0.1410 |  2.762874e+06 |   -1.09% |  1.89e-06 |  (qrl_tx4)
+      310 |   0.1407 |  2.762874e+06 |   -1.09% |  1.39e-06 |  (qrl_tx6)
+      310 |   0.1415 |  2.762874e+06 |   -1.09% |  1.81e-06 |  (qrl_tx7)
+      310 |   0.2106 |  2.762874e+06 |   -1.09% |  4.15e-06 |  (qrl_rsw)
+      310 |   0.3731 |  2.762874e+06 |   -1.09% |  1.12e-06 |  (qrl_rnw)
+      310 |   0.1690 |  2.762874e+06 |   -1.09% |  4.68e-06 |  (qrl_rse)
+      310 |   0.2773 |  2.762874e+06 |   -1.09% |  1.90e-06 |  (qrl_rne)
+      310 |   0.1350 |  2.762874e+06 |   -1.09% |  9.64e-06 |  (qrl_hub)
+      320 |   0.6479 |  2.761617e+06 |   -0.05% |  1.84e-06 |      
+      320 |   0.1913 |  2.761617e+06 |   -0.05% |  3.08e-06 |  (qrl_tx0)
+      320 |   0.1626 |  2.761617e+06 |   -0.05% |  2.69e-06 |  (qrl_tx2)
+      320 |   0.1765 |  2.761617e+06 |   -0.05% |  2.53e-06 |  (qrl_tx3)
+      320 |   0.1393 |  2.761617e+06 |   -0.05% |  2.78e-06 |  (qrl_tx4)
+      320 |   0.1224 |  2.761617e+06 |   -0.05% |  2.04e-06 |  (qrl_tx6)
+      320 |   0.1372 |  2.761617e+06 |   -0.05% |  2.67e-06 |  (qrl_tx7)
+      320 |   0.1238 |  2.761617e+06 |   -0.05% |  6.09e-06 |  (qrl_rsw)
+      320 |   0.2521 |  2.761617e+06 |   -0.05% |  1.76e-06 |  (qrl_rnw)
+      320 |   0.1333 |  2.761617e+06 |   -0.05% |  6.89e-06 |  (qrl_rse)
+      320 |   0.2078 |  2.761617e+06 |   -0.05% |  2.79e-06 |  (qrl_rne)
+      320 |   0.1087 |  2.761617e+06 |   -0.05% |  1.42e-05 |  (qrl_hub)
+      323 |   0.0967 |  2.762186e+06 |          |  1.65e-05 | qrl_hub
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_hub' placement finished at iteration 323
+[INFO GPL-1002] Placed Cell Area             1033.9709
+[INFO GPL-1003] Available Free Area          3862.4960
+[INFO GPL-1004] Minimum Feasible Density        0.2700 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.2974
+[INFO GPL-1008]     - For 80% usage of free space: 0.3346
+[INFO GPL-1009]     - For 50% usage of free space: 0.5354
+      325 |   0.0965 |  2.762664e+06 |          |  7.69e-06 | qrl_rsw
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_rsw' placement finished at iteration 325
+[INFO GPL-1002] Placed Cell Area              146.6450
+[INFO GPL-1003] Available Free Area          3927.0693
+[INFO GPL-1004] Minimum Feasible Density        0.0400 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0415
+[INFO GPL-1008]     - For 80% usage of free space: 0.0467
+[INFO GPL-1009]     - For 50% usage of free space: 0.0747
+      326 |   0.0996 |  2.763590e+06 |          |  2.67e-06 | qrl_tx6
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_tx6' placement finished at iteration 326
+[INFO GPL-1002] Placed Cell Area              226.3818
+[INFO GPL-1003] Available Free Area          1942.8552
+[INFO GPL-1004] Minimum Feasible Density        0.1200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.1295
+[INFO GPL-1008]     - For 80% usage of free space: 0.1457
+[INFO GPL-1009]     - For 50% usage of free space: 0.2330
+      329 |   0.0985 |  2.764646e+06 |          |  1.01e-05 | qrl_rse
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_rse' placement finished at iteration 329
+[INFO GPL-1002] Placed Cell Area              146.6450
+[INFO GPL-1003] Available Free Area          3812.2142
+[INFO GPL-1004] Minimum Feasible Density        0.0400 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0427
+[INFO GPL-1008]     - For 80% usage of free space: 0.0481
+[INFO GPL-1009]     - For 50% usage of free space: 0.0769
+      330 |   0.5823 |  2.763778e+06 |   +0.08% |  2.99e-06 |      
+      330 |   0.1557 |  2.763778e+06 |   +0.08% |  4.54e-06 |  (qrl_tx0)
+      330 |   0.1054 |  2.763778e+06 |   +0.08% |  3.96e-06 |  (qrl_tx2)
+      330 |   0.1165 |  2.763778e+06 |   +0.08% |  3.72e-06 |  (qrl_tx3)
+      330 |   0.1032 |  2.763778e+06 |   +0.08% |  4.09e-06 |  (qrl_tx4)
+      330 |   0.1147 |  2.763778e+06 |   +0.08% |  3.92e-06 |  (qrl_tx7)
+      330 |   0.2056 |  2.763778e+06 |   +0.08% |  2.59e-06 |  (qrl_rnw)
+      330 |   0.1788 |  2.763778e+06 |   +0.08% |  4.12e-06 |  (qrl_rne)
+      331 |   0.0991 |  2.764802e+06 |          |  4.42e-06 | qrl_tx4
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_tx4' placement finished at iteration 331
+[INFO GPL-1002] Placed Cell Area              229.1674
+[INFO GPL-1003] Available Free Area          1942.8552
+[INFO GPL-1004] Minimum Feasible Density        0.1200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.1311
+[INFO GPL-1008]     - For 80% usage of free space: 0.1474
+[INFO GPL-1009]     - For 50% usage of free space: 0.2359
+      335 |   0.0996 |  2.765237e+06 |          |  4.70e-06 | qrl_tx3
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_tx3' placement finished at iteration 335
+[INFO GPL-1002] Placed Cell Area              226.3818
+[INFO GPL-1003] Available Free Area          2007.7200
+[INFO GPL-1004] Minimum Feasible Density        0.1200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.1253
+[INFO GPL-1008]     - For 80% usage of free space: 0.1409
+[INFO GPL-1009]     - For 50% usage of free space: 0.2255
+      340 |   0.5113 |  2.763477e+06 |   -0.01% |  4.87e-06 |      
+      340 |   0.1097 |  2.763477e+06 |   -0.01% |  6.69e-06 |  (qrl_tx0)
+      340 |   0.1195 |  2.763477e+06 |   -0.01% |  5.83e-06 |  (qrl_tx2)
+      340 |   0.1061 |  2.763477e+06 |   -0.01% |  5.78e-06 |  (qrl_tx7)
+      340 |   0.1601 |  2.763477e+06 |   -0.01% |  3.82e-06 |  (qrl_rnw)
+      340 |   0.1336 |  2.763477e+06 |   -0.01% |  6.06e-06 |  (qrl_rne)
+      345 |   0.0987 |  2.762946e+06 |          |  7.29e-06 | qrl_tx7
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_tx7' placement finished at iteration 345
+[INFO GPL-1002] Placed Cell Area              226.3818
+[INFO GPL-1003] Available Free Area          1942.8552
+[INFO GPL-1004] Minimum Feasible Density        0.1200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.1295
+[INFO GPL-1008]     - For 80% usage of free space: 0.1457
+[INFO GPL-1009]     - For 50% usage of free space: 0.2330
+      348 |   0.0995 |  2.764574e+06 |          |  8.59e-06 | qrl_rne
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_rne' placement finished at iteration 348
+[INFO GPL-1002] Placed Cell Area              151.9186
+[INFO GPL-1003] Available Free Area          4404.3708
+[INFO GPL-1004] Minimum Feasible Density        0.0400 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0383
+[INFO GPL-1008]     - For 80% usage of free space: 0.0431
+[INFO GPL-1009]     - For 50% usage of free space: 0.0690
+      350 |   0.4577 |  2.764558e+06 |   +0.04% |  7.94e-06 |      
+      350 |   0.1171 |  2.764558e+06 |   +0.04% |  9.85e-06 |  (qrl_tx0)
+      350 |   0.1441 |  2.764558e+06 |   +0.04% |  8.58e-06 |  (qrl_tx2)
+      350 |   0.1043 |  2.764558e+06 |   +0.04% |  5.62e-06 |  (qrl_rnw)
+      351 |   0.0991 |  2.765170e+06 |          |  6.08e-06 | qrl_rnw
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_rnw' placement finished at iteration 351
+[INFO GPL-1002] Placed Cell Area              152.0056
+[INFO GPL-1003] Available Free Area          4531.4254
+[INFO GPL-1004] Minimum Feasible Density        0.0300 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0373
+[INFO GPL-1008]     - For 80% usage of free space: 0.0419
+[INFO GPL-1009]     - For 50% usage of free space: 0.0671
+      360 |   0.4001 |  2.769210e+06 |   +0.17% |  1.29e-05 |      
+      360 |   0.1136 |  2.769210e+06 |   +0.17% |  1.45e-05 |  (qrl_tx0)
+      360 |   0.1162 |  2.769210e+06 |   +0.17% |  1.26e-05 |  (qrl_tx2)
+      363 |   0.0993 |  2.771454e+06 |          |  1.48e-05 | qrl_tx2
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_tx2' placement finished at iteration 363
+[INFO GPL-1002] Placed Cell Area              226.3818
+[INFO GPL-1003] Available Free Area          2007.7200
+[INFO GPL-1004] Minimum Feasible Density        0.1200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.1253
+[INFO GPL-1008]     - For 80% usage of free space: 0.1409
+[INFO GPL-1009]     - For 50% usage of free space: 0.2255
+      365 |   0.0982 |  2.773233e+06 |          |  1.83e-05 | qrl_tx0
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'qrl_tx0' placement finished at iteration 365
+[INFO GPL-1002] Placed Cell Area              229.1674
+[INFO GPL-1003] Available Free Area          2007.7200
+[INFO GPL-1004] Minimum Feasible Density        0.1200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.1268
+[INFO GPL-1008]     - For 80% usage of free space: 0.1427
+[INFO GPL-1009]     - For 50% usage of free space: 0.2283
+      370 |   0.3438 |  2.779043e+06 |   +0.36% |  2.10e-05 |      
+      380 |   0.2961 |  2.803124e+06 |   +0.87% |  3.09e-05 |      
+      390 |   0.2423 |  2.844219e+06 |   +1.47% |  4.54e-05 |      
+      400 |   0.1894 |  2.897936e+06 |   +1.89% |  6.65e-05 |      
+      410 |   0.1464 |  2.953392e+06 |   +1.91% |  9.76e-05 |      
+      420 |   0.1128 |  2.997895e+06 |   +1.51% |  1.43e-04 |      
+      425 |   0.0995 |  3.013527e+06 |          |  1.80e-04 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 425
+[INFO GPL-1002] Placed Cell Area             4386.1327
+[INFO GPL-1003] Available Free Area         348608.7185
+[INFO GPL-1004] Minimum Feasible Density        0.0100 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0140
+[INFO GPL-1008]     - For 80% usage of free space: 0.0157
+[INFO GPL-1009]     - For 50% usage of free space: 0.0252
+[INFO GPL-1011] Original area (um^2): 6257.07
+[INFO GPL-1013] Total timing-driven delta area: 1862.64 (+29.77%)
+[INFO GPL-1014] Final placement area: 8119.71 (+29.77%)
+Took 229 seconds: global_placement -density 0.5 -pad_left 0 -pad_right 0 -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 333822 um^2 45% utilization.
+write_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_3_place_gp.odb
+Elapsed time: 4:44.89[h:]min:sec. CPU time: user 599.64 sys 53.89 (229%). Peak memory: 1471728KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb          284           1437 d02d0305b15e791874a3
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+Running resize.tcl, stage 3_4_place_resized
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_tt.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_ff.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_ff.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_ff.lib
+read_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_3_place_gp.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     72643
+     1000 |     +0.0% |       1 |       0 |             0 |     71643
+     2000 |     +0.0% |       1 |       0 |             0 |     70643
+     3000 |     +0.0% |       1 |       2 |             2 |     69643
+     4000 |     +0.0% |       1 |      46 |            45 |     68643
+     5000 |     +0.0% |       1 |     258 |           225 |     67643
+     6000 |     +0.0% |       1 |     404 |           361 |     66643
+     7000 |     +0.0% |     379 |     481 |           434 |     65643
+     8000 |     +0.1% |     999 |     514 |           467 |     64643
+     9000 |     +0.1% |    1028 |     693 |           645 |     63643
+    10000 |     +0.1% |    1028 |     725 |           677 |     62643
+    11000 |     +0.1% |    1029 |    1358 |          1207 |     61643
+    12000 |     +0.1% |    1029 |    1358 |          1207 |     60643
+    13000 |     +0.1% |    1031 |    1364 |          1213 |     59643
+    14000 |     +0.1% |    1090 |    1500 |          1345 |     58643
+    15000 |     +0.1% |    1090 |    1500 |          1345 |     57643
+    16000 |     +0.1% |    1090 |    1504 |          1349 |     56643
+    17000 |     +0.2% |    1090 |    2045 |          1658 |     55643
+    18000 |     +0.2% |    1090 |    2260 |          1859 |     54643
+    19000 |     +0.2% |    1090 |    2445 |          2007 |     53643
+    20000 |     +0.3% |    1090 |    2718 |          2181 |     52643
+    21000 |     +0.3% |    1090 |    2720 |          2183 |     51643
+    22000 |     +0.3% |    1090 |    2752 |          2197 |     50643
+    23000 |     +0.3% |    1090 |    2752 |          2197 |     49643
+    24000 |     +0.3% |    1090 |    2752 |          2197 |     48643
+    25000 |     +0.3% |    1090 |    2752 |          2197 |     47643
+    26000 |     +0.3% |    1090 |    2754 |          2199 |     46643
+    27000 |     +0.3% |    1090 |    2754 |          2199 |     45643
+    28000 |     +0.3% |    1090 |    2754 |          2199 |     44643
+    29000 |     +0.3% |    1090 |    2754 |          2199 |     43643
+    30000 |     +0.3% |    1090 |    2754 |          2199 |     42643
+    31000 |     +0.3% |    1090 |    2754 |          2199 |     41643
+    32000 |     +0.3% |    1090 |    2920 |          2339 |     40643
+    33000 |     +0.3% |    1090 |    3503 |          2802 |     39643
+    34000 |     +0.3% |    1090 |    3535 |          2832 |     38643
+    35000 |     +0.3% |    1090 |    3539 |          2836 |     37643
+    36000 |     +0.3% |    1090 |    3653 |          2949 |     36643
+    37000 |     +0.4% |    1090 |    3791 |          3083 |     35643
+    38000 |     +0.4% |    1090 |    3968 |          3260 |     34643
+    39000 |     +0.4% |    1090 |    3988 |          3278 |     33643
+    40000 |     +0.4% |    1090 |    3988 |          3278 |     32643
+    41000 |     +0.4% |    1090 |    3988 |          3278 |     31643
+    42000 |     +0.4% |    1094 |    4026 |          3303 |     30643
+    43000 |     +0.4% |    1094 |    4038 |          3315 |     29643
+    44000 |     +0.4% |    1094 |    4038 |          3315 |     28643
+    45000 |     +0.4% |    1094 |    4100 |          3362 |     27643
+    46000 |     +0.4% |    1094 |    4100 |          3362 |     26643
+    47000 |     +0.4% |    1094 |    4100 |          3362 |     25643
+    48000 |     +0.4% |    1094 |    4100 |          3362 |     24643
+    49000 |     +0.4% |    1094 |    4108 |          3366 |     23643
+    50000 |     +0.4% |    1094 |    4109 |          3367 |     22643
+    51000 |     +0.4% |    1094 |    4109 |          3367 |     21643
+    52000 |     +0.4% |    1100 |    4112 |          3370 |     20643
+    53000 |     +0.4% |    1100 |    4118 |          3375 |     19643
+    54000 |     +0.4% |    1100 |    4124 |          3378 |     18643
+    55000 |     +0.4% |    1100 |    4129 |          3382 |     17643
+    56000 |     +0.4% |    1101 |    4150 |          3403 |     16643
+    57000 |     +0.4% |    1101 |    4150 |          3403 |     15643
+    58000 |     +0.4% |    1101 |    4167 |          3418 |     14643
+    59000 |     +0.4% |    1101 |    4192 |          3442 |     13643
+    60000 |     +0.4% |    1102 |    4422 |          3672 |     12643
+    61000 |     +0.4% |    1154 |    4466 |          3716 |     11643
+    62000 |     +0.4% |    1154 |    4466 |          3716 |     10643
+    63000 |     +0.4% |    1154 |    4466 |          3716 |      9643
+    64000 |     +0.4% |    1154 |    4489 |          3739 |      8643
+    65000 |     +0.4% |    1154 |    4489 |          3739 |      7643
+    66000 |     +0.4% |    1154 |    4595 |          3845 |      6643
+    67000 |     +0.4% |    1154 |    4637 |          3873 |      5643
+    68000 |     +0.4% |    1154 |    4672 |          3895 |      4643
+    69000 |     +0.4% |    1154 |    4672 |          3895 |      3643
+    70000 |     +0.4% |    1154 |    4672 |          3895 |      2643
+    71000 |     +0.4% |    1154 |    4672 |          3895 |      1643
+    72000 |     +0.4% |    1154 |    4672 |          3895 |       643
+    final |     +0.4% |    1154 |    4672 |          3895 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 4950 slew violations.
+[INFO RSZ-0039] Resized 1154 instances.
+[INFO RSZ-0038] Inserted 4672 buffers in 3895 nets.
+[INFO RSZ-0504] Runtime: 10.33s
+Took 10 seconds: repair_design -verbose -slew_margin 30
+Floating nets: 
+[WARNING RSZ-0020] found 2 floating nets.
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 335247 um^2 45% utilization.
+Instance count before 117656, after 122328
+Pin count before 175894, after 185238
+write_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_4_place_resized.odb
+Elapsed time: 1:10.26[h:]min:sec. CPU time: user 85.11 sys 8.78 (133%). Peak memory: 789864KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb           70            771 d607c1a4442411a92fa2
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_tt.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_ff.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_ff.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_ff.lib
+read_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_4_place_resized.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_place_pre_dpl.tcl
+INHOLD released 5714 FIRM hold cells / drivers for DPL
+OT_OFLOP released 2343 output-port flops for DPL
+detailed_placement
+[INFO DPL-0006] Core area: 737183.46 um^2
+[INFO DPL-0007] Movable instances area: 10721.11 um^2
+[INFO DPL-0008] Fixed instances area within core: 324526.22 um^2
+[INFO DPL-0009] Utilization: 45.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 122309 cells
+[INFO DPL-0393]   height 408 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+[INFO DPL-0393]   height 1600 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      49606 |      6006 |     35649
+        1 |      32024 |      4621 |     19651
+        2 |      26362 |      4274 |     14641
+        3 |      23244 |      4104 |     11675
+        4 |      21639 |      4027 |     10177
+        5 |      20710 |      3982 |      9344
+        6 |      20510 |      3968 |      9158
+        7 |      20143 |      3952 |      8807
+        8 |      20090 |      3940 |      8766
+        9 |      20088 |      3940 |      8764
+       10 |      20088 |      3940 |      8764
+       16 |      20046 |      3938 |      8724
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 20046 for 3 consecutive iterations.
+Using old diamond search for 3938 remaining illegal cells.
+diamond recovery: recovered 3938/3938 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 41.42s
+Placement Analysis
+---------------------------------
+total displacement     125285.8 u
+average displacement        1.0 u
+max displacement           71.8 u
+original HPWL         3021670.9 u
+legalized HPWL        3157136.7 u
+delta HPWL                    4 %
+
+Took 42 seconds: detailed_placement
+optimize_mirroring
+[INFO DPL-0020] Mirrored 35356 instances
+[INFO DPL-0021] HPWL before          3157136.7 u
+[INFO DPL-0022] HPWL after           3141425.4 u
+[INFO DPL-0023] HPWL delta               -0.5 %
+OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring
+detailed_placement
+[INFO DPL-0006] Core area: 737183.46 um^2
+[INFO DPL-0007] Movable instances area: 10721.11 um^2
+[INFO DPL-0008] Fixed instances area within core: 324526.22 um^2
+[INFO DPL-0009] Utilization: 45.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 122309 cells
+[INFO DPL-0393]   height 408 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+[INFO DPL-0393]   height 1600 row(s): 1 cells
+[INFO DPL-0500] Runtime: 4.64s
+Placement Analysis
+---------------------------------
+total displacement      19909.5 u
+average displacement        0.2 u
+max displacement            1.6 u
+original HPWL         3141425.4 u
+legalized HPWL        3157136.7 u
+delta HPWL                    1 %
+
+Took 5 seconds: detailed_placement
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Took 5 seconds: estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 335247 um^2 45% utilization.
+write_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_place.sdc
+Elapsed time: 2:02.42[h:]min:sec. CPU time: user 133.89 sys 9.48 (117%). Peak memory: 3250064KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb          122           3173 dadfaeaf08e2155a9fa1
+cp /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_5_place_dp.odb /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_tt.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_ff.lib
+read_liberty /src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_ff.lib
+read_liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_ff.lib
+read_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_ENTRIES entry ck_rp0 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_single.g_col\[0\].u_leaf/clk (ot_qwen_tile_romleaf) wire 249.2 um LONG
+OT_ENTRIES entry ck_rp1 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_single.g_col\[0\].u_leaf/clk (ot_qwen_tile_romleaf) wire 249.2 um LONG
+OT_ENTRIES entry ck_rp2 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_single.g_col\[0\].u_leaf/clk (ot_qwen_tile_romleaf) wire 249.2 um LONG
+OT_ENTRIES entry ck_rp3 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_single.g_col\[0\].u_leaf/clk (ot_qwen_tile_romleaf) wire 292.4 um LONG
+OT_ENTRIES entry ck_rp4 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_single.g_col\[0\].u_leaf/clk (ot_qwen_tile_romleaf) wire 328.9 um LONG
+OT_ENTRIES entry ck_rp5 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_single.g_col\[1\].u_leaf/clk (ot_qwen_tile_romleaf) wire 249.2 um LONG
+OT_ENTRIES entry ck_rp6 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_single.g_col\[1\].u_leaf/clk (ot_qwen_tile_romleaf) wire 249.2 um LONG
+OT_ENTRIES entry ck_rp7 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_single.g_col\[1\].u_leaf/clk (ot_qwen_tile_romleaf) wire 249.2 um LONG
+OT_ENTRIES entry ck_rp8 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_single.g_col\[1\].u_leaf/clk (ot_qwen_tile_romleaf) wire 249.2 um LONG
+OT_ENTRIES entry ck_rp9 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_single.g_col\[1\].u_leaf/clk (ot_qwen_tile_romleaf) wire 249.2 um LONG
+OT_ENTRIES entry ck_lsl0 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.u_lh/clk (ot_qwen_tile_lsl_fp1) wire 359.8 um LONG
+OT_ENTRIES entry ck_lsl1 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.u_lh/clk (ot_qwen_tile_lsl_fp1) wire 359.8 um LONG
+OT_ENTRIES entry ck_lsl2 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.u_lh/clk (ot_qwen_tile_lsl_fp1) wire 375.2 um LONG
+OT_ENTRIES entry ck_lsl3 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.u_lh/clk (ot_qwen_tile_lsl_fp1) wire 411.6 um LONG
+OT_ENTRIES entry ck_lsl4 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.u_lh/clk (ot_qwen_tile_lsl_fp1) wire 372.3 um LONG
+OT_ENTRIES entry ck_lsl5 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.u_lh/clk (ot_qwen_tile_lsl_fp1) wire 346.4 um LONG
+OT_ENTRIES entry ck_lsl6 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.u_lh/clk (ot_qwen_tile_lsl_fp1) wire 346.4 um LONG
+OT_ENTRIES entry ck_lsl7 -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.u_lh/clk (ot_qwen_tile_lsl_fp1) wire 346.4 um LONG
+OT_ENTRIES entry ck_node -> u_ot_pr_core.u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node/clk (ot_qwen_tile_node) wire 618.2 um LONG
+OT_HYBRID excluded hard entries: in-CTS -repair_clock_nets disabled; selected-root trees repaired after CTS
+OT_MACRO_CTS 19 clocked macros: -macro_clustering_size 2 -macro_clustering_max_diameter 40
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: ck ck_rs ck_rn ck_rsw ck_rnw ck_dw ck_de ck_tx0 ck_tx1 ck_tx2 ck_tx3 ck_tx4 ck_tx5 ck_tx6 ck_tx7 ck_fa0 ck_fa1 ck_fa2 ck_fa3 ck_fa4.
+[INFO CTS-0095] Net "ck" found.
+[INFO CTS-0010]  Clock net "ck" has 2937 sinks.
+[INFO CTS-0095] Net "ck_de" found.
+[INFO CTS-0010]  Clock net "ck_de" has 1056 sinks.
+[INFO CTS-0095] Net "ck_dw" found.
+[INFO CTS-0010]  Clock net "ck_dw" has 1056 sinks.
+[INFO CTS-0095] Net "ck_fa0" found.
+[INFO CTS-0010]  Clock net "ck_fa0" has 514 sinks.
+[INFO CTS-0095] Net "ck_fa1" found.
+[INFO CTS-0010]  Clock net "ck_fa1" has 514 sinks.
+[INFO CTS-0095] Net "ck_fa2" found.
+[INFO CTS-0010]  Clock net "ck_fa2" has 514 sinks.
+[INFO CTS-0095] Net "ck_fa3" found.
+[INFO CTS-0010]  Clock net "ck_fa3" has 516 sinks.
+[INFO CTS-0095] Net "ck_fa4" found.
+[INFO CTS-0010]  Clock net "ck_fa4" has 286 sinks.
+[INFO CTS-0095] Net "ck_rn" found.
+[INFO CTS-0010]  Clock net "ck_rn" has 514 sinks.
+[INFO CTS-0095] Net "ck_rnw" found.
+[INFO CTS-0010]  Clock net "ck_rnw" has 514 sinks.
+[INFO CTS-0095] Net "ck_rs" found.
+[INFO CTS-0010]  Clock net "ck_rs" has 515 sinks.
+[INFO CTS-0095] Net "ck_rsw" found.
+[INFO CTS-0010]  Clock net "ck_rsw" has 515 sinks.
+[INFO CTS-0095] Net "ck_tx0" found.
+[INFO CTS-0010]  Clock net "ck_tx0" has 861 sinks.
+[INFO CTS-0095] Net "ck_tx1" found.
+[INFO CTS-0010]  Clock net "ck_tx1" has 861 sinks.
+[INFO CTS-0095] Net "ck_tx2" found.
+[INFO CTS-0010]  Clock net "ck_tx2" has 861 sinks.
+[INFO CTS-0095] Net "ck_tx3" found.
+[INFO CTS-0010]  Clock net "ck_tx3" has 861 sinks.
+[INFO CTS-0095] Net "ck_tx4" found.
+[INFO CTS-0010]  Clock net "ck_tx4" has 861 sinks.
+[INFO CTS-0095] Net "ck_tx5" found.
+[INFO CTS-0010]  Clock net "ck_tx5" has 861 sinks.
+[INFO CTS-0095] Net "ck_tx6" found.
+[INFO CTS-0010]  Clock net "ck_tx6" has 861 sinks.
+[INFO CTS-0095] Net "ck_tx7" found.
+[INFO CTS-0010]  Clock net "ck_tx7" has 861 sinks.
+[INFO CTS-0008] TritonCTS found 20 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck.
+[INFO CTS-0028]  Total number of sinks: 2937.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 105.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 142.
+[INFO CTS-0024]  Normalized sink region: [(268.085, 168.9), (599.113, 520.019)].
+[INFO CTS-0025]     Width:  331.0280.
+[INFO CTS-0026]     Height: 351.1187.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 71
+    Sub-region size: 331.0280 X 175.5593
+[INFO CTS-0034]     Segment length (rounded): 88.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 36
+    Sub-region size: 165.5140 X 175.5593
+[INFO CTS-0034]     Segment length (rounded): 82.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 18
+    Sub-region size: 165.5140 X 87.7797
+[INFO CTS-0034]     Segment length (rounded): 44.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 9
+    Sub-region size: 82.7570 X 87.7797
+[INFO CTS-0034]     Segment length (rounded): 42.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 5
+    Sub-region size: 82.7570 X 43.8898
+[INFO CTS-0034]     Segment length (rounded): 22.
+ Level 6
+    Direction: Horizontal
+    Sinks per sub-region: 3
+    Sub-region size: 41.3785 X 43.8898
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 7
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 41.3785 X 21.9449
+[INFO CTS-0034]     Segment length (rounded): 10.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 142.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_de.
+[INFO CTS-0028]  Total number of sinks: 1056.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 15.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 46.
+[INFO CTS-0024]  Normalized sink region: [(301.194, 249.529), (443.523, 317.821)].
+[INFO CTS-0025]     Width:  142.3295.
+[INFO CTS-0026]     Height: 68.2929.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 23
+    Sub-region size: 71.1647 X 68.2929
+[INFO CTS-0034]     Segment length (rounded): 36.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 12
+    Sub-region size: 71.1647 X 34.1464
+[INFO CTS-0034]     Segment length (rounded): 18.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 46.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_dw.
+[INFO CTS-0028]  Total number of sinks: 1056.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 14.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 42.
+[INFO CTS-0024]  Normalized sink region: [(165.435, 248.973), (312.9, 318.274)].
+[INFO CTS-0025]     Width:  147.4656.
+[INFO CTS-0026]     Height: 69.3015.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 21
+    Sub-region size: 73.7328 X 69.3015
+[INFO CTS-0034]     Segment length (rounded): 36.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 11
+    Sub-region size: 73.7328 X 34.6508
+[INFO CTS-0034]     Segment length (rounded): 18.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 42.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_fa0.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 4.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(2.83037, 342.3), (8.57185, 402.604)].
+[INFO CTS-0025]     Width:  5.7415.
+[INFO CTS-0026]     Height: 60.3037.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 5.7415 X 30.1519
+[INFO CTS-0034]     Segment length (rounded): 16.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_fa1.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 4.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(2.88785, 422.785), (8.678, 482.46)].
+[INFO CTS-0025]     Width:  5.7902.
+[INFO CTS-0026]     Height: 59.6754.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 5.7902 X 29.8377
+[INFO CTS-0034]     Segment length (rounded): 14.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_fa2.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 4.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(3.10935, 575.757), (8.6006, 634.835)].
+[INFO CTS-0025]     Width:  5.4912.
+[INFO CTS-0026]     Height: 59.0783.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 5.4912 X 29.5392
+[INFO CTS-0034]     Segment length (rounded): 14.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_fa3.
+[INFO CTS-0028]  Total number of sinks: 516.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 4.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(3.14435, 496.69), (8.68288, 559.233)].
+[INFO CTS-0025]     Width:  5.5385.
+[INFO CTS-0026]     Height: 62.5433.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 5.5385 X 31.2717
+[INFO CTS-0034]     Segment length (rounded): 16.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_fa4.
+[INFO CTS-0028]  Total number of sinks: 286.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 5.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 10.
+[INFO CTS-0024]  Normalized sink region: [(598.632, 114.805), (604.416, 158.985)].
+[INFO CTS-0025]     Width:  5.7844.
+[INFO CTS-0026]     Height: 44.1793.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 5
+    Sub-region size: 5.7844 X 22.0897
+[INFO CTS-0034]     Segment length (rounded): 12.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 10.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rn.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 5.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(441.063, 417.138), (445.471, 455.231)].
+[INFO CTS-0025]     Width:  4.4078.
+[INFO CTS-0026]     Height: 38.0937.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 4.4078 X 19.0468
+[INFO CTS-0034]     Segment length (rounded): 10.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rnw.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 6.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(161.672, 417.329), (166.367, 455.048)].
+[INFO CTS-0025]     Width:  4.6953.
+[INFO CTS-0026]     Height: 37.7194.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 4.6953 X 18.8597
+[INFO CTS-0034]     Segment length (rounded): 10.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rs.
+[INFO CTS-0028]  Total number of sinks: 515.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 5.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(441.784, 166.88), (445.613, 219.963)].
+[INFO CTS-0025]     Width:  3.8292.
+[INFO CTS-0026]     Height: 53.0823.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 3.8292 X 26.5411
+[INFO CTS-0034]     Segment length (rounded): 13.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rsw.
+[INFO CTS-0028]  Total number of sinks: 515.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 4.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 17.
+[INFO CTS-0024]  Normalized sink region: [(161.673, 166.795), (164.027, 219.306)].
+[INFO CTS-0025]     Width:  2.3543.
+[INFO CTS-0026]     Height: 52.5117.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 2.3543 X 26.2558
+[INFO CTS-0034]     Segment length (rounded): 13.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 17.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx0.
+[INFO CTS-0028]  Total number of sinks: 861.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 9.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 29.
+[INFO CTS-0024]  Normalized sink region: [(267.592, 98.6375), (276.069, 193)].
+[INFO CTS-0025]     Width:  8.4775.
+[INFO CTS-0026]     Height: 94.3625.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 15
+    Sub-region size: 8.4775 X 47.1813
+[INFO CTS-0034]     Segment length (rounded): 24.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 8
+    Sub-region size: 4.2388 X 47.1813
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 29.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx1.
+[INFO CTS-0028]  Total number of sinks: 861.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 9.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 29.
+[INFO CTS-0024]  Normalized sink region: [(267.592, 228.5), (276.022, 321.216)].
+[INFO CTS-0025]     Width:  8.4300.
+[INFO CTS-0026]     Height: 92.7158.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 15
+    Sub-region size: 8.4300 X 46.3579
+[INFO CTS-0034]     Segment length (rounded): 24.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 8
+    Sub-region size: 4.2150 X 46.3579
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 29.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx2.
+[INFO CTS-0028]  Total number of sinks: 861.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 11.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 29.
+[INFO CTS-0024]  Normalized sink region: [(267.592, 354.147), (276.059, 444.456)].
+[INFO CTS-0025]     Width:  8.4675.
+[INFO CTS-0026]     Height: 90.3092.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 15
+    Sub-region size: 8.4675 X 45.1546
+[INFO CTS-0034]     Segment length (rounded): 22.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 8
+    Sub-region size: 4.2338 X 45.1546
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 29.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx3.
+[INFO CTS-0028]  Total number of sinks: 861.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 5.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 29.
+[INFO CTS-0024]  Normalized sink region: [(267.592, 483.941), (276.076, 574.456)].
+[INFO CTS-0025]     Width:  8.4837.
+[INFO CTS-0026]     Height: 90.5142.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 15
+    Sub-region size: 8.4837 X 45.2571
+[INFO CTS-0034]     Segment length (rounded): 22.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 8
+    Sub-region size: 4.2419 X 45.2571
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 29.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx4.
+[INFO CTS-0028]  Total number of sinks: 861.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 5.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 29.
+[INFO CTS-0024]  Normalized sink region: [(341.5, 103.019), (349.632, 190.644)].
+[INFO CTS-0025]     Width:  8.1315.
+[INFO CTS-0026]     Height: 87.6250.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 15
+    Sub-region size: 8.1315 X 43.8125
+[INFO CTS-0034]     Segment length (rounded): 22.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 8
+    Sub-region size: 4.0658 X 43.8125
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 29.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx5.
+[INFO CTS-0028]  Total number of sinks: 861.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 6.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 28.
+[INFO CTS-0024]  Normalized sink region: [(341.513, 229.994), (349.672, 318.744)].
+[INFO CTS-0025]     Width:  8.1588.
+[INFO CTS-0026]     Height: 88.7500.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 14
+    Sub-region size: 8.1588 X 44.3750
+[INFO CTS-0034]     Segment length (rounded): 22.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 28.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx6.
+[INFO CTS-0028]  Total number of sinks: 861.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 5.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 28.
+[INFO CTS-0024]  Normalized sink region: [(341.472, 357.125), (349.672, 447.019)].
+[INFO CTS-0025]     Width:  8.2001.
+[INFO CTS-0026]     Height: 89.8937.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 14
+    Sub-region size: 8.2001 X 44.9469
+[INFO CTS-0034]     Segment length (rounded): 22.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 28.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx7.
+[INFO CTS-0028]  Total number of sinks: 861.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 8.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 29.
+[INFO CTS-0024]  Normalized sink region: [(341.472, 485.239), (349.639, 552.575)].
+[INFO CTS-0025]     Width:  8.1676.
+[INFO CTS-0026]     Height: 67.3365.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 15
+    Sub-region size: 8.1676 X 33.6682
+[INFO CTS-0034]     Segment length (rounded): 16.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 8
+    Sub-region size: 4.0838 X 33.6682
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 29.
+[INFO CTS-0018]     Created 397 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 13.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 13.
+[INFO CTS-0015]     Created 397 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:82, 2:27, 3:6, 5:4, 6:1, 7:1, 8:2, 9:4, 10:1, 11:2, 12:2, 14:3, 15:2, 16:2, 17:2, 18:5, 19:4, 20:2, 21:5, 22:8, 23:19, 24:21, 25:22, 26:15, 27:4, 28:4, 29:2..
+[INFO CTS-0017]     Max level of the clock tree: 7.
+[INFO CTS-0018]     Created 53 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 4.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 4.
+[INFO CTS-0015]     Created 53 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 7:1, 8:1, 11:3, 12:1, 13:3, 15:1, 16:1, 17:1, 18:1, 19:1, 20:1, 21:2, 22:1, 23:4, 24:4, 25:7, 26:2, 27:6, 28:5, 29:3, 30:1..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 49 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 4.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 4.
+[INFO CTS-0015]     Created 49 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:1, 7:1, 10:2, 11:2, 18:1, 19:1, 20:1, 22:2, 23:4, 24:3, 25:4, 26:5, 27:6, 28:2, 29:4, 30:2, 31:3, 32:2..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 20 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 20 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 8:1, 9:1, 17:1, 27:2, 30:1, 31:3, 32:10..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 20 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 20 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 8:1, 9:1, 26:1, 28:2, 30:6, 31:4, 32:4..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 20 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 20 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 8:1, 9:1, 14:1, 28:2, 30:1, 31:2, 32:11..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 20 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 20 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 8:1, 9:1, 20:1, 29:2, 30:3, 31:4, 32:7..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 13 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 13 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:2, 19:1, 26:1, 27:1, 28:1, 30:2, 31:2, 32:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 20 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 20 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 8:1, 9:1, 19:1, 22:1, 28:1, 29:1, 32:13..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 20 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 20 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 8:1, 9:1, 21:1, 24:1, 26:1, 29:1, 30:1, 32:12..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 20 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 20 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 7:1, 10:2, 26:1, 31:1, 32:14..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 20 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 20 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:1, 8:1, 9:1, 31:2, 32:14..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 34 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 34 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 6:1, 7:2, 9:1, 16:1, 18:1, 21:1, 22:1, 27:1, 28:1, 29:2, 31:1, 32:20..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 34 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 34 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:1, 7:1, 8:1, 9:1, 19:2, 21:1, 24:1, 25:1, 26:1, 28:1, 30:2, 31:1, 32:19..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 34 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 34 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:1, 7:1, 8:1, 9:1, 15:1, 17:1, 23:1, 25:2, 26:2, 32:22..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 34 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 34 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:1, 7:2, 10:1, 21:1, 25:2, 26:1, 27:4, 28:2, 29:2, 30:1, 32:16..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 34 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 34 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 6:2, 7:1, 10:1, 12:1, 21:2, 25:2, 28:1, 29:1, 30:2, 32:20..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 31 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 31 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 12:1, 16:1, 21:1, 22:1, 25:1, 30:3, 31:1, 32:21..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 31 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 31 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 12:1, 16:1, 18:1, 22:1, 25:1, 30:1, 31:2, 32:22..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 34 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 34 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 6:1, 7:3, 9:1, 20:1, 25:1, 26:1, 29:4, 30:2, 31:1, 32:18..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0098] Clock net "ck"
+[INFO CTS-0099]  Sinks 2987
+[INFO CTS-0100]  Leaf buffers 142
+[INFO CTS-0101]  Average sink wire length 967.22 um
+[INFO CTS-0102]  Path depth 11 - 13
+[INFO CTS-0207]  Dummy loads inserted 50
+[INFO CTS-0098] Clock net "ck_de"
+[INFO CTS-0099]  Sinks 1098
+[INFO CTS-0100]  Leaf buffers 46
+[INFO CTS-0101]  Average sink wire length 553.15 um
+[INFO CTS-0102]  Path depth 3 - 4
+[INFO CTS-0207]  Dummy loads inserted 42
+[INFO CTS-0098] Clock net "ck_dw"
+[INFO CTS-0099]  Sinks 1095
+[INFO CTS-0100]  Leaf buffers 42
+[INFO CTS-0101]  Average sink wire length 584.11 um
+[INFO CTS-0102]  Path depth 3 - 4
+[INFO CTS-0207]  Dummy loads inserted 39
+[INFO CTS-0098] Clock net "ck_fa0"
+[INFO CTS-0099]  Sinks 522
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 115.03 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 8
+[INFO CTS-0098] Clock net "ck_fa1"
+[INFO CTS-0099]  Sinks 528
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 215.45 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 14
+[INFO CTS-0098] Clock net "ck_fa2"
+[INFO CTS-0099]  Sinks 521
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 106.53 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 7
+[INFO CTS-0098] Clock net "ck_fa3"
+[INFO CTS-0099]  Sinks 527
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 317.90 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 11
+[INFO CTS-0098] Clock net "ck_fa4"
+[INFO CTS-0099]  Sinks 294
+[INFO CTS-0100]  Leaf buffers 10
+[INFO CTS-0101]  Average sink wire length 113.51 um
+[INFO CTS-0102]  Path depth 3 - 3
+[INFO CTS-0207]  Dummy loads inserted 8
+[INFO CTS-0098] Clock net "ck_rn"
+[INFO CTS-0099]  Sinks 527
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 358.12 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 13
+[INFO CTS-0098] Clock net "ck_rnw"
+[INFO CTS-0099]  Sinks 528
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 401.31 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 14
+[INFO CTS-0098] Clock net "ck_rs"
+[INFO CTS-0099]  Sinks 531
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 297.53 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 16
+[INFO CTS-0098] Clock net "ck_rsw"
+[INFO CTS-0099]  Sinks 531
+[INFO CTS-0100]  Leaf buffers 17
+[INFO CTS-0101]  Average sink wire length 345.92 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 16
+[INFO CTS-0098] Clock net "ck_tx0"
+[INFO CTS-0099]  Sinks 877
+[INFO CTS-0100]  Leaf buffers 29
+[INFO CTS-0101]  Average sink wire length 430.27 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 16
+[INFO CTS-0098] Clock net "ck_tx1"
+[INFO CTS-0099]  Sinks 875
+[INFO CTS-0100]  Leaf buffers 29
+[INFO CTS-0101]  Average sink wire length 427.31 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 14
+[INFO CTS-0098] Clock net "ck_tx2"
+[INFO CTS-0099]  Sinks 871
+[INFO CTS-0100]  Leaf buffers 29
+[INFO CTS-0101]  Average sink wire length 436.64 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 10
+[INFO CTS-0098] Clock net "ck_tx3"
+[INFO CTS-0099]  Sinks 878
+[INFO CTS-0100]  Leaf buffers 29
+[INFO CTS-0101]  Average sink wire length 471.79 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 17
+[INFO CTS-0098] Clock net "ck_tx4"
+[INFO CTS-0099]  Sinks 876
+[INFO CTS-0100]  Leaf buffers 29
+[INFO CTS-0101]  Average sink wire length 425.97 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 15
+[INFO CTS-0098] Clock net "ck_tx5"
+[INFO CTS-0099]  Sinks 877
+[INFO CTS-0100]  Leaf buffers 28
+[INFO CTS-0101]  Average sink wire length 412.17 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 16
+[INFO CTS-0098] Clock net "ck_tx6"
+[INFO CTS-0099]  Sinks 869
+[INFO CTS-0100]  Leaf buffers 28
+[INFO CTS-0101]  Average sink wire length 413.61 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 8
+[INFO CTS-0098] Clock net "ck_tx7"
+[INFO CTS-0099]  Sinks 876
+[INFO CTS-0100]  Leaf buffers 29
+[INFO CTS-0101]  Average sink wire length 420.63 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 15
+[INFO CTS-0500] Runtime: 5.45s
+[INFO RSZ-0058] Using max wire length 163um.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 1 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 1 buffers in 1 nets.
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0055] Inserted 1 buffers in 1 nets.
+OT_HYBRID post-CTS scoped net repair on selected roots; 19 hard entries unchanged
+OT_HYBRID CTS roots ck ck_rn ck_rs ck_rsw ck_rnw ck_dw ck_de ck_tx0 ck_tx1 ck_tx2 ck_tx3 ck_tx4 ck_tx5 ck_tx6 ck_tx7 ck_fa0 ck_fa1 ck_fa2 ck_fa3 ck_fa4; hard-child entries excluded
+OT_ENTRIES done: 19 independent hard entries, 20 glue CTS roots, 19 entry wires over 60.0 um
+QDM PINFLOP reference: 1315 input pin flops, median arrival 353.273529 (range 343.648254 .. 1109.425049)
+QDM reference pin u_ot_pr_core.u_g.n_a_q[431]$_DFF_P_/CLK clock arrival max 353.273529 min 328.729309 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_HYBRID CLOCK_RULE tt ck WARN pin_spread=0.0 scope=boundary sinks=2937 WARN: insertion all_mean 640.9 / pin_mean 863.5 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE tt ck sinks=2937 reference_scope=boundary boundary_sinks=1 min=863.5250327103797 mean=863.5250327103797 max=863.5250327103797 all_mean=640.8587233217378
+OT_HYBRID CLOCK_RULE tt ck_rn PASS pin_spread=4.9 scope=all_internal_only sinks=514
+OT_HYBRID CTS_MEASURE tt ck_rn sinks=514 reference_scope=all_internal_only boundary_sinks=514 min=229.64245874502296 mean=232.11753674982606 max=234.58488023685914 all_mean=232.11753674982606
+OT_HYBRID CLOCK_RULE tt ck_rs PASS pin_spread=9.9 scope=all_internal_only sinks=515
+OT_HYBRID CTS_MEASURE tt ck_rs sinks=515 reference_scope=all_internal_only boundary_sinks=515 min=190.68507959995543 mean=194.26792046136185 max=200.54577523274568 all_mean=194.26792046136185
+OT_HYBRID CLOCK_RULE tt ck_rsw PASS pin_spread=6.3 scope=all_internal_only sinks=515
+OT_HYBRID CTS_MEASURE tt ck_rsw sinks=515 reference_scope=all_internal_only boundary_sinks=515 min=219.69644247244935 mean=223.09036172011957 max=226.0453222530762 all_mean=223.09036172011957
+OT_HYBRID CLOCK_RULE tt ck_rnw PASS pin_spread=4.3 scope=all_internal_only sinks=514
+OT_HYBRID CTS_MEASURE tt ck_rnw sinks=514 reference_scope=all_internal_only boundary_sinks=514 min=248.99019057238502 mean=251.04204888555049 max=253.2675190808741 all_mean=251.04204888555049
+OT_HYBRID CLOCK_RULE tt ck_dw FAIL pin_spread=232.2 scope=all_internal_only sinks=1056 WARN: insertion all_mean 397.2 / pin_mean 397.2 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root ck_dw pin-flop spread 232.2 ps > 80 at tt (all_internal_only, 1056 of 1056 sinks)
+Elapsed time: 0:28.78[h:]min:sec. CPU time: user 42.48 sys 4.98 (164%). Peak memory: 1039352KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/4_1_cts.odb] Error 2
