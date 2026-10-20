@@ -56,7 +56,8 @@ module ot_s81sl_xs4_rst (
     input  wire        rst_n_in,
     output wire [3:0]  rst_e,
     output wire [53:0] rst_l,
-    output wire [38:0] rst_k
+    output wire [38:0] rst_k,
+    output wire [23:0] rst_x    // XG5: extra controller hold-enable leaves (same release edge as rst_k)
 );
     (* keep = "true", dont_touch = "true" *) reg s0, s1;
     always @(posedge clk or negedge rst_n_in)
@@ -67,6 +68,7 @@ module ot_s81sl_xs4_rst (
     (* keep = "true", dont_touch = "true" *) reg [53:0] l2;
     (* keep = "true", dont_touch = "true" *) reg [7:0]  c1;
     (* keep = "true", dont_touch = "true" *) reg [38:0] k1, k2, k3, k4;
+    (* keep = "true", dont_touch = "true" *) reg [23:0] x1, x2, x3, x4;
     integer k;
     always @(posedge clk) begin
         e1 <= {4{s1}};
@@ -77,10 +79,35 @@ module ot_s81sl_xs4_rst (
         k2 <= k1;
         k3 <= k2;
         k4 <= k3;
+        for (k = 0; k < 24; k = k + 1) x1[k] <= c1[k / 3];
+        x2 <= x1; x3 <= x2; x4 <= x3;
     end
     assign rst_e = e1;
     assign rst_l = l2;
     assign rst_k = k4;
+    assign rst_x = x4;
+endmodule
+
+// ===================================================================================================================== XG5 kept helpers
+// (listed in the kit's synth_keep_modules; non-parameterised so the keep matches the mapped name)
+// arrival-table line predecode: line x = 96 p + beat (beat = k[7:1] < 96) == hi[x / 16] && lo[x % 16]
+(* keep_hierarchy = 1 *) module ot_s81sl_xs4_pdec (input wire p, input wire [6:0] k, output wire [11:0] hi, output wire [15:0] lo);
+    genvar j;
+    generate for (j = 0; j < 12; j = j + 1) begin : g_hi
+        assign hi[j] = (p == (j >= 6)) && k[6:4] == 3'(j % 6);
+    end
+    for (j = 0; j < 16; j = j + 1) begin : g_lo
+        assign lo[j] = k[3:0] == 4'(j);
+    end endgenerate
+endmodule
+// calendar reader due term (one instance per consumer group: same function, own gates)
+(* keep_hierarchy = 1 *) module ot_s81sl_xs4_due (input wire act, input wire cnz, input wire [23:0] t, input wire [23:0] age, output wire due);
+    assign due = act && cnz && t == age;
+endmodule
+// calendar reader fetch term (one instance per consumer group)
+(* keep_hierarchy = 1 *) module ot_s81sl_xs4_fetch (input wire priming, input wire due5, input wire [12:0] fi, input wire [12:0] nrows,
+                                                    output wire fetch);
+    assign fetch = (priming && fi < nrows && fi < 13'd4) || (due5 && fi < nrows);
 endmodule
 
 // ===================================================================================================================== calendar
@@ -116,16 +143,13 @@ module ot_s81sl_xs4_cal (
     reg [2:0]  fetch_valid; reg priming; reg [2:0] count; reg [1:0] wp; reg [23:0] last_ts;
     // ---- rows (4 x 99 b used: action 75, timestamp 24) with registered one-hot write enables (4 x 25-b copies)
     wire [98:0] row [0:3];
-    (* keep = "true" *) reg [15:0] weq;   // [4 e + chunk]
+    (* keep = "true" *) reg [35:0] weq;   // [9 e + chunk]  XG5: 9 x 11-b chunks per row (was 4 x 25 b -> 48-50 mapped loads)
     genvar ge, gk;
     generate for (ge = 0; ge < 4; ge = ge + 1) begin : g_row
         reg [98:0] r;
-        always @(posedge ck) begin
-            if (weq[4*ge + 0]) r[24:0]  <= rin[24:0];
-            if (weq[4*ge + 1]) r[49:25] <= rin[49:25];
-            if (weq[4*ge + 2]) r[74:50] <= rin[74:50];
-            if (weq[4*ge + 3]) r[98:75] <= rin[98:75];
-        end
+        integer c;
+        always @(posedge ck)
+            for (c = 0; c < 9; c = c + 1) if (weq[9*ge + c]) r[11*c +: 11] <= rin[11*c +: 11];
         assign row[ge] = r;
     end endgenerate
     // ---- replicated due copies k = 0..5: own ts/END pointer (rpt), action pointer (rpa, k < 4), age, active
@@ -150,7 +174,8 @@ module ot_s81sl_xs4_cal (
             for (e = 0; e < 4; e = e + 1) if (rpt[e]) begin t = t | row[e][98:75]; en = en | row[e][EB]; end
         end
         assign tsm[gk] = t; assign endm[gk] = en; assign agew[gk] = age; assign actw[gk] = act;
-        assign due[gk] = act && cnz && t == age;
+        // XG5: due from a kept term instance; the action-chunk copy (k < 4) takes its own instance below
+        ot_s81sl_xs4_due u_due (.act(act), .cnz(cnz), .t(t), .age(age), .due(due[gk]));
         always @(posedge ck or negedge rg[5 + gk]) begin
             if (!rg[5 + gk]) begin age <= 24'd0; act <= 1'b0; end
             else begin
@@ -174,26 +199,33 @@ module ot_s81sl_xs4_cal (
                 am = '0;
                 for (ea = 0; ea < 4; ea = ea + 1) if (rpa[ea]) am = am | row[ea][HI:LO];
             end
+            wire due_a;
+            ot_s81sl_xs4_due u_due_a (.act(act), .cnz(cnz), .t(t), .age(age), .due(due_a));
             always @(posedge ck or negedge rg[13 + gk])
-                if (!rg[13 + gk]) a <= '0; else a <= due[gk] ? am : '0;
+                if (!rg[13 + gk]) a <= '0; else a <= due_a ? am : '0;
             assign act_nx[HI:LO] = a;
         end
     end endgenerate
     assign action = act_nx;
     assign active = actw[5];
     // ---- shared next state (copy 5 = control, copy 4 = last timestamp)
-    wire due5 = due[5];
-    wire fetch = (priming && fetch_index < nrows && fetch_index < 13'd4) || (due5 && fetch_index < nrows);
+    // XG5: the shared next-state copy of due[5] (consume / count / fetch / fault) from its own kept term instance
+    wire due5;
+    ot_s81sl_xs4_due u_due5 (.act(actw[5]), .cnz(cnz), .t(tsm[5]), .age(agew[5]), .due(due5));
+    // XG5: fetch from two kept term instances (ROM address side / index + valid side; one term mapped to 46 loads)
+    wire fetch, fetch_r;
+    ot_s81sl_xs4_fetch u_fetch   (.priming(priming), .due5(due5), .fi(fetch_index), .nrows(nrows), .fetch(fetch));
+    ot_s81sl_xs4_fetch u_fetch_r (.priming(priming), .due5(due5), .fi(fetch_index), .nrows(nrows), .fetch(fetch_r));
     wire push = fetch_valid[2];
     wire [1:0] wp_nx = push ? wp + 2'd1 : (pok[3] ? 2'd0 : wp);
     integer e2;
-    always @(posedge ck) for (e2 = 0; e2 < 4; e2 = e2 + 1) weq[4*e2 +: 4] <= {4{fetch_valid[1] && wp_nx == 2'(e2)}};
+    always @(posedge ck) for (e2 = 0; e2 < 4; e2 = e2 + 1) weq[9*e2 +: 9] <= {9{fetch_valid[1] && wp_nx == 2'(e2)}};
     reg [12:0] read_a;
     always @(posedge ck or negedge rg[1]) begin
         if (!rg[1]) begin rom_addr <= 12'd0; base_q <= 12'd0; end
         else begin
             if (pok[2]) base_q <= base_p;
-            if (fetch) begin read_a = {1'b0, base_q} + fetch_index; rom_addr <= read_a[11:0]; end
+            if (fetch_r) begin read_a = {1'b0, base_q} + fetch_index; rom_addr <= read_a[11:0]; end
         end
     end
     always @(posedge ck or negedge rg[2]) begin
@@ -254,6 +286,7 @@ module ot_s81sl_xs4_ctl (
     input  wire [3:0]    rc,
     input  wire [31:0]   rh,
     input  wire [2:0]    rb,
+    input  wire [23:0]   rx,       // XG5: second hold-enable leaves (wide payload split to <= 16 bits per enable copy)
     input  wire          calendar_v,
     input  wire [74:0]   calendar_action,
     input  wire          go,
@@ -267,7 +300,7 @@ module ot_s81sl_xs4_ctl (
     output wire [42:0]   hb_o,
     output wire          bc_o,
     output wire [609:0]  bc_hr_o,
-    output wire [35:0]   bv_o,
+    output wire [68:0]   bv_o,     // XG5: 69 copies (16 lane bits each; was 36 x 32 -> 64 mapped loads)
     output reg           fault
 );
     localparam integer PHW = 10, SAW = 14, KMAX = 6144, NBLK = 192, BW = 1634;
@@ -352,8 +385,10 @@ module ot_s81sl_xs4_ctl (
     end endgenerate
     (* keep = "true" *) reg [42:0] hb_q;
     always @(posedge clk) begin
-        if (rh[30]) hb_q[21:0] <= hb_d[21:0];
-        if (rh[31]) hb_q[42:22] <= hb_d[42:22];
+        if (rh[30]) hb_q[10:0]  <= hb_d[10:0];
+        if (rx[18]) hb_q[21:11] <= hb_d[21:11];
+        if (rh[31]) hb_q[31:22] <= hb_d[31:22];
+        if (rx[19]) hb_q[42:32] <= hb_d[42:32];
     end
     (* keep = "true" *) reg bc_c;
     always @(posedge clk or negedge rc[3]) if (!rc[3]) bc_c <= 1'b0; else bc_c <= bc_d;
@@ -390,16 +425,20 @@ module ot_s81sl_xs4_ctl (
     assign bc_hr_o = bc_hr;
     // bv = bc_hr[39] | bc_hr[594] (lane f_bus[1063] | f_bus[1618]): 36 registered copies beside bc_hc, from 2 + 2
     // kept copies of bt_xb_v / bt_gobf
-    (* keep = "true" *) reg [1:0] btx_c, btg_c;
+    (* keep = "true" *) reg [3:0] btx_c, btg_c;
     always @(posedge clk or negedge rc[2])
-        if (!rc[2]) begin btx_c <= 2'd0; btg_c <= 2'd0; end
-        else begin btx_c <= {2{p1_xb_v}}; btg_c <= {2{p1_gobf}}; end
-    (* keep = "true" *) reg [35:0] bv_c;
+        if (!rc[2]) begin btx_c <= 4'd0; btg_c <= 4'd0; end
+        else begin btx_c <= {4{p1_xb_v}}; btg_c <= {4{p1_gobf}}; end
+    (* keep = "true" *) reg [68:0] bv_c;
     integer kb;
     always @(posedge clk or negedge rb[1])
         if (!rb[1]) bv_c[17:0] <= 18'd0; else for (kb = 0; kb < 18; kb = kb + 1) bv_c[kb] <= btx_c[0] | btg_c[0];
+    always @(posedge clk or negedge rx[20])
+        if (!rx[20]) bv_c[34:18] <= 17'd0; else for (kb = 18; kb < 35; kb = kb + 1) bv_c[kb] <= btx_c[1] | btg_c[1];
     always @(posedge clk or negedge rb[2])
-        if (!rb[2]) bv_c[35:18] <= 18'd0; else for (kb = 18; kb < 36; kb = kb + 1) bv_c[kb] <= btx_c[1] | btg_c[1];
+        if (!rb[2]) bv_c[52:35] <= 18'd0; else for (kb = 35; kb < 53; kb = kb + 1) bv_c[kb] <= btx_c[2] | btg_c[2];
+    always @(posedge clk or negedge rx[21])
+        if (!rx[21]) bv_c[68:53] <= 16'd0; else for (kb = 53; kb < 69; kb = kb + 1) bv_c[kb] <= btx_c[3] | btg_c[3];
     assign bv_o = bv_c;
     // INCAP calendar-contract diagnosis
     reg [74:0] dg_act; reg dg_go, dg_calv; reg [3:0] dg_sv, dg_sr, dg_si;
@@ -471,19 +510,26 @@ module ot_s81sl_xs4_ctl (
             r1_tag <= ra_tag; r1_pos <= ra_pos; r1_fam <= ra_fam; r1_lp <= ra_lp; r1_lo <= ra_lo;
             if (phase_pin_valid) s_pw0[phase_pin_tag] <= phase0_pin;
         end
-        if (rh[2]) r2_w[23:0] <= r1_w[23:0];
-        if (rh[3]) r2_w[47:24] <= r1_w[47:24];
+        if (rh[2]) r2_w[11:0] <= r1_w[11:0];
+        if (rx[0]) r2_w[23:12] <= r1_w[23:12];
+        if (rh[3]) r2_w[35:24] <= r1_w[35:24];
+        if (rx[1]) r2_w[47:36] <= r1_w[47:36];
         if (rh[4]) begin
             r2_tag <= r1_tag; r2_pos <= r1_pos; r2_fam <= r1_fam; r2_lp <= r1_lp; r2_lo <= r1_lo;
             r2_spar <= r1_spar; r2_nq <= r1_nq;
         end
-        if (rh[5]) begin r2_m01 <= r1_m01; r2_m23 <= r1_m23; end
+        if (rh[5]) r2_m01 <= r1_m01;
+        if (rx[2]) r2_m23 <= r1_m23;
         if (rh[6]) r2_b0 <= r1_blk0;
         if (rh[7]) r2_b1 <= r1_blk1;
-        if (rh[8]) for (kd = 0; kd < 2; kd = kd + 1) r2_hi[9*kd +: 9] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[8+8*kd +: 8]};
-        if (rh[9]) for (kd = 2; kd < 4; kd = kd + 1) r2_hi[9*kd +: 9] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[8+8*kd +: 8]};
-        if (rh[10]) r3_w[23:0] <= r2_w[23:0];
-        if (rh[11]) r3_w[47:24] <= r2_w[47:24];
+        if (rh[8]) r2_hi[8:0]   <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[15:8]};
+        if (rx[3]) r2_hi[17:9]  <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[23:16]};
+        if (rh[9]) r2_hi[26:18] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[31:24]};
+        if (rx[4]) r2_hi[35:27] <= (r1_spar ? 9'(KMAX/128) : 9'd0) + {1'b0, r1_w[39:32]};
+        if (rh[10]) r3_w[11:0] <= r2_w[11:0];
+        if (rx[5])  r3_w[23:12] <= r2_w[23:12];
+        if (rh[11]) r3_w[35:24] <= r2_w[35:24];
+        if (rx[6])  r3_w[47:36] <= r2_w[47:36];
         if (rh[12]) begin
             r3_tag <= r2_tag; r3_pos <= r2_pos; r3_fam <= r2_fam; r3_lp <= r2_lp; r3_lo <= r2_lo;
             r3_spar <= r2_spar; r3_nq <= r2_nq;
@@ -491,10 +537,17 @@ module ot_s81sl_xs4_ctl (
         if (rh[13]) r3_umax <= r2_m23 > r2_m01 ? r2_m23 : r2_m01;
         if (rh[14]) r3_b0 <= r2_b0;
         if (rh[15]) r3_b1 <= r2_b1;
-        if (rh[16]) r3_hi[17:0] <= r2_hi[17:0];
-        if (rh[17]) r3_hi[35:18] <= r2_hi[35:18];
-        if (rh[18]) he[EW-1 -: 24] <= r3_e[EW-1 -: 24];
-        if (rh[19]) he[EW-25:0] <= r3_e[EW-25:0];
+        if (rh[16]) r3_hi[8:0]   <= r2_hi[8:0];
+        if (rx[7])  r3_hi[17:9]  <= r2_hi[17:9];
+        if (rh[17]) r3_hi[26:18] <= r2_hi[26:18];
+        if (rx[8])  r3_hi[35:27] <= r2_hi[35:27];
+        if (rh[18]) he[EW-1 -: 12]  <= r3_e[EW-1 -: 12];
+        if (rx[9])  he[EW-13 -: 12] <= r3_e[EW-13 -: 12];
+        // he[EW-25:0] (116 b): rh[19] + rx[10..17], 13 b per enable copy
+        if (rh[19]) he[12:0] <= r3_e[12:0];
+        for (kd = 0; kd < 7; kd = kd + 1)
+            if (rx[10 + kd]) he[13 + 13*kd +: 13] <= r3_e[13 + 13*kd +: 13];   // [103:13]
+        if (rx[17]) he[EW-25:104] <= r3_e[EW-25:104];                           // [115:104]
     end
 endmodule
 
@@ -513,8 +566,8 @@ module ot_s81sl_xs4 (
     output reg           fault
 );
     // ------------------------------------------------------------------ reset
-    wire [3:0] rst_e; wire [53:0] rst_l; wire [38:0] rst_k;
-    ot_s81sl_xs4_rst u_rst (.clk(clk), .rst_n_in(rst_n), .rst_e(rst_e), .rst_l(rst_l), .rst_k(rst_k));
+    wire [3:0] rst_e; wire [53:0] rst_l; wire [38:0] rst_k; wire [23:0] rst_x;
+    ot_s81sl_xs4_rst u_rst (.clk(clk), .rst_n_in(rst_n), .rst_e(rst_e), .rst_l(rst_l), .rst_k(rst_k), .rst_x(rst_x));
     // l2 region map: 0-5 issuer, 6-27 table groups, 28-29 write-leaf parity replicas, 30 faults / lane / exp,
     // 31-47 calendar, 48 window-open copies, 49-53 spare
     wire [16:0] rg_cal = rst_l[47:31];
@@ -562,12 +615,14 @@ module ot_s81sl_xs4 (
     wire [60:0] dq_in = {due, ip_b};
     genvar ge;
     generate for (ge = 0; ge < ND; ge = ge + 1) begin : g_dq
-        (* keep = "true" *) reg [1:0] we;
-        always @(posedge clk) we <= {2{isv_a[0] && dq_w_nx == 3'(ge)}};
+        (* keep = "true" *) reg [3:0] we;   // XG5: 4 copies x <= 16 b (2 x 31 b mapped to 60-62 loads)
+        always @(posedge clk) we <= {4{isv_a[0] && dq_w_nx == 3'(ge)}};
         reg [60:0] w;
         always @(posedge clk) begin
-            if (we[0]) w[30:0] <= dq_in[30:0];
-            if (we[1]) w[60:31] <= dq_in[60:31];
+            if (we[0]) w[15:0]  <= dq_in[15:0];
+            if (we[1]) w[30:16] <= dq_in[30:16];
+            if (we[2]) w[45:31] <= dq_in[45:31];
+            if (we[3]) w[60:46] <= dq_in[60:46];
         end
         assign dqe[ge] = w;
     end endgenerate
@@ -658,8 +713,8 @@ module ot_s81sl_xs4 (
     end
 
     // ================================================================== production stream path (native ctl copy)
-    wire ctl_fault; wire [169:0] hq; wire [4:0] qc; wire [42:0] hb; wire bcs; wire [609:0] bc_hr; wire [35:0] bvc;
-    ot_s81sl_xs4_ctl u_ctl (.clk(clk), .rc(rst_k[3:0]), .rh(rst_k[35:4]), .rb(rst_k[38:36]), .calendar_v(cal_v),
+    wire ctl_fault; wire [169:0] hq; wire [4:0] qc; wire [42:0] hb; wire bcs; wire [609:0] bc_hr; wire [68:0] bvc;
+    ot_s81sl_xs4_ctl u_ctl (.clk(clk), .rc(rst_k[3:0]), .rh(rst_k[35:4]), .rb(rst_k[38:36]), .rx(rst_x), .calendar_v(cal_v),
         .calendar_action(cal_action), .go(o_go), .i_ph(o_ph), .i_np(o_np), .rom_gobf(ph_rd[0]), .rom_sq(st_sq),
         .hq_o(hq), .qc_o(qc), .hb_o(hb), .bc_o(bcs), .bc_hr_o(bc_hr), .bv_o(bvc), .fault(ctl_fault));
 
@@ -744,6 +799,7 @@ module ot_s81sl_xs4 (
         localparam integer FB = gc >= 12 ? 1 : 0, G = gc >= 12 ? gc - 12 : gc;
         wire gwx = o_gw[gc % NG], gwf = o_gwf[gc % NG], gwp = o_gwp[gc % NG];
         (* keep = "true" *) reg wp, wpv;   // main wpar_q (FB 0) / wpar_b (FB 1): wpv for the valid sets, wp the rest
+        (* keep = "true" *) reg wps;       // XG5: kept copy of wp for the s0 / s1 source writes (wp mapped to 39-50 loads)
 `ifdef OT_S81SL_XS4_MUT_TPAR
         wire open_f = (gc == 5) ? 1'b0 : (gwx && gwf == FB[0]);
 `else
@@ -757,9 +813,9 @@ module ot_s81sl_xs4 (
         wire [7:0] vc = wp ? v1 : v0;
         wire cl0 = open_f && !gwp, cl1 = open_f && gwp;
         always @(posedge clk or negedge rst_l[6 + gc]) begin
-            if (!rst_l[6 + gc]) begin wp <= 1'b0; wpv <= 1'b0; v0 <= 8'd0; v1 <= 8'd0; end
+            if (!rst_l[6 + gc]) begin wp <= 1'b0; wpv <= 1'b0; wps <= 1'b0; v0 <= 8'd0; v1 <= 8'd0; end
             else begin
-                if (open_f) begin wp <= gwp; wpv <= gwp; end
+                if (open_f) begin wp <= gwp; wpv <= gwp; wps <= gwp; end
                 v0 <= cl0 ? (any & {8{!wpv}} & ~v0) : (v0 | (any & {8{!wpv}}));
                 v1 <= cl1 ? (any & {8{wpv}} & ~v1) : (v1 | (any & {8{wpv}}));
             end
@@ -768,7 +824,7 @@ module ot_s81sl_xs4 (
         always @(posedge clk)
             for (i = 0; i < 8; i = i + 1)
                 if (!vc[i] && any[i]) begin
-                    if (wp) s1[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
+                    if (wps) s1[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
                     else    s0[2*i +: 2] <= o2[i] ? 2'd2 : o1[i] ? 2'd1 : 2'd0;
                 end
         wire [2:0] hit = {|(o2 & vc), |(o1 & vc), |(o0 & vc)};
@@ -836,9 +892,13 @@ module ot_s81sl_xs4 (
         wire [7:0] k = gc < 2 ? k0 : k1;
         wire gate = (gc < 2 ? hg[gc][0] : hg[gc][1]) && qc[gc];
         (* keep = "true" *) reg [191:0] ln; (* keep = "true" *) reg [3:0] m;   // ln[96 parity + beat]
+        // XG5: two-level predecode in a kept module (hi 12 x lo 16 one-hots): each term drives 16 / 12 line ANDs
+        // (the flat 192-line decode mapped to 48-load shared products)
+        wire [11:0] ohi; wire [15:0] olo;
+        ot_s81sl_xs4_pdec u_pd (.p(p0), .k(k[7:1]), .hi(ohi), .lo(olo));
         integer x;
         always @(posedge clk) begin
-            for (x = 0; x < 192; x = x + 1) ln[x] <= (p0 == (x >= 96)) && k[7:1] == 7'(x % 96);
+            for (x = 0; x < 192; x = x + 1) ln[x] <= ohi[x / 16] && olo[x % 16];
             for (x = 0; x < 4; x = x + 1) m[x] <= gate && {k[0], k[1]} == 2'(x);
         end
         assign qln[gc] = ln; assign qms[gc] = m;
@@ -1051,7 +1111,7 @@ module ot_s81sl_xs4 (
     wire [1100:0] word_q = {536'd0, l_cc, l_x1, l_x0, l_qv | l_go | l_cfg};                    // bv = 0
     reg [1100:0] xw_l;
     integer kw;
-    always @(posedge clk) for (kw = 0; kw < 1101; kw = kw + 1) xw_l[kw] <= bvc[kw / 32] ? word_b[kw] : word_q[kw];
+    always @(posedge clk) for (kw = 0; kw < 1101; kw = kw + 1) xw_l[kw] <= bvc[kw / 16] ? word_b[kw] : word_q[kw];
     reg collision_fault, lx_fault;
     always @(posedge clk or negedge rst_l[30])
         if (!rst_l[30]) begin collision_fault <= 1'b0; lx_fault <= 1'b0; end
