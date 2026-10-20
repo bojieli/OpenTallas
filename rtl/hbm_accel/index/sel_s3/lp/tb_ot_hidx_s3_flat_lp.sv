@@ -101,7 +101,7 @@ module ot_hidx_s3_flat_rsref #(
  wire [13:0] ties_0, ties_1, ties_2, ties_3;
  wire [24:0] ret_0, ret_1, ret_2, ret_3;
  wire qf_0, qf_1, qf_2, qf_3;
-    wire lprs_g;  ot_pl_pad #(.W(1), .N(4)) u_lprs_g (.ck(clk), .d(rst_n), .q(lprs_g));
+    wire lprs_g;  ot_pl_pad #(.W(1), .N(3)) u_lprs_g (.ck(clk), .d(rst_n), .q(lprs_g));
     wire [24:0] ret_0__rq_ctl, ret_0__rs_ctl;  ot_pl_pad #(.W(((24) - (0) + 1)), .N(3)) u_lprs_0 (.ck(clk), .d(ret_0), .q(ret_0__rq_ctl));  assign ret_0__rs_ctl = lprs_g ? ret_0__rq_ctl : {(((24) - (0) + 1)){1'b0}};
     wire [24:0] ret_1__rq_ctl, ret_1__rs_ctl;  ot_pl_pad #(.W(((24) - (0) + 1)), .N(3)) u_lprs_1 (.ck(clk), .d(ret_1), .q(ret_1__rq_ctl));  assign ret_1__rs_ctl = lprs_g ? ret_1__rq_ctl : {(((24) - (0) + 1)){1'b0}};
     wire [24:0] ret_2__rq_ctl, ret_2__rs_ctl;  ot_pl_pad #(.W(((24) - (0) + 1)), .N(3)) u_lprs_2 (.ck(clk), .d(ret_2), .q(ret_2__rq_ctl));  assign ret_2__rs_ctl = lprs_g ? ret_2__rq_ctl : {(((24) - (0) + 1)){1'b0}};

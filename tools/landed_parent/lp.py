@@ -784,7 +784,9 @@ class Parent:
             L.append(f"    wire lprs_reset; ot_pl_pad #(.W(1), .N({RB})) u_lprs_reset (.ck({ck}), .d({self.rst}), .q(lprs_reset));")
             ref_reset = "lprs_reset"
         rel = ref_reset if S.get("reset_active_low", True) else f"~{ref_reset}"
-        L.append(f"    wire lprs_g;  ot_pl_pad #(.W(1), .N({A + 1})) u_lprs_g (.ck({ck}), .d({rel}), .q(lprs_g));")
+        # landing_reset_lead releases the ring / read one edge earlier: the first landed word is one edge earlier too
+        # (L2H-IDXSEL s3 10-20: the reschedule reference kept A + 1 and missed the ring's first word, MUT 0 lockstep FAIL)
+        L.append(f"    wire lprs_g;  ot_pl_pad #(.W(1), .N({A + 1 - int(self.reset_lead)})) u_lprs_g (.ck({ck}), .d({rel}), .q(lprs_g));")
         sub = {}
         for Ld in P["lands"]:
             n, net, r = Ld["name"], Ld["net"], Ld["dst_region"]

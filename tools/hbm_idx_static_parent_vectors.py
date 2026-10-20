@@ -27,7 +27,8 @@ if os.environ.get('IDX_VEC_CRAFT')=='1':
  #  T (the 512th score) is unique with pass-2 bin 0 (orderkey low 6 bits 0: found on the LAST op5 of pass 2, its tie
  #  budget 1 decided there) and sits in quadrant 0 line 0 (the first compaction line reads the fresh budget: an op6
  #  block one edge early takes the reset budget 0 and drops T); line 170 of quadrants 0..2 holds keys of T's pass-0 bin
- #  with pass-1 bin 31 (the first op5 of pass 1: a drain one edge short misses them and shifts the rank).
+ #  inside T's pass-1 bin with pass-2 bin 63 (the first op5 of pass 2: a drain one edge short misses them, rank_left stays
+ #  above T's count at bin 0 and no tie budget is set: T is dropped).
  ok=lambda x:(~x)&0xffff if x&0x8000 else x^0x8000          # orderkey of bf16 bits
  pc,pu=B.qdq_codes(np.random.default_rng(2026102001).standard_normal((3*n,128)).astype(np.float32))
  pe,pb=C.golden(C.values(qc,qu),w,C.values(pc,pu),np.ones(3*n,dtype=bool),qu,pu)
@@ -35,11 +36,11 @@ if os.environ.get('IDX_VEC_CRAFT')=='1':
  K=np.array([ok(int(x)) for x in pe],dtype=np.int64)
  order=np.argsort(-K,kind='stable')
  pick=None
- for r in range(600,2600):
+ for r in range(300,4000):
   t=int(K[order[r]])
-  if t&63 or ((t>>6)&31)==31 or int((K==t).sum())!=1:continue
-  hi=np.where((K>t)&((K>>11)==(t>>11))&(((K>>6)&31)==31))[0]
-  if len(hi)>=3:pick=(order[r],t,hi[:6]);break
+  if t&63 or int((K==t).sum())!=1:continue
+  hi=np.where(((K>>6)==(t>>6))&((K&63)==63))[0]
+  if len(hi)>=1:pick=(order[r],t,hi[:6]);break
  assert pick is not None,'no craftable threshold in the pool'
  iT,t,hi=pick
  above=[int(i) for i in order if K[i]>t and int(i) not in set(int(x) for x in hi)][:511-len(hi)]
