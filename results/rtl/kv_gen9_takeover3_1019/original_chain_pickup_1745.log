@@ -1,0 +1,8 @@
+2026-10-19 17:32:56 PDT KV RST WINDOW HOPS: 50 cross-tree reset root hops on 15 nets {'EN->c': 11, 'ES->EN': 5, 'ES->c': 12, 'WN->c': 1, 'WS->WN': 4, 'WS->c': 1, 'c->EN': 4, 'c->ES': 4, 'c->WN': 4, 'c->WS': 4}
+2026-10-19 17:32:57 PDT chain start (laned netlist; OT_BIND_DIAGNOSTIC=1)
+2026-10-19 17:32:57 PDT chain start die=kv src=e4eb15c83 from=case
+2026-10-19 17:34:56 PDT STRICT PORT BIND v2: ValueError: static child nb identity/role changed head_EN_0_0__g_t_0__u_l8
+2026-10-19 17:34:57 PDT RELAY_CHECK FAIL no bound netlist /srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-e4eb15c83-gen9d/port_bind_v2/die_bound.v / port_bind_v2.json (kv_port_bind_v2.sh)
+2026-10-19 17:34:57 PDT RELAY_CHECK FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-e4eb15c83-gen9d/relay_check.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT
+2026-10-19 16:35:46 PDT kvs14r e4eb15c83: lane views 16 committed (lane_views.tsv); prep start e4eb15c83308b44662cffc9cd495d957a147d6bf
+2026-10-19 17:04:00 PDT PREP FAIL (prep.log):   File "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-e4eb15c83-gen9s/tools/qwen_kv_die/kv_expand_parameters.py", line 106, in preserve     raise ValueError(f'{module}: missing selected parameter profile') ValueError: qkd_astk_rly_296_fl: missing selected parameter profile 

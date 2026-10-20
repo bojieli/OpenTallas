@@ -1,0 +1,22 @@
+ot-run: ot-epyc4       admits   990 GB (avail 806, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 42 disk 315 GB 
+ot-run: ot-epyc5       admits   916 GB (avail 750, growth 108, headroom 0, waiters 0/0 GB) load 77/128 running 27 disk 746 GB 
+ot-run: ot-epyc6       admits  1143 GB (avail 914, growth 113, headroom 0, waiters 0/0 GB) load 77/128 running 34 disk 5505 GB 
+ot-run: ot-epyc7       admits   609 GB (avail 527, growth 101, headroom 0, waiters 0/0 GB) load 82/96 running 22 disk 6092 GB 
+ot-run: ot-epyc8       admits  1171 GB (avail 900, growth 80, headroom 0, waiters 0/0 GB) load 35/128 running 13 disk 32 GB 
+ot-run: ot-pve1        admits    65 GB (avail 65, growth 19, headroom 0, waiters 0/0 GB) load 30/28 running 10 disk 1199 GB 
+ot-run: ot-agidock128  admits    86 GB (avail 72, growth 13, headroom 0, waiters 0/0 GB) load 23/64 running 10 disk 273 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-327354-1792456993 after 0 s
+kv_grp_safe2 --check PASS
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.14-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /srv/opentallas-scratch/claude/codex-kv-gen9-t3-tests-390ad0bbf/venv/bin/python3
+
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-327354-1792456993): exit 1

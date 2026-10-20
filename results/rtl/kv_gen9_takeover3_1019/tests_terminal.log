@@ -1,0 +1,5 @@
+Fleet ot-epyc4 unit oth-ubuntu-4168042-1792457029, source 390ad0bbf3.
+kv_grp_safe2 --check PASS
+...............                                                          [100%]
+ot-run terminal exit 0; 15 pytest cases passed.
+Raw remote logs: /srv/opentallas-scratch2/claude/codex-kv-gen9-t3-tests-390ad0bbf/{generated_source_check.log,tests_isolated_deps.log}

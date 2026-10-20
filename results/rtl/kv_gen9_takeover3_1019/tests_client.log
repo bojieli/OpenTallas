@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits   979 GB (avail 799, growth 113, headroom 0, waiters 0/0 GB) load 68/128 running 43 disk 316 GB 
+ot-run: ot-epyc5       admits  1010 GB (avail 801, growth 94, headroom 0, waiters 0/0 GB) load 81/128 running 27 disk 749 GB 
+ot-run: ot-epyc6       admits  1147 GB (avail 917, growth 113, headroom 0, waiters 0/0 GB) load 78/128 running 36 disk 5505 GB 
+ot-run: ot-epyc7       admits   610 GB (avail 527, growth 101, headroom 0, waiters 0/0 GB) load 86/96 running 22 disk 6094 GB 
+ot-run: ot-epyc8       admits  1205 GB (avail 905, growth 62, headroom 0, waiters 0/0 GB) load 29/128 running 11 disk 35 GB 
+ot-run: ot-pve1        admits    66 GB (avail 65, growth 19, headroom 0, waiters 0/0 GB) load 25/28 running 10 disk 1199 GB 
+ot-run: ot-agidock128  admits    86 GB (avail 73, growth 13, headroom 0, waiters 0/0 GB) load 17/64 running 9 disk 273 GB 
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-303767-1792456892 after 0 s
+Preparing worktree (detached HEAD 390ad0bbf3)
+kv_grp_safe2 --check PASS
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-303767-1792456892): exit 1
