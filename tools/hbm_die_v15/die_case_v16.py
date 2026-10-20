@@ -388,6 +388,17 @@ def main():
     ap.add_argument('--lane-reach-margin-um', type=float, default=0.0,
                     help='placement-side margin under the reach for the pin-centroid span (the post-GEN per-bus pin check '
                          'd4g_reach_check.py is the authority)')
+    ap.add_argument('--lane-reach-lookahead', choices=('site', 'chain'), default='site',
+                    help='HBM-DIE8 10-20 (lane_rows_reach.py doc): site = an unplaced neighbour row is bounded at its planned '
+                         'site (as before); chain = exact chain bound to the fixed anchors (span <= h*R over h hops), the '
+                         'planned-site hop audit is re-measured on the PLACED basis (placed hops > R still fail the GEN)')
+    ap.add_argument('--lane-reach-window-um', type=float, default=None,
+                    help='HBM-DIE8: bounded candidate window (L-inf half size, um) around the planned row site; default = reach')
+    ap.add_argument('--lane-reach-repair', type=int, default=0,
+                    help='HBM-DIE8: rounds of negotiated rip-up/re-place repair of reach-failing lane rows (0 = off, as before)')
+    ap.add_argument('--relay-outline', choices=('floor', 'density'), default='floor',
+                    help='HBM-DIE8: SYNTH die relay tile (hbfd_*) outline: floor = max(area/0.6, 21.6 um) (as before); '
+                         'density = max(area/0.6, 10.8 um, bits / 24 um) capped at the floor rule (<= 6 pins/um)')
     ap.add_argument('--lane-reach-order', choices=('area', 'chain'), default='area',
                     help='lane-row order under --lane-reach: area (widest first) | chain (BFS from placed chain ends)')
     die_reach.add_args(ap, 'hbm')
@@ -519,6 +530,15 @@ def main():
             big = max([max(mw, mh) for n_, mw, mh in meta['macros'].values()] or [0])
             s_ = max(math.sqrt(A), big + 2 * HALO, 21.6)
             w, h = s_, s_; why = f"area {meta['std_area_um2']:.0f} um2 std / 0.60 + 1.3 x macros"
+            if a.relay_outline == 'density' and e['master'].startswith('hbfd') and not meta['macros']:
+                # HBM-DIE8 10-20: a die relay / lane / landing / pad tile is sized from its synthesis area (60 %) and its
+                # pin-face density (<= 6 pins/um over the perimeter) on a 10.8 um floor, never above the old rule: the
+                # fixed 21.6 um floor put a 48-bit lane tile at ~5 % utilisation and its rows filled the SM/SU channels
+                # (r7 S7 reach classification).  Never grows a tile.
+                s2_ = max(math.sqrt(A), 10.8, bits / (4 * 6.0))
+                if s2_ < s_:
+                    w, h = s2_, s2_; why += f'; relay outline density rule {s2_:.1f} um (was {s_:.1f})'
+                    flags[c] = 'relay_density'
         if c in oovr:
             w, h = oovr[c]; why = f'coordinator outline override {w}x{h}'
         need = bits * 0.048 * 1.5 / 0.9           # perimeter (um) for one track per bit + 50 % margin (faces fill unevenly: pins face their peers)
@@ -717,10 +737,19 @@ def main():
         LP = LRR.LanePlacer(occ=occ, cell=CELL, W=W, H=H, R=mw['value_um'], margin=a.lane_reach_margin_um, slide_um=LANE_SLIDE,
                             tol_um=64.8, inst_rows=inst_rows, rows=rows_, I=I, edges=C['edges'], cell_of=cell_of, size=size,
                             kinds=kinds, lef_path_of=lambda c_: (vd / f'{c_}.lef') if (vd / f'{c_}.lef').exists() else None,
-                            lef_xy_fn=lef_xy, pl=pl, mode=a.lane_reach)
-        for rid in LP.order(a.lane_reach_order):
+                            lef_xy_fn=lef_xy, pl=pl, mode=a.lane_reach, lookahead=a.lane_reach_lookahead,
+                            window_um=a.lane_reach_window_um)
+        if a.lane_reach_repair > 0:
+            # HBM-DIE8: whole-pass placement + negotiated rip-up/re-place repair (lane_rows_reach.LanePlacer.run)
+            ord_ = LP.order(a.lane_reach_order)
+            res_ = LP.run(ord_, repair_rounds=a.lane_reach_repair)
+            print('lane rows repair', {k: v for k, v in LP.stats.items() if k.startswith('repair')}, flush=True)
+            seq_ = [(rid, res_[rid]) for rid in ord_]
+        else:
+            seq_ = ((rid, None) for rid in LP.order(a.lane_reach_order))
+        for rid, r_ in seq_:
             g_ = LP.row_geom[rid]
-            got, how, wspan = LP.place(rid)
+            got, how, wspan = r_ if r_ is not None else LP.place(rid)
             if got is None:
                 continue
             lane_stats[' '.join(how.split(' ')[:2])] += 1
@@ -735,7 +764,7 @@ def main():
         reach_rec.update(fails=LP.fails, not_inserted=LP.not_inserted[:5000], relaxed=LP.relaxed[:5000])
         print('lane rows (reach)', len(rows_), 'tiles', sum(len(v) for v in rows_.values()), dict(lane_stats),
               'REACH_FAIL rows', len(LP.fails), 'not_inserted hops', len(LP.not_inserted), flush=True)
-        if a.lane_reach == 'fail' and (LP.fails or LP.not_inserted):
+        if a.lane_reach == 'fail' and (LP.fails or (LP.not_inserted and a.lane_reach_lookahead == 'site')):
             # A failed bounded row must never enter the legacy unconstrained
             # per-tile fallback. Preserve the full blocker packet immediately;
             # diag mode may still finish the explicit unqualified audit case.
@@ -965,6 +994,17 @@ def main():
                          home_fail=home_fail)
         nfail = len((reach_rec or {}).get('fails', [])) + len(home_fail) + aud['over_buses']
         nins = len((reach_rec or {}).get('not_inserted', []))
+        if a.lane_reach_lookahead == 'chain':
+            # HBM-DIE8: a planned-basis 'not_inserted' hop is a station-count question; the PLACED span answers it exactly
+            # (audit_edges measures every such bus).  Count only the ones still over reach once placed.
+            over_ = set()
+            for b_ in aud['buses']:
+                s_, t_ = b_['bus'].split(' -> '); over_.add((s_, t_)); over_.add((t_, s_))
+            pni = [x for x in (reach_rec.get('not_inserted') or []) if tuple(x['hop'].split(' -> ')) in over_]
+            reach_rec['not_inserted_planned_basis'] = nins
+            reach_rec['placed_not_inserted_over'] = pni[:5000]
+            nins = len(pni)
+            print('planned-basis not_inserted hops', reach_rec['not_inserted_planned_basis'], 'still over reach once placed', nins, flush=True)
         reach_rec['verdict'] = 'PASS' if not (nfail or nins) else 'REACH_FAIL'
         print('reach audit', json.dumps({k: v for k, v in aud.items() if k not in ('buses',)})[:1500], 'verdict', reach_rec['verdict'], flush=True)
         (out / 'reach_fail.json' if reach_rec['verdict'] != 'PASS' else out / 'reach_gen.json').write_text(json.dumps(reach_rec, indent=1))
@@ -1433,6 +1473,7 @@ set_routing_layers -signal M4-M9 -clock M7-M9
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.146
 {{REPEAT}}
+{{PGCONNECT}}
 set t0 [clock seconds]
 global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
@@ -1527,7 +1568,54 @@ puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'
                            for c, k in sorted(kinds.items())},
             classify=f'python3 tools/die_hold_budget.py classify --report out/hold_links_ff.rpt --masters hold_budget_masters.json '
                      f'--paths-cap {a.paths} --design hbm --out out/hold_budget.json'), indent=1) + '\n')
-    (out / 'run.tcl').write_text(tcl.replace('{REPEAT}', rep_))
+    # HBM-DIE8 10-20 PG step (canonical global_connect, as every kit pdn.tcl and the ORDER 86d113af7 diagnostic: 25,598
+    # unbound PG ITerms of repair-inserted buffers -> 0 with signal/placement invariance).  Runs AFTER every cell-inserting
+    # step (die repeaters) and before GRT; binds every std-cell / macro power pin to VDD/VSS by the five kit rules.  It
+    # touches PG ITerms only: the signal-net / ITerm-to-signal-net census and the instance placement digest are taken
+    # before and after and must be identical; any PG ITerm left without a net (or on a wrong-type net) is OT_PG_FAIL.
+    pg_ = '''# HBM-DIE8 PG: canonical global_connect + invariance audit (tools/hbm_die_v15/die_case_v16.py)
+proc ot_pg_sig_digest {} {
+  # placement + signal connectivity census: instances, summed origins / orients / status, signal nets, signal ITerms on them
+  set blk [ord::get_db_block]; set ni 0; set sx 0; set sy 0; set so {}
+  foreach i [$blk getInsts] {
+    incr ni; set loc [$i getLocation]; set sx [expr {$sx + [lindex $loc 0]}]; set sy [expr {$sy + [lindex $loc 1]}]
+    dict incr so "[$i getOrient]/[$i getPlacementStatus]"
+  }
+  set sig 0; set st 0
+  foreach n [$blk getNets] { set ty [$n getSigType]; if {$ty ne "POWER" && $ty ne "GROUND"} { incr sig; incr st [llength [$n getITerms]] } }
+  return "insts=$ni sumx=$sx sumy=$sy orient_status=[lsort -stride 2 $so] signal_nets=$sig signal_iterms=$st"
+}
+proc ot_pg_unbound {} {
+  # every POWER/GROUND master terminal of every instance must sit on a net of the same type
+  set blk [ord::get_db_block]; set bad 0; set ex {}; set pg {}
+  foreach i [$blk getInsts] {
+    set m [$i getMaster]; set mn [$m getName]
+    if {![dict exists $pg $mn]} {
+      set l {}; foreach mt [$m getMTerms] { set ty [$mt getSigType]; if {$ty eq "POWER" || $ty eq "GROUND"} { lappend l [$mt getName] $ty } }
+      dict set pg $mn $l
+    }
+    foreach {mt ty} [dict get $pg $mn] {
+      set t [$i findITerm $mt]; set n [expr {$t eq "NULL" ? "NULL" : [$t getNet]}]
+      if {$n eq "NULL" || [$n getSigType] ne $ty} { incr bad; if {[llength $ex] < 20} { lappend ex "[$i getName]/$mt" } }
+    }
+  }
+  return [list $bad $ex]
+}
+set ot_pg_b [ot_pg_sig_digest]; set ot_pg_u0 [ot_pg_unbound]
+add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDD$} -power
+add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDDPE$}
+add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDDCE$}
+add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground
+add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSSE$}
+global_connect
+set ot_pg_a [ot_pg_sig_digest]; set ot_pg_u1 [ot_pg_unbound]
+set ot_pg_inv [expr {$ot_pg_b eq $ot_pg_a}]
+set f [open /work/out/pg_connect.json w]
+puts $f "{\"step\": \"canonical global_connect (5 kit rules)\", \"unbound_before\": [lindex $ot_pg_u0 0], \"unbound_after\": [lindex $ot_pg_u1 0], \"signal_invariant\": $ot_pg_inv, \"before\": \"$ot_pg_b\", \"after\": \"$ot_pg_a\", \"after_examples\": \"[lindex $ot_pg_u1 1]\"}"
+close $f
+if {[lindex $ot_pg_u1 0] == 0 && $ot_pg_inv} { puts "OT_PG_PASS unbound [lindex $ot_pg_u0 0] -> 0, signal/placement digest unchanged $ot_pg_a" } else { puts "OT_PG_FAIL unbound [lindex $ot_pg_u0 0] -> [lindex $ot_pg_u1 0] invariant $ot_pg_inv ex [lindex $ot_pg_u1 1]" }
+write_db /work/out/place_pg.odb'''
+    (out / 'run.tcl').write_text(tcl.replace('{REPEAT}', rep_).replace('{PGCONNECT}', pg_))
     shutil.copy(ROOT / 'tools/die_clock_check.tcl', out / 'die_clock_check.tcl')
     shutil.copy(ROOT / 'tools/ref_tile/layout_dump.tcl', out / 'layout_dump.tcl')
     (out / 'run.sh').write_text('''#!/bin/bash

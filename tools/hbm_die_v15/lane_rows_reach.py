@@ -22,6 +22,20 @@ and slid others up to 150 um.  This placer keeps every lane hop inside the reach
     already > R + tol apart is listed as 'not_inserted' (relay layer / station planner fix, not a GEN placement fix).
 All arithmetic uses windowed integral images of the die occupancy grid (the old per-row full-die cumsum was the 2.7 h
 GEN wall time).
+
+HBM-DIE8 10-20 lookahead='chain' (GEN2e4 r7 S7 fix; default 'site' = the behaviour above, byte-identical):
+  r7 S7 failed 3659 rows: the relay router (relay_router.py) sites every station in a FREE cell with NO capacity model,
+  so the stations of many buses (and whole equal-age pad chains: up to 31 rows on one point) share one site in the thin
+  channels between the grant-slot SM frames / SU slices (failing 572 um windows 74 % blocked, row demand 1.17x the free
+  area).  The planned site is a HINT, not a constraint: the binding rule is every PLACED hop <= R.  'chain' replaces the
+  look-ahead "span to the unplaced neighbour's planned site <= R" by the exact necessary condition of the chain: walk
+  from that neighbour through unplaced lane tiles (h edges from this tile) to every FIXED anchor (placed instance, or a
+  planned relay home placed later within 64.8 um) and require span(this pin, anchor pin) <= h*R - margin; h = 1 is the
+  direct placed-neighbour check exactly as before.  A chain thereby uses its real slack ((N+1)*R - route length) to
+  leave a full window.  The candidate window grows to window_um (bounded, never the die-wide fallback); the nearest
+  feasible candidate to the planned site still wins.  The reach is never relaxed: the post-placement per-bus audit
+  (audit_edges) is the authority and every hop listed 'not_inserted' on the PLANNED basis is re-measured on the
+  PLACED basis (placed_not_inserted) -- the GEN fails if any placed hop is over R.
 """
 import collections
 import math
@@ -61,12 +75,21 @@ def _xf(o, w, h, px, py):
 
 class LanePlacer:
     def __init__(self, *, occ, cell, W, H, R, margin, slide_um, tol_um, inst_rows, rows, I, edges, cell_of, size, kinds,
-                 lef_path_of, lef_xy_fn, pl, mode):
+                 lef_path_of, lef_xy_fn, pl, mode, lookahead='site', window_um=None, chain_depth=48, chain_nodes=4000):
         self.occ, self.CELL, self.W, self.H = occ, cell, W, H
         self.R, self.margin, self.slide, self.tol, self.mode = R, margin, slide_um, tol_um, mode
         self.rows, self.inst_rows, self.I, self.cell_of, self.size, self.pl = rows, inst_rows, I, cell_of, size, pl
         self.kinds, self.lef_path_of, self.lef_xy_fn = kinds, lef_path_of, lef_xy_fn
+        self.lookahead, self.window = lookahead, float(window_um or R)
+        self.chain_depth, self.chain_nodes = chain_depth, chain_nodes
         self._pc = {}
+        # planned relay homes placed AFTER the lane rows (die_case 'planned relay home (bounded)', <= 64.8 um from home)
+        self.home = {}
+        for n_, v_ in I.items():
+            m_ = re.search(r'home \(([\d.]+), ([\d.]+)\) um', v_.get('note', '') or '')
+            if m_ and n_ not in inst_rows and n_ in cell_of:
+                w_, h_ = size[cell_of[n_]]
+                self.home[n_] = (float(m_.group(1)) + w_ / 2, float(m_.group(2)) + h_ / 2)
         # tile -> [(own port, neighbour inst, neighbour port)]
         self.nb = collections.defaultdict(list)
         seen = set()
@@ -90,6 +113,7 @@ class LanePlacer:
                 self.plan_ll[n] = (x0 + ox, y0 + oy)
         self.fails, self.not_inserted, self.relaxed = [], [], []
         self.stats = collections.Counter()
+        self.chain_stats = collections.Counter()
         self.max_hop = collections.Counter()
 
     # ---------- geometry ----------
@@ -167,14 +191,56 @@ class LanePlacer:
             for port, m, mport in self.nb[n]:
                 if self.inst_rows.get(m) == rid:
                     continue        # tile of the same row (abutted)
-                geo, kind = self.nb_point(m, mport)
-                if geo is None:
-                    self.stats['nb_unplaced_block'] += 1
-                    continue
                 off = self.port_off(n, port)
                 if off is None:
                     w_, h_ = g['dims'][k]; off = (w_ / 2, h_ / 2)
-                out.append((k, (ox + off[0], oy + off[1]), geo, kind, f'{n}.{port} -> {m}.{mport}'))
+                d_ = (ox + off[0], oy + off[1])
+                geo, kind = self.nb_point(m, mport)
+                if self.lookahead == 'chain' and kind != 'placed':
+                    anc = self.anchors(n, m, mport, rid)
+                    self.chain_stats['terms'] += 1; self.chain_stats['anchors'] += len(anc)
+                    for geo_, h_, kind_, lab_ in anc:
+                        out.append((k, d_, geo_, kind_, f'{n}.{port} -> {m}.{mport} ~> {lab_} ({h_} hops)', h_))
+                    if anc:
+                        continue
+                    self.chain_stats['no_anchor'] += 1
+                if geo is None:
+                    self.stats['nb_unplaced_block'] += 1
+                    continue
+                out.append((k, d_, geo, kind, f'{n}.{port} -> {m}.{mport}', 1))
+        return out
+
+    def anchors(self, n, m, mport, rid):
+        """HBM-DIE8 chain look-ahead: fixed anchors reachable from this tile n through its unplaced neighbour m (entered on
+        port mport) along unplaced lane tiles, never re-entering row rid -> [(geo, h edges from n, kind, label)]"""
+        out, seen = [], {n, m}
+        frontier = [(m, mport, 1)]
+        nodes = 0
+        while frontier:
+            nxt = []
+            for u, up, h in frontier:
+                if u in self.pl or (u not in self.inst_rows and u in self.home):
+                    if u in self.pl:
+                        geo, _ = self.nb_point(u, up)
+                    else:
+                        geo = ('pt',) + self.home[u]
+                    out.append((geo, h, 'chain' if h > 1 else 'placed', f'{u}.{up}'))
+                    continue
+                if u not in self.inst_rows or h >= self.chain_depth:
+                    if u not in self.inst_rows:
+                        self.chain_stats['open_end'] += 1
+                    else:
+                        self.chain_stats['depth_cap'] += 1
+                    continue
+                for _p, v, vp in self.nb[u]:
+                    if v in seen or self.inst_rows.get(v) == rid:
+                        continue
+                    seen.add(v); nodes += 1
+                    if nodes > self.chain_nodes:
+                        self.chain_stats['node_cap'] += 1
+                        return out
+                    nxt.append((v, vp, h + 1))
+            frontier = nxt
         return out
 
     @staticmethod
@@ -185,12 +251,13 @@ class LanePlacer:
         return np.maximum(0, np.maximum(x0 - X, X - x1)) + np.maximum(0, np.maximum(y0 - Y, Y - y1))
 
     def worst(self, T, X, Y, relaxed=False):
-        """max span over constraint terms for candidate row lower-left arrays X, Y -> (max span array, argmax term)"""
+        """max span over constraint terms for candidate row lower-left arrays X, Y -> (max span array, argmax term).
+        A chain term (h edges to its anchor) counts as its span minus (h - 1) R: <= R - margin <=> span <= h R - margin."""
         mx = np.zeros(np.shape(X)); arg = np.full(np.shape(X), -1)
-        for t, (k, (dx, dy), geo, kind, lab) in enumerate(T):
-            if relaxed and kind == 'planned':
+        for t, (k, (dx, dy), geo, kind, lab, h) in enumerate(T):
+            if relaxed and kind in ('planned', 'chain'):
                 continue
-            s = self.span(geo, X + dx, Y + dy)
+            s = self.span(geo, X + dx, Y + dy) - (h - 1) * self.R
             upd = s > mx
             mx = np.where(upd, s, mx); arg = np.where(upd, t, arg)
         return mx, arg
@@ -201,8 +268,13 @@ class LanePlacer:
         cx, cy = g['site']; x0, y0 = cx - rw / 2, cy - rh / 2
         T = self.terms(rid)
         lim = self.R - self.margin
-        # planned-hop audit: the relay layer's own sites already over reach
-        for k, (dx, dy), geo, kind, lab in T:
+        # planned-hop audit: the relay layer's own sites already over reach (direct neighbour terms, site basis)
+        if self.lookahead == 'chain':
+            la_, self.lookahead = self.lookahead, 'site'
+            T0 = self.terms(rid); self.lookahead = la_
+        else:
+            T0 = T
+        for k, (dx, dy), geo, kind, lab, h in T0:
             m_ = lab.split(' -> ')[1].rsplit('.', 1)
             if m_[0] in self.plan_ll:          # planned basis on BOTH ends: the relay layer's sites (not GEN's placement)
                 ll = self.plan_ll[m_[0]]; off = self.port_off(m_[0], m_[1])
@@ -225,7 +297,7 @@ class LanePlacer:
         # 2 windowed search inside the reach diamond of the site
         C = self.CELL
         nw, nh = int(math.ceil(rw / C)), int(math.ceil(rh / C))
-        r = int(math.ceil(self.R / C))
+        r = int(math.ceil(self.window / C))
         ci, cj = int(x0 / C), int(y0 / C)
         fm, i0, j0 = self.free_mask(ci - r, cj - r, ci + r, cj + r, nw, nh)
         if fm is not None and fm.any():
@@ -251,6 +323,156 @@ class LanePlacer:
         self.fails.append(dict(row=rid, tiles=[n for n, *_ in g['tiles']], flow=g['fl'], site=[round(cx, 1), round(cy, 1)],
                                best_span_um=None, offending_hop=None, reason='no free spot of the row size inside the reach window'))
         return None, 'REACH_FAIL no free spot in window', None
+
+    # ---------- HBM-DIE8 negotiated repair (rip-up and re-place) ----------
+    def _cells(self, x, y, w, h):
+        C = self.CELL
+        return (max(0, int(x / C)), max(0, int(y / C)), min(self.occ.nx, int(math.ceil((x + w) / C))),
+                min(self.occ.ny, int(math.ceil((y + h) / C))))
+
+    def _tile_rects(self, rid, got):
+        g = self.row_geom[rid]
+        return [(n, got[0] + ox, got[1] + oy, w_, h_) for ((n, *_), (ox, oy), (w_, h_)) in zip(g['tiles'], g['offs'], g['dims'])]
+
+    def _mark(self, rid, got, sgn):
+        """+1: occupy the row's tile cells and enter its tiles in pl; -1: release them (blocks below never change)"""
+        B = 108
+        for n, x, y, w_, h_ in self._tile_rects(rid, got):
+            i0, j0, i1, j1 = self._cells(x, y, w_, h_)
+            self.cnt[j0:j1, i0:i1] += sgn
+            self.occ.g[j0:j1, i0:i1] = np.where(self.cnt[j0:j1, i0:i1] > 0, 1, self.base[j0:j1, i0:i1])
+            if sgn > 0:
+                self.pl[n] = dict(m=self.cell_of[n], x=round(x, 3), y=round(y, 3), o='R0', w=w_, h=h_, rule='lane row (LP)')
+            else:
+                self.pl.pop(n, None)
+            for bx in range(int(x // B), int((x + w_) // B) + 1):
+                for by in range(int(y // B), int((y + h_) // B) + 1):
+                    (self.bucket[(bx, by)].add if sgn > 0 else self.bucket[(bx, by)].discard)(rid)
+        self.occ._ii = None
+
+    def _victims(self, rid, x, y, rw, rh):
+        B = 108; ci = self._cells(x, y, rw, rh); out = set()
+        for bx in range(int(x // B) - 1, int((x + rw) // B) + 2):
+            for by in range(int(y // B) - 1, int((y + rh) // B) + 2):
+                for q in self.bucket.get((bx, by), ()):
+                    if q == rid or q in out or self.res.get(q, (None,))[0] is None:
+                        continue
+                    for _n, tx, ty, tw, th in self._tile_rects(q, self.res[q][0]):
+                        c2 = self._cells(tx, ty, tw, th)
+                        if c2[0] < ci[2] and ci[0] < c2[2] and c2[1] < ci[3] and ci[1] < c2[3]:
+                            out.add(q); break
+        return out
+
+    def _place_rec(self, rid):
+        """place() with the per-row failure / relaxed bookkeeping kept per row (re-placement replaces it)"""
+        nf, nn = len(self.fails), len(self.not_inserted)
+        got, how, ws = self.place(rid)
+        new_f = self.fails[nf:]; del self.fails[nf:]
+        if self._ni_done.get(rid):
+            del self.not_inserted[nn:]
+        self._ni_done[rid] = True
+        if new_f:
+            self.fail_by[rid] = new_f
+        else:
+            self.fail_by.pop(rid, None)
+        return got, how, ws
+
+    def run(self, order, repair_rounds=0, cands=4):
+        """place every row (as the die_case loop does) then up to repair_rounds of negotiated repair: a failing row takes
+        the nearest reach-feasible spot that is free of BLOCKS, the rows it overlaps are ripped up and re-placed under
+        their own exact constraints; the move is kept only if every ripped row re-places without a reach failure (the
+        failure count never rises).  -> {rid: (lower-left or None, how, worst span)}"""
+        self.base = self.occ.g.copy(); self.cnt = np.zeros(self.occ.g.shape, np.int16)
+        self.bucket = collections.defaultdict(set); self.res = {}; self.fail_by = {}; self._ni_done = {}
+        for rid in order:
+            got, how, ws = self._place_rec(rid)
+            self.res[rid] = (got, how, ws)
+            if got is not None:
+                self._mark(rid, got, +1)
+        for rnd in range(repair_rounds):
+            failed = [r for r in order if r in self.fail_by]
+            fixed = 0
+            for rid in failed:
+                fixed += self._repair(rid, cands)
+            self.stats[f'repair_round{rnd}_fixed'] = fixed
+            self.stats[f'repair_round{rnd}_tried'] = len(failed)
+            if not fixed:
+                break
+        self.fails = [e for r in order for e in self.fail_by.get(r, [])]
+        self.relaxed = [r for r in order if self.res[r][1].startswith('relaxed')]
+        return self.res
+
+    def _repair(self, rid, cands):
+        g = self.row_geom[rid]; rw, rh = g['rw'], g['rh']; C = self.CELL
+        cx, cy = g['site']; x0, y0 = cx - rw / 2, cy - rh / 2
+        nw, nh = int(math.ceil(rw / C)), int(math.ceil(rh / C)); r = int(math.ceil(self.window / C))
+        ci, cj = int(x0 / C), int(y0 / C)
+        occ_g = self.occ.g; self.occ.g = self.base          # candidates free of BLOCKS (rows may be ripped up)
+        try:
+            fm, i0, j0 = self.free_mask(ci - r, cj - r, ci + r, cj + r, nw, nh)
+        finally:
+            self.occ.g = occ_g
+        if fm is None or not fm.any():
+            return 0
+        jj, ii = np.nonzero(fm)
+        X = (i0 + ii) * C; Y = (j0 + jj) * C
+        old = self.res[rid]
+        if old[0] is not None:
+            self._mark(rid, old[0], -1)
+        T = self.terms(rid)
+        m, _ = self.worst(T, X, Y)
+        ok = m <= self.R - self.margin
+        if not ok.any():
+            m, _ = self.worst(T, X, Y, True); ok = m <= self.R - self.margin
+        if not ok.any():
+            if old[0] is not None:
+                self._mark(rid, old[0], +1)
+            return 0
+        X, Y = X[ok], Y[ok]
+        # rank by row cells overlapped (fewest rip-ups), then displacement from the planned site
+        wj1, wi1 = min(self.cnt.shape[0], j0 + fm.shape[0] + nh), min(self.cnt.shape[1], i0 + fm.shape[1] + nw)
+        rows_ = (self.cnt[j0:wj1, i0:wi1] > 0).astype(np.int32)          # window only
+        ii_ = np.zeros((rows_.shape[0] + 1, rows_.shape[1] + 1), np.int32); ii_[1:, 1:] = rows_.cumsum(0).cumsum(1)
+        I_ = (X / C).round().astype(int) - i0; J_ = (Y / C).round().astype(int) - j0
+        I1 = np.minimum(I_ + nw, rows_.shape[1]); J1 = np.minimum(J_ + nh, rows_.shape[0])
+        ov = ii_[J1, I1] - ii_[J_, I1] - ii_[J1, I_] + ii_[J_, I_]
+        disp = np.abs(X - x0) + np.abs(Y - y0)
+        for k in np.lexsort((disp, ov))[:cands]:
+            x, y = float(X[k]), float(Y[k])
+            vic = self._victims(rid, x, y, rw, rh)
+            saved = {q: self.res[q] for q in vic}
+            sf = {q: self.fail_by.get(q) for q in vic}
+            for q in vic:
+                self._mark(q, self.res[q][0], -1)
+            if not self.rect_free(x, y, rw, rh):
+                for q in vic:
+                    self._mark(q, saved[q][0], +1)
+                continue
+            self._mark(rid, (x, y), +1)
+            placed, good = [], True
+            for q in sorted(vic, key=lambda q_: -self.row_geom[q_]['rw'] * self.row_geom[q_]['rh']):
+                gq, hq, wq = self._place_rec(q)
+                self.res[q] = (gq, hq, wq)
+                if gq is None or q in self.fail_by:
+                    good = False
+                    break
+                self._mark(q, gq, +1); placed.append(q)
+            if good:
+                self.res[rid] = ((x, y), 'repair (rip-up %d rows)' % len(vic), float(self.worst(T, np.array([x]), np.array([y]))[0][0]))
+                self.fail_by.pop(rid, None); self.stats['repair_moves'] += 1; self.stats['repair_ripped'] += len(vic)
+                return 1
+            for q in placed:
+                self._mark(q, self.res[q][0], -1)
+            self._mark(rid, (x, y), -1)
+            for q in vic:
+                self.res[q] = saved[q]; self._mark(q, saved[q][0], +1)
+                if sf[q]:
+                    self.fail_by[q] = sf[q]
+                else:
+                    self.fail_by.pop(q, None)
+        if old[0] is not None:
+            self._mark(rid, old[0], +1)
+        return 0
 
     def order(self, how='area'):
         """area: widest rows first (packing, as before).  chain: breadth-first from the rows that touch an already placed
@@ -283,6 +505,7 @@ class LanePlacer:
     def report(self):
         return dict(reach_um=self.R, margin_um=self.margin, slide_um=self.slide, tol_um=self.tol, mode=self.mode,
                     rows=len(self.rows), stats=dict(self.stats), relaxed_rows=len(self.relaxed),
+                    lookahead=self.lookahead, window_um=self.window, chain_stats=dict(self.chain_stats),
                     reach_fail_rows=len(self.fails), not_inserted_hops=len(self.not_inserted),
                     not_inserted_rows=len({x['row'] for x in self.not_inserted}),
                     worst_placed_hop_hist=dict(self.max_hop))
@@ -294,17 +517,23 @@ def audit_edges(edges, pl, I, cell_of, size, R, lef_path_of, lef_xy_fn, tol=0.0)
     assigned later, on a face), relay tile without LEF pins -> its centre.  Resets excluded (H.RST forest).
     Classes: hop (a relay at either end: lane / station hop placed over reach), not_inserted (block -> block bus over reach
     with no relay at all: the relay layer never planned it)."""
-    pcs = {}
+    pcs, pxy = {}, {}
 
-    def geo(n, port):
+    def geo(n, port, bits=None):
         v = pl[n]; c = cell_of[n]
         if c not in pcs:
             lp = lef_path_of(c)
             try:
-                pcs[c] = _port_centroids(lef_xy_fn, lp) if lp else {}
+                pxy[c] = lef_xy_fn(lp) if lp else {}
+                pcs[c] = _port_centroids(lambda _p: pxy[c], lp) if lp else {}
             except Exception:
-                pcs[c] = {}
+                pcs[c] = {}; pxy[c] = {}
         p = pcs[c].get(port)
+        if bits and pxy.get(c):
+            # HBM-DIE8: the bus's OWN bits (a ctl_pNN slice of a die-wide PHY port), not the whole-port centroid
+            xs = [pxy[c][f'{port}[{k}]'] for k in bits if f'{port}[{k}]' in pxy[c]]
+            if xs:
+                p = (sum(x for x, _ in xs) / len(xs), sum(y for _, y in xs) / len(xs))
         if p is not None:
             dx, dy = _xf(v['o'], v['w'], v['h'], p[0], p[1])
             return ('pt', v['x'] + dx, v['y'] + dy, v['x'] + dx, v['y'] + dy)
@@ -315,15 +544,19 @@ def audit_edges(edges, pl, I, cell_of, size, R, lef_path_of, lef_xy_fn, tol=0.0)
     def gap(a, b):
         dx = max(0.0, a[1] - b[3], b[1] - a[3]); dy = max(0.0, a[2] - b[4], b[2] - a[4])
         return dx + dy
-    bus = {}
+    bus, bb = {}, collections.defaultdict(lambda: (set(), set()))
     for e in edges:
         (si, sp), (ti, tp) = e['source'][:2], e['sink'][:2]
         if si == ti or si not in pl or ti not in pl or RST.search(sp.lower()) or RST.search(tp.lower()):
             continue
         k = (si, sp, ti, tp)
-        if k in bus:
-            continue
-        bus[k] = gap(geo(si, sp), geo(ti, tp))
+        s_, t_ = e['source'], e['sink']
+        sb_, tb_ = bb[k]
+        if len(s_) >= 4 and len(t_) >= 4:
+            sb_.update(range(s_[2], s_[3])); tb_.update(range(t_[2], t_[3]))
+    for k, (sb, tb) in bb.items():
+        si, sp, ti, tp = k
+        bus[k] = gap(geo(si, sp, sorted(sb)), geo(ti, tp, sorted(tb)))
     over = []
     by = collections.Counter()
     for (si, sp, ti, tp), s in bus.items():
