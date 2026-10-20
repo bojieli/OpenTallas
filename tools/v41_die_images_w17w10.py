@@ -249,6 +249,9 @@ def add_phase(field: Field, mats: list[Mat], fmt_fp32=(False, False), rsplit: in
                 beats.append(v)
         else:
             rl = max(field.add_latency, len(units), dmax)
+            st = getattr(field, 'stretch', None)
+            if st:     # S81-ROMOPT-C (opt-in, xs_place OT_XS_KSLOT_STRETCH): longer rounds, the units spread wider
+                rl = max(rl, math.ceil(st * len(units)))
             slots = [None] * rl
             for i, u in enumerate(units):
                 slots[(i * rl) // len(units)] = u

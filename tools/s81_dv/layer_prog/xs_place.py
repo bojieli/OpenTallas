@@ -49,6 +49,39 @@ import os  # noqa: E402
 import xs_flags as XO  # noqa: E402  S81-ROMOPT-A: release defaults (env overrides)
 GU_MERGE = XO.on('OT_XS_GU_MERGE')
 import xs_topo as TP  # noqa: E402  S81-RATE3: physical frames per slice (OT_XS_TOPO=1)
+# S81-ROMOPT-C (owner 10-20 ~08:45, O3): OT_XS_KSLOT=k (1 | 2 | 3) gives every element of a phase of the KSLOT_OPS up to k
+# segment CLASSES (k segments of distinct segment indices; the element takes NSEG 8 segments / 8 classes, NCH 16 chain
+# words a round, as built), so a phase holds R_k = 2 x floor(k x q pairs / nseg) rows.  Contents only (ROM images, cfg7
+# rows, xs streams / calendars); the multi-class return cadence is MEASURED (ELEM_SLOT, PV trace) and legalised.
+# Default 1 = every record byte-identical.
+KSLOT = int(os.environ.get('OT_XS_KSLOT', '1'))
+if KSLOT not in (1, 2, 3):
+    raise ValueError('OT_XS_KSLOT must be 1, 2 or 3')
+# OT_XS_KSLOT_OPS: the ops compiled with k classes, 'op' (k = OT_XS_KSLOT) or 'op:k' (per-op k, e.g. a mixed k2 / k3)
+_KO = [x.split(':') for x in os.environ.get('OT_XS_KSLOT_OPS', 'ffn.experts_gu,ffn.down').split(',') if x]
+KSLOT_OPS = tuple(x[0] for x in _KO)
+KSLOT_PER_OP = {x[0]: int(x[1]) for x in _KO if len(x) > 1}
+if any(v not in (1, 2, 3) for v in KSLOT_PER_OP.values()):
+    raise ValueError('OT_XS_KSLOT_OPS per-op k must be 1, 2 or 3')
+# OT_XS_KSLOT_STRETCH='op:f,...' (k > 1 phases only; default unset = off): that op's FP8 / FP4 stream rounds are
+# max(.., ceil(f x units)) beats, so its classes' last beats (and return words) spread f x wider -- e.g. ffn.down's 5
+# units in 8-beat rounds put classes 0 / 1 and 2 / 3 one beat apart (never in one element, E3); f 2 spaces them 2.
+# Contents only (the xs stream ROM); the stream grows by the added beats (priced by the op's measured floor).
+KSLOT_STRETCH = {o: float(f) for o, f in (x.split(':') for x in os.environ.get('OT_XS_KSLOT_STRETCH', '').split(',') if x)}
+
+
+def kslot_of(op):
+    if op in KSLOT_PER_OP:
+        return KSLOT_PER_OP[op]
+    return KSLOT if op in KSLOT_OPS else 1
+
+
+def nsr_max(nseg, npairs, k):
+    """super rows a phase holds: k = 1 the D2 rule (one segment per pair); k > 1 k segment classes per pair:
+    floor(k x npairs / nseg)"""
+    if k == 1:
+        return npairs // nseg
+    return (k * npairs) // nseg
 
 
 def sha(b):
@@ -318,6 +351,24 @@ ELEM_SEG = {('fp8', 5120, 5): [33] * 5,        # a_proj bench_xs + shared_gu ben
             ('fp4', 2304, 5): [-14] * 5,       # down bench_xsp down (phase 47); predicts phase 50; PV trace p50 exact
             ('fp8', 2304, 5): [0, 0, 0, 0, -14],   # shared down, PV trace p44 (bench_xsp_pv)
             ('fp8', 1280, 3): [0, 0, -14]}     # wq_b, PV trace p1 (bench_xsp_pv)
+# S81-ROMOPT-C: MEASURED multi-slot cadence per (fmt, K, nseg, k): slot j of an element holding n slots (one segment
+# index) leaves slot_extra[n][j] edges after its single-slot E(pair, seg) (frame bench PV trace, release FSEQ tb
+# -DTB_PVTRACE).  A shape missing here compiles with 0 and is reported calendar_unmeasured (no cycle-exact claim).
+PVK = 'results/rtl/s81_romopt_1020/c/pv'
+# MEASURED (PV trace, release FSEQ tb -DTB_PVTRACE, u_f_0L00 col_h9_l4_nx LK5 + u_f_3L01 col_h10_l4 LK2, k2 + k3):
+# an element holding k segment classes whose single-slot edges E(pair, seg) are pairwise >= 2 apart emits EVERY class
+# exactly at E(pair, seg) (2,681 / 2,681 pv words); class sets closer than 2 edges shift (+1, fp8 adder interleave)
+# and are refused by the legaliser (frame_return_plan.leaves_for E3).  So the multi-class cadence term is 0.
+_Z = {n: [0] * n for n in (1, 2, 3)}
+ELEM_SLOT = {('fp4', 5120, 5): dict(slot_extra=_Z, evidence=PVK + ' experts_gu k2/k3 2 frames: 1,260 words exact'),
+             ('fp4', 2304, 5): dict(slot_extra=_Z, evidence=PVK + ' ffn.down routed k2/k3 2 frames: 1,224 words exact'),
+             ('fp8', 2304, 5): dict(slot_extra=_Z, evidence=PVK + ' ffn.down shared k2/k3 2 frames: 197 words exact')}
+
+def _prov_slot(k):
+    """an UNMEASURED k-slot shape: provisional cadence slot j at +j x OT_XS_KSLOT_PROV edges (default 0: the classes' own last beats), so the
+    phase compiles (images exact) for the PV-trace measurement; its calendar is reported calendar_unmeasured"""
+    d = int(os.environ.get('OT_XS_KSLOT_PROV', '0'))
+    return {n: [j * d for j in range(n)] for n in range(1, k + 1)}
 
 
 def frame_slot(die, frame):
@@ -328,17 +379,21 @@ def frame_slot(die, frame):
     raise KeyError(frame)
 
 
-def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None):
+def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None, kslot=1, nsr=None, stretch=None):
     """legalise one phase on pairs (a contiguous run qa[off:off + n]); assign_slots in field-slot indexing"""
     import frame_return_plan as P
     import v41_rom_ksplit_bankmap as S
     sx = ELEM_SEG.get((mat.fmt, mat.K, nseg))
+    kx = ELEM_SLOT.get((mat.fmt, mat.K, nseg)) if kslot > 1 else None
+    if kx is not None and not all(n in kx['slot_extra'] for n in range(1, kslot + 1)):
+        kx = None      # a slot count without a measurement: unmeasured
     plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk),
-                        seg_extra=sx, assign=assign)
+                        seg_extra=sx, assign=assign, kslot=kslot, nsr=nsr, stretch=stretch,
+                        slot_extra=_prov_slot(kslot) if kx is None else {int(n): v for n, v in kx['slot_extra'].items()})
     plan['assign_slots'] = [(i + off, R, sg) for i, R, sg in plan['assign_slots']]
     units = {S.unit_range(mat.fmt, a0, el)[1] - S.unit_range(mat.fmt, a0, el)[0] for a0, el in S.segments(mat.K, nseg)}
-    plan['elem_class'] = [mat.fmt, max(units), 2]
-    plan['calendar'] = 'measured_class' if sx is not None else 'calendar_unmeasured'
+    plan['elem_class'] = [mat.fmt, max(units), 2] + ([kslot] if kslot > 1 else [])
+    plan['calendar'] = 'measured_class' if sx is not None and (kslot == 1 or kx is not None) else 'calendar_unmeasured'
     plan['emission'] = dict(plan['emission'], elem_extra=sx)
     return plan
 
@@ -365,7 +420,7 @@ def phase_list(fx, ops, npairs=NPAIRS):
             f = fmt_of(fx, grp['mat'])
             K = fx.w(grp['mat']).shape[1] * (2 if f == 'fp4' else 1)
             nseg, _ = nseg_for(f, K, npairs)
-            R = 2 * (npairs // nseg)
+            R = 2 * nsr_max(nseg, npairs, kslot_of(op))
             most = max(len(fr) for sl in grp['groups'] for fr in sl)
             for c in range(-(-most // R)):
                 seq.append((op, gi, c, nseg, R))
@@ -416,8 +471,14 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         sel = TP.chunk(grp, sel_all, c, R)
         assert sel, ('empty FP chunk on a frame', op, gi, c, frame)
         mat = make_mat(fx, grp, sel, op)
+        ks = kslot_of(op)
         npair = (len(qa) // nseg) * nseg
-        if XO.on('OT_XS_COMPACT_TAILS') and mat.rows:
+        nsr_k = None
+        if ks > 1:     # S81-ROMOPT-C: the phase's real super rows (no SENT super rows), k classes a pair, all q pairs
+            nsr_k = -(-mat.rows // 2)
+            assert nsr_k <= nsr_max(nseg, len(qa), ks), ('k-slot phase over its rows', op, mat.rows, ks)
+            npair = len(qa)
+        if XO.on('OT_XS_COMPACT_TAILS') and mat.rows and ks == 1:
             # The full pair budget used to allocate completely SENT superrows
             # on short tails. Only real superrows need weight/config storage.
             npair = min(npair, -(-mat.rows // 2) * nseg)
@@ -432,14 +493,20 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         slot_ids = slot_ids[:npair]
         pairs = [qa[i] for i in slot_ids]
         measured = only is None or k in only
-        plan = phase_plan(master, lk, pairs, 0, mat, grp['x'], nseg, iters if measured else 0)
+        st_k = KSLOT_STRETCH.get(op) if ks > 1 else None
+        plan = phase_plan(master, lk, pairs, 0, mat, grp['x'], nseg, iters if measured else 0, kslot=ks, nsr=nsr_k,
+                          stretch=st_k)
         plan['assign_slots'] = [(slot_ids[i], r, seg) for i, r, seg in plan['assign_slots']]
         if not measured:
             plan['calendar'] = 'not_legalised'
-        ph = add_planned(field, plan, mat, nseg)
+        field.stretch = st_k
+        try:
+            ph = add_planned(field, plan, mat, nseg)
+        finally:
+            field.stretch = None
         tie = [grp['tie'][grp['rows'].index(grp['rows'][i])] if grp['tie'] else None for i in sel]
         phases.append(dict(phase=k, op=op, mat=grp['mat'], fmt=mat.fmt, K=mat.K, chunk=c, rows=len(sel),
-                           row_index=[grp['rows'][i] for i in sel], tie=tie, nseg=nseg, rows_per_phase=R,
+                           row_index=[grp['rows'][i] for i in sel], tie=tie, nseg=nseg, rows_per_phase=R, **({'kslot': ks} if ks > 1 else {}),
                            nbeat=ph['nbeat'], sbase=ph['sbase'], faults=plan['faults'], ret_words=plan['ret_words'],
                            calendar=plan['calendar'], elem_class=plan['elem_class'], ret=plan['ret'],
                            emission=plan['emission'], placement=plan['placement'], plan=plan, sel=sel, gi=gi))
@@ -869,7 +936,7 @@ def lower_placed(die, op, ctx):
         f = fmt_of(fx, grp['mat'])
         K = fx.w(grp['mat']).shape[1] * (2 if f == 'fp4' else 1)
         nseg, units = nseg_for(f, K, NPAIRS)
-        mats.append(dict(mat=grp['mat'], fmt=f, K=K, nseg=nseg, rows_per_phase=2 * (NPAIRS // nseg),
+        mats.append(dict(mat=grp['mat'], fmt=f, K=K, nseg=nseg, rows_per_phase=2 * nsr_max(nseg, NPAIRS, kslot_of(name)),
                          phases=sum(1 for x in seq if x[1] == gi), rows_per_frame=[len(fr) for fr in grp['groups'][g]],
                          calendar='measured_class' if (f, K, nseg) in ELEM_SEG else 'calendar_unmeasured',
                          tie='fixture' if grp['tie'] else 'golden', note=grp.get('note')))
