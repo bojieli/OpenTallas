@@ -501,6 +501,8 @@ def kit_pin_hooks(s: dict) -> bool:
 
 
 def gen_pin_hooks(s: dict) -> dict:
+    if s.get("pin_hook_after_flops") and not pin_hook_wrapper(s):
+        raise SpecError("pin_hook_after_flops needs the recipe-2 pin-hook wrapper")
     if pin_hook_flops_only(s):
         pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (pin flops, no hold stages): the spec's pin_hook_before_flops repo hooks, then",
                    "# every port's single launch / capture flop is fixed at its pin.  ORFS takes one hook per step."]
