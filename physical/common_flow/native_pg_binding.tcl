@@ -97,6 +97,29 @@ proc ot_pg_master_census {inst} {
   }
   return $rows
 }
+# A whole source-owned insertion batch must preflight before any PG mutation.
+# Existing protected-unbound cells refuse; no flags, rules or wrong nets change.
+proc ot_pg_bind_batch_before_protect {block instances} {
+  set targeted 1
+  foreach rule [$block getGlobalConnects] {
+    if {[$rule getInstPattern] ne ".*"} {set targeted 0; break}
+  }
+  if {$targeted} {set mapping [ot_pg_prepare_targets $block $instances]} else {set mapping [ot_pg_prepare $block]}
+  foreach inst $instances {
+    if {[$inst getBlock] ne $block} {error OT_PG_TARGET_INSTANCE_REFUSED}
+    foreach row [ot_pg_master_census $inst] {
+      lassign $row mt term why
+      if {$why ne ""} {error "$why [$inst getName]/[$mt getName]"}
+      set actual [$term getNet]
+      set expected [ot_pg_expected $mapping $inst $term]
+      if {$actual ne "NULL" && $actual ne $expected} {error "OT_PG_WRONG_DOMAIN [$inst getName]/[$mt getName]"}
+      if {$actual eq "NULL" && [$inst isDoNotTouch]} {error "OT_PG_ORDER_PROTECTED_UNBOUND [$inst getName]"}
+    }
+  }
+  set bound 0
+  foreach inst $instances {incr bound [ot_pg_bind_before_protect $mapping $inst]}
+  return $bound
+}
 proc ot_pg_bind_before_protect {mapping inst} {
   set pending {}
   # Preflight every terminal before changing any connection. No force or
@@ -172,6 +195,23 @@ proc ot_pg_strict_enabled {} {
 }
 # Call prepare once AFTER the final insertion/master/rule/region change in each
 # batch; discard mapping after that protection loop. Never cache across batches.
+# STANDARD mode (OT_PG_STRICT unset): bind PG at every protection site BEFORE
+# setDoNotTouch, with the design's own global_connect rules. OpenROAD
+# global_connect skips dont_touch instances (dbGlobalConnect.cpp:163), so cells
+# protected before the final global_connect stayed unbound (S81 STA.PG). This
+# runs exactly the connection the final global_connect would have made, earlier;
+# it adds no strict-mode stage/RC/coverage refusals. No rules yet (pre-PDN) ->
+# no-op. Strict mode keeps its own source-owned per-instance binder.
+proc ot_pg_standard_bind {where} {
+  if {[ot_pg_strict_enabled]} {return 0}
+  set block [ord::get_db_block]
+  if {$block eq "NULL" || $block eq ""} {return 0}
+  set rules [llength [$block getGlobalConnects]]
+  if {!$rules} {puts "OT_PG_STANDARD_BIND $where rules=0 skipped"; return 0}
+  global_connect
+  puts "OT_PG_STANDARD_BIND $where rules=$rules"
+  return $rules
+}
 proc ot_pg_bind_instance_before_protect {mapping inst} {
   if {![ot_pg_strict_enabled]} {return 0}
   return [ot_pg_bind_before_protect $mapping $inst]
@@ -283,8 +323,8 @@ proc ot_pg_note_binding_delta {before after} {
 # Observe the actual API, not a caller-supplied stage/model declaration. These
 # observers never substitute another RC model. Any database or SPEF reload
 # invalidates placement admission, including a failed attempted reload.
-proc ot_pg_install_rc_observers {} {
-  if {![ot_pg_strict_enabled] || [info commands ot_pg_native_estimate_parasitics] ne ""} {return}
+proc ot_pg_install_rc_observers {{standard_cts 0}} {
+  if {(![ot_pg_strict_enabled] && !$standard_cts) || [info commands ot_pg_native_estimate_parasitics] ne ""} {return}
   set ::ot_pg_rc_model unknown
   if {![info exists ::ot_pg_bindings_dirty]} {set ::ot_pg_bindings_dirty 0}
   set ::ot_pg_spef_seen 0
@@ -370,4 +410,19 @@ proc ot_pg_require_cts_placement_or_empty_context {} {
     }
   }
   return $model
+}
+
+# Current pinned engine has no admitted native birth/analysis transaction guard.
+# Wrapping command RETURN cannot cover internal CTS/resizer estimates. Strict
+# mode therefore refuses these native inserters BEFORE they execute. This is
+# deliberately not bypassed by an environment capability name or image label.
+proc ot_pg_install_unsupported_birth_guards {} {
+  if {![ot_pg_strict_enabled]} {return}
+  foreach command {buffer_ports repair_clock_inverters clock_tree_synthesis repair_timing repair_design global_placement} {
+    if {[info commands $command] eq "" || [info commands ot_pg_unsupported_$command] ne ""} continue
+    rename $command ot_pg_unsupported_$command
+    proc ::$command {args} [format {
+      error "OT_PG_NATIVE_BIRTH_CAPABILITY_REQUIRED command=%s"
+    } $command]
+  }
 }

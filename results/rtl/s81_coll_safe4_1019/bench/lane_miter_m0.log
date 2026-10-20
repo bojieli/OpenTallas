@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       admits   976 GB (avail 796, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 43 disk 314 GB 
+ot-run: ot-epyc5       admits   922 GB (avail 756, growth 111, headroom 0, waiters 0/0 GB) load 87/128 running 27 disk 744 GB 
+ot-run: ot-epyc6       admits  1135 GB (avail 908, growth 113, headroom 0, waiters 0/0 GB) load 80/128 running 35 disk 5502 GB 
+ot-run: ot-epyc7       admits   610 GB (avail 528, growth 101, headroom 0, waiters 0/0 GB) load 79/96 running 22 disk 6091 GB 
+ot-run: ot-epyc8       admits  1138 GB (avail 893, growth 97, headroom 0, waiters 0/0 GB) load 29/128 running 14 disk 31 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-coll-safe4-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-coll-safe4-1019/src
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-339275-1792457045 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+COLL_SAFE4_COVERAGE naks=3/5 replays=7/5 timeouts=2/2 crc_err=12/31 relocks=7 fifo_fwd=9994 replay_fwd=0 credit_rx_fwd=20727 gearbox_fwd=24572
+COLL_SAFE4_BOUNDARY PASS checks=79994 sent=37025 received=36912 resets=2 crcerr_cycles=61 blackout_cycles=2507 faults=000/000
+- rtl/dsrom_sys/s81_ph/test/tb_coll_safe4_boundary.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 2.103 s; speed 19.018 us/s
+- Verilator: cpu 2.102 s on 1 threads; allocated 9 MB
+sim exit 0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-339275-1792457045): exit 0

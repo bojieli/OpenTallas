@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-coll3-1019/src
+ot-run: ot-epyc6       admits  1028 GB (avail 826, growth 107, headroom 0, waiters 0/0 GB) load 71/128 running 20 disk 5137 GB 
+ot-run: ot-epyc7       admits   185 GB (avail 231, growth 101, headroom 0, waiters 0/0 GB) load 55/96 running 31 disk 5744 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-coll3-1019/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-coll3-1019/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-coll3-1019/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-753293-1792474773 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+[58000] %Fatal: ot_sram_oldread_b64.sv:54: Assertion failed in tb_coll_safe4_boundary.variant[1].safe.e.u.u_ep.g_fifo_safe.u_m.g_bank[0].g_depth[0]: COLL_COLLISION_UNSAFE bank64 macro read/write same address bank0 depth0
+%Error: rtl/lib/ot_sram_oldread_b64.sv:54: Verilog $stop
+Aborting...
+sim exit 1
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-753293-1792474773): exit 1

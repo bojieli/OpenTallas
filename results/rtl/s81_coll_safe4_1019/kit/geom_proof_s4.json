@@ -1,0 +1,124 @@
+{
+ "w": {
+  "die": [
+   540.0,
+   712.8
+  ],
+  "macros": 55,
+  "lattice_band_errors": [],
+  "min_macro_gap_um": 25.896,
+  "min_core_edge_um": 21.288,
+  "band": [
+   345.6,
+   385.2
+  ],
+  "band_density_synth": 0.4452,
+  "pin_face_channels": [
+   {
+    "x": 77.784,
+    "width_um": 51.816,
+    "face_contacts": 2090,
+    "m3_m5_tracks": 2518,
+    "use": 0.83
+   },
+   {
+    "x": 164.184,
+    "width_um": 51.816,
+    "face_contacts": 1793,
+    "m3_m5_tracks": 2518,
+    "use": 0.712
+   },
+   {
+    "x": 250.584,
+    "width_um": 51.816,
+    "face_contacts": 1696,
+    "m3_m5_tracks": 2518,
+    "use": 0.674
+   },
+   {
+    "x": 336.984,
+    "width_um": 51.816,
+    "face_contacts": 1690,
+    "m3_m5_tracks": 2518,
+    "use": 0.671
+   },
+   {
+    "x": 423.384,
+    "width_um": 51.816,
+    "face_contacts": 1987,
+    "m3_m5_tracks": 2518,
+    "use": 0.789
+   }
+  ],
+  "macro_to_band_um_near_face": 285.1,
+  "macro_to_band_um_far_corner": 302.4,
+  "pin_to_band_um_max": 343.44,
+  "bus_pin_density_per_um": {
+   "rx": 1.47,
+   "tx": 1.45,
+   "lo_d": 1.65,
+   "li_d": 1.69
+  }
+ },
+ "e": {
+  "die": [
+   540.0,
+   712.8
+  ],
+  "macros": 55,
+  "lattice_band_errors": [],
+  "min_macro_gap_um": 25.896,
+  "min_core_edge_um": 21.288,
+  "band": [
+   345.6,
+   385.2
+  ],
+  "band_density_synth": 0.4452,
+  "pin_face_channels": [
+   {
+    "x": 77.784,
+    "width_um": 51.816,
+    "face_contacts": 1987,
+    "m3_m5_tracks": 2518,
+    "use": 0.789
+   },
+   {
+    "x": 164.184,
+    "width_um": 51.816,
+    "face_contacts": 1690,
+    "m3_m5_tracks": 2518,
+    "use": 0.671
+   },
+   {
+    "x": 250.584,
+    "width_um": 51.816,
+    "face_contacts": 1696,
+    "m3_m5_tracks": 2518,
+    "use": 0.674
+   },
+   {
+    "x": 336.984,
+    "width_um": 51.816,
+    "face_contacts": 1793,
+    "m3_m5_tracks": 2518,
+    "use": 0.712
+   },
+   {
+    "x": 423.384,
+    "width_um": 51.816,
+    "face_contacts": 2090,
+    "m3_m5_tracks": 2518,
+    "use": 0.83
+   }
+  ],
+  "macro_to_band_um_near_face": 285.1,
+  "macro_to_band_um_far_corner": 302.4,
+  "pin_to_band_um_max": 343.44,
+  "bus_pin_density_per_um": {
+   "rx": 1.47,
+   "tx": 1.45,
+   "lo_d": 1.65,
+   "li_d": 1.69
+  }
+ }
+}
