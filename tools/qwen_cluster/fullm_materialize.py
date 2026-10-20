@@ -9,15 +9,21 @@ Refuses unless the data replay and the control replay are PASS for exactly these
 import json, sys, hashlib, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[2]; G = ROOT / "results/arch/qw_cb16_legal_bays_1020/grid43"
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
-for name in sys.argv[1:]:
+REG = "--regions" in sys.argv          # fallback: every scalar FF as its own 4.32-um EXCLUSIVE legal region (no FIRM cells)
+for name in [a for a in sys.argv[1:] if not a.startswith("--")]:
     js = G / f"{name}_joint_solution.json"; cs = G / f"{name}_control_solution.json"
     dr = json.loads((G / f"{name}_data_replay.json").read_text()); cr = json.loads((G / f"{name}_control_replay.json").read_text())
     assert dr["status"] == "PASS" and dr["solution_sha256"] == sha(js), "data replay not PASS for this joint solution"
     assert cr["status"] == "PASS" and cr["solution_sha256"] == sha(cs), "control replay not PASS for this control solution"
     sol = json.loads(js.read_text()); pos = json.loads(cs.read_text())["pos"]
     raw = (G / f"{name}_joint_raw_sites.tsv").read_text().splitlines()
+    out_name = name + ("r" if REG else "")
     spec_p = ROOT / "tools/ref_tile/specs_qcluster" / f"{name}.json"; spec = json.loads(spec_p.read_text())
     W = spec["outline"]["w"]
+    def line(n, x, y):
+        if REG:   # 4.32-um square region centred on the solved site (Codex 05:13 audit: all corners <= 388.8 um)
+            return f"{n}\t{x:.3f}\t{y:.3f}\t{x - 2.16:.3f}\t{x + 2.16:.3f}\t{y - 2.16:.3f}\t{y + 2.16:.3f}"
+        return f"{n}\t{x:.3f}\t{y:.3f}\t{max(0.0, x - 15):.3f}\t{min(W, x + 15):.3f}"
     out = ["# prefix\tx\ty\txlo\txhi[\tylo\tyhi]  (fullm_materialize.py: joint 43.2 hard + bay solution, control_ac scalar sites)"]
     done = set(); nb = 0; dup = 0
     for l in raw:
@@ -30,13 +36,12 @@ for name in sys.argv[1:]:
         if f[0] in sol["bays"]:
             dup += 1; continue          # stale diag compact-block line of a pad ring half that HAS a bay: the bay region owns it
         if f[0] in pos:
-            x, y = pos[f[0]]; done.add(f[0])
-            out.append(f"{f[0]}\t{x:.3f}\t{y:.3f}\t{max(0.0, x - 15):.3f}\t{min(W, x + 15):.3f}")
+            x, y = pos[f[0]]; done.add(f[0]); out.append(line(f[0], x, y))
         else:
             raise SystemExit(f"site line {f[0]} is neither a joint bay nor a solved scalar FF")
     for n in sorted(set(pos) - done):
-        x, y = pos[n]; out.append(f"{n}\t{x:.3f}\t{y:.3f}\t{max(0.0, x - 15):.3f}\t{min(W, x + 15):.3f}")
-    (ROOT / f"physical/qcluster/{name}_sites.tsv").write_text("\n".join(out) + "\n")
+        x, y = pos[n]; out.append(line(n, x, y))
+    (ROOT / f"physical/qcluster/{out_name}_sites.tsv").write_text("\n".join(out) + "\n")
     moved = 0
     for c in spec["children"]:
         hx, hy = sol["hard"][c["inst"]][:2]
@@ -47,5 +52,10 @@ for name in sys.argv[1:]:
         " | QW-CB16A0 10-20 fullm: hard origins = CP-SAT joint station/bay solution on 43.2 (all-bit hard/soft/bank data <=405, "
         "independent replay PASS), ring bays = EXCLUSIVE legal regions (GPL owns ring cells, no FIRM ring blocks), every scalar "
         "reset/control FF at an arc-consistent legal site (all control edges <=385 planned, replay PASS); no data multicycle.")
+    if REG:
+        spec["name"] = out_name; spec["orfs_vars"]["OT_QC_SITES"] = f"physical/qcluster/{out_name}_sites.tsv"
+        spec["job"]["tag"] = out_name[10:]
+        spec["structural_change"] += " FALLBACK r: every scalar FF in its own 4.32-um EXCLUSIVE region (no FIRM cells at all)."
+        spec_p = ROOT / "tools/ref_tile/specs_qcluster" / f"{out_name}.json"
     spec_p.write_text(json.dumps(spec, indent=1) + "\n")
     print("MATERIALIZE", name, "bays", nb, "dropped stale pad-half block lines", dup, "scalar", len(pos), "children moved", moved)

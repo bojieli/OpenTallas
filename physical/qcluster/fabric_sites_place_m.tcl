@@ -1,4 +1,6 @@
 # Codex 10-20 fullm: structural reserved-ring legal regions after fullk ODB-0359.
+# QW-CB16A0 10-20: the capacity loop variable is rw (was row: it overwrote the 0.27-um row pitch used by later 5-column
+# compact-block lines; found by the Codex 05:13 control audit).
 # QW-CB16FULL2 (2026-10-20): fabric_sites_place.tcl + BAY lines.  A site line with 7 columns (prefix x y xlo xhi ylo yhi)
 # is a RESERVED std-cell bay of one soft landing-ring half (qc_full_kit.py bays()): its flops are spread evenly over the
 # whole bay box (row pitch and column pitch chosen so the bay is uniformly filled), not packed into a 24-um 100 %-dense
@@ -60,8 +62,8 @@ foreach s $sites {
       incr placed
     }
     set capacity 0.0
-    foreach row [$blk getRows] {
-      set bb [$row getBBox]
+    foreach rw [$blk getRows] {
+      set bb [$rw getBBox]
       set rx0 [expr {[$bb xMin]/double($dbu)}];set ry0 [expr {[$bb yMin]/double($dbu)}]
       set rx1 [expr {[$bb xMax]/double($dbu)}];set ry1 [expr {[$bb yMax]/double($dbu)}]
       set capacity [expr {$capacity+max(0.0,min($xhi,$rx1)-max($xlo,$rx0))*max(0.0,min($yhi,$ry1)-max($ylo,$ry0))}]
