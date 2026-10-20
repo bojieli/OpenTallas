@@ -22,7 +22,7 @@ def lattice_band_errors(s, W, H, blocks, std_area):
     try:
         lo, hi = map(float, q["std_band_y_um"])
         density = std_area / ((W - 2 * CORE_MARGIN) * (hi - lo))
-        if not (CORE_MARGIN <= lo < hi <= H - CORE_MARGIN and 0.4 <= density <= 0.6):
+        if not (CORE_MARGIN - 1e-6 <= lo < hi <= H - CORE_MARGIN + 1e-6 and 0.4 <= density <= 0.6):
             errors.append("measured std-band density outside 40..60% or invalid band")
     except (ValueError, TypeError, KeyError, ZeroDivisionError):
         return errors + ["invalid standard-cell band"]
