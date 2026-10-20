@@ -229,7 +229,14 @@
         "width": 2448,
         "storage_bits": 4896
       }
-    ]
+    ],
+    "geometry_screen": {
+      "scope": "DECLARED_REGION_CENTRES_ONLY_NOT_NATIVE_ENDPOINTS",
+      "point_macro_limit_um": 810,
+      "max_macro_internal_manhattan_um": 49.296,
+      "conservative_one_macro_two_external_segments_limit_um": 859.296,
+      "pairs_over859_296": 0
+    }
   },
   "s81": {
     "record_sha256": "bb19a917c9d240005bb86a8643af214711abf3d4b03be629728e3070fd58bcef",
@@ -474,7 +481,14 @@
         "width": 1,
         "storage_bits": 4
       }
-    ]
+    ],
+    "geometry_screen": {
+      "scope": "DECLARED_REGION_CENTRES_ONLY_NOT_NATIVE_ENDPOINTS",
+      "point_macro_limit_um": 810,
+      "max_macro_internal_manhattan_um": 49.296,
+      "conservative_one_macro_two_external_segments_limit_um": 859.296,
+      "pairs_over859_296": 0
+    }
   },
   "qw": {
     "record_sha256": "851d1a020228a6528280b96ed8bbda97cbfeb24702a126129b32ba3f5595834a",
@@ -2877,6 +2891,13 @@
         "width": 1567,
         "storage_bits": 6268
       }
-    ]
+    ],
+    "geometry_screen": {
+      "scope": "DECLARED_REGION_CENTRES_ONLY_NOT_NATIVE_ENDPOINTS",
+      "point_macro_limit_um": 810,
+      "max_macro_internal_manhattan_um": 49.296,
+      "conservative_one_macro_two_external_segments_limit_um": 859.296,
+      "pairs_over859_296": 118
+    }
   }
 }
