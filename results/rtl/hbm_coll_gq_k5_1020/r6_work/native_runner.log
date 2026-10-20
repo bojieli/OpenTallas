@@ -1,0 +1,834 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex-gq7-native-r6
+ot-run: ot-epyc6       admits   694 GB (avail 599, growth 113, headroom 0, waiters 0/0 GB) load 37/128 running 26 disk 3954 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex-gq7-native-r6
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/codex-gq7-native-r6
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex-gq7-native-r6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex-gq7-native-r6
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3097401-1792506905 after 0 s
+orfs_hold_mm: final legalization patched
+orfs_hold_mm: {"helper": "/src/tools/orfs_hold_mm.tcl", "load_before": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934", "util_before": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81", "status": "patched", "load_after": "50f4af0af0194e085d6641275578d072ab1d25cb980513362df50888f83e1b4c", "util_after": "9bec38e0bc6c6109820d48ee99ed9c1c8a4232c8fce25f1fc67a3b0674c99329"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook patched
+orfs_hold_mm: sliver block hook patched
+orfs_hold_mm: pre-route gate hook patched
+{"allcorner_spef_evaluator": "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl", "original_sha256": "8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c", "patched_sha256": "532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d", "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"}
+mkdir -p /work/results/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/
+echo 833.333333 > /work/results/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/clock_period.txt
+Setting clock period to 833.333333
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib
+7. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_tt.lib
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+12. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+13. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib
+14. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_tt.lib
+15. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv
+16. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv
+17. Executing Verilog-2005 frontend: /src/rtl/lib/ot_rst_relay.sv
+18. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv
+19. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq_scale13r.sv
+20. Executing Verilog-2005 frontend: /src/rtl/hdc/v41/ot_hdc_actquant.sv
+21. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fpu.sv
+22. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+23. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_delay.sv
+24. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_delay_hc.sv
+25. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_cg.sv
+26. Executing Verilog-2005 frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v
+27. Executing Verilog-2005 frontend: /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv
+28. Executing Verilog-2005 frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v
+29. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+30. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_issue'.
+Warning: Replacing memory \g_ring.fs with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:881
+Warning: Replacing memory \g_ring.fd with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:879
+Warning: Replacing memory \qoh with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:748
+Warning: Replacing memory \qa with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:743
+Warning: Replacing memory \ev_s with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:613
+Warning: Replacing memory \ev_c with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:594
+Warning: Replacing memory \ev_f with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:594
+Warning: Replacing memory \ev_k with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:594
+Warning: Replacing memory \cur_ohc with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:339
+Warning: Replacing memory \cb with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1017
+Warning: Replacing memory \p_d with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:992
+Warning: Replacing memory \pp_hic with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:969
+Warning: Replacing memory \pp_loc with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:968
+Warning: Replacing memory \pp_codec with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:967
+Warning: Replacing memory \pp_rawc with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:966
+Warning: Replacing memory \aq_ebc with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:917
+Warning: Replacing memory \rdx with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:852
+Warning: Replacing memory \qc_ohc with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:788
+Warning: Replacing memory \pr_oh with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:783
+Warning: Replacing memory \pr_s with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:781
+Warning: Replacing memory \dr with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:393
+31. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_issue'.
+Warning: Replacing memory \ev_s with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:608
+32. Executing HIERARCHY pass (managing design hierarchy).
+33. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_issue'.
+33.1. Analyzing design hierarchy..
+33.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_control_ff'.
+33.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_em_chunk'.
+33.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_control_ff'.
+33.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_em_chunk'.
+33.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_em_chunk'.
+33.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_em_chunk'.
+33.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_em_chunk'.
+33.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_em_chunk'.
+33.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_em_chunk'.
+33.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_em_chunk'.
+33.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_control_and'.
+33.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_vmring'.
+33.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_req_chunk'.
+33.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_req_chunk'.
+33.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rq_en'.
+33.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_issue_allow'.
+33.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_stage_hold'.
+33.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_stage_hold'.
+33.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_stage_hold'.
+33.21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_stage_hold'.
+33.22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_stage_hold'.
+33.23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_control_hold'.
+33.24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_slot_load'.
+33.25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_slot_load'.
+33.26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_slot_load'.
+33.27. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_slot_load'.
+33.28. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_control_hold'.
+33.29. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_control_hold'.
+33.30. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_wrap_local'.
+33.31. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_fire_prefix'.
+33.32. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_row_bit'.
+33.33. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_column'.
+Warning: Replacing memory \r with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1495
+33.34. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_column'.
+33.35. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_request_reset'.
+33.36. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_control_hold'.
+33.37. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_target16'.
+33.38. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq13'.
+Warning: Replacing memory \s10_g with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv:348
+Warning: Replacing memory \s10_c with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv:347
+Warning: Replacing memory \s9_g with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv:297
+Warning: Replacing memory \s9_sig with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv:294
+Warning: Replacing memory \s2a_m with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv:132
+Warning: Replacing memory \s1_m with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv:119
+Warning: Replacing memory \t16 with list of registers. See /src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv:111
+33.39. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /src/rtl/lib/ot_rst_relay.sv:42
+33.40. Analyzing design hierarchy..
+33.41. Analyzing design hierarchy..
+33.42. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_em_allow'.
+33.43. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_slot_and'.
+33.44. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_slot_and'.
+33.45. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.46. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.47. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.48. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.49. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.50. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.51. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.52. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.53. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.54. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.55. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.56. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.57. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.58. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.59. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.60. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_rf_decode'.
+33.61. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_bitff'.
+33.62. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_base_copy'.
+33.63. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_launch'.
+33.64. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_cfg_byte'.
+33.65. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_cfg_slot'.
+33.66. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_flags'.
+33.67. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_header'.
+33.68. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_match'.
+33.69. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_reset2'.
+33.70. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_reset_bank'.
+33.71. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_control_ff'.
+33.72. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_shift_mux'.
+33.73. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_control_ff'.
+33.74. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_shift_mux'.
+33.75. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_amax_chunk'.
+33.76. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_amax_chunk'.
+33.77. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_amax_chunk'.
+33.78. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_sramdelay'.
+33.79. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+33.80. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+33.81. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_scale13r'.
+33.82. Analyzing design hierarchy..
+33.83. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gq_t16_accept'.
+33.84. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_mul13r'.
+33.85. Analyzing design hierarchy..
+33.86. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.87. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.88. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.89. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.90. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.91. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.92. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.93. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.94. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.95. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.96. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_dec_sel'.
+33.97. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_scale_pow_ff'.
+33.98. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_aq_top_ff'.
+33.99. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_scale_data_ff'.
+33.100. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_scale_top_in_ff'.
+33.101. Analyzing design hierarchy..
+33.102. Analyzing design hierarchy..
+33.103. Analyzing design hierarchy..
+Warning: Selection "ot_sram_1r1w_128x256_m1_r2c2_p192_mir" did not match any module.
+Warning: Selection "ot_sram_1r1w_64x16_m1" did not match any module.
+34. Executing HIERARCHY pass (managing design hierarchy).
+34.1. Analyzing design hierarchy..
+34.2. Analyzing design hierarchy..
+source /src/physical/common_flow/ot_keep_regs.tcl
+35. Executing Verilog-2005 frontend: /work/results/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/ot_rst_land_wrapper.v
+36. Executing HIERARCHY pass (managing design hierarchy).
+36.1. Analyzing design hierarchy..
+36.2. Analyzing design hierarchy..
+OT_RST_LAND ot_hgi_coll_gq_issue: 1 reset port(s) landed in 2 registered stage(s) (clock clk); table /work/results/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/ot_rst_land.tsv
+37. Executing PROC pass (convert processes to netlists).
+37.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+37.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+37.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+37.4. Executing PROC_INIT pass (extract init attributes).
+37.5. Executing PROC_ARST pass (detect async resets in processes).
+37.6. Executing PROC_ROM pass (convert switches to ROMs).
+37.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+37.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30251.$fordecl_block$4222.j [0]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:545:proc_dlatch$49099
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30251.$fordecl_block$4222.j [31:1]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:543:proc_dlatch$49102
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30259.$fordecl_block$4222.j [0]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:543:proc_dlatch$49111
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30259.$fordecl_block$4222.j [1]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:545:proc_dlatch$49114
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30259.$fordecl_block$4222.j [31:2]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:543:proc_dlatch$49117
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30269.$fordecl_block$4222.j [1:0]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:545:proc_dlatch$49126
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30269.$fordecl_block$4222.j [31:2]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:543:proc_dlatch$49129
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30282.$fordecl_block$4222.j [0]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:545:proc_dlatch$49138
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30282.$fordecl_block$4222.j [31:1]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:543:proc_dlatch$49141
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30290.$fordecl_block$4222.j [0]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:543:proc_dlatch$49150
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30290.$fordecl_block$4222.j [1]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:545:proc_dlatch$49153
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30290.$fordecl_block$4222.j [31:2]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:543:proc_dlatch$49156
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30300.$fordecl_block$4222.j [1:0]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:545:proc_dlatch$49165
+Warning: Latch inferred for signal `\ot_hgi_coll_gq_issue__ot_pr_core.\srcq$func$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:1013$30300.$fordecl_block$4222.j [31:2]' from process `\ot_hgi_coll_gq_issue__ot_pr_core.$proc$/src/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:998$36192': $auto$proc_dlatch.cc:543:proc_dlatch$49168
+37.9. Executing PROC_DFF pass (convert process syncs to FFs).
+37.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+37.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+37.12. Executing OPT_EXPR pass (perform const folding).
+38. Executing OPT_CLEAN pass (remove unused cells and wires).
+39. Executing TECHMAP pass (map to technology primitives).
+39.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+39.2. Continuing TECHMAP pass.
+OT_KEEP_PIN_REGS: 0 top-level pin register cells kept
+OT_KEEP_REGS: keep set on 1349 register cells driving keep wires
+40. Executing FLATTEN pass (flatten design).
+41. Executing OPT_CLEAN pass (remove unused cells and wires).
+42. Executing JSON backend.
+OT_RST_COPIES: 59 multi-bit registers on relay copies mapped to per-bit flops
+43. Executing TECHMAP pass (map to technology primitives).
+43.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+43.2. Continuing TECHMAP pass.
+44. Executing OPT_CLEAN pass (remove unused cells and wires).
+45. Executing JSON backend.
+OT_RST_COPIES rst_n__ot_rlv: 4 copies, 46 loads -> [12,12,12,10] (34 ports moved) OK
+OT_RST_COPIES u_ot_pr_core.u_rst.rst_n: 32 copies, 725 loads -> [23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,12] (682 ports moved) OK
+OT_RST_COPIES u_ot_pr_core.u_target.reset_ctrl_copies: 8 copies, 32 loads -> [4,4,4,4,4,4,4,4] (28 ports moved) OK
+OT_RST_COPIES 3 relay copy families (max 32 loads a copy); table /work/results/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/ot_rst_copies.tsv
+46. Executing OPT_CLEAN pass (remove unused cells and wires).
+Took 17 seconds: source /src/physical/common_flow/ot_keep_regs.tcl
+47. Executing OPT_CLEAN pass (remove unused cells and wires).
+48. Executing RTLIL backend.
+Warnings: 47 unique messages, 117 total
+End of script. Logfile hash: 8a851aa535, time: 196.83s, user: 201.58s, system: 5.30s, MEM: 213.21 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 82% 3x hierarchy (171 sec), 9% 2x script (20 sec), ...
+Elapsed time: 3:16.90[h:]min:sec. CPU time: user 202.79 sys 5.59 (105%). Peak memory: 218328KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil        196            213 b43ed5161f07cf995bd1
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl /work/logs/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/1_2_yosys.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/clock_period.txt
+Setting clock period to 833.333333
+1. Executing RTLIL frontend.
+Warning: Selection "ot_sram_1r1w_128x256_m1_r2c2_p192_mir" did not match any module.
+Warning: Selection "ot_sram_1r1w_64x16_m1" did not match any module.
+2. Executing HIERARCHY pass (managing design hierarchy).
+2.1. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
+3. Executing SYNTH pass.
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+3.1.1. Analyzing design hierarchy..
+3.1.2. Analyzing design hierarchy..
+3.2. Executing PROC pass (convert processes to netlists).
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+3.3. Executing CHECK pass (checking for obvious problems).
+3.4. Executing FLATTEN pass (flatten design).
+3.5. Executing OPT_EXPR pass (perform const folding).
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.7. Executing CHECK pass (checking for obvious problems).
+3.8. Executing OPT pass (performing simple optimizations).
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+3.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.19. Executing OPT_MERGE pass (detect identical cells).
+3.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.22. Executing OPT_EXPR pass (perform const folding).
+3.8.23. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.26. Executing OPT_MERGE pass (detect identical cells).
+3.8.27. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.29. Executing OPT_EXPR pass (perform const folding).
+3.8.30. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.31. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.32. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.33. Executing OPT_MERGE pass (detect identical cells).
+3.8.34. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.35. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.36. Executing OPT_EXPR pass (perform const folding).
+3.8.37. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.38. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.39. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.40. Executing OPT_MERGE pass (detect identical cells).
+3.8.41. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.42. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.43. Executing OPT_EXPR pass (perform const folding).
+3.8.44. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.45. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.46. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.47. Executing OPT_MERGE pass (detect identical cells).
+3.8.48. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.49. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.50. Executing OPT_EXPR pass (perform const folding).
+3.8.51. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.52. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.53. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.54. Executing OPT_MERGE pass (detect identical cells).
+3.8.55. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.56. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.57. Executing OPT_EXPR pass (perform const folding).
+3.8.58. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.59. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.60. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.61. Executing OPT_MERGE pass (detect identical cells).
+3.8.62. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.63. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.64. Executing OPT_EXPR pass (perform const folding).
+3.8.65. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.66. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.67. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.68. Executing OPT_MERGE pass (detect identical cells).
+3.8.69. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.70. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.71. Executing OPT_EXPR pass (perform const folding).
+3.8.72. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.73. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.74. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.75. Executing OPT_MERGE pass (detect identical cells).
+3.8.76. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.77. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.78. Executing OPT_EXPR pass (perform const folding).
+3.8.79. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.80. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.81. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.82. Executing OPT_MERGE pass (detect identical cells).
+3.8.83. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.84. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.85. Executing OPT_EXPR pass (perform const folding).
+3.8.86. Finished fast OPT passes. (There is nothing left to do.)
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+3.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+3.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+3.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+3.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+3.10. Executing OPT pass (performing simple optimizations).
+3.10.1. Executing OPT_EXPR pass (perform const folding).
+3.10.2. Executing OPT_MERGE pass (detect identical cells).
+3.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.5. Executing OPT_MERGE pass (detect identical cells).
+3.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.8. Executing OPT_EXPR pass (perform const folding).
+3.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.12. Executing OPT_MERGE pass (detect identical cells).
+3.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.15. Executing OPT_EXPR pass (perform const folding).
+3.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.19. Executing OPT_MERGE pass (detect identical cells).
+3.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.22. Executing OPT_EXPR pass (perform const folding).
+3.10.23. Finished fast OPT passes. (There is nothing left to do.)
+3.11. Executing WREDUCE pass (reducing word size of cells).
+3.12. Executing PEEPOPT pass (run peephole optimizers).
+3.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.14. Executing ALUMACC pass (create $alu and $macc cells).
+3.15. Executing SHARE pass (SAT-based resource sharing).
+3.16. Executing OPT pass (performing simple optimizations).
+3.16.1. Executing OPT_EXPR pass (perform const folding).
+3.16.2. Executing OPT_MERGE pass (detect identical cells).
+3.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.5. Executing OPT_MERGE pass (detect identical cells).
+3.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.8. Executing OPT_EXPR pass (perform const folding).
+3.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.12. Executing OPT_MERGE pass (detect identical cells).
+3.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.15. Executing OPT_EXPR pass (perform const folding).
+3.16.16. Finished fast OPT passes. (There is nothing left to do.)
+3.17. Executing MEMORY pass.
+3.17.1. Executing OPT_MEM pass (optimize memories).
+3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+3.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+4. Executing SYNTH pass.
+4.1. Executing OPT pass (performing simple optimizations).
+4.1.1. Executing OPT_EXPR pass (perform const folding).
+4.1.2. Executing OPT_MERGE pass (detect identical cells).
+4.1.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.5. Finished fast OPT passes.
+4.2. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+4.3. Executing OPT pass (performing simple optimizations).
+4.3.1. Executing OPT_EXPR pass (perform const folding).
+4.3.2. Executing OPT_MERGE pass (detect identical cells).
+4.3.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.5. Executing OPT_MERGE pass (detect identical cells).
+4.3.6. Executing OPT_SHARE pass.
+4.3.7. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.9. Executing OPT_EXPR pass (perform const folding).
+4.3.10. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.13. Executing OPT_MERGE pass (detect identical cells).
+4.3.14. Executing OPT_SHARE pass.
+4.3.15. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.17. Executing OPT_EXPR pass (perform const folding).
+4.3.18. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.21. Executing OPT_MERGE pass (detect identical cells).
+4.3.22. Executing OPT_SHARE pass.
+4.3.23. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.25. Executing OPT_EXPR pass (perform const folding).
+4.3.26. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.27. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.28. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.29. Executing OPT_MERGE pass (detect identical cells).
+4.3.30. Executing OPT_SHARE pass.
+4.3.31. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.32. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.33. Executing OPT_EXPR pass (perform const folding).
+4.3.34. Finished fast OPT passes. (There is nothing left to do.)
+4.4. Executing TECHMAP pass (map to technology primitives).
+4.4.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+4.4.2. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/common/lcu_kogge_stone.v
+4.4.3. Continuing TECHMAP pass.
+4.4.218. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.4.219. Executing OPT_EXPR pass (perform const folding).
+4.4.225. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.4.226. Executing OPT_EXPR pass (perform const folding).
+4.5. Executing OPT pass (performing simple optimizations).
+4.5.1. Executing OPT_EXPR pass (perform const folding).
+4.5.2. Executing OPT_MERGE pass (detect identical cells).
+4.5.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.5. Rerunning OPT passes. (Removed registers in this run.)
+4.5.6. Executing OPT_EXPR pass (perform const folding).
+4.5.7. Executing OPT_MERGE pass (detect identical cells).
+4.5.8. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.10. Finished fast OPT passes.
+4.6. Executing HIERARCHY pass (managing design hierarchy).
+4.6.1. Analyzing design hierarchy..
+4.6.2. Analyzing design hierarchy..
+4.7. Printing statistics.
+4.8. Executing CHECK pass (checking for obvious problems).
+5. Executing OPT pass (performing simple optimizations).
+5.1. Executing OPT_EXPR pass (perform const folding).
+5.2. Executing OPT_MERGE pass (detect identical cells).
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.5. Executing OPT_MERGE pass (detect identical cells).
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.8. Executing OPT_EXPR pass (perform const folding).
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.12. Executing OPT_MERGE pass (detect identical cells).
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.15. Executing OPT_EXPR pass (perform const folding).
+5.16. Finished fast OPT passes. (There is nothing left to do.)
+6. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+7. Executing TECHMAP pass (map to technology primitives).
+7.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v
+7.2. Continuing TECHMAP pass.
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+9. Executing OPT pass (performing simple optimizations).
+9.1. Executing OPT_EXPR pass (perform const folding).
+9.2. Executing OPT_MERGE pass (detect identical cells).
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.5. Executing OPT_MERGE pass (detect identical cells).
+9.6. Executing OPT_DFF pass (perform DFF optimizations).
+9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.8. Executing OPT_EXPR pass (perform const folding).
+9.9. Rerunning OPT passes. (Maybe there is more to do..)
+9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.12. Executing OPT_MERGE pass (detect identical cells).
+9.13. Executing OPT_DFF pass (perform DFF optimizations).
+9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.15. Executing OPT_EXPR pass (perform const folding).
+9.16. Finished fast OPT passes. (There is nothing left to do.)
+10. Executing SETUNDEF pass (replace undef values with defined constants).
+abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz -liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib -liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_tt.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/objects/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/abc.constr -D 833.333333
+11. Executing ABC pass (technology mapping using ABC).
+11.1. Extracting gate netlist of module `$paramod$05607df1243c49adc224cd8fe2d9ccf5cec4d124\ot_hgi_coll_gq_slot_load' to `<abc-temp-dir>/input.blif'..
+11.1.1. Executed ABC.
+11.1.2. Re-integrating ABC results.
+11.2. Extracting gate netlist of module `$paramod$07f1d0799c564c481d0eb445c54fffcfe25e7360\ot_hgi_coll_gq_slot_load' to `<abc-temp-dir>/input.blif'..
+11.2.1. Executed ABC.
+11.2.2. Re-integrating ABC results.
+11.3. Extracting gate netlist of module `$paramod$1241d6845be71348c2b763535368f9cc5de88788\ot_hgi_coll_aq_amax_chunk' to `<abc-temp-dir>/input.blif'..
+11.3.1. Executed ABC.
+11.3.2. Re-integrating ABC results.
+11.4. Extracting gate netlist of module `$paramod$15e0a0eab502d9f382a2cb917a4152f75aeac18b\ot_hgi_coll_gq_stage_hold' to `<abc-temp-dir>/input.blif'..
+11.4.1. Executed ABC.
+11.4.2. Re-integrating ABC results.
+11.5. Extracting gate netlist of module `$paramod$17c2b29d1ee145fcc970b1f2769d41d155c48b17\ot_hgi_coll_gq_stage_hold' to `<abc-temp-dir>/input.blif'..
+11.5.1. Executed ABC.
+11.5.2. Re-integrating ABC results.
+11.6. Extracting gate netlist of module `$paramod$1ca0e1e2503f090bf22dd7fbb11ae153be1d756e\ot_hgi_coll_gq_em_chunk' to `<abc-temp-dir>/input.blif'..
+11.6.1. Executed ABC.
+11.6.2. Re-integrating ABC results.
+11.7. Extracting gate netlist of module `$paramod$2d54e8c4131fa5a4ddbefeac50bfd92a0afc31bb\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.7.1. Executed ABC.
+11.7.2. Re-integrating ABC results.
+11.8. Extracting gate netlist of module `$paramod$2e6b7673443af59ea9f327861b06bb6be414a860\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.8.1. Executed ABC.
+11.8.2. Re-integrating ABC results.
+11.9. Extracting gate netlist of module `$paramod$48422feea4bb29987b79644b6ebbf6193e80803a\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.9.1. Executed ABC.
+11.9.2. Re-integrating ABC results.
+11.10. Extracting gate netlist of module `$paramod$57f7a51f562fc055f05bae661b584bbe03ad2a0a\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.10.1. Executed ABC.
+11.10.2. Re-integrating ABC results.
+11.11. Extracting gate netlist of module `$paramod$5e01fb1d61c08d0a7e709455f8e1afc37adc8eb4\ot_hgi_coll_gq_em_chunk' to `<abc-temp-dir>/input.blif'..
+11.11.1. Executed ABC.
+11.11.2. Re-integrating ABC results.
+11.12. Extracting gate netlist of module `$paramod$61165c59c983afedeb37d7c1d9f74a5754fd4b0d\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.12.1. Executed ABC.
+11.12.2. Re-integrating ABC results.
+11.13. Extracting gate netlist of module `$paramod$7636a84e67ca5fd79c6b6f191b55d188dbb21e89\ot_hgi_coll_gq_stage_hold' to `<abc-temp-dir>/input.blif'..
+11.13.1. Executed ABC.
+11.13.2. Re-integrating ABC results.
+11.14. Extracting gate netlist of module `$paramod$7ba776a2b687a83ce4d8abc4b7dcb63960899a4c\ot_hgi_coll_gq_em_chunk' to `<abc-temp-dir>/input.blif'..
+11.14.1. Executed ABC.
+11.14.2. Re-integrating ABC results.
+11.15. Extracting gate netlist of module `$paramod$88fec4ef70a257d7cd9e85229945bd8fe5bc9e93\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.15.1. Executed ABC.
+11.15.2. Re-integrating ABC results.
+11.16. Extracting gate netlist of module `$paramod$89a85d8cb2fe773f06b24a1a1275a386db5af1c2\ot_hgi_coll_gq_em_chunk' to `<abc-temp-dir>/input.blif'..
+11.16.1. Executed ABC.
+11.16.2. Re-integrating ABC results.
+11.17. Extracting gate netlist of module `$paramod$8e722d8bc6a31dbc361628175a2ecb3c8820e6a5\ot_hgi_coll_aq_amax_chunk' to `<abc-temp-dir>/input.blif'..
+11.17.1. Executed ABC.
+11.17.2. Re-integrating ABC results.
+11.18. Extracting gate netlist of module `$paramod$a386a90960300d5ef66f0e9d90aedce5e79f9349\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.18.1. Executed ABC.
+11.18.2. Re-integrating ABC results.
+11.19. Extracting gate netlist of module `$paramod$a731ee4b9bc943dae8a36eb7615b4ba616fee812\ot_hgi_coll_gq_req_chunk' to `<abc-temp-dir>/input.blif'..
+11.19.1. Executed ABC.
+11.19.2. Re-integrating ABC results.
+11.20. Extracting gate netlist of module `$paramod$b01c3eb31fdbc8f708b43aa629a77a4493094032\ot_hgi_coll_aq_amax_chunk' to `<abc-temp-dir>/input.blif'..
+11.20.1. Executed ABC.
+11.20.2. Re-integrating ABC results.
+11.21. Extracting gate netlist of module `$paramod$b06fdc126cbbe4dd0984e965d97a51d83fa46529\ot_hdc_delay' to `<abc-temp-dir>/input.blif'..
+11.21.1. Executed ABC.
+11.21.2. Re-integrating ABC results.
+11.22. Extracting gate netlist of module `$paramod$b0e3e2e8206bcea81cf570a314e8506b40ec2522\ot_hgi_coll_gq_em_chunk' to `<abc-temp-dir>/input.blif'..
+11.22.1. Executed ABC.
+11.22.2. Re-integrating ABC results.
+11.23. Extracting gate netlist of module `$paramod$bc164884553d42dd996176b4a5b40407c14ddcef\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.23.1. Executed ABC.
+11.23.2. Re-integrating ABC results.
+11.24. Extracting gate netlist of module `$paramod$be83c09751f06cf3f95bd48c88e2306d61a410e1\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.24.1. Executed ABC.
+11.24.2. Re-integrating ABC results.
+11.25. Extracting gate netlist of module `$paramod$bf32dabf451cdd40a93bff924b80cd6ae186f794\ot_hgi_coll_gq_em_chunk' to `<abc-temp-dir>/input.blif'..
+11.25.1. Executed ABC.
+11.25.2. Re-integrating ABC results.
+11.26. Extracting gate netlist of module `$paramod$c034a4ae5b4ca3dae58dc6147a9210fee7c84b40\ot_hgi_coll_gq_em_chunk' to `<abc-temp-dir>/input.blif'..
+11.26.1. Executed ABC.
+11.26.2. Re-integrating ABC results.
+11.27. Extracting gate netlist of module `$paramod$c58b1aec497d693b7b655a5cc50a6b0bc2f0e064\ot_hgi_coll_gq_stage_hold' to `<abc-temp-dir>/input.blif'..
+11.27.1. Executed ABC.
+11.27.2. Re-integrating ABC results.
+11.28. Extracting gate netlist of module `$paramod$ce722b064015ebfd6d7ca8aaa6089058446e2268\ot_hgi_coll_gq_slot_and' to `<abc-temp-dir>/input.blif'..
+11.28.1. Executed ABC.
+11.28.2. Re-integrating ABC results.
+11.29. Extracting gate netlist of module `$paramod$d1fd11fe38b2619773d7d24f0c39e74ee615da73\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.29.1. Executed ABC.
+11.29.2. Re-integrating ABC results.
+11.30. Extracting gate netlist of module `$paramod$d324a03677957b5532c08454bd7b0de1c6e669c3\ot_hgi_coll_gq_slot_and' to `<abc-temp-dir>/input.blif'..
+11.30.1. Executed ABC.
+11.30.2. Re-integrating ABC results.
+11.31. Extracting gate netlist of module `$paramod$d4aa7145a345cc51cf679b764fba7236be633e1d\ot_hgi_coll_gq_req_chunk' to `<abc-temp-dir>/input.blif'..
+11.31.1. Executed ABC.
+11.31.2. Re-integrating ABC results.
+11.32. Extracting gate netlist of module `$paramod$e81e29e8719d7ca4bb148b615c2c9ff98646b69b\ot_hgi_coll_gq_slot_load' to `<abc-temp-dir>/input.blif'..
+11.32.1. Executed ABC.
+11.32.2. Re-integrating ABC results.
+11.33. Extracting gate netlist of module `$paramod$eadefa2f37266fcaa753ef09198e6b339632de39\ot_hgi_coll_gq_slot_load' to `<abc-temp-dir>/input.blif'..
+11.33.1. Executed ABC.
+11.33.2. Re-integrating ABC results.
+11.34. Extracting gate netlist of module `$paramod$ee8f8e3acc57ad5ce1afff72a454ef416c9f1b6e\ot_hgi_coll_gq_stage_hold' to `<abc-temp-dir>/input.blif'..
+11.34.1. Executed ABC.
+11.34.2. Re-integrating ABC results.
+11.35. Extracting gate netlist of module `$paramod$f43c4c89b6b395acbbd16a64f028b40cac0aff50\ot_hgi_coll_aq_dec_sel' to `<abc-temp-dir>/input.blif'..
+11.35.1. Executed ABC.
+11.35.2. Re-integrating ABC results.
+11.36. Extracting gate netlist of module `$paramod$f621826f0913eddb1b8cf28ff2f525952e2938d3\ot_hgi_coll_gq_em_chunk' to `<abc-temp-dir>/input.blif'..
+11.36.1. Executed ABC.
+11.36.2. Re-integrating ABC results.
+11.37. Extracting gate netlist of module `$paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000001' to `<abc-temp-dir>/input.blif'..
+11.37.1. Executed ABC.
+11.37.2. Re-integrating ABC results.
+11.38. Extracting gate netlist of module `$paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000000110' to `<abc-temp-dir>/input.blif'..
+11.38.1. Executed ABC.
+11.38.2. Re-integrating ABC results.
+11.39. Extracting gate netlist of module `$paramod\ot_hgi_coll_aq_control_ff\W=s32'00000000000000000000000000001011' to `<abc-temp-dir>/input.blif'..
+11.39.1. Executed ABC.
+11.39.2. Re-integrating ABC results.
+11.40. Extracting gate netlist of module `$paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000000011' to `<abc-temp-dir>/input.blif'..
+11.40.1. Executed ABC.
+11.40.2. Re-integrating ABC results.
+11.41. Extracting gate netlist of module `$paramod\ot_hgi_coll_aq_shift_mux\W=s32'00000000000000000000000000010000' to `<abc-temp-dir>/input.blif'..
+11.41.1. Executed ABC.
+11.41.2. Re-integrating ABC results.
+11.42. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000000100' to `<abc-temp-dir>/input.blif'..
+11.42.1. Executed ABC.
+11.42.2. Re-integrating ABC results.
+11.43. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001000' to `<abc-temp-dir>/input.blif'..
+11.43.1. Executed ABC.
+11.43.2. Re-integrating ABC results.
+11.44. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000001111' to `<abc-temp-dir>/input.blif'..
+11.44.1. Executed ABC.
+11.44.2. Re-integrating ABC results.
+11.45. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_control_hold\W=s32'00000000000000000000000000010000' to `<abc-temp-dir>/input.blif'..
+11.45.1. Executed ABC.
+11.45.2. Re-integrating ABC results.
+11.46. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000000110' to `<abc-temp-dir>/input.blif'..
+11.46.1. Executed ABC.
+11.46.2. Re-integrating ABC results.
+11.47. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_column\W=s32'00000000000000000000000000001000' to `<abc-temp-dir>/input.blif'..
+11.47.1. Executed ABC.
+11.47.2. Re-integrating ABC results.
+11.48. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000000' to `<abc-temp-dir>/input.blif'..
+11.48.1. Executed ABC.
+11.48.2. Re-integrating ABC results.
+11.49. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000001' to `<abc-temp-dir>/input.blif'..
+11.49.1. Executed ABC.
+11.49.2. Re-integrating ABC results.
+11.50. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000010' to `<abc-temp-dir>/input.blif'..
+11.50.1. Executed ABC.
+11.50.2. Re-integrating ABC results.
+11.51. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000011' to `<abc-temp-dir>/input.blif'..
+11.51.1. Executed ABC.
+11.51.2. Re-integrating ABC results.
+11.52. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000100' to `<abc-temp-dir>/input.blif'..
+11.52.1. Executed ABC.
+11.52.2. Re-integrating ABC results.
+11.53. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000101' to `<abc-temp-dir>/input.blif'..
+11.53.1. Executed ABC.
+11.53.2. Re-integrating ABC results.
+11.54. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000110' to `<abc-temp-dir>/input.blif'..
+11.54.1. Executed ABC.
+11.54.2. Re-integrating ABC results.
+11.55. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000000111' to `<abc-temp-dir>/input.blif'..
+11.55.1. Executed ABC.
+11.55.2. Re-integrating ABC results.
+11.56. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001000' to `<abc-temp-dir>/input.blif'..
+11.56.1. Executed ABC.
+11.56.2. Re-integrating ABC results.
+11.57. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001001' to `<abc-temp-dir>/input.blif'..
+11.57.1. Executed ABC.
+11.57.2. Re-integrating ABC results.
+11.58. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001010' to `<abc-temp-dir>/input.blif'..
+11.58.1. Executed ABC.
+11.58.2. Re-integrating ABC results.
+11.59. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001011' to `<abc-temp-dir>/input.blif'..
+11.59.1. Executed ABC.
+11.59.2. Re-integrating ABC results.
+11.60. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001100' to `<abc-temp-dir>/input.blif'..
+11.60.1. Executed ABC.
+11.60.2. Re-integrating ABC results.
+11.61. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001101' to `<abc-temp-dir>/input.blif'..
+11.61.1. Executed ABC.
+11.61.2. Re-integrating ABC results.
+11.62. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001110' to `<abc-temp-dir>/input.blif'..
+11.62.1. Executed ABC.
+11.62.2. Re-integrating ABC results.
+11.63. Extracting gate netlist of module `$paramod\ot_hgi_coll_gq_rf_decode\A=s32'00000000000000000000000000001111' to `<abc-temp-dir>/input.blif'..
+11.63.1. Executed ABC.
+11.63.2. Re-integrating ABC results.
+11.64. Extracting gate netlist of module `\ot_gq_t16_accept' to `<abc-temp-dir>/input.blif'..
+11.64.1. Executed ABC.
+11.64.2. Re-integrating ABC results.
+11.65. Extracting gate netlist of module `\ot_gq_t16_base_copy' to `<abc-temp-dir>/input.blif'..
+11.65.1. Executed ABC.
+11.65.2. Re-integrating ABC results.
+11.66. Extracting gate netlist of module `\ot_gq_t16_bitff' to `<abc-temp-dir>/input.blif'..
+11.66.1. Executed ABC.
+11.66.2. Re-integrating ABC results.
+11.67. Extracting gate netlist of module `\ot_gq_t16_cfg_byte' to `<abc-temp-dir>/input.blif'..
+11.67.1. Executed ABC.
+11.67.2. Re-integrating ABC results.
+11.68. Extracting gate netlist of module `\ot_gq_t16_cfg_slot' to `<abc-temp-dir>/input.blif'..
+11.68.1. Executed ABC.
+11.68.2. Re-integrating ABC results.
+11.69. Extracting gate netlist of module `\ot_gq_t16_flags' to `<abc-temp-dir>/input.blif'..
+11.69.1. Executed ABC.
+11.69.2. Re-integrating ABC results.
+11.70. Extracting gate netlist of module `\ot_gq_t16_header' to `<abc-temp-dir>/input.blif'..
+11.70.1. Executed ABC.
+11.70.2. Re-integrating ABC results.
+11.71. Extracting gate netlist of module `\ot_gq_t16_launch' to `<abc-temp-dir>/input.blif'..
+11.71.1. Executed ABC.
+11.71.2. Re-integrating ABC results.
+11.72. Extracting gate netlist of module `\ot_gq_t16_match' to `<abc-temp-dir>/input.blif'..
+11.72.1. Executed ABC.
+11.72.2. Re-integrating ABC results.
+11.73. Extracting gate netlist of module `\ot_gq_t16_reset2' to `<abc-temp-dir>/input.blif'..
+11.73.1. Executed ABC.
+11.73.2. Re-integrating ABC results.
+11.74. Extracting gate netlist of module `\ot_hgi_coll_aq_top_ff' to `<abc-temp-dir>/input.blif'..
+11.74.1. Executed ABC.
+11.74.2. Re-integrating ABC results.
+11.75. Extracting gate netlist of module `\ot_hgi_coll_gq_control_and' to `<abc-temp-dir>/input.blif'..
+11.75.1. Executed ABC.
+11.75.2. Re-integrating ABC results.
+11.76. Extracting gate netlist of module `\ot_hgi_coll_gq_control_ff' to `<abc-temp-dir>/input.blif'..
+11.76.1. Executed ABC.
+11.76.2. Re-integrating ABC results.
+11.77. Extracting gate netlist of module `\ot_hgi_coll_gq_em_allow' to `<abc-temp-dir>/input.blif'..
+11.77.1. Executed ABC.
+11.77.2. Re-integrating ABC results.
+11.78. Extracting gate netlist of module `\ot_hgi_coll_gq_fire_prefix' to `<abc-temp-dir>/input.blif'..
+11.78.1. Executed ABC.
+11.78.2. Re-integrating ABC results.
+11.79. Extracting gate netlist of module `\ot_hgi_coll_gq_issue' to `<abc-temp-dir>/input.blif'..
+11.79.1. Executed ABC.
+11.79.2. Re-integrating ABC results.
+11.80. Extracting gate netlist of module `\ot_hgi_coll_gq_issue_allow' to `<abc-temp-dir>/input.blif'..
+11.80.1. Executed ABC.
+11.80.2. Re-integrating ABC results.
+11.81. Extracting gate netlist of module `\ot_hgi_coll_gq_request_reset' to `<abc-temp-dir>/input.blif'..
+11.81.1. Executed ABC.
+11.81.2. Re-integrating ABC results.
+11.82. Extracting gate netlist of module `\ot_hgi_coll_gq_row_bit' to `<abc-temp-dir>/input.blif'..
+11.82.1. Executed ABC.
+11.82.2. Re-integrating ABC results.
+11.83. Extracting gate netlist of module `\ot_hgi_coll_gq_rq_en' to `<abc-temp-dir>/input.blif'..
+11.83.1. Executed ABC.
+11.83.2. Re-integrating ABC results.
+11.84. Extracting gate netlist of module `\ot_hgi_coll_gq_wrap_local' to `<abc-temp-dir>/input.blif'..
+11.84.1. Executed ABC.
+11.84.2. Re-integrating ABC results.
+11.85. Extracting gate netlist of module `\ot_hgi_coll_scale_data_ff' to `<abc-temp-dir>/input.blif'..
+11.85.1. Executed ABC.
+11.85.2. Re-integrating ABC results.
+11.86. Extracting gate netlist of module `\ot_hgi_coll_scale_pow_ff' to `<abc-temp-dir>/input.blif'..
+11.86.1. Executed ABC.
+11.86.2. Re-integrating ABC results.
+11.87. Extracting gate netlist of module `\ot_hgi_coll_scale_top_in_ff' to `<abc-temp-dir>/input.blif'..
+11.87.1. Executed ABC.
+11.87.2. Re-integrating ABC results.
+Took 80 seconds: abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz -liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib -liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_tt.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/objects/asap7/opentallas_ot_hgi_coll_gq_issue_asap7_ref_gate/base/abc.constr -D 833.333333
+12. Executing SPLITNETS pass (splitting up multi-bit signals).
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+14. Executing HILOMAP pass (mapping to constant drivers).
+15. Executing INSBUF pass (insert buffer cells for connected wires).
+16. Executing CHECK pass (checking for obvious problems).
+17. Printing statistics.
+18. Executing CHECK pass (checking for obvious problems).
+19. Executing Verilog backend.
+19.1. Executing BMUXMAP pass.
+19.2. Executing DEMUXMAP pass.
+Warnings: 2 unique messages, 2 total
+End of script. Logfile hash: b8323455c6, time: 136.32s, user: 73.09s, system: 3.77s, MEM: 899.34 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 51% 1x abc (80 sec), 12% 53x opt_clean (19 sec), ...
+Elapsed time: 2:16.74[h:]min:sec. CPU time: user 151.15 sys 5.19 (114%). Peak memory: 921996KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_2_yosys                 .v            136            900 0fccb9f407aac3dc1185
+CANONICAL_NORMALISE 0
+PRE_GATE_NATIVE_CENSUS FAIL report=/work/native_census_r6.json
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3097401-1792506905): exit 1
