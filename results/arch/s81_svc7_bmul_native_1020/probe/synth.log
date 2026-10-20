@@ -1,0 +1,2013 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/probe.ys' --
+
+1. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_s81svc7_bmul_graph_input.sv
+Parsing SystemVerilog input from `/src/rtl/hdc/v41x/ot_s81svc7_bmul_graph_input.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81svc7_bmul_graph_input'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv
+Parsing SystemVerilog input from `/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_hgrp_s'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_tile_s'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_bmul_s'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_hdp_s'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_chunk_s'.
+Generating RTLIL representation for module `\ot_hdc_v41x_qaddf'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_deq_a'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_deq_b'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_deq_b1'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_deq_b2'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_m84'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_bmul_s7'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv
+Parsing SystemVerilog input from `/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_bmul_l'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_chunk_l'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_hdp_l'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_tile_l'.
+Generating RTLIL representation for module `\ot_hdc_v41x_qaddl'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv
+Parsing SystemVerilog input from `/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_dly'.
+Generating RTLIL representation for module `\ot_hdc_v41x_vdly'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_bmul'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_deq'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_chunk'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_hdp'.
+Generating RTLIL representation for module `\ot_hdc_v41x_attn_tile'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `/src/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksadd_k'.
+Generating RTLIL representation for module `\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+Used module:     \ot_hdc_v41x_attn_bmul_s
+Used module:         \ot_hdc_v41x_dly
+Used module:         \ot_hdc_ksadd_k
+Parameter \ML = 6
+
+6.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_v41x_attn_bmul_s'.
+Parameter \ML = 6
+Generating RTLIL representation for module `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110'.
+Parameter \W = 79
+Parameter \D = 1
+
+6.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_v41x_dly'.
+Parameter \W = 79
+Parameter \D = 1
+Generating RTLIL representation for module `$paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly'.
+Warning: Replacing memory \g_reg.r with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:75
+Parameter \W = 32
+Parameter \D = 1
+
+6.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_v41x_dly'.
+Parameter \W = 32
+Parameter \D = 1
+Generating RTLIL representation for module `$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly'.
+Warning: Replacing memory \g_reg.r with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:75
+Parameter \W = 16
+
+6.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+Parameter \W = 16
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000'.
+Parameter \W = 33
+Parameter \D = 1
+
+6.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_v41x_dly'.
+Parameter \W = 33
+Parameter \D = 1
+Generating RTLIL representation for module `$paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly'.
+Warning: Replacing memory \g_reg.r with list of registers. See /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:75
+
+6.7. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+Used module:     $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110
+Used module:         \ot_hdc_v41x_dly
+Used module:         \ot_hdc_ksadd_k
+Parameter \W = 79
+Parameter \D = 1
+Found cached RTLIL representation for module `$paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly'.
+Parameter \W = 32
+Parameter \D = 1
+Found cached RTLIL representation for module `$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly'.
+Parameter \W = 16
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000'.
+Parameter \W = 33
+Parameter \D = 1
+Found cached RTLIL representation for module `$paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly'.
+
+6.8. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+Used module:     $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110
+Used module:         $paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly
+Used module:         $paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly
+Used module:         $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000
+Used module:         $paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly
+
+6.9. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+Used module:     $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110
+Used module:         $paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly
+Used module:         $paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly
+Used module:         $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000
+Used module:         $paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly
+Removing unused module `\ot_hdc_inc_k'.
+Removing unused module `\ot_hdc_ksadd_k'.
+Removing unused module `\ot_hdc_v41x_attn_tile'.
+Removing unused module `\ot_hdc_v41x_attn_hdp'.
+Removing unused module `\ot_hdc_v41x_attn_chunk'.
+Removing unused module `\ot_hdc_v41x_attn_deq'.
+Removing unused module `\ot_hdc_v41x_attn_bmul'.
+Removing unused module `\ot_hdc_v41x_vdly'.
+Removing unused module `\ot_hdc_v41x_dly'.
+Removing unused module `\ot_hdc_v41x_qaddl'.
+Removing unused module `\ot_hdc_v41x_attn_tile_l'.
+Removing unused module `\ot_hdc_v41x_attn_hdp_l'.
+Removing unused module `\ot_hdc_v41x_attn_chunk_l'.
+Removing unused module `\ot_hdc_v41x_attn_bmul_l'.
+Removing unused module `\ot_hdc_v41x_attn_bmul_s7'.
+Removing unused module `\ot_hdc_v41x_attn_m84'.
+Removing unused module `\ot_hdc_v41x_attn_deq_b2'.
+Removing unused module `\ot_hdc_v41x_attn_deq_b1'.
+Removing unused module `\ot_hdc_v41x_attn_deq_b'.
+Removing unused module `\ot_hdc_v41x_attn_deq_a'.
+Removing unused module `\ot_hdc_v41x_qaddf'.
+Removing unused module `\ot_hdc_v41x_attn_chunk_s'.
+Removing unused module `\ot_hdc_v41x_attn_hdp_s'.
+Removing unused module `\ot_hdc_v41x_attn_bmul_s'.
+Removing unused module `\ot_hdc_v41x_attn_tile_s'.
+Removing unused module `\ot_hdc_v41x_attn_hgrp_s'.
+Removed 26 unused modules.
+
+7. Executing PROC pass (convert processes to netlists).
+
+7.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:403$15790 in module $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.
+Marked 16 switch rules as full_case in process $proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:356$15768 in module $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.
+Removed a total of 0 dead cases.
+
+7.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 199 assignments to connections.
+
+7.4. Executing PROC_INIT pass (extract init attributes).
+
+7.5. Executing PROC_ARST pass (detect async resets in processes).
+
+7.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~19 debug messages>
+
+7.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16132'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16129'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16128'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16127'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16126'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16125'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16124'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16123'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16122'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16121'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16120'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16119'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16118'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16117'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16116'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16115'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16114'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16113'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16112'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16111'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16110'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16109'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16108'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16107'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16106'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16105'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16104'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16103'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16102'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16101'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16100'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16099'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16098'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16097'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16095'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16092'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16090'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16087'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16085'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16082'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16080'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16077'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16075'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16072'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16070'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16067'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16065'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16062'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16060'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16057'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16055'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16052'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16051'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16050'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16049'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16048'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16047'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16046'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16045'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16044'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16043'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16042'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16041'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16040'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16039'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16038'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16037'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16036'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16034'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16031'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16029'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16026'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16024'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16021'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16019'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16016'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16014'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16011'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16009'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16006'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16004'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16001'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15999'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15996'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15994'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15991'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15989'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15986'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15984'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15981'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15979'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15976'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15974'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15971'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15970'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15969'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15968'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15967'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15966'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15965'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15964'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15963'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15961'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15958'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15956'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15953'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15951'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15948'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15946'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15943'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15941'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15938'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15936'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15933'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15931'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15928'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15926'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15923'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15921'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15918'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15916'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15913'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15911'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15908'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15906'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15903'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15901'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15898'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15896'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15893'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15891'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15888'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15887'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15886'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15885'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15884'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15882'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15879'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15877'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15874'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15872'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15869'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15867'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15864'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15862'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15859'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15857'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15854'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15852'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15849'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15847'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15844'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15842'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15839'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15837'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15834'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15832'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15829'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15827'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15824'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15822'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15819'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15817'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15814'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15812'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15809'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15807'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15804'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15803'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15802'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:27$15800'.
+Creating decoders for process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:26$15798'.
+Creating decoders for process `$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$15795'.
+Creating decoders for process `$paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$15794'.
+Creating decoders for process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:403$15790'.
+     1/2: $0\flt[0:0]
+     2/2: $0\y[31:0]
+Creating decoders for process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+Creating decoders for process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:356$15768'.
+     1/16: $16\lz0[3:0]
+     2/16: $15\lz0[3:0]
+     3/16: $14\lz0[3:0]
+     4/16: $13\lz0[3:0]
+     5/16: $12\lz0[3:0]
+     6/16: $11\lz0[3:0]
+     7/16: $10\lz0[3:0]
+     8/16: $9\lz0[3:0]
+     9/16: $8\lz0[3:0]
+    10/16: $7\lz0[3:0]
+    11/16: $6\lz0[3:0]
+    12/16: $5\lz0[3:0]
+    13/16: $4\lz0[3:0]
+    14/16: $3\lz0[3:0]
+    15/16: $2\lz0[3:0]
+    16/16: $1\lz0[3:0]
+Creating decoders for process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:337$15764'.
+Creating decoders for process `$paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$16134'.
+Creating decoders for process `\ot_s81svc7_bmul_graph_input.$proc$/src/rtl/hdc/v41x/ot_s81svc7_bmul_graph_input.sv:9$1'.
+
+7.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16132'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16129'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16128'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16127'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16126'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16125'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16124'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16123'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16122'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16121'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16120'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16119'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16118'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16117'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16116'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16115'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16114'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16113'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16112'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16111'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16110'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16109'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16108'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16107'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16106'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16105'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16104'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16103'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16102'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16101'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16100'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16099'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[5] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16098'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[5] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16097'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16095'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16092'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16090'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16087'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16085'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16082'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16080'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16077'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16075'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16072'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16070'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16067'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16065'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16062'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16060'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16057'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16055'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16052'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16051'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16050'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16049'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16048'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16047'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16046'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16045'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16044'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16043'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16042'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16041'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16040'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16039'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16038'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[4] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16037'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[4] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16036'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16034'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16031'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16029'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16026'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16024'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16021'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16019'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16016'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16014'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16011'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16009'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16006'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16004'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16001'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15999'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15996'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15994'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15991'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15989'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15986'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15984'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15981'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15979'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15976'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15974'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15971'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15970'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15969'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15968'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15967'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15966'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15965'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[3] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15964'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[3] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15963'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15961'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15958'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15956'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15953'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15951'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15948'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15946'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15943'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15941'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15938'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15936'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15933'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15931'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15928'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15926'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15923'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15921'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15918'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15916'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15913'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15911'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15908'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15906'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15903'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15901'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15898'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15896'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15893'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15891'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15888'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15887'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15886'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[2] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15885'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[2] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15884'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15882'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [16]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15879'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15877'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [15]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15874'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15872'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [14]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15869'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15867'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [13]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15864'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15862'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [12]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15859'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15857'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [11]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15854'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15852'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [10]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15849'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15847'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [9]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15844'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15842'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [8]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15839'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15837'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [7]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15834'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15832'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [6]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15829'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15827'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [5]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15824'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15822'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [4]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15819'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15817'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [3]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15814'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15812'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [2]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15809'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15807'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [1]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15804'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[1] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15803'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[1] [0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15802'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\p[0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:27$15800'.
+No latch inferred for signal `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.\g[0]' from process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:26$15798'.
+No latch inferred for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\i' from process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:356$15768'.
+No latch inferred for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\lz0' from process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:356$15768'.
+
+7.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly.\g_reg.i' using process `$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$15795'.
+  created $dff cell `$procdff$16200' with positive edge clock.
+Creating register for signal `$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly.\g_reg.r[0]' using process `$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$15795'.
+  created $dff cell `$procdff$16201' with positive edge clock.
+Creating register for signal `$paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly.\g_reg.i' using process `$paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$15794'.
+  created $dff cell `$procdff$16202' with positive edge clock.
+Creating register for signal `$paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly.\g_reg.r[0]' using process `$paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$15794'.
+  created $dff cell `$procdff$16203' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\y' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:403$15790'.
+  created $dff cell `$procdff$16204' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\flt' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:403$15790'.
+  created $dff cell `$procdff$16205' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_code_n' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16206' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_p' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16207' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_lsh' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16208' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_rsh' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16209' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_left' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16210' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_normal' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16211' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_over' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16212' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_sign' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16213' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_zero' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16214' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s2_nonfin' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+  created $dff cell `$procdff$16215' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s1_pl' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:337$15764'.
+  created $dff cell `$procdff$16216' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s1_ph' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:337$15764'.
+  created $dff cell `$procdff$16217' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s1_esum' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:337$15764'.
+  created $dff cell `$procdff$16218' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s1_sign' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:337$15764'.
+  created $dff cell `$procdff$16219' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s1_zero' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:337$15764'.
+  created $dff cell `$procdff$16220' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.\s1_nonfin' using process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:337$15764'.
+  created $dff cell `$procdff$16221' with positive edge clock.
+Creating register for signal `$paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly.\g_reg.i' using process `$paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$16134'.
+  created $dff cell `$procdff$16222' with positive edge clock.
+Creating register for signal `$paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly.\g_reg.r[0]' using process `$paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$16134'.
+  created $dff cell `$procdff$16223' with positive edge clock.
+Creating register for signal `\ot_s81svc7_bmul_graph_input.\rst0' using process `\ot_s81svc7_bmul_graph_input.$proc$/src/rtl/hdc/v41x/ot_s81svc7_bmul_graph_input.sv:9$1'.
+  created $dff cell `$procdff$16224' with positive edge clock.
+Creating register for signal `\ot_s81svc7_bmul_graph_input.\rst1' using process `\ot_s81svc7_bmul_graph_input.$proc$/src/rtl/hdc/v41x/ot_s81svc7_bmul_graph_input.sv:9$1'.
+  created $dff cell `$procdff$16225' with positive edge clock.
+Creating register for signal `\ot_s81svc7_bmul_graph_input.\pins' using process `\ot_s81svc7_bmul_graph_input.$proc$/src/rtl/hdc/v41x/ot_s81svc7_bmul_graph_input.sv:9$1'.
+  created $dff cell `$procdff$16226' with positive edge clock.
+
+7.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+7.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16132'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16129'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16128'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16127'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16126'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16125'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16124'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16123'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16122'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16121'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16120'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16119'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16118'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16117'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16116'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16115'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16114'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16113'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16112'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16111'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16110'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16109'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16108'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16107'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16106'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16105'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16104'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16103'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16102'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16101'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16100'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16099'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16098'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16097'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16095'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16092'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16090'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16087'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16085'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16082'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16080'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16077'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16075'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16072'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16070'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16067'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16065'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16062'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16060'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16057'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16055'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16052'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16051'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16050'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16049'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16048'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16047'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16046'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16045'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16044'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16043'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16042'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16041'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16040'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16039'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16038'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$16037'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$16036'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16034'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16031'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16029'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16026'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16024'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16021'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16019'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16016'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16014'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16011'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16009'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16006'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$16004'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$16001'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15999'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15996'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15994'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15991'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15989'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15986'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15984'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15981'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15979'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15976'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15974'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15971'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15970'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15969'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15968'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15967'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15966'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15965'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15964'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15963'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15961'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15958'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15956'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15953'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15951'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15948'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15946'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15943'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15941'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15938'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15936'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15933'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15931'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15928'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15926'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15923'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15921'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15918'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15916'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15913'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15911'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15908'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15906'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15903'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15901'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15898'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15896'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15893'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15891'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15888'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15887'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15886'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15885'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15884'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15882'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15879'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15877'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15874'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15872'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15869'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15867'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15864'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15862'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15859'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15857'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15854'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15852'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15849'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15847'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15844'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15842'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15839'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15837'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15834'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15832'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15829'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15827'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15824'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15822'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15819'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15817'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15814'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15812'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15809'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:34$15807'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:33$15804'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:37$15803'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:36$15802'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:27$15800'.
+Removing empty process `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.$proc$/src/rtl/hdc/ot_hdc_prefix.sv:26$15798'.
+Removing empty process `$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$15795'.
+Removing empty process `$paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$15794'.
+Found and cleaned up 3 empty switches in `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:403$15790'.
+Removing empty process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:403$15790'.
+Removing empty process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:377$15775'.
+Found and cleaned up 16 empty switches in `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:356$15768'.
+Removing empty process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:356$15768'.
+Removing empty process `$paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:337$15764'.
+Removing empty process `$paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly.$proc$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:74$16134'.
+Removing empty process `ot_s81svc7_bmul_graph_input.$proc$/src/rtl/hdc/v41x/ot_s81svc7_bmul_graph_input.sv:9$1'.
+Cleaned up 19 empty switches.
+
+7.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.
+<suppressed ~16 debug messages>
+Optimizing module $paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly.
+Optimizing module $paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly.
+Optimizing module $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.
+<suppressed ~7 debug messages>
+Optimizing module $paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly.
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+8. Executing TECHMAP pass (map to technology primitives).
+
+8.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+8.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $dff.
+No more expansions possible.
+<suppressed ~80 debug messages>
+
+9. Executing SYNTH pass.
+
+9.1. Executing HIERARCHY pass (managing design hierarchy).
+
+9.1.1. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+Used module:     $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110
+Used module:         $paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly
+Used module:         $paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly
+Used module:         $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000
+Used module:         $paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly
+
+9.1.2. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+Used module:     $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110
+Used module:         $paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly
+Used module:         $paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly
+Used module:         $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000
+Used module:         $paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly
+Removed 0 unused modules.
+
+9.2. Executing PROC pass (convert processes to netlists).
+
+9.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+9.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+9.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+9.2.4. Executing PROC_INIT pass (extract init attributes).
+
+9.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+9.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+9.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+9.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+9.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+9.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+9.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+9.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.
+Optimizing module $paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly.
+Optimizing module $paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly.
+Optimizing module $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.
+Optimizing module $paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly.
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.3. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000...
+Checking module $paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly...
+Checking module $paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly...
+Checking module $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110...
+Checking module $paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly...
+Checking module ot_s81svc7_bmul_graph_input...
+Found and reported 0 problems.
+
+9.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010000.
+Deleting now unused module $paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\ot_hdc_v41x_dly.
+Deleting now unused module $paramod$c6504bdb0a6aebe75442829d690740712a72a9f2\ot_hdc_v41x_dly.
+Deleting now unused module $paramod\ot_hdc_v41x_attn_bmul_s\ML=s32'00000000000000000000000000000110.
+Deleting now unused module $paramod$1830bba48e17069ee0c3b4e224cb9e943c77cb0c\ot_hdc_v41x_dly.
+<suppressed ~5 debug messages>
+
+9.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+<suppressed ~10 debug messages>
+
+9.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 3 unused cells and 374 unused wires.
+<suppressed ~7 debug messages>
+
+9.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_s81svc7_bmul_graph_input...
+Found and reported 0 problems.
+
+9.8. Executing OPT pass (performing simple optimizations).
+
+9.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 266 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 265 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+9.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~36 debug messages>
+
+9.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 0 changes.
+
+9.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 265 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 0 on $flatten\u_mul.$procdff$16206 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 1 on $flatten\u_mul.$procdff$16206 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 2 on $flatten\u_mul.$procdff$16206 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 3 on $flatten\u_mul.$procdff$16206 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 4 on $flatten\u_mul.$procdff$16206 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 5 on $flatten\u_mul.$procdff$16206 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 6 on $flatten\u_mul.$procdff$16206 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 7 on $flatten\u_mul.$procdff$16206 ($dff) from module ot_s81svc7_bmul_graph_input.
+
+9.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+9.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~36 debug messages>
+
+9.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 0 changes.
+
+9.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 265 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 8 on $flatten\u_mul.\u_cut3.$procdff$16203 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 9 on $flatten\u_mul.\u_cut3.$procdff$16203 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 10 on $flatten\u_mul.\u_cut3.$procdff$16203 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 11 on $flatten\u_mul.\u_cut3.$procdff$16203 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 12 on $flatten\u_mul.\u_cut3.$procdff$16203 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 13 on $flatten\u_mul.\u_cut3.$procdff$16203 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 14 on $flatten\u_mul.\u_cut3.$procdff$16203 ($dff) from module ot_s81svc7_bmul_graph_input.
+Setting constant 0-bit at position 15 on $flatten\u_mul.\u_cut3.$procdff$16203 ($dff) from module ot_s81svc7_bmul_graph_input.
+
+9.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~36 debug messages>
+
+9.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 0 changes.
+
+9.8.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 265 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.8.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.8.23. Finished fast OPT passes. (There is nothing left to do.)
+
+9.9. Executing FSM pass (extract and optimize FSM).
+
+9.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+9.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+9.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+9.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+9.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+9.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+9.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+9.10. Executing OPT pass (performing simple optimizations).
+
+9.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 265 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~36 debug messages>
+
+9.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 0 changes.
+
+9.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 265 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\u_mul.\u_cut2.$procdff$16201 ($dff) from module ot_s81svc7_bmul_graph_input (D = $flatten\u_mul.$8\lz0[3:0] [3], Q = \u_mul.u_cut2.g_reg.r[0] [31], rval = 1'0).
+Adding SRST signal on $flatten\u_mul.\u_cut2.$procdff$16201 ($dff) from module ot_s81svc7_bmul_graph_input (D = $flatten\u_mul.$12\lz0[3:0] [2], Q = \u_mul.u_cut2.g_reg.r[0] [30], rval = 1'0).
+Adding SRST signal on $flatten\u_mul.\u_cut2.$procdff$16201 ($dff) from module ot_s81svc7_bmul_graph_input (D = $flatten\u_mul.$14\lz0[3:0] [1], Q = \u_mul.u_cut2.g_reg.r[0] [29], rval = 1'0).
+Adding SRST signal on $flatten\u_mul.\u_cut2.$procdff$16201 ($dff) from module ot_s81svc7_bmul_graph_input (D = $flatten\u_mul.$15\lz0[3:0] [0], Q = \u_mul.u_cut2.g_reg.r[0] [28], rval = 1'0).
+Adding SRST signal on $flatten\u_mul.$procdff$16209 ($dff) from module ot_s81svc7_bmul_graph_input (D = $flatten\u_mul.$neg$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:382$15780_Y, Q = \u_mul.s2_rsh, rval = 5'10001).
+Adding SRST signal on $flatten\u_mul.$procdff$16208 ($dff) from module ot_s81svc7_bmul_graph_input (D = \u_mul.lsh [4:0], Q = \u_mul.s2_lsh, rval = 5'10110).
+Adding SRST signal on $flatten\u_mul.$procdff$16205 ($dff) from module ot_s81svc7_bmul_graph_input (D = $flatten\u_mul.$procmux$16139_Y, Q = \u_mul.flt, rval = 1'1).
+Adding SRST signal on $flatten\u_mul.$procdff$16204 ($dff) from module ot_s81svc7_bmul_graph_input (D = $flatten\u_mul.$procmux$16145_Y, Q = \u_mul.y, rval = 0).
+
+9.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 6 unused cells and 6 unused wires.
+<suppressed ~8 debug messages>
+
+9.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~31 debug messages>
+
+9.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 0 changes.
+
+9.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 267 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+9.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 4 bits (of 16) from port A of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.\u_ps.$and$/src/rtl/hdc/ot_hdc_prefix.sv:26$15799 ($and).
+Removed top 3 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16196 ($mux).
+Removed top 2 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16193 ($mux).
+Removed top 2 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16190 ($mux).
+Removed top 1 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16187 ($mux).
+Removed top 1 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16184 ($mux).
+Removed top 1 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16181 ($mux).
+Removed top 1 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16178 ($mux).
+Removed top 3 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16157 ($mux).
+Removed top 8 bits (of 24) from port A of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:401$15788 ($add).
+Removed top 23 bits (of 24) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:401$15788 ($add).
+Removed top 7 bits (of 24) from port Y of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:401$15788 ($add).
+Removed top 16 bits (of 32) from port Y of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:393$15784 ($shr).
+Removed top 7 bits (of 23) from port A of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782 ($shl).
+Removed top 5 bits (of 11) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$lt$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:382$15779 ($lt).
+Removed top 5 bits (of 11) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$gt$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:381$15777 ($gt).
+Removed top 1 bits (of 11) from port A of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:371$15774 ($sub).
+Removed top 3 bits (of 11) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:371$15774 ($sub).
+Converting cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:371$15774 ($sub) from signed to unsigned.
+Removed top 1 bits (of 10) from port A of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:371$15774 ($sub).
+Removed top 1 bits (of 8) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:371$15774 ($sub).
+Removed top 1 bits (of 11) from port Y of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:371$15774 ($sub).
+Removed top 2 bits (of 11) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$ge$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:370$15773 ($ge).
+Removed top 9 bits (of 11) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$ge$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:369$15772 ($ge).
+Removed top 6 bits (of 11) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15771 ($sub).
+Removed top 1 bits (of 11) from port A of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15770 ($sub).
+Removed top 3 bits (of 11) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15770 ($sub).
+Converting cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15770 ($sub) from signed to unsigned.
+Removed top 1 bits (of 10) from port A of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15770 ($sub).
+Removed top 1 bits (of 8) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15770 ($sub).
+Removed top 1 bits (of 11) from port Y of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15770 ($sub).
+Removed top 1 bits (of 16) from port Y of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:367$15769 ($shl).
+Removed top 4 bits (of 16) from port A of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.\u_ps.$xor$/src/rtl/hdc/ot_hdc_prefix.sv:43$15796 ($xor).
+Removed top 1 bits (of 9) from port A of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:331$15754 ($add).
+Removed top 1 bits (of 9) from port B of cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:331$15754 ($add).
+Removed top 2 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16160 ($mux).
+Removed top 2 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16163 ($mux).
+Removed top 1 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16166 ($mux).
+Removed top 1 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16169 ($mux).
+Removed top 1 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16172 ($mux).
+Removed top 1 bits (of 4) from mux cell ot_s81svc7_bmul_graph_input.$flatten\u_mul.$procmux$16175 ($mux).
+Removed top 7 bits (of 24) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:401$15788_Y.
+Removed top 3 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$15\lz0[3:0].
+Removed top 2 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$14\lz0[3:0].
+Removed top 2 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$13\lz0[3:0].
+Removed top 1 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$12\lz0[3:0].
+Removed top 1 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$11\lz0[3:0].
+Removed top 1 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$10\lz0[3:0].
+Removed top 1 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$9\lz0[3:0].
+Removed top 1 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$8\lz0[3:0].
+Removed top 1 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$7\lz0[3:0].
+Removed top 1 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$6\lz0[3:0].
+Removed top 1 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$5\lz0[3:0].
+Removed top 2 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$4\lz0[3:0].
+Removed top 2 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$3\lz0[3:0].
+Removed top 3 bits (of 4) from wire ot_s81svc7_bmul_graph_input.$flatten\u_mul.$2\lz0[3:0].
+
+9.12. Executing PEEPOPT pass (run peephole optimizers).
+
+9.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 0 unused cells and 15 unused wires.
+<suppressed ~1 debug messages>
+
+9.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_s81svc7_bmul_graph_input:
+  creating $macc model for $flatten\u_mul.$mul$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:338$15765 ($mul).
+  creating $macc model for $flatten\u_mul.$mul$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:339$15766 ($mul).
+  creating $macc model for $flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15770 ($sub).
+  creating $macc model for $flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15771 ($sub).
+  creating $macc model for $flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:371$15774 ($sub).
+  creating $macc model for $flatten\u_mul.$neg$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:382$15780 ($neg).
+  creating $macc model for $flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:401$15788 ($add).
+  creating $macc model for $flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:331$15754 ($add).
+  creating $alu model for $macc $flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:331$15754.
+  creating $alu model for $macc $flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:401$15788.
+  creating $alu model for $macc $flatten\u_mul.$neg$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:382$15780.
+  creating $alu model for $macc $flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:371$15774.
+  creating $alu model for $macc $flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15771.
+  creating $alu model for $macc $flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15770.
+  creating $macc cell for $flatten\u_mul.$mul$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:339$15766: $auto$alumacc.cc:399:replace_macc$16372
+  creating $macc cell for $flatten\u_mul.$mul$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:338$15765: $auto$alumacc.cc:399:replace_macc$16373
+  creating $alu model for $flatten\u_mul.$ge$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:369$15772 ($ge): new $alu
+  creating $alu model for $flatten\u_mul.$ge$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:370$15773 ($ge): new $alu
+  creating $alu model for $flatten\u_mul.$gt$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:381$15777 ($gt): new $alu
+  creating $alu model for $flatten\u_mul.$lt$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:382$15779 ($lt): new $alu
+  creating $alu cell for $flatten\u_mul.$lt$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:382$15779: $auto$alumacc.cc:548:replace_alu$16378
+  creating $alu cell for $flatten\u_mul.$gt$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:381$15777: $auto$alumacc.cc:548:replace_alu$16385
+  creating $alu cell for $flatten\u_mul.$ge$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:370$15773: $auto$alumacc.cc:548:replace_alu$16398
+  creating $alu cell for $flatten\u_mul.$ge$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:369$15772: $auto$alumacc.cc:548:replace_alu$16413
+  creating $alu cell for $flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15770: $auto$alumacc.cc:548:replace_alu$16428
+  creating $alu cell for $flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:368$15771: $auto$alumacc.cc:548:replace_alu$16431
+  creating $alu cell for $flatten\u_mul.$sub$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:371$15774: $auto$alumacc.cc:548:replace_alu$16434
+  creating $alu cell for $flatten\u_mul.$neg$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:382$15780: $auto$alumacc.cc:548:replace_alu$16437
+  creating $alu cell for $flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:401$15788: $auto$alumacc.cc:548:replace_alu$16440
+  creating $alu cell for $flatten\u_mul.$add$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:331$15754: $auto$alumacc.cc:548:replace_alu$16443
+  created 10 $alu and 2 $macc cells.
+
+9.15. Executing OPT pass (performing simple optimizations).
+
+9.15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+<suppressed ~1 debug messages>
+
+9.15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 286 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~30 debug messages>
+
+9.15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 0 changes.
+
+9.15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 286 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 1 unused cells and 5 unused wires.
+<suppressed ~2 debug messages>
+
+9.15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.15.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~30 debug messages>
+
+9.15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 0 changes.
+
+9.15.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 285 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.15.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.15.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.15.16. Finished fast OPT passes. (There is nothing left to do.)
+
+9.16. Executing MEMORY pass.
+
+9.16.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+9.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+9.16.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+9.16.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+9.16.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+9.16.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.16.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+9.16.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+9.16.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.16.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+9.17. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.18. Executing OPT pass (performing simple optimizations).
+
+9.18.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+<suppressed ~93 debug messages>
+
+9.18.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 243 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.18.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.18.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 1 unused cells and 34 unused wires.
+<suppressed ~2 debug messages>
+
+9.18.5. Finished fast OPT passes.
+
+9.19. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+9.20. Executing OPT pass (performing simple optimizations).
+
+9.20.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.20.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 242 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.20.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~26 debug messages>
+
+9.20.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+    Consolidated identical input bits for $mux cell $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:401$15789:
+      Old ports: A={ 7'0000000 $auto$wreduce.cc:514:run$16357 [16:0] }, B={ 1'0 \u_mul.u_cut3.g_reg.r[0] [78:56] }, Y=\u_mul.sub_f
+      New ports: A={ 6'000000 $auto$wreduce.cc:514:run$16357 [16:0] }, B=\u_mul.u_cut3.g_reg.r[0] [78:56], Y=\u_mul.sub_f [22:0]
+      New connections: \u_mul.sub_f [23] = 1'0
+    Consolidated identical input bits for $mux cell $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:409$15791:
+      Old ports: A={ \u_mul.u_cut3.g_reg.r[0] [39:16] 8'00000000 }, B=0, Y=$flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:409$15791_Y
+      New ports: A=\u_mul.u_cut3.g_reg.r[0] [39:16], B=24'000000000000000000000000, Y=$flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:409$15791_Y [31:8]
+      New connections: $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:409$15791_Y [7:0] = 8'00000000
+    Consolidated identical input bits for $mux cell $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793:
+      Old ports: A={ \u_mul.u_cut3.g_reg.r[0] [2] 7'0000000 \u_mul.sub_f }, B=0, Y=$flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793_Y
+      New ports: A={ \u_mul.u_cut3.g_reg.r[0] [2] \u_mul.sub_f }, B=25'0000000000000000000000000, Y={ $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793_Y [31] $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793_Y [23:0] }
+      New connections: $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793_Y [30:24] = 7'0000000
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+    Consolidated identical input bits for $mux cell $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793:
+      Old ports: A={ \u_mul.u_cut3.g_reg.r[0] [2] \u_mul.sub_f }, B=25'0000000000000000000000000, Y={ $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793_Y [31] $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793_Y [23:0] }
+      New ports: A={ \u_mul.u_cut3.g_reg.r[0] [2] \u_mul.sub_f [22:0] }, B=24'000000000000000000000000, Y={ $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793_Y [31] $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793_Y [22:0] }
+      New connections: $flatten\u_mul.$ternary$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15793_Y [23] = 1'0
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 4 changes.
+
+9.20.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 242 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.20.6. Executing OPT_SHARE pass.
+
+9.20.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.20.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.20.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+<suppressed ~1 debug messages>
+
+9.20.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.20.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~26 debug messages>
+
+9.20.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 0 changes.
+
+9.20.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 242 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.20.14. Executing OPT_SHARE pass.
+
+9.20.15. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $auto$ff.cc:337:slice$16354 ($sdff) from module ot_s81svc7_bmul_graph_input (D = \u_mul.u_cut3.g_reg.r[0] [38:31], Q = \u_mul.y [30:23], rval = 8'00000000).
+Adding SRST signal on $auto$ff.cc:337:slice$16354 ($sdff) from module ot_s81svc7_bmul_graph_input (D = \u_mul.sub_f [7:0], Q = \u_mul.y [7:0], rval = 8'00000000).
+
+9.20.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.20.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.20.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.20.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~26 debug messages>
+
+9.20.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+    New input vector for $reduce_or cell $auto$opt_dff.cc:362:combine_resets$16467: { \u_mul.u_cut3.g_reg.r[0] [3] \u_mul.u_cut3.g_reg.r[0] [1:0] $auto$rtlil.cc:3267:Not$16465 }
+    New input vector for $reduce_or cell $auto$opt_dff.cc:362:combine_resets$16470: { $flatten\u_mul.$eq$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:411$15792_Y \u_mul.u_cut3.g_reg.r[0] [4] \u_mul.u_cut3.g_reg.r[0] [1:0] }
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 2 changes.
+
+9.20.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 247 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.20.22. Executing OPT_SHARE pass.
+
+9.20.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.20.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.20.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.20.26. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.20.27. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_graph_input..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~26 debug messages>
+
+9.20.28. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_graph_input.
+Performed a total of 0 changes.
+
+9.20.29. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 247 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.20.30. Executing OPT_SHARE pass.
+
+9.20.31. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.20.32. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+
+9.20.33. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+
+9.20.34. Finished fast OPT passes. (There is nothing left to do.)
+
+9.21. Executing TECHMAP pass (map to technology primitives).
+
+9.21.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+9.21.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $sdff.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $xor.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod$4ccbe221165818e15f326ddee3d1183c7924e12f\_90_alu for cells of type $alu.
+Using template $paramod$f30f8fc2e30bd83d28cb1ad43b9d9ec083109075\_90_alu for cells of type $alu.
+Using template $paramod$85eeb8e7bd166e78c6631e277d66d3fbd038b41a\_90_alu for cells of type $alu.
+Using template $paramod$3e96e356bb68fcbd4f9c12f6d97ec8513d1af8c6\_90_alu for cells of type $alu.
+Using template $paramod$78442a4931486f0e57f68961ac105d7345d17183\_90_alu for cells of type $alu.
+Using template $paramod$d0bd18ee3981f6362d6d67883e35dd3a98d87608\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$7f95631acb8676456e705d33c0a7bfc93870ee4b\_90_alu for cells of type $alu.
+Using template $paramod$9842bba05edc7546c7482c30270bec058ba4d3ef\_90_alu for cells of type $alu.
+Using template $paramod$64ba77b6f8f0d1c45c64fc130b47866dde2fc210\_90_alu for cells of type $alu.
+Using template $paramod$14493e0198d6b1c17bbe1c4d358b3acef40e9105\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add { \u_mul.ma [7] \u_mul.u_cut0.g_reg.r[0] [23:17] } * \u_mul.u_cut0.g_reg.r[0] [4:1] (8x4 bits, unsigned)
+  add { \u_mul.ma [7] \u_mul.u_cut0.g_reg.r[0] [23:17] } * { \u_mul.mb [7] \u_mul.u_cut0.g_reg.r[0] [7:5] } (8x4 bits, unsigned)
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_or.
+Using template $paramod$constmap:c8a0a4c85c21568cef37530c34d73d2042cb21d1$paramod$df3166ec6f473b53260035fbd0f12f64f45fa555\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shr.
+Using template $paramod$constmap:c3f9db2ed086131a46ea635902d682d06f2a96c0$paramod$f32fe74d2f8ab5a9d1f90720afb1f17fabd90573\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shr.
+Using template $paramod$constmap:ac3f54aa43abd619fc633ce392e37e97b97da228$paramod$c24f054abc86ea4fb54827e699771f4a103006c6\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shl.
+Using template $paramod$constmap:e5432ef71e4a0e5601b2ee3df91f9f8fde20d08f$paramod$0ce59810e1ea478327c110ffca34b74a1c66f29a\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shl.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001100 for cells of type $fa.
+Using template $paramod$ee3d784672cdb1cb32d9a801a3af776716f16b74\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001011 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001010 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001001 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000010001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000010001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001100 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~3150 debug messages>
+
+9.22. Executing OPT pass (performing simple optimizations).
+
+9.22.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+<suppressed ~1163 debug messages>
+
+9.22.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 1875 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 1825 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 1796 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 1775 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 1759 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+<suppressed ~348 debug messages>
+Removed a total of 116 cells.
+
+9.22.3. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $auto$ff.cc:337:slice$16833 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [0], Q = \u_mul.u_cut3.g_reg.r[0] [40], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16834 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [1], Q = \u_mul.u_cut3.g_reg.r[0] [41], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16835 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [2], Q = \u_mul.u_cut3.g_reg.r[0] [42], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16836 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [3], Q = \u_mul.u_cut3.g_reg.r[0] [43], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16837 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [4], Q = \u_mul.u_cut3.g_reg.r[0] [44], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16838 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [5], Q = \u_mul.u_cut3.g_reg.r[0] [45], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16839 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [6], Q = \u_mul.u_cut3.g_reg.r[0] [46], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16840 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [7], Q = \u_mul.u_cut3.g_reg.r[0] [47], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16841 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [8], Q = \u_mul.u_cut3.g_reg.r[0] [48], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16842 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [9], Q = \u_mul.u_cut3.g_reg.r[0] [49], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16843 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [10], Q = \u_mul.u_cut3.g_reg.r[0] [50], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16844 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [11], Q = \u_mul.u_cut3.g_reg.r[0] [51], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16845 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [12], Q = \u_mul.u_cut3.g_reg.r[0] [52], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16846 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [13], Q = \u_mul.u_cut3.g_reg.r[0] [53], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16847 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [14], Q = \u_mul.u_cut3.g_reg.r[0] [54], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16848 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shr$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:392$15783.$10\buffer[15:0] [15], Q = \u_mul.u_cut3.g_reg.r[0] [55], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16849 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$10\buffer[22:0] [16], Q = \u_mul.u_cut3.g_reg.r[0] [56], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16850 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$10\buffer[22:0] [17], Q = \u_mul.u_cut3.g_reg.r[0] [57], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16851 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$10\buffer[22:0] [18], Q = \u_mul.u_cut3.g_reg.r[0] [58], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16852 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$10\buffer[22:0] [19], Q = \u_mul.u_cut3.g_reg.r[0] [59], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16853 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$10\buffer[22:0] [20], Q = \u_mul.u_cut3.g_reg.r[0] [60], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16854 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$10\buffer[22:0] [21], Q = \u_mul.u_cut3.g_reg.r[0] [61], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16855 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$10\buffer[22:0] [22], Q = \u_mul.u_cut3.g_reg.r[0] [62], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16856 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$5\buffer[22:0] [7], Q = \u_mul.u_cut3.g_reg.r[0] [63], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16857 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$7\buffer[22:0] [8], Q = \u_mul.u_cut3.g_reg.r[0] [64], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16858 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$7\buffer[22:0] [9], Q = \u_mul.u_cut3.g_reg.r[0] [65], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16859 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$7\buffer[22:0] [10], Q = \u_mul.u_cut3.g_reg.r[0] [66], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16860 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$7\buffer[22:0] [11], Q = \u_mul.u_cut3.g_reg.r[0] [67], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16861 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$7\buffer[22:0] [12], Q = \u_mul.u_cut3.g_reg.r[0] [68], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16862 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$7\buffer[22:0] [13], Q = \u_mul.u_cut3.g_reg.r[0] [69], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16863 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$7\buffer[22:0] [14], Q = \u_mul.u_cut3.g_reg.r[0] [70], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16864 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:391$15782.$7\buffer[22:0] [15], Q = \u_mul.u_cut3.g_reg.r[0] [71], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16872 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:367$15769.$5\buffer[15:0] [0], Q = \u_mul.s2_code_n [8], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16873 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:367$15769.$5\buffer[15:0] [1], Q = \u_mul.s2_code_n [9], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16874 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:367$15769.$5\buffer[15:0] [2], Q = \u_mul.s2_code_n [10], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16875 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:367$15769.$5\buffer[15:0] [3], Q = \u_mul.s2_code_n [11], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16876 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:367$15769.$5\buffer[15:0] [4], Q = \u_mul.s2_code_n [12], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16877 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:367$15769.$5\buffer[15:0] [5], Q = \u_mul.s2_code_n [13], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16878 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:367$15769.$5\buffer[15:0] [6], Q = \u_mul.s2_code_n [14], rval = 1'0).
+Adding SRST signal on $auto$ff.cc:337:slice$16879 ($_DFF_P_) from module ot_s81svc7_bmul_graph_input (D = $techmap$flatten\u_mul.$shl$/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv:367$15769.$5\buffer[15:0] [7], Q = \u_mul.s2_code_n [15], rval = 1'0).
+
+9.22.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 204 unused cells and 772 unused wires.
+<suppressed ~206 debug messages>
+
+9.22.5. Rerunning OPT passes. (Removed registers in this run.)
+
+9.22.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+<suppressed ~2 debug messages>
+
+9.22.7. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 1554 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.22.8. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.22.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+9.22.10. Finished fast OPT passes.
+
+9.23. Executing ABC pass (technology mapping using ABC).
+
+9.23.1. Extracting gate netlist of module `\ot_s81svc7_bmul_graph_input' to `<abc-temp-dir>/input.blif'..
+
+9.23.1.1. Executed ABC.
+Extracted 1255 gates and 1432 wires to a netlist network with 175 inputs and 244 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+9.23.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      267
+ABC RESULTS:            ANDNOT cells:       39
+ABC RESULTS:               BUF cells:        1
+ABC RESULTS:               MUX cells:      164
+ABC RESULTS:              NAND cells:      264
+ABC RESULTS:               NOR cells:       45
+ABC RESULTS:               NOT cells:       28
+ABC RESULTS:                OR cells:       65
+ABC RESULTS:             ORNOT cells:       16
+ABC RESULTS:              XNOR cells:       31
+ABC RESULTS:               XOR cells:      126
+ABC RESULTS:        internal signals:     1013
+ABC RESULTS:           input signals:      175
+ABC RESULTS:          output signals:      244
+Removing temp directory.
+Removing global temp directory.
+
+9.24. Executing OPT pass (performing simple optimizations).
+
+9.24.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_graph_input.
+<suppressed ~22 debug messages>
+
+9.24.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_graph_input'.
+Computing hashes of 1344 cells of `\ot_s81svc7_bmul_graph_input'.
+Finding duplicate cells in `\ot_s81svc7_bmul_graph_input'.
+Removed a total of 0 cells.
+
+9.24.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.24.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 0 unused cells and 703 unused wires.
+<suppressed ~1 debug messages>
+
+9.24.5. Finished fast OPT passes.
+
+9.25. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_s81svc7_bmul_graph_input'. Setting top module to ot_s81svc7_bmul_graph_input.
+
+9.25.1. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+
+9.25.2. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+Removed 0 unused modules.
+
+9.26. Printing statistics.
+
+=== ot_s81svc7_bmul_graph_input ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      982 wires
+     2329 wire bits
+      100 public wires
+     1346 public wire bits
+        7 ports
+       68 port bits
+     1344 cells
+       39   $_ANDNOT_
+      267   $_AND_
+      207   $_DFF_P_
+      164   $_MUX_
+      264   $_NAND_
+       45   $_NOR_
+       28   $_NOT_
+       16   $_ORNOT_
+       65   $_OR_
+        2   $_SDFF_PN0_
+        3   $_SDFF_PN1_
+       79   $_SDFF_PP0_
+        3   $_SDFF_PP1_
+       31   $_XNOR_
+      126   $_XOR_
+        5   $scopeinfo
+
+9.27. Executing CHECK pass (checking for obvious problems).
+Checking module ot_s81svc7_bmul_graph_input...
+Found and reported 0 problems.
+
+10. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+10.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\ot_s81svc7_bmul_graph_input':
+  mapped 294 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+11. Executing ABC pass (technology mapping using ABC).
+
+11.1. Extracting gate netlist of module `\ot_s81svc7_bmul_graph_input' to `<abc-temp-dir>/input.blif'..
+
+11.1.1. Executed ABC.
+Extracted 1426 gates and 1722 wires to a netlist network with 294 inputs and 381 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_2af21601.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+11.1.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:       20
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:        2
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:       20
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       14
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       10
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:       21
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:       15
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:       89
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:        7
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:        6
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      212
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:       18
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:        5
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:      107
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:       11
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:        3
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:        5
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:      198
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:       21
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:       13
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:        4
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:       22
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:        3
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:       14
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:       16
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:       79
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:        3
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:       23
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:        5
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:        8
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:       10
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        8
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:        8
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:       80
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:       47
+ABC RESULTS:        internal signals:     1047
+ABC RESULTS:           input signals:      294
+ABC RESULTS:          output signals:      381
+Removing temp directory.
+Removing global temp directory.
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_graph_input..
+Removed 0 unused cells and 1570 unused wires.
+<suppressed ~24 debug messages>
+
+13. Printing statistics.
+
+=== ot_s81svc7_bmul_graph_input ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     1218        - wires
+     2368        - wire bits
+       77        - public wires
+     1130        - public wire bits
+        7        - ports
+       68        - port bits
+     1430  170.732 cells
+        5        -   $scopeinfo
+       20     1.75   A2O1A1Ixp33_ASAP7_75t_R
+        2    0.262   A2O1A1O1Ixp25_ASAP7_75t_R
+       20     1.75   AND2x2_ASAP7_75t_R
+       14    1.225   AND3x1_ASAP7_75t_R
+       10    1.021   AND4x1_ASAP7_75t_R
+        2    0.233   AND5x1_ASAP7_75t_R
+       21    1.837   AO21x1_ASAP7_75t_R
+       15    1.312   AOI211xp5_ASAP7_75t_R
+       89    6.488   AOI21xp33_ASAP7_75t_R
+        7    0.612   AOI22xp33_ASAP7_75t_R
+        6    0.525   AOI31xp33_ASAP7_75t_R
+      294    85.73   DFFHQNx1_ASAP7_75t_R
+      212    9.273   INVx1_ASAP7_75t_R
+       18    1.837   MAJIxp5_ASAP7_75t_R
+        5    0.656   MAJx2_ASAP7_75t_R
+      107     6.24   NAND2xp33_ASAP7_75t_R
+       11    0.802   NAND3xp33_ASAP7_75t_R
+        3    0.262   NAND4xp25_ASAP7_75t_R
+        5     0.51   NAND5xp2_ASAP7_75t_R
+      198   11.547   NOR2xp33_ASAP7_75t_R
+       21    1.531   NOR3xp33_ASAP7_75t_R
+       13    1.137   NOR4xp25_ASAP7_75t_R
+        4    0.408   NOR5xp2_ASAP7_75t_R
+       22    1.925   O2A1O1Ixp33_ASAP7_75t_R
+        3     0.35   OA211x2_ASAP7_75t_R
+       14    1.429   OA21x2_ASAP7_75t_R
+        2    0.292   OA22x2_ASAP7_75t_R
+       16      1.4   OAI211xp5_ASAP7_75t_R
+       79    5.759   OAI21xp33_ASAP7_75t_R
+        3    0.306   OAI221xp5_ASAP7_75t_R
+       23    2.012   OAI22xp33_ASAP7_75t_R
+        5    0.437   OAI31xp33_ASAP7_75t_R
+        8    0.816   OAI32xp33_ASAP7_75t_R
+       10    0.875   OR2x2_ASAP7_75t_R
+        8      0.7   OR3x1_ASAP7_75t_R
+        8    0.816   OR4x1_ASAP7_75t_R
+       80   10.498   XNOR2xp5_ASAP7_75t_R
+       47    6.167   XOR2xp5_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_s81svc7_bmul_graph_input': 170.731800
+     of which used for sequential elements: 85.730400 (50.21%)
+
+14. Executing Verilog backend.
+
+14.1. Executing BMUXMAP pass.
+
+14.2. Executing DEMUXMAP pass.
+Dumping module `\ot_s81svc7_bmul_graph_input'.
+
+15. Executing Liberty frontend: /tmp/lib/SIMPLE.lib
+Imported 56 cell types from liberty file.
+
+16. Executing Liberty frontend: /tmp/lib/AO.lib
+Imported 42 cell types from liberty file.
+
+17. Executing Liberty frontend: /tmp/lib/OA.lib
+Imported 34 cell types from liberty file.
+
+18. Executing Liberty frontend: /tmp/lib/INVBUF.lib
+Imported 37 cell types from liberty file.
+
+19. Executing Liberty frontend: /tmp/lib/SEQ.lib
+Imported 33 cell types from liberty file.
+
+20. Executing HIERARCHY pass (managing design hierarchy).
+
+20.1. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+
+20.2. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_graph_input
+Removed 0 unused modules.
+
+21. Executing JSON backend.
+
+Warnings: 1 unique messages, 3 total
+End of script. Logfile hash: bc591f8ada, time: 7.23s, user: 5.24s, system: 0.19s, MEM: 84.64 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 49% 8x read_verilog (3 sec), 25% 2x abc (1 sec), ...

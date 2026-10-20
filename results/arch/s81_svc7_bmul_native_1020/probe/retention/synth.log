@@ -1,0 +1,777 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/keep.ys' --
+
+1. Executing Liberty frontend: /tmp/lib/SIMPLE.lib
+Imported 56 cell types from liberty file.
+
+2. Executing Liberty frontend: /tmp/lib/AO.lib
+Imported 42 cell types from liberty file.
+
+3. Executing Liberty frontend: /tmp/lib/OA.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: /tmp/lib/INVBUF.lib
+Imported 37 cell types from liberty file.
+
+5. Executing Liberty frontend: /tmp/lib/SEQ.lib
+Imported 33 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: /graph/native.v
+Parsing Verilog input from `/graph/native.v' to AST representation.
+Generating RTLIL representation for module `\ot_s81svc7_bmul_native'.
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_native
+
+7.2. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_native
+Removed 0 unused modules.
+
+8. Executing PROC pass (convert processes to netlists).
+
+8.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+8.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+8.4. Executing PROC_INIT pass (extract init attributes).
+
+8.5. Executing PROC_ARST pass (detect async resets in processes).
+
+8.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+8.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+8.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+8.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+8.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+9. Executing TECHMAP pass (map to technology primitives).
+
+9.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+9.2. Continuing TECHMAP pass.
+No more expansions possible.
+<suppressed ~77 debug messages>
+
+10. Executing SYNTH pass.
+
+10.1. Executing HIERARCHY pass (managing design hierarchy).
+
+10.1.1. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_native
+
+10.1.2. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_native
+Removed 0 unused modules.
+
+10.2. Executing PROC pass (convert processes to netlists).
+
+10.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+10.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+10.2.4. Executing PROC_INIT pass (extract init attributes).
+
+10.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+10.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+10.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+10.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+10.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+10.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+10.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.3. Executing CHECK pass (checking for obvious problems).
+Checking module ot_s81svc7_bmul_native...
+Found and reported 0 problems.
+
+10.4. Executing FLATTEN pass (flatten design).
+
+10.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_s81svc7_bmul_native...
+Found and reported 0 problems.
+
+10.8. Executing OPT pass (performing simple optimizations).
+
+10.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_native..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+10.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_native.
+Performed a total of 0 changes.
+
+10.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.8.9. Finished fast OPT passes. (There is nothing left to do.)
+
+10.9. Executing FSM pass (extract and optimize FSM).
+
+10.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+10.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+10.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+10.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+10.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+10.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+10.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+10.10. Executing OPT pass (performing simple optimizations).
+
+10.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_native..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+10.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_native.
+Performed a total of 0 changes.
+
+10.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.10.9. Finished fast OPT passes. (There is nothing left to do.)
+
+10.11. Executing WREDUCE pass (reducing word size of cells).
+
+10.12. Executing PEEPOPT pass (run peephole optimizers).
+
+10.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_s81svc7_bmul_native:
+  created 0 $alu and 0 $macc cells.
+
+10.15. Executing OPT pass (performing simple optimizations).
+
+10.15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_native..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+10.15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_native.
+Performed a total of 0 changes.
+
+10.15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.15.9. Finished fast OPT passes. (There is nothing left to do.)
+
+10.16. Executing MEMORY pass.
+
+10.16.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+10.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+10.16.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+10.16.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+10.16.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+10.16.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.16.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+10.16.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+10.16.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.16.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+10.17. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.18. Executing OPT pass (performing simple optimizations).
+
+10.18.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.18.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.18.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.18.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.18.5. Finished fast OPT passes.
+
+10.19. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10.20. Executing OPT pass (performing simple optimizations).
+
+10.20.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.20.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.20.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81svc7_bmul_native..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+10.20.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81svc7_bmul_native.
+Performed a total of 0 changes.
+
+10.20.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.20.6. Executing OPT_SHARE pass.
+
+10.20.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.20.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.20.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.20.10. Finished fast OPT passes. (There is nothing left to do.)
+
+10.21. Executing TECHMAP pass (map to technology primitives).
+
+10.21.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+10.21.2. Continuing TECHMAP pass.
+No more expansions possible.
+<suppressed ~77 debug messages>
+
+10.22. Executing OPT pass (performing simple optimizations).
+
+10.22.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.22.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.22.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.22.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.22.5. Finished fast OPT passes.
+
+10.23. Executing ABC pass (technology mapping using ABC).
+
+10.23.1. Extracting gate netlist of module `\ot_s81svc7_bmul_native' to `<abc-temp-dir>/input.blif'..
+
+10.23.1.1. Executed ABC.
+Extracted 0 gates and 0 wires to a netlist network with 0 inputs and 0 outputs.
+Don't call ABC as there is nothing to map.
+Removing temp directory.
+Removing global temp directory.
+
+10.24. Executing OPT pass (performing simple optimizations).
+
+10.24.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81svc7_bmul_native.
+
+10.24.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81svc7_bmul_native'.
+Computing hashes of 1428 cells of `\ot_s81svc7_bmul_native'.
+Finding duplicate cells in `\ot_s81svc7_bmul_native'.
+Removed a total of 0 cells.
+
+10.24.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.24.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+10.24.5. Finished fast OPT passes.
+
+10.25. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_s81svc7_bmul_native'. Setting top module to ot_s81svc7_bmul_native.
+
+10.25.1. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_native
+
+10.25.2. Analyzing design hierarchy..
+Top module:  \ot_s81svc7_bmul_native
+Removed 0 unused modules.
+
+10.26. Printing statistics.
+
+=== ot_s81svc7_bmul_native ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1470 wires
+     1531 wire bits
+     1470 public wires
+     1531 public wire bits
+        7 ports
+       68 port bits
+     1428 cells
+       20   A2O1A1Ixp33_ASAP7_75t_R
+        2   A2O1A1O1Ixp25_ASAP7_75t_R
+       20   AND2x2_ASAP7_75t_R
+       14   AND3x1_ASAP7_75t_R
+       10   AND4x1_ASAP7_75t_R
+        2   AND5x1_ASAP7_75t_R
+       21   AO21x1_ASAP7_75t_R
+       15   AOI211xp5_ASAP7_75t_R
+       89   AOI21xp33_ASAP7_75t_R
+        7   AOI22xp33_ASAP7_75t_R
+        6   AOI31xp33_ASAP7_75t_R
+      305   DFFHQNx1_ASAP7_75t_R
+      204   INVx1_ASAP7_75t_R
+       18   MAJIxp5_ASAP7_75t_R
+        5   MAJx2_ASAP7_75t_R
+      107   NAND2xp33_ASAP7_75t_R
+       11   NAND3xp33_ASAP7_75t_R
+        3   NAND4xp25_ASAP7_75t_R
+        5   NAND5xp2_ASAP7_75t_R
+      198   NOR2xp33_ASAP7_75t_R
+       21   NOR3xp33_ASAP7_75t_R
+       13   NOR4xp25_ASAP7_75t_R
+        4   NOR5xp2_ASAP7_75t_R
+       22   O2A1O1Ixp33_ASAP7_75t_R
+        3   OA211x2_ASAP7_75t_R
+       14   OA21x2_ASAP7_75t_R
+        2   OA22x2_ASAP7_75t_R
+       16   OAI211xp5_ASAP7_75t_R
+       79   OAI21xp33_ASAP7_75t_R
+        3   OAI221xp5_ASAP7_75t_R
+       23   OAI22xp33_ASAP7_75t_R
+        5   OAI31xp33_ASAP7_75t_R
+        8   OAI32xp33_ASAP7_75t_R
+       10   OR2x2_ASAP7_75t_R
+        8   OR3x1_ASAP7_75t_R
+        8   OR4x1_ASAP7_75t_R
+       80   XNOR2xp5_ASAP7_75t_R
+       47   XOR2xp5_ASAP7_75t_R
+
+10.27. Executing CHECK pass (checking for obvious problems).
+Checking module ot_s81svc7_bmul_native...
+Found and reported 0 problems.
+
+11. Executing ABC pass (technology mapping using ABC).
+
+11.1. Extracting gate netlist of module `\ot_s81svc7_bmul_native' to `<abc-temp-dir>/input.blif'..
+
+11.1.1. Executed ABC.
+Extracted 0 gates and 0 wires to a netlist network with 0 inputs and 0 outputs.
+Don't call ABC as there is nothing to map.
+Removing temp directory.
+Removing global temp directory.
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81svc7_bmul_native..
+
+13. Executing Verilog backend.
+
+13.1. Executing BMUXMAP pass.
+
+13.2. Executing DEMUXMAP pass.
+Dumping module `\A2O1A1Ixp33_ASAP7_75t_R'.
+Dumping module `\A2O1A1O1Ixp25_ASAP7_75t_R'.
+Dumping module `\AND2x2_ASAP7_75t_R'.
+Dumping module `\AND2x4_ASAP7_75t_R'.
+Dumping module `\AND2x6_ASAP7_75t_R'.
+Dumping module `\AND3x1_ASAP7_75t_R'.
+Dumping module `\AND3x2_ASAP7_75t_R'.
+Dumping module `\AND3x4_ASAP7_75t_R'.
+Dumping module `\AND4x1_ASAP7_75t_R'.
+Dumping module `\AND4x2_ASAP7_75t_R'.
+Dumping module `\AND5x1_ASAP7_75t_R'.
+Dumping module `\AND5x2_ASAP7_75t_R'.
+Dumping module `\AO211x2_ASAP7_75t_R'.
+Dumping module `\AO21x1_ASAP7_75t_R'.
+Dumping module `\AO21x2_ASAP7_75t_R'.
+Dumping module `\AO221x1_ASAP7_75t_R'.
+Dumping module `\AO221x2_ASAP7_75t_R'.
+Dumping module `\AO222x2_ASAP7_75t_R'.
+Dumping module `\AO22x1_ASAP7_75t_R'.
+Dumping module `\AO22x2_ASAP7_75t_R'.
+Dumping module `\AO31x2_ASAP7_75t_R'.
+Dumping module `\AO322x2_ASAP7_75t_R'.
+Dumping module `\AO32x1_ASAP7_75t_R'.
+Dumping module `\AO32x2_ASAP7_75t_R'.
+Dumping module `\AO331x1_ASAP7_75t_R'.
+Dumping module `\AO331x2_ASAP7_75t_R'.
+Dumping module `\AO332x1_ASAP7_75t_R'.
+Dumping module `\AO332x2_ASAP7_75t_R'.
+Dumping module `\AO333x1_ASAP7_75t_R'.
+Dumping module `\AO333x2_ASAP7_75t_R'.
+Dumping module `\AO33x2_ASAP7_75t_R'.
+Dumping module `\AOI211x1_ASAP7_75t_R'.
+Dumping module `\AOI211xp5_ASAP7_75t_R'.
+Dumping module `\AOI21x1_ASAP7_75t_R'.
+Dumping module `\AOI21xp33_ASAP7_75t_R'.
+Dumping module `\AOI21xp5_ASAP7_75t_R'.
+Dumping module `\AOI221x1_ASAP7_75t_R'.
+Dumping module `\AOI221xp5_ASAP7_75t_R'.
+Dumping module `\AOI222xp33_ASAP7_75t_R'.
+Dumping module `\AOI22x1_ASAP7_75t_R'.
+Dumping module `\AOI22xp33_ASAP7_75t_R'.
+Dumping module `\AOI22xp5_ASAP7_75t_R'.
+Dumping module `\AOI311xp33_ASAP7_75t_R'.
+Dumping module `\AOI31xp33_ASAP7_75t_R'.
+Dumping module `\AOI31xp67_ASAP7_75t_R'.
+Dumping module `\AOI321xp33_ASAP7_75t_R'.
+Dumping module `\AOI322xp5_ASAP7_75t_R'.
+Dumping module `\AOI32xp33_ASAP7_75t_R'.
+Dumping module `\AOI331xp33_ASAP7_75t_R'.
+Dumping module `\AOI332xp33_ASAP7_75t_R'.
+Dumping module `\AOI333xp33_ASAP7_75t_R'.
+Dumping module `\AOI33xp33_ASAP7_75t_R'.
+Dumping module `\BUFx10_ASAP7_75t_R'.
+Dumping module `\BUFx12_ASAP7_75t_R'.
+Dumping module `\BUFx12f_ASAP7_75t_R'.
+Dumping module `\BUFx16f_ASAP7_75t_R'.
+Dumping module `\BUFx24_ASAP7_75t_R'.
+Dumping module `\BUFx2_ASAP7_75t_R'.
+Dumping module `\BUFx3_ASAP7_75t_R'.
+Dumping module `\BUFx4_ASAP7_75t_R'.
+Dumping module `\BUFx4f_ASAP7_75t_R'.
+Dumping module `\BUFx5_ASAP7_75t_R'.
+Dumping module `\BUFx6f_ASAP7_75t_R'.
+Dumping module `\BUFx8_ASAP7_75t_R'.
+Dumping module `\CKINVDCx10_ASAP7_75t_R'.
+Dumping module `\CKINVDCx11_ASAP7_75t_R'.
+Dumping module `\CKINVDCx12_ASAP7_75t_R'.
+Dumping module `\CKINVDCx14_ASAP7_75t_R'.
+Dumping module `\CKINVDCx16_ASAP7_75t_R'.
+Dumping module `\CKINVDCx20_ASAP7_75t_R'.
+Dumping module `\CKINVDCx5p33_ASAP7_75t_R'.
+Dumping module `\CKINVDCx6p67_ASAP7_75t_R'.
+Dumping module `\CKINVDCx8_ASAP7_75t_R'.
+Dumping module `\CKINVDCx9p33_ASAP7_75t_R'.
+Dumping module `\DFFASRHQNx1_ASAP7_75t_R'.
+Dumping module `\DFFHQNx1_ASAP7_75t_R'.
+Dumping module `\DFFHQNx2_ASAP7_75t_R'.
+Dumping module `\DFFHQNx3_ASAP7_75t_R'.
+Dumping module `\DFFHQx4_ASAP7_75t_R'.
+Dumping module `\DFFLQNx1_ASAP7_75t_R'.
+Dumping module `\DFFLQNx2_ASAP7_75t_R'.
+Dumping module `\DFFLQNx3_ASAP7_75t_R'.
+Dumping module `\DFFLQx4_ASAP7_75t_R'.
+Dumping module `\DHLx1_ASAP7_75t_R'.
+Dumping module `\DHLx2_ASAP7_75t_R'.
+Dumping module `\DHLx3_ASAP7_75t_R'.
+Dumping module `\DLLx1_ASAP7_75t_R'.
+Dumping module `\DLLx2_ASAP7_75t_R'.
+Dumping module `\DLLx3_ASAP7_75t_R'.
+Dumping module `\FAx1_ASAP7_75t_R'.
+Dumping module `\HAxp5_ASAP7_75t_R'.
+Dumping module `\HB1xp67_ASAP7_75t_R'.
+Dumping module `\HB2xp67_ASAP7_75t_R'.
+Dumping module `\HB3xp67_ASAP7_75t_R'.
+Dumping module `\HB4xp67_ASAP7_75t_R'.
+Dumping module `\ICGx1_ASAP7_75t_R'.
+Dumping module `\ICGx2_ASAP7_75t_R'.
+Dumping module `\ICGx2p67DC_ASAP7_75t_R'.
+Dumping module `\ICGx3_ASAP7_75t_R'.
+Dumping module `\ICGx4DC_ASAP7_75t_R'.
+Dumping module `\ICGx4_ASAP7_75t_R'.
+Dumping module `\ICGx5_ASAP7_75t_R'.
+Dumping module `\ICGx5p33DC_ASAP7_75t_R'.
+Dumping module `\ICGx6p67DC_ASAP7_75t_R'.
+Dumping module `\ICGx8DC_ASAP7_75t_R'.
+Dumping module `\INVx11_ASAP7_75t_R'.
+Dumping module `\INVx13_ASAP7_75t_R'.
+Dumping module `\INVx1_ASAP7_75t_R'.
+Dumping module `\INVx2_ASAP7_75t_R'.
+Dumping module `\INVx3_ASAP7_75t_R'.
+Dumping module `\INVx4_ASAP7_75t_R'.
+Dumping module `\INVx5_ASAP7_75t_R'.
+Dumping module `\INVx6_ASAP7_75t_R'.
+Dumping module `\INVx8_ASAP7_75t_R'.
+Dumping module `\INVxp33_ASAP7_75t_R'.
+Dumping module `\INVxp67_ASAP7_75t_R'.
+Dumping module `\MAJIxp5_ASAP7_75t_R'.
+Dumping module `\MAJx2_ASAP7_75t_R'.
+Dumping module `\MAJx3_ASAP7_75t_R'.
+Dumping module `\NAND2x1_ASAP7_75t_R'.
+Dumping module `\NAND2x1p5_ASAP7_75t_R'.
+Dumping module `\NAND2x2_ASAP7_75t_R'.
+Dumping module `\NAND2xp33_ASAP7_75t_R'.
+Dumping module `\NAND2xp5_ASAP7_75t_R'.
+Dumping module `\NAND2xp67_ASAP7_75t_R'.
+Dumping module `\NAND3x1_ASAP7_75t_R'.
+Dumping module `\NAND3x2_ASAP7_75t_R'.
+Dumping module `\NAND3xp33_ASAP7_75t_R'.
+Dumping module `\NAND4xp25_ASAP7_75t_R'.
+Dumping module `\NAND4xp75_ASAP7_75t_R'.
+Dumping module `\NAND5xp2_ASAP7_75t_R'.
+Dumping module `\NOR2x1_ASAP7_75t_R'.
+Dumping module `\NOR2x1p5_ASAP7_75t_R'.
+Dumping module `\NOR2x2_ASAP7_75t_R'.
+Dumping module `\NOR2xp33_ASAP7_75t_R'.
+Dumping module `\NOR2xp67_ASAP7_75t_R'.
+Dumping module `\NOR3x1_ASAP7_75t_R'.
+Dumping module `\NOR3x2_ASAP7_75t_R'.
+Dumping module `\NOR3xp33_ASAP7_75t_R'.
+Dumping module `\NOR4xp25_ASAP7_75t_R'.
+Dumping module `\NOR4xp75_ASAP7_75t_R'.
+Dumping module `\NOR5xp2_ASAP7_75t_R'.
+Dumping module `\O2A1O1Ixp33_ASAP7_75t_R'.
+Dumping module `\O2A1O1Ixp5_ASAP7_75t_R'.
+Dumping module `\OA211x2_ASAP7_75t_R'.
+Dumping module `\OA21x2_ASAP7_75t_R'.
+Dumping module `\OA221x2_ASAP7_75t_R'.
+Dumping module `\OA222x2_ASAP7_75t_R'.
+Dumping module `\OA22x2_ASAP7_75t_R'.
+Dumping module `\OA31x2_ASAP7_75t_R'.
+Dumping module `\OA331x1_ASAP7_75t_R'.
+Dumping module `\OA331x2_ASAP7_75t_R'.
+Dumping module `\OA332x1_ASAP7_75t_R'.
+Dumping module `\OA332x2_ASAP7_75t_R'.
+Dumping module `\OA333x1_ASAP7_75t_R'.
+Dumping module `\OA333x2_ASAP7_75t_R'.
+Dumping module `\OA33x2_ASAP7_75t_R'.
+Dumping module `\OAI211xp5_ASAP7_75t_R'.
+Dumping module `\OAI21x1_ASAP7_75t_R'.
+Dumping module `\OAI21xp33_ASAP7_75t_R'.
+Dumping module `\OAI21xp5_ASAP7_75t_R'.
+Dumping module `\OAI221xp5_ASAP7_75t_R'.
+Dumping module `\OAI222xp33_ASAP7_75t_R'.
+Dumping module `\OAI22x1_ASAP7_75t_R'.
+Dumping module `\OAI22xp33_ASAP7_75t_R'.
+Dumping module `\OAI22xp5_ASAP7_75t_R'.
+Dumping module `\OAI311xp33_ASAP7_75t_R'.
+Dumping module `\OAI31xp33_ASAP7_75t_R'.
+Dumping module `\OAI31xp67_ASAP7_75t_R'.
+Dumping module `\OAI321xp33_ASAP7_75t_R'.
+Dumping module `\OAI322xp33_ASAP7_75t_R'.
+Dumping module `\OAI32xp33_ASAP7_75t_R'.
+Dumping module `\OAI331xp33_ASAP7_75t_R'.
+Dumping module `\OAI332xp33_ASAP7_75t_R'.
+Dumping module `\OAI333xp33_ASAP7_75t_R'.
+Dumping module `\OAI33xp33_ASAP7_75t_R'.
+Dumping module `\OR2x2_ASAP7_75t_R'.
+Dumping module `\OR2x4_ASAP7_75t_R'.
+Dumping module `\OR2x6_ASAP7_75t_R'.
+Dumping module `\OR3x1_ASAP7_75t_R'.
+Dumping module `\OR3x2_ASAP7_75t_R'.
+Dumping module `\OR3x4_ASAP7_75t_R'.
+Dumping module `\OR4x1_ASAP7_75t_R'.
+Dumping module `\OR4x2_ASAP7_75t_R'.
+Dumping module `\OR5x1_ASAP7_75t_R'.
+Dumping module `\OR5x2_ASAP7_75t_R'.
+Dumping module `\SDFHx1_ASAP7_75t_R'.
+Dumping module `\SDFHx2_ASAP7_75t_R'.
+Dumping module `\SDFHx3_ASAP7_75t_R'.
+Dumping module `\SDFHx4_ASAP7_75t_R'.
+Dumping module `\SDFLx1_ASAP7_75t_R'.
+Dumping module `\SDFLx2_ASAP7_75t_R'.
+Dumping module `\SDFLx3_ASAP7_75t_R'.
+Dumping module `\SDFLx4_ASAP7_75t_R'.
+Dumping module `\TIEHIx1_ASAP7_75t_R'.
+Dumping module `\TIELOx1_ASAP7_75t_R'.
+Dumping module `\XNOR2x1_ASAP7_75t_R'.
+Dumping module `\XNOR2x2_ASAP7_75t_R'.
+Dumping module `\XNOR2xp5_ASAP7_75t_R'.
+Dumping module `\XOR2x1_ASAP7_75t_R'.
+Dumping module `\XOR2x2_ASAP7_75t_R'.
+Dumping module `\XOR2xp5_ASAP7_75t_R'.
+
+14. Executing Verilog backend.
+
+14.1. Executing BMUXMAP pass.
+
+14.2. Executing DEMUXMAP pass.
+Dumping module `\ot_s81svc7_bmul_native'.
+
+15. Executing JSON backend.
+
+End of script. Logfile hash: 4394aa84df, time: 1.98s, user: 0.86s, system: 0.35s, MEM: 80.72 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 42% 2x abc (0 sec), 25% 10x read_liberty (0 sec), ...

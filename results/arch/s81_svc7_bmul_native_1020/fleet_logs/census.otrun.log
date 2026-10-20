@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020
+ot-run: ot-epyc7       admits   662 GB (avail 564, growth 101, headroom 0, waiters 0/0 GB) load 74/96 running 34 disk 5724 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2342572-1792483672 after 0 s
+textbook_lint: PASS ot_s81svc7_bmul_native cells 1,428 flops 305 depth 406.7 ps util None reach None um (0.0 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=305 root=port:clk rule=PASS: 305 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2342572-1792483672): exit 0

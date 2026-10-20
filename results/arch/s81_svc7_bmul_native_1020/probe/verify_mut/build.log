@@ -1,0 +1,1172 @@
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/native.v:2:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | module ot_s81svc7_bmul_native(clk,rst_n,a,b,pad,y,flt);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    3 | module A2O1A1Ixp33_ASAP7_75t_R(A1, A2, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:35:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   35 | module A2O1A1O1Ixp25_ASAP7_75t_R(A1, A2, B, C, D, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:81:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   81 | module AND2x2_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:93:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   93 | module AND2x4_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:105:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  105 | module AND2x6_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:117:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  117 | module AND3x1_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:133:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  133 | module AND3x2_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:149:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  149 | module AND3x4_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:165:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  165 | module AND4x1_ASAP7_75t_R(A, B, C, D, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:185:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  185 | module AND4x2_ASAP7_75t_R(A, B, C, D, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:205:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  205 | module AND5x1_ASAP7_75t_R(A, B, C, D, E, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:229:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  229 | module AND5x2_ASAP7_75t_R(A, B, C, D, E, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:253:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  253 | module AO211x2_ASAP7_75t_R(A1, A2, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:273:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  273 | module AO21x1_ASAP7_75t_R(A1, A2, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:289:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  289 | module AO21x2_ASAP7_75t_R(A1, A2, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:305:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  305 | module AO221x1_ASAP7_75t_R(A1, A2, B1, B2, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:329:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  329 | module AO221x2_ASAP7_75t_R(A1, A2, B1, B2, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:353:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  353 | module AO222x2_ASAP7_75t_R(A1, A2, B1, B2, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:381:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  381 | module AO22x1_ASAP7_75t_R(A1, A2, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:401:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  401 | module AO22x2_ASAP7_75t_R(A1, A2, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:421:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  421 | module AO31x2_ASAP7_75t_R(A1, A2, A3, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:441:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  441 | module AO322x2_ASAP7_75t_R(A1, A2, A3, B1, B2, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:473:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  473 | module AO32x1_ASAP7_75t_R(A1, A2, A3, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:497:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  497 | module AO32x2_ASAP7_75t_R(A1, A2, A3, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:521:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  521 | module AO331x1_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:553:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  553 | module AO331x2_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:585:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  585 | module AO332x1_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:621:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  621 | module AO332x2_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:657:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  657 | module AO333x1_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2, C3);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:697:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  697 | module AO333x2_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2, C3);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:737:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  737 | module AO33x2_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:765:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  765 | module AOI211x1_ASAP7_75t_R(A1, A2, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:801:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  801 | module AOI211xp5_ASAP7_75t_R(A1, A2, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:837:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  837 | module AOI21x1_ASAP7_75t_R(A1, A2, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:863:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  863 | module AOI21xp33_ASAP7_75t_R(A1, A2, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:889:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  889 | module AOI21xp5_ASAP7_75t_R(A1, A2, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:915:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  915 | module AOI221x1_ASAP7_75t_R(A1, A2, B1, B2, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:977:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  977 | module AOI221xp5_ASAP7_75t_R(A1, A2, B1, B2, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1039:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1039 | module AOI222xp33_ASAP7_75t_R(A1, A2, B1, B2, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1151:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1151 | module AOI22x1_ASAP7_75t_R(A1, A2, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1195:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1195 | module AOI22xp33_ASAP7_75t_R(A1, A2, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1239:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1239 | module AOI22xp5_ASAP7_75t_R(A1, A2, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1283:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1283 | module AOI311xp33_ASAP7_75t_R(A1, A2, A3, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1333:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1333 | module AOI31xp33_ASAP7_75t_R(A1, A2, A3, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1369:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1369 | module AOI31xp67_ASAP7_75t_R(A1, A2, A3, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1405:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1405 | module AOI321xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1493:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1493 | module AOI322xp5_ASAP7_75t_R(A1, A2, A3, B1, B2, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1655:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1655 | module AOI32xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1717:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1717 | module AOI331xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:1843:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 1843 | module AOI332xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2079:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2079 | module AOI333xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2, C3);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2425:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2425 | module AOI33xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2513:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2513 | module BUFx10_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2521:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2521 | module BUFx12_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2529:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2529 | module BUFx12f_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2537:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2537 | module BUFx16f_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2545:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2545 | module BUFx24_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2553:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2553 | module BUFx2_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2561:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2561 | module BUFx3_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2569:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2569 | module BUFx4_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2577:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2577 | module BUFx4f_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2585:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2585 | module BUFx5_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2593:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2593 | module BUFx6f_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2601:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2601 | module BUFx8_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2609:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2609 | module CKINVDCx10_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2619:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2619 | module CKINVDCx11_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2629:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2629 | module CKINVDCx12_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2639:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2639 | module CKINVDCx14_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2649:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2649 | module CKINVDCx16_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2659:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2659 | module CKINVDCx20_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2669:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2669 | module CKINVDCx5p33_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2679:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2679 | module CKINVDCx6p67_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2689:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2689 | module CKINVDCx8_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2699:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2699 | module CKINVDCx9p33_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2709:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2709 | module DFFASRHQNx1_ASAP7_75t_R(CLK, D, QN, RESETN, SETN);
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2745:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2745 | module DFFHQNx1_ASAP7_75t_R(CLK, D, QN);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2765:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2765 | module DFFHQNx2_ASAP7_75t_R(CLK, D, QN);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2785:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2785 | module DFFHQNx3_ASAP7_75t_R(CLK, D, QN);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2805:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2805 | module DFFHQx4_ASAP7_75t_R(CLK, D, Q);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2823:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2823 | module DFFLQNx1_ASAP7_75t_R(CLK, D, QN);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2845:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2845 | module DFFLQNx2_ASAP7_75t_R(CLK, D, QN);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2867:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2867 | module DFFLQNx3_ASAP7_75t_R(CLK, D, QN);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2889:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2889 | module DFFLQx4_ASAP7_75t_R(CLK, D, Q);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2909:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2909 | module DHLx1_ASAP7_75t_R(CLK, D, Q);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2924:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2924 | module DHLx2_ASAP7_75t_R(CLK, D, Q);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2939:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2939 | module DHLx3_ASAP7_75t_R(CLK, D, Q);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2954:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2954 | module DLLx1_ASAP7_75t_R(CLK, D, Q);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2971:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2971 | module DLLx2_ASAP7_75t_R(CLK, D, Q);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:2988:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 2988 | module DLLx3_ASAP7_75t_R(CLK, D, Q);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3005:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3005 | module FAx1_ASAP7_75t_R(A, B, CI, CON, SN);
+      |        ^~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3076:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3076 | module HAxp5_ASAP7_75t_R(A, B, CON, SN);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3105:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3105 | module HB1xp67_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3113:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3113 | module HB2xp67_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3121:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3121 | module HB3xp67_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3129:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3129 | module HB4xp67_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3137:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3137 | module INVx11_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3147:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3147 | module INVx13_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3157:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3157 | module INVx1_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3167:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3167 | module INVx2_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3177:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3177 | module INVx3_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3187:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3187 | module INVx4_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3197:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3197 | module INVx5_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3207:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3207 | module INVx6_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3217:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3217 | module INVx8_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3227:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3227 | module INVxp33_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3237:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3237 | module INVxp67_ASAP7_75t_R(A, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3247:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3247 | module MAJIxp5_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3281:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3281 | module MAJx2_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3303:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3303 | module MAJx3_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3325:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3325 | module NAND2x1_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3341:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3341 | module NAND2x1p5_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3357:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3357 | module NAND2x2_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3373:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3373 | module NAND2xp33_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3389:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3389 | module NAND2xp5_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3405:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3405 | module NAND2xp67_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3421:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3421 | module NAND3x1_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3443:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3443 | module NAND3x2_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3465:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3465 | module NAND3xp33_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3487:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3487 | module NAND4xp25_ASAP7_75t_R(A, B, C, D, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3515:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3515 | module NAND4xp75_ASAP7_75t_R(A, B, C, D, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3543:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3543 | module NAND5xp2_ASAP7_75t_R(A, B, C, D, E, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3577:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3577 | module NOR2x1_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3593:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3593 | module NOR2x1p5_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3609:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3609 | module NOR2x2_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3625:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3625 | module NOR2xp33_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3641:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3641 | module NOR2xp67_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3657:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3657 | module NOR3x1_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3679:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3679 | module NOR3x2_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3701:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3701 | module NOR3xp33_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3723:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3723 | module NOR4xp25_ASAP7_75t_R(A, B, C, D, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3751:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3751 | module NOR4xp75_ASAP7_75t_R(A, B, C, D, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3779:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3779 | module NOR5xp2_ASAP7_75t_R(A, B, C, D, E, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3813:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3813 | module O2A1O1Ixp33_ASAP7_75t_R(A1, A2, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3845:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3845 | module O2A1O1Ixp5_ASAP7_75t_R(A1, A2, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3877:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3877 | module OA211x2_ASAP7_75t_R(A1, A2, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3901:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3901 | module OA21x2_ASAP7_75t_R(A1, A2, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3919:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3919 | module OA221x2_ASAP7_75t_R(A1, A2, B1, B2, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:3957:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 3957 | module OA222x2_ASAP7_75t_R(A1, A2, B1, B2, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4021:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4021 | module OA22x2_ASAP7_75t_R(A1, A2, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4049:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4049 | module OA31x2_ASAP7_75t_R(A1, A2, A3, B1, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4073:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4073 | module OA331x1_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4145:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4145 | module OA331x2_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4217:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4217 | module OA332x1_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4345:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4345 | module OA332x2_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4473:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4473 | module OA333x1_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2, C3);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4657:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4657 | module OA333x2_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2, C3);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4841:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4841 | module OA33x2_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4893:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4893 | module OAI211xp5_ASAP7_75t_R(A1, A2, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4921:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4921 | module OAI21x1_ASAP7_75t_R(A1, A2, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4943:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4943 | module OAI21xp33_ASAP7_75t_R(A1, A2, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4965:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4965 | module OAI21xp5_ASAP7_75t_R(A1, A2, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:4987:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 4987 | module OAI221xp5_ASAP7_75t_R(A1, A2, B1, B2, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5021:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5021 | module OAI222xp33_ASAP7_75t_R(A1, A2, B1, B2, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5061:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5061 | module OAI22x1_ASAP7_75t_R(A1, A2, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5089:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5089 | module OAI22xp33_ASAP7_75t_R(A1, A2, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5117:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5117 | module OAI22xp5_ASAP7_75t_R(A1, A2, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5145:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5145 | module OAI311xp33_ASAP7_75t_R(A1, A2, A3, B1, Y, C1);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5179:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5179 | module OAI31xp33_ASAP7_75t_R(A1, A2, A3, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5207:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5207 | module OAI31xp67_ASAP7_75t_R(A1, A2, A3, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5235:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5235 | module OAI321xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, C, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5275:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5275 | module OAI322xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5321:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5321 | module OAI32xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5355:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5355 | module OAI331xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5401:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5401 | module OAI332xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5453:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5453 | module OAI333xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y, C1, C2, C3);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5511:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5511 | module OAI33xp33_ASAP7_75t_R(A1, A2, A3, B1, B2, B3, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5551:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5551 | module OR2x2_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5563:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5563 | module OR2x4_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5575:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5575 | module OR2x6_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5587:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5587 | module OR3x1_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5603:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5603 | module OR3x2_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5619:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5619 | module OR3x4_ASAP7_75t_R(A, B, C, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5635:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5635 | module OR4x1_ASAP7_75t_R(A, B, C, D, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5655:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5655 | module OR4x2_ASAP7_75t_R(A, B, C, D, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5675:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5675 | module OR5x1_ASAP7_75t_R(A, B, C, D, E, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5699:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5699 | module OR5x2_ASAP7_75t_R(A, B, C, D, E, Y);
+      |        ^~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5723:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5723 | module SDFHx1_ASAP7_75t_R(CLK, D, QN, SE, SI);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5765:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5765 | module SDFHx2_ASAP7_75t_R(CLK, D, QN, SE, SI);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5807:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5807 | module SDFHx3_ASAP7_75t_R(CLK, D, QN, SE, SI);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5849:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5849 | module SDFHx4_ASAP7_75t_R(CLK, D, QN, SE, SI);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5891:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5891 | module SDFLx1_ASAP7_75t_R(CLK, D, QN, SE, SI);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5935:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5935 | module SDFLx2_ASAP7_75t_R(CLK, D, QN, SE, SI);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:5979:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 5979 | module SDFLx3_ASAP7_75t_R(CLK, D, QN, SE, SI);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:6023:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 6023 | module SDFLx4_ASAP7_75t_R(CLK, D, QN, SE, SI);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:6067:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 6067 | module TIEHIx1_ASAP7_75t_R(H);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:6073:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 6073 | module TIELOx1_ASAP7_75t_R(L);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:6079:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 6079 | module XNOR2x1_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:6099:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 6099 | module XNOR2x2_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:6119:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 6119 | module XNOR2xp5_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:6139:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 6139 | module XOR2x1_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:6159:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 6159 | module XOR2x2_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/cells.v:6179:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+ 6179 | module XOR2xp5_ASAP7_75t_R(A, B, Y);
+      |        ^~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv:21:8: ... Location of module with timescale
+   21 | module ot_hdc_v41x_attn_bmul_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+make: Entering directory '/srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vtb_svc7_bmul.cpp Vtb_svc7_bmul___024root__0.cpp Vtb_svc7_bmul__main.cpp Vtb_svc7_bmul___024root__Slow.cpp Vtb_svc7_bmul___024root__0__Slow.cpp Vtb_svc7_bmul__Syms__Slow.cpp > Vtb_svc7_bmul__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o Vtb_svc7_bmul__ALL.o Vtb_svc7_bmul__ALL.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_svc7_bmul__ALL.a    -pthread -lpthread -latomic   -o sim
+rm Vtb_svc7_bmul__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/codex-svc7-bmul-native-1020/out_graph2/verify_mut/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.007 MB sources in 219 modules, into 0.673 MB in 6 C++ files needing 0.001 MB
+- Verilator: Walltime 6.907 s (elab=0.073, cvt=0.347, bld=6.390); cpu 0.535 s on 4 threads; allocated 82.438 MB

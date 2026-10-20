@@ -1,0 +1,16 @@
+read_verilog -sv /src/rtl/hdc/v41x/ot_s81svc7_bmul_graph_input.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv /src/rtl/hdc/ot_hdc_prefix.sv 
+hierarchy -top ot_s81svc7_bmul_graph_input
+tcl /src/physical/common_flow/ot_keep_regs.tcl
+synth -top ot_s81svc7_bmul_graph_input -flatten -noshare
+dfflibmap -liberty /tmp/lib/SEQ.lib
+abc -liberty /tmp/lib/SIMPLE.lib -liberty /tmp/lib/AO.lib -liberty /tmp/lib/OA.lib -liberty /tmp/lib/INVBUF.lib -liberty /tmp/lib/SEQ.lib
+opt_clean
+stat -liberty /tmp/lib/SIMPLE.lib -liberty /tmp/lib/AO.lib -liberty /tmp/lib/OA.lib -liberty /tmp/lib/INVBUF.lib -liberty /tmp/lib/SEQ.lib
+write_verilog -noattr /out/mapped.v
+read_liberty -lib /tmp/lib/SIMPLE.lib
+read_liberty -lib /tmp/lib/AO.lib
+read_liberty -lib /tmp/lib/OA.lib
+read_liberty -lib /tmp/lib/INVBUF.lib
+read_liberty -lib /tmp/lib/SEQ.lib
+hierarchy -check -top ot_s81svc7_bmul_graph_input
+write_json /out/mapped.json

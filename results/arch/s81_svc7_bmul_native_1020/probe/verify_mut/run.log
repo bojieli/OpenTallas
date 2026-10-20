@@ -1,0 +1,9 @@
+BMUL_DIFF cycle=45 got=0bf800000 expected=000000000
+BMUL_DIFF cycle=109 got=0bf800000 expected=000000000
+BMUL_DIFF cycle=111 got=0b0c44400 expected=000000000
+BMUL_DIFF cycle=9008 got=100000000 expected=000000000
+BMUL_DIFF cycle=9009 got=0d70fff00 expected=000000000
+SVC7_BMUL checked=19991 errors=5 latency=7 verdict=FAIL
+[40000000] %Fatal: tb_svc7_bmul.sv:37: Assertion failed in tb_svc7_bmul: BMUL_FAIL
+%Error: tools/s81_dv/svc_rs/tb_svc7_bmul.sv:37: Verilog $stop
+Aborting...

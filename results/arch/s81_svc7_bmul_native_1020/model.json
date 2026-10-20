@@ -1,0 +1,41 @@
+{
+  "status": "MODEL ONLY; not adopted",
+  "mechanism": "input pin capture + original ML6 arithmetic with recursive actual logic and state replication",
+  "baseline_edges": 6,
+  "candidate_edges": 7,
+  "delta_edges": 1,
+  "period_ns": 0.8333333333333334,
+  "delta_ns": 0.8333333333333334,
+  "products_per_cycle": 1,
+  "input_bits_per_cycle": 33,
+  "output_bits_per_cycle": 33,
+  "clock_bits": 1,
+  "reset_bits": 1,
+  "reset_landing_edges": 2,
+  "stationary_bits": 0,
+  "replication_limit": 24,
+  "area": "mapped measurement required; no layout admitted",
+  "hierarchy": "4 heads, 4 chunks/head, 8 sequential products/chunk; golden sum order unchanged",
+  "group_product_instances": 128,
+  "group_latency_delta_edges": 1,
+  "initial_state_contract": "arbitrary unreset arithmetic state; output usable only seven edges after live input; reset injects PAD before original cut, no valid output exists",
+  "measured": {
+    "baseline": {
+      "std_um2": 170.7317999999979,
+      "flops": 294,
+      "cells": 1425
+    },
+    "retained": {
+      "std_um2": 173.5894800000017,
+      "flops": 305,
+      "cells": 1428
+    },
+    "delta_std_um2": 2.8576800000038247,
+    "over32": 0,
+    "depth_ps": 406.7,
+    "depth_levels": 12,
+    "scope": "mapped census/depth estimate; no routed closure",
+    "latency_edges": 7
+  },
+  "qualification": "native32 and exact PASS; independent initial-state SAT pending; no layout/reach/clock qualification"
+}

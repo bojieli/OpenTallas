@@ -1,0 +1,6 @@
+read_liberty -ignore_miss_func /tmp/lib/SIMPLE.lib
+read_liberty -ignore_miss_func /tmp/lib/AO.lib
+read_liberty -ignore_miss_func /tmp/lib/OA.lib
+read_liberty -ignore_miss_func /tmp/lib/INVBUF.lib
+read_liberty -ignore_miss_func /tmp/lib/SEQ.lib
+write_verilog -noattr /out/cells.v

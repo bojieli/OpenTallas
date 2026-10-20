@@ -1,0 +1,237 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/models.ys' --
+
+1. Executing Liberty frontend: /tmp/lib/SIMPLE.lib
+Imported 56 cell types from liberty file.
+
+2. Executing Liberty frontend: /tmp/lib/AO.lib
+Imported 42 cell types from liberty file.
+
+3. Executing Liberty frontend: /tmp/lib/OA.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: /tmp/lib/INVBUF.lib
+Imported 37 cell types from liberty file.
+
+5. Executing Liberty frontend: /tmp/lib/SEQ.lib
+Ignoring cell ICGx1_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx2_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx2p67DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx3_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx4DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx4_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx5_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx5p33DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx6p67DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx8DC_ASAP7_75t_R with missing function on output IQ.
+Imported 23 cell types from liberty file.
+<suppressed ~2 debug messages>
+
+6. Executing Verilog backend.
+
+6.1. Executing BMUXMAP pass.
+
+6.2. Executing DEMUXMAP pass.
+Dumping module `\A2O1A1Ixp33_ASAP7_75t_R'.
+Dumping module `\A2O1A1O1Ixp25_ASAP7_75t_R'.
+Dumping module `\AND2x2_ASAP7_75t_R'.
+Dumping module `\AND2x4_ASAP7_75t_R'.
+Dumping module `\AND2x6_ASAP7_75t_R'.
+Dumping module `\AND3x1_ASAP7_75t_R'.
+Dumping module `\AND3x2_ASAP7_75t_R'.
+Dumping module `\AND3x4_ASAP7_75t_R'.
+Dumping module `\AND4x1_ASAP7_75t_R'.
+Dumping module `\AND4x2_ASAP7_75t_R'.
+Dumping module `\AND5x1_ASAP7_75t_R'.
+Dumping module `\AND5x2_ASAP7_75t_R'.
+Dumping module `\AO211x2_ASAP7_75t_R'.
+Dumping module `\AO21x1_ASAP7_75t_R'.
+Dumping module `\AO21x2_ASAP7_75t_R'.
+Dumping module `\AO221x1_ASAP7_75t_R'.
+Dumping module `\AO221x2_ASAP7_75t_R'.
+Dumping module `\AO222x2_ASAP7_75t_R'.
+Dumping module `\AO22x1_ASAP7_75t_R'.
+Dumping module `\AO22x2_ASAP7_75t_R'.
+Dumping module `\AO31x2_ASAP7_75t_R'.
+Dumping module `\AO322x2_ASAP7_75t_R'.
+Dumping module `\AO32x1_ASAP7_75t_R'.
+Dumping module `\AO32x2_ASAP7_75t_R'.
+Dumping module `\AO331x1_ASAP7_75t_R'.
+Dumping module `\AO331x2_ASAP7_75t_R'.
+Dumping module `\AO332x1_ASAP7_75t_R'.
+Dumping module `\AO332x2_ASAP7_75t_R'.
+Dumping module `\AO333x1_ASAP7_75t_R'.
+Dumping module `\AO333x2_ASAP7_75t_R'.
+Dumping module `\AO33x2_ASAP7_75t_R'.
+Dumping module `\AOI211x1_ASAP7_75t_R'.
+Dumping module `\AOI211xp5_ASAP7_75t_R'.
+Dumping module `\AOI21x1_ASAP7_75t_R'.
+Dumping module `\AOI21xp33_ASAP7_75t_R'.
+Dumping module `\AOI21xp5_ASAP7_75t_R'.
+Dumping module `\AOI221x1_ASAP7_75t_R'.
+Dumping module `\AOI221xp5_ASAP7_75t_R'.
+Dumping module `\AOI222xp33_ASAP7_75t_R'.
+Dumping module `\AOI22x1_ASAP7_75t_R'.
+Dumping module `\AOI22xp33_ASAP7_75t_R'.
+Dumping module `\AOI22xp5_ASAP7_75t_R'.
+Dumping module `\AOI311xp33_ASAP7_75t_R'.
+Dumping module `\AOI31xp33_ASAP7_75t_R'.
+Dumping module `\AOI31xp67_ASAP7_75t_R'.
+Dumping module `\AOI321xp33_ASAP7_75t_R'.
+Dumping module `\AOI322xp5_ASAP7_75t_R'.
+Dumping module `\AOI32xp33_ASAP7_75t_R'.
+Dumping module `\AOI331xp33_ASAP7_75t_R'.
+Dumping module `\AOI332xp33_ASAP7_75t_R'.
+Dumping module `\AOI333xp33_ASAP7_75t_R'.
+Dumping module `\AOI33xp33_ASAP7_75t_R'.
+Dumping module `\BUFx10_ASAP7_75t_R'.
+Dumping module `\BUFx12_ASAP7_75t_R'.
+Dumping module `\BUFx12f_ASAP7_75t_R'.
+Dumping module `\BUFx16f_ASAP7_75t_R'.
+Dumping module `\BUFx24_ASAP7_75t_R'.
+Dumping module `\BUFx2_ASAP7_75t_R'.
+Dumping module `\BUFx3_ASAP7_75t_R'.
+Dumping module `\BUFx4_ASAP7_75t_R'.
+Dumping module `\BUFx4f_ASAP7_75t_R'.
+Dumping module `\BUFx5_ASAP7_75t_R'.
+Dumping module `\BUFx6f_ASAP7_75t_R'.
+Dumping module `\BUFx8_ASAP7_75t_R'.
+Dumping module `\CKINVDCx10_ASAP7_75t_R'.
+Dumping module `\CKINVDCx11_ASAP7_75t_R'.
+Dumping module `\CKINVDCx12_ASAP7_75t_R'.
+Dumping module `\CKINVDCx14_ASAP7_75t_R'.
+Dumping module `\CKINVDCx16_ASAP7_75t_R'.
+Dumping module `\CKINVDCx20_ASAP7_75t_R'.
+Dumping module `\CKINVDCx5p33_ASAP7_75t_R'.
+Dumping module `\CKINVDCx6p67_ASAP7_75t_R'.
+Dumping module `\CKINVDCx8_ASAP7_75t_R'.
+Dumping module `\CKINVDCx9p33_ASAP7_75t_R'.
+Dumping module `\DFFASRHQNx1_ASAP7_75t_R'.
+Dumping module `\DFFHQNx1_ASAP7_75t_R'.
+Dumping module `\DFFHQNx2_ASAP7_75t_R'.
+Dumping module `\DFFHQNx3_ASAP7_75t_R'.
+Dumping module `\DFFHQx4_ASAP7_75t_R'.
+Dumping module `\DFFLQNx1_ASAP7_75t_R'.
+Dumping module `\DFFLQNx2_ASAP7_75t_R'.
+Dumping module `\DFFLQNx3_ASAP7_75t_R'.
+Dumping module `\DFFLQx4_ASAP7_75t_R'.
+Dumping module `\DHLx1_ASAP7_75t_R'.
+Dumping module `\DHLx2_ASAP7_75t_R'.
+Dumping module `\DHLx3_ASAP7_75t_R'.
+Dumping module `\DLLx1_ASAP7_75t_R'.
+Dumping module `\DLLx2_ASAP7_75t_R'.
+Dumping module `\DLLx3_ASAP7_75t_R'.
+Dumping module `\FAx1_ASAP7_75t_R'.
+Dumping module `\HAxp5_ASAP7_75t_R'.
+Dumping module `\HB1xp67_ASAP7_75t_R'.
+Dumping module `\HB2xp67_ASAP7_75t_R'.
+Dumping module `\HB3xp67_ASAP7_75t_R'.
+Dumping module `\HB4xp67_ASAP7_75t_R'.
+Dumping module `\INVx11_ASAP7_75t_R'.
+Dumping module `\INVx13_ASAP7_75t_R'.
+Dumping module `\INVx1_ASAP7_75t_R'.
+Dumping module `\INVx2_ASAP7_75t_R'.
+Dumping module `\INVx3_ASAP7_75t_R'.
+Dumping module `\INVx4_ASAP7_75t_R'.
+Dumping module `\INVx5_ASAP7_75t_R'.
+Dumping module `\INVx6_ASAP7_75t_R'.
+Dumping module `\INVx8_ASAP7_75t_R'.
+Dumping module `\INVxp33_ASAP7_75t_R'.
+Dumping module `\INVxp67_ASAP7_75t_R'.
+Dumping module `\MAJIxp5_ASAP7_75t_R'.
+Dumping module `\MAJx2_ASAP7_75t_R'.
+Dumping module `\MAJx3_ASAP7_75t_R'.
+Dumping module `\NAND2x1_ASAP7_75t_R'.
+Dumping module `\NAND2x1p5_ASAP7_75t_R'.
+Dumping module `\NAND2x2_ASAP7_75t_R'.
+Dumping module `\NAND2xp33_ASAP7_75t_R'.
+Dumping module `\NAND2xp5_ASAP7_75t_R'.
+Dumping module `\NAND2xp67_ASAP7_75t_R'.
+Dumping module `\NAND3x1_ASAP7_75t_R'.
+Dumping module `\NAND3x2_ASAP7_75t_R'.
+Dumping module `\NAND3xp33_ASAP7_75t_R'.
+Dumping module `\NAND4xp25_ASAP7_75t_R'.
+Dumping module `\NAND4xp75_ASAP7_75t_R'.
+Dumping module `\NAND5xp2_ASAP7_75t_R'.
+Dumping module `\NOR2x1_ASAP7_75t_R'.
+Dumping module `\NOR2x1p5_ASAP7_75t_R'.
+Dumping module `\NOR2x2_ASAP7_75t_R'.
+Dumping module `\NOR2xp33_ASAP7_75t_R'.
+Dumping module `\NOR2xp67_ASAP7_75t_R'.
+Dumping module `\NOR3x1_ASAP7_75t_R'.
+Dumping module `\NOR3x2_ASAP7_75t_R'.
+Dumping module `\NOR3xp33_ASAP7_75t_R'.
+Dumping module `\NOR4xp25_ASAP7_75t_R'.
+Dumping module `\NOR4xp75_ASAP7_75t_R'.
+Dumping module `\NOR5xp2_ASAP7_75t_R'.
+Dumping module `\O2A1O1Ixp33_ASAP7_75t_R'.
+Dumping module `\O2A1O1Ixp5_ASAP7_75t_R'.
+Dumping module `\OA211x2_ASAP7_75t_R'.
+Dumping module `\OA21x2_ASAP7_75t_R'.
+Dumping module `\OA221x2_ASAP7_75t_R'.
+Dumping module `\OA222x2_ASAP7_75t_R'.
+Dumping module `\OA22x2_ASAP7_75t_R'.
+Dumping module `\OA31x2_ASAP7_75t_R'.
+Dumping module `\OA331x1_ASAP7_75t_R'.
+Dumping module `\OA331x2_ASAP7_75t_R'.
+Dumping module `\OA332x1_ASAP7_75t_R'.
+Dumping module `\OA332x2_ASAP7_75t_R'.
+Dumping module `\OA333x1_ASAP7_75t_R'.
+Dumping module `\OA333x2_ASAP7_75t_R'.
+Dumping module `\OA33x2_ASAP7_75t_R'.
+Dumping module `\OAI211xp5_ASAP7_75t_R'.
+Dumping module `\OAI21x1_ASAP7_75t_R'.
+Dumping module `\OAI21xp33_ASAP7_75t_R'.
+Dumping module `\OAI21xp5_ASAP7_75t_R'.
+Dumping module `\OAI221xp5_ASAP7_75t_R'.
+Dumping module `\OAI222xp33_ASAP7_75t_R'.
+Dumping module `\OAI22x1_ASAP7_75t_R'.
+Dumping module `\OAI22xp33_ASAP7_75t_R'.
+Dumping module `\OAI22xp5_ASAP7_75t_R'.
+Dumping module `\OAI311xp33_ASAP7_75t_R'.
+Dumping module `\OAI31xp33_ASAP7_75t_R'.
+Dumping module `\OAI31xp67_ASAP7_75t_R'.
+Dumping module `\OAI321xp33_ASAP7_75t_R'.
+Dumping module `\OAI322xp33_ASAP7_75t_R'.
+Dumping module `\OAI32xp33_ASAP7_75t_R'.
+Dumping module `\OAI331xp33_ASAP7_75t_R'.
+Dumping module `\OAI332xp33_ASAP7_75t_R'.
+Dumping module `\OAI333xp33_ASAP7_75t_R'.
+Dumping module `\OAI33xp33_ASAP7_75t_R'.
+Dumping module `\OR2x2_ASAP7_75t_R'.
+Dumping module `\OR2x4_ASAP7_75t_R'.
+Dumping module `\OR2x6_ASAP7_75t_R'.
+Dumping module `\OR3x1_ASAP7_75t_R'.
+Dumping module `\OR3x2_ASAP7_75t_R'.
+Dumping module `\OR3x4_ASAP7_75t_R'.
+Dumping module `\OR4x1_ASAP7_75t_R'.
+Dumping module `\OR4x2_ASAP7_75t_R'.
+Dumping module `\OR5x1_ASAP7_75t_R'.
+Dumping module `\OR5x2_ASAP7_75t_R'.
+Dumping module `\SDFHx1_ASAP7_75t_R'.
+Dumping module `\SDFHx2_ASAP7_75t_R'.
+Dumping module `\SDFHx3_ASAP7_75t_R'.
+Dumping module `\SDFHx4_ASAP7_75t_R'.
+Dumping module `\SDFLx1_ASAP7_75t_R'.
+Dumping module `\SDFLx2_ASAP7_75t_R'.
+Dumping module `\SDFLx3_ASAP7_75t_R'.
+Dumping module `\SDFLx4_ASAP7_75t_R'.
+Dumping module `\TIEHIx1_ASAP7_75t_R'.
+Dumping module `\TIELOx1_ASAP7_75t_R'.
+Dumping module `\XNOR2x1_ASAP7_75t_R'.
+Dumping module `\XNOR2x2_ASAP7_75t_R'.
+Dumping module `\XNOR2xp5_ASAP7_75t_R'.
+Dumping module `\XOR2x1_ASAP7_75t_R'.
+Dumping module `\XOR2x2_ASAP7_75t_R'.
+Dumping module `\XOR2xp5_ASAP7_75t_R'.
+
+End of script. Logfile hash: e42f87638c, time: 0.60s, user: 0.54s, system: 0.13s, MEM: 79.03 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 98% 10x read_liberty (0 sec), 1% 2x write_verilog (0 sec), ...
