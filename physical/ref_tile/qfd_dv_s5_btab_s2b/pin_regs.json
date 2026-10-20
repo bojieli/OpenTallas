@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_btab_safe",
+ "enable": false,
+ "reason": "SRAM macro input registers and sixteen kept one-hot select captures register every read/write input; bt_q is the direct 256-bit capture flop Q. Zero added cycles, no resettable state."
+}
