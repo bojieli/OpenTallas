@@ -1,0 +1,14 @@
+LK_AGE lag=0 checked=922 mism=0
+LK_AGE lag=1 checked=923 mism=923
+LK_AGE lag=2 checked=924 mism=924
+LK_AGE lag=3 checked=923 mism=923
+LK_AGE lag=4 checked=922 mism=922
+LK_AGE lag=5 checked=921 mism=921
+LK_AGE lag=6 checked=920 mism=920
+LK_AGE lag=7 checked=919 mism=919
+LK_AGE lag=8 checked=918 mism=902
+LK_AGE_PASS seed=-198373595 measured_lag=0 compared=922 phases=2
+- /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020/tb_lk_pr0.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 1.341 s; speed 2.369 us/s
+- Verilator: cpu 1.341 s on 1 threads; allocated 36 MB

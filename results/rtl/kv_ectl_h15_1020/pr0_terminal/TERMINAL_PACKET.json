@@ -1,0 +1,54 @@
+{
+  "scope": "PRIVATE_FULL16_LANE_LK_LOGICAL_ONLY_NO_KIT_OR_PHYSICAL_QUALIFICATION",
+  "authority": "a005c18a39a07218854fd734cbfcbdaa733395e8 source/proof; immutable R9 source gate041108; exact core/head hashes in source_identity_pr0.json",
+  "positive": {
+    "11": [
+      "LK_AGE lag=0 checked=922 mism=0",
+      "LK_AGE_PASS seed=-1172255673 measured_lag=0 compared=922 phases=2"
+    ],
+    "19": [
+      "LK_AGE lag=0 checked=922 mism=0",
+      "LK_AGE_PASS seed=-198373595 measured_lag=0 compared=922 phases=2"
+    ]
+  },
+  "wrong_stage": [
+    "LK_AGE_FAIL seed=-1172255673 expected_lag=0 checked=922 mism=922"
+  ],
+  "wrong_ages": {
+    "1": [
+      "LK_AGE_FAIL seed=-1172255673 expected_lag=1 checked=923 mism=923"
+    ],
+    "2": [
+      "LK_AGE_FAIL seed=-1172255673 expected_lag=2 checked=924 mism=924"
+    ]
+  },
+  "reset_cold_bounds": "Each startup seed has two epochs;96-cycle quiet after reset, Q reload32 beats, one mid-active-pipeline reset. Numerical valid-retire comparisons after200 local active edges; no claim on invalid sc_d/nb, earlier reset release or physical face/native timing. Separate exact211-region reset proof4epochs64checks per seed: landing2/release5/capture6.",
+  "remaining": [
+    "actual mapped pr0 top/native census",
+    "full physical boundary/face/native timing/clock/reach qualification",
+    "no enable, view or receipt"
+  ],
+  "files": {
+    "ectl_capture_run_13.log": "82ff693a79f6b05f7c59692ad174ac24ea75e84cb7c81b089a3e91d005c1656e",
+    "ectl_capture_run_14.log": "75f783a208e16bf587160a192aac31f17297197a798f25bc4e107d20fa514cb2",
+    "ectl_capture_run_15.log": "dd0b8e61a2911240c281ff1a1b1441699276985429fed288bece7355915e7b40",
+    "flags_seed11.log": "4e5afd17276b38b99d2c181d5b89c8c4d9ceda242619e0e89009cb1a93bc7573",
+    "flags_seed19.log": "661540ae3dac34f39fd45c81b9a6685aec44528e3eac8d4bc8e575ba6e81c345",
+    "flags_wrong_age1.log": "b6b0fffc06b4961e0b5ad0b47d9f0258f519107a1a7b7127c70d8523da175285",
+    "flags_wrong_age2.log": "9b3927428aeb23d334538d90ecd026e2498940bc5d72457d550d715d863313cc",
+    "ot_rst_land_wrapper.v": "dd2364d4d03e9f38ff68268dfda3dbb4e3de443f7be6299588de110c4223fc09",
+    "pr0_lk_client.log": "e97a8fc4ef9184d10eba80b85471d892970fc6f9f3c8bf22d41c49fa47f71b65",
+    "pr0_wrong_output_stage.v": "563296089d44308a0b98aa36dc94e30ce24ca2913a1d98c3860708ac5bc008b4",
+    "pr0_wrong_stage.log": "e37414c788b1c3d62562385d9edb5b1a57423a9c19a5901df8001f9215e206d8",
+    "pr0_wrongstage_client.log": "23eb9afa6ba2ea98db56002186db9da45b1779291379b0f121e7dab3b1a1f53a",
+    "reset_seed11.log": "a871760b1d06c0c35cfbd6ad7e5493b50aa9e58cd513d968b18403b2e2f72e60",
+    "reset_seed19.log": "fe9314734f0f0c63738a5c6f3e544524f7d989231c2ef441cdf8cea30be4e049",
+    "run_lk_pr0.sh": "2708798e455208c5d042b83ce14afa73c3c1dc716b4c3a8139c13e239bb3bc96",
+    "run_pr0_reset.sh": "cfa581bf285b4ad21e55f96a2d0075847e3616a68662138dd44f0b2659dec373",
+    "run_pr0_wrong_stage.sh": "beb77d07e2a850494467c0c282962cbcd01f0f1f12c6eb83e6e1775aef9e0779",
+    "source_identity_pr0.json": "340172a78b8aebc75f71faa6e6361b0f09d4c10a255a242f26b7cd721f46c1f4",
+    "source_identity_pr0_mut.json": "ab22f72ebf3abc61be2d3453fc1b2a7a07054c64d75a102798ad0cfe1ddc5e11",
+    "tb_lk_pr0.sv": "fd8a3ed38962eaba6642037e2c57deb4d26d6da58a2e83a0b2a158ceed35b6d4",
+    "tb_pr0_reset.sv": "e95e446f02c88a81474f04cc59afed90d55cca6650b88406d970f4a773537b6f"
+  }
+}
