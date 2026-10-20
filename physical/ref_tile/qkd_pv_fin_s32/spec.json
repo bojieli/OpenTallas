@@ -13,7 +13,8 @@
     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
     "rtl/hdc/ot_hdc_prefix.sv",
     "rtl/hdc/ot_hdc_fastfp.sv",
-    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin_bb.v"
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_pvfin/ot_sram_1r1w_32x128_m1_p192_pvfin_bb.v",
+    "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
   ],
   "params": {
     "ADD_LAT": 7,
@@ -122,7 +123,7 @@
   "job": {
     "owner": "CODEX:KV-PVFIN",
     "branch": "codex/kv-pvfin-sram-1020",
-    "tag": "s32r6",
+    "tag": "s32r8",
     "purpose": "PVFIN default-off safe32 successor: 4x32x128 sum SRAM, 2-edge prefetch with both write-forward paths, unchanged MUL_AGE and one beat/edge; bounded reset +2 boot edges. Native census required before gate.",
     "benches": [
       {
@@ -150,9 +151,10 @@
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh"
+          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
+          "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
         ],
-        "pass_witness": "results/rtl/kv_pvfin_sram_1020/r6_proof/m0.log"
+        "pass_witness": "results/rtl/kv_pvfin_sram_1020/r8_proof/m0.log"
       },
       {
         "name": "pv_fin_s32_m1",
@@ -179,10 +181,11 @@
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh"
+          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
+          "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
         ],
         "fail_regex": "^PVFIN_KIT FAIL mut=1 detected",
-        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r6_proof/m1.log"
+        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r8_proof/m1.log"
       },
       {
         "name": "pv_fin_s32_m2",
@@ -209,10 +212,11 @@
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh"
+          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
+          "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
         ],
         "fail_regex": "^PVFIN_KIT FAIL mut=2 detected",
-        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r6_proof/m2.log"
+        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r8_proof/m2.log"
       },
       {
         "name": "pv_fin_s32_m3",
@@ -239,10 +243,11 @@
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh"
+          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
+          "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
         ],
         "fail_regex": "^PVFIN_KIT FAIL mut=3 detected",
-        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r6_proof/m3.log"
+        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r8_proof/m3.log"
       },
       {
         "name": "pv_fin_s32_m4",
@@ -269,10 +274,11 @@
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh"
+          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
+          "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
         ],
         "fail_regex": "^PVFIN_KIT FAIL mut=4 detected",
-        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r6_proof/m4.log"
+        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r8_proof/m4.log"
       },
       {
         "name": "pv_fin_s32_m5",
@@ -299,10 +305,11 @@
           "rtl/hdc/ot_hdc_prefix.sv",
           "rtl/hdc/ot_hdc_fastfp.sv",
           "rtl/test/qwen_split/tb_qkd_pv_fin_s32.sv",
-          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh"
+          "rtl/test/qwen_split/run_qkd_pv_fin_s32.sh",
+          "rtl/hdc/ot_qkd_pvfin_calendar_value.sv"
         ],
         "fail_regex": "^PVFIN_KIT FAIL mut=5 detected",
-        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r6_proof/m5.log"
+        "fail_witness": "results/rtl/kv_pvfin_sram_1020/r8_proof/m5.log"
       }
     ],
     "extra_paths": [

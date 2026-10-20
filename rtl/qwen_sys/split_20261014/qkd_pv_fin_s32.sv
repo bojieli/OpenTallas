@@ -159,6 +159,10 @@ module qkd_pv_fin_s32 #(
  (* keep="true",dont_touch="true" *) reg [9:0] command_start,command_active;
  wire [9:0] command_accept;
  wire [15:0] command_mulage[0:9];
+ (* keep="true",dont_touch="true" *) reg [47:0] command_payload[0:1];
+ generate for(genvar pc=0;pc<2;pc=pc+1)begin:g_command_payload
+  always @(posedge ck)command_payload[pc]<=cal;
+ end endgenerate
  generate for(genvar cg=0;cg<10;cg=cg+1)begin:g_command
   always @(posedge ck)begin
    command_cal[cg]<=cal;command_start[cg]<=start;command_active[cg]<=active_d;
@@ -169,7 +173,13 @@ module qkd_pv_fin_s32 #(
   wire [15:0] xs=(x0>x1)?(x0-x1):(x1-x0);
   wire xb=(x0<1)||(x1<1)||(xr<1)||(xs>16'(SKEW))||({1'b0,xl}+17'd64+17'(ADD_LAT+MUL_LAT)>17'hffff);
   assign command_accept[cg]=command_start[cg]&&!command_active[cg]&&!xb;
-  assign command_mulage[cg]=xl+16'(ADD_LAT+2);
+  if(cg>=8)begin:g_value
+   (* keep_hierarchy="yes" *) ot_qkd_pvfin_calendar_value #(.C(ADD_LAT+2),.IGNORE_R(MUT==3)) u_value(
+    .p0(command_payload[cg-8][15:0]),.p1(command_payload[cg-8][31:16]),.r(command_payload[cg-8][47:32]),
+    .y(command_mulage[cg]));
+  end else begin:g_no_value
+   assign command_mulage[cg]=16'd0;
+  end
  end endgenerate
  reg active_d;
  reg [15:0] age_d;
