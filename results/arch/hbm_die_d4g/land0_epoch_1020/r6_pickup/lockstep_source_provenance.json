@@ -1,0 +1,76 @@
+{
+  "compiler_commit": "e03558505",
+  "compared_sha256": {
+    "rtl/hbm_accel/die_glue/hbfd_rly_fc_masters.sv": {
+      "recorded": "bb7c8174879c038e984b1700d180094815b91d19967d0df2d98dcce411637068",
+      "actual_current": "bb7c8174879c038e984b1700d180094815b91d19967d0df2d98dcce411637068",
+      "own_committed_candidate": "bb7c8174879c038e984b1700d180094815b91d19967d0df2d98dcce411637068"
+    },
+    "rtl/hbm_accel/die_glue/hbfd_rly_fcf_masters.sv": {
+      "recorded": "dbe22340cfd66529bda97ef40b1a9188aee22ac6dc8e522494a68106751d2f4f",
+      "actual_current": "dbe22340cfd66529bda97ef40b1a9188aee22ac6dc8e522494a68106751d2f4f",
+      "own_committed_candidate": "dbe22340cfd66529bda97ef40b1a9188aee22ac6dc8e522494a68106751d2f4f"
+    },
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv": {
+      "recorded": "c181eaddb3787a958397b9e4a58246779d1db921c29ee7b6d1c1d87f31abc86d",
+      "actual_current": "c181eaddb3787a958397b9e4a58246779d1db921c29ee7b6d1c1d87f31abc86d",
+      "own_committed_candidate": "c181eaddb3787a958397b9e4a58246779d1db921c29ee7b6d1c1d87f31abc86d"
+    },
+    "rtl/hbm_accel/die_glue/ot_hbm_rly_fc.sv": {
+      "recorded": "67353879792fee26b9136ede11e48076cad743fcfe0c7bb4de5b119753caa761",
+      "actual_current": "67353879792fee26b9136ede11e48076cad743fcfe0c7bb4de5b119753caa761",
+      "own_committed_candidate": "67353879792fee26b9136ede11e48076cad743fcfe0c7bb4de5b119753caa761"
+    },
+    "rtl/hbm_accel/die_glue/ot_hbm_rly_fcf.sv": {
+      "recorded": "2830e3fb668dd4bcfbe46bf03fd2309f90c7cdf85919cb9fcbcb999439b36a3e",
+      "actual_current": "2830e3fb668dd4bcfbe46bf03fd2309f90c7cdf85919cb9fcbcb999439b36a3e",
+      "own_committed_candidate": "2830e3fb668dd4bcfbe46bf03fd2309f90c7cdf85919cb9fcbcb999439b36a3e"
+    },
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv": {
+      "recorded": "6885ac1a168df5f58537cad363cf59ccde05bfcd253046080fe425b0ac3e63aa",
+      "actual_current": "6885ac1a168df5f58537cad363cf59ccde05bfcd253046080fe425b0ac3e63aa",
+      "own_committed_candidate": "6885ac1a168df5f58537cad363cf59ccde05bfcd253046080fe425b0ac3e63aa"
+    },
+    "rtl/lib/ot_rst_relay.sv": {
+      "recorded": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "actual_current": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "own_committed_candidate": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    "rtl/hbm_accel/die_glue/hbfd_lane_masters.sv": {
+      "recorded": "62fd80b3972a73ee5f6f985b8eade275b93304826c684635ba45c19a24fb6ee3",
+      "actual_current": "62fd80b3972a73ee5f6f985b8eade275b93304826c684635ba45c19a24fb6ee3",
+      "own_committed_candidate": "62fd80b3972a73ee5f6f985b8eade275b93304826c684635ba45c19a24fb6ee3"
+    },
+    "rtl/hbm_accel/die_glue/ot_hbm_lane.sv": {
+      "recorded": "8e605d58ab469eafc537e48457476cdb7cfafa6bad8e5a9faf1a8b367591f274",
+      "actual_current": "8e605d58ab469eafc537e48457476cdb7cfafa6bad8e5a9faf1a8b367591f274",
+      "own_committed_candidate": "8e605d58ab469eafc537e48457476cdb7cfafa6bad8e5a9faf1a8b367591f274"
+    },
+    "rtl/qwen_split/qfd_fwd_lane.sv": {
+      "recorded": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+      "actual_current": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+      "own_committed_candidate": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622"
+    },
+    "rtl/hdc/ot_hdc_cg.sv": {
+      "recorded": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "actual_current": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "own_committed_candidate": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r6land0/net/layer.json.gz": {
+      "recorded": "af4e1dc293eb9ba03afbd8d2d29cd84f3de0dba6ba4555e95ca7a959050fcdf5",
+      "actual_current": "af4e1dc293eb9ba03afbd8d2d29cd84f3de0dba6ba4555e95ca7a959050fcdf5",
+      "own_committed_candidate": null
+    },
+    "tools/hbm_die_v16/relay_lockstep_bench.py": {
+      "recorded": "397aa997a033eef2796a2d277a345ee2bf29e21014bb294997cb2e270e796d79",
+      "actual_current": "397aa997a033eef2796a2d277a345ee2bf29e21014bb294997cb2e270e796d79",
+      "own_committed_candidate": "397aa997a033eef2796a2d277a345ee2bf29e21014bb294997cb2e270e796d79"
+    },
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r6land0/lockstep_runner_unpinned.sh": {
+      "recorded": "d626218ceb6e7a9c0614fb648d6024b5fd647a32fa2ca36a8f3d89d1ebd434d1",
+      "actual_current": "d626218ceb6e7a9c0614fb648d6024b5fd647a32fa2ca36a8f3d89d1ebd434d1",
+      "own_committed_candidate": null
+    }
+  },
+  "all_equal": true
+}
