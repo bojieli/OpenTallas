@@ -46,13 +46,29 @@ module qfd_dv_table_rom_loader #(
         end
     endfunction
     wire [1063:0] data;
+`ifdef SYNTHESIS
+    ot_rom_4096x266_m8 m0   // hard macro (blackbox view has no INSTANCE parameter; masks bound by INSTANCE name)
+`else
     ot_rom_4096x266_m8 #(.INSTANCE($sformatf("table_s%0d_m0",SLICE))) m0
+`endif
         (.clk(ck),.ce_in(active),.addr_in(rom_addr),.rd_out(data[265:0]));
+`ifdef SYNTHESIS
+    ot_rom_4096x266_m8 m1   // hard macro (blackbox view has no INSTANCE parameter; masks bound by INSTANCE name)
+`else
     ot_rom_4096x266_m8 #(.INSTANCE($sformatf("table_s%0d_m1",SLICE))) m1
+`endif
         (.clk(ck),.ce_in(active),.addr_in(rom_addr),.rd_out(data[531:266]));
+`ifdef SYNTHESIS
+    ot_rom_4096x266_m8 m2   // hard macro (blackbox view has no INSTANCE parameter; masks bound by INSTANCE name)
+`else
     ot_rom_4096x266_m8 #(.INSTANCE($sformatf("table_s%0d_m2",SLICE))) m2
+`endif
         (.clk(ck),.ce_in(active),.addr_in(rom_addr),.rd_out(data[797:532]));
+`ifdef SYNTHESIS
+    ot_rom_4096x266_m8 m3   // hard macro (blackbox view has no INSTANCE parameter; masks bound by INSTANCE name)
+`else
     ot_rom_4096x266_m8 #(.INSTANCE($sformatf("table_s%0d_m3",SLICE))) m3
+`endif
         (.clk(ck),.ce_in(active),.addr_in(rom_addr),.rd_out(data[1063:798]));
     wire [1:0] kind=data[1026:1025];
     wire [23:0] local_addr=data[1050:1027];
