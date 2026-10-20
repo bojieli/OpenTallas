@@ -1978,7 +1978,7 @@ wire [9:0] head_first = head_first__qv[9:0];
  end
 endmodule
 
-// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 50 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2), rb[5]x2(4) ----
+// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 50 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2), rb[5]x2(4), j[11]x2(3) ----
 module ot_qkd_static_kv_timing_kvpc_s #(
   parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
   parameter integer SQD = 4,                  // static queue entries (power of two)
@@ -2047,7 +2047,10 @@ module ot_qkd_static_kv_timing_kvpc_s #(
       idle_rank = (s==3'(IDLE0))?0:(s==3'(IDLE1))?1:(s==3'(IDLE2))?2:(s==3'(IDLE3))?3:
                   (s==3'(IDLE4))?4:(s==3'(IDLE5))?5:(s==3'(IDLE6))?6:7;
     endfunction
-    reg [10:0] j, n; reg [18:0] row;
+    reg [10:0] n;
+    (* keep, ot_rst_split = 11 *) reg [21:0] j__qv;   // KV-PC SAFE: 2 kept copies of j
+    function [10:0] j__f; input [10:0] v; j__f = v; endfunction
+    wire [10:0] j = j__qv[10:0]; reg [18:0] row;
     reg v_consumer_order;
     reg context_v, context_kb;
     (* keep, ot_rst_split *) reg [4:0] context_active__qv;   // KV-PC SAFE: 5 kept copies of context_active
@@ -2699,7 +2702,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
         v_consumer_order<=0;context_active__qv <= {5{context_active__f(0)}};context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last <= 0; nm1 <= 0;
-        j <= 0; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
+        j__qv <= {2{j__f(0)}}; n <= 0; row <= 0; open <= 0; done <= 0; stale <= 0; refreshed <= 0;
         rrds_c <= 0; noact_c <= 0; ref_pend <= 0; blk <= 0; rb__qv <= {2{rb__f(0)}}; fault_r <= 0;
         ref_c <= RW'(RPH + PERIOD); running <= 0; phase <= 0;
         c_v <= 0; c_prio <= 0; c_op <= PRE; c_bank <= 0; c_oh <= 0; c_s__qv <= {2{c_s__f(0)}}; c_sp <= 0; c_srow <= 0;
@@ -2792,7 +2795,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
         if (streaming && go) running <= 1;
         // column
         if (rd_ok) begin
-          j <= j_p1;
+          j__qv <= {2{j__f(j_p1)}};
           // (streaming end: streaming_nx)
         end
         // KV-PC5: ordinal / done per load group from their own rd_ok copies (same order)
@@ -2824,7 +2827,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
         if (row_gnt && ev_qv[82]) refreshed <= (&(refreshed | (32'b1 << rb))) ? 32'b0 : (refreshed | (32'b1 << rb));
         // descriptor
         // KV-PC5: the descriptor accept per load group from its own desc_acc copy (same statements, same order)
-        if (desc_acc_c[6]) j <= first_sector;
+        if (desc_acc_c[6]) j__qv <= {2{j__f(first_sector)}};
         if (desc_acc_c[7]) n <= desc_n;
         if (desc_acc_c[8]) row[9:0] <= desc_row[9:0];        // KV-PC6: row lo / hi per copy (38-load leaf, i4)
         if (desc_acc_c[17]) row[18:10] <= desc_row[18:10];

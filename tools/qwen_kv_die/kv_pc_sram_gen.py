@@ -1481,7 +1481,7 @@ CLONES = [
        "    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;\n"
        "    initial if (SQW != 2 || WQW != 2) $error(\"ot_qkd_static_kv_timing_kvpc_s: kept copy widths assume SQD 4, WQ 4\");")] + TIM_PC5 + TIM_PC7,
      [('sq_rp', 2, 2), ('wq_rp', 2, 2), ('wq_rp1', 2, 2), ('context_active', 1, 5), ('streaming', 1, 10),
-      ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2), ('bsel', 5, 2), ('rb', 5, 2)]),
+      ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2), ('bsel', 5, 2), ('rb', 5, 2), ('j', 11, 2)]),   # KV-PC7: rb / j 2-copy families (census sr9: rb[1] 34, j[9] 33)
     ('REWRITE', 'qkd_kvpc_s_chain'),
     (ESM, 'qkd_static_kv_pc_es_merge_b', 'qkd_kvpc_s_esm', ESM_HQ + ESM_ERK, [('own', 1, 11)]),
     (STRAP, 'qkd_embedding_static_pc_strap', 'qkd_kvpc_s_emb_strap', STRAP_SUBS),
