@@ -654,6 +654,13 @@ module ot_v41_bf_col #(
     always @(posedge gclk_c or negedge rst_mpv)
         if (!rst_mpv) pr_vp <= '0; else pr_vp <= {pr_vp[LAT-2:0], any};
     wire        q_v = pr_vp[LAT-1];
+`ifdef OT_BF_QUEUE32
+    // Queue byte enables use independent producer flops on the existing final edge.
+    (* keep *) reg [4:0] q_vk;
+    always @(posedge gclk_c or negedge rst_mpv)
+        if (!rst_mpv) q_vk <= 0; else q_vk <= {5{pr_vp[LAT-2]}};
+    wire [4:0] b_vk = (BP == 1 && fam ? {5{q4_v}} : q_vk) | bf_wvk;
+`endif
 `ifdef OT_BF_FOREP
     wire [31:0] q_val = {pr_bk[3] ? pr_sum[31:24] : pr_pass[31:24], pr_bk[2] ? pr_sum[23:16] : pr_pass[23:16],
                          pr_bk[1] ? pr_sum[15:8] : pr_pass[15:8], pr_bk[0] ? pr_sum[7:0] : pr_pass[7:0]};
@@ -684,6 +691,9 @@ module ot_v41_bf_col #(
 
     // ---------------- optional BF16 lanes -------------------------------------------------------------------
     wire bf_v, bf_err, bf_final;
+`ifdef OT_BF_QUEUE32
+    wire [4:0] bf_wvk;
+`endif
 `ifdef OT_BF_FOREP
     wire [4:0] bf_vk;      // kept copies of bf_v: [0..3] b_val bytes, [4] err / tag / final
 `endif
@@ -703,6 +713,9 @@ module ot_v41_bf_col #(
             .ofinal(bf_final), .oerr(bf_err), .fault(b_fault)
 `ifdef OT_BF_FOREP
             , .ov_k(bf_vk)
+`ifdef OT_BF_QUEUE32
+            , .ov_wk(bf_wvk)
+`endif
 `endif
             );
         end else if (FAST != 0 && QBF != 0) begin : g_fq
@@ -727,6 +740,9 @@ module ot_v41_bf_col #(
         assign bf_v = 1'b0; assign bf_val = 32'd0; assign bf_tree = '0; assign bf_final = 1'b0;
 `ifdef OT_BF_FOREP
         assign bf_vk = 5'b00000;
+`ifdef OT_BF_QUEUE32
+        assign bf_wvk = 5'b00000;
+`endif
 `endif
         assign bf_err = 1'b0; assign b_fault = 1'b0;
     end
@@ -768,6 +784,9 @@ module ot_v41_bf_col #(
         , .OSW(SW), .OHK(2)
 `endif
         ) u_tree (.clk(gclk_c), .rst_pin(b_rst_v[5]), .in_v(b_v),
+`ifdef OT_BF_QUEUE32
+        .in_vk(b_vk),
+`endif
 `else
     ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_c), .rst_n(rst_mt), .in_v(b_v),
 `endif

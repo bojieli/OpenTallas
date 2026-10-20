@@ -21,6 +21,9 @@ module ot_v41_segtree5_rp #(
     input  wire                     clk,
     input  wire                     rst_pin,
     input  wire                     in_v,
+`ifdef OT_BF_QUEUE32
+    input wire [4:0] in_vk,
+`endif
     input  wire [$clog2(NT)-1:0]    in_tree,
     input  wire [2:0]               in_pos,     // position (MTP) of the tree's nodes; leaves with its value
     input  wire [31:0]              in_val,
@@ -108,14 +111,14 @@ module ot_v41_segtree5_rp #(
 `ifdef OT_BF_QUEUE32
     // One head-read pointer/control set per byte or metadata decoder. Same edge/state
     // as qr, sv and (qc!=0); prevents one qr+use_q decode driving the whole head mux.
-    localparam integer NQR = 6;
+    localparam integer NQR = 7;
     (* keep *) reg [QW-1:0] qr_k [0:NQR-1];
     (* keep *) reg [NQR-1:0] sv_qk, qne_k;
     wire [QW:0] qc_next = qc + (in_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
     wire [NQR-1:0] use_qk;
     wire [QW-1:0] qr_next_k [0:NQR-1];
-    wire [1:0] rst_qk;
-    for (genvar qg = 0; qg < 2; qg++) begin : g_qread_rst
+    wire [2:0] rst_qk;
+    for (genvar qg = 0; qg < 3; qg++) begin : g_qread_rst
         ot_v41_rst_copy u_r (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_qk[qg]));
     end
     for (genvar qj = 0; qj < NQR; qj++) begin : g_qread
@@ -132,6 +135,35 @@ module ot_v41_segtree5_rp #(
             end else begin
                 qr_k[qj] <= qr_next_k[qj];
                 sv_qk[qj] <= sv_a; qne_k[qj] <= |qc_next;
+            end
+        end
+    end
+`endif
+`ifdef OT_BF_QUEUE32
+    // Each bank owns a rotating write token. No broad decoded address/enable
+    // drives the entire 41-bit word; bytes and metadata keep their original edge.
+    (* keep *) reg [QD-1:0] qw_oh [0:4];
+    wire [1:0] rst_qw;
+    for (genvar wg=0; wg<2; wg++) begin : g_qwrite_rst
+        ot_v41_rst_copy u_r (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_qw[wg]));
+    end
+    for (genvar wb=0; wb<5; wb++) begin : g_qwrite
+        always @(posedge clk or negedge rst_qw[wb/3])
+            if (!rst_qw[wb/3]) begin
+`ifdef OT_BF_QUEUE32_MUT_WRITE
+                qw_oh[wb] <= (wb == 0 ? 2 : 1);
+`else
+                qw_oh[wb] <= 1;
+`endif
+            end else if (in_vk[wb]) qw_oh[wb] <= {qw_oh[wb][QD-2:0], qw_oh[wb][QD-1]};
+        for (genvar wi=0; wi<QD; wi++) begin : g_word
+            if (wb<4) begin : g_byte
+                always @(posedge clk) if (in_vk[wb] && qw_oh[wb][wi])
+                    qv[wi][8*wb+:8] <= in_val[8*wb+:8];
+            end else begin : g_meta
+                always @(posedge clk) if (in_vk[wb] && qw_oh[wb][wi]) begin
+                    qt[wi] <= in_tree; qf[wi] <= in_final; qe[wi] <= in_err; qp[wi] <= in_pos;
+                end
             end
         end
     end
@@ -430,21 +462,25 @@ module ot_v41_segtree5_rp #(
         end
     end
     always @(posedge clk) begin
+`ifndef OT_BF_QUEUE32
         if (in_v) begin qv[qw] <= in_val; qt[qw] <= in_tree; qf[qw] <= in_final; qe[qw] <= in_err; qp[qw] <= in_pos; end
+`endif
         if (use_q) tpos[h_t] <= h_p;
         opos <= y_pos;
 `ifdef OT_BF_QUEUE32
         for (int qb = 0; qb < 4; qb++)
             h_v[8*qb +: 8] <= (qr_next_k[qb] == qw) ? in_val[8*qb +: 8] : qv[qr_next_k[qb]][8*qb +: 8];
         if (qr_next_k[4] == qw) begin
-            h_t <= in_tree; h_f <= in_final; h_e <= in_err; h_p <= in_pos;
+            h_t <= in_tree;
+        end else h_t <= qt[qr_next_k[4]];
+        if (qr_next_k[5] == qw) begin
+            h_f <= in_final; h_e <= in_err; h_p <= in_pos;
         end else begin
-            h_t <= qt[qr_next_k[4]]; h_f <= qf[qr_next_k[4]];
-            h_e <= qe[qr_next_k[4]]; h_p <= qp[qr_next_k[4]];
+            h_f <= qf[qr_next_k[5]]; h_e <= qe[qr_next_k[5]]; h_p <= qp[qr_next_k[5]];
         end
 `ifdef OT_BF_FOREP
         for (ti = 0; ti < NT; ti = ti + 1)
-            h_toh[ti] <= (qr_next_k[5] == qw) ? (in_tree == ti) : (qt[qr_next_k[5]] == ti);
+            h_toh[ti] <= (qr_next_k[6] == qw) ? (in_tree == ti) : (qt[qr_next_k[6]] == ti);
 `endif
 `else
         if (qr + (use_q ? 1'b1 : 1'b0) == qw) begin      // the head-to-be is the node arriving now (if any)

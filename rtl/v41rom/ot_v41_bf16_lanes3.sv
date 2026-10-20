@@ -58,6 +58,9 @@ module ot_v41_bf16_lanes3 #(
 `ifdef OT_BF_FOREP
     , output wire [4:0]      ov_k      // FOREP: 5 kept copies of ov (same edge), one per consumer slice in the column
 `endif
+`ifdef OT_BF_QUEUE32
+    , output wire [4:0] ov_wk
+`endif
 );
     localparam integer HW = $clog2(NCHB);
     localparam integer TW = HW + 2 + TRW + 1;
@@ -235,6 +238,13 @@ module ot_v41_bf16_lanes3 #(
             (* keep *) reg [4:0] vk;
             always @(posedge clk or negedge rst_lv) if (!rst_lv) vk <= '0; else vk <= {5{vp[LATT-2]}};
             assign ov_k = vk;
+`ifdef OT_BF_QUEUE32
+            wire rst_wk;
+            ot_v41_rst_copy u_rw (.clk(clk), .rst_pin(rst_pv[4]), .rst_n(rst_wk));
+            (* keep *) reg [4:0] wvk;
+            always @(posedge clk or negedge rst_wk) if (!rst_wk) wvk <= 0; else wvk <= {5{vp[LATT-2]}};
+            assign ov_wk = wvk;
+`endif
         end
 `endif
         ot_hdc_delay #(.W(TRW + 1), .D(LATT)) u_t (.clk(clk), .rst_n(rst_lv), .d(lvt[lv]), .q(lvt[lv+1]));
