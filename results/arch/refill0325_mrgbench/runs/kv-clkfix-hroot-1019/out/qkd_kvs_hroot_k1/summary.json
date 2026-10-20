@@ -1,0 +1,71 @@
+{
+ "kit": "qkd_kvs_hroot_k1",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "results": [
+  {
+   "kit": "qkd_kvs_hroot_k1",
+   "name": "lint",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "kit": "qkd_kvs_hroot_k1",
+   "name": "hroot_lockstep",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "kit": "qkd_kvs_hroot_k1",
+   "name": "hroot_mut1",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "kit": "qkd_kvs_hroot_k1",
+   "name": "hroot_mut3",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "kit": "qkd_kvs_hroot_k1",
+   "name": "hroot_land_latency",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "kit": "qkd_kvs_hroot_k1",
+   "name": "hroot_land_mut1",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "kit": "qkd_kvs_hroot_k1",
+   "name": "hroot_land_mut2",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "kit": "qkd_kvs_hroot_k1",
+   "name": "hroot_land_mut3",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  }
+ ],
+ "unexpected": 0
+}
