@@ -1,8 +1,9 @@
 """Production-shape throughput on the existing source-checked release frame sequence binary."""
-import hashlib,json,pickle,subprocess,sys
+import hashlib,json,os,pickle,subprocess,sys
 from pathlib import Path
 from types import SimpleNamespace
 R=Path.cwd();sys.path.insert(0,str(R/'tools/s81_dv/layer_prog'))
+os.environ['PYTHONPATH']=str(R/'tools/s81_dv/layer_prog')+':'+os.environ.get('PYTHONPATH','')
 import xs_place as X
 import dv_layer_compile as C
 D=Path('/srv/opentallas-scratch/codex/s81-rom12-1020');O=D/'out/fseq12';O.mkdir(parents=True,exist_ok=True)
@@ -28,7 +29,10 @@ for op,period in [('ffn.experts_gu',145),('attn.wq_b',126)]:
  for P in [period,period-1]:
   log=V/f'run_P{P}.log'
   args=[str(exe),f'+OT_ROM_DIR={sd}',f'+T={nph*P+1500}',f'+K={K}',f'+OPS={rows}',f'+PH={ph0}',f'+NPH={nph}',f'+PER={P}','+RETIRE=1']
-  with log.open('w') as f:r=subprocess.run(args,stdout=f,stderr=subprocess.STDOUT)
+  if log.exists() and 'END edges=' in log.read_text():
+   r=SimpleNamespace(returncode=0)
+  else:
+   with log.open('w') as f:r=subprocess.run(args,stdout=f,stderr=subprocess.STDOUT)
   out=V/f'check_P{P}.json'
   chk=subprocess.run([sys.executable,str(Q/'toksim_fgu_check.py'),'seq','--seq',str(sd),'--vec',str(V),'--log',str(log),'--out',str(out),'--per',str(P),'--ref-go','63'],capture_output=True,text=True)
   (V/f'check_P{P}.log').write_text(chk.stdout+chk.stderr)

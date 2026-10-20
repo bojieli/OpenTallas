@@ -105,6 +105,14 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
                iss=dict(pipe['iss']), phases=per, stream_words=len(stream), nphases=len(per), cal_rows=pipe['cal_rows'],
                floor=floor)
     cal['static'] = static_checks(cal, allow_below_floor)
+    if op == 'attn.wq_b' and os.environ.get('OT_XS_QPAIRS') == '12':
+        # FSEQ uses the same u_sp.go input -> frame-root RET origin as this
+        # record. The full12-pair8-row release vehicle measures1189 at P126:
+        # seven periods plus307, rather than the fullsix vehicle's old223.
+        tail = 307
+        cal['span_tail'] = tail
+        cal['span_metric'] = 'spine_go0_to_last_frame_root_ret_edges'
+        cal['span_evidence'] = 'results/rtl/s81_rom12_codex_1020/fseq12/wq_b/check_P126.json (8ph64rows96RET; P125 FAIL)'
     cal['predicted_span'] = (len(per) - 1) * P + tail
     return cal
 
@@ -233,13 +241,13 @@ def write_layer_images(lc, phase, stream, out):
 
 def record(cal):
     keep = ('op', 'fam', 'mode', 'period', 'cfg_lead', 'floor', 'nphases', 'cal_rows', 'stream_words', 'static',
-            'predicted_span')
+            'predicted_span', 'span_tail', 'span_metric', 'span_evidence')
     r = {k: cal[k] for k in keep if k in cal}
     r['phases'] = [{k: p[k] for k in ('phase', 'tag', 'accept', 'cfg', 'launch', 'stream', 'retire', 'nb', 'stall_edges')}
                    for p in cal['phases']]
     r['floor_evidence'] = FLOORS[cal['op']][4]
     r['predicted_span_definition'] = ('spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + '
-                                      f'{FLOORS[cal["op"]][3]} (measured law); die wire / CAP tail not included')
+                                      f'{cal.get("span_tail", FLOORS[cal["op"]][3])} (measured law); die wire / CAP tail not included')
     return r
 
 
@@ -385,7 +393,7 @@ def cmd_die(a):
         summary['layers'][L] = dict(frame=r['frame'], field_phases=r['field_phases'], skipped=r['skipped'],
                                     ops={o: dict(nphases=v['nphases'], period=v['period'], floor=v['floor'],
                                                  predicted_span=v['predicted_span'],
-                                                 serial_span=FLOORS[o][3] * v['nphases'],
+                                                 serial_span=v.get('span_tail', FLOORS[o][3]) * v['nphases'],
                                                  static_PASS=v['static']['PASS'],
                                                  negative_control=v['static']['below_floor_negative_control'])
                                          for o, v in ops_rec.items()},
