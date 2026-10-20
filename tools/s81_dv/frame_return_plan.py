@@ -277,8 +277,10 @@ KSLOT_LAYOUTS = ROOT / 'tools/s81_dv/layer_prog/kslot_layouts.json'
 _LAY = None
 
 
-def kslot_key(master, fmt, K, nseg, nsr, k, stretch=None):
-    return f'{master}|{fmt}|{K}|{nseg}|{nsr}|{k}' + (f'|st{float(stretch):g}' if stretch else '')
+def kslot_key(master, fmt, K, nseg, nsr, k, stretch=None, rows=None):
+    """the calendar of a k-class phase is fixed by (master, shape, super rows, k, stretch) AND the row count (an odd
+    count leaves one idle half: fewer words, different merges)"""
+    return f'{master}|{fmt}|{K}|{nseg}|{nsr}|{k}|r{rows}' + (f'|st{float(stretch):g}' if stretch else '')
 
 
 def kslot_layouts():
@@ -473,7 +475,7 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
         # S81-ROMOPT-C: a legalised k-class layout of this shape (compiler data, kslot_search.py) is reused when it covers
         # these pairs and composes fault-free here (emission timing is value-independent, so every phase of one shape
         # has the same calendar faults); otherwise the search below runs
-        layout_key = kslot_key(master, mat.fmt, mat.K, nseg, nsr, kslot, stretch)
+        layout_key = kslot_key(master, mat.fmt, mat.K, nseg, nsr, kslot, stretch, mat.rows)
         lay_ = kslot_layouts().get(layout_key)
         if lay_ is not None and {int(q_) for q_ in lay_} <= set(pairs):
             cand_ = {int(q_): [(R_, s_, nseg) for R_, s_ in v_] for q_, v_ in lay_.items()}

@@ -117,7 +117,9 @@ CASES = [('calpipe_ref', None, {}),                     # the existing CALPIPE s
          ('o12_prop_f8', 'prop2_s0', dict(f8=True)),      # + F8 window_load at CFG (RATE3 contents-only headline)
          ('o3k2_prop_compiled', 'k2_s0', {}),
          ('o3k2_prop_f8', 'k2_s0', dict(f8=True)),
-         ('o3k3_prop_compiled', 'k3_s0', {}),
+         ('o3mix_prop_compiled', 'mix_s0', {}),         # gu k2 + down k3 (stretch 2): every shape legalised die-wide
+         ('o3mix_prop_f8', 'mix_s0', dict(f8=True)),
+         ('o3k3_prop_compiled', 'k3_s0', {}),           # gu k3 too: legalised on 8/7-frame slices only (see README)
          ('o3k3_prop_f8', 'k3_s0', dict(f8=True))]
 K3_OPS = ('ffn.experts_gu', 'ffn.down')
 summary = {}
@@ -133,7 +135,7 @@ for name, case, kw in CASES:
 # the k cases may differ from k = 1 ONLY in the KSLOT ops
 if (CAL / 'prop2_s0' / 'die_field_calendar.json').exists():
     base, _ = cal('prop2_s0')
-    for case in ('k2_s0', 'k3_s0'):
+    for case in ('k2_s0', 'mix_s0', 'k3_s0'):
         if (CAL / case / 'die_field_calendar.json').exists():
             ck, _ = cal(case)
             for op in ADD:

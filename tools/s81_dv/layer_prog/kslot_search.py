@@ -60,7 +60,7 @@ def shapes(a):
         mat = X.make_mat(fx, grp, ph['sel'], a.op)
         nsr = -(-mat.rows // 2)
         st = X.KSLOT_STRETCH.get(a.op)
-        key = P.kslot_key(master, mat.fmt, mat.K, ph['nseg'], nsr, ph['kslot'], st)
+        key = P.kslot_key(master, mat.fmt, mat.K, ph['nseg'], nsr, ph['kslot'], st, mat.rows)
         if key in out:
             continue
         pairs = list(rec['pairs'])
@@ -93,6 +93,7 @@ def main(argv=None):
     ap.add_argument('--workers', type=int, default=32)
     ap.add_argument('--iters', type=int, default=40000)
     ap.add_argument('--rounds', type=int, default=4)
+    ap.add_argument('--seed0', type=int, default=0, help='seed base (parallel jobs of one shape use different bases)')
     a = ap.parse_args(argv)
     t0 = time.time()
     MODEL.update(shapes(a))
@@ -106,7 +107,7 @@ def main(argv=None):
         best = None
         for rd in range(a.rounds):
             # round 0 from the initial layout; later rounds: half the workers restart from the best layout so far
-            args = [(key, 1000 * rd + i, a.iters, *sched[i % len(sched)],
+            args = [(key, a.seed0 + 1000 * rd + i, a.iters, *sched[i % len(sched)],
                      best[3] if best is not None and i % 2 else None) for i in range(a.workers)]
             with mp.get_context('fork').Pool(a.workers) as pool:
                 res = pool.map(_work, args)

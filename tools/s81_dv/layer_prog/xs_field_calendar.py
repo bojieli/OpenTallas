@@ -78,6 +78,11 @@ FLOORS_K = {
                             '2L02 / 3L01 P145 PASS 1939 / 1938 / 1943, P144 FAIL; swap / shift FAIL)'),
     ('ffn.down', 2): ('fp8', 127, 126, 298, 'results/rtl/s81_romopt_1020/c/fseq/k2/*/down (14 phases, u_f_0L00 / 2L02 / 3L01 '
                       'P127 PASS 1948 / 1944 / 1949, P126 FAIL; swap / shift FAIL)'),
+    ('ffn.experts_gu', 3): ('fp8', 145, 144, 346, 'results/rtl/s81_romopt_1020/c/fseq/k3/*/experts_gu (6 phases, u_f_0L00 / 2L02 '
+                            'P145 PASS 1071 / 1069, P144 FAIL; swap / shift FAIL)'),
+    # k3: down with OT_XS_KSLOT_STRETCH=ffn.down:2 (10-beat rounds); a different stretch has no floor (compile fault)
+    ('ffn.down', 3, 2.0): ('fp8', 135, 134, 315, 'results/rtl/s81_romopt_1020/c/fseq/k3_st2/*/down (7 phases, u_f_0L00 / 2L02 / '
+                           '3L01 P135 PASS, P134 FAIL; swap / shift FAIL)'),
 }
 
 
@@ -87,9 +92,10 @@ def floor_rec(op):
     k = XP.kslot_of(op)
     if k == 1:
         return FLOORS[op]
-    if (op, k) not in FLOORS_K:
-        raise CalendarFault(('k-class op without a measured floor', op, k))
-    return FLOORS_K[(op, k)]
+    key = (op, k) + ((XP.KSLOT_STRETCH[op],) if op in XP.KSLOT_STRETCH else ())
+    if key not in FLOORS_K:
+        raise CalendarFault(('k-class op without a measured floor (op, k[, stream stretch])', key))
+    return FLOORS_K[key]
 
 
 SERIAL_ONLY = {'attn.cmp.wk': 'one BF phase a layer: nothing to overlap', 'eng.wkv': 'not a field matvec calendar here'}

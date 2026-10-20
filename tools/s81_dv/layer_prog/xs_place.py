@@ -56,7 +56,12 @@ import xs_topo as TP  # noqa: E402  S81-RATE3: physical frames per slice (OT_XS_
 KSLOT = int(os.environ.get('OT_XS_KSLOT', '1'))
 if KSLOT not in (1, 2, 3):
     raise ValueError('OT_XS_KSLOT must be 1, 2 or 3')
-KSLOT_OPS = tuple(os.environ.get('OT_XS_KSLOT_OPS', 'ffn.experts_gu,ffn.down').split(','))
+# OT_XS_KSLOT_OPS: the ops compiled with k classes, 'op' (k = OT_XS_KSLOT) or 'op:k' (per-op k, e.g. a mixed k2 / k3)
+_KO = [x.split(':') for x in os.environ.get('OT_XS_KSLOT_OPS', 'ffn.experts_gu,ffn.down').split(',') if x]
+KSLOT_OPS = tuple(x[0] for x in _KO)
+KSLOT_PER_OP = {x[0]: int(x[1]) for x in _KO if len(x) > 1}
+if any(v not in (1, 2, 3) for v in KSLOT_PER_OP.values()):
+    raise ValueError('OT_XS_KSLOT_OPS per-op k must be 1, 2 or 3')
 # OT_XS_KSLOT_STRETCH='op:f,...' (k > 1 phases only; default unset = off): that op's FP8 / FP4 stream rounds are
 # max(.., ceil(f x units)) beats, so its classes' last beats (and return words) spread f x wider -- e.g. ffn.down's 5
 # units in 8-beat rounds put classes 0 / 1 and 2 / 3 one beat apart (never in one element, E3); f 2 spaces them 2.
@@ -65,6 +70,8 @@ KSLOT_STRETCH = {o: float(f) for o, f in (x.split(':') for x in os.environ.get('
 
 
 def kslot_of(op):
+    if op in KSLOT_PER_OP:
+        return KSLOT_PER_OP[op]
     return KSLOT if op in KSLOT_OPS else 1
 
 
