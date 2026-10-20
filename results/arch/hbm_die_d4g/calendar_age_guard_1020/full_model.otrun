@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-calendar-age-1020
+ot-run: ot-epyc6       admits   694 GB (avail 599, growth 113, headroom 0, waiters 0/0 GB) load 37/128 running 27 disk 3955 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-calendar-age-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-calendar-age-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-calendar-age-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-calendar-age-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3091993-1792506783 after 0 s
+STATIC_AGE_MODEL FAIL groups 8587 unknown 2670 mixed 4 unequal 0 qualification=false
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3091993-1792506783): exit 1

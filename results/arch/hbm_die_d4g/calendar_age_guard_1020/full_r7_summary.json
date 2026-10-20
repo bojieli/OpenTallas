@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.hbm.relay-static-age-model.v1",
+  "qualification_eligible": false,
+  "calendar_qualified": false,
+  "native_qualified": false,
+  "physical_qualified": false,
+  "verdict": "FAIL",
+  "defects": [],
+  "groups": 8587,
+  "failing_groups": 2670,
+  "unknown_groups": 2670,
+  "mixed_groups": 4,
+  "unequal_known_groups": 0,
+  "scope": "Static source-bit age model only; no transaction/calendar or physical qualification.",
+  "inputs_sha256": {
+    "layer": "7a134ed29badbe1b503bf2613de0202afa22c7f9ebcdd22ec751de3b9f7414ee",
+    "compiler_report": "5a5eeb03aa19fca0abfcbf1f9288a799bca2cb080cb6dfe6c2442d8b981229b0",
+    "pre_relay_contract": "9d1a3f207588adfca70b21075df2f9ef1c394d0a191909c8eae9bb65f8a0abb8"
+  },
+  "diagnostic": false
+}

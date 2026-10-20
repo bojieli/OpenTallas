@@ -1,0 +1,188 @@
+[
+  {
+    "producer": [
+      "pgp_SE",
+      "command"
+    ],
+    "consumer": [
+      "su_SE0",
+      "vmw_cmd"
+    ],
+    "full_consumer_port_width": 78,
+    "source_partition_bits": 78,
+    "rows": [
+      {
+        "bus": "rf0980",
+        "kind": "old",
+        "age_edges": 9,
+        "unknown_reason": null,
+        "source_to_sink_ranges_half_open": [
+          [
+            128,
+            165,
+            0,
+            37
+          ],
+          [
+            167,
+            206,
+            39,
+            78
+          ]
+        ]
+      },
+      {
+        "bus": "rf1921",
+        "kind": "fc136lane",
+        "age_edges": null,
+        "unknown_reason": "missing_actual_clock_reset_epoch_evidence",
+        "source_to_sink_ranges_half_open": [
+          [
+            165,
+            167,
+            37,
+            39
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "producer": [
+      "pgp_NE",
+      "command"
+    ],
+    "consumer": [
+      "sucore_NE",
+      "red_cmd"
+    ],
+    "full_consumer_port_width": 74,
+    "source_partition_bits": 74,
+    "rows": [
+      {
+        "bus": "rf1036",
+        "kind": "old",
+        "age_edges": 4,
+        "unknown_reason": null,
+        "source_to_sink_ranges_half_open": [
+          [
+            8,
+            70,
+            8,
+            70
+          ]
+        ]
+      },
+      {
+        "bus": "rf1430",
+        "kind": "fc136lane",
+        "age_edges": null,
+        "unknown_reason": "missing_actual_clock_reset_epoch_evidence",
+        "source_to_sink_ranges_half_open": [
+          [
+            0,
+            8,
+            0,
+            8
+          ],
+          [
+            70,
+            74,
+            70,
+            74
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "producer": [
+      "pgp_SW",
+      "command"
+    ],
+    "consumer": [
+      "sucore_SW",
+      "red_cmd"
+    ],
+    "full_consumer_port_width": 74,
+    "source_partition_bits": 74,
+    "rows": [
+      {
+        "bus": "rf1039",
+        "kind": "old",
+        "age_edges": 10,
+        "unknown_reason": null,
+        "source_to_sink_ranges_half_open": [
+          [
+            8,
+            70,
+            8,
+            70
+          ]
+        ]
+      },
+      {
+        "bus": "rf1433",
+        "kind": "fc136lane",
+        "age_edges": null,
+        "unknown_reason": "missing_actual_clock_reset_epoch_evidence",
+        "source_to_sink_ranges_half_open": [
+          [
+            0,
+            8,
+            0,
+            8
+          ],
+          [
+            70,
+            74,
+            70,
+            74
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "producer": [
+      "hb_vms_SW",
+      "vmstat"
+    ],
+    "consumer": [
+      "vm_status4",
+      "quadrant_status"
+    ],
+    "full_consumer_port_width": 76,
+    "source_partition_bits": 19,
+    "rows": [
+      {
+        "bus": "rf1416",
+        "kind": "old",
+        "age_edges": 5,
+        "unknown_reason": null,
+        "source_to_sink_ranges_half_open": [
+          [
+            0,
+            16,
+            0,
+            16
+          ]
+        ]
+      },
+      {
+        "bus": "rf1731",
+        "kind": "fc",
+        "age_edges": null,
+        "unknown_reason": "missing_actual_clock_reset_epoch_evidence",
+        "source_to_sink_ranges_half_open": [
+          [
+            16,
+            19,
+            16,
+            19
+          ]
+        ]
+      }
+    ]
+  }
+]
