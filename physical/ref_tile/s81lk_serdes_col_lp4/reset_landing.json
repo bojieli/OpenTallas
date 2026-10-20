@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_pdie_serdes_col_lp4",
+ "enable": false,
+ "reason": "rst is landed by the lp.py regional reset runs: root stage on ck_tx + 4 registered stages per region (depth 5), each child reset run depth + t(child); no plain fanout from the port"
+}
