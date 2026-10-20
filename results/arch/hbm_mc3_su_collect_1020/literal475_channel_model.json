@@ -1,0 +1,357 @@
+{
+  "schema": "codex.mc3.literal_channel_plan.v1",
+  "status": "MODEL_ONLY_NOT_KIT_OR_GATE_GO",
+  "source": "ae2a8e0be MC3c6 functional source272b37645",
+  "outline": [
+    475.2,
+    475.2
+  ],
+  "macros": [
+    {
+      "inst": "u_native.u_response_payload.M[0].P.u_m",
+      "at": [
+        43.2,
+        129.6
+      ],
+      "bbox": [
+        43.2,
+        129.6,
+        76.896,
+        157.14
+      ],
+      "role": "response"
+    },
+    {
+      "inst": "u_native.g_wpay.u_write_payload.M[0].P.u_m",
+      "at": [
+        43.2,
+        302.4
+      ],
+      "bbox": [
+        43.2,
+        302.4,
+        76.896,
+        329.94
+      ],
+      "role": "write"
+    },
+    {
+      "inst": "u_native.u_response_payload.M[1].P.u_m",
+      "at": [
+        129.60000000000002,
+        129.6
+      ],
+      "bbox": [
+        129.60000000000002,
+        129.6,
+        163.29600000000002,
+        157.14
+      ],
+      "role": "response"
+    },
+    {
+      "inst": "u_native.g_wpay.u_write_payload.M[1].P.u_m",
+      "at": [
+        129.60000000000002,
+        302.4
+      ],
+      "bbox": [
+        129.60000000000002,
+        302.4,
+        163.29600000000002,
+        329.94
+      ],
+      "role": "write"
+    },
+    {
+      "inst": "u_native.u_response_payload.M[2].P.u_m",
+      "at": [
+        216.0,
+        129.6
+      ],
+      "bbox": [
+        216.0,
+        129.6,
+        249.696,
+        157.14
+      ],
+      "role": "response"
+    },
+    {
+      "inst": "u_native.g_wpay.u_write_payload.M[2].P.u_m",
+      "at": [
+        216.0,
+        302.4
+      ],
+      "bbox": [
+        216.0,
+        302.4,
+        249.696,
+        329.94
+      ],
+      "role": "write"
+    },
+    {
+      "inst": "u_native.u_response_payload.M[3].P.u_m",
+      "at": [
+        302.40000000000003,
+        129.6
+      ],
+      "bbox": [
+        302.40000000000003,
+        129.6,
+        336.096,
+        157.14
+      ],
+      "role": "response"
+    },
+    {
+      "inst": "u_native.g_wpay.u_write_payload.M[3].P.u_m",
+      "at": [
+        302.40000000000003,
+        302.4
+      ],
+      "bbox": [
+        302.40000000000003,
+        302.4,
+        336.096,
+        329.94
+      ],
+      "role": "write"
+    },
+    {
+      "inst": "u_native.METADATA[0].u_head.M[0].P.u_m",
+      "at": [
+        43.2,
+        43.2
+      ],
+      "bbox": [
+        43.2,
+        43.2,
+        76.896,
+        70.74000000000001
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[0].u_post.M[0].P.u_m",
+      "at": [
+        43.2,
+        216.0
+      ],
+      "bbox": [
+        43.2,
+        216.0,
+        76.896,
+        243.54
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[0].u_post.M[1].P.u_m",
+      "at": [
+        43.2,
+        388.8
+      ],
+      "bbox": [
+        43.2,
+        388.8,
+        76.896,
+        416.34000000000003
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[1].u_head.M[0].P.u_m",
+      "at": [
+        129.60000000000002,
+        43.2
+      ],
+      "bbox": [
+        129.60000000000002,
+        43.2,
+        163.29600000000002,
+        70.74000000000001
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[1].u_post.M[0].P.u_m",
+      "at": [
+        129.60000000000002,
+        216.0
+      ],
+      "bbox": [
+        129.60000000000002,
+        216.0,
+        163.29600000000002,
+        243.54
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[1].u_post.M[1].P.u_m",
+      "at": [
+        129.60000000000002,
+        388.8
+      ],
+      "bbox": [
+        129.60000000000002,
+        388.8,
+        163.29600000000002,
+        416.34000000000003
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[2].u_head.M[0].P.u_m",
+      "at": [
+        216.0,
+        43.2
+      ],
+      "bbox": [
+        216.0,
+        43.2,
+        249.696,
+        70.74000000000001
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[2].u_post.M[0].P.u_m",
+      "at": [
+        216.0,
+        216.0
+      ],
+      "bbox": [
+        216.0,
+        216.0,
+        249.696,
+        243.54
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[2].u_post.M[1].P.u_m",
+      "at": [
+        216.0,
+        388.8
+      ],
+      "bbox": [
+        216.0,
+        388.8,
+        249.696,
+        416.34000000000003
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[3].u_head.M[0].P.u_m",
+      "at": [
+        302.40000000000003,
+        43.2
+      ],
+      "bbox": [
+        302.40000000000003,
+        43.2,
+        336.096,
+        70.74000000000001
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[3].u_post.M[0].P.u_m",
+      "at": [
+        302.40000000000003,
+        216.0
+      ],
+      "bbox": [
+        302.40000000000003,
+        216.0,
+        336.096,
+        243.54
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.METADATA[3].u_post.M[1].P.u_m",
+      "at": [
+        302.40000000000003,
+        388.8
+      ],
+      "bbox": [
+        302.40000000000003,
+        388.8,
+        336.096,
+        416.34000000000003
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.controller.u_queue.M[0].P.u_m",
+      "at": [
+        388.8,
+        43.2
+      ],
+      "bbox": [
+        388.8,
+        43.2,
+        422.496,
+        70.74000000000001
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.u_pending_identity.M[0].P.u_m",
+      "at": [
+        388.8,
+        129.6
+      ],
+      "bbox": [
+        388.8,
+        129.6,
+        422.496,
+        157.14
+      ],
+      "role": "metadata"
+    },
+    {
+      "inst": "u_native.u_response_identity.M[0].P.u_m",
+      "at": [
+        388.8,
+        216.0
+      ],
+      "bbox": [
+        388.8,
+        216.0,
+        422.496,
+        243.54
+      ],
+      "role": "metadata"
+    }
+  ],
+  "lattice_um": 43.2,
+  "all_origins_literal_lattice": true,
+  "min_orthogonal_channel_um": 52.70399999999998,
+  "central_full_width_gap_y": [
+    243.54,
+    302.4
+  ],
+  "central_after_5p4_halos_y": [
+    248.94,
+    297.0
+  ],
+  "macro_plus_gate_std_fill": 0.12110929369452099,
+  "area_ratio_vs_t242": 3.4297052154195002,
+  "controller64_outline_mm2": 14.452162559999998,
+  "delta64_vs_t242_mm2": 10.2383419392,
+  "shoreline_pc_pitch_um": 265.584,
+  "shoreline_rows_width_only": 2,
+  "hold_point": [
+    "ROOT priced lowfill approval required (fill12.11%).",
+    "ONE std band 40-60% needs exact native cell role packing/area geometry and exact IO-hold exceptions, not proved.",
+    "Role-native reach<=405 including control, real pin rectangles and every inserted cell NOT proved; no gate GO.",
+    "Two shoreline rows vs t242 one; parent route/relay, parity and clock domain price still needed.",
+    "PGbirth fix must compose before any new native gate."
+  ]
+}
