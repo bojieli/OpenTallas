@@ -51,3 +51,20 @@ Checklist R14: 1 Pins PASS (kit landing + pin flops; outputs registered) 2 Reach
 max32 4 Depth unchanged (LAT-7 add, LAT-6 mul) 5 Storage PASS 4x32x128 SRAM 6 Floorplan PASS lattice macros, band, 55.8%,
 square 7 Clock single centre root, gate --cts measures spread 8 Schedule static, token delta 0, boot +5 edges (die boot
 calendar owner KV-BIND8).
+
+## R15b status (KV-PVFIN15 10-20, claude/kv-pvfin15b-1020) -- clock-structure fallback on the unchanged R14 RTL
+R14 gate 084503 (ep7) FAILED at CTS: OT_HOLD_STALL NEEDS_RTL after 3 h of hold repair (25,810 hold buffers, +4.6% area,
+util 65.6%; 23,931 endpoints inside the 30 ps margin; FF hold -50.3 ps/1345 -> -27.2/78). Worst R2R = zero-logic copies
+u_mul.u_c2.q -> s2_shoh/s2_ms/s2_mr/s2_err (launch leaf 262.5 ps vs capture leaf 322.9 ps at FF, adjacent flops).
+Classification: clock-structure + copy-hop hold problem, not logic depth: default max-cap sink clustering made 1,959
+leaves of 3..29 sinks (8 levels), insertion 250..390 ps, report_clock_skew 136-140 ps, ~60 ps between neighbour leaves.
+R15b fix (structural, clock): balanced register-sink clustering route.cts_sink size 20 / 40 um / 2 clustering levels /
+buffer every 60 um / unbalance 0.5 (measured on dsdv_sh_lk, one root over 25k sinks: pin-flop spread TT 21.7 / FF 21.3 vs
+84 default). RTL, census (R14 PASS max32 / 0 viol) and V5.050 shipping witnesses (r14_proof) unchanged.
+The RTL fallback that removes the copy hops is R15a (claude/kv-pvfin15-1020); bind whichever closes first.
+Safe-design checklist R15b: 1 Pins PASS (kit landing + RTL pin flops; outputs registered) 2 Reach: 259.2 square,
+post-route registered-stage audit owed 3 Fanout PASS (R14 census max32/0) 4 Depth unchanged (LAT-7 add, LAT-6 mul);
+known zero-logic copy hops in the mul stage 2 are left for hold buffers here (fixed in R15a) 5 Storage PASS 4x32x128
+SRAM 6 Floorplan PASS (lattice macros, central band, 55.8% synthesis util, square) 7 Clock FIXED: single centre root,
+balanced 20-sink / 40 um leaves, gate measures spread (<=80 within the region) 8 Schedule static, token delta 0,
+boot +5 command edges (KV-BIND8 die boot calendar).

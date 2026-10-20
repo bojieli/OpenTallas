@@ -116,15 +116,21 @@
    "h": "M4",
    "v": "M5"
   },
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 20,
+   "diameter_um": 40,
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 60 -clustering_unbalance_ratio 0.5",
+   "why": "KV-PVFIN15 10-20: R14 gate default max-cap clustering (1959 leaves of 3..29 sinks, 8 levels) gave insertion 250..390 ps, skew 136-140 ps, ~60 ps between adjacent pipeline leaves -> 23,931 FF hold endpoints within 30 ps, CTS hold repair stall (OT_HOLD_STALL). Setting measured on dsdv_sh_lk (25k sinks, one root, 255 um wide): pin-flop spread TT 21.7 / FF 21.3 vs 84 default."
+  }
  },
  "recipe": 3,
- "purpose": "PVFIN safe32 successor R14: 4x32x128 sum SRAM, static command calendar, per-group acceptance nodes (native census PASS max32/0 viol, R14 cfaa9a3cb); token-age delta 0; boot reset release: first start capture E6/accept E7 (+5 command edges vs legacy E1/E2).",
+ "purpose": "PVFIN safe32 R15b: R14 RTL (native census PASS max32, cc8cea048) + balanced register-sink CTS clustering (size 20 / 40 um / 2 levels / buffers every 60 um) against the R14 CTS hold-repair stall; token-age delta 0; boot +5 command edges vs legacy.",
  "job": {
-  "owner": "Claude:KV-PARAMS6",
-  "branch": "claude/kv-pvfin-r14-1020",
-  "tag": "s32r14",
-  "purpose": "PVFIN safe32 successor R14: 4x32x128 sum SRAM, static command calendar, per-group acceptance nodes (native census PASS max32/0 viol, R14 cfaa9a3cb); token-age delta 0; boot reset release: first start capture E6/accept E7 (+5 command edges vs legacy E1/E2).",
+  "owner": "Claude:KV-PVFIN15",
+  "branch": "claude/kv-pvfin15b-1020",
+  "tag": "s32r15b",
+  "purpose": "PVFIN safe32 R15b: R14 RTL (native census PASS max32, cc8cea048) + balanced register-sink CTS clustering (size 20 / 40 um / 2 levels / buffers every 60 um) against the R14 CTS hold-repair stall; token-age delta 0; boot +5 command edges vs legacy.",
   "benches": [
    {
     "name": "pv_fin_s32_m0",
