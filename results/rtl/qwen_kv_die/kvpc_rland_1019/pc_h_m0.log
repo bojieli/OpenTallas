@@ -1,0 +1,7 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+KVPC_RLAND PASS tile=pc_h edges=3000 checks=604284 active_out=22183 outs=13 child_pins=98 errors=0 mut=0 vs=ref_unlanded_external_landing
+- ../runs/pc_h_m0/tb.sv:200: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.061 s; speed 41.053 us/s
+- Verilator: cpu 0.061 s on 1 threads; allocated 7 MB
+

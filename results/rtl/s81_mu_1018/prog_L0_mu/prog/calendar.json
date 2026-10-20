@@ -24,6 +24,15 @@
   },
   {
    "i": 2,
+   "issue": 57,
+   "done": 0,
+   "engine": 14,
+   "arg": 0,
+   "row76": "000000000039e000000",
+   "what": "KIT"
+  },
+  {
+   "i": 3,
    "issue": 63,
    "done": 68,
    "engine": 1,
@@ -32,7 +41,7 @@
    "what": "attn NORM leaf 0 u_s_0S (imm = hc_pre: RUNTIME, see gap)"
   },
   {
-   "i": 3,
+   "i": 4,
    "issue": 64,
    "done": 69,
    "engine": 1,
@@ -41,7 +50,7 @@
    "what": "attn NORM leaf 1 u_s_0S (imm = hc_pre: RUNTIME, see gap)"
   },
   {
-   "i": 4,
+   "i": 5,
    "issue": 65,
    "done": 70,
    "engine": 1,
@@ -50,7 +59,7 @@
    "what": "attn NORM leaf 2 u_s_0S (imm = hc_pre: RUNTIME, see gap)"
   },
   {
-   "i": 5,
+   "i": 6,
    "issue": 66,
    "done": 71,
    "engine": 1,
@@ -59,7 +68,7 @@
    "what": "attn NORM leaf 3 u_s_0S (imm = hc_pre: RUNTIME, see gap)"
   },
   {
-   "i": 6,
+   "i": 7,
    "issue": 67,
    "done": 72,
    "engine": 1,
@@ -68,22 +77,13 @@
    "what": "attn NORM leaf 4 u_s_0S (imm = hc_pre: RUNTIME, see gap)"
   },
   {
-   "i": 7,
+   "i": 8,
    "issue": 68,
    "done": 73,
    "engine": 1,
    "arg": 7,
    "row76": "0000490000441000007",
    "what": "attn XFIN_GO u_s_0S"
-  },
-  {
-   "i": 8,
-   "issue": 57,
-   "done": 0,
-   "engine": 14,
-   "arg": 0,
-   "row76": "000000000039e000000",
-   "what": "KIT"
   },
   {
    "i": 9,

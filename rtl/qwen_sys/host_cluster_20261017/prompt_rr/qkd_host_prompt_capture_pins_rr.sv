@@ -4,6 +4,7 @@
 // gate p3 host_rst_n drove 4,924 async-reset pins tile-wide).  The pin drives only ot_rst_relay (2 sync flops + 1 kept
 // relay flop) placed with this member; the relay output is the member's reset.  Assert asynchronous and immediate,
 // RELEASE 3 ck edges after the pin, as every other host_rst_n consumer of the child.  rtl/physical/ot_qkd_host_prompt_capture_pins.sv is unchanged.
+// HKV-PROMPT6: inner member qkd_host_prompt_capture_pins_pd (tools/qwen_kv_die/host_cluster/gen_prompt_pd.py, same function).
 // QKD_HR_PR_RR_MUTANT (bench only): relay bypassed.
 module qkd_host_prompt_capture_pins_rr #(
   parameter integer MUT=0
@@ -24,7 +25,7 @@ module qkd_host_prompt_capture_pins_rr #(
 `else
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_q));
 `endif
- qkd_host_prompt_capture_pins #(.MUT(MUT)) u_m(
+ qkd_host_prompt_capture_pins_pd #(.MUT(MUT)) u_m(
   .ck(ck),
   .rst_n(rst_q),
   .we(we),

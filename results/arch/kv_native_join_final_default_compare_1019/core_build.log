@@ -1,0 +1,155 @@
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'cq_offer_ok'
+                     core_candidate.sv:46:15: ... Location of port declaration
+   46 |   output wire cq_offer_ok,
+      |               ^~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'certificate_key_ok'
+                     core_candidate.sv:52:15: ... Location of port declaration
+   52 |   output wire certificate_key_ok,
+      |               ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'issue_ready'
+                     core_candidate.sv:53:15: ... Location of port declaration
+   53 |   output wire issue_ready, request_allow, binding_valid, protocol_fault,
+      |               ^~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'request_allow'
+                     core_candidate.sv:53:28: ... Location of port declaration
+   53 |   output wire issue_ready, request_allow, binding_valid, protocol_fault,
+      |                            ^~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'binding_valid'
+                     core_candidate.sv:53:43: ... Location of port declaration
+   53 |   output wire issue_ready, request_allow, binding_valid, protocol_fault,
+      |                                           ^~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'protocol_fault'
+                     core_candidate.sv:53:58: ... Location of port declaration
+   53 |   output wire issue_ready, request_allow, binding_valid, protocol_fault,
+      |                                                          ^~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'pending_phase'
+                     core_candidate.sv:54:21: ... Location of port declaration
+   54 |   output wire [1:0] pending_phase,
+      |                     ^~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'pending_client'
+                     core_candidate.sv:55:22: ... Location of port declaration
+   55 |   output wire [15:0] pending_client,
+      |                      ^~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'pending_slot'
+                     core_candidate.sv:56:21: ... Location of port declaration
+   56 |   output wire [7:0] pending_slot,
+      |                     ^~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'pending_desc_gen'
+                     core_candidate.sv:57:21: ... Location of port declaration
+   57 |   output wire [1:0] pending_desc_gen,
+      |                     ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'pending_position'
+                     core_candidate.sv:58:22: ... Location of port declaration
+   58 |   output wire [17:0] pending_position, pending_input_token,
+      |                      ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'pending_input_token'
+                     core_candidate.sv:58:40: ... Location of port declaration
+   58 |   output wire [17:0] pending_position, pending_input_token,
+      |                                        ^~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'bound_client'
+                     core_candidate.sv:59:22: ... Location of port declaration
+   59 |   output wire [15:0] bound_client,
+      |                      ^~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'bound_slot'
+                     core_candidate.sv:60:21: ... Location of port declaration
+   60 |   output wire [7:0] bound_slot,
+      |                     ^~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'bound_position'
+                     core_candidate.sv:61:22: ... Location of port declaration
+   61 |   output wire [17:0] bound_position,
+      |                      ^~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'bound_desc_gen'
+                     core_candidate.sv:62:21: ... Location of port declaration
+   62 |   output wire [1:0] bound_desc_gen, bound_native_gen,
+      |                     ^~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'bound_native_gen'
+                     core_candidate.sv:62:37: ... Location of port declaration
+   62 |   output wire [1:0] bound_desc_gen, bound_native_gen,
+      |                                     ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'bound_request_tag'
+                     core_candidate.sv:63:22: ... Location of port declaration
+   63 |   output wire [58:0] bound_request_tag, bound_terminal_tag,
+      |                      ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'bound_terminal_tag'
+                     core_candidate.sv:63:41: ... Location of port declaration
+   63 |   output wire [58:0] bound_request_tag, bound_terminal_tag,
+      |                                         ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'raw_cleanup_allow'
+                     core_candidate.sv:64:15: ... Location of port declaration
+   64 |   output wire raw_cleanup_allow,
+      |               ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: disabled_core_compare.sv:51:31: Instance has missing pin: 'binding_certified'
+                     core_candidate.sv:65:15: ... Location of port declaration
+   65 |   output wire binding_certified
+      |               ^~~~~~~~~~~~~~~~~
+%Warning-WIDTHEXPAND: disabled_core_compare.sv:76:58: Operator SHIFTR expects 59 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                    : ... note: In instance 'disabled_core_compare'
+   76 | allocation_tag=59'((edge_n*32'h9e3779b9) ^ (32'h13579bdf >> 5));
+      |                                                          ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: disabled_core_compare.sv:79:56: Operator SHIFTR expects 59 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                    : ... note: In instance 'disabled_core_compare'
+   79 | terminal_tag=59'((edge_n*32'h9e3779b9) ^ (32'h13579bdf >> 8));
+      |                                                        ^~
+%Warning-WIDTHEXPAND: disabled_core_compare.sv:90:59: Operator SHIFTR expects 87 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                    : ... note: In instance 'disabled_core_compare'
+   90 | certificate_key=87'((edge_n*32'h9e3779b9) ^ (32'h13579bdf >> 3));
+      |                                                           ^~
+%Warning-WIDTHEXPAND: disabled_core_compare.sv:92:53: Operator SHIFTR expects 87 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                    : ... note: In instance 'disabled_core_compare'
+   92 | event_key=87'((edge_n*32'h9e3779b9) ^ (32'h13579bdf >> 5));
+      |                                                     ^~
+%Warning-WIDTHEXPAND: disabled_core_compare.sv:94:54: Operator SHIFTR expects 87 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                    : ... note: In instance 'disabled_core_compare'
+   94 | prompt_key=87'((edge_n*32'h9e3779b9) ^ (32'h13579bdf >> 7));
+      |                                                      ^~
+%Warning-WIDTHEXPAND: disabled_core_compare.sv:96:56: Operator SHIFTR expects 87 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                    : ... note: In instance 'disabled_core_compare'
+   96 | cq_offer_key=87'((edge_n*32'h9e3779b9) ^ (32'h13579bdf >> 9));
+      |                                                        ^~
+%Warning-WIDTHEXPAND: disabled_core_compare.sv:98:50: Operator SHIFTR expects 87 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                    : ... note: In instance 'disabled_core_compare'
+   98 | cq_key=87'((edge_n*32'h9e3779b9) ^ (32'h13579bdf >> 11));
+      |                                                  ^~
+%Warning-WIDTHEXPAND: disabled_core_compare.sv:100:52: Operator SHIFTR expects 59 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                     : ... note: In instance 'disabled_core_compare'
+  100 | post_tag=59'((edge_n*32'h9e3779b9) ^ (32'h13579bdf >> 13));
+      |                                                    ^~
+make: Entering directory '/srv/opentallas-scratch/claude/kv-native-join-final-default-1019/a8ddbb4c1/obj_core'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vdisabled_core_compare.cpp Vdisabled_core_compare___024root__0.cpp Vdisabled_core_compare__main.cpp Vdisabled_core_compare___024root__Slow.cpp Vdisabled_core_compare___024root__0__Slow.cpp Vdisabled_core_compare__Syms__Slow.cpp > Vdisabled_core_compare__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o Vdisabled_core_compare__ALL.o Vdisabled_core_compare__ALL.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vdisabled_core_compare__ALL.a    -pthread -lpthread -latomic   -o Vdisabled_core_compare
+rm Vdisabled_core_compare__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/kv-native-join-final-default-1019/a8ddbb4c1/obj_core'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.072 MB sources in 3 modules, into 0.029 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 3.630 s (elab=0.003, cvt=0.006, bld=3.614); cpu 0.017 s on 2 threads; allocated 38.430 MB
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module disabled_core_compare --Mdir obj_core -j 2 disabled_core_compare.sv core_candidate.sv"
+	User time (seconds): 6.00
+	System time (seconds): 0.77
+	Percent of CPU this job got: 181%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:03.72
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 318900
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 232037
+	Voluntary context switches: 109
+	Involuntary context switches: 23
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1840
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

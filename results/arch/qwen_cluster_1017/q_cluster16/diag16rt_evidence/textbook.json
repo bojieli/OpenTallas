@@ -1,0 +1,195 @@
+{
+ "cells": 679798,
+ "flops": 163201,
+ "icgs": 0,
+ "macros": 168,
+ "findings": {
+  "clock_domain": [
+   "clock root port ck_c2r2: 16,045 flops > 15,000 on one root (+0 ICGs, 48 macro clock pins; e.g. u_fab.u_land_dn2_rly6_r.o[0]$_SDFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c2r1: 14,499 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 49 macro clock pins; e.g. u_fab.u_land_dn2_rly3_r.o[0]$_SDFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c3r1: 14,495 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 54 macro clock pins; e.g. u_fab.u_land_dn3_rly3_r.o[0]$_SDFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c1r2: 13,456 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 56 macro clock pins; e.g. u_fab.u_land_dn1_rly6_r.o[0]$_SDFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c3r2: 11,917 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 49 macro clock pins; e.g. u_fab.u_land_dn3_rly6_r.o[0]$_SDFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c1r0: 11,916 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 58 macro clock pins; e.g. u_fab.u_land_dn1_rly3_w.b[0][0]$_DFFE_PP_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c1r1: 11,915 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 52 macro clock pins; e.g. u_fab.u_land_dn1_rly3_r.o[0]$_SDFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c3r3: 9,840 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 45 macro clock pins; e.g. u_fab.u_land_dn3_rly9_r.o[0]$_SDFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c2r0: 9,331 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 50 macro clock pins; e.g. u_fab.u_land_dn2_rly3_w.b[0][0]$_DFFE_PP_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c0r0: 8,807 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 44 macro clock pins; e.g. u_fab.u_land_dn0_rly3_w.b[0][0]$_DFFE_PP_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "clock root port ck_c2r3: 8,299 flops > 8,000 spread over a 2441 x 5223 um outline (> 600 um) (+0 ICGs, 47 macro clock pins; e.g. u_fab.u_land_dn2_rly9_r.o[0]$_SDFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+  ],
+  "high_fanout": [
+   "reset u_fab.u_land_rs_0_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R): 2,064 loads (0 flops, e.g. None) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "reset u_fab.u_land_rs_0_r.rc[0]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R): 1,035 loads (0 flops, e.g. None) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)"
+  ],
+  "util_channel": [
+   "20 macro channel(s) narrower than 20 um with placement rows (e.g. u_fab.u_x_0_0|u_t_0_0 8.6 um, u_fab.u_x_0_1|u_t_0_1 8.6 um, u_fab.u_x_0_2|u_t_0_2 8.6 um): widen to >= 20 um or block the channel"
+  ],
+  "clock_guidance": [
+   "clock root port:ck_c2r2: 16,093 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,093 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+  ]
+ },
+ "refuse": {},
+ "metrics": {
+  "core_um": [
+   2440.8,
+   5222.9
+  ],
+  "clock_roots": [
+   {
+    "root": "port:ck_c2r2",
+    "ff": 16045,
+    "icg": 0,
+    "macro_pins": 48,
+    "example": "u_fab.u_land_dn2_rly6_r.o[0]$_SDFF_PN0_"
+   },
+   {
+    "root": "port:ck_c2r1",
+    "ff": 14499,
+    "icg": 0,
+    "macro_pins": 49,
+    "example": "u_fab.u_land_dn2_rly3_r.o[0]$_SDFF_PN0_"
+   },
+   {
+    "root": "port:ck_c3r1",
+    "ff": 14495,
+    "icg": 0,
+    "macro_pins": 54,
+    "example": "u_fab.u_land_dn3_rly3_r.o[0]$_SDFF_PN0_"
+   },
+   {
+    "root": "port:ck_c1r2",
+    "ff": 13456,
+    "icg": 0,
+    "macro_pins": 56,
+    "example": "u_fab.u_land_dn1_rly6_r.o[0]$_SDFF_PN0_"
+   },
+   {
+    "root": "port:ck_c3r2",
+    "ff": 11917,
+    "icg": 0,
+    "macro_pins": 49,
+    "example": "u_fab.u_land_dn3_rly6_r.o[0]$_SDFF_PN0_"
+   },
+   {
+    "root": "port:ck_c1r0",
+    "ff": 11916,
+    "icg": 0,
+    "macro_pins": 58,
+    "example": "u_fab.u_land_dn1_rly3_w.b[0][0]$_DFFE_PP_"
+   }
+  ],
+  "hier_subblocks": 152,
+  "clock_max_root_sinks": 16093,
+  "clock_max_root": "port:ck_c2r2",
+  "high_fanout_top": [
+   {
+    "net": "u_fab.u_land_dn0_rly3_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2072,
+    "flops": 0
+   },
+   {
+    "net": "u_fab.u_land_dn0_rly6_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2072,
+    "flops": 0
+   },
+   {
+    "net": "u_fab.u_land_dn0_rly9_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2072,
+    "flops": 0
+   },
+   {
+    "net": "u_fab.u_land_dn1_rly3_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2072,
+    "flops": 0
+   },
+   {
+    "net": "u_fab.u_land_dn1_rly6_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2072,
+    "flops": 0
+   },
+   {
+    "net": "u_fab.u_land_dn1_rly9_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2072,
+    "flops": 0
+   },
+   {
+    "net": "u_fab.u_land_dn2_rly3_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2072,
+    "flops": 0
+   },
+   {
+    "net": "u_fab.u_land_dn2_rly6_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 2072,
+    "flops": 0
+   }
+  ],
+  "hf_max_port": 0,
+  "hf_max_reset": 2064,
+  "hf_max_net": 2072,
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 0,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 186.7,
+  "depth_path": [
+   "u_fab.u_land_dn0_rly3_w.rq$_DFF_P_",
+   "u_fab.u_land_dn0_rly3_w.b[0][266]$_DFFE_PP_/D"
+  ],
+  "depth_levels": 3,
+  "reach_worst_um": 0.0,
+  "reach_violations": 0,
+  "util": 0.7122,
+  "std_density": 0.0253,
+  "total_fill": 0.7122,
+  "narrow_channels": 20,
+  "narrow_channel_min_um": 8.64
+ },
+ "top": "qfd_c_b16_dv",
+ "netlist": "/srv/opentallas-scratch/claude/ref_gate/qfd_c_b16_dv_diag16rt-20261019-004424/routes/gate/work/orfs/results/asap7/opentallas_qfd_c_b16_dv_asap7_ref_gate/base/1_2_yosys.v",
+ "seconds": 126.7,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0,
+  "reset_ports": "rst_c0r0,rst_c1r0,rst_c2r0,rst_c3r0,rst_c0r3,rst_c1r3,rst_c2r3,rst_c3r3,rst_c0r1,rst_c1r1,rst_c2r1,rst_c3r1,rst_c0r2,rst_c1r2,rst_c2r2,rst_c3r2"
+ },
+ "clock_rule": {
+  "max_root_sinks": 16093,
+  "root": "port:ck_c2r2",
+  "ok": true,
+  "text": "16,093 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,093 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "clock_domain: clock root port ck_c2r2: 16,045 flops > 15,000 on one root (+0 ICGs, 48 macro clock pins; e.g. u_fab.u_land_dn2_rly6_r.o[0]$_SDFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | high_fanout: reset u_fab.u_land_rs_0_r.rc[1]$_SDFF_PN0_/QN (DFFHQNx1_ASAP7_75t_R): 2,064 loads (0 flops, e.g. None) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region) | util_channel: 20 macro channel(s) narrower than 20 um with placement rows (e.g. u_fab.u_x_0_0|u_t_0_0 8.6 um, u_fab.u_x_0_1|u_t_0_1 8.6 um, u_fab.u_x_0_2|u_t_0_2 8.6 um): widen to >= 20 um or block the channel | clock_guidance: clock root port:ck_c2r2: 16,093 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,093 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+}

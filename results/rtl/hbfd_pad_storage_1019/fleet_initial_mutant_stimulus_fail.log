@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   977 GB (avail 787, growth 103, headroom 0, waiters 0/0 GB) load 68/128 running 30 disk 412 GB 
+ot-run: ot-epyc5       admits   798 GB (avail 672, growth 113, headroom 0, waiters 0/0 GB) load 57/128 running 17 disk 564 GB 
+ot-run: ot-epyc6       admits   818 GB (avail 686, growth 113, headroom 0, waiters 0/0 GB) load 45/128 running 22 disk 563 GB 
+ot-run: ot-epyc7       admits   883 GB (avail 706, growth 88, headroom 0, waiters 0/0 GB) load 50/96 running 20 disk 502 GB 
+ot-run: ot-epyc8       admits  1112 GB (avail 874, growth 96, headroom 0, waiters 0/0 GB) load 53/128 running 25 disk 565 GB 
+ot-run: ot-pve1        admits   117 GB (avail 95, growth 13, headroom 0, waiters 0/0 GB) load 48/28 running 6 disk 1197 GB 
+ot-run: ot-agidock128  admits    93 GB (avail 77, growth 13, headroom 0, waiters 0/0 GB) load 13/64 running 8 disk 47 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1061594-1792424361 after 0 s
+/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator
+Verilator 5.050 2026-07-01 rev v5.050
+[5839000] %Fatal: tb.sv:101: Assertion failed in tb_hbfd_pad_storage: MUTANT_NOT_DETECTED W=1 N=3 caught=0
+%Error: tb.sv:101: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1061594-1792424361): exit 1

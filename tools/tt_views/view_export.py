@@ -428,6 +428,9 @@ def choose_abstract(out, name, base, image, mounts=()):
     return rec
 
 
+PF_ENV_RE = re.compile(r"set ::env\(OT_PF_MACRO_LIBS\) \[list ([^\]]*)\]\s*$")
+
+
 def verdict_section(tcl_text):
     """the constraint section of a verdict STA Tcl (corner_sta.py / meas_resta.py form): every line from read_db up to
     the first report (puts "OT_CORNER ..."), without meas_resta's register census"""
@@ -437,6 +440,11 @@ def verdict_section(tcl_text):
     if a is None or b is None or b <= a:
         raise VerdictError("verdict Tcl has no read_db ... OT_CORNER section")
     sec = [l for l in lines[a:b] if l.strip() and "OT_REGS" not in l]
+    # PF-HARDCHILD-EXPORT (S81-CAPC2 2026-10-19): the verdict session sets OT_PF_MACRO_LIBS (corner_sta.py /
+    # meas_resta.with_pf_macro_libs) just BEFORE read_db; the sign-off SDC's PINFLOP reference (pinflop_ref.tcl) reads
+    # the hard-child ETM insertion from it.  Without it the export session referenced the raw child clock pin and
+    # could never reproduce the verdict (s81sl_capc d8836674d: export FF -158.19 / TT -27.41 vs verdict +18.21 / +198.74).
+    sec = [l for l in lines[:a] if PF_ENV_RE.match(l)] + sec
     if not any(l.startswith("read_sdc ") for l in sec) or not any(l.startswith("read_spef ") for l in sec):
         raise VerdictError("verdict Tcl section reads no SDC / SPEF")
     return sec
@@ -449,6 +457,10 @@ def export_corner_sequence(sequence, corner):
     out = []
     seen = False
     for line in sequence:
+        m = PF_ENV_RE.match(line)
+        if m:
+            # the verdict's setup section carries the TT ETMs, its hold section the FF ones: name this corner's
+            line = pf_env_line([re.sub(r"_(ss|tt|ff)(\.lib(?:\.gz)?)$", rf"_{corner}\2", f) for f in m.group(1).split()])
         if line.startswith("set ::ot_ce_corner "):
             if not re.fullmatch(r"set ::ot_ce_corner (?:ss|tt|ff|\{(?:ss|tt|ff)\})", line):
                 raise VerdictError("unrecognized explicit clock-entry corner selector")
@@ -462,8 +474,18 @@ def export_corner_sequence(sequence, corner):
 
 
 def section_files(sec):
-    """[(command, container path)] of the files a section reads"""
-    return [tuple(l.split()[:2]) for l in sec if re.match(r"(read_db|read_sdc|read_spef|source) /", l)]
+    """[(command, container path)] of the files a section reads (incl. the OT_PF_MACRO_LIBS hard-child ETMs)"""
+    out = [tuple(l.split()[:2]) for l in sec if re.match(r"(read_db|read_sdc|read_spef|source) /", l)]
+    for l in sec:
+        m = PF_ENV_RE.match(l)
+        if m:
+            out += [("pf_macro_lib", f) for f in m.group(1).split()]
+    return out
+
+
+def pf_env_line(libs):
+    """the OT_PF_MACRO_LIBS line pinflop_ref.tcl reads hard-child ETM clock insertion from"""
+    return f"set ::env(OT_PF_MACRO_LIBS) [list {' '.join(libs)}]"
 
 
 def find_verdict(orfs, explicit=None):
@@ -737,6 +759,11 @@ def main():
             # must be loaded before it evaluates clock arrivals.
             seq, mode = [f"read_db /in/{rel}/6_final.odb", f"read_spef /in/{rel}/6_final.spef", f"read_sdc {sdc}",
                          "set_propagated_clock [all_clocks]"], "legacy"
+        if mv and not any(PF_ENV_RE.match(l) for l in seq):
+            # no verdict line (job replay / post_sdc / legacy): the PINFLOP reference must still see the hard
+            # children's ETM insertion, as the route (ADDITIONAL_LIBS) and the verdict did -- this session's own ETMs
+            at = next((i for i, l in enumerate(seq) if l.startswith("read_db ")), 0)
+            seq.insert(at, pf_env_line([f"/mv{i}/{n}_{c}.lib" for i, n in mv]))
         seq = export_corner_sequence(seq, c)
         rec["sdc_sequence"][c] = dict(mode=mode, tcl=seq)
         audit = []

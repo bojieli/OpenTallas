@@ -1,0 +1,294 @@
+{
+  "source_sha256": "f78cea8af28b15937316ca31ea473a916fe1342d8bf91255bd3023c5dfd2fc5e",
+  "extra_ff_min_at32": 13,
+  "roots": [
+    {
+      "driver": "c12184",
+      "endpoints": 131,
+      "extra_ff_min_at32": 4,
+      "endpoints_by_pin": {
+        "RESETN": 131
+      },
+      "incoming": {
+        "CLK": {
+          "net": "ck",
+          "drivers": [],
+          "input": "ck"
+        },
+        "D": {
+          "net": "n18533",
+          "driver": "c12852",
+          "pin": "QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "RESETN": {
+          "net": "n14734",
+          "driver": "c12207",
+          "pin": "QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "SETN": {
+          "net": "n20608",
+          "driver": "c18867",
+          "pin": "H",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        }
+      }
+    },
+    {
+      "driver": "c12185",
+      "endpoints": 89,
+      "extra_ff_min_at32": 2,
+      "endpoints_by_pin": {
+        "RESETN": 89
+      },
+      "incoming": {
+        "CLK": {
+          "net": "ck",
+          "drivers": [],
+          "input": "ck"
+        },
+        "D": {
+          "net": "n18533",
+          "driver": "c12852",
+          "pin": "QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "RESETN": {
+          "net": "n14734",
+          "driver": "c12207",
+          "pin": "QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "SETN": {
+          "net": "n20608",
+          "driver": "c18867",
+          "pin": "H",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        }
+      }
+    },
+    {
+      "driver": "c27394",
+      "endpoints": 74,
+      "extra_ff_min_at32": 2,
+      "endpoints_by_pin": {
+        "RESETN": 74
+      },
+      "incoming": {
+        "CLK": {
+          "net": "ck",
+          "drivers": [],
+          "input": "ck"
+        },
+        "D": {
+          "net": "n34406",
+          "driver": "c32665",
+          "pin": "QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "RESETN": {
+          "net": "n34404",
+          "driver": "c32663",
+          "pin": "QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "SETN": {
+          "net": "n32600",
+          "driver": "c30859",
+          "pin": "H",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        }
+      }
+    },
+    {
+      "driver": "c27387",
+      "endpoints": 64,
+      "extra_ff_min_at32": 1,
+      "endpoints_by_pin": {
+        "RESETN": 64
+      },
+      "incoming": {
+        "CLK": {
+          "net": "ck",
+          "drivers": [],
+          "input": "ck"
+        },
+        "D": {
+          "net": "n34406",
+          "driver": "c32665",
+          "pin": "QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "RESETN": {
+          "net": "n34404",
+          "driver": "c32663",
+          "pin": "QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "SETN": {
+          "net": "n32599",
+          "driver": "c30858",
+          "pin": "H",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        }
+      }
+    },
+    {
+      "driver": "c27395",
+      "endpoints": 53,
+      "extra_ff_min_at32": 1,
+      "endpoints_by_pin": {
+        "RESETN": 53
+      },
+      "incoming": {
+        "CLK": {
+          "net": "ck",
+          "drivers": [],
+          "input": "ck"
+        },
+        "D": {
+          "net": "n34406",
+          "driver": "c32665",
+          "pin": "QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "RESETN": {
+          "net": "n34404",
+          "driver": "c32663",
+          "pin": "QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "SETN": {
+          "net": "n32600",
+          "driver": "c30859",
+          "pin": "H",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        }
+      }
+    },
+    {
+      "driver": "c27386",
+      "endpoints": 48,
+      "extra_ff_min_at32": 1,
+      "endpoints_by_pin": {
+        "RESETN": 48
+      },
+      "incoming": {
+        "CLK": {
+          "net": "ck",
+          "drivers": [],
+          "input": "ck"
+        },
+        "D": {
+          "net": "n34406",
+          "driver": "c32665",
+          "pin": "QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "RESETN": {
+          "net": "n34404",
+          "driver": "c32663",
+          "pin": "QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "SETN": {
+          "net": "n32599",
+          "driver": "c30858",
+          "pin": "H",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        }
+      }
+    },
+    {
+      "driver": "c27388",
+      "endpoints": 47,
+      "extra_ff_min_at32": 1,
+      "endpoints_by_pin": {
+        "RESETN": 47
+      },
+      "incoming": {
+        "CLK": {
+          "net": "ck",
+          "drivers": [],
+          "input": "ck"
+        },
+        "D": {
+          "net": "n34406",
+          "driver": "c32665",
+          "pin": "QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "RESETN": {
+          "net": "n34404",
+          "driver": "c32663",
+          "pin": "QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "SETN": {
+          "net": "n32599",
+          "driver": "c30858",
+          "pin": "H",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        }
+      }
+    },
+    {
+      "driver": "c27389",
+      "endpoints": 42,
+      "extra_ff_min_at32": 1,
+      "endpoints_by_pin": {
+        "RESETN": 42
+      },
+      "incoming": {
+        "CLK": {
+          "net": "ck",
+          "drivers": [],
+          "input": "ck"
+        },
+        "D": {
+          "net": "n34406",
+          "driver": "c32665",
+          "pin": "QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "RESETN": {
+          "net": "n34404",
+          "driver": "c32663",
+          "pin": "QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        },
+        "SETN": {
+          "net": "n32599",
+          "driver": "c30858",
+          "pin": "H",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "current_endpoints": 24
+        }
+      }
+    }
+  ]
+}

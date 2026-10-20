@@ -1,0 +1,346 @@
+{
+  "pid": 2322853,
+  "proc_present": false,
+  "controller_log_sha256": "9c0e938b01cd28b0f054cac53d80bb6b44bf52a35cd8f7d0431d8b22c3050989",
+  "terminal_receipts": {
+    "ot_hbm_su_static_pgslice_lg__pv10": {
+      "execution": {
+        "args": [
+          "/home/ubuntu/bin/ot-run",
+          "--mem",
+          "48",
+          "--threads",
+          "4",
+          "--dir",
+          "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/collect2_admitted",
+          "--priority",
+          "die",
+          "--",
+          "bash",
+          "-c",
+          "set -e; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv10; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv10.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv10 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv10 ot_hbm_su_static_pgslice_lg__pv10 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv10.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv10 ot_hbm_su_static_pgslice_lg__pv10"
+        ],
+        "pid": 2322853,
+        "started_utc": "2026-10-19T20:23:32.577375+00:00"
+      },
+      "receipt": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv10",
+        "client_rc": 0,
+        "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv10",
+        "status": "EXECUTION_COMPLETED_NEEDS_HASH_PORT_ETM_REVIEW"
+      },
+      "terminal_lines": [
+        "ot_hbm_su_static_pgslice_lg__pv10 rc=0    Chip area for module '$paramod\\ot_hdc_ksadd_k__d4g_pgslice\\W=s32'00000000000000000000000000001000': 6.283980",
+        "ot_hbm_su_static_pgslice_lg__pv10 etm rc=0 OT_ETM_CLOCKS 621 OT_ETM_DONE_tt OT_ETM_CLOCKS 621 OT_ETM_DONE_ff ",
+        "ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1493849-1792441414): exit 0"
+      ],
+      "log_sha256": "dce39d046174756bfd6a629c31db00b929393c74dd09dd70770bf235c5d84882"
+    },
+    "ot_hbm_su_static_pgslice_lg__pv11": {
+      "execution": {
+        "args": [
+          "/home/ubuntu/bin/ot-run",
+          "--mem",
+          "48",
+          "--threads",
+          "4",
+          "--dir",
+          "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/collect2_admitted",
+          "--priority",
+          "die",
+          "--",
+          "bash",
+          "-c",
+          "set -e; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv11; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv11.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv11 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv11 ot_hbm_su_static_pgslice_lg__pv11 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv11.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv11 ot_hbm_su_static_pgslice_lg__pv11"
+        ],
+        "pid": 2322853,
+        "started_utc": "2026-10-19T20:23:32.577658+00:00"
+      },
+      "receipt": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv11",
+        "client_rc": 0,
+        "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv11",
+        "status": "EXECUTION_COMPLETED_NEEDS_HASH_PORT_ETM_REVIEW"
+      },
+      "terminal_lines": [
+        "ot_hbm_su_static_pgslice_lg__pv11 rc=0    Chip area for module '$paramod\\ot_hdc_ksadd_k__d4g_pgslice\\W=s32'00000000000000000000000000001000': 6.283980",
+        "ot_hbm_su_static_pgslice_lg__pv11 etm rc=0 OT_ETM_CLOCKS 621 OT_ETM_DONE_tt OT_ETM_CLOCKS 621 OT_ETM_DONE_ff ",
+        "ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1494152-1792441414): exit 0"
+      ],
+      "log_sha256": "ab3daf4d14ea9035447ec6de47121dac73229edd460abdb8b267d2793eedec5a"
+    },
+    "ot_hbm_su_static_pgslice_lg__pv12": {
+      "execution": {
+        "args": [
+          "/home/ubuntu/bin/ot-run",
+          "--mem",
+          "48",
+          "--threads",
+          "4",
+          "--dir",
+          "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/collect2_admitted",
+          "--priority",
+          "die",
+          "--",
+          "bash",
+          "-c",
+          "set -e; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv12; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv12.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv12 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv12 ot_hbm_su_static_pgslice_lg__pv12 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv12.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv12 ot_hbm_su_static_pgslice_lg__pv12"
+        ],
+        "pid": 2322853,
+        "started_utc": "2026-10-19T20:46:31.464206+00:00"
+      },
+      "receipt": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv12",
+        "client_rc": 0,
+        "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv12",
+        "status": "EXECUTION_COMPLETED_NEEDS_HASH_PORT_ETM_REVIEW"
+      },
+      "terminal_lines": [
+        "ot_hbm_su_static_pgslice_lg__pv12 rc=0    Chip area for module '$paramod\\ot_hdc_ksadd_k__d4g_pgslice\\W=s32'00000000000000000000000000001000': 6.283980",
+        "ot_hbm_su_static_pgslice_lg__pv12 etm rc=0 OT_ETM_CLOCKS 621 OT_ETM_DONE_tt OT_ETM_CLOCKS 621 OT_ETM_DONE_ff ",
+        "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3679490-1792442793): exit 0"
+      ],
+      "log_sha256": "4fac6340c02bb0e7abaf1547ab72f4eedc39410a3ec36e7466aa1752e5a63ae7"
+    },
+    "ot_hbm_su_static_pgslice_lg__pv13": {
+      "execution": {
+        "args": [
+          "/home/ubuntu/bin/ot-run",
+          "--mem",
+          "48",
+          "--threads",
+          "4",
+          "--dir",
+          "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/collect2_admitted",
+          "--priority",
+          "die",
+          "--",
+          "bash",
+          "-c",
+          "set -e; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv13; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv13.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv13 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv13 ot_hbm_su_static_pgslice_lg__pv13 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv13.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv13 ot_hbm_su_static_pgslice_lg__pv13"
+        ],
+        "pid": 2322853,
+        "started_utc": "2026-10-19T20:35:06.618608+00:00"
+      },
+      "receipt": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv13",
+        "client_rc": 0,
+        "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv13",
+        "status": "EXECUTION_COMPLETED_NEEDS_HASH_PORT_ETM_REVIEW"
+      },
+      "terminal_lines": [
+        "ot_hbm_su_static_pgslice_lg__pv13 rc=0    Chip area for module '$paramod\\ot_hdc_ksadd_k__d4g_pgslice\\W=s32'00000000000000000000000000001000': 6.283980",
+        "ot_hbm_su_static_pgslice_lg__pv13 etm rc=0 OT_ETM_CLOCKS 621 OT_ETM_DONE_tt OT_ETM_CLOCKS 621 OT_ETM_DONE_ff ",
+        "ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1539098-1792442108): exit 0"
+      ],
+      "log_sha256": "4bdc4fa01f1b54e9ddc3c1955879957b5017779bc261b939650b6d8701a4b9dc"
+    },
+    "ot_hbm_su_static_pgslice_lg__pv14": {
+      "execution": {
+        "args": [
+          "/home/ubuntu/bin/ot-run",
+          "--mem",
+          "48",
+          "--threads",
+          "4",
+          "--dir",
+          "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/collect2_admitted",
+          "--priority",
+          "die",
+          "--",
+          "bash",
+          "-c",
+          "set -e; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv14; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv14.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv14 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv14 ot_hbm_su_static_pgslice_lg__pv14 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv14.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv14 ot_hbm_su_static_pgslice_lg__pv14"
+        ],
+        "pid": 2322853,
+        "started_utc": "2026-10-19T20:43:31.207660+00:00"
+      },
+      "receipt": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv14",
+        "client_rc": 0,
+        "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv14",
+        "status": "EXECUTION_COMPLETED_NEEDS_HASH_PORT_ETM_REVIEW"
+      },
+      "terminal_lines": [
+        "ot_hbm_su_static_pgslice_lg__pv14 rc=0    Chip area for module '$paramod\\ot_hdc_ksadd_k__d4g_pgslice\\W=s32'00000000000000000000000000001000': 6.283980",
+        "ot_hbm_su_static_pgslice_lg__pv14 etm rc=0 OT_ETM_CLOCKS 621 OT_ETM_DONE_tt OT_ETM_CLOCKS 621 OT_ETM_DONE_ff ",
+        "ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1576767-1792442613): exit 0"
+      ],
+      "log_sha256": "e934eb297e07e05d783d522826dcde06e51632f6759e3809d562675336a99c05"
+    },
+    "ot_hbm_su_static_pgslice_lg__pv4": {
+      "execution": {
+        "args": [
+          "/home/ubuntu/bin/ot-run",
+          "--mem",
+          "48",
+          "--threads",
+          "4",
+          "--dir",
+          "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/collect2_admitted",
+          "--priority",
+          "die",
+          "--",
+          "bash",
+          "-c",
+          "set -e; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv4; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv4.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv4 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv4 ot_hbm_su_static_pgslice_lg__pv4 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv4.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv4 ot_hbm_su_static_pgslice_lg__pv4"
+        ],
+        "pid": 2322853,
+        "started_utc": "2026-10-19T20:23:32.577105+00:00"
+      },
+      "receipt": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv4",
+        "client_rc": 0,
+        "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv4",
+        "status": "EXECUTION_COMPLETED_NEEDS_HASH_PORT_ETM_REVIEW"
+      },
+      "terminal_lines": [
+        "ot_hbm_su_static_pgslice_lg__pv4 rc=0    Chip area for module '$paramod$5238efde2b39ffcb6fe16007a46f585beb78912b\\ot_hbm_su_static_vm_bank_leaf__d4g_pgslice': 9.185400",
+        "ot_hbm_su_static_pgslice_lg__pv4 etm rc=0 OT_ETM_CLOCKS 621 OT_ETM_DONE_tt OT_ETM_CLOCKS 621 OT_ETM_DONE_ff ",
+        "ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1494151-1792441414): exit 0"
+      ],
+      "log_sha256": "76a2be16196208b8484b1e7c86e849ae89cec7e50c6dc60a104101a96a7e9602"
+    },
+    "ot_hbm_su_static_pgslice_lg__pv6": {
+      "execution": {
+        "args": [
+          "/home/ubuntu/bin/ot-run",
+          "--mem",
+          "48",
+          "--threads",
+          "4",
+          "--dir",
+          "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/collect2_admitted",
+          "--priority",
+          "die",
+          "--",
+          "bash",
+          "-c",
+          "set -e; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv6; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv6.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv6 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv6 ot_hbm_su_static_pgslice_lg__pv6 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv6.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv6 ot_hbm_su_static_pgslice_lg__pv6"
+        ],
+        "pid": 2322853,
+        "started_utc": "2026-10-19T20:35:12.021691+00:00"
+      },
+      "receipt": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv6",
+        "client_rc": 0,
+        "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv6",
+        "status": "EXECUTION_COMPLETED_NEEDS_HASH_PORT_ETM_REVIEW"
+      },
+      "terminal_lines": [
+        "ot_hbm_su_static_pgslice_lg__pv6 rc=0    Chip area for module '$paramod$a0b93f2067bbc952168557de1cf7f0c67c4aceff\\ot_hbm_su_static_vm_bank_leaf__d4g_pgslice': 9.331200",
+        "ot_hbm_su_static_pgslice_lg__pv6 etm rc=0 OT_ETM_CLOCKS 621 OT_ETM_DONE_tt OT_ETM_CLOCKS 621 OT_ETM_DONE_ff ",
+        "ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1540094-1792442114): exit 0"
+      ],
+      "log_sha256": "9ec945e5b85829dc14555f875b2080fac33c24d30bb566ed34087dbf7c91c802"
+    },
+    "ot_hbm_su_static_pgslice_lg__pv7": {
+      "execution": {
+        "args": [
+          "/home/ubuntu/bin/ot-run",
+          "--mem",
+          "48",
+          "--threads",
+          "4",
+          "--dir",
+          "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/collect2_admitted",
+          "--priority",
+          "die",
+          "--",
+          "bash",
+          "-c",
+          "set -e; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv7; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv7.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv7 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv7 ot_hbm_su_static_pgslice_lg__pv7 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv7.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv7 ot_hbm_su_static_pgslice_lg__pv7"
+        ],
+        "pid": 2322853,
+        "started_utc": "2026-10-19T20:35:06.512256+00:00"
+      },
+      "receipt": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv7",
+        "client_rc": 0,
+        "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv7",
+        "status": "EXECUTION_COMPLETED_NEEDS_HASH_PORT_ETM_REVIEW"
+      },
+      "terminal_lines": [
+        "ot_hbm_su_static_pgslice_lg__pv7 rc=0    Chip area for module '$paramod$e340a54bdd43ff3a7774ee1a14e728bee2b33c06\\ot_hbm_su_static_vm_bank_leaf__d4g_pgslice': 9.316620",
+        "ot_hbm_su_static_pgslice_lg__pv7 etm rc=0 OT_ETM_CLOCKS 621 OT_ETM_DONE_tt OT_ETM_CLOCKS 621 OT_ETM_DONE_ff ",
+        "ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1538941-1792442108): exit 0"
+      ],
+      "log_sha256": "efe6299d4312394dac63dd608164623732517e6a598dc5bc35d4dce00f78fc72"
+    },
+    "ot_hbm_su_static_pgslice_lg__pv8": {
+      "execution": {
+        "args": [
+          "/home/ubuntu/bin/ot-run",
+          "--mem",
+          "48",
+          "--threads",
+          "4",
+          "--dir",
+          "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/collect2_admitted",
+          "--priority",
+          "die",
+          "--",
+          "bash",
+          "-c",
+          "set -e; cd /srv/opentallas-scratch/claude/hd4g/gen2e2/src_6f783d0a1; test ! -e /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv8; env MEMG=48 HIER=1 EXTRA=v16w/v16w_ot_hbm_su_static_pgslice_lg__pv8.sv,rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv WTOP=v16w_ot_hbm_su_static_pgslice_lg__pv8 bash /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/synth_master.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv8 ot_hbm_su_static_pgslice_lg__pv8 ot_hbm_su_static_pgslice_lg - - --prefer v16w/prefer_ot_hbm_su_static_pgslice_lg__pv8.txt; env MEMG=48 bash tools/hbm_die_v15/synth_etm.sh . /srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv8 ot_hbm_su_static_pgslice_lg__pv8"
+        ],
+        "pid": 2322853,
+        "started_utc": "2026-10-19T20:23:32.578135+00:00"
+      },
+      "receipt": {
+        "cell": "ot_hbm_su_static_pgslice_lg__pv8",
+        "client_rc": 0,
+        "output": "/srv/opentallas-scratch/claude/hd4g/gen2e2/failed_resume_1019/ot_hbm_su_static_pgslice_lg__pv8",
+        "status": "EXECUTION_COMPLETED_NEEDS_HASH_PORT_ETM_REVIEW"
+      },
+      "terminal_lines": [
+        "ot_hbm_su_static_pgslice_lg__pv8 rc=0    Chip area for module '$paramod\\ot_hdc_ksadd_k__d4g_pgslice\\W=s32'00000000000000000000000000001000': 6.283980",
+        "ot_hbm_su_static_pgslice_lg__pv8 etm rc=0 OT_ETM_CLOCKS 621 OT_ETM_DONE_tt OT_ETM_CLOCKS 621 OT_ETM_DONE_ff ",
+        "ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1493850-1792441414): exit 0"
+      ],
+      "log_sha256": "ec06ecc700b2cd73089b1517e37e44baddb76827c7c53e656c0db9f3107e7d7b"
+    }
+  },
+  "unchanged_reused_evidence": {
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/original_verified_1019/original_verified_receipts.json": {
+      "expected": "f29a940b74b79b6f91f8a45f713cd499bf0375140dc426a74ca9788c55948826",
+      "actual": "f29a940b74b79b6f91f8a45f713cd499bf0375140dc426a74ca9788c55948826",
+      "match": true
+    },
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/original_verified_1019/original_source_lineage.json": {
+      "expected": "de26ac3bbcd4d6d9c233f7e75030c292f8ca37c15734e3bb764090a52e4161cc",
+      "actual": "de26ac3bbcd4d6d9c233f7e75030c292f8ca37c15734e3bb764090a52e4161cc",
+      "match": true
+    },
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/original_verified_1019/original_metadata_hashes.json": {
+      "expected": "4deac86fd34d0f5290f53d70ecafa712de69a30acbb8be82b07425024fcd94f2",
+      "actual": "4deac86fd34d0f5290f53d70ecafa712de69a30acbb8be82b07425024fcd94f2",
+      "match": true
+    },
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/final_manifest_1019/reuse_verified_receipts.json": {
+      "expected": "8aee6bd4ac6d459a036a5ddf9dc13ada924c626331a1b05b0759c6070b4f863e",
+      "actual": "8aee6bd4ac6d459a036a5ddf9dc13ada924c626331a1b05b0759c6070b4f863e",
+      "match": true
+    },
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/views.json": {
+      "expected": "599a0b81b456c26f760d9821279e1e9979515f28c2cf39deefa3c94b603c755c",
+      "actual": "599a0b81b456c26f760d9821279e1e9979515f28c2cf39deefa3c94b603c755c",
+      "match": true
+    },
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/vplan_a/jobs.tsv": {
+      "expected": "d230a34a820b3e7ec9e8c88136b742bd06832b7d32f578a19ac46f95626bf0cf",
+      "actual": "d230a34a820b3e7ec9e8c88136b742bd06832b7d32f578a19ac46f95626bf0cf",
+      "match": true
+    },
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/failed_resume_1019/failed_only_resume.stable.json": {
+      "expected": "95e13f89d209db8279c6be6eef44d7996dc120ca6caa6df5363a9f30fac835fe",
+      "actual": "95e13f89d209db8279c6be6eef44d7996dc120ca6caa6df5363a9f30fac835fe",
+      "match": true
+    },
+    "/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2/failed_resume_1019/input_audit_collect2.json": {
+      "expected": "cb1aeeb7875f822b0720aa9c3b770e18e6859b65be07f6a45c7a294ba3e076cc",
+      "actual": "cb1aeeb7875f822b0720aa9c3b770e18e6859b65be07f6a45c7a294ba3e076cc",
+      "match": true
+    }
+  }
+}

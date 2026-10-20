@@ -1,0 +1,12 @@
+XDIE2_CFG MU 0 LEG 1 DMUT 0 NS 1380 NM 0 ERRP 0 LATE 40 CHB 1
+LATE dst 8 src 5 pair 0 k 0 land 12603 deadline 12564
+LATE dst 8 src 5 pair 0 k 1 land 12605 deadline 12566
+LATE dst 8 src 5 pair 0 k 2 land 12607 deadline 12568
+LATE dst 8 src 5 pair 0 k 3 land 12608 deadline 12570
+LATE dst 8 src 5 pair 0 k 4 land 12609 deadline 12572
+XDIE_LINK timeouts 0 retx_flits 0 (all 32 lanes; go-back-N ACK timeouts and replayed flits)
+XDIE_MU tagged_expected 0 tagged_seen 0 tag_errors 0
+XDIE_STATS beats 1380 landed 1380 mismatches 0 late 68 maxlate 39 extra 0 faults 0000000000000000 live 32/32 last_cycle 19041
+FAIL xdie_s81: landed 1380/1380 mismatches 0 late 68 extra 0 faults 0000000000000000 live 32/32 tags 0/0 tag_errors 0
+BENCH_FAIL late
+EXIT 1

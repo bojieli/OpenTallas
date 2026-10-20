@@ -23,7 +23,7 @@ module ot_s81sl_slice_c1x_lp #(
     input wire [275:0] vi,
     output wire [275:0] vo,
     input wire [1103:0] bi,
-    output wire [1103:0] bo,
+    output wire [512:0] bo,
     output wire [4415:0] xc,
     input wire [559:0] rt,
     output wire [15:0] ck_line,
@@ -67,7 +67,7 @@ module ot_s81sl_slice_c1x_lp #(
     wire [31:0] x_eps, x_s, x_rbd, x_scale; wire x_mode;
     wire xe_v, eg_v, f_eg; wire [1:0] xe_c, eg_c; wire [31:0] xe_hh, xe_kk, xe_dd, eg_d; wire [7:0] x_si;
     wire [172:0] nx_wi, nx_ei, nx_eo, nx_wo; wire [1100:0] xw_d;
-    assign bo = 1104'd0;
+    assign bo = 513'd0;
     wire [559:0] rt_q;
     wire [1:0] mkq; wire [1103:0] xw4;
     assign xw4 = {xw_d[1100:565], xw_d[0], mkq[1], xw_d[564:0], mkq[1]};
@@ -155,7 +155,7 @@ module ot_s81sl_slice_c1x_lp #(
     ot_s81dv_xfin u_xf (.clk(ck_C), .rst_n(lpr_c_u_xf), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv), .s_i(x_si), .s(x_s), .wi_v(nx_wi[172]), .wi_h(nx_wi[171:168]), .wi_b(nx_wi[167:160]), .wi_d(nx_wi[159:0]), .ei_v(nx_ei[172]), .ei_h(nx_ei[171:168]), .ei_b(nx_ei[167:160]), .ei_d(nx_ei[159:0]), .eo_v(nx_eo[172]), .eo_h(nx_eo[171:168]), .eo_b(nx_eo[167:160]), .eo_d(nx_eo[159:0]), .wo_v(nx_wo[172]), .wo_h(nx_wo[171:168]), .wo_b(nx_wo[167:160]), .wo_d(nx_wo[159:0]), .rb_v(x_rbv), .rb_d(x_rbd), .e_v(xe_v), .e_c(xe_c), .e_hh(xe_hh), .e_kk(xe_kk), .e_dd(xe_dd), .fault(f_xf));   // region C, t = 0
     ot_s81sl_eg u_eg (.clk(ck_C), .rst_n(lpr_c_u_eg), .eps(x_eps), .scale(x_scale), .i_v(xe_v), .i_c(xe_c), .i_hh(xe_hh), .i_kk(xe_kk), .i_dd(xe_dd), .g_v(eg_v), .g_c(eg_c), .g(eg_d), .fault(f_eg));   // region C, t = 0
     ot_s81sl_rly #(.W(560), .D(DR)) u_rt (.clk(ck_C), .d(rt), .q(rt_q));   // region C, t = 0
-    ot_s81sl_cap u_cap (.clk(ck_C), .rst_n(lpr_c_u_cap), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d), .cw_s_v(cw_v_x[5:0]), .cw_s_a(cw_a_x[71:0]), .cw_s_d(cw_d_x[191:0]), .cw_n_v(cw_v_x[9:6]), .cw_n_a(cw_a_x[119:72]), .cw_n_d(cw_d_x[319:192]), .fault(f_cap));   // region C, t = 0
+    ot_s81sl_capc2 u_cap (.clk(ck_C), .rst_n(lpr_c_u_cap), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d), .cw_s_v(cw_v_x[5:0]), .cw_s_a(cw_a_x[71:0]), .cw_s_d(cw_d_x[191:0]), .cw_n_v(cw_v_x[9:6]), .cw_n_a(cw_a_x[119:72]), .cw_n_d(cw_d_x[319:192]), .fault(f_cap));   // region C, t = 0
     ot_s81sl_mk u_mk (.clk(ck_C), .rst_n(lpr_c_u_mk), .mk(mkq));   // region C, t = 0
     ot_s81sl_rly #(.W(1104), .D(DX)) u_x0 (.clk(ck_C), .d(xw4), .q(xc[1103:0]));   // region C, t = 0
     ot_s81sl_rly #(.W(1104), .D(DX)) u_x1 (.clk(ck_C), .d(xw4), .q(xc[2207:1104]));   // region C, t = 0

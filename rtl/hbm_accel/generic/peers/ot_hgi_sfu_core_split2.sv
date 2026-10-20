@@ -24,7 +24,11 @@
 // OT_SFU_CORE_MUT_SKIP_REG (bench negative control) as in ot_hgi_sfu_core_split.
 module ot_hgi_sfu_core_split2 #(
  parameter integer LWB=15,
- parameter integer LG_PATH=0
+ parameter integer LG_PATH=0,
+ // HBM-BANKLAT-SU 10-19: the SFU LG pair tap's READ_RETURN/WRITE_RETURN as bound on the die (ot_hgi_sfu_lg_pair_tap_leaf;
+ // 14/11 = zero-lane SU tap + non-pin bank). The bridge expects TAP_RR/TAP_WR + 2*(LG_PATH+1).
+ parameter integer TAP_RR=14,
+ parameter integer TAP_WR=11
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
  input wire [3:0] clk_lg,rst_lg_n,
@@ -116,7 +120,7 @@ module ot_hgi_sfu_core_split2 #(
   else begin {ro_v_e,ro_v_w}<=e_rov;{ro_x_e,ro_x_w}<=e_rox;end
 `endif
  localparam integer LGB=LG_PATH+1;
- ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LGB),.WRITE_RETURN(11+2*LGB)) u_vm(
+ ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(TAP_RR+2*LGB),.WRITE_RETURN(TAP_WR+2*LGB)) u_vm(
  .clk(clk),.rst_n(rr[0]),.clk_lg(clk_lg),.rst_lg_n(rst_lg_n),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
  .prefetch_local_addr(prefetch_local_addr),.prefetch_scalar(prefetch_scalar),.prefetch_word(prefetch_word),.scalar_addr(scalar_addr),
  .local_rq(b_rq),.local_rr(b_rr),.local_wq(b_wq),.local_w_done(b_wd),

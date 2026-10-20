@@ -10,6 +10,7 @@
 module tb_qfd_dv2_faces;
     parameter integer MUT = 0;
     parameter integer MU_NU = 1;      // MU-ADOPT-SLICE: the faces' MU_NU (4: the 4-user LM-head argmax, user fields 0 here)
+    parameter integer SU_LT = 0, HD_W130 = 0;   // MU-SLICE-GATE 10-19: the hardened configuration (slice2_wh / slice2_e kits: 1, 1)
     reg ck = 0, rst_n = 0;
     always #1 ck = ~ck;
     reg [115:0] cmd0 = 0;
@@ -24,7 +25,7 @@ module tb_qfd_dv2_faces;
     wire o3v, o3m, o3l, o2v, o2m, o2l, o1v, o1m, o1l; wire [31:0] o3t, o2t, o1t; wire [511:0] o3d, o2d, o1d;
     wire [547:0] q3, q2, q1;
     wire [1087:0] x0, x1, x2, x3, y0, y1, y2, y3; wire [47:0] u0, u1, u2, u3, v0, v1, v2, v3;
-    qfd_dv_slice2_w #(.MUT(MUT), .MU_NU(MU_NU)) W1 (.ck(ck), .rst_n(rst_n), .cmd_wi(cmd0), .cmd_eo(c1), .hr_wi(453'd0), .hr_eo(),
+    qfd_dv_slice2_w #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) W1 (.ck(ck), .rst_n(rst_n), .cmd_wi(cmd0), .cmd_eo(c1), .hr_wi(453'd0), .hr_eo(),
         .st_wo(), .st_wi(1088'd0), .st_eo(x0), .st_ei(y0), .sc_wo(), .sc_wi(48'd0), .sc_eo(u0), .sc_ei(v0),
         .arv_wo(), .art_wo(), .arm_wo(), .arl_wo(), .ard_wo(), .dd_wo(),
         .arv_ei(o1v), .art_ei(o1t), .arm_ei(o1m), .arl_ei(o1l), .ard_ei(o1d), .dd_ei(q1),
@@ -33,7 +34,7 @@ module tb_qfd_dv2_faces;
         .ag_wo(aw), .ag_ei(a1), .ss_wo(s0), .ccv_wo(ccv), .ccm_wo(ccm), .ccw_wo(ccw), .cct_wo(cct),
         .l9_wi(514'd0), .l9_eo(), .rs_n0(514'd0), .rs_n1(514'd0), .rs_s0(514'd0), .rs_s1(514'd0),
         .cw_n0(), .cw_n1(), .cw_n2(), .cw_n3(), .cw_s0(), .cw_s1(), .cw_s2(), .cw_s3());
-    qfd_dv_slice2_w #(.MUT(MUT), .MU_NU(MU_NU)) W0 (.ck(ck), .rst_n(rst_n), .cmd_wi(c1), .cmd_eo(c2), .hr_wi(453'd0), .hr_eo(),
+    qfd_dv_slice2_w #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) W0 (.ck(ck), .rst_n(rst_n), .cmd_wi(c1), .cmd_eo(c2), .hr_wi(453'd0), .hr_eo(),
         .st_wo(y0), .st_wi(x0), .st_eo(x1), .st_ei(y1), .sc_wo(v0), .sc_wi(u0), .sc_eo(u1), .sc_ei(v1),
         .arv_wo(o1v), .art_wo(o1t), .arm_wo(o1m), .arl_wo(o1l), .ard_wo(o1d), .dd_wo(q1),
         .arv_ei(o2v), .art_ei(o2t), .arm_ei(o2m), .arl_ei(o2l), .ard_ei(o2d), .dd_ei(q2),
@@ -42,7 +43,7 @@ module tb_qfd_dv2_faces;
         .ag_wo(a1), .ag_ei(a2), .ss_wo(s1), .ccv_wo(), .ccm_wo(), .ccw_wo(), .cct_wo(),
         .l9_wi(514'd0), .l9_eo(), .rs_n0(514'd0), .rs_n1(514'd0), .rs_s0(514'd0), .rs_s1(514'd0),
         .cw_n0(), .cw_n1(), .cw_n2(), .cw_n3(), .cw_s0(), .cw_s1(), .cw_s2(), .cw_s3());
-    qfd_dv_slice2_e #(.MUT(MUT), .MU_NU(MU_NU)) E0 (.ck(ck), .rst_n(rst_n), .cmd_ei(c2), .cmd_wo(c3), .hr_ei(453'd0), .hr_wo(),
+    qfd_dv_slice2_e #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) E0 (.ck(ck), .rst_n(rst_n), .cmd_ei(c2), .cmd_wo(c3), .hr_ei(453'd0), .hr_wo(),
         .st_eo(y1), .st_ei(x1), .st_wo(x2), .st_wi(y2), .sc_eo(v1), .sc_ei(u1), .sc_wo(u2), .sc_wi(v2),
         .arv_eo(o2v), .art_eo(o2t), .arm_eo(o2m), .arl_eo(o2l), .ard_eo(o2d), .dd_eo(q2),
         .arv_wi(o3v), .art_wi(o3t), .arm_wi(o3m), .arl_wi(o3l), .ard_wi(o3d), .dd_wi(q3),
@@ -51,7 +52,7 @@ module tb_qfd_dv2_faces;
         .ag_eo(a2), .ag_wi(a3), .ss_eo(s2), .ccv_eo(), .ccm_eo(), .ccw_eo(), .cct_eo(),
         .l9_wi(514'd0), .l9_eo(), .rs_n0(514'd0), .rs_n1(514'd0), .rs_s0(514'd0), .rs_s1(514'd0),
         .cw_n0(), .cw_n1(), .cw_n2(), .cw_n3(), .cw_s0(), .cw_s1(), .cw_s2(), .cw_s3());
-    qfd_dv_slice2_e #(.MUT(MUT), .MU_NU(MU_NU)) E1 (.ck(ck), .rst_n(rst_n), .cmd_ei(c3), .cmd_wo(), .hr_ei(453'd0), .hr_wo(),
+    qfd_dv_slice2_e #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) E1 (.ck(ck), .rst_n(rst_n), .cmd_ei(c3), .cmd_wo(), .hr_ei(453'd0), .hr_wo(),
         .st_eo(y2), .st_ei(x2), .st_wo(), .st_wi(1088'd0), .sc_eo(v2), .sc_ei(u2), .sc_wo(), .sc_wi(48'd0),
         .arv_eo(o3v), .art_eo(o3t), .arm_eo(o3m), .arl_eo(o3l), .ard_eo(o3d), .dd_eo(q3),
         .arv_wi(1'b0), .art_wi(32'd0), .arm_wi(1'b0), .arl_wi(1'b0), .ard_wi(512'd0), .dd_wi(548'd0),

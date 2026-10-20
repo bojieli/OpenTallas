@@ -1,0 +1,11 @@
+# Actual source input graph: diagnostic boundary proof
+
+Setup01 is preserved with its exact original TB hash and parser failure (reserved SV keyword). Observation02 carries390 genuine source event words through every selected path and measures internal CFIFO xw_ ages10/8/11. Strict03 freezes those ages, checks actual CFIFO stickyflt and rejects five causal route/source faults. Pins04 additionally retains and checks the actual unconditional xa/xb/cc/x2 registered outputs:390 pin bundles per frame, measured ages11/9/12, all five causal faults still reject. The earlier +1 is now runtime measurement, not an omitted wrapper assumption.
+
+The actual raw1280 source, real quantizer/gathers and all15 reader epochs provide the event words; no fabricated Q/return/fixture payload drives a diagnostic endpoint. Actual mk2/DX6,23 selected halfcycle stations,8 exact independent MX forwarders,24 lanes and6 actual CFIFO rings/straps are retained. MX source statements and bit/clock/reset equivalence are pinned in input_marker_sources. This independent input boundary cone is not a reduced numeric frame. Actual fullsix numeric uses all real frame masters.
+
+CFIFO has no request/ready/read-enable/clear interface. Its input side samples unconditionally; reset is actual rst→rsync and rings. Diagnostic ri/st0 are return/status-only inputs outside this observed cone. Clock tuples record actual forwarded edges and pre/post counter/reset/LK state; +4ps readback merely observes NBA state. Named regional resets share a declared logical diagnostic schedule. Native phase/CTS/regional reset dates remain NULL.
+
+Faults drop one actual forwarded edge, corrupt a real routed bit, replace a lane with its actual neighbor, delay the actual source word one edge, or change the actual forwarded-clock polarity. Baseline source/body/polarity/routes are unchanged; fault operations are private diagnostic force/interposition only. No production gate or datapath is added. Original source03/retained/reinstall/marker objects remain immutable.
+
+These receipts do not establish actual numeric frame input/return dates, all72 cfg7/go_tag/EF lifetimes, CAP/VP drain, RoPE/Q512, production/MU ownership or original token deadline PASS. The qbank-delayed GO and direct live go_tag seam now requires actual coupled tracing; backend tags cannot be set from a host phase counter.

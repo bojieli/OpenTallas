@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_slice2_e_lpf_lp",
+ "enable": false,
+ "reason": "landed parent: every input port is written into its landing ring on the face region root at the pin (flop-first) and every output port is the landing read register in its face region (flop-last); lp.py offsets are the compiler record"
+}

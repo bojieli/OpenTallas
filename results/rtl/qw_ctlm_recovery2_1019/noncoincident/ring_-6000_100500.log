@@ -1,0 +1,5 @@
+RING_PHASE PASS phase=-6000 release=100500 samples=47 min_age_ps=18000 max_age_ps=18000
+- tb_ring_phase.sv:14: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 500ns; walltime 0.000 s; speed 5.391 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

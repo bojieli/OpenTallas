@@ -1,0 +1,39 @@
+LPF_NZ cmd_wo 0
+LPF_NZ hr_wo 2981
+LPF_NZ st_eo 0
+LPF_NZ st_wo 0
+LPF_NZ sc_eo 0
+LPF_NZ sc_wo 0
+LPF_NZ arv_eo 0
+LPF_NZ art_eo 0
+LPF_NZ arm_eo 0
+LPF_NZ arl_eo 0
+LPF_NZ ard_eo 0
+LPF_NZ dd_eo 0
+LPF_NZ rv_wo 0
+LPF_NZ re_wo 0
+LPF_NZ rr_wo 0
+LPF_NZ rl_wo 0
+LPF_NZ rd_wo 0
+LPF_NZ dr_wo 0
+LPF_NZ ag_eo 2968
+LPF_NZ ss_eo 2981
+LPF_NZ ccv_eo 0
+LPF_NZ ccm_eo 0
+LPF_NZ ccw_eo 0
+LPF_NZ cct_eo 0
+LPF_NZ l9_eo 0
+LPF_NZ cw_n0 2969
+LPF_NZ cw_n1 2969
+LPF_NZ cw_n2 2969
+LPF_NZ cw_n3 2969
+LPF_NZ cw_s0 2981
+LPF_NZ cw_s1 2981
+LPF_NZ cw_s2 2981
+LPF_NZ cw_s3 2981
+LPF_FAULT_CYCLES heads=2968 any=2968
+LPF_EQ PASS quiet=0 hronly=1 compared=98373 nonzero=32730 cycles=3000
+- rtl/test/qwen_dv/tb_qfd_dv_slice2_e_lpf.sv:196: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 17.034 s; speed 176.118 ns/s
+- Verilator: cpu 16.983 s on 1 threads; allocated 54 MB

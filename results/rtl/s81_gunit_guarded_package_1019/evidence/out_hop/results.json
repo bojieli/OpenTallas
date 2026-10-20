@@ -1,0 +1,29 @@
+[
+  {
+    "case": "positive",
+    "exit": 0,
+    "expected_verdict_observed": true,
+    "age_N": 1015,
+    "age_S": 1013,
+    "binary_sha256": "c6e45ee8d989b71d9f2eb8fdb73e508a607935af97733e20fe08be273ee00dec",
+    "sorted_fixture": true
+  },
+  {
+    "case": "old_main_age",
+    "exit": 0,
+    "expected_verdict_observed": true,
+    "age_N": 759,
+    "age_S": 757,
+    "binary_sha256": "c6e45ee8d989b71d9f2eb8fdb73e508a607935af97733e20fe08be273ee00dec",
+    "sorted_fixture": true
+  },
+  {
+    "case": "wrong_age_plus1",
+    "exit": 0,
+    "expected_verdict_observed": true,
+    "age_N": 1016,
+    "age_S": 1014,
+    "binary_sha256": "c6e45ee8d989b71d9f2eb8fdb73e508a607935af97733e20fe08be273ee00dec",
+    "sorted_fixture": true
+  }
+]

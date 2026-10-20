@@ -6,7 +6,9 @@
  "clock_ports": [
   "ck_core"
  ],
- "reset_ports": [],
+ "reset_ports": [
+  "u_rank__u_control__por_n"
+ ],
  "exclude": "",
  "reset": "^()$",
  "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)",

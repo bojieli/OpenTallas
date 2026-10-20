@@ -1,0 +1,22 @@
+read_verilog -sv -DSYNTHESIS    xl_gold/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv xl_gold/rtl/hdc/ot_hdc_delay.sv
+chparam -set NCH 4 -set READ_PIN_PIPE 1 -set FILL_PIPE 1 ot_qfd_xs_leaf
+hierarchy -check -top ot_qfd_xs_leaf
+proc; flatten; opt_clean; memory; opt_clean
+rename -top gold
+hierarchy -top gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS    xl_gate/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv xl_gate/rtl/hdc/ot_hdc_delay.sv
+chparam -set NCH 4 -set READ_PIN_PIPE 1 -set FILL_PIPE 1 ot_qfd_xs_leaf
+hierarchy -check -top ot_qfd_xs_leaf
+proc; flatten; opt_clean; memory; opt_clean
+rename -top gate
+hierarchy -top gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+async2sync
+equiv_simple -seq 5
+equiv_induct -seq 5
+equiv_status -assert

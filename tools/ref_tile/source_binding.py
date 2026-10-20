@@ -18,6 +18,10 @@ from pathlib import Path
 SCHEMA = "opentallas.ref_tile.source_snapshot.v1"
 EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
+# Helpers that only NEW gates execute (pre_route_gate.ship_tar ships them beside the route-plan overlays, captured at the
+# same main head), never members of a frozen route plan.  validate() must resolve their current effective bytes the
+# same way, or a byte-identical gate-only helper reads as "blob unknown" and every post-native32 gate is refused.
+GATE_ONLY_HELPERS = ("tools/ref_tile/ref_route.sh", "tools/ref_tile/native_census.py", "tools/ref_tile/native_census.tcl")
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
               "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py",

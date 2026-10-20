@@ -1,0 +1,23 @@
+RX_MODEL input1264 born1066 boundary1265 shift-1 user0 pos0
+KU c1266 user 0 pos 0
+RX_MODEL input1517 born1319 boundary1518 shift-1 user1 pos0
+KU c1519 user 1 pos 0
+RX_MODEL input1773 born1575 boundary1774 shift-1 user0 pos1
+KU c1775 user 0 pos 1
+RX_MODEL input2026 born1828 boundary2027 shift-1 user1 pos1
+KU c2028 user 1 pos 1
+RX_MODEL input2282 born2084 boundary2283 shift-1 user0 pos2
+KU c2284 user 0 pos 2
+RX_MODEL input2535 born2337 boundary2536 shift-1 user1 pos2
+KU c2537 user 1 pos 2
+RX_MODEL input2791 born2593 boundary2792 shift-1 user0 pos3
+KU c2793 user 0 pos 3
+RX_MODEL input3044 born2846 boundary3045 shift-1 user1 pos3
+KU c3046 user 1 pos 3
+MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0000 hslot 0000 hwin 00
+MUWIN PASS
+- /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:398: Verilog $finish
+EARLY_MITER edges 3145
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.211 s; speed 14.930 us/s
+- Verilator: cpu 0.211 s on 1 threads; allocated 8 MB

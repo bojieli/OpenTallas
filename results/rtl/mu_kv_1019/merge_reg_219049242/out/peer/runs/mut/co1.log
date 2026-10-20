@@ -1,0 +1,24 @@
+ERR cyc 562 coordinator fault
+  codec 0 post 0 identity 1 lifecycle 1 alloc 0 cohort 0
+ERR cyc 562 coordinator identity_fault
+ERR cyc 563 coordinator fault
+  codec 0 post 0 identity 1 lifecycle 1 alloc 0 cohort 0
+ERR cyc 563 coordinator identity_fault
+ERR cyc 564 token service fault
+  die 0
+ERR cyc 564 coordinator fault
+  codec 0 post 0 identity 1 lifecycle 1 alloc 0 cohort 1
+ERR cyc 564 coordinator identity_fault
+ERR cyc 565 token service fault
+  die 0
+ERR cyc 565 coordinator fault
+  codec 0 post 0 identity 1 lifecycle 1 alloc 0 cohort 1
+ERR cyc 565 coordinator identity_fault
+ERR cyc 566 token service fault
+  die 0
+  codec 0 post 0 identity 1 lifecycle 1 alloc 0 cohort 1
+FAIL MU_PEER_E2E fails=13 (stopped)
+- rtl/test/mu_qwen_1018/tb_mu_peer_e2e.sv:225: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 566ns; walltime 0.002 s; speed 248.151 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 8 MB

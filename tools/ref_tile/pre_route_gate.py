@@ -55,6 +55,7 @@ import pin_fit as PF  # noqa: E402
 import source_binding as SB  # noqa: E402
 import clock_entry_constraints as CE  # noqa: E402
 import keep_module_audit as KA  # noqa: E402
+import native_census as NC  # noqa: E402
 HO = SB.overlay_module()
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
@@ -1526,7 +1527,12 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
                    "; no congestion report came back" if ovf else "")
                 + (f"; congestion map {imgs.get('congestion')}" if imgs.get("congestion") else "")
                 + (f"; GRT {secs.group(1)} s" if secs else ""))
-        if ovf is None:
+        if g.trial_route["rc"] != "0":
+            # OpenROAD can print zero overflow before repair crashes (for example GRT-0183).
+            # Only a successful final route may qualify that congestion table.
+            g.add("FAIL", "trial_route", "trial global route failed (GATE_GRT_RC="
+                  + g.trial_route["rc"] + "); " + note, "read the remote grt.log; preserve this failed run")
+        elif ovf is None:
             g.add("FAIL", "trial_route", "trial global route produced no congestion table (GATE_GRT_RC="
                   + re.search(r"GATE_GRT_RC=(\S+)", out).group(1) + ")", "read the remote grt.log")
         elif ovf > 0:
@@ -2653,6 +2659,8 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pin_hook_before_flops (claude s81-grpA r4, 10-14): ref_tile gen checks each hook exists at ROOT; without it
          # dsfd_vm_be_sl r5 (besl_xhold.tcl, committed at the source commit) was REFUSED "missing pin hook"
          + [x for x in sp.get("pin_hook_before_flops", []) if isinstance(x, str)]
+         # pin_hook_after_flops (KV-RST3 10-20): same existence check at ROOT as the before-flops hooks
+         + [x for x in sp.get("pin_hook_after_flops", []) if isinstance(x, str)]
          # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
          # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
          + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]

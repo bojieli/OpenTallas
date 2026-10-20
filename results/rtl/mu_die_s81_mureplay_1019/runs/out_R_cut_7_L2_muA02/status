@@ -1,0 +1,7 @@
+build reused /srv/opentallas-scratch/claude/mu-die-s81-tok/out_cut_7_idle/obj
+run rc 0
+rate 24.0 cyc/s
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 59:38.82
+	Maximum resident set size (kbytes): 721248
+DV_SLICE cycles=85598 in_events=434 out_checks=0 mismatches=0 fault_cycles=0 first_fault=-1
+TB_DV_SLICE PASS

@@ -1,0 +1,26 @@
+{
+ "cell": "dsdv_bksel_c",
+ "view": "physical/ref_tile/s81dvbk_selc2/views/dsdv_bksel_c",
+ "lib_cell": "dsdv_bksel_c",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 367.2,
+ "spread_ps": 51.6,
+ "outputs": 636,
+ "inputs": 4877,
+ "launch_ps": 234.5,
+ "launch_pin": "t_c_s[97]",
+ "capture_ps": 133.9,
+ "capture_pin": "f_s_n[939]",
+ "launch_over": 20,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 48.5,
+ "ff_launch_min_ps": 68.1,
+ "ff_hold_need_ps": -21.6,
+ "pass": false,
+ "fail_why": "launch 234.48854 > 220 (20 pins)"
+}

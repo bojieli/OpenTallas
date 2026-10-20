@@ -1,0 +1,4 @@
+# case F0_nu4_m_gap30 env DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=30 args m --work /srv/opentallas-scratch/claude/refill-1225/QWREG/out/slice_w/gap30 host ot-epyc7 2026-10-19T12:30:17-07:00 commit 715e572ace085894f342b4dfda2d302cb93f1165
+    bench2 (m): seed 21 gap 30 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 2064
+bench2 (m) MUT=0: PASS 8/8
+# exit 0

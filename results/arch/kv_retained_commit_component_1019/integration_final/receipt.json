@@ -1,0 +1,154 @@
+{
+  "verdict": "FIVE_BOUNDED_COMPONENT_CASES_PASS",
+  "final_scheduler_sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2",
+  "scheduler_source_commit": "8858a45b0",
+  "fleet": "ot-epyc7 oth-ubuntu-130126-1792446276; ot-run exit0;12GB8threads",
+  "verilator": "5.050",
+  "cases": [
+    {
+      "case": 0,
+      "edges": 209,
+      "issues": 1,
+      "native_requests": 8,
+      "resultcredits": 8,
+      "CQwrites": 2,
+      "success": 1,
+      "errors": 0,
+      "measured_response": 14,
+      "H": 64,
+      "deadline": 48
+    },
+    {
+      "case": 1,
+      "edges": 210,
+      "issues": 1,
+      "native_requests": 8,
+      "resultcredits": 8,
+      "CQwrites": 2,
+      "success": 0,
+      "errors": 1,
+      "measured_response": 14,
+      "H": 64,
+      "deadline": 48
+    },
+    {
+      "case": 2,
+      "edges": 210,
+      "issues": 1,
+      "native_requests": 8,
+      "resultcredits": 8,
+      "CQwrites": 2,
+      "success": 0,
+      "errors": 1,
+      "measured_response": 14,
+      "H": 64,
+      "deadline": 48
+    },
+    {
+      "case": 3,
+      "edges": 221,
+      "issues": 1,
+      "native_requests": 8,
+      "resultcredits": 8,
+      "CQwrites": 2,
+      "success": 0,
+      "errors": 1,
+      "measured_response": 14,
+      "H": 64,
+      "deadline": 48
+    },
+    {
+      "case": 4,
+      "edges": 221,
+      "issues": 1,
+      "native_requests": 8,
+      "resultcredits": 8,
+      "CQwrites": 2,
+      "success": 0,
+      "errors": 1,
+      "measured_response": 14,
+      "H": 64,
+      "deadline": 48
+    }
+  ],
+  "unchanged_gold": "Same integrated_bench.sv SHA as previous547f run. Independent gold checks every actual CQ word, token43/nativeidentity/gen/result credits.",
+  "warm_cases": [
+    2,
+    4
+  ],
+  "conditional_warm_environment": "rst_n/warm_rst_n low3edges while unchanged service_pins/ctl/pkgctl explicitly reset from rawPOR (stays1). Not production reset closure.",
+  "actual_dataflow_cases": [
+    0,
+    1,
+    3
+  ],
+  "health_identity_domain": "HOST_DESCRIPTOR_COMPONENT; nativeTAG mapping OPEN",
+  "production_calendar": null,
+  "new_logic_storage": "2864 indexed event bits; physicalSRAMHOLD",
+  "files": [
+    {
+      "file": "case0.log",
+      "sha256": "cb0a754a36a6f304019a0275c21e8feed7ddc82ab41416699cf51b9d5d7394d5"
+    },
+    {
+      "file": "case1.log",
+      "sha256": "0cb14023960c6da7d25546fc1917e862a77ab9286293009c06518ef7656eba67"
+    },
+    {
+      "file": "case2.log",
+      "sha256": "2347f04f6019da8ff7c8731ee24ab795349ecfd004ca7cba14ad05b2894a7fdc"
+    },
+    {
+      "file": "case3.log",
+      "sha256": "b28e4388f0e7efa3f4983c1c7e697fc028390f7af58ce6133090ee63d0c69e14"
+    },
+    {
+      "file": "case4.log",
+      "sha256": "783cb5c977eac362886fb8533db775199747d9b6e844894ebb0d0be3af130872"
+    },
+    {
+      "file": "compile.log",
+      "sha256": "cda106485face2a521f2b29ee6643bb2b33ab617a71129795426fb7ab3b1a6d5"
+    },
+    {
+      "file": "inputs.sha256",
+      "sha256": "d3c67565807fa5042d1319721db4cf53df15224cc7268b460c465dcff336f932"
+    },
+    {
+      "file": "integrated_bench.sv",
+      "sha256": "a39dfa6f3d05ae9895bd8260b647982c7b6c77be44a833075f7617926a0a52ea"
+    },
+    {
+      "file": "integrated_ot_host_if_pb2_observed_rc.sv",
+      "sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2"
+    },
+    {
+      "file": "integrated_ot_qfd_pkgctl.sv",
+      "sha256": "9dc960a01a40d7a4a873599bce8eeb11c12c16d454332e27dcc2533caad9b962"
+    },
+    {
+      "file": "integrated_ot_qwen_host_ctl.sv",
+      "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436"
+    },
+    {
+      "file": "integrated_qkd_host_axi_packet_rc.sv",
+      "sha256": "4fafb0a72ddc6e71d0d0d1d0e29ef842940baddff2033c679867ea8a65ba4bd1"
+    },
+    {
+      "file": "integrated_qkd_host_ctl_service_pins.sv",
+      "sha256": "c43934f9a6f4f13f9872475e9edf36a5b90e1b7a31787c31c0bd4c1b3e258cc8"
+    },
+    {
+      "file": "integrated_qkd_host_native_token_endpoint_cancel_rc.sv",
+      "sha256": "56edccaf12a3dceea1072c884bd72700b31a88eabddb866a00aa3a9779a281b0"
+    },
+    {
+      "file": "integrated_run.sh",
+      "sha256": "2dca3948f18b954b290c16c611c0f64b228c108a6e4c1b70fc87faef1e7e5414"
+    },
+    {
+      "file": "manifest_before_run.json",
+      "sha256": "b5715f0fa686f2e93f0b7ee32dce704e75593d3f66f5faa00cfa1645cf3386d0"
+    }
+  ]
+}

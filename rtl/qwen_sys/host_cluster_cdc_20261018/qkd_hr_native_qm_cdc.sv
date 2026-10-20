@@ -3,6 +3,7 @@
 // the closed core children and the flat root). Same ports and parameters as the original. Change: (1) the clk_i -> ck fault synchroniser fs samples a
 // register f_any_q (+1 clk_i), not the f_code != 0 compare; (2) quiet_h reads the fault through a clk_i -> clk_h
 // two-flop synchroniser (fh_s) of a registered sticky copy f_any_h instead of the ck-domain fault_c.
+// (3) HKV-HROOT 10-18: CSR0 hold/acknowledge (CSR_HOLD_ACK, below).
 
 // Production native6-entry clock variant; allfour ingest entries are one
 // compensated600MHz synchronous phasefamily. h/core crossings stay originalCDC.
@@ -44,6 +45,12 @@
 // MUT (bench mutants, must FAIL): 1 flips bit 30 (element 0 exponent MSB) of the 7th payload beat; 2 reports done tags + 1.
 // ---------------------------------------------------------------------------
 module qkd_hr_native_qm_cdc #(
+    // HKV-HROOT 10-18: CSR0 (share) crosses clk_i -> ck as a toggle event with a held payload. CSR_HOLD_ACK 1 (fork
+    // default) holds the host-FIFO head of the next CSR0 write until ck has captured the previous one (csr_ack, two-flop
+    // synchronised back): share_i is stable through every capture. Flow control sits only at the off-die host credit
+    // boundary (CSR0 is host configuration, not a compiled per-token path). 0 = legacy: a legal 8-write credit burst
+    // overwrote share_i before capture (rtl/test/qwen_host/tb_hkv_cdc_csr_temporal.sv FAIL witness).
+    parameter integer CSR_HOLD_ACK=1,
     parameter integer QUIET_MUT=0,
     parameter integer AW     = 32,
     parameter integer HDMAX  = 128,
@@ -178,7 +185,8 @@ module qkd_hr_native_qm_cdc #(
         if (hv_i) begin
             if (f_any) hx_pop = 1'b1;                                   // fail closed: drain and drop
             else case (hcl)
-                2'd0: hx_pop = (hx_head[7:0] == 8'd2) ? mark_go : 1'b1;
+                2'd0: hx_pop = (hx_head[7:0] == 8'd2) ? mark_go :
+                              ((CSR_HOLD_ACK != 0 && hx_head[7:0] == 0) ? csr_ready : 1'b1);
                 2'd1: hx_pop = (bad_qkv || bad_rmw || bad_native) ? 1'b1 : e_drdy;
                 2'd2: hx_pop = e_inrdy;
                 default: hx_pop = 1'b1;
@@ -188,6 +196,12 @@ module qkd_hr_native_qm_cdc #(
     // CSRs
     reg  [8:0]   share_i;
     reg          csr_tgl;
+    reg          csr_ack;
+    (* async_reg = "true" *) reg csr_ac1,csr_ac2;
+    wire csr_ready = csr_tgl == csr_ac2;
+    always @(posedge clk_i or negedge rn_i)
+        if (!rn_i) begin csr_ac1<=0;csr_ac2<=0;end
+        else begin csr_ac1<=csr_ack;csr_ac2<=csr_ac1;end
     reg          all_done;                  // reserved (bit 0 of CSR 1); completions follow the descriptor fence bit
     // request FIFO clk_i -> ck: {we, addr, data}; writes before reads, reads capped by the return FIFO
     wire         ox_full, ox_empty, ox_ovf;
@@ -223,7 +237,9 @@ module qkd_hr_native_qm_cdc #(
             e_rdv <= 1'b0; e_rdd <= 0; cx_wr <= 1'b0; cx_w <= 0; f_sent <= 1'b0;
         end else begin
             if (hv_i && !f_any && hcl == 2'd0) begin
-                if (hx_head[7:0] == 8'd0) begin share_i <= hx_head[40:32]; csr_tgl <= ~csr_tgl; end
+                if (hx_head[7:0] == 8'd0 && (CSR_HOLD_ACK == 0 || csr_ready)) begin
+                    share_i <= hx_head[40:32]; csr_tgl <= ~csr_tgl;
+                end
                 if (hx_head[7:0] == 8'd1) all_done <= hx_head[32];
             end
             if (take_p && e_inrdy && pcnt != 4'd15) pcnt <= pcnt + 4'd1;
@@ -301,10 +317,13 @@ module qkd_hr_native_qm_cdc #(
     (* async_reg = "true" *) reg [2:0] tg_s;
     reg  [8:0]  share_c;
     always @(posedge ck or negedge rn_c)
-        if (!rn_c) begin tg_s <= 0; share_c <= 0; end
+        if (!rn_c) begin tg_s <= 0; share_c <= 0; csr_ack <= 0; end
         else begin
             tg_s <= {tg_s[1:0], csr_tgl};
-            if (tg_s[2] != tg_s[1]) share_c <= share_i;        // share_i stable since the toggle (>= 2 ck earlier)
+            if (CSR_HOLD_ACK != 0 ? tg_s[2] != csr_ack : tg_s[2] != tg_s[1]) begin
+                share_c <= share_i;
+                csr_ack <= tg_s[2];
+            end
         end
     localparam integer PW = $clog2(PCAP * 256 + 512) + 1;
     reg  [PW-1:0] tok;

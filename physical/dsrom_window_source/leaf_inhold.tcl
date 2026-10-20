@@ -97,6 +97,17 @@ foreach bt [$ot_ih_blk getBTerms] {
   incr ot_ih_n
 }
 if {$ot_ih_n > 0} {
+  # Native global_connect skips already protected cells. Preflight the ENTIRE
+  # actual hold cohort before binding any PG pin or setting any protection.
+  # Existing wrong/unknown/protected-unbound targets refuse without mutation.
+  set ot_ih_pg_helper /src/physical/common_flow/native_pg_binding.tcl
+  if {[info exists ::env(OT_PG_HELPER)]} {set ot_ih_pg_helper $::env(OT_PG_HELPER)}
+  source $ot_ih_pg_helper
+  set ot_ih_pg_targets {}
+  foreach ot_ih_pg_inst [$ot_ih_blk getInsts] {
+    if {[string match ot_inhold_* [$ot_ih_pg_inst getName]]} {lappend ot_ih_pg_targets $ot_ih_pg_inst}
+  }
+  ot_pg_bind_batch_before_protect $ot_ih_blk $ot_ih_pg_targets
   set_dont_touch [get_cells ot_inhold_*]
   foreach pn $ot_ih_pnets { $pn setDoNotTouch 1 }
   foreach dn $ot_ih_dnets { $dn setDoNotTouch 1 }

@@ -1,0 +1,39 @@
+--- a/rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv
++++ b/rtl/qwen_dv/qfd_tt_ctlm_dv_lpf.sv
+@@ -23,6 +23,7 @@
+ module qfd_tt_ctlm_dv_lpf #(
+     parameter integer XPF_TRANSPORT_EDGES = -1,
+     parameter integer LAST_STAGE = 37,
++    parameter integer PRIVATE_CALR = 0, // PROPOSAL ONLY: existing 7e515 CALR source must be selected privately
+     parameter integer STAGE_ME = 0,
+     parameter integer NU = 4,                    // MU-ADOPT-CTLM 10-19: Qwen ROM 4 users (qfd_tt_ctlm_dv NU; 1 = single user)
+     parameter integer UVM_STRIDE = 4096,         // = tools/qwen_static_schedule/mu_calendar.py DV_UVM_STRIDE
+@@ -83,7 +84,7 @@
+     wire [379:0] ib_q;
+     wire [72:0]  hr_lo;
+     wire [379:0] ib_hr;
+-    qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
++    qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .PRIVATE_CALR(PRIVATE_CALR), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
+         .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .OPSEG(OPSEG), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST))
+         u_gi (.ck(ck), .rst_n(rst_n), .dh(dh), .dh_user(dh_user), .ss5(ss5),
+         .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(g_tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
+--- a/rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv
++++ b/rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv
+@@ -22,6 +22,7 @@
+ // =====================================================================================================================
+ module qfd_tt_ctlm_dv_gi #(
+     parameter integer LAST_STAGE = 37,
++    parameter integer PRIVATE_CALR = 0, // PROPOSAL ONLY: existing 7e515 CALR source must be selected privately
+     parameter integer STAGE_ME = 0,
+     parameter integer NU = 4,
+     parameter integer UVM_STRIDE = 4096,
+@@ -113,7 +114,8 @@
+     wire [11:0] c_base; wire [8:0] c_pidx;
+     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
+     qfd_dv_cmd_cal_mu #(.MUT(0), .LAST_STAGE(LAST_STAGE), .NU(NU), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE),
+-        .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS)) u_cal (.ck(ck), .rst_n(rst_n),
++        .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS),
++        .CALENDAR_ROM(PRIVATE_CALR), .TABLE_ROM(PRIVATE_CALR)) u_cal (.ck(ck), .rst_n(rst_n),
+         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
+         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
+         .start(u_start), .stage(u_stage), .start_user(u_user), .start_rng(l_start), .start_first(op_first), .start_cnt(op_cnt), .cmd(cmd), .tl(tl), .cmd_user(c_user), .loc_emb(c_emb),

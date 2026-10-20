@@ -1,0 +1,18 @@
+MISMATCH die=0 msg=0 word=2 cyc=643 expected_cyc=643 actual=c7d1f1e44f305377ceec2e52cb3450164e86d6a9ce9d7deb4f22a63dc765abeecffbcc17c900474037de057bce48b14e490eedc1cef8543e4d1cd1decebf29e2 expected=4ab29368cdc8f3c1cd001f14c8e27a484cd2db574f0ba4094f1f90b8bf3aabcdcffbcc174d76e216c4dc8d7cccbe7a27cd91a6a2cef85811ca05050bcebfa11e
+MISMATCH die=1 msg=0 word=2 cyc=643 expected_cyc=643 actual=c7d1f1e44f305377ceec2e52cb3450164e86d6a9ce9d7deb4f22a63dc765abeecffbcc17c900474037de057bce48b14e490eedc1cef8543e4d1cd1decebf29e2 expected=4ab29368cdc8f3c1cd001f14c8e27a484cd2db574f0ba4094f1f90b8bf3aabcdcffbcc174d76e216c4dc8d7cccbe7a27cd91a6a2cef85811ca05050bcebfa11e
+MISMATCH die=2 msg=0 word=2 cyc=643 expected_cyc=643 actual=4c849486cdd799a44fd7bbeb4c365b0cc90f1e884f0bac13c0d2e3e144afb814405a6fa4ce41d384c51a439d4e5dd75ecd91a7ce4acd5d64c82fcb99ca0d384e expected=4ab29368cdc8f3c1cd001f14c8e27a484cd2db574f0ba4094f1f90b8bf3aabcdcffbcc174d76e216c4dc8d7cccbe7a27cd91a6a2cef85811ca05050bcebfa11e
+MISMATCH die=3 msg=0 word=2 cyc=643 expected_cyc=643 actual=4c849486cdd799a44fd7bbeb4c365b0cc90f1e884f0bac13c0d2e3e144afb814405a6fa4ce41d384c51a439d4e5dd75ecd91a7ce4acd5d64c82fcb99ca0d384e expected=4ab29368cdc8f3c1cd001f14c8e27a484cd2db574f0ba4094f1f90b8bf3aabcdcffbcc174d76e216c4dc8d7cccbe7a27cd91a6a2cef85811ca05050bcebfa11e
+TP8SL_LANE die0 port0 tx N 3/3 K 2/2 meas 6 | rx(die2 port2) N 8/8 K 6/6 meas 6
+TP8SL_LANE die0 port1 tx N 0/0 K 0/0 meas 0 | rx(die4 port1) N 0/0 K 0/0 meas 0
+TP8SL_LANE die0 port2 tx N 8/10 K 7/7 meas 7 | rx(die6 port0) N 3/2 K 2/2 meas 2
+TP8SL dies=8 latu=53 lats=378 pu=20 ps=339 xu=0 xs=0 msgs=30 drop=-1 corrupt=-1 mismatches=61424 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 issuer_done=00000000
+DIE 0 code=00010 cdc=01000000010000000000 abort=10100 cause=0400080000
+DIE 1 code=00010 cdc=01000000010000000000 abort=10100 cause=0400080000
+DIE 2 code=00010 cdc=01000000010000000000 abort=10100 cause=0400080000
+DIE 3 code=00010 cdc=01000000010000000000 abort=10100 cause=0400080000
+DIE 4 code=00010 cdc=01000000010000000000 abort=10100 cause=0400080000
+DIE 5 code=00010 cdc=01000000010000000000 abort=10100 cause=0400080000
+DIE 6 code=00010 cdc=01000000010000000000 abort=10100 cause=0400080000
+DIE 7 code=00010 cdc=01000000010000000000 abort=10100 cause=0400080000
+FAIL
+- /srv/opentallas-scratch/claude/qw-mureg-cur-1019/src/rtl/test/tb_coll_tp8_static_links.sv:442: Verilog $finish

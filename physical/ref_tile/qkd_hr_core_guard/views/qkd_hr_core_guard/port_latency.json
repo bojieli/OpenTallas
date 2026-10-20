@@ -1,0 +1,515 @@
+{
+  "control_roles": {
+    "clocks": [
+      "ck_core"
+    ],
+    "excluded_data_ports": [],
+    "reset_landing": {
+      "host_rst_n": 2,
+      "por_n": 2
+    },
+    "reset_meaning": "source RTL polarity and reset semantics preserved: direct wiring, or a landed reset (plain registers copy the value; assertion and release delayed by the stage count)",
+    "resets": [
+      "host_rst_n",
+      "por_n"
+    ],
+    "source_sha256": {}
+  },
+  "evidence": {
+    "ot_pin_regs.tsv": "ea992915468186c4d1c1fc30468cd329b33ba55c3a60222930aa964c71051021",
+    "ot_pin_regs_wrapper.v": "335b6c662e3ba25a1b46a299adabe901e3766e4e5c0b8fee2283577f98debec4"
+  },
+  "job": "qkd_hr_core_guard-mu1s-d222ef261",
+  "ports": {
+    "cancel_release_gen": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 2
+    },
+    "cancel_release_tag": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 59
+    },
+    "cancel_release_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "cancel_released": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "certificate_prefix": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 32
+    },
+    "certificate_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "ck_core": {
+      "dir": "input",
+      "reason": "clock",
+      "register_edges": 0,
+      "width": 1
+    },
+    "coordinator_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "ctrl_completion_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "die_id": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 3
+    },
+    "est": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "hc": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 182
+    },
+    "host_observer_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "host_recovery_clear": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "host_rst_n": {
+      "dir": "input",
+      "reason": "reset",
+      "register_edges": 0,
+      "width": 1
+    },
+    "link_physical_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "local_service_epoch": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "local_tk": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 93
+    },
+    "native_collective_busy": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_collective_drained": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_context_owned": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_host_drained": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_kv_drained": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_kv_flush": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_pr": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 143
+    },
+    "native_request_cr": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_request_gen": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 2
+    },
+    "native_request_pos": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 18
+    },
+    "native_request_tag": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 59
+    },
+    "native_request_token": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 18
+    },
+    "native_request_trace": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 32
+    },
+    "native_request_v": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_result_cause": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 4
+    },
+    "native_result_cr": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_result_cycles": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 32
+    },
+    "native_result_done": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_result_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_result_gen": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 2
+    },
+    "native_result_tag": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 59
+    },
+    "native_result_token": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 18
+    },
+    "native_result_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "native_result_value": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 32
+    },
+    "native_vm_drained": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "peer_protocol_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "pll_locked": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "por_n": {
+      "dir": "input",
+      "reason": "reset",
+      "register_edges": 0,
+      "width": 1
+    },
+    "program_ready": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "record_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "root_mux_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "service_abort": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "service_diag_raw": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 26
+    },
+    "service_faults": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 24
+    },
+    "service_faults_o": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "service_ready": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "service_status": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 32
+    },
+    "slice_boot_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 128
+    },
+    "token_epoch": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "token_epoch_valid": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "transport_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 8
+    },
+    "u_rank__begin_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__bootbarrier_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__commit_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__dispatch_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__done_d": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 64
+    },
+    "u_rank__done_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__guarded_physical": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 8
+    },
+    "u_rank__guarded_tk": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 93
+    },
+    "u_rank__guarded_transport": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 8
+    },
+    "u_rank__ing_cls": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 2
+    },
+    "u_rank__ing_d": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "u_rank__ing_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__ingress_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__marker_consumer_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__peer_link_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__pending_advertised": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__pending_epoch": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "u_rank__program_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__service_begin_epoch": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "u_rank__service_begin_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__source_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "u_rank__u_control__service_ready": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    }
+  },
+  "schema": "opentallas.ref_tile.port_latency.v1",
+  "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+  "source_commit": "d222ef261d73f6c57c83bcd657cde49099a9d40f",
+  "top": "qkd_hr_core_guard"
+}

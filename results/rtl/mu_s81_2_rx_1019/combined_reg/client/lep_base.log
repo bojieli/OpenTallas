@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUS81REG/src_7613ee7f4
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUS81REG/src_7613ee7f4
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUS81REG/src_7613ee7f4
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUS81REG/src_7613ee7f4
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUS81REG/src_7613ee7f4
+ot-run: ot-pve1        admits   122 GB (avail 107, growth 21, headroom 0, waiters 0/0 GB) load 15/28 running 7 disk 1222 GB 
+ot-run: ot-agidock128  admits    79 GB (avail 78, growth 23, headroom 0, waiters 0/0 GB) load 30/64 running 9 disk 253 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-541543-1792409603 after 1 s
+mu_s1: PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: 240 cut-through and 160 landed beats exact
+mu_s5: PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: 240 cut-through and 160 landed beats exact
+LEP_MU_GATE PASS
+LEG lep_base rc=0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-541543-1792409603): exit 0

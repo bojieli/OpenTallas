@@ -29,7 +29,15 @@ run() { # name expect(pass|fail) -G...
   else
     if [[ $rc != 0 ]] || ! grep -q '^N59DV_PASS' "$out/$n.log"; then echo "$n OK (mutant fails)"; else echo "$n MUTANT SURVIVED"; rc_all=1; fi
   fi
-  grep -E '^N59DV_' "$out/$n.log" | head -3; rm -rf "$out/$n.obj"
+  grep -E '^N59DV_ERR' "$out/$n.log" | head -3
+  # QW-N59 10-19: the simulator's own verdict line goes to stdout (the closure daemon judges fail_regex '^N59DV_FAIL'
+  # on the stage log, which held only the first 3 ERR lines), and in N59_ONLY mode the exit code is the simulator's raw
+  # verdict (non-zero = the run FAILED, the daemon's expect-fail convention); the all-runs mode keeps rc 0 = as expected.
+  grep -E '^N59DV_(PASS|FAIL)' "$out/$n.log" || echo "N59DV_NOVERDICT (sim rc=$rc): not a detected mutant"
+  if [[ -n ${N59_ONLY:-} ]]; then
+    if [[ $rc == 0 ]] && grep -q '^N59DV_PASS' "$out/$n.log"; then rc_all=0; else rc_all=1; fi
+  fi
+  rm -rf "$out/$n.obj"
 }
 run positive pass
 run bad_q pass -GBAD_Q=1

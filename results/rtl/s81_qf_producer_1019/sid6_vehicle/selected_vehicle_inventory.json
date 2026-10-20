@@ -1,0 +1,1178 @@
+{
+  "schema": "opentallas.s81.selected_six_frame_source_inventory.v1",
+  "source_ref": "ceaed19c4",
+  "selected_die_sha256": "61b683b697d17b7d6d1619352d302648d835822677c02097ce48639a0aa399b8",
+  "frames": [
+    {
+      "frame": "u_f_3L01",
+      "master": "col_h10_l4",
+      "lk": 1170,
+      "lk_lanes": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "real_rows": 6,
+      "unused_six_row_capacity": 0,
+      "sent_padding_must_remain_padding": true,
+      "actual_emission_calendar": null,
+      "rows": [
+        {
+          "dimension": 0,
+          "rank_semantic_row": 3072,
+          "original_weight_row": 3072,
+          "original_fixture_gold_index": 3072,
+          "local_phase_row": 0,
+          "original_segment_sums": [
+            1046163514,
+            3190651004,
+            3201345040
+          ],
+          "original_accumulator": 3199846961,
+          "original_bf16_gold": 3199860736,
+          "storage_rank_row": 22528,
+          "leaf": 0,
+          "port": 0,
+          "word": 0,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 1,
+          "rank_semantic_row": 3073,
+          "original_weight_row": 3073,
+          "original_fixture_gold_index": 3073,
+          "local_phase_row": 1,
+          "original_segment_sums": [
+            1028976776,
+            1058389718,
+            1035248280
+          ],
+          "original_accumulator": 1060741681,
+          "original_bf16_gold": 1060765696,
+          "storage_rank_row": 22529,
+          "leaf": 0,
+          "port": 0,
+          "word": 1,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 2,
+          "rank_semantic_row": 3074,
+          "original_weight_row": 3074,
+          "original_fixture_gold_index": 3074,
+          "local_phase_row": 2,
+          "original_segment_sums": [
+            3211006514,
+            1028099084,
+            3191442216
+          ],
+          "original_accumulator": 3213032990,
+          "original_bf16_gold": 3213033472,
+          "storage_rank_row": 22530,
+          "leaf": 0,
+          "port": 0,
+          "word": 2,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 3,
+          "rank_semantic_row": 3075,
+          "original_weight_row": 3075,
+          "original_fixture_gold_index": 3075,
+          "local_phase_row": 3,
+          "original_segment_sums": [
+            3164543488,
+            1032988616,
+            3203182720
+          ],
+          "original_accumulator": 3201439790,
+          "original_bf16_gold": 3201433600,
+          "storage_rank_row": 22531,
+          "leaf": 0,
+          "port": 0,
+          "word": 3,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 4,
+          "rank_semantic_row": 3076,
+          "original_weight_row": 3076,
+          "original_fixture_gold_index": 3076,
+          "local_phase_row": 4,
+          "original_segment_sums": [
+            3198574156,
+            1046496517,
+            3208073774
+          ],
+          "original_accumulator": 3209850899,
+          "original_bf16_gold": 3209822208,
+          "storage_rank_row": 22532,
+          "leaf": 0,
+          "port": 1,
+          "word": 4,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 5,
+          "rank_semantic_row": 3077,
+          "original_weight_row": 3077,
+          "original_fixture_gold_index": 3077,
+          "local_phase_row": 5,
+          "original_segment_sums": [
+            3189705740,
+            1043198348,
+            3185724704
+          ],
+          "original_accumulator": 3183772192,
+          "original_bf16_gold": 3183804416,
+          "storage_rank_row": 22533,
+          "leaf": 0,
+          "port": 1,
+          "word": 5,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        }
+      ]
+    },
+    {
+      "frame": "u_f_3L02",
+      "master": "col_h9_MX_l4",
+      "lk": 585,
+      "lk_lanes": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "real_rows": 6,
+      "unused_six_row_capacity": 0,
+      "sent_padding_must_remain_padding": true,
+      "actual_emission_calendar": null,
+      "rows": [
+        {
+          "dimension": 86,
+          "rank_semantic_row": 3158,
+          "original_weight_row": 3158,
+          "original_fixture_gold_index": 3158,
+          "local_phase_row": 0,
+          "original_segment_sums": [
+            1057556492,
+            3196100068,
+            1046399336
+          ],
+          "original_accumulator": 1056992116,
+          "original_bf16_gold": 1056964608,
+          "storage_rank_row": 22614,
+          "leaf": 1,
+          "port": 1,
+          "word": 22,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 87,
+          "rank_semantic_row": 3159,
+          "original_weight_row": 3159,
+          "original_fixture_gold_index": 3159,
+          "local_phase_row": 1,
+          "original_segment_sums": [
+            3213660426,
+            3204015442,
+            3198256928
+          ],
+          "original_accumulator": 3220392998,
+          "original_bf16_gold": 3220373504,
+          "storage_rank_row": 22615,
+          "leaf": 1,
+          "port": 1,
+          "word": 23,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 88,
+          "rank_semantic_row": 3160,
+          "original_weight_row": 3160,
+          "original_fixture_gold_index": 3160,
+          "local_phase_row": 2,
+          "original_segment_sums": [
+            1051413058,
+            1049140844,
+            3189638752
+          ],
+          "original_accumulator": 1055188350,
+          "original_bf16_gold": 1055195136,
+          "storage_rank_row": 22616,
+          "leaf": 1,
+          "port": 0,
+          "word": 24,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 89,
+          "rank_semantic_row": 3161,
+          "original_weight_row": 3161,
+          "original_fixture_gold_index": 3161,
+          "local_phase_row": 3,
+          "original_segment_sums": [
+            1060409802,
+            1056368874,
+            3200271101
+          ],
+          "original_accumulator": 1062200514,
+          "original_bf16_gold": 1062207488,
+          "storage_rank_row": 22617,
+          "leaf": 1,
+          "port": 0,
+          "word": 25,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 90,
+          "rank_semantic_row": 3162,
+          "original_weight_row": 3162,
+          "original_fixture_gold_index": 3162,
+          "local_phase_row": 4,
+          "original_segment_sums": [
+            1052910696,
+            3198931449,
+            3170095008
+          ],
+          "original_accumulator": 1013100192,
+          "original_bf16_gold": 1013121024,
+          "storage_rank_row": 22618,
+          "leaf": 1,
+          "port": 0,
+          "word": 26,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 91,
+          "rank_semantic_row": 3163,
+          "original_weight_row": 3163,
+          "original_fixture_gold_index": 3163,
+          "local_phase_row": 5,
+          "original_segment_sums": [
+            3197638308,
+            3167150048,
+            3201013472
+          ],
+          "original_accumulator": 3208121793,
+          "original_bf16_gold": 3208118272,
+          "storage_rank_row": 22619,
+          "leaf": 1,
+          "port": 0,
+          "word": 27,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        }
+      ]
+    },
+    {
+      "frame": "u_f_3L03",
+      "master": "col_h9_l4",
+      "lk": 1170,
+      "lk_lanes": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "real_rows": 6,
+      "unused_six_row_capacity": 0,
+      "sent_padding_must_remain_padding": true,
+      "actual_emission_calendar": null,
+      "rows": [
+        {
+          "dimension": 172,
+          "rank_semantic_row": 3244,
+          "original_weight_row": 3244,
+          "original_fixture_gold_index": 3244,
+          "local_phase_row": 0,
+          "original_segment_sums": [
+            1060388903,
+            3201715954,
+            3129726976
+          ],
+          "original_accumulator": 1049732484,
+          "original_bf16_gold": 1049755648,
+          "storage_rank_row": 22700,
+          "leaf": 2,
+          "port": 1,
+          "word": 44,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 173,
+          "rank_semantic_row": 3245,
+          "original_weight_row": 3245,
+          "original_fixture_gold_index": 3245,
+          "local_phase_row": 1,
+          "original_segment_sums": [
+            3202351936,
+            1058041866,
+            1042456192
+          ],
+          "original_accumulator": 1049766932,
+          "original_bf16_gold": 1049755648,
+          "storage_rank_row": 22701,
+          "leaf": 2,
+          "port": 1,
+          "word": 45,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 174,
+          "rank_semantic_row": 3246,
+          "original_weight_row": 3246,
+          "original_fixture_gold_index": 3246,
+          "local_phase_row": 2,
+          "original_segment_sums": [
+            1057401933,
+            1066057452,
+            1053382184
+          ],
+          "original_accumulator": 1073755470,
+          "original_bf16_gold": 1073741824,
+          "storage_rank_row": 22702,
+          "leaf": 2,
+          "port": 1,
+          "word": 46,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 175,
+          "rank_semantic_row": 3247,
+          "original_weight_row": 3247,
+          "original_fixture_gold_index": 3247,
+          "local_phase_row": 3,
+          "original_segment_sums": [
+            1055314661,
+            1051889503,
+            1053892676
+          ],
+          "original_accumulator": 1067098274,
+          "original_bf16_gold": 1067122688,
+          "storage_rank_row": 22703,
+          "leaf": 2,
+          "port": 1,
+          "word": 47,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 176,
+          "rank_semantic_row": 3248,
+          "original_weight_row": 3248,
+          "original_fixture_gold_index": 3248,
+          "local_phase_row": 4,
+          "original_segment_sums": [
+            1057135515,
+            1053653522,
+            1060590974
+          ],
+          "original_accumulator": 1070618385,
+          "original_bf16_gold": 1070596096,
+          "storage_rank_row": 22704,
+          "leaf": 2,
+          "port": 0,
+          "word": 48,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 177,
+          "rank_semantic_row": 3249,
+          "original_weight_row": 3249,
+          "original_fixture_gold_index": 3249,
+          "local_phase_row": 5,
+          "original_segment_sums": [
+            3198767749,
+            3189267181,
+            1032793432
+          ],
+          "original_accumulator": 3201414310,
+          "original_bf16_gold": 3201433600,
+          "storage_rank_row": 22705,
+          "leaf": 2,
+          "port": 0,
+          "word": 49,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        }
+      ]
+    },
+    {
+      "frame": "u_f_3R01",
+      "master": "col_h10_l4",
+      "lk": 1170,
+      "lk_lanes": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "real_rows": 6,
+      "unused_six_row_capacity": 0,
+      "sent_padding_must_remain_padding": true,
+      "actual_emission_calendar": null,
+      "rows": [
+        {
+          "dimension": 257,
+          "rank_semantic_row": 3329,
+          "original_weight_row": 3329,
+          "original_fixture_gold_index": 3329,
+          "local_phase_row": 0,
+          "original_segment_sums": [
+            3190403960,
+            3212176232,
+            1048843550
+          ],
+          "original_accumulator": 3210628535,
+          "original_bf16_gold": 3210608640,
+          "storage_rank_row": 22785,
+          "leaf": 4,
+          "port": 0,
+          "word": 1,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 258,
+          "rank_semantic_row": 3330,
+          "original_weight_row": 3330,
+          "original_fixture_gold_index": 3330,
+          "local_phase_row": 1,
+          "original_segment_sums": [
+            3204247360,
+            3200346485,
+            3194818752
+          ],
+          "original_accumulator": 3213703237,
+          "original_bf16_gold": 3213688832,
+          "storage_rank_row": 22786,
+          "leaf": 4,
+          "port": 0,
+          "word": 2,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 259,
+          "rank_semantic_row": 3331,
+          "original_weight_row": 3331,
+          "original_fixture_gold_index": 3331,
+          "local_phase_row": 2,
+          "original_segment_sums": [
+            3202732769,
+            3211280318,
+            3200845276
+          ],
+          "original_accumulator": 3219117582,
+          "original_bf16_gold": 3219128320,
+          "storage_rank_row": 22787,
+          "leaf": 4,
+          "port": 0,
+          "word": 3,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 260,
+          "rank_semantic_row": 3332,
+          "original_weight_row": 3332,
+          "original_fixture_gold_index": 3332,
+          "local_phase_row": 3,
+          "original_segment_sums": [
+            1055981396,
+            3205879614,
+            3204271911
+          ],
+          "original_accumulator": 3206283048,
+          "original_bf16_gold": 3206283264,
+          "storage_rank_row": 22788,
+          "leaf": 4,
+          "port": 1,
+          "word": 4,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 261,
+          "rank_semantic_row": 3333,
+          "original_weight_row": 3333,
+          "original_fixture_gold_index": 3333,
+          "local_phase_row": 4,
+          "original_segment_sums": [
+            1058375912,
+            3182966086,
+            1047377152
+          ],
+          "original_accumulator": 1060761471,
+          "original_bf16_gold": 1060765696,
+          "storage_rank_row": 22789,
+          "leaf": 4,
+          "port": 1,
+          "word": 5,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 262,
+          "rank_semantic_row": 3334,
+          "original_weight_row": 3334,
+          "original_fixture_gold_index": 3334,
+          "local_phase_row": 5,
+          "original_segment_sums": [
+            1046020132,
+            1059013188,
+            1049339696
+          ],
+          "original_accumulator": 1066248946,
+          "original_bf16_gold": 1066270720,
+          "storage_rank_row": 22790,
+          "leaf": 4,
+          "port": 1,
+          "word": 6,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        }
+      ]
+    },
+    {
+      "frame": "u_f_3R02",
+      "master": "col_h9_MX_l4",
+      "lk": 585,
+      "lk_lanes": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "real_rows": 6,
+      "unused_six_row_capacity": 0,
+      "sent_padding_must_remain_padding": true,
+      "actual_emission_calendar": null,
+      "rows": [
+        {
+          "dimension": 342,
+          "rank_semantic_row": 3414,
+          "original_weight_row": 3414,
+          "original_fixture_gold_index": 3414,
+          "local_phase_row": 0,
+          "original_segment_sums": [
+            1039945304,
+            1059636906,
+            1043971224
+          ],
+          "original_accumulator": 1064746907,
+          "original_bf16_gold": 1064763392,
+          "storage_rank_row": 22870,
+          "leaf": 0,
+          "port": 1,
+          "word": 86,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 343,
+          "rank_semantic_row": 3415,
+          "original_weight_row": 3415,
+          "original_fixture_gold_index": 3415,
+          "local_phase_row": 1,
+          "original_segment_sums": [
+            1052292298,
+            1041060112,
+            3164284160
+          ],
+          "original_accumulator": 1056287490,
+          "original_bf16_gold": 1056309248,
+          "storage_rank_row": 22871,
+          "leaf": 0,
+          "port": 1,
+          "word": 87,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 344,
+          "rank_semantic_row": 3416,
+          "original_weight_row": 3416,
+          "original_fixture_gold_index": 3416,
+          "local_phase_row": 2,
+          "original_segment_sums": [
+            1051997974,
+            1055133494,
+            1026335500
+          ],
+          "original_accumulator": 1062661463,
+          "original_bf16_gold": 1062666240,
+          "storage_rank_row": 22872,
+          "leaf": 0,
+          "port": 0,
+          "word": 88,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 345,
+          "rank_semantic_row": 3417,
+          "original_weight_row": 3417,
+          "original_fixture_gold_index": 3417,
+          "local_phase_row": 3,
+          "original_segment_sums": [
+            3194193064,
+            3193205379,
+            3195559408
+          ],
+          "original_accumulator": 3207337287,
+          "original_bf16_gold": 3207331840,
+          "storage_rank_row": 22873,
+          "leaf": 0,
+          "port": 0,
+          "word": 89,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 346,
+          "rank_semantic_row": 3418,
+          "original_weight_row": 3418,
+          "original_fixture_gold_index": 3418,
+          "local_phase_row": 4,
+          "original_segment_sums": [
+            1023266816,
+            3207068950,
+            3137128448
+          ],
+          "original_accumulator": 3206581498,
+          "original_bf16_gold": 3206610944,
+          "storage_rank_row": 22874,
+          "leaf": 0,
+          "port": 0,
+          "word": 90,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 347,
+          "rank_semantic_row": 3419,
+          "original_weight_row": 3419,
+          "original_fixture_gold_index": 3419,
+          "local_phase_row": 5,
+          "original_segment_sums": [
+            3207347395,
+            3172660430,
+            1044310064
+          ],
+          "original_accumulator": 3204854276,
+          "original_bf16_gold": 3204841472,
+          "storage_rank_row": 22875,
+          "leaf": 0,
+          "port": 0,
+          "word": 91,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        }
+      ]
+    },
+    {
+      "frame": "u_f_3R03",
+      "master": "col_h9_l4",
+      "lk": 1170,
+      "lk_lanes": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "real_rows": 6,
+      "unused_six_row_capacity": 0,
+      "sent_padding_must_remain_padding": true,
+      "actual_emission_calendar": null,
+      "rows": [
+        {
+          "dimension": 427,
+          "rank_semantic_row": 3499,
+          "original_weight_row": 3499,
+          "original_fixture_gold_index": 3499,
+          "local_phase_row": 0,
+          "original_segment_sums": [
+            1030017888,
+            3182846572,
+            1035278336
+          ],
+          "original_accumulator": 1029848712,
+          "original_bf16_gold": 1029832704,
+          "storage_rank_row": 22955,
+          "leaf": 1,
+          "port": 0,
+          "word": 107,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 428,
+          "rank_semantic_row": 3500,
+          "original_weight_row": 3500,
+          "original_fixture_gold_index": 3500,
+          "local_phase_row": 1,
+          "original_segment_sums": [
+            3207589061,
+            1047327640,
+            3186247744
+          ],
+          "original_accumulator": 3205626087,
+          "original_bf16_gold": 3205627904,
+          "storage_rank_row": 22956,
+          "leaf": 1,
+          "port": 1,
+          "word": 108,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 429,
+          "rank_semantic_row": 3501,
+          "original_weight_row": 3501,
+          "original_fixture_gold_index": 3501,
+          "local_phase_row": 2,
+          "original_segment_sums": [
+            1040759194,
+            1060914913,
+            3185617888
+          ],
+          "original_accumulator": 1061314508,
+          "original_bf16_gold": 1061289984,
+          "storage_rank_row": 22957,
+          "leaf": 1,
+          "port": 1,
+          "word": 109,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 430,
+          "rank_semantic_row": 3502,
+          "original_weight_row": 3502,
+          "original_fixture_gold_index": 3502,
+          "local_phase_row": 3,
+          "original_segment_sums": [
+            3201731346,
+            3210138350,
+            3187637248
+          ],
+          "original_accumulator": 3216049148,
+          "original_bf16_gold": 3216048128,
+          "storage_rank_row": 22958,
+          "leaf": 1,
+          "port": 1,
+          "word": 110,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 431,
+          "rank_semantic_row": 3503,
+          "original_weight_row": 3503,
+          "original_fixture_gold_index": 3503,
+          "local_phase_row": 4,
+          "original_segment_sums": [
+            3196028080,
+            3189354582,
+            1044506688
+          ],
+          "original_accumulator": 3193392326,
+          "original_bf16_gold": 3193372672,
+          "storage_rank_row": 22959,
+          "leaf": 1,
+          "port": 1,
+          "word": 111,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        },
+        {
+          "dimension": 432,
+          "rank_semantic_row": 3504,
+          "original_weight_row": 3504,
+          "original_fixture_gold_index": 3504,
+          "local_phase_row": 5,
+          "original_segment_sums": [
+            3196383604,
+            1056948704,
+            3178776612
+          ],
+          "original_accumulator": 1043828431,
+          "original_bf16_gold": 1043857408,
+          "storage_rank_row": 22960,
+          "leaf": 1,
+          "port": 0,
+          "word": 112,
+          "actual_producer_arr": null,
+          "actual_write_edge": null
+        }
+      ]
+    }
+  ],
+  "masters": {
+    "col_h9_l4": {
+      "dsfd_qbank_N": 12,
+      "dsfd_qbank_S": 12,
+      "ot_rom_4096x72_m8": 105,
+      "dsfd_cfifo_crs4": 1,
+      "ot_v41_rom_elem_q_qxpq_w10": 12,
+      "dsfd_bf_front_roots": 3,
+      "dsfd_bf_col": 6,
+      "dsfd_node_LLfu": 7,
+      "dsfd_node_NNfu": 7,
+      "dsfd_node_LLfd": 7,
+      "dsfd_node_NNfd": 7,
+      "dsfd_node_LLd": 1,
+      "dsfd_rstg": 3,
+      "ot_s81_cfg7_seq": 12,
+      "ot_s81_cfg7_seq_bfp": 3,
+      "ot_s81_sstn_base566": 9,
+      "ot_s81_sstn_payload536": 9,
+      "dsfd_rly_15_SN": 4,
+      "dsfd_rly_15_NS": 2,
+      "dsfd_rly_15_EN": 2,
+      "dsfd_rly_54_WN": 3,
+      "dsfd_rly_2_WE": 6,
+      "dsfd_rly_2_WS": 6,
+      "dsfd_rly_2_ES": 6,
+      "dsfd_rly_2_NS": 6,
+      "dsfd_rly_38_WN": 3,
+      "dsfd_rly_1_WN": 3,
+      "dsfd_rly_1_EW": 2,
+      "dsfd_rly_66_NS": 7,
+      "dsfd_rly_66_EN": 1,
+      "dsfd_rly_66_SW": 1,
+      "dsfd_rly_66_ES": 1,
+      "dsfd_rly_66_NE": 1,
+      "dsfd_rly_63_NE": 9,
+      "dsfd_rly_63_WE": 46,
+      "dsfd_rly_63_WN": 5,
+      "dsfd_rly_63_SE": 5,
+      "dsfd_rly_63_WS": 31,
+      "dsfd_rly_63_NS": 29,
+      "dsfd_rly_63_ES": 1,
+      "dsfd_rly_66_SN": 4,
+      "dsfd_rly_2_NW": 5,
+      "dsfd_rly_2_NE": 3,
+      "dsfd_rly_536_SN": 3,
+      "dsfd_rly_536_SW": 3,
+      "dsfd_rly_536_EN": 2,
+      "dsfd_rly_283_EW": 8,
+      "dsfd_rly_266_EW": 8,
+      "dsfd_dvrly_276_NS": 4
+    },
+    "col_h10_l4": {
+      "dsfd_qbank_N": 12,
+      "dsfd_qbank_S": 12,
+      "ot_rom_4096x72_m8": 112,
+      "dsfd_cfifo_crs4": 1,
+      "ot_v41_rom_elem_q_qxpq_w10": 12,
+      "dsfd_bf_front_roots": 4,
+      "dsfd_bf_col": 8,
+      "dsfd_node_LLfu": 8,
+      "dsfd_node_NNfu": 7,
+      "dsfd_node_LLfd": 7,
+      "dsfd_node_NNfd": 8,
+      "dsfd_node_LLd": 1,
+      "dsfd_rstg": 3,
+      "ot_s81_cfg7_seq": 12,
+      "ot_s81_cfg7_seq_bfp": 4,
+      "ot_s81_sstn_base566": 10,
+      "ot_s81_sstn_payload536": 10,
+      "dsfd_rly_15_SN": 3,
+      "dsfd_rly_15_NS": 4,
+      "dsfd_rly_15_EN": 2,
+      "dsfd_rly_54_WN": 4,
+      "dsfd_rly_2_WE": 6,
+      "dsfd_rly_2_WS": 7,
+      "dsfd_rly_2_ES": 5,
+      "dsfd_rly_2_NS": 6,
+      "dsfd_rly_2_NE": 4,
+      "dsfd_rly_38_WN": 4,
+      "dsfd_rly_1_WN": 4,
+      "dsfd_rly_1_EW": 2,
+      "dsfd_rly_66_NS": 7,
+      "dsfd_rly_66_EW": 3,
+      "dsfd_rly_66_ES": 1,
+      "dsfd_rly_63_NE": 8,
+      "dsfd_rly_63_WE": 49,
+      "dsfd_rly_63_SE": 8,
+      "dsfd_rly_63_WS": 32,
+      "dsfd_rly_63_NS": 50,
+      "dsfd_rly_63_WN": 5,
+      "dsfd_rly_66_SN": 4,
+      "dsfd_rly_63_SN": 1,
+      "dsfd_rly_2_NW": 5,
+      "dsfd_rly_536_SW": 4,
+      "dsfd_rly_536_EN": 3,
+      "dsfd_rly_536_SN": 2,
+      "dsfd_rly_283_EW": 9,
+      "dsfd_rly_266_EW": 9,
+      "dsfd_dvrly_276_NS": 4
+    }
+  },
+  "storage": {
+    "cfg4096x72_macros": 644,
+    "q4096x274_macros": 288,
+    "BF4096x274_macros": 80,
+    "total_frame_ROM_macros": 1012,
+    "total_frame_ROM_bits": 602931200,
+    "existing_XS_SRAM_macros": 24,
+    "existing_XS_SRAM_bits": 786432,
+    "existing_five_VP_SRAM_macros": 10,
+    "existing_five_VP_SRAM_bits": 655360,
+    "existing_quantizer_ring_SRAM_macros": 1,
+    "existing_quantizer_ring_SRAM_bits": 32768,
+    "existing_XS_calendar_phase_stream_ROM_macros": 7,
+    "new_physical_macros": 0,
+    "new_FF": 0,
+    "new_gates": 0,
+    "new_physical_area_um2": 0,
+    "qualification": "Existing minimum component storage census; not physical source-cone pruning or new free capacity"
+  },
+  "source_files": [
+    {
+      "path": "rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4.sv",
+      "sha256": "b55f3e9a08362281581729d3d93db56837c752c8bdb3563a43f637a56c6833a5",
+      "bytes": 1480534
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/frame_l4/col_h10_l4.sv",
+      "sha256": "3d6e0cbf289fc9df6df2ae995dc6628ac900141d2404a1b53e42c2ef9ed5f663",
+      "bytes": 1656317
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/frame_l4/col_h9_MX_l4.sv",
+      "sha256": "c470d67ad25579e7a1529bf4e4745451f742779975dd6b3453f58281c9c51099",
+      "bytes": 687
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+      "sha256": "517e501dd6a505871302dc93cf31b87f9dc5cfcc771a9564c07b58b662014d96",
+      "bytes": 5673
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
+      "sha256": "5089c68ea2171f736980d879c484f8165469fb01a7c00315593f7d4f2e22f0f5",
+      "bytes": 159212
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+      "sha256": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
+      "bytes": 31571
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bf_col.sv",
+      "sha256": "0364d57adda8738f4aec1437a710dcd079ea0ee81dcbb3e341076ba717673f3a",
+      "bytes": 42784
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+      "sha256": "f9606abe8f228ffbdf8ad3be5380abab6dbb9bac9bdc31af6b76abf99e502e2e",
+      "bytes": 5958
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "sha256": "9e83cdca202aa4e54e8024d91b35f5309ff9fca0961d23b36cd01a4e41c13e3f",
+      "bytes": 5964
+    },
+    {
+      "path": "tools/s81_dv/frame_bench.f",
+      "sha256": "d7f1de3421bfe53d010ce68e993f9eb169c0a7c2a653516b4f7688df492e2f2a",
+      "bytes": 3343
+    }
+  ],
+  "frame_sources_only_bytes": 3137538,
+  "required_cone": [
+    "Proved genuine raw source and real XS output",
+    "2-stage mk +4 actual DX6 copies",
+    "Actual selected24 input lane paths/ICG/stations/MX forwarded output clocks",
+    "Six exact frame masters/straps/region resets and all real ROM contents",
+    "Six real packed return ports/ICG/SN/NS/stations/landK2",
+    "DR6 +actual CAP64slot/tree/finish",
+    "DL4+five actual VP CW pin/macro commits"
+  ],
+  "selected_source_lines": [
+    {
+      "line": 750,
+      "text": "  wire [69:0] w_r_f_3L01_src, w_r_f_3L01_dst;"
+    },
+    {
+      "line": 751,
+      "text": "  wire [1:0] nr_f_3L01_fck;"
+    },
+    {
+      "line": 756,
+      "text": "  wire [69:0] w_r_f_3L02_src, w_r_f_3L02_dst;"
+    },
+    {
+      "line": 765,
+      "text": "  wire [69:0] w_r_f_3L03_src, w_r_f_3L03_dst;"
+    },
+    {
+      "line": 766,
+      "text": "  wire [2:0] nr_f_3L03_fck;"
+    },
+    {
+      "line": 775,
+      "text": "  wire [69:0] w_r_f_3R01_src, w_r_f_3R01_dst;"
+    },
+    {
+      "line": 776,
+      "text": "  wire [1:0] nr_f_3R01_fck;"
+    },
+    {
+      "line": 781,
+      "text": "  wire [69:0] w_r_f_3R02_src, w_r_f_3R02_dst;"
+    },
+    {
+      "line": 790,
+      "text": "  wire [69:0] w_r_f_3R03_src, w_r_f_3R03_dst;"
+    },
+    {
+      "line": 791,
+      "text": "  wire [2:0] nr_f_3R03_fck;"
+    },
+    {
+      "line": 1701,
+      "text": "  col_h10_l4 #(.INSTANCE(\"u_f_3L01\")) u_f_3L01 (.clk(ck_cl3S), .cr(ck_cl3S), .cr_s(ck_cl3S), .xk({nx_f_3L01_l3_fck[1], nx_f_3L01_l2_fck[1], nx_f_3L01_l1_fck[1], nx_f_3L01_l0_fck[1]}), .rst_n(rs_31_10_2), .lk(12'h492), .x({w_x_f_3L01_l3_dst[275:0], w_x_f_3L01_l2_dst[275:0], w_x_f_3L01_l1_dst[275:0], w_x_f_3L01_l0_dst[275:0]}), .ret({w_r_f_3L01_src[69:0]}));"
+    },
+    {
+      "line": 1703,
+      "text": "  col_h9_MX_l4 #(.INSTANCE(\"u_f_3L02\")) u_f_3L02 (.clk(ck_cl3S), .cr(ck_cl3S), .cr_s(ck_cl3S), .xk({u_s_3S_ck_xc[11], u_s_3S_ck_xc[10], u_s_3S_ck_xc[9], u_s_3S_ck_xc[8]}), .rst_n(rs_31_19_2), .lk(12'h249), .x({w_x_f_3L02_l3_src[275:0], w_x_f_3L02_l2_src[275:0], w_x_f_3L02_l1_src[275:0], w_x_f_3L02_l0_src[275:0]}), .ret({w_r_f_3L02_src[69:0]}), .xo({w_x_f_3L03_l3_src[275:0], w_x_f_3L03_l2_src[275:0], w_x_f_3L03_l1_src[275:0], w_x_f_3L03_l0_src[275:0]}), .xok(u_f_3L02_xok));"
+    },
+    {
+      "line": 1704,
+      "text": "  col_h9_l4 #(.INSTANCE(\"u_f_3L03\")) u_f_3L03 (.clk(ck_cl3S), .cr(ck_cl3S), .cr_s(ck_cl3S), .xk({nx_f_3L03_l3_fck[2], nx_f_3L03_l2_fck[2], nx_f_3L03_l1_fck[2], nx_f_3L03_l0_fck[1]}), .rst_n(rs_33_30_3), .lk(12'h492), .x({w_x_f_3L03_l3_dst[275:0], w_x_f_3L03_l2_dst[275:0], w_x_f_3L03_l1_dst[275:0], w_x_f_3L03_l0_dst[275:0]}), .ret({w_r_f_3L03_src[69:0]}));"
+    },
+    {
+      "line": 1711,
+      "text": "  col_h10_l4 #(.INSTANCE(\"u_f_3R01\")) u_f_3R01 (.clk(ck_cl3S), .cr(ck_cl3S), .cr_s(ck_cl3S), .xk({nx_f_3R01_l3_fck[1], nx_f_3R01_l2_fck[1], nx_f_3R01_l1_fck[1], nx_f_3R01_l0_fck[1]}), .rst_n(rs_38_10_1), .lk(12'h492), .x({w_x_f_3R01_l3_dst[275:0], w_x_f_3R01_l2_dst[275:0], w_x_f_3R01_l1_dst[275:0], w_x_f_3R01_l0_dst[275:0]}), .ret({w_r_f_3R01_src[69:0]}));"
+    },
+    {
+      "line": 1713,
+      "text": "  col_h9_MX_l4 #(.INSTANCE(\"u_f_3R02\")) u_f_3R02 (.clk(ck_cl3S), .cr(ck_cl3S), .cr_s(ck_cl3S), .xk({u_s_3S_ck_xc[15], u_s_3S_ck_xc[14], u_s_3S_ck_xc[13], u_s_3S_ck_xc[12]}), .rst_n(rs_38_19_1), .lk(12'h249), .x({w_x_f_3R02_l3_src[275:0], w_x_f_3R02_l2_src[275:0], w_x_f_3R02_l1_src[275:0], w_x_f_3R02_l0_src[275:0]}), .ret({w_r_f_3R02_src[69:0]}), .xo({w_x_f_3R03_l3_src[275:0], w_x_f_3R03_l2_src[275:0], w_x_f_3R03_l1_src[275:0], w_x_f_3R03_l0_src[275:0]}), .xok(u_f_3R02_xok));"
+    },
+    {
+      "line": 1714,
+      "text": "  col_h9_l4 #(.INSTANCE(\"u_f_3R03\")) u_f_3R03 (.clk(ck_cl3S), .cr(ck_cl3S), .cr_s(ck_cl3S), .xk({nx_f_3R03_l3_fck[2], nx_f_3R03_l2_fck[2], nx_f_3R03_l1_fck[2], nx_f_3R03_l0_fck[2]}), .rst_n(rs_36_30_2), .lk(12'h492), .x({w_x_f_3R03_l3_dst[275:0], w_x_f_3R03_l2_dst[275:0], w_x_f_3R03_l1_dst[275:0], w_x_f_3R03_l0_dst[275:0]}), .ret({w_r_f_3R03_src[69:0]}));"
+    },
+    {
+      "line": 1840,
+      "text": "  ot_s81sl_slice #(.HB(1)) u_s_3S (.clk(ck_cl3S), .rst_n(rs_34_13_2), .sid(4'd6), .ri_w({w_xrE_2S_l3_lnd[275:0], w_xrE_2S_l2_lnd[275:0], w_xrE_2S_l1_lnd[275:0], w_xrE_2S_l0_lnd[275:0]}), .ro_w({w_xrW_2S_l3_src[275:0], w_xrW_2S_l2_src[275:0], w_xrW_2S_l1_src[275:0], w_xrW_2S_l0_src[275:0]}), .ck_line(u_s_3S_ck_line), .ro_e({w_xrE_3S_l3_src[275:0], w_xrE_3S_l2_src[275:0], w_xrE_3S_l1_src[275:0], w_xrE_3S_l0_src[275:0]}), .ri_e({w_xrW_3S_l3_lnd[275:0], w_xrW_3S_l2_lnd[275:0], w_xrW_3S_l1_lnd[275:0], w_xrW_3S_l0_lnd[275:0]}), .vo({w_tvN_s_3S_src[275:0]}), .ck_v(u_s_3S_ck_v), .vi({w_tvS_gunit_lnd[275:0]}), .xc({w_x_f_3R02_l3_src[275:0], w_x_f_3R02_l2_src[275:0], w_x_f_3R02_l1_src[275:0], w_x_f_3R02_l0_src[275:0], w_x_f_3L02_l3_src[275:0], w_x_f_3L02_l2_src[275:0], w_x_f_3L02_l1_src[275:0], w_x_f_3L02_l0_src[275:0], w_x_f_3R01_l3_src[275:0], w_x_f_3R01_l2_src[275:0], w_x_f_3R01_l1_src[275:0], w_x_f_3R01_l0_src[275:0], w_x_f_3L01_l3_src[275:0], w_x_f_3L01_l2_src[275:0], w_x_f_3L01_l1_src[275:0], w_x_f_3L01_l0_src[275:0]}), .ck_xc(u_s_3S_ck_xc), .rt({140'd0, w_r_f_3R03_lnd[69:0], w_r_f_3R02_src[69:0], w_r_f_3R01_lnd[69:0], w_r_f_3L03_lnd[69:0], w_r_f_3L02_src[69:0], w_r_f_3L01_lnd[69:0]}), .bo({u_s_3S_bo_nc564[539:0], w_q_W_l1_src[236:0], w_q_W_l0_src[275:1], u_s_3S_bo_nc1[50:0], w_q_W_l0_src[0:0]}), .bi({w_pv_W_lnd[1103:0]}), .fault(block_fault[4]));"
+    },
+    {
+      "line": 2871,
+      "text": "  wire [69:0] w_r_f_3L01_lnd;"
+    },
+    {
+      "line": 2872,
+      "text": "  dsfd_dvland_70 ld_r_f_3L01 (.ck_f(nr_f_3L01_fck[1]), .i(w_r_f_3L01_dst), .ck(ck_cl3S), .rs(rs_34_13_2), .k(3'd2), .o(w_r_f_3L01_lnd), .fault(land_fault[95]));"
+    },
+    {
+      "line": 2873,
+      "text": "  wire [69:0] w_r_f_3L03_lnd;"
+    },
+    {
+      "line": 2874,
+      "text": "  dsfd_dvland_70 ld_r_f_3L03 (.ck_f(nr_f_3L03_fck[2]), .i(w_r_f_3L03_dst), .ck(ck_cl3S), .rs(rsg_rs_34_13_2_cl3S_15), .k(3'd2), .o(w_r_f_3L03_lnd), .fault(land_fault[96]));"
+    },
+    {
+      "line": 2877,
+      "text": "  wire [69:0] w_r_f_3R01_lnd;"
+    },
+    {
+      "line": 2878,
+      "text": "  dsfd_dvland_70 ld_r_f_3R01 (.ck_f(nr_f_3R01_fck[1]), .i(w_r_f_3R01_dst), .ck(ck_cl3S), .rs(rs_34_13_2), .k(3'd2), .o(w_r_f_3R01_lnd), .fault(land_fault[97]));"
+    },
+    {
+      "line": 2881,
+      "text": "  wire [69:0] w_r_f_3R03_lnd;"
+    },
+    {
+      "line": 2882,
+      "text": "  dsfd_dvland_70 ld_r_f_3R03 (.ck_f(nr_f_3R03_fck[2]), .i(w_r_f_3R03_dst), .ck(ck_cl3S), .rs(rsg_rs_34_13_2_cl3S_16), .k(3'd2), .o(w_r_f_3R03_lnd), .fault(land_fault[98]));"
+    },
+    {
+      "line": 7197,
+      "text": "  ICGx4_ASAP7_75t_R fwd_r_f_3L01 (.CLK(ck_cl3S), .ENA(rsg_rs_31_10_2_cl3S_6), .SE(1'b0), .GCLK(nr_f_3L01_fck[0]));   // hop 0: clock gate (LANDING-CONTRACT L3) on the source region root"
+    },
+    {
+      "line": 7198,
+      "text": "  dsfd_dvrlyh_70_SN st_r_f_3L01_0 (.i(w_r_f_3L01_src), .o(w_r_f_3L01_dst), .ck(nr_f_3L01_fck[0]), .ck_o(nr_f_3L01_fck[1]), .rs(rs_33_12));"
+    },
+    {
+      "line": 7213,
+      "text": "  ICGx4_ASAP7_75t_R fwd_r_f_3L03 (.CLK(ck_cl3S), .ENA(rs_33_30_3), .SE(1'b0), .GCLK(nr_f_3L03_fck[0]));   // hop 0: clock gate (LANDING-CONTRACT L3) on the source region root"
+    },
+    {
+      "line": 7215,
+      "text": "  dsfd_dvrlyh_70_NS st_r_f_3L03_0 (.i(w_r_f_3L03_src), .o(r_r_f_3L03_0), .ck(nr_f_3L03_fck[0]), .ck_o(nr_f_3L03_fck[1]), .rs(rs_33_26));"
+    },
+    {
+      "line": 7216,
+      "text": "  dsfd_dvrlyh_70_NS st_r_f_3L03_1 (.i(r_r_f_3L03_0), .o(w_r_f_3L03_dst), .ck(nr_f_3L03_fck[1]), .ck_o(nr_f_3L03_fck[2]), .rs(rs_33_25));"
+    },
+    {
+      "line": 7225,
+      "text": "  ICGx4_ASAP7_75t_R fwd_r_f_3R01 (.CLK(ck_cl3S), .ENA(rsg_rs_38_10_1_cl3S_0), .SE(1'b0), .GCLK(nr_f_3R01_fck[0]));   // hop 0: clock gate (LANDING-CONTRACT L3) on the source region root"
+    },
+    {
+      "line": 7226,
+      "text": "  dsfd_dvrlyh_70_SN st_r_f_3R01_0 (.i(w_r_f_3R01_src), .o(w_r_f_3R01_dst), .ck(nr_f_3R01_fck[0]), .ck_o(nr_f_3R01_fck[1]), .rs(rs_36_12_3));"
+    },
+    {
+      "line": 7243,
+      "text": "  ICGx4_ASAP7_75t_R fwd_r_f_3R03 (.CLK(ck_cl3S), .ENA(rs_36_30_2), .SE(1'b0), .GCLK(nr_f_3R03_fck[0]));   // hop 0: clock gate (LANDING-CONTRACT L3) on the source region root"
+    },
+    {
+      "line": 7245,
+      "text": "  dsfd_dvrlyh_70_NS st_r_f_3R03_0 (.i(w_r_f_3R03_src), .o(r_r_f_3R03_0), .ck(nr_f_3R03_fck[0]), .ck_o(nr_f_3R03_fck[1]), .rs(rs_36_26_3));"
+    },
+    {
+      "line": 7246,
+      "text": "  dsfd_dvrlyh_70_NS st_r_f_3R03_1 (.i(r_r_f_3R03_0), .o(w_r_f_3R03_dst), .ck(nr_f_3R03_fck[1]), .ck_o(nr_f_3R03_fck[2]), .rs(rs_36_25_3));"
+    }
+  ],
+  "actual_source_component_resources": {
+    "max_RSS_KiB": 2340380,
+    "wall_seconds": 64.14,
+    "threads": 4,
+    "scope": "Measured retained XS component only; cannot extrapolate as six-frame peak"
+  },
+  "next_build_admission": {
+    "resource_reservation_candidate_GB": 128,
+    "threads_candidate": 8,
+    "unpinned": true,
+    "qualification": "Candidate admission reservation from actual fleet headroom and1012ROM inventory only; NOT a guessed process/cgroup hardlimit or measured need. Actual frontend CPP/object/RSS census required. No protective memory cap or deadline added; preserve useful objects."
+  },
+  "native_phase": null,
+  "native_regional_reset_dates": null,
+  "actual_frame_arrival_dates": null,
+  "actual_CAP_CW_commit_dates": null,
+  "original_deadline_pass": null,
+  "blocked_claims": [
+    "No fullarray/GEN/production imagewriter",
+    "No native phase claim from G=R0 functional model",
+    "No CFG/RETIRE/END completion credit without actual return+CAP+VP drain",
+    "No source read substitution or endpoint/return injection",
+    "No production/MU scratch/storage ownership qualification"
+  ]
+}

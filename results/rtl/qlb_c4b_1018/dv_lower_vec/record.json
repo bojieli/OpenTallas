@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.qlb_c4b.dv_lower_vec.v1",
+ "lane": "QLB-C4b/3a 10-18, gap G-C4 (DV slice lowering, lane-local vector op families)",
+ "compiler": "tools/qwen_layerbench/dv_lower_vec.py (imports dv_lower.py unchanged; unit tests test_dv_lower_vec.py)",
+ "programme": "results/arch/qwen_tp8_native_dispatch_1014/actual_fused_layer0/die0/program.hex, checked field by field (isa_vec: PC3/4/5/6/7-10/14/15/18/19/22/23)",
+ "lowered": {
+  "1_norm_apply_bf16_stream": "the programme is NORM-FOLDED (input / post-attn gains folded into qkv / gu weights; matvecs read raw X, r multiplies V / q,k / gate,up outputs). Lowered: per-slice SU op x -> window 01 packer (BF16 RNE, 64-el beats, eaddr = global element), STREAM dirs slice0 E, 1..11 both; collision-free schedule: every (slice, edge) sees <= 1 x word; * r lowered at the consumers (families 3, 4)",
+  "2_residual_add": "slice-major AR return calendar + compiled PORTS on/off edges (RTL-derived: return word t in slice k pin reg at t + k, PORTS arms ar_en at c + 2k + 1; zero-gap); one fused SU op x <- (t * pscale_CROM) + x with red_sq to the PSUM window (tags = golden block), fused ROOT r on dvs_W5; both residuals emitted (PS1 / PS2), bench runs residual 1",
+  "3_qk_norm_rope": "q heads on slices 0/2/4/6, k on 8, v on 10: qr = q r + head SSQ, RS = rsqrt(SS 2^-7 + eps), QN = (qr RS) g (CROM), RoPE lo/hi (CROM cos,sin of the token pos, broadcast table words) -> q D2D kind 0 FP32, k kind 1 FP8, v = fp8(v r) kind 2",
+  "4_silu_up": "slice s = gate block s + up block s (interleave): GU *= r, act = (g sigm(-g)) u -> BF16 stream eaddr 128 s + i",
+  "ages": "vec_ages.json measured on the RTL (calibrate PASS: add PSUM 83+16j as SSQ, x beats 34+8j, silu 114/122, D2D first word 26, head SSQ reducer 83, rsqrt 63); 2-edge stream hop model confirmed (slice 1 and 10 offsets equal)"
+ },
+ "bench": {
+  "vehicle": "rtl/test/qwen_dv/dv_lower_vec_bench.py on tb_qfd_dv2 N 12 (qfd_dv_slice2 x 12), Verilator 5.050, ot-epyc4 one ot-run job (--mem 160; build ~20 min), job script results/rtl/qlb_c4b_1018/dv_lower_vec/job.sh",
+  "resid_m0": "PASS 26/26: r = 0x3f551336 bit-exact at all 12 slices (x' = t*ps + x, blocks over decades), 160 PSUMs on compiled edge/tag, 64 BF16 x' words at E5 on compiled edges, x' FP32 bit-exact in all 12 slices (bench-only D2D readback), no fault",
+  "qk_m0": "PASS 4/4: 4 q heads (rope(QN) FP32), k (fp8), v (fp8(v r)) bit-exact vs hdc_golden, 96 D2D words on their compiled W5 edges",
+  "silu_m0": "PASS 1/1: 24 BF16 act words (to_bf16(silu(g r)(u r))) on compiled edges, incl. -100 / 95 / +-1e-30 gate values",
+  "mutants": {
+   "resid_arwin": "FAIL (PORTS on one edge early: wrong landings, r 0x3f5257dc) -- witness resid_arwin.out / runs/run_resid_arwin.log",
+   "resid_xslot": "FAIL (x stream without occupancy check: 53 collisions, stm/xt faults on slices 1,3,4,5) -- witness resid_xslot.out / runs/run_resid_xslot.log",
+   "qk_ropesign": "FAIL (RoPE signs swapped: q 512/512, k 99/128 mismatches) -- witness qk_ropesign.out / runs/run_qk_ropesign.log",
+   "silu_nor": "FAIL (gate/up * r dropped: 24/24 act words wrong) -- witness silu_nor.out / runs/run_silu_nor.log"
+  },
+  "fail_regex": "^DV_LOWER_VEC \\w+ FAIL",
+  "sources": "source.sha256 (remote files == committed, checked)"
+ },
+ "assumptions": [
+  "AR return calendar slice-major: the io_collective all-reduce must return t words in this order (return word has no address)",
+  "D2D addresses: q = 128 head + i, k / v = head-dim index; the KV die adds the token position",
+  "slice 11 x words also leave east at the E5 chain end (no consumer on the die)",
+  "QKV / GU / RX landings are stimulus here: STN landings are QLB-C4b/3b's (their dbase must equal vm QKV / GU), r comes from the fused ROOT (dv_lower)"
+ ],
+ "not_lowered": ["STN of the matvecs (3b)", "XC collectives (3b)", "LM-head AMAX (3b)", "stage-0 slice commands (3b)", "head-row hr/xpf control of the column heads consuming the x stream", "splice into the ctlm decode calendar", "DV-README consumer-side h = (x r) g (not the programme's numerics: folded)"],
+ "gaps_found": [
+  "NUMERICS/CONTRACT: the DV README (step 1) specifies consumer-side h = (x r) g + BF16 stream with CROM gains, but the compiled programme is norm-folded (r post-matvec, gains in weights); the lowering follows the programme. Owner/arch to confirm the DV die keeps the folded order (otherwise weights + golden change)",
+  "DIE GAP (unchanged, dv_lower): dvs_W5.st_wi tied 0 -> the PROG / CROM table words (incl. the per-token RoPE row) have no load path on the die"
+ ]
+}

@@ -1,0 +1,6 @@
+region audit: 922 register edges, 98 seam crossings (28339 b) over 27 region pairs (3 diagonal)
+FAIL R1 u_land_dn0_rly3_r clocked by ck_c0r0 but sits in {'c0r1'} at [43.2, 1471.332]
+FAIL R5 landing dn0_rly3: ring on ck_c0r0 / read on ck_c0r0, contract c0r0 -> c0r1
+FAIL R5 landing dn0_rly3: 1 other multi-bit c0r0 -> c0r1 crossings, unlanded: ['land_dn0_rly3']
+FAIL R6 unlanded 516-b crossing u_land_dn0_rly3_r (c0r0) -> u_dn0_rly3 (c0r1) net land_dn0_rly3
+REGION_AUDIT_FAIL 4

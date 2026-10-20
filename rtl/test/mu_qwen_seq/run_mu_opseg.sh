@@ -2,9 +2,10 @@
 # MU-QW-B1 benches (2026-10-19; FLEET only, Verilator 5.050 = the closure daemon's): op-granular 4-user playback through
 # qfd_tt_ctlm_dv NU 4 OPSEG 1 (leaf qfd_sys_face_mu_dhuser OPSEG + qfd_dv_cmd_cal_mu explicit range), mu_opcal frames.
 #   usage: run_mu_opseg.sh WORK [part ...]     parts (default all): pass mut old
-#   pass  mu_opseg_bench.py mut 0, cases red (F16 x 2 layers, 3 frames) ctx_part neg_drift neg_coll neg_ctx full (F16 x 36 layers, 1 frame
+#   pass  mu_opseg_bench.py mut 0, cases red (F16 x 2 layers, 3 frames) ctx_part d2d_ctx neg_drift neg_coll neg_ctx neg_xcoll full (F16 x 36 layers, 1 frame
 #         + 30k edges of frame 1): MU_OPSEG_PASS
-#   mut   21 .. 29 each MU_OPSEG_FAIL (21 / 23 / 24 / 25 / 27 / 28 on red, 22 on neg_coll, 26 on neg_drift, 29 on neg_ctx)
+#   mut   21 .. 29, 32 each MU_OPSEG_FAIL (21 / 23 / 24 / 25 / 27 / 28 / 32 on red, 22 on neg_coll, 26 on neg_drift, 29 on neg_ctx),
+#         33 on neg_xcoll (same-filler load rule unchecked), 34 on d2d_ctx (ctx leaf MUT 1: wrong user), 35 on red (filler native context not raised, C10) (MU-DQ-BOOTCTX)
 #   emb   MU-OPCAL-EMB (10-19) C7 witnesses on red, mut 0 RTL: --emb-t 16 (pre-fix image) and --res-skew 1 (result one
 #         edge late) each MU_OPSEG_FAIL on C7
 #   full2 the steady-state rate run: full, frames 0-1 + 30k edges of frame 2 (measured frame-1 rate): MU_OPSEG_PASS
@@ -25,11 +26,18 @@ if want pass; then
     chk opseg_m0 MU_OPSEG_PASS "$(grep -m1 '^MU_OPSEG_' "$W/opseg_m0.out")"
 fi
 if want mut; then
-    for mc in "21 red" "22 neg_coll" "23 red" "24 red" "25 red" "26 neg_drift" "27 red" "28 red" "29 neg_ctx"; do
+    for mc in "21 red" "22 neg_coll" "23 red" "24 red" "25 red" "26 neg_drift" "27 red" "28 red" "29 neg_ctx" "32 red" "33 neg_xcoll" "34 d2d_ctx" "35 red"; do
         set -- $mc
         python3 -I "$D/mu_opseg_bench.py" --work "$W/opseg" --mut $1 --cases $2 --verilator "$VL" --jobs 8 > "$W/opseg_m$1.out" 2>&1
         chk opseg_m$1 MU_OPSEG_FAIL "$(grep -m1 '^MU_OPSEG_' "$W/opseg_m$1.out")"
     done
+fi
+if want d2duser; then
+    # MU-DQ-D2DUSER (10-19): C8 user carrier on native_pos[17:16] -- mut 0 red PASS, mut 32 (user not carried) red FAIL
+    python3 -I "$D/mu_opseg_bench.py" --work "$W/opseg" --mut 0 --cases red --verilator "$VL" --jobs 8 > "$W/opseg_d2du_m0.out" 2>&1
+    chk d2du_m0 MU_OPSEG_PASS "$(grep -m1 '^MU_OPSEG_' "$W/opseg_d2du_m0.out")"
+    python3 -I "$D/mu_opseg_bench.py" --work "$W/opseg" --mut 32 --cases red --verilator "$VL" --jobs 8 > "$W/opseg_d2du_m32.out" 2>&1
+    L=$(grep -m1 '^MU_OPSEG_' "$W/opseg_d2du_m32.out"); case "$L" in *C8*) chk d2du_m32 MU_OPSEG_FAIL "$L";; *) chk d2du_m32 "MU_OPSEG_FAIL (C8)" "${L:-NO_RESULT}";; esac
 fi
 if want emb; then
     for wc in "emb16 --emb-t 16" "skew1 --res-skew 1"; do

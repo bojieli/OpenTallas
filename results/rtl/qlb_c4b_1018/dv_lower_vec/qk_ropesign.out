@@ -1,0 +1,4 @@
+DV_LOWER_VEC qk FAIL 2/4 mutant=ropesign commands=26 collisions=0 q heads 4 / k / v, d2d words=96
+    q: 512/512 mismatches, first (0, 0) got 0xbeba5519 want 0x3e17671e
+    k: 99/128 mismatches, first (1, 0) got 0x3e200000 want 0xbf000000
+rc=1

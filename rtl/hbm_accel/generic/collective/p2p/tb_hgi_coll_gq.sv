@@ -14,8 +14,19 @@
 // compiler model); no gq / ring / share fault. ISA pass-through: a fifth master with random ISA ring words must output
 // them on the ring-A ports exactly 2 edges later. +fault=N must fault: 1 ISA ring-A inject collides with a gather inject,
 // 2 descriptor overlap (fires while busy), 3 COLL writer double-books a landing bank (kq share), 4 a ring-B arrival dropped.
+// HBM-BANKLAT-COLL 10-19 (d4g bank latency class): LANES 1 puts the GEN2-shaped read path between each gather master and
+// its quadrant banks: gq <-> read share LG edges each way (all 136 / 2056 bits), share -> bank rq lane DQ[b] + faces PIN
+// flop (+1, bank answers n+7 from the client-side sample), bank -> share rr lane DR[b]; DQ[b] + DR[b] = LT for every bank
+// but split UNEQUALLY (the die pads the short banks' 17-b request lanes to the budget). Share BANK_RT = 6 + PIN + LT,
+// gq VM_RT = BANK_RT - 6 + 2 LG (+2 with SREG 1, the registered share leaf). Reservations: bank read sample edges move by
+// LG + SREG + PIN + DQ[b]; every write and ring edge moves by VM_RT. LANES 0 (default) = the original bench.
 module tb_hgi_coll_gq;
     parameter integer MUT = 0, KQMUT = 0;
+    parameter integer LANES = 0, VM_RT = 0, BANK_RT = 6, SREG = 0, LT = 65, LG = 4;
+    localparam integer PIN = LANES ? 1 : 0;
+    function automatic integer DQ(input integer b); return LANES ? ((b * 23 + 5) % (LT + 1)) : 0; endfunction
+    function automatic integer DR(input integer b); return LANES ? LT - DQ(b) : 0; endfunction
+    localparam integer GL = LANES ? LG : 0;
     parameter string VEC = "vec";
     reg clk = 0, rst_n = 0; always #0.5 clk = ~clk;
     integer cyc = 0; always @(negedge clk) cyc <= cyc + 1;   // stable at every posedge
@@ -54,7 +65,7 @@ module tb_hgi_coll_gq;
         wire [3:0] rb_ttl, rb_kind, rb_src; wire [5:0] rb_rtag;
         wire [1:0] pa_v, pb_v; wire [3:0] pa_s, pb_s; wire [5:0] pa_t, pb_t; wire [511:0] pa_d, pb_d;
         wire act, dn, tf, fi, fl; assign f_gq[q] = fi | fl; assign f_ld[q] = fl;
-        ot_hgi_coll_gq #(.MUT(MUT)) gq(.clk_issue(clk), .clk_land(clk), .rst_n(rst_n), .qid(2'(q)), .tgt(8'hb0 + 8'(q)),
+        ot_hgi_coll_gq #(.MUT(MUT), .VM_RT(VM_RT)) gq(.clk_issue(clk), .clk_land(clk), .rst_n(rst_n), .qid(2'(q)), .tgt(8'hb0 + 8'(q)),
             .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v),
             .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
             .configured(conf[q]), .tgt_fault(tf), .active(act), .done(dn), .fault(fi), .land_fault(fl),
@@ -90,8 +101,19 @@ module tb_hgi_coll_gq;
             .tx_inject(rb_inj), .tx_forward(fault_drop(q, rb_fwd)), .tx_tag(rb_tag), .tx_ttl(rb_ttl),
             .rx_slot(rb_rx), .rx_kind(rb_kind), .rx_src(rb_src), .rx_tag(rb_rtag),
             .ag_v(pb_v), .ag_src(pb_s), .ag_tag(pb_t), .ag_d(pb_d), .fault(f_rb[q]));
-        ot_hbm_idx_vm_share2_static rs(.clk_pair({4{clk}}), .rst_n(rst_n), .a_rq(136'd0), .b_rq(g_rq[q]), .vm_rq(v_rq[q]),
-            .vm_rr(v_rr[q]), .a_rr(a_rr_unused[q]), .b_rr(g_rr[q]), .fault(f_rs[q]));
+        // gq <-> share lanes (GL registered stations each way)
+        wire [135:0] s_rq; wire [2055:0] s_rr;
+        if (GL == 0) begin : g_nl assign s_rq = g_rq[q]; assign g_rr[q] = s_rr; end
+        else begin : g_l
+            reg [135:0] lq [0:GL-1]; reg [2055:0] lr [0:GL-1];
+            always @(posedge clk) begin
+                lq[0] <= rst_n ? g_rq[q] : '0; lr[0] <= rst_n ? s_rr : '0;
+                for (integer d = 1; d < GL; d = d + 1) begin lq[d] <= lq[d-1]; lr[d] <= lr[d-1]; end
+            end
+            assign s_rq = lq[GL-1]; assign g_rr[q] = lr[GL-1];
+        end
+        ot_hbm_idx_vm_share2_static #(.REG(SREG), .BANK_RT(BANK_RT)) rs(.clk_pair({4{clk}}), .rst_n(rst_n), .a_rq(136'd0), .b_rq(s_rq), .vm_rq(v_rq[q]),
+            .vm_rr(v_rr[q]), .a_rr(a_rr_unused[q]), .b_rr(s_rr), .fault(f_rs[q]));
         ot_hgi_coll_kq_share2 #(.MUT(KQMUT)) ks(.clk_pair({4{clk}}), .rst_n(rst_n), .a_kq(a_kq[q]), .b_kq(g_kq[q]),
             .vm_kq(v_kq[q]), .fault(f_ks[q]));
     end
@@ -99,8 +121,23 @@ module tb_hgi_coll_gq;
     reg [255:0] mem [0:3][0:16383];
     reg [255:0] rpipe_d [0:3][0:7][0:5]; reg rpipe_v [0:3][0:7][0:5];
     reg [256:0] rr_reg [0:3][0:7];
+    wire [16:0] m_rq [0:3][0:7];             // request as the bank model samples it (after rq lane DQ[b] + PIN)
     for (genvar q = 0; q < 4; q = q + 1) begin : g_vrr
-        for (genvar b = 0; b < 8; b = b + 1) begin : g_b assign v_rr[q][b*257 +: 257] = rr_reg[q][b]; end
+        for (genvar b = 0; b < 8; b = b + 1) begin : g_b
+            localparam integer NQ = DQ(b) + PIN, NRR = DR(b);
+            if (NQ == 0) begin : g_q0 assign m_rq[q][b] = v_rq[q][b*17 +: 17]; end
+            else begin : g_qd
+                reg [16:0] d [0:NQ-1];
+                always @(posedge clk) begin d[0] <= rst_n ? v_rq[q][b*17 +: 17] : '0; for (integer k = 1; k < NQ; k = k + 1) d[k] <= d[k-1]; end
+                assign m_rq[q][b] = d[NQ-1];
+            end
+            if (NRR == 0) begin : g_r0 assign v_rr[q][b*257 +: 257] = rr_reg[q][b]; end
+            else begin : g_rd
+                reg [256:0] d [0:NRR-1];
+                always @(posedge clk) begin d[0] <= rr_reg[q][b]; for (integer k = 1; k < NRR; k = k + 1) d[k] <= d[k-1]; end
+                assign v_rr[q][b*257 +: 257] = d[NRR-1];
+            end
+        end
     end
     // compiled reservations: rres/wres[q][b] = list of edges (bitmap over cycles)
     localparam integer NC = 4096;
@@ -108,7 +145,7 @@ module tb_hgi_coll_gq;
     always @(posedge clk) begin
         for (integer q = 0; q < 4; q = q + 1) for (integer b = 0; b < 8; b = b + 1) begin
             reg [16:0] r; reg [280:0] k; reg [13:0] a;
-            r = v_rq[q][b*17 +: 17]; k = v_kq[q][b*281 +: 281];
+            r = m_rq[q][b]; k = v_kq[q][b*281 +: 281];
             rr_reg[q][b] <= {rpipe_v[q][b][5], rpipe_d[q][b][5]};
             for (integer d = 5; d > 0; d = d - 1) begin rpipe_v[q][b][d] <= rpipe_v[q][b][d-1]; rpipe_d[q][b][d] <= rpipe_d[q][b][d-1]; end
             rpipe_v[q][b][0] <= 1'b0;
@@ -135,12 +172,12 @@ module tb_hgi_coll_gq;
         end
     end
     // ---------------------------------------------------------------- descriptors
-    localparam integer NR = 6, PERIOD = 900, LOOPS = 2;
+    localparam integer NR = 6, PERIOD = 900 + 6 * VM_RT, LOOPS = 2;
     localparam integer KS = 2;   // HBM-NSFIX/KQS 10-18: registered kq share (pin flops + vm_kq flops): every COLL kq bank sample +2 edges
     integer r_qbg [0:NR-1] = '{0, 0, 1, 1, 1, 0};
     integer r_r2 [0:NR-1] = '{1, 0, 1, 0, 1, 1};
     integer r_self [0:NR-1] = '{1, 0, 1, 1, 1, 1};
-    integer r_t [0:NR-1] = '{0, 150, 300, 450, 600, 780};
+    integer r_t [0:NR-1] = '{0, 150 + VM_RT, 300 + 2 * VM_RT, 450 + 3 * VM_RT, 600 + 4 * VM_RT, 780 + 5 * VM_RT};
     integer r_f [0:NR-1] = '{72, 19, 19, 9, 50, 1};
     integer r_bs [0:NR-1] = '{0, 0, 18, 8, 48, 0};
     integer r_src [0:NR-1] = '{'h1000, 'h1100, 'h1200, 'h1300, 'h1400, 'h1600};
@@ -165,14 +202,14 @@ module tb_hgi_coll_gq;
                 integer r, k, ie, d, a;
                 r = i % R; k = i / R; d = k % 2; ie = fe + 1 + 3 * (k / 2) + (k % 2);
                 if (r_qbg[row] && i < r_bs[row]) for (integer w = 0; w < 4; w = w + 1) begin
-                    a = r_src[row] + 4 * i + w; rres[q][a%8][ie+1] = 1; rsec[q][a%8][ie+1] = sec(q, a);
+                    a = r_src[row] + 4 * i + w; rres[q][a%8][ie+1+GL+SREG+PIN+DQ(a%8)] = 1; rsec[q][a%8][ie+1+GL+SREG+PIN+DQ(a%8)] = sec(q, a);
                 end
-                if (!r_qbg[row]) begin a = r_src[row] + i; rres[q][a%8][ie+16] = 1; rsec[q][a%8][ie+16] = sec(q, a); end
+                if (!r_qbg[row]) begin a = r_src[row] + i; rres[q][a%8][ie+16+GL+SREG+PIN+DQ(a%8)] = 1; rsec[q][a%8][ie+16+GL+SREG+PIN+DQ(a%8)] = sec(q, a); end
                 for (integer h = 1; h <= 3; h = h + 1) begin
                     integer s; s = srcof(q, d, h); a = r_dst[row] + s * r_str[row] + i;
-                    wres[q][a%8][ie+32+KS+2*h] = 1; wsec[q][a%8][ie+32+KS+2*h] = sec(q, a);
+                    wres[q][a%8][ie+32+KS+2*h+VM_RT] = 1; wsec[q][a%8][ie+32+KS+2*h+VM_RT] = sec(q, a);
                 end
-                if (r_self[row] || r_qbg[row]) begin a = r_dst[row] + q * r_str[row] + i; wres[q][a%8][ie+27+KS] = 1; wsec[q][a%8][ie+27+KS] = sec(q, a); end
+                if (r_self[row] || r_qbg[row]) begin a = r_dst[row] + q * r_str[row] + i; wres[q][a%8][ie+27+KS+VM_RT] = 1; wsec[q][a%8][ie+27+KS+VM_RT] = sec(q, a); end
             end
     endtask
     // ---------------------------------------------------------------- ISA pass-through master (not on a ring)
@@ -253,10 +290,10 @@ module tb_hgi_coll_gq;
         for (integer l = 0; l < LOOPS; l = l + 1) for (integer row = 0; row < NR; row = row + 1) compile(row, l);
         last_edge = L + 3 + LOOPS * PERIOD + 100;
         // edges: IE(k=0) = L + 4; a value set by at_edge(T) is sampled at the posedge where cyc == T
-        if (scenario == 1) fork begin at_edge(L + 4 + 27); isa[2][28:27] = 2'b01; at_edge(L + 4 + 28); isa[2] = 0; end join_none
-        if (scenario == 3) fork begin at_edge(L + 4 + 34); a_kq[1][((r_dst[0] + prevq(1) * r_str[0]) % 8) * 281 + 280] = 1'b1;
-            at_edge(L + 4 + 35); a_kq[1] = 0; end join_none
-        drop_at = L + 4 + 30;                   // ring-B stop samples the first h=1 transit (k=0) here
+        if (scenario == 1) fork begin at_edge(L + 4 + 27 + VM_RT); isa[2][28:27] = 2'b01; at_edge(L + 4 + 28 + VM_RT); isa[2] = 0; end join_none
+        if (scenario == 3) fork begin at_edge(L + 4 + 34 + VM_RT); a_kq[1][((r_dst[0] + prevq(1) * r_str[0]) % 8) * 281 + 280] = 1'b1;
+            at_edge(L + 4 + 35 + VM_RT); a_kq[1] = 0; end join_none
+        drop_at = L + 4 + 30 + VM_RT;           // ring-B stop samples the first h=1 transit (k=0) here
         while (cyc < last_edge) @(negedge clk);
         // checks
         if (scenario != 0) begin
@@ -279,8 +316,8 @@ module tb_hgi_coll_gq;
                 if (g !== e) begin if (errors < 30) $display("COLLQ DATA row%0d q%0d seg%0d word%0d got %h exp %h", row, q, s, i, g, e); errors++; end
                 else checked++;
             end
-        if (errors == 0) $display("COLLQ PASS rows=%0d loops=%0d vm_words_checked=%0d reads=%0d writes=%0d isa_passthrough=%0d gather_edges_F72R2=%0d",
-            NR, LOOPS, checked, reads, writes, xchk, 1 + 3 * ((36 - 1) / 2) + ((36 - 1) % 2) + 38);
+        if (errors == 0) $display("COLLQ PASS lanes=%0d vm_rt=%0d bank_rt=%0d sreg=%0d rows=%0d loops=%0d vm_words_checked=%0d reads=%0d writes=%0d isa_passthrough=%0d gather_edges_F72R2=%0d",
+            LANES, VM_RT, BANK_RT, SREG, NR, LOOPS, checked, reads, writes, xchk, 1 + 3 * ((36 - 1) / 2) + ((36 - 1) % 2) + 38);
         else $display("COLLQ FAIL errors=%0d", errors);
         $finish;
     end

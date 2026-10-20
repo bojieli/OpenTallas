@@ -1,0 +1,37 @@
+XSL_MISMATCH xs edge 457 ref edge 136 valid 1/1 cc 0040/0040
+XSL_BIT edge 457 bit 1 xs 0 ref 1
+XSL_BIT edge 457 bit 5 xs 0 ref 1
+XSL_BIT edge 457 bit 6 xs 0 ref 1
+XSL_BIT edge 457 bit 7 xs 0 ref 1
+XSL_BIT edge 457 bit 8 xs 0 ref 1
+XSL_BIT edge 457 bit 10 xs 0 ref 1
+XSL_BIT edge 457 bit 12 xs 0 ref 1
+XSL_BIT edge 457 bit 13 xs 0 ref 1
+XSL_BIT edge 457 bit 15 xs 0 ref 1
+XSL_BIT edge 457 bit 17 xs 0 ref 1
+XSL_BIT edge 457 bit 19 xs 0 ref 1
+XSL_BIT edge 457 bit 20 xs 0 ref 1
+RET 724 07cd7872c1000008b
+RET 725 17a26694c1000408b
+RET 728 07699a9601000804b
+RET 729 07b25aa381000c04b
+RET 734 07b5b8bd01000844b
+RET 735 17a6991961000c44b
+RET 741 17a7c9fec1000888b
+RET 742 17accc83a1000c88b
+RET 744 07b82a1101000088b
+RET 745 078474f9c1000488b
+XSL_LOCKSTEP D=321 compared=1023 mismatch=1 valid_ref=82 valid_xs=82 first_ref=67 first_xs=388 xs_fault_at=455
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame_xs.sv:186: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 5.869 s; speed 230.034 ns/s
+- Verilator: cpu 5.852 s on 1 threads; allocated 48 MB
+CHECK MISMATCH edge 724 row 0 lo 0 k 2 got 3e6bc396/0 want 3e57d0c6/0
+CHECK MISMATCH edge 725 row 1 lo 0 k 2 got bd1334a6/0 want bd143e06/0
+CHECK MISMATCH edge 728 row 2 lo 0 k 1 got 3b4cd4b0/0 want 3b8af558/0
+CHECK MISMATCH edge 729 row 3 lo 0 k 1 got 3d92d51c/0 want 3d91be1c/0
+CHECK PLAN_MISMATCH predicted 10 words, got 10; first diff ((724, 0, (0, 2, 5), 1045942470, 0), (724, 0, (0, 2, 5), 1047249814, 0))
+CHECK LOCKSTEP D=321 compared=1023 mismatch=1 valid_ref=82 valid_xs=82 first_ref=67 first_xs=388 xs_fault_at=455
+CHECK XS_FAULT at 455
+CHECK XSL_MISMATCH xs edge 457 ref edge 136 valid 1/1 cc 0040/0040
+XS_CAL_CHECK FAIL p16_late

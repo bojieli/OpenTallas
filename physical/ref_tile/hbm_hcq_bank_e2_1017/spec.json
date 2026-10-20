@@ -19,7 +19,11 @@
  "params": {},
  "clock_port": "clk",
  "reset_ports": [
-  "rst_n"
+  "rst_n",
+  "fa_rst_n",
+  "fb_rst_n",
+  "fa_rst_n_o",
+  "fb_rst_n_o"
  ],
  "outline": {
   "w": 734.4,

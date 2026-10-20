@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_s81_kp4_dchn.lef",
-    "sha256": "cb928d426dd168719827ff047ca147c469c02892ec24928049835860d2546481"
+    "sha256": "2bf317264413f2a8a13cfa26b7e31a94cd511737ea99d138ab9d496d2af19444"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81lk_kp4_dchn-t2-5f0b4a343/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch/claude/closure-loop/s81lk_kp4_dchn-col-07c70c35d/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81lk_kp4_dchn-t2-5f0b4a343/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81lk_kp4_dchn-t2-5f0b4a343/record/views/ot_s81_kp4_dchn/provenance/raw/ot_s81_kp4_dchn.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81lk_kp4_dchn-t2-5f0b4a343/record/views/ot_s81_kp4_dchn/provenance/ot_s81_kp4_dchn.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/s81lk_kp4_dchn-col-07c70c35d/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/s81lk_kp4_dchn-col-07c70c35d/record/views/ot_s81_kp4_dchn/provenance/raw/ot_s81_kp4_dchn.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/s81lk_kp4_dchn-col-07c70c35d/record/views/ot_s81_kp4_dchn/provenance/ot_s81_kp4_dchn.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 69 OBS rects moved into 69 pins: clk, fs, k_any, n_corr[0], n_corr[10], n_corr[11], n_corr[12], n_corr[13], n_corr[14], n_corr[15], n_corr[16], n_corr[17]; pockets: 1733 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 70 OBS rects moved into 69 pins: clk, fs, k_any, n_corr[0], n_corr[10], n_corr[11], n_corr[12], n_corr[13], n_corr[14], n_corr[15], n_corr[16], n_corr[17]; pockets: 1795 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81lk_kp4_dchn-t2-5f0b4a343/record/views/ot_s81_kp4_dchn/provenance/ot_s81_kp4_dchn.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/s81lk_kp4_dchn-col-07c70c35d/record/views/ot_s81_kp4_dchn/provenance/ot_s81_kp4_dchn.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_s81_kp4_dchn 216.0 x 194.4: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 945 blocked-above 0 blocked-same 0; clock clk insertion 311 ps; pockets M5 0 (closed)",
+    "summary": "ot_s81_kp4_dchn 216.0 x 194.4: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 945 blocked-above 0 blocked-same 0; clock clk insertion 313 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_s81_kp4_dchn",
       "W": 216.0,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 945,
         "blocked_above": 0,
-        "covered_below": 0,
+        "covered_below": 10,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 310.91,
-          "min_ps": 222.22
+          "max_ps": 313.05,
+          "min_ps": 223.24
         }
       },
       "pockets": {
@@ -87,16 +87,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 1733
+          "added": 1795
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "ot_s81_kp4_dchn.lef",
-    "sha256": "90b1bc946dee2c86cc098df045057eb11e6a6d755e1094c8b017cd4bfd2b770d"
+    "sha256": "e07d6e43c5e631cde6e561177f33c7facef2a128de2122b924150a5cf1f9400e"
   }
 }

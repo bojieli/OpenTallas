@@ -1,0 +1,69 @@
+{
+  "parent_drivers": [
+    "L_0x6337bae5a3c0",
+    "L_0x6337baeb8a30"
+  ],
+  "count_ports": [
+    {
+      "scope": "S_0x6337ba8717d0 .scope module, \"u_crl\" \"dsdv_mu_boot_enable\" 4 168, 4 772 0, S_0x6337ba524970;",
+      "driver": "L_0x6337baeb8a30",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337ba871450 .scope module, \"u_crm\" \"dsdv_mu_boot_enable\" 4 169, 4 772 0, S_0x6337ba524970;",
+      "driver": "L_0x6337baeb8a30",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337ba8675f0 .scope module, \"u_crl\" \"dsdv_mu_boot_enable\" 4 168, 4 772 0, S_0x6337ba86ebc0;",
+      "driver": "L_0x6337baeb8a30",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337ba585710 .scope module, \"u_crm\" \"dsdv_mu_boot_enable\" 4 169, 4 772 0, S_0x6337ba86ebc0;",
+      "driver": "L_0x6337baeb8a30",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337ba98e5f0 .scope module, \"u_crl\" \"dsdv_mu_boot_enable\" 4 168, 4 772 0, S_0x6337ba9419e0;",
+      "driver": "L_0x6337baeb8a30",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337ba922c10 .scope module, \"u_crm\" \"dsdv_mu_boot_enable\" 4 169, 4 772 0, S_0x6337ba9419e0;",
+      "driver": "L_0x6337baeb8a30",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337bace5960 .scope module, \"u_crl\" \"dsdv_mu_boot_enable\" 4 168, 4 772 0, S_0x6337bace48b0;",
+      "driver": "L_0x6337bae5a3c0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337bace65c0 .scope module, \"u_crm\" \"dsdv_mu_boot_enable\" 4 169, 4 772 0, S_0x6337bace48b0;",
+      "driver": "L_0x6337bae5a3c0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337bace83e0 .scope module, \"u_crl\" \"dsdv_mu_boot_enable\" 4 168, 4 772 0, S_0x6337bace7360;",
+      "driver": "L_0x6337bae5a3c0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337bace9160 .scope module, \"u_crm\" \"dsdv_mu_boot_enable\" 4 169, 4 772 0, S_0x6337bace7360;",
+      "driver": "L_0x6337bae5a3c0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337baceb0b0 .scope module, \"u_crl\" \"dsdv_mu_boot_enable\" 4 168, 4 772 0, S_0x6337bace9f60;",
+      "driver": "L_0x6337bae5a3c0",
+      "bound_parent": true
+    },
+    {
+      "scope": "S_0x6337bacebef0 .scope module, \"u_crm\" \"dsdv_mu_boot_enable\" 4 169, 4 772 0, S_0x6337bace9f60;",
+      "driver": "L_0x6337bae5a3c0",
+      "bound_parent": true
+    }
+  ],
+  "verdict": "PASS"
+}

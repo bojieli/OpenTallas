@@ -1,0 +1,163 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1.check",
+ "replay": "/home/ubuntu/scratch/mu-die-s81/linecol/R/R_cut_3S_L0_su",
+ "run": "/home/ubuntu/scratch/mu-die-s81/linecol/runs/out_R_cut_3S_L0_su",
+ "verdict_kind": "SCHEDULE",
+ "sim_pass": false,
+ "trace_mismatches": 37,
+ "partial": true,
+ "verdict": "FAIL",
+ "ports": [
+  {
+   "port": "o__w_q_W_l0_lnd",
+   "lane": "q_W_l0",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": false,
+   "ok": true
+  },
+  {
+   "port": "o__w_q_W_l1_lnd",
+   "lane": "q_W_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": false,
+   "ok": true
+  },
+  {
+   "port": "o__w_tvN_s_3S_lnd",
+   "lane": "tvN_s_3S",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": false,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_3S_l0_lnd",
+   "lane": "xrE_3S_l0",
+   "expected": 15,
+   "missed": [
+    1605.0,
+    1606.0,
+    1607.0,
+    1608.0,
+    1609.0,
+    1610.0,
+    10732.0,
+    10733.0,
+    10734.0,
+    10735.0,
+    10736.0,
+    10737.0,
+    11418.0,
+    11539.0,
+    11540.0
+   ],
+   "unscheduled": [
+    1611,
+    10738,
+    11419,
+    11541
+   ],
+   "n_unscheduled": 4,
+   "strict": true,
+   "ok": false
+  },
+  {
+   "port": "o__w_xrE_3S_l1_lnd",
+   "lane": "xrE_3S_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_3S_l2_lnd",
+   "lane": "xrE_3S_l2",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_3S_l3_lnd",
+   "lane": "xrE_3S_l3",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_2S_l0_lnd",
+   "lane": "xrW_2S_l0",
+   "expected": 114,
+   "missed": [
+    1605.0,
+    1606.0,
+    1607.0,
+    1608.0,
+    1609.0,
+    1610.0,
+    10732.0,
+    10733.0,
+    10734.0,
+    10735.0,
+    10736.0,
+    10737.0,
+    11418.0,
+    11539.0,
+    11540.0
+   ],
+   "unscheduled": [
+    1611,
+    11419,
+    11541
+   ],
+   "n_unscheduled": 3,
+   "strict": true,
+   "ok": false
+  },
+  {
+   "port": "o__w_xrW_2S_l1_lnd",
+   "lane": "xrW_2S_l1",
+   "expected": 99,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_2S_l2_lnd",
+   "lane": "xrW_2S_l2",
+   "expected": 99,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrW_2S_l3_lnd",
+   "lane": "xrW_2S_l3",
+   "expected": 99,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  }
+ ]
+}

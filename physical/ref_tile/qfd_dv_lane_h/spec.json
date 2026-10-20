@@ -1,0 +1,228 @@
+{
+ "name": "qfd_dv_lane_h",
+ "top": "qfd_dv_lane_h",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_su_lane.sv",
+  "rtl/hdc/ot_hdc_vstream_lane.sv",
+  "rtl/hdc/ot_hdc_vstream_lane_t.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_sfu_q.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "emit0",
+   "live",
+   "i",
+   "fin_th",
+   "i_last_r",
+   "cura0",
+   "curb0",
+   "curc0",
+   "curd0",
+   "rrow",
+   "asi",
+   "bsi",
+   "csi",
+   "dsi",
+   "asrc",
+   "bsrc",
+   "csrc",
+   "mc",
+   "md",
+   "redsq",
+   "ma",
+   "mb",
+   "dst",
+   "red",
+   "ad",
+   "imm1",
+   "imm2",
+   "cls",
+   "accept",
+   "i_sfu"
+  ],
+  "S": [
+   "va_re",
+   "va_addr",
+   "vb_re",
+   "vb_addr",
+   "vc_re",
+   "vc_addr",
+   "wrom_re",
+   "wrom_addr",
+   "crom_re",
+   "crom_addr",
+   "va_q",
+   "vb_q",
+   "vc_q",
+   "wrom_q",
+   "crom_q"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "vm_we",
+   "vm_waddr",
+   "vm_wdata",
+   "kv_we",
+   "kv_waddr",
+   "kv_wdata",
+   "l_ov",
+   "l_out",
+   "l_red",
+   "l_redsq",
+   "l_raddr",
+   "l_last",
+   "retire",
+   "l_fault",
+   "sx_exp_v",
+   "sx_exp_x",
+   "sy_exp_y",
+   "sy_exp_vo",
+   "sy_exp_f",
+   "sx_rcp_v",
+   "sx_rcp_x",
+   "sy_rcp_y",
+   "sy_rcp_f",
+   "sx_rsq_v",
+   "sx_rsq_x",
+   "sy_rsq_y",
+   "sy_rsq_f"
+  ]
+ },
+ "outline": {
+  "w": 172.8,
+  "h": 129.6
+ },
+ "recipe": 2,
+ "route": {
+  "pd": 0.52,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware",
+   "why": "QK-SLICE 10-18: dl1 gate (default obstruction-aware H-tree around the TLS SRAM) TT pin-flop 227.3..314.1 (86.8) / FF 80.7 ps > 80. 7-variant re-CTS sweep on the dl1 3_place.odb (ORFS cts + ck_insertion --raw-source, ot-epyc4 /srv/opentallas-scratch/claude/qk-slice/cts_sweep): -no_obstruction_aware TT pin 253.0..262.7 (9.7) all 48.8 / FF 9.3 all 49.2; levels2+dbb40+noobs 23.7/22.9; size30/60 levels2 noobs 15.8/16.2; levels2+dbb25+noobs 24.0/22.7; levels2+dbb40 64.8/61.1; size20/40 90.0/83.7."
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:S-QSLICE",
+  "branch": "claude/qslice2-hard-1018",
+  "tag": "dl2",
+  "purpose": "S-QSLICE 10-18: Q-DV slice SU lane head = ot_hdc_vstream_lane_h at the SLICE configuration (WR16 AW24 NW18 KV_FP8 ML 1 RD 2 QLA4 QLM5, TLS ring in one 128x256 SRAM) as the no-parameter wrapper qfd_dv_lane_h; leaf of the slice lane tile qfd_dv_su_lane (x8 per slice, x96 per die). The closed qfd_su_lane_h view is ML 15 (14 edges deeper alignment) and is not this lane. M5 cap, local CTS, recipe 2, pin flops in and out, own reset register. Benches run on the assembled slice (dv_bench2 a..j, slice2 SU_LT=1 HD_W130=1: 8 lane tiles) + 4 mutants.",
+  "benches": [
+   {
+    "name": "slice2_su_lt",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g i j --work {RUN}/slice2_su_lt --vflags \"-GSU_LT=1 -GHD_W130=1\"",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^bench2 \\(j\\) MUT=0: PASS",
+    "pass_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_pos.out"
+   },
+   {
+    "name": "slice2_su_lt_loff_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_loff_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_loff_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_LOFF_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_loff_mut.out"
+   },
+   {
+    "name": "slice2_su_lt_tls_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_tls_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_tls_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_TLS_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_tls_mut.out"
+   },
+   {
+    "name": "slice2_su_lt_loreg_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_loreg_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_loreg_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_LOREG_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_loreg_mut.out"
+   },
+   {
+    "name": "slice2_su_lt_ireg_mut",
+    "cmd": "mkdir -p {RUN}/slice2_su_lt_ireg_mut && PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 rtl/test/qwen_dv/dv_bench2.py a b c d e f g --work {RUN}/slice2_su_lt_ireg_mut --vflags \"-GSU_LT=1 -GHD_W130=1 +define+OT_IREG_MUT\"",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^bench2 \\([a-g]\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_split_compute_1014/q_slice_1017/hardening/bench_h3/slice_ireg_mut.out"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_dv",
+   "rtl/test/qwen_dv",
+   "rtl/qwen_sys/dvm_20261014",
+   "rtl/test/full_sm_service",
+   "rtl/test/hbm_rf_visibility",
+   "rtl/lib",
+   "rtl/physical",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_lane_h/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_lane_h",
+  "structural_change": "New leaf: the slice SU lane head at ML 1 (the slice VM answers in 1 + ML = 2 edges; inner lane ML 7 = 1 + 2 + 2 RD). Same structure as the closed qfd_su_lane_h (ML 15)."
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hdc_vstream_lane_h registers every input (q_* pin flops) and every output (out flops) in RTL; the su8 LTD relays and the head's ML + 2 + 2 RD alignment count exactly those edges: an extra kit pin register would break the read round trip"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

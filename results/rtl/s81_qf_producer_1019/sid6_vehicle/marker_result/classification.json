@@ -1,0 +1,18 @@
+{
+  "baseline_marker": true,
+  "logical_CAP_ARR_age": {
+    "direct": 1,
+    "one_station_SN_landingK2": 4,
+    "two_station_NS_landingK2": 5
+  },
+  "late_gate_epoch_rejected": true,
+  "gate_open_before_reset_release": "MASKED_BY_ACTUAL_RSREG_LANDING_RESET; not a causal negative",
+  "initial_harness_negative": "MUTANT_NOT_CAUSAL retained; fixed baseline-age check",
+  "native_physical_phase": null,
+  "actual_selected_reset_dates": null,
+  "source_token_qualification": false,
+  "build_job": "3688539",
+  "preserved_object_dir": "/srv/opentallas-scratch/claude/s81-qf-producer-source-1019/marker_02/obj",
+  "old_run_exit": 1,
+  "old_run_exit_reason": "harness incorrectly demanded pre-release gate shift be a causal negative; traces now classified without recompilation or rerun"
+}

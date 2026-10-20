@@ -1,0 +1,13 @@
+# leg opseg_pass mem 32 threads 8 2026-10-19T12:29:05-07:00
+# cmd: bash rtl/test/mu_qwen_seq/run_mu_opseg.sh /srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_pass/w pass
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc7       admits   912 GB (avail 739, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 50 disk 6318 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4124602-1792438145 after 1 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4124602-1792438145): exit 0
+# ot-run rc=0 2026-10-19T12:32:07-07:00

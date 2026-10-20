@@ -3,9 +3,11 @@
 7) into the STATIC KV schedule and onto the Qwen ROM + KV token path (results/arch/token_path_20261009/qwen_rom.json,
 tools/throughput/accepted_cost.py longest-path solve; loss = 1 - T_base / T_new).
 
-Per lane of n stations: today n + 1 edges (n relays + the block flop); landed 1 + (n-2)/2 + 1 + E + 1 (hop 0 full cycle,
-later stations half-cycle, the ring, the E handoff, the block flop); E = planned (kv_fwd_lanes.planned_e) until the die
-STA measures it.  A bundle (one compiler slot: the lanes of one bus family and stack) pays its worst lane once.  The
+Per lane of n stations: today n + 1 edges (n relays + the block flop); landed E + 2 (+ post stages) (the ring age E
+covers hop 0 and the half-cycle stations, + the landing o flop + the block flop; KVR-FWDAGE 10-19: the old
+1 + (n-2)/2 + 1 + E + 1 counted the station delay twice); E = planned (kv_fwd_lanes.planned_e) until the die STA measures
+it.  added = landed - today is NEGATIVE for most lanes (half-cycle hops beat n full-cycle relays): the bundle records its
+signed worst lane, the token charge takes max(0, worst) (no credit taken against a baseline priced on plan stages).  A bundle (one compiler slot: the lanes of one bus family and stack) pays its worst lane once.  The
 schedule is static (no credits, no backpressure): every added edge is a fixed, compile-time latency per bundle.
 
 On the token path the KV die sits in L*.attn_kv (8K-context attention of every layer) and L*.qknorm_rope (KV append):
@@ -43,14 +45,14 @@ def main():
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     L = json.load(open(a.lanes))['lanes']
-    bundles = defaultdict(lambda: dict(lanes=0, bits=0, worst_added=0.0, worst_n=0, E=0, dir=None))
+    bundles = defaultdict(lambda: dict(lanes=0, bits=0, worst_added=None, worst_n=0, E=0, dir=None))
     for x in L:
         f = family(x['stations'][-1])
         d = 'c->st' if x['src_tree'] == 'c' else 'st->c' if x['dst_tree'] == 'c' else 'st->st'
         b = bundles[(f, d)]
         b['lanes'] += 1
         b['bits'] += x['S']
-        if x['added'] > b['worst_added']:
+        if b['worst_added'] is None or x['added'] > b['worst_added']:
             b.update(worst_added=x['added'], worst_n=x['n'], E=x['E_planned'])
         b['dir'] = d
     charge = {}
@@ -58,7 +60,8 @@ def main():
         cand = {k: v for k, v in bundles.items() if v['dir'] == d and rx.search(k[0])}
         if cand:
             k = max(cand, key=lambda k_: cand[k_]['worst_added'])
-            charge[d] = dict(bundle=k[0], added_edges=cand[k]['worst_added'], n=cand[k]['worst_n'], E=cand[k]['E'])
+            charge[d] = dict(bundle=k[0], added_edges=max(0, cand[k]['worst_added']), worst_added_signed=cand[k]['worst_added'],
+                             n=cand[k]['worst_n'], E=cand[k]['E'])
     per_layer = sum(v['added_edges'] for v in charge.values())
     doc = AC.load_path('qwen_rom')
     base, _ = AC.solve(doc['nodes'], doc['edges'])
@@ -66,8 +69,8 @@ def main():
     new, _ = AC.solve(doc['nodes'], doc['edges'], delta)
     hz = doc['clock_hz']
     rec = dict(schema='opentallas.qwen_kv_fwd_lane_price.v1', lanes=a.lanes, lanes_total=len(L),
-               rule='landed = 1 + (n-2)/2 + 1 + E + 1 vs today n + 1; worst lane per bundle; c->st + st->c bundles in series '
-                    'on every L*.attn_kv (conservative)',
+               rule='landed = E + 2 (+ post) vs today n + 1 (KVR-FWDAGE 10-19); worst lane per bundle, charged max(0, .); '
+                    'c->st + st->c bundles in series on every L*.attn_kv (conservative)',
                bundles={f'{k[0]}|{k[1]}': v for k, v in sorted(bundles.items())}, charged_per_layer=charge,
                added_edges_per_layer=per_layer, layers_charged=len(delta),
                token=dict(base_cycles=base, new_cycles=new, base_tok_s=round(hz / base, 2), new_tok_s=round(hz / new, 2),

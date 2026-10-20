@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "baseline": "92cdd8600",
+  "helper_count": 49,
+  "plan_content_sha256": "727a97f95c111978d28bb9dcfe7e29914521d6474480c915e81d3fe6ae751442",
+  "exact_generated_outputs": [
+    {
+      "function": "gen_env",
+      "pg_strict": null,
+      "sha256": "aa2cbc06312ec35359a4d423f8c7ed261201c080997ef0c88e53e0ba097a160a"
+    },
+    {
+      "function": "gen_job",
+      "pg_strict": null,
+      "sha256": "cef83073db527af641d4a16a10b3cb30903b900a132b8c86baba7ae5b7f97c90"
+    },
+    {
+      "function": "referenced_paths",
+      "pg_strict": null,
+      "sha256": "8ef4730aa62c79cc936c16824aea424daf0343b4de5b66a643eb3eb618a25330"
+    },
+    {
+      "function": "gen_env",
+      "pg_strict": false,
+      "sha256": "aa2cbc06312ec35359a4d423f8c7ed261201c080997ef0c88e53e0ba097a160a"
+    },
+    {
+      "function": "gen_job",
+      "pg_strict": false,
+      "sha256": "cef83073db527af641d4a16a10b3cb30903b900a132b8c86baba7ae5b7f97c90"
+    },
+    {
+      "function": "referenced_paths",
+      "pg_strict": false,
+      "sha256": "8ef4730aa62c79cc936c16824aea424daf0343b4de5b66a643eb3eb618a25330"
+    }
+  ]
+}

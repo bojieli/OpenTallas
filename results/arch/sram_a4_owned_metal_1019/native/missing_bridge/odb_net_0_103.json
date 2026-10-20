@@ -1,0 +1,30 @@
+{
+  "source_net": "wd_in[25]",
+  "native_net": "case0_net103",
+  "exact_box_multiset": true,
+  "actual_boxes": [
+    [
+      "M4",
+      [
+        42192,
+        807,
+        52440,
+        831
+      ]
+    ],
+    [
+      "M4",
+      [
+        42192,
+        807,
+        42216,
+        831
+      ]
+    ]
+  ],
+  "wire_type": [
+    "ROUTED",
+    "ROUTED"
+  ],
+  "sig_type": "SIGNAL"
+}

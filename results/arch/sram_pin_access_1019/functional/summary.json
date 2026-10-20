@@ -1,0 +1,63 @@
+{
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "cases": [
+    {
+      "words": 8,
+      "bits": 285,
+      "mutant": 0,
+      "exit": 0,
+      "pass": true,
+      "log": "w8_b285_m0.log"
+    },
+    {
+      "words": 16,
+      "bits": 546,
+      "mutant": 0,
+      "exit": 0,
+      "pass": true,
+      "log": "w16_b546_m0.log"
+    },
+    {
+      "words": 32,
+      "bits": 546,
+      "mutant": 0,
+      "exit": 0,
+      "pass": true,
+      "log": "w32_b546_m0.log"
+    },
+    {
+      "words": 128,
+      "bits": 256,
+      "mutant": 0,
+      "exit": 0,
+      "pass": true,
+      "log": "w128_b256_m0.log"
+    },
+    {
+      "words": 256,
+      "bits": 512,
+      "mutant": 0,
+      "exit": 0,
+      "pass": true,
+      "log": "w256_b512_m0.log"
+    },
+    {
+      "words": 32,
+      "bits": 546,
+      "mutant": 1,
+      "exit": 1,
+      "pass": true,
+      "log": "w32_b546_m1.log"
+    },
+    {
+      "words": 32,
+      "bits": 546,
+      "mutant": 2,
+      "exit": 1,
+      "pass": true,
+      "log": "w32_b546_m2.log"
+    }
+  ],
+  "verdict": "PASS",
+  "scope": "functional native bank contracts; no physical escape qualification"
+}

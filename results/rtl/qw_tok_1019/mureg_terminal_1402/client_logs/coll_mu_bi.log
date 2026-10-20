@@ -1,0 +1,13 @@
+# leg coll_mu_bi mem 48 threads 16 2026-10-19T12:29:13-07:00
+# cmd: a=$(python3 tools/xdie_qtp8/cases.py args mu_bi) && rm -rf /srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll/mu_bi && eval python3 tools/qwen_coll_tp8_static_links_bench.py --out /srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll/mu_bi $a; rc=$?; rm -rf /srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll/mu_bi/obj_*; exit $rc
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-epyc7       admits   899 GB (avail 730, growth 101, headroom 0, waiters 0/0 GB) load 67/96 running 54 disk 6316 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/QWREG/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4126755-1792438153 after 1 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4126755-1792438153): exit 0
+# ot-run rc=0 2026-10-19T13:01:00-07:00

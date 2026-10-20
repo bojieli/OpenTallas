@@ -8,6 +8,10 @@ set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set ::env(OT_IO_SKEW) 90
 set ::env(OT_IO_HOLD_SKEW) 50
+set ::env(OT_IO_HOLD_BUDGET) die
+set ::env(OT_BH_LAUNCH_MIN_PS) 25
+set ::env(OT_BH_TILE_HOLD_UNC_PS) 25
+set ::env(OT_BH_ROUTE_RELIEF_PS) 0
 set ::env(OT_REF_GLOB) {*}
 set ::env(OT_IO_INTER) {none_*}
 set ::env(OT_IO_SKEW_INTER) 150
@@ -116,6 +120,24 @@ set ot_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD
 set_input_delay [expr $qdm_lmin - $ot_hki] -min -clock core_clk [all_inputs -no_clocks]
 set_output_delay [expr $ot_ob - $qdm_lmax + $ot_sk] -max -clock core_clk [all_outputs]
 set_output_delay [expr 0 - $qdm_lmin - $ot_hk] -min -clock core_clk [all_outputs]
+# OT_BH begin -- DIE BOUNDARY HOLD BUDGET (FLOW-HOLD, owner 2026-10-16 ~22:00; results/arch/boundary_hold_budget_1016/RULE.md).  Opt-in:
+# OT_IO_HOLD_BUDGET=die (ref_tile spec "hold_budget": "die"; registered-pin tiles only).  Setup lines above unchanged.
+#   output min = U - (L_min + C)     the SENDER guarantees launch >= L_min + C at FF (C = OT_BH_LAUNCH_MIN_PS, default 25:
+#                                    a pin register's FF clk->Q, no pad), nothing more
+#   input  min = L_min + C + U       the RECEIVER credits that guaranteed launch (0 wire); U = OT_BH_TILE_HOLD_UNC_PS (25)
+#                                    cancels the tile's own hold uncertainty on boundary paths only
+# The link's skew (<= 80 ps neighbour budget), hold uncertainty and any shortfall are the DIE's: die FF STA on the tiles'
+# ETMs (whose hold arcs do not depend on these delays) must hold >= 0, fixed in relay stations / die-net hold cells.
+# OT_BH_ROUTE_RELIEF_PS (route-time only, = hold_margin - io_hold_margin): the boundary is repaired at the io margin.
+if {[info exists ::env(OT_IO_HOLD_BUDGET)] && $::env(OT_IO_HOLD_BUDGET) eq "die"} {
+  set ot_bhc [expr {[info exists ::env(OT_BH_LAUNCH_MIN_PS)] ? $::env(OT_BH_LAUNCH_MIN_PS) : 25}]
+  set ot_bhu [expr {[info exists ::env(OT_BH_TILE_HOLD_UNC_PS)] ? $::env(OT_BH_TILE_HOLD_UNC_PS) : 25}]
+  set ot_bhr [expr {[info exists ::env(OT_BH_ROUTE_RELIEF_PS)] ? $::env(OT_BH_ROUTE_RELIEF_PS) : 0}]
+  set_input_delay [expr $qdm_lmin + $ot_bhc + $ot_bhu + $ot_bhr] -min -clock core_clk [all_inputs -no_clocks]
+  set_output_delay [expr $ot_bhu + $ot_bhr - $qdm_lmin - $ot_bhc] -min -clock core_clk [all_outputs]
+  puts "OT_HOLD_BUDGET die: L_min $qdm_lmin C $ot_bhc U $ot_bhu relief $ot_bhr"
+}
+# OT_BH end
 if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
   set ot_ski [expr {[info exists ::env(OT_IO_SKEW_INTER)] ? $::env(OT_IO_SKEW_INTER) : 150}]
   set ot_ii {}; set ot_io {}

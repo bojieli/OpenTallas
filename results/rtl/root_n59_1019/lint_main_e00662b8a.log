@@ -1,0 +1,16 @@
+%Error: rtl/qwen_split/qfd_native59_dv_service.sv:122:80: Can't find definition of variable: 'qbuf'
+                                                        : ... Suggested alternative: 'qbuf_n'
+  122 |                              hit[1]?p_dd[89+32*1+:32]:hit[0]?p_dd[89+32*0+:32]:qbuf[32*ge+:32];
+      |                                                                                ^~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/qwen_split/qfd_native59_dv_service.sv:123:23: Can't find definition of variable: 'qseen'
+                                                        : ... Suggested alternative: 'qseen_n'
+  123 |    assign qseen_n[ge]=qseen[ge]|(|hit);
+      |                       ^~~~~
+%Error: rtl/qwen_split/qfd_native59_dv_service.sv:127:25: Can't find definition of variable: 'qctx'
+  127 |  wire q_in_bad=(dd_q&&(!qctx||qlock||begin_slot))||(|qhi_bad)||(|qdup);
+      |                         ^~~~
+%Error: rtl/qwen_split/qfd_native59_dv_service.sv:127:31: Can't find definition of variable: 'qlock'
+  127 |  wire q_in_bad=(dd_q&&(!qctx||qlock||begin_slot))||(|qhi_bad)||(|qdup);
+      |                               ^~~~~
+%Error: Exiting due to 4 error(s)

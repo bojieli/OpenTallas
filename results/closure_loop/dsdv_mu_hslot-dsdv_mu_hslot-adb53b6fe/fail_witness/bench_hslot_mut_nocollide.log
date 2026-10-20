@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe bench bench_hslot_mut_nocollide host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe log cl/bench_hslot_mut_nocollide.a1b1.log captured 2026-10-19T08:34:39-07:00
+# fail_regex '^MUHSLOT COLLIDE NS 47 FAIL \\(no fault\\)'
+Verilator 5.050 2026-07-01 rev v5.050
+ERR return at 6090 tag {user 0 pos 501} != start {user 0 pos 500}
+ERR return at 6154 tag {user 1 pos 512} != start {user 1 pos 511}
+ERR return at 6218 tag {user 2 pos 523} != start {user 2 pos 522}
+ERR return at 6282 tag {user 3 pos 534} != start {user 3 pos 533}
+ERR return at 6346 tag {user 4 pos 545} != start {user 4 pos 544}
+MUHSLOT COLLIDE NS 47 FAIL (no fault) t_mf 1100
+BENCH_FAIL hslot MUT=2 NS 47 COLLIDE 1

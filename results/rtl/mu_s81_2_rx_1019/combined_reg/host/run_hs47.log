@@ -1,0 +1,18 @@
+U0 S 40 tok 1000 pos 500
+U0 R 3015 tok 32501
+U0 S 3048 tok 32501 pos 501
+U0 R 6023 tok 1009035
+U0 S 6056 tok 1009035 pos 502
+U0 R 9031 tok 1921464
+U0 S 9064 tok 1921464 pos 503
+U0 R 12039 tok 846638
+U0 S 12072 tok 846638 pos 504
+U0 R 15047 tok 1081467
+U0 S 15080 tok 1081467 pos 505
+U0 R 18055 tok 2069713
+MUHSLOT NS 47 NP 47 NU 47 RL 2973: 282 starts, 282 returns, 47/47 users exact, max outstanding 47, errs 0
+MUHSLOT PASS
+- /srv/opentallas-scratch/claude/refill-0730/MUS81REG/src_7613ee7f4/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hslot.sv:130: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.012 s; speed 1.981 ms/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 7 MB

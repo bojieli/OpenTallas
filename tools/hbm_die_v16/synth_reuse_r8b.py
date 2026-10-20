@@ -38,14 +38,18 @@ def main():
             pv = json.loads((Path(a.prev) / 'views.json').read_text()).get(cell)
             pw = Path(a.prev) / 'wrap' / f"{v['wrapper']}.sv"
             nw = Path(a.views) / 'wrap' / f"{v['wrapper']}.sv"
-            if pv and pv['kind'] == 'SYNTH' and pw.is_file() and pw.read_bytes() == nw.read_bytes():
-                reuse.append(cell); continue
-            synth[cell] = 'new cell or wrapper differs from the previous run'; continue
+            if not (pv and pv['kind'] == 'SYNTH' and pw.is_file() and pw.read_bytes() == nw.read_bytes()):
+                synth[cell] = 'new cell or wrapper differs from the previous run'; continue
+            # A previous wrapper proves only the parameter binding.  Its implementation can change while the
+            # wrapper remains byte-identical (GEN2e reused old split2/split3 timing after RTL changes).
+            # Always validate the immutable source inventory below as well.
         srcs = m.get('source_file_sha256') or {}
         wkey = f"v16w/{v['wrapper']}.sv"
         wnew = Path(a.views) / 'wrap' / f"{v['wrapper']}.sv"
         why = None
-        if srcs.get(wkey) != sha(wnew):
+        if not srcs:
+            why = 'prior synthesis has no immutable source inventory'
+        elif srcs.get(wkey) != sha(wnew):
             why = 'wrapper (parameters) changed'
         else:
             for f, h in srcs.items():

@@ -1,0 +1,181 @@
+{
+ "name": "qkd_pv16_vport_b1-b1-COMMIT",
+ "block": "qkd_pv16_vport_b",
+ "ref_tile": true,
+ "owner": "Claude:KV-BOOTAGE",
+ "purpose": "KV-BOOTAGE 10-19 (coordinator decision, lanes/KVR-DERIVE.md re-harden spec): boot-programmable static-schedule ages. qkd_pv16_vport_b = r6 with DQ / RT taken from cfg_age = {DQ, RT} (sealed die cfg, pre-boot image target 10; no handshake): request wait line DQ<=15 deep, slot/sel line DQ+RT+1<=47 deep, the word selects the tap (die-derived RT 16-17 vs the r6 hard 8). +16 pins (cfg_age, S face). Same outline 86.4 x 172.8. Edge-for-edge = r6 #(DQ d, RT r) (lockstep bench, results/rtl/kv_bootage_1019). r6 (Q-VMWB 10-16, closure-first): params DQ 0 / RT 8 only (slot = request + DQ + RT + 1; RL = 4 ",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-bootage-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die/kv_bootage_bench.sh",
+   "rtl/test/kv_bootage_1019",
+   "results/rtl/kv_bootage_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_pv16_vport_b #(.MUT(0), .DQ(15), .RT(31)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vport_r8",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_r8 vport 0 D=0 R=8",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "vport_r16",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_r16 vport 0 D=0 R=16",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "vport_d3r17",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_d3r17 vport 0 D=3 R=17",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "vport_d15r31",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_d15r31 vport 0 D=15 R=31",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "vport_mut_tap",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_mut_tap vport 6 D=0 R=16",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "fail_regex": "^KVBA_VPORT FAIL",
+    "fail_witness": "results/rtl/kv_bootage_1019/sim_vport_6_D_0_R_16_.log"
+   },
+   {
+    "name": "vport_mut_dq",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_mut_dq vport 7 D=3 R=17",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "fail_regex": "^KVBA_VPORT FAIL",
+    "fail_witness": "results/rtl/kv_bootage_1019/sim_vport_7_D_3_R_17_.log"
+   },
+   {
+    "name": "vport_mut_range",
+    "cmd": "bash tools/qwen_kv_die/kv_bootage_bench.sh {RUN}/bench/vport_mut_range vport 8 D=0 R=16",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_VPORT PASS",
+    "fail_regex": "^KVBA_VPORT FAIL",
+    "fail_witness": "results/rtl/kv_bootage_1019/sim_vport_8_D_0_R_16_.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_pv16_vport_b1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_pv16_vport_b1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_pv16_vport_b1 --out {RUN}/record/views/qkd_pv16_vport_b  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_pv16_vport_b1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_pv16_vport_b1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_pv16_vport_b1/qkd_pv16_vport_b1-b1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KV-BOOTAGE 10-19 (coordinator decision, lanes/KVR-DERIVE.md re-harden spec): boot-programmable static-schedule ages. qkd_pv16_vport_b = r6 with DQ / RT taken from cfg_age = {DQ, RT} (sealed die cfg, pre-boot image target 10; no handshake): request wait line DQ<=15 deep, slot/sel line DQ+RT+1<=47 deep, the word selects the tap (die-derived RT 16-17 vs the r6 hard 8). +16 pins (cfg_age, S face). Same outline 86.4 x 172.8. Edge-for-edge = r6 #(DQ d, RT r) (lockstep bench, results/rtl/kv_bootage_1019). r6 (Q-VMWB 10-16, closure-first): params DQ 0 / RT 8 only (slot = request + DQ + RT + 1; RL = 4 + W + DQ + RT, W = WP + O is die relays, measured W 59 -> RL 71); the word's epoch travels with it (in{g}_epoch from landing rsp_epoch -> out_epoch -> pair in_epoch check). +48 pins (16 epoch per side, W/E/N). Same outline 86.4 x 172.8, 3-track pins, HB1 out pad, rst_n pin capture. 0 production cycles in the tile.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "KV-BOOTAGE: boot-programmable DQ/RT (cfg_age pin, delay lines sized for the bounds); the r6 view hard-codes RT 8 while the die derives 16-17"
+ }
+}

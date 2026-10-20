@@ -1,0 +1,18 @@
+MUCTX_SLOT cycle=203 run=0
+MUCTX_SLOT cycle=204 run=0
+MUCTX_HOST_TX cycle=205 run=0 owner=002080003280540 gen=1
+MUCTX_HOST_TX cycle=206 run=0 owner=002000003200500 gen=0
+MUCTX_SU_REF cycle=206 run=0 identical=1
+MUCTX_END run=0 n=0 loads=0 native=00 abort=10 transport=08/00 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_SLOT cycle=249803 run=1
+MUCTX_SLOT cycle=249804 run=1
+MUCTX_HOST_TX cycle=249805 run=1 owner=002100003300580 gen=2
+MUCTX_HOST_TX cycle=249806 run=1 owner=002000003200500 gen=0
+MUCTX_SU_REF cycle=249806 run=1 identical=1
+MUCTX_END run=1 n=0 loads=0 native=01 abort=11 transport=08/04 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_END run=2 n=0 loads=0 native=01 abort=11 transport=08/04 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_REAL_LINK_FAIL errors=3 n=0 loads=0
+- rtl/test/qwen_split/tb_mu_context_real_link.sv:246: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 417us; walltime 12.279 s; speed 33.924 us/s
+- Verilator: cpu 12.278 s on 1 threads; allocated 7 MB

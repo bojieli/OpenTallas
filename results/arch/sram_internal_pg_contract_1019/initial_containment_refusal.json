@@ -1,0 +1,10 @@
+{
+  "phase": "initial finite model, before attachment apron correction",
+  "source": "c634d1540 exact SC2 PG rail 38",
+  "original_assertion": "assert contains(cb,cell)",
+  "observed_result": "AssertionError",
+  "rail_M4_nm": [21660, 29607, 195180, 29727],
+  "original_bitcore_bbox_nm": [21360, 39, 195308, 29603],
+  "required_attachment_cell_y_nm": [29583, 29751],
+  "structural_response": "New analytical attachment reservation grows north by 148 nm; bitcore unchanged; 25.744304 um2 apron charged; original c634/A3 untouched."
+}

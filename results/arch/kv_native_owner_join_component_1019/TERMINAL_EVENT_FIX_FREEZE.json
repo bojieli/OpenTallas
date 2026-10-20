@@ -1,0 +1,31 @@
+{
+  "kind": "BEFORE_EDIT_TERMINAL_EVENT_ALIGNMENT_FIX",
+  "failed_attempt": "attempt1-247bc1c69",
+  "failure": "case0 join fault at edge308; all other source faults0",
+  "cause": "terminal_accepted is allocator registered pulse; lifecycle acknowledged tag/gen are one NBA edge later",
+  "proposed_source": "Export lifecycle retained terminal_tag/terminal_generation as terminal_accept_tag/gen alongside terminal_accepted; propagate services/tp8; enabled private codec and join use this accepted pair",
+  "added_state_bits": 0,
+  "source_lifetime_proof": [
+    "lifecycle captures selected terminal tag/gen only with !terminal_pending&&!rearm&&!post_pending",
+    "allocator accepts only terminal_pending with exact full owned TAG/gen and actual drains",
+    "during registered terminal_accepted pulse lifecycle terminal_pending remains asserted until the sampling edge, preventing a fresh selected tag write",
+    "replacement-terminal branch can only write the same owned expected tag/gen; flags may change but identity cannot",
+    "when lifecycle consumes terminal_accepted it clears pending and raises rearm/post_pending, so subsequent terminal capture remains blocked"
+  ],
+  "default_policy": "private ENABLE_NATIVE_OWNER_JOIN=0 continues original acknowledged tag/gen codec hookup; public originals unchanged",
+  "private_sha256": {
+    "ot_qwen_tp8_token_epoch_allocator_rc.sv": "7c1e4659c84f73180b14f9eedc623bc1cb2a552f5cd1843b21308d0e44befb39",
+    "qkd_host_ctl_rc.sv": "fb784c7550c4dd6c1b23d80cc3409f9192c03324069dcbb7c3b9578521caee90",
+    "qkd_host_peer_rank_codec_rc.sv": "bf0450a0a2acb6adaf665a9c9108ca2de059ce13b3d73e09a35abf45a52e5a73",
+    "qkd_host_peer_coordinator_codec_rc.sv": "e3b258965e16f6db57061bbdd1efd225b1aa86f4aed488a14e9c9592b8551fa4",
+    "qkd_host_coordinator_services_rc.sv": "57b5b90958c7653b7dbab9fc71e9d48ece39279420cb8f32e5fd388e742776ce",
+    "qkd_host_native_owner_join_rc.sv": "8897f2f79cb60592b5a8ee867ac87328d96e4f5338d8c73b9848cd52838fa9a9",
+    "qkd_host_if_pins_observed_rc.sv": "52145e53d357a856bd8bc5b07bae6819785c90c5d5ff477858ab38d082da66b1",
+    "ot_host_if_pb2_observed_rc.sv": "1f526e890a5b1c4357278fdae5113ba43a9320c628e0f1f4a374e54029d991e3",
+    "qkd_host_ctl_service_pins_rc.sv": "e1e3500ea5a5ae96d69336c67cf4069e3d0ef034041ddd773405cd7f8fd85521",
+    "qkd_host_tp8_coordinator_rc.sv": "513f1092f8387068351a6f7df8f3474fbfc1b4dc96796097dfbb686db2966b36",
+    "qkd_host_lifecycle_collected_rc.sv": "ecb7c6462a251aceab6e8f3cdadd2dbb14abc963de1abfb84ed32ae846ba9d53",
+    "qkd_host_hc_station_rc.sv": "ba406b7cfcdb0d94f151f5d2a1a341498d5daec527819c19bfb1da11fe3484e3"
+  },
+  "runtime_verdict": "NOT_RUN_AFTER_FIX"
+}

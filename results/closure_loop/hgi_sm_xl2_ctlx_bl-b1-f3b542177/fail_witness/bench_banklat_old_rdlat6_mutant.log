@@ -1,0 +1,16 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hgi_sm_xl2_ctlx_bl-b1-f3b542177 bench bench_banklat_old_rdlat6_mutant host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/hgi_sm_xl2_ctlx_bl-b1-f3b542177 log cl/bench_banklat_old_rdlat6_mutant.a1b1.log captured 2026-10-19T03:28:18-07:00
+# fail_regex '^XLOAD_BANKLAT FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+ERR F20 install: configured 11 fault 10 ingress 0
+ERR round 11 did not finish (done ref 1 dut 0 active 00)
+ERR F20 install: configured 11 fault 10 ingress 0
+ERR round 12 did not finish (done ref 1 dut 0 active 00)
+ERR F20 install: configured 11 fault 10 ingress 0
+ERR round 13 did not finish (done ref 1 dut 0 active 00)
+ERR F20 install: configured 11 fault 10 ingress 0
+ERR round 14 did not finish (done ref 1 dut 0 active 00)
+ERR F20 install: configured 11 fault 10 ingress 0
+ERR round 15 did not finish (done ref 1 dut 0 active 00)
+XLOAD_BANKLAT dut vs ref (+49 edges): 6002809 cycles compared, 1152 dut beats, 6002705 differ; rq lanes off-stagger 48019226 (dut rq 2304); done ref 16 dut 1; fault ref 0 dut 1; lanefault ref 0 dut 0
+XLOAD_BANKLAT FAIL CFG=2 BMUT=1 errors=31

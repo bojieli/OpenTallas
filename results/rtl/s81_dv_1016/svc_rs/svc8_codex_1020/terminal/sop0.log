@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/out_fg3
+ot-run: ot-epyc6       admits   800 GB (avail 673, growth 113, headroom 0, waiters 0/0 GB) load 154/128 running 44 disk 4986 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/out_fg3
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/out_fg3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/out_fg3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/out_fg3
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1979729-1792477414 after 0 s
+HOST ot-epyc6 sop0 E=prod ST=0 PE=0 start Mon Oct 19 23:23:35 PDT 2026
+/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/so_job.sh: line 14: syntax error near unexpected token `}'
+/srv/opentallas-scratch/claude/s81-svc5-1019/svc6/so_job.sh: line 14: `it 1; }'
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1979729-1792477414): exit 2

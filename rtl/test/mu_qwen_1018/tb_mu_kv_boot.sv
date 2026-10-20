@@ -42,7 +42,7 @@ module tb_mu_kv_boot;
  reg[31:0]e_c[0:8191];reg[1:0]e_u[0:8191];reg[5:0]e_s[0:8191];reg[9:0]e_m[0:8191];
  integer nolist=0;
  integer cyc=0,base,i,a,ei=0,si=0,nev=0,ndone=0,nlock=0,fd,r,c,u,s,k,m;
- reg[1023:0]fn;
+ string fn;  // Absolute fleet paths can exceed 128 bytes.
  task tick;begin @(posedge ck);#0.1;end endtask
  task fail(input [8*96-1:0]why);begin
   $display("FAIL MU_KV_BOOT: %0s cyc %0d (rel %0d) mu mask %03h ref mask %03h epoch %h lprg fault %02h boot fault %02h",

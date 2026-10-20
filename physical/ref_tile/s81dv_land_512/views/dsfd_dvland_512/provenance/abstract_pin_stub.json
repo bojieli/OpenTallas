@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/dsfd_dvland_512.lef",
-    "sha256": "ac53d21cf8634b94d219578dbc5c3112b34773faa1545fc03f7b9b1c7497fa79"
+    "sha256": "a16c4e68a6fed34cc3257f2908cbc96946d45e08048cff1ec7b059da6eb74b84"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81dv_land_512-g3a-7a9c99ef3/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch/claude/closure-loop/s81dv_land_512-po2-df5c2d585/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81dv_land_512-g3a-7a9c99ef3/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81dv_land_512-g3a-7a9c99ef3/record/views/dsfd_dvland_512/provenance/raw/dsfd_dvland_512.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81dv_land_512-g3a-7a9c99ef3/record/views/dsfd_dvland_512/provenance/dsfd_dvland_512.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/s81dv_land_512-po2-df5c2d585/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dv_land_512-po2-df5c2d585/record/views/dsfd_dvland_512/provenance/raw/dsfd_dvland_512.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dv_land_512-po2-df5c2d585/record/views/dsfd_dvland_512/provenance/dsfd_dvland_512.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 603 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 7 OBS rects moved into 5 pins: fault, k[0], k[1], k[2], rs; pockets: 483 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81dv_land_512-g3a-7a9c99ef3/record/views/dsfd_dvland_512/provenance/dsfd_dvland_512.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/s81dv_land_512-po2-df5c2d585/record/views/dsfd_dvland_512/provenance/dsfd_dvland_512.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "dsfd_dvland_512 38.88 x 95.04: PG M5 VDD 13 stripes (83% spread, 100% cov) / VSS 13 stripes (83% spread, 100% cov); strap M6; face pins 1031 blocked-above 0 blocked-same 0; clock ck insertion 98 ps; clock ck_f insertion 125 ps; pockets M5 0 (closed)",
+    "summary": "dsfd_dvland_512 38.88 x 95.04: PG M5 VDD 13 stripes (83% spread, 100% cov) / VSS 13 stripes (83% spread, 100% cov); strap M6; face pins 1031 blocked-above 0 blocked-same 0; clock ck insertion 106 ps; clock ck_f insertion 138 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "dsfd_dvland_512",
       "W": 38.88,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 1031,
         "blocked_above": 0,
-        "covered_below": 372,
+        "covered_below": 15,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,12 +77,12 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 98.43,
-          "min_ps": 79.57
+          "max_ps": 105.71,
+          "min_ps": 84.68
         },
         "ck_f": {
-          "max_ps": 124.8,
-          "min_ps": 93.77
+          "max_ps": 137.84,
+          "min_ps": 100.84
         }
       },
       "pockets": {
@@ -91,16 +91,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 603
+          "added": 483
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "dsfd_dvland_512.lef",
-    "sha256": "28decacd586681b914606983b85cb12dff52f342418783ed1b7687800ecc5a37"
+    "sha256": "d9816bd24eca383f4c351be3721081d82a2d79ae66f4e1d90eee0632eadb76d8"
   }
 }

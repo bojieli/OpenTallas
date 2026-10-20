@@ -1,0 +1,7 @@
+Fulltoken execution prerequisite report, calendar-owner source135ea55d0
+
+First blocker: actual406 sourceW5 commands do not bind to F16 public cap0 OPSEG ranges/times; six family starts unaligned. Count-only aligned417/full1021 capacity fits with2spare, but no production image/FIRST. Native543→ME672, o2232→2459, gu3883→3625 and down4567→4447 timing disagreement remains. GI su_obs filters fillers; actual XS3 resid1/resid2 slice groups need all12 witnesses/predecessor map, while scalarXPF rejects repeatedPC.
+
+Namespace576 actualstage/user cases and native23040 BF16 publication PASS; model16416 typed events/16mutants PASS. These do not yet bind actual ME/XPF physical authority copies/userpublication→lastread or production clock axis. ROOT selected400PW canonical helduser MODEL; livehu OR is not snapshot/retirement protected. No72/36/body or token proof. Exact owner receipts on codex/qwen-calendar-integration-1019 at135ea55d0: ROOT_PROGRAMME_REVIEW.md, ROOT_HELD_USER_REVIEW.md, witness/programme_join/certificate.json.
+
+B4 positives use direct command calendar and modeled PHY; they separately prove native storage/core behavior, not the above production compiler link. Subsequent regional landing actual age composition, source/lck/receiver phase arrivals, native TT/FF clock/reach/reset/PG/pinaccess remain open. Bank-command capture audit is separately pinned9a92ac53f and must precede whole-parent schedule adoption.

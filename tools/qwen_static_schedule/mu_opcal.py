@@ -82,9 +82,11 @@ ROM_WORDS = 4096
 LEAF_MAGIC = 0x4F50                     # "OP"
 TB, UB_, SB, FB, CB = 22, 2, 6, 10, 10  # entry fields: t, user, stage, first, cnt  (+ flag FIRST)
 # leaf spacing rule (qfd_sys_face_mu_dhuser OPSEG): the leaf consumes an entry on edge e and issues the ROM read of the
-# next entry on that same edge (1-edge read, captured into the prefetch register on e + 1), so the next entry can be
-# consumed on e + 2 at the earliest: consecutive t_rom (and the frame wrap, last -> first + H) >= LEAF_MIN_GAP
-LEAF_MIN_GAP = 2
+# next entry on that same edge (1-edge read).  The hardened leaf (PINREG 1, MU-LEAF-KIT2 2026-10-19) lands rd_out in a
+# capture register on e + 1 and loads the prefetch register on e + 2, so the next entry can be consumed on e + 3 at the
+# earliest (PINREG 0: e + 2): consecutive t_rom (and the frame wrap, last -> first + H) >= LEAF_MIN_GAP.  The op start
+# edges do not move (the fire edge is t_rom either way).  F16 image: minimum gap 7, wrap 24,246.
+LEAF_MIN_GAP = 3
 
 
 # ---------------------------------------------------------------------------------------------------- image
@@ -123,7 +125,7 @@ def layer_entries(p=None):
     for i, (op, unit, _, _) in enumerate(M.LAYER_WINDOWS):
         a = ops[op][0] + OP_ENTRY_OFS
         if unit == "me":
-            ent.append((a, C.stn(0x100 + 0x40 * i), op))
+            ent.append((a, C.stn(0x100 + 0x40 * i, kc=C.MATVEC_KC[op]), op))
         elif unit == "su":
             ent.append((a, C.su(1 + i), op))
         elif unit == "kv":
@@ -594,6 +596,25 @@ def face_stage_list(cal):
     """the latency user's stage starts of one token (the leaf's STG_SEQ alignment list): stages in order"""
     T = cal["T"]
     return [b["stage"] for n, t0, b in cal["schedule"][0] if t0 < T]
+
+
+def dhobs_lists(cal):
+    """MU-DQ-DHUSER 10-19 (COORD 0kg: no strap on qfd_tt_ctlm_dv.dh_user): the compiled lists of the die-level observer
+    qfd_sys_face_mu_dhobs (= qfd_sys_face_mu_dhuser NU 4, OPSEG 0 on the face's seq_dh).  Under OPSEG the face's T calendar
+    carries the latency user's stage starts only, so every one of its h_starts is user 0: USER_SEQ = 0 (all entries),
+    STG_SEQ = face_stage_list (the alignment list the stage check runs against), RES_SEQ = the token block (stage 0: the
+    previous token's argmax result is captured there).  -> dict(NS, USER_SEQ, STG_SEQ, RES_SEQ) as integers."""
+    T = cal["T"]
+    blocks = [(b["stage"], b["kind"]) for n, t0, b in cal["schedule"][0] if t0 < T]   # schedule[0] = user 0 only
+    if not 1 <= len(blocks) <= 64:
+        raise ScheduleError(f"{len(blocks)} face stage starts a token (the observer holds 1..64)")
+    if blocks[0][0] != 1:
+        raise ScheduleError("the token period does not begin with the L0 (stage 1) start (the observer's k anchors there)")
+    stg = sum(s << (6 * k) for k, (s, _) in enumerate(blocks))
+    res = sum(1 << k for k, (_, kind) in enumerate(blocks) if kind == "token")
+    if bin(res).count("1") != 1:
+        raise ScheduleError("expected exactly one token (RESULT) block a token period")
+    return dict(NS=len(blocks), USER_SEQ=0, STG_SEQ=stg, RES_SEQ=res)
 
 
 def receipt(cal, pb=None):

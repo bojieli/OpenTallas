@@ -1,0 +1,89 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/root-n59
+ot-run: ot-epyc5       admits  1363 GB (avail 1011, growth 35, headroom 0, waiters 0/0 GB) load 91/128 running 8 disk 1436 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root-n59
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/root-n59
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/root-n59
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root-n59
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root-n59
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-853713-1792415473 after 0 s
+lint_main rc=1
+%Error: rtl/qwen_split/qfd_native59_dv_service.sv:122:80: Can't find definition of variable: 'qbuf'
+%Error: rtl/qwen_split/qfd_native59_dv_service.sv:123:23: Can't find definition of variable: 'qseen'
+%Error: rtl/qwen_split/qfd_native59_dv_service.sv:127:25: Can't find definition of variable: 'qctx'
+%Error: rtl/qwen_split/qfd_native59_dv_service.sv:127:31: Can't find definition of variable: 'qlock'
+lint_fix rc=0
+== bench_all rc=0
+positive OK (pass)
+N59DV_PASS x3=4 tx=33(1 CMD+32 Q) ar=32 bit-exact vs OLD (+1/+1/+2 edges), native_ret every edge, done 214->215, emb group-1 words=65 at cmd+6..+70
+bad_q OK (pass)
+N59DV_ERR cycle 125: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 126: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 127: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_PASS BAD_Q missing Q dd word -> sticky fault, no completion
+mut1_q_lane OK (mutant fails)
+N59DV_ERR cycle 129: native_tx_payload differs from OLD (or not +1 edge)
+N59DV_ERR cycle 129: Q beat != element values (packing)
+N59DV_ERR cycle 130: native_tx_payload differs from OLD (or not +1 edge)
+N59DV_FAIL errors=64 x3 4/4 tx 33/33 ar 32/32 emb 65 done 214/215 fault 0
+mut2_kv_addr OK (mutant fails)
+N59DV_ERR cycle 31: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 32: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 33: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_FAIL errors=345 x3 4/0 tx 33/0 ar 32/0 emb 65 done 214/-1 fault 1
+mut3_emb_word OK (mutant fails)
+N59DV_ERR cycle 298: embedding code word
+N59DV_ERR cycle 299: embedding code word
+N59DV_ERR cycle 300: embedding code word
+N59DV_FAIL errors=64 x3 4/4 tx 33/33 ar 32/32 emb 65 done 214/215 fault 0
+== daemon positive rc=0
+positive OK (pass)
+N59DV_PASS x3=4 tx=33(1 CMD+32 Q) ar=32 bit-exact vs OLD (+1/+1/+2 edges), native_ret every edge, done 214->215, emb group-1 words=65 at cmd+6..+70
+== daemon bad_q rc=0
+bad_q OK (pass)
+N59DV_ERR cycle 125: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 126: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 127: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_PASS BAD_Q missing Q dd word -> sticky fault, no completion
+== daemon mut1_q_lane rc=1
+mut1_q_lane OK (mutant fails)
+N59DV_ERR cycle 129: native_tx_payload differs from OLD (or not +1 edge)
+N59DV_ERR cycle 129: Q beat != element values (packing)
+N59DV_ERR cycle 130: native_tx_payload differs from OLD (or not +1 edge)
+N59DV_FAIL errors=64 x3 4/4 tx 33/33 ar 32/32 emb 65 done 214/215 fault 0
+== daemon mut2_kv_addr rc=1
+mut2_kv_addr OK (mutant fails)
+N59DV_ERR cycle 31: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 32: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 33: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_FAIL errors=345 x3 4/0 tx 33/0 ar 32/0 emb 65 done 214/-1 fault 1
+== daemon mut3_emb_word rc=1
+mut3_emb_word OK (mutant fails)
+N59DV_ERR cycle 298: embedding code word
+N59DV_ERR cycle 299: embedding code word
+N59DV_ERR cycle 300: embedding code word
+N59DV_FAIL errors=64 x3 4/4 tx 33/33 ar 32/32 emb 65 done 214/215 fault 0
+== xdie rc=1
+sha256sum: physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v: No such file or directory
+f1_n59_legacy_window expect=FAIL got=CAL_FAIL -> UNEXPECTED
+    d = json.load(open(tp_path))
+                  ~~~~^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+full expect=PASS got=CAL_FAIL -> UNEXPECTED
+    d = json.load(open(tp_path))
+                  ~~~~^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+mut4_qslot_late expect=FAIL got=CAL_FAIL -> UNEXPECTED
+    d = json.load(open(tp_path))
+                  ~~~~^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+pair expect=PASS got=CAL_FAIL -> UNEXPECTED
+    d = json.load(open(tp_path))
+                  ~~~~^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+vc expect=PASS got=CAL_FAIL -> UNEXPECTED
+    d = json.load(open(tp_path))
+                  ~~~~^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/arch/token_path_20261009/qwen_rom.json'
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-853713-1792415473): exit 0

@@ -1,0 +1,80 @@
+{
+ "archive_run": "/srv/opentallas-scratch/claude/codex-kv-health-profiles-1020/arch/qkd_rlys_1-v1-6da52734e",
+ "closed": {
+  "commit": "6da52734e22dbb988813cbc1ddc22159d41769ce",
+  "final_v_sha256": "dd84b9432a98faee250cdc17e70012272ef8233c19fe6496efe517884fe1357e",
+  "job": "qkd_rlys_1-v1-6da52734e",
+  "lef_sha256": "0db3b49be06b0c999e52068db249ece747359f090d10817bc7d21d4a73d95f18",
+  "physical_json_sha256": "8ed6570819438786158f68bbeea519474bb922ba7ecc78776279df6eddc4e0d9",
+  "spec_params": {},
+  "synth_sources": {
+   "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e"
+  },
+  "top": "qkd_rlys_1",
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "closed_spec_diff": {},
+ "equiv": {
+  "cells": 2,
+  "log_sha256": "e298ac7e29c96275f06f5ef7aa0c7dc427866289524cec50279f4c1e16852949",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct -seq 4",
+  "proven_cells": 2,
+  "rc": 0,
+  "seconds": [
+   0.0,
+   0.0
+  ],
+  "unproven_cells": 0,
+  "unproven_sample": []
+ },
+ "expect": "pass",
+ "gate": {
+  "flops": 1,
+  "macros": {},
+  "replicas": 0
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "53c30ef2a9c95494a233d51d6407b9a224624f3726693684f35ce4d12595d0b2",
+   "child_lint.json": "95b3e642694c2e673a344cce67d1c4c2c8013ea8f2636388bce8abd7d80ed0a5",
+   "export_ff.log": "0ab52b3ee7d6aa5af85e000d2312d0b69bc7c0d43c8aa27794a98497891430de",
+   "export_ff.tcl": "c07c601aec13e208163048d279e8ff8b757703d0b498b8133b22276fb0585547",
+   "export_ss.log": "380b69d55a4950512ba9ea59cdd486b8b29d0891cd2e05754d50cc8f52264e93",
+   "export_ss.tcl": "9e6acae229cfbe585b811870a02ca8c652555c78e90317375097d1ca29807510",
+   "export_tt.log": "4b09ace2153d95ed2f1a74b7842eed7ab6f71c75471f95a82287cc6f5dcce42d",
+   "export_tt.tcl": "4087d92140f3292c3b94001bb6080148e9787000008771b12857efbd2d76f05d",
+   "insertion.json": "0e2705f4e852b242742bf583aaf854d7d1034ce43e326d592732eaae30bea05f",
+   "provenance/abstract_pin_stub.json": "d21eebbd5c38aab99a64ffc12c46140330529d4492bfa19bde38cc61a97db370",
+   "provenance/raw/qkd_rlys_1.lef": "0db3b49be06b0c999e52068db249ece747359f090d10817bc7d21d4a73d95f18",
+   "provenance/view_export.abstract.json": "d2caabd39b3380efe823e07cdb641bc7c4638e6b0bf2794169dd21fd04bc243f",
+   "qkd_rlys_1.lef": "16ff9ead66299e01d4ac15b9abc1ddb4131738df1e70f75ef5fd617e2abf6016",
+   "qkd_rlys_1_ff.lib": "b6e1df67baa60ea919b94fba450276d4f833a321742d870aadc306212f27bc0a",
+   "qkd_rlys_1_ss.lib": "9f334ce363011f8ef0b1dd30a3269eba43393deac9d74d9bf0b4c1b7c90db43f",
+   "qkd_rlys_1_tt.lib": "31b8019c8c5bd54008cbd035e767f7e69afd53a67c4c031bdd2f64288ce9455f"
+  },
+  "rtl": {
+   "path": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+   "sha256": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e"
+  },
+  "view": "physical/ref_tile/qkd_rlys_1/views/qkd_rlys_1"
+ },
+ "module": "qkd_rlys_1",
+ "observe_zero": null,
+ "parameters": {},
+ "proven": true,
+ "rtl": "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+ "schema": "opentallas.kv_param_native_audit.v1",
+ "sources": {
+  "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e"
+ },
+ "sources_changed_since_closure": [],
+ "state": {
+  "gate_only": 0,
+  "gate_only_sample": [],
+  "gold_only": 0,
+  "gold_only_sample": [],
+  "gold_regs": 1,
+  "paired": 1
+ },
+ "view": "physical/ref_tile/qkd_rlys_1/views/qkd_rlys_1"
+}

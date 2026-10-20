@@ -1,0 +1,929 @@
+{
+ "schema": "opentallas.cb16.schedule_price.v1",
+ "source": "ac8e4c483",
+ "baseline_pass": true,
+ "baseline": {
+  "tap": {
+   "0": 3,
+   "1": 10,
+   "2": 17,
+   "3": 24
+  },
+  "bco": 26,
+  "rs_fabric": 74,
+  "rs_i_to_rs_o": 29
+ },
+ "release_ready": false,
+ "candidate": {
+  "tap": {
+   "0": 24,
+   "1": 39,
+   "2": 52,
+   "3": 67
+  },
+  "bco": 70,
+  "rs_fabric": 184,
+  "rs_i_to_rs_o": 48
+ },
+ "extra_relays": [
+  {
+   "src": "bc0",
+   "dst": "u_dn0_entry",
+   "edges": 4
+  },
+  {
+   "src": "u_dn0_entry",
+   "dst": "u_dn0_rly0",
+   "edges": 4
+  },
+  {
+   "src": "u_dn0_rly0",
+   "dst": "u_x_0_0",
+   "edges": 9
+  },
+  {
+   "src": "u_dn0_rly2",
+   "dst": "u_land_dn0_rly3_w",
+   "edges": 1
+  },
+  {
+   "src": "u_land_dn0_rly3_r",
+   "dst": "u_dn0_rly3",
+   "edges": 2
+  },
+  {
+   "src": "u_dn0_rly5",
+   "dst": "u_land_dn0_rly6_w",
+   "edges": 1
+  },
+  {
+   "src": "u_land_dn0_rly6_w",
+   "dst": "u_land_dn0_rly6_r",
+   "edges": 1
+  },
+  {
+   "src": "u_land_dn0_rly9_w",
+   "dst": "u_land_dn0_rly9_r",
+   "edges": 1
+  },
+  {
+   "src": "u_x_0_3",
+   "dst": "u_dn0_rly10",
+   "edges": 2
+  },
+  {
+   "src": "u_dn0_rly10",
+   "dst": "u_dn0_exit",
+   "edges": 1
+  },
+  {
+   "src": "bc1",
+   "dst": "u_dn1_entry",
+   "edges": 1
+  },
+  {
+   "src": "u_land_dn1_rly3_w",
+   "dst": "u_land_dn1_rly3_r",
+   "edges": 1
+  },
+  {
+   "src": "u_land_dn1_rly3_r",
+   "dst": "u_dn1_rly3",
+   "edges": 3
+  },
+  {
+   "src": "u_dn1_rly3",
+   "dst": "u_x_1_1",
+   "edges": 2
+  },
+  {
+   "src": "u_land_dn1_rly6_w",
+   "dst": "u_land_dn1_rly6_r",
+   "edges": 1
+  },
+  {
+   "src": "u_land_dn1_rly9_w",
+   "dst": "u_land_dn1_rly9_r",
+   "edges": 1
+  },
+  {
+   "src": "u_land_dn1_rly9_r",
+   "dst": "u_dn1_rly9",
+   "edges": 2
+  },
+  {
+   "src": "u_dn1_rly9",
+   "dst": "u_x_1_3",
+   "edges": 2
+  },
+  {
+   "src": "u_dn2_rly2",
+   "dst": "u_land_dn2_rly3_w",
+   "edges": 1
+  },
+  {
+   "src": "u_land_dn2_rly3_r",
+   "dst": "u_dn2_rly3",
+   "edges": 4
+  },
+  {
+   "src": "u_dn2_rly3",
+   "dst": "u_x_2_1",
+   "edges": 3
+  },
+  {
+   "src": "u_x_2_1",
+   "dst": "u_dn2_rly4",
+   "edges": 3
+  },
+  {
+   "src": "u_dn2_rly4",
+   "dst": "u_dn2_rly5",
+   "edges": 1
+  },
+  {
+   "src": "u_dn2_rly5",
+   "dst": "u_land_dn2_rly6_w",
+   "edges": 2
+  },
+  {
+   "src": "u_dn2_rly8",
+   "dst": "u_land_dn2_rly9_w",
+   "edges": 3
+  },
+  {
+   "src": "u_land_dn2_rly9_w",
+   "dst": "u_land_dn2_rly9_r",
+   "edges": 1
+  },
+  {
+   "src": "u_land_dn2_rly9_r",
+   "dst": "u_dn2_rly9",
+   "edges": 2
+  },
+  {
+   "src": "u_dn2_rly9",
+   "dst": "u_x_2_3",
+   "edges": 2
+  },
+  {
+   "src": "bc3",
+   "dst": "u_dn3_entry",
+   "edges": 4
+  },
+  {
+   "src": "u_dn3_entry",
+   "dst": "u_dn3_rly0",
+   "edges": 3
+  },
+  {
+   "src": "u_dn3_rly0",
+   "dst": "u_x_3_0",
+   "edges": 2
+  },
+  {
+   "src": "u_land_dn3_rly3_w",
+   "dst": "u_land_dn3_rly3_r",
+   "edges": 1
+  },
+  {
+   "src": "u_x_3_1",
+   "dst": "u_dn3_rly4",
+   "edges": 2
+  },
+  {
+   "src": "t_out_0_0",
+   "dst": "u_land_leg_1_0a_y_w",
+   "edges": 4
+  },
+  {
+   "src": "u_land_leg_1_0a_y_w",
+   "dst": "u_land_leg_1_0a_y_r",
+   "edges": 3
+  },
+  {
+   "src": "t_out_1_0",
+   "dst": "u_pad_1_0b_0",
+   "edges": 2
+  },
+  {
+   "src": "u_pad_1_0b_0",
+   "dst": "u_pad_1_0b_1",
+   "edges": 2
+  },
+  {
+   "src": "u_pad_1_0b_1",
+   "dst": "u_pad_1_0b_2",
+   "edges": 1
+  },
+  {
+   "src": "t_out_0_1",
+   "dst": "u_pad_1_1a_0",
+   "edges": 1
+  },
+  {
+   "src": "t_out_1_1",
+   "dst": "u_land_leg_1_1b_y_w",
+   "edges": 2
+  },
+  {
+   "src": "t_out_2_0",
+   "dst": "u_pad_1_2a_0",
+   "edges": 1
+  },
+  {
+   "src": "u_pad_1_2a_0",
+   "dst": "u_pad_1_2a_1",
+   "edges": 2
+  },
+  {
+   "src": "u_pad_1_2a_1",
+   "dst": "u_pad_1_2a_2",
+   "edges": 2
+  },
+  {
+   "src": "t_out_3_0",
+   "dst": "u_land_leg_1_2b_y_w",
+   "edges": 1
+  },
+  {
+   "src": "t_out_3_1",
+   "dst": "u_pad_1_3b_0",
+   "edges": 1
+  },
+  {
+   "src": "u_pad_1_3b_0",
+   "dst": "u_pad_1_3b_1",
+   "edges": 5
+  },
+  {
+   "src": "u_pad_1_3b_1",
+   "dst": "u_pad_1_3b_2",
+   "edges": 5
+  },
+  {
+   "src": "t_out_0_2",
+   "dst": "u_pad_1_4a_0",
+   "edges": 2
+  },
+  {
+   "src": "t_out_0_3",
+   "dst": "u_pad_1_5a_0",
+   "edges": 2
+  },
+  {
+   "src": "t_out_1_3",
+   "dst": "u_land_leg_1_5b_y_w",
+   "edges": 1
+  },
+  {
+   "src": "t_out_2_2",
+   "dst": "u_land_leg_1_6a_y_w",
+   "edges": 1
+  },
+  {
+   "src": "t_out_3_2",
+   "dst": "u_pad_1_6b_0",
+   "edges": 11
+  },
+  {
+   "src": "t_out_2_3",
+   "dst": "u_land_leg_1_7a_y_w",
+   "edges": 1
+  },
+  {
+   "src": "t_out_3_3",
+   "dst": "u_pad_1_7b_0",
+   "edges": 1
+  },
+  {
+   "src": "n_y_1_0",
+   "dst": "u_leg_2_0a_0",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_2_0b_y_w",
+   "dst": "u_land_leg_2_0b_y_r",
+   "edges": 1
+  },
+  {
+   "src": "n_y_2_0",
+   "dst": "u_land_leg_2_1a_0_w",
+   "edges": 4
+  },
+  {
+   "src": "u_land_leg_2_1a_0_w",
+   "dst": "u_land_leg_2_1a_0_r",
+   "edges": 6
+  },
+  {
+   "src": "u_land_leg_2_1a_0_r",
+   "dst": "u_leg_2_1a_0",
+   "edges": 12
+  },
+  {
+   "src": "u_leg_2_1a_1",
+   "dst": "u_leg_2_1a_2",
+   "edges": 5
+  },
+  {
+   "src": "u_leg_2_1a_2",
+   "dst": "u_land_leg_2_1a_3_w",
+   "edges": 8
+  },
+  {
+   "src": "u_land_leg_2_1a_3_w",
+   "dst": "u_land_leg_2_1a_3_r",
+   "edges": 5
+  },
+  {
+   "src": "u_land_leg_2_1a_y_w",
+   "dst": "u_land_leg_2_1a_y_r",
+   "edges": 3
+  },
+  {
+   "src": "n_y_3_1",
+   "dst": "u_land_leg_2_1b_y_w",
+   "edges": 2
+  },
+  {
+   "src": "u_land_leg_2_1b_y_w",
+   "dst": "u_land_leg_2_1b_y_r",
+   "edges": 4
+  },
+  {
+   "src": "u_pad_2_1b_1",
+   "dst": "u_pad_2_1b_2",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_2_2a_3_w",
+   "dst": "u_land_leg_2_2a_3_r",
+   "edges": 2
+  },
+  {
+   "src": "u_land_leg_2_2a_3_r",
+   "dst": "u_leg_2_2a_3",
+   "edges": 1
+  },
+  {
+   "src": "n_y_3_2",
+   "dst": "u_leg_2_3a_0",
+   "edges": 4
+  },
+  {
+   "src": "u_land_leg_2_3a_3_w",
+   "dst": "u_land_leg_2_3a_3_r",
+   "edges": 3
+  },
+  {
+   "src": "u_land_leg_2_3a_3_r",
+   "dst": "u_leg_2_3a_3",
+   "edges": 2
+  },
+  {
+   "src": "u_leg_2_3a_3",
+   "dst": "u_land_leg_2_3a_y_w",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_2_3a_y_w",
+   "dst": "u_land_leg_2_3a_y_r",
+   "edges": 1
+  },
+  {
+   "src": "n_y_3_3",
+   "dst": "u_land_leg_2_3b_y_w",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_2_3b_y_w",
+   "dst": "u_land_leg_2_3b_y_r",
+   "edges": 2
+  },
+  {
+   "src": "u_land_leg_3_0a_4_w",
+   "dst": "u_land_leg_3_0a_4_r",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_3_0a_y_w",
+   "dst": "u_land_leg_3_0a_y_r",
+   "edges": 6
+  },
+  {
+   "src": "u_land_leg_3_0a_y_r",
+   "dst": "u_pad_3_0a_0",
+   "edges": 2
+  },
+  {
+   "src": "u_pad_3_0a_0",
+   "dst": "u_pad_3_0a_1",
+   "edges": 2
+  },
+  {
+   "src": "u_land_leg_3_0b_5_w",
+   "dst": "u_land_leg_3_0b_5_r",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_3_0b_5_r",
+   "dst": "u_leg_3_0b_5",
+   "edges": 3
+  },
+  {
+   "src": "u_leg_3_0b_5",
+   "dst": "u_land_leg_3_0b_y_w",
+   "edges": 2
+  },
+  {
+   "src": "u_land_leg_3_0b_y_w",
+   "dst": "u_land_leg_3_0b_y_r",
+   "edges": 3
+  },
+  {
+   "src": "n_y_1_3",
+   "dst": "u_leg_3_1a_0",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_3_1a_2_w",
+   "dst": "u_land_leg_3_1a_2_r",
+   "edges": 3
+  },
+  {
+   "src": "u_leg_3_1a_3",
+   "dst": "u_leg_3_1a_4",
+   "edges": 2
+  },
+  {
+   "src": "u_leg_3_1a_4",
+   "dst": "u_leg_3_1a_5",
+   "edges": 2
+  },
+  {
+   "src": "u_land_leg_3_1b_0_w",
+   "dst": "u_land_leg_3_1b_0_r",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_3_1b_1_w",
+   "dst": "u_land_leg_3_1b_1_r",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_3_1b_3_w",
+   "dst": "u_land_leg_3_1b_3_r",
+   "edges": 2
+  },
+  {
+   "src": "u_leg_3_1b_5",
+   "dst": "u_leg_3_1b_6",
+   "edges": 2
+  },
+  {
+   "src": "n_y_2_2",
+   "dst": "u_land_leg_4_0a_0_w",
+   "edges": 5
+  },
+  {
+   "src": "u_land_leg_4_0a_0_w",
+   "dst": "u_land_leg_4_0a_0_r",
+   "edges": 5
+  },
+  {
+   "src": "u_leg_4_0a_4",
+   "dst": "u_leg_4_0a_5",
+   "edges": 2
+  },
+  {
+   "src": "u_land_leg_4_0a_7_w",
+   "dst": "u_land_leg_4_0a_7_r",
+   "edges": 5
+  },
+  {
+   "src": "u_land_leg_4_0a_9_r",
+   "dst": "u_leg_4_0a_9",
+   "edges": 4
+  },
+  {
+   "src": "n_y_1_2",
+   "dst": "u_leg_4_0b_0",
+   "edges": 2
+  },
+  {
+   "src": "u_leg_4_0b_0",
+   "dst": "u_land_leg_4_0b_1_w",
+   "edges": 3
+  },
+  {
+   "src": "u_leg_4_0b_4",
+   "dst": "u_land_leg_4_0b_5_w",
+   "edges": 3
+  },
+  {
+   "src": "u_land_leg_4_0b_5_w",
+   "dst": "u_land_leg_4_0b_5_r",
+   "edges": 3
+  },
+  {
+   "src": "u_land_rs_0_w",
+   "dst": "u_land_rs_0_r",
+   "edges": 3
+  },
+  {
+   "src": "u_ft_1",
+   "dst": "u_land_ft_2_w",
+   "edges": 4
+  },
+  {
+   "src": "u_ft_5",
+   "dst": "u_land_ft_6_w",
+   "edges": 2
+  },
+  {
+   "src": "u_land_ft_6_w",
+   "dst": "u_land_ft_6_r",
+   "edges": 1
+  },
+  {
+   "src": "u_ft_8",
+   "dst": "u_land_ft_9_w",
+   "edges": 4
+  },
+  {
+   "src": "u_land_ft_9_w",
+   "dst": "u_land_ft_9_r",
+   "edges": 3
+  },
+  {
+   "src": "u_ft_11",
+   "dst": "u_ft_12",
+   "edges": 1
+  },
+  {
+   "src": "u_ft_12",
+   "dst": "u_land_ft_13_w",
+   "edges": 2
+  },
+  {
+   "src": "u_land_ft_13_w",
+   "dst": "u_land_ft_13_r",
+   "edges": 2
+  },
+  {
+   "src": "u_land_leg_4_0a_y_r",
+   "dst": "n_a_0_0",
+   "edges": 1
+  },
+  {
+   "src": "u_pad_4_0b_2",
+   "dst": "n_b_0_0",
+   "edges": 3
+  },
+  {
+   "src": "u_x_0_0",
+   "dst": "tap_0_0",
+   "edges": 4
+  },
+  {
+   "src": "u_pad_1_1a_2",
+   "dst": "n_a_0_1",
+   "edges": 5
+  },
+  {
+   "src": "u_land_leg_1_1b_y_r",
+   "dst": "n_b_0_1",
+   "edges": 2
+  },
+  {
+   "src": "u_x_0_1",
+   "dst": "tap_0_1",
+   "edges": 4
+  },
+  {
+   "src": "u_x_0_2",
+   "dst": "tap_0_2",
+   "edges": 4
+  },
+  {
+   "src": "u_pad_1_5a_2",
+   "dst": "n_a_0_3",
+   "edges": 2
+  },
+  {
+   "src": "u_x_0_3",
+   "dst": "tap_0_3",
+   "edges": 4
+  },
+  {
+   "src": "u_land_leg_1_0a_y_r",
+   "dst": "n_a_1_0",
+   "edges": 2
+  },
+  {
+   "src": "u_pad_1_0b_2",
+   "dst": "n_b_1_0",
+   "edges": 2
+  },
+  {
+   "src": "u_pad_2_0a_2",
+   "dst": "n_a_1_1",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_2_0b_y_r",
+   "dst": "n_b_1_1",
+   "edges": 2
+  },
+  {
+   "src": "u_pad_3_1a_5",
+   "dst": "n_a_1_2",
+   "edges": 1
+  },
+  {
+   "src": "u_leg_3_1b_6",
+   "dst": "n_b_1_2",
+   "edges": 1
+  },
+  {
+   "src": "u_leg_2_2a_3",
+   "dst": "n_a_1_3",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_2_2b_y_r",
+   "dst": "n_b_1_3",
+   "edges": 1
+  },
+  {
+   "src": "u_pad_1_2a_2",
+   "dst": "n_a_2_0",
+   "edges": 2
+  },
+  {
+   "src": "u_land_leg_2_1a_y_r",
+   "dst": "n_a_2_1",
+   "edges": 2
+  },
+  {
+   "src": "u_pad_2_1b_2",
+   "dst": "n_b_2_1",
+   "edges": 2
+  },
+  {
+   "src": "u_pad_3_0a_5",
+   "dst": "n_a_2_2",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_3_0b_y_r",
+   "dst": "n_b_2_2",
+   "edges": 1
+  },
+  {
+   "src": "u_land_leg_2_3b_y_r",
+   "dst": "n_b_2_3",
+   "edges": 2
+  },
+  {
+   "src": "u_x_3_0",
+   "dst": "tap_3_0",
+   "edges": 4
+  },
+  {
+   "src": "u_pad_1_3b_2",
+   "dst": "n_b_3_1",
+   "edges": 4
+  },
+  {
+   "src": "u_x_3_1",
+   "dst": "tap_3_1",
+   "edges": 4
+  },
+  {
+   "src": "u_land_leg_1_6a_y_r",
+   "dst": "n_a_3_2",
+   "edges": 1
+  },
+  {
+   "src": "u_pad_1_6b_2",
+   "dst": "n_b_3_2",
+   "edges": 2
+  },
+  {
+   "src": "u_x_3_2",
+   "dst": "tap_3_2",
+   "edges": 4
+  },
+  {
+   "src": "u_pad_1_7b_2",
+   "dst": "n_b_3_3",
+   "edges": 2
+  },
+  {
+   "src": "u_x_3_3",
+   "dst": "tap_3_3",
+   "edges": 4
+  },
+  {
+   "src": "u_rs_1",
+   "dst": "rs",
+   "edges": 2
+  },
+  {
+   "src": "u_dn0_exit",
+   "dst": "bco0",
+   "edges": 2
+  },
+  {
+   "src": "u_dn1_exit",
+   "dst": "bco1",
+   "edges": 1
+  },
+  {
+   "src": "u_dn3_exit",
+   "dst": "bco3",
+   "edges": 2
+  }
+ ],
+ "alignment_pads": [
+  {
+   "src": "u_dn0_rly3",
+   "dst": "u_x_0_1",
+   "edges": 5,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn0_rly6",
+   "dst": "u_x_0_2",
+   "edges": 4,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn0_rly9",
+   "dst": "u_x_0_3",
+   "edges": 7,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn1_rly0",
+   "dst": "u_x_1_0",
+   "edges": 20,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn1_rly3",
+   "dst": "u_x_1_1",
+   "edges": 2,
+   "implementation": "hardened register(s)"
+  },
+  {
+   "src": "u_dn1_rly6",
+   "dst": "u_x_1_2",
+   "edges": 5,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn1_rly9",
+   "dst": "u_x_1_3",
+   "edges": 3,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn2_rly0",
+   "dst": "u_x_2_0",
+   "edges": 21,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn3_rly0",
+   "dst": "u_x_3_0",
+   "edges": 8,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn3_rly3",
+   "dst": "u_x_3_1",
+   "edges": 7,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn3_rly6",
+   "dst": "u_x_3_2",
+   "edges": 4,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn3_rly9",
+   "dst": "u_x_3_3",
+   "edges": 8,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_dn2_exit",
+   "dst": "bco2",
+   "edges": 1,
+   "implementation": "hardened register(s)"
+  },
+  {
+   "src": "u_dn3_exit",
+   "dst": "bco3",
+   "edges": 3,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_land_leg_1_1b_y_r",
+   "dst": "n_b_0_1",
+   "edges": 2,
+   "implementation": "hardened register(s)"
+  },
+  {
+   "src": "u_land_leg_1_4b_y_r",
+   "dst": "n_b_0_2",
+   "edges": 2,
+   "implementation": "hardened register(s)"
+  },
+  {
+   "src": "u_land_leg_1_5b_y_r",
+   "dst": "n_b_0_3",
+   "edges": 3,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_pad_1_0b_2",
+   "dst": "n_b_1_0",
+   "edges": 2,
+   "implementation": "hardened register(s)"
+  },
+  {
+   "src": "u_land_leg_1_2b_y_r",
+   "dst": "n_b_2_0",
+   "edges": 6,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_land_leg_1_3a_y_r",
+   "dst": "n_a_3_1",
+   "edges": 15,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_land_leg_1_6a_y_r",
+   "dst": "n_a_3_2",
+   "edges": 11,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_land_leg_1_7a_y_r",
+   "dst": "n_a_3_3",
+   "edges": 2,
+   "implementation": "hardened register(s)"
+  },
+  {
+   "src": "u_pad_2_0a_2",
+   "dst": "n_a_1_1",
+   "edges": 6,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_leg_2_2a_3",
+   "dst": "n_a_1_3",
+   "edges": 7,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_pad_2_1b_2",
+   "dst": "n_b_2_1",
+   "edges": 20,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_land_leg_2_3b_y_r",
+   "dst": "n_b_2_3",
+   "edges": 8,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_pad_3_1a_5",
+   "dst": "n_a_1_2",
+   "edges": 9,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_pad_3_0a_5",
+   "dst": "n_a_2_2",
+   "edges": 33,
+   "implementation": "ring/SRAM required"
+  },
+  {
+   "src": "u_pad_4_0b_2",
+   "dst": "n_b_0_0",
+   "edges": 25,
+   "implementation": "ring/SRAM required"
+  }
+ ],
+ "candidate_complete_geometry": false,
+ "placement_area_mm2": 16.03286784,
+ "note": "Conservative ordinary-relay price only; bank edges cannot be adopted this way without age/overwrite proof and extra relay geometry. Incomplete geometry does not qualify an architecture."
+}
