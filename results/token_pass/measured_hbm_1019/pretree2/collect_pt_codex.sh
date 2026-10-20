@@ -29,6 +29,9 @@ if failures:raise SystemExit('PRETREE_ACCEPTANCE_FAIL: '+'; '.join(failures))
 print('PRETREE_ACCEPTANCE_PASS: 16 bit-exact records and 6 causal mutant failures')
 CHECK
 [ $? -eq 0 ] || { echo 'COLLECT_STOPPED: correctness/witnesses incomplete; no timing adoption'; exit 4; }
+echo 'PRETREE_RECORDS_VALIDATED: raw exactness collected; automatic unit/rate update HELD'
+echo '8-row affine law has no admitted atomic programme; actual phased4 proof and timing integration required'
+exit 6
 python3 $P/update_su_pt.py $L/res/vec_pt claude/hbm-pretree2-1020@a5cc6f083 || { echo UPDATE_FAIL; exit 3; }
 python3 $P/make_measured_pt.py $L/m_pt.json
 ssh -o ControlPath=none ot-epyc6 "mkdir -p $T/pretree2" && scp -o ControlPath=none -q $L/m_pt.json ot-epyc6:$T/pretree2/m_pt.json
