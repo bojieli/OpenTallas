@@ -635,12 +635,22 @@ module ot_v41_bf_col #(
         ot_fp32_add_rne_pipe u_pair (.clk(gclk_c), .rst_n(rst_mp), .valid_in(both), .a(c0_s), .b(c1_s),
             .y(pr_sum), .err(pr_err), .valid_out(pr_vo));
     end
-    ot_hdc_delay #(.W(32), .D(LAT)) u_pp (.clk(gclk_c), .rst_n(rst_mp), .d(one), .q(pr_pass));
+`ifdef OT_BF_DELAY_SRAM
+    ot_v41_bf_sram_delay #(.W(32), .D(LAT)) u_pp
+`else
+    ot_hdc_delay #(.W(32), .D(LAT)) u_pp
+`endif
+        (.clk(gclk_c), .rst_n(rst_mp), .d(one), .q(pr_pass));
     wire [TG+2:0] pr_t;   // {position, tree, final, both, err}
 `ifdef OT_BF_FOREP
     // the last stage of the pair tag line as an explicit register plus 4 kept copies of `both` (q_val bytes)
     wire [TG+2:0] pr_t1;
-    ot_hdc_delay #(.W(TG + 3), .D(LAT - 1)) u_pt (.clk(gclk_c), .rst_n(rst_mp),
+`ifdef OT_BF_DELAY_SRAM
+    ot_v41_bf_sram_delay #(.W(TG + 3), .D(LAT - 1)) u_pt
+`else
+    ot_hdc_delay #(.W(TG + 3), .D(LAT - 1)) u_pt
+`endif
+        (.clk(gclk_c), .rst_n(rst_mp),
         .d({ct, both, both ? (c0_f | c1_f) : one_f}), .q(pr_t1));
     reg [TG+2:0] pr_tq;
     (* keep *) reg [3:0] pr_bk;
@@ -869,3 +879,25 @@ module ot_v41_bf_col #(
         assign qy_bkf = bk_fault;
     end
 endmodule
+
+`ifdef OT_BF_DELAY_SRAM
+// Fixed D-edge data delay. Independent read/write addresses never collide for
+// D>=3. Valid travels separately: old unreset data was unspecified until filled.
+module ot_v41_bf_sram_delay #(parameter integer W=32, D=8)(
+    input wire clk, rst_n, input wire [W-1:0] d, output wire [W-1:0] q);
+    localparam integer AW=$clog2(D);
+    reg [AW-1:0] wp;
+    wire [AW-1:0] nextp = wp == D-1 ? 0 : wp + 1'b1;
+    always @(posedge clk or negedge rst_n) if (!rst_n) wp<=0; else wp<=nextp;
+    wire [31:0] rd;
+`ifdef OT_BF_DELAY_SRAM_MUT_ADDR
+    wire [6:0] ra=7'(wp);
+`else
+    wire [6:0] ra=7'(nextp);
+`endif
+    initial if (W>32 || D<3 || D>128) $fatal(1,"BF delay SRAM unsupported shape");
+    ot_v41_bf_held128x32 u_mem (.clk(clk), .ren(1'b1), .ra(ra), .rd(rd),
+        .wen(1'b1), .wa(7'(wp)), .wd(32'(d)));
+    assign q=rd[W-1:0];
+endmodule
+`endif
