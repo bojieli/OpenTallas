@@ -20,6 +20,7 @@ module ot_qfd_su_kv_static_posted #(
  output reg word_v,output reg [10:0] word_tag,output reg [511:0] word_data,
  input wire word_slot,input wire [1:0] word_index,
  output wire[39:0]word_ctl_pub,
+ input wire[15:0] word_index_pub, // opt-in same-age source copies; LOCAL_CTL=0 ignores
  output reg fault,output reg [7:0] fault_code
 );
  // Every arriving face bit is captured before decode/arbitration.
@@ -133,7 +134,7 @@ module ot_qfd_su_kv_static_posted #(
   end
  end endgenerate
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin active<=0;pos<=0;issued<=0;sent<=0;word_v<=0;word_tag<=0;word_data<=0;fault<=0;fault_code<=0;end
+  if(!rst_n)begin active<=0;pos<=0;issued<=0;sent<=0;word_v<=0;word_tag<=0;if(LOCAL_CTL==0)word_data<=0;fault<=0;fault_code<=0;end
   else if(ENABLE!=0)begin
    if(eb_q)begin
     if(active||word_v||fault||ep_q>=8192)begin fault<=1;fault_code[4]<=1;end
@@ -147,17 +148,39 @@ module ot_qfd_su_kv_static_posted #(
     if(|err)begin fault<=1;fault_code<=fault_code|err;end
     if(!fault&&!(|err)&&choose&&(!word_v||take))begin
      word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
+     if(LOCAL_CTL==0)begin
      case(selected)
       0:word_data<=bytes_r[0+:512];1:word_data<=bytes_r[512+:512];
       2:word_data<=bytes_r[1024+:512];3:word_data<=bytes_r[1536+:512];
       default:word_data<=0;
      endcase
-     if(MUT_MASK!=0)word_data[7:0]<=0;
+     end
+     if(MUT_MASK!=0&&LOCAL_CTL==0)word_data[7:0]<=0;
     end else if(take||fault||(|err))word_v<=0;
     if(active&&(&sent)&&!word_v&&issued==3'b111)active<=0;
    end
   end
  end
+ // R3: one registered one-hot word selector per output byte. Source index
+ // copies are registered at the parent p_kvi edge; this is the old slot_index_q
+ // edge, so every payload capture/hold edge remains unchanged.
+ generate if(LOCAL_CTL)begin:g_word_sel32
+  for(genvar wb=0;wb<64;wb=wb+1)begin:g_byte
+   (* keep = "true" *) reg[3:0] sel;
+   always @(posedge clk or negedge rst_n)
+    if(!rst_n)sel<=4'b0001;
+    else sel<=4'b0001<<word_index_pub[2*(wb/8)+:2];
+   always @(posedge clk or negedge rst_n)
+    if(!rst_n)word_data[8*wb+:8]<=0;
+    else if(ENABLE!=0&&!eb_q&&!fault&&!(|err)&&choose&&(!word_v||take))begin
+     word_data[8*wb+:8]<=({8{sel[0]}}&bytes_r[8*wb+:8]) |
+                        ({8{sel[1]}}&bytes_r[512+8*wb+:8]) |
+                        ({8{sel[2]}}&bytes_r[1024+8*wb+:8]) |
+                        ({8{sel[3]}}&bytes_r[1536+8*wb+:8]);
+     if(MUT_MASK!=0&&wb==0)word_data[8*wb+:8]<=0;
+    end
+  end
+ end endgenerate
  // Same-edge control publications for bounded KVN consumer groups (no new edge).
  generate if(LOCAL_CTL)begin:g_ctl_pub
   for(genvar cp=0;cp<10;cp=cp+1)begin:g_copy

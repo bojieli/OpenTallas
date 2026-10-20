@@ -263,6 +263,15 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  reg p_lcv;reg[5:0]p_stage;reg[17:0]p_tok,p_pos;reg[379:0]p_cmd;reg[547:0]p_dd;
  reg p_kvs,p_x3s;reg[1:0]p_kvi;
  wire[9:0]x3_slot_pub;
+ wire[15:0]fmt_index_pub;
+ generate if(LOCAL32)begin:g_fmt_index_pub
+  (* keep = "true" *) reg[15:0]q;
+  always @(posedge ck or negedge rst_pin)
+   if(!rst_pin)q<=0;else q<={8{bnd_kv_word_index}};
+  assign fmt_index_pub=q;
+ end else begin:g_fmt_index_alias
+  assign fmt_index_pub={8{p_kvi}};
+ end endgenerate
  generate if(LOCAL32)begin:g_x3_slot_pub
   (* keep = "true" *) reg[9:0]q;
   always @(posedge ck or negedge rst_pin)
@@ -391,7 +400,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  .clk(ck),.rst_n(rst_fmt),.epoch_begin(native_context),.epoch_pos(c_pos),
  .issue_v(kv_issue),.issue_kind(kv_kind),.issue_nout(18'd1),.issue_nin(kv_nin),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.epoch_idle(formatter_idle),.drained(formatter_drained),
- .word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),.word_ctl_pub(kvn_ctl_pub),.word_slot(p_kvs),.word_index(p_kvi),
+ .word_v(kvn_v),.word_tag(kvn_tag),.word_data(kvn_data),.word_ctl_pub(kvn_ctl_pub),.word_index_pub(fmt_index_pub),.word_slot(p_kvs),.word_index(p_kvi),
  .fault(formatter_fault),.fault_code(formatter_fault_code));
  reg[58:0]formatter_identity;reg[1:0]formatter_generation;
  always @(posedge ck or negedge rst_top)
