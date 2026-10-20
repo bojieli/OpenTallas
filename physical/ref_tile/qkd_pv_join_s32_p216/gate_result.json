@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qkd_pv_join_s32_p216",
  "verdict": "WARN",
- "generated": "2026-10-20T05:03:18-0700",
- "host": "ot-epyc7",
+ "generated": "2026-10-20T07:12:15-0700",
+ "host": "ot-epyc9",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "a55e986682dcc1452360912d4470791c5ee3e37f",
+  "start_commit": "15e552ba07b32b168023f5fefd897fa547233357",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,8 +25,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "73d00c1ab171f18aa4bb9e9640d63f43df6eaaa95b1eefa5181374ab6ff1f3df",
-  "manifest_sha256": "acb28b78a3869a15bf650ccb61fc31afad7de8ff2f1448ad76bc64d88a525ad0",
+  "archive_sha256": "63ee334f1cd4db6f1d70fc87aa69eb78ef0705a29a5153ccb1f046420386605f",
+  "manifest_sha256": "ecf0b9a1b13c802b1e8dfe96b6d88b514f72bf6d13e4f13dfaf9313aec531799",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -140791,8 +140791,8 @@
    {
     "path": "tools/ref_tile/native_census.py",
     "kind": "file",
-    "sha256": "a83ebec367621669b737b2921421eada914ae57801e56fd875dc8fe7b2e19bda",
-    "git_blob": "fe77e1db890ff3be4e961c0509e3a63faea8a920",
+    "sha256": "f5cdc3c33eded52c4d2bf51058a5083c15ab8eabe8c710b74d08ca26e5d87ccb",
+    "git_blob": "7a00abd1cd988ff7b22702696c752840ade26147",
     "source": "daemon_overlay",
     "matches_provenance_commit": false
    },
@@ -183727,14 +183727,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 162308584,
-   "unpacked_bytes": 967536640,
+   "archive_bytes": 162310387,
+   "unpacked_bytes": 967544832,
    "pick_gb": 23,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "dd9273f4c73437fc54423d7567ed66e5ec129f15",
+   "origin_main": "315a465963e92bd22c6a4f52d1c08f73d05387ba",
    "content_sha256": "5b87a481c37d660435677effcce7c4a83aaf80103e1d3c98d009a50d92cc3a2a",
    "files": [
     {
@@ -202834,7 +202834,7 @@
     "tools/ref_tile/layout_dump.tcl": "cc1a9fa11ecdbe323644c251fcd061eee26535894995967ed26b63d13d08d747",
     "tools/ref_tile/layout_png.py": "652816e6b820bcfc2e2cb1e174aa70d28f61ca3fd20b2c461037b779eecb58a9",
     "tools/ref_tile/measured_band_fill.py": "40c4f27d3cf3636921b31b01a52a1d31e7e5b4b0faa926cfe452efd63fe76bf1",
-    "tools/ref_tile/native_census.py": "a83ebec367621669b737b2921421eada914ae57801e56fd875dc8fe7b2e19bda",
+    "tools/ref_tile/native_census.py": "f5cdc3c33eded52c4d2bf51058a5083c15ab8eabe8c710b74d08ca26e5d87ccb",
     "tools/ref_tile/native_census.tcl": "a755c3b2c3cb079c3f60a194454c4ed161a4b0389a3211d0ffd566683daffba6",
     "tools/ref_tile/path_classes.tcl": "9785ffb341d5d2a845307c6e314d7c63e89bac9b9dcc3d04f1ccf228f913568a",
     "tools/ref_tile/ref_route.sh": "dcfbb94f41e1d5306145d4916ca8fd55c00d68a924a90e5e7728813682a8da0f",
@@ -202967,16 +202967,16 @@
    },
    "digest": "7aac1666ef643fcf2283bcb5b23b4abb7f217e3441d3962afb315aac081b02a2"
   },
-  "captured": "2026-10-20T04:21:37-0700",
+  "captured": "2026-10-20T06:29:56-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qkd_pv_join_s32_p216/signoff.sdc"
   },
-  "remote_script_sha256": "6f84b2660ac29adcadf260ed212351d90546b3728d0671eae21545f8aa35172b",
+  "remote_script_sha256": "6c27d2d78c79690c0a382c12b8af70d1215c363a65a9ca17b4978e1ff94ee722",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc7",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053",
+  "remote_host": "ot-epyc9",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-062907",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -203096,7 +203096,7 @@
   "kind": "tile",
   "skip_incremental_repair": true,
   "rc": "0",
-  "grt_s": 566,
+  "grt_s": 618,
   "layers": [
    {
     "layer": "M1",
