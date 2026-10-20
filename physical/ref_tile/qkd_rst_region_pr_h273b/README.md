@@ -6,7 +6,7 @@ GEN9 die (kvs14r-a6998c101-gen9d) bound HOLD128 and the health retirement reset 
 Root cause: the core's output flop b also feeds its own hold logic (`if (b) hold <= HOLD_LD`), so the output pin net
 (QN -> hold BUF -> INV -> b) also carried the internal loads (_249_ A1, _162_ A) across the tile.
 Fix (structural, 0 cycles): core qkd_rst_region_po keeps b_int for the feedback and a KEPT twin b_pin with byte-identical
-next-state logic that drives only pin b. Wrapper qkd_rst_region_pr_h273b: dly pin captures (as _pr) + core HOLD 273.
+next-state logic that drives only pin b; BOTH copies (* keep, dont_touch *) (gate 1 at ed87b1ca5: b_int unkept was merged into b_pin by opt_merge, 41 flops). Wrapper qkd_rst_region_pr_h273b: dly pin captures (as _pr) + core HOLD 273.
 Die: kvsys_prep.sh binds this view first (OT_KV_RST_HOLD_CELL=qkd_rst_region_pr_h273b -> kv_die.py) when its CLOSED view
 audits PASS; h273 then HOLD128 remain the fallbacks.
 
