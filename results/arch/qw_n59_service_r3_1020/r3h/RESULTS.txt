@@ -1,0 +1,7 @@
+R3h 764f4bd1b (QW-N59-6 10-20) on R3g: formatter hit-decode address copies (4 per-group we/wa face copies), q_epoch select
+quarters, MU epoch select copy, native59-local codec copy qkd_native_attention_record_n59 with a kept tx_valid_b.
+Six V5.050 legs PASS.  Causal mutants (local_dv): ht0 / cq0 / bpub0 / optag0 / emc0 / ddc0 / qo0 / eba / wac0 REJECTED;
+txvb_zero (tx_valid_b held 0: native_tx_payload[547:274] gated off) SURVIVED local_dv (dv_positive reports every split
+output == reference): the upper payload half is not observed by local_dv -> rerun on local_mu / local_rnd (R3j dir).
+Strict mapped census: REFUSE 14 > 32 (max 48; 21,892 FF, 93,811 cells, depth 391.7 ps): beat check-mux tail (R3i), q_epoch
+select quarter 1 sharing nc_pub[19] (48), tx_valid_b 39 merges, MU epoch select 36 (R3j).
