@@ -49,7 +49,7 @@
    },
    {
     "name": "hc_ring_s1_exact",
-    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_QDRLY=2 +define+HC_QSI=1' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m0 0",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m0 0",
     "expect": "pass",
     "pass_regex": "^HC_RING_LOCKSTEP MUT=0 rc=0",
     "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0",
@@ -61,7 +61,7 @@
    },
    {
     "name": "hc_ring_s1_mut6",
-    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_QDRLY=2 +define+HC_QSI=1' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m6 6",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m6 6",
     "expect": "fail",
     "pass_regex": "^HC_RING_LOCKSTEP MUT=6 rc=0",
     "fail_regex": "HC_ENG FAIL",

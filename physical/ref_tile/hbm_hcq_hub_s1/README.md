@@ -30,7 +30,7 @@ yosys, and its reset split never matched (the wrong relay names). This kit keeps
 | 5 | Storage > 2 kb in SRAM | PASS. The programme is a 1024x256 SRAM. rr_q/result_q/s_q are single captures. done_cal (152 b), order (12x23) and installed (1 kb) are under 2 kb. |
 | 6 | Floorplan | **fixed / waived**. The SRAM is at (259.2, 302.4) on the 43.2 lattice with a 5.4 halo, and there is one contiguous band, aspect 1:1. Tile utilisation stays ~9 % (fill_reason.pin_bound): 9,903 literal face pins sit in the 734.4 hole of the bank ring. Band utilisation is ~40 %. |
 | 7 | Clock | **fixed** structurally. There is one root, but its sinks are a compact 345.6 um register mass, not four faces 734 um apart. io_hold_margin is 0.03. The `--cts` gate measures TT/FF spread (limit 80). |
-| 8 | Static schedule, cycles priced | **+1 edge**. The s_i pin register delays the quarter subtree, so ps_v/ps/ps_f leave 1 edge later. The root takes this as QCHX 12 (= 11 CPR + 1) and the programme as RAW0 179 (165 + 11 + 2 + 1). Bench: HC_QSI=1. Ledger: hc_tree 41 -> 42 edges, under 0.1 % of the HC mix and well under 1 % end to end. Everything else adds 0 edges. |
+| 8 | Static schedule, cycles priced | **+1 edge**. The s_i pin register delays the quarter subtree, so ps_v/ps/ps_f leave 1 edge later. The root takes this as QCHX 12 (= 11 CPR + 1) and the programme as RAW0 179 (165 + 11 CPR + 2 DRLY + 1); bench form = the closed ring the kits encode (HC_XRLY 0, the U relay is the die lead's open choice). Bench: HC_QSI=1. Ledger: hc_tree 41 -> 42 edges, under 0.1 % of the HC mix and well under 1 % end to end. Everything else adds 0 edges. |
 
 ## Benches (fleet, @ca6cb0c03)
 
@@ -38,7 +38,7 @@ yosys, and its reset split never matched (the wrong relay names). This kit keeps
   - SAFE 0 regression: MUT 0 PASS, 1-4 FAIL.
   - SAFE 1: MUT 0 PASS, 1/2/3/4/7 FAIL. The face-copy equality is checked on every edge.
   - Logs: `results/rtl/hbm_hcq_hub_s1/hcq_*.log`.
-- Ring lockstep, Verilator 5.050: `HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_QDRLY=2 +define+HC_QSI=1'`.
+- Ring lockstep, Verilator 5.050: `HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1'`.
   - MUT 0 must PASS.
   - MUT 6 (s_i register without the valid delay) must FAIL.
   - Witness: `results/rtl/hbm_hcq_hub_s1/ring_mut6.log`.
