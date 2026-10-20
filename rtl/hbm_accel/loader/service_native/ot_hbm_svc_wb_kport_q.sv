@@ -35,7 +35,13 @@
 // Reset assertion and release are 2 edges later in each domain: a scheduled constant, no data-latency change.
 // MUT (bench only): 1 = premature wa (as the master), 2 = fold ignores the quad strap (E writes land on W-hash sectors),
 //                   3 = window total = ordinal total (not the real span: per-PC counts short).
-module ot_hbm_svc_wb_kport_q #(parameter integer WOPEN=0, parameter integer MUT=0,
+// HBM-WBK2 2026-10-20 (H.STA.BLK.5 structural successor, kit hbm_wbk_q2_1020): the write-back block is now
+// ot_hbm_svc_wb_kq2_core (ot_hbm_svc_wb_kq2.sv: stream-family copy + registered one-hot lane -> PC select + per-PC
+// 32-b-sliced reviewed ot_link_afifo crossing + 32-b-sliced K pin skids; reset relays of <= 32 loads).  This wrapper keeps
+// every stream-pin behaviour above unchanged; its control registers reset from core relay leaves (either landed reset
+// resets the whole port), and the pins that fan out widely are captured in KEPT pin copies (fill_start x8,
+// wb_fill_bank x6, reservation bank x2, window bank selects x2).  FAW = log2 depth of the per-PC crossing FIFOs.
+module ot_hbm_svc_wb_kport_q #(parameter integer WOPEN=0, parameter integer MUT=0, parameter integer FAW=3,
                                parameter [29:0] STACK_SECTORS=30'd703125000)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire[3:0]stream_fifo_clk,                 // four stream-frequency clock-tree roots of the WB payload groups
@@ -60,17 +66,24 @@ module ot_hbm_svc_wb_kport_q #(parameter integer WOPEN=0, parameter integer MUT=
  always @(posedge stream_clk)begin srst_l0<=stream_rst_n;srst_l1<=srst_l0;end
  always @(posedge hbm_clk)begin hrst_l0<=hbm_rst_n;hrst_l1<=hrst_l0;end
  wire srst_n=srst_l1,hrst_n=hrst_l1;
+ wire [1:0] kr;                                  // core stream-family relay leaves for this wrapper's control registers
  function automatic [29:0] fold(input [28:0] o,input q);
   fold={o[28:6],q^o[10]^o[15],o[5:0]};
  endfunction
  // ---------------------------------------------------------------- stream pins
  reg rv_q,rb_q,fb_q,fs_q;reg[15:0]re_q,fe_q;reg[11:0]rt_q;reg[31:0]rbase_q;reg[2311:0]wd_q;reg[1:0]stk_q;reg q_s;
+ (* keep="true",dont_touch="true" *) reg fs_c [0:6];      // fill_start pin copies for the core fill FSM copies
+ (* keep="true",dont_touch="true" *) reg fb_c [0:4];      // wb_fill_bank pin copies: core 0..2, window bank 3 / 4
+ (* keep="true",dont_touch="true" *) reg rb_c;            // wb_reserve_bank pin copy for the core
+ integer ci;
  always @(posedge stream_clk)begin
-  rb_q<=wb_reserve_bank;fb_q<=wb_fill_bank;re_q<=wb_reserve_epoch;fe_q<=wb_fill_epoch;rt_q<=wb_reserve_sectors;
+  rb_q<=wb_reserve_bank;rb_c<=wb_reserve_bank;fb_q<=wb_fill_bank;for(ci=0;ci<5;ci=ci+1)fb_c[ci]<=wb_fill_bank;
+  re_q<=wb_reserve_epoch;fe_q<=wb_fill_epoch;rt_q<=wb_reserve_sectors;
   rbase_q<=wb_reserve_base;wd_q<=wd;stk_q<=stk;q_s<=(MUT==2)?1'b0:quad;
  end
- always @(posedge stream_clk or negedge srst_n)
-  if(!srst_n)begin rv_q<=0;fs_q<=0;end else begin rv_q<=wb_reserve_v;fs_q<=wb_fill_start;end
+ always @(posedge stream_clk or negedge kr[0])
+  if(!kr[0])begin rv_q<=0;fs_q<=0;for(ci=0;ci<7;ci=ci+1)fs_c[ci]<=1'b0;end
+  else begin rv_q<=wb_reserve_v;fs_q<=wb_fill_start;for(ci=0;ci<7;ci=ci+1)fs_c[ci]<=wb_fill_start;end
  // stack check + stack-local ordinals
  reg[2311:0]wd_l;reg wd_stk_bad;integer s;
  always @*begin
@@ -83,63 +96,63 @@ module ot_hbm_svc_wb_kport_q #(parameter integer WOPEN=0, parameter integer MUT=
  wire rbase_stk_bad=rv_q&&rbase_q[31:30]!=stk_q;
  // ---------------------------------------------------------------- write-back block (quadrant mode)
  wire reserve_ready,fill_done,done_v,done_bank,blk_fault;wire[15:0]done_epoch;wire[11:0]done_sectors;wire[1:0]owned;
- wire[15:0]k_v,k_rdy,k_we,k_wr_done_q;wire[479:0]k_addr;wire[4095:0]k_wdata;wire[63:0]k_len;wire[271:0]k_tag;wire[511:0]k_wstrb;
- ot_hbm_svc_wb_cutthrough_cdc #(.STACK(2'd0),.NPC(16),.QFOLD(1)) u_wb(
-  .stream_clk(stream_clk),.stream_rst_n(srst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hrst_n),.stream_fifo_clk(stream_fifo_clk),
-  .reserve_v(rv_q),.reserve_ready(reserve_ready),.reserve_bank(rb_q),.reserve_epoch(re_q),.reserve_base({2'b00,rbase_q[29:0]}),
-  .reserve_total(rt_q),.fill_start(fs_q),.fill_start_bank(fb_q),.fill_start_epoch(fe_q),.wd(wd_l),
+ reg q_h;
+ always @(posedge hbm_clk)q_h<=(MUT==2)?1'b0:quad;
+ ot_hbm_svc_wb_kq2_core #(.FAW(FAW),.MUT(MUT)) u_wb(
+  .stream_clk(stream_clk),.hbm_clk(hbm_clk),.stream_fifo_clk(stream_fifo_clk),.srst_in_n(srst_n),.hrst_in_n(hrst_n),
+  .kp_rst_n(kr),
+  .reserve_v(rv_q),.reserve_ready(reserve_ready),.reserve_bank(rb_c),.reserve_epoch(re_q),.reserve_base({2'b00,rbase_q[29:0]}),
+  .reserve_total(rt_q),.fill_start_c({fs_c[6],fs_c[5],fs_c[4],fs_c[3],fs_c[2],fs_c[1],fs_c[0]}),
+  .fill_bank_c({fb_c[2],fb_c[1],fb_c[0]}),.fill_start_epoch(fe_q),.wd(wd_l),
   .fill_done(fill_done),.done_v(done_v),.done_bank(done_bank),.done_epoch(done_epoch),.done_sectors(done_sectors),
-  .bank_owned(owned),.fault(blk_fault),
-  .k_v(k_v),.k_rdy(k_rdy),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),.k_we(k_we),.k_wdata(k_wdata),.k_wstrb(k_wstrb),
-  .k_wr_done(k_wr_done_q));
+  .bank_owned(owned),.fault(blk_fault),.q_h(q_h),
+  .w_k_v(w_k_v),.w_k_rdy(w_k_rdy),.w_k_addr(w_k_addr),.w_k_wdata(w_k_wdata),.w_k_wr_done(w_k_wr_done));
  // ---------------------------------------------------------------- real window of a reservation (2 registered stages)
- reg rv1,rb1,rv2,rb2;reg[28:0]ob1,oe1;reg[29:0]sb2,se2;reg rq1;
- always @(posedge stream_clk or negedge srst_n)
-  if(!srst_n)begin rv1<=0;rv2<=0;end else begin rv1<=rv_q&&reserve_ready;rv2<=rv1;end
+ reg rv1,rv2,rb1;(* keep="true",dont_touch="true" *) reg rb2c [0:1];reg[28:0]ob1,oe1;reg[29:0]sb2,se2;reg rq1;
+ always @(posedge stream_clk or negedge kr[0])
+  if(!kr[0])begin rv1<=0;rv2<=0;end else begin rv1<=rv_q&&reserve_ready;rv2<=rv1;end
  always @(posedge stream_clk)begin
   rb1<=rb_q;ob1<=rbase_q[28:0];oe1<=rbase_q[28:0]+29'(rt_q)-29'd1;rq1<=q_s;
-  rb2<=rb1;sb2<=fold(ob1,rq1);se2<=fold(oe1,rq1);
+  rb2c[0]<=rb1;rb2c[1]<=rb1;sb2<=fold(ob1,rq1);se2<=fold(oe1,rq1);
  end
  wire[30:0]span2={1'b0,se2}-{1'b0,sb2}+31'd1;
  wire span_bad=rv2&&(span2>31'd4095||{1'b0,se2}>={1'b0,STACK_SECTORS});
  // ---------------------------------------------------------------- reservation receipts, wb_ready, wa, window command
  reg[1:0]accepted;reg[15:0]aepoch[0:1];reg[11:0]atotal[0:1];reg[29:0]wbase[0:1];reg[11:0]wspan[0:1];reg rfault;
- reg fsb_q;   // buffer whose fill is in progress (for the WOPEN=1 window)
+ (* keep="true",dont_touch="true" *) reg fsb_c [0:1];   // buffer whose fill is in progress (for the WOPEN=1 window)
  wire block_ready=accepted[fb_q]&&aepoch[fb_q]==fe_q&&owned[fb_q];
  wire win_go=(WOPEN==0)?fs_q:fill_done;
- wire win_bank=(WOPEN==0)?fb_q:fsb_q;
- always @(posedge stream_clk or negedge srst_n)begin
-  if(!srst_n)begin
-   accepted<=0;rfault<=0;wb_ready<=0;wa<=0;wbw_v<=0;wbw_base<=0;wbw_total<=0;fault<=0;fsb_q<=0;
-   aepoch[0]<=0;aepoch[1]<=0;atotal[0]<=0;atotal[1]<=0;wbase[0]<=0;wbase[1]<=0;wspan[0]<=0;wspan[1]<=0;
+ wire wb_b=(WOPEN==0)?fb_c[3]:fsb_c[0];          // window base select
+ wire wb_t=(WOPEN==0)?fb_c[4]:fsb_c[1];          // window total select
+ always @(posedge stream_clk or negedge kr[0])begin
+  if(!kr[0])begin
+   accepted<=0;rfault<=0;wb_ready<=0;wbw_v<=0;fault<=0;
   end else begin
    if(rv_q)begin
     if(!reserve_ready)rfault<=1;
-    else begin accepted[rb_q]<=1;aepoch[rb_q]<=re_q;atotal[rb_q]<=rt_q;end
+    else accepted[rb_q]<=1;
    end
-   if(rv2)begin wbase[rb2]<=sb2;wspan[rb2]<=(MUT==3)?atotal[rb2]:span2[11:0];end
    if(done_v)begin
     if(!accepted[done_bank]||aepoch[done_bank]!=done_epoch||atotal[done_bank]!=done_sectors)rfault<=1;
     accepted[done_bank]<=0;
    end
-   if(fs_q)fsb_q<=fb_q;
    if(rbase_stk_bad||wd_stk_bad||span_bad)rfault<=1;
    wb_ready<=block_ready;
-   wa<=(MUT==1)?(fill_done?atotal[fsb_q]:12'd0):(done_v?done_sectors:12'd0);
-   wbw_v<=win_go;wbw_base<=wbase[win_bank];wbw_total<=wspan[win_bank];
+   wbw_v<=win_go;
    fault<=rfault||blk_fault;
   end
  end
- // ---------------------------------------------------------------- K write pins (hbm_clk)
- reg[15:0]wr_done_q;reg q_h;
- always @(posedge hbm_clk)q_h<=(MUT==2)?1'b0:quad;
- always @(posedge hbm_clk or negedge hrst_n)if(!hrst_n)wr_done_q<=0;else wr_done_q<=w_k_wr_done;
- assign k_wr_done_q=wr_done_q;
- genvar p;
- generate for(p=0;p<16;p=p+1)begin:pc
-  ot_hbm_svc_pin_skid2 #(.WIDTH(286)) u_k(.clk(hbm_clk),.rst_n(hrst_n),.in_v(k_v[p]),.in_r(k_rdy[p]),
-   .in_data({fold(k_addr[30*p+:29],q_h),k_wdata[256*p+:256]}),.out_v(w_k_v[p]),.out_r(w_k_rdy[p]),
-   .out_data({w_k_addr[30*p+:30],w_k_wdata[256*p+:256]}));
- end endgenerate
+ always @(posedge stream_clk or negedge kr[1])
+  if(!kr[1])wa<=0;
+  else wa<=(MUT==1)?(fill_done?atotal[fsb_c[0]]:12'd0):(done_v?done_sectors:12'd0);
+ always @(posedge stream_clk)begin
+  if(rv_q&&reserve_ready)begin aepoch[rb_q]<=re_q;atotal[rb_q]<=rt_q;end
+  if(rv2)begin
+   wbase[rb2c[0]]<=sb2;
+   wspan[rb2c[1]]<=(MUT==3)?atotal[rb2c[1]]:span2[11:0];
+  end
+  if(fs_q)begin fsb_c[0]<=fb_q;fsb_c[1]<=fb_q;end
+  wbw_base<=wbase[wb_b];wbw_total<=wspan[wb_t];
+ end
 endmodule
 `default_nettype wire
