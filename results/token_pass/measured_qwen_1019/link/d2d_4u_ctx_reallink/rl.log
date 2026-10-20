@@ -1,0 +1,157 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/rl
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/rl
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/rl
+ot-run: ot-epyc8       admits   923 GB (avail 759, growth 113, headroom 0, waiters 0/0 GB) load 36/128 running 33 disk 316 GB 
+ot-run: ot-epyc9       admits  1302 GB (avail 977, growth 65, headroom 0, waiters 0/0 GB) load 37/128 running 14 disk 774 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/rl
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/rl
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-79613-1792459799 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MUCTX_REAL_LINK_PASS four distinct contexts; three filler loads; user0 restored; component only
+MUCTX_REAL_LINK_FAIL errors=6 n=6 loads=3
+MUCTX_REAL_LINK_FAIL errors=3 n=6 loads=0
+MUCTX_REAL_LINK_FAIL errors=3 n=0 loads=0
+MUCTX_REAL_LINK_FAIL errors=9 n=6 loads=3
+MUCTX_REAL_LINK_FAIL errors=3 n=0 loads=0
+MUCTX_FULL_STREAM_DIAGNOSTIC_NATIVE_FAULT expected unsupported later producer scope
+rc=0
+== out/full/
+MUCTX_SLOT cycle=203 run=0
+MUCTX_SLOT cycle=204 run=0
+MUCTX_HOST_TX cycle=205 run=0 owner=002080003280540 gen=1
+MUCTX_HOST_TX cycle=206 run=0 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=221 run=0 n=0 user=1 owner=002080003280540 gen=1
+MUCTX_WIRE cycle=222 run=0 n=1 user=0 owner=002000003200500 gen=0
+MUCTX_LOAD cycle=222 user=1 ctx=14d431000000000000000000001940015
+MUCTX_END run=0 n=2 loads=1 native=00 abort=11 transport=80/04 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_FULL_STREAM_DIAGNOSTIC_NATIVE_FAULT expected unsupported later producer scope
+== out/mut0/
+MUCTX_SLOT cycle=203 run=0
+MUCTX_SLOT cycle=204 run=0
+MUCTX_HOST_TX cycle=205 run=0 owner=002080003280540 gen=1
+MUCTX_HOST_TX cycle=206 run=0 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=221 run=0 n=0 user=1 owner=002080003280540 gen=1
+MUCTX_WIRE cycle=222 run=0 n=1 user=0 owner=002000003200500 gen=0
+MUCTX_LOAD cycle=222 user=1 ctx=14d431000000000000000000001940015
+MUCTX_END run=0 n=2 loads=1 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_SLOT cycle=249803 run=1
+MUCTX_SLOT cycle=249804 run=1
+MUCTX_HOST_TX cycle=249805 run=1 owner=002100003300580 gen=2
+MUCTX_HOST_TX cycle=249806 run=1 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=249821 run=1 n=2 user=2 owner=002100003300580 gen=2
+MUCTX_WIRE cycle=249822 run=1 n=3 user=0 owner=002000003200500 gen=0
+MUCTX_LOAD cycle=249822 user=2 ctx=14d432000000000001980016000000000
+MUCTX_END run=1 n=4 loads=2 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_SLOT cycle=499403 run=2
+MUCTX_SLOT cycle=499404 run=2
+MUCTX_HOST_TX cycle=499405 run=2 owner=0021800033805c0 gen=3
+MUCTX_HOST_TX cycle=499406 run=2 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=499421 run=2 n=4 user=3 owner=0021800033805c0 gen=3
+MUCTX_WIRE cycle=499422 run=2 n=5 user=0 owner=002000003200500 gen=0
+MUCTX_LOAD cycle=499422 user=3 ctx=14d4340019c0017000000000000000000
+MUCTX_END run=2 n=6 loads=3 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_REAL_LINK_PASS four distinct contexts; three filler loads; user0 restored; component only
+== out/mut1/
+MUCTX_SLOT cycle=203 run=0
+MUCTX_SLOT cycle=204 run=0
+MUCTX_HOST_TX cycle=205 run=0 owner=002100003280540 gen=1
+MUCTX_HOST_TX cycle=206 run=0 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=221 run=0 n=0 user=2 owner=002100003280540 gen=1
+MUCTX_WIRE cycle=222 run=0 n=1 user=0 owner=002000003200500 gen=0
+MUCTX_LOAD cycle=222 user=2 ctx=14d432000000000001940015000000000
+MUCTX_END run=0 n=2 loads=1 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_SLOT cycle=249803 run=1
+MUCTX_SLOT cycle=249804 run=1
+MUCTX_HOST_TX cycle=249805 run=1 owner=002180003300580 gen=2
+MUCTX_HOST_TX cycle=249806 run=1 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=249821 run=1 n=2 user=3 owner=002180003300580 gen=2
+MUCTX_WIRE cycle=249822 run=1 n=3 user=0 owner=002000003200500 gen=0
+MUCTX_LOAD cycle=249822 user=3 ctx=14d434001980016000000000000000000
+MUCTX_END run=1 n=4 loads=2 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_SLOT cycle=499403 run=2
+MUCTX_SLOT cycle=499404 run=2
+MUCTX_HOST_TX cycle=499405 run=2 owner=0020800033805c0 gen=3
+MUCTX_HOST_TX cycle=499406 run=2 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=499421 run=2 n=4 user=1 owner=0020800033805c0 gen=3
+MUCTX_WIRE cycle=499422 run=2 n=5 user=0 owner=002000003200500 gen=0
+MUCTX_LOAD cycle=499422 user=1 ctx=14d4310000000000000000000019c0017
+MUCTX_END run=2 n=6 loads=3 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_REAL_LINK_FAIL errors=6 n=6 loads=3
+== out/mut2/
+MUCTX_SLOT cycle=203 run=0
+MUCTX_SLOT cycle=204 run=0
+MUCTX_HOST_TX cycle=205 run=0 owner=002000003200500 gen=0
+MUCTX_HOST_TX cycle=206 run=0 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=221 run=0 n=0 user=0 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=222 run=0 n=1 user=0 owner=002000003200500 gen=0
+MUCTX_END run=0 n=2 loads=0 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_SLOT cycle=249803 run=1
+MUCTX_SLOT cycle=249804 run=1
+MUCTX_HOST_TX cycle=249805 run=1 owner=002000003200500 gen=0
+MUCTX_HOST_TX cycle=249806 run=1 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=249821 run=1 n=2 user=0 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=249822 run=1 n=3 user=0 owner=002000003200500 gen=0
+MUCTX_END run=1 n=4 loads=0 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_SLOT cycle=499403 run=2
+MUCTX_SLOT cycle=499404 run=2
+MUCTX_HOST_TX cycle=499405 run=2 owner=002000003200500 gen=0
+MUCTX_HOST_TX cycle=499406 run=2 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=499421 run=2 n=4 user=0 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=499422 run=2 n=5 user=0 owner=002000003200500 gen=0
+MUCTX_END run=2 n=6 loads=0 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_REAL_LINK_FAIL errors=3 n=6 loads=0
+== out/mut3/
+MUCTX_SLOT cycle=203 run=0
+MUCTX_SLOT cycle=204 run=0
+MUCTX_HOST_TX cycle=205 run=0 owner=002080003280540 gen=1
+MUCTX_HOST_TX cycle=206 run=0 owner=002000003200500 gen=0
+MUCTX_END run=0 n=0 loads=0 native=00 abort=10 transport=01/00 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_SLOT cycle=249803 run=1
+MUCTX_SLOT cycle=249804 run=1
+MUCTX_HOST_TX cycle=249805 run=1 owner=002100003300580 gen=2
+MUCTX_HOST_TX cycle=249806 run=1 owner=002000003200500 gen=0
+MUCTX_END run=1 n=0 loads=0 native=01 abort=11 transport=01/04 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_END run=2 n=0 loads=0 native=01 abort=11 transport=01/04 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_REAL_LINK_FAIL errors=3 n=0 loads=0
+== out/mut4/
+MUCTX_SLOT cycle=203 run=0
+MUCTX_SLOT cycle=204 run=0
+MUCTX_HOST_TX cycle=205 run=0 owner=002080003280540 gen=1
+MUCTX_HOST_TX cycle=206 run=0 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=221 run=0 n=0 user=1 owner=002080003280540 gen=0
+MUCTX_WIRE cycle=222 run=0 n=1 user=0 owner=002000003200500 gen=1
+MUCTX_LOAD cycle=222 user=1 ctx=14d431000000000000000000001940015
+MUCTX_END run=0 n=2 loads=1 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=1
+MUCTX_SLOT cycle=249803 run=1
+MUCTX_SLOT cycle=249804 run=1
+MUCTX_HOST_TX cycle=249805 run=1 owner=002100003300580 gen=2
+MUCTX_HOST_TX cycle=249806 run=1 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=249821 run=1 n=2 user=2 owner=002100003300580 gen=3
+MUCTX_WIRE cycle=249822 run=1 n=3 user=0 owner=002000003200500 gen=1
+MUCTX_LOAD cycle=249822 user=2 ctx=14d432000000000001980016000000000
+MUCTX_END run=1 n=4 loads=2 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=1
+MUCTX_SLOT cycle=499403 run=2
+MUCTX_SLOT cycle=499404 run=2
+MUCTX_HOST_TX cycle=499405 run=2 owner=0021800033805c0 gen=3
+MUCTX_HOST_TX cycle=499406 run=2 owner=002000003200500 gen=0
+MUCTX_WIRE cycle=499421 run=2 n=4 user=3 owner=0021800033805c0 gen=2
+MUCTX_WIRE cycle=499422 run=2 n=5 user=0 owner=002000003200500 gen=1
+MUCTX_LOAD cycle=499422 user=3 ctx=14d4340019c0017000000000000000000
+MUCTX_END run=2 n=6 loads=3 native=00 abort=00 transport=00/00 host=0 face=0 mu=0 faceowner=002000003200500 facegen=1
+MUCTX_REAL_LINK_FAIL errors=9 n=6 loads=3
+== out/mut5/
+MUCTX_SLOT cycle=203 run=0
+MUCTX_SLOT cycle=204 run=0
+MUCTX_HOST_TX cycle=205 run=0 owner=002080003280540 gen=1
+MUCTX_HOST_TX cycle=206 run=0 owner=002000003200500 gen=0
+MUCTX_END run=0 n=0 loads=0 native=00 abort=10 transport=08/00 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_SLOT cycle=249803 run=1
+MUCTX_SLOT cycle=249804 run=1
+MUCTX_HOST_TX cycle=249805 run=1 owner=002100003300580 gen=2
+MUCTX_HOST_TX cycle=249806 run=1 owner=002000003200500 gen=0
+MUCTX_END run=1 n=0 loads=0 native=01 abort=11 transport=08/04 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_END run=2 n=0 loads=0 native=01 abort=11 transport=08/04 host=0 face=1 mu=1 faceowner=000000000000000 facegen=0
+MUCTX_REAL_LINK_FAIL errors=3 n=0 loads=0
+RL_JOB_DONE
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-79613-1792459799): exit 0
