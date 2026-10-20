@@ -1,0 +1,878 @@
+{
+  "scope": "Readonly actual immutable CLOSED ECO ODB four-ROM clock paths. Every traversed producer classified from existing pinned Liberty Boolean unary function, no name filter. Endpoint spans are physical pin-centre Manhattan distances, not routed wire length or delay. No constraints/database writes.",
+  "odb_sha256": "5db687a82a49b4aed0960c1624d0ca582517be62b8f16601fe85dfcee6792c4b",
+  "after_sha256": "5db687a82a49b4aed0960c1624d0ca582517be62b8f16601fe85dfcee6792c4b",
+  "paths": {
+    "u_ot_pr_core.u_ld.m0": {
+      "edges": [
+        {
+          "driver": "clkbuf_sp_L444/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            38.162,
+            44.415
+          ],
+          "sink_xy_um": [
+            43.212,
+            43.98
+          ],
+          "endpoint_span_um": 5.4850000000000065,
+          "sink_pin": "u_ot_pr_core.u_ld.m0/clk",
+          "net": "clkbuf_sp_L444_net",
+          "physical_input_loads": 1
+        },
+        {
+          "driver": "clkbuf_sp_L444_p3/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            37.4045,
+            45.225
+          ],
+          "sink_xy_um": [
+            37.254,
+            44.415
+          ],
+          "endpoint_span_um": 0.9605000000000032,
+          "sink_pin": "clkbuf_sp_L444/A",
+          "net": "clkbuf_sp_L444_p3_net",
+          "physical_input_loads": 1
+        },
+        {
+          "driver": "clkbuf_sp_L444_p2/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            36.7565,
+            44.415
+          ],
+          "sink_xy_um": [
+            37.2515,
+            45.225
+          ],
+          "endpoint_span_um": 1.3049999999999997,
+          "sink_pin": "clkbuf_sp_L444_p3/A",
+          "net": "clkbuf_sp_L444_p2_net",
+          "physical_input_loads": 1
+        },
+        {
+          "driver": "clkbuf_sp_L444_p1/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            37.4045,
+            44.955
+          ],
+          "sink_xy_um": [
+            36.6035,
+            44.415
+          ],
+          "endpoint_span_um": 1.341000000000001,
+          "sink_pin": "clkbuf_sp_L444_p2/A",
+          "net": "clkbuf_sp_L444_p1_net",
+          "physical_input_loads": 1
+        },
+        {
+          "driver": "clkbuf_sp_N76/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            37.892,
+            43.875
+          ],
+          "sink_xy_um": [
+            37.2515,
+            44.955
+          ],
+          "endpoint_span_um": 1.7205000000000013,
+          "sink_pin": "clkbuf_sp_L444_p1/A",
+          "net": "clkbuf_sp_N76_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N77/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            37.298,
+            41.985
+          ],
+          "sink_xy_um": [
+            36.984,
+            43.875
+          ],
+          "endpoint_span_um": 2.2040000000000006,
+          "sink_pin": "clkbuf_sp_N76/A",
+          "net": "clkbuf_sp_N77_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N78/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            36.002,
+            42.795
+          ],
+          "sink_xy_um": [
+            36.39,
+            41.985
+          ],
+          "endpoint_span_um": 1.1980000000000004,
+          "sink_pin": "clkbuf_sp_N77/A",
+          "net": "clkbuf_sp_N78_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N79/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            36.434,
+            38.745
+          ],
+          "sink_xy_um": [
+            35.094,
+            42.795
+          ],
+          "endpoint_span_um": 5.390000000000001,
+          "sink_pin": "clkbuf_sp_N78/A",
+          "net": "clkbuf_sp_N79_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N88/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            36.488,
+            55.755
+          ],
+          "sink_xy_um": [
+            35.526,
+            38.745
+          ],
+          "endpoint_span_um": 17.972,
+          "sink_pin": "clkbuf_sp_N79/A",
+          "net": "clkbuf_sp_N88_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N106/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            54.254,
+            38.205
+          ],
+          "sink_xy_um": [
+            35.58,
+            55.755
+          ],
+          "endpoint_span_um": 36.224000000000004,
+          "sink_pin": "clkbuf_sp_N88/A",
+          "net": "clkbuf_sp_N106_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N142/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            116.3,
+            39.825
+          ],
+          "sink_xy_um": [
+            53.346,
+            38.205
+          ],
+          "endpoint_span_um": 64.57400000000001,
+          "sink_pin": "clkbuf_sp_N106/A",
+          "net": "clkbuf_sp_N142_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N143/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            61.49,
+            39.825
+          ],
+          "sink_xy_um": [
+            115.392,
+            39.825
+          ],
+          "endpoint_span_um": 53.901999999999994,
+          "sink_pin": "clkbuf_sp_N142/A",
+          "net": "clkbuf_sp_N143_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N288/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            66.998,
+            110.565
+          ],
+          "sink_xy_um": [
+            60.582,
+            39.825
+          ],
+          "endpoint_span_um": 77.156,
+          "sink_pin": "clkbuf_sp_N143/A",
+          "net": "clkbuf_sp_N288_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N577/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            199.568,
+            105.705
+          ],
+          "sink_xy_um": [
+            66.09,
+            110.565
+          ],
+          "endpoint_span_um": 138.33800000000002,
+          "sink_pin": "clkbuf_sp_N288/A",
+          "net": "clkbuf_sp_N577_net",
+          "physical_input_loads": 2
+        },
+        {
+          "root_input_ports": [
+            "ck"
+          ],
+          "net": "ck",
+          "sink_pin": "clkbuf_sp_N577/A",
+          "sink_xy_um": [
+            198.66,
+            105.705
+          ]
+        }
+      ],
+      "errors": [],
+      "depth": 14,
+      "endpoint_span_sum_um": 407.77000000000004
+    },
+    "u_ot_pr_core.u_ld.m1": {
+      "edges": [
+        {
+          "driver": "clkbuf_sp_L443/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            38.162,
+            130.005
+          ],
+          "sink_xy_um": [
+            43.212,
+            130.38
+          ],
+          "endpoint_span_um": 5.425000000000004,
+          "sink_pin": "u_ot_pr_core.u_ld.m1/clk",
+          "net": "clkbuf_sp_L443_net",
+          "physical_input_loads": 1
+        },
+        {
+          "driver": "clkbuf_sp_L443_p1/Y",
+          "master": "HB4xp67_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            37.541,
+            130.275
+          ],
+          "sink_xy_um": [
+            37.254,
+            130.005
+          ],
+          "endpoint_span_um": 0.5570000000000093,
+          "sink_pin": "clkbuf_sp_L443/A",
+          "net": "clkbuf_sp_L443_p1_net",
+          "physical_input_loads": 1
+        },
+        {
+          "driver": "clkbuf_sp_N216/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            37.892,
+            130.545
+          ],
+          "sink_xy_um": [
+            37.2625,
+            130.284
+          ],
+          "endpoint_span_um": 0.8904999999999959,
+          "sink_pin": "clkbuf_sp_L443_p1/A",
+          "net": "clkbuf_sp_N216_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N217/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            36.11,
+            101.115
+          ],
+          "sink_xy_um": [
+            36.984,
+            130.545
+          ],
+          "endpoint_span_um": 30.303999999999995,
+          "sink_pin": "clkbuf_sp_N216/A",
+          "net": "clkbuf_sp_N217_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N222/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            35.624,
+            124.065
+          ],
+          "sink_xy_um": [
+            35.202,
+            101.115
+          ],
+          "endpoint_span_um": 23.372000000000007,
+          "sink_pin": "clkbuf_sp_N217/A",
+          "net": "clkbuf_sp_N222_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N231/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            35.138,
+            131.085
+          ],
+          "sink_xy_um": [
+            34.716,
+            124.065
+          ],
+          "endpoint_span_um": 7.442000000000007,
+          "sink_pin": "clkbuf_sp_N222/A",
+          "net": "clkbuf_sp_N231_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N249/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            94.592,
+            124.875
+          ],
+          "sink_xy_um": [
+            34.23,
+            131.085
+          ],
+          "endpoint_span_um": 66.572,
+          "sink_pin": "clkbuf_sp_N231/A",
+          "net": "clkbuf_sp_N249_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N286/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            138.764,
+            125.955
+          ],
+          "sink_xy_um": [
+            93.684,
+            124.875
+          ],
+          "endpoint_span_um": 46.16000000000001,
+          "sink_pin": "clkbuf_sp_N249/A",
+          "net": "clkbuf_sp_N286_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N287/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            72.506,
+            125.145
+          ],
+          "sink_xy_um": [
+            137.856,
+            125.955
+          ],
+          "endpoint_span_um": 66.16,
+          "sink_pin": "clkbuf_sp_N286/A",
+          "net": "clkbuf_sp_N287_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N288/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            66.998,
+            110.565
+          ],
+          "sink_xy_um": [
+            71.598,
+            125.145
+          ],
+          "endpoint_span_um": 19.179999999999993,
+          "sink_pin": "clkbuf_sp_N287/A",
+          "net": "clkbuf_sp_N288_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N577/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            199.568,
+            105.705
+          ],
+          "sink_xy_um": [
+            66.09,
+            110.565
+          ],
+          "endpoint_span_um": 138.33800000000002,
+          "sink_pin": "clkbuf_sp_N288/A",
+          "net": "clkbuf_sp_N577_net",
+          "physical_input_loads": 2
+        },
+        {
+          "root_input_ports": [
+            "ck"
+          ],
+          "net": "ck",
+          "sink_pin": "clkbuf_sp_N577/A",
+          "sink_xy_um": [
+            198.66,
+            105.705
+          ]
+        }
+      ],
+      "errors": [],
+      "depth": 11,
+      "endpoint_span_sum_um": 404.4005
+    },
+    "u_ot_pr_core.u_ld.m2": {
+      "edges": [
+        {
+          "driver": "clkbuf_sp_L442/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            210.962,
+            44.145
+          ],
+          "sink_xy_um": [
+            216.012,
+            43.98
+          ],
+          "endpoint_span_um": 5.215000000000018,
+          "sink_pin": "u_ot_pr_core.u_ld.m2/clk",
+          "net": "clkbuf_sp_L442_net",
+          "physical_input_loads": 1
+        },
+        {
+          "driver": "clkbuf_sp_L442_p1/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            210.2045,
+            44.415
+          ],
+          "sink_xy_um": [
+            210.054,
+            44.145
+          ],
+          "endpoint_span_um": 0.4204999999999899,
+          "sink_pin": "clkbuf_sp_L442/A",
+          "net": "clkbuf_sp_L442_p1_net",
+          "physical_input_loads": 1
+        },
+        {
+          "driver": "clkbuf_sp_N306/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            211.718,
+            47.385
+          ],
+          "sink_xy_um": [
+            210.0515,
+            44.415
+          ],
+          "endpoint_span_um": 4.636499999999984,
+          "sink_pin": "clkbuf_sp_L442_p1/A",
+          "net": "clkbuf_sp_N306_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N308/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            211.934,
+            48.195
+          ],
+          "sink_xy_um": [
+            210.81,
+            47.385
+          ],
+          "endpoint_span_um": 1.9339999999999975,
+          "sink_pin": "clkbuf_sp_N306/A",
+          "net": "clkbuf_sp_N308_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N313/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            211.61,
+            75.735
+          ],
+          "sink_xy_um": [
+            211.026,
+            48.195
+          ],
+          "endpoint_span_um": 28.124000000000002,
+          "sink_pin": "clkbuf_sp_N308/A",
+          "net": "clkbuf_sp_N313_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N322/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            261.992,
+            111.105
+          ],
+          "sink_xy_um": [
+            210.702,
+            75.735
+          ],
+          "endpoint_span_um": 86.66000000000003,
+          "sink_pin": "clkbuf_sp_N313/A",
+          "net": "clkbuf_sp_N322_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N323/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            211.124,
+            77.085
+          ],
+          "sink_xy_um": [
+            261.084,
+            111.105
+          ],
+          "endpoint_span_um": 83.98000000000002,
+          "sink_pin": "clkbuf_sp_N322/A",
+          "net": "clkbuf_sp_N323_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N359/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            293.528,
+            110.025
+          ],
+          "sink_xy_um": [
+            210.216,
+            77.085
+          ],
+          "endpoint_span_um": 116.25200000000002,
+          "sink_pin": "clkbuf_sp_N323/A",
+          "net": "clkbuf_sp_N359_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N431/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            343.424,
+            71.415
+          ],
+          "sink_xy_um": [
+            292.62,
+            110.025
+          ],
+          "endpoint_span_um": 89.41399999999997,
+          "sink_pin": "clkbuf_sp_N359/A",
+          "net": "clkbuf_sp_N431_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N576/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            332.408,
+            114.885
+          ],
+          "sink_xy_um": [
+            342.516,
+            71.415
+          ],
+          "endpoint_span_um": 53.578,
+          "sink_pin": "clkbuf_sp_N431/A",
+          "net": "clkbuf_sp_N576_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N577/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            199.568,
+            105.705
+          ],
+          "sink_xy_um": [
+            331.5,
+            114.885
+          ],
+          "endpoint_span_um": 141.112,
+          "sink_pin": "clkbuf_sp_N576/A",
+          "net": "clkbuf_sp_N577_net",
+          "physical_input_loads": 2
+        },
+        {
+          "root_input_ports": [
+            "ck"
+          ],
+          "net": "ck",
+          "sink_pin": "clkbuf_sp_N577/A",
+          "sink_xy_um": [
+            198.66,
+            105.705
+          ]
+        }
+      ],
+      "errors": [],
+      "depth": 11,
+      "endpoint_span_sum_um": 611.326
+    },
+    "u_ot_pr_core.u_ld.m3": {
+      "edges": [
+        {
+          "driver": "clkbuf_sp_L441/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            210.962,
+            130.545
+          ],
+          "sink_xy_um": [
+            216.012,
+            130.38
+          ],
+          "endpoint_span_um": 5.215000000000003,
+          "sink_pin": "u_ot_pr_core.u_ld.m3/clk",
+          "net": "clkbuf_sp_L441_net",
+          "physical_input_loads": 1
+        },
+        {
+          "driver": "clkbuf_sp_N310/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            211.718,
+            132.435
+          ],
+          "sink_xy_um": [
+            210.054,
+            130.545
+          ],
+          "endpoint_span_um": 3.554000000000002,
+          "sink_pin": "clkbuf_sp_L441/A",
+          "net": "clkbuf_sp_N310_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N311/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            211.826,
+            116.505
+          ],
+          "sink_xy_um": [
+            210.81,
+            132.435
+          ],
+          "endpoint_span_um": 16.945999999999998,
+          "sink_pin": "clkbuf_sp_N310/A",
+          "net": "clkbuf_sp_N311_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N312/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            211.664,
+            96.255
+          ],
+          "sink_xy_um": [
+            210.918,
+            116.505
+          ],
+          "endpoint_span_um": 20.99599999999998,
+          "sink_pin": "clkbuf_sp_N311/A",
+          "net": "clkbuf_sp_N312_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N313/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            211.61,
+            75.735
+          ],
+          "sink_xy_um": [
+            210.756,
+            96.255
+          ],
+          "endpoint_span_um": 21.37400000000001,
+          "sink_pin": "clkbuf_sp_N312/A",
+          "net": "clkbuf_sp_N313_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N322/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            261.992,
+            111.105
+          ],
+          "sink_xy_um": [
+            210.702,
+            75.735
+          ],
+          "endpoint_span_um": 86.66000000000003,
+          "sink_pin": "clkbuf_sp_N313/A",
+          "net": "clkbuf_sp_N322_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N323/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            211.124,
+            77.085
+          ],
+          "sink_xy_um": [
+            261.084,
+            111.105
+          ],
+          "endpoint_span_um": 83.98000000000002,
+          "sink_pin": "clkbuf_sp_N322/A",
+          "net": "clkbuf_sp_N323_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N359/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            293.528,
+            110.025
+          ],
+          "sink_xy_um": [
+            210.216,
+            77.085
+          ],
+          "endpoint_span_um": 116.25200000000002,
+          "sink_pin": "clkbuf_sp_N323/A",
+          "net": "clkbuf_sp_N359_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N431/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            343.424,
+            71.415
+          ],
+          "sink_xy_um": [
+            292.62,
+            110.025
+          ],
+          "endpoint_span_um": 89.41399999999997,
+          "sink_pin": "clkbuf_sp_N359/A",
+          "net": "clkbuf_sp_N431_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N576/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            332.408,
+            114.885
+          ],
+          "sink_xy_um": [
+            342.516,
+            71.415
+          ],
+          "endpoint_span_um": 53.578,
+          "sink_pin": "clkbuf_sp_N431/A",
+          "net": "clkbuf_sp_N576_net",
+          "physical_input_loads": 2
+        },
+        {
+          "driver": "clkbuf_sp_N577/Y",
+          "master": "BUFx24_ASAP7_75t_R",
+          "function": "A",
+          "driver_xy_um": [
+            199.568,
+            105.705
+          ],
+          "sink_xy_um": [
+            331.5,
+            114.885
+          ],
+          "endpoint_span_um": 141.112,
+          "sink_pin": "clkbuf_sp_N576/A",
+          "net": "clkbuf_sp_N577_net",
+          "physical_input_loads": 2
+        },
+        {
+          "root_input_ports": [
+            "ck"
+          ],
+          "net": "ck",
+          "sink_pin": "clkbuf_sp_N577/A",
+          "sink_xy_um": [
+            198.66,
+            105.705
+          ]
+        }
+      ],
+      "errors": [],
+      "depth": 11,
+      "endpoint_span_sum_um": 639.081
+    }
+  }
+}
