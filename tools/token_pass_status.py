@@ -29,8 +29,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 COMP = ROOT / 'results/arch/token_path_1018'
 OUT = ROOT / 'results/token_pass'
-STATUS_ASOF = '2026-10-20 05:05 PDT'
-TAG = '1020_0505'
+STATUS_ASOF = '2026-10-20 08:40 PDT'
+TAG = '1020_0840'
 
 RELEASE_DIES = {
     'ds_rom': 'S81 p4l-MU (520 dies; die gates est. 10-22..24)',
@@ -56,7 +56,7 @@ ELEMENTS = {
     ],
     ('ds_rom', 'mu'): [
         E('46-user AR / 10-user MTP calendar', 'REL', 'partial: slot issue measured on release seq_host/fixed_issue RTL, 0 collisions (cal1 152d70002); per-user = 1u compose', 'TOKEN-LEAD2', 'MU.S81.CAL'),
-        E('Multi-user collectives on MU die (u5, guard 2)', 'REL', 'u_ar46d 278,024 beats 46/46 + u_mtp10d 60,440 beats 10/10 WIN/INV PASS; realshift ar46r/mtp10r live ep5', 'TOKEN-LEAD2', 'TOK.DS.XDIE.5'),
+        E('Multi-user collectives on MU die (u5, guard 2)', 'REL', 'u_ar46d 278,024 beats 46/46 + u_mtp10d 60,440 beats 10/10 WIN/INV PASS; realshift ar46r/mtp10r live ep5 (8h49m at 08:40, ~888k cycles, no check receipt)', 'TOKEN-LEAD2', 'TOK.DS.XDIE.5'),
         E('Host plane N outstanding + MTP seed', 'REL', 'partial: SEQHOST_MU on die master; NS47 ph0-5 PASS, 6-10 state owed', 'LEAD4-S81/MU', 'MU.TOK.DS4'),
         E('Per-user layer benches', 'REL', 'partial: L0 MU-A slice (prog_L0_mu_A) 564/564 PASS; other layers + QF producers owed', 'LEAD4-S81/TOK2', 'TOK.DS.LAYER.MU'),
         E('lep tag + second landing + A/B select', 'MISS', 'lepmu{a,h}_dr gates; hier v2 d7cb08cb2 unrun', 'LEAD4-S81/MUBUF3', 'MU.TOK.DS3'),
@@ -65,7 +65,7 @@ ELEMENTS = {
         E('L0 + chained layer x35 (compute die, GEN3 rel)', 'REL', 'partial: toksim-qw2 4eeeaf287 gen3 DV ages + priced die edges folded: 254,125 cyc/token, 62.8% REL / 26.9% DIAG / 9.8% PRICED', 'TOKEN-LEAD2/TOK-QW', 'TOK.QW.LAYER.2'),
         E('Attention return (dr words + o_proj stream)', 'DIAG', 'no gen3 attn bench mode (compiled 119 vs measured 98)', 'TOKEN-LEAD2/TOK-QW', 'TOK.QW.LAYER.1'),
         E('LM head', 'PRICE', 'priced 3,101 cyc; head span RTL owed (QW-SEGCAL head WIP)', 'LEAD4-QW', 'TOK.QW.LAYER.3'),
-        E('KV attention 1u (KV die GEN9)', 'MISS', 'tb_kvattn_rel job3 (src fafc28231, ep5 out_fafc28231) still in Verilator build at 05:01 (live since 02:20); KV service 1,779 on kvs14c stand-in = DIAG', 'TOKEN-LEAD2/TOK-KVATT', 'TOK.QW.KV'),
+        E('KV attention 1u (KV die GEN9)', 'MISS', 'tb_kvattn_rel job3 (src fafc28231, ep5 out_fafc28231) still in Verilator build at 08:40 (live since 02:20); KV service 1,779 on kvs14c stand-in = DIAG', 'TOKEN-LEAD2/TOK-KVATT', 'TOK.QW.KV'),
         E('Layer-programme compiler (tt_ctlm deployment)', 'MISS', 'tt_ctlm deployment programme (G-C3) missing; STORE BLOCKED', 'LEAD4-QW', 'TOK.QW.BENCH.1'),
         E('36-layer TP4 golden', 'MISS', 'canonical driver done 21:13; gold4 ISA golds generated (not RTL), provenance FAIL retained', 'LEAD4-QW', 'TOK.QW.BENCH.2'),
         E('Compute <-> KV D2D (1u)', 'DIAG', 'dh2 1u PASS; shared D2D transport native proof c92c2be9d; release pair owed', 'LEAD4-QW', 'TOK.QW.XDIE'),
@@ -113,9 +113,9 @@ RECORDS = {
 }
 
 FLAGS = [
-    'S81 MTP 2,653.9 accepted tok/s is BELOW the owner floor (DS ROM MTP > ~3,000, owner 10-15); AR 836.0 is -31% vs the 1,212.6 compose (owner ledger: <= 15% total/design); S81-WQBP candidate 901.8/2,832 still below the floor. Coordinator/owner decision needed.',
-    'HBM-Qwen 372.2 tok/s as-built (softmax reductions ingress-bound); HH-6 pre-tree + MAX bind is the release lever (est ~990, unmeasured).',
-    'Qwen KV attention on GEN9 has NO measurement yet: tb_kvattn_rel job3 still building on ep5 (05:01); Qwen 1u falls 5,141.3 -> 4,724.0 once priced die edges are folded (toksim-qw2).',
+    'S81 MTP 2,653.9 accepted tok/s is BELOW the owner floor (DS ROM MTP > ~3,000, owner 10-15); AR 836.0 is -31% vs the 1,212.6 compose (owner ledger: <= 15% total/design); S81-WQBP candidate 901.8/2,832 still below the floor. Coordinator/owner decision needed. S81-RATE3 real-die compiled 966.2 AR / 2,998.2 MTP (012a3a074) is a compiler component only: full-stage NOT ADMITTED (FIN repair e551b1e9a local), so it is not the record.',
+    'HBM-Qwen 372.2 tok/s as-built (softmax reductions ingress-bound); HH-6 pre-tree + MAX bind is the release lever (est ~990, unmeasured). HBM-RATE7 (main c87a7bd14) composes 1,341.1 DS / 1,011.3 Qwen component-only; COLLFUSE PRETREE TB/runner source-map owed before it becomes a measured record.',
+    'Qwen KV attention on GEN9 has NO measurement yet: tb_kvattn_rel job3 Verilator make still running on ep5 at 08:40 (since 02:20, no record); Qwen 1u falls 5,141.3 -> 4,724.0 once priced die edges are folded (toksim-qw2).',
 ]
 
 # A100 80GB baseline (owner compare-against-a100-same-node-1018; HANDOFF section 2): Qwen3-8B measured on Vast.
