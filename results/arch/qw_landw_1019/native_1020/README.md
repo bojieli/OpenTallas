@@ -1,3 +1,5 @@
+IMPORTANT follow-up: mapped/README.md supersedes any suggestion below to bind107/116 immediately. Their mapped native census FAILS; HOLD pending structural repair. The10SRAM views pass mapped32.
+
 # Wide D8 routed native boundary receipts
 
 All 14 lw1-8d4a75a94 routes are CLOSED and their published TT/FF Liberty boundary audits pass. Fleet jobs ot-epyc5 oth-ubuntu-1363264-1792481892 and oth-ubuntu-1377386-1792481958 completed exit0; no route rerun. source_hashes.json pins copied published libraries and insertion metadata. Native audit scripts are the committed repository helpers; run.py/en_capture.py reproduce these receipts on the fleet.

@@ -1,0 +1,28 @@
+{
+ "pass_proc_async2sync_clk2fflogic": true,
+ "yosys": "Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+ "models": {
+  "canonical_ASR_normalized.v": "ee63e9a38cab2a9fa507f6fdc0480b04f047088a2f76464a5fca6182a9ba26d5",
+  "canonical_DFF_normalized.v": "cbba1c176afe1a03e677d21ee4e095c7b3d326689d8ec5ec46640d3e43a26254"
+ },
+ "cell_inventory": {
+  "proc": {
+   "$mux": 3,
+   "$and": 1,
+   "$not": 4,
+   "$dff": 1,
+   "$dffsr": 1,
+   "$scopeinfo": 2
+  },
+  "lowered": {
+   "$not": 4,
+   "$and": 4,
+   "$or": 2,
+   "$bwmux": 2,
+   "$ff": 6,
+   "$mux": 4,
+   "$eqx": 2,
+   "$scopeinfo": 2
+  }
+ }
+}

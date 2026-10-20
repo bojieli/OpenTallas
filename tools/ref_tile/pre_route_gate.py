@@ -66,7 +66,9 @@ GATE_REFUSE = ("clock_domain", "high_fanout", "wire_reach", "reset_landing")
 RELAUNCH_WAIT_S = int(os.environ.get("OT_GATE_RELAUNCH_WAIT_S", "900"))
 DAEMON_TREE = Path(os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
 # flow helpers the loop ships into every job snapshot (closure_loop.py ship_fpl / HELPERS); the remote gate does the same
-SHIP_HELPERS = ("tools/orfs_hold_mm.py", "tools/orfs_hold_mm.tcl", "tools/fp_margin_lint.py", "tools/fp_margin_lint.tcl",
+GATE_ONLY_HELPERS = ("tools/ref_tile/ref_route.sh", "tools/ref_tile/native_census.py", "tools/ref_tile/native_census.tcl")
+SHIP_HELPERS = (*GATE_ONLY_HELPERS,
+                "tools/orfs_hold_mm.py", "tools/orfs_hold_mm.tcl", "tools/fp_margin_lint.py", "tools/fp_margin_lint.tcl",
                 "tools/textbook_lint.py", "physical/common_flow/macro_cts_cluster.tcl",
                 "physical/common_flow/native_pg_binding.tcl")
 
@@ -979,9 +981,10 @@ T0=$(date +%s)
 # balanced at SS against the children's TT insertion targets measured a mixed-corner spread (dsfd_sp_pq_c, dscoll_ces0_sp)
 export OT_ORFS_CORNER_OVERRIDE=TC
 # pin groups exactly as the job's route command sets them (ref_tile.gen_job; the kit.env's own export wins in both)
-SRC=$R/src SYNTH_TIMEOUT={CAP} OT_PIN_GROUP_MAX={PGM} bash tools/ref_tile/ref_route.sh {KIT}/kit.env gate $R/routes floorplan; FRC=$?
+SRC=$R/src SYNTH_TIMEOUT={CAP} OT_PIN_GROUP_MAX={PGM} bash tools/ref_tile/ref_route.sh {KIT}/kit.env gate $R/routes floorplan --native-census; FRC=$?
 echo "GATE_FLOW_RC=$FRC GATE_FLOW_S=$(( $(date +%s) - T0 ))"
 C=$R/routes/gate/work/orfs; B=$(ls -d $C/results/asap7/*/base 2>/dev/null | head -1)
+[ -s $C/native_census.json ] && python3 -c 'import json,sys;print("GATE_NATIVE_CENSUS_RESULT "+json.dumps(json.load(open(sys.argv[1])),separators=(",",":")))' $C/native_census.json
 grep -hE "^\[ERROR|Error:|ERROR \[|timed out|TimeoutExpired|exceeded" $R/routes/gate/flow.log $C/*.log 2>/dev/null | head -8 | sed 's/^/GATE_FLOWERR /'
 [ $FRC -eq 0 ] || exit 0
 NB=${{B#$C/}}
@@ -1071,7 +1074,7 @@ fi
 """
 
 
-def ship_tar(paths, overlay_payloads=None, overlay_modes=None, spec=None):
+def ship_tar(paths, overlay_payloads=None, overlay_modes=None, spec=None, overlay_head=None):
     import io
     import tarfile
     helpers = ship_helpers(spec)
@@ -1079,6 +1082,14 @@ def ship_tar(paths, overlay_payloads=None, overlay_modes=None, spec=None):
         plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, paths=[h for h in helpers if (DAEMON_TREE / h).exists()],
                                                  pg_strict=HO.pg_strict(spec or {}))
         overlay_modes = {f["path"]: f["mode"] for f in plan["files"]}
+    # These files execute only in new gates, not in historical frozen routes.
+    # Capture their authoritative effective bytes at the SAME main head and
+    # bind them in the staged archive, without retrofitting route-plan members.
+    missing = [h for h in GATE_ONLY_HELPERS if h not in overlay_payloads and (DAEMON_TREE / h).exists()]
+    if missing:
+        gate_plan, gate_bytes = HO.capture_plan(DAEMON_TREE, ROOT, paths=missing, head=overlay_head)
+        overlay_payloads = {**overlay_payloads, **gate_bytes}
+        overlay_modes = {**(overlay_modes or {}), **{f["path"]: f["mode"] for f in gate_plan["files"]}}
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
         for p in sorted(set(paths)):
@@ -1259,7 +1270,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     start_commit = SB.git_head(ROOT)
     daemon_commit = SB.git_head(DAEMON_TREE)
     route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, pg_strict=HO.pg_strict(spec))
-    data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]}, spec=spec)
+    data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]}, spec=spec,
+                    overlay_head=route_plan['origin_main'])
     budget = gate_disk_budget(spec, data, disk)
     auto = host == "auto"
     threads = int(spec.get("route", {}).get("threads", 8))
@@ -1580,12 +1592,36 @@ def check_textbook_execution(g: Gate, out: str):
     return True
 
 
+def check_native_census(g: Gate, out: str):
+    """Missing native admission is an execution failure, never a WARN."""
+    rows = re.findall(r'^GATE_NATIVE_CENSUS_RESULT (\{.*\})$', out, re.M)
+    try:
+        reports = [json.loads(row) for row in rows]
+        report = reports[0]
+        if any(row != report for row in reports):
+            raise ValueError('conflicting census receipts')
+        if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
+                or report.get('status') != 'PASS' or report.get('limit') != 32
+                or not report.get('liberty') or not re.fullmatch('[a-f0-9]{64}', report.get('netlist', {}).get('sha256', ''))
+                or any(not re.fullmatch('[a-f0-9]{64}', row.get('sha256', '')) for row in report['liberty'])
+                or type(report.get('max_dynamic_loads')) is not int or not 0 <= report['max_dynamic_loads'] <= 32
+                or report.get('role_errors') or report.get('violations')):
+            raise ValueError('native census refused or provenance missing')
+    except (ValueError, IndexError, TypeError) as exc:
+        g.add('FAIL', 'native_census', str(exc),
+              'run mapped native census before floorplan; repair dynamic/reset drivers to <=32 actual load pins')
+        return False
+    g.add('INFO', 'native_census', f"mapped dynamic load limit32 PASS; max={report['max_dynamic_loads']}", '')
+    return True
+
+
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
                    cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
     """One parser for live runs and fully verified frozen-run recovery."""
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     check_textbook_execution(g,out)
+    check_native_census(g,out)
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if binding.get("staged_remeasurement"):
         if not SB.staged_remeasurement_matches_log(binding, out.encode()):
