@@ -1,0 +1,17 @@
+{
+  "name": "pin_aw_before",
+  "verdict": "CAUGHT",
+  "baseline_exit": 0,
+  "mutant_exit": 1,
+  "baseline_application_pass": true,
+  "mutant_named_invariant_failed": true,
+  "mutant_application_pass": false,
+  "extra_witness_present": true,
+  "source_delta": [
+    "private/qkd_host_if_pins_observed_rc.sv"
+  ],
+  "baseline_log_sha256": "dfd434e6157c9055308fb2a016f94ed0f13a23dac7bd39dcbcaa784a906718ce",
+  "mutant_log_sha256": "173d141391d4148d4edc4793b99fb6d344d48da7de7486c84b01c913d0afad7e",
+  "required_regex": "OFFERED_AW_CHANGED_BEFORE_ACCEPTANCE",
+  "scope": "minimum native seam COMPONENT source control, no production/native/physical qualification"
+}

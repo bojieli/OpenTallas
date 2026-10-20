@@ -1,0 +1,15 @@
+# leg sl_F0_nu4_m_gap30 mem 16 threads 8 2026-10-19T06:07:20-07:00
+# cmd: DV2_GAP=30 bash results/rtl/mu_qwen_1018/adopt_slice/run_group.sh ONE /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/slice_w F0_nu4_m_gap30 DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=30 -- m --work /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/slice_w/gap30
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-pve1        admits    -1 GB (avail 73, growth 74, headroom 0, waiters 0/0 GB) load 45/28 running 10 disk 1226 GB 
+ot-run: ot-agidock128  admits    12 GB (avail 69, growth 61, headroom 0, waiters 0/0 GB) load 20/64 running 12 disk 306 GB 
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/refill-0730 (13.1 GB) ot-agidock128 -> ot-epyc4 (no host with --dir admits 16 GB now)
+ot-run: SPILL: copied in 1313 s; running on ot-epyc4; written files go back to ot-agidock128 after the run
+ot-heavy: admitted on regular-crane as oth-ubuntu-2589291-1792416555 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2589291-1792416555): exit 0
+ot-run: SPILL: outputs copied back ot-epyc4 -> ot-agidock128; RAN on ot-epyc4: exit 0
+# ot-run rc=0 2026-10-19T06:36:06-07:00

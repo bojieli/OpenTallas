@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.kv_fault_reset_evidence.v1",
+ "qualified_release": false,
+ "archive_sha256": "09065fbb45a745afaeb3bd6a675505a9dde74b34c7626128ff0666da407a1faa",
+ "remote": "ot-epyc5:/srv/opentallas-scratch/claude/kv-fault-reset-1019/gen7",
+ "terminal_units": [
+  "1725144: GEN7 inventory/data validation/reset manifest PASS",
+  "1728419: first additive route REFUSED adjacent stations, preserved",
+  "1729157: corrected additive route PASS",
+  "1730482: initial clear model PASS, superseded by stronger source model",
+  "1731730: independent reset geometry/fanout PASS",
+  "1732738: strengthened clear model356sources/12cohorts/4mutants PASS conditional",
+  "1734070: review-only fragments emitted",
+  "1735742: six geometry corruption mutants REFUSED",
+  "1737322: final source guard and identical positive candidate hash PASS",
+  "1738502: fail-closed complete expression fanout census; candidate byte-identical and independent geometry PASS"
+ ],
+ "limitations": [
+  "No native clock/phase/root-skew qualification",
+  "No upstream ahub.hf clear/drain receipt",
+  "No POR/admission extension or complete STATUS retirement qualification",
+  "Cycle model, not new RTL bench; review-only fragments not installed"
+ ]
+}

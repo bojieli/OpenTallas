@@ -9,10 +9,14 @@ import stat
 import subprocess
 from pathlib import Path
 
+PG_HELPERS = ("pg_receipt.py", "../../physical/common_flow/audit_native_pg.tcl",
+              "../../physical/common_flow/native_pg_binding.tcl",
+              "../../physical/common_flow/native_pg_bootstrap.tcl")
+
 HELPERS = ("m6_stub_config.py", "eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
-           "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
+           "../../physical/common_flow/io_ref_routed.sdc", "../../physical/common_flow/clock_family.tcl", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "../textbook_lint.py", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py", "../hier_contract/child_lint.py",
            "../hier_contract/abstract_pin_stub.py", "../hier_contract/m6_pin_grant.py", "../../physical/common_flow/grt_macro_top_layer.tcl", "../../physical/common_flow/m6_pin_access.tcl",
@@ -69,6 +73,34 @@ def helper_paths(helpers=None):
     return sorted({os.path.normpath("tools/closure_loop/" + h) for h in (HELPERS if helpers is None else helpers)})
 
 
+def pg_strict(spec):
+    """The job/spec is authoritative; environment variables never admit strict jobs."""
+    value = spec.get("pg_strict", False)
+    if type(value) is not bool:
+        raise ValueError("pg_strict must be a boolean")
+    return value
+
+
+def validate_pg_policy(plan, pg_strict=False):
+    """Refuse policy drift; never retrofit PG dependencies into historical plans."""
+    if type(pg_strict) is not bool:
+        raise ValueError("pg_strict must be a boolean")
+    if not isinstance(plan, dict):
+        if pg_strict:
+            raise ValueError("strict PG job requires a strict frozen helper plan")
+        return
+    if type(plan.get("pg_strict", False)) is not bool or plan.get("pg_strict", False) != pg_strict:
+        raise ValueError("strict PG policy differs from frozen helper plan")
+    pg_paths = set(helper_paths(PG_HELPERS))
+    paths = {r.get("path") for r in plan.get("files", []) if isinstance(r, dict)}
+    if not pg_strict and pg_paths & paths:
+        raise ValueError("default frozen helper plan unexpectedly carries strict PG dependencies")
+    if pg_strict:
+        rows = frozen_rows(plan)
+        if not pg_paths <= {r["path"] for r in rows}:
+            raise ValueError("strict frozen helper plan lacks PG dependencies")
+
+
 def content_rows(files):
     return sorted([{k: f[k] for k in ("path", "sha256", "git_blob", "mode")} for f in files], key=lambda f: f["path"])
 
@@ -77,24 +109,34 @@ def digest(files):
     return hashlib.sha256(json.dumps(content_rows(files), sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def capture_plan(daemon, repo, paths=None, head=None, cache=None):
+def capture_plan(daemon, repo, paths=None, head=None, cache=None, pg_strict=False):
     """Freeze one origin ref and the actual effective bytes; HEAD is provenance only."""
+    if type(pg_strict) is not bool:
+        raise ValueError("pg_strict must be a boolean")
+    paths = set(helper_paths() if paths is None else paths)
+    if pg_strict:
+        paths.update(helper_paths(PG_HELPERS))
     head = main_head(repo) if head is None else head
     files, payloads = [], {}
-    for rel in sorted(set(helper_paths() if paths is None else paths)):
+    for rel in sorted(paths):
         literal = (Path(daemon) / rel).read_bytes()
         data, state = resolve_bytes(daemon, repo, rel, head, cache, local_bytes=literal)
         payloads[rel] = data
         files.append({"path": rel, "sha256": hashlib.sha256(data).hexdigest(), "git_blob": blob_id(data),
                       "mode": (Path(daemon) / rel).stat().st_mode & 0o777, "resolution": state,
                       "literal_git_blob": blob_id(literal)})
-    return {"schema": SCHEMA, "origin_main": head, "content_sha256": digest(files), "files": files}, payloads
+    plan = {"schema": SCHEMA, "origin_main": head, "content_sha256": digest(files), "files": files}
+    if pg_strict:
+        plan["pg_strict"] = True
+    return plan, payloads
 
 
 def compare_plans(frozen, effective):
     if not isinstance(frozen, dict) or frozen.get("schema") != SCHEMA:
         return False, "missing frozen effective helper plan"
     try:
+        validate_pg_policy(effective, pg_strict=effective.get("pg_strict", False))
+        validate_pg_policy(frozen, pg_strict=effective.get("pg_strict", False))
         if digest(frozen["files"]) != frozen.get("content_sha256"):
             return False, "frozen helper plan digest mismatch"
         old = {f["path"]: f for f in content_rows(frozen["files"])}
@@ -228,6 +270,87 @@ RULE_COMMITS = {
     "53efc860bda4dc258b0ec9f229d1b6a9b89d05ff": dict(
         kind="tightening", rule="pin-track-access",
         what="fp_margin_lint: IO pins without actual routing-track access FAIL"),
+    # ROOT-UNBLOCK 10-19: two main commits without a trailer refused every older gate (unclassified).
+    # 96f1d6e0d (RC-IOREF): ot_rc_cal_hold now re-syncs the numeric FF I/O references (ot_mm_unsync; ot_mm_sync) after
+    # applying and after restoring the calibrated hold RC.  It acts only when RC-CAL changes something AND the MM scene
+    # was already synced (OT_HOLD_MM).  No gate FAIL rule reads it (gate hold is WARN-only; the clock tree is not touched),
+    # but it changes the hold-repair targets: stale platform-RC references were pessimistic for outputs and optimistic
+    # for inputs (rc_ioref_capc_1019: out_hold 30.3 -> 111.6 ps, refmax 605 -> 522 ps), so repair buffers can move either
+    # way.  At gate CTS (placement mode) the hold RC applies only with a spine (ot_rc_cal_spine), so the gate's CTS ODB
+    # can differ only for spine clusters -> tightening scoped by requires=rc_cal_spine_hold (spine cluster: re-gate).
+    "96f1d6e0d0577256388fba8ae81830b4c80f4284": dict(
+        kind="tightening", rule="rc-ioref-refresh", requires="rc_cal_spine_hold", paths=("tools/orfs_hold_mm.tcl",),
+        what="RC-IOREF: FF I/O references re-measured under the calibrated hold RC (and again after restore) inside "
+             "ot_rc_cal_hold; gate CTS hold repair differs only for spine clusters under OT_HOLD_MM; never a gate FAIL "
+             "rule; route hold repair targets change in either direction"),
+    # e03b80922 (SINGLE-CLOCK BW contract): ot_mm_sync_link_periods now calls ot_single_clock_check, a proc that exists
+    # only in kits whose spec carries single_clock_contract (single_clock_contract.guard); it can raise (wrong root,
+    # unowned virtual clock, period mismatch), never relax -> tightening scoped by requires=single_clock_contract.
+    "e03b80922d812ab1d803f3c4c9313e74f5eeba9b": dict(
+        kind="tightening", rule="single-clock-contract", requires="single_clock_contract", paths=("tools/orfs_hold_mm.tcl",),
+        what="SINGLE-CLOCK: MM link-period sync runs ot_single_clock_check when the kit defines it (spec "
+             "single_clock_contract); other kits never define the proc -> unchanged"),
+    "c0b7b4d66a11c2125ad0d1ecac53454604b54cc6": dict(
+        kind="tightening", rule="single-clock-contract", requires="single_clock_contract",
+        paths=("physical/common_flow/io_ref_routed.sdc",),
+        what="SINGLE-CLOCK: io_ref_routed.sdc runs ot_single_clock_check when the kit defines it (spec "
+             "single_clock_contract); other kits never define the proc -> unchanged"),
+    # b7aff0fb8 / a6dc6094a (CLOCK-FAMILY ordinary roots): with no generated clock family (ot_cf_master empty) the
+    # family helpers fall back to the pre-family all_registers / legacy ot_ir_arr ownership query, which the strict
+    # family query could refuse ('wrong/ambiguous clock ownership') on check-only macro entries; generated-family kits run
+    # the same code.  a6dc6094a only makes that rename idempotent when the SDC is re-sourced after an RC refresh (the
+    # second source used to raise).  ck_insertion: ot_cf_root is the identity for ordinary roots.  -> relaxing.
+    "b7aff0fb8961b5ac15a3ea8d8551aa62db9facd9": dict(
+        kind="relaxing", rule="clock-family-ordinary",
+        paths=("physical/common_flow/clock_family.tcl", "physical/common_flow/io_ref_routed.sdc",
+               "tools/closure_loop/ck_insertion.py"),
+        what="CLOCK-FAMILY: ordinary roots (no generated family) use the pre-family all_registers ownership query "
+             "again; generated families unchanged; an ownership FAIL can only disappear"),
+    "a6dc6094abd587d675adc438a0247d115bd63862": dict(
+        kind="relaxing", rule="clock-family-ordinary", paths=("physical/common_flow/io_ref_routed.sdc",),
+        what="CLOCK-FAMILY: re-sourcing io_ref_routed.sdc after an RC refresh no longer raises on the legacy rename"),
+    # a6d33cc98 (BALANCED-RESET): textbook_lint gains balanced_reset_proof, active only with --balanced-reset-profile,
+    # which pre_route_gate passes only when spec.reset_landing.first_copies is set.  For such a kit a proved two-edge
+    # landing skips the rst_land_max FAIL (relaxing) but a refused proof is a new FAIL (tightening); every kit without
+    # first_copies runs byte-identical checks -> tightening scoped by requires=balanced_reset_profile.
+    "a6d33cc985d3a0d686ba2b1d94930b3350b5de14": dict(
+        kind="tightening", rule="balanced-reset-proof", requires="balanced_reset_profile", paths=("tools/textbook_lint.py",),
+        what="BALANCED-RESET: opt-in mapped two-edge reset proof for kits with reset_landing.first_copies (proof replaces "
+             "the rst_land_max sink limit, refusal is a FAIL); kits without first_copies unchanged"),
+    # ROOT-RULETAG 10-19: the six remaining helper-chain commits without a (valid) trailer.
+    # 03c544ca1 (DAEMON-FIX2): abstract_pin_stub.move_stubs pin index = same hits in the same order (randomised
+    # equivalence test vs the all-pairs scan); the closure_loop.py part is daemon restart-drain / checkpoint plumbing.
+    "03c544ca1ab6f68f0d2a94bb2e7fb43751eedce7": dict(
+        kind="neutral", rule="pin-stub-index",
+        what="DAEMON-FIX2: abstract_pin_stub binned pin index (identical output, faster); daemon SIGTERM drain + "
+             "write-ahead checkpoint + staged helper ship; no gate check or limit changes"),
+    # b7918e979 (KV-ECTL5): child_lint (i) pin access is a new FAIL on hard-child views (the pre-route gate lints spec
+    # "children" only) and ref_tile gen refuses such a view; abstract_pin_stub's wider pin keep-out only shrinks the
+    # pocket set child_lint (h) can see.  -> tightening, judged per kit by requires=child_pin_access (no children, or no
+    # child view LEF with a violation: gate kept).
+    "b7918e97926daf87d0edfee3e62f07322d62e96b": dict(
+        kind="tightening", rule="child-pin-access", requires="child_pin_access",
+        what="KV-ECTL5: child_lint (i) FAILs a hard-child pin with a same-layer OBS closer than the wide-metal spacing; "
+             "ref_tile gen refuses such a child view; pin keep-out >= wide spacing (pockets can only shrink)"),
+    # view_export.py (PUBLISH_ONLY): runs only in collect / re-export after the route verdict; no pre-route gate reads it.
+    # bb5e443cd's trailer "Gate-Rule: export-session reproduces verdict" is not in the vocabulary, so it read unclassified.
+    "bb5e443cdb8423c7b3ad4fab6961c201bfeb9e1b": dict(
+        kind="neutral", rule="export-replays-verdict",
+        what="PF-HARDCHILD-EXPORT: the export session replays the verdict's OT_PF_MACRO_LIBS line, so export slack = "
+             "verdict slack; no rule or limit changes"),
+    "b8fa05678b7e74d2549d37a0d6c8a7608abc6731": dict(
+        kind="relaxing", rule="exact-abstract-fallback",
+        what="RLYH0-NE: export publishes the exact-shape abstract only when the default abstract has child_lint (i) "
+             "pin-access violations and the exact one has fewer (a collect FAIL can only disappear); PUBLISH_ONLY "
+             "drift sanction; identical export-lint FAIL stops at the first repeat (retry count, not a verdict)"),
+    "cdd8d92a84daa2bf1d60a08d9d8ba97be64c1488": dict(
+        kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
+        what="view_export judges pin access on the finalized LEF too, so the exact-shape fallback also runs when the "
+             "published LEF would fail child_lint (i); a collect FAIL can only disappear"),
+    "ff7aa2deb861035c309af48249284018f40718b0": dict(
+        kind="relaxing", rule="exact-abstract-fallback", paths=("tools/tt_views/view_export.py",),
+        what="TW3-LGTAP: exact shapes only inside pin windows when the exact abstract is > 200k rects; published only "
+             "when it has fewer pin-access violations than the default; a collect FAIL can only disappear"),
 }
 # ROOT-0040 name, kept for callers / tests: the relaxing entries
 RELAXING_RULE_COMMITS = {c: e for c, e in RULE_COMMITS.items() if e.get("kind") == "relaxing"}

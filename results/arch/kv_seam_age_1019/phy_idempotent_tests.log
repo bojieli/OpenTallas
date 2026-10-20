@@ -1,0 +1,20 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-epyc5       admits   597 GB (avail 531, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 11 disk 1040 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1707194-1792428690 after 0 s
+test_main_preserves_already_scalarized_native_phy_ports (test_phy_fdi_binding.PhyFdi.test_main_preserves_already_scalarized_native_phy_ports) ... ok
+test_main_rejects_mixed_bundle_and_native_ports (test_phy_fdi_binding.PhyFdi.test_main_rejects_mixed_bundle_and_native_ports) ... ok
+test_native_main_splits_both_licensed_phy_bundles (test_phy_fdi_binding.PhyFdi.test_native_main_splits_both_licensed_phy_bundles) ... ok
+
+----------------------------------------------------------------------
+kv_bound_netlist: 2 instances, 2 masters, 0 rewritten, 0 constant bits folded ({}), 0 strap ports, off-chip [], problems []
+kv_bound_netlist: 2 instances, 2 masters, 2 rewritten, 0 constant bits folded ({}), 0 strap ports, off-chip [], problems []
+Ran 3 tests in 0.008s
+
+OK
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1707194-1792428690): exit 0

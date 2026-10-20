@@ -1,0 +1,33 @@
+{
+  "job": "oth-ubuntu-3737250-1792445463",
+  "scope": "Private logical source reset/reinstall +15 XS-reader epochs only",
+  "reset_assert_edge": 1300,
+  "reset_release_edge": 1310,
+  "full_raw_reinstall_offset": 1400,
+  "real_raw_row_writes": 640,
+  "actual_QB_commands": 40,
+  "actual_gathers": 40,
+  "actual_macro_commits": 80,
+  "measured_macro_commit_last": 2660,
+  "actual_GO": 15,
+  "actual_END": 15,
+  "actual_GW": 2,
+  "actual_read_requests": 360,
+  "actual_code_scale_blocks": 600,
+  "first_actual_read": 2957,
+  "last_actual_read": 11418,
+  "reset_without_reinstall_negative": "retained_xs_result/mut_6.log preserves FAIL",
+  "fresh_reinstall_and_all15_reads_PASS": true,
+  "late_GW_after_reinstall_causal_FAIL": true,
+  "actual_clock_origin": "XR CTL pin sample edge0; $time/834-ORIGIN used for macro commit ledger",
+  "new_datapath_RTL": false,
+  "production_MU_replay_overlap_proved": false,
+  "native_physical_phase": null,
+  "actual_frame_CAP_VP_proved": false,
+  "whole_token_deadline_pass": null,
+  "frozen_RTL_sources": "qnorm_source_bundle/manifest.json exact51 files",
+  "private_source_SHA256": {
+    "tb_retained_xs_reinstall.sv": "73d61a3cd129ab9da8dcb68b1cd97316fc87f76e6bd174c70c4757357a246c0a",
+    "run_retained_xs_reinstall.sh": "fe6ce8aff1ccccf2900776fba17425269b89a34c4870d36e599c00dbf32e8c77"
+  }
+}

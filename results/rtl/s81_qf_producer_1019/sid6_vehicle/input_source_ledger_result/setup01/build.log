@@ -1,0 +1,108 @@
+%Error: tb_input_source_ledger.sv:176:21: syntax error, unexpected matches
+  176 |  integer t;reg[31:0]matches;reg[1100:0]word;
+      |                     ^~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: tb_input_source_ledger.sv:183:5: syntax error, unexpected matches
+  183 |     matches=0;
+      |     ^~~~~~~
+%Error: tb_input_source_ledger.sv:184:78: syntax error, unexpected matches, expecting case or casex or casez or if
+  184 |     for(integer age=0;age<32;age++)if(t>=age && source_history[t-age]===word)matches[age]=1;
+      |                                                                              ^~~~~~~
+%Error: tb_input_source_ledger.sv:185:43: syntax error, unexpected matches, expecting IDENTIFIER-for-type
+  185 |     nsamples[f]++;age_mask[f]=age_mask[f]&matches;
+      |                                           ^~~~~~~
+%Error: tb_input_source_ledger.sv:186:81: syntax error, unexpected matches, expecting ')' or ','
+  186 |     $display("CFIFO_INPUT_WORD t=%0d frame=%0d matches=%h fault=%b word=%h",t,f,matches,input_faults[f],word);
+      |                                                                                 ^~~~~~~
+%Error: tb_input_source_ledger.sv:187:8: syntax error, unexpected matches, expecting IDENTIFIER-for-type
+  187 |     if(matches==0)begin probe_errors++;$display("INPUT_WORD_HAS_NO_REAL_SOURCE_MATCH");end
+      |        ^~~~~~~
+%Error: tb_input_source_ledger.sv:191:1: syntax error, unexpected end
+  191 | end
+      | ^~~
+%Error: tb_input_source_ledger.sv:194:7: syntax error, unexpected integer, expecting IDENTIFIER or IDENTIFIER-for-pathpulse or genvar or randomize
+  194 |   for(integer f=0;f<6;f++)begin
+      |       ^~~~~~~
+%Error: tb_input_source_ledger.sv:196:87: syntax error, unexpected ++, expecting '('
+  196 |    if(nsamples[f]!=nsources||nsources==0||age_mask[f]==0||input_faults[f])probe_errors++;
+      |                                                                                       ^~
+%Error: tb_input_source_ledger.sv:198:28: syntax error, unexpected +=, expecting '('
+  198 |   if(probe_errors)begin err+=probe_errors;$display("INPUT_BOUNDARY_OBSERVATION_FAIL errors=%0d",probe_errors);end
+      |                            ^~
+%Error: tb_input_source_ledger.sv:199:8: syntax error, unexpected $display
+  199 |   else $display("INPUT_BOUNDARY_OBSERVATION_PASS no_numericframe_or_nativephase_claim");
+      |        ^~~~~~~~
+%Error: tb_input_source_ledger.sv:206:2: syntax error, unexpected $display
+  206 |  $display("INPUT_CLOCK_TUPLE frame=3L01 lane=0 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L01.lk[0+:3],input_cone.ingress_u_f_3L01.rsync,input_cone.ingress_u_f_3L01.g_lane[0].u_l.wc,input_cone.ingress_u_f_3L01.g_lane[0].u_l.rc,input_cone.ingress_u_f_3L01.g_lane[0].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:211:2: syntax error, unexpected $display
+  211 |  $display("INPUT_CLOCK_TUPLE frame=3L01 lane=1 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L01.lk[3+:3],input_cone.ingress_u_f_3L01.rsync,input_cone.ingress_u_f_3L01.g_lane[1].u_l.wc,input_cone.ingress_u_f_3L01.g_lane[1].u_l.rc,input_cone.ingress_u_f_3L01.g_lane[1].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:216:2: syntax error, unexpected $display
+  216 |  $display("INPUT_CLOCK_TUPLE frame=3L01 lane=2 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L01.lk[6+:3],input_cone.ingress_u_f_3L01.rsync,input_cone.ingress_u_f_3L01.g_lane[2].u_l.wc,input_cone.ingress_u_f_3L01.g_lane[2].u_l.rc,input_cone.ingress_u_f_3L01.g_lane[2].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:221:2: syntax error, unexpected $display
+  221 |  $display("INPUT_CLOCK_TUPLE frame=3L01 lane=3 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L01.lk[9+:3],input_cone.ingress_u_f_3L01.rsync,input_cone.ingress_u_f_3L01.g_lane[3].u_l.wc,input_cone.ingress_u_f_3L01.g_lane[3].u_l.rc,input_cone.ingress_u_f_3L01.g_lane[3].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:226:2: syntax error, unexpected $display
+  226 |  $display("INPUT_CLOCK_TUPLE frame=3L02 lane=0 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L02.lk[0+:3],input_cone.ingress_u_f_3L02.rsync,input_cone.ingress_u_f_3L02.g_lane[0].u_l.wc,input_cone.ingress_u_f_3L02.g_lane[0].u_l.rc,input_cone.ingress_u_f_3L02.g_lane[0].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:231:2: syntax error, unexpected $display
+  231 |  $display("INPUT_CLOCK_TUPLE frame=3L02 lane=1 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L02.lk[3+:3],input_cone.ingress_u_f_3L02.rsync,input_cone.ingress_u_f_3L02.g_lane[1].u_l.wc,input_cone.ingress_u_f_3L02.g_lane[1].u_l.rc,input_cone.ingress_u_f_3L02.g_lane[1].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:236:2: syntax error, unexpected $display
+  236 |  $display("INPUT_CLOCK_TUPLE frame=3L02 lane=2 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L02.lk[6+:3],input_cone.ingress_u_f_3L02.rsync,input_cone.ingress_u_f_3L02.g_lane[2].u_l.wc,input_cone.ingress_u_f_3L02.g_lane[2].u_l.rc,input_cone.ingress_u_f_3L02.g_lane[2].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:241:2: syntax error, unexpected $display
+  241 |  $display("INPUT_CLOCK_TUPLE frame=3L02 lane=3 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L02.lk[9+:3],input_cone.ingress_u_f_3L02.rsync,input_cone.ingress_u_f_3L02.g_lane[3].u_l.wc,input_cone.ingress_u_f_3L02.g_lane[3].u_l.rc,input_cone.ingress_u_f_3L02.g_lane[3].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:246:2: syntax error, unexpected $display
+  246 |  $display("INPUT_CLOCK_TUPLE frame=3L03 lane=0 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L03.lk[0+:3],input_cone.ingress_u_f_3L03.rsync,input_cone.ingress_u_f_3L03.g_lane[0].u_l.wc,input_cone.ingress_u_f_3L03.g_lane[0].u_l.rc,input_cone.ingress_u_f_3L03.g_lane[0].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:251:2: syntax error, unexpected $display
+  251 |  $display("INPUT_CLOCK_TUPLE frame=3L03 lane=1 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L03.lk[3+:3],input_cone.ingress_u_f_3L03.rsync,input_cone.ingress_u_f_3L03.g_lane[1].u_l.wc,input_cone.ingress_u_f_3L03.g_lane[1].u_l.rc,input_cone.ingress_u_f_3L03.g_lane[1].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:256:2: syntax error, unexpected $display
+  256 |  $display("INPUT_CLOCK_TUPLE frame=3L03 lane=2 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L03.lk[6+:3],input_cone.ingress_u_f_3L03.rsync,input_cone.ingress_u_f_3L03.g_lane[2].u_l.wc,input_cone.ingress_u_f_3L03.g_lane[2].u_l.rc,input_cone.ingress_u_f_3L03.g_lane[2].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:261:2: syntax error, unexpected $display
+  261 |  $display("INPUT_CLOCK_TUPLE frame=3L03 lane=3 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3L03.lk[9+:3],input_cone.ingress_u_f_3L03.rsync,input_cone.ingress_u_f_3L03.g_lane[3].u_l.wc,input_cone.ingress_u_f_3L03.g_lane[3].u_l.rc,input_cone.ingress_u_f_3L03.g_lane[3].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:266:2: syntax error, unexpected $display
+  266 |  $display("INPUT_CLOCK_TUPLE frame=3R01 lane=0 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R01.lk[0+:3],input_cone.ingress_u_f_3R01.rsync,input_cone.ingress_u_f_3R01.g_lane[0].u_l.wc,input_cone.ingress_u_f_3R01.g_lane[0].u_l.rc,input_cone.ingress_u_f_3R01.g_lane[0].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:271:2: syntax error, unexpected $display
+  271 |  $display("INPUT_CLOCK_TUPLE frame=3R01 lane=1 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R01.lk[3+:3],input_cone.ingress_u_f_3R01.rsync,input_cone.ingress_u_f_3R01.g_lane[1].u_l.wc,input_cone.ingress_u_f_3R01.g_lane[1].u_l.rc,input_cone.ingress_u_f_3R01.g_lane[1].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:276:2: syntax error, unexpected $display
+  276 |  $display("INPUT_CLOCK_TUPLE frame=3R01 lane=2 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R01.lk[6+:3],input_cone.ingress_u_f_3R01.rsync,input_cone.ingress_u_f_3R01.g_lane[2].u_l.wc,input_cone.ingress_u_f_3R01.g_lane[2].u_l.rc,input_cone.ingress_u_f_3R01.g_lane[2].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:281:2: syntax error, unexpected $display
+  281 |  $display("INPUT_CLOCK_TUPLE frame=3R01 lane=3 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R01.lk[9+:3],input_cone.ingress_u_f_3R01.rsync,input_cone.ingress_u_f_3R01.g_lane[3].u_l.wc,input_cone.ingress_u_f_3R01.g_lane[3].u_l.rc,input_cone.ingress_u_f_3R01.g_lane[3].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:286:2: syntax error, unexpected $display
+  286 |  $display("INPUT_CLOCK_TUPLE frame=3R02 lane=0 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R02.lk[0+:3],input_cone.ingress_u_f_3R02.rsync,input_cone.ingress_u_f_3R02.g_lane[0].u_l.wc,input_cone.ingress_u_f_3R02.g_lane[0].u_l.rc,input_cone.ingress_u_f_3R02.g_lane[0].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:291:2: syntax error, unexpected $display
+  291 |  $display("INPUT_CLOCK_TUPLE frame=3R02 lane=1 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R02.lk[3+:3],input_cone.ingress_u_f_3R02.rsync,input_cone.ingress_u_f_3R02.g_lane[1].u_l.wc,input_cone.ingress_u_f_3R02.g_lane[1].u_l.rc,input_cone.ingress_u_f_3R02.g_lane[1].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:296:2: syntax error, unexpected $display
+  296 |  $display("INPUT_CLOCK_TUPLE frame=3R02 lane=2 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R02.lk[6+:3],input_cone.ingress_u_f_3R02.rsync,input_cone.ingress_u_f_3R02.g_lane[2].u_l.wc,input_cone.ingress_u_f_3R02.g_lane[2].u_l.rc,input_cone.ingress_u_f_3R02.g_lane[2].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:301:2: syntax error, unexpected $display
+  301 |  $display("INPUT_CLOCK_TUPLE frame=3R02 lane=3 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R02.lk[9+:3],input_cone.ingress_u_f_3R02.rsync,input_cone.ingress_u_f_3R02.g_lane[3].u_l.wc,input_cone.ingress_u_f_3R02.g_lane[3].u_l.rc,input_cone.ingress_u_f_3R02.g_lane[3].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:306:2: syntax error, unexpected $display
+  306 |  $display("INPUT_CLOCK_TUPLE frame=3R03 lane=0 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R03.lk[0+:3],input_cone.ingress_u_f_3R03.rsync,input_cone.ingress_u_f_3R03.g_lane[0].u_l.wc,input_cone.ingress_u_f_3R03.g_lane[0].u_l.rc,input_cone.ingress_u_f_3R03.g_lane[0].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:311:2: syntax error, unexpected $display
+  311 |  $display("INPUT_CLOCK_TUPLE frame=3R03 lane=1 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R03.lk[3+:3],input_cone.ingress_u_f_3R03.rsync,input_cone.ingress_u_f_3R03.g_lane[1].u_l.wc,input_cone.ingress_u_f_3R03.g_lane[1].u_l.rc,input_cone.ingress_u_f_3R03.g_lane[1].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:316:2: syntax error, unexpected $display
+  316 |  $display("INPUT_CLOCK_TUPLE frame=3R03 lane=2 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R03.lk[6+:3],input_cone.ingress_u_f_3R03.rsync,input_cone.ingress_u_f_3R03.g_lane[2].u_l.wc,input_cone.ingress_u_f_3R03.g_lane[2].u_l.rc,input_cone.ingress_u_f_3R03.g_lane[2].u_l.warm);
+      |  ^~~~~~~~
+%Error: tb_input_source_ledger.sv:321:2: syntax error, unexpected $display
+  321 |  $display("INPUT_CLOCK_TUPLE frame=3R03 lane=3 time_ps=%0t phase_ps=%0d root_t=%0d K=%0d rsync=%b wc=%0d rc=%0d warm=%b",$time,$time%834,($time/834)-ORIGIN,input_cone.ingress_u_f_3R03.lk[9+:3],input_cone.ingress_u_f_3R03.rsync,input_cone.ingress_u_f_3R03.g_lane[3].u_l.wc,input_cone.ingress_u_f_3R03.g_lane[3].u_l.rc,input_cone.ingress_u_f_3R03.g_lane[3].u_l.warm);
+      |  ^~~~~~~~
+%Error: Cannot continue
+        ... This fatal error may be caused by the earlier error(s); resolve those first.

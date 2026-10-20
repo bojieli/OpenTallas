@@ -47,6 +47,7 @@ import pin_fit  # noqa: E402
 import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
+from measured_band_fill import lattice_band_errors, measured_band_fill  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -325,18 +326,32 @@ def reset_landing_plan(s: dict) -> dict | None:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
     plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    fc = rl.get("first_copies")
+    if fc is not None:
+        if (not isinstance(fc, dict) or not fc or any(p not in resets for p in fc)
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 32 for n in fc.values())):
+            raise SpecError('spec: reset_landing.first_copies must map declared resets to integers 1..32')
+        if st != 2:
+            raise SpecError('spec: balanced first_copies requires exactly two landing stages')
+        if not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32:
+            raise SpecError('spec: balanced first_copies requires reset_relay_split.max_loads <=32')
+        plan['first_copies'] = dict(fc)
     cp = rl.get("copies")
     if cp is not None:
         # KV-RELAYGEN 2026-10-19: {"<reset port>": N} -> the last landing stage has N KEPT identical copies, spread over the
         # core's reset loads by reset_relay_split (ot_rst_copies.tcl); latency unchanged (the copies are the last stage)
         if (not isinstance(cp, dict) or not cp or any(p not in resets for p in cp)
-                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 64 for n in cp.values())):
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= (1024 if fc is not None else 64) for n in cp.values())):
             raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
         if st < 2:
             raise SpecError("spec: reset_landing.copies needs stages >= 2")
         if not reset_relay_split_plan(s):
             raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
+        if fc is not None and (set(fc) != set(cp) or any(cp[p] > 32*fc[p] for p in fc)):
+            raise SpecError('spec: balanced copies requires matching first/final ports and <=32 final copies per first')
         plan["copies"] = dict(cp)
+    elif fc is not None:
+        raise SpecError('spec: first_copies requires final copies')
     return plan
 
 
@@ -372,6 +387,8 @@ def reset_relay_split_vars(s: dict) -> list:
     rl = reset_landing_plan(s)
     if rl and rl.get("enable") and rl.get("copies"):
         out.append("--orfs-var OT_RST_LAND_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["copies"].items())))
+    if rl and rl.get("enable") and rl.get("first_copies"):
+        out.append("--orfs-var OT_RST_LAND_FIRST_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["first_copies"].items())))
     return out
 
 
@@ -548,6 +565,8 @@ def gen_pin_hooks(s: dict) -> dict:
 # --------------------------------------------------------------------------------------------- spec
 def load_spec(path: str) -> dict:
     s = json.loads(Path(path).read_text())
+    if type(s.get("pg_strict", False)) is not bool:
+        raise SpecError("pg_strict must be a boolean")
     for k in ("name", "top", "sources", "clock_port", "pins"):
         if k not in s:
             raise SpecError(f"spec: missing '{k}'")
@@ -1224,31 +1243,13 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
     reason = str(fr.get("pin_bound", "")).strip()
     reason_kind = "pin-bound"
     structural = fr.get("lattice_channel_bound")
-    if isinstance(structural, dict) and not reason:
-        # Gate-rule exception: root must approve it; verify the geometry rather
-        # than accepting claimed utilisation/channel numbers as a low-fill escape.
-        band = structural.get("std_band_y_um", [])
-        lattice = 43.2
-        valid = (str(structural.get("why", "")).strip()
-                 and str(structural.get("approved_by", "")).strip()
-                 and len(blocks) >= 4 and len(band) == 2)
-        if valid:
-            lo, hi = map(float, band)
-            density = float(std_area) / ((W - 2 * CORE_MARGIN) * (hi - lo)) if hi > lo else 0
-            valid = (CORE_MARGIN <= lo < hi <= H - CORE_MARGIN and 0.4 <= density <= 0.6)
-            for block in blocks:
-                valid = valid and block.get("kind") == "macro"
-                valid = valid and all(abs(block[axis] / lattice - round(block[axis] / lattice)) < 1e-6
-                                      for axis in ("x", "y"))
-                valid = valid and (block["y"] + block["h"] <= lo or block["y"] >= hi)
-            for i, block in enumerate(blocks):
-                for other in blocks[i + 1:]:
-                    gx = max(block["x"] - other["x"] - other["w"], other["x"] - block["x"] - block["w"])
-                    gy = max(block["y"] - other["y"] - other["h"], other["y"] - block["y"] - block["h"])
-                    valid = valid and max(gx, gy) >= CHANNEL_UM - 1e-6
-        if valid:
-            reason = str(structural["why"]).strip()
-            reason_kind = "lattice/channel-bound gate-rule exception"
+    if structural is not None:
+        errors = lattice_band_errors(s, W, H, blocks, float(std_area))
+        if errors:
+            return ("FAIL", "fill", "invalid lattice/channel band: " + "; ".join(errors),
+                    "fix measured sizing geometry; actual placement verification is also required")
+        reason = str(structural["why"]).strip()
+        reason_kind = "lattice/channel-bound gate-rule exception (placement verification required)"
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
@@ -1650,7 +1651,7 @@ def spec_io_budget(s: dict) -> tuple:
 def io_budget_env(s: dict) -> dict:
     """OT_IO_*_BUDGET_PS for a tightened single-clock boundary ({} = nominal 0.2 T, kits unchanged)"""
     fin, fout = spec_io_budget(s)
-    if (fin, fout) == (0.2, 0.2):
+    if (fin, fout) == (0.2, 0.2) and not s.get('single_clock_contract'):
         return {}
     signoff = clock_entry_constraints.signoff_period(s)
     return {"OT_IO_IN_BUDGET_PS": round(signoff * fin, 3), "OT_IO_OUT_BUDGET_PS": round(signoff * fout, 3)}
@@ -1672,7 +1673,8 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             # Extra SDC may declare secondary clocks. Data slew must exclude
             # their sources; explicit source-clock transitions in extra SDC stand.
             + "set_input_transition 150 [all_inputs -no_clocks]\n"
-            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT))
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
+            + clock_entry_constraints.single_clock_contract.guard(s))
 
 
 def sdc_extra(s: dict) -> str:
@@ -1705,7 +1707,8 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
             + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
-            + "\nset_propagated_clock [all_clocks]\n")
+            + "\nset_propagated_clock [all_clocks]\n"
+            + clock_entry_constraints.single_clock_contract.guard(s))
 
 
 def io_hold_relief_ps(s: dict) -> int:
@@ -2138,6 +2141,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({shell_array(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
+        *(["export OT_PG_STRICT=1"] if s.get("pg_strict", False) else []),
         *pin_order_desc_env(s),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
@@ -2245,6 +2249,7 @@ def referenced_paths(s: dict, kd: str) -> list:
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
+    out += clock_entry_constraints.single_clock_contract.evidence_paths(s)
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
     if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
@@ -2301,6 +2306,13 @@ def referenced_paths(s: dict, kd: str) -> list:
         except (ValueError, OSError) as error:
             raise SpecError(str(error)) from error
         out += ["tools/ref_tile/raw_macro_clocks.py", *raw_paths]
+    pg_strict = s.get("pg_strict", False)
+    if type(pg_strict) is not bool:
+        raise SpecError("pg_strict must be a boolean")
+    if pg_strict:
+        out += ["physical/common_flow/native_pg_binding.tcl",
+                "physical/common_flow/native_pg_bootstrap.tcl",
+                "physical/common_flow/audit_native_pg.tcl", "tools/closure_loop/pg_receipt.py"]
     return out
 
 
@@ -2354,6 +2366,8 @@ def route_hold_context(s: dict, kd: str) -> dict:
 
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     r, j = s["route"], dict(s.get("job", {}))
+    if s.get("single_clock_contract"):
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(clock_entry_constraints.single_clock_contract.evidence_paths(s)))
     if s.get("registered_cluster_candidate"):
         from registered_cluster_budget import evidence_paths
         j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
@@ -2374,6 +2388,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     mv = " ".join(f"--macro-view {v}" for v in views)
     spec = {
         "name": name, "block": s["top"], "ref_tile": True,
+        **({"pg_strict": True} if s.get("pg_strict", False) else {}),
         **({"m6_pin_grant": s["m6_pin_grant"]} if s.get("m6_pin_grant") else {}),
         "owner": j.get("owner", "Claude:ref-flow"),
         "purpose": j.get("purpose", f"reference tile flow ({s['kind']}) kit {kd}"),

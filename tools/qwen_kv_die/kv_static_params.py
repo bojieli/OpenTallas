@@ -308,6 +308,12 @@ def check(model, rs, fs, unresolved, actual, die_v=None):
             # HKV-DIE3 10-19: per tile, by master (expanded children such as the ASTK strip's rly_296 relays included)
             ms = re.findall(r'^\s*(' + re.escape(t['master']) + r'(?:_fl)?)\s+(?:#\s*\(.*?\)\s*)?\w+\s*\(', txt, re.M | re.S)
             if not ms:
+                # KV-FACELAND-WIRE 10-19: a selected tile with no instance on this netlist (hr_core_queue inside the
+                # qkd_host_rt frame) has its edges charged by the compiler and carried by nothing -> FAIL
+                if tl in sel:
+                    fails.append(dict(id='FACE_LAND_TILE_ABSENT', what=f'{tl}: selected in OT_KV_FACE_LAND but die.v has no '
+                                      f'{t["master"]}[_fl] instance: the compiler charges edges no netlist carries',
+                                      fix='select only tiles the die instantiates (OT_KV_FACE_LAND list)'))
                 continue
             landed = {m.endswith('_fl') for m in ms}
             want = tl in sel
@@ -645,6 +651,15 @@ def run(model, doc, fwd=None, die_v=None, attn=False, case_die_v=None, sidecar=N
     actual['static_schedule']['bound'] = bound
     fails += schedule_check(sched, tile, bound, (model.get('static_schedule') or {}).get('paths'), tp,
                             boot=model.get('boot_ages'))     # KV-BOOTAGE: the GEN's boot image vs THIS table
+    # KV-FACELAND-WIRE 10-19: the per-tile view record of the prep (RUN/tile_views.json, kv_tile_views.py): every tile view
+    # that passed identity + edges is bound, every face-landed tile is bound on its _fl view and module
+    rd = Path(case_die_v).resolve().parent.parent if case_die_v else None
+    if rd is not None and (rd / 'tile_views.json').exists():
+        import kv_tile_views as KTV
+        tv = json.loads((rd / 'tile_views.json').read_text())
+        vj = rd / 'libs' / 'views.json'
+        fails += KTV.check(tv, json.loads(vj.read_text()) if vj.exists() else {}, die_v)
+        info.append(dict(id='TILE_VIEWS', bound=sorted(tv.get('bind', {})), assumed=tv.get('assumed')))
     dv = case_die_v or die_v
     if dv and Path(dv).exists():
         f_, rows = slg_identity(dv)

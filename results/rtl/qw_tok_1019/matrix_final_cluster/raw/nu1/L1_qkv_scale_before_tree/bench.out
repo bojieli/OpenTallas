@@ -1,0 +1,13 @@
+RTL_EXEC_BEGIN /srv/opentallas-scratch/claude/refill-1225/QWLAYER/nu1/obj_n12/Vtb sha256=7ba89595a8c4d2e77ba02e76479b2703237c426caf994cc8f2911ec698b8ce86
+DV_LOWER_MAT qkv FAIL 327/769 mutant=0 fixture=L1_mat_qkv_tp8.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_span_cycles": 407, "span_note": "VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback"}
+    qkv slice 0 row 1: got 0x3b8ba680 exp 0x3b8ba67e
+    qkv slice 0 row 2: got 0x3c141003 exp 0x3c141004
+    qkv slice 0 row 7: got 0xbc427c4d exp 0xbc427c4e
+    qkv slice 0 row 11: got 0x3c252c8c exp 0x3c252c8d
+    qkv slice 0 row 12: got 0xbc780cd6 exp 0xbc780cd5
+    qkv slice 0 row 16: got 0x3c5a4897 exp 0x3c5a4898
+    qkv slice 0 row 18: got 0xbd280fb3 exp 0xbd280fb4
+    qkv slice 0 row 19: got 0xbc23e5bd exp 0xbc23e5be
+    qkv slice 0 row 20: got 0xbd13c133 exp 0xbd13c132
+    qkv slice 0 row 21: got 0xbb4d292b exp 0xbb4d292a
+BENCH_RC 1

@@ -1,0 +1,1 @@
+module probe(input clk,input en,output [545:0] q); wire [545:0] mid; ot_sram_1r1w_32x546_m1 launch(.clk(clk),.r_ce_in(en),.rd_out(mid)); ot_sram_1r1w_32x546_m1 capture(.clk(clk),.r_ce_in(en),.wd_in(mid),.rd_out(q)); endmodule

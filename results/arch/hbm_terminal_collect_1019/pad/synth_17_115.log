@@ -1,0 +1,1822 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv -lib macro_bb.v; read_verilog -sv -DSYNTHESIS hbfd_pad.sv delay.sv; chparam -set W 17 -set N 115 -set SAFE_STORAGE 1 hbfd_pad; hierarchy -top hbfd_pad; synth -top hbfd_pad; write_json synth_17_115.json; stat' --
+
+1. Executing Verilog-2005 frontend: macro_bb.v
+Parsing SystemVerilog input from `macro_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: hbfd_pad.sv
+Parsing SystemVerilog input from `hbfd_pad.sv' to AST representation.
+Generating RTLIL representation for module `\hbfd_pad'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: delay.sv
+Parsing SystemVerilog input from `delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+Parameter \W = 17
+Parameter \N = 115
+Parameter \SAFE_STORAGE = 1
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\hbfd_pad'.
+Parameter \W = 17
+Parameter \N = 115
+Parameter \SAFE_STORAGE = 1
+Generating RTLIL representation for module `$paramod$19ec01e2c2ea9f320a16beeb13185d3096c443d6\hbfd_pad'.
+Warning: Replacing memory \g_ring.g_small.mem with list of registers. See hbfd_pad.sv:62
+Warning: Replacing memory \g_ring.g_small.ingress_local with list of registers. See hbfd_pad.sv:56
+Warning: Replacing memory \g_ring.age with list of registers. See hbfd_pad.sv:20
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+
+5.2. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+Removing unused module `\ot_hdc_delay'.
+Removed 1 unused modules.
+
+6. Executing SYNTH pass.
+
+6.1. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1.1. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+
+6.1.2. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+Removed 0 unused modules.
+
+6.2. Executing PROC pass (convert processes to netlists).
+
+6.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$hbfd_pad.sv:19$27 in module hbfd_pad.
+Marked 1 switch rules as full_case in process $proc$hbfd_pad.sv:24$32 in module hbfd_pad.
+Marked 18 switch rules as full_case in process $proc$hbfd_pad.sv:64$395 in module hbfd_pad.
+Removed a total of 0 dead cases.
+
+6.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 44 assignments to connections.
+
+6.2.4. Executing PROC_INIT pass (extract init attributes).
+
+6.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:19$27'.
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:24$32'.
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+
+6.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~133 debug messages>
+
+6.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:19$27'.
+     1/1: $0\g_ring.age[0][6:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:24$32'.
+     1/1: $0\g_ring.ptr[6:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:28$37'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:56$38'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:56$39'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:56$40'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:56$41'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:56$42'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:56$43'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:56$44'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:56$45'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$50'.
+     1/1: $0\g_ring.g_small.mem[0][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$53'.
+     1/1: $0\g_ring.g_small.mem[1][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$56'.
+     1/1: $0\g_ring.g_small.mem[2][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$59'.
+     1/1: $0\g_ring.g_small.mem[3][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$62'.
+     1/1: $0\g_ring.g_small.mem[4][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$65'.
+     1/1: $0\g_ring.g_small.mem[5][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$68'.
+     1/1: $0\g_ring.g_small.mem[6][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$71'.
+     1/1: $0\g_ring.g_small.mem[7][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$74'.
+     1/1: $0\g_ring.g_small.mem[8][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$77'.
+     1/1: $0\g_ring.g_small.mem[9][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$80'.
+     1/1: $0\g_ring.g_small.mem[10][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$83'.
+     1/1: $0\g_ring.g_small.mem[11][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$86'.
+     1/1: $0\g_ring.g_small.mem[12][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$89'.
+     1/1: $0\g_ring.g_small.mem[13][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$92'.
+     1/1: $0\g_ring.g_small.mem[14][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$95'.
+     1/1: $0\g_ring.g_small.mem[15][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$98'.
+     1/1: $0\g_ring.g_small.mem[16][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$101'.
+     1/1: $0\g_ring.g_small.mem[17][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$104'.
+     1/1: $0\g_ring.g_small.mem[18][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$107'.
+     1/1: $0\g_ring.g_small.mem[19][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$110'.
+     1/1: $0\g_ring.g_small.mem[20][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$113'.
+     1/1: $0\g_ring.g_small.mem[21][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$116'.
+     1/1: $0\g_ring.g_small.mem[22][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$119'.
+     1/1: $0\g_ring.g_small.mem[23][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$122'.
+     1/1: $0\g_ring.g_small.mem[24][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$125'.
+     1/1: $0\g_ring.g_small.mem[25][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$128'.
+     1/1: $0\g_ring.g_small.mem[26][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$131'.
+     1/1: $0\g_ring.g_small.mem[27][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$134'.
+     1/1: $0\g_ring.g_small.mem[28][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$137'.
+     1/1: $0\g_ring.g_small.mem[29][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$140'.
+     1/1: $0\g_ring.g_small.mem[30][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$143'.
+     1/1: $0\g_ring.g_small.mem[31][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$146'.
+     1/1: $0\g_ring.g_small.mem[32][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$149'.
+     1/1: $0\g_ring.g_small.mem[33][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$152'.
+     1/1: $0\g_ring.g_small.mem[34][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$155'.
+     1/1: $0\g_ring.g_small.mem[35][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$158'.
+     1/1: $0\g_ring.g_small.mem[36][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$161'.
+     1/1: $0\g_ring.g_small.mem[37][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$164'.
+     1/1: $0\g_ring.g_small.mem[38][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$167'.
+     1/1: $0\g_ring.g_small.mem[39][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$170'.
+     1/1: $0\g_ring.g_small.mem[40][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$173'.
+     1/1: $0\g_ring.g_small.mem[41][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$176'.
+     1/1: $0\g_ring.g_small.mem[42][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$179'.
+     1/1: $0\g_ring.g_small.mem[43][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$182'.
+     1/1: $0\g_ring.g_small.mem[44][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$185'.
+     1/1: $0\g_ring.g_small.mem[45][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$188'.
+     1/1: $0\g_ring.g_small.mem[46][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$191'.
+     1/1: $0\g_ring.g_small.mem[47][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$194'.
+     1/1: $0\g_ring.g_small.mem[48][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$197'.
+     1/1: $0\g_ring.g_small.mem[49][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$200'.
+     1/1: $0\g_ring.g_small.mem[50][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$203'.
+     1/1: $0\g_ring.g_small.mem[51][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$206'.
+     1/1: $0\g_ring.g_small.mem[52][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$209'.
+     1/1: $0\g_ring.g_small.mem[53][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$212'.
+     1/1: $0\g_ring.g_small.mem[54][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$215'.
+     1/1: $0\g_ring.g_small.mem[55][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$218'.
+     1/1: $0\g_ring.g_small.mem[56][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$221'.
+     1/1: $0\g_ring.g_small.mem[57][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$224'.
+     1/1: $0\g_ring.g_small.mem[58][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$227'.
+     1/1: $0\g_ring.g_small.mem[59][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$230'.
+     1/1: $0\g_ring.g_small.mem[60][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$233'.
+     1/1: $0\g_ring.g_small.mem[61][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$236'.
+     1/1: $0\g_ring.g_small.mem[62][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$239'.
+     1/1: $0\g_ring.g_small.mem[63][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$242'.
+     1/1: $0\g_ring.g_small.mem[64][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$245'.
+     1/1: $0\g_ring.g_small.mem[65][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$248'.
+     1/1: $0\g_ring.g_small.mem[66][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$251'.
+     1/1: $0\g_ring.g_small.mem[67][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$254'.
+     1/1: $0\g_ring.g_small.mem[68][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$257'.
+     1/1: $0\g_ring.g_small.mem[69][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$260'.
+     1/1: $0\g_ring.g_small.mem[70][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$263'.
+     1/1: $0\g_ring.g_small.mem[71][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$266'.
+     1/1: $0\g_ring.g_small.mem[72][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$269'.
+     1/1: $0\g_ring.g_small.mem[73][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$272'.
+     1/1: $0\g_ring.g_small.mem[74][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$275'.
+     1/1: $0\g_ring.g_small.mem[75][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$278'.
+     1/1: $0\g_ring.g_small.mem[76][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$281'.
+     1/1: $0\g_ring.g_small.mem[77][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$284'.
+     1/1: $0\g_ring.g_small.mem[78][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$287'.
+     1/1: $0\g_ring.g_small.mem[79][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$290'.
+     1/1: $0\g_ring.g_small.mem[80][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$293'.
+     1/1: $0\g_ring.g_small.mem[81][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$296'.
+     1/1: $0\g_ring.g_small.mem[82][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$299'.
+     1/1: $0\g_ring.g_small.mem[83][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$302'.
+     1/1: $0\g_ring.g_small.mem[84][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$305'.
+     1/1: $0\g_ring.g_small.mem[85][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$308'.
+     1/1: $0\g_ring.g_small.mem[86][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$311'.
+     1/1: $0\g_ring.g_small.mem[87][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$314'.
+     1/1: $0\g_ring.g_small.mem[88][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$317'.
+     1/1: $0\g_ring.g_small.mem[89][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$320'.
+     1/1: $0\g_ring.g_small.mem[90][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$323'.
+     1/1: $0\g_ring.g_small.mem[91][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$326'.
+     1/1: $0\g_ring.g_small.mem[92][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$329'.
+     1/1: $0\g_ring.g_small.mem[93][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$332'.
+     1/1: $0\g_ring.g_small.mem[94][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$335'.
+     1/1: $0\g_ring.g_small.mem[95][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$338'.
+     1/1: $0\g_ring.g_small.mem[96][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$341'.
+     1/1: $0\g_ring.g_small.mem[97][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$344'.
+     1/1: $0\g_ring.g_small.mem[98][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$347'.
+     1/1: $0\g_ring.g_small.mem[99][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$350'.
+     1/1: $0\g_ring.g_small.mem[100][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$353'.
+     1/1: $0\g_ring.g_small.mem[101][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$356'.
+     1/1: $0\g_ring.g_small.mem[102][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$359'.
+     1/1: $0\g_ring.g_small.mem[103][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$362'.
+     1/1: $0\g_ring.g_small.mem[104][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$365'.
+     1/1: $0\g_ring.g_small.mem[105][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$368'.
+     1/1: $0\g_ring.g_small.mem[106][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$371'.
+     1/1: $0\g_ring.g_small.mem[107][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$374'.
+     1/1: $0\g_ring.g_small.mem[108][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$377'.
+     1/1: $0\g_ring.g_small.mem[109][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$380'.
+     1/1: $0\g_ring.g_small.mem[110][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$383'.
+     1/1: $0\g_ring.g_small.mem[111][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$386'.
+     1/1: $0\g_ring.g_small.mem[112][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$389'.
+     1/1: $0\g_ring.g_small.mem[113][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:62$392'.
+     1/1: $0\g_ring.g_small.mem[114][16:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+     1/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$26_DATA[16:0]$499
+     2/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$25_DATA[16:0]$497
+     3/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$24_DATA[16:0]$495
+     4/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$23_DATA[16:0]$493
+     5/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$22_DATA[16:0]$491
+     6/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$21_DATA[16:0]$489
+     7/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$20_DATA[16:0]$487
+     8/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$19_DATA[16:0]$485
+     9/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$18_DATA[16:0]$483
+    10/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$17_DATA[16:0]$481
+    11/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$16_DATA[16:0]$479
+    12/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$15_DATA[16:0]$477
+    13/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$14_DATA[16:0]$475
+    14/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$13_DATA[16:0]$473
+    15/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$12_DATA[16:0]$471
+    16/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$11_DATA[16:0]$469
+    17/69: $2$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$10_DATA[16:0]$467
+    18/69: $1\g_ring.g_small.$fordecl_block$7.k[31:0]$432
+    19/69: $0\g_ring.capture[16:0] [16]
+    20/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$26_DATA[16:0]$466
+    21/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$26_ADDR[6:0]$465
+    22/69: $0\g_ring.capture[16:0] [15]
+    23/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$25_DATA[16:0]$464
+    24/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$25_ADDR[6:0]$463
+    25/69: $0\g_ring.capture[16:0] [14]
+    26/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$24_DATA[16:0]$462
+    27/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$24_ADDR[6:0]$461
+    28/69: $0\g_ring.capture[16:0] [13]
+    29/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$23_DATA[16:0]$460
+    30/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$23_ADDR[6:0]$459
+    31/69: $0\g_ring.capture[16:0] [12]
+    32/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$22_DATA[16:0]$458
+    33/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$22_ADDR[6:0]$457
+    34/69: $0\g_ring.capture[16:0] [11]
+    35/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$21_DATA[16:0]$456
+    36/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$21_ADDR[6:0]$455
+    37/69: $0\g_ring.capture[16:0] [10]
+    38/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$20_DATA[16:0]$454
+    39/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$20_ADDR[6:0]$453
+    40/69: $0\g_ring.capture[16:0] [9]
+    41/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$19_DATA[16:0]$452
+    42/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$19_ADDR[6:0]$451
+    43/69: $0\g_ring.capture[16:0] [8]
+    44/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$18_DATA[16:0]$450
+    45/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$18_ADDR[6:0]$449
+    46/69: $0\g_ring.capture[16:0] [7]
+    47/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$17_DATA[16:0]$448
+    48/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$17_ADDR[6:0]$447
+    49/69: $0\g_ring.capture[16:0] [6]
+    50/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$16_DATA[16:0]$446
+    51/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$16_ADDR[6:0]$445
+    52/69: $0\g_ring.capture[16:0] [5]
+    53/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$15_DATA[16:0]$444
+    54/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$15_ADDR[6:0]$443
+    55/69: $0\g_ring.capture[16:0] [4]
+    56/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$14_DATA[16:0]$442
+    57/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$14_ADDR[6:0]$441
+    58/69: $0\g_ring.capture[16:0] [3]
+    59/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$13_DATA[16:0]$440
+    60/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$13_ADDR[6:0]$439
+    61/69: $0\g_ring.capture[16:0] [2]
+    62/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$12_DATA[16:0]$438
+    63/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$12_ADDR[6:0]$437
+    64/69: $0\g_ring.capture[16:0] [1]
+    65/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$11_DATA[16:0]$436
+    66/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$11_ADDR[6:0]$435
+    67/69: $0\g_ring.capture[16:0] [0]
+    68/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$10_DATA[16:0]$434
+    69/69: $1$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$10_ADDR[6:0]$433
+
+6.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\hbfd_pad.\g_ring.age[0]' using process `\hbfd_pad.$proc$hbfd_pad.sv:19$27'.
+  created $adff cell `$procdff$2726' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.ptr' using process `\hbfd_pad.$proc$hbfd_pad.sv:24$32'.
+  created $adff cell `$procdff$2731' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.ingress' using process `\hbfd_pad.$proc$hbfd_pad.sv:28$37'.
+  created $dff cell `$procdff$2732' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.ingress_local[0]' using process `\hbfd_pad.$proc$hbfd_pad.sv:56$38'.
+  created $dff cell `$procdff$2733' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.ingress_local[1]' using process `\hbfd_pad.$proc$hbfd_pad.sv:56$39'.
+  created $dff cell `$procdff$2734' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.ingress_local[2]' using process `\hbfd_pad.$proc$hbfd_pad.sv:56$40'.
+  created $dff cell `$procdff$2735' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.ingress_local[3]' using process `\hbfd_pad.$proc$hbfd_pad.sv:56$41'.
+  created $dff cell `$procdff$2736' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.ingress_local[4]' using process `\hbfd_pad.$proc$hbfd_pad.sv:56$42'.
+  created $dff cell `$procdff$2737' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.ingress_local[5]' using process `\hbfd_pad.$proc$hbfd_pad.sv:56$43'.
+  created $dff cell `$procdff$2738' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.ingress_local[6]' using process `\hbfd_pad.$proc$hbfd_pad.sv:56$44'.
+  created $dff cell `$procdff$2739' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.ingress_local[7]' using process `\hbfd_pad.$proc$hbfd_pad.sv:56$45'.
+  created $dff cell `$procdff$2740' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[0]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$50'.
+  created $dff cell `$procdff$2741' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[1]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$53'.
+  created $dff cell `$procdff$2742' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[2]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$56'.
+  created $dff cell `$procdff$2743' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[3]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$59'.
+  created $dff cell `$procdff$2744' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[4]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$62'.
+  created $dff cell `$procdff$2745' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[5]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$65'.
+  created $dff cell `$procdff$2746' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[6]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$68'.
+  created $dff cell `$procdff$2747' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[7]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$71'.
+  created $dff cell `$procdff$2748' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[8]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$74'.
+  created $dff cell `$procdff$2749' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[9]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$77'.
+  created $dff cell `$procdff$2750' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[10]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$80'.
+  created $dff cell `$procdff$2751' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[11]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$83'.
+  created $dff cell `$procdff$2752' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[12]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$86'.
+  created $dff cell `$procdff$2753' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[13]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$89'.
+  created $dff cell `$procdff$2754' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[14]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$92'.
+  created $dff cell `$procdff$2755' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[15]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$95'.
+  created $dff cell `$procdff$2756' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[16]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$98'.
+  created $dff cell `$procdff$2757' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[17]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$101'.
+  created $dff cell `$procdff$2758' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[18]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$104'.
+  created $dff cell `$procdff$2759' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[19]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$107'.
+  created $dff cell `$procdff$2760' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[20]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$110'.
+  created $dff cell `$procdff$2761' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[21]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$113'.
+  created $dff cell `$procdff$2762' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[22]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$116'.
+  created $dff cell `$procdff$2763' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[23]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$119'.
+  created $dff cell `$procdff$2764' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[24]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$122'.
+  created $dff cell `$procdff$2765' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[25]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$125'.
+  created $dff cell `$procdff$2766' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[26]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$128'.
+  created $dff cell `$procdff$2767' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[27]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$131'.
+  created $dff cell `$procdff$2768' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[28]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$134'.
+  created $dff cell `$procdff$2769' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[29]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$137'.
+  created $dff cell `$procdff$2770' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[30]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$140'.
+  created $dff cell `$procdff$2771' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[31]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$143'.
+  created $dff cell `$procdff$2772' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[32]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$146'.
+  created $dff cell `$procdff$2773' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[33]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$149'.
+  created $dff cell `$procdff$2774' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[34]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$152'.
+  created $dff cell `$procdff$2775' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[35]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$155'.
+  created $dff cell `$procdff$2776' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[36]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$158'.
+  created $dff cell `$procdff$2777' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[37]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$161'.
+  created $dff cell `$procdff$2778' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[38]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$164'.
+  created $dff cell `$procdff$2779' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[39]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$167'.
+  created $dff cell `$procdff$2780' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[40]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$170'.
+  created $dff cell `$procdff$2781' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[41]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$173'.
+  created $dff cell `$procdff$2782' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[42]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$176'.
+  created $dff cell `$procdff$2783' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[43]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$179'.
+  created $dff cell `$procdff$2784' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[44]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$182'.
+  created $dff cell `$procdff$2785' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[45]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$185'.
+  created $dff cell `$procdff$2786' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[46]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$188'.
+  created $dff cell `$procdff$2787' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[47]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$191'.
+  created $dff cell `$procdff$2788' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[48]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$194'.
+  created $dff cell `$procdff$2789' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[49]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$197'.
+  created $dff cell `$procdff$2790' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[50]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$200'.
+  created $dff cell `$procdff$2791' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[51]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$203'.
+  created $dff cell `$procdff$2792' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[52]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$206'.
+  created $dff cell `$procdff$2793' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[53]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$209'.
+  created $dff cell `$procdff$2794' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[54]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$212'.
+  created $dff cell `$procdff$2795' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[55]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$215'.
+  created $dff cell `$procdff$2796' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[56]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$218'.
+  created $dff cell `$procdff$2797' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[57]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$221'.
+  created $dff cell `$procdff$2798' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[58]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$224'.
+  created $dff cell `$procdff$2799' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[59]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$227'.
+  created $dff cell `$procdff$2800' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[60]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$230'.
+  created $dff cell `$procdff$2801' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[61]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$233'.
+  created $dff cell `$procdff$2802' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[62]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$236'.
+  created $dff cell `$procdff$2803' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[63]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$239'.
+  created $dff cell `$procdff$2804' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[64]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$242'.
+  created $dff cell `$procdff$2805' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[65]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$245'.
+  created $dff cell `$procdff$2806' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[66]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$248'.
+  created $dff cell `$procdff$2807' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[67]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$251'.
+  created $dff cell `$procdff$2808' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[68]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$254'.
+  created $dff cell `$procdff$2809' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[69]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$257'.
+  created $dff cell `$procdff$2810' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[70]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$260'.
+  created $dff cell `$procdff$2811' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[71]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$263'.
+  created $dff cell `$procdff$2812' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[72]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$266'.
+  created $dff cell `$procdff$2813' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[73]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$269'.
+  created $dff cell `$procdff$2814' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[74]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$272'.
+  created $dff cell `$procdff$2815' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[75]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$275'.
+  created $dff cell `$procdff$2816' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[76]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$278'.
+  created $dff cell `$procdff$2817' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[77]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$281'.
+  created $dff cell `$procdff$2818' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[78]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$284'.
+  created $dff cell `$procdff$2819' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[79]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$287'.
+  created $dff cell `$procdff$2820' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[80]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$290'.
+  created $dff cell `$procdff$2821' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[81]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$293'.
+  created $dff cell `$procdff$2822' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[82]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$296'.
+  created $dff cell `$procdff$2823' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[83]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$299'.
+  created $dff cell `$procdff$2824' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[84]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$302'.
+  created $dff cell `$procdff$2825' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[85]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$305'.
+  created $dff cell `$procdff$2826' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[86]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$308'.
+  created $dff cell `$procdff$2827' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[87]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$311'.
+  created $dff cell `$procdff$2828' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[88]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$314'.
+  created $dff cell `$procdff$2829' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[89]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$317'.
+  created $dff cell `$procdff$2830' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[90]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$320'.
+  created $dff cell `$procdff$2831' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[91]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$323'.
+  created $dff cell `$procdff$2832' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[92]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$326'.
+  created $dff cell `$procdff$2833' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[93]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$329'.
+  created $dff cell `$procdff$2834' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[94]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$332'.
+  created $dff cell `$procdff$2835' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[95]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$335'.
+  created $dff cell `$procdff$2836' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[96]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$338'.
+  created $dff cell `$procdff$2837' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[97]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$341'.
+  created $dff cell `$procdff$2838' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[98]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$344'.
+  created $dff cell `$procdff$2839' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[99]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$347'.
+  created $dff cell `$procdff$2840' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[100]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$350'.
+  created $dff cell `$procdff$2841' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[101]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$353'.
+  created $dff cell `$procdff$2842' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[102]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$356'.
+  created $dff cell `$procdff$2843' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[103]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$359'.
+  created $dff cell `$procdff$2844' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[104]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$362'.
+  created $dff cell `$procdff$2845' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[105]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$365'.
+  created $dff cell `$procdff$2846' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[106]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$368'.
+  created $dff cell `$procdff$2847' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[107]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$371'.
+  created $dff cell `$procdff$2848' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[108]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$374'.
+  created $dff cell `$procdff$2849' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[109]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$377'.
+  created $dff cell `$procdff$2850' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[110]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$380'.
+  created $dff cell `$procdff$2851' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[111]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$383'.
+  created $dff cell `$procdff$2852' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[112]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$386'.
+  created $dff cell `$procdff$2853' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[113]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$389'.
+  created $dff cell `$procdff$2854' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.mem[114]' using process `\hbfd_pad.$proc$hbfd_pad.sv:62$392'.
+  created $dff cell `$procdff$2855' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.capture' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2860' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.g_small.$fordecl_block$7.k' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $dff cell `$procdff$2867' with positive edge clock.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$10_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2872' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$10_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2877' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$11_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2882' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$11_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2887' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$12_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2892' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$12_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2897' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$13_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2902' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$13_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2907' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$14_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2912' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$14_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2917' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$15_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2922' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$15_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2927' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$16_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2932' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$16_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2937' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$17_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2942' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$17_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2947' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$18_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2952' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$18_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2957' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$19_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2962' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$19_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2967' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$20_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2972' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$20_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2977' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$21_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2982' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$21_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2987' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$22_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2992' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$22_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$2997' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$23_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$3002' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$23_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$3007' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$24_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$3012' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$24_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$3017' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$25_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$3022' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$25_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$3027' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$26_ADDR' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$3032' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.$mem2reg_rd$\g_ring.g_small.mem$hbfd_pad.sv:66$26_DATA' using process `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+  created $adff cell `$procdff$3037' with positive edge clock and positive level reset.
+
+6.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:19$27'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:19$27'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:24$32'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:28$37'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:56$38'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:56$39'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:56$40'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:56$41'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:56$42'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:56$43'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:56$44'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:56$45'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$50'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$50'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$53'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$53'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$56'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$56'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$59'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$59'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$62'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$62'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$65'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$65'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$68'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$68'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$71'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$71'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$74'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$74'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$77'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$77'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$80'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$80'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$83'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$83'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$86'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$86'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$89'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$89'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$92'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$92'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$95'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$95'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$98'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$98'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$101'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$101'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$104'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$104'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$107'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$107'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$110'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$110'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$113'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$113'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$116'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$116'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$119'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$119'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$122'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$122'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$125'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$125'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$128'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$128'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$131'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$131'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$134'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$134'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$137'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$137'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$140'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$140'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$143'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$143'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$146'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$146'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$149'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$149'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$152'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$152'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$155'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$155'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$158'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$158'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$161'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$161'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$164'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$164'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$167'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$167'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$170'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$170'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$173'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$173'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$176'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$176'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$179'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$179'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$182'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$182'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$185'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$185'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$188'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$188'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$191'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$191'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$194'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$194'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$197'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$197'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$200'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$200'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$203'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$203'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$206'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$206'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$209'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$209'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$212'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$212'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$215'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$215'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$218'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$218'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$221'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$221'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$224'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$224'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$227'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$227'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$230'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$230'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$233'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$233'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$236'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$236'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$239'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$239'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$242'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$242'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$245'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$245'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$248'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$248'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$251'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$251'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$254'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$254'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$257'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$257'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$260'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$260'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$263'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$263'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$266'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$266'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$269'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$269'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$272'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$272'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$275'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$275'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$278'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$278'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$281'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$281'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$284'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$284'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$287'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$287'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$290'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$290'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$293'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$293'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$296'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$296'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$299'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$299'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$302'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$302'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$305'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$305'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$308'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$308'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$311'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$311'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$314'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$314'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$317'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$317'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$320'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$320'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$323'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$323'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$326'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$326'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$329'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$329'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$332'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$332'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$335'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$335'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$338'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$338'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$341'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$341'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$344'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$344'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$347'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$347'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$350'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$350'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$353'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$353'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$356'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$356'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$359'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$359'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$362'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$362'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$365'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$365'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$368'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$368'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$371'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$371'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$374'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$374'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$377'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$377'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$380'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$380'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$383'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$383'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$386'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$386'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$389'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$389'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:62$392'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:62$392'.
+Found and cleaned up 17 empty switches in `\hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:64$395'.
+Cleaned up 133 empty switches.
+
+6.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+<suppressed ~94 debug messages>
+
+6.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 78 unused cells and 464 unused wires.
+<suppressed ~80 debug messages>
+
+6.5. Executing CHECK pass (checking for obvious problems).
+Checking module hbfd_pad...
+Found and reported 0 problems.
+
+6.6. Executing OPT pass (performing simple optimizations).
+
+6.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 2471 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Computing hashes of 623 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+<suppressed ~5544 debug messages>
+Removed a total of 1848 cells.
+
+6.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~287 debug messages>
+
+6.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 623 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Computing hashes of 607 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+<suppressed ~48 debug messages>
+Removed a total of 16 cells.
+
+6.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 0 unused cells and 1857 unused wires.
+<suppressed ~1 debug messages>
+
+6.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~289 debug messages>
+
+6.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 607 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6.7. Executing FSM pass (extract and optimize FSM).
+
+6.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+6.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+6.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+6.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+6.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+6.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+6.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+6.8. Executing OPT pass (performing simple optimizations).
+
+6.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 607 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~289 debug messages>
+
+6.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 607 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$2854 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[113]).
+Adding EN signal on $procdff$2850 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[109]).
+Adding EN signal on $procdff$2849 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[108]).
+Adding EN signal on $procdff$2853 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[112]).
+Adding EN signal on $procdff$2726 ($adff) from module hbfd_pad (D = $add$hbfd_pad.sv:21$30_Y, Q = \g_ring.age[0]).
+Adding EN signal on $procdff$2852 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[111]).
+Adding EN signal on $procdff$2855 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[114]).
+Adding EN signal on $procdff$2851 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[110]).
+Adding EN signal on $procdff$2842 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[101]).
+Adding EN signal on $procdff$2843 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[102]).
+Adding EN signal on $procdff$2844 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[103]).
+Adding EN signal on $procdff$2845 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[104]).
+Adding EN signal on $procdff$2846 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[105]).
+Adding EN signal on $procdff$2847 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[106]).
+Adding EN signal on $procdff$2848 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[107]).
+Adding EN signal on $procdff$2741 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[0]).
+Adding EN signal on $procdff$2742 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[1]).
+Adding EN signal on $procdff$2743 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[2]).
+Adding EN signal on $procdff$2744 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[3]).
+Adding EN signal on $procdff$2745 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[4]).
+Adding EN signal on $procdff$2746 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[5]).
+Adding EN signal on $procdff$2747 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[6]).
+Adding EN signal on $procdff$2748 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[7]).
+Adding EN signal on $procdff$2749 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[8]).
+Adding EN signal on $procdff$2750 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[9]).
+Adding EN signal on $procdff$2751 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[10]).
+Adding EN signal on $procdff$2752 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[11]).
+Adding EN signal on $procdff$2753 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[12]).
+Adding EN signal on $procdff$2754 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[13]).
+Adding EN signal on $procdff$2755 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[14]).
+Adding EN signal on $procdff$2756 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[15]).
+Adding EN signal on $procdff$2757 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[16]).
+Adding EN signal on $procdff$2758 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[17]).
+Adding EN signal on $procdff$2759 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[18]).
+Adding EN signal on $procdff$2760 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[19]).
+Adding EN signal on $procdff$2761 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[20]).
+Adding EN signal on $procdff$2762 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[21]).
+Adding EN signal on $procdff$2763 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[22]).
+Adding EN signal on $procdff$2764 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[23]).
+Adding EN signal on $procdff$2765 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[24]).
+Adding EN signal on $procdff$2766 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[25]).
+Adding EN signal on $procdff$2767 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[26]).
+Adding EN signal on $procdff$2768 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[27]).
+Adding EN signal on $procdff$2769 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[28]).
+Adding EN signal on $procdff$2770 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[29]).
+Adding EN signal on $procdff$2771 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[30]).
+Adding EN signal on $procdff$2772 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[31]).
+Adding EN signal on $procdff$2773 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[32]).
+Adding EN signal on $procdff$2774 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[33]).
+Adding EN signal on $procdff$2775 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[34]).
+Adding EN signal on $procdff$2776 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[35]).
+Adding EN signal on $procdff$2777 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[36]).
+Adding EN signal on $procdff$2778 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[37]).
+Adding EN signal on $procdff$2779 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[38]).
+Adding EN signal on $procdff$2780 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[39]).
+Adding EN signal on $procdff$2781 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[40]).
+Adding EN signal on $procdff$2782 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[41]).
+Adding EN signal on $procdff$2783 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[42]).
+Adding EN signal on $procdff$2784 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[43]).
+Adding EN signal on $procdff$2785 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[44]).
+Adding EN signal on $procdff$2786 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[45]).
+Adding EN signal on $procdff$2787 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[46]).
+Adding EN signal on $procdff$2788 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[47]).
+Adding EN signal on $procdff$2789 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[48]).
+Adding EN signal on $procdff$2790 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[49]).
+Adding EN signal on $procdff$2791 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[50]).
+Adding EN signal on $procdff$2792 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[51]).
+Adding EN signal on $procdff$2793 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[52]).
+Adding EN signal on $procdff$2794 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[53]).
+Adding EN signal on $procdff$2795 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[54]).
+Adding EN signal on $procdff$2796 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[55]).
+Adding EN signal on $procdff$2797 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[56]).
+Adding EN signal on $procdff$2798 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[57]).
+Adding EN signal on $procdff$2799 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[58]).
+Adding EN signal on $procdff$2800 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[59]).
+Adding EN signal on $procdff$2801 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[60]).
+Adding EN signal on $procdff$2802 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[61]).
+Adding EN signal on $procdff$2803 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[62]).
+Adding EN signal on $procdff$2804 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[63]).
+Adding EN signal on $procdff$2805 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[64]).
+Adding EN signal on $procdff$2806 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[65]).
+Adding EN signal on $procdff$2807 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[66]).
+Adding EN signal on $procdff$2808 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[67]).
+Adding EN signal on $procdff$2809 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[68]).
+Adding EN signal on $procdff$2810 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[69]).
+Adding EN signal on $procdff$2811 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[70]).
+Adding EN signal on $procdff$2812 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[71]).
+Adding EN signal on $procdff$2813 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[72]).
+Adding EN signal on $procdff$2814 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[73]).
+Adding EN signal on $procdff$2815 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[74]).
+Adding EN signal on $procdff$2816 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[75]).
+Adding EN signal on $procdff$2817 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[76]).
+Adding EN signal on $procdff$2818 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[77]).
+Adding EN signal on $procdff$2819 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[78]).
+Adding EN signal on $procdff$2820 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[79]).
+Adding EN signal on $procdff$2821 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[80]).
+Adding EN signal on $procdff$2822 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[81]).
+Adding EN signal on $procdff$2823 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[82]).
+Adding EN signal on $procdff$2824 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[83]).
+Adding EN signal on $procdff$2825 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[84]).
+Adding EN signal on $procdff$2826 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[85]).
+Adding EN signal on $procdff$2827 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[86]).
+Adding EN signal on $procdff$2828 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[87]).
+Adding EN signal on $procdff$2829 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[88]).
+Adding EN signal on $procdff$2830 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[89]).
+Adding EN signal on $procdff$2831 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[90]).
+Adding EN signal on $procdff$2832 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[91]).
+Adding EN signal on $procdff$2833 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[92]).
+Adding EN signal on $procdff$2834 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[93]).
+Adding EN signal on $procdff$2835 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[94]).
+Adding EN signal on $procdff$2836 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[95]).
+Adding EN signal on $procdff$2837 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[96]).
+Adding EN signal on $procdff$2838 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[97]).
+Adding EN signal on $procdff$2839 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[98]).
+Adding EN signal on $procdff$2840 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[99]).
+Adding EN signal on $procdff$2841 ($dff) from module hbfd_pad (D = \g_ring.g_small.ingress_local[7], Q = \g_ring.g_small.mem[100]).
+
+6.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 116 unused cells and 116 unused wires.
+<suppressed ~117 debug messages>
+
+6.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~57 debug messages>
+
+6.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 491 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 5 bits (of 7) from port B of cell hbfd_pad.$add$hbfd_pad.sv:60$48 ($add).
+Removed top 6 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$54 ($eq).
+Removed top 5 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$57 ($eq).
+Removed top 5 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$60 ($eq).
+Removed top 4 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$63 ($eq).
+Removed top 4 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$66 ($eq).
+Removed top 4 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$69 ($eq).
+Removed top 4 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$72 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$75 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$78 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$81 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$84 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$87 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$90 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$93 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$96 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$99 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$102 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$105 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$108 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$111 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$114 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$117 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$120 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$123 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$126 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$129 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$132 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$135 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$138 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$141 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$144 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$147 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$150 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$153 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$156 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$159 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$162 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$165 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$168 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$171 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$174 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$177 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$180 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$183 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$186 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$189 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$192 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$195 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$198 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$201 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$204 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$207 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$210 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$213 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$216 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$219 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$222 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$225 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$228 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$231 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$234 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$237 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$eq$hbfd_pad.sv:62$240 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2658_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2659_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2660_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2661_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2662_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2663_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2664_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2665_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2666_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2667_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2668_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2669_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2670_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2671_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2672_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2673_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2674_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2675_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2676_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2677_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2678_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2679_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2680_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2681_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2682_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2683_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2684_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2685_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2686_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2687_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2688_CMP0 ($eq).
+Removed top 1 bits (of 7) from port B of cell hbfd_pad.$procmux$2689_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2690_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2691_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2692_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2693_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2694_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2695_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2696_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2697_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2698_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2699_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2700_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2701_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2702_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2703_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2704_CMP0 ($eq).
+Removed top 2 bits (of 7) from port B of cell hbfd_pad.$procmux$2705_CMP0 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$procmux$2706_CMP0 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$procmux$2707_CMP0 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$procmux$2708_CMP0 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$procmux$2709_CMP0 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$procmux$2710_CMP0 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$procmux$2711_CMP0 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$procmux$2712_CMP0 ($eq).
+Removed top 3 bits (of 7) from port B of cell hbfd_pad.$procmux$2713_CMP0 ($eq).
+Removed top 4 bits (of 7) from port B of cell hbfd_pad.$procmux$2714_CMP0 ($eq).
+Removed top 4 bits (of 7) from port B of cell hbfd_pad.$procmux$2715_CMP0 ($eq).
+Removed top 4 bits (of 7) from port B of cell hbfd_pad.$procmux$2716_CMP0 ($eq).
+Removed top 4 bits (of 7) from port B of cell hbfd_pad.$procmux$2717_CMP0 ($eq).
+Removed top 5 bits (of 7) from port B of cell hbfd_pad.$procmux$2718_CMP0 ($eq).
+Removed top 5 bits (of 7) from port B of cell hbfd_pad.$procmux$2719_CMP0 ($eq).
+Removed top 6 bits (of 7) from port B of cell hbfd_pad.$procmux$2720_CMP0 ($eq).
+
+6.10. Executing PEEPOPT pass (run peephole optimizers).
+
+6.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module hbfd_pad:
+  creating $macc model for $add$hbfd_pad.sv:21$30 ($add).
+  creating $macc model for $add$hbfd_pad.sv:26$35 ($add).
+  creating $macc model for $sub$hbfd_pad.sv:60$47 ($sub).
+  creating $macc model for $add$hbfd_pad.sv:60$48 ($add).
+  creating $alu model for $macc $add$hbfd_pad.sv:60$48.
+  creating $alu model for $macc $sub$hbfd_pad.sv:60$47.
+  creating $alu model for $macc $add$hbfd_pad.sv:26$35.
+  creating $alu model for $macc $add$hbfd_pad.sv:21$30.
+  creating $alu model for $lt$hbfd_pad.sv:21$29 ($lt): new $alu
+  creating $alu model for $ge$hbfd_pad.sv:22$31 ($ge): new $alu
+  creating $alu model for $ge$hbfd_pad.sv:59$46 ($ge): merged with $sub$hbfd_pad.sv:60$47.
+  creating $alu model for $eq$hbfd_pad.sv:62$390 ($eq): merged with $sub$hbfd_pad.sv:60$47.
+  creating $alu cell for $ge$hbfd_pad.sv:22$31: $auto$alumacc.cc:548:replace_alu$3156
+  creating $alu cell for $lt$hbfd_pad.sv:21$29: $auto$alumacc.cc:548:replace_alu$3169
+  creating $alu cell for $add$hbfd_pad.sv:21$30: $auto$alumacc.cc:548:replace_alu$3174
+  creating $alu cell for $add$hbfd_pad.sv:26$35: $auto$alumacc.cc:548:replace_alu$3177
+  creating $alu cell for $sub$hbfd_pad.sv:60$47, $ge$hbfd_pad.sv:59$46, $eq$hbfd_pad.sv:62$390: $auto$alumacc.cc:548:replace_alu$3180
+  creating $alu cell for $add$hbfd_pad.sv:60$48: $auto$alumacc.cc:548:replace_alu$3193
+  created 6 $alu and 0 $macc cells.
+
+6.13. Executing SHARE pass (SAT-based resource sharing).
+
+6.14. Executing OPT pass (performing simple optimizations).
+
+6.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+<suppressed ~1 debug messages>
+
+6.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 500 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~57 debug messages>
+
+6.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 500 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 1 unused cells and 5 unused wires.
+<suppressed ~2 debug messages>
+
+6.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~57 debug messages>
+
+6.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.14.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 499 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.14.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.14.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6.15. Executing MEMORY pass.
+
+6.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+6.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+6.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+6.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+6.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+6.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+6.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+6.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+6.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.17. Executing OPT pass (performing simple optimizations).
+
+6.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+<suppressed ~20 debug messages>
+
+6.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 500 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 1 unused cells and 2 unused wires.
+<suppressed ~2 debug messages>
+
+6.17.5. Finished fast OPT passes.
+
+6.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+6.19. Executing OPT pass (performing simple optimizations).
+
+6.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 499 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+6.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 499 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.19.6. Executing OPT_SHARE pass.
+
+6.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.19.10. Finished fast OPT passes. (There is nothing left to do.)
+
+6.20. Executing TECHMAP pass (map to technology primitives).
+
+6.20.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+6.20.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$32efbfac1c4dc57230cf86180788fdfd12e3b511\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$dbcdc7e8aa1a4080cea2deda6fdc8772064f4d90\_90_alu for cells of type $alu.
+Using template $paramod$103b4016182df467cceab67bcf3e18e6361ec0fd\_90_alu for cells of type $alu.
+Using template $paramod$00298f3f8094950cb9a5ff2fda48d0d8bde8806c\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $pmux.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000111 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000111 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000110 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000110 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~1089 debug messages>
+
+6.21. Executing OPT pass (performing simple optimizations).
+
+6.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+<suppressed ~1925 debug messages>
+
+6.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 8635 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Computing hashes of 7686 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Computing hashes of 7127 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Computing hashes of 6791 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+<suppressed ~5532 debug messages>
+Removed a total of 1844 cells.
+
+6.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 24 unused cells and 1911 unused wires.
+<suppressed ~25 debug messages>
+
+6.21.5. Finished fast OPT passes.
+
+6.22. Executing ABC pass (technology mapping using ABC).
+
+6.22.1. Extracting gate netlist of module `\hbfd_pad' to `<abc-temp-dir>/input.blif'..
+
+6.22.1.1. Executed ABC.
+Extracted 4764 gates and 6735 wires to a netlist network with 1970 inputs and 147 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+6.22.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:     2208
+ABC RESULTS:            ANDNOT cells:       20
+ABC RESULTS:               MUX cells:        1
+ABC RESULTS:              NAND cells:     1981
+ABC RESULTS:               NOR cells:        6
+ABC RESULTS:               NOT cells:        2
+ABC RESULTS:                OR cells:        4
+ABC RESULTS:             ORNOT cells:        2
+ABC RESULTS:              XNOR cells:        9
+ABC RESULTS:               XOR cells:        5
+ABC RESULTS:        internal signals:     4618
+ABC RESULTS:           input signals:     1970
+ABC RESULTS:          output signals:      147
+Removing temp directory.
+Removing global temp directory.
+
+6.23. Executing OPT pass (performing simple optimizations).
+
+6.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 6241 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 0 unused cells and 4748 unused wires.
+<suppressed ~3 debug messages>
+
+6.23.5. Finished fast OPT passes.
+
+6.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `hbfd_pad'. Setting top module to hbfd_pad.
+
+6.24.1. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+
+6.24.2. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+Removed 0 unused modules.
+
+6.25. Printing statistics.
+
+=== hbfd_pad ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     4341 wires
+     6409 wire bits
+      130 public wires
+     2158 public wire bits
+        4 ports
+       36 port bits
+     6241 cells
+       20   $_ANDNOT_
+     2208   $_AND_
+        7   $_DFFE_PN0N_
+     1955   $_DFFE_PP_
+       24   $_DFF_PN0_
+       17   $_DFF_P_
+        1   $_MUX_
+     1981   $_NAND_
+        6   $_NOR_
+        2   $_NOT_
+        2   $_ORNOT_
+        4   $_OR_
+        9   $_XNOR_
+        5   $_XOR_
+
+6.26. Executing CHECK pass (checking for obvious problems).
+Checking module hbfd_pad...
+Found and reported 0 problems.
+
+7. Executing JSON backend.
+
+8. Printing statistics.
+
+=== hbfd_pad ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     4341 wires
+     6409 wire bits
+      130 public wires
+     2158 public wire bits
+        4 ports
+       36 port bits
+     6241 cells
+       20   $_ANDNOT_
+     2208   $_AND_
+        7   $_DFFE_PN0N_
+     1955   $_DFFE_PP_
+       24   $_DFF_PN0_
+       17   $_DFF_P_
+        1   $_MUX_
+     1981   $_NAND_
+        6   $_NOR_
+        2   $_NOT_
+        2   $_ORNOT_
+        4   $_OR_
+        9   $_XNOR_
+        5   $_XOR_
+
+Warnings: 3 unique messages, 3 total
+End of script. Logfile hash: ac8c877327, time: 1.14s, user: 0.81s, system: 0.04s, MEM: 44.71 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 36% 1x abc (0 sec), 12% 18x opt_clean (0 sec), ...

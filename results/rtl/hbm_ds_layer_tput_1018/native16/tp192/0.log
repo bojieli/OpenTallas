@@ -1,0 +1,26 @@
+  schedule 0: {'input_cycles': 29963.3, 'list_alpha': 0.2, 'moves': 15, 'output_cycles': 24156.3, 'rounds': [24230.2], 'seed': 'given', 'ils_moves': 3, 'layer': 0}
+L00 sliding                      PASS records 92 97 s fault None bad []
+pass
+	Command being timed: "python3 -m hgi_sim.ds_native --layers 0 --refs /srv/opentallas-scratch/claude/layerbench-hbm/dsfix/refs --out /srv/opentallas-scratch/claude/layerbench-hbm/dsfix/nat16/out/tp192/0.json --program-out /srv/opentallas-scratch/claude/layerbench-hbm/dsfix/nat16/out/tp192/0.prog.json"
+	User time (seconds): 97.29
+	System time (seconds): 0.62
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:37.92
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3638072
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 182267
+	Voluntary context switches: 1
+	Involuntary context switches: 92
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 3192
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

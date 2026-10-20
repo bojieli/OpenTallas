@@ -1,0 +1,134 @@
+{
+ "name": "qfd_c_land_r257_narrow",
+ "top": "qfd_c_land_r257_narrow",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/qcluster/qfd_c_land_safe.sv",
+  "rtl/physical/qcluster/qfd_c_land.sv",
+  "rtl/test/tb_qfd_c_land_safe.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rsi"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 129.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "o"
+  ],
+  "W": [
+   "bank_w"
+  ],
+  "E": [
+   "bank_e"
+  ],
+  "S": [
+   "ck",
+   "rsi",
+   "vld"
+  ]
+ },
+ "pin_ranges": {
+  "o": [
+   0.54,
+   64.26
+  ],
+  "bank_w": [
+   0.54,
+   129.06
+  ],
+  "bank_e": [
+   0.54,
+   129.06
+  ],
+  "ck": [
+   28.08,
+   31.32
+  ],
+  "rsi": [
+   33.48,
+   36.72
+  ],
+  "vld": [
+   40.0,
+   50.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ring capture flops and registered read output are the landed bank endpoint; adding input stages changes the priced ring window"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "one shared kept face rst_l0 then kept r2 per <=24bit slice; exactly two stages, first-stage fanout <=12"
+ },
+ "structural_change": "SAFE-QW-CB16: replace 163k soft parent DFFs with <=258bit ring/read hard halves, kept per24bit rotating onehot selects and 2stage reset. Geometry pin limited; parent not yet bound. Narrow split bank_w/e at516bits per128.52um face (4.02pins/um); explicit4 slot-written flags restore phase-shifted reset behavior.",
+ "job": {
+  "owner": "Claude:QW-LANDCB16",
+  "branch": "claude/qw-landcb16-1019",
+  "tag": "safe1",
+  "purpose": "hard landing half; critical CB16 parent prerequisite, gate only",
+  "submit": true,
+  "benches": [
+   {
+    "name": "safe_land_primary",
+    "cmd": "bash tools/qwen_cluster/bench_land_safe.sh {RUN}/land_pass pass 257",
+    "expect": "pass",
+    "pass_regex": "SAFE_LAND_PASS MUT0",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "sources": [
+     "tools/qwen_cluster/bench_land_safe.sh",
+     "rtl/physical/qcluster/qfd_c_land.sv",
+     "rtl/physical/qcluster/qfd_c_land_safe.sv",
+     "rtl/test/tb_qfd_c_land_safe.sv"
+    ],
+    "pass_witness": "results/arch/qwen_cluster_1017/q_cluster16/bench_land_narrow/w257_pass.log"
+   },
+   {
+    "name": "safe_land_mutant_wrongK3",
+    "cmd": "bash tools/qwen_cluster/bench_land_safe.sh {RUN}/land_mut mut 257",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "sources": [
+     "tools/qwen_cluster/bench_land_safe.sh",
+     "rtl/physical/qcluster/qfd_c_land.sv",
+     "rtl/physical/qcluster/qfd_c_land_safe.sv",
+     "rtl/test/tb_qfd_c_land_safe.sv"
+    ],
+    "fail_regex": "SAFE_LAND_FAIL MUT1 errors=[1-9][0-9]*",
+    "fail_witness": "results/arch/qwen_cluster_1017/q_cluster16/bench_land_narrow/w257_mut.log"
+   }
+  ]
+ }
+}

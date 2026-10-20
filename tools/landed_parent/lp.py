@@ -96,6 +96,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LIB_RTL = "rtl/common/landed_parent/ot_pl_land.sv"
+RESET_FOREST_RTL = ["rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+                    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"]
 KW = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic", "assign", "always", "always_ff",
       "always_comb", "initial", "generate", "endgenerate", "parameter", "localparam", "if", "else", "for", "begin", "end",
       "case", "endcase", "function", "endfunction", "genvar", "integer", "signed", "unsigned", "default_nettype"}
@@ -105,6 +107,9 @@ LIB_PORTS = {"ot_pl_land_w": {"ck": "in", "rsi": "in", "i": "in", "bank": "out",
 # Chunked primitives preserve the same top-level source/read contract.
 LIB_PORTS['ot_pl_land_chunk_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
+LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
+LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
+LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
 
 
 
@@ -368,6 +373,61 @@ def width_text(rng: str | None) -> str:
 
 
 # ----------------------------------------------------------------------------------------------------------- the model
+def regional_bindings(spec, insts, csrc):
+    """Exact LSB-first regional clock/reset vector bindings; no datapath waiver.
+
+    Flat inputs must be a literal replication of the parent clock/reset. Vector
+    aliases, expressions and parameter-dependent port shapes are rejected so
+    the generated bit-to-root contract can be audited without interpretation.
+    """
+    result = {}
+    regions = {r['name'] for r in spec['regions']}
+    by_inst = {i['inst']: i for i in insts}
+    for role in ('clocks', 'resets'):
+        key = 'regional_child_' + role
+        rows = spec.get(key) or []
+        if not isinstance(rows,list):
+            raise SystemExit(f'{key}: requires a list')
+        for row in rows:
+            if not isinstance(row,dict) or set(row) != {'inst', 'pin', 'regions'}:
+                raise SystemExit(f'{key}: requires exact inst/pin/regions fields')
+            inst, pin, rs = row['inst'], row['pin'], row['regions']
+            if not isinstance(inst,str) or not isinstance(pin,str) or inst not in by_inst or (inst, pin) in result:
+                raise SystemExit(f'{key}: missing or duplicate instance/pin {inst}.{pin}')
+            i = by_inst[inst]
+            cm = parse_module(csrc, i['module'])
+            port = next((p for p in cm['ports'] if p['name'] == pin), None)
+            declared = spec.get('clock_pins' if role == 'clocks' else 'reset_pins') or []
+            if not port or port['dir'] != 'in' or pin not in declared or pin not in i['conns']:
+                raise SystemExit(f'{key}: {inst}.{pin} is not a declared {role} input')
+            if not isinstance(rs, list) or len(rs) < 2 or any(not isinstance(r,str) for r in rs) or len(set(rs)) != len(rs) or any(r not in regions for r in rs):
+                raise SystemExit(f'{key}: regions must be distinct known roots in LSB-first order')
+            # The initial interface is deliberately constant-sized, descending,
+            # zero-based; accept no vector direction or param alias ambiguity.
+            rng = re.sub(r'\s+', '', port['range'] or '')
+            if rng != f'[{len(rs)-1}:0]':
+                raise SystemExit(f'{key}: {inst}.{pin} must have literal range [{len(rs)-1}:0]')
+            roots = (spec.get('clock_ports') or []) if role == 'clocks' else [spec.get('reset_port')]
+            ex = re.sub(r'\s+', '', i['conns'][pin])
+            if ex not in {f'{{{len(rs)}{{{r}}}}}' for r in roots}:
+                raise SystemExit(f'{key}: {inst}.{pin} must replicate one parent {role} root, no aliases')
+            result[inst, pin] = dict(role=role, regions=list(rs))
+    if result:
+        clock_roots = {r for b in result.values() if b['role']=='clocks' for r in b['regions']}
+        ordinary_roots = {r['name'] for r in spec['regions'] if any(
+            fnmatch.fnmatchcase(i['inst'],pattern) for i in insts for pattern in r['insts'])}
+        if regions - ordinary_roots - clock_roots:
+            raise SystemExit('regional_child_clocks: every extra root needs an explicit child clock bit')
+        for (inst,pin), b in result.items():
+            if b['role']=='resets' and not any(j==inst and q['role']=='clocks' and q['regions']==b['regions']
+                                               for (j,p),q in result.items()):
+                raise SystemExit(f'regional_child_resets: {inst}.{pin} has no matching clock-bit epochs')
+            if b['role']=='clocks' and not any(j==inst and q['role']=='resets' and q['regions']==b['regions']
+                                               for (j,p),q in result.items()):
+                raise SystemExit(f'regional_child_clocks: {inst}.{pin} needs explicit matching reset-bit epochs; reset-free exceptions unsupported')
+    return result
+
+
 class Parent:
     def __init__(self, spec: dict):
         self.S = spec
@@ -384,6 +444,7 @@ class Parent:
             raise SystemExit(f"unknown synthesis hard instances: {sorted(unknown)}")
         self.env = {k: v for k, v in self.mod["params"].items()}
         self.env.update({k: str(v) for k, v in (spec.get("params") or {}).items()})
+        self.regional_bindings = regional_bindings(spec, self.insts, csrc)
         self.cports, self.cwidth = {}, {}
         for ins in self.insts:
             m = ins["module"]
@@ -407,6 +468,11 @@ class Parent:
         self.K = self.E
         self.direct_timing = bool(spec.get("landing_direct_timing", False))
         self.chunk_bits = int(spec.get("landing_chunk_bits", 0))
+        self.reset_forest = spec.get("landing_reset_forest", False)
+        if type(self.reset_forest) is not bool:
+            raise SystemExit("landing_reset_forest must be an explicit boolean")
+        if self.reset_forest and not self.chunk_bits:
+            raise SystemExit("landing_reset_forest requires explicit landing_chunk_bits")
         if self.chunk_bits and not 1 <= self.chunk_bits <= 24:
             raise SystemExit("landing_chunk_bits must be 1..24 (kept local selector fanout)")
         if self.direct_timing and (self.D != 4 or self.E != 2):
@@ -653,9 +719,54 @@ class Parent:
         RB = 1 + max(max(hops.values()), 1)
         return rr, hops, RB
 
+    def reset_forest_plan(self, P):
+        """Exact per-chunk leaf allocation at unchanged regional reset depth."""
+        if not self.reset_forest:
+            return None
+        _, _, RB = self.reset_tree()
+        depth = RB - 1
+        if depth < 2:
+            raise SystemExit("landing_reset_forest needs at least two already-priced regional stages; no free reset edge")
+        regions = {r: dict(leaves=1, terms=['1'], bindings=[]) for r in self.regions}
+        for land in P['lands']:
+            n = land['name']
+            roles = [('r', land['dst_region'])]
+            if land.get('ring_of', n) == n:
+                roles.insert(0, ('w', land['src_region']))
+            wt = width_text(self.rng(land['net']))
+            count_expr = f'((({wt})+{self.chunk_bits}-1)/{self.chunk_bits})'
+            count = math.ceil(land['width'] / self.chunk_bits)
+            for role, region in roles:
+                row = regions[region]
+                row['bindings'].append(dict(landing=n, role=role, first_leaf=row['leaves'],
+                    chunks=count, first_expr='+'.join(row['terms']), chunks_expr=count_expr))
+                row['leaves'] += count
+                row['terms'].append(count_expr)
+        for region, row in regions.items():
+            if row['leaves'] > 1024:
+                raise SystemExit(f'landing_reset_forest {region}: {row["leaves"]} leaves exceeds1024')
+            row['branches'] = math.ceil(row['leaves'] / 32)
+            row['FFs'] = depth - 2 + row['branches'] + row['leaves']
+            scalar_uses = sum(self.region[ins['inst']] == region and any(
+                pin in (self.S.get('reset_pins') or []) and ex.strip() == self.rst
+                for pin, ex in ins['conns'].items()) for ins in self.insts)
+            scalar_uses += sum(binding['regions'].count(region) for binding in self.regional_bindings.values()
+                               if binding['role'] == 'resets')
+            row['scalar_child_pad_port_uses'] = scalar_uses
+            if scalar_uses > 32:
+                raise SystemExit(f'landing_reset_forest {region} scalar child reset boundary has {scalar_uses} ports; partition still required')
+        root_loads = sum(v['branches'] if depth == 2 else 1 for v in regions.values())
+        if root_loads > 32:
+            raise SystemExit(f'landing_reset_forest root has {root_loads} registered loads; no added edge credited')
+        return dict(regional_stages=depth, root_D_loads=root_loads, regions=regions,
+                    incremental_FFs=sum(v['FFs']-depth for v in regions.values()),
+                    required_rtl_sources=RESET_FOREST_RTL,
+                    scope='Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified.')
+
     def emit(self, P, top_lp, mut=True):
         S, D, E, K, AW = self.S, self.D, self.E, self.K, self.AW
         rr, hops, RB = self.reset_tree()
+        forest = self.reset_forest_plan(P)
         L = []
         w = L.append
         # header
@@ -696,16 +807,32 @@ class Parent:
         # reset tree
         w(f"    // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region {rr} holds the root)")
         w(f"    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_{rr}), .d({self.rst}), .q(lpr_root));")
+        if forest:
+            for r in self.regions:
+                expression = '+'.join(forest['regions'][r]['terms'])
+                w(f'    localparam integer LPR_LEAVES_{r} = {expression};')
+            root_load_expr = ('+'.join(f'((LPR_LEAVES_{r}+31)/32)' for r in self.regions)
+                              if RB-1 == 2 else str(len(self.regions)))
         for r in self.regions:
-            w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N({RB - 1})) u_lpr_{r} (.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}));"
-              f"   // {hops[r]} hop(s) from {rr}")
+            if forest:
+                w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
+                w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
+                  f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
+            else:
+                w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N({RB - 1})) u_lpr_{r} (.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}));"
+                  f"   // {hops[r]} hop(s) from {rr}")
         # landings
         sub = {}            # (inst, net) -> replacement net
         for Ld in P["lands"]:
             n, net, s, r = Ld["name"], Ld["net"], Ld["src_region"], Ld["dst_region"]
             rng = self.rng(net)
             wt = width_text(rng)
-            primitive = "ot_pl_land_chunk" if self.chunk_bits else "ot_pl_land"
+            primitive = "ot_pl_land_vector_reset" if forest else ("ot_pl_land_chunk" if self.chunk_bits else "ot_pl_land")
+            def reset_input(role, region):
+                if not forest:
+                    return f'lpr_{region}'
+                binding = next(v for v in forest['regions'][region]['bindings'] if v['landing']==n and v['role']==role)
+                return f'lpr_{region}_leaves[({binding["first_expr"]}) +: {binding["chunks_expr"]}]'
             cp = f", .CHUNK_BITS({self.chunk_bits})" if self.chunk_bits else ""
             vld_hi = f"{D}*((({wt})+{self.chunk_bits}-1)/{self.chunk_bits})-1" if self.chunk_bits else str(D - 1)
             decl = rng or ""
@@ -716,12 +843,12 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                w(f"    {primitive}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi(lpr_{s}), .i({net}), "
+                w(f"    {primitive}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
                 w(f"    wire {decl} {out}, lpl_{n}_o;")
             kk = f"(MUT == 2) ? {K + 1} : {K}" if n == "0" and mut else f"{K}"
-            w(f"    {primitive}_r #(.W({wt}), .D({D}), .K({kk}){cp}) u_lpl_{n}_r (.ck(ck_{r}), .rsi(lpr_{r}), "
+            w(f"    {primitive}_r #(.W({wt}), .D({D}), .K({kk}){cp}) u_lpl_{n}_r (.ck(ck_{r}), .rsi({reset_input('r',r)}), "
               f".bank(lpl_{g}_bank), .epo(lpl_{g}_epo), .vld(lpl_{g}_vld), .o(lpl_{n}_o));")
             if Ld.get("unlanded_mutant"):
                 w(f"    assign {out} = {net};   // --mut-unland: the region audit must FAIL on this crossing")
@@ -751,13 +878,32 @@ class Parent:
                 w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d(lpr_{r}), .q(lpr_c_{i}));"
                   + (f"   // t({i}) = {tc}" if not self.reference else f"   // reference schedule: held {tc} past the landing epochs"))
                 rsub[i] = f"lpr_c_{i}"
+        # Internal regional reset ports receive the same logical child delay as
+        # the ordinary child reset, each on its own root. No reset/data mask.
+        brsub = {}
+        for (i,pin), binding in self.regional_bindings.items():
+            if binding['role'] != 'resets':
+                continue
+            tc = P['t'].get(i, 0) + self.rx
+            names = []
+            for bit,r in enumerate(binding['regions']):
+                name = f'lpr_b_{i}_{pin}_{bit}'
+                kk = f'(MUT == 4) ? {tc+1} : {tc}' if i == mc and mut else str(tc)
+                w(f'    wire {name}; ot_pl_pad #(.W(1), .N({kk})) u_lprb_{i}_{pin}_{bit} '
+                  f'(.ck(ck_{r}), .d(lpr_{r}), .q({name}));')
+                names.append(name)
+            brsub[i,pin] = '{' + ', '.join(reversed(names)) + '}'
         # children
         w("    // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)")
         for ins in self.insts:
             i, r = ins["inst"], self.region[ins["inst"]]
             cs = []
             for pin, ex in ins["conns"].items():
-                if pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
+                binding = self.regional_bindings.get((i,pin))
+                if binding:
+                    ex = ('{' + ', '.join('ck_'+r for r in reversed(binding['regions'])) + '}'
+                          if binding['role']=='clocks' else brsub[i,pin])
+                elif pin in (S.get("clock_pins") or []) and idents(ex) & self.ck:
                     cw = self.cwidth[ins["module"]].get(pin, 1)
                     ex = f"ck_{r}" if cw == 1 else f"{{{cw}{{ck_{r}}}}}"
                 elif i in rsub and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst:
@@ -879,6 +1025,17 @@ class Parent:
         flops_oreg = sum(eval_width(self.ports[p]["range"], self.env) * k for p, k in (P.get("oregs") or {}).items())
         flops_rst = 1 + len(self.regions) * (rt["RB"] - 1) + sum(t.get(i["inst"], 0) + self.rx for i in self.insts if any(
             pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in i["conns"].items()))
+        # emit() creates a distinct W1 u_lprb pad for EVERY regional reset
+        # vector bit, in addition to the ordinary scalar child reset pad.
+        regional_reset_pads = [dict(instance=i, pin=pin, bit=bit,
+                                   stages=t.get(i, 0) + self.rx)
+            for (i, pin), binding in self.regional_bindings.items()
+            if binding['role'] == 'resets' for bit in range(len(binding['regions']))]
+        regional_reset_FFs = sum(pad['stages'] for pad in regional_reset_pads)
+        flops_rst += regional_reset_FFs
+        forest = self.reset_forest_plan(P)
+        if forest:
+            flops_rst += forest['incremental_FFs']
         pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in P["lands"]})
         rpairs = sorted({"-".join(sorted((rt["reset_region"], r))) for r in self.regions if r != rt["reset_region"]})
         port_in = {p["name"]: t.get(f"port:{p['name']}", 0) for p in self.mod["ports"]
@@ -907,6 +1064,9 @@ class Parent:
                               note="sticky status flags (no reservation / valid / payload effect): landed, outside the "
                                    "offset solve; the reader sees each flag lag_edges later than the flat parent"),
             reset=dict(port=self.rst, root_region=rt["reset_region"], depth=rt["RB"], hops=rt["hops"],
+                       **(dict(same_depth_forest=forest) if forest else {}),
+                       **(dict(regional_vector_padding_FFs=regional_reset_FFs,
+                               regional_vector_padding=regional_reset_pads) if regional_reset_pads else {}),
                        note="flat reference == landed parent with its reset delayed by depth; child c's reset run is "
                             "depth + t(c)"),
             flops=dict(landing=flops_land, pads=flops_pad, reset=flops_rst, **({"out_regs": flops_oreg} if flops_oreg else {})),
@@ -937,6 +1097,14 @@ class Parent:
                 landing_implementation=dict(chunk_bits=self.chunk_bits, direct_quarter_period_timing=self.direct_timing,
                                             compensated_phase_T=[-0.75, 0.75], sample_age_T=[1.25, 2.75],
                                             overwrite_gap_min_T=1.25))),
+            **({} if not self.regional_bindings else dict(
+                regional_child_bindings=[dict(inst=i,pin=p,role=b['role'],
+                    bits=[dict(bit=j,region=r,clock_port='ck_'+r,
+                               reset_net=(f'lpr_b_{i}_{p}_{j}' if b['role']=='resets' else None),
+                               reset_delay_edges=(t.get(i,0)+self.rx if b['role']=='resets' else None))
+                          for j,r in enumerate(b['regions'])])
+                    for (i,p),b in sorted(self.regional_bindings.items())],
+                internal_crossing_obligation='Vector binding is clock/reset connectivity only. Every declared root must appear in native entry and internal crossing audits; no internal datapath coverage is implied.')),
             die_obligations=[
                 "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
                 "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
@@ -1084,6 +1252,7 @@ class Parent:
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
         srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
+                        (RESET_FOREST_RTL if self.reset_forest else []) +
                         ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
@@ -1135,10 +1304,18 @@ def audit(spec: dict, rtl_text: str) -> dict:
     for i in insts:
         if i["module"] not in dirs:
             dirs[i["module"]] = {p["name"]: p["dir"] for p in parse_module(csrc, i["module"])["ports"]}
+    bindings = Parent(spec).regional_bindings if (spec.get('regional_child_clocks') or spec.get('regional_child_resets')) else {}
+    for (name,pin), binding in bindings.items():
+        child = next((i for i in insts if i['inst']==name), None)
+        expected = ('{' + ','.join('ck_'+r for r in reversed(binding['regions'])) + '}'
+                    if binding['role']=='clocks' else
+                    '{' + ','.join(f'lpr_b_{name}_{pin}_{j}' for j in reversed(range(len(binding['regions'])))) + '}')
+        if child is None or re.sub(r'\s+','',child['conns'].get(pin,'')) != expected:
+            return dict(ok=False, fails=[f'{name}.{pin}: regional {binding["role"]} bit mapping differs from declared contract'])
     rcks = {f"ck_{r['name']}" for r in spec["regions"]}     # region clocks only (a parent port may be named ck_*)
     reg = {}
     for i in insts:
-        cks = [ckname(ex) for pin, ex in i["conns"].items() if ckname(ex) in rcks]
+        cks = [ckname(ex) for pin, ex in i["conns"].items() if ckname(ex) in rcks and (i['inst'],pin) not in bindings]
         if len(set(cks)) != 1:
             return dict(ok=False, fails=[f"{i['inst']}: clock pins on {sorted(set(cks)) or 'no region clock'}"])
         reg[i["inst"]] = cks[0][3:]
@@ -1156,14 +1333,14 @@ def audit(spec: dict, rtl_text: str) -> dict:
     fails, landed, rst = [], 0, 0
     for i in insts:
         for pin, ex in i["conns"].items():
-            if dirs[i["module"]].get(pin) != "in" or ckname(ex) in rcks:
+            if dirs[i["module"]].get(pin) != "in" or ckname(ex) in rcks or (i['inst'],pin) in bindings:
                 continue
             for n in idents(ex):
                 for d in drv.get(n, ()):
                     if reg[d] == reg[i["inst"]]:
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r") and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):

@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hidx_op_n12_1018-n12-7bfb8c78c bench bench_vm_query_n12_mut2 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hidx_op_n12_1018-n12-7bfb8c78c-bench log cl/bench_vm_query_n12_mut2.a1b1.log captured 2026-10-18T09:55:51-07:00
+# fail_regex '^IDX_VM_QUERY_N12 MUT2 .*errors[1-9][0-9]* fault0 '
+IDX_VM_QUERY_N12 MUT2 rq_rly1 rr_rly1 commits514 reads514 blocks128 quant32 errors2 fault0 firstblock33 lastblock160 firstquant186
+FATAL: rtl/test/hbm_idx_static/tb_vm_query_n12.sv:88: n+12 operand reader query/weight/quant/latency mismatch
+       Time: 2990000  Scope: tb_vm_query_n12

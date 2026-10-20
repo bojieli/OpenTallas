@@ -1,0 +1,13 @@
+# leg head mem 24 threads 8 2026-10-19T06:06:18-07:00
+# cmd: OT_HEAD_BUILD=/srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/head/build bash results/rtl/mu_qwen_1018/head/run_head.sh; rc=$?; cp -r results/rtl/mu_qwen_1018/head/runs /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/head/runs; exit $rc
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-pve1        admits    39 GB (avail 81, growth 53, headroom 0, waiters 0/0 GB) load 21/28 running 8 disk 1226 GB 
+ot-run: ot-agidock128  admits    11 GB (avail 83, growth 75, headroom 0, waiters 0/0 GB) load 17/64 running 12 disk 310 GB 
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1036486-1792415178 after 1 s
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1036486-1792415178): exit 0
+# ot-run rc=0 2026-10-19T06:07:34-07:00

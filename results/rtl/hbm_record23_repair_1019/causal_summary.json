@@ -1,0 +1,22 @@
+{
+  "absent_reader_identity": {
+    "exit": 1,
+    "fail_regex": "ARITHMETIC FAIL",
+    "words": 53
+  },
+  "missing_control_lifetime": {
+    "exit": 1,
+    "fail_regex": "ARITHMETIC FAIL",
+    "words": 53
+  },
+  "old_drain_gap": {
+    "exit": 1,
+    "fail_regex": "ARITHMETIC FAIL",
+    "words": 52
+  },
+  "old_fill_deadline": {
+    "exit": 1,
+    "fail_regex": "ARITHMETIC FAIL",
+    "words": 53
+  }
+}

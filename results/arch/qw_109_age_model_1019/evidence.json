@@ -1,0 +1,684 @@
+{
+ "verdict": "HOLD_SOURCE_AND_NATIVE_COMPOSITION",
+ "historical_age_differences": 109,
+ "source_family_count": 23,
+ "declared_D4_residual_window_failures": [
+  {
+   "bus": "dvs_W5.ag_wo -> tt_ctlm.ag5",
+   "width": 10,
+   "landings": [
+    {
+     "bid": "dvw_ag_wo",
+     "n": 23,
+     "E": 16,
+     "E_sta": 6,
+     "D": 4,
+     "declared_window_ok": false,
+     "K": 7,
+     "G": 1267,
+     "R0": 1332,
+     "calendar": -65,
+     "source_gate_clock": "n_clk_r135",
+     "landing_read_clock": "n_clk_r54",
+     "landing_output_register": true,
+     "source_metadata_clock": "clk_r135",
+     "destination_metadata_clock": "clk_r54",
+     "reset_root": "__declared_calendar__",
+     "chain": [
+      "rly_dvw_ag_wo_0",
+      "rly_dvw_ag_wo_1",
+      "rly_dvw_ag_wo_2",
+      "rly_dvw_ag_wo_3",
+      "rly_dvw_ag_wo_4",
+      "rly_dvw_ag_wo_5",
+      "rly_dvw_ag_wo_6",
+      "rly_dvw_ag_wo_7",
+      "rly_dvw_ag_wo_8",
+      "rly_dvw_ag_wo_9",
+      "rly_dvw_ag_wo_10",
+      "rly_dvw_ag_wo_11",
+      "rly_dvw_ag_wo_12",
+      "rly_dvw_ag_wo_13",
+      "rly_dvw_ag_wo_14",
+      "rly_dvw_ag_wo_15",
+      "rly_dvw_ag_wo_16",
+      "rly_dvw_ag_wo_17",
+      "rly_dvw_ag_wo_18",
+      "rly_dvw_ag_wo_19",
+      "rly_dvw_ag_wo_20",
+      "rly_dvw_ag_wo_21",
+      "rly_dvw_ag_wo_22"
+     ]
+    }
+   ]
+  },
+  {
+   "bus": "dvs_W5.dd_wo -> native59.dd_i",
+   "width": 548,
+   "landings": [
+    {
+     "bid": "dvw_dd_wo",
+     "n": 26,
+     "E": 19,
+     "E_sta": 7,
+     "D": 4,
+     "declared_window_ok": false,
+     "K": 2,
+     "G": 1267,
+     "R0": 1596,
+     "calendar": -329,
+     "source_gate_clock": "n_clk_r135",
+     "landing_read_clock": "n_clk_r54",
+     "landing_output_register": true,
+     "source_metadata_clock": "clk_r135",
+     "destination_metadata_clock": "clk_r54",
+     "reset_root": "__declared_calendar__",
+     "chain": [
+      "rly_dvw_dd_wo_0",
+      "rly_dvw_dd_wo_1",
+      "rly_dvw_dd_wo_2",
+      "rly_dvw_dd_wo_3",
+      "rly_dvw_dd_wo_4",
+      "rly_dvw_dd_wo_5",
+      "rly_dvw_dd_wo_6",
+      "rly_dvw_dd_wo_7",
+      "rly_dvw_dd_wo_8",
+      "rly_dvw_dd_wo_9",
+      "rly_dvw_dd_wo_10",
+      "rly_dvw_dd_wo_11",
+      "rly_dvw_dd_wo_12",
+      "rly_dvw_dd_wo_13",
+      "rly_dvw_dd_wo_14",
+      "rly_dvw_dd_wo_15",
+      "rly_dvw_dd_wo_16",
+      "rly_dvw_dd_wo_17",
+      "rly_dvw_dd_wo_18",
+      "rly_dvw_dd_wo_19",
+      "rly_dvw_dd_wo_20",
+      "rly_dvw_dd_wo_21",
+      "rly_dvw_dd_wo_22",
+      "rly_dvw_dd_wo_23",
+      "rly_dvw_dd_wo_24",
+      "rly_dvw_dd_wo_25"
+     ]
+    }
+   ]
+  },
+  {
+   "bus": "dvs_W5.ss_wo -> tt_ctlm.ss5",
+   "width": 107,
+   "landings": [
+    {
+     "bid": "dvw_ss_wo",
+     "n": 22,
+     "E": 16,
+     "E_sta": 6,
+     "D": 4,
+     "declared_window_ok": false,
+     "K": 7,
+     "G": 1267,
+     "R0": 1332,
+     "calendar": -65,
+     "source_gate_clock": "n_clk_r135",
+     "landing_read_clock": "n_clk_r54",
+     "landing_output_register": true,
+     "source_metadata_clock": "clk_r135",
+     "destination_metadata_clock": "clk_r54",
+     "reset_root": "__declared_calendar__",
+     "chain": [
+      "rly_dvw_ss_wo_0",
+      "rly_dvw_ss_wo_1",
+      "rly_dvw_ss_wo_2",
+      "rly_dvw_ss_wo_3",
+      "rly_dvw_ss_wo_4",
+      "rly_dvw_ss_wo_5",
+      "rly_dvw_ss_wo_6",
+      "rly_dvw_ss_wo_7",
+      "rly_dvw_ss_wo_8",
+      "rly_dvw_ss_wo_9",
+      "rly_dvw_ss_wo_10",
+      "rly_dvw_ss_wo_11",
+      "rly_dvw_ss_wo_12",
+      "rly_dvw_ss_wo_13",
+      "rly_dvw_ss_wo_14",
+      "rly_dvw_ss_wo_15",
+      "rly_dvw_ss_wo_16",
+      "rly_dvw_ss_wo_17",
+      "rly_dvw_ss_wo_18",
+      "rly_dvw_ss_wo_19",
+      "rly_dvw_ss_wo_20",
+      "rly_dvw_ss_wo_21"
+     ]
+    }
+   ]
+  },
+  {
+   "bus": "io_collective.cmd_free -> sys_face.io_cmd_free",
+   "width": 1,
+   "landings": [
+    {
+     "bid": "dvw_io_collective_cmd_free",
+     "n": 26,
+     "E": 19,
+     "E_sta": 7,
+     "D": 4,
+     "declared_window_ok": false,
+     "K": 5,
+     "G": 671,
+     "R0": 21,
+     "calendar": 650,
+     "source_gate_clock": "n_clk_coll",
+     "landing_read_clock": "n_clk_d2d",
+     "landing_output_register": true,
+     "source_metadata_clock": "clk_coll",
+     "destination_metadata_clock": "clk_d2d",
+     "reset_root": "__declared_calendar__",
+     "chain": [
+      "rly_dvw_io_collective_cmd_free_0",
+      "rly_dvw_io_collective_cmd_free_1",
+      "rly_dvw_io_collective_cmd_free_2",
+      "rly_dvw_io_collective_cmd_free_3",
+      "rly_dvw_io_collective_cmd_free_4",
+      "rly_dvw_io_collective_cmd_free_5",
+      "rly_dvw_io_collective_cmd_free_6",
+      "rly_dvw_io_collective_cmd_free_7",
+      "rly_dvw_io_collective_cmd_free_8",
+      "rly_dvw_io_collective_cmd_free_9",
+      "rly_dvw_io_collective_cmd_free_10",
+      "rly_dvw_io_collective_cmd_free_11",
+      "rly_dvw_io_collective_cmd_free_12",
+      "rly_dvw_io_collective_cmd_free_13",
+      "rly_dvw_io_collective_cmd_free_14",
+      "rly_dvw_io_collective_cmd_free_15",
+      "rly_dvw_io_collective_cmd_free_16",
+      "rly_dvw_io_collective_cmd_free_17",
+      "rly_dvw_io_collective_cmd_free_18",
+      "rly_dvw_io_collective_cmd_free_19",
+      "rly_dvw_io_collective_cmd_free_20",
+      "rly_dvw_io_collective_cmd_free_21",
+      "rly_dvw_io_collective_cmd_free_22",
+      "rly_dvw_io_collective_cmd_free_23",
+      "rly_dvw_io_collective_cmd_free_24",
+      "rly_dvw_io_collective_cmd_free_25"
+     ]
+    }
+   ]
+  },
+  {
+   "bus": "io_collective.fault -> sys_face.io_fault",
+   "width": 1,
+   "landings": [
+    {
+     "bid": "sf_io_fault",
+     "n": 26,
+     "E": 18,
+     "E_sta": 6,
+     "D": 4,
+     "declared_window_ok": false,
+     "K": 4,
+     "G": 671,
+     "R0": 21,
+     "calendar": 650,
+     "source_gate_clock": "n_clk_coll",
+     "landing_read_clock": "n_clk_d2d",
+     "landing_output_register": true,
+     "source_metadata_clock": "clk_coll",
+     "destination_metadata_clock": "clk_d2d",
+     "reset_root": "__declared_calendar__",
+     "chain": [
+      "rly_sf_io_fault_0",
+      "rly_sf_io_fault_1",
+      "rly_sf_io_fault_2",
+      "rly_sf_io_fault_3",
+      "rly_sf_io_fault_4",
+      "rly_sf_io_fault_5",
+      "rly_sf_io_fault_6",
+      "rly_sf_io_fault_7",
+      "rly_sf_io_fault_8",
+      "rly_sf_io_fault_9",
+      "rly_sf_io_fault_10",
+      "rly_sf_io_fault_11",
+      "rly_sf_io_fault_12",
+      "rly_sf_io_fault_13",
+      "rly_sf_io_fault_14",
+      "rly_sf_io_fault_15",
+      "rly_sf_io_fault_16",
+      "rly_sf_io_fault_17",
+      "rly_sf_io_fault_18",
+      "rly_sf_io_fault_19",
+      "rly_sf_io_fault_20",
+      "rly_sf_io_fault_21",
+      "rly_sf_io_fault_22",
+      "rly_sf_io_fault_23",
+      "rly_sf_io_fault_24",
+      "rly_sf_io_fault_25"
+     ]
+    }
+   ]
+  },
+  {
+   "bus": "io_collective.shared_fault -> sys_face.io_shared_fault",
+   "width": 1,
+   "landings": [
+    {
+     "bid": "sf_io_shared_fault",
+     "n": 27,
+     "E": 19,
+     "E_sta": 7,
+     "D": 4,
+     "declared_window_ok": false,
+     "K": 5,
+     "G": 671,
+     "R0": 21,
+     "calendar": 650,
+     "source_gate_clock": "n_clk_coll",
+     "landing_read_clock": "n_clk_d2d",
+     "landing_output_register": true,
+     "source_metadata_clock": "clk_coll",
+     "destination_metadata_clock": "clk_d2d",
+     "reset_root": "__declared_calendar__",
+     "chain": [
+      "rly_sf_io_shared_fault_0",
+      "rly_sf_io_shared_fault_1",
+      "rly_sf_io_shared_fault_2",
+      "rly_sf_io_shared_fault_3",
+      "rly_sf_io_shared_fault_4",
+      "rly_sf_io_shared_fault_5",
+      "rly_sf_io_shared_fault_6",
+      "rly_sf_io_shared_fault_7",
+      "rly_sf_io_shared_fault_8",
+      "rly_sf_io_shared_fault_9",
+      "rly_sf_io_shared_fault_10",
+      "rly_sf_io_shared_fault_11",
+      "rly_sf_io_shared_fault_12",
+      "rly_sf_io_shared_fault_13",
+      "rly_sf_io_shared_fault_14",
+      "rly_sf_io_shared_fault_15",
+      "rly_sf_io_shared_fault_16",
+      "rly_sf_io_shared_fault_17",
+      "rly_sf_io_shared_fault_18",
+      "rly_sf_io_shared_fault_19",
+      "rly_sf_io_shared_fault_20",
+      "rly_sf_io_shared_fault_21",
+      "rly_sf_io_shared_fault_22",
+      "rly_sf_io_shared_fault_23",
+      "rly_sf_io_shared_fault_24",
+      "rly_sf_io_shared_fault_25",
+      "rly_sf_io_shared_fault_26"
+     ]
+    }
+   ]
+  },
+  {
+   "bus": "native59.dr_o -> dvs_W5.dr_wi",
+   "width": 520,
+   "landings": [
+    {
+     "bid": "dvw_dr_wi",
+     "n": 27,
+     "E": 19,
+     "E_sta": 7,
+     "D": 4,
+     "declared_window_ok": false,
+     "K": 6,
+     "G": 1597,
+     "R0": 1266,
+     "calendar": 331,
+     "source_gate_clock": "n_clk_r54",
+     "landing_read_clock": "n_clk_r135",
+     "landing_output_register": true,
+     "source_metadata_clock": "clk_r54",
+     "destination_metadata_clock": "clk_r135",
+     "reset_root": "__declared_calendar__",
+     "chain": [
+      "rly_dvw_dr_wi_0",
+      "rly_dvw_dr_wi_1",
+      "rly_dvw_dr_wi_2",
+      "rly_dvw_dr_wi_3",
+      "rly_dvw_dr_wi_4",
+      "rly_dvw_dr_wi_5",
+      "rly_dvw_dr_wi_6",
+      "rly_dvw_dr_wi_7",
+      "rly_dvw_dr_wi_8",
+      "rly_dvw_dr_wi_9",
+      "rly_dvw_dr_wi_10",
+      "rly_dvw_dr_wi_11",
+      "rly_dvw_dr_wi_12",
+      "rly_dvw_dr_wi_13",
+      "rly_dvw_dr_wi_14",
+      "rly_dvw_dr_wi_15",
+      "rly_dvw_dr_wi_16",
+      "rly_dvw_dr_wi_17",
+      "rly_dvw_dr_wi_18",
+      "rly_dvw_dr_wi_19",
+      "rly_dvw_dr_wi_20",
+      "rly_dvw_dr_wi_21",
+      "rly_dvw_dr_wi_22",
+      "rly_dvw_dr_wi_23",
+      "rly_dvw_dr_wi_24",
+      "rly_dvw_dr_wi_25",
+      "rly_dvw_dr_wi_26"
+     ]
+    }
+   ]
+  },
+  {
+   "bus": "tt_ctlm.cmd -> dvs_W5.cmd_wi",
+   "width": 116,
+   "landings": [
+    {
+     "bid": "dvw_cmd_wi",
+     "n": 25,
+     "E": 18,
+     "E_sta": 7,
+     "D": 4,
+     "declared_window_ok": false,
+     "K": 5,
+     "G": 1333,
+     "R0": 1266,
+     "calendar": 67,
+     "source_gate_clock": "n_clk_r54",
+     "landing_read_clock": "n_clk_r135",
+     "landing_output_register": true,
+     "source_metadata_clock": "clk_r54",
+     "destination_metadata_clock": "clk_r135",
+     "reset_root": "__declared_calendar__",
+     "chain": [
+      "rly_dvw_cmd_wi_0",
+      "rly_dvw_cmd_wi_1",
+      "rly_dvw_cmd_wi_2",
+      "rly_dvw_cmd_wi_3",
+      "rly_dvw_cmd_wi_4",
+      "rly_dvw_cmd_wi_5",
+      "rly_dvw_cmd_wi_6",
+      "rly_dvw_cmd_wi_7",
+      "rly_dvw_cmd_wi_8",
+      "rly_dvw_cmd_wi_9",
+      "rly_dvw_cmd_wi_10",
+      "rly_dvw_cmd_wi_11",
+      "rly_dvw_cmd_wi_12",
+      "rly_dvw_cmd_wi_13",
+      "rly_dvw_cmd_wi_14",
+      "rly_dvw_cmd_wi_15",
+      "rly_dvw_cmd_wi_16",
+      "rly_dvw_cmd_wi_17",
+      "rly_dvw_cmd_wi_18",
+      "rly_dvw_cmd_wi_19",
+      "rly_dvw_cmd_wi_20",
+      "rly_dvw_cmd_wi_21",
+      "rly_dvw_cmd_wi_22",
+      "rly_dvw_cmd_wi_23",
+      "rly_dvw_cmd_wi_24"
+     ]
+    }
+   ]
+  },
+  {
+   "bus": "tt_ctlm.hr -> dvs_W5.hr_wi",
+   "width": 453,
+   "landings": [
+    {
+     "bid": "dvw_hr_wi",
+     "n": 26,
+     "E": 19,
+     "E_sta": 7,
+     "D": 4,
+     "declared_window_ok": false,
+     "K": 6,
+     "G": 1333,
+     "R0": 1266,
+     "calendar": 67,
+     "source_gate_clock": "n_clk_r54",
+     "landing_read_clock": "n_clk_r135",
+     "landing_output_register": true,
+     "source_metadata_clock": "clk_r54",
+     "destination_metadata_clock": "clk_r135",
+     "reset_root": "__declared_calendar__",
+     "chain": [
+      "rly_dvw_hr_wi_0",
+      "rly_dvw_hr_wi_1",
+      "rly_dvw_hr_wi_2",
+      "rly_dvw_hr_wi_3",
+      "rly_dvw_hr_wi_4",
+      "rly_dvw_hr_wi_5",
+      "rly_dvw_hr_wi_6",
+      "rly_dvw_hr_wi_7",
+      "rly_dvw_hr_wi_8",
+      "rly_dvw_hr_wi_9",
+      "rly_dvw_hr_wi_10",
+      "rly_dvw_hr_wi_11",
+      "rly_dvw_hr_wi_12",
+      "rly_dvw_hr_wi_13",
+      "rly_dvw_hr_wi_14",
+      "rly_dvw_hr_wi_15",
+      "rly_dvw_hr_wi_16",
+      "rly_dvw_hr_wi_17",
+      "rly_dvw_hr_wi_18",
+      "rly_dvw_hr_wi_19",
+      "rly_dvw_hr_wi_20",
+      "rly_dvw_hr_wi_21",
+      "rly_dvw_hr_wi_22",
+      "rly_dvw_hr_wi_23",
+      "rly_dvw_hr_wi_24",
+      "rly_dvw_hr_wi_25"
+     ]
+    }
+   ]
+  }
+ ],
+ "declared_window_failure_bits": 1757,
+ "representative_pin_age_comparisons_pass": 3584,
+ "provider_source_gold_checks": 1152,
+ "provider_fault_checks": 1608,
+ "actual_CTLM_HR_low73_ideal_age": 16,
+ "current_export_CTLM_HR_ideal_age": 20,
+ "CTLM_HR_mismatches": 512,
+ "runs": {
+  "initial": {
+   "path": "receipts/run_base.log",
+   "sha256": "df2b0bd08df81e35ca69f79bf79f7f9536f91fcb561b01c3be6ed2cd99a166ce",
+   "cases": {
+    "0": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "2": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "3": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "4": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "1": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "7": {
+     "checks": 512,
+     "mismatches": 512
+    }
+   },
+   "semantic_verdict": "FAIL"
+  },
+  "wrong_K": {
+   "path": "receipts/run_K.log",
+   "sha256": "446f7951dcf22237684a8279397adac99fad405cf91f27a18f3c6606f998e099",
+   "cases": {
+    "0": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "2": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "3": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "4": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "1": {
+     "checks": 512,
+     "mismatches": 256
+    },
+    "7": {
+     "checks": 512,
+     "mismatches": 512
+    }
+   },
+   "semantic_verdict": "FAIL"
+  },
+  "extra_stage": {
+   "path": "receipts/run_STAGE.log",
+   "sha256": "6317405a240ce23fc12a39a5211bf375878258c5b3b5eed3c79a19df36c9a88e",
+   "cases": {
+    "0": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "2": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "3": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "4": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "1": {
+     "checks": 512,
+     "mismatches": 256
+    },
+    "7": {
+     "checks": 512,
+     "mismatches": 512
+    }
+   },
+   "semantic_verdict": "FAIL"
+  },
+  "observed": {
+   "path": "receipts/observer/run_observed.log",
+   "sha256": "ae425f300a645bca4b8dd21b3df82aec10367735e2178c22df26535f448f4a76",
+   "cases": {
+    "0": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "2": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "3": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "4": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "1": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "7": {
+     "checks": 512,
+     "mismatches": 512
+    }
+   },
+   "semantic_verdict": "FAIL"
+  },
+  "half_edge": {
+   "path": "receipts/observer/run_PHASE.log",
+   "sha256": "66d169ce83ee523b4ddcec69ebbdc92f5b5251427e5b8256b6e6047d4cc5e098",
+   "cases": {
+    "0": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "2": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "3": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "4": {
+     "checks": 512,
+     "mismatches": 512
+    },
+    "1": {
+     "checks": 512,
+     "mismatches": 256
+    },
+    "7": {
+     "checks": 512,
+     "mismatches": 512
+    }
+   },
+   "semantic_verdict": "FAIL"
+  },
+  "provider": {
+   "path": "receipts/provider_gold/run_provider.log",
+   "sha256": "a514f47719e82c00df94c09a7eaa0b574e7c1ff96cf5bbc3b7e2a467ec31639f",
+   "cases": {
+    "6": {
+     "checks": 512,
+     "mismatches": 0
+    },
+    "5": {
+     "checks": 512,
+     "mismatches": 0
+    }
+   },
+   "semantic_verdict": "PASS"
+  },
+  "provider_K": {
+   "path": "receipts/provider_gold/run_provider_K.log",
+   "sha256": "a0e31b5996b10121f95adf859f50525ce8829ef4557792db40470a59b28c5216",
+   "cases": {
+    "6": {
+     "checks": 512,
+     "mismatches": 4
+    },
+    "5": {
+     "checks": 512,
+     "mismatches": 200
+    }
+   },
+   "semantic_verdict": "FAIL"
+  },
+  "provider_stage": {
+   "path": "receipts/provider_gold/run_provider_STAGE.log",
+   "sha256": "12df766c43b7f24e1bbf97a2d5922bbf2ae407c74757edd2c95ccd5777c10e59",
+   "cases": {
+    "6": {
+     "checks": 512,
+     "mismatches": 4
+    },
+    "5": {
+     "checks": 512,
+     "mismatches": 192
+    }
+   },
+   "semantic_verdict": "FAIL"
+  }
+ },
+ "scope": "Original register-cone/lane mechanisms under ideal common roots and declared reset epochs. Provider full RTL/store/macro source used. No physical root phase or full-parent first-use qualification.",
+ "production_native_phase": null,
+ "adoptable_ages": null,
+ "source_recompile": false,
+ "die_GRT_admitted": false,
+ "hardware_delta": null
+}

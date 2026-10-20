@@ -1,0 +1,9 @@
+# Source-only compiler model before image build
+
+Actual mechanism is the existing128lane/two-bank native pgslice diagnostic; no new RTL, pins, fanout, SRAM, floorplan or clock. Source operation is record23 with128 independent checkpoint fixture words; 32 are physically tested through four sectors/two banks. Existing actual18/15 return and asymmetric GEN2c+l12 lanes remain frozen.
+
+Repair costs: legal unused B/C/D addresses add no physical state or transactions. Backend controls are direct live stage inputs, requiring finite ownership until all consumers commit. The initial conservative reservation is edge0..72 inclusive,73commands versus52; +21busy serial edges. OLD-read DRAIN gap adds one serial edge: lastcommit71→72, setup14/issue22 unchanged. This is nominal1.111111ns, frozen functionalPLL1.112ns; busy extension23.352ns. Original acceptance3800 and host3750/3770 unchanged. No token-rate claim is computed until actual placement of these reservations among every record and user is regenerated.
+
+Two static users sharing one datapath require nonoverlapping control reservations, even if bitwise control patterns are disjoint or zero. The model refuses offsets0..72 and admits73; heterogeneous records can execute serially. It does not assert that serialization is optimal. A future stage-specific interleaved calendar must prove every control-use lifetime before reducing this reservation. Actual MU numerical proof remains open.
+
+Every emitted source image, native calendar and original cached RTL archive is independently hashed in contract_proof.json. Four separate causal mutants prove missing reader identity, missing live controls, old DRAIN collision and old FILL deadline. No conditional waiting, falsepaths, macro forwarding, zero-initialization shortcut or changed golden is introduced.
