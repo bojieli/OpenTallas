@@ -1,0 +1,184 @@
+{
+ "name": "hcoll_v5r_ctl_n2s1_v74q-v74q-COMMIT",
+ "block": "ot_hgi_coll_ctl_v5r_n2s1_safephys",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-COLLP",
+ "purpose": "H.STA.BLK.16.4 COLL release leaf n2s1 v74p pipelined successor of v74x (gate WARN GRT0, setup -14..-53 ps on the iter_mul stage-3 7-term combine): MUL_PIPE 1 splits the combine into two registered rungs (+1 COLL issue edge, priced in H.STA.BANKLAT.COLL); geometry of v74x unchanged (two macro columns on the 43.2 lattice).",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbm-coll-v74p-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "tools/run_hbm_coll_mulpipe_proofs_1019.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_ctl_v5r_n2s1_safephys #(.VM_RT(74), .SAFE_DELAY(1), .MUL_PIPE(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_release_safephys.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5_safephys.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_fixed_delay_sram_safephys.sv rtl/hdc/ot_hdc_prefix.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_mulpipe_n2s1_proofs",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh {RUN}/bench/proofs",
+    "expect": "pass",
+    "pass_regex": "COLL_MULP_PROOFS PASS cases=20",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "20 cases in parallel: iter PIPE0/1, shift-equivalence vs v74 NPT1/2, production/dense MULP1, v74 regression; exits non-zero if any mutant survives"
+   },
+   {
+    "name": "mut_mulp_s0_m1",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/mulp_s0_m1 mulp_s0_m1",
+    "expect": "fail",
+    "fail_regex": "COLL_MULP_FAIL MUT1",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/mulp_s0_m1.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "v74p RTL at MUL_PIPE 0 behind the +1 parent contract: products one edge early"
+   },
+   {
+    "name": "mut_mulp_s0_m2",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/mulp_s0_m2 mulp_s0_m2",
+    "expect": "fail",
+    "fail_regex": "COLL_MULP_FAIL MUT2",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/mulp_s0_m2.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "taps one edge late"
+   },
+   {
+    "name": "mut_mulp_s0_m3",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/mulp_s0_m3 mulp_s0_m3",
+    "expect": "fail",
+    "fail_regex": "COLL_MULP_FAIL MUT3",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/mulp_s0_m3.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "hgi_start/hgi_busy/issue_done double-delayed"
+   },
+   {
+    "name": "mut_mulp_s0_m4",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/mulp_s0_m4 mulp_s0_m4",
+    "expect": "fail",
+    "fail_regex": "COLL_MULP_FAIL MUT4",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/mulp_s0_m4.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "s_rgx low byte cut (rgx products)"
+   },
+   {
+    "name": "mut_iter_p1_m3",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/iter_p1_m3 iter_p1_m3",
+    "expect": "fail",
+    "fail_regex": "COLL_ITER_SAFE_FAIL PIPE1",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/iter_p1_m3.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "PIPE 1 products checked at the v74 edge"
+   },
+   {
+    "name": "mut_v74p_s0_m4",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/v74p_s0_m4 v74p_s0_m4",
+    "expect": "fail",
+    "fail_regex": "COLL_VMRT FAIL MUT4",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/v74p_s0_m4.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "MULP 1 leaf expected at the v74 assembled edge"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_v5r_ctl_n2s1_v74q/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_v5r_ctl_n2s1_v74q/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_v5r_ctl_n2s1_v74q --out {RUN}/record/views/ot_hgi_coll_ctl_v5r_n2s1_safephys --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_v5r_ctl_n2s1_v74q/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_v5r_ctl_n2s1_v74q/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hcoll_v5r_ctl_n2s1_v74q/hcoll_v5r_ctl_n2s1_v74q-v74q-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

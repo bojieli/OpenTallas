@@ -1,0 +1,32 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-collp/r1
+ot-run: ot-epyc5       admits   892 GB (avail 737, growth 113, headroom 0, waiters 0/0 GB) load 83/128 running 27 disk 706 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/l2h-collp/r1
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-collp/r1
+ot-run: ot-epyc8       admits  1146 GB (avail 891, growth 89, headroom 0, waiters 0/0 GB) load 61/128 running 20 disk 77 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-collp/r1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-collp/r1
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1910340-1792458010 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+RESULT iter_p0 PASS COLL_ITER_SAFE_PASS PIPE0 lat2 cases=513 independent unsigned truncation +sameedge baseline
+RESULT iter_p1 PASS COLL_ITER_SAFE_PASS PIPE1 lat3 cases=512 independent unsigned truncation +sameedge baseline
+RESULT iter_p1_m1 MUTANT_FAILED_AS_EXPECTED [56000] %Fatal: tb_hgi_coll_iter_safephys.sv:30: Assertion failed in tb_hgi_coll_iter_safephys.unnamedblk1: COLL_ITER_SAFE_FAIL PIPE1 j=4 old=00010001ffff0001ffff0001ffff0001000000000000feff01feff01 new=00000000000000000000000000000000000000000000000000000000 expected=00010001ffff0001ffff0001ffff0001000000000000feff01feff01
+RESULT iter_p1_m2 MUTANT_FAILED_AS_EXPECTED [56000] %Fatal: tb_hgi_coll_iter_safephys.sv:30: Assertion failed in tb_hgi_coll_iter_safephys.unnamedblk1: COLL_ITER_SAFE_FAIL PIPE1 j=4 old=00010001ffff0001ffff0001ffff0001000000000000feff01feff01 new=00010001ffff0001ffff0001ffff0100000000000000feff01feff01 expected=00010001ffff0001ffff0001ffff0001000000000000feff01feff01
+RESULT iter_p1_m3 MUTANT_FAILED_AS_EXPECTED [46000] %Fatal: tb_hgi_coll_iter_safephys.sv:30: Assertion failed in tb_hgi_coll_iter_safephys.unnamedblk1: COLL_ITER_SAFE_FAIL PIPE1 j=3 old=00000000000000000000000000000000000000000000000000000000 new=00000000000000000000000000000000000000000000000000000000 expected=00010001ffff0001ffff0001ffff0001000000000000feff01feff01
+RESULT mulp_s0 PASS COLL_MULP_PASS SHAPE0 NPT1 checked6063 out_bits967 act rgx6063 del6063 inj6063 vm6063 asm290 fault6049
+RESULT mulp_s0_m1 MUTANT_FAILED_AS_EXPECTED COLL_MULP_FAIL MUT1 SHAPE0 errors5869 checked6063 act rgx6063 del6063 inj6063 vm6063
+RESULT mulp_s0_m2 MUTANT_FAILED_AS_EXPECTED COLL_MULP_FAIL MUT2 SHAPE0 errors5871 checked6063 act rgx6063 del6063 inj6063 vm6063
+RESULT mulp_s0_m3 MUTANT_FAILED_AS_EXPECTED COLL_MULP_FAIL MUT3 SHAPE0 errors2185 checked6063 act rgx6063 del6063 inj6063 vm6063
+RESULT mulp_s0_m4 MUTANT_FAILED_AS_EXPECTED COLL_MULP_FAIL MUT4 SHAPE0 errors6041 checked6063 act rgx6045 del6063 inj6063 vm6063
+RESULT mulp_s1 PASS COLL_MULP_PASS SHAPE1 NPT2 checked6063 out_bits1023 act rgx6063 del6063 inj6063 vm6063 asm290 fault6049
+RESULT mulp_s1_m4 MUTANT_FAILED_AS_EXPECTED COLL_MULP_FAIL MUT4 SHAPE1 errors6041 checked6063 act rgx6045 del6063 inj6063 vm6063
+RESULT v74_s0_regress PASS COLL_VMRT PASS LAT74 VM_RT74 pairs1792 lanes_padded_to_budget MULP0
+RESULT v74p_s0 PASS COLL_VMRT PASS LAT74 VM_RT74 pairs1792 lanes_padded_to_budget MULP1
+RESULT v74p_s0_dense PASS COLL_VMRT PASS LAT74 VM_RT74 pairs8192 lanes_padded_to_budget MULP1
+RESULT v74p_s0_m1 MUTANT_FAILED_AS_EXPECTED COLL_VMRT FAIL MUT1 LAT74 VM_RT73 errors1336 protocol_fault_edges628 got1336 exp1792
+RESULT v74p_s0_m4 MUTANT_FAILED_AS_EXPECTED COLL_VMRT FAIL MUT4 LAT74 VM_RT74 errors1792 protocol_fault_edges0 got1792 exp1792
+RESULT v74p_s1 PASS COLL_VMRT PASS LAT74 VM_RT74 pairs1792 lanes_padded_to_budget MULP1
+RESULT v74p_s1_dense PASS COLL_VMRT PASS LAT74 VM_RT74 pairs8192 lanes_padded_to_budget MULP1
+RESULT v74p_s1_m4 MUTANT_FAILED_AS_EXPECTED COLL_VMRT FAIL MUT4 LAT74 VM_RT74 errors1792 protocol_fault_edges0 got1792 exp1792
+COLL_MULP_PROOFS PASS cases=20
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1910340-1792458010): exit 0

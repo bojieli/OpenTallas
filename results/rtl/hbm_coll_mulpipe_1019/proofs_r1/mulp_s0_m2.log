@@ -1,0 +1,10 @@
+COLL_MULP mismatch cyc401 bit2 dut=0 ref_d1=1
+COLL_MULP mismatch cyc402 bit1 dut=0 ref_d1=1
+COLL_MULP mismatch cyc403 bit1 dut=0 ref_d1=1
+COLL_MULP mismatch cyc404 bit3 dut=1 ref_d1=0
+COLL_MULP mismatch cyc405 bit2 dut=0 ref_d1=1
+COLL_MULP mismatch cyc406 bit6 dut=0 ref_d1=1
+COLL_MULP_FAIL MUT2 SHAPE0 errors5871 checked6063 act rgx6063 del6063 inj6063 vm6063
+[5411000] %Fatal: tb_hgi_coll_ctl_mulpipe_safephys.sv:71: Assertion failed in tb_hgi_coll_ctl_mulpipe_safephys: COLL MULP
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_ctl_mulpipe_safephys.sv:71: Verilog $stop
+Aborting...

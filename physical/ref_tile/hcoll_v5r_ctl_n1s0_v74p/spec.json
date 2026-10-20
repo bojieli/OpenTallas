@@ -1,0 +1,259 @@
+{
+ "name": "hcoll_v5r_ctl_n1s0_v74p",
+ "top": "ot_hgi_coll_ctl_v5r_n1s0_safephys",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_release_safephys.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5_safephys.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_fixed_delay_sram_safephys.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v"
+ ],
+ "clock_port": "clk_control",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 345.6
+ },
+ "pins": {
+  "W": [
+   "clk_control",
+   "rst_n",
+   "inst",
+   "tap_iteration",
+   "tap_steps",
+   "hgi_start",
+   "hgi_busy",
+   "issue_done"
+  ],
+  "N": [
+   "vm_rv",
+   "vm_sel_d",
+   "tkm_done",
+   "tkm_busy",
+   "dest_v",
+   "rc_v",
+   "rc_tag"
+  ],
+  "S": [
+   "vm_assembled_v",
+   "vm_source_meta",
+   "inj_source_v",
+   "inj_source_meta"
+  ],
+  "E": [
+   "vm_req_pin",
+   "inj_req_pin",
+   "inj_idx_pin",
+   "inj_addr_pin",
+   "delivery_obase_pin",
+   "rgx_addr_pin",
+   "held_epoch",
+   "wr_sequence_pin",
+   "rd_sequence_pin",
+   "rx_sequence_pin",
+   "protocol_fault",
+   "cycles"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "inst": "*u_vm*u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    43.2,
+    172.8
+   ],
+   "at_exact": true,
+   "inst": "*u_se*u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "at_exact": true,
+   "inst": "*u_inj*u_mem*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    172.8,
+    172.8
+   ],
+   "at_exact": true,
+   "inst": "*u_sl*u_mem*"
+  }
+ ],
+ "children": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "V6 (H-ELEM 14:20, +1 issue edge): inst/hgi_start/hgi_busy arrive at the issuer's d2 edge and are captured at this leaf's pins (= the d3 edge of the other children); tap_iteration/tap_steps are pin-captured by ot_hgi_coll_iter_mul, then 16x8 partial products, then a registered combine, so only field + offset adders sit between flops. VM read data moved to ot_hgi_coll_vmasm; vm_rv (valid bits) is captured at its pin. Every output is a flop Q. A synthesis pin stage would add edges the V6 schedule and lockstep bench (tb_hgi_coll_q_hard_v5 SH=4) do not carry. v74p (MUL_PIPE 1): hs/hb/issue_done get one more pin flop inside the leaf; the +1 issue edge is the priced schedule change, not a synthesis pin stage."
+ },
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-COLLP",
+  "branch": "claude/hbm-coll-v74p-1019",
+  "tag": "v74p",
+  "purpose": "H.STA.BLK.16.4 COLL release leaf n1s0 v74p pipelined successor of v74w (gate WARN GRT0, setup -14..-53 ps on the iter_mul stage-3 7-term combine): MUL_PIPE 1 splits the combine into two registered rungs (+1 COLL issue edge, priced in H.STA.BANKLAT.COLL); geometry of v74w unchanged (two macro columns on the 43.2 lattice).",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "tools/run_hbm_coll_mulpipe_proofs_1019.sh"
+  ],
+  "benches": [
+   {
+    "name": "coll_mulpipe_n1s0_proofs",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh {RUN}/bench/proofs",
+    "expect": "pass",
+    "pass_regex": "COLL_MULP_PROOFS PASS cases=20",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "20 cases in parallel: iter PIPE0/1, shift-equivalence vs v74 NPT1/2, production/dense MULP1, v74 regression; exits non-zero if any mutant survives"
+   },
+   {
+    "name": "mut_mulp_s0_m1",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/mulp_s0_m1 mulp_s0_m1",
+    "expect": "fail",
+    "fail_regex": "COLL_MULP_FAIL MUT1",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/mulp_s0_m1.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "v74p RTL at MUL_PIPE 0 behind the +1 parent contract: products one edge early"
+   },
+   {
+    "name": "mut_mulp_s0_m2",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/mulp_s0_m2 mulp_s0_m2",
+    "expect": "fail",
+    "fail_regex": "COLL_MULP_FAIL MUT2",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/mulp_s0_m2.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "taps one edge late"
+   },
+   {
+    "name": "mut_mulp_s0_m3",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/mulp_s0_m3 mulp_s0_m3",
+    "expect": "fail",
+    "fail_regex": "COLL_MULP_FAIL MUT3",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/mulp_s0_m3.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "hgi_start/hgi_busy/issue_done double-delayed"
+   },
+   {
+    "name": "mut_mulp_s0_m4",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/mulp_s0_m4 mulp_s0_m4",
+    "expect": "fail",
+    "fail_regex": "COLL_MULP_FAIL MUT4",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/mulp_s0_m4.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "s_rgx low byte cut (rgx products)"
+   },
+   {
+    "name": "mut_iter_p1_m3",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/iter_p1_m3 iter_p1_m3",
+    "expect": "fail",
+    "fail_regex": "COLL_ITER_SAFE_FAIL PIPE1",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/iter_p1_m3.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "PIPE 1 products checked at the v74 edge"
+   },
+   {
+    "name": "mut_v74p_s0_m4",
+    "cmd": "bash tools/run_hbm_coll_mulpipe_proofs_1019.sh --raw {RUN}/bench/v74p_s0_m4 v74p_s0_m4",
+    "expect": "fail",
+    "fail_regex": "COLL_VMRT FAIL MUT4",
+    "fail_witness": "results/rtl/hbm_coll_mulpipe_1019/proofs_r1/v74p_s0_m4.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "MULP 1 leaf expected at the v74 assembled edge"
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_v5r_ctl_n1s0_v74p/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v5r_ctl_n1s0_v74p"
+ },
+ "params": {
+  "VM_RT": 74,
+  "SAFE_DELAY": 1,
+  "MUL_PIPE": 1
+ },
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "fill_reason": {
+  "pin_bound": "L2H-SMATT 10-19: pin/macro-bound outline 259.2 x 345.6. W face ~1,700 pins at pin_min_tracks 4 (0.192 um) need >=331 um -> h 345.6; width set by two macro columns + three >=33 um std bands so no horizontal net must cross a macro (M3/M4 OBS, cap M5). Std area ~3.2k um2 -> ~25% fill incl. macros."
+ },
+ "orfs_vars": {
+  "MACRO_ROWS_HALO_X": "6.48",
+  "MACRO_ROWS_HALO_Y": "2.16",
+  "OT_CKKM_K": "8",
+  "OT_CKKM_PORT": "clk_control"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ]
+}
