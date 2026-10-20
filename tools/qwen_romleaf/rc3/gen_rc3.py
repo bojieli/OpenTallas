@@ -56,6 +56,13 @@ HUB = {  # (x0, y0, x1, y1)
     ("rc5", False): (395.0, 406.0, 439.0, 494.0),
     ("rc5b", True): (391.0, 326.0, 443.0, 426.0),
     ("rc5b", False): (391.0, 400.0, 443.0, 500.0),
+    # rc6 (after NK rc4: DPL PASS, ck 76.7 ps PASS, ck_tx0 84.2 ps FAIL): the FREE TX rung-0 landings spread ck_tx0 over
+    # x 233-441 (drivers in dw + hub, 389 of 845 sinks).  Every rung-0 driver is <= ~250 um from its tx fence in this
+    # floorplan, so rung 0 joins its tx fence (one reg -> wire -> reg hop from dw/hub, <= 405 um); hub boxes as rc5/rc5b.
+    ("rc6", True): (395.0, 338.0, 439.0, 426.0),
+    ("rc6", False): (395.0, 406.0, 439.0, 494.0),
+    ("rc6b", True): (391.0, 326.0, 443.0, 426.0),
+    ("rc6b", False): (391.0, 400.0, 443.0, 500.0),
 }
 LO = "([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])"
 
@@ -78,10 +85,11 @@ def boxes(rev, nk):
 def regions_tcl(kit, rev, nk):
     b = boxes(rev, nk)
     fmt = lambda r: "{%.3f %.3f %.3f %.3f}" % r
-    tx = [f"  [dict create name tx{g} type EXCLUSIVE regex {{g_sl\\[{g}\\]\\.g_hd\\.(g_tx\\.g_r\\[1\\]\\.u_tx/|g_lrr\\.rq|g_outland\\.q)}} "
+    rung = "[01]" if rev in ("rc6", "rc6b") else "1"
+    tx = [f"  [dict create name tx{g} type EXCLUSIVE regex {{g_sl\\[{g}\\]\\.g_hd\\.(g_tx\\.g_r\\[{rung}\\]\\.u_tx/|g_lrr\\.rq|g_outland\\.q)}} "
           f"boxes {{{fmt(b[f'tx{g}'])}}} min 1 max 100000] \\" for g in range(8)]
     lines = [
-        "  [dict create name land_tx type FREE regex {g_hd\\.g_tx\\.g_r\\[0\\]\\.u_tx/} boxes {} min 1 max 100000] \\",
+        *([] if rev in ("rc6", "rc6b") else ["  [dict create name land_tx type FREE regex {g_hd\\.g_tx\\.g_r\\[0\\]\\.u_tx/} boxes {} min 1 max 100000] \\"]),
         "  [dict create name land_rq type FREE regex {g_rom_pipe\\.rq_(ce|ad)_[sn]\\[1\\]\\[} boxes {} min 1 max 100000] \\",
         "  [dict create name land_fault type FREE regex {u_me\\.fault_q\\[} boxes {} min 0 max 100] \\",
         *tx,
@@ -109,7 +117,9 @@ def make(nk, rev):
     s["pin_hook_before_flops"] = [f"tools/qwen_romleaf/rc3/{kit}_regions.tcl"]
     hubtxt = {"rc3": "hub column 395-439", "rc3b": "compact hub box", "rc4": "square-ish 70x140 hub box (ck H-tree spread)",
               "rc4b": "80x110 hub box (ck H-tree spread)", "rc5": "44x88 hub box, 21 um lanes (ck spread + lanes)",
-              "rc5b": "52x100 hub box, 17 um lanes (ck spread + lanes)"}[rev] + (" under the node" if nk else "") + \
+              "rc5b": "52x100 hub box, 17 um lanes (ck spread + lanes)",
+              "rc6": "44x88 hub box + TX rung 0 inside its tx fence (ck_tx spread)",
+              "rc6b": "52x100 hub box + TX rung 0 inside its tx fence (ck_tx spread)"}[rev] + (" under the node" if nk else "") + \
              ("" if rev in ("rc3", "rc3b") else "; u_g.u_tile.n_va/fault_q pin-side flops FREE (rc3 NK DPL-0008 n_va)")
     s["structural_change"] = (f"QW-A0-RC3 {rev} (10-19, after rc1/rc2 DPL-0033): fences are pin-side sub-lanes with a "
         f"free lane in every corridor for the non-member comb/repair cells ({hubtxt}); REGROOT 7 RTL, 820.8 x 907.2 "

@@ -52,7 +52,8 @@ def check(kit):
     fences = {m.group(1): tuple(map(float, m.group(2).split()))
               for m in re.finditer(r"name (\w+) type EXCLUSIVE .*? boxes \{\{([0-9. ]+)\}\}", txt)}
     k = "nk" if "_nk_" in kit else "nl"
-    seq = {n: SEQ["tx"] if n.startswith("tx") else SEQ.get(n, SEQ["hub_" + k]) for n in fences}
+    txa = SEQ["tx"] + (0.0 if "land_tx" in txt else 390 * 0.292)     # rc6+: TX rung 0 joins its tx fence
+    seq = {n: txa if n.startswith("tx") else SEQ.get(n, SEQ["hub_" + k]) for n in fences}
     # corridors: x-ranges between macro columns, full core height
     ivs = sorted((m[0], m[2]) for m in macros if m[3] - m[1] < 400.0)   # ROM / LSL stacks; the NK node sits IN a corridor
     merged = []

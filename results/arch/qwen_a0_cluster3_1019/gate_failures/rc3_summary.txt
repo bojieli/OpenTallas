@@ -9,3 +9,6 @@ QW-A0-RC3 rc3/rc3b gates (10-19 21:35, @28d7d8290, --remote auto --cts):
 rc4/rc4b NL (ot-epyc7, @a26ea0ec8): DPL-0033 with only 2 / 1 buffers (BUFx3 place35072/35094; BUFx16f wire44675) overlapping
  tapcells at y 441-487, i.e. in the 8.2 / 3.5 um lanes between the wide hub (70 / 80 um) and the tx1/2/5/6 fences.
  -> rc5 hub 44x88 / rc5b 52x100: <=2:1 aspect and rc3's 21 / 17 um lanes. Area check gains "lane between side-by-side fences >= 12 um".
+rc4 NK (ot-epyc7): DPL PASS; CTS ck PASS spread 76.7 ps (2586 sinks, hub 70x140, insertion 434.5); ck_rn/rs/rsw/rnw 6.8-9.0, ck_dw/de
+ 40.2/35.6 PASS; ck_tx0 FAIL 84.2 ps (845 sinks: 455 fenced + 389 FREE rung-0 landings spread x 233-441) -> rc6: rung 0 inside the tx fence.
+rc4b NK: DPL-0033 (85 stuck -> 5 off-row + 2 overlaps; 3.5 um lanes).
