@@ -102,3 +102,36 @@ by its existing ef->core rings. That SOURCE structure can be audited, but it
 is not the consumed g5 hard view and carries no inherited g5 arrival/phase.
 The flat single-ck parent candidates remain mechanism source prototypes.
 No further bench or gate follows until actual parent/leaf ownership is bound.
+
+## Per-port ownership audit and private compiler hook
+
+`clock_ownership.json` audits every one of the ten transmit/receive port pairs
+individually at TT and FF against the consumed g5 Liberty files: 20 rows,
+all abstract related_pin ck[0], native-owned rows ZERO. It separately checks
+each current regional source output on u_tw/ck_wf and each input's ef/ck_ef
+assignment. The LP source/spec SHA and consumed Lib SHA are retained. No source
+clock identity is promoted to a physically bound ownership claim.
+
+The real `tools/qwen_layerbench/layer_compile.py` has a private opt-in
+`--compute-face-landing-proposal MODEL --compute-face-clock-ownership AUDIT`.
+It matches the exact current g5 netlist relay table by source/destination ports
+and width, emits all ten old_age0 -> proposed_age5 rows, then FAILS CLOSED before
+emitting an executable programme, calendar or replacement relay schedule.
+The default compiler path is unchanged. `compiler_face_proposal.json` retains
+the exact source-table digest/SHA and ten port costs; role=proposal_only.
+Its producer interface names the actual event/user/stage/cohort/issue/consume,
+clock, reset and programme-SHA fields required to compile these ages coherently.
+It never substitutes sys_face bench_program filler for production events.
+
+Reviewed neighbouring scopes: QW-CCTL-MU-CODEX records queued preparation without
+implementation; QW-F16PROG4 implements witness/CALR loader and face sources but
+leaves GEN/regional binding open; QW-PROGSTORE implements immutable calendar/store
+components and explicitly leaves fullbody+BOOT/INIT production emitter open.
+These findings concern the reviewed scopes, rather than asserting that all
+other programme work is absent. The current layer_compile compute_programme
+gap remains unresolved by their described artifacts.
+
+Exact fleet compiler CLI unit47471-1792526949 exited as expected: printed
+FACE_PROPOSAL_ONLY, emitted exactly one proposal JSON and NO deployment output;
+the harness verified this refusal and returned0. No additional RTL bench or
+gate was launched after discovering incomplete native ownership.

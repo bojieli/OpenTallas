@@ -344,8 +344,17 @@ def main(argv=None):
                     'parameters (hub AP_OFS/FR_OFS, ASTK e_after_header, attention fault latencies, seq KVN bundle) on '
                     '--kv-stages and FAIL a finding where they disagree (tools/qwen_kv_die/kv_static_params.py)')
     ap.add_argument('--kv-fwd-lanes', help='RUN/fwd_lanes.json: landed lane ages for buses whose netlist age is not a stage count')
+    ap.add_argument('--compute-face-landing-proposal', help='PRIVATE opt-in: write exact per-port +5 candidate ledger and fail closed before deployment output')
+    ap.add_argument('--compute-face-clock-ownership', help='per-port ownership audit for the private face landing proposal')
     a = ap.parse_args(argv)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    if a.compute_face_landing_proposal:
+        if not a.compute_face_clock_ownership:
+            raise SystemExit('face proposal requires --compute-face-clock-ownership')
+        from face_landing_proposal import compile_proposal
+        proposal = compile_proposal(a.compute_stages, a.compute_face_landing_proposal, a.compute_face_clock_ownership)
+        write_json(out / 'face_landing_proposal.json', proposal)
+        raise SystemExit('FACE_PROPOSAL_ONLY: exact ten-port age ledger written; native clocks and actual deployment producer events required; no programme emitted')
     findings, gaps = [], []
     docs = {'qwen_compute': DRS.load(a.compute_stages), 'qwen_kv': DRS.load(a.kv_stages)}
     for k, d in docs.items():

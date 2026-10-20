@@ -1,0 +1,358 @@
+{
+  "schema": "opentallas.qwen.face_landing_schedule_proposal.v1",
+  "role": "proposal_only",
+  "inputs": {
+    "/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5/p2/relay_stages_netlist.json": "d053546a15f31f2d3f4be1610b0920996bd0925f5e6e122267b6a30afa7729e6",
+    "model.json": "339db011c937a9abb7af805c235d57cfd95feb76a6cb39518b69bf3fd65d7d5e",
+    "ownership.json": "ab3d34eed6efab9ef4d7fefe57784d1f034d32e06231f6bc74c82a6638fd2079"
+  },
+  "source_plan": {
+    "id": "dv2f20g5-netlist",
+    "commit": "d502ea9ae",
+    "generator": "tools/qwen_layerbench/netlist_relay_stages.py",
+    "sources": [
+      "/home/ubuntu/scratch/qw-gen5/dv2f20g5/p2/die.v",
+      "git:d502ea9ae:physical/qwen_fwd_lane/qfd_fwd_lane_masters.sv",
+      "git:d502ea9ae:physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
+      "git:d502ea9ae:physical/qwen_missing_phy/nface_tall_1017/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+      "git:d502ea9ae:physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+      "git:d502ea9ae:physical/qwen_rst_rep/qfd_rst_rep_masters.sv",
+      "git:d502ea9ae:physical/ref_tile/ot_coll_fold_slice_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+      "git:d502ea9ae:rtl/hdc/kv/ot_qwen_kv_land_merge.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_cg.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_delay.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_dyn_ttiles.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_fastfp.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_fpu.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_matvec.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_prefix.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_sfu.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_sfu_q.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_vreduce.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_vstream_lane.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_vstream_lane_t.sv",
+      "git:d502ea9ae:rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+      "git:d502ea9ae:rtl/hdc/ot_qwen_me_array_w12.sv",
+      "git:d502ea9ae:rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+      "git:d502ea9ae:rtl/hdc/ot_qwen_rom_tile_w12.sv",
+      "git:d502ea9ae:rtl/hdc/ot_qwen_w12_arith.sv",
+      "git:d502ea9ae:rtl/hdc/ot_qwen_w12_matvec.sv",
+      "git:d502ea9ae:rtl/lib/ot_reset_sync.sv",
+      "git:d502ea9ae:rtl/lib/ot_rst_pipe.sv",
+      "git:d502ea9ae:rtl/physical/ot_hdc_vred_pending_guard.sv",
+      "git:d502ea9ae:rtl/physical/ot_hdc_vreduce_entries64.sv",
+      "git:d502ea9ae:rtl/physical/ot_qfd_collective_static_io_production.sv",
+      "git:d502ea9ae:rtl/physical/ot_qfd_io_collective_static.sv",
+      "git:d502ea9ae:rtl/physical/ot_qfd_static_transport.sv",
+      "git:d502ea9ae:rtl/physical/ot_qfd_tt_ctlm_split.sv",
+      "git:d502ea9ae:rtl/physical/ot_qfd_ucie_six_five.sv",
+      "git:d502ea9ae:rtl/physical/ot_qwen_rom_tile_die.sv",
+      "git:d502ea9ae:rtl/physical/ot_qwen_rom_tile_nk.sv",
+      "git:d502ea9ae:rtl/physical/ot_qwen_tile_operand.sv",
+      "git:d502ea9ae:rtl/physical/ot_qwen_tile_rpair.sv",
+      "git:d502ea9ae:rtl/physical/ot_qwen_tile_rqr_half.sv",
+      "git:d502ea9ae:rtl/physical/qcluster/qfd_c_b16_dv.sv",
+      "git:d502ea9ae:rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv",
+      "git:d502ea9ae:rtl/physical/qcluster/qfd_c_stn.sv",
+      "git:d502ea9ae:rtl/physical/qcluster/qfd_q3h_stn.sv",
+      "git:d502ea9ae:rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "git:d502ea9ae:rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_dv_heads.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_dv_redstn2.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_dv_scalar2.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_dv_slice2.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_dv_stream.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_dv_su8_entries.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_dv_su_lane.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_dv_vm.sv",
+      "git:d502ea9ae:rtl/qwen_dv/qfd_tt_ctlm_dv.sv",
+      "git:d502ea9ae:rtl/qwen_split/mu/qfd_mu_ctx_rx.sv",
+      "git:d502ea9ae:rtl/qwen_split/mu/qfd_sys_face_mu_dhobs.sv",
+      "git:d502ea9ae:rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_ckdiv6.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_embedding_word_provider.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_fwd_lane.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_kvn_static_transport.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_link_slots.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_native59_command_context.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_native59_dv_service.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_native59_q_export_control.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_native59_record_endpoint.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_native59_static_service.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_sys_face.sv",
+      "git:d502ea9ae:rtl/qwen_split/qfd_sys_face_record_port.sv",
+      "git:d502ea9ae:rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+      "git:d502ea9ae:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
+      "git:d502ea9ae:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv",
+      "git:d502ea9ae:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+      "git:d502ea9ae:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+      "git:d502ea9ae:rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+      "git:d502ea9ae:rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+      "git:d502ea9ae:rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+      "git:d502ea9ae:rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+      "git:d502ea9ae:rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+      "git:d502ea9ae:rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+      "git:d502ea9ae:rtl/qwen_sys/reset_tree_20261013/ot_qwen_rst_rep.sv",
+      "git:d502ea9ae:rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+      "git:d502ea9ae:rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+      "git:d502ea9ae:rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+      "git:d502ea9ae:rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+      "git:d502ea9ae:rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
+      "git:d502ea9ae:rtl/rom/ot_coll_fold_slice.sv",
+      "git:d502ea9ae:rtl/rom/ot_coll_rst_leaf.sv",
+      "git:d502ea9ae:rtl/rom/ot_coll_tp8_static.sv",
+      "local:/home/ubuntu/scratch/qw-gen5/dv2f20g5/p2/die_glue.sv"
+    ],
+    "kind": "GEN netlist walk (die run)"
+  },
+  "physical_qualification_eligible": false,
+  "deployment_programme_emitted": false,
+  "actual_source_ownership_bound": false,
+  "rows": [
+    {
+      "actual_id": "dvs_E1.cmd_wo -> dvs_E2.cmd_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "cmd_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "cmd_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 116,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    },
+    {
+      "actual_id": "dvs_E1.hr_wo -> dvs_E2.hr_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "hr_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "hr_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 453,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    },
+    {
+      "actual_id": "dvs_E1.st_wo -> dvs_E2.st_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "st_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "st_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 1088,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    },
+    {
+      "actual_id": "dvs_E1.sc_wo -> dvs_E2.sc_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "sc_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "sc_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 48,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    },
+    {
+      "actual_id": "dvs_E1.rv_wo -> dvs_E2.rv_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "rv_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "rv_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 1,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    },
+    {
+      "actual_id": "dvs_E1.re_wo -> dvs_E2.re_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "re_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "re_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 1,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    },
+    {
+      "actual_id": "dvs_E1.rr_wo -> dvs_E2.rr_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "rr_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "rr_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 3,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    },
+    {
+      "actual_id": "dvs_E1.rl_wo -> dvs_E2.rl_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "rl_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "rl_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 1,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    },
+    {
+      "actual_id": "dvs_E1.rd_wo -> dvs_E2.rd_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "rd_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "rd_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 512,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    },
+    {
+      "actual_id": "dvs_E1.dr_wo -> dvs_E2.dr_ei",
+      "src": {
+        "inst": "dvs_E1",
+        "port": "dr_wo",
+        "master": "qfd_dv_slice2_e"
+      },
+      "dst": {
+        "inst": "dvs_E2",
+        "port": "dr_ei",
+        "master": "qfd_dv_slice2_e"
+      },
+      "bits": 520,
+      "old_age_edges": 0,
+      "added_receiver_edges": 5,
+      "proposed_age_edges": 5,
+      "source_clock_candidate": "u_tw/ck_wf",
+      "receiver_clock_candidate": "ck_ef",
+      "clock_ownership_bound": false
+    }
+  ],
+  "producer_interface": {
+    "required_event_fields": [
+      "source_programme_sha256",
+      "event_id",
+      "user",
+      "stage",
+      "cohort_id",
+      "producer_issue_edge",
+      "receiver_consume_edge",
+      "source_leaf_clock",
+      "receiver_leaf_clock",
+      "reset_G",
+      "reset_R0"
+    ],
+    "contract": "For every real issued tuple, all ten receiver_consume_edges must equal producer_issue_edge+proposed_age_edges. Recompute dependent ME/XPF/status retire and reset windows from these actual events.",
+    "unresolved": "No actual production event stream supplied; do not use sys_face bench_program filler"
+  },
+  "reviewed_scopes": [
+    "lanes/QW-CCTL-MU-CODEX.md: queued preparation, no implementation",
+    "lanes/QW-F16PROG4.md: witness/CALR loader and face source; GEN and regional-parent binding open",
+    "lanes/QW-PROGSTORE.md: immutable store/window component; fullbody+BOOT/INIT producer explicitly open"
+  ],
+  "blockers": [
+    "native per-port clock ownership and measured phases unbound",
+    "actual deployment ME/XPF/DV producer events not supplied",
+    "dependent consumer/lifetime calendars not compiled",
+    "parent physical face placement and mapped census absent"
+  ]
+}

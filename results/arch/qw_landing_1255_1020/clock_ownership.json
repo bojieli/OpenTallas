@@ -1,0 +1,420 @@
+{
+  "schema": "opentallas.qwen.slice_face_clock_ownership.v1",
+  "consumed_view": "ASSUMED",
+  "reason": "ideal zero-insertion assumption, no measured boundary evidence",
+  "actual_lib_sha256": {
+    "tt": "a43d97014ad2d01055f39d82424e621de8a6f765428784bfa84956db934b4759",
+    "ff": "f643c0b768f95881e49bddbaf8d28ea04aa1769877ebf13b09299b5f5a64a768"
+  },
+  "source_sha256": "d7941642d894d6899421cae41b39f9ffd248f8d62ee54828ed6aa47a1f84900f",
+  "spec_sha256": "47ac544f59e2013747ab3a92058458cf1c1d27849f8482dbd6d2eb3a0f71c18d",
+  "rows": [
+    {
+      "corner": "tt",
+      "src_port": "cmd_wo",
+      "dst_port": "cmd_ei",
+      "bits": 116,
+      "consumed_abstract_related_pin": {
+        "cmd_wo": [
+          "ck[0]"
+        ],
+        "cmd_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "tt",
+      "src_port": "hr_wo",
+      "dst_port": "hr_ei",
+      "bits": 453,
+      "consumed_abstract_related_pin": {
+        "hr_wo": [
+          "ck[0]"
+        ],
+        "hr_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "tt",
+      "src_port": "st_wo",
+      "dst_port": "st_ei",
+      "bits": 1088,
+      "consumed_abstract_related_pin": {
+        "st_wo": [
+          "ck[0]"
+        ],
+        "st_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "tt",
+      "src_port": "sc_wo",
+      "dst_port": "sc_ei",
+      "bits": 48,
+      "consumed_abstract_related_pin": {
+        "sc_wo": [
+          "ck[0]"
+        ],
+        "sc_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "tt",
+      "src_port": "rv_wo",
+      "dst_port": "rv_ei",
+      "bits": 1,
+      "consumed_abstract_related_pin": {
+        "rv_wo": [
+          "ck[0]"
+        ],
+        "rv_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "tt",
+      "src_port": "re_wo",
+      "dst_port": "re_ei",
+      "bits": 1,
+      "consumed_abstract_related_pin": {
+        "re_wo": [
+          "ck[0]"
+        ],
+        "re_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "tt",
+      "src_port": "rr_wo",
+      "dst_port": "rr_ei",
+      "bits": 3,
+      "consumed_abstract_related_pin": {
+        "rr_wo": [
+          "ck[0]"
+        ],
+        "rr_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "tt",
+      "src_port": "rl_wo",
+      "dst_port": "rl_ei",
+      "bits": 1,
+      "consumed_abstract_related_pin": {
+        "rl_wo": [
+          "ck[0]"
+        ],
+        "rl_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "tt",
+      "src_port": "rd_wo",
+      "dst_port": "rd_ei",
+      "bits": 512,
+      "consumed_abstract_related_pin": {
+        "rd_wo": [
+          "ck[0]"
+        ],
+        "rd_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "tt",
+      "src_port": "dr_wo",
+      "dst_port": "dr_ei",
+      "bits": 520,
+      "consumed_abstract_related_pin": {
+        "dr_wo": [
+          "ck[0]"
+        ],
+        "dr_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "cmd_wo",
+      "dst_port": "cmd_ei",
+      "bits": 116,
+      "consumed_abstract_related_pin": {
+        "cmd_wo": [
+          "ck[0]"
+        ],
+        "cmd_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "hr_wo",
+      "dst_port": "hr_ei",
+      "bits": 453,
+      "consumed_abstract_related_pin": {
+        "hr_wo": [
+          "ck[0]"
+        ],
+        "hr_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "st_wo",
+      "dst_port": "st_ei",
+      "bits": 1088,
+      "consumed_abstract_related_pin": {
+        "st_wo": [
+          "ck[0]"
+        ],
+        "st_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "sc_wo",
+      "dst_port": "sc_ei",
+      "bits": 48,
+      "consumed_abstract_related_pin": {
+        "sc_wo": [
+          "ck[0]"
+        ],
+        "sc_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "rv_wo",
+      "dst_port": "rv_ei",
+      "bits": 1,
+      "consumed_abstract_related_pin": {
+        "rv_wo": [
+          "ck[0]"
+        ],
+        "rv_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "re_wo",
+      "dst_port": "re_ei",
+      "bits": 1,
+      "consumed_abstract_related_pin": {
+        "re_wo": [
+          "ck[0]"
+        ],
+        "re_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "rr_wo",
+      "dst_port": "rr_ei",
+      "bits": 3,
+      "consumed_abstract_related_pin": {
+        "rr_wo": [
+          "ck[0]"
+        ],
+        "rr_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "rl_wo",
+      "dst_port": "rl_ei",
+      "bits": 1,
+      "consumed_abstract_related_pin": {
+        "rl_wo": [
+          "ck[0]"
+        ],
+        "rl_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "rd_wo",
+      "dst_port": "rd_ei",
+      "bits": 512,
+      "consumed_abstract_related_pin": {
+        "rd_wo": [
+          "ck[0]"
+        ],
+        "rd_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    },
+    {
+      "corner": "ff",
+      "src_port": "dr_wo",
+      "dst_port": "dr_ei",
+      "bits": 520,
+      "consumed_abstract_related_pin": {
+        "dr_wo": [
+          "ck[0]"
+        ],
+        "dr_ei": [
+          "ck[0]"
+        ]
+      },
+      "consumed_owner_qualified": false,
+      "source_candidate_tx": "u_tw/ck_wf",
+      "source_candidate_rx": "ck_ef",
+      "source_candidate_native_bound": false,
+      "physical_phase_qualified": false,
+      "requested_added_edges": 5
+    }
+  ],
+  "summary": {
+    "per_corner_ports": 10,
+    "rows": 20,
+    "bits_per_corner": 2743,
+    "native_owned_rows": 0,
+    "physical_qualification_eligible": false
+  }
+}
