@@ -24,6 +24,18 @@ calendar adds the die's per-bank rq lane depth (padded, equal per bank) to the r
           [--q Q] [--R 2] [--fire-index N] [--src W --dst W --stride W]
           # quadrant VM calendar_<q> reservations of one gather (hbm_vm_static_calendar.py schedule form)
 
+ISSUE_AHEAD (HBM-VMEARLY-COLL 10-19; RTL ot_hgi_coll_gq #(ISSUE_AHEAD = N), default 0 = one gather in flight): N + 1
+descriptor SLOTS (static field [101 +: SW], gather j -> slot j mod (N + 1)), so gather j+1 fires while gather j drains and
+its VM reads issue while j's reads are in flight.  Fire rules (each a static fault in the RTL when violated):
+  N = 0      fire(j) >= fire(j-1) + issue_rel(K-1) + ND + 1              ND = 40 + VM_RT (busy = issue + drain)
+  N > 0      fire(j) >= fire(j-1) + issue_rel(K-1) + GAP                 GAP = 11 (IA_GAP: every same-tag ring entry pair of two
+                                                                         gathers >= 12 edges apart = k, k+8 of one gather);
+                                                                         15 for plain -> QBG (reads @16 vs @1 stay in order)
+             fire(j) >= fire(j-N-1) + issue_rel(K(j-N-1)-1) + ND + 1     slot reuse (the slot's gather drained)
+  RAW        a read of a word an earlier gather writes samples its bank >= 1 edge after that write's bank sample.
+  python3 tools/hgi_sim/collq_gather_1018.py [--vm-rt V] ia-check   # cross-gather link/bank/tag proof of IA sequences
+  python3 tools/hgi_sim/collq_gather_1018.py [--vm-rt V] ia-plan OUT.json   # fires / exposed edges, DS shapes, N 0..3
+
 VM CALENDAR RESERVATIONS (d4g quadrant VM map results/rtl/hbm_b_rtl1_1017/vm_quadrant_map.json: read group 3 = COLL,
 write code WG + 0 = 2 = COLL kq; the gather master shares both with hb_coll_<q> through the static owner splits
 hcollrs_<q> / hcollks_<q>, zero latency): every gather read (bank b, sample edge e) needs rslot_v[b] = 1, rslot[3b+:3] =
@@ -133,6 +145,243 @@ def check(maxF=400):
                                 bad.append((name, R, F, qbg, q, e[:3]))
                             seen.add((e[0], e[1]))
     return bad
+
+
+# ------------------------------------------------------------------ ISSUE_AHEAD (HBM-VMEARLY-COLL 10-19)
+IA_GAP = 11
+
+
+def nd():
+    return 40 + VM_RT
+
+
+def kring(F, R):
+    return (F + R - 1) // R
+
+
+def last_issue(g):
+    return issue_rel(kring(g["F"], g["R"]) - 1)
+
+
+def ia_gap(p, g):
+    """minimum fire(j) - fire(j-1) - issue_rel(K(j-1)-1) at ISSUE_AHEAD > 0: the tag distance (IA_GAP) and the read
+    stream order (a QBG gather reads at IE + 1, a plain one at IE + 16: the reads of j start after the reads of j-1)"""
+    rel = lambda x: 1 if x["qbg"] else 16
+    return max(IA_GAP, rel(p) - rel(g))
+
+
+def g_schedule(q, g):
+    return schedule(q, g["F"], g["R"], g["qbg"], g.get("self", 1), g["src"], g["dst"], g["stride"], g.get("Bs", 0))
+
+
+def ia_fires(gathers, ia, t0=0, rq_lane=lambda b: 0, raw=True):
+    """earliest legal fire edge of every gather (programme order) and the binding rule; rq_lane(b) = read request lane
+    edges from the master to bank b's sample (die lanes + faces pin): RAW compares bank SAMPLE edges"""
+    fires, why = [], []
+    for j, g in enumerate(gathers):
+        fe, w = t0, "first"
+        if j:
+            p = gathers[j - 1]
+            if ia == 0:
+                fe, w = fires[j - 1] + last_issue(p) + nd() + 1, "busy"
+            else:
+                fe, w = fires[j - 1] + last_issue(p) + ia_gap(p, g), "serial"
+                if j > ia:
+                    o = fires[j - ia - 1] + last_issue(gathers[j - ia - 1]) + nd() + 1
+                    if o > fe:
+                        fe, w = o, "slot"
+        if raw:
+            for pj in range(j):
+                for q in range(4):
+                    wr = {}
+                    for e in g_schedule(q, gathers[pj])[1]:
+                        wr[e[2]] = max(wr.get(e[2], -1), fires[pj] + e[0])
+                    for e in g_schedule(q, g)[0]:
+                        if e[2] in wr:
+                            need = wr[e[2]] + 1 - (e[0] + rq_lane(e[1]))
+                            if need > fe:
+                                fe, w = need, f"raw:{pj}"
+        fires.append(fe)
+        why.append(w)
+    return fires, why
+
+
+def ia_check_seq(gathers, fires):
+    """absolute link / bank / tag-distance conflicts of a gather sequence (all quadrants)"""
+    bad, links, rd, wr, tags = [], {}, {}, {}, {}
+    for j, (g, fe) in enumerate(zip(gathers, fires)):
+        for i, r, k in flits(g["F"], g["R"]):
+            ie = fe + issue_rel(k)
+            c = ie + ISSUE_TO_INJECT + VM_RT
+            d = k & 1
+            for q in range(4):
+                s = q
+                for h in range(3):
+                    key = (r, s, d, c + 2 * h)
+                    if key in links and links[key] != j:
+                        bad.append(("link", j, links[key], key))
+                    links[key] = j
+                    s = NEXT[s] if d == 0 else PREV[s]
+            key = (r, k % 8)
+            if key in tags and tags[key][0] != j and ie - tags[key][1] < 12:
+                bad.append(("tag", j, tags[key][0], key, ie - tags[key][1]))
+            tags[key] = (j, ie)
+        for q in range(4):
+            reads, writes = g_schedule(q, g)
+            for name, ev, tab in (("read", reads, rd), ("write", writes, wr)):
+                for e in ev:
+                    key = (q, fe + e[0], e[1])
+                    if key in tab and tab[key] != j:
+                        bad.append((name, j, tab[key], key))
+                    tab[key] = j
+    return bad
+
+
+def ds_gathers(n_each=2):
+    """the DS d4g gather shapes (QBG R2: expert_intermediate / o_group / engram_rows; plain R2 / R1), production order mix"""
+    out, base = [], 0x0
+    for name, n in SHAPES.items():
+        s = n // 4
+        Bs = s // 32
+        F = Bs + (Bs + 31) // 32
+        out.append(dict(name=f"{name}_qbg", F=F, R=2, qbg=1, Bs=Bs, self=1, stride=((F + 7) // 8) * 8))
+        out.append(dict(name=f"{name}_plain", F=s // 8, R=2, qbg=0, Bs=0, self=1, stride=((s // 8 + 7) // 8) * 8))
+    return out
+
+
+def place(gathers, src0=0x1000, dst0=0x0000):
+    """distinct src / dst regions (independent gathers); returns copies with src / dst set"""
+    out, src, dst = [], src0, dst0
+    for g in gathers:
+        g = dict(g)
+        g["src"], g["dst"] = src, dst
+        src += ((4 * g["F"] if g["qbg"] else g["F"]) + 7) // 8 * 8
+        dst += 4 * g["stride"]
+        out.append(g)
+    return out
+
+
+def read_edges(q, g, fe):
+    return sorted(fe + e[0] for e in g_schedule(q, g)[0])
+
+
+def exposed(gathers, fires):
+    """per consecutive pair: first VM read (master edge) of gather j minus the last VM read of gather j-1 (the operand
+    stream gap the consumer sees; the capture is the read + the fixed round trip, so the same gap)"""
+    out = []
+    for j in range(1, len(gathers)):
+        out.append(read_edges(0, gathers[j], fires[j])[0] - read_edges(0, gathers[j - 1], fires[j - 1])[-1])
+    return out
+
+
+def ia_check(seed=20261019, trials=400):
+    import random
+    rnd = random.Random(seed)
+    bad, n = [], 0
+    shapes = ds_gathers()
+    for ia in (1, 2, 3):
+        for t in range(trials):
+            seq = []
+            for _ in range(rnd.randint(2, 8)):
+                if rnd.random() < 0.5:
+                    seq.append(dict(rnd.choice(shapes)))
+                else:
+                    R = rnd.choice((1, 2))
+                    F = rnd.randint(1, 120)
+                    seq.append(dict(name="rand", F=F, R=R, qbg=0, Bs=0, self=rnd.randint(0, 1), stride=((F + 7) // 8) * 8))
+            seq = place(seq)
+            fires, _ = ia_fires(seq, ia)
+            bad += ia_check_seq(seq, fires)
+            n += 1
+    return n, bad
+
+
+def ia_legal(gathers, fires, ia, rq_lane=lambda b: 0):
+    """every ISSUE_AHEAD fire rule (ia_fires docstring) holds for these fires; returns the violated rules"""
+    bad = []
+    for j in range(1, len(gathers)):
+        p, g = gathers[j - 1], gathers[j]
+        need = fires[j - 1] + last_issue(p) + (nd() + 1 if ia == 0 else ia_gap(p, g))
+        if fires[j] < need:
+            bad.append(("serial", j, fires[j], need))
+        if ia and j > ia and fires[j] < fires[j - ia - 1] + last_issue(gathers[j - ia - 1]) + nd() + 1:
+            bad.append(("slot", j))
+    for j, g in enumerate(gathers):
+        for pj in range(j):
+            for q in range(4):
+                wr = {}
+                for e in g_schedule(q, gathers[pj])[1]:
+                    wr[e[2]] = max(wr.get(e[2], -1), fires[pj] + e[0])
+                for e in g_schedule(q, g)[0]:
+                    if e[2] in wr and fires[j] + e[0] + rq_lane(e[1]) <= wr[e[2]]:
+                        bad.append(("raw", j, pj, q, e[2]))
+    return bad
+
+
+def bench_rows():
+    """the IA bench programme: 12 rows (a multiple of NB = 2, 3, 4, so the static slot j mod NB repeats every loop), DS
+    shapes, row 3 a DEPENDENT plain gather of the words row 2 landed (RAW on its own quadrant's slice 0)"""
+    ex = lambda: dict(F=19, R=2, qbg=1, Bs=18, self=1, stride=24, vec=1)
+    og = lambda R=2: dict(F=9, R=R, qbg=1, Bs=8, self=1, stride=16, vec=2)
+    en = lambda: dict(F=50, R=2, qbg=1, Bs=48, self=1, stride=56, vec=3)
+    pl = lambda F, R=2, self=1: dict(F=F, R=R, qbg=0, Bs=0, self=self, stride=((F + 7) // 8) * 8, vec=0)
+    rows = [ex(), og(), pl(72), pl(72), en(), pl(19, 1, 0), og(1), pl(1), dict(ex(), R=1), og(), pl(32), ex()]
+    src, dst = 0x1000, 0x0000
+    for j, g in enumerate(rows):
+        g["src"] = src
+        src += ((4 * g["Bs"] if g["qbg"] else g["F"]) + 7) // 8 * 8
+        g["dst"] = dst
+        dst += 4 * g["stride"]
+    rows[3]["src"] = rows[2]["dst"]            # = quadrant slice s = 0 of row 2's landing (self-land in q0, publish elsewhere)
+    rows[3]["dep"] = 2
+    return rows
+
+
+def ia_bench(out, ia, lanes=False, dep_mutant=False, loops=2):
+    """rows.txt for tb_hgi_coll_gq_ia: header 'NR PERIOD LOOPS', then per row 'qbg r2 self t F Bs src dst stride slot vec
+    dep'; expected exposed edges (master read stream gaps, rows 1..NR-1 of loop 0 and the loop-boundary pair)"""
+    rows = bench_rows()
+    lane = (lambda b: 4 + 1 + (b * 23 + 5) % 66) if lanes else (lambda b: 0)
+    nb = ia + 1
+    if dep_mutant:
+        fires, why = ia_fires(rows, ia, raw=False, rq_lane=lane)
+    else:
+        fires, why = ia_fires(rows, ia, rq_lane=lane)
+    period = fires[-1] - fires[0] + 1
+    two = rows + rows
+    while True:
+        f2 = fires + [f + period for f in fires]
+        bad = ia_legal(two, f2, ia, lane)
+        if dep_mutant:
+            bad = [b for b in bad if b[0] != "raw"]
+        if not bad:
+            break
+        period += 1
+    lines = [f"{len(rows)} {period} {loops}"]
+    for j, (g, t) in enumerate(zip(rows, fires)):
+        lines.append(" ".join(str(x) for x in (g["qbg"], int(g["R"] == 2), g["self"], t, g["F"], g["Bs"], g["src"], g["dst"],
+                                               g["stride"], j % nb if ia else 0, g["vec"], g.get("dep", -1))))
+    seq = rows + [rows[0]]
+    exp = exposed(seq, fires + [fires[0] + period])
+    Path(out).mkdir(parents=True, exist_ok=True)
+    (Path(out) / "rows.txt").write_text("\n".join(lines) + "\n")
+    (Path(out) / "expected_exposed.txt").write_text(" ".join(str(x) for x in exp) + "\n")
+    doc = dict(ia=ia, vm_rt=VM_RT, nd=nd(), lanes=lanes, dep_mutant=dep_mutant, period=period, fires=fires, why=why,
+               exposed=exp, exposed_sum=sum(exp), rows=rows)
+    (Path(out) / "ia_bench.json").write_text(json.dumps(doc, indent=1) + "\n")
+    return doc
+
+
+def ia_plan():
+    doc = {"vm_rt": VM_RT, "nd": nd(), "ia_gap": IA_GAP, "per_shape": {}}
+    for g in ds_gathers():
+        row = {}
+        for ia in (0, 1, 2, 3):
+            seq = place([dict(g) for _ in range(8)])
+            fires, why = ia_fires(seq, ia)
+            row[f"ia{ia}"] = dict(fire_period=[b - a for a, b in zip(fires, fires[1:])], exposed=exposed(seq, fires), why=why)
+        doc["per_shape"][g["name"]] = dict(F=g["F"], R=g["R"], K=kring(g["F"], g["R"]), issue_edges=last_issue(g), **row)
+    return doc
 
 
 # ------------------------------------------------------------------ QBG golden vectors
@@ -288,6 +537,21 @@ def main():
         VM_RT = int(sys.argv[j + 1])
         del sys.argv[j:j + 2]
     cmd = sys.argv[1] if len(sys.argv) > 1 else "check"
+    if cmd == "ia-check":
+        n, bad = ia_check()
+        print(f"COLLQ_IA_CHECK vm_rt={VM_RT} N=1..3 sequences={n} (DS shapes + random F<=120, R 1/2) conflicts={len(bad)}", bad[:5])
+        return 0 if not bad else 1
+    if cmd == "ia-bench":
+        ia = int(sys.argv[3])
+        doc = ia_bench(sys.argv[2], ia, lanes="--lanes" in sys.argv, dep_mutant="--dep-mutant" in sys.argv)
+        print(f"COLLQ_IA_BENCH ia={ia} vm_rt={VM_RT} period={doc['period']} exposed_sum={doc['exposed_sum']} exposed={doc['exposed']} why={doc['why']}")
+        return 0
+    if cmd == "ia-plan":
+        doc = ia_plan()
+        Path(sys.argv[2]).write_text(json.dumps(doc, indent=1) + "\n")
+        for k, v in doc["per_shape"].items():
+            print(k, "K", v["K"], " ".join(f"ia{n}: period {v[f'ia{n}']['fire_period'][-1]} exposed {v[f'ia{n}']['exposed'][-1]}" for n in range(4)))
+        return 0
     if cmd == "calendar":
         return calendar_cmd(sys.argv[2:])
     if cmd == "check":
