@@ -21,7 +21,7 @@ FAN = 'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv'
 PATH = 'rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv'
 CTRL = 'rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv'
 CORE = 'rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv'
-NHGO = 64      # u_ctl strap-release (hgo) copies: 1994 async-reset loads -> <= 32 each
+NHGO = 72      # u_ctl strap-release (hgo) copies: 1994 async-reset loads -> <= 32 each
 NHR = 16       # sched hclk reset capture (hr_q) copies: 414 loads -> <= 32 each
 
 TQ_DECL = '''    reg  [33:0] tq [0:TQD-1];'''
@@ -58,6 +58,23 @@ SCHED = [
      f'''        if (!h_rn) begin dcnt <= 7'd0; hgo_qv <= {{{NHGO}{{1'b0}}}}; end
         else if (dcnt == dsel) hgo_qv <= {{{NHGO}{{1'b1}}}};'''),
     (TQ_DECL, TQ_DECL_NEW),
+    # KV-PC3 sr6 (gate pc_h_sr3 164813: SS setup -437.5 ps at ot_prs_00560_ff/D): the S-face fault-chain input fi fed the
+    # sticky OR of fo, an N-face output register that pin_reg_split clones at the pin -> one cycle from the S face
+    # through 5 gates and ~300 um to the N face (an in -> out-register cone).  fi now lands in a face register first
+    # (flop-direct pin, no reset: the upstream fo is reset), +1 hclk edge on the fault-only chain per PC tile.
+    ("""    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) fo <= 1'b0;
+        else fo <= fo | fi | ctl_fault""",
+     """    // KV-PC3 sr6: fault-chain input landing register (pin register at the S face; +1 edge, fault-only, priced)
+    reg fi_q;
+`ifdef OT_KVPC_FI_MUT
+    always @(*) fi_q = fi;                                         // bench mutant: landing bypassed (old in -> fo cone)
+`else
+    always @(posedge hclk) fi_q <= fi;
+`endif
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) fo <= 1'b0;
+        else fo <= fo | fi_q | ctl_fault"""),
     ('''    wire [33:0] t_head  = tq[tr[TQA-1:0]];''', '''    wire [33:0] t_head  = tq_h0;'''),
     (TQ_WRITE, ''),
     ('''    always @(posedge hclk or negedge h_rn)
@@ -151,7 +168,7 @@ CLONES = [
     (CORE, 'qkd_ctrl_pc_obs_child', 'qkd_kvpc_s_obs_child', OBS_PO, [('hr_q', 1, 16)]),
     (CTRL, 'qkd_ctrl_pc_port_child_nc', 'qkd_kvpc_s_port_child',
      [('    ot_qfd_emb_pcport_nkw #(', '    ot_qfd_emb_pcport_nkw_kvpc_s #(')],
-     [('rv_q', 1, 27), ('col_sr_q', 1, 2)]),
+     [('rv_q', 1, 56), ('col_sr_q', 1, 2)]),
     (CTRL, 'ot_qfd_emb_pcport_nkw', 'ot_qfd_emb_pcport_nkw_kvpc_s',
      PORT_Y1 + [("    localparam integer WA = (WQD > 1) ? $clog2(WQD) : 1;",
                  "    localparam integer WA = (WQD > 1) ? $clog2(WQD) : 1;\n"
@@ -173,7 +190,7 @@ CLONES = [
      [("    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;",
        "    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;\n"
        "    initial if (SQW != 2 || WQW != 2) $error(\"ot_qkd_static_kv_timing_kvpc_s: kept copy widths assume SQD 4, WQ 4\");")],
-     [('sq_rp', 2, 27), ('wq_rp', 2, 9), ('wq_rp1', 2, 8), ('context_active', 1, 5), ('streaming', 1, 7),
+     [('sq_rp', 2, 27), ('wq_rp', 2, 9), ('wq_rp1', 2, 8), ('context_active', 1, 5), ('streaming', 1, 10),
       ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2)]),
     (CHAIN, 'qkd_kv_pc_chain_station_b', 'qkd_kvpc_s_chain', CHAIN_WES,
      [('rs_q', 1, 10), ('bt', 1, 12), ('ss', 1, 4), ('hit', 1, 11),
@@ -283,6 +300,50 @@ def clone(path, name, new, subs, fams=()):
     return f'// ---- {new}: clone of {name} ({path}) with {len(subs)} substitution(s){fs} ----\n' + t
 
 
+# KV-PC2 10-19 edits (edaed078e / dc3010ee5 were applied to the generated file by hand; KV-PC3 moved them here so the
+# generator reproduces the committed output again).  Exact-once substitutions on the rendered text, after the copy
+# families are expanded (the streaming master + identical-D restructure reads the expanded streaming__qv names).
+POST = [
+    ("    (* keep, ot_rst_split *) reg [71:0] hgo_qv;",
+     "    // (KV-PC2: 64 -> 72: gate 164813 measured 2178 loads = 35 / copy at 64)\n"
+     "    (* keep, ot_rst_split *) reg [71:0] hgo_qv;"),
+    ("// KV-PC SAFE: 56 kept copies of rv_q\n",
+     "// KV-PC SAFE: 56 kept copies of rv_q (KV-PC2: 27 -> 56, 1576 loads = 59 / copy at 27)\n"),
+    ("// KV-PC SAFE: 10 kept copies of streaming\n",
+     "// KV-PC SAFE: 10 kept copies of streaming (KV-PC2: 7 -> 10, 264 loads = 38 / copy at 7)\n"),
+    ("""    assign busy = streaming; assign ref_fault = fault_r;
+    always @(posedge clk or negedge rst_n) begin
+      if (!rst_n) begin
+        streaming__qv <= {10{streaming__f(0)}};v_consumer_order<=0;""",
+     """    assign busy = streaming; assign ref_fault = fault_r;
+    // KV-PC2: streaming as master + identical copies.  The copies' hold term was each copy's own Q (bit 0 became a
+    // DFFE, the rest plain DFF: ot_rst_copies REFUSED the family, gate 164813).  Now one master streaming_m holds the
+    // state; every copy loads streaming_nx each edge (identical D), and the copies drive the loads.
+    (* keep *) reg streaming_m;
+    wire streaming_nx = (desc_v && !streaming && !fault_r) ? (desc_n != 0) :
+                        (rd_ok && (context_active ? ordinal+9'd1==context_count : j==nm1)) ? 1'b0 : streaming_m;
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) begin streaming_m <= 1'b0; streaming__qv <= {10{streaming__f(0)}}; end
+      else begin streaming_m <= streaming_nx; streaming__qv <= {10{streaming__f(streaming_nx)}}; end
+    always @(posedge clk or negedge rst_n) begin
+      if (!rst_n) begin
+        v_consumer_order<=0;"""),
+    ("          if (context_active ? ordinal+9'd1==context_count : j==nm1) streaming__qv <= {10{streaming__f(0)}};\n",
+     "          // (streaming end: streaming_nx)\n"),
+    ("          streaming__qv <= {10{streaming__f((desc_n != 0))}}; nm1 <= desc_n - 11'd1;",
+     "          nm1 <= desc_n - 11'd1;"),
+]
+
+
+def post(t):
+    for old, rep in POST:
+        n = t.count(old)
+        if n != 1:
+            raise SystemExit(f'kv_pc_sram_gen: POST substitution site found {n} times:\\n{old}')
+        t = t.replace(old, rep)
+    return t
+
+
 def render():
     hdr = ['`timescale 1ns/1ps',
            '// GENERATED by tools/qwen_kv_die/kv_pc_sram_gen.py -- do not edit.  KV-PC 2026-10-19 SAFE redesign: the PC path',
@@ -291,7 +352,7 @@ def render():
            f'// replicated hr_q ({NHR}) / hgo ({NHGO}) roots).',
            '`ifndef OT_KVPC_SRAM_CLONES_1019_SV', '`define OT_KVPC_SRAM_CLONES_1019_SV', '']
     body = [clone(*c) for c in CLONES]
-    return '\n'.join(hdr) + '\n'.join(body) + '`endif\n'
+    return post('\n'.join(hdr) + '\n'.join(body) + '`endif\n')
 
 
 RL_TILE = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds_rl.sv'
@@ -303,9 +364,13 @@ def sr_tile():
     file (the die GEN with OT_KV_PC_RLAND=1 OT_KV_PC_SRAM=1 produces the same modules)"""
     import ast
     src = (ROOT / 'tools/qwen_kv_die/kv_static_die.py').read_text()
-    fn = next(n for n in ast.parse(src).body if isinstance(n, ast.FunctionDef) and n.name == 'pc_sram_text')
-    ns = {'PC_RLAND': True}
-    exec(ast.get_source_segment(src, fn), ns)
+    import os
+    ns = {'PC_RLAND': True, 're': re, 'os': os}
+    for n in ast.parse(src).body:     # the two text functions + the module-level PC_* constants they read
+        if (isinstance(n, ast.FunctionDef) and n.name in ('pc_sram_text', 'pc_hfx_text')) or (
+                isinstance(n, ast.Assign) and all(isinstance(x, ast.Name) and x.id.startswith('PC_') for x in n.targets)):
+            exec(ast.get_source_segment(src, n), ns)
+    ns['PC_RLAND'] = True
     t = (ROOT / RL_TILE).read_text()
     for m in ('qkd_kvs_pc', 'qkd_kvs_pc_h'):
         a = re.search(rf'^module {m} \(', t, re.M).start()
