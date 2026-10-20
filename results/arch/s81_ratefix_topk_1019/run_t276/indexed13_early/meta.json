@@ -1,0 +1,37 @@
+{
+ "ncyc": 970,
+ "mutant": "early",
+ "t_first_in": 100,
+ "t_last_in": 423,
+ "window": [
+  699,
+  774
+ ],
+ "drain": {
+  "vi_n_edge": 689,
+  "vo_edge": 691,
+  "payload": 680283,
+  "n": 76,
+  "d": 1
+ },
+ "words": 36,
+ "sel_per_quarter": [
+  120,
+  137,
+  131,
+  124
+ ],
+ "golden_ok": true,
+ "golden": "attn.idx.topk_final (sorted)",
+ "shard": {
+  "k_dies": 1,
+  "candidates": [
+   512,
+   512,
+   512,
+   512
+  ],
+  "closure": null
+ },
+ "indexed13": true
+}
