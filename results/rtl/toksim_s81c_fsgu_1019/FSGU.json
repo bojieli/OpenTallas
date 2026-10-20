@@ -1,0 +1,88 @@
+{
+ "cls": "FSGU",
+ "written": "2026-10-20 00:15 PT",
+ "agent_branch": "claude/toksim-s81c-fsgu-1019@26786f786",
+ "ops": [
+  {
+   "op": "ffn.experts_gu",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": [
+    1857.9,
+    1856.9,
+    3705.6,
+    1852.8,
+    2470.7,
+    1238.9,
+    1239.8
+   ],
+   "by_old": {
+    "1857.9": 3680,
+    "1856.9": 3680,
+    "3705.6": 3680,
+    "1852.8": 3680,
+    "2470.7": 3680,
+    "1238.9": 3680,
+    "1239.8": 3680
+   },
+   "grade": "measured-release-RTL",
+   "definition": "identical to FGU: spine go of the op's first phase -> last return word at the frame root (RET), all of the op's phases of the frame back to back at the minimum passing uniform go period; die wire / hub return NOT included (as FIELD wq_b)",
+   "shape": "frame u_f_0L00 (slice u_s_0S), every layer: 6 routed experts x w1/w3 = 24 phases (4+1 rows), 60 rows, K 5120 FP4, nseg 5 (xs_place.compile_frame). Representative per class: L1 (1857.9), L2 + L14 (1856.9), L3 (3705.6), L20 (1852.8), L24 (2470.7), L21 (1238.9); L0r control (1239.8)",
+   "per_layer_measured": {
+    "L1": 3680,
+    "L2": 3680,
+    "L3": 3680,
+    "L14": 3680,
+    "L20": 3680,
+    "L21": 3680,
+    "L24": 3680,
+    "L0r": 3680
+   },
+   "bit_exact": true,
+   "golden": "per phase, unchanged xs_place check: golden segment-tree node values bit-exact (hdc_golden_v41 chunk8 on the layer's rank-0 rows of the released DeepSeek-V4.1-Flash checkpoint x the w17 golden shard's ffn_norm), each row's segments covered once, cycle-exact compiled calendar, fixture BF16 tie of every row (fixture ffn.experts.<e>.gu = hdc_golden_v41.linear_q); swap/shift mutants of the first phase FAIL in every leg",
+   "rtl": {
+    "module": "col_h9_l4_nx_b frame (u_f_0L00: 10 q pairs ot_v41_rom_elem_q_qxpq_w10 + frame return tree, LK5 landing ot_s81_land/dsfd_cfifo_crs4) driven by ot_v41_spine_pq_static_w17w10 + dsfd_pq_lx",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "exe = FGU job 4 Vtb_toksim_fgu_seq (same inode on ot-epyc9): 78/78 simulated RTL files blob-identical to 19bf4121e (results/rtl/toksim_s81b_fgu_1019/rtl_blob_vs_release_19bf4121e.txt); only the bench differs",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_dv/layer_prog/qf_producer/{toksim_fsgu_leg.sh,toksim_fsgu_gen.py,toksim_fsgu_ffnfix.py} + FGU tb_toksim_fgu_seq.sv (+RETIRE) / toksim_fgu_check.py seq @claude/toksim-s81c-fsgu-1019@26786f786",
+   "evidence": "results/rtl/toksim_s81c_fsgu_1019/<L>/sweep.txt 'seq_experts_gu_P145_R1 ... PASS ... rows 60 fixture_rows 60 go0 63 last_ret 3743 span 3680 errors 0' and P144 FAIL (FAULT edge 467 status 11) for L1 L2 L3 L14 L20 L21 L24 L0r; <L>/singles.txt 24/24 PASS + m_swap/m_shift FAIL; summary.json",
+   "job": "ot-run ot-epyc9 (unpinned; data only there) units oth-ubuntu-694899/694818/694833-1792476808 (L2/L14/L20), 735829/735605/735864/735771-17924770xx (L1/L3/L21/L24), 748372-1792477050 (L0r); Verilator 5.050; done",
+   "edges_owed": "as FGU: xg successor +1 on xw (if bound, not in release); CAP EDLY24/WL3DLY16 after the frame root (outside); die wire tail owed",
+   "note": "WHY old classes differed: old node = dsrom_1m_allmeasured_adapters.field_rows 'slowest die one-region RTL time' of the OLD m221pq die for the representative layer's golden-routed experts + r8 wire over 2..6 phases -- old-die placement of the routed experts, not a layer shape. On the p4l DV die every layer die holds the 6 routed experts x 1152 rank rows = 6,912 (SPEC s.330), dealt evenly: identical frame shape in every MoE layer, measured identical in all 7 classes. So FGU's 3680 applies to every class INCLUDING 3705.6; the parent curation's 'other per-die expert/row counts' (folding only 1238.9/1239.8) does not hold on the release die. L1/L3/L21/L24 use REDUCED fixtures (toksim_fsgu_ffnfix.py: a_proj + experts_gu inputs from the shard + checkpoint; L0 run reproduces the full L0 fixture 37/37 files byte-identical; routed experts re-derived = shard) because dv_layer_fixtures refuses them; their field = a_proj + experts_gu only, the L0r control on the same reduced field gives FGU's full-field 3680. L2/L14/L20 = full fixtures + full production field (89/114/89 phases). One frame (u_f_0L00, the 5-row frame) only."
+  },
+  {
+   "op": "attn.a_proj",
+   "dag_cls": "field",
+   "n_crit": 8,
+   "old_cycles_per_instance": [
+    3090.3,
+    1859.2,
+    1858.1
+   ],
+   "by_old": {},
+   "grade": "partial-measured (not a replacement)",
+   "measured_a_proj_part": {
+    "3090.3": 531,
+    "1859.2": 531,
+    "1858.1": 531
+   },
+   "definition": "identical to FSMALL: one a_proj phase per frame, bench go -> last frame-root return word, max over the slice's 7 a_proj frames = 361, + the 628-instance priced wire tail 170 (r8 142 + tiles 28) = 531",
+   "shape": "448 rank rows (wq_a 320 + wkv 128) = 4 rows on each of 7 frames, K 5120 FP8, NSEG 5, in L2/L14/L20 (full fixtures) and L24 (reduced) -- identical to L0",
+   "bit_exact": true,
+   "golden": "lower_xs.py check: every returned word vs golden segment-tree node (bit-exact), row coverage, cycle-exact vs compiled return calendar, fixture BF16 tie of every row (4/4 per frame)",
+   "rtl": {
+    "module": "frame masters col_h9_l4_nx / col_h10_l4 / col_h9_MX_l4 (FSMALL release-master frame exes s_h9nx_e5/s_h10_e2/s_h9MX_e1/s_h9nx_e2, same inodes)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "FSMALL: 83/83 RTL files blob-identical to 19bf4121e (results/rtl/toksim_s81b_fsmall_1019/evidence/blob_vs_release_19bf4121e.txt)",
+    "in_release_source": true
+   },
+   "bench": "toksim_fsgu_leg.sh (lower_xs gen/check per frame) @claude/toksim-s81c-fsgu-1019@26786f786",
+   "evidence": "results/rtl/toksim_s81c_fsgu_1019/<L>/aproj.txt: 7/7 frames XS_CHECK PASS, go 63 -> last RET 420..424 (max 424) for L1 L2 L3 L14 L20 L21 L24 L0r",
+   "job": "same legs as experts_gu",
+   "edges_owed": "none",
+   "note": "NOT FOLDABLE as-is: the old sparse-class nodes are a_proj 448 rows + compressor.wkv 128 + compressor.wgate 128 + indexer.weights_proj 32 = 736 (L2/8/14), + wkv 128 + weights_proj 32 = 608 (L20), + weights_proj 32 = 480 (L24/28/32/36) (old DAG notes 'N rows exact'; fixture shapes). The DV field compiler xs_place places none of compressor.wkv / compressor.wgate / indexer.weights_proj (not in XS_OPS / BF_OPS), so 531 covers only the a_proj part; replacing 3090.3/1859.2/1858.1 by 531 would silently drop 288/160/32 rows of work. Fold only together with a placed + measured node for those rows (compiler gap, LEAD2-S81 INBOX notice). The 448-row a_proj part itself is layer-invariant (361 = FSMALL's L0)."
+  }
+ ]
+}
