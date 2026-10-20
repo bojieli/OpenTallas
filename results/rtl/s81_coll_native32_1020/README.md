@@ -1,5 +1,7 @@
 # COLL native32 source recovery (gate BLOCKED)
 
+**10-20 S81-COLL4: v8 (`OT_COLL_NATIVE32_OFF`, native_v8/README.md) clears the source blocker: depth 540.1 ps / 14 lv, native max32 (0 > 32, actual-Liberty PASS), 79,994 PASS + 4 causal FAIL, 0 added cycles. Layout still blocked on geometry (native_v8/README.md "Geometry blocker").**
+
 `OT_COLL_NATIVE32` opt-in, default legacy safe4 unchanged. v3 candidate is current source: four complete same-edge10-bit NXT/UNA copy banks; separate same-edge ready-ack copy; separate complete rewind cones for sender state/address/ready; four additional same-depth reset leaves separate UNA compare copies from overloaded reset45 leaf. Balanced reset release unchanged, zero data/schedule edges. Native mappedFF16306 vs gatebaseline16261 (+45);55SRAM storage unchanged.
 
 Native census baseline8roots>32 -> v1one(ok_c33) -> v2one(rewind_sender33) -> **v3zero,max32**. Native helper canonicalizeSYNTH_KEEP_MODULES retained; transparent BUF/INV collapsed census.55macro directions inferred in this scout—not independent pin audit.

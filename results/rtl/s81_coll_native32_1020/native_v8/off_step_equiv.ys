@@ -1,0 +1,4 @@
+read_verilog -sv off_step_equiv.sv
+prep -top off_step_equiv
+flatten
+sat -prove bad 0 -verify -show-inputs

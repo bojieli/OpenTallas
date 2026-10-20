@@ -312,6 +312,19 @@ module ot_s81ph_link_ep_safe4 #(
 `ifdef OT_COLL_NATIVE32
     wire ok_ready;
     ot_s81ph_kff4_1 u_k_ok_ready (.clk(clk), .rst_n(rst_v[15]), .d(ok_d), .q(ok_ready));
+`ifdef OT_COLL_NATIVE32_OFF
+    // v8d: own copies for the offset update (ok_o), the credit sum consumers (ok_f2 = ok_f) and the ready/state rewind
+    // cones (nxt_rw2 / una_rw2), so ABC's per-bit mux expansion cannot push v3 roots past 32 (v8c census: ok_f 37,
+    // nxt_rw[6] 36, ok_ready 35).
+    wire ok_o, ok_o2, ok_f2; wire [SEQW-1:0] nxt_rw2, una_rw2;   // v8e: ok_o / ok_o2 one 10-bit select each (v8d ok_o 33)
+    ot_s81ph_kff4_1 u_k_ok_o (.clk(clk), .rst_n(rst_v[14]), .d(ok_d), .q(ok_o));
+    ot_s81ph_kff4_1 u_k_ok_o2 (.clk(clk), .rst_n(rst_v[15]), .d(ok_d), .q(ok_o2));
+    ot_s81ph_kff4_1 u_k_ok_f2 (.clk(clk), .rst_n(rst_v[15]), .d(p_take), .q(ok_f2));
+    ot_s81ph_kff4_10 u_k_nxt_rw2 (.clk(clk),.rst_n(rst_v[15]),.d(nxt_nx),.q(nxt_rw2));
+    ot_s81ph_kff4_10 u_k_una_rw2 (.clk(clk),.rst_n(rst_v[14]),.d(una_n),.q(una_rw2));
+`else
+    wire ok_f2 = ok_f; wire [SEQW-1:0] nxt_rw2 = nxt_rw, una_rw2 = una_rw;
+`endif
 `else
     wire ok_ready=ok_c;
 `endif
@@ -363,10 +376,10 @@ module ot_s81ph_link_ep_safe4 #(
     wire rewind_at_limit = at_lim;
 `endif
     ot_s81ph_rewind4 u_rw_sender (.nxt(nxt_rw), .una(una_rw), .ack_ok(ack_ok), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_sender));
-    ot_s81ph_rewind4 u_rw_ready (.nxt(nxt_rw), .una(una_rw), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_ready));
+    ot_s81ph_rewind4 u_rw_ready (.nxt(nxt_rw2), .una(una_rw2), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_ready));
 `ifdef OT_COLL_NATIVE32
     wire rewind_sender_state;
-    ot_s81ph_rewind4 u_rw_sender_state (.nxt(nxt_rw), .una(una_rw), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_sender_state));
+    ot_s81ph_rewind4 u_rw_sender_state (.nxt(nxt_rw2), .una(una_rw2), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_sender_state));
 `else
     wire rewind_sender_state=rewind_sender;
 `endif
@@ -380,10 +393,25 @@ module ot_s81ph_link_ep_safe4 #(
     generate if(OLDREAD!=0) begin:g_rb_safe
         wire [MEM_NA*IW-1:0] wa_copy,ra_copy;
         wire [MEM_NA-1:0] wr_group;
+`ifdef OT_COLL_NATIVE32_OFF
+        // v8: the per-group write/accept term in_valid && ready_r crosses a kept boundary (ot_s81ph_kp4_20), so ABC
+        // cannot fold in_valid into every rp_r / ready_r mux bit (v8 mapped census before this: in_valid 112 loads
+        // = 105 AND3 mux terms; with the boundary in_valid drives one AND2 per group).
+        wire [MEM_NA-1:0] wr_raw; wire [19:0] wr_kp;
+        ot_s81ph_kp4_20 u_kp_wr (.a({{(20-MEM_NA){1'b0}}, wr_raw}), .y(wr_kp));
+`ifndef SYNTHESIS
+        initial if (MEM_NA > 20) $fatal(1, "COLL native32 v8: MEM_NA > 20 write-group boundary");
+`endif
+`endif
         for(genvar mg=0;mg<MEM_NA;mg=mg+1) begin:g_address
             (* keep="true" *) reg [IW-1:0] wp_r,rp_r;
             (* keep="true" *) reg ready_r;
+`ifdef OT_COLL_NATIVE32_OFF
+            assign wr_raw[mg]=in_valid && ready_r;
+            wire wr=wr_kp[mg];
+`else
             wire wr=in_valid && ready_r;
+`endif
             assign wr_group[mg]=wr;
             assign wa_copy[IW*mg+:IW]=wp_r;
             assign ra_copy[IW*mg+:IW]=rp_r;
@@ -561,13 +589,24 @@ module ot_s81ph_link_ep_safe4 #(
         localparam integer RB=MEM_NS+MEM_NA;
         wire [MEM_NA*PW-1:0] wa_copy,ra_copy;
         wire [MEM_NA-1:0] wr_group,rd_group;
+`ifdef OT_COLL_NATIVE32_OFF
+        // v8: per-group receive write term through a kept boundary (as the replay write groups): c_inord drives one
+        // AND2 per group, not every wp_r / count_r bit term (v8b mapped census: c_inord-side OR2 33 loads).
+        wire [MEM_NA-1:0] fwr_raw; wire [19:0] fwr_kp;
+        ot_s81ph_kp4_20 u_kp_fwr (.a({{(20-MEM_NA){1'b0}}, fwr_raw}), .y(fwr_kp));
+`endif
         for(genvar mg=0;mg<MEM_NA;mg=mg+1) begin:g_address
             (* keep="true" *) reg [PW-1:0] wp_r,rp_r;
             (* keep="true" *) reg [CW-1:0] count_r;
             (* keep="true" *) reg valid_r;
             wire ordy=out_ready_v[1+(mg*(ORN-1))/MEM_NA];   // out_ready copy for this group
             wire rd=(count_r!=0)&&(!valid_r||ordy);
+`ifdef OT_COLL_NATIVE32_OFF
+            assign fwr_raw[mg]=c_inord&&(count_r!=CW'(CREDITS));
+            wire wr=fwr_kp[mg];
+`else
             wire wr=c_inord&&(count_r!=CW'(CREDITS));
+`endif
             assign wr_group[mg]=wr; assign rd_group[mg]=rd;
             assign wa_copy[PW*mg+:PW]=wp_r;assign ra_copy[PW*mg+:PW]=rp_r;
             always @(posedge clk or negedge mem_rst_n[RB+MEM_NS+mg])
@@ -653,7 +692,7 @@ module ot_s81ph_link_ep_safe4 #(
     wire [IW-1:0]   sndinx_0 = (rewind_sender || skip_0) ? una_i_n : sndil_0;
     wire [IW-1:0]   sndinx_1 = (rewind_sender || skip_1) ? una_i_n : sndil_1;
     wire [SEQW-1:0] nxtnx_1 = nxt + 1'b1;
-    wire [CW-1:0]   cred_r  = credits + ((ok_f && !fr_bad) ? d_fr : {CW{1'b0}});
+    wire [CW-1:0]   cred_r  = credits + ((ok_f2 && !fr_bad) ? d_fr : {CW{1'b0}});
     wire [CW-1:0]   cred_1  = cred_r - 1'b1;
     wire            pok_0   = (PHY_NUM == 0) ? 1'b1 : (lnch_0 ? pace_ok_launch : (!pace_ok ? pace_ok_inc : pace_ok_r));
     wire            pok_1   = (PHY_NUM == 0) ? 1'b1 : pace_ok_launch;
@@ -692,7 +731,7 @@ module ot_s81ph_link_ep_safe4 #(
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
     wire            ck_0 = 1'b1, ck_1 = 1'b1;
 `else
-    wire            fr_use  = ok_f && !fr_bad;
+    wire            fr_use  = ok_f2 && !fr_bad;
     wire            ck_0    = fr_use ? (cred_sum[CW-1:0] != 0) : (credits != 0);
     wire            ck_1    = fr_use ? (cred_sum[CW-1:0] != 1) : (credits != 1);
 `endif
@@ -713,7 +752,7 @@ module ot_s81ph_link_ep_safe4 #(
     ot_s81ph_kff4_1 u_k_rep_o (.clk(clk), .rst_n(rst_v[14]), .d(accept_a ? rep_1 : rep_0), .q(rep_o));
     wire            accept_o = in_valid && !nrdy_o, lnch_o = rep_o && pace_ok;
     wire [SEQW-1:0] off_p1 = off_s + 1'b1, off_md = off_s - d_ack, off_md1 = off_s - s2dackm1;
-    wire [SEQW-1:0] off_t1 = ok_ready ? off_md1 : off_p1, off_t0 = ok_v ? off_md : off_s;
+    wire [SEQW-1:0] off_t1 = ok_o ? off_md1 : off_p1, off_t0 = ok_o2 ? off_md : off_s;
     wire [SEQW-1:0] offnx_0 = (rewind_sender_state || skip_0) ? {SEQW{1'b0}} : (lnch_o ? off_t1 : off_t0);
     wire [SEQW-1:0] offnx_1 = (rewind_sender_state || skip_1) ? {SEQW{1'b0}} : off_t1;
     wire [SEQW-1:0] off_d = accept_o ? offnx_1 : offnx_0;
@@ -726,6 +765,7 @@ module ot_s81ph_link_ep_safe4 #(
         if (skip_0 !== (ack_ok && (d_ack > (sndl_0 - una))) || skip_1 !== (ack_ok && (d_ack > (sndl_1 - una))))
             $fatal(1, "COLL native32 v8 skip predicate differs");
         if (ok_u && (d_ack !== rr_ack - una)) $fatal(1, "COLL native32 v8 d_ack != rr_ack - una in an apply cycle");
+        if (ok_o !== ok_u || ok_o2 !== ok_u || ok_f2 !== ok_f || nxt_rw2 !== nxt || una_rw2 !== una) $fatal(1, "COLL native32 v8 state copy differs");
     end
 `endif
 `endif

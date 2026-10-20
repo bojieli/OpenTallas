@@ -1,0 +1,33 @@
+{
+ "top": "dsfd_coll_lane_w_safe4",
+ "flops": 16319,
+ "macros": 55,
+ "max_nonclock_loads": 37,
+ "sha256": "8ce63fbd69bc1e08aa4b66855e7eab238d91ddf0779661c7775b560c86bd8ca9",
+ "nonclock_roots_over32": 3,
+ "over32": [
+  {
+   "net": "u_ot_pr_core.u.u_ep.ok_f$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 37,
+   "flop_loads": 0,
+   "driver": "u_ot_pr_core.u.u_ep.ok_f$_DFF_PN0_",
+   "kind": "ff"
+  },
+  {
+   "net": "u_ot_pr_core.u.u_ep.u_k_nxt_rw.q[6]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 36,
+   "flop_loads": 0,
+   "driver": "u_ot_pr_core.u.u_ep.u_k_nxt_rw.q[6]$_DFF_PN0_",
+   "kind": "ff"
+  },
+  {
+   "net": "u_ot_pr_core.u.u_ep.u_k_ok_ready.q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 35,
+   "flop_loads": 0,
+   "driver": "u_ot_pr_core.u.u_ep.u_k_ok_ready.q$_DFF_PN0_",
+   "kind": "ff"
+  }
+ ],
+ "macro_cells_direction_inferred": 55,
+ "scope": "mapped native standard-cell roots, BUF/INV collapsed; no physical reach or complete macro-direction claim"
+}

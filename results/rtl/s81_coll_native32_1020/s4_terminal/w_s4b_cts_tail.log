@@ -1,0 +1,60 @@
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 21901
+[INFO DPL-0500] Runtime: 159.40s
+Placement Analysis
+---------------------------------
+total displacement      40991.1 u
+average displacement        0.5 u
+max displacement            8.9 u
+original HPWL         2757485.1 u
+legalized HPWL        2785151.5 u
+delta HPWL                    1 %
+
+Took 160 seconds: detailed_placement
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Took 8 seconds: estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 74148 um^2 20% utilization.
+write_db /work/results/asap7/opentallas_dsfd_coll_lane_w_safe4_asap7_ref_gate/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_dsfd_coll_lane_w_safe4_asap7_ref_gate/base/3_place.sdc
+Elapsed time: 7:53.34[h:]min:sec. CPU time: user 484.50 sys 4.59 (103%). Peak memory: 873916KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb          473            853 00d5c365fbf6a1174900
+cp /work/results/asap7/opentallas_dsfd_coll_lane_w_safe4_asap7_ref_gate/base/3_5_place_dp.odb /work/results/asap7/opentallas_dsfd_coll_lane_w_safe4_asap7_ref_gate/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib
+read_db /work/results/asap7/opentallas_dsfd_coll_lane_w_safe4_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_coll_lane_w_safe4_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_coll_lane_w_safe4_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_coll_lane_w_safe4_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+REF_TILE spine: child insertion targets 
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 2067 sinks 16157 cells 4175 leaf arrival 471.8..830.7 ps (spread 359.0) pad 60.0 / 14.0 ps
+OT_SPINE iter 1 (coarse) leaves 2067 sinks 16157 cells 14403 leaf arrival 759.7..948.9 ps (spread 189.2) pad 60.8 / 14.0 ps
+OT_SPINE iter 2 (coarse) leaves 2067 sinks 16157 cells 18311 leaf arrival 871.4..1095.5 ps (spread 224.1) pad 59.5 / 14.0 ps
+OT_SPINE iter 3 (coarse) leaves 2067 sinks 16157 cells 22846 leaf arrival 1016.0..1277.1 ps (spread 261.1) pad 60.8 / 14.0 ps
+OT_SPINE iter 4 (coarse) leaves 2067 sinks 16157 cells 28443 leaf arrival 1188.9..1521.2 ps (spread 332.3) pad 68.9 / 14.0 ps
+OT_SPINE iter 5 (coarse) leaves 2067 sinks 16157 cells 34232 leaf arrival 1404.9..1869.2 ps (spread 464.3) pad 86.8 / 14.0 ps

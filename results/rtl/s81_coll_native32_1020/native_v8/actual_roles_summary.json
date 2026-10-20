@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.pre_gate_native_census.v1",
+ "netlist": {
+  "path": "/case/coll.v",
+  "sha256": "862d30291cb861f80c22acd1db158bd61585ad325023a63a8698450e2bcd50a6"
+ },
+ "top": "dsfd_coll_lane_w_safe4",
+ "status": "PASS",
+ "limit": 32,
+ "roots_examined": 48713,
+ "max_dynamic_loads": 32,
+ "functional_pin_contract": "NOT_EVALUATED",
+ "pin_registration_contract": "NOT_EVALUATED",
+ "storage_contract": "NOT_EVALUATED",
+ "independent_source_contract_audit_required": true
+}
