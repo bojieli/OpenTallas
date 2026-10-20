@@ -92,7 +92,7 @@
  },
  "pin_regs": {
   "enable": false,
-  "reason": "every output is flop Q in RTL (HARD 1 out registers); every input is the landing-read register of its lp landing beside the leaf in r_ctl: a flow pin register would be a second, unpriced +1 edge"
+  "reason": "the RTL registers every input at its pin (HARD 1 pin registers, no reset) and launches every output from a flop; a flow wrapper would add a second, unpriced +1"
  },
  "reset_landing": {
   "enable": false,
@@ -118,14 +118,14 @@
   }
  },
  "safe_design_checklist": {
-  "1_pins": "PASS (waiver on inputs, reason): every output is a flop Q (HARD 1: one out register on every combinational cut output -- stn_cfg, sc_cfg, stm_cfg, su_cmd, am_*, w16/w1, own_ch, ag_own; st, cc_o, sid are state flops); every input arrives from a flop: in the hardened slice each ctl input is the landing-read register of its lp landing in r_ctl beside this leaf (or a same-region flop), so a leaf input register would be a second, unpriced +1 edge (pin_regs off). No combinational in->out path. rst_n lands in 2 registered stages (qfd_dv_s5_rst2); the HARD out register resets only its 20 valid/strobe bits (payload follows o_c every edge).",
+  "1_pins": "FIXED after gate1 (in->reg -221.7 ps, 1,884 input->register endpoints > 3 levels, port r_v 1,056 loads): HARD 1 lands EVERY input in one pin register (no reset; FIRM at its pin by io_flop_at_pins) and launches every output from a flop (out registers on the cut outputs; st / cc_o / sid state flops). No combinational in->out path. rst_n lands in 2 registered stages, then 5 kept relay registers.",
   "2_reach": "PASS: leaf <= 345.6 um side; all slice-scale distances are lp landings in the parent.",
-  "3_fanout": "gate textbook_lint high_fanout decides; decode strobes c_* drive <= 26 enables each; cmd_q bits <= 4 loads",
+  "3_fanout": "FIXED after gate1: the wide-mux selects (w16 data 512 b, own AR word 512 b, own D2D lanes) use 16 KEPT copies of r_v / chd_q[1037] / tok_own (registered from the ports with the pin registers) and of the state bits stn_dst / ar_en / g_arm / arx_arm (written identically), per-lane kept copies of kv_we / vm_we / window: <= ~70 loads per select net; reset: 5 kept relays (<= ~170 sinks) + the amax_mu tree on its own relay (1,767 sinks: one module reset port; repair_design buffers it, recovery/removal timed) -- a relay tree inside qfd_dv_amax_mu is an owed module change",
   "4_depth": "VM write merge (4:1 x 537 b) / own word (3:1 x 1095 b) / status OR before the HARD out register; argmax okey compare 32 b; gate logic_depth / --cts path classes confirm",
   "5_storage": "PASS: no runtime-indexed flop array; amax_mu per-user running best NU 4 x 57 b = 228 b, gather best 56 b",
   "6_floorplan": "pin-bound (4,898 port bits): outline set by <= 6 pins/um per face, not by area (fill_reason pin_bound); one std-cell band, no macros; aspect 1.33",
   "7_clock": "one centre-fed TritonCTS root (~7.3k sinks); io_hold_margin 0.03",
-  "8_schedule": "static: HARD 1 adds +1 edge on stn_cfg, sc_cfg, stm_cfg, su_cmd (p_re and su_go both: SU issue relative timing unchanged), am_*, w16_*, w1_*, own_ch, ag_own vs qfd_dv_slice2 (flat0 HARD 0 == slice2 at offset 0); handed to the compiler NOTICE (lanes/QW-GEN3.md via QW-SLICE6)"
+  "8_schedule": "static: HARD 1 = input pin register (+1 on every input) and out register (+1 on stn_cfg, sc_cfg, stm_cfg, su_cmd -- p_re and su_go together --, am_*, w16_*, w1_*, own_ch, ag_own): every path THROUGH ctl +2 edges, ctl state (sid, configs, gather, status st / cc_o) sees its inputs +1; reset release +1 (relays, boot only); flat0 = HARD 0 is cycle-exact == qfd_dv_slice2 at offset 0; handed to the compiler NOTICE via QW-SLICE6"
  },
  "structural_change": "QW-SLICE6 parallel fallback of qfd_dv_s5_ctl: 2:1 432 x 216, the two chain words (chd_q in, own_ch out) both on the long S face (toward the pass lanes / dn face via the S band), SU buses N",
  "children": [],
