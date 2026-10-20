@@ -6,6 +6,20 @@ reg[W-1:0]i=0; wire[W-1:0]o,ref_o; wire[4*W-1:0]bank; wire[4*((W+23)/24)-1:0]vld
 qfd_c_land_safe_w #(.W(W))ref_w(ck_w,rst_n,i,bank,vld);
 qfd_c_land_safe_r #(.W(W),.K(2))ref_r(ck_r,rst_n,bank,vld,ref_o);
 qfd_c_land_pair_safe #(.W(W),.K(MUT==1?3:2))dut(ck_w,ck_r,rst_n,rst_n,i,o);
+genvar gg,ss;
+generate for(gg=0;gg<(W+14)/15;gg=gg+1)begin:g_cap_audit
+ localparam integer N=(W-gg*15<15)?W-gg*15:15;
+ for(ss=0;ss<4;ss=ss+1)begin:g_bank_audit
+  reg[N-1:0]sampled;reg enabled;
+  always @(posedge ck_w)begin
+   sampled=i[gg*15+:N];
+   enabled=dut.g_slice[gg].u_w.g_bank[ss].active && dut.g_slice[gg].u_w.sel[ss];
+   #0.001;
+   if(enabled && dut.g_slice[gg].u_w.g_bank[ss].b !== sampled)
+    $fatal(1,"PAIR_FIRST_CAPTURE_FAIL group=%0d slot=%0d",gg,ss);
+  end
+ end
+end endgenerate
 integer c,j,n=0; reg[W+31:0]word;
 initial begin
 for(c=0;c<5000;c=c+1)begin
