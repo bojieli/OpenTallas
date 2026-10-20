@@ -11,7 +11,9 @@ vertical G-free geometry) and the inter-column gaps grow from 17.28 to 17.28 + G
 the GEN then lands those rows like every other cross-region link (one-frame forwarded lane at the receiver: ring
 written on the sender's root, read on the receiver's root, fixed E, no backpressure).  G is on the 43.2 lattice.
 
-usage: dv_xgap_plan.py --plan in.json --gap-um 86.4 --out out.json [--die-w-max 33000]
+usage: dv_xgap_plan.py --plan in.json --gap-um 129.6 --skip dvs_E1 --out out.json [--die-w-max 33000]
+G 86.4 (one 64.8-um station column) was too narrow: dv2f20g5l tries 2-3 stacked ~1 mm of landings per boundary in one
+column beside a ~1-mm pin window (779-838 / 658-um hops); G 129.6 holds two 64.8-um columns.
 """
 import argparse, json
 from pathlib import Path
@@ -26,6 +28,8 @@ def main():
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--die-w-max', type=float, default=33000.0, help='reticle width (um): refuse a plan wider than this')
     ap.add_argument('--die-w', type=float, default=31730.376, help='current die width (um) the plan builds')
+    ap.add_argument('--skip', default='', help='slices whose W-side boundary gets no channel (same region root as the W neighbour, '
+                                               'no cross-region slice bus there: dvs_E1 on g5 = E0 | E1 share pll_r95)')
     a = ap.parse_args()
     G = a.gap_um
     if abs(G / LAT - round(G / LAT)) > 1e-6 or G <= 0:
@@ -34,8 +38,8 @@ def main():
     sl = sorted((i for i in D['insts'] if i['n'].startswith('dvs_')), key=lambda i: i['x'])
     bounds = []
     for p, q in zip(sl, sl[1:]):
-        if abs(p['x'] + p['w'] - q['x']) < 1e-3:        # abutted pair (the W0|E0 seam has its own channel)
-            bounds.append(q['x'])
+        if abs(p['x'] + p['w'] - q['x']) < 1e-3 and q['n'] not in set(filter(None, a.skip.split(','))):
+            bounds.append(q['x'])                       # abutted pair (the W0|E0 seam has its own channel)
     if not bounds:
         raise SystemExit('no abutted slice boundary in the plan')
     moved = {}
