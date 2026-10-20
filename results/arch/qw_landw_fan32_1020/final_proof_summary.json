@@ -1,0 +1,290 @@
+[
+  {
+    "master": "qfd_landh0d8f_107_EW_52x52",
+    "width": 107,
+    "mode": "pass",
+    "rc": 0,
+    "expected_regex": "LAND8_BENCH_ALL PASS",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_107_EW_52x52",
+    "width": 107,
+    "mode": "sel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_107_EW_52x52",
+    "width": 107,
+    "mode": "naive",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_107_EW_52x52",
+    "width": 107,
+    "mode": "vld",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_107_EW_52x52",
+    "width": 107,
+    "mode": "encomb",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_107_EW_52x52",
+    "width": 107,
+    "mode": "k3",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_107_EW_52x52",
+    "width": 107,
+    "mode": "wsel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_107_EW_52x52",
+    "width": 107,
+    "mode": "rsel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_116_EW_54x54",
+    "width": 116,
+    "mode": "pass",
+    "rc": 0,
+    "expected_regex": "LAND8_BENCH_ALL PASS",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_116_EW_54x54",
+    "width": 116,
+    "mode": "sel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_116_EW_54x54",
+    "width": 116,
+    "mode": "naive",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_116_EW_54x54",
+    "width": 116,
+    "mode": "vld",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_116_EW_54x54",
+    "width": 116,
+    "mode": "encomb",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_116_EW_54x54",
+    "width": 116,
+    "mode": "k3",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_116_EW_54x54",
+    "width": 116,
+    "mode": "wsel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8f_116_EW_54x54",
+    "width": 116,
+    "mode": "rsel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_107_EW_52x52",
+    "width": 107,
+    "mode": "pass",
+    "rc": 0,
+    "expected_regex": "LAND8_BENCH_ALL PASS",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_107_EW_52x52",
+    "width": 107,
+    "mode": "sel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_107_EW_52x52",
+    "width": 107,
+    "mode": "naive",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_107_EW_52x52",
+    "width": 107,
+    "mode": "vld",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_107_EW_52x52",
+    "width": 107,
+    "mode": "encomb",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_107_EW_52x52",
+    "width": 107,
+    "mode": "k3",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_107_EW_52x52",
+    "width": 107,
+    "mode": "wsel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_107_EW_52x52",
+    "width": 107,
+    "mode": "rsel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_116_EW_54x54",
+    "width": 116,
+    "mode": "pass",
+    "rc": 0,
+    "expected_regex": "LAND8_BENCH_ALL PASS",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_116_EW_54x54",
+    "width": 116,
+    "mode": "sel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_116_EW_54x54",
+    "width": 116,
+    "mode": "naive",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_116_EW_54x54",
+    "width": 116,
+    "mode": "vld",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_116_EW_54x54",
+    "width": 116,
+    "mode": "encomb",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_116_EW_54x54",
+    "width": 116,
+    "mode": "k3",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_116_EW_54x54",
+    "width": 116,
+    "mode": "wsel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  },
+  {
+    "master": "qfd_landh0d8fn_116_EW_54x54",
+    "width": 116,
+    "mode": "rsel",
+    "rc": 1,
+    "expected_regex": "LAND8_BENCH_ALL FAIL",
+    "expected_seen": true,
+    "qualified": true
+  }
+]

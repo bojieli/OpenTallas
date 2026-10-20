@@ -1,0 +1,185 @@
+{
+ "name": "qfwd_landh0d8f_107_ew_52x52-lnf1-COMMIT",
+ "block": "qfd_landh0d8f_107_EW_52x52",
+ "ref_tile": true,
+ "owner": "Codex:QW-LANDW",
+ "purpose": "Native32-safe same-edge D8 flop landing107, ICGmain",
+ "threads": 2,
+ "peak_ram_gb": 6,
+ "source": {
+  "branch": "codex/qw-landw-fan32-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/qwen_split/bench_land8f.sh",
+   "tools/qwen_split/bench_land8w.py",
+   "results/arch/qw_landw_fan32_1020/final_bench"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_landh0d8f_107_EW_52x52 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_land8.sv rtl/qwen_split/qfd_land8_fan32.sv rtl/hdc/ot_hdc_cg.sv physical/qwen_fwd_lane/qfd_land8f_masters.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "land8f_pass",
+    "cmd": "bash tools/qwen_split/bench_land8f.sh pass {RUN}/b_pass qfd_landh0d8f_107_EW_52x52 107 flop",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "LAND8_BENCH_ALL PASS",
+    "pass_witness": "results/arch/qw_landw_fan32_1020/final_bench/qfd_landh0d8f_107_EW_52x52_pass.log"
+   },
+   {
+    "name": "land8f_sel",
+    "cmd": "bash tools/qwen_split/bench_land8f.sh sel {RUN}/b_sel qfd_landh0d8f_107_EW_52x52 107 flop",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_fan32_1020/final_bench/qfd_landh0d8f_107_EW_52x52_sel.log"
+   },
+   {
+    "name": "land8f_naive",
+    "cmd": "bash tools/qwen_split/bench_land8f.sh naive {RUN}/b_naive qfd_landh0d8f_107_EW_52x52 107 flop",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_fan32_1020/final_bench/qfd_landh0d8f_107_EW_52x52_naive.log"
+   },
+   {
+    "name": "land8f_vld",
+    "cmd": "bash tools/qwen_split/bench_land8f.sh vld {RUN}/b_vld qfd_landh0d8f_107_EW_52x52 107 flop",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_fan32_1020/final_bench/qfd_landh0d8f_107_EW_52x52_vld.log"
+   },
+   {
+    "name": "land8f_encomb",
+    "cmd": "bash tools/qwen_split/bench_land8f.sh encomb {RUN}/b_encomb qfd_landh0d8f_107_EW_52x52 107 flop",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_fan32_1020/final_bench/qfd_landh0d8f_107_EW_52x52_encomb.log"
+   },
+   {
+    "name": "land8f_k3",
+    "cmd": "bash tools/qwen_split/bench_land8f.sh k3 {RUN}/b_k3 qfd_landh0d8f_107_EW_52x52 107 flop",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_fan32_1020/final_bench/qfd_landh0d8f_107_EW_52x52_k3.log"
+   },
+   {
+    "name": "land8f_wsel",
+    "cmd": "bash tools/qwen_split/bench_land8f.sh wsel {RUN}/b_wsel qfd_landh0d8f_107_EW_52x52 107 flop",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_fan32_1020/final_bench/qfd_landh0d8f_107_EW_52x52_wsel.log"
+   },
+   {
+    "name": "land8f_rsel",
+    "cmd": "bash tools/qwen_split/bench_land8f.sh rsel {RUN}/b_rsel qfd_landh0d8f_107_EW_52x52 107 flop",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_fan32_1020/final_bench/qfd_landh0d8f_107_EW_52x52_rsel.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfwd_landh0d8f_107_ew_52x52/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfwd_landh0d8f_107_ew_52x52/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 2,
+   "peak_ram_gb": 6
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfwd_landh0d8f_107_ew_52x52 --out {RUN}/record/views/qfd_landh0d8f_107_EW_52x52  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfwd_landh0d8f_107_ew_52x52/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfwd_landh0d8_116_ew_46x46/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfwd_landh0d8_116_ew_46x46/qfwd_landh0d8f_107_ew_52x52-lnf1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Native32 structural replacement of CLOSED but unsafe original107/116: four-bit data regions limit warm/select loads32; distinct-ID same-edge calendar copies perfourregions bound all receiverdecode/root loads. Originalsource/masters unchanged, newnamedoptinmasters; zeroaddededges/II/reset/warm price verified by fullcalendar gold. Actualsynthesis area1059.31/1141.45um2 sized45-50percent core density; allmappednonconstantdrivers<=32, actualLibconstantroles pinned. No layout/adoption claim beforegate/route."
+}

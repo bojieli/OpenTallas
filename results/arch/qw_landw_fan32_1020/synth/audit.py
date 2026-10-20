@@ -1,5 +1,5 @@
 import pathlib,json,collections,re,hashlib,os
-p=pathlib.Path('flat.json');m=json.loads(p.read_text())['modules'][os.environ.get('OT_NATIVE_TOP','qfd_landh0d8f_116_EW_46x46')];cells=m['cells'];constant_cells=json.loads(pathlib.Path('lib_roles.json').read_text())['actual_literal_constant_cells'];inputs=collections.defaultdict(list);ports=collections.defaultdict(list)
+p=pathlib.Path('flat.json');m=json.loads(p.read_text())['modules'][os.environ.get('OT_NATIVE_TOP','qfd_landh0d8f_116_EW_54x54')];cells=m['cells'];constant_cells=json.loads(pathlib.Path('lib_roles.json').read_text())['actual_literal_constant_cells'];inputs=collections.defaultdict(list);ports=collections.defaultdict(list)
 def trans(c):return bool(re.match(r'^(BUF|INV|HB)[x0-9_]',c['type'],re.I))
 def clockpin(n):return n.upper()in['CLK','CK','CP','GCLK','CLKN','CLKB']
 for n,c in cells.items():

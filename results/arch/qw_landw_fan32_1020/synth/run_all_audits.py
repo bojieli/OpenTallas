@@ -1,6 +1,6 @@
 import pathlib,subprocess,os,json,hashlib
 r=pathlib.Path.cwd();a=r/'results/arch/qw_landw_fan32_1020/synth';rows=[]
-for label,top in [('landw116v2','qfd_landh0d8f_116_EW_46x46'),('landw107v2','qfd_landh0d8f_107_EW_44x44'),('landwn107v2','qfd_landh0d8fn_107_EW_44x44'),('landwn116v2','qfd_landh0d8fn_116_EW_46x46')]:
+for label,top in [('landw116final','qfd_landh0d8f_116_EW_54x54'),('landw107final','qfd_landh0d8f_107_EW_52x52'),('landwn107final','qfd_landh0d8fn_107_EW_52x52'),('landwn116final','qfd_landh0d8fn_116_EW_54x54')]:
  paths=list((r/'native_synth_out'/label).glob('**/1_2_yosys.raw.v'));assert len(paths)==1;d=paths[0].parent
  for fn in ['flatten.py','audit.py','constant_roles.py']:(d/fn).write_text((a/fn).read_text())
  for fn in ['constant_roles.py','flatten.py']:
