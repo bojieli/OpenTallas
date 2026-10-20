@@ -133,6 +133,39 @@ def aproj_topology_enabled():
     return os.environ.get('OT_XS_APROJ_TOPO', '0') == '1'
 
 
+def aproj_rank_tags_enabled():
+    enabled = os.environ.get('OT_XS_APROJ_RANK_TAGS', '0') == '1'
+    assert not enabled or aproj_topology_enabled(), 'rank-tag a_proj requires the actual topology owner map'
+    return enabled
+
+
+def rank_cfg_words(words, rank_rows):
+    """Production cfg image row IDs; SENT, segments, ROM addresses and arithmetic stay unchanged."""
+    out = list(words)
+    assert len(rank_rows) == len(set(rank_rows)) and all(0 <= r < (1 << 14) for r in rank_rows)
+    for w in list(range(8)) + list(range(17, 25)):
+        v = out[w]
+        if not v or (v & 0x8000):
+            continue
+        row = v & 0xFFFF
+        assert row < len(rank_rows), ('a_proj cfg row outside owner map', row, rank_rows)
+        out[w] = (v & ~0xFFFF) | rank_rows[row]
+    return out
+
+
+def rank_plan(plan, rank_rows):
+    from static_return_calendar import _f, _mk, norm
+    out = dict(plan)
+    ret = []
+    for edge, tag, data, err in plan['ret']:
+        row19, lo, k, n = _f(norm(tag))
+        pos, flags, row = row19 >> 16, (row19 >> 14) & 3, row19 & 0x3FFF
+        ret.append([edge, _mk((pos << 16) | (flags << 14) | rank_rows[row], lo, k, n), data, err])
+    out['ret'] = ret
+    out['rows_vals'] = {str(rank_rows[int(r)]): v for r, v in plan['rows_vals'].items()}
+    return out
+
+
 def placement(die, sl, fx=None):
     frames = die.frames_of(sl)
     g = slice_index(die, sl)
@@ -217,7 +250,7 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None):
     return field, ph, plan, qa, q, _bf
 
 
-def field_images(field, qa, q, bf, inst, out):
+def field_images(field, qa, q, bf, inst, out, rank_rows=None):
     """the frame's ROM images under its die instance name: element via-maps + il7 cfg banks (phase 0)"""
     import v41_die_images_w17w10 as I
     from field_cfg7_image import encode_bank
@@ -233,6 +266,9 @@ def field_images(field, qa, q, bf, inst, out):
                 names.append(f'{inst}_e{k}{mb}_{par}.viamap.hex')
     for k in q + bf:
         words = field.cfg[0][slot_of[k]] if k in slot_of else [0] * 25
+        if aproj_rank_tags_enabled():
+            assert rank_rows is not None, 'production a_proj images require their exact rank owner map'
+            words = rank_cfg_words(words, rank_rows)
         banked = [[0] * 4096 for _ in range(7)]
         for w_, v in enumerate(words):
             banked[w_ % 7][w_ // 7] = v
@@ -321,7 +357,7 @@ def cmd_gen(a):
     assert p['rows'], f'{a.frame}: no a_proj rows'
     mats, gidx = frame_mats(fx, p['rows'])
     field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'])
-    names, tmp = field_images(field, qa, q, bf, a.frame, out)
+    names, tmp = field_images(field, qa, q, bf, a.frame, out, p['rows'])
     xsn = xs_roms(tmp, out)
     # the frame bench instantiates the master with INSTANCE "f": the same images under the bench name
     if a.mutant == 'swap':      # wrong placement: the ROM images of two elements holding different rows swapped
@@ -351,6 +387,9 @@ def cmd_gen(a):
     plan.pop('stream')
     if a.mutant == 'shift':     # the compiler's calendar one edge late: the check must reject the cycle-exact compare
         plan['ret'] = [[e + 1] + list(rest) for e, *rest in plan['ret']]
+    if aproj_rank_tags_enabled():
+        rows = {p['rows'][r]: v for r, v in rows.items()}
+        plan = rank_plan(plan, p['rows'])
     meta = dict(master=base_master(p['master']), die_frame=a.frame, die_master=p['master'], lk=p['lk'],
                 land_e=land_e(p['lk']), slice=sl, slice_index=g, seed=SEED, only=None, K=mats[0].K,
                 rows_per_mat=[m.rows for m in mats], mats=len(mats), q_pairs=q, bf_pairs=bf, pairs=qa,

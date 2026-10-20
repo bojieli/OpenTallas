@@ -422,6 +422,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     if bfo:
         phases += compile_bf(field, fx, bfo, g, j, LX.base_master(master), LX.land_e(lk), bf, len(qa))
     if LX.aproj_topology_enabled():
+        field.aproj_rank_rows = list(p0['rows'])
         phases[0]['row_index'] = list(p0['rows'])
         phases[0]['ownership'] = 'physical-frame contiguous tensor rows; CAP/gather unadmitted'
     fill = [int(v) for v in field.fill]
@@ -531,6 +532,9 @@ def write_images(field, qa, q, bf, inst, out):
         banked = [[0] * 4096 for _ in range(7)]
         for p in range(nph):
             words = list(field.cfg[p][slot_all[k]]) if k in slot_all else [0] * 25
+            if p == 0 and LX.aproj_rank_tags_enabled():
+                assert hasattr(field, 'aproj_rank_rows'), 'production a_proj rank owner map missing'
+                words = LX.rank_cfg_words(words, field.aproj_rank_rows)
             d = bdesc.get(p, {}).get(slot_all.get(k))
             if d:     # ot_s81_cfg7_seq_bfp: desc[24 w +: 24] in the spare columns [71:48] of cfg word w = 0..3
                 for w_ in range(4):
