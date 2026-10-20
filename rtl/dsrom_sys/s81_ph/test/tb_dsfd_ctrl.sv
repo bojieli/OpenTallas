@@ -168,6 +168,9 @@ module tb_dsfd_ctrl;
     end
     // ---------------- run
     integer c, nb, beats, wr_n, k, tmo;
+    // S81-CTRL3 10-19: no-progress watchdog (+stall=, default 20000 cks cycles; exact max request latency 143 cycles):
+    // a hung mutant fails in ~20k cycles instead of the 400k-cycle phase timeout (two phases at -O0 took > 15 h).
+    integer prog, prog_l, stall, stall_max;
     task automatic check_phase(input integer ph);
         integer key; reg [255:0] v;
         beats = 0; wr_n = 0;
@@ -202,7 +205,7 @@ module tb_dsfd_ctrl;
     endtask
     task automatic run_phase(input integer ph);
         phase = ph; gen(ph);
-        tmo = 0;
+        tmo = 0; prog_l = -1; stall = 0;
         while (tmo < 400000) begin
             @(posedge cks); tmo = tmo + 1;
             nb = 0;
@@ -211,6 +214,11 @@ module tb_dsfd_ctrl;
             for (c = 0; c < NPC; c = c + 1) for (k = 0; k < n_req; k = k + 1) if (!s_we[c][k]) beats = beats + s_len[c][k];
             k = 0; for (c = 0; c < NPC; c = c + 1) k = k + wd_n[c];
             for (c = 0; c < NPC; c = c + 1) for (nb = 0; nb < 1; nb = nb + 1) ;
+            prog = dmap.num() + k; for (c = 0; c < NPC; c = c + 1) prog = prog + acc_dut[c];
+            if (prog != prog_l) begin prog_l = prog; stall = 0; end else stall = stall + 1;
+            if (stall >= stall_max) begin
+                $display("ERR phase %0d: no progress for %0d cks cycles (cycle %0d)", ph, stall, tmo); tmo = 400000; break;
+            end
             if (dmap.num() == beats && rmap.num() == beats) begin
                 wr_n = 0; for (c = 0; c < NPC; c = c + 1) for (nb = 0; nb < n_req; nb = nb + 1) if (s_we[c][nb]) wr_n = wr_n + 1;
                 if (k == wr_n) begin
@@ -227,6 +235,7 @@ module tb_dsfd_ctrl;
         if (!$value$plusargs("seed=%d", seed)) seed = 20261006;
         if (!$value$plusargs("n=%d", n_req)) n_req = 48;
         if (!$value$plusargs("p=%d", p_iss)) p_iss = 40;
+        if (!$value$plusargs("stall=%d", stall_max)) stall_max = 20000;
         void'($urandom(seed));
         errors = 0; lat_q_sum = 0; lat_q_max = 0; lat_r_sum = 0; lat_r_max = 0; lat_q_n = 0; lat_r_n = 0; lat_q_min = 64'd1 << 40; lat_r_min = 64'd1 << 40;
         rq = 0; r_kv = 0; r_kwe = 0; r_kaddr = 0; r_klen = 0; r_ktag = 0; r_kwdata = 0; r_kwstrb = 0;
