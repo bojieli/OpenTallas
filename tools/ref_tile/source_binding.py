@@ -18,6 +18,10 @@ from pathlib import Path
 SCHEMA = "opentallas.ref_tile.source_snapshot.v1"
 EXCLUDED = {"gate_result.json", "source_snapshot.json"}
 CONSUMED_SCHEMA = "opentallas.ref_tile.gate_consumed.v1"
+# Helpers that only NEW gates execute (pre_route_gate.ship_tar ships them beside the route-plan overlays, captured at the
+# same main head), never members of a frozen route plan.  validate() must resolve their current effective bytes the
+# same way, or a byte-identical gate-only helper reads as "blob unknown" and every post-native32 gate is refused.
+GATE_ONLY_HELPERS = ("tools/ref_tile/ref_route.sh", "tools/ref_tile/native_census.py", "tools/ref_tile/native_census.tcl")
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
               "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py",
@@ -226,6 +230,12 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                 effective = HO.committed_frozen_payloads(root, frozen)
             else:
                 current, effective = HO.capture_plan(daemon, root, paths=paths, pg_strict=pg_strict)
+                gate_only = sorted(e["path"] for e in entries if e["source"] == "daemon_overlay"
+                                   and e["path"] in GATE_ONLY_HELPERS and e["path"] not in effective
+                                   and (Path(daemon) / e["path"]).exists())
+                if gate_only:   # same head as the route helpers, exactly as ship_tar captured them
+                    _, gate_bytes = HO.capture_plan(daemon, root, paths=gate_only, head=current.get("origin_main"))
+                    effective = {**effective, **gate_bytes}
         except (OSError, ValueError, subprocess.SubprocessError) as ex:
             return False, f"cannot resolve effective route helpers: {ex}"
         if frozen and not frozen_recovery:
