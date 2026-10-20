@@ -439,6 +439,7 @@ def post(v, m, G):
 
     # 1. leaves beside the sources (one clock root per leaf)
     leaves = collections.defaultdict(list)       # clock bus -> leaf names
+    orphans = []
     worst_src = 0.0
     for inst, port, real, bit, cj, rj, xy in sorted(src, key=lambda t: (t[4], t[6][0], t[6][1])):
         if cj not in root_ck:
@@ -542,6 +543,14 @@ def post(v, m, G):
                     route, tgt2 = _hop_route(c0, tl_, stats=st1)
                     if route is None:   # wider snap (box still checked <= REACH_UM centre to centre)
                         route, tgt2 = _hop_route(c0, tl_, slack=150.0, stats=st2)
+                    if route is None and cur == lf and os.environ.get('OT_SPLIT_FAULT_ORPHAN', 'fail') == 'record':
+                        # QW-G5F3: the leaf's free component holds no node of its clock root (dv2f20g5f8: flt_leaf229 in
+                        # the y 18697 row gap, its clock root's nodes in the y 13409 gap; 31k boxes searched).  Recorded
+                        # ORPHAN: the leaf is withdrawn, its sources stay open (as on the base g5 die); a region root per
+                        # (owner, row gap) in pre is the structural fix (owed).
+                        orphans.append(dict(leaf=lf, xy=[round(c0[0], 1), round(c0[1], 1)], clock=m['buses'][cj][0],
+                                            nearest=tgt, nearest_um=round(d, 1), stats=st2 or st1))
+                        break
                     if route is None:
                         raise ValueError(f'fault emit: no hop route from {cur} {c0} to any of {len(okp)} attached nodes, nearest {tgt} {t} '
                                          f'(A* {st1} / wide {st2}; free boxes within 340 um of the leaf: '
@@ -579,7 +588,25 @@ def post(v, m, G):
                     raise ValueError(f'fault emit: hop site for {cur} too far ({_man(c0, _ctr(nodes[hop]["it"])):.0f} um)')
                 connect(cur, hop)
                 cur = hop
-            att.append(lf)
+            if not (orphans and orphans[-1]['leaf'] == lf):
+                att.append(lf)
+    if orphans:
+        gone = {o_['leaf'] for o_ in orphans}
+        for o_ in orphans:
+            o_['sources'] = [f'{e[0][0]}.{e[0][1]}' for b_, c_, n_, e in new_buses if e[1][0] == o_['leaf']]
+        new_buses[:] = [b for b in new_buses if not any(e_[0] in gone for e_ in b[3])]
+        m['insts'][:] = [i_ for i_ in m['insts'] if i_.name not in gone]
+        for j_, (bid_, cl_, bits_, eps_) in enumerate(m['buses']):
+            if any(e_[0] in gone for e_ in eps_):
+                m['buses'][j_] = (bid_, cl_, bits_, [e_ for e_ in eps_ if e_[0] not in gone])
+        for g_ in gone:
+            nodes.pop(g_, None)
+            by.pop(g_, None)
+            follow.pop((g_, 'ck'), None)
+        src[:] = [s_ for s_ in src if s_[:2] not in {tuple(x_.split('.', 1)) for o_ in orphans for x_ in o_['sources']}]
+        print(f'FAULT_EMIT ORPHANS {len(orphans)} leaves / {sum(len(o_["sources"]) for o_ in orphans)} source bits left OPEN '
+              f'(no free route to their clock root nodes): {[(o_["leaf"], o_["xy"], o_["clock"], o_["nearest_um"]) for o_ in orphans[:12]]}', flush=True)
+    rec['orphans'] = orphans
     # 3. masters at the final input count (same footprint, pins f0.. unchanged)
     counts = collections.Counter()
     for nm, d in nodes.items():
