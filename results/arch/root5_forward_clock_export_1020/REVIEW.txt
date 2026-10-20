@@ -1,6 +1,10 @@
 Forwarded clock ETM export: source/model handback packet (ROOT publication review pending)
 
-Source baseline c0768b96a. Candidate source 28ad73b73 + 35e931766.
+Fresh projection base 4a7636d6723a50de327c7f50a0e9b4c3228c080c.
+Exporter at 4a is byte-identical to original baseline c0768b96a.
+Candidate source 28ad73b73 + 35e931766 is cherry-picked without byte changes.
+Only native evidence commits 4d4256bc9/c23484bc9 are cherry-picked from the
+S81 truth branch; no old550 ancestry or old exporter/tools are imported.
 No runtime CDC, physical gates, frozen views, main, or daemon changes.
 
 Problem and scope
@@ -77,13 +81,36 @@ Validation so far
 - INV TT: input absolute rise40/fall394ps (wave23/377 + source17), output
   rise462.137909/fall97.340271ps; local opposite-edge transfer rise68.137909 /
   fall57.340271ps. Native related_pin ck and negative_unate come from extraction.
-- Additional input-slew20 -> 40 sensitivity and physical nonunary-master causal
-  checks were requested, but are not part of 4d4256bc9. On CLAUDE IS BACK, new
-  launches stop; S81 diechain records whether these were already in flight.
+- Supplement c23484bc9 completed before handback: input slew20 -> 40ps is
+  preserved at the actual input terminal and changes native INV TT local rise
+  68.137909 -> 76.477814ps and fall57.340271 -> 65.018692ps; native Liberty changes.
+  Actual routed AND2x2 physical master is refused, rc1. All proof jobs terminal.
 
-Handback restriction
-CLAUDE IS BACK: no new work or launches. Current source35 bytes are sealed.
-Only own branch is pushed. ROOT/Claude owns review, main publication and any
-subsequent actual closed-view export. The original EW routed ODB/SPEF is absent,
-so it cannot be re-exported from Liberty alone. No actual EW export, die GRT,
-physical acceptance, main push or daemon deployment has been performed.
+Source review and consumer boundary
+Independent review confirms phase XOR inversion parity, coherent same-bound
+actual-input subtraction, original sign-off extraction before all clock mutation,
+unique physical driver/root and actual Liberty parity admission, and output-only
+native ETM replacement. Source35 bytes and the existing full suite/native proof
+remain unchanged; no additional broad tests were run for this clean projection.
+
+Prospective S81 consumer319daccb1 removes dv_rvcase.py's SELF arc conversion and
+negative-unate string relabel. It guards both every requested STA corner library
+and the TT GRT copy, checks master/missing relay pin identity, and requires native
+raw ETM/provenance. Independent review reproduced a NaN absolute-arrival fail-open in319, then
+verified final a5edacdfa checks both finite operands and observed transfer.
+Native positive still admits and the same coherent-receipt NaN now refuses.
+Owner fleet result9native admits/8causal refusals PASS. Consumer approval is
+for prospective case generation only; existing frozen42STA/14TT files remain
+immutable and are not silently repaired. The exporter packet does not contain
+consumer source or authorize a runtime deployment.
+
+Publication restriction
+ROOT owns merge/publication/deployment. No actual EW re-export is authorized:
+the original routed ODB/SPEF is absent and Liberty alone cannot regenerate it.
+The original failed SELF/40ns STA evidence and live immutable c076 bind job are
+preserved. No main push, daemon deployment, actual EW export or die GRT occurred.
+
+ROOT-approved classification for both exporter source commits:
+Gate-Rule: neutral requires=native_forwarded_clock_model applies-to=BUF,INV,BUF_INV_BUF
+This is a post-verdict model repair with actual physical function, phase, and
+SPEF source guards; no timing budget changes or proof waiver.
