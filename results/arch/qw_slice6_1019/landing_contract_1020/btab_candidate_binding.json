@@ -1,0 +1,47 @@
+{
+  "status": "OPT_IN_SOURCE_COMPILE_CANDIDATES_ONLY",
+  "bindings": [
+    {
+      "source": "rtl/qwen_dv/s5/qfd_dv_s5_flat.sv",
+      "source_sha256": "4a3c39679c9e3518a7d875da6906ee55b61b0b20bd0dc2aaecf43dea74d7a608",
+      "candidate": "rtl/qwen_dv/s5/btab_candidate/qfd_dv_s5_flat_btab_s3_candidate.sv",
+      "candidate_sha256": "055f7b6e61f73b82c68b8feb70b7637a20bb677f07ed1579d9343f3e9dcdecdb",
+      "top": "qfd_dv_s5_flat_btab_s3_candidate",
+      "child": "u_btab",
+      "leaf": "qfd_dv_s5_btab_s3",
+      "reversible_source_diff": "PASS_only_module_name_and_btab_instance",
+      "added_data_edges": 0,
+      "added_reset_edges": 0,
+      "clock_and_other_port_bytes": "identical",
+      "physical_binding": "HOLD_until_exact_leaf_CLOSED_and_parent_contracts_pass"
+    },
+    {
+      "source": "rtl/qwen_dv/s5/lp/qfd_dv_s5_lp.sv",
+      "source_sha256": "7927680937e9fce9215f8d302dd2354f8091288c976c56f1c0d32d85055b3cba",
+      "candidate": "rtl/qwen_dv/s5/btab_candidate/qfd_dv_s5_lp_btab_s3_candidate.sv",
+      "candidate_sha256": "d333f8f88f09094750d71add20c393c7a7df6e790c6fc0cfbce02c706ee31854",
+      "top": "qfd_dv_s5_lp_btab_s3_candidate",
+      "child": "u_btab",
+      "leaf": "qfd_dv_s5_btab_s3",
+      "reversible_source_diff": "PASS_only_module_name_and_btab_instance",
+      "added_data_edges": 0,
+      "added_reset_edges": 0,
+      "clock_and_other_port_bytes": "identical",
+      "physical_binding": "HOLD_until_exact_leaf_CLOSED_and_parent_contracts_pass"
+    },
+    {
+      "source": "rtl/qwen_dv/s5/lp/qfd_dv_s5b_lp.sv",
+      "source_sha256": "bc4f919386333228b16254ed6ff765cf07c785397453541a92eb1cd6499b7914",
+      "candidate": "rtl/qwen_dv/s5/btab_candidate/qfd_dv_s5b_lp_btab_s3_candidate.sv",
+      "candidate_sha256": "b2f7d85bede5cc005dca4f074e2fbe57046abcf3daea60c3c563c963a8bfe94f",
+      "top": "qfd_dv_s5b_lp_btab_s3_candidate",
+      "child": "u_btab",
+      "leaf": "qfd_dv_s5_btab_s3",
+      "reversible_source_diff": "PASS_only_module_name_and_btab_instance",
+      "added_data_edges": 0,
+      "added_reset_edges": 0,
+      "clock_and_other_port_bytes": "identical",
+      "physical_binding": "HOLD_until_exact_leaf_CLOSED_and_parent_contracts_pass"
+    }
+  ]
+}
