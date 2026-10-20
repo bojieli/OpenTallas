@@ -9,6 +9,7 @@ No buffers are used to hide a logical driver's load count.
 import argparse
 from collections import defaultdict
 from copy import deepcopy
+import heapq
 import hashlib
 import json
 from pathlib import Path
@@ -53,7 +54,7 @@ def cyclic_cells(inputs,drivers):
     return cyclic
 
 
-def bound(data, top, limit=24, clock_ports=('clk',)):
+def bound(data, top, limit=24, clock_ports=('clk',), incremental=False):
     m=deepcopy(data['modules'][top])
     original=deepcopy(m['cells'])
     aliases={}
@@ -94,19 +95,46 @@ def bound(data, top, limit=24, clock_ports=('clk',)):
                  for b in bs if isinstance(b,int)]+[1])+1
     clock={b for p in clock_ports for b in m['ports'].get(p,{}).get('bits',[])}
     clones=0
-    while True:
-        loads=defaultdict(list)
+    # The reference rebuild remains available for differential tests.  The
+    # worklist updates only roots whose sink sets change after cloning.
+    loads=defaultdict(dict)
+    heap=[]
+    versions=defaultdict(int)
+    def add_load(bit, sink):
+        if isinstance(bit,int) and (bit not in clock or sink[0]=='port'):
+            loads[bit][sink]=None
+    def touch(bit):
+        if not isinstance(bit,int):return
+        versions[bit]+=1
+        if len(loads[bit])>limit:
+            heapq.heappush(heap,(-len(loads[bit]),-bit,versions[bit]))
+    if incremental:
         for n,ports in inputs.items():
             for p,bs in ports.items():
-                for i,(b,inv) in enumerate(bs):
-                    if isinstance(b,int) and b not in clock:
-                        loads[b].append(('cell',n,p,i))
+                for i,(bit,inv) in enumerate(bs):add_load(bit,('cell',n,p,i))
         for p,bs in outputs.items():
-            for i,(b,inv) in enumerate(bs):
-                if isinstance(b,int):loads[b].append(('port',None,p,i))
-        bad=[(len(s),b,s) for b,s in loads.items() if len(s)>limit]
-        if not bad:break
-        _,b,sinks=max(bad)
+            for i,(bit,inv) in enumerate(bs):add_load(bit,('port',None,p,i))
+        for bit in loads:touch(bit)
+    while True:
+        if incremental:
+            while heap:
+                count,negbit,version=heapq.heappop(heap);b=-negbit
+                if versions[b]==version and -count==len(loads[b]):break
+            else:break
+            sinks=list(loads[b])
+        else:
+            scan=defaultdict(list)
+            for n,ports in inputs.items():
+                for p,bs in ports.items():
+                    for i,(bit,inv) in enumerate(bs):
+                        if isinstance(bit,int) and bit not in clock:
+                            scan[bit].append(('cell',n,p,i))
+            for p,bs in outputs.items():
+                for i,(bit,inv) in enumerate(bs):
+                    if isinstance(bit,int):scan[bit].append(('port',None,p,i))
+            bad=[(len(sinks),bit,sinks) for bit,sinks in scan.items() if len(sinks)>limit]
+            if not bad:break
+            _,b,sinks=max(bad)
         if b not in drivers:
             ports=[p+'[%d]'%i for p,v in m['ports'].items() if v['direction']=='input'
                    for i,pb in enumerate(v['bits']) if norm(pb)[0]==b]
@@ -135,12 +163,25 @@ def bound(data, top, limit=24, clock_ports=('clk',)):
             families[fresh]=families[b]
             drivers[fresh]=name
             inputs[name]=deepcopy(inputs[src])
+            dirty=set()
+            if incremental:
+                for p,bs in inputs[name].items():
+                    for i,(bit,inv) in enumerate(bs):
+                        add_load(bit,('cell',name,p,i))
+                        if isinstance(bit,int):dirty.add(bit)
             for kind,n,p,i in sinks[k:k+limit]:
                 bs=inputs[n][p] if kind=='cell' else outputs[p]
                 _,inv=bs[i];bs[i]=(fresh,inv)
+                if incremental:
+                    sink=(kind,n,p,i)
+                    loads[b].pop(sink)
+                    add_load(fresh,sink)
+            if incremental:
+                dirty.update((b,fresh))
+                for bit in dirty:touch(bit)
     # Structural equivalence invariant: each primitive's type and every input
     # function, including clock/reset, agree with the original graph. Cloned
-    # unreset registers agree after the first active edge; no power-up claim.
+    # unreset registers require a separate legal reset/first-valid capture proof.
     for n,c in cells.items():
         old=original[origins[n]]
         assert c['type']==old['type']
@@ -199,11 +240,12 @@ def main():
     a.add_argument('--name',required=True);a.add_argument('--out',required=True)
     a.add_argument('--limit',type=int,default=24)
     a.add_argument('--clock-port',action='append',default=['clk'])
+    a.add_argument('--incremental',action='store_true',help='update fanout worklist instead of rescanning every cell')
     a.add_argument('--budget-only',action='store_true',help='report resource/frontier only, emit no RTL')
     args=a.parse_args()
     raw=Path(args.mapped_json).read_bytes();d=json.loads(raw)
     try:
-        m,c,i,o,origins,n=bound(d,args.top,args.limit,args.clock_port)
+        m,c,i,o,origins,n=bound(d,args.top,args.limit,args.clock_port,incremental=args.incremental)
     except ReplicationFrontier as e:
         Path(args.out+'.blocked.json').write_text(json.dumps(e.report,indent=2)+'\n')
         print('SVC7_GRAPH BLOCKED '+json.dumps(e.report))
@@ -220,7 +262,7 @@ def main():
                 source_top=args.top,output_top=args.name,limit=args.limit,
                 original_cells=len(m['cells']),final_cells=len(c),clones=n,
                 invariant='all clone primitive input functions/clock/reset identical to original; port functions identical',
-                initialization='unreset copies equivalent after first active clock; no independent power-up claim',
+                initialization='independent power-up requires separate reset/first-valid/capture proof; not established by this ledger',
                 origins=origins)
     Path(args.out+'.ledger.json').write_text(json.dumps(ledger,indent=2)+'\n')
     print('SVC7_GRAPH clones=%d final_cells=%d structural_invariant=PASS'%(n,len(c)))

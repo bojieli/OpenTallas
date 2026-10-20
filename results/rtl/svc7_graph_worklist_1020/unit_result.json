@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "fleet_unit": "oth-ubuntu-2175220-1792483617",
+  "command": "python3 -m unittest -v test_svc7_bound_graph.py test_svc7_bound_graph_worklist.py",
+  "tests": 14,
+  "random_dag_cases": 150,
+  "reference_base": "cf32860cf",
+  "runtime_seconds": 0.249,
+  "scope": "algorithm/frontier/load ledgers only; no RTL/arbitrary-init adoption proof"
+}
