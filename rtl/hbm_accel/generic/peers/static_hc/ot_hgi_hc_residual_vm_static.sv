@@ -16,7 +16,12 @@ module ot_hgi_hc_residual_vm_static #(
     parameter integer CAPTURE_LAT=19,
     parameter integer MUT_POSITION=0,
     parameter integer BEATS=1,
-    parameter integer MUT_BEAT=0
+    parameter integer MUT_BEAT=0,
+    // QHUB-S1 10-19 (kit hbm_hcq_hub_s1, SAFE-DESIGN items 2/3): SAFE 1 = per-face KEPT copies of the beat-control output
+    // register (x_face_v / x_face_beat: copy f = W, N, E, S, centre; same next-state and edge as x_wave_v / x_wave_beat)
+    // and ECOP kept copies of the capture-enable register (valid[CAPTURE_LAT-1]) so no enable drives > ~32 data flops.
+    // Default 0 = unchanged (x_face_* then mirror the single register).
+    parameter integer SAFE=0
 )(
     input wire clk,rst_n,launch,
     input wire [3:0] npos,
@@ -28,7 +33,9 @@ module ot_hgi_hc_residual_vm_static #(
     output reg [9:0] x_wave_word,
     output reg [8192/BEATS-1:0] x_wave,
     output reg [1:0] x_wave_beat,
-    output reg done,fault
+    output reg done,fault,
+    output wire [4:0] x_face_v,
+    output wire [9:0] x_face_beat
 );
     reg active;
     reg [11:0] issue,total;
@@ -69,7 +76,9 @@ module ot_hgi_hc_residual_vm_static #(
     generate if(BEATS==1)begin:g_wave
         reg [6143:0] assembly;
         always @(posedge clk)
-            if(valid[CAPTURE_LAT-1]&&cap_beat!=3)assembly[cap_beat*2048+:2048]<=cap_d;
+            // decoded constant-index slices (QHUB-S1: no runtime-indexed part-select), same writes as assembly[cap_beat*2048+:2048]
+            for(integer k=0;k<3;k=k+1)
+                if(valid[CAPTURE_LAT-1]&&cap_beat==2'(k))assembly[k*2048+:2048]<=cap_d;
         always @(posedge clk or negedge rst_n)
             if(!rst_n)x_wave_v<=0;
             else x_wave_v<=valid[CAPTURE_LAT-1]&&cap_beat==3;
@@ -77,16 +86,51 @@ module ot_hgi_hc_residual_vm_static #(
             x_wave_beat<=2'd0;
             if(valid[CAPTURE_LAT-1]&&cap_beat==3)begin x_wave_word<=cap_word;x_wave<={cap_d,assembly};end
         end
+        assign x_face_v={5{x_wave_v}};
+        assign x_face_beat={5{x_wave_beat}};
     end else begin:g_beats
         reg late_v; reg [9:0] late_word; reg [2047:0] late_d;
         wire send=valid[CAPTURE_LAT-1]&&!(MUT_BEAT==2&&cap_beat==3);
         always @(posedge clk or negedge rst_n)
             if(!rst_n)begin x_wave_v<=0;late_v<=0;end
             else begin x_wave_v<=send||late_v;late_v<=valid[CAPTURE_LAT-1]&&MUT_BEAT==2&&cap_beat==3;end
-        always @(posedge clk)begin
-            if(late_v)begin x_wave_beat<=2'd3;x_wave_word<=late_word;x_wave<=late_d;end
-            else if(send)begin x_wave_beat<=mut_beat;x_wave_word<=cap_word;x_wave<=cap_d;end
-            late_word<=cap_word;late_d<=cap_d;
+        if(SAFE==0)begin:g_d1
+            always @(posedge clk)begin
+                if(late_v)begin x_wave_beat<=2'd3;x_wave_word<=late_word;x_wave<=late_d;end
+                else if(send)begin x_wave_beat<=mut_beat;x_wave_word<=cap_word;x_wave<=cap_d;end
+                late_word<=cap_word;late_d<=cap_d;
+            end
+            assign x_face_v={5{x_wave_v}};
+            assign x_face_beat={5{x_wave_beat}};
+        end else begin:g_safe
+            // ECOP kept copies of valid[CAPTURE_LAT-1] (loaded from valid[CAPTURE_LAT-2] on the same edge, same reset):
+            // copy k enables data bits [k*32 +: 32] of the 2,048-b beat register
+            localparam integer ECOP=64;
+            initial if(CAPTURE_LAT<2)$fatal(1,"SAFE needs CAPTURE_LAT >= 2");
+            (* keep = "true", dont_touch = "true" *) reg [ECOP-1:0] vcap;
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)vcap<=0; else vcap<={ECOP{valid[CAPTURE_LAT-2]}};
+            always @(posedge clk)begin
+                if(late_v)begin x_wave_beat<=2'd3;x_wave_word<=late_word;end
+                else if(send)begin x_wave_beat<=mut_beat;x_wave_word<=cap_word;end
+                late_word<=cap_word;late_d<=cap_d;
+            end
+            for(genvar k=0;k<ECOP;k=k+1)begin:g_e
+                wire sk=vcap[k]&&!(MUT_BEAT==2&&cap_beat==3);
+                always @(posedge clk)
+                    if(late_v)x_wave[k*32+:32]<=late_d[k*32+:32];
+                    else if(sk)x_wave[k*32+:32]<=cap_d[k*32+:32];
+            end
+            // per-face beat-control copies (W, N, E, S, centre): same next-state / enable as x_wave_v / x_wave_beat
+            (* keep = "true", dont_touch = "true" *) reg [4:0] fv;
+            (* keep = "true", dont_touch = "true" *) reg [9:0] fb;
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)fv<=0; else fv<={5{send||late_v}};
+            always @(posedge clk)
+                if(late_v)fb<={5{2'd3}};
+                else if(send)fb<={5{mut_beat}};
+            assign x_face_v=fv;
+            assign x_face_beat=fb;
         end
     end endgenerate
 endmodule

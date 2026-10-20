@@ -16,7 +16,13 @@ module ot_hbm_hc_qhub_static #(
     parameter integer CHX = 0,       // HH-9 10-19: extra bank-chain edges (ot_hbm_hc_qcen_static CHX; 11 with the CPR ring)
     parameter integer RD_CAPTURE = 23,
     parameter integer GATHER_PHASE = 23,
-    parameter integer DONE_LAT = 19
+    parameter integer DONE_LAT = 19,
+    // QHUB-S1 10-19 (kit hbm_hcq_hub_s1, SAFE-DESIGN checklist): SAFE 1 = ot_hbm_hc_q_static SAFE (reset copies, bounds
+    // precompute, valid-only LG steering, ECOP capture-enable copies, per-face beat-control copies) + ot_hbm_hc_qcen_static
+    // SAFE (s_i pin register: +1 subtree edge -> root QCHX + 1; centre reset copies).  The bank beat control on each face
+    // (xb_v*, xb_beat*) and the centre's rx then leave their OWN kept copy (W, N, E, S, centre) instead of one register
+    // fanned to four faces.  Default 0 = unchanged.
+    parameter integer SAFE = 0
 )(
     input  wire           clk, rst_n,
     // ---- hc_<q> (ot_hbm_hc_q_static)
@@ -52,25 +58,32 @@ module ot_hbm_hc_qhub_static #(
     output wire           xb_v_n, xb_v_e, xb_v_s, output wire [1:0] xb_beat_n, xb_beat_e, xb_beat_s,
     output wire [255:0]   xb_d0, xb_d1, xb_d2, xb_d3, xb_d4, xb_d5, xb_d6, xb_d7
 );
-    wire xv; wire [9:0] xw; wire [2047:0] xd; wire [1:0] xbt; wire [7:0] rb;
+    wire xv; wire [9:0] xw; wire [2047:0] xd; wire [1:0] xbt; wire [7:0] rb; wire [4:0] xfv; wire [9:0] xfb;
     assign rstb_w = rb[0]; assign rstb_n = rb[3:1]; assign rstb_e = rb[4]; assign rstb_s = rb[7:5];
-    ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .DONE_LAT(DONE_LAT), .XW_BEATS(4)) u_q (
+    ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .DONE_LAT(DONE_LAT), .XW_BEATS(4), .SAFE(SAFE)) u_q (
         .clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .configured(configured), .lg_rq(lg_rq), .lg_wq(lg_wq), .lg_rr(lg_rr), .lg_w_done(lg_w_done),
-        .x_wave_v(xv), .x_wave_word(xw), .x_wave(xd), .x_wave_beat(xbt), .residual_done(residual_done),
+        .x_wave_v(xv), .x_wave_word(xw), .x_wave(xd), .x_wave_beat(xbt), .x_face_v(xfv), .x_face_beat(xfb),
+        .residual_done(residual_done),
         .gathered_mix_v(gathered_mix_v), .gathered_mix_row(gathered_mix_row), .gathered_mix_pos(gathered_mix_pos),
         .gathered_mix_data(gathered_mix_data), .gather_done(gather_done), .result_v(result_v),
         .result_position(result_position), .result(result), .program_active(program_active),
         .program_done(program_done), .fault(hcq_fault));
-    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX)) u_cen (
+    wire cxv = (SAFE != 0) ? xfv[4] : xv; wire [1:0] cxb = (SAFE != 0) ? xfb[9:8] : xbt;
+    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .SAFE(SAFE)) u_cen (
         .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
-        .x_v(xv), .x_beat(xbt), .x_word(xw), .s_i(s_i), .wfault_i({wf_s[2:0], wf_e, wf_n[2:0], wf_w}), .rst_b(rb),
+        .x_v(cxv), .x_beat(cxb), .x_word(xw), .s_i(s_i), .wfault_i({wf_s[2:0], wf_e, wf_n[2:0], wf_w}), .rst_b(rb),
         .bd_v(bd_v), .bd_ss(bd_ss), .bd_nv(bd_nv), .bd_wa(bd_wa), .bd_xa(bd_xa),
         .wc_w(wc_w), .wc_n(wc_n), .wc_e(wc_e), .wc_s(wc_s), .ps_v(ps_v), .ps(ps), .ps_f(ps_f), .fault(eng_fault));
-    assign xb_v = xv; assign xb_v_n = xv; assign xb_v_e = xv; assign xb_v_s = xv;
-    assign xb_beat = xbt; assign xb_beat_n = xbt; assign xb_beat_e = xbt; assign xb_beat_s = xbt;
+    if (SAFE != 0) begin : g_face
+        assign xb_v = xfv[0]; assign xb_v_n = xfv[1]; assign xb_v_e = xfv[2]; assign xb_v_s = xfv[3];
+        assign xb_beat = xfb[1:0]; assign xb_beat_n = xfb[3:2]; assign xb_beat_e = xfb[5:4]; assign xb_beat_s = xfb[7:6];
+    end else begin : g_one
+        assign xb_v = xv; assign xb_v_n = xv; assign xb_v_e = xv; assign xb_v_s = xv;
+        assign xb_beat = xbt; assign xb_beat_n = xbt; assign xb_beat_e = xbt; assign xb_beat_s = xbt;
+    end
     wire [8*256-1:0] xs;
     for (genvar k = 0; k < 8; k = k + 1) begin : g_xs
         for (genvar i = 0; i < 8; i = i + 1) begin : g_i

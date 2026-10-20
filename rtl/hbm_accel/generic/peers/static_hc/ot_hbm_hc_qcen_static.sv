@@ -11,13 +11,23 @@
 //            for bit the aligned 64-leaf subtree of the 256-leaf csum tree (as ot_hbm_hc_qeng_static).
 //   reset    ot_rst_relay, 9 regions: rst_b[k] -> bank k (each bank relays again), region 8 = this centre.
 //   fault    sticky: rx order, ingest (unsolicited / missing / wrong word / bad event), any bank's residual check.
-// MUT (bench): 3 = x landing one run off, 4 = tree level-1 pairs (0,2),(1,3).
+// MUT (bench): 3 = x landing one run off, 4 = tree level-1 pairs (0,2),(1,3),
+//   6 = (SAFE) s_i pin register without the leaf-valid / lane-fault delay (the tree adds the chunk sums one edge early).
+// SAFE (QHUB-S1 10-19, kit hbm_hcq_hub_s1; default 0 = unchanged bit for bit):
+//   s_i     the 2,049-b chunk-sum input lands in a PIN REGISTER (SAFE-DESIGN item 1; before, s_i drove the level-1 adders'
+//           decode logic straight from the port: 1,600 input endpoints > 3 levels).  +1 edge on the subtree: the leaf
+//           valid and the lane-fault pipe move one edge with it, every adder keeps LAT TLA (the P3 hub's LAT-6 level-1
+//           absorption measured -49.9 ps post-CTS and stalled CTS repair); ps_v / ps / ps_f leave ONE edge later than
+//           SAFE 0: the root takes it as QCHX + 1 (programme RAW0 + 1, bench HC_QSI=1).
+//   reset   the centre's own reset loads hang off u_rst_relay (RCN kept copies; the kit's reset_relay_split spreads them
+//           <= 32 a copy); the 8 bank resets keep their own relay u_rst (one copy per bank face).
 module ot_hbm_hc_qcen_static #(
     parameter integer K    = 20480,
     parameter integer DRLY = 1,
     parameter integer TLA  = 7,
     parameter integer CHX  = 0,     // HH-9 10-19: extra chain edges (bank chain pin registers, ot_hbm_hc_qeng_static CPR)
-    parameter integer MUT  = 0
+    parameter integer MUT  = 0,
+    parameter integer SAFE = 0
 )(
     input  wire           clk, rst_n,
     input  wire           d_v, d_ss, input wire [6:0] d_nv, input wire [9:0] d_wa, d_xa,
@@ -37,9 +47,17 @@ module ot_hbm_hc_qcen_static #(
     localparam integer SB = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR;
     initial if (K % 2048 != 0 || R > 16 || WPRQ > 32) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
 
-    wire [8:0] rn;
-    ot_rst_relay #(.REGIONS(9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
-    wire rc = rn[8];
+    localparam integer RCN = 32;
+    wire [8:0] rn; wire rc;
+    ot_rst_relay #(.REGIONS((SAFE != 0) ? 8 : 9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn[((SAFE != 0) ? 7 : 8):0]));
+    if (SAFE != 0) begin : g_rc
+        wire [RCN-1:0] rcn;
+        ot_rst_relay #(.REGIONS(RCN)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rcn));
+        assign rc = rcn[0];
+        assign rn[8] = 1'b1;
+    end else begin : g_rc0
+        assign rc = rn[8];
+    end
     assign rst_b = rn[7:0];
 
     // pin registers
@@ -117,15 +135,25 @@ module ot_hbm_hc_qcen_static #(
     end
     assign {bd_v, bd_ss, bd_nv, bd_wa, bd_xa} = dr[DRLY-1];
 
-    // 6-level subtree over the chunk sums of the task whose valid entered bank 0 SB + DRLY edges ago
-    localparam integer VD = SB + DRLY + CHX;
+    // SAFE: the chunk-sum pin register (no reset: data + the lane-fault bit, qualified by the leaf valid below)
+    wire [2048:0] s_l;
+    if (SAFE != 0) begin : g_sireg
+        reg [2048:0] s_q;
+        always @(posedge clk) s_q <= s_i;
+        assign s_l = s_q;
+    end else begin : g_sidir
+        assign s_l = s_i;
+    end
+    localparam integer SID = (SAFE != 0 && MUT != 6) ? 1 : 0;   // MUT 6: landing without the valid delay
+    // 6-level subtree over the chunk sums of the task whose valid entered bank 0 SB + DRLY (+ SID) edges ago
+    localparam integer VD = SB + DRLY + CHX + SID;
     reg [VD-1:0] vl;
     always @(posedge clk or negedge rc) if (!rc) vl <= 0; else vl <= {vl[VD-2:0], bd_v};
     wire leaf_v = vl[VD-1];
     wire [64*32-1:0] lv0;
     for (genvar i = 0; i < 64; i = i + 1) begin : g_perm
         localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) : i;
-        assign lv0[i*32 +: 32] = s_i[SRC*32 +: 32];
+        assign lv0[i*32 +: 32] = s_l[SRC*32 +: 32];
     end
     wire [63*32-1:0] nd; wire [62:0] nv, ne;
     for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
@@ -144,7 +172,7 @@ module ot_hbm_hc_qcen_static #(
     end
     localparam integer RT = 62;
     reg [LT*TLA-1:0] lfd;
-    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_i[W*32] && leaf_v};
+    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_l[W*32] && leaf_v};
     always @(posedge clk or negedge rc) begin
         if (!rc) begin ps_v <= 1'b0; ps_f <= 1'b0; fault <= 1'b0; end
         else begin

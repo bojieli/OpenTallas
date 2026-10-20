@@ -26,7 +26,9 @@ cpr=${HC_CPR:-1}
 # DRLY register beyond 1 delays the raw return by 2 edges (centre desc relay + bank 0 exit relay; root SYS_LAT0 2*QDRLY;
 # HBM-RTL5 u0: DRLY 2 -> RAW0 165 -> 167). HC_QDRLY in HC_XDEF is a root mutant and does NOT move RAW0. HC_RAW0 overrides.
 drly=$(sed -n 's/.*+define+HC_DRLY=\([0-9][0-9]*\).*/\1/p' <<<"${HC_XDEF:-}"); drly=${drly:-1}
-raw0=${HC_RAW0:-$((165 + 11 * cpr + 2 * (drly - 1)))}
+# QHUB-S1 10-19: +define+HC_QSI=1 in HC_XDEF (hub centre s_i pin register) delays the subtree, so the raw return, by 1
+qsi=$(sed -n 's/.*+define+HC_QSI=\([0-9][0-9]*\).*/\1/p' <<<"${HC_XDEF:-}"); qsi=${qsi:-0}
+raw0=${HC_RAW0:-$((165 + 11 * cpr + 2 * (drly - 1) + qsi))}
 python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case" --split --npos 1 --raw0 $raw0 --rs 104 > "$out/vectors.log"
 # HCRING 10-19: HC_JOINT_MAP=<dir with hc_joint_map.svh> wires the 8 ring links as the bank tile faces abut
 # (tools/ref_tile/specs_hbm_b_rtl2_1017/hc_ring_joints.py --svh); unset = name-wired (unchanged).

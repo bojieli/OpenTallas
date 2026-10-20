@@ -1,0 +1,13 @@
+# QHUB-S2 10-19 fail witness: HCQ_SAFE=1 MUTS=1 run_hc_q_static.sh (iverilog, ot-epyc5, claude/hcq-hub-s1-1019 @0abb3677c RTL; GSTR 40 run of cases 0 1 2 3 4 7, GSTR 43 run of 0 1 7)
+hcq_g43.log:TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=4 waves=160 mixes=72 stores=12
+hcq_g43.log:TB_HBM_HC_Q_STATIC FAIL MUT=1 XWB=4 errors=5120
+hcq_g43.log:TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=4 waves=160 mixes=72 stores=12
+hcq_g43.log:TB_HBM_HC_Q_STATIC FAIL MUT=1 XWB=4 errors=5120
+hcq_g43.log:HC_Q_STATIC BENCH PASS (cases: 0 1 7 SAFE=1 GSTR=43)
+hcq_g43.log:ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1677119-1792474053): exit 0
+hcq_s2.log:TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=4 waves=160 mixes=72 stores=12
+hcq_s2.log:TB_HBM_HC_Q_STATIC FAIL MUT=1 XWB=4 errors=5120
+hcq_s2.log:TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=4 waves=160 mixes=72 stores=12
+hcq_s2.log:TB_HBM_HC_Q_STATIC FAIL MUT=1 XWB=4 errors=5120
+hcq_s2.log:HC_Q_STATIC BENCH PASS (cases: 0 1 2 3 4 7 SAFE=1)
+hcq_s2.log:ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1611076-1792473956): exit 0
