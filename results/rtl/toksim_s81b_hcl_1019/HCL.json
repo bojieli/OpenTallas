@@ -1,0 +1,330 @@
+{
+ "cls": "HCL",
+ "written": "2026-10-19 21:45 PT",
+ "agent_branch": "claude/toksim-s81b-hcl-1019@PENDING",
+ "ops": [
+  {
+   "op": "attn.hc_pre",
+   "dag_cls": "su",
+   "n_crit": 40,
+   "old_cycles_per_instance": [
+    3.0,
+    5.9
+   ],
+   "cycles": 23,
+   "grade": "measured-release-RTL",
+   "definition": "HC load prefix of a norm site whose h arrives from the stage hop landing: HLOAD issue -> NORM go = tightest passing HLOAD->GAIN spacing (17) + GAIN->NORM spacing (<=6, floor of the sweep)",
+   "shape": "one beat leaf (64 lanes x 4 copies, 32 h rows) of the p4l slice; real L0/L2 1M chains, BEAT 37",
+   "bit_exact": true,
+   "golden": "tools/s81_slice/leaf_gold.py (hc_gate.chains_golden on su_cases_v2_ildr.pkl, real 1M L0 and L2 chains): h after each hc_post (via HSTORE+RDOUT, 4 copies x 64), y, FP8 q, BF16 xb, partial == golden; no fault",
+   "rtl": {
+    "module": "ot_s81sl_vp + ot_s81sl_vn + ot_s81sl_vq (one beat leaf of the p4l slice)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / vq 0f0aa0f0 (archive of 19bf4121e)",
+    "in_release_source": true
+   },
+   "bench": "results/rtl/toksim_s81b_hcl_1019/tb_toksim_hcl_beat.sv (= rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv@19bf4121e + timers + HLS/GS plusargs)@claude/toksim-s81b-hcl-1019",
+   "evidence": "results/rtl/toksim_s81b_hcl_1019/logs/job_hcl.otrun.log: 'L0 HLS=17 GS=20 ... PASS', 'L0 HLS=16 ... FAIL' (vp busy fault), 'L0 HLS=40 GS=6 ... PASS'; same on L2",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "cycles_compiled": 60,
+   "hload_cmd_to_last_hw": 21,
+   "gain_cmd_to_last_wl": 13,
+   "edges_owed": "compiler slots: dv_layer_compile.BEAT hload_slot 40 + gain_slot 20 = 60 edges at each lowered norm site (37 over the measured floor); tighten to 17/6 or price 60",
+   "note": "SU.json set attn.hc_pre release = 0 (NORM imm fused): that leaves out the HLOAD (16-step vp sequencer op, 21 edges to the last h row) + GAIN that precede NORM at a site where h lands from the hop. If the layer runs on the same slices as the previous layer's ffn hc_post (h stays in vn) the exposed prefix is GAIN->NORM only (<=6); the parent picks per layer. Upper bound if every layer starts from landed h: 40 x 23."
+  },
+  {
+   "op": "head.hc_pre",
+   "dag_cls": "head",
+   "n_crit": 1,
+   "old_cycles_per_instance": 8.9,
+   "cycles": 6,
+   "grade": "measured-release-RTL",
+   "definition": "GAIN -> NORM go spacing of the head norm (h already in vn after the last ffn hc_post: no HLOAD); hc_pre weights are the NORM imm",
+   "shape": "as attn.hc_pre (beat leaf, L0/L2 operands; head operands not run, timing static)",
+   "bit_exact": true,
+   "golden": "tools/s81_slice/leaf_gold.py (hc_gate.chains_golden on su_cases_v2_ildr.pkl, real 1M L0 and L2 chains): h after each hc_post (via HSTORE+RDOUT, 4 copies x 64), y, FP8 q, BF16 xb, partial == golden; no fault",
+   "rtl": {
+    "module": "ot_s81sl_vp + ot_s81sl_vn + ot_s81sl_vq (one beat leaf of the p4l slice)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / vq 0f0aa0f0 (archive of 19bf4121e)",
+    "in_release_source": true
+   },
+   "bench": "results/rtl/toksim_s81b_hcl_1019/tb_toksim_hcl_beat.sv (= rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv@19bf4121e + timers + HLS/GS plusargs)@claude/toksim-s81b-hcl-1019",
+   "evidence": "results/rtl/toksim_s81b_hcl_1019/logs/job_hcl.otrun.log: 'HLS=40 GS=6 ... PASS' (L0, L2)",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "none",
+   "note": "6 is the sweep floor (upper bound); GAIN can be issued once the POST sequencer op ends. The head gain ROM binding is absent on the release die (G9)."
+  },
+  {
+   "op": "head.norm.scale",
+   "dag_cls": "head",
+   "n_crit": 1,
+   "old_cycles_per_instance": 306.0,
+   "cycles": 438,
+   "grade": "measured-release-RTL",
+   "definition": "NORM go -> last BF16 xb beat: beat go->partial 112 + 16-slice xfin exchange (last partial -> rstd 234 + spread 13 = 247) + rstd->xb 79",
+   "shape": "D 5120 x 4 copies over 16 slices x 5 beats (the release head binding codex/s81-head-producer-1019: VN NORM -> XFIN NX -> VQ XB); operands L0/L2 layer chains",
+   "bit_exact": true,
+   "golden": "tools/s81_slice/leaf_gold.py (hc_gate.chains_golden on su_cases_v2_ildr.pkl, real 1M L0 and L2 chains): h after each hc_post (via HSTORE+RDOUT, 4 copies x 64), y, FP8 q, BF16 xb, partial == golden; no fault; xfin16 tb_s81dv_xfin16 (SU evidence)",
+   "rtl": {
+    "module": "ot_s81sl_vp + ot_s81sl_vn + ot_s81sl_vq (one beat leaf of the p4l slice)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / vq 0f0aa0f0 (archive of 19bf4121e)",
+    "in_release_source": true
+   },
+   "bench": "results/rtl/toksim_s81b_hcl_1019/tb_toksim_hcl_beat.sv (= rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv@19bf4121e + timers + HLS/GS plusargs)@claude/toksim-s81b-hcl-1019 (112, 79) + tools/s81_dv/norm16_bench.sh xfin@19bf4121e (247, TOKSIM-S81/SU)",
+   "evidence": "results/rtl/toksim_s81b_hcl_1019/logs/job_hcl.otrun.log: SLBEAT go_to_partial=112/112 rstd_to_xb=79/79 PASS (L0, L2); xfin 247 = ot-epyc7:/srv/opentallas-scratch/claude/toksim-s81-su/out_slice/xfin16.txt",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "tail_priced": 0,
+   "edges_owed": "NORMR +3 (not in release, SU note)",
+   "note": "Same composition as ffn.norm.scale 438 (zz_curation). Head operands not simulated (static timing); transport to the off-die head is inside lm_head go. head.norm.sumsq / rsqrt stay 0 (fused)."
+  },
+  {
+   "op": "attn.hc.sinkhorn",
+   "dag_cls": "su",
+   "n_crit": 0,
+   "old_cycles_per_instance": 637.2,
+   "cycles": 748,
+   "grade": "measured-release-RTL",
+   "definition": "HC COEF chain on the G-unit: last HP root beat in -> first coefficient CTL row out at the stop pins (rsqrt + sigmoid/exp pre_post + Sinkhorn-20; 760 at the unit pins)",
+   "shape": "production HC: D 5120, 4 copies, 24 mixes, 25 x 16 x 2 x 6 HP root words; 8 golden cases (random BF16 residual + fn, gunit_vectors.py seed 1017)",
+   "bit_exact": true,
+   "golden": "tools/hdc_golden_v41 Model.hc_mixes (chunk8: full-K csum, rsqrt, sigmoid, exp, Sinkhorn) -> 24 coefficients bit-exact; mutants 1/4/5/6/7/8/9 FAIL",
+   "rtl": {
+    "module": "dsdv_gunit (l0..l5, tail, pass)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "l5 b21f0a4c / l0 e2ea49d8 / gunit fd4692ee",
+    "in_release_source": true
+   },
+   "bench": "rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh@19bf4121e",
+   "evidence": "results/rtl/toksim_s81b_hcl_1019/logs/gunit.txt: GUNIT PASS cases=8 ... hc_lat=748; GUNIT_GATE PASS",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "S81-SAFE-FIX/GUNIT claude/s81sf-gunit-1019@afa31fbae (not in release): +55 -> 803 (815 at unit pins)",
+   "note": "OFF the critical path in the DAG (slack). Replaces rsqrt + pre_post + sinkhorn (old 197.3 + 212.3 + 637.2 = 1,046.8) -> 748; see the zero records. sumsq / fn (HP partial production in the slices) not measured."
+  },
+  {
+   "op": "attn.hc.rsqrt",
+   "dag_cls": "su",
+   "n_crit": 0,
+   "old_cycles_per_instance": 197.3,
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "inside the G-unit HC chain measured as attn.hc.sinkhorn (748)",
+   "bit_exact": true,
+   "golden": "as hc.sinkhorn",
+   "rtl": {
+    "module": "dsdv_gunit",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "in_release_source": true
+   },
+   "bench": "run_gunit_bench.sh@19bf4121e",
+   "evidence": "logs/gunit.txt",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "as hc.sinkhorn"
+  },
+  {
+   "op": "attn.hc.pre_post",
+   "dag_cls": "su",
+   "n_crit": 0,
+   "old_cycles_per_instance": 212.3,
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "inside the G-unit HC chain measured as attn.hc.sinkhorn (748)",
+   "bit_exact": true,
+   "golden": "as hc.sinkhorn",
+   "rtl": {
+    "module": "dsdv_gunit",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "in_release_source": true
+   },
+   "bench": "run_gunit_bench.sh@19bf4121e",
+   "evidence": "logs/gunit.txt",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "as hc.sinkhorn"
+  },
+  {
+   "op": "ffn.hc.sinkhorn",
+   "dag_cls": "su",
+   "n_crit": 0,
+   "old_cycles_per_instance": 637.2,
+   "cycles": 748,
+   "grade": "measured-release-RTL",
+   "definition": "HC COEF chain on the G-unit: last HP root beat in -> first coefficient CTL row out at the stop pins (rsqrt + sigmoid/exp pre_post + Sinkhorn-20; 760 at the unit pins)",
+   "shape": "production HC: D 5120, 4 copies, 24 mixes, 25 x 16 x 2 x 6 HP root words; 8 golden cases (random BF16 residual + fn, gunit_vectors.py seed 1017)",
+   "bit_exact": true,
+   "golden": "tools/hdc_golden_v41 Model.hc_mixes (chunk8: full-K csum, rsqrt, sigmoid, exp, Sinkhorn) -> 24 coefficients bit-exact; mutants 1/4/5/6/7/8/9 FAIL",
+   "rtl": {
+    "module": "dsdv_gunit (l0..l5, tail, pass)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "l5 b21f0a4c / l0 e2ea49d8 / gunit fd4692ee",
+    "in_release_source": true
+   },
+   "bench": "rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh@19bf4121e",
+   "evidence": "results/rtl/toksim_s81b_hcl_1019/logs/gunit.txt: GUNIT PASS cases=8 ... hc_lat=748; GUNIT_GATE PASS",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "S81-SAFE-FIX/GUNIT claude/s81sf-gunit-1019@afa31fbae (not in release): +55 -> 803 (815 at unit pins)",
+   "note": "OFF the critical path in the DAG (slack). Replaces rsqrt + pre_post + sinkhorn (old 197.3 + 212.3 + 637.2 = 1,046.8) -> 748; see the zero records. sumsq / fn (HP partial production in the slices) not measured."
+  },
+  {
+   "op": "ffn.hc.rsqrt",
+   "dag_cls": "su",
+   "n_crit": 0,
+   "old_cycles_per_instance": 197.3,
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "inside the G-unit HC chain measured as ffn.hc.sinkhorn (748)",
+   "bit_exact": true,
+   "golden": "as hc.sinkhorn",
+   "rtl": {
+    "module": "dsdv_gunit",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "in_release_source": true
+   },
+   "bench": "run_gunit_bench.sh@19bf4121e",
+   "evidence": "logs/gunit.txt",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "as hc.sinkhorn"
+  },
+  {
+   "op": "ffn.hc.pre_post",
+   "dag_cls": "su",
+   "n_crit": 0,
+   "old_cycles_per_instance": 212.3,
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "inside the G-unit HC chain measured as ffn.hc.sinkhorn (748)",
+   "bit_exact": true,
+   "golden": "as hc.sinkhorn",
+   "rtl": {
+    "module": "dsdv_gunit",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "in_release_source": true
+   },
+   "bench": "run_gunit_bench.sh@19bf4121e",
+   "evidence": "logs/gunit.txt",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "as hc.sinkhorn"
+  },
+  {
+   "op": "hc.h_store",
+   "dag_cls": "hc",
+   "n_crit": null,
+   "old_cycles_per_instance": null,
+   "cycles": 24,
+   "grade": "measured-release-RTL",
+   "definition": "HSTORE cmd -> last leaf-store write (16 half rows)",
+   "shape": "one beat leaf, L0/L2",
+   "bit_exact": true,
+   "golden": "tools/s81_slice/leaf_gold.py (hc_gate.chains_golden on su_cases_v2_ildr.pkl, real 1M L0 and L2 chains): h after each hc_post (via HSTORE+RDOUT, 4 copies x 64), y, FP8 q, BF16 xb, partial == golden; no fault",
+   "rtl": {
+    "module": "ot_s81sl_vp + ot_s81sl_vn + ot_s81sl_vq (one beat leaf of the p4l slice)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / vq 0f0aa0f0 (archive of 19bf4121e)",
+    "in_release_source": true
+   },
+   "bench": "results/rtl/toksim_s81b_hcl_1019/tb_toksim_hcl_beat.sv (= rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv@19bf4121e + timers + HLS/GS plusargs)@claude/toksim-s81b-hcl-1019",
+   "evidence": "results/rtl/toksim_s81b_hcl_1019/logs/job_hcl.otrun.log HCLBEAT lines",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "none",
+   "note": "no DAG node of its own (stage hand-off sits inside the xdie hop terms); informational, matches nothing in compose"
+  },
+  {
+   "op": "hc.h_rdout",
+   "dag_cls": "hc",
+   "n_crit": null,
+   "old_cycles_per_instance": null,
+   "cycles": 21,
+   "grade": "measured-release-RTL",
+   "definition": "RDOUT 16 row pairs cmd -> last lo row",
+   "shape": "one beat leaf, L0/L2",
+   "bit_exact": true,
+   "golden": "tools/s81_slice/leaf_gold.py (hc_gate.chains_golden on su_cases_v2_ildr.pkl, real 1M L0 and L2 chains): h after each hc_post (via HSTORE+RDOUT, 4 copies x 64), y, FP8 q, BF16 xb, partial == golden; no fault",
+   "rtl": {
+    "module": "ot_s81sl_vp + ot_s81sl_vn + ot_s81sl_vq (one beat leaf of the p4l slice)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / vq 0f0aa0f0 (archive of 19bf4121e)",
+    "in_release_source": true
+   },
+   "bench": "results/rtl/toksim_s81b_hcl_1019/tb_toksim_hcl_beat.sv (= rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv@19bf4121e + timers + HLS/GS plusargs)@claude/toksim-s81b-hcl-1019",
+   "evidence": "results/rtl/toksim_s81b_hcl_1019/logs/job_hcl.otrun.log HCLBEAT lines",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "none",
+   "note": "no DAG node of its own (stage hand-off sits inside the xdie hop terms); informational, matches nothing in compose"
+  },
+  {
+   "op": "hc.h_load",
+   "dag_cls": "hc",
+   "n_crit": null,
+   "old_cycles_per_instance": null,
+   "cycles": 21,
+   "grade": "measured-release-RTL",
+   "definition": "HLOAD cmd -> last h half row into vn",
+   "shape": "one beat leaf, L0/L2",
+   "bit_exact": true,
+   "golden": "tools/s81_slice/leaf_gold.py (hc_gate.chains_golden on su_cases_v2_ildr.pkl, real 1M L0 and L2 chains): h after each hc_post (via HSTORE+RDOUT, 4 copies x 64), y, FP8 q, BF16 xb, partial == golden; no fault",
+   "rtl": {
+    "module": "ot_s81sl_vp + ot_s81sl_vn + ot_s81sl_vq (one beat leaf of the p4l slice)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / vq 0f0aa0f0 (archive of 19bf4121e)",
+    "in_release_source": true
+   },
+   "bench": "results/rtl/toksim_s81b_hcl_1019/tb_toksim_hcl_beat.sv (= rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_beat.sv@19bf4121e + timers + HLS/GS plusargs)@claude/toksim-s81b-hcl-1019",
+   "evidence": "results/rtl/toksim_s81b_hcl_1019/logs/job_hcl.otrun.log HCLBEAT lines",
+   "job": "ot-run ot-epyc9 oth-ubuntu-699183-1792462770 (job_hcl.sh, Verilator 5.050)",
+   "edges_owed": "none",
+   "note": "no DAG node of its own (stage hand-off sits inside the xdie hop terms); informational, matches nothing in compose"
+  },
+  {
+   "op": "embed",
+   "dag_cls": "embed",
+   "n_crit": 1,
+   "old_cycles_per_instance": 1074.3,
+   "cycles": 323,
+   "tail_priced": 751.3,
+   "grade": "measured-newest-element-RTL",
+   "definition": "token id -> 320 BF16 words of the row out of ot_dsrom_embed_row_reader on the ROM macro (start -> last word); the rest of the node (wire 80, TP4 bcast 442 old collective, SU expand 97 old, FEC leg 100, crossings 32.3) kept as tail",
+   "shape": "1M pos 1,048,575, token 16754, real checkpoint row (sha 27ae17d6)",
+   "bit_exact": true,
+   "golden": "row sha256 27ae17d6..., 320/320 words, 0 errors",
+   "rtl": {
+    "module": "ot_dsrom_embed_row_reader + ot_rom_8192x274_m8 model",
+    "source": "824ee5a9b (sha256 8b6249e4 / 47659841 / tb 3857150e = 19bf4121e, blob 661c318a)",
+    "blob": "661c318a",
+    "in_release_source": true
+   },
+   "bench": "rtl/test/dsrom_sys/tb_dsrom_1m_embed.sv (blob bc8bec99, = release)",
+   "evidence": "origin/main results/rtl/dsrom_1m_allmeasured_20261004/embed.json rom: start=9 last=331 cycles 323 PASS",
+   "job": "none (collected: blob-identical to release, not rerun)",
+   "edges_owed": "none",
+   "note": "Executing files are byte-identical to the release source, but mu4c die.v has no embedding instance (G9), hence newest-element. The 751.3 tail is NOT measured on release (tail_priced relabels old-RTL 539 + PHY 100 + priced 112 as priced; measured share unchanged)."
+  },
+  {
+   "op": "head.argmax_merge",
+   "dag_cls": "coll",
+   "n_crit": 1,
+   "old_cycles_per_instance": 374.9,
+   "cycles": null,
+   "grade": "pending",
+   "definition": "coll node: compose replaces it with the base xdie terms (119 measured-current + 453 modelled-PHY + 134 priced on-die leg)",
+   "note": "Not an HCL measurement and not foldable from an element record: toksim_s81_compose treats coll nodes ONLY through the base xdie terms (head.xdie.head.argmax_merge = 119 measured-current-RTL tb_xdie_s81_2 + 453 modelled-PHY + 134 priced on-die leg). No release RTL executes the merge itself (mu4c die.v has no head instance, G9); the on-die merge compare chain (6 cyc, HEADB 641239174) is inside head.argmax. The only unmeasured on-chip part is the 134 on-die leg (67/end, farthest slice <-> end slice), which is the generic leg of every collective: TOKSIM-S81B/LEG (leg_s81 bench, scratch/toksim-s81b/leg/out_l1 PASS 6320 beats) owns it; nothing launched here to avoid duplicating LEG.",
+   "covered_by": "XDIE (119, measured) + LEG (134 on-die leg) + PHY (453, modelled)"
+  },
+  {
+   "op": "mtp.draft_blocks (D0/D1/D2 DSpark mtp.0..2, MC.draft, accept/seed)",
+   "dag_cls": "mtp",
+   "n_crit": null,
+   "old_cycles_per_instance": {
+    "D0": 37341.1,
+    "D1": 33871.1,
+    "D2": 33870.8,
+    "MC.draft": 15967.5,
+    "accept": 3875.5
+   },
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "ds_rom_mtp.json draft groups (draft.die base term 133,819.9 old-RTL)",
+   "note": "Checked composition (results/rtl/toksim_s81b_hcl_1019/draft_map.json, tools/s81_dv/toksim_hcl_draft_map.py): the 192 D0/D1/D2 draft nodes reuse the layer (cls, op) names but their old cycles come from the DP1-EP5 draft decomposition (e.g. wo_a 6170 vs layer 2222, hc_pre 293.3 vs 3.0/5.9); 0 of 192 match a layer node, so compose keeps all of them. 97,932.6 of 105,083.0 critical draft cycles have a layer-equivalent op; HCL-owned: attn.hc_pre x3 293.3 -> 23 (879.9 -> 69). Applying release per-op records needs the parent's placement ruling (draft blocks on p4l layer-class dies; mtp.* weights bound on no S81 die, TOK.DS.LAYER.6) plus re-solving the draft hops/collectives; a run would execute the same release RTL at the same layer shape (cycles static) and add only mtp.* weight bit-exactness, so none was launched. Kept measured-old-RTL.",
+   "draft_map": "results/rtl/toksim_s81b_hcl_1019/draft_map.json"
+  }
+ ]
+}

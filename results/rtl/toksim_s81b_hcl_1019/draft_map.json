@@ -1,0 +1,2776 @@
+{
+ "schema": "opentallas.toksim_s81b.hcl_draft_map.v1",
+ "dag": "/home/ubuntu/wt/toksim-s81/results/arch/token_path_20261009/ds_rom_mtp.json",
+ "verdict": "composable only as a placement mapping (draft blocks on p4l layer-class dies); no draft node old cycles match a layer node, so compose keeps them; a run would execute the same release RTL at the same layer shape (cycles static) and add only mtp.* weight bit-exactness: not launched",
+ "totals": {
+  "critical_old": 105083.0,
+  "critical_with_layer_equivalent": 97932.6,
+  "critical_hcl_old": 879.9,
+  "critical_hcl_release": 69.0
+ },
+ "nodes": [
+  {
+   "node": "mtp.0.hop_in",
+   "cls": "hop",
+   "op": "hop_in",
+   "critical": true,
+   "old_draft_cycles": 3673.3,
+   "layer_equivalent": null,
+   "layer_old_cycles": [],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "no layer node"
+  },
+  {
+   "node": "mtp.0.attn.hc_pre",
+   "cls": "su",
+   "op": "attn.hc_pre",
+   "critical": true,
+   "old_draft_cycles": 293.3,
+   "layer_equivalent": "su/attn.hc_pre",
+   "layer_old_cycles": [
+    3.0,
+    5.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": 23,
+   "release_record": "HCL attn.hc_pre"
+  },
+  {
+   "node": "mtp.0.attn.norm.sumsq",
+   "cls": "su",
+   "op": "attn.norm.sumsq",
+   "critical": true,
+   "old_draft_cycles": 100.0,
+   "layer_equivalent": "su/attn.norm.sumsq",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.norm.rsqrt",
+   "cls": "su",
+   "op": "attn.norm.rsqrt",
+   "critical": true,
+   "old_draft_cycles": 193.3,
+   "layer_equivalent": "su/attn.norm.rsqrt",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.norm.scale",
+   "cls": "su",
+   "op": "attn.norm.scale",
+   "critical": true,
+   "old_draft_cycles": 76.0,
+   "layer_equivalent": "su/attn.norm.scale",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.quant",
+   "cls": "su",
+   "op": "attn.quant",
+   "critical": true,
+   "old_draft_cycles": 1133.3,
+   "layer_equivalent": "su/attn.quant",
+   "layer_old_cycles": [
+    324.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.a_proj",
+   "cls": "field",
+   "op": "attn.a_proj",
+   "critical": true,
+   "old_draft_cycles": 1249.0,
+   "layer_equivalent": "field/attn.a_proj",
+   "layer_old_cycles": [
+    628.0,
+    1858.1,
+    1859.2,
+    3090.3
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.a_allgather",
+   "cls": "coll",
+   "op": "attn.a_allgather",
+   "critical": true,
+   "old_draft_cycles": 548.3,
+   "layer_equivalent": "coll/attn.a_allgather",
+   "layer_old_cycles": [
+    434.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.q_norm.sumsq",
+   "cls": "su",
+   "op": "attn.q_norm.sumsq",
+   "critical": true,
+   "old_draft_cycles": 226.7,
+   "layer_equivalent": "su/attn.q_norm.sumsq",
+   "layer_old_cycles": [
+    3.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.q_norm.rsqrt",
+   "cls": "su",
+   "op": "attn.q_norm.rsqrt",
+   "critical": true,
+   "old_draft_cycles": 193.3,
+   "layer_equivalent": "su/attn.q_norm.rsqrt",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.q_norm.scale",
+   "cls": "su",
+   "op": "attn.q_norm.scale",
+   "critical": true,
+   "old_draft_cycles": 72.0,
+   "layer_equivalent": "su/attn.q_norm.scale",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.q_quant",
+   "cls": "su",
+   "op": "attn.q_quant",
+   "critical": true,
+   "old_draft_cycles": 333.3,
+   "layer_equivalent": "su/attn.q_quant",
+   "layer_old_cycles": [
+    288.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.wq_b",
+   "cls": "field",
+   "op": "attn.wq_b",
+   "critical": true,
+   "old_draft_cycles": 884.0,
+   "layer_equivalent": "field/attn.wq_b",
+   "layer_old_cycles": [
+    1039.9,
+    1559.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.q_rope",
+   "cls": "su",
+   "op": "attn.q_rope",
+   "critical": true,
+   "old_draft_cycles": 136.0,
+   "layer_equivalent": "su/attn.q_rope",
+   "layer_old_cycles": [
+    117.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.scores.r0",
+   "cls": "hbm",
+   "op": "attn.scores.r0",
+   "critical": true,
+   "old_draft_cycles": 105.0,
+   "layer_equivalent": "hbm/attn.scores",
+   "layer_old_cycles": [
+    49.9,
+    103.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.max.r0",
+   "cls": "su",
+   "op": "attn.max.r0",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.exp.r0",
+   "cls": "su",
+   "op": "attn.exp.r0",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.den.r0",
+   "cls": "su",
+   "op": "attn.den.r0",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.sink.r0",
+   "cls": "su",
+   "op": "attn.sink.r0",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.normalize.r0",
+   "cls": "su",
+   "op": "attn.normalize.r0",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.max.r1",
+   "cls": "su",
+   "op": "attn.max.r1",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.exp.r1",
+   "cls": "su",
+   "op": "attn.exp.r1",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.den.r1",
+   "cls": "su",
+   "op": "attn.den.r1",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.sink.r1",
+   "cls": "su",
+   "op": "attn.sink.r1",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.normalize.r1",
+   "cls": "su",
+   "op": "attn.normalize.r1",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.max.r2",
+   "cls": "su",
+   "op": "attn.max.r2",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.exp.r2",
+   "cls": "su",
+   "op": "attn.exp.r2",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.den.r2",
+   "cls": "su",
+   "op": "attn.den.r2",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.sink.r2",
+   "cls": "su",
+   "op": "attn.sink.r2",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.normalize.r2",
+   "cls": "su",
+   "op": "attn.normalize.r2",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.max.r3",
+   "cls": "su",
+   "op": "attn.max.r3",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.exp.r3",
+   "cls": "su",
+   "op": "attn.exp.r3",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.den.r3",
+   "cls": "su",
+   "op": "attn.den.r3",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.sink.r3",
+   "cls": "su",
+   "op": "attn.sink.r3",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.normalize.r3",
+   "cls": "su",
+   "op": "attn.normalize.r3",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.max.r4",
+   "cls": "su",
+   "op": "attn.max.r4",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.exp.r4",
+   "cls": "su",
+   "op": "attn.exp.r4",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.den.r4",
+   "cls": "su",
+   "op": "attn.den.r4",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.sink.r4",
+   "cls": "su",
+   "op": "attn.sink.r4",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.normalize.r4",
+   "cls": "su",
+   "op": "attn.normalize.r4",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.wo_a",
+   "cls": "field",
+   "op": "attn.wo_a",
+   "critical": true,
+   "old_draft_cycles": 6170.0,
+   "layer_equivalent": "field/attn.wo_a",
+   "layer_old_cycles": [
+    2222.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.z_quant",
+   "cls": "su",
+   "op": "attn.z_quant",
+   "critical": true,
+   "old_draft_cycles": 493.3,
+   "layer_equivalent": "su/attn.z_quant",
+   "layer_old_cycles": [
+    80.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.wo_b",
+   "cls": "field",
+   "op": "attn.wo_b",
+   "critical": true,
+   "old_draft_cycles": 913.0,
+   "layer_equivalent": "field/attn.wo_b",
+   "layer_old_cycles": [
+    548.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.out_allreduce",
+   "cls": "coll",
+   "op": "attn.out_allreduce",
+   "critical": true,
+   "old_draft_cycles": 3154.9,
+   "layer_equivalent": "coll/attn.out_allreduce",
+   "layer_old_cycles": [
+    827.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.attn.hc_post",
+   "cls": "su",
+   "op": "attn.hc_post",
+   "critical": true,
+   "old_draft_cycles": 641.3,
+   "layer_equivalent": "su/attn.hc_post",
+   "layer_old_cycles": [
+    112.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.hc_pre",
+   "cls": "su",
+   "op": "ffn.hc_pre",
+   "critical": true,
+   "old_draft_cycles": 293.3,
+   "layer_equivalent": "su/ffn.hc_pre",
+   "layer_old_cycles": [
+    8.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.norm.sumsq",
+   "cls": "su",
+   "op": "ffn.norm.sumsq",
+   "critical": true,
+   "old_draft_cycles": 100.0,
+   "layer_equivalent": "su/ffn.norm.sumsq",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.norm.rsqrt",
+   "cls": "su",
+   "op": "ffn.norm.rsqrt",
+   "critical": true,
+   "old_draft_cycles": 193.3,
+   "layer_equivalent": "su/ffn.norm.rsqrt",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.norm.scale",
+   "cls": "su",
+   "op": "ffn.norm.scale",
+   "critical": true,
+   "old_draft_cycles": 76.0,
+   "layer_equivalent": "su/ffn.norm.scale",
+   "layer_old_cycles": [
+    306.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.router",
+   "cls": "field",
+   "op": "ffn.router",
+   "critical": true,
+   "old_draft_cycles": 1619.0,
+   "layer_equivalent": "field/ffn.router",
+   "layer_old_cycles": [
+    977.2
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.softplus_sqrt",
+   "cls": "su",
+   "op": "ffn.softplus_sqrt",
+   "critical": true,
+   "old_draft_cycles": 609.3,
+   "layer_equivalent": "su/ffn.softplus_sqrt",
+   "layer_old_cycles": [
+    185.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.router_allgather",
+   "cls": "coll",
+   "op": "ffn.router_allgather",
+   "critical": true,
+   "old_draft_cycles": 480.3,
+   "layer_equivalent": "coll/ffn.router_allgather",
+   "layer_old_cycles": [
+    421.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.bias",
+   "cls": "su",
+   "op": "ffn.bias",
+   "critical": true,
+   "old_draft_cycles": 136.0,
+   "layer_equivalent": "su/ffn.bias",
+   "layer_old_cycles": [
+    117.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.top6",
+   "cls": "select",
+   "op": "ffn.top6",
+   "critical": true,
+   "old_draft_cycles": 0.0,
+   "layer_equivalent": "select/ffn.top6",
+   "layer_old_cycles": [
+    8.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.top6_order",
+   "cls": "select",
+   "op": "ffn.top6_order",
+   "critical": true,
+   "old_draft_cycles": 690.0,
+   "layer_equivalent": "select/ffn.top6_order",
+   "layer_old_cycles": [
+    44.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.ids_hop.r0",
+   "cls": "hop",
+   "op": "ffn.ids_hop.r0",
+   "critical": true,
+   "old_draft_cycles": 472.3,
+   "layer_equivalent": null,
+   "layer_old_cycles": [],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "no layer node"
+  },
+  {
+   "node": "mtp.0.ffn.experts_gu.r0",
+   "cls": "field",
+   "op": "ffn.experts_gu.r0",
+   "critical": true,
+   "old_draft_cycles": 1429.0,
+   "layer_equivalent": "field/ffn.experts_gu",
+   "layer_old_cycles": [
+    1238.9,
+    1239.8,
+    1852.8,
+    1856.9,
+    1857.9,
+    2470.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.swiglu.r0",
+   "cls": "su",
+   "op": "ffn.swiglu.r0",
+   "critical": true,
+   "old_draft_cycles": 293.3,
+   "layer_equivalent": "su/ffn.swiglu",
+   "layer_old_cycles": [
+    3.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.route_w.r0",
+   "cls": "su",
+   "op": "ffn.route_w.r0",
+   "critical": true,
+   "old_draft_cycles": 133.3,
+   "layer_equivalent": "su/ffn.route_w",
+   "layer_old_cycles": [
+    5.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.quant2.r0",
+   "cls": "su",
+   "op": "ffn.quant2.r0",
+   "critical": true,
+   "old_draft_cycles": 426.7,
+   "layer_equivalent": "su/ffn.quant2",
+   "layer_old_cycles": [
+    191.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.down.r0",
+   "cls": "field",
+   "op": "ffn.down.r0",
+   "critical": true,
+   "old_draft_cycles": 1099.0,
+   "layer_equivalent": "field/ffn.down",
+   "layer_old_cycles": [
+    1516.3,
+    1517.7,
+    1540.7,
+    2028.2,
+    2050.7,
+    3071.5
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.ret_hop.r0",
+   "cls": "hop",
+   "op": "ffn.ret_hop.r0",
+   "critical": true,
+   "old_draft_cycles": 551.3,
+   "layer_equivalent": null,
+   "layer_old_cycles": [],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "no layer node"
+  },
+  {
+   "node": "mtp.0.ffn.combine_allreduce",
+   "cls": "coll",
+   "op": "ffn.combine_allreduce",
+   "critical": true,
+   "old_draft_cycles": 3154.9,
+   "layer_equivalent": "coll/ffn.combine_allreduce",
+   "layer_old_cycles": [
+    827.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.0.ffn.hc_post",
+   "cls": "su",
+   "op": "ffn.hc_post",
+   "critical": true,
+   "old_draft_cycles": 641.3,
+   "layer_equivalent": "su/ffn.hc_post",
+   "layer_old_cycles": [
+    112.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.hop_in",
+   "cls": "hop",
+   "op": "hop_in",
+   "critical": true,
+   "old_draft_cycles": 203.3,
+   "layer_equivalent": null,
+   "layer_old_cycles": [],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "no layer node"
+  },
+  {
+   "node": "mtp.1.attn.hc_pre",
+   "cls": "su",
+   "op": "attn.hc_pre",
+   "critical": true,
+   "old_draft_cycles": 293.3,
+   "layer_equivalent": "su/attn.hc_pre",
+   "layer_old_cycles": [
+    3.0,
+    5.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": 23,
+   "release_record": "HCL attn.hc_pre"
+  },
+  {
+   "node": "mtp.1.attn.norm.sumsq",
+   "cls": "su",
+   "op": "attn.norm.sumsq",
+   "critical": true,
+   "old_draft_cycles": 100.0,
+   "layer_equivalent": "su/attn.norm.sumsq",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.norm.rsqrt",
+   "cls": "su",
+   "op": "attn.norm.rsqrt",
+   "critical": true,
+   "old_draft_cycles": 193.3,
+   "layer_equivalent": "su/attn.norm.rsqrt",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.norm.scale",
+   "cls": "su",
+   "op": "attn.norm.scale",
+   "critical": true,
+   "old_draft_cycles": 76.0,
+   "layer_equivalent": "su/attn.norm.scale",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.quant",
+   "cls": "su",
+   "op": "attn.quant",
+   "critical": true,
+   "old_draft_cycles": 1133.3,
+   "layer_equivalent": "su/attn.quant",
+   "layer_old_cycles": [
+    324.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.a_proj",
+   "cls": "field",
+   "op": "attn.a_proj",
+   "critical": true,
+   "old_draft_cycles": 1249.0,
+   "layer_equivalent": "field/attn.a_proj",
+   "layer_old_cycles": [
+    628.0,
+    1858.1,
+    1859.2,
+    3090.3
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.a_allgather",
+   "cls": "coll",
+   "op": "attn.a_allgather",
+   "critical": true,
+   "old_draft_cycles": 548.3,
+   "layer_equivalent": "coll/attn.a_allgather",
+   "layer_old_cycles": [
+    434.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.q_norm.sumsq",
+   "cls": "su",
+   "op": "attn.q_norm.sumsq",
+   "critical": true,
+   "old_draft_cycles": 226.7,
+   "layer_equivalent": "su/attn.q_norm.sumsq",
+   "layer_old_cycles": [
+    3.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.q_norm.rsqrt",
+   "cls": "su",
+   "op": "attn.q_norm.rsqrt",
+   "critical": true,
+   "old_draft_cycles": 193.3,
+   "layer_equivalent": "su/attn.q_norm.rsqrt",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.q_norm.scale",
+   "cls": "su",
+   "op": "attn.q_norm.scale",
+   "critical": true,
+   "old_draft_cycles": 72.0,
+   "layer_equivalent": "su/attn.q_norm.scale",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.q_quant",
+   "cls": "su",
+   "op": "attn.q_quant",
+   "critical": true,
+   "old_draft_cycles": 333.3,
+   "layer_equivalent": "su/attn.q_quant",
+   "layer_old_cycles": [
+    288.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.wq_b",
+   "cls": "field",
+   "op": "attn.wq_b",
+   "critical": true,
+   "old_draft_cycles": 884.0,
+   "layer_equivalent": "field/attn.wq_b",
+   "layer_old_cycles": [
+    1039.9,
+    1559.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.q_rope",
+   "cls": "su",
+   "op": "attn.q_rope",
+   "critical": true,
+   "old_draft_cycles": 136.0,
+   "layer_equivalent": "su/attn.q_rope",
+   "layer_old_cycles": [
+    117.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.scores.r0",
+   "cls": "hbm",
+   "op": "attn.scores.r0",
+   "critical": true,
+   "old_draft_cycles": 105.0,
+   "layer_equivalent": "hbm/attn.scores",
+   "layer_old_cycles": [
+    49.9,
+    103.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.max.r0",
+   "cls": "su",
+   "op": "attn.max.r0",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.exp.r0",
+   "cls": "su",
+   "op": "attn.exp.r0",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.den.r0",
+   "cls": "su",
+   "op": "attn.den.r0",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.sink.r0",
+   "cls": "su",
+   "op": "attn.sink.r0",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.normalize.r0",
+   "cls": "su",
+   "op": "attn.normalize.r0",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.max.r1",
+   "cls": "su",
+   "op": "attn.max.r1",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.exp.r1",
+   "cls": "su",
+   "op": "attn.exp.r1",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.den.r1",
+   "cls": "su",
+   "op": "attn.den.r1",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.sink.r1",
+   "cls": "su",
+   "op": "attn.sink.r1",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.normalize.r1",
+   "cls": "su",
+   "op": "attn.normalize.r1",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.max.r2",
+   "cls": "su",
+   "op": "attn.max.r2",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.exp.r2",
+   "cls": "su",
+   "op": "attn.exp.r2",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.den.r2",
+   "cls": "su",
+   "op": "attn.den.r2",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.sink.r2",
+   "cls": "su",
+   "op": "attn.sink.r2",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.normalize.r2",
+   "cls": "su",
+   "op": "attn.normalize.r2",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.max.r3",
+   "cls": "su",
+   "op": "attn.max.r3",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.exp.r3",
+   "cls": "su",
+   "op": "attn.exp.r3",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.den.r3",
+   "cls": "su",
+   "op": "attn.den.r3",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.sink.r3",
+   "cls": "su",
+   "op": "attn.sink.r3",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.normalize.r3",
+   "cls": "su",
+   "op": "attn.normalize.r3",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.max.r4",
+   "cls": "su",
+   "op": "attn.max.r4",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.exp.r4",
+   "cls": "su",
+   "op": "attn.exp.r4",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.den.r4",
+   "cls": "su",
+   "op": "attn.den.r4",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.sink.r4",
+   "cls": "su",
+   "op": "attn.sink.r4",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.normalize.r4",
+   "cls": "su",
+   "op": "attn.normalize.r4",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.wo_a",
+   "cls": "field",
+   "op": "attn.wo_a",
+   "critical": true,
+   "old_draft_cycles": 6170.0,
+   "layer_equivalent": "field/attn.wo_a",
+   "layer_old_cycles": [
+    2222.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.z_quant",
+   "cls": "su",
+   "op": "attn.z_quant",
+   "critical": true,
+   "old_draft_cycles": 493.3,
+   "layer_equivalent": "su/attn.z_quant",
+   "layer_old_cycles": [
+    80.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.wo_b",
+   "cls": "field",
+   "op": "attn.wo_b",
+   "critical": true,
+   "old_draft_cycles": 913.0,
+   "layer_equivalent": "field/attn.wo_b",
+   "layer_old_cycles": [
+    548.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.out_allreduce",
+   "cls": "coll",
+   "op": "attn.out_allreduce",
+   "critical": true,
+   "old_draft_cycles": 3154.9,
+   "layer_equivalent": "coll/attn.out_allreduce",
+   "layer_old_cycles": [
+    827.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.attn.hc_post",
+   "cls": "su",
+   "op": "attn.hc_post",
+   "critical": true,
+   "old_draft_cycles": 641.3,
+   "layer_equivalent": "su/attn.hc_post",
+   "layer_old_cycles": [
+    112.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.hc_pre",
+   "cls": "su",
+   "op": "ffn.hc_pre",
+   "critical": true,
+   "old_draft_cycles": 293.3,
+   "layer_equivalent": "su/ffn.hc_pre",
+   "layer_old_cycles": [
+    8.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.norm.sumsq",
+   "cls": "su",
+   "op": "ffn.norm.sumsq",
+   "critical": true,
+   "old_draft_cycles": 100.0,
+   "layer_equivalent": "su/ffn.norm.sumsq",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.norm.rsqrt",
+   "cls": "su",
+   "op": "ffn.norm.rsqrt",
+   "critical": true,
+   "old_draft_cycles": 193.3,
+   "layer_equivalent": "su/ffn.norm.rsqrt",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.norm.scale",
+   "cls": "su",
+   "op": "ffn.norm.scale",
+   "critical": true,
+   "old_draft_cycles": 76.0,
+   "layer_equivalent": "su/ffn.norm.scale",
+   "layer_old_cycles": [
+    306.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.router",
+   "cls": "field",
+   "op": "ffn.router",
+   "critical": true,
+   "old_draft_cycles": 1619.0,
+   "layer_equivalent": "field/ffn.router",
+   "layer_old_cycles": [
+    977.2
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.softplus_sqrt",
+   "cls": "su",
+   "op": "ffn.softplus_sqrt",
+   "critical": true,
+   "old_draft_cycles": 609.3,
+   "layer_equivalent": "su/ffn.softplus_sqrt",
+   "layer_old_cycles": [
+    185.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.router_allgather",
+   "cls": "coll",
+   "op": "ffn.router_allgather",
+   "critical": true,
+   "old_draft_cycles": 480.3,
+   "layer_equivalent": "coll/ffn.router_allgather",
+   "layer_old_cycles": [
+    421.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.bias",
+   "cls": "su",
+   "op": "ffn.bias",
+   "critical": true,
+   "old_draft_cycles": 136.0,
+   "layer_equivalent": "su/ffn.bias",
+   "layer_old_cycles": [
+    117.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.top6",
+   "cls": "select",
+   "op": "ffn.top6",
+   "critical": true,
+   "old_draft_cycles": 0.0,
+   "layer_equivalent": "select/ffn.top6",
+   "layer_old_cycles": [
+    8.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.top6_order",
+   "cls": "select",
+   "op": "ffn.top6_order",
+   "critical": true,
+   "old_draft_cycles": 690.0,
+   "layer_equivalent": "select/ffn.top6_order",
+   "layer_old_cycles": [
+    44.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.ids_hop.r0",
+   "cls": "hop",
+   "op": "ffn.ids_hop.r0",
+   "critical": true,
+   "old_draft_cycles": 472.3,
+   "layer_equivalent": null,
+   "layer_old_cycles": [],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "no layer node"
+  },
+  {
+   "node": "mtp.1.ffn.experts_gu.r0",
+   "cls": "field",
+   "op": "ffn.experts_gu.r0",
+   "critical": true,
+   "old_draft_cycles": 1429.0,
+   "layer_equivalent": "field/ffn.experts_gu",
+   "layer_old_cycles": [
+    1238.9,
+    1239.8,
+    1852.8,
+    1856.9,
+    1857.9,
+    2470.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.swiglu.r0",
+   "cls": "su",
+   "op": "ffn.swiglu.r0",
+   "critical": true,
+   "old_draft_cycles": 293.3,
+   "layer_equivalent": "su/ffn.swiglu",
+   "layer_old_cycles": [
+    3.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.route_w.r0",
+   "cls": "su",
+   "op": "ffn.route_w.r0",
+   "critical": true,
+   "old_draft_cycles": 133.3,
+   "layer_equivalent": "su/ffn.route_w",
+   "layer_old_cycles": [
+    5.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.quant2.r0",
+   "cls": "su",
+   "op": "ffn.quant2.r0",
+   "critical": true,
+   "old_draft_cycles": 426.7,
+   "layer_equivalent": "su/ffn.quant2",
+   "layer_old_cycles": [
+    191.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.down.r0",
+   "cls": "field",
+   "op": "ffn.down.r0",
+   "critical": true,
+   "old_draft_cycles": 1099.0,
+   "layer_equivalent": "field/ffn.down",
+   "layer_old_cycles": [
+    1516.3,
+    1517.7,
+    1540.7,
+    2028.2,
+    2050.7,
+    3071.5
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.ret_hop.r0",
+   "cls": "hop",
+   "op": "ffn.ret_hop.r0",
+   "critical": true,
+   "old_draft_cycles": 551.3,
+   "layer_equivalent": null,
+   "layer_old_cycles": [],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "no layer node"
+  },
+  {
+   "node": "mtp.1.ffn.combine_allreduce",
+   "cls": "coll",
+   "op": "ffn.combine_allreduce",
+   "critical": true,
+   "old_draft_cycles": 3154.9,
+   "layer_equivalent": "coll/ffn.combine_allreduce",
+   "layer_old_cycles": [
+    827.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.1.ffn.hc_post",
+   "cls": "su",
+   "op": "ffn.hc_post",
+   "critical": true,
+   "old_draft_cycles": 641.3,
+   "layer_equivalent": "su/ffn.hc_post",
+   "layer_old_cycles": [
+    112.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.hop_in",
+   "cls": "hop",
+   "op": "hop_in",
+   "critical": true,
+   "old_draft_cycles": 203.2,
+   "layer_equivalent": null,
+   "layer_old_cycles": [],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "no layer node"
+  },
+  {
+   "node": "mtp.2.attn.hc_pre",
+   "cls": "su",
+   "op": "attn.hc_pre",
+   "critical": true,
+   "old_draft_cycles": 293.3,
+   "layer_equivalent": "su/attn.hc_pre",
+   "layer_old_cycles": [
+    3.0,
+    5.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": 23,
+   "release_record": "HCL attn.hc_pre"
+  },
+  {
+   "node": "mtp.2.attn.norm.sumsq",
+   "cls": "su",
+   "op": "attn.norm.sumsq",
+   "critical": true,
+   "old_draft_cycles": 100.0,
+   "layer_equivalent": "su/attn.norm.sumsq",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.norm.rsqrt",
+   "cls": "su",
+   "op": "attn.norm.rsqrt",
+   "critical": true,
+   "old_draft_cycles": 193.3,
+   "layer_equivalent": "su/attn.norm.rsqrt",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.norm.scale",
+   "cls": "su",
+   "op": "attn.norm.scale",
+   "critical": true,
+   "old_draft_cycles": 76.0,
+   "layer_equivalent": "su/attn.norm.scale",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.quant",
+   "cls": "su",
+   "op": "attn.quant",
+   "critical": true,
+   "old_draft_cycles": 1133.3,
+   "layer_equivalent": "su/attn.quant",
+   "layer_old_cycles": [
+    324.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.a_proj",
+   "cls": "field",
+   "op": "attn.a_proj",
+   "critical": true,
+   "old_draft_cycles": 1249.0,
+   "layer_equivalent": "field/attn.a_proj",
+   "layer_old_cycles": [
+    628.0,
+    1858.1,
+    1859.2,
+    3090.3
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.a_allgather",
+   "cls": "coll",
+   "op": "attn.a_allgather",
+   "critical": true,
+   "old_draft_cycles": 548.3,
+   "layer_equivalent": "coll/attn.a_allgather",
+   "layer_old_cycles": [
+    434.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.q_norm.sumsq",
+   "cls": "su",
+   "op": "attn.q_norm.sumsq",
+   "critical": true,
+   "old_draft_cycles": 226.7,
+   "layer_equivalent": "su/attn.q_norm.sumsq",
+   "layer_old_cycles": [
+    3.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.q_norm.rsqrt",
+   "cls": "su",
+   "op": "attn.q_norm.rsqrt",
+   "critical": true,
+   "old_draft_cycles": 193.3,
+   "layer_equivalent": "su/attn.q_norm.rsqrt",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.q_norm.scale",
+   "cls": "su",
+   "op": "attn.q_norm.scale",
+   "critical": true,
+   "old_draft_cycles": 72.0,
+   "layer_equivalent": "su/attn.q_norm.scale",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.q_quant",
+   "cls": "su",
+   "op": "attn.q_quant",
+   "critical": true,
+   "old_draft_cycles": 333.3,
+   "layer_equivalent": "su/attn.q_quant",
+   "layer_old_cycles": [
+    288.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.wq_b",
+   "cls": "field",
+   "op": "attn.wq_b",
+   "critical": true,
+   "old_draft_cycles": 884.0,
+   "layer_equivalent": "field/attn.wq_b",
+   "layer_old_cycles": [
+    1039.9,
+    1559.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.q_rope",
+   "cls": "su",
+   "op": "attn.q_rope",
+   "critical": true,
+   "old_draft_cycles": 136.0,
+   "layer_equivalent": "su/attn.q_rope",
+   "layer_old_cycles": [
+    117.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.scores.r0",
+   "cls": "hbm",
+   "op": "attn.scores.r0",
+   "critical": true,
+   "old_draft_cycles": 105.0,
+   "layer_equivalent": "hbm/attn.scores",
+   "layer_old_cycles": [
+    49.9,
+    103.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.max.r0",
+   "cls": "su",
+   "op": "attn.max.r0",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.exp.r0",
+   "cls": "su",
+   "op": "attn.exp.r0",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.den.r0",
+   "cls": "su",
+   "op": "attn.den.r0",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.sink.r0",
+   "cls": "su",
+   "op": "attn.sink.r0",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.normalize.r0",
+   "cls": "su",
+   "op": "attn.normalize.r0",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.max.r1",
+   "cls": "su",
+   "op": "attn.max.r1",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.exp.r1",
+   "cls": "su",
+   "op": "attn.exp.r1",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.den.r1",
+   "cls": "su",
+   "op": "attn.den.r1",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.sink.r1",
+   "cls": "su",
+   "op": "attn.sink.r1",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.normalize.r1",
+   "cls": "su",
+   "op": "attn.normalize.r1",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.max.r2",
+   "cls": "su",
+   "op": "attn.max.r2",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.exp.r2",
+   "cls": "su",
+   "op": "attn.exp.r2",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.den.r2",
+   "cls": "su",
+   "op": "attn.den.r2",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.sink.r2",
+   "cls": "su",
+   "op": "attn.sink.r2",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.normalize.r2",
+   "cls": "su",
+   "op": "attn.normalize.r2",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.max.r3",
+   "cls": "su",
+   "op": "attn.max.r3",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.exp.r3",
+   "cls": "su",
+   "op": "attn.exp.r3",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.den.r3",
+   "cls": "su",
+   "op": "attn.den.r3",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.sink.r3",
+   "cls": "su",
+   "op": "attn.sink.r3",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.normalize.r3",
+   "cls": "su",
+   "op": "attn.normalize.r3",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.max.r4",
+   "cls": "su",
+   "op": "attn.max.r4",
+   "critical": true,
+   "old_draft_cycles": 186.7,
+   "layer_equivalent": "su/attn.max",
+   "layer_old_cycles": [
+    186.9,
+    221.6
+   ],
+   "old_matches_layer": true,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.exp.r4",
+   "cls": "su",
+   "op": "attn.exp.r4",
+   "critical": true,
+   "old_draft_cycles": 212.0,
+   "layer_equivalent": "su/attn.exp",
+   "layer_old_cycles": [
+    236.3,
+    289.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.den.r4",
+   "cls": "su",
+   "op": "attn.den.r4",
+   "critical": true,
+   "old_draft_cycles": 73.3,
+   "layer_equivalent": "su/attn.den",
+   "layer_old_cycles": [
+    72.0,
+    88.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.sink.r4",
+   "cls": "su",
+   "op": "attn.sink.r4",
+   "critical": true,
+   "old_draft_cycles": 192.0,
+   "layer_equivalent": "su/attn.sink",
+   "layer_old_cycles": [
+    196.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.normalize.r4",
+   "cls": "su",
+   "op": "attn.normalize.r4",
+   "critical": true,
+   "old_draft_cycles": 206.7,
+   "layer_equivalent": "su/attn.normalize",
+   "layer_old_cycles": [
+    244.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.wo_a",
+   "cls": "field",
+   "op": "attn.wo_a",
+   "critical": true,
+   "old_draft_cycles": 6170.0,
+   "layer_equivalent": "field/attn.wo_a",
+   "layer_old_cycles": [
+    2222.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.z_quant",
+   "cls": "su",
+   "op": "attn.z_quant",
+   "critical": true,
+   "old_draft_cycles": 493.3,
+   "layer_equivalent": "su/attn.z_quant",
+   "layer_old_cycles": [
+    80.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.wo_b",
+   "cls": "field",
+   "op": "attn.wo_b",
+   "critical": true,
+   "old_draft_cycles": 913.0,
+   "layer_equivalent": "field/attn.wo_b",
+   "layer_old_cycles": [
+    548.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.out_allreduce",
+   "cls": "coll",
+   "op": "attn.out_allreduce",
+   "critical": true,
+   "old_draft_cycles": 3154.9,
+   "layer_equivalent": "coll/attn.out_allreduce",
+   "layer_old_cycles": [
+    827.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.attn.hc_post",
+   "cls": "su",
+   "op": "attn.hc_post",
+   "critical": true,
+   "old_draft_cycles": 641.3,
+   "layer_equivalent": "su/attn.hc_post",
+   "layer_old_cycles": [
+    112.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.hc_pre",
+   "cls": "su",
+   "op": "ffn.hc_pre",
+   "critical": true,
+   "old_draft_cycles": 293.3,
+   "layer_equivalent": "su/ffn.hc_pre",
+   "layer_old_cycles": [
+    8.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.norm.sumsq",
+   "cls": "su",
+   "op": "ffn.norm.sumsq",
+   "critical": true,
+   "old_draft_cycles": 100.0,
+   "layer_equivalent": "su/ffn.norm.sumsq",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.norm.rsqrt",
+   "cls": "su",
+   "op": "ffn.norm.rsqrt",
+   "critical": true,
+   "old_draft_cycles": 193.3,
+   "layer_equivalent": "su/ffn.norm.rsqrt",
+   "layer_old_cycles": [
+    0.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.norm.scale",
+   "cls": "su",
+   "op": "ffn.norm.scale",
+   "critical": true,
+   "old_draft_cycles": 76.0,
+   "layer_equivalent": "su/ffn.norm.scale",
+   "layer_old_cycles": [
+    306.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.router",
+   "cls": "field",
+   "op": "ffn.router",
+   "critical": true,
+   "old_draft_cycles": 1619.0,
+   "layer_equivalent": "field/ffn.router",
+   "layer_old_cycles": [
+    977.2
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.softplus_sqrt",
+   "cls": "su",
+   "op": "ffn.softplus_sqrt",
+   "critical": true,
+   "old_draft_cycles": 609.3,
+   "layer_equivalent": "su/ffn.softplus_sqrt",
+   "layer_old_cycles": [
+    185.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.router_allgather",
+   "cls": "coll",
+   "op": "ffn.router_allgather",
+   "critical": true,
+   "old_draft_cycles": 480.3,
+   "layer_equivalent": "coll/ffn.router_allgather",
+   "layer_old_cycles": [
+    421.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.bias",
+   "cls": "su",
+   "op": "ffn.bias",
+   "critical": true,
+   "old_draft_cycles": 136.0,
+   "layer_equivalent": "su/ffn.bias",
+   "layer_old_cycles": [
+    117.6
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.top6",
+   "cls": "select",
+   "op": "ffn.top6",
+   "critical": true,
+   "old_draft_cycles": 0.0,
+   "layer_equivalent": "select/ffn.top6",
+   "layer_old_cycles": [
+    8.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.top6_order",
+   "cls": "select",
+   "op": "ffn.top6_order",
+   "critical": true,
+   "old_draft_cycles": 690.0,
+   "layer_equivalent": "select/ffn.top6_order",
+   "layer_old_cycles": [
+    44.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.ids_hop.r0",
+   "cls": "hop",
+   "op": "ffn.ids_hop.r0",
+   "critical": true,
+   "old_draft_cycles": 472.2,
+   "layer_equivalent": null,
+   "layer_old_cycles": [],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "no layer node"
+  },
+  {
+   "node": "mtp.2.ffn.experts_gu.r0",
+   "cls": "field",
+   "op": "ffn.experts_gu.r0",
+   "critical": true,
+   "old_draft_cycles": 1429.0,
+   "layer_equivalent": "field/ffn.experts_gu",
+   "layer_old_cycles": [
+    1238.9,
+    1239.8,
+    1852.8,
+    1856.9,
+    1857.9,
+    2470.7
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.swiglu.r0",
+   "cls": "su",
+   "op": "ffn.swiglu.r0",
+   "critical": true,
+   "old_draft_cycles": 293.3,
+   "layer_equivalent": "su/ffn.swiglu",
+   "layer_old_cycles": [
+    3.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.route_w.r0",
+   "cls": "su",
+   "op": "ffn.route_w.r0",
+   "critical": true,
+   "old_draft_cycles": 133.3,
+   "layer_equivalent": "su/ffn.route_w",
+   "layer_old_cycles": [
+    5.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.quant2.r0",
+   "cls": "su",
+   "op": "ffn.quant2.r0",
+   "critical": true,
+   "old_draft_cycles": 426.7,
+   "layer_equivalent": "su/ffn.quant2",
+   "layer_old_cycles": [
+    191.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.down.r0",
+   "cls": "field",
+   "op": "ffn.down.r0",
+   "critical": true,
+   "old_draft_cycles": 1099.0,
+   "layer_equivalent": "field/ffn.down",
+   "layer_old_cycles": [
+    1516.3,
+    1517.7,
+    1540.7,
+    2028.2,
+    2050.7,
+    3071.5
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.ret_hop.r0",
+   "cls": "hop",
+   "op": "ffn.ret_hop.r0",
+   "critical": true,
+   "old_draft_cycles": 551.2,
+   "layer_equivalent": null,
+   "layer_old_cycles": [],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "no layer node"
+  },
+  {
+   "node": "mtp.2.ffn.combine_allreduce",
+   "cls": "coll",
+   "op": "ffn.combine_allreduce",
+   "critical": true,
+   "old_draft_cycles": 3154.9,
+   "layer_equivalent": "coll/ffn.combine_allreduce",
+   "layer_old_cycles": [
+    827.0
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  },
+  {
+   "node": "mtp.2.ffn.hc_post",
+   "cls": "su",
+   "op": "ffn.hc_post",
+   "critical": true,
+   "old_draft_cycles": 641.3,
+   "layer_equivalent": "su/ffn.hc_post",
+   "layer_old_cycles": [
+    112.9
+   ],
+   "old_matches_layer": false,
+   "release_cycles_if_layer_placed": null,
+   "release_record": "other class"
+  }
+ ]
+}

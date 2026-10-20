@@ -1,0 +1,7 @@
+HCLBEAT HLS=16 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=36
+SLBEAT beat=37 partials=2 ybeats=16 qbeats=2 bbeats=2 blocks_done=2 err=0 fault=vp1/vn0/vq0 go_to_partial=112/112 rstd_to_y0=18/18 rstd_to_xq=59/59 rstd_to_xb=79/79 post_cmd_to_last_hw=63/63
+FAIL
+- /srv/opentallas-scratch/claude/toksim-s81b-hcl/tb_toksim_hcl_beat.sv:180: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.555 s; speed 2.162 us/s
+- Verilator: cpu 0.364 s on 1 threads; allocated 21 MB

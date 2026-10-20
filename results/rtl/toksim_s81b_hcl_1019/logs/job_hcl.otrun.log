@@ -1,0 +1,58 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-hcl
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-hcl
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-hcl
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-hcl
+ot-run: ot-epyc9       admits   909 GB (avail 812, growth 176, headroom 0, waiters 0/0 GB) load 108/128 running 44 disk 659 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81b-hcl
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81b-hcl
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-699183-1792462770 after 1 s
+HOST ot-epyc9 start Mon Oct 19 19:19:32 PDT 2026 src 19bf4121e
+Verilator 5.050 2026-07-01 rev v5.050
+L0 HLS=40 GS=20: HCLBEAT HLS=40 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=60 0 mism PASS
+L0 HLS=32 GS=20: HCLBEAT HLS=32 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=52 0 mism PASS
+L0 HLS=24 GS=20: HCLBEAT HLS=24 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=44 0 mism PASS
+L0 HLS=20 GS=20: HCLBEAT HLS=20 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=40 0 mism PASS
+L0 HLS=19 GS=20: HCLBEAT HLS=19 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=39 0 mism PASS
+L0 HLS=18 GS=20: HCLBEAT HLS=18 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=38 0 mism PASS
+L0 HLS=17 GS=20: HCLBEAT HLS=17 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=37 0 mism PASS
+L0 HLS=16 GS=20: HCLBEAT HLS=16 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=36 0 mism FAIL
+L0 HLS=15 GS=20: HCLBEAT HLS=15 GS=20 hload_cmd_to_last_hw=20 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=35 14 mism FAIL
+L0 HLS=40 GS=16: HCLBEAT HLS=40 GS=16 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=56 0 mism PASS
+L0 HLS=40 GS=12: HCLBEAT HLS=40 GS=12 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=52 0 mism PASS
+L0 HLS=40 GS=10: HCLBEAT HLS=40 GS=10 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=50 0 mism PASS
+L0 HLS=40 GS=9: HCLBEAT HLS=40 GS=9 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=49 0 mism PASS
+L0 HLS=40 GS=8: HCLBEAT HLS=40 GS=8 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=48 0 mism PASS
+L0 HLS=40 GS=7: HCLBEAT HLS=40 GS=7 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=47 0 mism PASS
+L0 HLS=40 GS=6: HCLBEAT HLS=40 GS=6 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=46 0 mism PASS
+SLBEAT beat=37 partials=2 ybeats=16 qbeats=2 bbeats=2 blocks_done=2 err=0 fault=vp0/vn0/vq0 go_to_partial=112/112 rstd_to_y0=18/18 rstd_to_xq=59/59 rstd_to_xb=79/79 post_cmd_to_last_hw=63/63
+L2 HLS=40 GS=20: HCLBEAT HLS=40 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=60 0 mism PASS
+L2 HLS=32 GS=20: HCLBEAT HLS=32 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=52 0 mism PASS
+L2 HLS=24 GS=20: HCLBEAT HLS=24 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=44 0 mism PASS
+L2 HLS=20 GS=20: HCLBEAT HLS=20 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=40 0 mism PASS
+L2 HLS=19 GS=20: HCLBEAT HLS=19 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=39 0 mism PASS
+L2 HLS=18 GS=20: HCLBEAT HLS=18 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=38 0 mism PASS
+L2 HLS=17 GS=20: HCLBEAT HLS=17 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=37 0 mism PASS
+L2 HLS=16 GS=20: HCLBEAT HLS=16 GS=20 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=36 0 mism FAIL
+L2 HLS=15 GS=20: HCLBEAT HLS=15 GS=20 hload_cmd_to_last_hw=20 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=35 14 mism FAIL
+L2 HLS=40 GS=16: HCLBEAT HLS=40 GS=16 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=56 0 mism PASS
+L2 HLS=40 GS=12: HCLBEAT HLS=40 GS=12 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=52 0 mism PASS
+L2 HLS=40 GS=10: HCLBEAT HLS=40 GS=10 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=50 0 mism PASS
+L2 HLS=40 GS=9: HCLBEAT HLS=40 GS=9 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=49 0 mism PASS
+L2 HLS=40 GS=8: HCLBEAT HLS=40 GS=8 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=48 0 mism PASS
+L2 HLS=40 GS=7: HCLBEAT HLS=40 GS=7 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=47 0 mism PASS
+L2 HLS=40 GS=6: HCLBEAT HLS=40 GS=6 hload_cmd_to_last_hw=21 gain_cmd_to_last_wl=13/13 hstore_cmd_to_last_write=24/24 rdout_cmd_to_last_lo=21/21 hload_cmd_to_norm_go=46 0 mism PASS
+SLBEAT beat=37 partials=2 ybeats=16 qbeats=2 bbeats=2 blocks_done=2 err=0 fault=vp0/vn0/vq0 go_to_partial=112/112 rstd_to_y0=18/18 rstd_to_xq=59/59 rstd_to_xb=79/79 post_cmd_to_last_hw=63/63
+== gunit
+MUT=0: GUNIT PASS cases=8 router_lat=56 (last SC -> ids row at the stop pins; 68 at the unit pins) hc_lat=748 (last HP -> first coef row at the stop pins; 760 at the unit pins)
+MUT=1: GUNIT FAIL 80 (MUT=1)
+MUT=4: GUNIT FAIL 130 (MUT=4)
+MUT=5: GUNIT FAIL 96 (MUT=5)
+MUT=6: GUNIT FAIL 100 (MUT=6)
+MUT=7: GUNIT FAIL 13 (MUT=7)
+MUT=8: GUNIT FAIL 104 (MUT=8)
+MUT=9: GUNIT FAIL 16 (MUT=9)
+GUNIT_GATE PASS (8 golden cases, mutants 1/4/5/6/7/8/9 detected)
+EXIT 0
+HOST ot-epyc9 done Mon Oct 19 19:24:18 PDT 2026
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-699183-1792462770): exit 0
