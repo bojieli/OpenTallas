@@ -1,0 +1,13 @@
+{
+  "original_exit": "GEN_REACH_FAIL: 3659 bounded lane rows fail; 1349 planned hops missing stations; stopped before unbounded fallback; see reach_fail.json",
+  "captured_rows": [
+    "rf0019_k02_00",
+    "rf0025_k00_00"
+  ],
+  "qualification": false,
+  "scope": "Unmodified failed GEN replay; exact pre-place occupancy and centroid-lower-bound terms only",
+  "source_sha256": {
+    "tools/hbm_die_v15/die_case_v16.py": "437aef1f8376ef268cfee302740f06d3f2274c6e8afb765c1f8e0cfde99143cf",
+    "tools/hbm_die_v15/lane_rows_reach.py": "657b13bf1b067ded18745542ffe48b002bc7cdffb5795f530d204d56d74fb0c4"
+  }
+}

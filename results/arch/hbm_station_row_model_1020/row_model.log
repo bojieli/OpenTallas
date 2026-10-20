@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-station-row-model-1020
+ot-run: ot-epyc6       admits   690 GB (avail 596, growth 113, headroom 0, waiters 0/0 GB) load 37/128 running 26 disk 3955 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-station-row-model-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-station-row-model-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-station-row-model-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-station-row-model-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3092880-1792506796 after 0 s
+ROW_MODEL diagnostic rows 2 qualification=false
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3092880-1792506796): exit 0

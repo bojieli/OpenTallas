@@ -1,0 +1,341 @@
+{
+  "qualification": false,
+  "scope": "Exact captured pre-place row-origin lower-bound model; no full-pin/whole-die/native/calendar admission",
+  "rows": [
+    {
+      "row": "rf0019_k02_00",
+      "tiles": 17,
+      "row_um": [
+        394.848,
+        23.76
+      ],
+      "site": [
+        13284.0,
+        14665.5
+      ],
+      "missing_own_pin_geometry": [
+        "rf0019_k02_00_l0",
+        "rf0019_k02_00_l1",
+        "rf0019_k02_00_l2",
+        "rf0019_k02_00_l3",
+        "rf0019_k02_00_l4",
+        "rf0019_k02_00_l5",
+        "rf0019_k02_00_l6",
+        "rf0019_k02_00_l7",
+        "rf0019_k02_00_l8",
+        "rf0019_k02_00_l9",
+        "rf0019_k02_00_l10",
+        "rf0019_k02_00_l11",
+        "rf0019_k02_00_l12",
+        "rf0019_k02_00_l13",
+        "rf0019_k02_00_l14",
+        "rf0019_k02_00_l15",
+        "rf0019_k02_00_l16"
+      ],
+      "at_405_all": {
+        "feasible": true,
+        "bounds": {
+          "x": [
+            12867.294000000004,
+            13248.751999999999
+          ],
+          "y": [
+            14409.2,
+            14980.524000000001
+          ],
+          "u": [
+            27575.346000000005,
+            27936.234000000004
+          ],
+          "v": [
+            -1708.2299999999962,
+            -1565.4480000000005
+          ]
+        },
+        "vertices": [
+          [
+            13185.393000000002,
+            14750.841000000002
+          ],
+          [
+            13114.002000000004,
+            14822.232
+          ],
+          [
+            13004.949000000002,
+            14570.397000000003
+          ],
+          [
+            12933.558000000005,
+            14641.788
+          ]
+        ],
+        "witness": {
+          "x_lower": "rf0019_k02_00_l0.b -> cij_SE.idx_tx_r0",
+          "x_upper": "rf0019_k02_00_l16.a -> rf0019_s036_l16.b",
+          "y_lower": "rf0019_k02_00_l16.a -> rf0019_s036_l16.b",
+          "y_upper": "rf0019_k02_00_l0.b -> cij_SE.idx_tx_r0",
+          "u_lower": "rf0019_k02_00_l1.b -> cij_SE.idx_tx_r1",
+          "u_upper": "rf0019_k02_00_l16.b -> cij_SE.idx_tx_v",
+          "v_lower": "rf0019_k02_00_l0.b -> cij_SE.idx_tx_r0",
+          "v_upper": "rf0019_k02_00_l16.a -> rf0019_s036_l16.b"
+        }
+      },
+      "at_405_fixed": {
+        "feasible": true,
+        "bounds": {
+          "x": [
+            12867.294000000004,
+            13304.909999999998
+          ],
+          "y": [
+            14326.380000000001,
+            14980.524000000001
+          ],
+          "u": [
+            27575.346000000005,
+            27936.234000000004
+          ],
+          "v": [
+            -1708.2299999999962,
+            -1404.0059999999958
+          ]
+        },
+        "vertices": [
+          [
+            13266.114000000005,
+            14670.119999999999
+          ],
+          [
+            13114.002000000004,
+            14822.232
+          ],
+          [
+            13085.670000000006,
+            14489.676
+          ],
+          [
+            12933.558000000005,
+            14641.788
+          ]
+        ],
+        "witness": {
+          "x_lower": "rf0019_k02_00_l0.b -> cij_SE.idx_tx_r0",
+          "x_upper": "rf0019_k02_00_l16.b -> cij_SE.idx_tx_h",
+          "y_lower": "rf0019_k02_00_l1.b -> cij_SE.idx_tx_r1",
+          "y_upper": "rf0019_k02_00_l0.b -> cij_SE.idx_tx_r0",
+          "u_lower": "rf0019_k02_00_l1.b -> cij_SE.idx_tx_r1",
+          "u_upper": "rf0019_k02_00_l16.b -> cij_SE.idx_tx_v",
+          "v_lower": "rf0019_k02_00_l0.b -> cij_SE.idx_tx_r0",
+          "v_upper": "rf0019_k02_00_l15.b -> cij_SE.idx_tx_r1"
+        }
+      },
+      "minimum_centroid_radius_all_um": 333.609,
+      "minimum_centroid_radius_fixed_um": 252.888,
+      "occupancy": {
+        "free_candidates": 8881,
+        "feasible_placed_candidates": 0,
+        "least_worst_span_um": 489.366,
+        "least_worst_origin": [
+          13116.6,
+          14904.000000000002
+        ]
+      },
+      "original_failure": [
+        {
+          "row": "rf0019_k02_00",
+          "tiles": [
+            "rf0019_k02_00_l0",
+            "rf0019_k02_00_l1",
+            "rf0019_k02_00_l2",
+            "rf0019_k02_00_l3",
+            "rf0019_k02_00_l4",
+            "rf0019_k02_00_l5",
+            "rf0019_k02_00_l6",
+            "rf0019_k02_00_l7",
+            "rf0019_k02_00_l8",
+            "rf0019_k02_00_l9",
+            "rf0019_k02_00_l10",
+            "rf0019_k02_00_l11",
+            "rf0019_k02_00_l12",
+            "rf0019_k02_00_l13",
+            "rf0019_k02_00_l14",
+            "rf0019_k02_00_l15",
+            "rf0019_k02_00_l16"
+          ],
+          "flow": "NS",
+          "site": [
+            13284.0,
+            14665.5
+          ],
+          "best_span_um": 489.4,
+          "offending_hop": "rf0019_k02_00_l16.b -> cij_SE.idx_tx_v",
+          "reason": "no free spot keeps every hop <= reach"
+        }
+      ]
+    },
+    {
+      "row": "rf0025_k00_00",
+      "tiles": 4,
+      "row_um": [
+        175.608,
+        49.68
+      ],
+      "site": [
+        11793.7,
+        13078.6
+      ],
+      "missing_own_pin_geometry": [
+        "rf0025_k00_00_l0",
+        "rf0025_k00_00_l1",
+        "rf0025_k00_00_l2",
+        "rf0025_k00_00_l3"
+      ],
+      "at_405_all": {
+        "feasible": true,
+        "bounds": {
+          "x": [
+            12069.628,
+            12771.648
+          ],
+          "y": [
+            12653.26,
+            13455.16
+          ],
+          "u": [
+            25119.788,
+            25874.492
+          ],
+          "v": [
+            -980.5319999999997,
+            -242.02800000000119
+          ]
+        },
+        "vertices": [
+          [
+            12771.648,
+            13102.844
+          ],
+          [
+            12771.648,
+            13013.676000000001
+          ],
+          [
+            12069.628,
+            13050.16
+          ],
+          [
+            12446.98,
+            13427.511999999999
+          ],
+          [
+            12438.88,
+            12680.908000000001
+          ]
+        ],
+        "witness": {
+          "x_lower": "rf0025_k00_00_l0.a -> rf0025_s001_l0.b",
+          "x_upper": "rf0025_k00_00_l3.b -> hcb_SE4.sum_in",
+          "y_lower": "rf0025_k00_00_l3.a -> rf0025_s001_l3.b",
+          "y_upper": "rf0025_k00_00_l0.a -> rf0025_s001_l0.b",
+          "u_lower": "rf0025_k00_00_l0.a -> rf0025_s001_l0.b",
+          "u_upper": "rf0025_k00_00_l3.a -> rf0025_s001_l3.b",
+          "v_lower": "rf0025_k00_00_l0.a -> rf0025_s001_l0.b",
+          "v_upper": "rf0025_k00_00_l3.a -> rf0025_s001_l3.b"
+        }
+      },
+      "at_405_fixed": {
+        "feasible": true,
+        "bounds": {
+          "x": [
+            11364.084,
+            12771.648
+          ],
+          "y": [
+            12302.82,
+            13836.96
+          ],
+          "u": [
+            24061.644,
+            26213.868
+          ],
+          "v": [
+            -2067.875999999999,
+            63.82800000000036
+          ]
+        },
+        "vertices": [
+          [
+            12771.648,
+            13442.22
+          ],
+          [
+            12771.648,
+            12707.82
+          ],
+          [
+            11364.084,
+            12697.56
+          ],
+          [
+            11364.084,
+            13431.96
+          ],
+          [
+            12376.908,
+            13836.96
+          ],
+          [
+            11769.084,
+            13836.96
+          ],
+          [
+            11758.824,
+            12302.82
+          ],
+          [
+            12366.648,
+            12302.82
+          ]
+        ],
+        "witness": {
+          "x_lower": "rf0025_k00_00_l0.b -> hcb_SE4.d_nv",
+          "x_upper": "rf0025_k00_00_l3.b -> hcb_SE4.sum_in",
+          "y_lower": "rf0025_k00_00_l3.b -> hcb_SE4.sum_in",
+          "y_upper": "rf0025_k00_00_l0.b -> hcb_SE4.d_nv",
+          "u_lower": "rf0025_k00_00_l0.b -> hcb_SE4.d_nv",
+          "u_upper": "rf0025_k00_00_l3.b -> hcb_SE4.sum_in",
+          "v_lower": "rf0025_k00_00_l0.b -> hcb_SE4.d_nv",
+          "v_upper": "rf0025_k00_00_l3.b -> hcb_SE4.sum_in"
+        }
+      },
+      "minimum_centroid_radius_all_um": 53.99,
+      "minimum_centroid_radius_fixed_um": 0.0,
+      "occupancy": {
+        "free_candidates": 0,
+        "feasible_placed_candidates": 0,
+        "least_worst_span_um": null,
+        "least_worst_origin": null
+      },
+      "original_failure": [
+        {
+          "row": "rf0025_k00_00",
+          "tiles": [
+            "rf0025_k00_00_l0",
+            "rf0025_k00_00_l1",
+            "rf0025_k00_00_l2",
+            "rf0025_k00_00_l3"
+          ],
+          "flow": "NS",
+          "site": [
+            11793.7,
+            13078.6
+          ],
+          "best_span_um": null,
+          "offending_hop": null,
+          "reason": "no free spot of the row size inside the reach window"
+        }
+      ]
+    }
+  ]
+}
