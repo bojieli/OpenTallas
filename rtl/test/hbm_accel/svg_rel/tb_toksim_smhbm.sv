@@ -60,7 +60,7 @@ module tb_toksim_smhbm;
  assign ks[1023:128]=0;assign rrdy[31:4]={28{1'b1}};
  // ---------------- xc (extension calendar, own collar)
  wire[108:0]cmd_ext;wire[63:0]kv_desc;wire xc_done,xc_cfgd,xc_fault,xc_active;
- ot_hbm_svc_sm_xcal_rel_t #(.PAW(11),.PREL(1),.DD(256),.MUT(`ifdef XMUT `XMUT `else 0 `endif)) xc(.clk(stream),.rst_n(srst),.tgt(8'd192),
+ ot_hbm_svc_sm_xcal_rel_t #(.PAW(11),.PREL(1),.DD(256),.XSLOT(`ifdef XSLOT 1 `else 0 `endif),.MUT(`ifdef XMUT `XMUT `else 0 `endif)) xc(.clk(stream),.rst_n(srst),.tgt(8'd192),
   .cfg_v(cfg_v),.cfg_target(target),.cfg_addr(addr),.cfg_data(data),.desc_v(desc_v),.desc_base(dbase),.desc_limit(dlimit),
   .desc_loops(dloops),.launch_v(launch_v),.cmd_ext(cmd_ext),.kv_desc(kv_desc),.done(xc_done),.configured(xc_cfgd),
   .fault(xc_fault),.active(xc_active));
