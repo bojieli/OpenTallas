@@ -89,7 +89,7 @@ def test_nested_attributes_never_become_pin_roles_and_bus_bits_are_explicit(tmp_
     assert N.attr('timing() { clock:true; function:"0"; direction:output; }', 'clock') is None
     assert N.attr('timing() { function:"0"; } function:"!A";', 'function') == '!A'
     p=tmp_path/'bus.lib'
-    p.write_text('''library(L) {cell(BUS) {bus(D) {direction:input;
+    p.write_text('''library(L) {type(T) {bit_from:1; bit_to:0;} cell(BUS) {bus(D) {bus_type:T; direction:input;
       timing() {clock:true; function:"0";}
       pin(D[1]) {clock:true;} pin(D[0]) {clock:false;}
     } pin(Q) {direction:output; function:"D[0]";} }}''')
@@ -102,6 +102,22 @@ def test_nested_attributes_never_become_pin_roles_and_bus_bits_are_explicit(tmp_
     r=N.census(g,roles)
     assert r['violations'][0]['loads']==33
     assert r['driver_counts']==[{'driver':'d','driver_role':'input_port','net':'a','loads':33}]
+
+
+def test_nonzero_ascending_liberty_bus_and_untyped_ambiguity_fail_closed(tmp_path):
+    p=tmp_path/'bus.lib'
+    lib='''library(L) {type(T) {bit_from:2; bit_to:5;}
+      cell(BUS) {bus(D) {bus_type:T; direction:input;
+      pin(D[2]) {clock:true;} pin(D[3:5]) {clock:false;}}
+      pin(Q) {direction:output; function:"D[3]";}}}'''
+    p.write_text(lib);roles,_=N.liberty_roles([str(p)])
+    g=N.TL.Graph();a=g.net('a');ck=g.net('ck');g.ports={'d':('input',a),'ck':('input',ck)}
+    g.cells=[('BUS',f'b{i}',{'D':[ck,a,a,a],'Q':[g.net(f'q{i}')]}) for i in range(33)]
+    r=N.census(g,roles)
+    assert r['violations'][0]['loads']==99 and not r['role_errors']
+    p.write_text(lib.replace('bus_type:T;',''));roles,_=N.liberty_roles([str(p)])
+    r=N.census(g,roles)
+    assert r['status']=='FAIL' and 'ambiguous packed Liberty bus' in r['role_errors'][0]
 
 
 def test_endpoint_reconvergence_not_double_counted(tmp_path):
