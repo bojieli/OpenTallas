@@ -8,7 +8,7 @@
 // train root -> join path; the join's own +1 is unchanged.  No credit, ready or wait.
 // Proof: rtl/test/qwen_static_kv/tb_qkd_embedding_static_join4.sv (lock-step vs qkd_embedding_static_join fed the same
 // beats one edge earlier).  MUT (bench only): 1 = no conflict fault; 2 = train 3 ignored.
-module qkd_embedding_static_join4 #(parameter integer MUT = 0) (
+module qkd_embedding_static_join4 #(parameter integer MUT = 0, parameter integer NATIVE32 = 0) (
     input wire ck,rst_n,
     input wire [298:0] up0,up1,up2,up3,
     input wire beat_slot,
@@ -25,7 +25,27 @@ module qkd_embedding_static_join4 #(parameter integer MUT = 0) (
         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
     wire v3=(MUT==2)?1'b0:u3[0];
     wire [3:0] hot={v3,u2[0],u1[0],u0[0]};
-    wire [297:0] rec=({298{u0[0]}}&u0[298:1])|({298{u1[0]}}&u1[298:1])|({298{u2[0]}}&u2[298:1])|({298{v3}}&u3[298:1]);
+    // NATIVE32 captures valid copies on the SAME existing face edge. Each copy
+    // selects at most 30 payload bits; keep prevents equality merging in Yosys.
+    // No extra data/schedule edge. Legacy path remains the default.
+    wire [297:0] rec;
+    generate if (NATIVE32) begin : g_native32
+        for (genvar slice = 0; slice < 10; slice = slice + 1) begin : g_slice
+            localparam integer LO = slice * 30;
+            localparam integer WIDTH = (298 - LO < 30) ? 298 - LO : 30;
+            (* keep = 1, dont_touch = 1 *) reg [3:0] valid_q;
+            always @(posedge ck or negedge rst_n)
+                if (!rst_n) valid_q <= 4'b0;
+                else valid_q <= {(MUT == 2 ? 1'b0 : up3[0]), up2[0], up1[0], up0[0]};
+            assign rec[LO +: WIDTH] =
+                ({WIDTH{valid_q[0]}} & u0[LO+1 +: WIDTH]) |
+                ({WIDTH{valid_q[1]}} & u1[LO+1 +: WIDTH]) |
+                ({WIDTH{valid_q[2]}} & u2[LO+1 +: WIDTH]) |
+                ({WIDTH{valid_q[3]}} & u3[LO+1 +: WIDTH]);
+        end
+    end else begin : g_legacy_select
+        assign rec=({298{u0[0]}}&u0[298:1])|({298{u1[0]}}&u1[298:1])|({298{u2[0]}}&u2[298:1])|({298{v3}}&u3[298:1]);
+    end endgenerate
     wire bv=|hot;
     wire multi=(MUT==1)?1'b0:((hot&(hot-4'd1))!=4'd0);
     wire jf;
