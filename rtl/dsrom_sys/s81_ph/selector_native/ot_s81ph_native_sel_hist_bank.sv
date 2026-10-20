@@ -94,7 +94,6 @@ module ot_s81ph_native_sel_hist_bank #(
             assign hbin_d[CB*gb +: CB] = s[CB] ? SAT : s[CB-1:0];
         end
     endgenerate
-`ifdef OT_S81PH_SEL_FAN32
     // S81-TOPK FAN32 (10-19, SAFE item 3): the bin clear (2820 loads) and the bin update enable v2 (2112 loads) are
     // replaced by NCL KEPT identical copies, each owning 256/NCL bins (2 bins = 22 bin flops per copy).  Each clear
     // copy registers `clr` on the same edge as r_clr (HPIPE 1) and each v2 copy is v1 && !its clear copy, as v2.
@@ -104,14 +103,8 @@ module ot_s81ph_native_sel_hist_bank #(
     for (gk = 0; gk < NCL; gk = gk + 1) begin : g_clc
         if (HPIPE != 0) begin : g_r
             (* keep = "true" *) reg rc;
-  `ifdef OT_S81PH_SEL_FAN32_MUT_CLR
-            // mutant witness only: the clear copies of the lower half of the bins never clear (stale counts)
-            always @(posedge clk or negedge rst_n)
-                if (!rst_n) rc <= 1'b0; else rc <= (gk < NCL / 2) ? 1'b0 : clr;
-  `else
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) rc <= 1'b0; else rc <= clr;
-  `endif
             assign x_clr_c[gk] = rc;
         end else begin : g_d
             assign x_clr_c[gk] = clr;
@@ -128,13 +121,6 @@ module ot_s81ph_native_sel_hist_bank #(
             else if (v2_c[gb / (NB / NCL)]) hbin[CB*gb +: CB] <= hbin_d[CB*gb +: CB];
         end
     end
-`else
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) hbin <= {NB*CB{1'b0}};
-        else if (x_clr) hbin <= {NB*CB{1'b0}};
-        else if (v2) hbin <= hbin_d;
-    end
-`endif
 
     // group sums: 4-bin sums, then 16-bin sums
     reg [(NB/4)*(CB+2)-1:0] gs1;
@@ -174,7 +160,6 @@ module ot_s81ph_native_sel_hist_bank #(
         end
         always @(posedge clk) begin p1 <= p1_d; gs1 <= gs1_d; p2 <= p2_d; gsum <= gsum_d; end
     end endgenerate
-`ifdef OT_S81PH_SEL_FAN32
     // S81-TOPK FAN32: decoded constant-index group select.  Output bin o uses its own gsel copy, decoded to a
     // one-hot over the 16 groups, AND-OR over hbin[16 g + o]: = hbin[16*CB*gsel +: 16*CB] bin o (exact, same edge).
     wire [16*CB-1:0] gbin_d;
@@ -195,9 +180,6 @@ module ot_s81ph_native_sel_hist_bank #(
         assign gbin_d[CB*go +: CB] = o;
     end
     always @(posedge clk) gbin <= gbin_d;
-`else
-    always @(posedge clk) gbin <= hbin[16*CB*gsel +: 16*CB];
-`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) busy <= 1'b0;
         else busy <= x_v || v1 || v2;

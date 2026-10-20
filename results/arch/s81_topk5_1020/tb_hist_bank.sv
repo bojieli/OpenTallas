@@ -21,14 +21,14 @@ reg[175:0] joined;integer k;
 always@*begin joined=0;for(integer q=0;q<8;q=q+1)joined=joined|bin_values[176*q+:176];end
 integer cyc=0,checks=0;reg[31:0] random=32'h12345678;
 function automatic[31:0] rnd(input[31:0]x);reg[31:0]r;begin r=x^(x<<13);r=r^(r>>17);rnd=r^(r<<5);end endfunction
-initial begin
+initial begin: scenario
  repeat(5)@(negedge clk);rst_n=1;
  for(cyc=0;cyc<1200;cyc=cyc+1)begin
   @(negedge clk);
   if(cyc>20)begin
    checks=checks+1;
    if(bsum!==goldsum || joined!==goldbin || busy!=={8{oldbusy}})begin
-    $display("HIST_BANK FAIL MUT=%0d cycle=%0d sums=%0b bin_values=%0b busy=%0b",MUT,cyc,bsum!==goldsum,joined!==goldbin,busy!=={8{oldbusy}});$finish;
+    $display("HIST_BANK FAIL MUT=%0d cycle=%0d sums=%0b bin_values=%0b busy=%0b",MUT,cyc,bsum!==goldsum,joined!==goldbin,busy!=={8{oldbusy}});$finish; disable scenario;
    end
   end
   random=rnd(random);gs=random[3:0];
