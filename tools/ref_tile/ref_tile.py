@@ -1326,12 +1326,15 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
     reason_kind = "pin-bound"
     structural = fr.get("lattice_channel_bound")
     if structural is not None:
-        errors = lattice_band_errors(s, W, H, blocks, float(std_area))
+        errors = lattice_band_errors(s, W, H, blocks, float(std_area), planning=True, root=ROOT)
         if errors:
             return ("FAIL", "fill", "invalid lattice/channel band: " + "; ".join(errors),
                     "fix measured sizing geometry; actual placement verification is also required")
         reason = str(structural["why"]).strip()
         reason_kind = "lattice/channel-bound gate-rule exception (placement verification required)"
+        if "planning_birth_budget" in s:
+            reason_kind += (f"; PLANNING ONLY birth budget {s['planning_std_area_um2']:.3f} um2, "
+                            f"source {float(std_area):.3f} um2; actual placed 40..60% still required")
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
@@ -2452,6 +2455,9 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(clock_entry_constraints.single_clock_contract.evidence_paths(s)))
     if s.get("registered_cluster_candidate"):
         from registered_cluster_budget import evidence_paths
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
+    if s.get("planning_birth_budget"):
+        from planning_birth_budget import evidence_paths
         j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
     hold = route_hold_context(s, kd)
     hm = float(hold["HM"])
