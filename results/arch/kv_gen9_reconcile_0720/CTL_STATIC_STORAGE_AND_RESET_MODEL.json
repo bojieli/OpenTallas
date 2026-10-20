@@ -1,0 +1,91 @@
+{
+  "scope": "SOURCE DECLARATION INVENTORY and PROPOSED topology costs only; no synthesized count/native/clock/PG/405 proof",
+  "source_commit": "04b625135",
+  "source_sha256": {
+    "rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv": "8cc5ef117227577678fee0f487b44b31d3a4a59a50dbca0fe09e12075c99faea",
+    "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv": "89c4e228be739c474f62fff5738e5c0b51dafc7afd9a19e028a2c2f048bb04a7",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "dcf2a7b68d228286c776fda2333ef5d9aae8baabb04b9c233a9db8c3ae05b464",
+    "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv": "220bcad45658820d5684585ad4362c4cfd49bc5a53fc833ef3475a8bc25ed95a"
+  },
+  "actual_boot_configuration_bits": {
+    "diecfg": {
+      "ECTL_fields": 480,
+      "reset_delay_fields": 344,
+      "capability": 1,
+      "attention_ages": 32,
+      "pair_ages": 16,
+      "VPORT_ages": 256,
+      "total": 1129,
+      "nonage_predecessor_total": 825,
+      "age_delta": 304,
+      "classification": "static boot/configuration; retained across functional reset, invalidated by POR",
+      "not_equal_to": "96word*64 interface beat width"
+    },
+    "MU_layer_programme": {
+      "nine_stage_tables": 10368,
+      "user_stage_GAP": 4608,
+      "total": 14976,
+      "classification": "static boot-loaded indexed tables; >~4kbit scoped waiver does not apply as blanket"
+    },
+    "writer_programme": {
+      "five_stage_tables": 5760,
+      "total": 5760,
+      "classification": "static boot-loaded indexed tables; >~4kbit"
+    },
+    "ownership_root_words": {
+      "enter_leave_deadline": 96,
+      "total": 96
+    },
+    "subtotal_named_config_fields_and_tables": 21961,
+    "exclusions": "shadows, pin pipeline state, runtime contexts, fault/control/next counters, clones and hard SRAM padding are separate"
+  },
+  "MU_runtime_contexts_lower_inventory": {
+    "nine_active_schedule_words": 1152,
+    "cycle_age_tokencycles": 384,
+    "stage": 24,
+    "epoch": 64,
+    "token_position": 144,
+    "context_tag": 56,
+    "generation": 8,
+    "activity_wait_load_quiet": 16,
+    "total_named": 1948,
+    "classification": "dynamic four-context state; NOT static-config waiver; other live control/pipeline state excluded"
+  },
+  "existing_S32_memory_family": {
+    "source": "codex/kv-ctl3-native36-1020 only; NOT qualified BA replacement",
+    "CTLSRAM1": {
+      "layer_rowa_macros": 4,
+      "layer_rowb_macros": 3,
+      "writer_macros": 3,
+      "macro_bits": 4096,
+      "total_capacity_bits": 40960,
+      "layer_named_data_bits": 14976,
+      "extra_predecoded_GAP_flags_bits": 288,
+      "writer_named_data_bits": 5760
+    },
+    "CTLSRAM2": "6 x64x128 family exists separately; no shape/native/age transfer to BA"
+  },
+  "age_cfg_native_topology_proposal": {
+    "status": "NOT IMPLEMENTED/NOT MEASURED, per-member design proposal before build",
+    "token_edges_target": 0,
+    "boot_edges": "19 extra target10 accepted beats; measured dense fixture +19 seal edges, HOST cadence open",
+    "data_registers": 304,
+    "field_write_groups": "20 groups: two16bit attention halves, two8bit pair fields, sixteen16bit VPORT fields; keep each write-enable <=32 hold-mux loads",
+    "seal_publication_copies_minimum": 10,
+    "seal_partition": "nine32bit output-gating groups plus one16bit group; separate original sealed fault/capability authority; preserve same seal edge",
+    "POR_model": "one additional kept first-stage POR sample +10 second-stage leaf copies; async assert cascades, target second-edge release equal predecessor; primitive/native/stopped-clock causal proof required",
+    "proposed_extra_FFs_vs_nonage_S32": 325,
+    "proposed_extra_FFs_vs_existing_BA": 21,
+    "clock_sinks_delta_target_vs_nonage_S32": 325,
+    "clock_domain": "existing ck only; no new phase/root/domain admitted",
+    "reset_load_partition": "314 age+seal FF resets over10leaf copies <=32 each; new first-stage output10D+10R loads <=20; initial POR root pin load must be measured with all predecessor families",
+    "unproven": [
+      "opt_merge resistance/kept clone identity and native32 roles",
+      "actual source source-control/data/decoder fanout",
+      "assertion/release under stopped clock and arbitrary retained FF state",
+      "zero output/first-read before complete boot seal, functional reset retention/POR invalidation",
+      "full MU table SRAM first-use validity/read latency and parent62port/109bit attention records",
+      "actual area/shape/pins/clock skew/405/PG and production HOST cadence"
+    ]
+  }
+}

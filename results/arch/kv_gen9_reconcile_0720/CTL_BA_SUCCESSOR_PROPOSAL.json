@@ -69,7 +69,7 @@
       "    output wire [1117:0] o_hroot_EN",
       "    input wire [143:0] i_hroot_EN"
     ],
-    "no_CTLLVM_or_CTLSRAM_parameter_in_actual_selected_top": true
+    "no_CTLSRAM_parameter_in_actual_selected_top": true
   },
   "source_authority_gap": {
     "actual_d11r_legacy_module_equal_to_producer": false,
@@ -133,7 +133,33 @@
     "new distinct top/view identity carrying62portABI including o_attn109 and17age exports",
     "no public default flag enable until CLOSED source+native+405+PG+clock proof and full MU/cold/reset/calendar transaction qualification",
     "no d11case edits, old diagnostic failures remain",
-    "recompute full poststation static/boot/calendar images and eliminate all stale/unresolved stages; actualshell reset graph includes PVFIN total+4 vslegacy pending sourceproof",
+    "recompute full poststation static/boot/calendar images and eliminate all stale/unresolved stages; actual PVFIN shell first-pin-capture E6/command-accept E7 versus legacy E1/E2; +5 earliest-command price, not scalar +4 release-label",
     "lane8+2 requires admitted hardC HXK15, not overridingclosedHXK13; new compute g5 pilot remains separate physical qualification"
-  ]
+  ],
+  "PVFIN_boot_event_authority": {
+    "scope": "params source inspection reported; exact RTL edge witness pending, no qualification",
+    "raw_reset_deassert": "before E1",
+    "actual_shell": [
+      "plain landing E1/E2",
+      "farm root E3, second E4, leaf release E5 after NBA",
+      "first pin capture E6",
+      "first accepted command E7 from start E6"
+    ],
+    "unwrapped_R10": [
+      "release E3",
+      "capture E4",
+      "accept E5"
+    ],
+    "legacy": [
+      "direct capture E1",
+      "accept E2"
+    ],
+    "price": {
+      "actual_vs_legacy_first_accept_edges": 5,
+      "unwrapped_vs_legacy_first_accept_edges": 3,
+      "actual_vs_unwrapped_edges": 2
+    },
+    "token_active_age_delta": 0,
+    "history": "earlier +4 described leaf-release edge only and cannot price first accepted command"
+  }
 }
