@@ -68,6 +68,15 @@ PG=()
 NATIVE=()
 if [ "$REF_GATE_NATIVE_CENSUS" = --native-census ]; then
   NATIVE=(--step-tcl PRE_FLOORPLAN=tools/ref_tile/native_census.tcl)
+  if python3 - "$K/reset_landing.json" <<'ASR_PROFILE'
+import json,sys
+from pathlib import Path
+p=Path(sys.argv[1])
+sys.exit(0 if p.is_file() and json.loads(p.read_text()).get('async_release') else 1)
+ASR_PROFILE
+  then
+    NATIVE+=(--orfs-var "OT_ASR_RELEASE_PROFILE=/src/$K/reset_landing.json")
+  fi
 fi
 if [ "${OT_PG_STRICT:-0}" = 1 ]; then
   PG=(--orfs-var OT_PG_STRICT=1 --orfs-var OT_PG_HELPER=/src/physical/common_flow/native_pg_binding.tcl --step-tcl PRE_FINAL_REPORT=physical/common_flow/native_pg_bootstrap.tcl)

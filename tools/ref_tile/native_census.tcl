@@ -19,6 +19,9 @@ set native_cmd [list python3 /src/tools/ref_tile/native_census.py \
   --netlist $::env(RESULTS_DIR)/1_2_yosys.v --top $::env(DESIGN_NAME) \
   --out /work/native_census.json]
 foreach p [lsort -unique $native_libs] {lappend native_cmd --liberty $p}
+if {[info exists ::env(OT_ASR_RELEASE_PROFILE)] && $::env(OT_ASR_RELEASE_PROFILE) ne ""} {
+  lappend native_cmd --async-release-profile $::env(OT_ASR_RELEASE_PROFILE)
+}
 set native_rc [catch {exec {*}$native_cmd 2>@1} native_message]
 puts $native_message
 if {[file exists /work/native_census.json]} {

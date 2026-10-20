@@ -580,7 +580,7 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None, *, pg_strict=No
                                  f"{len(views)} hard-child view(s), 0 pin-access violations: child_lint (i) passes"
                                  if not bad else f"hard-child pin-access violations {dict(list(bad.items())[:3])}: re-gate")))
             continue
-        if n in ("rc_cal_spine_hold", "balanced_reset_profile", "single_clock_contract"):
+        if n in ("rc_cal_spine_hold", "balanced_reset_profile", "single_clock_contract", "async_release_profile"):
             # ROOT-UNBLOCK 10-19: 96f1d6e0d changes the gate only for a spine cluster (CTS hold RC applies only with a
             # spine); a6d33cc98 only for a kit whose spec sets reset_landing.first_copies.  Judged from the kit spec.
             kit = (gate or {}).get("kit") if isinstance(gate, dict) else None
@@ -597,6 +597,11 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None, *, pg_strict=No
                 rows.append(dict(requires=n, ok=not hit, text="rc_cal_spine_hold: " + (
                     "spine cluster: gate CTS hold repair ran with the calibrated RC, re-gate" if hit else
                     "no spine: gate CTS never applied the calibrated hold RC, verdict unchanged")))
+            elif n == "async_release_profile":
+                hit = bool((sp.get("reset_landing") or {}).get("async_release"))
+                rows.append(dict(requires=n, ok=not hit, text="async_release_profile: " + (
+                    "typed RTL async release profile requires its exact native Liberty proof, re-gate" if hit else
+                    "no typed async release profile: prior reset proof behavior unchanged")))
             elif n == "single_clock_contract":
                 hit = bool(sp.get("single_clock_contract"))
                 rows.append(dict(requires=n, ok=not hit, text="single_clock_contract: " + (

@@ -312,7 +312,29 @@ def reset_landing_plan(s: dict) -> dict | None:
     if not rl.get("enable"):
         if not str(rl.get("reason") or rl.get("waive") or "").strip():
             raise SpecError(f"spec: reset_landing opt-out needs a recorded reason ({RESET_LANDING_RULE})")
-        return {"enable": False, "reason": rl.get("reason") or rl.get("waive")}
+        plan = {"enable": False, "reason": rl.get("reason") or rl.get("waive")}
+        release = rl.get('async_release')
+        if release is not None:
+            if (not isinstance(release, dict) or set(release)-{'stages', 'clock', 'ports', 'sync_select'}
+                    or type(release.get('stages')) is not int or release.get('stages') != 2
+                    or release.get('clock') not in declared_clock_ports(s)):
+                raise SpecError('spec: async_release requires exactly two RTL release stages and a declared clock')
+            ports = release.get('ports')
+            if not isinstance(ports, dict) or not ports or any(p not in (s.get('reset_ports') or []) for p in ports):
+                raise SpecError('spec: async_release must name actual declared reset ports')
+            for counts in ports.values():
+                if (not isinstance(counts, dict) or set(counts) != {'first', 'final'}
+                        or type(counts['first']) is not int or not 1 <= counts['first'] <= 32
+                        or type(counts['final']) is not int or not 1 <= counts['final'] <= 32 * counts['first']):
+                    raise SpecError('spec: async_release requires exact bounded first/final counts')
+            ss=release.get('sync_select')
+            if ss is not None and (not isinstance(ss,dict) or set(ss)!={'kind','scopes'}
+                    or ss.get('kind')!='qfd_land8_onehot_v1' or not isinstance(ss.get('scopes'),list)
+                    or not ss['scopes'] or any(not isinstance(x,str)or not x for x in ss['scopes'])
+                    or len(set(ss['scopes']))!=len(ss['scopes'])):
+                raise SpecError('spec: unsupported source-bound synchronous select/reset contract')
+            plan['async_release'] = release
+        return plan
     st = rl.get("stages", 2)
     if not isinstance(st, int) or isinstance(st, bool) or not 1 <= st <= 4:
         raise SpecError("spec: reset_landing.stages must be an integer 1..4 (standard 2)")

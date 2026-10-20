@@ -1307,7 +1307,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     g.source_binding = binding
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
-                          RC=",".join(GATE_REFUSE), TBX=textbook_reset_args(spec) + reset_landing_args(spec), BRP=(" --balanced-reset-profile $R/src/{}/reset_landing.json".format(kd.relative_to(ROOT)) if (spec.get('reset_landing') or {}).get('first_copies') else ""), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
+                          RC=",".join(GATE_REFUSE), TBX=textbook_reset_args(spec) + reset_landing_args(spec), BRP=reset_proof_args(spec,kd), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1, GRTX=trial_grt_make_args(spec), CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     if HO.pg_strict(spec):
@@ -2372,6 +2372,16 @@ def reset_landing_args(spec):
     return out
 
 
+def reset_proof_args(spec, kd):
+    rl=spec.get('reset_landing') or {}
+    if not (rl.get('first_copies') or rl.get('async_release')):
+        return ''
+    out=' --balanced-reset-profile $R/src/{}/reset_landing.json'.format(kd.relative_to(ROOT))
+    if rl.get('async_release'):
+        out+=' --async-release-receipt $C/native_census.json'
+    return out
+
+
 def reset_landing_record(out: str) -> dict | None:
     """the gate netlist's reset_landing metrics (textbook_lint INFO line), None when the gate's lint predates the check"""
     m = re.search(r"^GATE_TB textbook_lint: INFO reset_landing (\{.*\})\s*$", out, re.M)
@@ -2384,7 +2394,8 @@ def reset_landing_record(out: str) -> dict | None:
     ports = [p for p in d.get("ports") or [] if isinstance(p, dict)]
     mx = d.get("max")
     waived = bool(re.search(r"^GATE_TB textbook_lint: WAIVED reset_landing:", out, re.M))
-    over = [p["port"] for p in ports if isinstance(mx, (int, float)) and p.get("sinks", 0) > mx]
+    over = [p["port"] for p in ports if isinstance(mx, (int, float)) and p.get("sinks", 0) > mx
+            and not (p.get('async_release_proof') or {}).get('pass')]
     return {"max_sinks": mx, "ports": ports, "over": over, "waived": waived, "ok": not over or waived}
 
 

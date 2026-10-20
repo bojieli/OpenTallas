@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.ref_tile.reset_landing.v1",
+  "top": "qfd_landh0d8f_107_EW_52x52",
+  "enable": false,
+  "async_release": {
+    "stages": 2,
+    "clock": "ck",
+    "ports": {
+      "rs": {
+        "first": 8,
+        "final": 36
+      }
+    },
+    "sync_select": {
+      "kind": "qfd_land8_onehot_v1",
+      "scopes": [
+        "u_land.g_region[0].u_region",
+        "u_land.g_region[1].u_region",
+        "u_land.g_region[2].u_region",
+        "u_land.g_region[3].u_region",
+        "u_land.g_region[4].u_region",
+        "u_land.g_region[5].u_region",
+        "u_land.g_region[6].u_region",
+        "u_land.g_region[7].u_region",
+        "u_land.g_region[8].u_region",
+        "u_land.g_region[9].u_region",
+        "u_land.g_region[10].u_region",
+        "u_land.g_region[11].u_region",
+        "u_land.g_region[12].u_region",
+        "u_land.g_region[13].u_region",
+        "u_land.g_region[14].u_region",
+        "u_land.g_region[15].u_region",
+        "u_land.g_region[16].u_region",
+        "u_land.g_region[17].u_region",
+        "u_land.g_region[18].u_region",
+        "u_land.g_region[19].u_region",
+        "u_land.g_region[20].u_region",
+        "u_land.g_region[21].u_region",
+        "u_land.g_region[22].u_region",
+        "u_land.g_region[23].u_region",
+        "u_land.g_region[24].u_region",
+        "u_land.g_region[25].u_region",
+        "u_land.g_region[26].u_region",
+        "u_land.u_meta"
+      ]
+    }
+  }
+}

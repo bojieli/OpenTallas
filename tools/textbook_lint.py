@@ -37,6 +37,7 @@ Per-check modes: REFUSE applies to the checks in refuse_checks only; the others 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -581,7 +582,7 @@ class Graph:
                 self.parent[ra] = rb
 
 
-def flatten(mods: dict, top: str | None) -> tuple[Graph, str]:
+def flatten(mods: dict, top: str | None, *, keep_aliases=False) -> tuple[Graph, str]:
     if top is None or top not in mods:
         users = {t for m in mods.values() for t, _, _ in m.insts}
         cands = [m for m in mods if m not in users]
@@ -604,6 +605,8 @@ def flatten(mods: dict, top: str | None) -> tuple[Graph, str]:
     def emit(mod, prefix, bind):
         def nid(bit):
             if bit in bind:
+                if keep_aliases:
+                    g.net_id.setdefault(local(prefix,bit),bind[bit])
                 return bind[bit]
             return g.net(local(prefix, bit))
         for lhs, rhs in mod.assigns:
@@ -1009,6 +1012,13 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
         tot, ff, mac, ex = reset_sinks(g, A, x)
         land.append({"port": b, "sinks": tot, "flops": ff, "macros": mac})
         profile = T.get('_balanced_reset_profile')
+        if profile and base in ((profile.get('async_release') or {}).get('ports') or {}):
+            receipt = T.get('_async_release_receipt') or {}
+            proof = ((receipt.get('async_release') or {}).get('ports') or {}).get(base) or {}
+            land[-1]['async_release_proof'] = proof
+            if proof.get('pass') is True and proof.get('edges') == 2:
+                continue
+            bad.append(f"reset port {b}: missing verified native two-release-stage proof")
         if profile and base in (profile.get('first_copies') or {}):
             proof=balanced_reset_proof(g,A,base,x,profile)
             land[-1]['balanced_proof']=proof
@@ -1713,6 +1723,7 @@ def main(argv=None):
     c.add_argument("--netlist", required=True)
     c.add_argument("--dump")
     c.add_argument("--balanced-reset-profile", help="source-bound reset_landing.json; exact mapped two-edge/count/clock/load proof")
+    c.add_argument("--async-release-receipt", help="mandatory native census receipt for an exact RTL async-release profile")
     c.add_argument("--top")
     c.add_argument("--out")
     c.add_argument("--mode", choices=("warn", "refuse"), default="warn")
@@ -1737,6 +1748,24 @@ def main(argv=None):
             with open(a.balanced_reset_profile) as f:th['_balanced_reset_profile']=json.load(f)
         except (OSError,ValueError) as ex:
             print(f'textbook_lint: invalid balanced reset profile: {ex}');return 2
+    if a.async_release_receipt:
+        try:
+            with open(a.async_release_receipt) as f:receipt=json.load(f)
+            profile=th.get('_balanced_reset_profile') or {}
+            with open(a.netlist,'rb') as f:net_sha=hashlib.sha256(f.read()).hexdigest()
+            with open(a.balanced_reset_profile,'rb') as f:profile_sha=hashlib.sha256(f.read()).hexdigest()
+            if (receipt.get('schema')!='opentallas.pre_gate_native_census.v1'
+                    or receipt.get('status')!='PASS' or receipt.get('limit')!=32
+                    or not receipt.get('liberty') or receipt.get('role_errors') or receipt.get('violations')
+                    or type(receipt.get('max_dynamic_loads')) is not int or receipt['max_dynamic_loads']>32
+                    or receipt.get('top')!=profile.get('top')
+                    or (receipt.get('netlist') or {}).get('sha256')!=net_sha
+                    or (receipt.get('async_release') or {}).get('status')!='PASS'
+                    or receipt['async_release'].get('profile_sha256')!=profile_sha):
+                raise ValueError('native release receipt is failed/stale/not bound to exact source profile and netlist')
+            th['_async_release_receipt']=receipt
+        except (OSError,ValueError,TypeError) as ex:
+            print(f'textbook_lint: invalid async release receipt: {ex}');return 2
     if a.cfg:
         try:
             with open(a.cfg) as f:
