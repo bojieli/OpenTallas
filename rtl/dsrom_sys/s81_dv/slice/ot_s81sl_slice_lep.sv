@@ -613,7 +613,7 @@ module ot_s81sl_lep_core #(
             reg [DR-1:0] mk,mrk,mtk,mhost,mks; reg hk;
             wire [3*AR-1:0] meta_read_next;
             for(genvar mp=0;mp<3;mp=mp+1) begin:g_meta_ptr
-              if(NATIVE32!=0 && RX_SRAM!=0) begin:g_local
+              if((NATIVE32!=0 || SAFE_STD) && RX_SRAM!=0) begin:g_local
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
                 wire mb=(t==0)?1'b1:rne[2*(t/2)+1];
 `else
@@ -655,7 +655,7 @@ module ot_s81sl_lep_core #(
 `else
                 wire [AR-1:0] read_next=rp_nx;
 `endif
-                ot_sram_showahead_1r1w #(.W(H+1),.AW(AR),.LOCAL_HIT(1),.SB(8),.LOCAL_RA(NATIVE32),.DEPTH(DR)) u_rx_mem(
+                ot_sram_showahead_1r1w #(.W(H+1),.AW(AR),.LOCAL_HIT(1),.SB(8),.LOCAL_RA(NATIVE32+SAFE_STD),.DEPTH(DR)) u_rx_mem(
                     .clk(clk),.rst_n(rr[4+t*RX_NS+:RX_NS]),.we(wr),.wa(wp),.wd(dq),
                     .ra(read_next),.q(head),.advance_a(rne[2*(t/2)]),
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
@@ -687,7 +687,7 @@ module ot_s81sl_lep_core #(
         assign rne[t] = nz; assign lir[t] = cr; assign rxf[t] = f;
     end endgenerate
     generate for(genvar rh=0;rh<NL;rh=rh+1) begin:g_ring_meta
-      if(NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0) begin:g_native
+      if(SAFE_CONTROL) begin:g_native
         for(genvar rg=0;rg<4;rg=rg+1) begin:g_copy
           (* keep=1 *) ot_s81sl_lep_vcopy u_copy(.clk(clk),.d(rringx[rh]),.q(ring_meta_regions[4*rh+rg]));
         end
