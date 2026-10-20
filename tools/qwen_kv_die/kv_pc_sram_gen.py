@@ -810,6 +810,15 @@ TIM_PC7 = [
      '''    // KV-PC7 (5): k_n per case (the read-step candidate k_r1 shared with k1v; census s9: a duplicate j decode put 33 loads on j[9])
     wire [2:0] k_r1 = context_active ? j_p1[9:7] : (v_consumer_order && j[2:0] == 3'd7) ? (k ^ 3'd1) : (j[6:0] == 7'h7f) ? k + 3'd1 : k;
     wire [2:0] k_n = desc_acc ? first_sector[9:7] : (rd_ok_c[2] ? k_r1 : k);'''),
+    ('''    wire [4:0] rd_bank = {j[9:7], j[1:0]};''',
+     '''    // KV-PC7 (census sr9 r2/r3: j[9] 33 loads, 11 of them the col_bank copies; a j copy family is refused: j is a
+    // self-holding DFFE): the read bank bits as their own kept copies loading j's exact next value every edge
+    (* keep, ot_rst_split = 5 *) reg [9:0] jb__qv;
+    wire [4:0] rd_bank = jb__qv[4:0];      // == {j[9:7], j[1:0]}'''),
+    ('''    wire [2:0] k_r1 =''', '''    wire [10:0] jb_jn = desc_acc_c[6] ? first_sector : (rd_ok ? j_p1 : j);   // == j's next state (column / descriptor)
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) jb__qv <= 10'd0; else jb__qv <= {2{jb_jn[9:7], jb_jn[1:0]}};
+    wire [2:0] k_r1 ='''),
     ('''wq_ne_qv <= {3{wq_n_nx != 1, wq_n_nx != 0}};''',
      '''wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}};'''),
 ]
@@ -1481,7 +1490,7 @@ CLONES = [
        "    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;\n"
        "    initial if (SQW != 2 || WQW != 2) $error(\"ot_qkd_static_kv_timing_kvpc_s: kept copy widths assume SQD 4, WQ 4\");")] + TIM_PC5 + TIM_PC7,
      [('sq_rp', 2, 2), ('wq_rp', 2, 2), ('wq_rp1', 2, 2), ('context_active', 1, 5), ('streaming', 1, 10),
-      ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2), ('bsel', 5, 2), ('rb', 5, 2), ('j', 11, 2)]),   # KV-PC7: rb / j 2-copy families (census sr9: rb[1] 34, j[9] 33)
+      ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2), ('bsel', 5, 2), ('rb', 5, 2)]),   # KV-PC7: rb 2-copy family (census sr9 r1: rb[1] 34)
     ('REWRITE', 'qkd_kvpc_s_chain'),
     (ESM, 'qkd_static_kv_pc_es_merge_b', 'qkd_kvpc_s_esm', ESM_HQ + ESM_ERK, [('own', 1, 11)]),
     (STRAP, 'qkd_embedding_static_pc_strap', 'qkd_kvpc_s_emb_strap', STRAP_SUBS),
