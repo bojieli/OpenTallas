@@ -1,0 +1,45 @@
+{
+ "cell": "qfd_landh0d8_107_EW_44x44",
+ "view": "physical/ref_tile/qfwd_landh0d8_107_ew_44x44/views/qfd_landh0d8_107_EW_44x44",
+ "lib_cell": "qfd_landh0d8_107_EW_44x44",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 88.1,
+ "spread_ps": 7.4,
+ "outputs": 108,
+ "inputs": 109,
+ "launch_ps": 159.4,
+ "launch_pin": "b[99]",
+ "capture_ps": 166.6,
+ "capture_pin": "a[1]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "case_patterns": [
+  "k0",
+  "k1",
+  "k2",
+  "k3"
+ ],
+ "case_pins": [
+  "k0",
+  "k1",
+  "k2",
+  "k3"
+ ],
+ "case_pins_raw_capture_ps": {
+  "k0": 55.3,
+  "k1": 55.1,
+  "k2": 55.7,
+  "k3": 55.5
+ },
+ "ff_spread_ps": 7.0,
+ "ff_launch_min_ps": 93.6,
+ "ff_hold_need_ps": -24.2,
+ "pass": true,
+ "fail_why": "",
+ "case_evidence": "QW-LAND8/QW-LANDW GEN contract: each own K strap constant from tie cells; GEN must set_case_analysis all four, actual per-instance K proof separately owed"
+}

@@ -268,7 +268,9 @@ ATTN_LAND_EDGES = {'K.tx_record': 1, 'ks_prg': 1, 'ks_arh': 1, 'K.rx_record': 0,
 # its <master>_fl view, which must be CLOSED (face_land_require_closed fails closed on a missing view); the compiler takes
 # the edges of the selected tiles only (kv_static_programme._face_land) and kv_static_params checks die.v per tile.
 FACE_LAND_TILES = {'kvs_attn': dict(master='qkd_kvs_attn', kit='qkd_kvs_attn', rst_release=3, fin=1, i_ctl=1),
-                   'astk_rly_296': dict(master='qkd_astk_rly_296', kit='qkd_astk_rly_296', rst_release=3),
+                   # KV-BIND3 10-19: rc1 view (qkd_astk_rly_296-rc1-1b6976095, 10 KEPT reset relay copies): reset release =
+                   # flow reset_landing 2 stages + ot_rst_relay SYNC 2 + TREE 1 = 5 edges (startup calendar; COORD 18:16).
+                   'astk_rly_296': dict(master='qkd_astk_rly_296', kit='qkd_astk_rly_296', rst_release=5),
                    'hr_core_queue': dict(master='qkd_hr_core_queue', kit='qkd_hr_core_queue', rst_release=3)}
 if os.environ.get('OT_KV_BOOT_AGES', '0') == '1':     # KV-BOOTAGE 10-19: the boot-age attention tile's landed view
     FACE_LAND_TILES['kvs_attn'] = dict(FACE_LAND_TILES['kvs_attn'], kit='qkd_kvs_attn_ba1')
@@ -2035,6 +2037,18 @@ def _die_joins(m, K, B, add, fk, rec):
     # the sequencer's kc words -> the kept kc heads (re-pointed from the removed strips)
     for st in STACKS:
         bus(f'kc_{st}', 'kv_oneway', 33, [('seq', f'kc_{st}'), (f'kc_{st}', 'kc')])
+    _kd = K                  # the kv_die module (inject's K)
+    if getattr(_kd, 'HOST_RT_OBSX', False):     # KV-FRAMEPINS 10-20: the five die observations -> the HOST observation window (kv_die OBSX)
+        names_ = {i_.name for i_ in m['insts']}
+        miss_ = [n_ for n_ in ('dcal', 'd2d_kv', 'host') if n_ not in names_]
+        if miss_ or not _kd.DCAL_BC4:
+            raise ValueError(f'kv_static_die OBSX: needs the bc4 dcal + d2d_kv + host instances (missing {miss_}, '
+                             f'DCAL_BC4={_kd.DCAL_BC4})')
+        bus('ks_obs_dcal', 'kv_oneway', 3, [('dcal', 'dob'), ('host', 'odc')])       # adm_done, cal_ready, running
+        bus('ks_obs_dlay', 'kv_oneway', 6, [('dcal', 'lay'), ('host', 'odl')])       # layer (run index)
+        bus('ks_obs_rcy', 'kv_oneway', 32, [('d2d_kv', 'rcy'), ('host', 'odr')])     # recovery_cycles
+        rec['notes'].append('KV-FRAMEPINS OBSX: dcal dob/lay + d2d_kv rcy -> host odc/odl/odr (window snapshot, '
+                            'observation only, 0 token edges)')
     rec['opens'] += [
         *([] if BOOT else [dict(where='hsl_<st>_<k>.land_es (x128, 288 b)', owner='KVJ-C3 (writer 4-lane -> PC fan-out feeds '
                                 'the HOST slice)')]),

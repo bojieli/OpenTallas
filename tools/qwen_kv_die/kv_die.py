@@ -770,6 +770,17 @@ SPLIT_BINDINGS['qkd_rst_region'] = dict(module='qkd_rst_region', file='rtl/qwen_
 if RST_PIN_REG:
     SPLIT_BINDINGS['qkd_rst_region'] = dict(SPLIT_BINDINGS['qkd_rst_region'], module='qkd_rst_region_pr',
         file='rtl/qwen_sys/split_20261014/qkd_rst_region_pr.sv')
+# KV-HEALTH 10-19 (OT_KV_RST_HOLD=273, kvsys_prep binds the qkd_rst_region_pr_h273 view only when it audits PASS, else it
+# exports 128): the health retirement reset contract (263 edges) needs HOLD 273; wrapper of _pr, same ports and straps
+RST_HOLD = int(__import__('os').environ.get('OT_KV_RST_HOLD', '128'))
+# KV-BIND4 10-19: OT_KV_RST_HOLD_CELL (kvsys_prep exports the cell whose view audited PASS) selects the native-pin
+# successor qkd_rst_region_pr_h273b (dedicated output launch flop, same ports / straps / calendar) over h273.
+RST_HOLD_CELL = __import__('os').environ.get('OT_KV_RST_HOLD_CELL', 'qkd_rst_region_pr_h273')
+if RST_HOLD_CELL not in ('qkd_rst_region_pr_h273', 'qkd_rst_region_pr_h273b'):
+    raise SystemExit('OT_KV_RST_HOLD_CELL: unknown HOLD273 reset root ' + RST_HOLD_CELL)
+if RST_PIN_REG and RST_HOLD == 273:
+    SPLIT_BINDINGS['qkd_rst_region'] = dict(SPLIT_BINDINGS['qkd_rst_region'], module=RST_HOLD_CELL,
+        file=f'rtl/qwen_sys/split_20261014/{RST_HOLD_CELL}.sv')
 SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
     ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
 # v1.4.4 PV16 wide pairs (die-placed children via kv_expand) behind their wires-only KV-die face qkd_pvw_die (one die word
@@ -863,6 +874,22 @@ SLICE_GAP = 21.6
 # subsystem (kv_static_boot_join.HOST_DIE_JOINS) when kv_die --split instantiates it (item 10); until then they are open.
 HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv'
 HOST_RT_MODULE = 'qkd_host_root_admission'
+# Default-off OBS/OBSX integration. With HOST_OBS=0 the existing main root selection is byte-for-byte unchanged.
+# OBS/OBSX use the generated MU root only when explicitly enabled on the MU die.
+HOST_RT_OBS = (os.environ.get('OT_KV_MU', '0') == '1' and os.environ.get('OT_KV_HOST_MU', '1') == '1'
+               and os.environ.get('OT_KV_HOST_OBS', '0') == '1')
+HOST_RT_OBSX = HOST_RT_OBS and os.environ.get('OT_KV_HOST_OBSX', '0') == '1'
+if HOST_RT_OBS:
+    HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obs.sv'
+    HOST_RT_MODULE = 'qkd_host_root_admission_obs'
+if HOST_RT_OBSX:
+    if not all(os.environ.get(v, '0') == '1' for v in ('OT_KV_STATIC_DIE','OT_KV_DCAL_BC','OT_KV_DCAL_BC4')):
+        raise SystemExit('OBSX diagnostic needs static die and bc4 dcal')
+    HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv'
+    HOST_RT_MODULE = 'qkd_host_root_admission_obsx'
+OBSX_HOST_GROUPS = dict(odc=['obs_dcal_adm_done','obs_dcal_cal_ready','obs_dcal_running'],odl=['obs_dcal_layer'],odr=['obs_d2d_recovery_cycles'])
+OBSX_DCAL_DOB = ['adm_done','cal_ready','running']
+# Physical word coherence is HOLD: current tests assume an ideal common clock edge.
 HOST_RT_PT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'     # qkd_host_ingest_chain_pt (child of the admission root)
 HOST_RT_RENAMED = dict(host_drained_local='host_interface_idle')          # die port -> admission RTL port
 SLICE_DIE_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv'
@@ -1117,6 +1144,15 @@ RTL.update(qkd_d2ds=D2DS_FILE)
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
 BINDINGS.update(qkd_hslice_dn=slice_die_binding())
+if HOST_RT_OBSX:     # KV-FRAMEPINS 10-20: frame pin groups of the five die observations (see HOST_RT_OBSX)
+    _hx = BINDINGS['qkd_host_rt']['ports']
+    for _g, _ps in OBSX_HOST_GROUPS.items():
+        for _p in _ps:
+            if _hx.pop(_p, None) != [_p]:
+                raise SystemExit(f'kv_die OBSX: HOST root {HOST_RT_MODULE} has no input {_p}')
+        _hx[_g] = list(_ps)
+    BINDINGS['qkd_dcal']['ports']['dob'] = list(OBSX_DCAL_DOB)
+    BINDINGS['qkd_d2ds']['ports']['rcy'] = ['recovery_cycles']
 RTL.update(qkd_hslice_dn=SLICE_DIE_FILE)
 
 # KVJ-G2 2026-10-17 (OT_KV_STATIC_DIE=1, default off; kv_static_join_plan item 10): the 669-instance static KV subsystem

@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.toksim_s81c.gath_case.v1",
+ "layer": "L36",
+ "kind": "ratio1+indexer",
+ "rank": 0,
+ "heads": [
+  0,
+  16
+ ],
+ "fixture": "fixtures/L36",
+ "fixture_shard": {
+  "path": "/home/ubuntu/w17work/ref/ctx1048576_seed20260930/ctx1048576_L36.npz",
+  "sha256": "65260c9fc00a273cf44bcd5b84bdacea4e77ac157f801af7b5647858d076f292",
+  "input_sha256": "2d7ddac2d30e86bac80c1bfd8016ccd793433a2750dceb6969c663b281d9c749",
+  "output_sha256": "8f7268a902580045bc96b93127616c3ff5fb8bdae0cf630d4ae26bc1f2c4775c",
+  "l20_shard": "/home/ubuntu/w17work/ref/ctx1048576_seed20260930/ctx1048576_L20.npz"
+ },
+ "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "view": {
+  "die": 3,
+  "stack": 2
+ },
+ "compressed_rows": 1048576,
+ "n_sel": 512,
+ "T": 640,
+ "owned_rows": 30,
+ "owned_pc": [
+  18,
+  12
+ ],
+ "held_rows": 116,
+ "neighbour_rows": 2006,
+ "hbm_sectors": 22662,
+ "anchors": {
+  "window_rows": true,
+  "gathered_rows": true,
+  "rows_allgather": true,
+  "scores": true,
+  "pv": true,
+  "q_bf16": true
+ },
+ "counts": {
+  "NJOB": 1,
+  "NKV": 640,
+  "NP": 320,
+  "NSC": 640,
+  "NPV": 512
+ },
+ "expected": {
+  "scores": 10240,
+  "pv": 8192,
+  "score_faults": 0,
+  "pv_faults": 0,
+  "macs": 10485760
+ },
+ "golden": "fixture ops attn.gather / attn.window_load / attn.rows_allgather (stored rows, bitwise), attn.scores (x attn_scale) and attn.pv of heads 0..15 (bitwise)",
+ "images": {
+  "cfg.hex": "d711506ee26280885150e3400f886418997fea7603f5a1fc11290d0b593b8226",
+  "hdat.hex": "5604b0ecbaabd0ed3515b349394c31481cca8c5169b0375707175fb284d8e3bd",
+  "hkey.hex": "07a4797475b65fbf6568a74854d682aa60d3121853bd255b3260bec10492c039",
+  "jobs.hex": "8a754202f63b32bcb40c54ceb1114d1ba874374c01ffad4aeb76b26ebc4d5e43",
+  "kv.hex": "88aeb8c1e184e9ae48ac7f78d0195dc83aaae040d137ac02019622130fdad186",
+  "p.hex": "303760cc0cd853b910a0b77afd085fe2b5bce92c936ae490fe7580a3df4c67cf",
+  "pv.hex": "050e41984a979773451ae8744b125cf8f0ed5123cbbf7b71c3c42deb66900618",
+  "q.hex": "4b7b5fdeebe0229edfcb88dee78b172b0147c0c76ab0bd6c0660cebe14f6eeb9",
+  "sc.hex": "6363fa3c2329e3638ea0fe68a82d2226cf422b5bb59d0f7c7a5882484c11df18",
+  "sel.hex": "b44c1a04752d66e953320f2a6b6cf7f998b4ba89833b770274d427e5f06d8959",
+  "win.hex": "8760a6f754dbb43d7b88b39a647aa95c794e5151ab11b30fb42075c5754c3642"
+ }
+}

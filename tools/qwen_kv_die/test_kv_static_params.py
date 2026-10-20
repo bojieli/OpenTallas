@@ -111,7 +111,8 @@ def test_face_land_compiler_ages():
         importlib.reload(K2)
         import kv_static_programme as C
         fl = C._face_land()
-        assert fl['enabled'] and fl['i_ctl'] == 1 and fl['F_DLY_delta'] == 1 and fl['rst_release_max'] == 3
+        assert fl['enabled'] and fl['i_ctl'] == 1 and fl['F_DLY_delta'] == 1 and fl['rst_release_max'] == 5   # KV-BIND3: astk rc1 (2 landing + 3 relay)
+        assert fl['rst_release'] == dict(kvs_attn=3, astk_rly_296=5, hr_core_queue=3)
     finally:
         os.environ.pop('OT_KV_FACE_LAND')
         importlib.reload(K2)

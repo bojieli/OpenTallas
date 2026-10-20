@@ -28,7 +28,8 @@
 // Faults (sticky; checks only, they never reschedule; XR6: terms registered, flag visible 1 cycle after the event): two CTLs / two RDs / two lo beats in a cycle, an RD or a row write into
 // a busy leaf unpacker, a partial set that is partial or overlaps the collection, two injections in one ci slot, an RD to
 // leaf > 4, a CTL target > 5, two relayed SC beats in a cycle, a lo beat in the send-config cycle (it would be dropped), the ENG faults above.
-// Bench: rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv (tools/s81_slice/xr_bench.sh); mutants OT_S81SL_XR_MUT_*.
+// Bench: rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv (tools/s81_slice/xr_bench.sh); mutants OT_S81SL_XR_MUT_*
+// (XHOLD, XR1F-PIN 10-19: the x_eps / x_scale / x_mode output copies do not hold between config writes).
 // Every input lands in a flop; every output leaves a flop.  HB = 1 builds the C3 variant (band port B, attention).
 // XR7 (LEAD2-S81/SLICE2 10-19, SAFE items 1/3 after the 67954d13c census: 348 FF + 9 comb roots > 32 loads): 0 data cycles.
 //  * reset only on valid / control state; every kept copy is reset-free (it is recomputed every edge from reset state, so
@@ -99,9 +100,9 @@ module ot_s81sl_xr #(
     output reg  [31:0]     g_d,
     // xfin
     output reg             x_go,
-    output reg             x_mode,
-    output reg  [31:0]     x_eps,
-    output reg  [31:0]     x_scale,
+    output wire            x_mode,
+    output wire [31:0]     x_eps,
+    output wire [31:0]     x_scale,
     output reg             x_sv,
     output reg  [7:0]      x_si,
     output reg  [31:0]     x_s,
@@ -293,7 +294,7 @@ module ot_s81sl_xr #(
         snd[21 +: 16] = s_mask; snd[37 +: 3] = s_leaf; snd[40 +: 10] = s_row; snd[50 +: 2] = s_np; snd[52 +: 1024] = pk;
     end
     // S81-SMWIRE: SO gather words -> one XB ring beat (assembled from the B input flops; injected on the next edge)
-    reg [1:0] so_n; reg [511:0] so_lo, so_hi; reg so_go, so_f; reg [6:0] so_idx; reg [1:0] so_rt;
+    reg [1:0] so_n; wire [511:0] so_lo, so_hi; reg so_go, so_f; reg [6:0] so_idx; reg [1:0] so_rt;
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin so_n <= 2'd0; so_go <= 1'b0; so_f <= 1'b0; end
         else begin
@@ -309,11 +310,31 @@ module ot_s81sl_xr #(
                 end
             end
         end
-    always @(posedge clk) if (b_so) begin
-        if (so_n == 2'd0) so_lo <= bb[52 +: 512];
-        if (so_n == 2'd1) so_hi <= bb[52 +: 512];
-        if (so_n == 2'd2) begin so_idx <= bb[52 +: 7]; so_rt <= bb[6:5]; end
-    end
+    always @(posedge clk) if (b_so && so_n == 2'd2) begin so_idx <= bb[52 +: 7]; so_rt <= bb[6:5]; end
+    // ROOT4-S81POST (10-19, SAFE item 3): the lo / hi capture enables (b_so && so_n == 0 / 1) drove 512 loads each.  Now the
+    // word is staged one edge (so_w, no enable) and so_lo / so_hi capture so_w under KEPT registered enable copies, one per
+    // 8 bits (64 + 64 flops, D = the decode's next state, <= ~24 pins each).  lo is captured one edge after its B word,
+    // hi one edge after its B word = on the header edge, so both are valid in the so_go cycle exactly as before:
+    // so_b, ci_r and every SO cycle are unchanged (0 cycles).  C1 (HB = 0) has no B port: none of these flops there.
+    generate if (HB != 0) begin : g_soc
+        reg [511:0] so_w, so_lo_r, so_hi_r;
+        (* keep *) reg [63:0] sol_c; (* keep *) reg [63:0] soh_c;
+        always @(posedge clk) begin
+            so_w <= bb[52 +: 512];
+`ifdef OT_S81SL_XR_MUT_SOEN
+            for (k = 0; k < 64; k = k + 1) begin sol_c[k] <= b_so && so_n == 2'd0; soh_c[k] <= b_so && so_n == 2'd0; end
+`else
+            for (k = 0; k < 64; k = k + 1) begin sol_c[k] <= b_so && so_n == 2'd0; soh_c[k] <= b_so && so_n == 2'd1; end
+`endif
+            for (i = 0; i < 512; i = i + 1) begin
+                if (sol_c[i / 8]) so_lo_r[i] <= so_w[i];
+                if (soh_c[i / 8]) so_hi_r[i] <= so_w[i];
+            end
+        end
+        assign so_lo = so_lo_r; assign so_hi = so_hi_r;
+    end else begin : g_nosoc
+        assign so_lo = 512'd0; assign so_hi = 512'd0;
+    end endgenerate
     assign so_go_nx = b_so && so_n == 2'd2 && bb[4] && bb[52 + 32 +: 8] == 8'h5A && bb[6:5] != 2'd0 && bb[6:5] != 2'd3;
     wire [W-1:0] so_b = {{(W - 1045){1'b0}}, so_hi, so_lo, 1'b0, so_idx, sid_c, 5'd0, 3'd2, 1'b1};
     // V-from-G-unit CTL re-injection on the tier line (both sides, hops 0 = line default), SC relay to V
@@ -405,20 +426,40 @@ module ot_s81sl_xr #(
     // c_d / is_d / cfg_d are (* keep *) port registers: one flop per pin (synthesis otherwise folds the equal-D copies into
     // one flop that drives pins on two faces).  XR3 (10-18): c_d / rb_* / g_* leave as ONE copy; ot_s81sl_slice fans them
     // out to the 5 leaves in its glue (the leaf relays), so the tile no longer carries 5 equal 160 / 32 / 35-b pin copies.
+    // XR1F-PIN (S81-SLICE3-XR1F 10-19, native audit of closed 12b616b54: launch 286 ps > 220 on 42 pins, all x_eps /
+    // x_scale / x_mode; other outputs median 142): these were enable-hold flops (DFFE -> DFFHQN + QN -> NAND2 -> OA21 -> D),
+    // so the port net's flop also fed its own hold mux through a gate whose output is NOT the D net -- io_flop_at_pins.tcl
+    // (ot_of_fbonly) skipped them and they placed in the core.  Now the KEPT masters x_*_m hold the value and the pins leave
+    // DEDICATED KEPT output copies x_*_q with the master's next state as D (tg ? body : master): their Q drives only the
+    // pin, so they are anchored at the S face.  x_*_q == x_*_m every cycle -> same function, 0 cycles.
+    (* keep *) reg [31:0] x_eps_m, x_scale_m, x_eps_q, x_scale_q; (* keep *) reg x_mode_m, x_mode_q;
+    assign x_eps = x_eps_q; assign x_scale = x_scale_q; assign x_mode = x_mode_q;
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin c_v <= 5'd0; x_go <= 1'b0; is_v <= 1'b0; cfg_v <= 1'b0; x_mode <= 1'b0; end
+        if (!rs_o) begin c_v <= 5'd0; x_go <= 1'b0; is_v <= 1'b0; cfg_v <= 1'b0; x_mode_m <= 1'b0; x_mode_q <= 1'b0; end
         else begin
             c_v <= tg[0] ? lmask : 5'd0;
             x_go <= tg[1];
-            if (tg[1]) x_mode <= body[32];
+            x_mode_m <= tg[1] ? body[32] : x_mode_m;
+`ifdef OT_S81SL_XR_MUT_XHOLD
+            x_mode_q <= tg[1] ? body[32] : 1'b0;                    // mutant: output copy does not hold
+`else
+            x_mode_q <= tg[1] ? body[32] : x_mode_m;
+`endif
             is_v <= tg[2];
             cfg_v <= tg[3];
         end
     always @(posedge clk) begin
         c_d <= body;
         for (k = 0; k < 4; k = k + 1) begin
-            if (tg1_c[k]) x_eps[8 * k +: 8] <= body[8 * k +: 8];
-            if (tg1_c[4 + k]) x_scale[8 * k +: 8] <= body[64 + 8 * k +: 8];
+            x_eps_m[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : x_eps_m[8 * k +: 8];
+            x_scale_m[8 * k +: 8] <= tg1_c[4 + k] ? body[64 + 8 * k +: 8] : x_scale_m[8 * k +: 8];
+`ifdef OT_S81SL_XR_MUT_XHOLD
+            x_eps_q[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : 8'd0;  // mutant: output copies do not hold
+            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? body[64 + 8 * k +: 8] : 8'd0;
+`else
+            x_eps_q[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : x_eps_m[8 * k +: 8];
+            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? body[64 + 8 * k +: 8] : x_scale_m[8 * k +: 8];
+`endif
         end
         is_d <= body; cfg_d <= body;
     end
