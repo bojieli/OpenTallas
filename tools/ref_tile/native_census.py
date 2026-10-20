@@ -41,6 +41,14 @@ KTREE_LIBERTY = frozenset((
 
 def ktree_scoped_admission(report):
     """Verify the fixed coordinator decision, retaining the raw FAIL receipt."""
+    if not isinstance(report, dict) or not isinstance(report.get('netlist'), dict):
+        return False
+    raw_sha = report['netlist'].get('sha256')
+    if (not isinstance(raw_sha, str) or not re.fullmatch('[a-f0-9]{64}', raw_sha)
+            or type(report.get('limit')) is not int
+            or type(report.get('max_dynamic_loads')) is not int
+            or report.get('role_errors') != []):
+        return False
     if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
             or report.get('top') != 'ot_qkh_ktree_lk_nc32c'
             or (report.get('netlist', {}).get('sha256') != KTREE_NETLIST
@@ -49,13 +57,17 @@ def ktree_scoped_admission(report):
             or report.get('max_dynamic_loads') != 34 or report.get('role_errors')):
         return False
     libs = report.get('liberty', [])
-    if (len(libs) != len(KTREE_LIBERTY)
+    if (not isinstance(libs, list) or len(libs) != len(KTREE_LIBERTY)
+            or any(not isinstance(row, dict) for row in libs)
             or {row.get('sha256') for row in libs} != KTREE_LIBERTY):
         return False
     expected = {(f'u_kt.g_n[{i}].u_a.{"_6386_" if i == 14 else "_6361_"}/Y',
                  f'u_kt.g_n[{i}].u_a.{"_2981_" if i == 14 else "_2948_"}',
                  'combinational_or_macro', 34) for i in range(15)}
     rows = report.get('violations', [])
+    if (not isinstance(rows, list) or len(rows) != 15
+            or any(not isinstance(r, dict) or type(r.get('loads')) is not int for r in rows)):
+        return False
     actual = {(r.get('driver'), r.get('net'), r.get('driver_role'), r.get('loads')) for r in rows}
     return len(rows) == 15 and actual == expected
 
