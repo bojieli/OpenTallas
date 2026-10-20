@@ -1,0 +1,8 @@
+L25_H9C_SWAP PASS instances 64 straps 64 EXACT_SOURCE7_PARAMS6_PORTS_AND_EDGES_PRESERVED out 38d7e25f8098d80b
+DIE_PORT_BIND FAIL masters=200 instances=72791 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=65066 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=122 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+FUNCTIONAL_BIND FAIL paths=1284 bits=289940 fail_paths=124 stale_gaps=0 open_gaps=1
+UNREAD_L21_TRANSFER entries 309 repointed 0 approved_bits 65066 die_unread 65066 remaining 0 sha 712261692bd4e68368c540fd66096677a503a6981ef86cd41363cd3cb6da1292
+L25_REVIEW PASS repinned 4 entries 309 bits 65066 sha f52fbaf00f73a4d46583f7982f3f9c5cd9a5e2248943eff292cca3df5384a491
+S5H_UNREAD_PROPOSAL ca6d091f4f677159fe2848691bdff5a604ff41b4b6814dd4c2b18cfb80b318dc
+DIE_PORT_BIND PASS masters=200 instances=72791 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=122 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+S5H_STRICT_PASS ca6d091f4f677159fe2848691bdff5a604ff41b4b6814dd4c2b18cfb80b318dc (LEAD digest admission pending)
