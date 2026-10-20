@@ -1,0 +1,9 @@
+# Embedding parent with the real native32 child
+
+Source successor qkd_kvs_emb_ctx_n32child leaves the original parent unchanged. It defaults NATIVE32=1 and PIPE_JOIN=1 and instantiates qkd_embedding_row_tx_ctx_native32 directly as u_rowtx. It adds no active cycle beyond the previously priced +2 parent edges and six parallel reset-release edges. MODEL.json was written before source build and retains dimensions, throughput, storage, replicas, boundary and checklist obligations.
+
+The lockstep gold is the existing qkd_kvs_emb_ctx with both native parent options enabled, bound to the exact generated CLOSED c1b child wrapper retained in results/rtl/kv_rowctx_native32_1020/baseline/ot_pin_regs_wrapper.v, around the unchanged original child core. No behavioural stand-in replaces the child. Both sides use the real64x512 SRAM model. The bench sends four full64word rows plus scales across all four return trains, programs the actual calendar, exercises slot gaps, cold resets, held owner records, an unrelated record kind, malformed records and the66th-slot fault. Every visible parent output is compared each edge after reset warmup. Native32's six-edge reset warmup is respected before first use.
+
+Verilator5.050 m0 PASS1302 comparisons,261TX records,260joined words,5starts. Mutants alter child fill-token binding, one exported payload bit, drop the row fault, and bypass the pipelined join. Their exact fail witnesses are m1.log..m4.log; they must all fail before adoption.
+
+Physical adoption is OPEN. The child route has not closed, no native32 child LEF/Lib is yet bound into a parent kit, parent capture/launch/phase compensation is unresolved, and the x2a protected-unbound PG defect must be repaired by ROOT's canonical flow change. This source-only evidence is not a closed parent, not a die integration claim, and does not waive the full-parent mapped native census or real child reach/timing audit. Do not route a stand-in as if it were the real child.
