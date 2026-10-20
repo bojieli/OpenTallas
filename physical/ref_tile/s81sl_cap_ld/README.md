@@ -9,4 +9,4 @@ expected reset-CAP F9. Cost +16 edges on R01 words. Bench 5.050 tools/s81_slice/
 1 Pins: PASS -- pin input/output registers of the delay line; reset_landing 2 + ot_rst_relay. 2 Reach: PASS -- 43.2 um leaf.
 3 Fanout: PASS -- row write enable 70 bits/row via RF decode; reset relay copies only. 4 Depth: PASS -- one 14:1 mux stage.
 5 Storage: PASS -- 980 b RF ring, no flop->flop hold chain. 6 Floorplan: gate to confirm (no macros, one band, ~48 % est.).
-7 Clock: gate to confirm (one root, ~1.1k sinks; io_hold 0.03). 8 Schedule: PASS -- static, D owned by the compiler (+16 INBOX).
+7 Clock: PASS -- 1,136 sinks, TT/FF ins 114.2/85.8 ps, spread 3.0/3.3 ps; io_hold 0.03. 8 Schedule: PASS -- static, D owned by the compiler (+16 INBOX).
