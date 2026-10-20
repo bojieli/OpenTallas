@@ -81,8 +81,8 @@
   "reason": "ot_hgi_coll_fj_core registers every input at its pin in RTL (HOST F20 cfg/desc/launch frames, issuer feedback, child faults, sync rst_n D-pin flop; coordinator native audit of fj_q2 54f035ca0) and every output is flop Q (programme target issuer_cfg/start/configured/init_busy/fault, sticky fault/fault_cause); the V5 lockstep bench fixes these edges (programme +1, issue +3, child faults +1). A synthesis pin stage would add a second, unbenched rung."
  },
  "job": {
-  "owner": "Claude:HBM-ELEMOWN3/COLLQ3",
-  "branch": "claude/collq3-safe-1019",
+  "owner": "Claude:LEAD3-HBM/HBM-COLLFJ",
+  "branch": "claude/collfj-1019",
   "tag": "safe",
   "purpose": "COLLQ3 SAFE q3 parent hard child u_fj (ROWS 128 programme target, parameter-free top)",
   "extra_paths": [
@@ -90,41 +90,39 @@
    "rtl/lib/ot_rst_relay.sv",
    "rtl/hdc",
    "rtl/qwen_sys/split_20261014",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "results/arch/landed_parent_1018/collq",
    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir"
   ],
   "benches": [
    {
-    "name": "hard_v5_q3_pos",
-    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/pos q3 pos",
+    "name": "coll_q3_lp_ars_eq_v7",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/q3_eq eq",
     "expect": "pass",
-    "pass_regex": "HCOLL_Q_HARD_V5_POS_PASS",
-    "min_count_regex": "PASS q3 scen0 checks(\\d+)",
+    "pass_regex": "COLL_LP_ARS_ALL_EXIT 0",
     "threads": 16,
-    "peak_ram_gb": 192,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
-    ]
+    ],
+    "note": "SAFE q3 COLL parent ot_hfd_coll_q3_lpf_ars (binds this fj leaf ot_hgi_coll_fj_n2s1_r128 at ROWS 128 + issuer v7) == v8x #(AR_ITER 1, ROWS 128) every output every cycle + 3 EQ mutants rejected"
    },
    {
-    "name": "hard_v5_q3_mut_droplink",
-    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_droplink q3 droplink",
+    "name": "coll_q3_fj_mut_latespc",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/q3_ptmut ptmut",
     "expect": "fail",
+    "fail_regex": "EQ_MUTANT m_latespc REJECTED",
+    "fail_witness": "results/rtl/hbm_coll_fj_1019/witness/m_latespc_q3.log",
     "threads": 16,
-    "peak_ram_gb": 192,
+    "peak_ram_gb": 48,
     "needs": [
      "verilator"
-    ]
-   },
-   {
-    "name": "hard_v5_q3_mut_causeswap",
-    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_causeswap q3 causeswap",
-    "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 192,
-    "needs": [
-     "verilator"
-    ]
+    ],
+    "note": "fj-leaf mutant OT_PT_MUT_LATE_SPC: ROWS-128 programme target sets issuer_start_pc only at launch (pre-e0cf553cf) -> v7 never primed -> parent EQ must fail"
    }
   ],
   "views_to": "physical/ref_tile/hcoll_fj3_r128w/views",
@@ -147,5 +145,5 @@
   "enable": true,
   "stages": 2
  },
- "structural_change": "COLLQ3 10-19: hcoll_v5_fj3_r128 geometry / pins / RTL, re-topped as the parameter-free wrapper ot_hgi_coll_fj_n2s1_r128 (the parent instantiates it by this exact name; a #(ROWS 128) instance of the base module is renamed $paramod by yosys and binds no view)"
+ "structural_change": "COLLQ3 10-19: hcoll_v5_fj3_r128 geometry / pins / RTL, re-topped as the parameter-free wrapper ot_hgi_coll_fj_n2s1_r128 (the parent instantiates it by this exact name; a #(ROWS 128) instance of the base module is renamed $paramod by yosys and binds no view); HBM-COLLFJ 10-19: re-gated on the issuer-v7 branch (programme target ROWS 128 sets issuer_start_pc at descriptor accept, e0cf553cf); job benches = parent EQ with the v7 issuer + fj mutant LATE_SPC"
 }
