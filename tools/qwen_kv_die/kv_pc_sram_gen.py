@@ -572,6 +572,71 @@ TIM_PC5 = [
     (SQ_BLOCK_OLD, SQ_BLOCK_NEW), (CASE_OLD, CASE_NEW), (DESC_OLD, DESC_NEW), (RD_OLD, RD_NEW),
 ]
 
+# KV-PC5-A: u_ctl (ot_qkd_static_ctrl_pc_emb) command FIFO native32 restructure
+def _hg(k, lhs, a1, cq):
+    return (f'  {lhs} <= ctl_pop_c[{1 + k}] ? (ctl_hf_qv[{k * 10 + 9}] ? {a1} : (ctl_push_c[{1 + k}] ? {cq} : {lhs})) :\n'
+            f'          ((ctl_hf_qv[{k * 10 + 8}] && ctl_push_c[{1 + k}]) ? {cq} : {lhs});\n')
+
+def _rd(k, lo, w, src):
+    return ('|{' + ', '.join(f'{{{w}{{ctl_hf_qv[{k * 10 + e}]}}}} & {src}[{e}][{lo + w - 1}:{lo}]' for e in range(8)) + '}') if False else \
+        ' | '.join(f'({{{w}{{ctl_hf_qv[{k * 10 + e}]}}}} & {src}[{e}][{lo + w - 1}:{lo}])' for e in range(8))
+
+UCTL_PC5 = [
+    (''' wire pop=live && (malformed || (descriptor_head ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1));
+ wire push=(ENABLE!=0) && cmd_v_q && count<8;''',
+     ''' // KV-PC5 (native32): pop / push as kept AND-leaf copies (0 = the plain signal; 1..3 = head field groups)
+ wire [3:0] ctl_pop_c, ctl_push_c;
+ for (genvar q = 0; q < 4; q = q + 1) begin : g_ctl_pp
+   ot_kvpc5_and2 u_pop (.a(live), .b(malformed || (descriptor_head ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1)), .y(ctl_pop_c[q]));
+   ot_kvpc5_and2 u_push (.a((ENABLE!=0) && cmd_v_q), .b(count<8), .y(ctl_push_c[q]));
+ end
+ wire pop=ctl_pop_c[0];
+ wire push=ctl_push_c[0];
+ // lookahead (next-state pointers -> registered one-hot copies): free write slot per field group (ungated write: slot
+ // wp is never live while count < 8), and per head group {count > 1, count == 0, onehot(rp + 1)}
+ wire [3:0] ctl_count_nx = count + (push ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
+ wire [2:0] ctl_wp_nx = push ? wp + 3'd1 : wp;
+ wire [2:0] ctl_rp_nx = pop ? rp + 3'd1 : rp;
+ wire [7:0] ctl_ws_nx = (ctl_count_nx != 4'd8) ? (8'b1 << ctl_wp_nx) : 8'b0;
+ wire [9:0] ctl_hf_nx = {ctl_count_nx > 4'd1, ctl_count_nx == 4'd0, 8'b1 << 3'(ctl_rp_nx + 3'd1)};
+ (* keep *) reg [23:0] ctl_ws_qv; (* keep *) reg [29:0] ctl_hf_qv;
+ always @(posedge clk or negedge rst_n)
+  if (!rst_n) begin ctl_ws_qv <= {3{8'b1}}; ctl_hf_qv <= {3{2'b01, 8'b10}}; end
+  else begin ctl_ws_qv <= {3{ctl_ws_nx}}; ctl_hf_qv <= {3{ctl_hf_nx}}; end'''),
+    ('''  if(push)begin fifo[wp]<=cmd_q;first_fifo[wp]<=first_q;end
+  if(count==0 && push)begin head<=cmd_q;head_first<=first_q;end
+  else if(pop) begin
+   if(count>1)begin head<=fifo[rp_next];head_first<=first_fifo[rp_next];end
+   else if(push)begin head<=cmd_q;head_first<=first_q;end
+  end''',
+     '''  // KV-PC5: ungated slot writes and per-group head loads (exactly: count == 0 && push -> cmd_q; pop && count > 1 ->
+  // fifo[rp + 1]; pop && count == 1 && push -> cmd_q; else hold)
+  for (integer e = 0; e < 8; e = e + 1) begin
+   if (ctl_ws_qv[e]) fifo[e][13:0] <= cmd_q[13:0];
+   if (ctl_ws_qv[8 + e]) fifo[e][27:14] <= cmd_q[27:14];
+   if (ctl_ws_qv[16 + e]) begin fifo[e][31:28] <= cmd_q[31:28]; first_fifo[e] <= first_q; end
+  end
+''' + _hg(0, 'head[13:0]', 'ctl_a1_0', 'cmd_q[13:0]') + _hg(1, 'head[27:14]', 'ctl_a1_1', 'cmd_q[27:14]')
+     + _hg(2, 'head[31:28]', 'ctl_a1_2[13:10]', 'cmd_q[31:28]') + _hg(2, 'head_first', 'ctl_a1_2[9:0]', 'first_q')),
+    (' output reg row_v,output reg [2:0] row_op,output reg [4:0] row_bank,',
+     ' output reg row_v,output reg [2:0] row_op,output reg [4:0] row_bank,\n'
+     ' output reg [31:0] row_act_oh,   // KV-PC5: == {32{row_v && row_op == ACT}} & onehot(row_bank), registered'),
+    ('   row_v<=0;col_v<=0;col_we<=0;busy<=0;fault_q<=0;fault<=0;',
+     '   row_v<=0;col_v<=0;col_we<=0;busy<=0;fault_q<=0;fault<=0;row_act_oh<=32\'b0;'),
+    ('   row_v<=rv;col_v<=cv;col_we<=cwe;busy<=core_busy;',
+     "   row_v<=rv;col_v<=cv;col_we<=cwe;busy<=core_busy;row_act_oh<=(rv && rop==3'd1) ? (32'b1 << rb) : 32'b0;"),
+    (''' always @(posedge clk) begin
+  cmd_q<=cmd;first_q<=cmd_first;''',
+     ''' wire [13:0] ctl_a1_0 = ''' + _rd(0, 0, 14, 'fifo') + ''';
+ wire [13:0] ctl_a1_1 = ''' + _rd(1, 14, 14, 'fifo') + ''';
+ wire [3:0] ctl_a1_2h = ''' + _rd(2, 28, 4, 'fifo') + ''';
+ wire [9:0] ctl_a1_2l = ''' + _rd(2, 0, 10, 'first_fifo') + ''';
+ wire [13:0] ctl_a1_2 = {ctl_a1_2h, ctl_a1_2l};
+ always @(posedge clk) begin
+  cmd_q<=cmd;first_q<=cmd_first;'''),
+    ('''   if(pop) rp<=rp+1'b1;''', '''   rp<=ctl_rp_nx;'''),
+]
+
 
 CLONES = [
     # (file, original module, clone name, [(old, new), ...], [kept copy families])
@@ -593,7 +658,14 @@ CLONES = [
       ('    qkd_ctrl_pc_port_child_nc #(', '    qkd_kvpc_s_port_child #('),
       ('    qkd_ctrl_pc_ecc_child u_ecc (', '    qkd_kvpc_s_ecc_child u_ecc (')]),
     (CTRL, 'qkd_ctrl_pc_sched_nc', 'qkd_kvpc_s_sched',
-     SCHED + [('    ot_qkd_static_ctrl_pc_emb #(', '    ot_qkd_static_ctrl_pc_emb_kvpc_s #(')],
+     SCHED + [('    ot_qkd_static_ctrl_pc_emb #(', '    ot_qkd_static_ctrl_pc_emb_kvpc_s #('),
+              # KV-PC5: brow written by the registered ACT one-hot of u_ctl (was row_v && row_op == ACT decoded with
+              # row_bank: 49-load enable nodes)
+              ('    wire [18:0] row_row;\n', '    wire [18:0] row_row;\n    wire [31:0] row_act_oh;\n'),
+              ('        .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),',
+               '        .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row), .row_act_oh(row_act_oh),'),
+              ('        if (row_v && row_op == 3\'d1) brow[row_bank] <= row_row[7:0];',
+               '        for (integer b = 0; b < 32; b = b + 1) if (row_act_oh[b]) brow[b] <= row_row[7:0];')],
      [('static_owner_q', 1, 3)]),
     (CORE, 'qkd_ctrl_pc_cdc_child', 'qkd_kvpc_s_cdc_child',
      [('ot_qkd_static_emb_cdc #(.ENABLE(1)) u_ecdc (', 'ot_qkd_static_emb_cdc_kvpc_s #(.ENABLE(1)) u_ecdc (')],
@@ -614,8 +686,8 @@ CLONES = [
     (ECC, 'ot_qfd_kv_landing_ecc', 'ot_qfd_kv_landing_ecc_kvpc_s', [], [('p1_v', 1, 23)]),
     (CAL, 'qkd_controller_hbm_calendar', 'qkd_kvpc_s_calendar', [], [('rn', 1, 28), ('go_q', 1, 41)]),
     (UCTL, 'ot_qkd_static_ctrl_pc_emb', 'ot_qkd_static_ctrl_pc_emb_kvpc_s',
-     [(' ot_qkd_static_kv_timing #(', ' ot_qkd_static_kv_timing_kvpc_s #(')],
-     [('rp', 3, 15),
+     [(' ot_qkd_static_kv_timing #(', ' ot_qkd_static_kv_timing_kvpc_s #(')] + UCTL_PC5,
+     [('rp', 3, 2),
       ('col_bank', 5, 11, ('output reg [4:0] col_bank,col_col,', 'output wire [4:0] col_bank,output reg [4:0] col_col,')),
       ('col_col', 5, 3, ('output reg [4:0] col_col,', 'output wire [4:0] col_col,')),
       ('row_row', 19, 2, ('output reg [18:0] row_row,', 'output wire [18:0] row_row,'))]),
