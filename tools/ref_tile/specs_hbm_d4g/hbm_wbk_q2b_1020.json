@@ -514,7 +514,7 @@
  "slot_change_request": "d4g wbk_<q> x4: new slot 777.6 x 518.4 (pin-bound: N = 16 K ports 4,626 pins at 5.95/um toward the quadrant's 4 vmks leaves; S = DMA wd 2,312 + stream control at 3.2/um toward hb_dbk_<q>); 32 payload SRAMs as 4 abutted 8-high columns (one per stream_fifo_clk root) on the 43.2 lattice",
  "job": {
   "owner": "Claude:LEAD4-HBM/HBM-WBK2",
-  "branch": "claude/hbm-wbk2-1020",
+  "branch": "claude/hbm-wbk2m-1020",
   "tag": "q2b",
   "views_to": "physical/ref_tile/hbm_wbk_q2b_1020/views",
   "record_to": "results/rtl/ref_tile/hbm_wbk_q2b_1020",

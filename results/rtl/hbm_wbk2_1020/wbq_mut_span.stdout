@@ -1,0 +1,6 @@
+LOCKSTEP window base 28808040 total 640 vs fold(master 14404000, 640) = 28808040, span 1216
+[200000000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:117: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=1 wb=0 kshare=0000 controller=0
+%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:117: Verilog $stop
+Aborting...
+STK_WBQ MUTANT_REJECTED wbq_mut_span
+rc=0
