@@ -31,6 +31,18 @@
     "upper_area_multiplier": 35,
     "area_status": "measure mapped retained cones; bound is pessimistic"
   },
+  "arithmetic_graph_candidate": {
+    "status": "alternative after bit-cone native FAIL378; not adopted",
+    "baseline": "golden add4 plus one real input-pin edge",
+    "register_and_logic_replication": "recursive same-input primitive copies",
+    "maximum_logical_loads": 24,
+    "clock_reset_edges_unchanged_by_replication": true,
+    "arithmetic_edges": 5,
+    "additional_replication_edges": 0,
+    "technology": "ASAP7 RVT TT mapped primitives, source-pinned",
+    "required_proof": "clone input-function ledger and actual mapped native32 census",
+    "area_status": "measure actual replicated graph before floorplan"
+  },
   "candidate_core_latency_edges": 62,
   "candidate_group_latency_edges": 65,
   "old_group_latency_edges": 45,
