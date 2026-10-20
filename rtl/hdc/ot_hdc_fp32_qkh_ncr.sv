@@ -2,15 +2,20 @@
 // Default-off split-reset NC kernels. rst_y and rst_n must have identical phase/contract.
 // 32 output-data reset pins separated from <=25 control reset pins; arithmetic and ages unchanged.
 module ot_hdc_fp32_add_lat_ncr #(
-    parameter integer LAT = 7       // only LAT 7 (cuts A, B, C, D + HSPLIT) exists in this variant
+    parameter integer LAT = 7,      // only LAT 7 (cuts A, B, C, D + HSPLIT) exists in this variant
+    // YCOPY = 1..2 (KV-PARAMS4 K-tree root): y2[32 c +: 32] are kept extra output registers (same D, same edge, own reset
+    // leaf rst_y2[c]) so a wide consumer cone can be split over several drivers; YCOPY = 0: y2 = {y, y}, rst_y2 unused
+    parameter integer YCOPY = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
     input wire rst_y,
+    input wire [1:0] rst_y2,
     input  wire        valid_in,
     input  wire [31:0] a,
     input  wire [31:0] b,
     output reg  [31:0] y,
+    output wire [63:0] y2,
     output reg  [1:0]  err,
     output reg         valid_out
 );
@@ -253,6 +258,23 @@ module ot_hdc_fp32_add_lat_ncr #(
         else if(u_byp_dist[k])y[8*k+:8]<=u_code[8*k+:8];
         else if(u_zero || over)y[8*k+:8]<=8'd0;
         else y[8*k+:8]<=(code[30:0]==31'd0)?8'd0:code[8*k+:8];
+      end
+    end endgenerate
+    genvar yci;
+    generate for(yci=0;yci<2;yci=yci+1)begin:g_yc
+      if(yci<YCOPY)begin:g_ycopy
+        (* keep="true",dont_touch="true" *) reg [31:0] yc;
+        for(k=0;k<4;k=k+1)begin:out_copy
+          always @(posedge clk or negedge rst_y2[yci])begin
+            if(!rst_y2[yci])yc[8*k+:8]<=8'd0;
+            else if(u_byp_dist[k])yc[8*k+:8]<=u_code[8*k+:8];
+            else if(u_zero || over)yc[8*k+:8]<=8'd0;
+            else yc[8*k+:8]<=(code[30:0]==31'd0)?8'd0:code[8*k+:8];
+          end
+        end
+        assign y2[32*yci+:32]=yc;
+      end else begin:g_noycopy
+        assign y2[32*yci+:32]=y;
       end
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
