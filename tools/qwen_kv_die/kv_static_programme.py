@@ -68,6 +68,9 @@ AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 # ctl Z stride 4, distributed e-read qkd_astk_er_chain_st ERL 42) moves the attention calendar by MEASURED shifts relative to
 # the RL 1 / ERL 7 strip the attn_calendar laws were measured on (astk_calendar_sweep.sh on the actual strip + mapped SRAM,
 # Verilator 5.050): LMAX / EXP / Z (+ the hub ages that follow them), the P.V e-read issue gap and the e-read latency.
+# KV-FLOOR1 10-20 (default off): the pair END FLOOR control (ot_qwen_tp8_pv_wide_ctl_tbf, kv_bootage OT_KV_PVFIN_FLOOR):
+# both pairs publish on pair 0's issue count, so the compiler law is P1 = P0 (die profile pv_floor)
+PV_FLOOR = os.environ.get('OT_KV_PVFIN_FLOOR', '0') == '1'
 ASTK_EXPAND = os.environ.get('OT_KV_ASTK_EXPAND', '1') == '1'   # HKV-DIE3 10-19: production default ON (= kv_static_die)
 ASTK_LAW = 'results/arch/qwen_kv_die/hkv_astk_calendar_1018/astk_calendar_law.json'
 
@@ -307,7 +310,8 @@ def profile(kind, ages=None):
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
                 rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None,
                 # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)
-                f_dly=((ages.get('boot_ages') or {}).get('attn') or {}).get('F_DLY') or 1)
+                f_dly=((ages.get('boot_ages') or {}).get('attn') or {}).get('F_DLY') or 1,
+                pv_floor=PV_FLOOR)
 
 
 def kv_params(pr):
@@ -351,6 +355,12 @@ def attention_calendar(T, pr, service_end=None):
             c[f] += law[k]
         d_gap, d_erl = astk_pv_gap_shift(T, law), law['dERL']
     po = [AC.w16_pair_out(T, 0) + pr['d_rl'] + d_erl, AC.w16_pair_out(T, 1) + pr['d_rl'] + d_erl]
+    if pr.get('pv_floor'):
+        # KV-FLOOR1: ctl_tbf ends FEED / publishes out_age on pair 0's issue count for both pairs (pv_floor_bench: P1 = P0
+        # at every context, bit-exact).  Pair 0 has the most rows, so P0 = max(P0, P1): the join age is unchanged.
+        if po[1] > po[0]:
+            raise ValueError(f'T={T}: pair END FLOOR needs P0 >= P1 (P0 {po[0]}, P1 {po[1]})')
+        po[1] = po[0]
     mg = rz_margin(pr)
     pv = max(c['EXP'] + AC.pv_after_exp_w16(T) + d_gap, c['HUB_PUB'] + mg - max(po))
     r = max(max(po), c['HUB_PUB'] + mg - pv)

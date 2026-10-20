@@ -39,6 +39,18 @@ SOURCES = {
     O.RTL: O.RTL_SHA,
 }
 CTL_MASTER = 'ot_qwen_tp8_pv_wide_ctl_tb'
+# KV-FLOOR1 10-20 (OT_KV_PVFIN_FLOOR=1, default off): the frame is qkd_pvw_die_t_bf.sv (module qkd_pvw_die_tbf) and the pair
+# control the END FLOOR successor ot_qwen_tp8_pv_wide_ctl_tbf (same ports; out_age<=k_oa+nq_end is its only out_age write).
+# Same three contracts; the station rows of _bf are byte-identical to _ba (kv_bootage.pvw_variant_floor changes the module
+# name and the u_ctl master / END_FLOOR only).
+FLOOR = __import__('os').environ.get('OT_KV_PVFIN_FLOOR', '0') == '1'
+if FLOOR:
+    FRAME = 'rtl/qwen_sys/split_20261014/qkd_pvw_die_t_bf.sv'
+    CTL = 'rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv'
+    SOURCES = {k: v for k, v in SOURCES.items() if not k.endswith(('_ba.sv', 'ctl_tb.sv'))}
+    SOURCES.update({FRAME: '3edcf1637c22361c7c96d31ba3eed8d7c491b87907620ec42fe743e587f4d98f',
+                    CTL: '210f4a2f04011f04e55b9a03543d700dfbf449d9b09411f1513fe1415380a05d'})
+    CTL_MASTER = 'ot_qwen_tp8_pv_wide_ctl_tbf'
 PARENT = re.compile(r'^(pvw_[01])__(?:g_ok_)?(u_\w+)$')
 CLASSES = [
     (re.compile(r'^pvw_[01]__(?:g_ok_)?u_CP\w+_r\d+$'), 'branch_subset_cargo_CP'),
@@ -56,6 +68,8 @@ CTL_FACTS = [  # exact source statements the self_checked_status / reserved_zero
     r'if\(state!=IDLE&&cv_r\[0\]!=out_slot\)cbad=1;',
     r'output reg\[59:0\] cmd',
 ]
+if FLOOR:
+    CTL_FACTS = [f.replace(r'out_age<=k_oa\+nq;', r'out_age<=k_oa\+nq_end;') for f in CTL_FACTS]
 
 
 def ranges(bits):
