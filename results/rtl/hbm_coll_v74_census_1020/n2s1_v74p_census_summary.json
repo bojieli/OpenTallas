@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.pre_gate_native_census.v1",
+ "top": "ot_hgi_coll_ctl_v5r_n2s1_safephys",
+ "status": "FAIL",
+ "limit": 32,
+ "roots_examined": 21828,
+ "max_dynamic_loads": 60,
+ "functional_pin_contract": "NOT_EVALUATED",
+ "pin_registration_contract": "NOT_EVALUATED",
+ "storage_contract": "NOT_EVALUATED",
+ "independent_source_contract_audit_required": true,
+ "kit": "hcoll_v5r_ctl_n2s1_v74p",
+ "commit": "5f2230dd4 (= 902411602 RTL + origin/main gate helpers)",
+ "violations": 76,
+ "by_family": [
+  {
+   "driver": "u_ot_pr_core.u.u_mul.k[*]",
+   "max_loads": 60,
+   "nets": 8
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_mul.c[*]",
+   "max_loads": 59,
+   "nets": 15
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_mul.d[*]",
+   "max_loads": 57,
+   "nets": 14
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_mul.b[*]",
+   "max_loads": 55,
+   "nets": 15
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_mul.u_it_b.q[*]",
+   "max_loads": 49,
+   "nets": 5
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_mul.u_it_d.q[*]",
+   "max_loads": 49,
+   "nets": 6
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_mul.u_it_c.q[*]",
+   "max_loads": 48,
+   "nets": 7
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_mul.u_it_a.q[*]",
+   "max_loads": 43,
+   "nets": 2
+  },
+  {
+   "driver": "u_ot_pr_core.u.u_mul.u_it_v.q[*]",
+   "max_loads": 41,
+   "nets": 3
+  },
+  {
+   "driver": "u_ot_pr_core.u.hs_q",
+   "max_loads": 33,
+   "nets": 1
+  }
+ ],
+ "remote": "ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/hcoll_v5r_ctl_n2s1_v74p-20261020-022403/routes/gate/work/orfs/native_census.json"
+}
