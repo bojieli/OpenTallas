@@ -470,20 +470,34 @@ module ot_s81sl_lep_core #(
                 (* keep="true" *) reg [AT:0] count_r;
                 (* keep="true" *) reg [CW-1:0] credit_r;
                 (* keep="true" *) reg credit_pin_r;
-                assign rd_group[c]=(count_r!=0 && credit_r!=0);
-                assign wr_group[c]=push_group[2*c+t/2] && (count_r!=(AT+1)'(DT) || rd_group[c]);
+                wire wr_update,rd_update,wr_pointer,rd_pointer;
+                if(SAFE_STD) begin:g_std_qualify
+                  // Separate genuine state/pointer/memory consumer cones. A
+                  // single write/read predicate otherwise fans ~45 ABC pins.
+                  (* keep=1 *) ot_s81sl_std_tx_qualify #(.AT(AT),.CW(CW),.DT(DT)) u_memory(
+                    .push(push_group[2*c+t/2]),.count(count_r),.credit(credit_r),.wr(wr_group[c]),.rd(rd_group[c]));
+                  (* keep=1 *) ot_s81sl_std_tx_qualify #(.AT(AT),.CW(CW),.DT(DT)) u_state(
+                    .push(push_group[2*c+t/2]),.count(count_r),.credit(credit_r),.wr(wr_update),.rd(rd_update));
+                  (* keep=1 *) ot_s81sl_std_tx_qualify #(.AT(AT),.CW(CW),.DT(DT)) u_pointer(
+                    .push(push_group[2*c+t/2]),.count(count_r),.credit(credit_r),.wr(wr_pointer),.rd(rd_pointer));
+                end else begin:g_existing_qualify
+                  assign rd_group[c]=(count_r!=0 && credit_r!=0);
+                  assign wr_group[c]=push_group[2*c+t/2] && (count_r!=(AT+1)'(DT) || rd_group[c]);
+                  assign wr_update=wr_group[c];assign rd_update=rd_group[c];
+                  assign wr_pointer=wr_group[c];assign rd_pointer=rd_group[c];
+                end
                 wire pointer_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c];
                 wire state_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c+1];
                 always @(posedge clk or negedge state_reset)
                     if(!state_reset) begin count_r<=0;credit_r<=CW'(CRED);credit_pin_r<=0; end else begin
                         credit_pin_r<=lo_r[t];
-                        credit_r<=credit_r+CW'(credit_pin_r)-CW'(rd_group[c]);
-                        count_r<=count_r+(AT+1)'(wr_group[c])-(AT+1)'(rd_group[c]);
+                        credit_r<=credit_r+CW'(credit_pin_r)-CW'(rd_update);
+                        count_r<=count_r+(AT+1)'(wr_update)-(AT+1)'(rd_update);
                     end
                 always @(posedge clk or negedge pointer_reset)
                     if(!pointer_reset) begin wp_r<=0;rp_r<=0; end else begin
-                        wp_r<=(wp_r==AT'(DT-1) && wr_group[c])?AT'(0):wp_r+AT'(wr_group[c]);
-                        rp_r<=(rp_r==AT'(DT-1) && rd_group[c])?AT'(0):rp_r+AT'(rd_group[c]);
+                        wp_r<=(wp_r==AT'(DT-1) && wr_pointer)?AT'(0):wp_r+AT'(wr_pointer);
+                        rp_r<=(rp_r==AT'(DT-1) && rd_pointer)?AT'(0):rp_r+AT'(rd_pointer);
                     end
 `ifdef OT_S81SL_TX_GROUP_ASSERT
                 always @(posedge clk) if(rt && pointer_reset && state_reset) begin
@@ -1516,4 +1530,11 @@ endmodule
 // Independent combinational decode groups keep each shared metadata input local.
 (* keep_hierarchy=1 *) module ot_s81sl_lep_std_enable(input wire a,b,ring,output wire q);
  assign q=a&&b&&ring;
+endmodule
+
+// Default-off standard TX: independent physical qualification decoders.
+(* keep_hierarchy=1 *) module ot_s81sl_std_tx_qualify #(parameter integer AT=9,CW=4,DT=512)(
+ input wire push,input wire [AT:0] count,input wire [CW-1:0] credit,output wire wr,rd);
+ assign rd=(count!=0)&&(credit!=0);
+ assign wr=push&&((count!=(AT+1)'(DT))||rd);
 endmodule
