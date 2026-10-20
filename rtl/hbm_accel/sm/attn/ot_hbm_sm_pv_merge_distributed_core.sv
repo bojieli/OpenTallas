@@ -26,7 +26,8 @@
 //  * pub_d0 kept copies, one per 16 pub_buffer bits (capture enables; sourced from 4 pub_start copies), reset group 53;
 //    node_tag[pub_slot] read per 4-bit quarter from its own pub_slot copy; slot0/tag0 captured on the pub_start copies,
 //    slot1/tag1 on 3 more pub_d0 copies (pd0_o), the pub_word/pub_out_slot/pub_tag output captures on 3 more pub_d1 copies (pd1_o).
-// Reset groups (third-level tree outputs, <= 32 flops each): 0 bp/turn/ring/ov, 1-4 adder valids, 5-12 entry k/c/n,
+// Reset groups (third-level tree outputs, <= 32 flops each): 0 bp/turn/ring, 1-4 unused by the core (PVM9: the wrapper
+// feeds them from lane leaves 0/4/8/12; adder valids now on rst_lane_n[l], one leaf per lane), 5-12 entry k/c/n,
 // 13 entry busy/fl/fin + pv_v + m_fault, 14 fold state, 15 publication state (+ wrapper output valids), 16-47 slice
 // copies (2 slices each), 48-51 wn_k copies, 52 pub_d1/pub_active copies, 53 pub_d0 copies.
 module ot_hbm_sm_pv_merge_distributed_core #(
@@ -59,6 +60,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
 )(
     input wire clk,
     input wire [53:0] rst_core_n,
+    input wire [L-1:0] rst_lane_n,                   // PVM9: one third-level reset leaf per merge lane (kernel valids + ov_l)
     input wire [63:0] ev_operand, first_operand,     // per 8-bit operand slice
     input wire [63:0] ev_write,                      // per stack-write byte
     input wire [7:0] ev_entry,                       // per entry recurrence
@@ -161,13 +163,20 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     wire [L*32-1:0] vres;                             // the result read at the entry's next turn
     generate if (SAFE) begin : g_safe
         // (a) operand registers: the adders start from flops; y is the result at the entry's next turn
-        reg [L*32-1:0] oa, ob;
-        reg            ov;
-        always @(posedge clk) begin oa <= (SAFE == 2) ? ma2 : ma; ob <= (SAFE == 2) ? mb2 : mb; end
-        always @(posedge clk or negedge rst_core_n[0]) if (!rst_core_n[0]) ov <= 1'b0; else ov <= mv;
+        // PVM9 (HBM-PVM9 2026-10-20, r3 GPL RSZ-3006: ONE ov register drove valid_in of all 16 dont-touch kernels and
+        // rst_core_n[1+l/4] spanned 4 lanes, so the die-spanning nets ended on protected pins and could not be buffered):
+        // each lane owns a kept operand stage u_opr (its 32+32 operand bits + its OWN valid copy ov_l[l], same D mv, same
+        // edge, reset by its own third-level leaf rst_lane_n[l]) placed with its kernel inside the lane's fence.
+        // Cycle-identical: ov_l[l] == the former shared ov on every edge (bench observer); no schedule edge added.
+        // MUT 15 (bench only): lane 9's valid copy takes ov_l[8] (one edge late).
+        wire [L*32-1:0] oa, ob;
+        wire [L-1:0]    ov_l;
         for (l = 0; l < L; l = l + 1) begin : g_madd
             wire [1:0] er;
             wire       vo;
+            ot_pvm_lane_operand #(.ID(l)) u_opr (.clk(clk), .rn(rst_lane_n[l]),
+                .da((SAFE == 2) ? ma2[32*l +: 32] : ma[32*l +: 32]), .db((SAFE == 2) ? mb2[32*l +: 32] : mb[32*l +: 32]),
+                .dv((MUT == 15 && l == 9) ? ov_l[8] : mv), .qa(oa[32*l +: 32]), .qb(ob[32*l +: 32]), .qv(ov_l[l]));
             // (b) DRST 0: no reset on the adder datapath (valid bits only)
             if (FAN32 != 0) begin : g_fan32
                 // Exact root-approved LAT7/DRST0/CUTS=-1 component; no new edges.
@@ -180,10 +189,10 @@ module ot_hbm_sm_pv_merge_distributed_core #(
                 ot_hdc_fp32_add_lat_fan32
 `endif
                     #(.LAT(ALAT), .DRST(0), .CUTS(-1), .SAFE_DIST(FAN32)) u_m (
-                    .clk(clk), .rst_n(rst_core_n[1+l/4]), .valid_in(ov), .a(oa[32*l +: 32]),
+                    .clk(clk), .rst_n(rst_lane_n[l]), .valid_in(ov_l[l]), .a(oa[32*l +: 32]),
                     .b(ob[32*l +: 32]), .y(my[32*l +: 32]), .err(er), .valid_out(vo));
             end else begin : g_released
-            ot_hdc_fp32_add_lat #(.LAT(ALAT), .DRST(0)) u_m (.clk(clk), .rst_n(rst_core_n[1+l/4]), .valid_in(ov), .a(oa[32*l +: 32]),
+            ot_hdc_fp32_add_lat #(.LAT(ALAT), .DRST(0)) u_m (.clk(clk), .rst_n(rst_lane_n[l]), .valid_in(ov_l[l]), .a(oa[32*l +: 32]),
                 .b(ob[32*l +: 32]), .y(my[32*l +: 32]), .err(er), .valid_out(vo));
             end
             assign mf[l] = vo && (er != 2'd0);
@@ -662,3 +671,10 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     assign fault = m_fault | pub_fault | fold_fault;
 endmodule
 `default_nettype wire
+// PVM9: one merge lane's operand stage (kept hierarchy: its cells carry the u_opr/ prefix the kit fence binds to the lane's
+// kernel).  qa/qb plain registers (no reset, as the former oa/ob); qv async-reset valid copy (as the former ov).
+(* keep_hierarchy="yes" *) module ot_pvm_lane_operand #(parameter integer ID=0)(input wire clk,rn,input wire [31:0] da,db,
+  input wire dv,output reg [31:0] qa,qb,(* keep *) output reg qv);
+ always @(posedge clk) begin qa<=da; qb<=db; end
+ always @(posedge clk or negedge rn) if(!rn) qv<=1'b0; else qv<=dv;
+endmodule

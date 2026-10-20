@@ -74,6 +74,8 @@ def check(stim, log, tight=False):
         mism += 1
     elif done["fault"] != "0" or done["pv"] != "8" or done["pub"] != str(16 * len(pubn)):
         mism += 1
+    elif "lane_edges" in done and int(done["lane_edges"]) < 100:   # PVM9: the per-lane valid observer must have run
+        mism += 1
     n = len(exp_pv) * 16 + len(exp_pub)
     if mism:
         print(f"PVM FAIL mismatches={mism} (pv {len(exp_pv ^ got_pv)}, pub {len(exp_pub ^ got_pub)}, done {done})")

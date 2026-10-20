@@ -51,6 +51,21 @@ module tb_pv_merge_distributed;
       prior_ref={pv_v,pv_y,pv_tag,fault,pub_v,pub_data,pub_word,pub_out_slot,pub_tag};
       compare_started<=1;
     end
+    // PVM9: every lane's kept valid copy (and its adder valid_out) equals the reference's shared ov (adder valid_out)
+    // one edge earlier, on every edge both reset trees are released (MUT 15: lane 9 one edge late must fail here).
+    reg prior_ov=0, prior_r1=0; reg [15:0] prior_vo=0; integer lane_n=0;
+    wire [15:0] cand_vo, ref_vo;
+    generate for (genvar gl=0; gl<16; gl=gl+1) begin : g_vo
+        assign cand_vo[gl]=candidate.u_core.g_safe.g_madd[gl].vo; assign ref_vo[gl]=dut.u_core.g_safe.g_madd[gl].vo;
+    end endgenerate
+    always @(negedge clk) begin
+      if(prior_r1 && dut.r1 && (&candidate.reset_lane_n)) begin
+        if(candidate.u_core.g_safe.ov_l !== {16{prior_ov}} || cand_vo !== prior_vo)
+          $fatal(1,"LANE_VALID_AGE_MISMATCH ov_l %h ref %b vo %h ref %h",candidate.u_core.g_safe.ov_l,prior_ov,cand_vo,prior_vo);
+        lane_n=lane_n+1;
+      end
+      prior_ov=dut.u_core.g_safe.ov; prior_vo=ref_vo; prior_r1=dut.r1;
+    end
     reg [511:0] chunk [0:63];                       // entry e chunk j at e*8+j
     initial $readmemh(`STIM, chunk);
     integer round = 0, cyc = 0, npv = 0, npub = 0, fault_cyc = -1;
@@ -87,7 +102,8 @@ module tb_pv_merge_distributed;
         if (REASSERT == 2) begin
             #0.2 clk_run = 0; #2;                     // clock stopped low, no edge from here
             rst_n = 0; junk = 1; pub_start = 1; fold_start = 1; #3;
-            if ((|candidate.reset_first_n) !== 1'b0 || (|candidate.reset_second_n) !== 1'b0 || (|candidate.reset_core_n) !== 1'b0 ||
+            if ((|candidate.reset_first_n) !== 1'b0 || (|candidate.reset_second_n) !== 1'b0 || (|candidate.reset_core_n) !== 1'b0 || (|candidate.reset_lane_n) !== 1'b0 ||
+                (|candidate.u_core.g_safe.ov_l) !== 1'b0 ||
                 (|candidate.ev1) !== 1'b0 || (|candidate.ev2) !== 1'b0 || (|candidate.fold2c) !== 1'b0 || (|candidate.pub2c) !== 1'b0 || (|candidate.u_core.pd0_k) !== 1'b0 ||
                 {candidate.pub1,candidate.pub2,candidate.fold1,candidate.fold2} !== 4'd0 ||
                 candidate.u_core.e_busy !== 8'd0 || candidate.u_core.bp !== 3'd0 || (|candidate.u_core.fd1_k) !== 1'b0 ||
@@ -109,7 +125,8 @@ module tb_pv_merge_distributed;
     generate if (XRAND) begin : g_pwr
         for (genvar i = 0; i < 2; i = i + 1) initial #0.1 candidate.g_reset_first[i].u.q = 1'b0;
         for (genvar i = 0; i < 8; i = i + 1) initial #0.1 candidate.g_reset_second[i].u.q = 1'b0;
-        for (genvar i = 0; i < 54; i = i + 1) initial #0.1 candidate.g_reset_core[i].u.q = 1'b0;
+        for (genvar i = 0; i < 54; i = i + 1) if (i < 1 || i > 4) initial #0.1 candidate.g_reset_core[i].g_leaf.u.q = 1'b0;
+        for (genvar i = 0; i < 16; i = i + 1) initial #0.1 candidate.g_reset_lane[i].u.q = 1'b0;
         initial #0.1 begin dut.r0 = 1'b0; dut.r1 = 1'b0; end
     end endgenerate
     initial begin
@@ -130,8 +147,8 @@ module tb_pv_merge_distributed;
         end
         tick(10);
         if (df !== 1'b0) $fatal(1, "DISTRIBUTED_CANDIDATE_FAULT");
-        $display("PVM DONE pv=%0d pub=%0d fault=%0d fault_cyc=%0d cycles=%0d cmp_edges=%0d reassert=%0d xrand=%0d", npv, npub, fault,
-                 fault_cyc, cyc, cmp_n, REASSERT, XRAND);
+        $display("PVM DONE pv=%0d pub=%0d fault=%0d fault_cyc=%0d cycles=%0d cmp_edges=%0d reassert=%0d xrand=%0d lane_edges=%0d", npv, npub, fault,
+                 fault_cyc, cyc, cmp_n, REASSERT, XRAND, lane_n);
         $finish;
     end
 endmodule

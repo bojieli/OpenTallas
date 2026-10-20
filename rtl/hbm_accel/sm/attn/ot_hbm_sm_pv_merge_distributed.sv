@@ -5,7 +5,8 @@
 // source (bench only, never a kit value): 6 ev_operand[5] taken from the first ev capture (one edge early); 7 the scheduler ev copy
 // (ev2[96]) taken from the first capture (one edge early); 8 ev_write[9] from the first capture; 9 the e_busy
 // reset group never asserted (stale state survives a reassert); 10 second-level node 3 asserted synchronously (no
-// stopped-clock reset); 11 first_operand[7] from the first tag capture (one edge early).
+// stopped-clock reset); 11 first_operand[7] from the first tag capture (one edge early); 15 (core) lane 9 valid copy one
+// edge late; 16 lane reset leaf 9 asserted synchronously (no stopped-clock reset).
 module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0, FAN32=0)(
  input wire clk,rst_n,ev,input wire [511:0] sum,input wire [15:0] tag_d,
  output reg pv_v,output reg [511:0] pv_y,output reg [15:0] pv_tag,output reg fault,
@@ -19,7 +20,12 @@ module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0, FAN32=0)(
  // reset release 3 edges after rst_n (SAFE2 reference: 2), the input captures 2 (as the reference's pin regs).
  // (54 third-level groups: core groups 0-53, see ot_hbm_sm_pv_merge_distributed_core; second node 6 drives 6.)
  localparam integer NEV = 137;                      // ev second captures: 64 operand + 64 write + 8 entry + 1 control
- wire [1:0] reset_first_n; wire [7:0] reset_second_n; wire [53:0] reset_core_n;
+ // PVM9 (HBM-PVM9 10-20, r3 GPL RSZ-3006): 16 per-lane third-level leaves reset_lane_n (kernel valids + the lane's kept
+ // valid copy, 8 flops each, placed in the lane fence) replace core groups 1-4, which spanned 4 lanes each; groups 1-4
+ // are wired to lane leaves 0/4/8/12 (the core no longer reads them).  Same release edge (third level) as before.
+ // Lane leaves hang off the lightest second-level nodes: lanes 0-3 node 0 (freed by groups 1-4), 4-7 node 6, 8-15 node 7
+ // (second-level loads 29/28/27/27/28/27/28/26 <= 32).
+ wire [1:0] reset_first_n; wire [7:0] reset_second_n; wire [53:0] reset_core_n; wire [15:0] reset_lane_n;
  generate
  for(genvar ri=0;ri<2;ri=ri+1) begin:g_reset_first
   ot_pvm_reset_release #(.ID(ri)) u(.clk(clk),.rn(rst_n),.q(reset_first_n[ri]));
@@ -28,7 +34,14 @@ module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0, FAN32=0)(
   ot_pvm_reset_release #(.ID(2+ri),.SYNC(MUT==10 && ri==3)) u(.clk(clk),.rn(reset_first_n[ri/4]),.q(reset_second_n[ri]));
  end
  for(genvar ri=0;ri<54;ri=ri+1) begin:g_reset_core
-  ot_pvm_reset_release #(.ID(10+ri)) u(.clk(clk),.rn(reset_second_n[ri/8]),.q(reset_core_n[ri]));
+  if(ri>=1 && ri<=4) begin:g_lane_alias
+   assign reset_core_n[ri]=reset_lane_n[4*(ri-1)];
+  end else begin:g_leaf
+   ot_pvm_reset_release #(.ID(10+ri)) u(.clk(clk),.rn(reset_second_n[ri/8]),.q(reset_core_n[ri]));
+  end
+ end
+ for(genvar li=0;li<16;li=li+1) begin:g_reset_lane
+  ot_pvm_reset_release #(.ID(64+li),.SYNC(MUT==16 && li==9)) u(.clk(clk),.rn(reset_second_n[li<4 ? 0 : (li<8 ? 6 : 7)]),.q(reset_lane_n[li]));
  end
  endgenerate
  // ev: 5 first captures (<= 28 second copies each) -> 137 second copies (reset spread over the 8 second nodes)
@@ -78,7 +91,7 @@ module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0, FAN32=0)(
  wire [53:0] rcore_c = (MUT==9) ? {reset_core_n[53:14],1'b1,reset_core_n[12:0]} : reset_core_n;
  wire cpv,cpub,cfault;wire [511:0] cy;wire [15:0] ctag,cptag;wire[31:0] cdata;wire[3:0] cword;wire[2:0] cslot;
  ot_hbm_sm_pv_merge_distributed_core #(.TAGW(16),.LV(4),.MUT(MUT),.PUBLISH(1),.TURNREG(1),.SAFE(2),.FAN32(FAN32)) u_core(
-  .clk(clk),.rst_core_n(rcore_c),.ev_operand(ev_op_c),.ev_write(ev_wr_c),.ev_entry(ev_en_c),.fold_operand(fold2c),.pub_operand(pub2c),.pub_slot_tag(pubslot2t),.first_copy(first2c),
+  .clk(clk),.rst_core_n(rcore_c),.rst_lane_n(reset_lane_n),.ev_operand(ev_op_c),.ev_write(ev_wr_c),.ev_entry(ev_en_c),.fold_operand(fold2c),.pub_operand(pub2c),.pub_slot_tag(pubslot2t),.first_copy(first2c),
   .first_operand(first_c),
   .ev(ev_sch_c),.sum(sum2),.tag_d(tag2),.pv_v(cpv),.pv_y(cy),.pv_tag(ctag),.fault(cfault),
   .pub_start(pub2),.pub_slot(pubslot2),.pub_v(cpub),.pub_data(cdata),.pub_word(cword),.pub_out_slot(cslot),.pub_tag(cptag),
