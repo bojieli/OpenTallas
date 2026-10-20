@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.s81_dv.vpx_ag_check.v1",
+ "errors": [],
+ "n_errors": 0,
+ "info": {
+  "sends_A": {
+   "expected": 14,
+   "got": 14,
+   "edge_delta": [
+    0
+   ]
+  },
+  "sends_B": {
+   "expected": 14,
+   "got": 14,
+   "edge_delta": [
+    0
+   ]
+  },
+  "rx_A": {
+   "lri": 14,
+   "writes": 56,
+   "expected": 56,
+   "wr_minus_lri": [
+    6
+   ]
+  },
+  "rx_B": {
+   "lri": 14,
+   "writes": 56,
+   "expected": 56,
+   "wr_minus_lri": [
+    6
+   ]
+  },
+  "readback_A": {
+   "expected": 28,
+   "got": 28,
+   "edge_delta": [
+    0
+   ]
+  },
+  "readback_B": {
+   "expected": 28,
+   "got": 28,
+   "edge_delta": [
+    0
+   ]
+  }
+ },
+ "mut": "none",
+ "consts": {
+  "CFG_AT": 4,
+  "LO_AFTER_CTL": 16,
+  "SEND_AFTER_GO": 3,
+  "RX_WR_AFTER_PIN": 6,
+  "period": 6
+ },
+ "pass": true
+}

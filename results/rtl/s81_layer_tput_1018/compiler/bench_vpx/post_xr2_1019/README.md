@@ -1,0 +1,15 @@
+# Measured post-XR2 VPX calendar correction
+
+Source73879e4d2 changes CFG_AT3→4, LO_AFTER_CTL15→16, RX_WR_AFTER_PIN5→6, and observes actual registered `tg`/`lov1` in the benchmark. No RTL changed. Pin8136→target0 tg8140→first lov1 8156 proves the two independent classify stages. The derived issue period changes5→6 because a send config at pin offset15 would collide with a later RDOUT at period5.
+
+Same frozen Verilator5.050 native binary SHA256 `a4800305453ea17935c6c592162b2f7c9b98a4cbb85298e8eee3b137f8078fbe` was reused; its native HDL source/build inventory and current compiler/fixture manifests are separately retained. `lower_vpx.py` is a stimulus generator, not compiled into that binary. No build or simulation restart was needed.
+
+Positive `none` terminal PASS: each of two full end slices sends14/14 bit-exact beats on compiled edges, receives56/56 row-pair writes at actual LRI+6+j and reads back28/28 beats on exact edges. Real wrong-row mutant terminal checker rc1: actual send2 differs at destination row, preserving the native fail witness. The prior unmodified model's native `none` is preserved: only1/14 sends,4/56 received writes and1/28 readbacks per side.
+
+The original one-job sequence is still progressing through the final one-edge-shift mutant (`unit oth-ubuntu-4151548-1792456592`, persistent session66881, log `/home/ubuntu/artifacts/takeover3-s81-token-1019/vpx_fixed.otrun.log`; remote ep4 `/srv/opentallas-scratch/claude/tok2-vpx/takeover3`). Its live output is not relabelled terminal. Claude returned while it was running; no new work was started.
+
+**Exact price:** per leg, config pin+1 and first send+2. Sustained issue period increases1 edge per beat. For14 sends, last completion moves+2+13=+15 edges (old relative25..90, new27..105); it is not a uniform14-edge addition. Single-config private HOP has all80 send dates+2 and cfgpin+1, with no P6 throughput penalty. RX writes add1 relative to each actual arrival. End-to-end SU/MU token latency remains NULL until real producer/receive/lease calendars compose; these independent changes must not be blindly summed or reported as a token rate.
+
+Private HOP composition: sourcefc2e2ecb7 carries the same constants into `hop_leg`. Sourceb77e3a200 also carries current main's existing source-qualified XR2 V-injection7-edge contract (cc31c2d1… RTL) into the old private compiler/replay, preserving archived unversioned6-edge interpretation. This is separate private source, not a wholesale old-HOP file overwrite on main. Actual L0 SU/MU A/B generation and cut7 replay generation are live at ep7 `/srv/opentallas-scratch/claude/s81-vpx-p6-calendar`, unit628682; original five dependency-packaging failures and sixth missing topology attempt preserved in attempt1..6. Current run progresses through genuine frame programme generation. No new native cut build or rerun was launched; existing tokb3 builds continue untouched.
+
+This repairs an endpoint compiler model and partial cut schedule. No complete layer, final head/draft producer, healthy QF or full SU/MU token PASS follows.

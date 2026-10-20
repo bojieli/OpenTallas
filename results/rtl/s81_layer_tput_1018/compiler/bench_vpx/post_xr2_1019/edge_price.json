@@ -1,0 +1,28 @@
+{
+  "scope": "endpoint pin-relative edges only; full token latency unknown",
+  "old": {
+    "cfg": 3,
+    "lo": 15,
+    "rx": 5,
+    "period": 5,
+    "first_send": 25,
+    "last_send_14": 90
+  },
+  "new": {
+    "cfg": 4,
+    "lo": 16,
+    "rx": 6,
+    "period": 6,
+    "first_send": 27,
+    "last_send_14": 105
+  },
+  "delta": {
+    "cfg_pin": 1,
+    "first_send": 2,
+    "last_send_14": 15,
+    "sustained_period": 1,
+    "rx_from_arrival": 1,
+    "single_config_hop_all_sends": 2
+  },
+  "full_token_latency": null
+}

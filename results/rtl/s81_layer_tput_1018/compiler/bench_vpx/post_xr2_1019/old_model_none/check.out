@@ -1,0 +1,13 @@
+FAIL vpx_ag {"sends_A": {"expected": 14, "got": 1, "edge_delta": [67]}, "sends_B": {"expected": 14, "got": 1, "edge_delta": [67]}, "rx_A": {"lri": 1, "writes": 4, "expected": 56, "wr_minus_lri": [6]}, "rx_B": {"lri": 1, "writes": 4, "expected": 56, "wr_minus_lri": [6]}, "readback_A": {"expected": 28, "got": 1, "edge_delta": [137]}, "readback_B": {"expected": 28, "got": 1, "edge_delta": [137]}}
+  slice fault on die A at edge 8163
+  slice fault on die B at edge 8163
+  A: 1 outward beats, expected 14
+  A send 0: edge 8228 != compiled 8161
+  A send 0: beat differs (xor 1880000013000008141000081de00008318000001a9000080d0000000e0000003d4000001550000077c0000869c000001f4000006340000810d0000028a000000df000080460000018e000000d5000083e6000080370
+  B: 1 outward beats, expected 14
+  B send 0: edge 8228 != compiled 8161
+  B send 0: beat differs (xor 8a00000185000000800000803e000081590000001a000080540000808100000662000003e3000006e50000805a00008157000087c60000016e0000803500008025000001f2000081ba00008062000000680000832b00
+  A: 4 received row-pair writes, expected 56
+  A rx pair 0: leaf 0 row 440 (exp 240) data/mask mismatch
+  A rx pair 1: leaf 0 row 442 (exp 242) data/mask mismatch
+  A rx pair 2: leaf 0 row 444 (exp 244) data/mask mismatch

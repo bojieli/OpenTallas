@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       admits   985 GB (avail 803, growth 113, headroom 0, waiters 0/0 GB) load 69/128 running 42 disk 319 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/tok2-vpx/takeover3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/tok2-vpx/takeover3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/tok2-vpx/takeover3
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/tok2-vpx/takeover3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/tok2-vpx/takeover3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/tok2-vpx/takeover3
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4151548-1792456592 after 0 s
+{"t0": 8136, "t1": 9420, "end": 9888, "sends": {"A": 14, "B": 14}}
+CASE none rc=0
+PASS vpx_ag {"sends_A": {"expected": 14, "got": 14, "edge_delta": [0]}, "sends_B": {"expected": 14, "got": 14, "edge_delta": [0]}, "rx_A": {"lri": 14, "writes": 56, "expected": 56, "wr_minus_lri": [6]}, "rx_B": {"lri": 14, "writes": 56, "expected": 56, "wr_minus_lri": [6]}, "readback_A": {"expected": 28, "got": 28, "edge_delta": [0]}, "readback_B": {"expected": 28, "got": 28, "edge_delta": [0]}}
+{"t0": 8136, "t1": 9420, "end": 9888, "sends": {"A": 14, "B": 14}}
+CASE row rc=1
+FAIL vpx_ag {"sends_A": {"expected": 14, "got": 14, "edge_delta": [0]}, "sends_B": {"expected": 14, "got": 14, "edge_delta": [0]}, "rx_A": {"lri": 14, "writes": 56, "expected": 56, "wr_minus_lri": [6]}, "rx_B": {"lri": 14, "writes": 56, "expected": 56, "wr_minus_lri": [6]}, "readback_A": {"expected": 28, "got": 28, "edge_delta": [0]}, "readback_B": {"expected": 28, "got": 28, "edge_delta": [0]}}
+  A send 2: beat differs (xor 20000000000)
+{"t0": 8136, "t1": 9420, "end": 9888, "sends": {"A": 14, "B": 14}}
