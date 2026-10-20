@@ -1,0 +1,2237 @@
+{
+  "odb_sha256": "149867e1aaa3c46355647ae573945a8a1ebbee90381fe13b96e0b3ce6930c421",
+  "rows": [
+    {
+      "driver": {
+        "pin": "_2347_/Y",
+        "bbox_um": [
+          178.078,
+          4.347,
+          178.29,
+          4.563
+        ],
+        "master": "INVx4_ASAP7_75t_R",
+        "net": "u_p.g_pin.rst_l1",
+        "inst_origin_um": [
+          177.984,
+          4.32
+        ]
+      },
+      "effective_terminals": 16,
+      "bbox_L1_upper_um": 472.07900000000006,
+      "sinks": [
+        {
+          "pin": "u_p.cw_s_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            3.528,
+            3.852,
+            3.983,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            2.916,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.822,
+            411.012,
+            169.277,
+            411.107
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.21,
+            410.94
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.984,
+            410.773,
+            169.439,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.372,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_tw/rst_n",
+          "bbox_um": [
+            133.801,
+            347.424,
+            133.92,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4554",
+          "inst_origin_um": [
+            43.2,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[4\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            9.252,
+            3.312,
+            9.707,
+            3.407
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            8.64,
+            3.24
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.82,
+            411.313,
+            171.275,
+            411.408
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            170.208,
+            411.21
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ed.u_ed/rst_n",
+          "bbox_um": [
+            243.0,
+            216.0,
+            243.018,
+            218.251
+          ],
+          "master": "ot_s81sl_cap_ed",
+          "net": "net4555",
+          "inst_origin_um": [
+            216.0,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            7.794,
+            3.852,
+            8.249,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            7.182,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            6.39,
+            3.852,
+            6.845,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            5.778,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[5\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            10.71,
+            3.613,
+            11.165,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            10.098,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.55,
+            410.773,
+            171.005,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            169.938,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rst_n",
+          "bbox_um": [
+            306.601,
+            347.424,
+            306.72,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4517",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.fault$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            182.052,
+            3.852,
+            182.507,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net7063",
+          "inst_origin_um": [
+            181.44,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ld3.u_ld3/rst_n",
+          "bbox_um": [
+            65.88,
+            216.0,
+            66.078,
+            216.059
+          ],
+          "master": "ot_s81sl_cap_ld",
+          "net": "net4556",
+          "inst_origin_um": [
+            43.2,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            4.932,
+            3.613,
+            5.387,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            4.32,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_rt/rst_n",
+          "bbox_um": [
+            150.192,
+            158.585,
+            150.21,
+            159.84
+          ],
+          "master": "ot_s81sl_cap_rt",
+          "net": "net5196",
+          "inst_origin_um": [
+            43.2,
+            43.2
+          ]
+        }
+      ],
+      "classification": "reset landing/copies -> hard child reset inputs; transparent buffers do not add a cycle"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[0\\]$_DFF_P_/QN",
+        "bbox_um": [
+          334.03,
+          3.276,
+          334.135,
+          3.474
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0729_",
+        "inst_origin_um": [
+          333.018,
+          3.24
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 423.859,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[0]",
+          "bbox_um": [
+            216.0,
+            308.976,
+            216.084,
+            309.0
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4518",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[10\\]$_DFF_P_/QN",
+        "bbox_um": [
+          331.654,
+          17.586,
+          331.759,
+          17.784
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0739_",
+        "inst_origin_um": [
+          330.642,
+          17.55
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 409.813,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[10]",
+          "bbox_um": [
+            216.0,
+            311.616,
+            216.084,
+            311.64
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4528",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[11\\]$_DFF_P_/QN",
+        "bbox_um": [
+          329.71,
+          18.936,
+          329.815,
+          19.134
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0740_",
+        "inst_origin_um": [
+          328.698,
+          18.9
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 406.807,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[11]",
+          "bbox_um": [
+            216.0,
+            311.904,
+            216.084,
+            311.928
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4529",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[12\\]$_DFF_P_/QN",
+        "bbox_um": [
+          334.03,
+          20.556,
+          334.135,
+          20.754
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0741_",
+        "inst_origin_um": [
+          333.018,
+          20.52
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 409.747,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[12]",
+          "bbox_um": [
+            216.0,
+            312.144,
+            216.084,
+            312.168
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4530",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[13\\]$_DFF_P_/QN",
+        "bbox_um": [
+          331.06,
+          22.176,
+          331.165,
+          22.374
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0742_",
+        "inst_origin_um": [
+          330.048,
+          22.14
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 405.44500000000005,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[13]",
+          "bbox_um": [
+            216.0,
+            312.432,
+            216.084,
+            312.456
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4531",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[1\\]$_DFF_P_/QN",
+        "bbox_um": [
+          333.058,
+          4.356,
+          333.163,
+          4.554
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0730_",
+        "inst_origin_um": [
+          332.046,
+          4.32
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 422.095,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[1]",
+          "bbox_um": [
+            216.0,
+            309.264,
+            216.084,
+            309.288
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4519",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[2\\]$_DFF_P_/QN",
+        "bbox_um": [
+          332.302,
+          5.706,
+          332.407,
+          5.904
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0731_",
+        "inst_origin_um": [
+          331.29,
+          5.67
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 420.229,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[2]",
+          "bbox_um": [
+            216.0,
+            309.504,
+            216.084,
+            309.528
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4520",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[3\\]$_DFF_P_/QN",
+        "bbox_um": [
+          328.576,
+          7.596,
+          328.681,
+          7.794
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0732_",
+        "inst_origin_um": [
+          327.564,
+          7.56
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 414.90099999999995,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[3]",
+          "bbox_um": [
+            216.0,
+            309.792,
+            216.084,
+            309.816
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4521",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[4\\]$_DFF_P_/QN",
+        "bbox_um": [
+          333.22,
+          8.676,
+          333.325,
+          8.874
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0733_",
+        "inst_origin_um": [
+          332.208,
+          8.64
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 418.705,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[4]",
+          "bbox_um": [
+            216.0,
+            310.032,
+            216.084,
+            310.056
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4522",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[5\\]$_DFF_P_/QN",
+        "bbox_um": [
+          331.924,
+          10.566,
+          332.029,
+          10.764
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0734_",
+        "inst_origin_um": [
+          330.912,
+          10.53
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 415.807,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[5]",
+          "bbox_um": [
+            216.0,
+            310.32,
+            216.084,
+            310.344
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4523",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[6\\]$_DFF_P_/QN",
+        "bbox_um": [
+          330.574,
+          11.916,
+          330.679,
+          12.114
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0735_",
+        "inst_origin_um": [
+          329.562,
+          11.88
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 413.347,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[6]",
+          "bbox_um": [
+            216.0,
+            310.56,
+            216.084,
+            310.584
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4524",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[7\\]$_DFF_P_/QN",
+        "bbox_um": [
+          330.358,
+          13.266,
+          330.463,
+          13.464
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0736_",
+        "inst_origin_um": [
+          329.346,
+          13.23
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 412.069,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[7]",
+          "bbox_um": [
+            216.0,
+            310.848,
+            216.084,
+            310.872
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4525",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[8\\]$_DFF_P_/QN",
+        "bbox_um": [
+          333.328,
+          14.616,
+          333.433,
+          14.814
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0737_",
+        "inst_origin_um": [
+          332.316,
+          14.58
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 413.92900000000003,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[8]",
+          "bbox_um": [
+            216.0,
+            311.088,
+            216.084,
+            311.112
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4526",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.eq\\[9\\]$_DFF_P_/QN",
+        "bbox_um": [
+          333.598,
+          15.966,
+          333.703,
+          16.164
+        ],
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "net": "_0738_",
+        "inst_origin_um": [
+          332.586,
+          15.93
+        ]
+      },
+      "effective_terminals": 1,
+      "bbox_L1_upper_um": 413.13699999999994,
+      "sinks": [
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rt[9]",
+          "bbox_um": [
+            216.0,
+            311.376,
+            216.084,
+            311.4
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4527",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        }
+      ],
+      "classification": "eq pin register -> hard TE rt input; no registered parent intermediate"
+    },
+    {
+      "driver": {
+        "pin": "u_p.g_pin.rst_l1$_DFF_PN0_/QN",
+        "bbox_um": [
+          178.024,
+          3.537,
+          178.074,
+          3.753
+        ],
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "net": "_1171_",
+        "inst_origin_um": [
+          176.688,
+          3.51
+        ]
+      },
+      "effective_terminals": 16,
+      "bbox_L1_upper_um": 472.94300000000004,
+      "sinks": [
+        {
+          "pin": "u_p.cw_s_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            3.528,
+            3.852,
+            3.983,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            2.916,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.822,
+            411.012,
+            169.277,
+            411.107
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.21,
+            410.94
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.984,
+            410.773,
+            169.439,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.372,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_tw/rst_n",
+          "bbox_um": [
+            133.801,
+            347.424,
+            133.92,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4554",
+          "inst_origin_um": [
+            43.2,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[4\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            9.252,
+            3.312,
+            9.707,
+            3.407
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            8.64,
+            3.24
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.82,
+            411.313,
+            171.275,
+            411.408
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            170.208,
+            411.21
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ed.u_ed/rst_n",
+          "bbox_um": [
+            243.0,
+            216.0,
+            243.018,
+            218.251
+          ],
+          "master": "ot_s81sl_cap_ed",
+          "net": "net4555",
+          "inst_origin_um": [
+            216.0,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            7.794,
+            3.852,
+            8.249,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            7.182,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            6.39,
+            3.852,
+            6.845,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            5.778,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[5\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            10.71,
+            3.613,
+            11.165,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            10.098,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.55,
+            410.773,
+            171.005,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            169.938,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rst_n",
+          "bbox_um": [
+            306.601,
+            347.424,
+            306.72,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4517",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.fault$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            182.052,
+            3.852,
+            182.507,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net7063",
+          "inst_origin_um": [
+            181.44,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ld3.u_ld3/rst_n",
+          "bbox_um": [
+            65.88,
+            216.0,
+            66.078,
+            216.059
+          ],
+          "master": "ot_s81sl_cap_ld",
+          "net": "net4556",
+          "inst_origin_um": [
+            43.2,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            4.932,
+            3.613,
+            5.387,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            4.32,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_rt/rst_n",
+          "bbox_um": [
+            150.192,
+            158.585,
+            150.21,
+            159.84
+          ],
+          "master": "ot_s81sl_cap_rt",
+          "net": "net5196",
+          "inst_origin_um": [
+            43.2,
+            43.2
+          ]
+        }
+      ],
+      "classification": "reset landing/copies -> hard child reset inputs; transparent buffers do not add a cycle"
+    },
+    {
+      "driver": {
+        "pin": "place3047/Y",
+        "bbox_um": [
+          149.674,
+          37.287,
+          150.534,
+          37.503
+        ],
+        "master": "BUFx16f_ASAP7_75t_R",
+        "net": "net3046",
+        "inst_origin_um": [
+          149.364,
+          37.26
+        ]
+      },
+      "effective_terminals": 9,
+      "bbox_L1_upper_um": 467.543,
+      "sinks": [
+        {
+          "pin": "u_p.cw_n_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.822,
+            411.012,
+            169.277,
+            411.107
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.21,
+            410.94
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.984,
+            410.773,
+            169.439,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.372,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_tw/rst_n",
+          "bbox_um": [
+            133.801,
+            347.424,
+            133.92,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4554",
+          "inst_origin_um": [
+            43.2,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.55,
+            410.773,
+            171.005,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            169.938,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rst_n",
+          "bbox_um": [
+            306.601,
+            347.424,
+            306.72,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4517",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.82,
+            411.313,
+            171.275,
+            411.408
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            170.208,
+            411.21
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ed.u_ed/rst_n",
+          "bbox_um": [
+            243.0,
+            216.0,
+            243.018,
+            218.251
+          ],
+          "master": "ot_s81sl_cap_ed",
+          "net": "net4555",
+          "inst_origin_um": [
+            216.0,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ld3.u_ld3/rst_n",
+          "bbox_um": [
+            65.88,
+            216.0,
+            66.078,
+            216.059
+          ],
+          "master": "ot_s81sl_cap_ld",
+          "net": "net4556",
+          "inst_origin_um": [
+            43.2,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_rt/rst_n",
+          "bbox_um": [
+            150.192,
+            158.585,
+            150.21,
+            159.84
+          ],
+          "master": "ot_s81sl_cap_rt",
+          "net": "net5196",
+          "inst_origin_um": [
+            43.2,
+            43.2
+          ]
+        }
+      ],
+      "classification": "reset landing/copies -> hard child reset inputs; transparent buffers do not add a cycle"
+    },
+    {
+      "driver": {
+        "pin": "wire5973/Y",
+        "bbox_um": [
+          161.713,
+          3.807,
+          162.252,
+          4.023
+        ],
+        "master": "BUFx10_ASAP7_75t_R",
+        "net": "net5972",
+        "inst_origin_um": [
+          161.514,
+          3.78
+        ]
+      },
+      "effective_terminals": 15,
+      "bbox_L1_upper_um": 488.98400000000004,
+      "sinks": [
+        {
+          "pin": "u_p.cw_s_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            3.528,
+            3.852,
+            3.983,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            2.916,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ld3.u_ld3/rst_n",
+          "bbox_um": [
+            65.88,
+            216.0,
+            66.078,
+            216.059
+          ],
+          "master": "ot_s81sl_cap_ld",
+          "net": "net4556",
+          "inst_origin_um": [
+            43.2,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.984,
+            410.773,
+            169.439,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.372,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            6.39,
+            3.852,
+            6.845,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            5.778,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[5\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            10.71,
+            3.613,
+            11.165,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            10.098,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_tw/rst_n",
+          "bbox_um": [
+            133.801,
+            347.424,
+            133.92,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4554",
+          "inst_origin_um": [
+            43.2,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.55,
+            410.773,
+            171.005,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            169.938,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[4\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            9.252,
+            3.312,
+            9.707,
+            3.407
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            8.64,
+            3.24
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rst_n",
+          "bbox_um": [
+            306.601,
+            347.424,
+            306.72,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4517",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.82,
+            411.313,
+            171.275,
+            411.408
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            170.208,
+            411.21
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ed.u_ed/rst_n",
+          "bbox_um": [
+            243.0,
+            216.0,
+            243.018,
+            218.251
+          ],
+          "master": "ot_s81sl_cap_ed",
+          "net": "net4555",
+          "inst_origin_um": [
+            216.0,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            7.794,
+            3.852,
+            8.249,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            7.182,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.822,
+            411.012,
+            169.277,
+            411.107
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.21,
+            410.94
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            4.932,
+            3.613,
+            5.387,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            4.32,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_rt/rst_n",
+          "bbox_um": [
+            150.192,
+            158.585,
+            150.21,
+            159.84
+          ],
+          "master": "ot_s81sl_cap_rt",
+          "net": "net5196",
+          "inst_origin_um": [
+            43.2,
+            43.2
+          ]
+        }
+      ],
+      "classification": "reset landing/copies -> hard child reset inputs; transparent buffers do not add a cycle"
+    },
+    {
+      "driver": {
+        "pin": "hold7063/Y",
+        "bbox_um": [
+          178.129,
+          3.267,
+          178.236,
+          3.483
+        ],
+        "master": "BUFx2_ASAP7_75t_R",
+        "net": "net7062",
+        "inst_origin_um": [
+          177.984,
+          3.24
+        ]
+      },
+      "effective_terminals": 16,
+      "bbox_L1_upper_um": 473.10800000000006,
+      "sinks": [
+        {
+          "pin": "u_p.cw_s_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            3.528,
+            3.852,
+            3.983,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            2.916,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.822,
+            411.012,
+            169.277,
+            411.107
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.21,
+            410.94
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.984,
+            410.773,
+            169.439,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.372,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_tw/rst_n",
+          "bbox_um": [
+            133.801,
+            347.424,
+            133.92,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4554",
+          "inst_origin_um": [
+            43.2,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[4\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            9.252,
+            3.312,
+            9.707,
+            3.407
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            8.64,
+            3.24
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.82,
+            411.313,
+            171.275,
+            411.408
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            170.208,
+            411.21
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ed.u_ed/rst_n",
+          "bbox_um": [
+            243.0,
+            216.0,
+            243.018,
+            218.251
+          ],
+          "master": "ot_s81sl_cap_ed",
+          "net": "net4555",
+          "inst_origin_um": [
+            216.0,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            7.794,
+            3.852,
+            8.249,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            7.182,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            6.39,
+            3.852,
+            6.845,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            5.778,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[5\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            10.71,
+            3.613,
+            11.165,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            10.098,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.55,
+            410.773,
+            171.005,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            169.938,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rst_n",
+          "bbox_um": [
+            306.601,
+            347.424,
+            306.72,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4517",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.fault$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            182.052,
+            3.852,
+            182.507,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net7063",
+          "inst_origin_um": [
+            181.44,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ld3.u_ld3/rst_n",
+          "bbox_um": [
+            65.88,
+            216.0,
+            66.078,
+            216.059
+          ],
+          "master": "ot_s81sl_cap_ld",
+          "net": "net4556",
+          "inst_origin_um": [
+            43.2,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            4.932,
+            3.613,
+            5.387,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            4.32,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_rt/rst_n",
+          "bbox_um": [
+            150.192,
+            158.585,
+            150.21,
+            159.84
+          ],
+          "master": "ot_s81sl_cap_rt",
+          "net": "net5196",
+          "inst_origin_um": [
+            43.2,
+            43.2
+          ]
+        }
+      ],
+      "classification": "reset landing/copies -> hard child reset inputs; transparent buffers do not add a cycle"
+    },
+    {
+      "driver": {
+        "pin": "hold7977/Y",
+        "bbox_um": [
+          178.183,
+          3.807,
+          178.29,
+          4.023
+        ],
+        "master": "BUFx2_ASAP7_75t_R",
+        "net": "net7976",
+        "inst_origin_um": [
+          178.038,
+          3.78
+        ]
+      },
+      "effective_terminals": 16,
+      "bbox_L1_upper_um": 472.514,
+      "sinks": [
+        {
+          "pin": "u_p.cw_s_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            3.528,
+            3.852,
+            3.983,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            2.916,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.822,
+            411.012,
+            169.277,
+            411.107
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.21,
+            410.94
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.984,
+            410.773,
+            169.439,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.372,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_tw/rst_n",
+          "bbox_um": [
+            133.801,
+            347.424,
+            133.92,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4554",
+          "inst_origin_um": [
+            43.2,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[4\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            9.252,
+            3.312,
+            9.707,
+            3.407
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            8.64,
+            3.24
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.82,
+            411.313,
+            171.275,
+            411.408
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            170.208,
+            411.21
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ed.u_ed/rst_n",
+          "bbox_um": [
+            243.0,
+            216.0,
+            243.018,
+            218.251
+          ],
+          "master": "ot_s81sl_cap_ed",
+          "net": "net4555",
+          "inst_origin_um": [
+            216.0,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            7.794,
+            3.852,
+            8.249,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            7.182,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            6.39,
+            3.852,
+            6.845,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            5.778,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[5\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            10.71,
+            3.613,
+            11.165,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            10.098,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.55,
+            410.773,
+            171.005,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            169.938,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rst_n",
+          "bbox_um": [
+            306.601,
+            347.424,
+            306.72,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4517",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.fault$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            182.052,
+            3.852,
+            182.507,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net7063",
+          "inst_origin_um": [
+            181.44,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ld3.u_ld3/rst_n",
+          "bbox_um": [
+            65.88,
+            216.0,
+            66.078,
+            216.059
+          ],
+          "master": "ot_s81sl_cap_ld",
+          "net": "net4556",
+          "inst_origin_um": [
+            43.2,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            4.932,
+            3.613,
+            5.387,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            4.32,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_rt/rst_n",
+          "bbox_um": [
+            150.192,
+            158.585,
+            150.21,
+            159.84
+          ],
+          "master": "ot_s81sl_cap_rt",
+          "net": "net5196",
+          "inst_origin_um": [
+            43.2,
+            43.2
+          ]
+        }
+      ],
+      "classification": "reset landing/copies -> hard child reset inputs; transparent buffers do not add a cycle"
+    },
+    {
+      "driver": {
+        "pin": "hold7978/Y",
+        "bbox_um": [
+          178.237,
+          4.077,
+          178.344,
+          4.293
+        ],
+        "master": "BUFx2_ASAP7_75t_R",
+        "net": "net7977",
+        "inst_origin_um": [
+          178.092,
+          4.05
+        ]
+      },
+      "effective_terminals": 16,
+      "bbox_L1_upper_um": 472.19000000000005,
+      "sinks": [
+        {
+          "pin": "u_p.cw_s_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            3.528,
+            3.852,
+            3.983,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            2.916,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[0\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.822,
+            411.012,
+            169.277,
+            411.107
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.21,
+            410.94
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            168.984,
+            410.773,
+            169.439,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            168.372,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_tw/rst_n",
+          "bbox_um": [
+            133.801,
+            347.424,
+            133.92,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4554",
+          "inst_origin_um": [
+            43.2,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[4\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            9.252,
+            3.312,
+            9.707,
+            3.407
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            8.64,
+            3.24
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.82,
+            411.313,
+            171.275,
+            411.408
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            170.208,
+            411.21
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ed.u_ed/rst_n",
+          "bbox_um": [
+            243.0,
+            216.0,
+            243.018,
+            218.251
+          ],
+          "master": "ot_s81sl_cap_ed",
+          "net": "net4555",
+          "inst_origin_um": [
+            216.0,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[3\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            7.794,
+            3.852,
+            8.249,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            7.182,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            6.39,
+            3.852,
+            6.845,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            5.778,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[5\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            10.71,
+            3.613,
+            11.165,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            10.098,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.cw_n_v\\[2\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            170.55,
+            410.773,
+            171.005,
+            410.868
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net3043",
+          "inst_origin_um": [
+            169.938,
+            410.67
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_te/rst_n",
+          "bbox_um": [
+            306.601,
+            347.424,
+            306.72,
+            347.784
+          ],
+          "master": "ot_s81sl_cap_tr",
+          "net": "net4517",
+          "inst_origin_um": [
+            216.0,
+            302.4
+          ]
+        },
+        {
+          "pin": "u_p.fault$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            182.052,
+            3.852,
+            182.507,
+            3.947
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net7063",
+          "inst_origin_um": [
+            181.44,
+            3.78
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_ld3.u_ld3/rst_n",
+          "bbox_um": [
+            65.88,
+            216.0,
+            66.078,
+            216.059
+          ],
+          "master": "ot_s81sl_cap_ld",
+          "net": "net4556",
+          "inst_origin_um": [
+            43.2,
+            216.0
+          ]
+        },
+        {
+          "pin": "u_p.cw_s_v\\[1\\]$_DFF_PN0_/RESETN",
+          "bbox_um": [
+            4.932,
+            3.613,
+            5.387,
+            3.708
+          ],
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "net": "net5197",
+          "inst_origin_um": [
+            4.32,
+            3.51
+          ]
+        },
+        {
+          "pin": "u_p.u_core.g_hard.u_rt/rst_n",
+          "bbox_um": [
+            150.192,
+            158.585,
+            150.21,
+            159.84
+          ],
+          "master": "ot_s81sl_cap_rt",
+          "net": "net5196",
+          "inst_origin_um": [
+            43.2,
+            43.2
+          ]
+        }
+      ],
+      "classification": "reset landing/copies -> hard child reset inputs; transparent buffers do not add a cycle"
+    }
+  ]
+}
