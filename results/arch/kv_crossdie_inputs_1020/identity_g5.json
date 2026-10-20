@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.kv_compute_pair.v1",
+  "scope": "diagnostic",
+  "source_commit": "d502ea9ae502aaf2ab800c412bb0f1b4cbdb6b25",
+  "files": {
+    "die_v": {
+      "path": "/home/ubuntu/scratch/qw-gen5/dv2f20g5/p2/die.v",
+      "sha256": "771ed19400e3e7fba0320409ee305cff9018b005c150eaa6b265c281e7a76ca2"
+    },
+    "relay_stages": {
+      "path": "/home/ubuntu/scratch/qw-gen5/dv2f20g5/p2/relay_stages_netlist.json",
+      "sha256": "d053546a15f31f2d3f4be1610b0920996bd0925f5e6e122267b6a30afa7729e6"
+    },
+    "compute_lanes": {
+      "path": "/home/ubuntu/scratch/qw-gen5/dv2f20g5/p2/fwd_lanes.json",
+      "sha256": "234f67429adeec084c01026c46e00e49d9895973a6093c673a727477ab0759a6"
+    }
+  },
+  "plan_id": "dv2f20g5-netlist",
+  "table_digest": "sha256:6996a58cf141196415e66af92c3e2ee51851d1dca56598fabc9f85d51b112559",
+  "qualification": "IDENTITY_ONLY; source/view/native/physical/age qualification remains separate"
+}
