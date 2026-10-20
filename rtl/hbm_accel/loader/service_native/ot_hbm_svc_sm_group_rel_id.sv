@@ -8,7 +8,11 @@
 // descriptor table (DD 256: 8-bit descriptor address / run base, 9-bit run count).
 module ot_hbm_svc_sm_group_rel_id #(parameter integer LBANKS=4,parameter integer LB=(LBANKS>2)?2:1,
  parameter integer NID=6,parameter integer IDW=9,parameter integer PAW=11,parameter integer PREL=1,parameter integer DD=256,parameter integer IMUT=0,
- parameter integer DAW=(DD>128)?8:7,parameter integer ID_COHORT=0)(
+ parameter integer DAW=(DD>128)?8:7,parameter integer ID_COHORT=0,
+ // HBM-SMXL 2026-10-19: XSLOT 1 = the descriptor's x-store slot base relocates every command's xaddr (die op_xb from
+ // the static programme; issuer + feed headers).  0 (default) = unchanged.
+ parameter integer XSLOT=0,parameter integer CTXW=(XSLOT!=0)?53:46,
+ parameter integer OPEN_IL=0)(   // HBM-SMXL: open interlock of the producer (feed / cdc OPEN_IL)
  // strap identity: id_stack = HBM stack / quadrant (SW0 SE1 NW2 NE3), id_sm = SM index k (PCs 4k..4k+3)
  input wire[1:0]id_stack,input wire[2:0]id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
@@ -29,9 +33,9 @@ module ot_hbm_svc_sm_group_rel_id #(parameter integer LBANKS=4,parameter integer
  wire reserve_v,reserve_ready,start_v,program_start_v,program_done,feed_fault,issuer_fault;
  wire[31:0]reserve_base;wire[14:0]reserve_row_base;wire[11:0]reserve_total;wire[LB-1:0]reserve_bank,start_bank;
  wire[15:0]reserve_epoch,start_epoch,program_start_loops;wire[6:0]reserve_rows;wire[9:0]reserve_tag_base;
- wire[PAW-1:0]program_start_base;wire[PAW:0]program_start_limit;wire[45:0]program_start_ctx;wire[LBANKS-1:0]block_ready;wire[1:0]cache_ready,cache_owned;
+ wire[PAW-1:0]program_start_base;wire[PAW:0]program_start_limit;wire[CTXW-1:0]program_start_ctx;wire[LBANKS-1:0]block_ready;wire[1:0]cache_ready,cache_owned;
  assign fault=feed_fault||issuer_fault;
- ot_hbm_svc_sm_issuer_rel #(.LBANKS(LBANKS),.NID(NID),.IDW(IDW),.PAW(PAW),.DD(DD),.MUT(IMUT),.ID_COHORT(ID_COHORT)) issuer(
+ ot_hbm_svc_sm_issuer_rel #(.LBANKS(LBANKS),.NID(NID),.IDW(IDW),.PAW(PAW),.DD(DD),.MUT(IMUT),.ID_COHORT(ID_COHORT),.XSLOT(XSLOT)) issuer(
   .clk(stream_clk),.rst_n(stream_rst_n),.desc_we(desc_we),.desc_addr(desc_addr),.desc_data(desc_data),
   .run_v(run_v),.run_base(run_base),.run_count(run_count),.run_layer(run_layer),
   .ids_v(ids_v),.ids_layer(ids_layer),.ids(ids),.ids_cohort(ids_cohort),.running(running),.run_done(run_done),.fault(issuer_fault),
@@ -41,7 +45,7 @@ module ot_hbm_svc_sm_group_rel_id #(parameter integer LBANKS=4,parameter integer
   .start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),.program_start_v(program_start_v),
   .program_start_base(program_start_base),.program_start_limit(program_start_limit),.program_start_loops(program_start_loops),
   .program_start_ctx(program_start_ctx),.program_done(program_done));
- ot_hbm_svc_sm_feed_programmed_rel_id #(.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL)) feed(
+ ot_hbm_svc_sm_feed_programmed_rel_id #(.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL),.XSLOT(XSLOT),.OPEN_IL(OPEN_IL)) feed(
   .id_stack(id_stack),.id_sm(id_sm),
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),
   .stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),

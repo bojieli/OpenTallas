@@ -11,11 +11,25 @@
 //       cache retire: bank = ctx bank, epoch = ctx epoch                               (only with retire_v [117])
 //     A word without those flags passes unchanged (format launch, idle).  PREL=0 = absolute words (old envelope) through
 //     the same +1 stage.
+// HBM-SMXL 2026-10-19 XSLOT (default 0 = unchanged): the context carries the record's x-store slot base xb7 on top
+//   ({xb7, ctx46}, from ot_hbm_svc_sm_issuer_rel XSLOT 1); every valid issue word's xaddr [6:0] += xb (mod 128, in the
+//   same R-stage add as the looped + iteration term: no added edge).  The die's SM op_xb comes from the static programme.
 // Everything else (four-PC producer, landing/cache SRAMs, packed136 rows, S1 consumer copy, faults) is the _id feed.
+// HBM-QINT8 2026-10-19: INT8 packed-line view of the S1 consumer copy.  The SM (ot_hbm_accel_smh_attn ENABLE_INT8)
+//   turns a packed 128-code line marked by xc command[116] into two BF16 lines 2 and 3 edges later (ot_smh_static_int8),
+//   and the compiler's command [29]/[39:30]/[25] describe THAT stream; the copy here saw the raw packet, so every INT8
+//   calendar faulted at its first high-half issue edge (command[25] with no raw packet).  PREL programme word bit [118]
+//   (unused in PREL: retire bank/epoch come from the go context) now carries the same packed-line mark; the copy checks
+//   the SM-front view {conv ? {1, tag of the packet 2/3 edges ago} : mark ? 0 : raw} and the converter calendar rules of
+//   ot_hbm_accel_smh_attn g_int8 (mark without a packet, mark on the converter's busy edge, raw packet on a converted
+//   edge = i8_fault).  Valid/tag only (the copy's lt/lb/fm data outputs are unread on the die).  No mark = the raw packet
+//   exactly (bit-identical behaviour for every non-INT8 stream).  No stall, no backpressure: faults are sticky.
 module ot_hbm_svc_sm_feed_programmed_rel_id #(
  parameter integer PAW=11,PREL=1,
  parameter integer OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=4,
- parameter integer LB=(LBANKS>2)?2:1
+ parameter integer LB=(LBANKS>2)?2:1,
+ parameter integer XSLOT=0,parameter integer CTXW=(XSLOT!=0)?53:46,
+ parameter integer OPEN_IL=0   // HBM-SMXL: producer open interlock (ot_hbm_svc_sm4pc_cdc_rel_id OPEN_IL)
 )(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
@@ -28,7 +42,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
  input wire start_v,input wire[LB-1:0]start_bank,input wire[15:0]start_epoch,
  input wire program_cfg_we,input wire[PAW-1:0]program_cfg_addr,input wire[255:0]program_cfg_data,
  input wire program_start_v,input wire[PAW-1:0]program_start_base,input wire[PAW:0]program_start_limit,input wire[15:0]program_start_loops,
- input wire[45:0]program_start_ctx,
+ input wire[CTXW-1:0]program_start_ctx,
  output wire program_active,program_done,output wire fault,
  output wire[42:0]expected_request,output wire[1081:0]lt0,lt1,output wire[569:0]lb0,lb1,output wire[11:0]fm,
  output wire[1098:0]packet_observe,output wire[134:0]programme_observe,output wire programme_v,
@@ -58,20 +72,27 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
    open_q<=start_v;open_land_q<=start_bank;open_epoch_q<=start_epoch;
   end
  end
+ wire[LBANKS-1:0]producer_ready;
  wire out_v,out_bank,out_last;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
- ot_hbm_svc_sm4pc_cdc_rel_id #(.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH),.OVERLAP(OVERLAP),.LBANKS(LBANKS)) producer(
+ ot_hbm_svc_sm4pc_cdc_rel_id #(.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH),.OVERLAP(OVERLAP),.LBANKS(LBANKS),.OPEN_IL(OPEN_IL)) producer(
   .id_stack(id_stack),.id_sm(id_sm),
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),
   .reserve_v(reserve_fire),.reserve_ready(cdc_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),.reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),
-  .block_ready(block_ready),.block_ready_v(),.block_ready_bank(),.block_ready_epoch(),.start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),
+  .block_ready(producer_ready),.block_ready_v(),.block_ready_bank(),.block_ready_epoch(),.start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),
   .out_v(out_v),.out_mask(out_mask),.out_data(out_data),.out_ordinal(out_ordinal),.out_bank(out_bank),.out_epoch(out_epoch),.out_last(out_last),.fault(cdc_fault),
   .k_v(k_v),.k_rdy(k_rdy),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),.k_we(k_we),.k_wdata(k_wdata),.k_wstrb(k_wstrb),.k_wr_done(k_wr_done),.kr_v(kr_v),.kr_rdy(kr_rdy),.kr_tag(kr_tag),.kr_beat(kr_beat),.kr_data(kr_data));
  wire[95:0]indices;wire[63:0]epochs;
  for(genvar l=0;l<4;l=l+1)begin:metadata
   assign indices[l*24+:24]=out_ordinal+l;assign epochs[l*16+:16]=out_epoch;
  end
- wire[134:0]word;wire[45:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;wire cache_busy;
- ot_smh_calendar_static_x #(.W(135),.AW(PAW),.XW(46)) programme_leaf(
+ wire[134:0]word;wire[CTXW-1:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;wire cache_busy;
+ // OPEN_IL governs the variable HBM-to-cache admission, before the fixed programme GO.
+ // The landing producer releases draining at its last sector, but packed136 still
+ // writes its last row and clears running over the next two edges. Include that
+ // real consumer completion and the registered open already in flight; never
+ // alter a cache fault or delay a programme GO to hide a missed compiled slot.
+ assign block_ready=(OPEN_IL!=0)?(producer_ready&{LBANKS{!cache_busy&&!open_q}}):producer_ready;
+ ot_smh_calendar_static_x #(.W(135),.AW(PAW),.XW(CTXW)) programme_leaf(
   .clk(stream_clk),.rst_n(stream_rst_n),.cfg_we(program_cfg_we),.cfg_addr(program_cfg_addr),.cfg_data(program_cfg_data),
   .start_v(program_start_v),.start_base(program_start_base),.start_limit(program_start_limit),.start_loops(program_start_loops),
   .start_ctx(program_start_ctx),.calendar(word),.calendar_ctx(wctx),.calendar_iter(wit),.calendar_lastit(wlast),
@@ -88,10 +109,16 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
  wire[11:0]c_roff=wctx[45:34];wire[9:0]c_tag=wctx[33:24];wire[15:0]c_ep=wctx[23:8];wire c_bank=wctx[7];
  wire[3:0]c_lstep=wctx[6:3];wire c_fl=wctx[2];wire[1:0]c_fmt=wctx[1:0];
  wire looped=c_lstep!=0;
+ wire[6:0]c_xb;
+ generate if(XSLOT!=0)begin:g_xs assign c_xb=wctx[52:46];end else begin:g_nx assign c_xb=7'd0;end endgenerate
+ wire[6:0]c_xit=looped?wit[6:0]:7'd0;
  wire[9:0]c_lofs=wit[5:0]*c_lstep;
  reg[51:0]rd_r;reg rd_v_r;           // {read_v, bank, epoch16, row6, tag10, retire-free} of the R stage -> bits [116:83]
  reg[82:0]cmd_r,cmd_c;reg ret_r,ret_c;reg[16:0]retf_r,retf_c;reg inj_f;
  reg[134:0]programme;reg programme_v_q;
+ reg i8_r,i8_c,i8_p1,i8_p2,i8_p3,i8_f;reg[9:0]i8_t1,i8_t2;   // HBM-QINT8 mark (R, C) + converter view
+ wire raw_v=packet_observe[1098];wire[9:0]raw_tag=packet_observe[1097:1088];
+ wire i8_conv=i8_p2||i8_p3;   // halves of the marked packet 2 / 3 edges ago; its tag = i8_t2 on both edges
  always @(posedge stream_clk)begin
   // R stage
   rd_r<=0;cmd_r<=0;ret_r<=0;retf_r<=0;
@@ -101,7 +128,8 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
    if(PREL!=0)begin
     if(word[25])begin
      cmd_r[22:11]<=word[22:11]+c_roff;cmd_r[9:7]<=word[9:7]+c_roff[2:0];
-     if(looped)begin cmd_r[6:0]<=word[6:0]+wit[6:0];cmd_r[24]<=word[24]|(wit==0);cmd_r[23]<=word[23]|wlast;end
+     cmd_r[6:0]<=word[6:0]+c_xit+c_xb;
+     if(looped)begin cmd_r[24]<=word[24]|(wit==0);cmd_r[23]<=word[23]|wlast;end
     end
     if(word[29])cmd_r[39:30]<=word[39:30]+c_tag+c_lofs;
     if(word[83])begin rd_r[1]<=c_bank;rd_r[17:2]<=c_ep;rd_r[23:18]<=word[106:101]+c_lofs[5:0];rd_r[33:24]<=word[116:107]+c_tag+c_lofs;end
@@ -113,10 +141,15 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   if(PREL!=0&&word_v&&ordinal==0&&c_fl)begin cmd_c[28]<=1'b1;cmd_c[27:26]<=c_fmt;end
  end
  always @(posedge stream_clk or negedge stream_rst_n)
-  if(!stream_rst_n)begin programme_v_q<=0;inj_f<=0;end
+  if(!stream_rst_n)begin programme_v_q<=0;inj_f<=0;i8_r<=0;i8_c<=0;i8_p1<=0;i8_p2<=0;i8_p3<=0;i8_f<=0;i8_t1<=0;i8_t2<=0;end
   else begin
    programme_v_q<=word_v;
    if(PREL!=0&&word_v&&ordinal==0&&c_fl&&(cmd_r!=0||ret_r))inj_f<=1;     // format launch slot not idle
+   // HBM-QINT8: mark with its word's read (R) and command/packet (C) edges; converter halves at C+2 / C+3
+   i8_r<=(PREL!=0)&&word_v&&word[118];i8_c<=i8_r;
+   i8_p1<=i8_c&&raw_v;i8_p2<=i8_p1;i8_p3<=i8_p2;
+   if(i8_c&&raw_v)i8_t1<=raw_tag;i8_t2<=i8_t1;     // held tag (as ot_smh_static_int8), 2 deep: no delay line
+   if((i8_c&&(!raw_v||i8_p1))||(!i8_c&&raw_v&&i8_conv))i8_f<=1;
   end
  always @* begin
   programme=0;
@@ -133,9 +166,11 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   .read_v(programme_v&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
   .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
+ // HBM-QINT8: the packet the SM front sees (the raw packet when no INT8 mark is in flight)
+ wire[1098:0]s1_packet={i8_conv||(raw_v&&!i8_c),i8_conv?i8_t2:raw_tag,packet_observe[1087:0]};
  ot_smh_static_feed consumer(
-  .clk(stream_clk),.rst_n(stream_rst_n),.command(sm_command),.packet(packet_observe),
+  .clk(stream_clk),.rst_n(stream_rst_n),.command(sm_command),.packet(s1_packet),
   .expected_request(expected_request),.fault(feed_fault),.lt0(lt0),.lt1(lt1),.lb0(lb0),.lb1(lb1),.fm(fm));
- assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault||inj_f;
+ assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault||inj_f||i8_f;
 endmodule
 `default_nettype wire

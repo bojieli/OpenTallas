@@ -117,8 +117,8 @@ class Capacity:
         bx, by = xy[:, 0] // self.k, xy[:, 1] // self.k
         return self.R.free[xy[:, 0], xy[:, 1]] & (self.win[bx, by] >= fp)
 
-    def consume(self, cx, cy, fp, forced=False):
-        bx, by = cx // self.k, cy // self.k; r = self.r; nbx, nby = self.cap.shape
+    def consume(self, cx, cy, fp, forced=False, spread=1):
+        bx, by = cx // self.k, cy // self.k; r = self.r * spread; nbx, nby = self.cap.shape
         left = fp
         order = sorted(((abs(i), abs(j), i, j) for i in range(-r, r + 1) for j in range(-r, r + 1)))
         for _, _, i, j in order:
@@ -183,12 +183,42 @@ def plan_bus_cap(router, cap, P, par, R, W, sinks, paths, fp):
         run += snap_a
         s = 0; base = run                     # run at path index i (i > s) = base + G * (i - s)
         okv = cap.ok_cells(xy, fp)
+        frv = router.free[xy[:, 0], xy[:, 1]]
         i = 1 if n > 1 else n
         while i < n:
             lim = max(s, s + int(math.floor((R - base) / G + 1e-9)))   # last index with run <= R
             if lim >= n - 1:
-                break
+                # HBM-DIE10: the end is in reach of the last station only if the pin snap (snap_b) also fits; else one
+                # more station as close to the sink as legal (capacity-ok first, then any free cell) -- REACH FIRST
+                if base + G * (n - 1 - s) + snap_b <= R + 1e-6 or s >= n - 1:
+                    break
+                lo_ = max(i, s + 1)
+                cand = np.flatnonzero(okv[lo_:n]) + lo_
+                forced = False
+                if not len(cand):
+                    cand = np.flatnonzero(frv[lo_:n]) + lo_; forced = True
+                if not len(cand):
+                    break
+                ci = int(cand[-1])
+                prev, dep, ppt = put(xy, ci, prev, dep, ppt, base + G * (ci - s))
+                cap.consume(int(xy[ci, 0]), int(xy[ci, 1]), fp, forced=forced, spread=2 if forced else 1)
+                okv = cap.ok_cells(xy, fp)
+                s, base, i = ci, 0.0, ci + 1
+                continue
             seg = np.flatnonzero(okv[max(i, s + 1):lim + 1]) + max(i, s + 1)
+            if not len(seg):
+                # HBM-DIE10 REACH FIRST (r9 S5: 641 of 792 hops > 405 came from jumping past a full window to the next
+                # capacity-legal cell, median 740 um, max 2,970 um).  Reach is a die-standard rule, the 0.5 area budget is
+                # a planning heuristic: book the farthest FREE cell in reach over capacity (spread over a 2x radius:
+                # the GEN density outlines slide rows) and report it as capacity forced; past-reach only on no free cell.
+                fseg = np.flatnonzero(frv[max(i, s + 1):lim + 1]) + max(i, s + 1)
+                if len(fseg):
+                    ci = int(fseg[-1]); crun = base + G * (ci - s)
+                    prev, dep, ppt = put(xy, ci, prev, dep, ppt, crun)
+                    cap.consume(int(xy[ci, 0]), int(xy[ci, 1]), fp, forced=True, spread=2)
+                    okv = cap.ok_cells(xy, fp)
+                    s, base, i = ci, 0.0, ci + 1
+                    continue
             if len(seg):
                 ci = int(seg[-1])
                 if not cap.ok_cells(xy[ci:ci + 1], fp)[0]:
