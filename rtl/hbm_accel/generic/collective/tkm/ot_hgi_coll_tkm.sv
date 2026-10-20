@@ -713,7 +713,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     wire i_clr, i_conv, i_v; wire [TW-1:0] i_tid, i_tt; wire [LW-1:0] i_tl; wire [4*EW-1:0] i_b;
     genvar gp, gj, gk, gg;
     if (PRE != 0) begin : g_pre
-        reg s_clr, s_conv, s_v; reg [TW-1:0] s_tid, s_tt; reg [LW-1:0] s_tl; reg [4*EW-1:0] s_b;
+        (* keep=FAN32, dont_touch=FAN32 *) reg s_clr, s_conv, s_v; reg [TW-1:0] s_tid, s_tt; reg [LW-1:0] s_tl; (* keep=FAN32, dont_touch=FAN32 *) reg [4*EW-1:0] s_b;
         always @(posedge clk) begin
             s_clr <= clr; s_conv <= conv; s_v <= ins_v; s_tid <= tid; s_tt <= tau_t; s_tl <= tau_l; s_b <= ins_b;
         end
@@ -758,9 +758,10 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         end
     end
     localparam integer FW = 20, FN = (EW + FW - 1) / FW;
-    wire [3:0] gt_copy [0:NP-1][0:FN-1][0:4];
-    wire valid_copy [0:NP-1][0:FN-1][0:4];
+    wire [3:0] gt_copy [0:NP-1][0:FN][0:4];
+    wire valid_copy [0:NP-1][0:FN][0:4];
     wire valid_gn [0:NP-1], clear_gn [0:NP-1], pvalid_forword [0:NP-1];
+    wire [3:0] flags_for_gn[0:NP-1];
     if (FAN32 != 0) begin : g_fan32_state
         // Keep every input-to-control provenance edge bounded: 4 pin copies,
         // at most17 p-stage copies each, then <=26 q-stage copies per position.
@@ -780,10 +781,10 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             always @(posedge ckr[rg(g/GP)])begin pvalid[g]<=pin_v[g/17];pflags[g]<=pin_valid[g/17];end
             (* keep="true",dont_touch="true" *) reg vg,cg;
             always @(posedge ckr[rg(g/GP)])begin vg<=pvalid[g];cg<=pclear[g];end
-            assign valid_gn[g]=vg;assign clear_gn[g]=cg;assign pvalid_forword[g]=pvalid[g];
+            assign valid_gn[g]=vg;assign clear_gn[g]=cg;assign pvalid_forword[g]=pvalid[g];assign flags_for_gn[g]=pflags[g];
         end
         for(genvar d=0;d<NP;d=d+1)begin:g_d
-            for(genvar w=0;w<FN;w=w+1)begin:g_w
+            for(genvar w=0;w<=FN;w=w+1)begin:g_w
                 for(genvar k=0;k<5;k=k+1)begin:g_k
                     localparam integer SRC=(d>=k)?d-k:0;
                     if(d>=k)begin:g_live
@@ -791,7 +792,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                     (* keep="true",dont_touch="true" *) reg [3:0] gc;
                     always @(posedge ckr[rg(SRC/GP)])begin
                         qc<=pclear[SRC];qv<=pvalid[SRC];
-                        for(integer b=0;b<4;b=b+1)gc[b]<=qc?pflags[SRC][b]:gn[SRC][b];
+                        for(integer b=0;b<4;b=b+1)gc[b]<=(SRC>=PT)?pflags[SRC][b]:(qc?pflags[SRC][b]:gn[SRC][b]);
                     end
                     assign gt_copy[d][w][k]=gc;assign valid_copy[d][w][k]=qv;
                     end else begin:g_absent
@@ -837,21 +838,46 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     end
     reg [EW-1:0] ins_legacy [0:NP-1];
     wire [EW-1:0] ins [0:NP-1];
-    reg [3:0]    gn  [0:NP-1];
+    reg [3:0] gn_legacy[0:NP-1];
+    (* keep=FAN32 *) wire [3:0] gn[0:NP-1];
     always @* begin : bcins
         for (integer q = 0; q < NP; q = q + 1) begin
-            ins_legacy[q] = {EW{1'b0}}; gn[q] = 4'd0;
+            ins_legacy[q] = {EW{1'b0}}; gn_legacy[q] = 4'd0;
             for (integer i = 0; i <= 4; i = i + 1)
                 if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) begin
                     ins_legacy[q] = ins_legacy[q] | SX[(q - i >= 0) ? q - i : 0];
-                    gn[q]  = gn[q]  | g2f[4*((q - i >= 0) ? q - i : 0) +: 4];
+                    gn_legacy[q]  = gn_legacy[q]  | g2f[4*((q - i >= 0) ? q - i : 0) +: 4];
                 end
             for (integer j = 0; j < 4; j = j + 1)
-                if (valid_gn[q] && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j))) begin
+                if (valid_gn_legacy[q] && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j))) begin
                     ins_legacy[q] = ins_legacy[q] | q_bg[q / GP][EW*j +: EW];
-                    gn[q]  = gn[q]  | gbf[16*(q / GP) + 4*j +: 4];
+                    gn_legacy[q]  = gn_legacy[q]  | gbf[16*(q / GP) + 4*j +: 4];
                 end
-            if (q >= PT) for (integer j = 0; j < 4; j = j + 1) gn[q][j] = p_bg[q / GP][EW*j + EW - 1];
+            if (q >= PT) for (integer j = 0; j < 4; j = j + 1) gn_legacy[q][j] = p_bg[q / GP][EW*j + EW - 1];
+        end
+    end
+    // Dedicated GN control state prevents decoder factoring across the wide
+    // data selectors. Each source GN bit reaches <=30 copy D muxes, plus its
+    // original state at most; each local selector drives only four GN bits.
+    for(genvar d=0;d<NP;d=d+1)begin:g_gn32
+        if(FAN32==0)begin:g_old assign gn[d]=gn_legacy[d];end
+        else if(d>=PT)begin:g_tail assign gn[d]=flags_for_gn[d];end
+        else begin:g_new
+            (* keep *) wire [2:0] count[0:4];
+            for(genvar k=0;k<5;k=k+1)begin:g_count
+                wire[3:0] v=gt_copy[d][FN][k];
+                assign count[k]=valid_copy[d][FN][k]?(3'(v[0])+3'(v[1])+3'(v[2])+3'(v[3])):3'd0;
+            end
+            reg[3:0] value;
+            always @*begin
+                value=0;
+                for(integer k=0;k<5;k=k+1)
+                    if(d>=k&&count[k]==3'(k))value=value|g2f[4*((d>=k)?d-k:0)+:4];
+                for(integer k=0;k<4;k=k+1)
+                    if(valid_copy[d][FN][0]&&d>=k&&count[k]>3'(k)&&(d-k-1<0||count[k+1]<=3'(k)))
+                        value=value|gbf[16*(d/GP)+4*k+:4];
+            end
+            assign gn[d]=value;
         end
     end
     for (gp = 0; gp < NP; gp = gp + 1) begin : g_gt
@@ -872,15 +898,13 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                 end
                 // A separate kept validity provenance for the incoming-block leg
                 // shares the same value as q_vg[d/GP], with bounded local use.
-                (* keep="true",dont_touch="true" *) reg iv;
-                always @(posedge ckr[rg(d/GP)])iv<=pvalid_forword[d];
                 reg [W-1:0] value;
                 always @*begin
                     value=0;
                     for(integer k=0;k<5;k=k+1)
                         if(d>=k&&count[k]==3'(k))value=value|SX[(d>=k)?d-k:0][LO+:W];
                     for(integer k=0;k<4;k=k+1)
-                        if(iv&&d>=k&&count[k]>3'(k)&&(d-k-1<0||count[k+1]<=3'(k)))
+                        if(valid_copy[d][w][0]&&d>=k&&count[k]>3'(k)&&(d-k-1<0||count[k+1]<=3'(k)))
                             value=value|q_bg[d/GP][EW*k+LO+:W];
                 end
                 assign ins[d][LO+:W]=value;

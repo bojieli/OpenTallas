@@ -11,15 +11,15 @@
   "optin": "FAN32=1, PRE1, CREP1",
   "added_cycles": 0,
   "new_floorplan_assumption": "none; size from fresh synthesis before gate",
-  "added_flop_estimate": 17630,
+  "added_flop_estimate": 19300,
   "source_budgets": {
     "pin_data_q": 27,
     "pin_control_fanout": 30,
     "pin_provenance_copies": 4,
     "p_valid_to_q_copies": 31,
-    "p_clear_to_q_copies": 26,
-    "gn_bit_to_gt_copies": 26,
-    "p_validbit_to_gt_copies": 25,
+    "p_clear_to_q_copies": 31,
+    "gn_bit_to_gt_copies": 31,
+    "p_validbit_to_gt_copies": 30,
     "local_insertion_select": 20,
     "overflow_select_mux_endpoints": 24
   },
@@ -59,5 +59,11 @@
     "area_price": "must use standalone mapped synthesis before floorplan sizing; no estimated performance credit"
   },
   "storage_scope": "static captures and statically indexed replicated control state; no newly addressed flop memory",
-  "reach_scope": "unchanged logical crossing edges/regions; actual placement required, no reach pass claimed"
+  "reach_scope": "unchanged logical crossing edges/regions; actual placement required, no reach pass claimed",
+  "v2_changes": [
+    "keep original PRE captures distinct from new copies",
+    "dedicated GN count/valid state word",
+    "tail gt uses independent equal-age valid capture",
+    "reuse same-word valid for insertion guard"
+  ]
 }
