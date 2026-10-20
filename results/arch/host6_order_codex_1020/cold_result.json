@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "independent_initial_state": true,
+  "opt_merge": false,
+  "ignore_unknown_cells": false,
+  "copied_output_pairs": 2,
+  "memory_model": "PROOF ONLY: one unconstrained read stream per singleton SRAM",
+  "reset_assert_steps": 12,
+  "reset_release_steps": 12,
+  "checked_steps": "12..24",
+  "source_sha256": "06317cc8f8ef150c5f6ad9c908672e299815fcc59148721a1e2ce70e59969b7c"
+}

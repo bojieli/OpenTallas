@@ -70,7 +70,8 @@ pre/post JSON, exact source coupon, command file and proof log.
 
 The earlier whole-source proofs are preserved as diagnostics: two correctly
 refused unknown SRAMs, and a third with explicitly shared arbitrary read streams
-is still running. Their verdicts are not used to replace the narrower proven
+passed in 643 seconds with 23.3 GB peak memory. Its complete log and explicit
+proof-only model are retained. Those diagnostic verdicts are not used to replace the narrower proven
 obligation. No layout gate, REVIEW, submit, release binding or closure claim is
 made. ROOT's exact source-native reset registry remains pending review.
 
