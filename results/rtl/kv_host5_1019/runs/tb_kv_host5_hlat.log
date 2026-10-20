@@ -1,0 +1,30 @@
+HLAT_REQ u0 step0 cmd->grant 6 cmd->rq0 9 cmd->rq8 25
+HLAT_REQ u1 step0 cmd->grant 21 cmd->rq0 24 cmd->rq8 40
+HLAT_REQ u2 step0 cmd->grant 36 cmd->rq0 39 cmd->rq8 55
+HLAT_REQ u3 step0 cmd->grant 51 cmd->rq0 54 cmd->rq8 70
+HLAT_RES u0 step0 er->ret0 5 er->ret8 5 er->post 15
+HLAT_REQ u0 step1 cmd->grant 6 cmd->rq0 9 cmd->rq8 25
+HLAT_RES u1 step0 er->ret0 5 er->ret8 5 er->post 32
+HLAT_RES u2 step0 er->ret0 5 er->ret8 5 er->post 23
+HLAT_REQ u1 step1 cmd->grant 6 cmd->rq0 9 cmd->rq8 25
+HLAT_REQ u2 step1 cmd->grant 16 cmd->rq0 19 cmd->rq8 35
+HLAT_RES u3 step0 er->ret0 5 er->ret8 5 er->post 15
+HLAT_RES u0 step1 er->ret0 5 er->ret8 5 er->post 16
+HLAT_REQ u0 step2 cmd->grant 6 cmd->rq0 9 cmd->rq8 25
+HLAT_RES u1 step1 er->ret0 5 er->ret8 5 er->post 16
+HLAT_REQ u1 step2 cmd->grant 6 cmd->rq0 9 cmd->rq8 25
+HLAT_RES u2 step1 er->ret0 5 er->ret8 5 er->post 33
+HLAT_REQ u2 step2 cmd->grant 6 cmd->rq0 9 cmd->rq8 25
+HLAT_REQ u3 step1 cmd->grant 6 cmd->rq0 9 cmd->rq8 25
+HLAT_RES u0 step2 er->ret0 5 er->ret8 5 er->post 16
+HLAT_RES u1 step2 er->ret0 5 er->ret8 5 er->post 16
+HLAT_RES u2 step2 er->ret0 5 er->ret8 5 er->post 16
+HLAT_RES u3 step1 er->ret0 5 er->ret8 5 er->post 16
+HLAT_REQ u3 step2 cmd->grant 6 cmd->rq0 9 cmd->rq8 25
+HLAT_RES u3 step2 er->ret0 5 er->ret8 5 er->post 16
+PASS MU_PEER_E2E users=4 rounds=3 steps=12 posts=12 rank_requests=96 peer_starts=84 writer_stages=432 overlap_dispatch=10 overlap_post=10 epochs_out_of_global_order=1 max_post_after_kv_done=34 cycles=10936
+- rtl/test/kv_host5_1019/tb_kv_host5_hlat.sv:400: Verilog $finish
+HLAT_SUMMARY max er->ret0 5 max er->ret8 5 min er->ret8 5 max er->post 33 max cmd->grant 51 min cmd->rq0 9 max cmd->rq0 54 max cmd->rq8 70
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.047 s; speed 233.646 us/s
+- Verilator: cpu 0.047 s on 1 threads; allocated 8 MB

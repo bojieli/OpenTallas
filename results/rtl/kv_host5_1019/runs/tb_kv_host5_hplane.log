@@ -1,0 +1,21 @@
+CAPS 01040004
+HPLANE_PRM u0 pos1 tk->hc_start 23
+HPLANE_PRM u1 pos1 tk->hc_start 17
+HPLANE_GEN u2 pos1 tk->hc_start 15
+HPLANE_GEN u0 pos2 tk->hc_start 15
+HPLANE_PRM u1 pos2 tk->hc_start 17
+HPLANE_PRM u3 pos1 tk->hc_start 17
+HPLANE_GEN u2 pos2 tk->hc_start 15
+HPLANE_GEN u0 pos3 tk->hc_start 15
+HPLANE_GEN u1 pos3 tk->hc_start 15
+HPLANE_PRM u3 pos2 tk->hc_start 17
+HPLANE_GEN u2 pos3 tk->hc_start 15
+HPLANE_PRM u3 pos3 tk->hc_start 17
+HPLANE_GEN u3 pos4 tk->hc_start 15
+HPLANE_GEN u3 pos5 tk->hc_start 15
+PASS host MU_OUT users4 steps18 CQ entries12 per-user in order (slot/tag/pos/token/ngen/kind), hc user=pos[17:16], max outstanding 4, no fault
+- rtl/test/kv_host5_1019/tb_kv_host5_hplane.sv:161: Verilog $finish
+HPLANE_SUMMARY gen n=8 min 15 max 15 | prompt n=6 min 17 max 23
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 613ns; walltime 0.001 s; speed 677.752 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
