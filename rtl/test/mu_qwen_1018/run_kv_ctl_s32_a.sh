@@ -31,6 +31,7 @@ case "$CASE" in
  m_ld) MF=$S; FROM="else if(ldc[k])tv[LO+:W]<=rt_all[LO+:W];"; TO="else if(ldc[k]&&k!=0)tv[LO+:W]<=rt_all[LO+:W];";;
  m_cy) MF=$S; FROM=".s(actc[k]&&!spy[k])"; TO=".s(actc[k]&&!spy[k]&&k!=0)";;
  m_cp) MF=$S; FROM="wsc<={NC{actc[NCY]&&next_slot}};"; TO="wsc<={NC{actc[NCY]&&next_slot}}&{{(NC-1){1'b1}},1'b0};";;
+ m_l0) MF=$S; FROM=".s(lsg[gi] && good)"; TO=".s(lsg[gi] && good && gi != 1)";;
  *) echo "S32A $CASE: unknown case"; exit 2;;
 esac
 W="$OUT/src_$CASE"; rm -rf "$W"; mkdir -p "$W"

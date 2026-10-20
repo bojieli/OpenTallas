@@ -159,7 +159,11 @@ module qkd_kv_static_writer_s32 #(parameter integer MUT = 0, parameter integer V
         end
         for (gi = 0; gi < NL0; gi = gi + 1) begin : g_l0
             localparam integer LO = gi * SW, W = (WL0 - LO < SW) ? WL0 - LO : SW;
-            always @(posedge ck or negedge rr[0]) if (!rr[0]) l0[LO +: W] <= 0; else if (lsg[gi] && good) l0[LO +: W] <= l0_d[LO +: W];
+            // Keep the hold mux behind a boundary: ABC otherwise folds good into every
+            // identity bit (rev2 exact census one 52-load combinational root).
+            wire [W-1:0] lnx;
+            ot_s32_sel #(.W(W)) u_l0_hold(.s(lsg[gi] && good),.a(l0_d[LO +: W]),.b(l0[LO +: W]),.y(lnx));
+            always @(posedge ck or negedge rr[0]) if (!rr[0]) l0[LO +: W] <= 0; else l0[LO +: W] <= lnx;
         end
         for (gi = 0; gi < NR0; gi = gi + 1) begin : g_r0
             localparam integer LO = gi * SW, W = (WR0 - LO < SW) ? WR0 - LO : SW;
