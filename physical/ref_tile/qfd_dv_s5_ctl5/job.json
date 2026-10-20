@@ -2,12 +2,12 @@
  "name": "qfd_dv_s5_ctl5-ctl5a-COMMIT",
  "block": "qfd_dv_s5_ctl_repair4_leaf",
  "ref_tile": true,
- "owner": "Claude:QW-SLICE7-CTL",
+ "owner": "Codex:QW-SLICE7",
  "purpose": "QW-SLICE7 Q.STA.SLICE.2: slice2 glue leaf ctl (repair4 bounded fanout/depth) of the hardened one-level slice",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/qw-slice7-ctl-1020",
+  "branch": "codex/qw-ctl5-intake-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl",
