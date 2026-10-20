@@ -21,6 +21,7 @@ for v,bface in (('c','W'),('d','E')):
         if p not in RAW and p in r: r[p]=[205.0,415.8]
     at={m['inst']:m for m in s['macros']}
     at['u74592_c0/u_cell']['at']=[259.2,43.2]; at['u74646_c0/u_cell']['at']=[43.2,43.2]
+    s['clock']='spine'
     s['structural_change']={'kind':'floorplan_change','reason':
       f'p32a/b + PEER refusal fix: qkd_hr_core_peer_n32 FF u73608_c0 (AND of 128 slice_boot_done + 128 slice_boot_ok + 93 guarded_tk + local_service_epoch/local_kst pin regs) read pins on BOTH W and E faces (~459 um apart, Codex phase15530 REFUSED). All five buses only feed that reducer (+2 summaries), so they move together to the {bface} face. Lower SRAM identities swapped and TX(E 64.8..178)/rawRX(S 59.4..200) windows per Codex phase model (1058 boundary-macro pairs <=351 um nominal). Source unchanged (sha 1277bb49), 0 added edges.'}
     ck=s['safe_design_checklist']; ck['2_reach']=f'FIXED: boot reducer inputs on one face ({bface}); TX/rawRX windows beside their SRAMs (model 1058 pairs <=351 um); actual placed reach audit after gate.'

@@ -775,7 +775,7 @@
  ],
  "structural_change": {
   "kind": "floorplan_change",
-  "reason": "p32a/b + PEER refusal fix: qkd_hr_core_peer_n32 FF u73608_c0 (AND of 128 slice_boot_done + 128 slice_boot_ok + 93 guarded_tk + local_service_epoch/local_kst pin regs) read pins on BOTH W and E faces (~459 um apart, Codex phase15530 REFUSED). All five buses only feed that reducer (+2 summaries), so they move together to the W face. Lower SRAM identities swapped and TX(E 64.8..178)/rawRX(S 59.4..200) windows per Codex phase model (1058 boundary-macro pairs <=351 um nominal). Source unchanged (sha 1277bb49), 0 added edges."
+  "reason": "p32a/b + PEER refusal fix: qkd_hr_core_peer_n32 FF u73608_c0 (AND of 128 slice_boot_done + 128 slice_boot_ok + 93 guarded_tk + local_service_epoch/local_kst pin regs) read pins on BOTH W and E faces (~459 um apart, Codex phase15530 REFUSED). All five buses only feed that reducer (+2 summaries), so they move together to the W face. Lower SRAM identities swapped and TX(E 64.8..178)/rawRX(S 59.4..200) windows per Codex phase model (1058 boundary-macro pairs <=351 um nominal). Source unchanged (sha 1277bb49), 0 added edges. Clock: pre-placed balanced clock spine (p32b plain CTS measured TT pin-flop spread 247 ps / FF 216.5 over 20,619 sinks, insertion 804.5)."
  },
  "reroute_reason": {
   "kind": "rtl_change",
@@ -789,7 +789,8 @@
   "4_depth": "textbook proxy 13 levels/470.1ps; gate STA measures.",
   "5_storage": "PASS: three real p192 32x546 SRAMs; no FF group >2048 bits.",
   "6_floorplan": "macros on 43.2 lattice, >=38um channels, full-width central band; outline from 97.1k synth area.",
-  "7_clock": "single ck_core, pin at band face centre; TT/FF spread<=80 measured at gate CTS.",
+  "7_clock": "FIXED: balanced pre-placed clock spine (common_flow/clock_spine.tcl) instead of TritonCTS from a W-face root (p32b: TT spread 247/FF 216.5 ps FAIL); gate measures TT/FF <=80.",
   "8_schedule": "static; 0 added data edges vs mapped original."
- }
+ },
+ "clock": "spine"
 }
