@@ -19,7 +19,7 @@ git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hbm_sm_attention tools
   physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 | ssh "$HOST" "tar -x -C $OUT/src" || exit 2
 echo "$SHA" | ssh "$HOST" "cat > $OUT/src/REV"
 if [ -n "${REUSE_OBJ:-}" ]; then ssh "$HOST" "[ -d $OUT/work_pos/obj_d0_p0 ] || cp -al $REUSE_OBJ $OUT/work_pos/obj_d0_p0"; fi
-VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
+VL="VERILATOR=\$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator ATT_EXTRA_DEFINES=${ATT_EXTRA_DEFINES:-}"  # TOKSIM-HBM-att: OT_SMH_ATTN_INT8 = die bind ENABLE_INT8(1)
 T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/att_images.py unit --kv $KV --layer $L --bundle $BUNDLE --subrun $SUB"
 if [ -n "${SKIP_UNIT:-}" ]; then R1=0; else
 /home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir "$OUT" -- bash -c "$T --work $OUT/work_pos --out $OUT/out/L${L}_s${SUB}_pos.json \

@@ -362,6 +362,8 @@ def run_op(exe, rec, op, lat, work, tagname, smut="", probe=False):
         if res["first_result"] is not None:
             res["span_first_word_to_last_result"] = res["last_result"] - first_word
             res["span_first_line_to_last_result"] = res["last_result"] - exp["first_line"]
+            # TOKSIM-HBM-att: whole record at the SM face incl. the x-load (xw) beats
+            res["span_first_any_to_last_result"] = res["last_result"] - min([first_word] + list(cal.xw))
     return res, node, out, exp
 
 

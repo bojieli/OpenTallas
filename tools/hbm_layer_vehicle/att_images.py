@@ -52,6 +52,8 @@ NSM = 16
 SM_NAMES = [f"sm_SW{j}" for j in range(8)] + [f"sm_NW{j}" for j in range(8)]
 SVG_W, XC_W, PROG_WORDS = 135, 173, 1024
 DIE_DEFINES = ["OT_SMH_FC_HIER", "OT_SMH_HIER", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY"]
+# TOKSIM-HBM-att (10-19): extra build defines, e.g. OT_SMH_ATTN_INT8 = the d4g GEN2e3 die bind ENABLE_INT8(1)
+DIE_DEFINES += [d for d in os.environ.get("ATT_EXTRA_DEFINES", "").split(",") if d]
 
 
 def zb(a):
@@ -282,6 +284,9 @@ def cmd_unit(a):
             res["span_first_line_to_last_result"] = res["last_result"] - exp["first_line"]
             res["span_first_word_to_last_result"] = res["last_result"] - min(
                 [c for c, f in enumerate(cal.cyc) if f] + list(cal.kvd) + list(cal.pkt))
+            # TOKSIM-HBM-att: whole record at the SM face = first command / x-load / descriptor / packet -> last result
+            res["span_first_any_to_last_result"] = res["last_result"] - min(
+                [c for c, f in enumerate(cal.cyc) if f] + list(cal.kvd) + list(cal.pkt) + list(cal.xw))
         if op[1] == "pv" and res["pass"]:
             words = [(int(x[1]), int(x[2], 16), int(x[3], 16)) for x in (ln.split() for ln in out.splitlines()
                                                                         if ln.startswith("R "))]

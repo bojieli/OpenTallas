@@ -15,7 +15,7 @@ ssh "$HOST" "mkdir -p $OUT/src $OUT/out && rm -rf $OUT/src/*" || exit 2
 git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hbm_sm_attention tools/hgi_sim tools/hdc_golden_v41.py \
   tools/hdc_golden.py tools/hbm_svc_packed136_image.py rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv | ssh "$HOST" "tar -x -C $OUT/src" || exit 2
 echo "$SHA" | ssh "$HOST" "cat > $OUT/src/REV"
-VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
+VL="VERILATOR=\$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator ATT_EXTRA_DEFINES=${ATT_EXTRA_DEFINES:-}"  # TOKSIM-HBM-att: OT_SMH_ATTN_INT8 = die bind ENABLE_INT8(1)
 T="cd $OUT/src && $VL HDC_V41_ARITH=chunk8 python3 tools/hbm_layer_vehicle/qwen_att_unit.py run --kv $KV --bundle $BUNDLE"
 POS=""
 for x in $SL; do S=${x%%:*}; L=${x##*:}
