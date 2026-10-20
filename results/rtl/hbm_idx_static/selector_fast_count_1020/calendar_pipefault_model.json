@@ -1,0 +1,43 @@
+{
+  "source": "PIPE_HAZARD=1, FAST_COUNT=0",
+  "old_profiles": [
+    {
+      "old_profile": "registered",
+      "gap": 4,
+      "program_byte_identical": true
+    },
+    {
+      "old_profile": "registered",
+      "gap": 100,
+      "program_byte_identical": true
+    },
+    {
+      "old_profile": "registered_s3",
+      "gap": 4,
+      "program_byte_identical": true
+    },
+    {
+      "old_profile": "registered_s3",
+      "gap": 100,
+      "program_byte_identical": true
+    },
+    {
+      "old_profile": "none",
+      "gap": 4,
+      "program_byte_identical": true
+    },
+    {
+      "old_profile": "none",
+      "gap": 100,
+      "program_byte_identical": true
+    }
+  ],
+  "nominal_data_edges_added": 0,
+  "fault_status_edges_added": 1,
+  "frame_idle_edges_added": 1,
+  "baseline_length": 1433,
+  "pipefault_length": 1434,
+  "first_tx_old": 1305,
+  "first_tx_new": 1305,
+  "qualification": "Compiler model only; no parent physical/calendar RTL adoption"
+}

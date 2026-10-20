@@ -55,6 +55,10 @@ PIN_TABLES = {
     'none': dict(vmq_in=0, vmq_out=0, vm_rt=0, q_in=0, q_out=0, sel_in=0, sel_out=0, link_in=0, link_out=0,
                  link_core_out=0, sel_core_out=0, sel_scan_drain=0),
 }
+# Opt-in PIPE_HAZARD selector: data edges unchanged, sticky fault response +1.
+# Price one final idle instruction before frame completion; no old table changes.
+PIN_TABLES['registered_s3_pipefault'] = {**PIN_TABLES['registered_s3'], 'sel_fault_tail': 1}
+
 FIELDS = dict(weight=(31, 1), query=(30, 1), head=(29, 1), beat=(28, 1), index=(20, 8), op=(16, 4), ps=(14, 2),
               addr=(6, 8), flush=(5, 1), link=(4, 1), group=(0, 4))
 # tile that consumes each field (index is shared by query slots, head emits and key beats: owner set per use)
@@ -138,7 +142,7 @@ def compile_program(pins='registered', gap=100, score_chain=0, link_pipe=None):
     for b in range(16):
         emit('link', link=1, group=b)
         wait(7)
-    wait(4)
+    wait(4 + pin.get('sel_fault_tail', 0))
     hist_len = t[0]
     tail = pin['link_core_out']           # pipelined link: last TX beat lands link_core_out edges later
 
@@ -171,6 +175,7 @@ def compile_program(pins='registered', gap=100, score_chain=0, link_pipe=None):
         first_key_instruction=marks['first_key'] + sh['s'],
         added_edges_scan_to_tx=sh['link'] + pin['link_in'] + pin['link_core_out'] + pin['link_out'] - sh['sel'],
         added_edges_frame=length - hist_len,
+        fault_response_extra_edges=pin.get('sel_fault_tail', 0),
     )
     meta = dict(length=length, historical_length=hist_len, pins=pins, pin_table=pin, score_chain=score_chain, calendar_shift=sh,
                 core_shift=core, gap=gap, marks=marks, predicted=pred,
