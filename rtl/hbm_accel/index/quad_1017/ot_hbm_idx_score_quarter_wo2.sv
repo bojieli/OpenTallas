@@ -23,11 +23,11 @@ module ot_hbm_idx_score_qw_r4 #(parameter integer TP=96,RANK_W=(TP<=1?1:$clog2(T
  input wire beat_v,input wire[7:0]beat_index,
  input wire[2197:0]key_lines0,input wire[2197:0]key_lines1,
  output wire rst_c0,output wire rst_c1,
- output reg o_qv0,output reg[567:0]o_q0,output reg o_kv0,
- output reg[3:0]o_kkv0,output reg[2175:0]o_key0,output reg[29:0]o_aux0,
+ output wire o_qv0,output wire[567:0]o_q0,output wire o_kv0,
+ output wire[3:0]o_kkv0,output wire[2175:0]o_key0,output wire[29:0]o_aux0,
  output wire[551:0]o_bus0,
- output reg o_qv1,output reg[567:0]o_q1,output reg o_kv1,
- output reg[3:0]o_kkv1,output reg[2175:0]o_key1,output reg[29:0]o_aux1,
+ output wire o_qv1,output wire[567:0]o_q1,output wire o_kv1,
+ output wire[3:0]o_kkv1,output wire[2175:0]o_key1,output wire[29:0]o_aux1,
  output wire[551:0]o_bus1
 );
  wire[1:0]rst_r;
@@ -73,29 +73,44 @@ module ot_hbm_idx_score_qw_r4 #(parameter integer TP=96,RANK_W=(TP<=1?1:$clog2(T
   wire[19:0]first=g0+(h_r?20'(8*TP):20'd0)+20'(e*4);
   assign md[e]={(({4'd0,bi_r}+12'd1)*12'd16>=nk_r),first,4'd0};
  end
- // ---- stage B: per-row mid stage (row e domain), placed between the row-0 capture and row e's output pins
- reg b_qv0,b_kv0,b_wf0;reg[567:0]b_q0;reg[3:0]b_kkv0,b_kk0;reg[2175:0]b_key0;reg[24:0]b_md0;
- reg b_qv1,b_kv1,b_wf1;reg[567:0]b_q1;reg[3:0]b_kkv1,b_kk1;reg[2175:0]b_key1;reg[24:0]b_md1;
- always @(posedge clk_w0)begin
-  b_qv0<=qv_r;b_q0<={qh_r,qc_r,qs_r,qw_r};b_kv0<=bv_r;b_kkv0<=vk[0];b_kk0<=kk[0];b_key0<=keys[0];b_md0<=md[0];b_wf0<=wf0;
- end
- always @(posedge clk_w1)begin
-  b_qv1<=qv_r;b_q1<={qh_r,qc_r,qs_r,qw_r};b_kv1<=bv_r;b_kkv1<=vk[1];b_kk1<=kk[1];b_key1<=keys[1];b_md1<=md[1];b_wf1<=wf1;
- end
- // ---- stage C: output pin registers (every W-tile output launches from a flop at its pin)
- wire[29:0]aux0={b_wf0|b_wf1,b_md0,b_kk0};
- always @(posedge clk_w0)begin
-  o_qv0<=b_qv0;o_q0<=b_q0;o_kv0<=b_kv0;o_kkv0<=b_kkv0;o_key0<=b_key0;
- end
+ // ---- stages B + C per row, in the KEPT non-parameterised module ot_hidx_qw_row (SYNTH_KEEP_MODULES). L2H-IDXSCORE
+ // 10-19 r4k: in the one-root tile (clk_w0 = clk_w1) Yosys opt_merge folded every row-1 copy with identical D into row 0's
+ // (b_q, b_qv, b_kv, b_md, o_q, o_qv, o_kv, most of o_aux: 568 o_q flops left of 1,136), so o_q0 launched from the row-1
+ // flop one ~650 um buffered hop from its pin (gate qw4s_562_w432 reg->out -228 ps). A hierarchy boundary per row keeps
+ // both copies. Cycles unchanged: B then C, row e on its own row clock.
+ wire b_wf0,b_wf1;wire[28:0]b_ak0,b_ak1;wire[29:0]r0_aux;
+ ot_hidx_qw_row u_row0(.clk(clk_w0),.qv(qv_r),.q({qh_r,qc_r,qs_r,qw_r}),.kv(bv_r),.kkv(vk[0]),.kk(kk[0]),.key(keys[0]),
+  .md(md[0]),.wf(wf0),.wf_c(b_wf0|b_wf1),.b_wf_o(b_wf0),.b_ak_o(b_ak0),.o_qv(o_qv0),.o_q(o_q0),.o_kv(o_kv0),.o_kkv(o_kkv0),
+  .o_key(o_key0),.o_aux(r0_aux));
+ ot_hidx_qw_row u_row1(.clk(clk_w1),.qv(qv_r),.q({qh_r,qc_r,qs_r,qw_r}),.kv(bv_r),.kkv(vk[1]),.kk(kk[1]),.key(keys[1]),
+  .md(md[1]),.wf(wf1),.wf_c(b_wf1),.b_wf_o(b_wf1),.b_ak_o(b_ak1),.o_qv(o_qv1),.o_q(o_q1),.o_kv(o_kv1),.o_kkv(o_kkv1),
+  .o_key(o_key1),.o_aux(o_aux1));
 `ifdef OT_IDXQS_MUT_AUXEARLY
- always @* o_aux0=aux0;                                                       // mutant: row 0 aux one edge early
+ assign o_aux0={b_wf0|b_wf1,b_ak0};                                           // mutant: row 0 aux one edge early
 `else
- always @(posedge clk_w0) o_aux0<=aux0;
+ assign o_aux0=r0_aux;
 `endif
- always @(posedge clk_w1)begin
-  o_qv1<=b_qv1;o_q1<=b_q1;o_kv1<=b_kv1;o_kkv1<=b_kkv1;o_key1<=b_key1;o_aux1<={b_wf1,b_md1,b_kk1};
- end
  assign o_bus0='0;assign o_bus1='0;
+endmodule
+
+// One W-tile row's B (mid) + C (output pin) stages. Non-parameterised so the kit's SYNTH_KEEP_MODULES name matches (a
+// parameterised module is renamed $paramod and the keep misses it). o_aux = {wf_c, md, kk} at C; b_wf_o / b_ak_o = the
+// B-stage fault cause and {md, kk} (row 0 ORs both rows' B wf into its aux; the AUXEARLY mutant reads b_ak_o).
+module ot_hidx_qw_row(
+ input wire clk,
+ input wire qv,input wire[567:0]q,input wire kv,input wire[3:0]kkv,input wire[3:0]kk,input wire[2175:0]key,
+ input wire[24:0]md,input wire wf,input wire wf_c,
+ output wire b_wf_o,output wire[28:0]b_ak_o,
+ output reg o_qv,output reg[567:0]o_q,output reg o_kv,output reg[3:0]o_kkv,output reg[2175:0]o_key,output reg[29:0]o_aux
+);
+ reg b_qv,b_kv,b_wf;reg[567:0]b_q;reg[3:0]b_kkv,b_kk;reg[2175:0]b_key;reg[24:0]b_md;
+ always @(posedge clk)begin
+  b_qv<=qv;b_q<=q;b_kv<=kv;b_kkv<=kkv;b_kk<=kk;b_key<=key;b_md<=md;b_wf<=wf;
+ end
+ always @(posedge clk)begin
+  o_qv<=b_qv;o_q<=b_q;o_kv<=b_kv;o_kkv<=b_kkv;o_key<=b_key;o_aux<={wf_c,b_md,b_kk};
+ end
+ assign b_wf_o=b_wf;assign b_ak_o={b_md,b_kk};
 endmodule
 
 module ot_hbm_idx_score_qe_r4(
