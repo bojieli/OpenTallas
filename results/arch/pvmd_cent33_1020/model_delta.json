@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.pvm_cent33_model_delta.v1",
+  "source": "06641422a",
+  "baseline": "cc33b9ac7",
+  "change": "same-edge kept status provenance counter separate from entry decoder",
+  "data_cycle_delta": 0,
+  "reset_release_cycle_delta": 0,
+  "initiation_interval_delta": 0,
+  "sram_count_delta": 0,
+  "sram_bits_delta": 0,
+  "flop_count_delta": 3,
+  "baseline_synth_total_area_um2": 35869.2929,
+  "candidate_synth_total_area_um2": 35881.21934,
+  "area_delta_um2": 11.926440000002913,
+  "macro_area_um2": 26363.2787,
+  "candidate_std_area_um2": 9517.94064,
+  "baseline_price": "results/arch/hbm_pvm_distributed_source_1019/price.json; existing distributed wrapper +1 edge remains unchanged",
+  "outline_variants_um": [
+    [
+      345.6,
+      302.4
+    ],
+    [
+      432,
+      302.4
+    ]
+  ],
+  "resource_admission": "32GB16threads pergate, fleetauto; no stubs/masks/credit changes"
+}

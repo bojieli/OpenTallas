@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_sm_pv_merge_distributed",
+ "enable": false,
+ "reason": "the RTL lands rst_n: g_reset_first (2 flops, D=1) -> g_reset_second (8) -> g_reset_core (54) async-assert / sync-release keep_hierarchy flops, <= 32 loads each; the core releases 3 edges after rst_n (scheduled constant)"
+}
