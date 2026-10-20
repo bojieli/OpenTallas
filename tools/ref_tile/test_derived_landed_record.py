@@ -57,6 +57,10 @@ class PairedAHUB6(unittest.TestCase):
 
     def test_canonical_replay_full_record_and_actual_topology(self):self.validate()
 
+    def test_canonical_generator_relabel_is_rejected(self):
+        self.record['generator']='tools/landed_parent/lp.py'
+        with self.assertRaisesRegex(ValueError,'unsupported typed profile'):self.validate()
+
     def test_missing_provenance(self):
         del self.record['derived_lp']['canonical_rtl']
         with self.assertRaisesRegex(ValueError,'provenance fields'):self.validate()
