@@ -49,6 +49,41 @@ module ot_s81ph_hq_in (
     always @(posedge clk) begin s0c <= {lane[512:509], lane[0]}; s0d <= {lane[512:509], lane[0]}; end
     // type-8 select copies: 13 lanes x {val lo 8, val hi 8, idx lo 10, idx hi 10} + {lv/last} = 53 copies over four
     // decodes (<= 14 each)
+`ifdef OT_S81PH_HQ_INPUT_RAW
+    // Structural successor: land raw type bits at the existing first edge;
+    // decode locally at the existing second-stage payload mux. Eight groups
+    // keep each type bit below32 loads, with zero additional pipeline edges.
+    localparam integer NF = 53, NT = 8;
+    (* keep = "true" *) reg [4*NT-1:0] raw_type;
+`ifdef OT_S81PH_HQ_INPUT_RAW_MUT
+    reg [3:0] raw_type_prev;
+    always @(posedge clk) raw_type_prev <= lane[512:509];
+`endif
+    genvar rt;
+    generate for (rt = 0; rt < NT; rt = rt + 1) begin : g_raw_type
+        always @(posedge clk) begin
+`ifdef OT_S81PH_HQ_INPUT_RAW_MUT
+            if (`OT_S81PH_HQ_INPUT_RAW_MUT == 2) raw_type[4*rt +: 4] <= raw_type_prev;
+            else
+`endif
+                raw_type[4*rt +: 4] <= lane[512:509];
+        end
+    end endgenerate
+    wire [NF-1:0] f;
+    genvar fs;
+    generate for (fs = 0; fs < NF; fs = fs + 1) begin : g_f
+        wire [3:0] t = raw_type[4*(fs / 7) +: 4];
+        wire [3:0] dec = {t[3] & ~t[1] & ~t[0],
+                          t[3] & ~t[2] & ~t[0],
+                          t[3] & ~t[2] & ~t[1],
+                          t == 4'd8};
+`ifdef OT_S81PH_HQ_INPUT_RAW_MUT
+        assign f[fs] = (`OT_S81PH_HQ_INPUT_RAW_MUT == 1) ? ~dec[fs % 4] : dec[fs % 4];
+`else
+        assign f[fs] = dec[fs % 4];
+`endif
+    end endgenerate
+`else
     wire [3:0] t = lane[512:509];
     wire [3:0] dec = {t[3] & ~t[1] & ~t[0],             // {8, 12}
                       t[3] & ~t[2] & ~t[0],             // {8, 10}
@@ -62,6 +97,7 @@ module ot_s81ph_hq_in (
         always @(posedge clk) r <= dec[fs % 4];
         assign f[fs] = r;
     end endgenerate
+`endif
     wire          v   = s0[0];
     wire [481:0]  d   = s0[DW:1];
     wire [7:0]    tag = s0[DW+8:DW+1];

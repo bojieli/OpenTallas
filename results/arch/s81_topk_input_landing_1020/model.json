@@ -1,0 +1,26 @@
+{
+  "status": "STRUCTURAL_INPUT_LANDING_MODELONLY_UNTIL_PROOF_AND_MAP",
+  "base": "a86fd4882",
+  "current_gate_failure_observation": "HQ3 CTS setup repair108endpoints WNS~-65.85ps at u_in.g_f[50].r/D, no terminal gate failure yet",
+  "opt_in": "OT_S81PH_HQ_INPUT_RAW",
+  "first_stage": "8 kept4-bit raw type captures; 0 combinational levels before these D pins",
+  "second_stage": "existing payload mux captures using local decode of captured type; same edge as original registered-decoder select",
+  "default": "legacy HQ input source unchanged when opt-in unset",
+  "type_port_load_bound": 11,
+  "copy_groups": 8,
+  "select_group_size": 7,
+  "select_count": 53,
+  "old_selector_register_bits": 53,
+  "new_type_register_bits": 32,
+  "register_delta_bits": -21,
+  "added_cycles": 0,
+  "throughput_price": "same13indexed intake/cycle;1037-cycle reservation unchanged target",
+  "admission": [
+    "lockstep whole input module vs original at all16 type encodings, randompayload/reset",
+    "late/incorrect type mutants must fail",
+    "main mapped native32 with kept copies verified",
+    "full quarter productionbench and canonicalcensus before ANY future gate",
+    "new physical source first-stage flops at face and real second-stage path timing",
+    "no duplicate gate/current live source mutation"
+  ]
+}
