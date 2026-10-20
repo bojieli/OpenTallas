@@ -5,7 +5,8 @@ import json, re, sys
 from pathlib import Path
 
 RES, CENSUS, OUT = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
-BR = sys.argv[4] if len(sys.argv) > 4 else 'claude/toksim-hbm-su-1019'
+BR = sys.argv[4] if len(sys.argv) > 4 else 'claude/hbm-sufix-1019'
+JOBDIR = sys.argv[5] if len(sys.argv) > 5 else 'vec_a3'
 K = lambda d: json.dumps(d, sort_keys=True)
 V = lambda n, m=1, f='FP32': ['VM', n, m, f]
 # record -> (design, census SHAPE_KEY)
@@ -31,6 +32,8 @@ MAP = {
  'ds_attend_exp_sum128': ('ds_ar', dict(A=V(128), B=V(128), O=V(128), R=V(1))),
  'ds_swiglu': ('ds_ar', dict(A=V(24, 7), B=V(24, 7), C=V(24, 7), O=V(24, 7))),
  'ds_engram_gate': ('ds_ar', dict(A=V(4), B=V(4), O=V(4))),
+ 'ds_spsqrt4': ('ds_ar', dict(A=V(4), O=V(4))),           # HBM-SUFIX: SIDE sqrt(softplus), lowered
+ 'ds_rs': ('ds_ar', dict(A=V(1), O=V(1))),                # HBM-SUFIX: m1 5 + SIDE rsqrt, lowered
  'qw_bf16_p': ('qwen', dict(A=V(8192, 8), O=V(8192, 8))),
  'qw_row_scale_res': ('qwen', dict(A=V(4096), B=V(4096), C=V(4096), O=V(4096))),
  'qw_row_scale_gu': ('qwen', dict(A=V(6144), B=V(6144), O=V(6144))),
@@ -43,9 +46,6 @@ MAP = {
 LAW = {'qw_softmax_exp_sum_r1': ('qwen', dict(A=V(8192, 8), B=V(1, 8), O=V(8192, 8), R=V(1, 8)), 8),
        'qw_softmax_max_r1': None}
 UNLOWERED = {
- ('ds_ar', K(dict(A=V(4), O=V(4)))): 'sfu 6 = sqrt(softplus) (and engram/router SIDE functions): global lane 0 FULL scalar side pipe; '
-     'its NumPy golden and side-pipe calendar are not in this bench (cycles null)',
- ('ds_ar', K(dict(A=V(1), O=V(1)))): 'm1 5 (A/imm1) + sfu 2 rsqrt on the FULL lane side pipe (rs records): not lowered here',
  ('ds_ar', K(dict(A=V(1), I=['VM', 1, 1, 'U32'], O=V(1)))): 'indexed gather (I operand, MDESC indexed): needs the gather-index calendar',
  ('ds_ar', K(dict(A=V(64), B=V(64), D=V(64), O=V(64)))): 'rope tail: b_half + c_pair (pair lane operand) addressing not lowered',
  ('ds_ar', K(dict(A=V(64, 32), B=V(64, 32), D=V(64, 32), O=V(64, 32)))): 'rope (index_q): b_half + c_pair not lowered',
@@ -105,7 +105,7 @@ for des in ('ds_ar', 'qwen'):
         ent['shapes'][sk] = dict(cycles=cyc, golden=g if r10[3] else 'NONE', rtl_master='ot_hbm_su_static_top (16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore + ot_hbm_su_stree_net)',
                                  rtl_source='claude/hd4g-gen2e3-1019@9787e078a', bound_in_die=True,
                                  bench='tools/hbm_static/toksim_su/suvop/{tb_toksim_su_top.sv,prod_compile.py,run_toksim_su.sh} record ' + rec,
-                                 job=f"ot-epyc5:/srv/opentallas-scratch/claude/toksim-hbm-su/suvop/vec_mr10/{rec}", verilator='5.050',
+                                 job=f"ot-epyc5:/srv/opentallas-scratch/claude/hbm-sufix/suvop/{JOBDIR}/{rec}", verilator='5.050',
                                  notes=note, model_cost=c['model_cost'], n=c['n'], mr18_cycles=(r18[2]['cycles_stream_833ps'] if r18 else None),
                                  mr18_golden=(r18[3] if r18 else None))
         if cyc is not None and g == 'PASS':

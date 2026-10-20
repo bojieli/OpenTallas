@@ -60,3 +60,48 @@ ATT.PV 61k vs 189k, ATT.QK 45k vs 96k, SFU.GLU 17k vs 4k (3.8x).
 - `units_variants/`: att_mb (used in the release row), smhbm_p96, smhbm_h9b_bound.
 - Bench and runs: branch `claude/toksim-hbm-smhbm-1019` (`results/rtl/toksim_hbm_smhbm_1019/runs`).
 - Fleet: `ot-epyc5:/srv/opentallas-scratch/claude/toksim-smhbm-1019/out`, `ot-epyc6:/srv/opentallas-scratch/claude/toksim-hbm`.
+
+## HBM-SUFIX (10-20): SU.VOP measured, ROW_NORM cause, COLL classification
+
+Branch `claude/hbm-sufix-1019`. Files: `units/su.json`, `units_variants/su_rownorm_pretree.json`, `sufix/recompose_su.json`, `sufix/coll_classify.json`.
+
+**(a) SU.VOP compiler bug, fixed.** `prod_compile.py` had six defects:
+- `LIN` was 32 instead of 28. The lane writes 28 edges after emit at MLAT 4 / LEAF 1.
+- Unused operand streams had vb 0, so quarters 1..3 read outside their own quarter. That raised the slice `st_id_fault`, which explains why only q1..q3 faulted.
+- Control lines went to 0 after the last emit. The lane takes each stage's op fields from the LIVE line (lane header), so `co_dst` was 0 at OUT and nothing was written.
+- The fill pin edge was E+RR+3 instead of E+RR+2.
+- The RF drain was one edge early. It must be strictly after the RF commit, as in `su_top_compile`.
+- The per-row RF scalar was taken once per issue, although one issue spans several rows. Rows now get their own issues, and `ni` is set per issue.
+
+There is also one compiler workaround for an RTL mismatch. The SIDE pipe is built at MLAT 3 while the bound lane runs at MLAT 4, so side elements are now spaced (lane depth - side depth + 1) apart. The RTL lever is a side pipe at the lane's MLAT.
+
+Result:
+- 32/32 record programmes PASS bit-exact on the bound `ot_hbm_su_static_top` (mr10 = die-bound SRD 12 / SWD 10, Verilator 5.050).
+- The +MUT_DATA mutant FAILs (`results/rtl/toksim_hbm_su_1019/suvop/runs/mutant`).
+- Coverage of the class model_sum: DS 89.6%, Qwen 95.0%.
+- Light VOPs sit at about their price (80-105 vs 85-101).
+- Reductions are 2-38x their price. The as-built reducer takes ONE lane operand per quarter per edge, because GEN2e3 die.v has no pre-tree. Examples, measured vs price in stream edges:
+  - DS q_norm.ss: 835 vs 209
+  - DS attend max640: 664 vs 202
+  - Qwen softmax.exp_sum (8 x 8192): 22,316 vs 590
+  - Qwen softmax.max: 22,243 vs 399
+
+No compiler schedule can beat 16,384 operand-edges per quarter. Caveat: the golden is the calendar's chain/tree order (exact against the independent NumPy golden in that order), not yet checked against the model's softmax/norm reduction order.
+
+**(b) ROW_NORM.** The cause is the same ingress limit: 128 LOAD + 1024 ADD_EXT + 127 TREE command slots per quarter for d4096. It is not rsqrt or a re-launch. The best compiler-only schedule is still 8.3x the price. The lever is the closed HH-6 pre-tree (`hbm_su_pretree_s_1018-p3`), which is not bound in die.v (H.STA.BLK.16.6, LEAD2-HBM). Benched at the ROW_NORM shapes, bit-exact: d4096 672 / q 491 / k 477 vs 200 / 150 / 150. What remains is the fixed serial chain: pre-tree 80, two RF transits of 45, rsqrt 74. The next lever is a reducer -> rsqrt -> broadcast scalar bypass (about -100).
+
+**(c) COLL 1.24x.** Qwen ALL_REDUCE runs 6 dependent TP8 hypercube steps at about 178-193 each, against a TP4 calibration price. Reduce-scatter publishes 0.5 word/edge, and the TX calendar uses 4 of 5 slots. In DS GROUP_REDUCE_MCAST the switch crossings are on price; the endpoint serialisation is not.
+- L1 (fuse the last RS with the first AG) is compiler-only: Qwen +9.8 tok/s.
+- L1..L5 gives DS 1184 / Qwen 1031.
+- See `sufix/coll_classify.json`.
+
+**Recomposition** (census `--measured`, bw 98, bridge 1; deltas against the 1163.0 / 1003.3 base):
+
+| row | DS AR tok/s | Qwen AR tok/s |
+|---|---:|---:|
+| TOKSIM-HBM release, SU.VOP model | 1163.0 | 1003.3 |
+| + SU.VOP measured (as-built SU, no pre-tree) | **1110.1** | **417.5** |
+| + ROW_NORM on the HH-6 pre-tree (not bound) | 1110.1 | 429.3 |
+| estimate: pre-tree for ALL SU reductions (unmeasured) | ~1150 | ~990 |
+
+On the die as built, Qwen is SU-reduction bound: softmax is about 1.6M of 2.87M cycles per token. Binding the pre-tree (with a MAX mode for softmax.max) is the release-critical lever.

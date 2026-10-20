@@ -4,16 +4,19 @@ Classes or shapes no fragment covers stay listed with cycles null, grade 'unmeas
 measured shapes of a class (golden PASS or FAIL both kept; FAIL is graded measured-golden-FAIL). Also prints coverage."""
 import json, sys, datetime
 from pathlib import Path
-CEN = Path('/home/ubuntu/wt/toksim-hbm-1019/results/token_pass/measured_hbm_1019/census_shapes.json')
+CEN = Path('/home/ubuntu/wt/hbm-sufix-1019/results/token_pass/measured_hbm_1019/census_shapes.json')
 FR = Path(__file__).resolve().parents[3] / 'results/rtl/toksim_hbm_su_1019'
-OUT = Path('/home/ubuntu/wt/toksim-hbm-1019/results/token_pass/measured_hbm_1019/units/su.json')
+OUT = Path('/home/ubuntu/wt/hbm-sufix-1019/results/token_pass/measured_hbm_1019/units/su.json')
 MINE = {'ds_ar': ['SU.VOP', 'HC.HC_MIX', 'FUSED.HC_PRE_NORM', 'FUSED.HC_POST', 'FUSED.QDQ_FP8'],
         'qwen': ['SU.VOP', 'FUSED.ROW_NORM', 'SFU.GLU']}
 branch = sys.argv[1] if len(sys.argv) > 1 else 'claude/toksim-hbm-su-1019'
 cen = json.loads(CEN.read_text())
 frags = {}
-for p in sorted(FR.glob('*/fragment.json')):
-    for des, cl in json.loads(p.read_text()).get('designs', {}).items():
+for p in sorted(FR.glob('*/fragment.json')):  # rownorm_fix (pre-tree, not die-bound) -> units_variants
+    j = json.loads(p.read_text())
+    if 'cls' in j and 'design' in j:                 # HBM-SUFIX single-class fragment (rownorm_fix)
+        j = {'designs': {j['design']: {j['cls']: {k: v for k, v in j.items() if k not in ('design', 'cls', 'group')}}}}
+    for des, cl in j.get('designs', {}).items():
         for c, v in cl.items():
             frags.setdefault(des, {})[c] = v
 out = dict(group='su', branch=branch, updated_utc=datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'), designs={})
