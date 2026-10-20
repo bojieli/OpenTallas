@@ -1,10 +1,11 @@
 # HEADS/CTL takeover evidence, 2026-10-20
 
-All three collected candidates are **FAIL under the binding native census**, independent of their old gate verdict. No submission is authorized by these receipts.
+All four collected candidates are **FAIL under the binding native census**, independent of their old gate verdict. No submission is authorized by these receipts.
 
 | Candidate | Gate result | Nonclock drivers >32 | Flop drivers >32 | Maximum loads |
 |---|---|---:|---:|---:|
 | xhead gate3 | WARN, 0 failure, GRT 0 | 75 | 58 | 2585 |
+| xheadb gate3 | FAIL, TT/FF boundary spread88.3/84.5ps | 75 | 58 | 2585 |
 | ctl gate2 | WARN, 0 failure, GRT 0 | 136 | 49 | 1956 |
 | ctlb gate2 | FAIL, GPL-0305 placement divergence | 136 | 49 | 1956 |
 
@@ -18,6 +19,6 @@ Storage: synthesized macro counts zero (xhead7916 / ctl7305 flops). This is an i
 
 Actual floorplan PNGs for xhead and ctl were inspected: xhead216x432, ctl345.6x259.2, no macros and pin-heavy perimeter; the sparse pin-bound outlines alone do not cure shared wide controls. CTLb432x216 failed placement. Images are preserved as diagnosis, not approval.
 
-Benches: heads eq0 PASS124614 compares, eqxh FAIL23736/124614 (expected mutant witness), bench2 production cases PASS. CTL eq0/eqd11 logs are still build-only at collection; do not claim PASS. Original live jobs are preserved. xheadb gate3 child PID2164565 (parent2164561) and CTL bench fleet units remain owned by existing pending entries3053/3055. No new fleet job, gate or submit was launched.
+Benches: heads eq0 PASS124614 compares, eqxh FAIL23736/124614 (expected mutant witness), bench2 production cases PASS. CTL eq0 all four modes PASS124614 each; eqd11 witness random/legal FAIL (quiet/hronly do not exercise the bit). Original live jobs are preserved. xheadb gate3 and CTL benches now terminal. No new fleet job, gate or submit was launched.
 
 Source references: HEADS f4746778a (gate3 taken from b9895e3e0), CTL1f858dec1, HEADS benches50b338272. This evidence-only branch forks HEADS and contains no parent s5 source edit; cherry-pick its evidence commit only.

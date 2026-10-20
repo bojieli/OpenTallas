@@ -1,0 +1,119 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: the RTL registers every input at its pin (ot_qfd_xhead g_pin / ib_pin / f_q / tid_q / fi_q / lqp; ot_qfd_xs_tap E1 pin registers) and drives every output from a flop; flow pin registers would add unpriced cycles",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc5 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_dv_s5_xheadb_20261020-001537.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_dv_s5_xheadb_20261020-001537.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/qfd_dv_s5_xheadb-20261020-001537",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc5 in 259 s (gate total 1291 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 5726, 'pin_rectangles': 5726, 'pin_track_checked': 5726, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 1b49deb0376d2c407bcd57c50475af012b9f3d271bd95fbf6d3c5ee842028bc3",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 5724 um2 + macros 0 in core 109007: util 5%",
+   "fix": "set \"std_area_um2\": 5724 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qfd_dv_s5_xhead cells 46,252 flops 7,916 depth 481.8 ps util 0.0527 reach 138.4 um (0.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 5.3% outside 45%-65% (std 5744 + macro 0 um2 in 109007 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 468.4..569.3 ps (spread 100.9), boundary mean 509.3; tt insertion all 360.0..454.0 ps (spread 94.0), boundary mean 396.9; ff insertion all 293.5..382.2 ps (spread 88.7), boundary mean 328.0; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qfd_dv_s5_xheadb/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      370 paths, worst slack -39.6 ps (e.g. u_head.lw_ctl[62]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         2 paths, worst slack 427.6 ps (e.g. u_rl.rs1$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -3.959221839267002e-11 hold WNS 3.12684877989966e-11",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "7,916 sinks on the largest root; measured TT insertion 454.0 ps, FF insertion 382.2 ps, TT pin-flop spread 88.3 ps, FF pin-flop spread 84.5 ps; TT pin-flop spread 88.3 ps > 80 and FF pin-flop spread 84.5 ps > 80",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-slice6-heads-1019/physical/ref_tile/qfd_dv_s5_xheadb/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-slice6-heads-1019/physical/ref_tile/qfd_dv_s5_xheadb/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 24.26% used; GRT 155 s",
+   "fix": ""
+  }
+ ]
+}

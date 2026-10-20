@@ -7,3 +7,21 @@ ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-slice6/src_
 ot-run: -> ot-epyc7
 ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1611610-1792480600 after 0 s
 Verilator 5.050 2026-07-01 rev v5.050
+S5_MISMATCH port=cc_o cycle=1077 ref=2b59be35ccaa3 dut=3b59be35ccaa3
+S5_MISMATCH port=cc_o cycle=1978 ref=2dfe511fe9e62 dut=3dfe511fe9e62
+S5_MISMATCH port=cc_o cycle=2156 ref=2bbbdea833736 dut=3bbbdea833736
+S5_MISMATCH port=cc_o cycle=3291 ref=36d14ab4cbd42 dut=26d14ab4cbd42
+S5_FAULT_CYCLES any=5966 heads=5951
+S5_EQ FAIL quiet=0 hronly=0 legal=0 mismatches=6 of 124614
+S5_FAULT_CYCLES any=5964 heads=5941
+S5_EQ PASS quiet=1 hronly=0 legal=0 compared=124614 nonzero=74866 cycles=6000
+S5_FAULT_CYCLES any=5946 heads=5946
+S5_EQ PASS quiet=0 hronly=1 legal=0 compared=124614 nonzero=65274 cycles=6000
+S5_MISMATCH port=cc_o cycle=64 ref=3c41ea5198c6c dut=2c41ea5198c6c
+S5_MISMATCH port=cc_o cycle=245 ref=3d69866f39e7d dut=2d69866f39e7d
+S5_MISMATCH port=cc_o cycle=482 ref=243ad89bfb838 dut=343ad89bfb838
+S5_MISMATCH port=cc_o cycle=562 ref=20fed8c66b907 dut=30fed8c66b907
+S5_FAULT_CYCLES any=5966 heads=5950
+S5_EQ FAIL quiet=0 hronly=0 legal=1 mismatches=47 of 124614
+EQ M=d11: S5_EQ FAIL ( rand:FAIL quiet:PASS hronly:PASS legal:FAIL)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1611610-1792480600): exit 0

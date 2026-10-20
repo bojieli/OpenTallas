@@ -1,0 +1,460 @@
+{
+  "top": "qfd_dv_s5_xhead",
+  "mapped_sha256": "b84f951299b614fbe5a531a5a8c7cf6f88f841641116f1bdc5e63353465c212b",
+  "all_nonclock_drivers_over32": 75,
+  "flop_drivers_over32": 58,
+  "max_loads": 2585,
+  "violations": [
+    {
+      "driver": "u_head.b_d[474]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 2585,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[473]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 2177,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[475]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 2177,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[476]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 2177,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[477]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 2177,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[478]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 2177,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.fep$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 1707,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "_61378_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 1032,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "_62565_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 989,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_head.u_fill_go.genblk1.g_line.line[4]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 877,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "_62432_/Y (NAND2x1_ASAP7_75t_R)",
+      "loads": 768,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "_61373_/Y (OR2x2_ASAP7_75t_R)",
+      "loads": 762,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_head.g_pin$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 759,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.u_phd.genblk1.g_line.line[22]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 516,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.u_vd.genblk1.g_line.line[7]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 266,
+      "flop_loads": 4,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.u_phd.genblk1.g_line.line[23]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 258,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.u_pd.genblk1.g_line.line[7]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 256,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.ep_rd$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 161,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "_56638_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 142,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "_56715_/Y (OR3x1_ASAP7_75t_R)",
+      "loads": 142,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_head.dp_xb[9]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 101,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[8]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 98,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "_69281_/Y (AND3x1_ASAP7_75t_R)",
+      "loads": 94,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "_39326_/Y (OR4x1_ASAP7_75t_R)",
+      "loads": 93,
+      "flop_loads": 1,
+      "flop_driver": false
+    },
+    {
+      "driver": "_38643_/Y (OAI21x1_ASAP7_75t_R)",
+      "loads": 84,
+      "flop_loads": 2,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_head.dq_ep$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 83,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[10]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 81,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_rl.rst$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 80,
+      "flop_loads": 70,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[11]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 69,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "_69336_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 67,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_head.dp_xb[7]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 67,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[14]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 62,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_ep$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 61,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_v$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 58,
+      "flop_loads": 1,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[17]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 58,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[12]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 57,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[13]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 54,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[456]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 53,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[469]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 53,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[471]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 52,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "_39317_/Y (AND4x1_ASAP7_75t_R)",
+      "loads": 51,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_head.b_d[461]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 51,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[468]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 51,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[472]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 51,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[21]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 51,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[460]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 50,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[465]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 50,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[467]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 50,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.da_q[0][6]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 50,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.da_q[0][7]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 50,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[457]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 49,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[462]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 49,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[466]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 49,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[458]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 48,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[459]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 48,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[463]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 48,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[464]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 48,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.b_d[470]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 48,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[19]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 46,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[6]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 46,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[18]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 45,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.da_q[0][5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 44,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "_38653_/Y (AND5x1_ASAP7_75t_R)",
+      "loads": 43,
+      "flop_loads": 1,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_head.da_q[4][4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 43,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[15]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 43,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "_56171_/Y (AO31x2_ASAP7_75t_R)",
+      "loads": 42,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "_56540_/Y (NOR2x1_ASAP7_75t_R)",
+      "loads": 42,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_head.da_q[15][9]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 40,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.ph[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 40,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[22]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 39,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.da_q[0][8]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 38,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_head.dp_xb[16]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 35,
+      "flop_loads": 0,
+      "flop_driver": true
+    },
+    {
+      "driver": "_65168_/Y (AOI21x1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "flop_driver": false
+    },
+    {
+      "driver": "_56089_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 1,
+      "flop_driver": false
+    },
+    {
+      "driver": "_62313_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "flop_driver": false
+    }
+  ],
+  "verdict": "FAIL"
+}

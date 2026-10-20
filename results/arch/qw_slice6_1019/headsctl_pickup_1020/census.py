@@ -15,5 +15,6 @@ for d in sorted(Path(__file__).parent.iterdir()):
  rows.sort(key=lambda x:x['loads'],reverse=True)
  out={'top':top,'mapped_sha256':hashlib.sha256(data).hexdigest(),'all_nonclock_drivers_over32':len(rows),'flop_drivers_over32':sum(x['flop_driver'] for x in rows),'max_loads':rows[0]['loads'] if rows else 0,'violations':rows,'verdict':'FAIL' if rows else 'PASS'}
  (d/'census.json').write_text(json.dumps(out,indent=2)+'\n');print(d.name,{k:v for k,v in out.items() if k!='violations'})
- with gzip.open(d/'mapped.v.gz','wb') as f:f.write(data)
+ with (d/'mapped.v.gz').open('wb') as raw:
+  with gzip.GzipFile(fileobj=raw,mode='wb',mtime=0) as f:f.write(data)
  if p.exists():p.unlink()

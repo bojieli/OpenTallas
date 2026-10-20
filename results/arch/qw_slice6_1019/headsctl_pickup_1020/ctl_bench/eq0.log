@@ -7,3 +7,13 @@ ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-slice6/src_
 ot-run: -> ot-epyc7
 ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1611587-1792480600 after 0 s
 Verilator 5.050 2026-07-01 rev v5.050
+S5_FAULT_CYCLES any=5966 heads=5951
+S5_EQ PASS quiet=0 hronly=0 legal=0 compared=124614 nonzero=96358 cycles=6000
+S5_FAULT_CYCLES any=5964 heads=5941
+S5_EQ PASS quiet=1 hronly=0 legal=0 compared=124614 nonzero=74866 cycles=6000
+S5_FAULT_CYCLES any=5946 heads=5946
+S5_EQ PASS quiet=0 hronly=1 legal=0 compared=124614 nonzero=65274 cycles=6000
+S5_FAULT_CYCLES any=5966 heads=5950
+S5_EQ PASS quiet=0 hronly=0 legal=1 compared=124614 nonzero=96320 cycles=6000
+EQ M=0: S5_EQ PASS ( rand:PASS quiet:PASS hronly:PASS legal:PASS)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1611587-1792480600): exit 0
