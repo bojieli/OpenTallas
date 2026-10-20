@@ -50,6 +50,9 @@ DIE_OWNERS = {
     ('ot_qwen_tp8_pv_wide_ctl_t', ''): ('UNBOUND: OT_KV_PV_T_CTL_STANDIN view qkd_pv_ctl_rstpin_a72; real kit '
                                         'qkd_pv_ctl_t after the PV calendar move', 'KVJ-B (move) then KVE (kit)'),
 }
+# KV-BIND4-GUARD 10-19: the MU 1 HOST root (OT_KV_MU=1) binds qkd_host_root_admission_mu (same ports): same owners
+DIE_OWNERS.update({('qkd_host_root_admission_mu', p): v for (m, p), v in list(DIE_OWNERS.items())
+                   if m == 'qkd_host_root_admission'})
 # Static-join open inputs (role, port) -> (class, producer, owner).  Classes: DIE_JOIN (producer is an existing die
 # master or another static role; wiring only), NEW_RTL (producer RTL not on the integration branch), COMPILER (item 9
 # programme compiler / boot image), PHY (analog PHY digital face: off-chip by contract).
