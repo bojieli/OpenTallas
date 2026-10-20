@@ -114,6 +114,68 @@ class Occ:
         return None
 
 
+class RasterOcc(Occ):
+    """QW-G5F3 10-20: Occ on a boolean raster (CELL um), used by post: free() is one numpy slice instead of a scan of the
+    bucket lists (dv2f20g5f9/10 spent > 25 min in the post A*).  Conservative: a rect marks every cell it touches
+    (+ gap), a box is free only when none of its cells is marked."""
+    CELL = 4.32
+
+    def __init__(self, m, gap=0.432):
+        import numpy as np
+        self.np = np
+        self.W, self.H = m['die']['w'], m['die']['h']
+        self.gap = gap
+        self.r = np.zeros((int(self.W / self.CELL) + 2, int(self.H / self.CELL) + 2), dtype=bool)
+        for it in m['insts']:
+            self.add((it.x, it.y, it.x + it.w, it.y + it.h))
+        for r in m.get('relay_keepouts', ()):
+            self.add(tuple(r['rect']))
+
+    def _ix(self, r, g):
+        c = self.CELL
+        e = 1e-6                                       # FP: a cell-aligned edge belongs to the cell it starts / ends
+        return (max(0, int(math.floor((r[0] - g) / c + e))), max(0, int(math.floor((r[1] - g) / c + e))),
+                min(self.r.shape[0] - 1, int(math.floor((r[2] + g) / c - e))), min(self.r.shape[1] - 1, int(math.floor((r[3] + g) / c - e))))
+
+    def add(self, r):
+        a, b, c_, d = self._ix(r, self.gap)
+        self.r[a:c_ + 1, b:d + 1] = True
+
+    def free(self, r, gap=0.432):
+        if r[0] < 0 or r[1] < 0 or r[2] > self.W or r[3] > self.H:
+            return False
+        a, b, c_, d = self._ix(r, 0.0)
+        return not self.r[a:c_ + 1, b:d + 1].any()
+
+    def near_free(self, px, py, w, h, slack):
+        """lower-left (cell-aligned, on the site grid) of the free w x h box whose centre is nearest (px, py) within
+        `slack` (Manhattan), or None: one cumulative-sum window instead of a ring scan."""
+        np = self.np
+        c = self.CELL
+        nb = int(round(w / c))                     # cells a cell-aligned box covers (21.6 / 4.32 -> 5)
+        k = int(slack // c) + 1
+        cx0, cy0 = int((px - w / 2) // c), int((py - h / 2) // c)
+        x0, y0 = max(0, cx0 - k), max(0, cy0 - k)
+        x1, y1 = min(self.r.shape[0], cx0 + k + nb), min(self.r.shape[1], cy0 + k + nb)
+        sub = self.r[x0:x1, y0:y1]
+        if sub.shape[0] < nb or sub.shape[1] < nb:
+            return None
+        S = np.zeros((sub.shape[0] + 1, sub.shape[1] + 1), dtype=np.int32)
+        S[1:, 1:] = sub.cumsum(0).cumsum(1)
+        occn = S[nb:, nb:] - S[:-nb, nb:] - S[nb:, :-nb] + S[:-nb, :-nb]
+        ii, jj = np.nonzero(occn == 0)
+        if ii.size == 0:
+            return None
+        llx, lly = (x0 + ii) * c, (y0 + jj) * c
+        ok = (llx >= 0) & (lly >= 0) & (llx + w <= self.W) & (lly + h <= self.H)
+        dist = np.abs(llx + w / 2 - px) + np.abs(lly + h / 2 - py)
+        ok &= dist <= slack
+        if not ok.any():
+            return None
+        q = np.argmin(np.where(ok, dist, np.inf))
+        return float(llx[q]), float(lly[q])
+
+
 def _bus_index(m, cls):
     out = {}
     for j, (bid, cl, bits, eps) in enumerate(m['buses']):
@@ -392,7 +454,7 @@ def post(v, m, G):
     root_ck = collections.defaultdict(list)
     for o, it in roots.items():
         root_ck[ckx[(it.name, 'ck')]].append(it)
-    occ = Occ(m)
+    occ = RasterOcc(m) if os.environ.get('OT_SPLIT_FAULT_RASTER', '1') == '1' else Occ(m)
     follow = m.setdefault('ck_follow', {})
     # node table: name -> dict(inst, n_in, ck, rs, owner)
     nodes = {}
@@ -457,6 +519,8 @@ def post(v, m, G):
         new_buses.append((f'flt_s_{inst}_{port}', CLS, 1, [(inst, port), (lf, take(lf))]))
     def _free_near(px, py, slack=26.0, step=4.32):
         """lower-left of a free node box centred within `slack` (Manhattan) of (px, py), not booked."""
+        if hasattr(occ, 'near_free'):
+            return occ.near_free(px, py, W, H, slack)
         k = int(slack / step)
         for ring in range(0, k + 1):
             st = ring * step
@@ -518,11 +582,97 @@ def post(v, m, G):
                 if k2 in seen:
                     continue
                 tie += 1
-                heapq.heappush(heap, (g_ + 1 + math.ceil(max(0.0, hd(cc) - REACH_UM) / S_), g_ + 1, tie, cc, s_, key))
+                heapq.heappush(heap, (g_ + 1 + 2.0 * max(0.0, hd(cc) - REACH_UM) / S_, g_ + 1, tie, cc, s_, key))   # weighted A*
         stats.update(expanded=n_exp, open_left=len(heap), slack=slack)
         if not heap:
             stats['_seen'] = seen      # whole free component exhausted: dead for this clock root (occupancy only grows)
         return None, None
+
+    # QW-G5F3 10-20: hop-distance field per clock root on a 43.2 um cell grid (numpy BFS from the root nodes over cells that
+    # hold a free node box; a hop = <= RC cells centre to centre, so the real box-to-box Manhattan stays <= REACH_UM).
+    # A leaf walks the field down to its root; a leaf on no field cell is in a component without its root (ORPHAN).
+    import numpy as _np
+    PC = 43.2
+    RC = int((REACH_UM - 2 * PC) // PC)                     # 5 cells = 216 um between cell centres
+    _offs = [(di, dj) for di in range(-RC, RC + 1) for dj in range(-RC, RC + 1) if 0 < abs(di) + abs(dj) <= RC]
+    fields = {}
+
+    def _usable():
+        """cells holding at least one free node box (from the live raster)."""
+        r = occ.r
+        c = occ.CELL
+        nb = int(round(W / c))
+        S = _np.zeros((r.shape[0] + 1, r.shape[1] + 1), dtype=_np.int32)
+        S[1:, 1:] = r.cumsum(0, dtype=_np.int32).cumsum(1, dtype=_np.int32)
+        okb = (S[nb:, nb:] - S[:-nb, nb:] - S[nb:, :-nb] + S[:-nb, :-nb]) == 0     # box lower-left at raster (i, j) free
+        k = int(round(PC / c))
+        nx, ny = okb.shape[0] // k, okb.shape[1] // k
+        return okb[:nx * k, :ny * k].reshape(nx, k, ny, k).any(axis=(1, 3))
+
+    def _cell(p_):
+        return int(p_[0] // PC), int(p_[1] // PC)
+
+    def _field(cj):
+        if cj in fields:
+            return fields[cj]
+        U = _usable()
+        nx, ny = U.shape
+        dist = _np.full((nx, ny), -1, dtype=_np.int32)
+        gx, gy = _np.meshgrid((_np.arange(nx) + 0.5) * PC, (_np.arange(ny) + 0.5) * PC, indexing='ij')
+        seed = _np.zeros((nx, ny), dtype=bool)
+        for rt in root_ck[cj]:
+            c_ = _ctr(rt)
+            seed |= (_np.abs(gx - c_[0]) + _np.abs(gy - c_[1])) <= REACH_UM - PC
+        fr = seed & U
+        dist[fr] = 0
+        lvl = 0
+        while fr.any() and lvl < 400:
+            lvl += 1
+            nxt = _np.zeros_like(fr)
+            for di, dj in _offs:
+                a0, a1 = max(0, di), nx + min(0, di)
+                b0, b1 = max(0, dj), ny + min(0, dj)
+                nxt[a0:a1, b0:b1] |= fr[a0 - di:a1 - di, b0 - dj:b1 - dj]
+            nxt &= U & (dist < 0)
+            dist[nxt] = lvl
+            fr = nxt
+        fields[cj] = dist
+        return dist
+
+    def _field_route(c0, cj):
+        """-> (list of box lower-lefts, why).  [] + 'orphan' when the leaf sits on no field cell of its root."""
+        dist = _field(cj)
+        nx, ny = dist.shape
+        ci, cj_ = _cell(c0)
+        best = None
+        for di, dj in [(0, 0)] + _offs:
+            i, j = ci + di, cj_ + dj
+            if 0 <= i < nx and 0 <= j < ny and dist[i, j] >= 0 and (best is None or dist[i, j] < dist[best]):
+                best = (i, j)
+        if best is None:
+            return None, 'orphan'
+        out, prev = [], c0
+        cur = None
+        while True:
+            cands = [best] if cur is None else \
+                sorted([(cur[0] + di, cur[1] + dj) for di, dj in _offs
+                        if 0 <= cur[0] + di < nx and 0 <= cur[1] + dj < ny and dist[cur[0] + di, cur[1] + dj] == dist[cur] - 1],
+                       key=lambda q_: abs(q_[0] - cur[0]) + abs(q_[1] - cur[1]), reverse=True)
+            placed = None
+            for q_ in cands:
+                s_ = occ.near_free((q_[0] + 0.5) * PC, (q_[1] + 0.5) * PC, W, H, PC)
+                if s_ is None:
+                    continue
+                cc = (s_[0] + W / 2, s_[1] + H / 2)
+                if 60.0 <= _man(prev, cc) <= REACH_UM and all(abs(cc[0] - o_[0] - W / 2) > W or abs(cc[1] - o_[1] - H / 2) > H for o_ in out):
+                    placed = (q_, s_, cc)
+                    break
+            if placed is None:
+                return None, 'walk'
+            cur, s_, prev = placed
+            out.append(s_)
+            if dist[cur] == 0:
+                return out, 'ok'
 
     # 2. each leaf joins the nearest attached node of its clock root (roots first), hops every <= REACH_UM
     for cj, ls in sorted(leaves.items()):
@@ -544,8 +694,16 @@ def post(v, m, G):
                     tl_ = [(a, _ctr(by[a])) for a in okp]
                     st1, st2 = {}, {}
                     k0 = (round(c0[0] / 43.2), round(c0[1] / 43.2))
-                    if k0 in dead[cj]:
-                        route, st1 = None, dict(dead_component=True)
+                    route, why_ = (None, 'off')
+                    if os.environ.get('OT_SPLIT_FAULT_FIELD', '1') == '1' and hasattr(occ, 'near_free') and cur == lf:
+                        route, why_ = _field_route(c0, cj)
+                        st1 = dict(field=why_)
+                        if route is not None:
+                            tgt2 = None
+                    if route is not None:
+                        pass
+                    elif why_ == 'orphan' or k0 in dead[cj]:
+                        route, st1 = None, dict(dead_component=True, field=why_)
                     else:
                         route, tgt2 = _hop_route(c0, tl_, stats=st1)
                         if route is None:   # wider snap (box still checked <= REACH_UM centre to centre)
@@ -569,7 +727,8 @@ def post(v, m, G):
                         if not occ.free((ll[0], ll[1], ll[0] + W, ll[1] + H)):
                             # an earlier box of this same route took it: re-snap within reach of both neighbours
                             pc = _ctr(nodes[cur]['it'])
-                            nx = (route[k_ + 1][0] + W / 2, route[k_ + 1][1] + H / 2) if k_ + 1 < len(route) else _ctr(by[tgt2])
+                            nx = (route[k_ + 1][0] + W / 2, route[k_ + 1][1] + H / 2) if k_ + 1 < len(route) else \
+                                (_ctr(by[tgt2]) if tgt2 else min((_ctr(by[a]) for a in okp), key=lambda c_: _man(c_, (ll[0] + W / 2, ll[1] + H / 2))))
                             ll2 = None
                             for sl in (26.0, 60.0, 120.0):
                                 q_ = _free_near(ll[0] + W / 2, ll[1] + H / 2, slack=sl, step=4.32)
