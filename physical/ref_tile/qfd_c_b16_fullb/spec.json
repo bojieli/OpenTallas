@@ -1,0 +1,2759 @@
+{
+ "name": "qfd_c_b16_fullb",
+ "top": "qfd_c_b16_fullb",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/a0_rr_bb.v",
+  "rtl/physical/qcluster/qfd_c_stn.sv",
+  "rtl/physical/qcluster/qfd_c_xstn_safe.sv",
+  "rtl/physical/qcluster/qfd_c_land_safe.sv",
+  "rtl/physical/qcluster/qfd_q3h_stn.sv",
+  "rtl/physical/qcluster/qfd_c_land.sv",
+  "rtl/physical/qcluster/qfd_c_b16_full.sv"
+ ],
+ "params": {},
+ "clock": "cts",
+ "child_clock_ref": null,
+ "clock_port": "ck_c0r0",
+ "clock_ports": [
+  "ck_c0r0",
+  "ck_c0r1",
+  "ck_c0r2",
+  "ck_c0r3",
+  "ck_c1r0",
+  "ck_c1r1",
+  "ck_c1r2",
+  "ck_c1r3",
+  "ck_c2r0",
+  "ck_c2r1",
+  "ck_c2r2",
+  "ck_c2r3",
+  "ck_c3r0",
+  "ck_c3r1",
+  "ck_c3r2",
+  "ck_c3r3"
+ ],
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/qcluster/fabric_sites_place.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/qcluster/fabric_sites_release.tcl",
+  "OT_QC_SITES": "physical/qcluster/qfd_c_b16_fullb_sites.tsv",
+  "GPL_TIMING_DRIVEN": "0",
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "io_flop_at_pins": false,
+ "sdc_extra": [
+  "physical/qcluster/qfd_c_b16_fullb_regions.sdc"
+ ],
+ "reset_ports": [
+  "rst_c0r0",
+  "rst_c1r0",
+  "rst_c2r0",
+  "rst_c3r0",
+  "rst_c0r3",
+  "rst_c1r3",
+  "rst_c2r3",
+  "rst_c3r3",
+  "rst_c0r1",
+  "rst_c1r1",
+  "rst_c2r1",
+  "rst_c3r1",
+  "rst_c0r2",
+  "rst_c1r2",
+  "rst_c2r2",
+  "rst_c3r2"
+ ],
+ "outline": {
+  "w": 3067.2,
+  "h": 5486.4,
+  "exact": true
+ },
+ "child_lattice_um": 4.32,
+ "macros": [],
+ "pin_layers": {
+  "bc0": "M5",
+  "rs": "M5",
+  "bc1": "M5",
+  "rs_o": "M5",
+  "bc2": "M5",
+  "bc3": "M5",
+  "ck_c0r0": "M5",
+  "rst_c0r0": "M5",
+  "far": "M5",
+  "cid": "M5",
+  "tie_hi": "M5",
+  "tie_lo": "M5",
+  "ck_c1r0": "M5",
+  "rst_c1r0": "M5",
+  "ck_c2r0": "M5",
+  "rst_c2r0": "M5",
+  "ck_c3r0": "M5",
+  "rst_c3r0": "M5",
+  "bco0": "M5",
+  "rs_i": "M5",
+  "bco1": "M5",
+  "bco2": "M5",
+  "bco3": "M5",
+  "ck_c0r3": "M5",
+  "rst_c0r3": "M5",
+  "ck_c1r3": "M5",
+  "rst_c1r3": "M5",
+  "ck_c2r3": "M5",
+  "rst_c2r3": "M5",
+  "ck_c3r3": "M5",
+  "rst_c3r3": "M5",
+  "ck_c0r1": "M4",
+  "rst_c0r1": "M4",
+  "ck_c1r1": "M4",
+  "rst_c1r1": "M4",
+  "ck_c2r1": "M4",
+  "rst_c2r1": "M4",
+  "ck_c3r1": "M4",
+  "rst_c3r1": "M4",
+  "ck_c0r2": "M4",
+  "rst_c0r2": "M4",
+  "ck_c1r2": "M4",
+  "rst_c1r2": "M4",
+  "ck_c2r2": "M4",
+  "rst_c2r2": "M4",
+  "ck_c3r2": "M4",
+  "rst_c3r2": "M4"
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 192,
+  "pin_v": "M5",
+  "pin_h": "M4 M6",
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  }
+ },
+ "cluster_level": 2,
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "qc_gen.py RTL registers every data pin in the S / N strip (bc / rs_i entry flops, bco / rs / rs_o exit flops, rst_n pin register); cid / far are static straps from the instance's own tie cells; landing halves land rsi in 2 stages; every data pin lands in a hard station / half register (flop-first / flop-last)"
+ },
+ "structural_change": "QW-CB16FULL: FULL 16-region landed CB16 parent, one clock region per A0, every seam crossing = a soft qfd_c_land ring (writer on the source root, reader on the destination root) (static D4/K2 ring, no credit), 3-deep pads = 3 CLOSED stn514 relays, xstn = CLOSED xstn(w)_safe, relays = CLOSED stn514/516; netlist = the qc_gen fabric MUT 0 with identical edge counts; A0 = diagnostic STAND-IN (no qualified A0 view).",
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_0_0",
+   "at": [
+    172.8,
+    129.6
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_0_1",
+   "at": [
+    172.8,
+    1468.8
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_0_2",
+   "at": [
+    172.8,
+    2808.0
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_0_3",
+   "at": [
+    172.8,
+    4147.2
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_1_0",
+   "at": [
+    950.4,
+    129.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_1_1",
+   "at": [
+    950.4,
+    1468.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_1_2",
+   "at": [
+    950.4,
+    2808.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_1_3",
+   "at": [
+    950.4,
+    4147.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_2_0",
+   "at": [
+    1684.8,
+    129.6
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_2_1",
+   "at": [
+    1684.8,
+    1468.8
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_2_2",
+   "at": [
+    1684.8,
+    2808.0
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_2_3",
+   "at": [
+    1684.8,
+    4147.2
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nl_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_3_0",
+   "at": [
+    2419.2,
+    129.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_3_1",
+   "at": [
+    2419.2,
+    1468.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_3_2",
+   "at": [
+    2419.2,
+    2808.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin/qfd_tile_nk_rp2_romleaf_rr",
+   "count": 1,
+   "inst": "u_t_3_3",
+   "at": [
+    2419.2,
+    4147.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstn_safe/views/qfd_c_xstn_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_0_0",
+   "at": [
+    43.2,
+    561.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstn_safe/views/qfd_c_xstn_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_0_1",
+   "at": [
+    43.2,
+    1900.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstn_safe/views/qfd_c_xstn_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_0_2",
+   "at": [
+    43.2,
+    3240.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstn_safe/views/qfd_c_xstn_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_0_3",
+   "at": [
+    43.2,
+    4579.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstnw_safe/views/qfd_c_xstnw_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_1_0",
+   "at": [
+    1468.8,
+    561.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstnw_safe/views/qfd_c_xstnw_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_1_1",
+   "at": [
+    1468.8,
+    1900.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstnw_safe/views/qfd_c_xstnw_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_1_2",
+   "at": [
+    1468.8,
+    3240.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstnw_safe/views/qfd_c_xstnw_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_1_3",
+   "at": [
+    1468.8,
+    4579.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstn_safe/views/qfd_c_xstn_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_2_0",
+   "at": [
+    1555.2,
+    388.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstn_safe/views/qfd_c_xstn_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_2_1",
+   "at": [
+    1555.2,
+    1728.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstn_safe/views/qfd_c_xstn_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_2_2",
+   "at": [
+    1555.2,
+    3067.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstn_safe/views/qfd_c_xstn_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_2_3",
+   "at": [
+    1555.2,
+    4406.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstnw_safe/views/qfd_c_xstnw_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_3_0",
+   "at": [
+    2937.6,
+    561.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstnw_safe/views/qfd_c_xstnw_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_3_1",
+   "at": [
+    2937.6,
+    1900.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstnw_safe/views/qfd_c_xstnw_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_3_2",
+   "at": [
+    2937.6,
+    3240.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_xstnw_safe/views/qfd_c_xstnw_safe",
+   "count": 1,
+   "inst": "u_fab.u_x_3_3",
+   "at": [
+    2937.6,
+    4579.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_entry",
+   "at": [
+    30.24,
+    38.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_exit",
+   "at": [
+    30.24,
+    5352.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly0",
+   "at": [
+    30.24,
+    311.04
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly1",
+   "at": [
+    30.24,
+    889.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly10",
+   "at": [
+    30.24,
+    4959.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly2",
+   "at": [
+    30.24,
+    1209.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly3",
+   "at": [
+    30.24,
+    1581.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly4",
+   "at": [
+    30.24,
+    2229.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly5",
+   "at": [
+    30.24,
+    2548.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly6",
+   "at": [
+    30.24,
+    2920.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly7",
+   "at": [
+    30.24,
+    3568.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly8",
+   "at": [
+    30.24,
+    3888.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn0_rly9",
+   "at": [
+    30.24,
+    4259.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_entry",
+   "at": [
+    1503.36,
+    38.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_exit",
+   "at": [
+    1503.36,
+    5352.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly0",
+   "at": [
+    1503.36,
+    293.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly1",
+   "at": [
+    1503.36,
+    855.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly10",
+   "at": [
+    1503.36,
+    4933.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly2",
+   "at": [
+    1503.36,
+    1218.24
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly3",
+   "at": [
+    1503.36,
+    1520.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly4",
+   "at": [
+    1503.36,
+    2168.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly5",
+   "at": [
+    1503.36,
+    2496.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly6",
+   "at": [
+    1503.36,
+    2859.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly7",
+   "at": [
+    1503.36,
+    3507.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly8",
+   "at": [
+    1503.36,
+    3836.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn1_rly9",
+   "at": [
+    1503.36,
+    4216.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_entry",
+   "at": [
+    1576.8,
+    138.24
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_exit",
+   "at": [
+    1611.36,
+    5192.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly0",
+   "at": [
+    1576.8,
+    315.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly1",
+   "at": [
+    1576.8,
+    872.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly10",
+   "at": [
+    1576.8,
+    4803.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly2",
+   "at": [
+    1576.8,
+    950.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly3",
+   "at": [
+    1576.8,
+    1654.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly4",
+   "at": [
+    1576.8,
+    2194.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly5",
+   "at": [
+    1576.8,
+    2272.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly6",
+   "at": [
+    1576.8,
+    2972.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly7",
+   "at": [
+    1576.8,
+    3533.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly8",
+   "at": [
+    1576.8,
+    3611.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn2_rly9",
+   "at": [
+    1576.8,
+    4311.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_entry",
+   "at": [
+    2972.16,
+    38.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_exit",
+   "at": [
+    2972.16,
+    5352.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly0",
+   "at": [
+    2972.16,
+    311.04
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly1",
+   "at": [
+    2972.16,
+    889.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly10",
+   "at": [
+    2972.16,
+    4959.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly2",
+   "at": [
+    2972.16,
+    1209.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly3",
+   "at": [
+    2972.16,
+    1581.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly4",
+   "at": [
+    2972.16,
+    2229.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly5",
+   "at": [
+    2972.16,
+    2548.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly6",
+   "at": [
+    2972.16,
+    2920.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly7",
+   "at": [
+    2972.16,
+    3568.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly8",
+   "at": [
+    2972.16,
+    3888.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn516/views/qfd_c_stn516",
+   "count": 1,
+   "inst": "u_fab.u_dn3_rly9",
+   "at": [
+    2972.16,
+    4259.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_0",
+   "at": [
+    743.04,
+    5395.68
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_1",
+   "at": [
+    820.8,
+    5356.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_10",
+   "at": [
+    1503.36,
+    2246.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_11",
+   "at": [
+    1581.12,
+    1922.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_12",
+   "at": [
+    1503.36,
+    1598.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_13",
+   "at": [
+    1503.36,
+    1140.48
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_14",
+   "at": [
+    1503.36,
+    777.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_15",
+   "at": [
+    1481.76,
+    449.28
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_16",
+   "at": [
+    1503.36,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_2",
+   "at": [
+    1503.36,
+    5218.56
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_3",
+   "at": [
+    1503.36,
+    4855.68
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_4",
+   "at": [
+    1481.76,
+    4484.16
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_5",
+   "at": [
+    1503.36,
+    4138.56
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_6",
+   "at": [
+    1503.36,
+    3741.12
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_7",
+   "at": [
+    1503.36,
+    3391.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_8",
+   "at": [
+    1481.76,
+    3049.92
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_ft_9",
+   "at": [
+    1503.36,
+    2332.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_0a_0",
+   "at": [
+    872.64,
+    743.04
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_0a_1",
+   "at": [
+    829.44,
+    967.68
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_0a_2",
+   "at": [
+    725.76,
+    1123.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_0a_3",
+   "at": [
+    725.76,
+    1529.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_1a_0",
+   "at": [
+    2237.76,
+    673.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_1a_1",
+   "at": [
+    2237.76,
+    898.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_1a_2",
+   "at": [
+    2237.76,
+    1123.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_1a_3",
+   "at": [
+    2237.76,
+    1386.72
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_2a_0",
+   "at": [
+    725.76,
+    3412.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_2a_1",
+   "at": [
+    725.76,
+    3576.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_2a_2",
+   "at": [
+    725.76,
+    3810.24
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_2a_3",
+   "at": [
+    725.76,
+    4108.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_3a_0",
+   "at": [
+    2237.76,
+    3352.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_3a_1",
+   "at": [
+    2237.76,
+    3576.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_3a_2",
+   "at": [
+    2237.76,
+    3801.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_2_3a_3",
+   "at": [
+    2237.76,
+    4065.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0a_0",
+   "at": [
+    838.08,
+    2116.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0a_1",
+   "at": [
+    872.64,
+    2462.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0a_2",
+   "at": [
+    976.32,
+    2691.36
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0a_3",
+   "at": [
+    1054.08,
+    2691.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0a_4",
+   "at": [
+    1771.2,
+    2691.36
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0a_5",
+   "at": [
+    2099.52,
+    2691.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0b_0",
+   "at": [
+    2237.76,
+    1961.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0b_1",
+   "at": [
+    2237.76,
+    2134.08
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0b_2",
+   "at": [
+    2237.76,
+    2315.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0b_3",
+   "at": [
+    2237.76,
+    2548.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0b_4",
+   "at": [
+    2237.76,
+    2691.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_0b_5",
+   "at": [
+    2237.76,
+    2885.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1a_0",
+   "at": [
+    725.76,
+    4389.12
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1a_1",
+   "at": [
+    725.76,
+    4190.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1a_2",
+   "at": [
+    725.76,
+    3913.92
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1a_3",
+   "at": [
+    725.76,
+    3732.48
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1a_4",
+   "at": [
+    725.76,
+    3490.56
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1a_5",
+   "at": [
+    725.76,
+    3257.28
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1a_6",
+   "at": [
+    725.76,
+    3041.28
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1b_0",
+   "at": [
+    2237.76,
+    4250.88
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1b_1",
+   "at": [
+    2030.4,
+    4030.56
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1b_2",
+   "at": [
+    1667.52,
+    4052.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1b_3",
+   "at": [
+    803.52,
+    4039.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1b_4",
+   "at": [
+    803.52,
+    3805.92
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1b_5",
+   "at": [
+    872.64,
+    3542.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_3_1b_6",
+   "at": [
+    872.64,
+    3214.08
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_0",
+   "at": [
+    2237.76,
+    3015.36
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_1",
+   "at": [
+    2237.76,
+    2790.72
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_10",
+   "at": [
+    1157.76,
+    1395.36
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_11",
+   "at": [
+    894.24,
+    1343.52
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_12",
+   "at": [
+    725.76,
+    1200.96
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_13",
+   "at": [
+    725.76,
+    889.92
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_14",
+   "at": [
+    725.76,
+    691.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_15",
+   "at": [
+    725.76,
+    406.08
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_2",
+   "at": [
+    2237.76,
+    2471.04
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_3",
+   "at": [
+    2237.76,
+    2229.12
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_4",
+   "at": [
+    2237.76,
+    2039.04
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_5",
+   "at": [
+    2237.76,
+    1728.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_6",
+   "at": [
+    2237.76,
+    1477.44
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_7",
+   "at": [
+    2039.04,
+    1352.16
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_8",
+   "at": [
+    1788.48,
+    1352.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0a_9",
+   "at": [
+    1235.52,
+    1391.04
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0b_0",
+   "at": [
+    872.64,
+    3136.32
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0b_1",
+   "at": [
+    725.76,
+    2531.52
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0b_2",
+   "at": [
+    725.76,
+    2194.56
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0b_3",
+   "at": [
+    725.76,
+    1753.92
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0b_4",
+   "at": [
+    725.76,
+    1451.52
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0b_5",
+   "at": [
+    725.76,
+    1045.44
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_leg_4_0b_6",
+   "at": [
+    725.76,
+    613.44
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_rs_0",
+   "at": [
+    725.76,
+    328.32
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_rs_1",
+   "at": [
+    725.76,
+    38.88
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_0b_0",
+   "at": [
+    872.64,
+    315.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_0b_1",
+   "at": [
+    872.64,
+    241.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_0b_2",
+   "at": [
+    872.64,
+    388.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_1a_0",
+   "at": [
+    652.32,
+    1555.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_1a_1",
+   "at": [
+    652.32,
+    1481.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_1a_2",
+   "at": [
+    652.32,
+    1628.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_2a_0",
+   "at": [
+    2164.32,
+    216.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_2a_1",
+   "at": [
+    2164.32,
+    142.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_2a_2",
+   "at": [
+    2164.32,
+    289.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_3b_0",
+   "at": [
+    2311.2,
+    1654.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_3b_1",
+   "at": [
+    2311.2,
+    1581.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_3b_2",
+   "at": [
+    2311.2,
+    1728.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_4a_0",
+   "at": [
+    652.32,
+    2894.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_4a_1",
+   "at": [
+    652.32,
+    2820.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_4a_2",
+   "at": [
+    652.32,
+    2967.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_5a_0",
+   "at": [
+    652.32,
+    4233.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_5a_1",
+   "at": [
+    652.32,
+    4160.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_5a_2",
+   "at": [
+    652.32,
+    4307.04
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_6b_0",
+   "at": [
+    2311.2,
+    2993.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_6b_1",
+   "at": [
+    2311.2,
+    2920.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_6b_2",
+   "at": [
+    2311.2,
+    3067.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_7b_0",
+   "at": [
+    2311.2,
+    4332.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_7b_1",
+   "at": [
+    2311.2,
+    4259.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_1_7b_2",
+   "at": [
+    2311.2,
+    4406.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_2_0a_0",
+   "at": [
+    872.64,
+    1555.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_2_0a_1",
+   "at": [
+    872.64,
+    1481.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_2_0a_2",
+   "at": [
+    872.64,
+    1628.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_2_1b_0",
+   "at": [
+    2164.32,
+    1654.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_2_1b_1",
+   "at": [
+    2164.32,
+    1581.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_2_1b_2",
+   "at": [
+    2164.32,
+    1728.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_0a_0",
+   "at": [
+    2164.32,
+    2894.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_0a_1",
+   "at": [
+    2164.32,
+    2820.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_0a_2",
+   "at": [
+    2164.32,
+    2967.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_0a_3",
+   "at": [
+    2164.32,
+    3041.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_0a_4",
+   "at": [
+    2311.2,
+    2846.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_0a_5",
+   "at": [
+    2164.32,
+    3114.72
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_1a_0",
+   "at": [
+    872.64,
+    2894.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_1a_1",
+   "at": [
+    872.64,
+    2820.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_1a_2",
+   "at": [
+    872.64,
+    2967.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_1a_3",
+   "at": [
+    799.2,
+    2868.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_1a_4",
+   "at": [
+    799.2,
+    2941.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_3_1a_5",
+   "at": [
+    872.64,
+    2747.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_4_0b_0",
+   "at": [
+    652.32,
+    315.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_4_0b_1",
+   "at": [
+    652.32,
+    241.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_c_stn514/views/qfd_c_stn514",
+   "count": 1,
+   "inst": "u_fab.u_pad_4_0b_2",
+   "at": [
+    652.32,
+    388.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "N": [
+   "bco0",
+   "rs_i",
+   "bco1",
+   "bco2",
+   "bco3",
+   "ck_c0r3",
+   "rst_c0r3",
+   "ck_c1r3",
+   "rst_c1r3",
+   "ck_c2r3",
+   "rst_c2r3",
+   "ck_c3r3",
+   "rst_c3r3"
+  ],
+  "S": [
+   "bc0",
+   "rs",
+   "bc1",
+   "rs_o",
+   "bc2",
+   "bc3",
+   "ck_c0r0",
+   "rst_c0r0",
+   "far",
+   "cid",
+   "tie_hi",
+   "tie_lo",
+   "ck_c1r0",
+   "rst_c1r0",
+   "ck_c2r0",
+   "rst_c2r0",
+   "ck_c3r0",
+   "rst_c3r0"
+  ],
+  "E": [
+   "ck_c2r1",
+   "rst_c2r1",
+   "ck_c3r1",
+   "rst_c3r1",
+   "ck_c2r2",
+   "rst_c2r2",
+   "ck_c3r2",
+   "rst_c3r2"
+  ],
+  "W": [
+   "ck_c0r1",
+   "rst_c0r1",
+   "ck_c1r1",
+   "rst_c1r1",
+   "ck_c0r2",
+   "rst_c0r2",
+   "ck_c1r2",
+   "rst_c1r2"
+  ]
+ },
+ "pin_ranges": {
+  "bc0": [
+   90.72,
+   262.72
+  ],
+  "rs": [
+   704.893,
+   876.227
+  ],
+  "bc1": [
+   1223.093,
+   1395.093
+  ],
+  "rs_o": [
+   1460.893,
+   1632.227
+  ],
+  "bc2": [
+   1698.027,
+   1870.027
+  ],
+  "bc3": [
+   2787.2,
+   2959.2
+  ],
+  "ck_c0r0": [
+   430.865,
+   431.165
+  ],
+  "rst_c0r0": [
+   431.865,
+   432.165
+  ],
+  "far": [
+   432.865,
+   433.165
+  ],
+  "cid": [
+   433.865,
+   439.865
+  ],
+  "tie_hi": [
+   440.565,
+   440.865
+  ],
+  "tie_lo": [
+   441.565,
+   441.865
+  ],
+  "ck_c1r0": [
+   1047.155,
+   1047.455
+  ],
+  "rst_c1r0": [
+   1048.155,
+   1048.455
+  ],
+  "ck_c2r0": [
+   1871.027,
+   1871.327
+  ],
+  "rst_c2r0": [
+   1872.027,
+   1872.327
+  ],
+  "ck_c3r0": [
+   2604.633,
+   2604.933
+  ],
+  "rst_c3r0": [
+   2605.633,
+   2605.933
+  ],
+  "bco0": [
+   90.72,
+   262.72
+  ],
+  "rs_i": [
+   704.893,
+   876.227
+  ],
+  "bco1": [
+   1309.26,
+   1481.26
+  ],
+  "bco2": [
+   1611.86,
+   1783.86
+  ],
+  "bco3": [
+   2787.2,
+   2959.2
+  ],
+  "ck_c0r3": [
+   448.29,
+   448.59
+  ],
+  "rst_c0r3": [
+   449.29,
+   449.59
+  ],
+  "ck_c1r3": [
+   1092.626,
+   1092.926
+  ],
+  "rst_c1r3": [
+   1093.626,
+   1093.926
+  ],
+  "ck_c2r3": [
+   1853.388,
+   1853.688
+  ],
+  "rst_c2r3": [
+   1854.388,
+   1854.688
+  ],
+  "ck_c3r3": [
+   2484.373,
+   2484.673
+  ],
+  "rst_c3r3": [
+   2485.373,
+   2485.673
+  ],
+  "ck_c0r1": [
+   2016.172,
+   2016.472
+  ],
+  "rst_c0r1": [
+   2017.172,
+   2017.472
+  ],
+  "ck_c1r1": [
+   2038.185,
+   2038.485
+  ],
+  "rst_c1r1": [
+   2039.185,
+   2039.485
+  ],
+  "ck_c2r1": [
+   2103.044,
+   2103.344
+  ],
+  "rst_c2r1": [
+   2104.044,
+   2104.344
+  ],
+  "ck_c3r1": [
+   2000.01,
+   2000.31
+  ],
+  "rst_c3r1": [
+   2001.01,
+   2001.31
+  ],
+  "ck_c0r2": [
+   3367.884,
+   3368.184
+  ],
+  "rst_c0r2": [
+   3368.884,
+   3369.184
+  ],
+  "ck_c1r2": [
+   3409.763,
+   3410.063
+  ],
+  "rst_c1r2": [
+   3410.763,
+   3411.063
+  ],
+  "ck_c2r2": [
+   3391.889,
+   3392.189
+  ],
+  "rst_c2r2": [
+   3392.889,
+   3393.189
+  ],
+  "ck_c3r2": [
+   3284.207,
+   3284.507
+  ],
+  "rst_c3r2": [
+   3285.207,
+   3285.507
+  ]
+ },
+ "fill_reason": {
+  "pin_bound": "A0 stand-ins + pin-bound hard stations (1,028-1,032 pins on 51.84 um) + closed xstn_safe; soft logic = landing rings + reset stages; channels = the qc_gen corridor plan (cut <= 0.90) widened only where the closed xstn_safe needs it; no pocket off the link paths (QW-CB16FULL fill decision)"
+ },
+ "job": {
+  "owner": "Claude:QW-CB16FULL",
+  "branch": "claude/qw-cluster3-cb16-1019",
+  "tag": "fullb",
+  "purpose": "FULL CB16 landed parent (critical prefix qfd_c_b16: gate + coordinator review only, no submit)",
+  "submit": false,
+  "hold_merge": "QW-CB16FULL diagnostic: A0 STAND-IN",
+  "extra_paths": [
+   "results/arch/qwen_cluster_1017/q_cluster16/full"
+  ],
+  "no_bench_reason": "critical-prefix PHYSICAL gate only; function = the qc_gen fabric MUT 0 (lockstep bench owed against qfd_c_b16_dv: same edge counts by construction)"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL lands every rst_<q> in its rpin register + equal-depth soft tree (qc_gen)"
+ },
+ "inter": []
+}
