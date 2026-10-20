@@ -8,6 +8,12 @@ O=$1; OUT=$2; SRC=$3; MODE=$4; SDC=$5; shift 5
 B=$(ls -d $O/results/asap7/*/base | head -1); N=$(basename $(dirname $B))
 mkdir -p $OUT/orfs/results/asap7/$N/base
 for f in 6_final.odb 6_final.spef 6_final.sdc; do ln -f $B/$f $OUT/orfs/results/asap7/$N/base/$f 2>/dev/null || cp $B/$f $OUT/orfs/results/asap7/$N/base/$f; done
+# PG is an independent status. Timing-only re-STA never repairs missing PG.
+PG_RC=0
+if [ "${OT_PG_STRICT:-0}" = 1 ]; then
+  python3 "${OT_PG_RUNNER:-$SRC/tools/closure_loop/pg_receipt.py}" verify "$OUT/orfs/results/asap7/$N/base/6_final.odb" \
+    --receipt-dir "$OUT/pg_receipts" ${OT_PG_COLLECTOR:+--collector "$OT_PG_COLLECTOR"} > "$OUT/pg.log" 2>&1 || PG_RC=$?
+fi
 M=(); for m in "$@"; do M+=(--macro $m); done
 cd $SRC
 if [ $MODE = ref ]; then
@@ -16,3 +22,12 @@ else
   python3 tools/w18/corner_sta.py --orfs-dir $OUT/orfs --post-sdc $SDC "${M[@]}" --output $OUT/corner_sta.json > $OUT/sta.log 2>&1
 fi
 python3 -c "import json;d=json.load(open('$OUT/corner_sta.json'));print('RESTA', d['setup_ss']['worst_slack_ps'], d['hold_ff']['worst_slack_ps'], 'in2reg', d['hold_ff'].get('worst_input_to_reg_slack_ps'), 'out', d['hold_ff'].get('worst_output_port_slack_ps'), 'r2r', d['hold_ff'].get('worst_reg_to_reg_slack_ps'))"
+
+if [ "${OT_PG_STRICT:-0}" = 1 ]; then
+  python3 "${OT_PG_RUNNER:-$SRC/tools/closure_loop/pg_receipt.py}" verify "$OUT/orfs/results/asap7/$N/base/6_final.odb" \
+    --receipt-dir "$OUT/pg_receipts" ${OT_PG_COLLECTOR:+--collector "$OT_PG_COLLECTOR"} >> "$OUT/pg.log" 2>&1 || PG_RC=$?
+  if [ "$PG_RC" -ne 0 ]; then
+    echo "PG_HOLD: timing-only re-STA retained independent timing results; native PG audit failed" >&2
+    exit "$PG_RC"
+  fi
+fi

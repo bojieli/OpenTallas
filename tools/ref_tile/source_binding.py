@@ -181,7 +181,7 @@ def consumed_record(paths, entries, basis):
 
 
 def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False, clock=None, tile=None,
-             gate=None):
+             gate=None, pg_strict=False):
     """Match immutable staged contents against the requested route source and current tool overlay.
 
     clock: the gate result's "clock" record.  With it, drift made only by RELAXING-ONLY rule commits
@@ -196,6 +196,11 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
         return False, "missing immutable source snapshot; legacy result is unqualified"
     if frozen_recovery and not route_overlay:
         return False, "frozen helper recovery requires executed overlay verification"
+    HO = overlay_module()
+    try:
+        HO.validate_pg_policy(binding.get("route_overlay_plan"), pg_strict=pg_strict)
+    except ValueError as ex:
+        return False, str(ex)
     entries = binding.get("files")
     if not entries or canonical_digest(entries) != binding.get("manifest_sha256"):
         return False, "source manifest missing or digest mismatch"
@@ -220,7 +225,7 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                     return False, "original gate executed-helper verification missing or mismatched"
                 effective = HO.committed_frozen_payloads(root, frozen)
             else:
-                current, effective = HO.capture_plan(daemon, root, paths=paths)
+                current, effective = HO.capture_plan(daemon, root, paths=paths, pg_strict=pg_strict)
         except (OSError, ValueError, subprocess.SubprocessError) as ex:
             return False, f"cannot resolve effective route helpers: {ex}"
         if frozen and not frozen_recovery:
@@ -358,7 +363,7 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
                                                and (r["kind"] == "relaxing" or r.get("applies"))})))
             if rows:
                 needs = sorted({n for r in rows for n in r.pop("needs")})
-                req_ok, req = relaxed_rule_requirement(needs, clock, gate, root=root)
+                req_ok, req = relaxed_rule_requirement(needs, clock, gate, root=root, pg_strict=pg_strict)
                 if req_ok:
                     relaxed = rows
                     binding["relaxing_rule_allowlist"] = dict(
@@ -460,7 +465,7 @@ def child_flop_reference_macros(root, kit):
     return out
 
 
-def relaxed_rule_requirement(needs, clock, gate=None, root=None):
+def relaxed_rule_requirement(needs, clock, gate=None, root=None, *, pg_strict=None):
     """(ok, [{"requires", "ok", "text", ...}]): the relaxed rules' own conditions, judged from the existing gate report.
     clock_pin_spread (0dq): pin-flop spread <= 80 ps at TT (required); FF too when reported, else left to the routed
     native audit.
@@ -469,6 +474,15 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None):
     is unchanged); a gate that ran it must show overflow 0.  Without the gate result the strict refusal stands."""
     rows = []
     for n in needs:
+        if n == "pg_strict":
+            # Only SB.validate's typed policy, checked against the immutable frozen
+            # plan before drift classification, can scope this tightening away.
+            ok = type(pg_strict) is bool and not pg_strict
+            text = ("default job: strict PG tightening does not apply" if ok else
+                    "strict job requires a current strict gate" if pg_strict is True else
+                    "authoritative typed PG policy unavailable")
+            rows.append(dict(requires=n, ok=ok, pg_strict=pg_strict, text="pg_strict: " + text))
+            continue
         if n == "trial_grt":
             tr = gate.get("trial_route") if isinstance(gate, dict) else None
             if not isinstance(gate, dict):
