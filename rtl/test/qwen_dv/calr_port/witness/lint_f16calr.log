@@ -1,0 +1,60 @@
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:64:26: ... Location of port declaration
+   64 |     output wire [18-1:0] kvd_k,
+      |                          ^~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_nout'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:65:26: ... Location of port declaration
+   65 |     output wire [18-1:0] kvd_nout,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_kindk'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:66:18: ... Location of port declaration
+   66 |     output wire  kvd_kindk,
+      |                  ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_pos'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:67:26: ... Location of port declaration
+   67 |     output wire [18-1:0] kvd_pos,
+      |                          ^~~~~~~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1275:22: Replication of more that --replication-limit 8192 is suspect: 49152
+                                                                                                   : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head.u_ctrl_me'
+ 1275 |     assign vx_addr = '0;    
+      |                      ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1278:19: Replication of more that --replication-limit 8192 is suspect: 65536
+                                                                                                   : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head.u_ctrl_me'
+ 1278 |     assign xl_d = '0;    
+      |                   ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1283:25: Replication of more that --replication-limit 8192 is suspect: 12288
+                                                                                                   : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head.u_ctrl_me'
+ 1283 |     assign vw_me_data = '0;    
+      |                         ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:329:17: Replication of more that --replication-limit 8192 is suspect: 786432
+                                                                                                   : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head'
+  329 |         .wrom_q('0),
+      |                 ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:398:15: Replication of more that --replication-limit 8192 is suspect: 65536
+                                                                                                   : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head'
+  398 |         .vx_q('0),
+      |               ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:402:16: Replication of more that --replication-limit 8192 is suspect: 12288
+                                                                                                   : ... note: In instance 'qfd_tt_ctlm_dv_lpf.u_hr.u_head'
+  402 |         .t_lvl('0),
+      |                ^~
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:119:19: Signal has multiple driving blocks with different clocking: 'qfd_tt_ctlm_dv_lpf.u_hr.g_cmdreg.rom_cmd_q'
+                      rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:121:55: ... Location of first driving block
+  121 |         if (!rsl_c0) rom_cmd_q[189:0] <= 190'd0; else rom_cmd_q[189:0] <= rom_cmd_c[189:0];
+      |                                                       ^~~~~~~~~
+                      rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:123:57: ... Location of other driving block
+  123 |         if (!rsl_c1) rom_cmd_q[379:190] <= 190'd0; else rom_cmd_q[379:190] <= rom_cmd_c[379:190];
+      |                                                         ^~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 12.427 MB sources in 92 modules, into 8.109 MB in 12 C++ files needing 0.000 MB
+- Verilator: Walltime 2.147 s (elab=0.256, cvt=1.722, bld=0.000); cpu 2.147 s on 1 threads; allocated 164.391 MB
+CTLM_F16_CALR_ELAB_PASS
