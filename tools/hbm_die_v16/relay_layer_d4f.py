@@ -77,10 +77,13 @@ def main():
     ap.add_argument('--exclude-re', help='rows whose driver or any sink instance matches are left to another layer '
                     '(e.g. ^(rfr|sfr)_: the fixed-depth SU RF / SFU chains, su_chain_rehome_d4f.py)')
     ap.add_argument('--land', action='store_true', help='HBM-LANDING 10-18: half-cycle lane stations + LANDINGS (module doc)')
+    ap.add_argument('--port-age-land', action='store_true', help='land every row sharing a functional port with a forwarded row; align sink ages, retain unknown E as diagnostic')
     ap.add_argument('--land-plan', help="--land: per-link E / K JSON {links: [{link: '<driver row>-><sink>', E, K?}]}")
     ap.add_argument('--land-fault', choices=('pins', 'open'), default='pins',
                     help='--land: landing fault outputs -> die status pins (default) or left open (diagnostic only)')
     a = ap.parse_args()
+    if a.port_age_land and not a.land:
+        ap.error('--port-age-land requires --land')
     LP = {}
     if a.land and a.land_plan:
         LP = {x['link']: x for x in load(a.land_plan).get('links', [])}
@@ -183,6 +186,21 @@ def main():
         for p_, k_, ls_ in rowbits[bi]:
             for x_ in ls_:   # one functional path = one producer port -> one consumer port (other drivers' slots differ)
                 (port_mixed if fwd else port_rows)[x_[0], x_[1], di_, p_].add(bi)
+    # One functional word must use one transport mechanism even when its bits
+    # have different fanout sets. Take the transitive row closure: a row can
+    # participate in several producer/consumer port groups.
+    forced_land = set()
+    if a.port_age_land:
+        forced_land = {bi for bis in port_mixed.values() for bi in bis}
+        while True:
+            before = len(forced_land)
+            for key in port_rows.keys() | port_mixed.keys():
+                group = port_rows.get(key, set()) | port_mixed.get(key, set())
+                if group & forced_land:
+                    forced_land.update(group)
+            if len(forced_land) == before:
+                break
+        notes.append(f'PORT-AGE-LAND: {len(forced_land)} rows use landed transport')
     port_pad = collections.Counter()
     for _it in range(64):
         moved = 0
@@ -198,7 +216,7 @@ def main():
     else:
         problems.append('PORT-AGE: equal-age pad fixpoint not reached in 64 passes')
     for (s_, sp_, d_, p_), bis_ in sorted(port_mixed.items()):
-        if (s_, sp_, d_, p_) in port_rows:
+        if (s_, sp_, d_, p_) in port_rows and not a.port_age_land:
             problems.append(f'PORT-AGE: {d_}.{p_} -> {s_}.{sp_} split over forwarded AND plain rows (align at the landing plan)')
     port_age_pads = [dict(row=st['rows'][b_]['driver'], sink=s_, pads=v) for (b_, s_), v in sorted(port_pad.items()) if v]
     for x_ in port_age_pads:
@@ -218,7 +236,7 @@ def main():
         rd = region(di); rs_ = {s_: region(s_) for s_ in sinks}
         # DIE-CLOCK 10-17: same region or NEIGHBOUR regions (outlines within 600 um) = plain stations on the own region
         # root (neighbour-matched delivery is DIE-CLOCK's); only non-neighbour pairs get the F1 forwarded chain
-        inter = rd is None or any(v is None or (v != rd and frozenset((v, rd)) not in neigh) for v in rs_.values())
+        inter = bi in forced_land or rd is None or any(v is None or (v != rd and frozenset((v, rd)) not in neigh) for v in rs_.values())
         used_regions[rd] += 1
         # sink feed: station at the sink's depth nearest to the sink (depth 0 = driver)
         sdep = dict(zip(sinks, r['sink_depths']))
@@ -464,6 +482,64 @@ def main():
             depth_eff = {s_: (lr[s_]['latency_edges'] if s_ in lr else depth_eff[s_]) for s_ in sinks}
         consts.append(dict(bus=tag, driver=r['driver'], cls=cls, domain=dom, bits=n, kind=kind, lanes=T, inter_region=bool(inter),
                            fork=fork, sink_edges=depth_eff))
+    if a.port_age_land:
+        # Align the actual generated paths, after fork cascades determine N.
+        # Unknown E is a diagnostic E=1 model only: never manufacture a
+        # qualified latency receipt from a missing clock measurement.
+        row_by_tag = {x['bus']: x for x in splice}
+        const_by_tag = {x['bus']: x for x in consts}
+        land_by_key = {(x['bus'], x['sink']): x for x in land_rows}
+        groups = []
+        for key in port_rows.keys() | port_mixed.keys():
+            bis = port_rows.get(key, set()) | port_mixed.get(key, set())
+            if len(bis) > 1 and bis & forced_land:
+                groups.append([(f'rf{bi:04d}', key[0]) for bi in bis])
+        extra = collections.Counter()
+        def age(key):
+            lr = land_by_key[key]
+            return -(-lr['stations'] // 2) + 1 + (lr['E'] if lr['E'] is not None else 1) + lr['pads'] + extra[key]
+        for _ in range(64):
+            moved = False
+            for group in groups:
+                target = max(age(key) for key in group)
+                for key in group:
+                    delta = target - age(key)
+                    if delta:
+                        extra[key] += delta
+                        moved = True
+            if not moved:
+                break
+        else:
+            raise ValueError('PORT-AGE-LAND fixpoint failed')
+        for (tag, sink), count in sorted(extra.items()):
+            row = row_by_tag[tag]; sk = row['sinks'][sink]
+            lr = land_by_key[tag, sink]
+            if not sk['chain']:
+                raise ValueError(f'PORT-AGE-LAND missing landing {tag}->{sink}')
+            first = next(x for x in insts if x['name'] == sk['chain'][0][0])
+            site_match = re.search(r'(site|home) \(([^)]+)\) um', first['note'])
+            if site_match is None:
+                raise ValueError(f'PORT-AGE-LAND missing sink home {tag}->{sink}')
+            site = site_match.group(2)
+            for k in range(count):
+                names = [f'{tag}_pa{list(row["sinks"]).index(sink):02d}_{k:02d}_l{t}' for t in range(row['tiles'])]
+                sk['chain'].append(names); sk['chain_ports'].append(['i', 'o'])
+                for t, name in enumerate(names):
+                    master = f'hbfd_rly_{row["width"]}_WE'
+                    insts.append(dict(name=name, master=master, source=SRC_OLD, rtl_deps=DEPS_OLD, params={},
+                                      slot=f'd4f_relay_sink:{st["rows"][int(tag[2:])]["driver"]}->{sink}',
+                                      owner='HBM-PORT-AGE-LAND', note=f'functional port age pad {k+1}/{count}; '
+                                      f'lane row {tag}_pa{list(row["sinks"]).index(sink):02d}_{k:02d} {t}/{row["tiles"]} WE; site ({site}) um'))
+                    clocks.extend([dict(inst=name, port='ck', domain=row['domain'], kind='clock'),
+                                   dict(inst=name, port='rs', domain=row['domain'], kind='reset')])
+                    tiles[master] += 1
+            lr['pads'] += count
+            lr['port_age_model_edges'] = age((tag, sink)) - count
+            if lr['latency_edges'] is not None:
+                lr['latency_edges'] += count
+            const_by_tag[tag]['sink_edges'][sink] = lr['latency_edges']
+            port_age_pads.append(dict(row=st['rows'][int(tag[2:])]['driver'], sink=sink, pads=count,
+                                      transport='landed', diagnostic_E=lr['E'] is None))
     eq = collections.defaultdict(int)
     for x in consts:
         if x['cls'] == 'equal_age_pad':
