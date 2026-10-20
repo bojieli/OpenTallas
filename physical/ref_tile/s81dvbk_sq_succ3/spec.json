@@ -1,0 +1,449 @@
+{
+ "name": "s81dvbk_sq_succ3",
+ "top": "dsdv_bksel_q",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+  "rtl/lib/ot_sram_showahead_1r1w.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 324.0,
+  "h": 540.0
+ },
+ "pins": {
+  "N": [
+   "t_s",
+   "ck",
+   "rst",
+   "f_c",
+   "f_cr",
+   "lane"
+  ],
+  "W": [
+   "t_o"
+  ]
+ },
+ "pin_ranges": {
+  "t_s": [
+   2.16,
+   156.6
+  ],
+  "ck": [
+   156.6,
+   160.92
+  ],
+  "rst": [
+   160.92,
+   163.08
+  ],
+  "f_c": [
+   163.08,
+   178.2
+  ],
+  "f_cr": [
+   178.2,
+   180.36
+  ],
+  "lane": [
+   180.36,
+   321.84
+  ],
+  "t_o": [
+   2.16,
+   537.84
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "inst": "*g_m2.u_mem.g_b?0?.g_w?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    43.2,
+    123.696
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "inst": "*g_m2.u_mem.g_b?0?.g_w?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    43.2,
+    204.192
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "inst": "*g_m2.u_mem.g_b?0?.g_w?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_m2.u_mem.g_b?1?.g_w?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    172.8,
+    123.696
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_m2.u_mem.g_b?1?.g_w?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    172.8,
+    204.192
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_m2.u_mem.g_b?1?.g_w?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    284.688
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_ofq_sram.u_q.u_mem.g_bank?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    324.672
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_ofq_sram.u_q.u_mem.g_bank?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    364.656
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_ofq_sram.u_q.u_mem.g_bank?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    404.64
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_ofq_sram.u_q.u_mem.g_bank?3?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    444.624
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_ofq_sram.u_q.u_mem.g_bank?4?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216.0,
+    284.688
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_fq_sram.u_q.u_mem.g_bank?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216.0,
+    324.672
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_fq_sram.u_q.u_mem.g_bank?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216.0,
+    364.656
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_fq_sram.u_q.u_mem.g_bank?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216.0,
+    404.64
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_fq_sram.u_q.u_mem.g_bank?3?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216.0,
+    444.624
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*g_fq_sram.u_q.u_mem.g_bank?4?.u_m"
+  }
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: dsfd_selt_q2 QIO (the closed quarter RTL, unchanged) lands lane / f_c / f_cr in its pin flops and launches t_s / t_o from flops."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_x_um": 10.8,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  }
+ },
+ "structural_change": "S81-TOPK3 ACC32 (SAFE-review of s81dvbk_sq_succ2 gate 20261019-164207: placed TT reg->reg -62.7 ps at u_ps.acc[328]; textbook high-fanout top = packer accumulate controls u_pi/u_ps oflush 1,219/1,183, rq_v 1,132/1,134, rq_tot decode OR4 1,184 -> SAFE item 3 violation left by FAN32): OT_S81PH_SEL_ACC32 gives every packer output lane KEPT identical copies of the last-stage accumulate controls {ro_v, ro_fl, qf, qc} and its own oflush copy (same D, edge, reset), so each copy drives one lane's 38 acc/o_line bits; originals drive only o_v/o_fl/o_bv. Exact, 0 added edges. On top of FAN32 (d58faf9b0); geometry + clock recipe = s81dvbk_sq_succ2 (CTS spread TT 69.6 / FF 66.3 PASS).",
+ "job": {
+  "owner": "Claude:S81-TOPK3",
+  "branch": "claude/s81-topk3-1019",
+  "tag": "acc32a",
+  "purpose": "TOPK selector quarter FAN32+ACC32: KEPT per-lane copies of the packer accumulate controls on top of FAN32; geometry/clock = succ2; INDEXED13 1037 reserved cycles priced.",
+  "benches": [
+   {
+    "name": "indexed13_production",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build results/arch/s81_topk_final_1019/bench/indexed13",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^BK_LAYER PASS"
+   },
+   {
+    "name": "indexed13_identity_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build results/arch/s81_topk_final_1019/bench/indexed13_identity",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk_final_1019/bench/indexed13_identity/verdict.txt"
+   },
+   {
+    "name": "succ_onehot_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_SUCC_MUT_OH' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build_mut results/arch/s81_topk_succ_1019/bench/mut_oh",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk3_1019/bench/mut_oh/verdict.txt"
+   },
+   {
+    "name": "fan32_groupselect_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_FAN32_MUT_GS' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build_mutgs results/arch/s81_topk_fan32_1019/bench/mut_gs",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk3_1019/bench/mut_gs/verdict.txt"
+   },
+   {
+    "name": "fan32_clearcopy_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_FAN32_MUT_CLR' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build_mutclr results/arch/s81_topk_fan32_1019/bench/mut_clr",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk3_1019/bench/mut_clr/verdict.txt"
+   },
+   {
+    "name": "acc32_lanecopy_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_SEL_RST64 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_ACC32_MUT' bash tools/s81_dv/layer_prog/bk/run_bk_layer.sh {RUN}/build_mutacc results/arch/s81_topk3_1019/bench/mut_acc",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk3_1019/bench/mut_acc/verdict.txt"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units",
+   "results/rtl/s81_dv_1016/bk_units_bk2",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc",
+   "rtl/link",
+   "tools/s81_dv/layer_prog",
+   "results/arch/s81_topk_final_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "rtl/lib",
+   "results/arch/s81_topk_succ_1019",
+   "results/arch/s81_topk_fifo_safe_1019",
+   "results/arch/s81_topk_fan32_1019",
+   "results/arch/s81_topk3_1019"
+  ],
+  "views_to": "physical/ref_tile/s81dvbk_sq_succ3/views",
+  "record_to": "results/rtl/ref_tile/s81dvbk_sq_succ3",
+  "bench_sources": [
+   "rtl/lib/ot_sram_showahead_1r1w.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/common/ot_fwd_link_stage.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv",
+   "tools/s81_dv/layer_prog/bk/tb_bk_layer.sv",
+   "tools/s81_dv/layer_prog/bk/run_bk_layer.sh",
+   "tools/s81_dv/layer_prog/lower_bk.py",
+   "results/arch/s81_topk_final_1019/bench/indexed13/stim.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13/exp.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13/meta.json",
+   "results/arch/s81_topk_final_1019/bench/indexed13_identity/stim.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13_identity/exp.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13_identity/meta.json",
+   "results/arch/s81_topk_succ_1019/bench/mut_oh/stim.txt",
+   "results/arch/s81_topk_succ_1019/bench/mut_oh/exp.txt",
+   "results/arch/s81_topk_succ_1019/bench/mut_oh/meta.json",
+   "results/arch/s81_topk_fan32_1019/bench/mut_gs/stim.txt",
+   "results/arch/s81_topk_fan32_1019/bench/mut_gs/exp.txt",
+   "results/arch/s81_topk_fan32_1019/bench/mut_gs/meta.json",
+   "results/arch/s81_topk_fan32_1019/bench/mut_clr/stim.txt",
+   "results/arch/s81_topk_fan32_1019/bench/mut_clr/exp.txt",
+   "results/arch/s81_topk_fan32_1019/bench/mut_clr/meta.json",
+   "results/arch/s81_topk3_1019/bench/mut_acc/stim.txt",
+   "results/arch/s81_topk3_1019/bench/mut_acc/exp.txt",
+   "results/arch/s81_topk3_1019/bench/mut_acc/meta.json"
+  ]
+ },
+ "defines": [
+  "OT_S81PH_SEL_INDEXED13",
+  "OT_S81PH_SEL_RST64",
+  "OT_S81PH_FIFO_SRAM",
+  "OT_SRAM_P192",
+  "OT_S81PH_SEL_SUCC",
+  "OT_S81PH_SEL_FAN32",
+  "OT_S81PH_SEL_ACC32"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "fill_reason": {
+  "pin_bound": "16 SRAM macros (66.3k um2) with W/E pin faces need >=10.8 um halos + capture channels; outline 324x540 -> ~33% std fill (macro/pin-escape bound, not std-area bound). N face 1450 pins <=5.6/um."
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "ACC32 successor master (per-lane KEPT packer accumulate controls on top of FAN32) after succ2 gate review: placed TT reg->reg -62.7 ps at u_ps.acc with 1.1-1.2k-load oflush/rq_v controls (SAFE item 3); succ2c spread TT 216 / FF 195 FAIL; earlier closed quarter retained."
+ },
+ "reset_relay_split": {
+  "max_loads": 256
+ },
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}
