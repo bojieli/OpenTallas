@@ -367,3 +367,47 @@ class MultiDomainClockEvidence(unittest.TestCase):
         r = PG.clock_record(self.output(source="other"), True)
         self.assertIsNone(r["tt_insertion_ps"])
         self.assertEqual(r["verdict"], "WARN")                     # no own measurement: guidance, not a borrowed PASS
+
+
+class EveryRootJudged(unittest.TestCase):
+    """KV-CLKFIX 10-19: a two-clock kit's second root is judged by the same pin-flop rule (not only the largest root)."""
+    def out(self, h_tt=(230, 270), h_ff=(200, 230), boundary=True):
+        dom = lambda lo, hi: dict({"all": {"n": 900, "min": lo - 10, "max": hi}}, **({"boundary": {"min": lo, "max": hi}} if boundary else {}))
+        rows = [{"source": "ck", "clock": "core_clk", "tt": dom(200, 240), "ff": dom(160, 190)},
+                {"source": "hck", "clock": "hclk", "tt": dom(*h_tt), "ff": dom(*h_ff)}]
+        return ("GATE_TB textbook_lint: INFO clock_roots max_root_sinks=9000 root=port:ck\n" +
+                "\n".join("GATE_CK_DOMAIN " + json.dumps(r) for r in rows))
+
+    def test_second_root_within_limit_passes(self):
+        r = PG.clock_record(self.out(), True)
+        self.assertEqual(r["verdict"], "PASS")
+        self.assertEqual([(x["source"], x["tt_pin_spread_ps"], x["verdict"]) for x in r["other_roots"]], [("hck", 40.0, "PASS")])
+
+    def test_second_root_over_limit_refuses(self):
+        r = PG.clock_record(self.out(h_tt=(160, 290)), True)
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("root hck (hclk)", r["text"])
+
+    def test_root_without_pin_flops_not_judged(self):
+        r = PG.clock_record(self.out(h_tt=(160, 290), boundary=False), True)
+        self.assertEqual(r["verdict"], "PASS")
+        self.assertEqual(r["other_roots"][0]["verdict"], "INFO")
+
+    def test_without_cts_unchanged(self):
+        self.assertNotIn("other_roots", PG.clock_record(self.out(h_tt=(160, 290)), False))
+
+
+class EveryRootRequirement(unittest.TestCase):
+    """KV-CLKFIX 10-19: Gate-Rule tightening requires=every_root_spread keeps older one-root / in-limit gates."""
+    def test_scoping(self):
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "ref_tile"))
+        import source_binding as SB
+        dom = lambda s, c, lo, hi: {"source": s, "clock": c, "tt": {"boundary": {"min": lo, "max": hi}},
+                                    "ff": {"boundary": {"min": lo, "max": hi}}}
+        ok = lambda ck: SB.relaxed_rule_requirement(["every_root_spread"], ck)[0]
+        self.assertTrue(ok({"clock_measurements": [dom("ck", "core_clk", 100, 300)]}))
+        self.assertTrue(ok({"measured_clock": "core_clk", "clock_measurements": [dom("ck", "core_clk", 100, 300),
+                                                                                  dom("hck", "hclk", 200, 260)]}))
+        self.assertFalse(ok({"measured_clock": "core_clk", "clock_measurements": [dom("ck", "core_clk", 100, 150),
+                                                                                   dom("hck", "hclk", 200, 300)]}))
+        self.assertTrue(ok({}))
