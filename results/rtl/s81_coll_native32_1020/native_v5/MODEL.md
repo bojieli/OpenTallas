@@ -26,3 +26,5 @@ Fresh native source scout and full 5.050 boundary nominal are pending at ep6
 codex-s81-coll-native32v5-1020 and codex-s81-coll-native32v5-bench-1020/runs_v5/m0.
 Prior v3 max32/621.8ps and v4 rejected35/686.8ps sources/evidence remain intact.
 No physical gate; one-band packing/reach/native/clock/PG qualification owed.
+
+TERMINAL REJECTED: fullproduction79994 PASS and16306FF/55SRAM native max32/0>32, but mappeddepth733.5ps/20levels from pace_ok to replay rp_r. No gate. failed_source.sv+exactcensus/depth/nominal committed; current source restored immutable v3 before any successor. Original staging127 and permission126 failed before design execution, preserved remote/local sessions; corrected reruns terminal.
