@@ -486,16 +486,16 @@ def post(v, m, G):
         hd = lambda p_: min(_man(p_, c_) for _, c_ in tl)
         q = 43.2
         start = (c0[0], c0[1])
-        heap = [(math.ceil(hd(start) / S_), 0, start, None)]
+        heap = [(math.ceil(hd(start) / S_), 0, 0, start, None, None)]
         back, seen = {}, set()
-        back[(round(start[0] / 43.2), round(start[1] / 43.2))] = (None, None, 0)
-        n_exp = 0
+        n_exp, tie = 0, 0
         while heap and n_exp < 40000:
-            f_, g_, p_, ll = heapq.heappop(heap)
+            f_, g_, _t, p_, ll, pk = heapq.heappop(heap)
             key = (round(p_[0] / q), round(p_[1] / q))
             if key in seen:
                 continue
             seen.add(key)
+            back[key] = (ll, pk)        # parent fixed at pop: the box chain is exactly the expanded one
             n_exp += 1
             hit = [nm_ for nm_, c_ in tl if _man(p_, c_) <= REACH_UM]
             if g_ > 0 and hit:
@@ -515,9 +515,8 @@ def post(v, m, G):
                 k2 = (round(cc[0] / q), round(cc[1] / q))
                 if k2 in seen:
                     continue
-                if k2 not in back or back[k2][2] > g_ + 1:
-                    back[k2] = (s_, key, g_ + 1)
-                heapq.heappush(heap, (g_ + 1 + math.ceil(max(0.0, hd(cc) - REACH_UM) / S_), g_ + 1, cc, s_))
+                tie += 1
+                heapq.heappush(heap, (g_ + 1 + math.ceil(max(0.0, hd(cc) - REACH_UM) / S_), g_ + 1, tie, cc, s_, key))
         stats.update(expanded=n_exp, open_left=len(heap), slack=slack)
         return None, None
 
