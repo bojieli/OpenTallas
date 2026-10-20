@@ -2,15 +2,16 @@
   "status": "SOURCE_MODEL_BEFORE_BUILD_NO_GATE",
   "trigger": "r7 realnative LAT6/DRST0 cutflags A119135loads,B99~66/B55~56,C0~58/C69~35;FPvalidout119;join mode563observedr8",
   "method": "Additive newnamed FP32+pretree sources retain originalarithmetic/cycles/invalidvalues. Real kept identical FF copies carry ot_rst_split family metadata; existing sameedge canonicalizer proves perbit type/D/clock/reset identity then repartitions actual loads. No newtoolcode/ties or removedloads.",
-  "fp_per_adder_extraFF": 56,
+  "fp_per_adder_extraFF": 98,
   "qcore_adders": 8,
   "join_input_extraFF": 87,
   "join_modepipe_extraFF": 105,
-  "total_extraFF_estimate": 640,
+  "total_extraFF_estimate": 976,
   "requirements": [
     "allclonefamily TSV statusOK and exactnativecensus, no blanket equalityassumption",
     "5.050 LAT6/DRST0 all-edge y/err/validlockstep+causal mutant",
     "qcore everyoutputedge proof+productionparams native",
     "no layouts orclosure claim before sourceall32 plusarea/PG/clock/oneband"
-  ]
+  ],
+  "native_iteration": "Baseline earlytechmap+unaddressablecopyfamily FAIL18/max80; includes six additional jam shift bits now explicitly copied. Safe aliases do not alter originalnetnames or cellgraph; runtime graph proof required before unchanged split."
 }

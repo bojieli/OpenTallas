@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-epyc9       admits   966 GB (avail 810, growth 134, headroom 0, waiters 0/0 GB) load 81/128 running 43 disk 138 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore7-native32-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2814357-1792495984 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+RF WORD MISMATCH t=236000 class 2 00000000/8cf4bde5
+RF WORD MISMATCH t=266000 class 2 8cf4bde5/6249f0ea
+RF WORD MISMATCH t=266000 class 3 00000000/fda7d4d9
+RF WORD MISMATCH t=286000 class 1 00000000/b3df5464
+RF WORD MISMATCH t=286000 class 3 fda7d4d9/00000000
+QCORE_RG FAIL errors=12150 checks=9104 scalars=312
+- rtl/test/hbm_qcore_physical_1016/tb_qcore_r9_lockstep.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 91us; walltime 0.397 s; speed 229.893 us/s
+- Verilator: cpu 0.397 s on 1 threads; allocated 10 MB
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2814357-1792495984): exit 0
