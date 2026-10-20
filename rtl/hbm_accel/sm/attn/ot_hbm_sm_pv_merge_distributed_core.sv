@@ -232,17 +232,34 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     localparam integer NS = 64, SW = 8;               // PVMD: operand slices of 8 bits
     (* keep *) reg [NS-1:0] fd0_k, fd1_k;
     (* keep *) reg [NS-1:0] qb_k, qf_k, qklt_k, qk0_k, qck_k, qnk_k, qn0_k;
+    // The old FF-only census missed the *D-input* common read cones of the
+    // 64 kept state copies. Four same-edge barrel provenance counters make
+    // each local state-read result drive16 captures, without adding an edge.
+    wire [2:0] bp_operand [0:3];
+    generate for (genvar cg=0;cg<4;cg=cg+1) begin:g_operand_provenance
+        if (FAN32 != 0) begin:g_local
+            (* keep *) reg [2:0] count;
+            // Adder-valid reset groups have28 terminals: +3 =>31, not root0's30.
+            always @(posedge clk or negedge rst_core_n[1+cg])
+                if(!rst_core_n[1+cg]) count<=0; else count<=count+3'd1;
+            assign bp_operand[cg]=count;
+        end else begin:g_original
+            assign bp_operand[cg]=bp;
+        end
+    end endgenerate
+
     genvar s;
     generate if (SAFE == 2) begin : g_s2
         for (s = 0; s < NS; s = s + 1) begin : g_sl
+            wire [2:0] local_qe = FAN32 ? (bp_operand[s/16] + ((MUT==5)?3'd0:3'd1)) : qe;
             always @(posedge clk or negedge rst_core_n[16+s/2])
                 if (!rst_core_n[16+s/2]) begin
                     fd0_k[s]<=1'b0; fd1_k[s]<=1'b0;
                     qb_k[s]<=1'b0; qf_k[s]<=1'b0; qklt_k[s]<=1'b1; qk0_k[s]<=1'b1; qck_k[s]<=1'b0; qnk_k[s]<=1'b0; qn0_k[s]<=1'b0;
                 end else begin
                     fd0_k[s]<=PUBLISH ? fold_operand[s/16] : 1'b0; fd1_k[s]<=fd0_k[s];
-                    qb_k[s]<=e_busy[qe]; qf_k[s]<=e_fl[qe]; qklt_k[s]<=(e_k[qe]<LV); qk0_k[s]<=(e_k[qe]==0);
-                    qck_k[s]<=e_c[qe][e_k[qe][2:0]]; qnk_k[s]<=e_n[qe][e_k[qe][2:0]]; qn0_k[s]<=e_n[qe][0];
+                    qb_k[s]<=e_busy[local_qe]; qf_k[s]<=e_fl[local_qe]; qklt_k[s]<=(e_k[local_qe]<LV); qk0_k[s]<=(e_k[local_qe]==0);
+                    qck_k[s]<=e_c[local_qe][e_k[local_qe][2:0]]; qnk_k[s]<=e_n[local_qe][e_k[local_qe][2:0]]; qn0_k[s]<=e_n[local_qe][0];
                 end
             wire [SW-1:0] st_s = st_rd[SW*s +: SW], sum_s = sum[SW*s +: SW], vr_s = vres[SW*s +: SW], fa_s = fold_a_data2[SW*s +: SW];
             wire ec0 = first_operand[s] ? 1'b0 : qn0_k[s];
@@ -317,7 +334,20 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             end
         end
     end endgenerate
+    generate if(FAN32 != 0) begin:g_finish_distribution
+        // Existing same-age/reset local state and input captures are the
+        // provenance of these predicates; never copy a global comb enable.
+        for(genvar fs=0;fs<64;fs=fs+1) begin:g_data
+            wire local_finish=qb_k[fs] && qf_k[fs] && !qklt_k[fs] && !ev_operand[fs];
+            always @(posedge clk) if(local_finish) pv_y[8*fs+:8]<=vres[8*fs+:8];
+        end
+        for(genvar ft=0;ft<TAGW;ft=ft+1) begin:g_tag
+            wire local_finish=qb_k[ft/4] && qf_k[ft/4] && !qklt_k[ft/4] && !ev_operand[ft/4];
+            always @(posedge clk) if(local_finish) pv_tag[ft]<=e_tag[r][ft];
+        end
+    end else begin:g_original_finish
     always @(posedge clk) if (finish) begin pv_y <= vres; pv_tag <= e_tag[r]; end
+    end endgenerate
     // The unused level7 stores one final512bit node for each logical slot.
     // Publication shares the existing1R1W macro after the merge is quiescent.
     // Macro read -> buffer capture -> first scalar is exactly2edges. Requests
