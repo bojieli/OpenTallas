@@ -1,0 +1,279 @@
+{
+ "name": "s81sl_capc2",
+ "top": "ot_s81sl_capc2",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc2.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt",
+   "count": 1,
+   "inst": "u_p.u_core.g_hard.u_rt",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+   "count": 1,
+   "inst": "u_p.u_core.g_hard.u_tw",
+   "at": [
+    43.2,
+    259.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+   "count": 1,
+   "inst": "u_p.u_core.g_hard.u_te",
+   "at": [
+    216,
+    259.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_cap_ed/views/ot_s81sl_cap_ed",
+   "count": 1,
+   "inst": "u_p.u_core.g_ed.u_ed",
+   "at": [
+    216,
+    172.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_cap_ld/views/ot_s81sl_cap_ld",
+   "count": 1,
+   "inst": "u_p.u_core.g_ld3.u_ld3",
+   "at": [
+    43.2,
+    172.8
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "rt_w"
+  ],
+  "E": [
+   "rt_e"
+  ],
+  "N": [
+   "cfg_v",
+   "cfg_d",
+   "cw_n_v",
+   "cw_n_a",
+   "cw_n_d"
+  ],
+  "S": [
+   "cw_s_v",
+   "cw_s_a",
+   "cw_s_d",
+   "clk",
+   "rst_n",
+   "fault"
+  ]
+ },
+ "outline": {
+  "w": 345.6,
+  "h": 388.8
+ },
+ "layer_cap": "M5",
+ "clock": "spine",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "structural_change": "LEAD2-S81/CAPC2 10-19 S81.STA.PAR.1: the CAPC cluster gains the two TOK.DS.BENCH.1 calendar leaves as hard children -- u_ed ot_s81sl_cap_ed (D 24, E tree word -> n6) and u_ld3 ot_s81sl_cap_ld (D 16, W lane 3 -> u_tw) -- in a non-parameterised top ot_s81sl_capc2 = ot_s81sl_cap_p1 #(PINPIPE 1, EDLY 24, WL3DLY 16) (hard views carry no parameters). Same closed rt/tr child views and PINPIPE 1 face registers as CLOSED 267b (s81sl_capc_p1_die_slew); trees moved up 43.2 so the rt-to-tree seam (99.36) holds ED under u_te and LD under u_tw on the 43.2 lattice; outline 345.6 x 388.8.",
+ "why_floorplan": "Closed children at R0 on the 43.2 lattice: rt (43.2,43.2), tw (43.2,259.2), te (216,259.2), ED (216,172.8) between u_te S-face outputs and rt N-face e_* pins, LD (43.2,172.8) between the W-face lane-3 pin registers and u_tw; full-width south 43.2 std band and the 82.08 tree-to-tree channel unchanged; height +43.2 only for the delay leaves (halo 5.4 both sides).",
+ "job": {
+  "owner": "Claude:LEAD2-S81/CAPC2",
+  "branch": "claude/s81-capc2-cal-1019",
+  "tag": "s81capc2",
+  "purpose": "S81.STA.PAR.1 release CAPC cluster: closed rt/tr + new ED24/LD16 calendar leaves, PINPIPE 1 faces; bench vs closed 3-child RTL",
+  "benches": [
+   {
+    "name": "cap_cal_base",
+    "cmd": "bash tools/s81_slice/cap_p1_cal_bench.sh {RUN}/cal_base {RUN}/slcap_vec_cal 24 16",
+    "expect": "pass",
+    "pass_regex": "^PASS cap_p1_cal DE=24 DL=16 slcap_vec_cal$",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cap_cal_m23",
+    "cmd": "bash tools/s81_slice/cap_p1_cal_bench.sh {RUN}/cal_m23 {RUN}/slcap_vec_m23 23 16 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_CAL_MUTANT_DETECTED DE=23 DL=16 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc2_1019/cal_m23.out",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cap_cal_m15",
+    "cmd": "bash tools/s81_slice/cap_p1_cal_bench.sh {RUN}/cal_m15 {RUN}/slcap_vec_m15 24 15 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_CAL_MUTANT_DETECTED DE=24 DL=15 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc2_1019/cal_m15.out",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cap_p1_exact",
+    "cmd": "bash tools/s81_slice/cap_p1_bench.sh {RUN}/cap_p1_exact {RUN}/slcap_vec 0",
+    "expect": "pass",
+    "pass_regex": "^PASS cap_p1 MUT=0 slcap_vec$",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cap_p1_mut1",
+    "cmd": "bash tools/s81_slice/cap_p1_bench.sh {RUN}/cap_p1_m1 {RUN}/slcap_vec 1 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_P1_MUTANT_DETECTED MUT=1 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc_nativep1_1019/mut1.out",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cap_p1_mut2",
+    "cmd": "bash tools/s81_slice/cap_p1_bench.sh {RUN}/cap_p1_m2 {RUN}/slcap_vec 2 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_P1_MUTANT_DETECTED MUT=2 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc_nativep1_1019/mut2.out",
+    "threads": 4,
+    "peak_ram_gb": 16
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/ref_tile/s81sl_cap_ed/views",
+   "physical/ref_tile/s81sl_cap_ld/views",
+   "results/rtl/s81_slice_1017/cap",
+   "results/rtl/s81_slice_1017/cap_caprt1019",
+   "results/rtl/s81_slice_1017/capc2_1019",
+   "results/rtl/s81_slice_1017/capc_nativep1_1019",
+   "results/uarch/s81_capc_nativep1_1019",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/dsrom_sys/s81_static_net",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/proto",
+   "tools/s81",
+   "tools/s81_slice"
+  ],
+  "views_to": "physical/ref_tile/s81sl_capc2/views",
+  "record_to": "results/rtl/ref_tile/s81sl_capc2"
+ },
+ "child_clock_ref": "boundary",
+ "hard_define": "OT_HARD_CHILDREN",
+ "defines": [
+  "OT_HARD_CHILDREN"
+ ],
+ "macros": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL ot_s81sl_cap_p1 PINPIPE=1 registers every data input/output as coherent bundles; do not double the stages"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL g_pin.rst_l0/rst_l1 are two registered reset stages at the S face; rst_n has only two flop reset sinks"
+ },
+ "std_area_um2": 700.0,
+ "pin_ranges": {
+  "cw_s_v": [
+   2.16,
+   10.8
+  ],
+  "cw_s_a": [
+   10.8,
+   166.32
+  ],
+  "clk": [
+   171.72,
+   173.88
+  ],
+  "rst_n": [
+   176.04,
+   178.2
+  ],
+  "fault": [
+   180.36,
+   182.52
+  ],
+  "cw_s_d": [
+   188,
+   343.44
+  ],
+  "cfg_v": [
+   2.16,
+   4.32
+  ],
+  "cfg_d": [
+   4.32,
+   164.32
+  ],
+  "cw_n_v": [
+   168,
+   172
+  ],
+  "cw_n_a": [
+   174,
+   222
+  ],
+  "cw_n_d": [
+   224,
+   343.44
+  ],
+  "rt_w": [
+   2.16,
+   386.64
+  ],
+  "rt_e": [
+   2.16,
+   386.64
+  ]
+ },
+ "hold_budget": "tile",
+ "orfs_vars": {
+  "POST_RESIZE_TCL": "physical/common_flow/max_wire_repeat.tcl",
+  "OT_MAX_WIRE_UM": "80"
+ },
+ "max_signal_net_um": 130,
+ "hold_budget_reason": "level-1 cluster: the die-budget admission needs a ROOT candidate receipt for this identity (registered_cluster_budget); tile budget, no pin pads (RTL PINPIPE 1 registers every data pin)"
+}

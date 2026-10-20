@@ -3,7 +3,9 @@
 // Optional native boundary pipeline around the immutable hardened capture core.
 // PINPIPE=0 preserves its original contract. PINPIPE=1 adds one coherent input
 // edge and one coherent output edge, with identical sustained item rate.
-module ot_s81sl_cap_p1 #(parameter integer PINPIPE=0, parameter integer MUT=0) (
+module ot_s81sl_cap_p1 #(parameter integer PINPIPE=0, parameter integer MUT=0,
+  // LEAD2-S81/CAPC2 10-19: QF six-frame calendar delays (ot_s81sl_cap EDLY / WL3DLY; 0 = the pre-fix netlist)
+  parameter integer EDLY=0, parameter integer WL3DLY=0) (
  input wire clk, rst_n,
  input wire [279:0] rt_w,rt_e,
  input wire cfg_v, input wire [159:0] cfg_d,
@@ -42,7 +44,7 @@ module ot_s81sl_cap_p1 #(parameter integer PINPIPE=0, parameter integer MUT=0) (
    assign cw_s_v=sv; assign cw_s_a=sa; assign cw_s_d=sd;
    assign cw_n_v=nv; assign cw_n_a=na; assign cw_n_d=nd; assign fault=fl;
  end endgenerate
- ot_s81sl_cap u_core(.clk(clk),.rst_n(ri),.rt_w(wi),.rt_e(ei),.cfg_v(cv),.cfg_d(cd),
+ ot_s81sl_cap #(.EDLY(EDLY),.WL3DLY(WL3DLY)) u_core(.clk(clk),.rst_n(ri),.rt_w(wi),.rt_e(ei),.cfg_v(cv),.cfg_d(cd),
    .cw_s_v(sv),.cw_s_a(sa),.cw_s_d(sd),.cw_n_v(nv),.cw_n_a(na),.cw_n_d(nd),.fault(fl));
 endmodule
 `default_nettype wire
