@@ -309,6 +309,26 @@ SOURCE_NATIVE_RESET_LANDINGS = {
         "sha256": "c3de9cf6aeab78cbf4a01c9b6dd6b6cbf15f8f9f0839cf7f3f18bf47616a8b75",
         "top": "qkd_hr_core_order_n32", "clock": "ck_core", "reset_ports": ["host_rst_n"],
         "first_copies": {"host_rst_n": 12}, "copies": {"host_rst_n": 288},
+        "source_dependencies": {
+            "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v":
+                "abcda04ef59dc8c8056b48e3d1b1aab255d4d3713d658644e57a6638974799ba",
+        },
+    },
+    "host_prompt_n32_1020": {
+        # MU0 component only. A production MU4 source/shape needs a separate
+        # fingerprint and its own exactness, cold-state and mapped proof.
+        "source": "rtl/qwen_sys/host_cluster_20261017/prompt_native32/qkd_hr_core_prompt_n32.sv",
+        "sha256": "ddced4a80043ea79b4f2b95c47f745ea946f4646d9dba0fb1d5b28e793697426",
+        "top": "qkd_hr_core_prompt_n32", "clock": "ck_core", "reset_ports": ["u_rank__u_control__por_n"],
+        "first_copies": {"u_rank__u_control__por_n": 1}, "copies": {"u_rank__u_control__por_n": 4},
+        "source_dependencies": {
+            "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v":
+                "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+            "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v":
+                "f9074a0e2e16dacebdc30e8c8e8e66386165c6b2cf704da4ceb26209e4ade77c",
+            "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v":
+                "68ae182bc55607412d5dc4a5adf117adb3fd8acb863a28e3155af85691e10c8d",
+        },
     },
 }
 
@@ -336,11 +356,15 @@ def source_native_reset_landing(s: dict, rl: dict) -> dict | None:
     pr = s.get("pin_regs") or {}
     if pr.get("enable") is not False:
         raise SpecError("spec: source-native reset requires existing source pin registers")
-    source = ROOT / entry["source"]
-    if entry["source"] not in s.get("sources", []) or not source.is_file() or \
-            hashlib.sha256(source.read_bytes()).hexdigest() != entry["sha256"]:
-        raise SpecError("spec: source-native reset source fingerprint changed or missing")
-    return {"id": key, "source": entry["source"], "sha256": entry["sha256"]}
+    closure = {entry["source"]: entry["sha256"], **entry.get("source_dependencies", {})}
+    sources = s.get("sources", [])
+    if not isinstance(sources, list) or len(sources) != len(closure) or set(sources) != set(closure):
+        raise SpecError("spec: source-native reset complete source closure differs from reviewed source")
+    for path, digest in closure.items():
+        source = ROOT / path
+        if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+            raise SpecError("spec: source-native reset source fingerprint changed or missing: " + path)
+    return {"id": key, "source": entry["source"], "sha256": entry["sha256"], "source_closure": closure}
 
 
 def reset_landing_plan(s: dict) -> dict | None:

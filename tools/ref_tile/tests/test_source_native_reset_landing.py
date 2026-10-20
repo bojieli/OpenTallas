@@ -21,10 +21,13 @@ class SourceNative(unittest.TestCase):
         self.entry = dict(source=self.source, sha256=hashlib.sha256(p.read_bytes()).hexdigest(),
                           top='example', clock='ck', reset_ports=['rst_n'],
                           first_copies={'rst_n': 12}, copies={'rst_n': 288})
+        dep=self.root/'rtl/macro_bb.v';dep.write_text('module macro; endmodule\n')
+        self.entry['source_dependencies']={'rtl/macro_bb.v':hashlib.sha256(dep.read_bytes()).hexdigest()}
         self.spec = dict(top='example', sources=[self.source], params={}, defines=[], clock_port='ck',
                          reset_ports=['rst_n'], pin_regs=dict(enable=False, reason='existing source boundary registers'),
                          reset_landing=dict(enable=True, stages=2, clock='ck', source_native='fixture',
                                             first_copies={'rst_n': 12}, copies={'rst_n': 288}))
+        self.spec['sources'].append('rtl/macro_bb.v')
         self.patches = [patch.object(R, 'ROOT', self.root),
                         patch.object(R, 'SOURCE_NATIVE_RESET_LANDINGS', {'fixture': self.entry})]
         for p in self.patches: p.start()
@@ -57,9 +60,17 @@ class SourceNative(unittest.TestCase):
     def test_closed_top_parameter_define_and_source_contract(self):
         for change in (dict(top='other'), dict(params={'BYPASS': 1}), dict(defines=['BYPASS']),
                        dict(reset_ports=['other']), dict(clock_port='other'), dict(sources=[]),
-                       dict(pin_regs={'enable': True}), dict(reset_relay_split={'max_loads': 32})):
+                       dict(pin_regs={'enable': True}), dict(reset_relay_split={'max_loads': 32}),
+                       dict(sources=[self.source,'rtl/macro_bb.v','rtl/extra.v']),
+                       dict(orfs_vars={'SYNTH_PARAMETERS':'SHAPE=4'}),
+                       dict(orfs_vars={'SYNTH_DEFINES':'PROGRAM=4'}),
+                       dict(orfs_vars={'VERILOG_FILES':'other.v'}),dict(orfs_vars={'OT_RST_LAND':1})):
             with self.subTest(change=change), self.assertRaises(R.SpecError):
                 R.reset_landing_plan(dict(self.spec, **change))
+
+    def test_changed_dependency_refused(self):
+        (self.root/'rtl/macro_bb.v').write_text('module macro; reg q=1; endmodule\n')
+        with self.assertRaisesRegex(R.SpecError,'fingerprint'):R.reset_landing_plan(self.spec)
 
     def test_no_boolean_unknown_id_waiver_count_clock_or_age_escape(self):
         for change in (dict(source_native=True), dict(source_native=False), dict(source_native='unknown'),
