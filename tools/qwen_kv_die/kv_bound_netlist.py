@@ -199,6 +199,24 @@ def main(argv=None):
     files = [str(ROOT / b['file']) for b in bindings.values() if (ROOT / b['file']).exists()]
     files += [a.relay_rtl] if a.relay_rtl else []
     idx, _amb = PB.rtl_index(['rtl'], files, {}, files)
+    # The selected binding file is source authority. A module with the same name
+    # elsewhere in the repository cannot replace a missing generated variant.
+    for _master in sorted({_m for _m, _i, _p, _c in insts}):
+        if _master not in bindings or _master.startswith('qkd_rly'):
+            continue
+        if _expanded is not None and _master in _expanded.get('leaves', {}):
+            continue
+        _binding = bindings[_master]
+        _source = (ROOT / _binding['file']).resolve()
+        if not _source.is_file():
+            raise SystemExit(f'kv_bound_netlist: {_master}: selected binding source missing: {_source}')
+        _declared = [mm for mm in PB.parse_modules(PB.preprocess(PB.strip_comments(_source.read_text()), {}), str(_source))
+                     if mm.name == _binding['module']]
+        if len(_declared) != 1:
+            raise SystemExit(f"kv_bound_netlist: {_master}: selected source {_source} declares {len(_declared)} copies of {_binding['module']} (need exactly one; no by-name fallback)")
+        _selected = idx.get(_binding['module'])
+        if _selected is None or Path(_selected.path).resolve() != _source:
+            raise SystemExit(f"kv_bound_netlist: {_master}: indexed module {_binding['module']} does not come from selected source {_source}")
     if _expanded is not None:
         _sources = dict(_configured_leaf_sources)
         _reported = _expanded.get('leaves', {})
