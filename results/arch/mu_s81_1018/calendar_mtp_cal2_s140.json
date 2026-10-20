@@ -1,0 +1,7376 @@
+{
+ "schema": "opentallas.s81_dv.mu_calendar.v1",
+ "lane": "MU-S81",
+ "mode": "mtp",
+ "grade": "modelled (exact calendar arithmetic on the S81-BALANCE stage model of record; measured by MU.TOK)",
+ "config": {
+  "dup_groups": [
+   "S029",
+   "S020",
+   "S011",
+   "S002",
+   "S034",
+   "S040",
+   "S046",
+   "S052"
+  ],
+  "dup_layers": {
+   "S002": 2,
+   "S011": 8,
+   "S020": 14,
+   "S029": 20,
+   "S034": 24,
+   "S040": 28,
+   "S046": 32,
+   "S052": 36
+  },
+  "dies": 520,
+  "stacks": 520,
+  "total_mm2": 478504,
+  "model_users": 10,
+  "model_agg_ar": 57526,
+  "model_agg_mtp": 38291
+ },
+ "period": 1335560,
+ "slot": 126808,
+ "users": 10,
+ "fillers": 1,
+ "per_user_tok_s": 3736.9,
+ "filler_tok_s": 898.5,
+ "aggregate_tok_s": 38267,
+ "search": null,
+ "slots": [
+  {
+   "slot": 0,
+   "user": 0,
+   "kind": "latency",
+   "shift": 0,
+   "copy": {
+    "S002": "A",
+    "S011": "A",
+    "S020": "A",
+    "S029": "A",
+    "S034": "A",
+    "S040": "A",
+    "S046": "A",
+    "S052": "A"
+   }
+  },
+  {
+   "slot": 1,
+   "user": 1,
+   "kind": "mtp",
+   "shift": 126808,
+   "copy": {
+    "S002": "B",
+    "S011": "B",
+    "S020": "B",
+    "S029": "B",
+    "S034": "B",
+    "S040": "B",
+    "S046": "B",
+    "S052": "B"
+   }
+  },
+  {
+   "slot": 2,
+   "user": 2,
+   "kind": "mtp",
+   "shift": 253616,
+   "copy": {
+    "S002": "A",
+    "S011": "A",
+    "S020": "A",
+    "S029": "A",
+    "S034": "A",
+    "S040": "A",
+    "S046": "A",
+    "S052": "A"
+   }
+  },
+  {
+   "slot": 3,
+   "user": 3,
+   "kind": "mtp",
+   "shift": 380424,
+   "copy": {
+    "S002": "B",
+    "S011": "B",
+    "S020": "B",
+    "S029": "B",
+    "S034": "B",
+    "S040": "B",
+    "S046": "B",
+    "S052": "B"
+   }
+  },
+  {
+   "slot": 4,
+   "user": 4,
+   "kind": "mtp",
+   "shift": 507232,
+   "copy": {
+    "S002": "A",
+    "S011": "A",
+    "S020": "A",
+    "S029": "A",
+    "S034": "A",
+    "S040": "A",
+    "S046": "A",
+    "S052": "A"
+   }
+  },
+  {
+   "slot": 5,
+   "user": 5,
+   "kind": "mtp",
+   "shift": 634040,
+   "copy": {
+    "S002": "B",
+    "S011": "B",
+    "S020": "B",
+    "S029": "B",
+    "S034": "B",
+    "S040": "B",
+    "S046": "B",
+    "S052": "B"
+   }
+  },
+  {
+   "slot": 6,
+   "user": 6,
+   "kind": "mtp",
+   "shift": 760848,
+   "copy": {
+    "S002": "A",
+    "S011": "A",
+    "S020": "A",
+    "S029": "A",
+    "S034": "A",
+    "S040": "A",
+    "S046": "A",
+    "S052": "A"
+   }
+  },
+  {
+   "slot": 7,
+   "user": 7,
+   "kind": "mtp",
+   "shift": 887656,
+   "copy": {
+    "S002": "B",
+    "S011": "B",
+    "S020": "B",
+    "S029": "B",
+    "S034": "B",
+    "S040": "B",
+    "S046": "B",
+    "S052": "B"
+   }
+  },
+  {
+   "slot": 8,
+   "user": 8,
+   "kind": "mtp",
+   "shift": 1014464,
+   "copy": {
+    "S002": "A",
+    "S011": "A",
+    "S020": "A",
+    "S029": "A",
+    "S034": "A",
+    "S040": "A",
+    "S046": "A",
+    "S052": "A"
+   }
+  },
+  {
+   "slot": 9,
+   "user": 9,
+   "kind": "mtp",
+   "shift": 1141272,
+   "copy": {
+    "S002": "B",
+    "S011": "B",
+    "S020": "B",
+    "S029": "B",
+    "S034": "B",
+    "S040": "B",
+    "S046": "B",
+    "S052": "B"
+   }
+  },
+  {
+   "slot": 10,
+   "user": 10,
+   "kind": "filler",
+   "shift": 1268080,
+   "copy": {
+    "S002": "A",
+    "S011": "A",
+    "S020": "A",
+    "S029": "A",
+    "S034": "A",
+    "S040": "A",
+    "S046": "A",
+    "S052": "A"
+   }
+  }
+ ],
+ "pos": {
+  "rule": "pos of user k at pass p = pos0_k + p * stride; AR stride 1, MTP stride 6 verify positions a step (accepted count varies, the calendar does not)",
+  "stride": 6
+ },
+ "bases": {
+  "units": "HBM sectors (32 B) relative to the group copy region base",
+  "wb_sectors_per_user": 68,
+  "note": "modelled default (svc_att header); replaced by svc_bases.json when lane MU-S81/SVC commits it",
+  "sb_sectors_per_user": 18432,
+  "ikb_sectors_per_user": 139520
+ },
+ "tables": {
+  "S000": {
+   "label": "Stage 0: embed, L0",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 0,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 126808,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 253616,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 380424,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 507232,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 634040,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 760848,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 887656,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1014464,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1141272,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1268080,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S001": {
+   "label": "Stage 1: L0, L1.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 12015,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 138823,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 265631,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 392439,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 519247,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 646055,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 772863,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 899671,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1026479,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1153287,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1280095,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S002": {
+   "label": "Stage 2: L1, L2.ffn",
+   "copies": 2,
+   "users_per_copy": {
+    "A": 6,
+    "B": 5
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 30129,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 0,
+     "start": 156937,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 283745,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 1,
+     "start": 410553,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 537361,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 2,
+     "start": 664169,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 790977,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 3,
+     "start": 917785,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1044593,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 4,
+     "start": 1171401,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 5,
+     "start": 1298209,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
+    }
+   ]
+  },
+  "S003": {
+   "label": "Stage 3",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 61865,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 188673,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 315481,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 442289,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 569097,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 695905,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 822713,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 949521,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1076329,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1203137,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1329945,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S004": {
+   "label": "Stage 4: L2, L3.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 64316,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 191124,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 317932,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 444740,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 571548,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 698356,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 825164,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 951972,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1078780,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1205588,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1332396,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S005": {
+   "label": "Stage 5: L3, L4.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 82615,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 209423,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 336231,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 463039,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 589847,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 716655,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 843463,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 970271,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1097079,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1223887,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1350695,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S006": {
+   "label": "Stage 6",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 103973,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 230781,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 357589,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 484397,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 611205,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 738013,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 864821,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 991629,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1118437,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1245245,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1372053,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S007": {
+   "label": "Stage 7: L4, L5.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 106424,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 233232,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 360040,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 486848,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 613656,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 740464,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 867272,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 994080,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1120888,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1247696,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1374504,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S008": {
+   "label": "Stage 8: L5, L6.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 127782,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 254590,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 381398,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 508206,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 635014,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 761822,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 888630,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1015438,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1142246,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1269054,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1395862,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S009": {
+   "label": "Stage 9",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 149140,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 275948,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 402756,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 529564,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 656372,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 783180,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 909988,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1036796,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1163604,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1290412,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1417220,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S010": {
+   "label": "Stage 10: L6, L7.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 151591,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 278399,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 405207,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 532015,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 658823,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 785631,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 912439,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1039247,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1166055,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1292863,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1419671,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S011": {
+   "label": "Stage 11: L7, L8.ffn",
+   "copies": 2,
+   "users_per_copy": {
+    "A": 6,
+    "B": 5
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 172949,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 0,
+     "start": 299757,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 426565,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 1,
+     "start": 553373,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 680181,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 2,
+     "start": 806989,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 933797,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 3,
+     "start": 1060605,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1187413,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 4,
+     "start": 1314221,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 5,
+     "start": 1441029,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
+    }
+   ]
+  },
+  "S012": {
+   "label": "Stage 12",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 207749,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 334557,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 461365,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 588173,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 714981,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 841789,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 968597,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1095405,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1222213,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1349021,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1475829,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S013": {
+   "label": "Stage 13: L8, L9.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 210200,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 337008,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 463816,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 590624,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 717432,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 844240,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 971048,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1097856,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1224664,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1351472,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1478280,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S014": {
+   "label": "Stage 14: L9, L10.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 228499,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 355307,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 482115,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 608923,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 735731,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 862539,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 989347,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1116155,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1242963,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1369771,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1496579,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S015": {
+   "label": "Stage 15: L10, L11.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 249857,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 376665,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 503473,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 630281,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 757089,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 883897,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1010705,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1137513,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1264321,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1391129,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1517937,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S016": {
+   "label": "Stage 16",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 271215,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 398023,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 524831,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 651639,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 778447,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 905255,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1032063,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1158871,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1285679,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1412487,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1539295,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S017": {
+   "label": "Stage 17: L11, L12.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 273666,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 400474,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 527282,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 654090,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 780898,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 907706,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1034514,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1161322,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1288130,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1414938,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1541746,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S018": {
+   "label": "Stage 18: L12, L13.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 295024,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 421832,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 548640,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 675448,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 802256,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 929064,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1055872,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1182680,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1309488,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1436296,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1563104,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S019": {
+   "label": "Stage 19",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 316382,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 443190,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 569998,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 696806,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 823614,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 950422,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1077230,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1204038,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1330846,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1457654,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1584462,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S020": {
+   "label": "Stage 20: L13, L14.ffn",
+   "copies": 2,
+   "users_per_copy": {
+    "A": 6,
+    "B": 5
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 318833,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 0,
+     "start": 445641,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 572449,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 1,
+     "start": 699257,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 826065,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 2,
+     "start": 952873,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1079681,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 3,
+     "start": 1206489,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1333297,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 4,
+     "start": 1460105,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 5,
+     "start": 1586913,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
+    }
+   ]
+  },
+  "S021": {
+   "label": "Stage 21: L14, L15.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 354547,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 481355,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 608163,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 734971,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 861779,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 988587,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1115395,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1242203,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1369011,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1495819,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1622627,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S022": {
+   "label": "Stage 22",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 372846,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 499654,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 626462,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 753270,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 880078,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1006886,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1133694,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1260502,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1387310,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1514118,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1640926,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S023": {
+   "label": "Stage 23: L15, L16.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 375297,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 502105,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 628913,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 755721,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 882529,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1009337,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1136145,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1262953,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1389761,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1516569,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1643377,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S024": {
+   "label": "Stage 24: L16, L17.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 396655,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 523463,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 650271,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 777079,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 903887,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1030695,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1157503,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1284311,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1411119,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1537927,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1664735,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S025": {
+   "label": "Stage 25",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 418013,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 544821,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 671629,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 798437,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 925245,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1052053,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1178861,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1305669,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1432477,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1559285,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1686093,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S026": {
+   "label": "Stage 26: L17, L18.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 420464,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 547272,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 674080,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 800888,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 927696,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1054504,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1181312,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1308120,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1434928,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1561736,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1688544,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S027": {
+   "label": "Stage 27: L18, L19.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 441822,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 568630,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 695438,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 822246,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 949054,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1075862,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1202670,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1329478,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1456286,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1583094,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1709902,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S028": {
+   "label": "Stage 28",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 463180,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 589988,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 716796,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 843604,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 970412,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1097220,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1224028,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1350836,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1477644,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1604452,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1731260,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S029": {
+   "label": "Stage 29: L19, L20.ffn",
+   "copies": 2,
+   "users_per_copy": {
+    "A": 6,
+    "B": 5
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 465631,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 0,
+     "start": 592439,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 719247,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 1,
+     "start": 846055,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 972863,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 2,
+     "start": 1099671,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1226479,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 3,
+     "start": 1353287,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1480095,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 4,
+     "start": 1606903,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 5,
+     "start": 1733711,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
+    }
+   ]
+  },
+  "S030": {
+   "label": "Stage 30: L20, L21.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 505017,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 631825,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 758633,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 885441,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1012249,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1139057,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1265865,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1392673,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1519481,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1646289,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1773097,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S031": {
+   "label": "Stage 31: L21, L22.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 522797,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 649605,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 776413,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 903221,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1030029,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1156837,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1283645,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1410453,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1537261,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1664069,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1790877,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S032": {
+   "label": "Stage 32",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 539902,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 666710,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 793518,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 920326,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1047134,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1173942,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1300750,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1427558,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1554366,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1681174,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1807982,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S033": {
+   "label": "Stage 33: L22, L23.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 542353,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 669161,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 795969,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 922777,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1049585,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1176393,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1303201,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1430009,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1556817,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1683625,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1810433,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S034": {
+   "label": "Stage 34: L23, L24.ffn",
+   "copies": 2,
+   "users_per_copy": {
+    "A": 6,
+    "B": 5
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 559458,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 0,
+     "start": 686266,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 813074,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 1,
+     "start": 939882,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1066690,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 2,
+     "start": 1193498,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1320306,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 3,
+     "start": 1447114,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1573922,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 4,
+     "start": 1700730,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 5,
+     "start": 1827538,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
+    }
+   ]
+  },
+  "S035": {
+   "label": "Stage 35",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 583372,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 710180,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 836988,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 963796,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1090604,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1217412,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1344220,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1471028,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1597836,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1724644,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1851452,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S036": {
+   "label": "Stage 36: L24, L25.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 585823,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 712631,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 839439,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 966247,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1093055,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1219863,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1346671,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1473479,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1600287,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1727095,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1853903,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S037": {
+   "label": "Stage 37: L25, L26.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 604795,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 731603,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 858411,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 985219,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1112027,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1238835,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1365643,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1492451,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1619259,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1746067,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1872875,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S038": {
+   "label": "Stage 38",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 621900,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 748708,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 875516,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1002324,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1129132,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1255940,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1382748,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1509556,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1636364,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1763172,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1889980,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S039": {
+   "label": "Stage 39: L26, L27.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 624351,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 751159,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 877967,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1004775,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1131583,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1258391,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1385199,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1512007,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1638815,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1765623,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1892431,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S040": {
+   "label": "Stage 40: L27, L28.ffn",
+   "copies": 2,
+   "users_per_copy": {
+    "A": 6,
+    "B": 5
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 641456,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 0,
+     "start": 768264,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 895072,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 1,
+     "start": 1021880,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1148688,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 2,
+     "start": 1275496,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1402304,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 3,
+     "start": 1529112,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1655920,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 4,
+     "start": 1782728,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 5,
+     "start": 1909536,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
+    }
+   ]
+  },
+  "S041": {
+   "label": "Stage 41",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 665390,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 792198,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 919006,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1045814,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1172622,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1299430,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1426238,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1553046,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1679854,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1806662,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1933470,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S042": {
+   "label": "Stage 42: L28, L29.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 667841,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 794649,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 921457,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1048265,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1175073,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1301881,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1428689,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1555497,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1682305,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1809113,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1935921,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S043": {
+   "label": "Stage 43: L29, L30.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 686813,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 813621,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 940429,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1067237,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1194045,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1320853,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1447661,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1574469,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1701277,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1828085,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1954893,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S044": {
+   "label": "Stage 44: L30, L31.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 703918,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 830726,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 957534,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1084342,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1211150,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1337958,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1464766,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1591574,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1718382,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1845190,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1971998,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S045": {
+   "label": "Stage 45",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 721023,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 847831,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 974639,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1101447,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1228255,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1355063,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1481871,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1608679,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1735487,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1862295,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 1989103,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S046": {
+   "label": "Stage 46: L31, L32.ffn",
+   "copies": 2,
+   "users_per_copy": {
+    "A": 6,
+    "B": 5
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 723474,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 0,
+     "start": 850282,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 977090,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 1,
+     "start": 1103898,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1230706,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 2,
+     "start": 1357514,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1484322,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 3,
+     "start": 1611130,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1737938,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 4,
+     "start": 1864746,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 5,
+     "start": 1991554,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
+    }
+   ]
+  },
+  "S047": {
+   "label": "Stage 47: L32, L33.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 747408,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 874216,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1001024,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1127832,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1254640,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1381448,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1508256,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1635064,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1761872,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1888680,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2015488,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S048": {
+   "label": "Stage 48",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 766380,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 893188,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1019996,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1146804,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1273612,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1400420,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1527228,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1654036,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1780844,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1907652,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2034460,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S049": {
+   "label": "Stage 49: L33, L34.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 768831,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 895639,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1022447,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1149255,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1276063,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1402871,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1529679,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1656487,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1783295,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1910103,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2036911,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S050": {
+   "label": "Stage 50: L34, L35.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 785936,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 912744,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1039552,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1166360,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1293168,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1419976,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1546784,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1673592,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1800400,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1927208,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2054016,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S051": {
+   "label": "Stage 51",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 803041,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 929849,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1056657,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1183465,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1310273,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1437081,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1563889,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1690697,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1817505,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1944313,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2071121,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S052": {
+   "label": "Stage 52: L35, L36.ffn",
+   "copies": 2,
+   "users_per_copy": {
+    "A": 6,
+    "B": 5
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 805492,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 0,
+     "start": 932300,
+     "wb": 0,
+     "sb": 0,
+     "ikb": 0
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 1059108,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 1,
+     "start": 1185916,
+     "wb": 68,
+     "sb": 18432,
+     "ikb": 139520
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1312724,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 2,
+     "start": 1439532,
+     "wb": 136,
+     "sb": 36864,
+     "ikb": 279040
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1566340,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 3,
+     "start": 1693148,
+     "wb": 204,
+     "sb": 55296,
+     "ikb": 418560
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1819956,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "B",
+     "local": 4,
+     "start": 1946764,
+     "wb": 272,
+     "sb": 73728,
+     "ikb": 558080
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 5,
+     "start": 2073572,
+     "wb": 340,
+     "sb": 92160,
+     "ikb": 697600
+    }
+   ]
+  },
+  "S053": {
+   "label": "Stage 53: L36, L37.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 829426,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 956234,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1083042,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1209850,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1336658,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1463466,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1590274,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1717082,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1843890,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1970698,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2097506,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S054": {
+   "label": "Stage 54",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 848398,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 975206,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1102014,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1228822,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1355630,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1482438,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1609246,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1736054,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1862862,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1989670,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2116478,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S055": {
+   "label": "Stage 55: L37, L38.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 850849,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 977657,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1104465,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1231273,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1358081,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1484889,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1611697,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1738505,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1865313,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 1992121,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2118929,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S056": {
+   "label": "Stage 56: L38, L39.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 867954,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 994762,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1121570,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1248378,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1375186,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1501994,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1628802,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1755610,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1882418,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 2009226,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2136034,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S057": {
+   "label": "Stage 57: L39.ffn",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 885059,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 1011867,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1138675,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1265483,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1392291,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1519099,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1645907,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1772715,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1899523,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 2026331,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2153139,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  },
+  "S058": {
+   "label": "Stage 58: head die (LM head, argmax)",
+   "copies": 1,
+   "users_per_copy": {
+    "A": 11,
+    "B": 0
+   },
+   "rows": [
+    {
+     "user": 0,
+     "kind": "latency",
+     "copy": "A",
+     "local": 0,
+     "start": 893819,
+     "wb": 0,
+     "sb": 0
+    },
+    {
+     "user": 1,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 1,
+     "start": 1020627,
+     "wb": 68,
+     "sb": 18432
+    },
+    {
+     "user": 2,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 2,
+     "start": 1147435,
+     "wb": 136,
+     "sb": 36864
+    },
+    {
+     "user": 3,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 3,
+     "start": 1274243,
+     "wb": 204,
+     "sb": 55296
+    },
+    {
+     "user": 4,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 4,
+     "start": 1401051,
+     "wb": 272,
+     "sb": 73728
+    },
+    {
+     "user": 5,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 5,
+     "start": 1527859,
+     "wb": 340,
+     "sb": 92160
+    },
+    {
+     "user": 6,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 6,
+     "start": 1654667,
+     "wb": 408,
+     "sb": 110592
+    },
+    {
+     "user": 7,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 7,
+     "start": 1781475,
+     "wb": 476,
+     "sb": 129024
+    },
+    {
+     "user": 8,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 8,
+     "start": 1908283,
+     "wb": 544,
+     "sb": 147456
+    },
+    {
+     "user": 9,
+     "kind": "mtp",
+     "copy": "A",
+     "local": 9,
+     "start": 2035091,
+     "wb": 612,
+     "sb": 165888
+    },
+    {
+     "user": 10,
+     "kind": "filler",
+     "copy": "A",
+     "local": 10,
+     "start": 2161899,
+     "wb": 680,
+     "sb": 184320
+    }
+   ]
+  }
+ },
+ "lemma": {
+  "premise": {
+   "rule": "every non-replicated window <= slot spacing; every duplicated window <= per-copy spacing",
+   "nonrep_window_max": 126807,
+   "slot": 126808,
+   "holds": true
+  },
+  "brute_force": {
+   "resources": 135,
+   "windows": 1309,
+   "collisions": [],
+   "n_collisions": 0,
+   "result": "PASS"
+  },
+  "latency_user": {
+   "shift": 0,
+   "copy": "A on every duplicated group",
+   "result": "PASS",
+   "note": "user 0 runs the single-user schedule unshifted on copy A: its windows are the single-user windows, and no other user touches them (brute_force) -> its rate and cycle trace are the single-user ones"
+  }
+ },
+ "stage_model": {
+  "source": "results/arch/s81_balance_1018/compute.py group_occ (B3, IMB_BAL)",
+  "sha256": "03e4360293e0dcec1a3f84413e8a92086723c91c8381fba0a1a7e89fcece99d9",
+  "stages": [
+   {
+    "id": "S000",
+    "label": "Stage 0: embed, L0",
+    "t": 0,
+    "span": 11009,
+    "occ": 11294,
+    "step": 67762,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S001",
+    "label": "Stage 1: L0, L1.ffn",
+    "t": 12015,
+    "span": 17108,
+    "occ": 17650,
+    "step": 105898,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S002",
+    "label": "Stage 2: L1, L2.ffn",
+    "t": 30129,
+    "span": 30730,
+    "occ": 31525,
+    "step": 168060,
+    "copies": 2,
+    "idx": true
+   },
+   {
+    "id": "S003",
+    "label": "Stage 3",
+    "t": 61865,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S004",
+    "label": "Stage 4: L2, L3.ffn",
+    "t": 64316,
+    "span": 17293,
+    "occ": 17891,
+    "step": 107343,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S005",
+    "label": "Stage 5: L3, L4.ffn",
+    "t": 82615,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S006",
+    "label": "Stage 6",
+    "t": 103973,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S007",
+    "label": "Stage 7: L4, L5.ffn",
+    "t": 106424,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S008",
+    "label": "Stage 8: L5, L6.ffn",
+    "t": 127782,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S009",
+    "label": "Stage 9",
+    "t": 149140,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S010",
+    "label": "Stage 10: L6, L7.ffn",
+    "t": 151591,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S011",
+    "label": "Stage 11: L7, L8.ffn",
+    "t": 172949,
+    "span": 33794,
+    "occ": 34775,
+    "step": 187561,
+    "copies": 2,
+    "idx": true
+   },
+   {
+    "id": "S012",
+    "label": "Stage 12",
+    "t": 207749,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S013",
+    "label": "Stage 13: L8, L9.ffn",
+    "t": 210200,
+    "span": 17293,
+    "occ": 17891,
+    "step": 107343,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S014",
+    "label": "Stage 14: L9, L10.ffn",
+    "t": 228499,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S015",
+    "label": "Stage 15: L10, L11.ffn",
+    "t": 249857,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S016",
+    "label": "Stage 16",
+    "t": 271215,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S017",
+    "label": "Stage 17: L11, L12.ffn",
+    "t": 273666,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S018",
+    "label": "Stage 18: L12, L13.ffn",
+    "t": 295024,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S019",
+    "label": "Stage 19",
+    "t": 316382,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S020",
+    "label": "Stage 20: L13, L14.ffn",
+    "t": 318833,
+    "span": 34708,
+    "occ": 35706,
+    "step": 193147,
+    "copies": 2,
+    "idx": true
+   },
+   {
+    "id": "S021",
+    "label": "Stage 21: L14, L15.ffn",
+    "t": 354547,
+    "span": 17293,
+    "occ": 17891,
+    "step": 107343,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S022",
+    "label": "Stage 22",
+    "t": 372846,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S023",
+    "label": "Stage 23: L15, L16.ffn",
+    "t": 375297,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S024",
+    "label": "Stage 24: L16, L17.ffn",
+    "t": 396655,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S025",
+    "label": "Stage 25",
+    "t": 418013,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S026",
+    "label": "Stage 26: L17, L18.ffn",
+    "t": 420464,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S027",
+    "label": "Stage 27: L18, L19.ffn",
+    "t": 441822,
+    "span": 20352,
+    "occ": 21135,
+    "step": 126807,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S028",
+    "label": "Stage 28",
+    "t": 463180,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S029",
+    "label": "Stage 29: L19, L20.ffn",
+    "t": 465631,
+    "span": 38380,
+    "occ": 39281,
+    "step": 193604,
+    "copies": 2,
+    "idx": true
+   },
+   {
+    "id": "S030",
+    "label": "Stage 30: L20, L21.ffn",
+    "t": 505017,
+    "span": 16774,
+    "occ": 17339,
+    "step": 104034,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S031",
+    "label": "Stage 31: L21, L22.ffn",
+    "t": 522797,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S032",
+    "label": "Stage 32",
+    "t": 539902,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S033",
+    "label": "Stage 33: L22, L23.ffn",
+    "t": 542353,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S034",
+    "label": "Stage 34: L23, L24.ffn",
+    "t": 559458,
+    "span": 22908,
+    "occ": 23551,
+    "step": 141304,
+    "copies": 2,
+    "idx": true
+   },
+   {
+    "id": "S035",
+    "label": "Stage 35",
+    "t": 583372,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S036",
+    "label": "Stage 36: L24, L25.ffn",
+    "t": 585823,
+    "span": 17966,
+    "occ": 18605,
+    "step": 111625,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S037",
+    "label": "Stage 37: L25, L26.ffn",
+    "t": 604795,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S038",
+    "label": "Stage 38",
+    "t": 621900,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S039",
+    "label": "Stage 39: L26, L27.ffn",
+    "t": 624351,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S040",
+    "label": "Stage 40: L27, L28.ffn",
+    "t": 641456,
+    "span": 22928,
+    "occ": 23571,
+    "step": 141426,
+    "copies": 2,
+    "idx": true
+   },
+   {
+    "id": "S041",
+    "label": "Stage 41",
+    "t": 665390,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S042",
+    "label": "Stage 42: L28, L29.ffn",
+    "t": 667841,
+    "span": 17966,
+    "occ": 18605,
+    "step": 111625,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S043",
+    "label": "Stage 43: L29, L30.ffn",
+    "t": 686813,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S044",
+    "label": "Stage 44: L30, L31.ffn",
+    "t": 703918,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S045",
+    "label": "Stage 45",
+    "t": 721023,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S046",
+    "label": "Stage 46: L31, L32.ffn",
+    "t": 723474,
+    "span": 22928,
+    "occ": 23571,
+    "step": 141426,
+    "copies": 2,
+    "idx": true
+   },
+   {
+    "id": "S047",
+    "label": "Stage 47: L32, L33.ffn",
+    "t": 747408,
+    "span": 17966,
+    "occ": 18605,
+    "step": 111625,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S048",
+    "label": "Stage 48",
+    "t": 766380,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S049",
+    "label": "Stage 49: L33, L34.ffn",
+    "t": 768831,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S050",
+    "label": "Stage 50: L34, L35.ffn",
+    "t": 785936,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S051",
+    "label": "Stage 51",
+    "t": 803041,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S052",
+    "label": "Stage 52: L35, L36.ffn",
+    "t": 805492,
+    "span": 22928,
+    "occ": 23571,
+    "step": 141426,
+    "copies": 2,
+    "idx": true
+   },
+   {
+    "id": "S053",
+    "label": "Stage 53: L36, L37.ffn",
+    "t": 829426,
+    "span": 17966,
+    "occ": 18605,
+    "step": 111625,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S054",
+    "label": "Stage 54",
+    "t": 848398,
+    "span": 1445,
+    "occ": 1445,
+    "step": 8670,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S055",
+    "label": "Stage 55: L37, L38.ffn",
+    "t": 850849,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S056",
+    "label": "Stage 56: L38, L39.ffn",
+    "t": 867954,
+    "span": 16099,
+    "occ": 16623,
+    "step": 99738,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S057",
+    "label": "Stage 57: L39.ffn",
+    "t": 885059,
+    "span": 7754,
+    "occ": 7993,
+    "step": 47957,
+    "copies": 1,
+    "idx": false
+   },
+   {
+    "id": "S058",
+    "label": "Stage 58: head die (LM head, argmax)",
+    "t": 893819,
+    "span": 12368,
+    "occ": 12368,
+    "step": 74204,
+    "copies": 1,
+    "idx": false
+   }
+  ]
+ },
+ "edge_deltas": {
+  "per_stage_edges": 381,
+  "T_ar_edges": 31346,
+  "T_mtp_edges": 32159,
+  "source": "results/token_pass/cal2_s81_1020/fold_cal2.py",
+  "ledger": "2f2792ea3b7833b5"
+ }
+}

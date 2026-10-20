@@ -1,0 +1,62 @@
+ot-run: ot-epyc5       admits  1263 GB (avail 945, growth 61, headroom 0, waiters 0/0 GB) load 22/128 running 20 disk 252 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2868197-1792534236 after 0 s
+ar: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_ar_cal1.json
+ar: users 46 (+0 fillers) x 1213.0 tok/s = 55799 agg; slot 21505.7 period 989260; lemma PASS (5474 windows, 0 collisions), latency user PASS; model said 47
+mtp: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_mtp_cal1.json
+mtp: users 10 (+1 fillers) x 3801.3 tok/s = 38927 agg; slot 126112 period 1312908; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+ar: users 46 (+0 fillers) x 1186.0 tok/s = 54558 agg; slot 21995.0 period 1011772; lemma PASS (5474 windows, 0 collisions), latency user PASS; model said 47
+mtp: users 10 (+1 fillers) x 3736.9 tok/s = 38267 agg; slot 126808 period 1335560; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+ar: users 50 (+0 fillers) x 1118.6 tok/s = 55928 agg; slot 21456.1 period 1072804; lemma PASS (5950 windows, 0 collisions), latency user PASS; model said 47
+mtp: users 0 (+0 fillers) x 3573.6 tok/s = 0 agg; slot 126468 period 1396592; lemma FAULT (0 windows, 0 collisions), latency user FAIL; model said 10
+RC2
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2868197-1792534236): exit 0
+ot-run: ot-epyc5       admits  1257 GB (avail 945, growth 65, headroom 0, waiters 0/0 GB) load 22/128 running 20 disk 252 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2868369-1792534243 after 0 s
+mtp: users 10 (+4 fillers) x 3573.6 tok/s = 39172 agg; slot 126468 period 1396592; lemma PASS (1666 windows, 0 collisions), latency user PASS; model said 10
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2868369-1792534243): exit 0
+ot-run: ot-epyc5       admits  1257 GB (avail 945, growth 65, headroom 0, waiters 0/0 GB) load 21/128 running 20 disk 252 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-cal-1020/root
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2868542-1792534261 after 0 s
+ar: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_ar.json
+ar: users 46 (+0 fillers) x 1224.0 tok/s = 56302 agg; slot 21313.7 period 980428; lemma PASS (5474 windows, 0 collisions), latency user PASS; model said 47
+mtp: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_mtp.json
+mtp: users 10 (+1 fillers) x 3829.1 tok/s = 39211 agg; slot 124524 period 1303400; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+ar: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_ar_l20split.json
+ar: users 46 (+0 fillers) x 1223.9 tok/s = 56297 agg; slot 21315.5 period 980512; lemma PASS (5474 windows, 0 collisions), latency user PASS; model said 47
+  L20 split helper S030: PASS window 15854 own 289 busy 75.7% collisions 0 own offset first 0 any False
+mtp: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_mtp_l20split.json
+mtp: users 10 (+1 fillers) x 3830.4 tok/s = 39225 agg; slot 124524 period 1302944; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+  L20 split helper S030: PASS window 43414 own 1731 busy 38.1% collisions 0 own offset first 5332 any False
+ar: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_ar_cal1.json
+ar: users 46 (+0 fillers) x 1213.0 tok/s = 55799 agg; slot 21505.7 period 989260; lemma PASS (5474 windows, 0 collisions), latency user PASS; model said 47
+mtp: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_mtp_cal1.json
+mtp: users 10 (+1 fillers) x 3801.3 tok/s = 38927 agg; slot 126112 period 1312908; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+ar: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_ar_cal2_s140.json
+ar: users 46 (+0 fillers) x 1186.0 tok/s = 54558 agg; slot 21995.0 period 1011772; lemma PASS (5474 windows, 0 collisions), latency user PASS; model said 47
+mtp: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_mtp_cal2_s140.json
+mtp: users 10 (+1 fillers) x 3736.9 tok/s = 38267 agg; slot 126808 period 1335560; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+ar: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_ar_cal2_s201.json
+ar: users 50 (+0 fillers) x 1118.6 tok/s = 55928 agg; slot 21456.1 period 1072804; lemma PASS (5950 windows, 0 collisions), latency user PASS; model said 47
+mtp: SAME /srv/opentallas-scratch/claude/s81-cal-1020/root/results/arch/mu_s81_1018/calendar_mtp_cal2_s201.json
+mtp: users 10 (+4 fillers) x 3573.6 tok/s = 39172 agg; slot 126468 period 1396592; lemma PASS (1666 windows, 0 collisions), latency user PASS; model said 10
+mtp: users 10 (+1 fillers) x 3830.4 tok/s = 39225 agg; slot 124524 period 1302944; lemma PASS (1309 windows, 0 collisions), latency user PASS; model said 10
+  L20 split helper S030: PASS window 43414 own 1731 busy 38.1% collisions 0 own offset first 5332 any False
+PASS test_dv_mu_calendar
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2868542-1792534261): exit 0

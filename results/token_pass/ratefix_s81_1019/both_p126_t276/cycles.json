@@ -1,0 +1,2725 @@
+{
+ "clock_hz": 1200000000.0,
+ "design": "ds_rom",
+ "die": "S81 p4l-MU (release source GEN mu4c 19bf4121e)",
+ "inputs": {
+  "base": "results/arch/token_path_1018/ds_rom.json",
+  "dags": {
+   "ar": "results/arch/token_path_20261009/ds_rom.json",
+   "mtp": "results/arch/token_path_20261009/ds_rom_mtp.json"
+  },
+  "elements": [
+   {
+    "branch": "claude/toksim-s81-field-1019@3d55d499a",
+    "cls": "FIELD",
+    "file": "results/token_pass/ratefix_s81_1019/both_p126_t276/elements/FIELD.json",
+    "written": "2026-10-19 19:35 PT"
+   },
+   {
+    "branch": "claude/toksim-s81-headmu-1019@87607ecc1",
+    "cls": "HEADMU",
+    "file": "results/token_pass/ratefix_s81_1019/both_p126_t276/elements/HEADMU.json",
+    "written": "2026-10-19 18:45 PT"
+   },
+   {
+    "branch": "claude/toksim-s81-idx-1019",
+    "cls": "IDX",
+    "file": "results/token_pass/ratefix_s81_1019/both_p126_t276/elements/IDX.json",
+    "written": "2026-10-19 19:02 PT"
+   },
+   {
+    "branch": "claude/toksim-s81-su-1019 (no commits: bench adaptations are env-only, job scripts in /home/ubuntu/scratch/toksim-s81/su)",
+    "cls": "SU",
+    "file": "results/token_pass/ratefix_s81_1019/both_p126_t276/elements/SU.json",
+    "written": "2026-10-19 18:53 PT"
+   },
+   {
+    "branch": "claude/toksim-s81-1019",
+    "cls": "CURATION",
+    "file": "results/token_pass/ratefix_s81_1019/both_p126_t276/elements/zz_curation.json",
+    "written": "2026-10-19 19:10 PT"
+   },
+   {
+    "branch": "claude/s81-ratefix-1019",
+    "cls": "RATEFIX",
+    "file": "results/token_pass/ratefix_s81_1019/both_p126_t276/elements/zzz_topk_idx13_t276.json",
+    "written": "2026-10-19 21:30 PT"
+   },
+   {
+    "branch": "claude/s81-ratefix-1019",
+    "cls": "RATEFIX",
+    "file": "results/token_pass/ratefix_s81_1019/both_p126_t276/elements/zzz_wqb_pipe_p126.json",
+    "written": "2026-10-19 21:30 PT"
+   }
+  ]
+ },
+ "multi_user": {
+  "ar": {
+   "aggregate_tok_s": 50394.0,
+   "base_aggregate_tok_s": 55780,
+   "bound": "per-user token",
+   "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+   "calendar_period_cycles": 980428,
+   "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
+   "pct_measured_per_user": 32.66,
+   "per_user_tok_s": 1095.5,
+   "users": 46
+  },
+  "mtp": {
+   "aggregate_tok_s": 33549.0,
+   "base_aggregate_tok_s": 36985,
+   "bound": "per-user token",
+   "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+   "calendar_period_cycles": 1303400,
+   "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
+   "pct_measured_per_user": 27.34,
+   "per_user_tok_s": 3354.9,
+   "users": 10
+  }
+ },
+ "schema": "opentallas.toksim_s81.v1",
+ "workloads": {
+  "ar": {
+   "T_cycles_fixed": 1095361.7,
+   "T_cycles_solved": 1108707.2,
+   "base_T_cycles": 989618.6,
+   "base_tok_s": 1212.6,
+   "by_grade": {
+    "measured-current-RTL": 109119.0,
+    "measured-newest-element-RTL": 125458.0,
+    "measured-old-RTL": 440835.8,
+    "measured-release-RTL": 123126.0,
+    "modelled-PHY": 172975.0,
+    "priced": 123847.9
+   },
+   "extra_terms": [
+    {
+     "base_cycles": 532.4,
+     "base_grade": "priced",
+     "cycles": 532.4,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L0.dv_p4l"
+    },
+    {
+     "base_cycles": 585.2,
+     "base_grade": "priced",
+     "cycles": 585.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L1.dv_p4l"
+    },
+    {
+     "base_cycles": 619.2,
+     "base_grade": "priced",
+     "cycles": 619.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L2.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L3.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L4.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L5.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L6.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L7.dv_p4l"
+    },
+    {
+     "base_cycles": 619.2,
+     "base_grade": "priced",
+     "cycles": 619.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L8.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L9.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L10.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L11.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L12.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L13.dv_p4l"
+    },
+    {
+     "base_cycles": 680.2,
+     "base_grade": "priced",
+     "cycles": 680.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L14.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L15.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L16.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L17.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L18.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L19.dv_p4l"
+    },
+    {
+     "base_cycles": 628.6,
+     "base_grade": "priced",
+     "cycles": 628.6,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L20.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L21.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L22.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L23.dv_p4l"
+    },
+    {
+     "base_cycles": 694.5,
+     "base_grade": "priced",
+     "cycles": 694.5,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L24.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L25.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L26.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L27.dv_p4l"
+    },
+    {
+     "base_cycles": 694.5,
+     "base_grade": "priced",
+     "cycles": 694.5,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L28.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L29.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L30.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L31.dv_p4l"
+    },
+    {
+     "base_cycles": 627.5,
+     "base_grade": "priced",
+     "cycles": 627.5,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L32.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L33.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L34.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L35.dv_p4l"
+    },
+    {
+     "base_cycles": 627.5,
+     "base_grade": "priced",
+     "cycles": 627.5,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L36.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L37.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L38.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L39.dv_p4l"
+    },
+    {
+     "base_cycles": 67.0,
+     "base_grade": "priced",
+     "cycles": 67.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L40.dv_p4l"
+    },
+    {
+     "base_cycles": 26547.58,
+     "base_grade": "priced",
+     "cycles": 26547.6,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "adjust",
+     "slot": "price_of_record_residual"
+    },
+    {
+     "base_cycles": 889,
+     "base_grade": "measured-old-RTL",
+     "cycles": 0.0,
+     "evidence": null,
+     "grade": "measured-release-RTL",
+     "kind": "layer",
+     "slot": "L2.scan_d_reader"
+    },
+    {
+     "base_cycles": 1814.0,
+     "base_grade": "priced",
+     "cycles": 1814.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L2.scan_d_legs_merge"
+    },
+    {
+     "base_cycles": 889,
+     "base_grade": "measured-old-RTL",
+     "cycles": 0.0,
+     "evidence": null,
+     "grade": "measured-release-RTL",
+     "kind": "layer",
+     "slot": "L8.scan_d_reader"
+    },
+    {
+     "base_cycles": 1814.0,
+     "base_grade": "priced",
+     "cycles": 1814.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L8.scan_d_legs_merge"
+    },
+    {
+     "base_cycles": 889,
+     "base_grade": "measured-old-RTL",
+     "cycles": 0.0,
+     "evidence": null,
+     "grade": "measured-release-RTL",
+     "kind": "layer",
+     "slot": "L14.scan_d_reader"
+    },
+    {
+     "base_cycles": 1814.0,
+     "base_grade": "priced",
+     "cycles": 1814.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L14.scan_d_legs_merge"
+    },
+    {
+     "base_cycles": 1879,
+     "base_grade": "measured-old-RTL",
+     "cycles": 1879,
+     "evidence": null,
+     "grade": "measured-old-RTL",
+     "kind": "layer",
+     "slot": "L20.scan_d_reader"
+    },
+    {
+     "base_cycles": 1814.0,
+     "base_grade": "priced",
+     "cycles": 1814.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L20.scan_d_legs_merge"
+    },
+    {
+     "base_cycles": 783.0,
+     "base_grade": "priced",
+     "cycles": 783.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L24.scan_d_reindex"
+    },
+    {
+     "base_cycles": 783.0,
+     "base_grade": "priced",
+     "cycles": 783.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L28.scan_d_reindex"
+    },
+    {
+     "base_cycles": 783.0,
+     "base_grade": "priced",
+     "cycles": 783.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L32.scan_d_reindex"
+    },
+    {
+     "base_cycles": 783.0,
+     "base_grade": "priced",
+     "cycles": 783.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L36.scan_d_reindex"
+    },
+    {
+     "base_cycles": 5536.0,
+     "base_grade": "measured-current-RTL",
+     "cycles": 5536.0,
+     "evidence": null,
+     "grade": "measured-current-RTL",
+     "kind": "layer",
+     "slot": "L20.scan_d_l20split_k6"
+    }
+   ],
+   "pct_measured": 32.66,
+   "pct_measured_on_chip": 38.78,
+   "pct_modelled_phy": 15.79,
+   "per_accepted_cycles": 1095361.7,
+   "per_op": [
+    {
+     "cls": "field",
+     "cycles": 94571.5,
+     "grades": {
+      "measured-old-RTL": 94571.5
+     },
+     "n_crit": 40,
+     "old_cycles": 94571.5,
+     "op": "ffn.experts_gu"
+    },
+    {
+     "cls": "field",
+     "cycles": 88880.0,
+     "grades": {
+      "measured-old-RTL": 88880.0
+     },
+     "n_crit": 40,
+     "old_cycles": 88880.0,
+     "op": "attn.wo_a"
+    },
+    {
+     "cls": "field",
+     "cycles": 88191.0,
+     "grades": {
+      "measured-old-RTL": 88191.0
+     },
+     "n_crit": 40,
+     "old_cycles": 88191.0,
+     "op": "ffn.down"
+    },
+    {
+     "cls": "field",
+     "cycles": 87280.0,
+     "grades": {
+      "measured-newest-element-RTL": 79480.0,
+      "priced": 7800.0
+     },
+     "n_crit": 40,
+     "old_cycles": 45753.6,
+     "op": "attn.wq_b"
+    },
+    {
+     "cls": "select",
+     "cycles": 47945.0,
+     "grades": {
+      "measured-old-RTL": 5241.0,
+      "measured-release-RTL": 42704.0
+     },
+     "n_crit": 8,
+     "old_cycles": 11784.0,
+     "op": "attn.idx.topk_local"
+    },
+    {
+     "cls": "field",
+     "cycles": 39088.0,
+     "grades": {
+      "measured-old-RTL": 39088.0
+     },
+     "n_crit": 40,
+     "old_cycles": 39088.0,
+     "op": "ffn.router"
+    },
+    {
+     "cls": "field",
+     "cycles": 38658.5,
+     "grades": {
+      "measured-old-RTL": 38658.5
+     },
+     "n_crit": 40,
+     "old_cycles": 38658.5,
+     "op": "attn.a_proj"
+    },
+    {
+     "cls": "hbm",
+     "cycles": 29253.0,
+     "grades": {
+      "measured-newest-element-RTL": 23316.0,
+      "measured-old-RTL": 5937.0
+     },
+     "n_crit": 8,
+     "old_cycles": 18282.0,
+     "op": "attn.idx.score"
+    },
+    {
+     "cls": "field",
+     "cycles": 21956.0,
+     "grades": {
+      "measured-old-RTL": 21956.0
+     },
+     "n_crit": 40,
+     "old_cycles": 21956.0,
+     "op": "attn.wo_b"
+    },
+    {
+     "cls": "su",
+     "cycles": 17520.0,
+     "grades": {
+      "measured-release-RTL": 17520.0
+     },
+     "n_crit": 40,
+     "old_cycles": 12240.0,
+     "op": "ffn.norm.scale"
+    },
+    {
+     "cls": "su",
+     "cycles": 16720.0,
+     "grades": {
+      "measured-release-RTL": 16720.0
+     },
+     "n_crit": 40,
+     "old_cycles": 12960.0,
+     "op": "attn.quant"
+    },
+    {
+     "cls": "su",
+     "cycles": 16720.0,
+     "grades": {
+      "measured-release-RTL": 16720.0
+     },
+     "n_crit": 40,
+     "old_cycles": 11520.0,
+     "op": "attn.q_quant"
+    },
+    {
+     "cls": "hbm",
+     "cycles": 11560.0,
+     "grades": {
+      "measured-newest-element-RTL": 11560.0
+     },
+     "n_crit": 40,
+     "old_cycles": 2104.0,
+     "op": "attn.scores"
+    },
+    {
+     "cls": "su",
+     "cycles": 11481.2,
+     "grades": {
+      "measured-old-RTL": 11481.2
+     },
+     "n_crit": 40,
+     "old_cycles": 11481.2,
+     "op": "attn.exp"
+    },
+    {
+     "cls": "su",
+     "cycles": 9796.0,
+     "grades": {
+      "measured-old-RTL": 9796.0
+     },
+     "n_crit": 40,
+     "old_cycles": 9796.0,
+     "op": "attn.normalize"
+    },
+    {
+     "cls": "su",
+     "cycles": 8794.6,
+     "grades": {
+      "measured-old-RTL": 8794.6
+     },
+     "n_crit": 40,
+     "old_cycles": 8794.6,
+     "op": "attn.max"
+    },
+    {
+     "cls": "head",
+     "cycles": 8450.0,
+     "grades": {
+      "measured-newest-element-RTL": 8416.0,
+      "priced": 34.0
+     },
+     "n_crit": 1,
+     "old_cycles": 8429.0,
+     "op": "head.lm_head"
+    },
+    {
+     "cls": "su",
+     "cycles": 7840.0,
+     "grades": {
+      "measured-old-RTL": 7840.0
+     },
+     "n_crit": 40,
+     "old_cycles": 7840.0,
+     "op": "attn.sink"
+    },
+    {
+     "cls": "su",
+     "cycles": 7640.0,
+     "grades": {
+      "measured-release-RTL": 7640.0
+     },
+     "n_crit": 40,
+     "old_cycles": 7640.0,
+     "op": "ffn.quant2"
+    },
+    {
+     "cls": "select",
+     "cycles": 6487.0,
+     "grades": {
+      "measured-old-RTL": 6487.0
+     },
+     "n_crit": 8,
+     "old_cycles": 6487.0,
+     "op": "attn.gather"
+    },
+    {
+     "cls": "su",
+     "cycles": 5960.0,
+     "grades": {
+      "measured-release-RTL": 5800.0,
+      "priced": 160.0
+     },
+     "n_crit": 40,
+     "old_cycles": 7424.0,
+     "op": "ffn.softplus_sqrt"
+    },
+    {
+     "cls": "hbm",
+     "cycles": 5698.8,
+     "grades": {
+      "measured-old-RTL": 5698.8
+     },
+     "n_crit": 32,
+     "old_cycles": 5698.8,
+     "op": "attn.window_load"
+    },
+    {
+     "cls": "su",
+     "cycles": 4880.0,
+     "grades": {
+      "measured-release-RTL": 4600.0,
+      "priced": 280.0
+     },
+     "n_crit": 40,
+     "old_cycles": 4704.0,
+     "op": "ffn.bias"
+    },
+    {
+     "cls": "su",
+     "cycles": 4760.0,
+     "grades": {
+      "measured-release-RTL": 2520.0,
+      "priced": 2240.0
+     },
+     "n_crit": 40,
+     "old_cycles": 4516.0,
+     "op": "attn.hc_post"
+    },
+    {
+     "cls": "su",
+     "cycles": 4760.0,
+     "grades": {
+      "measured-release-RTL": 2520.0,
+      "priced": 2240.0
+     },
+     "n_crit": 40,
+     "old_cycles": 4516.0,
+     "op": "ffn.hc_post"
+    },
+    {
+     "cls": "su",
+     "cycles": 3488.0,
+     "grades": {
+      "measured-old-RTL": 3488.0
+     },
+     "n_crit": 40,
+     "old_cycles": 3488.0,
+     "op": "attn.den"
+    },
+    {
+     "cls": "select",
+     "cycles": 3388.0,
+     "grades": {
+      "measured-newest-element-RTL": 2676.0,
+      "measured-old-RTL": 712.0
+     },
+     "n_crit": 8,
+     "old_cycles": 1424.0,
+     "op": "attn.idx.topk_final"
+    },
+    {
+     "cls": "select",
+     "cycles": 2240.0,
+     "grades": {
+      "measured-release-RTL": 2240.0
+     },
+     "n_crit": 40,
+     "old_cycles": 1760.0,
+     "op": "ffn.top6_order"
+    },
+    {
+     "cls": "su",
+     "cycles": 2048.0,
+     "grades": {
+      "measured-release-RTL": 1824.0,
+      "priced": 224.0
+     },
+     "n_crit": 32,
+     "old_cycles": 3763.2,
+     "op": "attn.q_rope"
+    },
+    {
+     "cls": "su",
+     "cycles": 1394.0,
+     "grades": {
+      "measured-release-RTL": 1394.0
+     },
+     "n_crit": 2,
+     "old_cycles": 989.4,
+     "op": "eng.gate"
+    },
+    {
+     "cls": "embed",
+     "cycles": 1074.3,
+     "grades": {
+      "measured-old-RTL": 1074.3
+     },
+     "n_crit": 1,
+     "old_cycles": 1074.3,
+     "op": "embed"
+    },
+    {
+     "cls": "su",
+     "cycles": 920.0,
+     "grades": {
+      "measured-release-RTL": 760.0,
+      "priced": 160.0
+     },
+     "n_crit": 40,
+     "old_cycles": 3200.0,
+     "op": "attn.z_quant"
+    },
+    {
+     "cls": "field",
+     "cycles": 744.0,
+     "grades": {
+      "measured-old-RTL": 744.0
+     },
+     "n_crit": 8,
+     "old_cycles": 744.0,
+     "op": "attn.idx.q"
+    },
+    {
+     "cls": "head",
+     "cycles": 306.0,
+     "grades": {
+      "measured-old-RTL": 306.0
+     },
+     "n_crit": 1,
+     "old_cycles": 306.0,
+     "op": "head.norm.scale"
+    },
+    {
+     "cls": "su",
+     "cycles": 164.0,
+     "grades": {
+      "measured-release-RTL": 164.0
+     },
+     "n_crit": 2,
+     "old_cycles": 213.8,
+     "op": "eng.add"
+    },
+    {
+     "cls": "head",
+     "cycles": 10.0,
+     "grades": {
+      "measured-newest-element-RTL": 10.0
+     },
+     "n_crit": 1,
+     "old_cycles": 21.6,
+     "op": "head.argmax"
+    },
+    {
+     "cls": "head",
+     "cycles": 8.9,
+     "grades": {
+      "measured-old-RTL": 8.9
+     },
+     "n_crit": 1,
+     "old_cycles": 8.9,
+     "op": "head.hc_pre"
+    },
+    {
+     "cls": "su",
+     "cycles": 3.0,
+     "grades": {
+      "measured-old-RTL": 3.0,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 233.1,
+     "op": "attn.hc_pre"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 0.0,
+     "op": "attn.norm.sumsq"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 0.0,
+     "op": "attn.norm.rsqrt"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 0.0,
+     "op": "attn.norm.scale"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 120.0,
+     "op": "attn.q_norm.sumsq"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 0.0,
+     "op": "attn.q_norm.rsqrt"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 0.0,
+     "op": "attn.q_norm.scale"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 356.0,
+     "op": "ffn.hc_pre"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 0.0,
+     "op": "ffn.norm.sumsq"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 0.0,
+     "op": "ffn.norm.rsqrt"
+    },
+    {
+     "cls": "select",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 356.0,
+     "op": "ffn.top6"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 120.0,
+     "op": "ffn.swiglu"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 236.0,
+     "op": "ffn.route_w"
+    },
+    {
+     "cls": "field",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 2,
+     "old_cycles": 539.2,
+     "op": "eng.dot"
+    },
+    {
+     "cls": "head",
+     "cycles": 0.0,
+     "grades": {
+      "measured-old-RTL": 0.0
+     },
+     "n_crit": 1,
+     "old_cycles": 0.0,
+     "op": "head.norm.sumsq"
+    },
+    {
+     "cls": "head",
+     "cycles": 0.0,
+     "grades": {
+      "measured-old-RTL": 0.0
+     },
+     "n_crit": 1,
+     "old_cycles": 0.0,
+     "op": "head.norm.rsqrt"
+    }
+   ],
+   "price_of_record": {
+    "cycles": 899140.3,
+    "scan_stacks_correction_cycles": 20470.0,
+    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+    "tok_s": 1334.6,
+    "uncorrected_tok_s": 1365.7
+   },
+   "solved_path_changed": true,
+   "tau": null,
+   "tok_s": 1095.5,
+   "tok_s_solved": 1082.3,
+   "workload": "ar"
+  },
+  "mtp": {
+   "T_cycles_fixed": 1487621.4,
+   "T_cycles_solved": 1487621.4,
+   "base_T_cycles": 1381860.8,
+   "base_tok_s": 3611.7,
+   "by_grade": {
+    "measured-current-RTL": 116078.0,
+    "measured-newest-element-RTL": 167568.0,
+    "measured-old-RTL": 708930.9,
+    "measured-release-RTL": 123126.0,
+    "modelled-PHY": 187823.6,
+    "priced": 184094.9
+   },
+   "extra_terms": [
+    {
+     "base_cycles": 532.4,
+     "base_grade": "priced",
+     "cycles": 532.4,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L0.dv_p4l"
+    },
+    {
+     "base_cycles": 585.2,
+     "base_grade": "priced",
+     "cycles": 585.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L1.dv_p4l"
+    },
+    {
+     "base_cycles": 619.2,
+     "base_grade": "priced",
+     "cycles": 619.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L2.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L3.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L4.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L5.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L6.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L7.dv_p4l"
+    },
+    {
+     "base_cycles": 619.2,
+     "base_grade": "priced",
+     "cycles": 619.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L8.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L9.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L10.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L11.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L12.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L13.dv_p4l"
+    },
+    {
+     "base_cycles": 680.2,
+     "base_grade": "priced",
+     "cycles": 680.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L14.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L15.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L16.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L17.dv_p4l"
+    },
+    {
+     "base_cycles": 611.2,
+     "base_grade": "priced",
+     "cycles": 611.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L18.dv_p4l"
+    },
+    {
+     "base_cycles": 678.2,
+     "base_grade": "priced",
+     "cycles": 678.2,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L19.dv_p4l"
+    },
+    {
+     "base_cycles": 628.6,
+     "base_grade": "priced",
+     "cycles": 628.6,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L20.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L21.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L22.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L23.dv_p4l"
+    },
+    {
+     "base_cycles": 694.5,
+     "base_grade": "priced",
+     "cycles": 694.5,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L24.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L25.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L26.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L27.dv_p4l"
+    },
+    {
+     "base_cycles": 694.5,
+     "base_grade": "priced",
+     "cycles": 694.5,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L28.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L29.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L30.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L31.dv_p4l"
+    },
+    {
+     "base_cycles": 627.5,
+     "base_grade": "priced",
+     "cycles": 627.5,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L32.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L33.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L34.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L35.dv_p4l"
+    },
+    {
+     "base_cycles": 627.5,
+     "base_grade": "priced",
+     "cycles": 627.5,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L36.dv_p4l"
+    },
+    {
+     "base_cycles": 523.1,
+     "base_grade": "priced",
+     "cycles": 523.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L37.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L38.dv_p4l"
+    },
+    {
+     "base_cycles": 456.1,
+     "base_grade": "priced",
+     "cycles": 456.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L39.dv_p4l"
+    },
+    {
+     "base_cycles": 67.0,
+     "base_grade": "priced",
+     "cycles": 67.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L40.dv_p4l"
+    },
+    {
+     "base_cycles": 32925.13,
+     "base_grade": "priced",
+     "cycles": 32925.1,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "adjust",
+     "slot": "price_of_record_residual"
+    },
+    {
+     "base_cycles": 889,
+     "base_grade": "measured-old-RTL",
+     "cycles": 0.0,
+     "evidence": null,
+     "grade": "measured-release-RTL",
+     "kind": "layer",
+     "slot": "L2.scan_d_reader"
+    },
+    {
+     "base_cycles": 1814.0,
+     "base_grade": "priced",
+     "cycles": 1814.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L2.scan_d_legs_merge"
+    },
+    {
+     "base_cycles": 889,
+     "base_grade": "measured-old-RTL",
+     "cycles": 0.0,
+     "evidence": null,
+     "grade": "measured-release-RTL",
+     "kind": "layer",
+     "slot": "L8.scan_d_reader"
+    },
+    {
+     "base_cycles": 1814.0,
+     "base_grade": "priced",
+     "cycles": 1814.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L8.scan_d_legs_merge"
+    },
+    {
+     "base_cycles": 889,
+     "base_grade": "measured-old-RTL",
+     "cycles": 0.0,
+     "evidence": null,
+     "grade": "measured-release-RTL",
+     "kind": "layer",
+     "slot": "L14.scan_d_reader"
+    },
+    {
+     "base_cycles": 1814.0,
+     "base_grade": "priced",
+     "cycles": 1814.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L14.scan_d_legs_merge"
+    },
+    {
+     "base_cycles": 1879,
+     "base_grade": "measured-old-RTL",
+     "cycles": 1879,
+     "evidence": null,
+     "grade": "measured-old-RTL",
+     "kind": "layer",
+     "slot": "L20.scan_d_reader"
+    },
+    {
+     "base_cycles": 1814.0,
+     "base_grade": "priced",
+     "cycles": 1814.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L20.scan_d_legs_merge"
+    },
+    {
+     "base_cycles": 783.0,
+     "base_grade": "priced",
+     "cycles": 783.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L24.scan_d_reindex"
+    },
+    {
+     "base_cycles": 783.0,
+     "base_grade": "priced",
+     "cycles": 783.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L28.scan_d_reindex"
+    },
+    {
+     "base_cycles": 783.0,
+     "base_grade": "priced",
+     "cycles": 783.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L32.scan_d_reindex"
+    },
+    {
+     "base_cycles": 783.0,
+     "base_grade": "priced",
+     "cycles": 783.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "L36.scan_d_reindex"
+    },
+    {
+     "base_cycles": 18465.0,
+     "base_grade": "priced",
+     "cycles": 18465.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "wave.scan_d"
+    },
+    {
+     "base_cycles": 5536.0,
+     "base_grade": "measured-current-RTL",
+     "cycles": 5536.0,
+     "evidence": null,
+     "grade": "measured-current-RTL",
+     "kind": "layer",
+     "slot": "L20.scan_d_l20split_k6"
+    },
+    {
+     "base_cycles": 27680.0,
+     "base_grade": "priced",
+     "cycles": 27680.0,
+     "evidence": null,
+     "grade": "priced",
+     "kind": "layer",
+     "slot": "wave.scan_d_l20split_k6"
+    }
+   ],
+   "pct_measured": 27.34,
+   "pct_measured_on_chip": 31.3,
+   "pct_modelled_phy": 12.63,
+   "per_accepted_cycles": 357687.3,
+   "per_op": [
+    {
+     "cls": "wave",
+     "cycles": 161546.0,
+     "grades": {
+      "measured-old-RTL": 161546.0
+     },
+     "n_crit": 5,
+     "old_cycles": 161546.0,
+     "op": "wave.busy"
+    },
+    {
+     "cls": "field",
+     "cycles": 107390.0,
+     "grades": {
+      "measured-old-RTL": 107390.0
+     },
+     "n_crit": 43,
+     "old_cycles": 107390.0,
+     "op": "attn.wo_a"
+    },
+    {
+     "cls": "field",
+     "cycles": 94571.5,
+     "grades": {
+      "measured-old-RTL": 94571.5
+     },
+     "n_crit": 40,
+     "old_cycles": 94571.5,
+     "op": "ffn.experts_gu"
+    },
+    {
+     "cls": "field",
+     "cycles": 89932.0,
+     "grades": {
+      "measured-newest-element-RTL": 79480.0,
+      "measured-old-RTL": 2652.0,
+      "priced": 7800.0
+     },
+     "n_crit": 43,
+     "old_cycles": 48405.6,
+     "op": "attn.wq_b"
+    },
+    {
+     "cls": "field",
+     "cycles": 88191.0,
+     "grades": {
+      "measured-old-RTL": 88191.0
+     },
+     "n_crit": 40,
+     "old_cycles": 88191.0,
+     "op": "ffn.down"
+    },
+    {
+     "cls": "select",
+     "cycles": 47945.0,
+     "grades": {
+      "measured-old-RTL": 5241.0,
+      "measured-release-RTL": 42704.0
+     },
+     "n_crit": 8,
+     "old_cycles": 11784.0,
+     "op": "attn.idx.topk_local"
+    },
+    {
+     "cls": "field",
+     "cycles": 43945.0,
+     "grades": {
+      "measured-old-RTL": 43945.0
+     },
+     "n_crit": 43,
+     "old_cycles": 43945.0,
+     "op": "ffn.router"
+    },
+    {
+     "cls": "field",
+     "cycles": 42405.5,
+     "grades": {
+      "measured-old-RTL": 42405.5
+     },
+     "n_crit": 43,
+     "old_cycles": 42405.5,
+     "op": "attn.a_proj"
+    },
+    {
+     "cls": "head",
+     "cycles": 42250.0,
+     "grades": {
+      "measured-newest-element-RTL": 42080.0,
+      "priced": 170.0
+     },
+     "n_crit": 5,
+     "old_cycles": 41935.0,
+     "op": "draft.head"
+    },
+    {
+     "cls": "hbm",
+     "cycles": 29253.0,
+     "grades": {
+      "measured-newest-element-RTL": 23316.0,
+      "measured-old-RTL": 5937.0
+     },
+     "n_crit": 8,
+     "old_cycles": 18282.0,
+     "op": "attn.idx.score"
+    },
+    {
+     "cls": "field",
+     "cycles": 24695.0,
+     "grades": {
+      "measured-old-RTL": 24695.0
+     },
+     "n_crit": 43,
+     "old_cycles": 24695.0,
+     "op": "attn.wo_b"
+    },
+    {
+     "cls": "su",
+     "cycles": 20119.9,
+     "grades": {
+      "measured-old-RTL": 3399.9,
+      "measured-release-RTL": 16720.0
+     },
+     "n_crit": 43,
+     "old_cycles": 16359.9,
+     "op": "attn.quant"
+    },
+    {
+     "cls": "su",
+     "cycles": 17748.0,
+     "grades": {
+      "measured-old-RTL": 228.0,
+      "measured-release-RTL": 17520.0
+     },
+     "n_crit": 43,
+     "old_cycles": 12468.0,
+     "op": "ffn.norm.scale"
+    },
+    {
+     "cls": "su",
+     "cycles": 17719.9,
+     "grades": {
+      "measured-old-RTL": 999.9,
+      "measured-release-RTL": 16720.0
+     },
+     "n_crit": 43,
+     "old_cycles": 12519.9,
+     "op": "attn.q_quant"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 15357.0,
+     "grades": {
+      "measured-old-RTL": 15357.0
+     },
+     "n_crit": 1,
+     "old_cycles": 15357.0,
+     "op": "mc.p2.selected_path"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 13560.0,
+     "grades": {
+      "measured-old-RTL": 13560.0
+     },
+     "n_crit": 1,
+     "old_cycles": 13560.0,
+     "op": "mc.wfc_kit.ar_pass"
+    },
+    {
+     "cls": "hbm",
+     "cycles": 11560.0,
+     "grades": {
+      "measured-newest-element-RTL": 11560.0
+     },
+     "n_crit": 40,
+     "old_cycles": 2104.0,
+     "op": "attn.scores"
+    },
+    {
+     "cls": "su",
+     "cycles": 11481.2,
+     "grades": {
+      "measured-old-RTL": 11481.2
+     },
+     "n_crit": 40,
+     "old_cycles": 11481.2,
+     "op": "attn.exp"
+    },
+    {
+     "cls": "su",
+     "cycles": 9796.0,
+     "grades": {
+      "measured-old-RTL": 9796.0
+     },
+     "n_crit": 40,
+     "old_cycles": 9796.0,
+     "op": "attn.normalize"
+    },
+    {
+     "cls": "su",
+     "cycles": 8794.6,
+     "grades": {
+      "measured-old-RTL": 8794.6
+     },
+     "n_crit": 40,
+     "old_cycles": 8794.6,
+     "op": "attn.max"
+    },
+    {
+     "cls": "head",
+     "cycles": 8450.0,
+     "grades": {
+      "measured-newest-element-RTL": 8416.0,
+      "priced": 34.0
+     },
+     "n_crit": 1,
+     "old_cycles": 8429.0,
+     "op": "head.lm_head"
+    },
+    {
+     "cls": "su",
+     "cycles": 7840.0,
+     "grades": {
+      "measured-old-RTL": 7840.0
+     },
+     "n_crit": 40,
+     "old_cycles": 7840.0,
+     "op": "attn.sink"
+    },
+    {
+     "cls": "su",
+     "cycles": 7787.9,
+     "grades": {
+      "measured-old-RTL": 1827.9,
+      "measured-release-RTL": 5800.0,
+      "priced": 160.0
+     },
+     "n_crit": 43,
+     "old_cycles": 9251.9,
+     "op": "ffn.softplus_sqrt"
+    },
+    {
+     "cls": "su",
+     "cycles": 7640.0,
+     "grades": {
+      "measured-release-RTL": 7640.0
+     },
+     "n_crit": 40,
+     "old_cycles": 7640.0,
+     "op": "ffn.quant2"
+    },
+    {
+     "cls": "su",
+     "cycles": 6683.9,
+     "grades": {
+      "measured-old-RTL": 1923.9,
+      "measured-release-RTL": 2520.0,
+      "priced": 2240.0
+     },
+     "n_crit": 43,
+     "old_cycles": 6439.9,
+     "op": "attn.hc_post"
+    },
+    {
+     "cls": "su",
+     "cycles": 6683.9,
+     "grades": {
+      "measured-old-RTL": 1923.9,
+      "measured-release-RTL": 2520.0,
+      "priced": 2240.0
+     },
+     "n_crit": 43,
+     "old_cycles": 6439.9,
+     "op": "ffn.hc_post"
+    },
+    {
+     "cls": "select",
+     "cycles": 6487.0,
+     "grades": {
+      "measured-old-RTL": 6487.0
+     },
+     "n_crit": 8,
+     "old_cycles": 6487.0,
+     "op": "attn.gather"
+    },
+    {
+     "cls": "hbm",
+     "cycles": 5698.8,
+     "grades": {
+      "measured-old-RTL": 5698.8
+     },
+     "n_crit": 32,
+     "old_cycles": 5698.8,
+     "op": "attn.window_load"
+    },
+    {
+     "cls": "su",
+     "cycles": 5288.0,
+     "grades": {
+      "measured-old-RTL": 408.0,
+      "measured-release-RTL": 4600.0,
+      "priced": 280.0
+     },
+     "n_crit": 43,
+     "old_cycles": 5112.0,
+     "op": "ffn.bias"
+    },
+    {
+     "cls": "select",
+     "cycles": 4310.0,
+     "grades": {
+      "measured-old-RTL": 2070.0,
+      "measured-release-RTL": 2240.0
+     },
+     "n_crit": 43,
+     "old_cycles": 3830.0,
+     "op": "ffn.top6_order"
+    },
+    {
+     "cls": "field",
+     "cycles": 4287.0,
+     "grades": {
+      "measured-old-RTL": 4287.0
+     },
+     "n_crit": 3,
+     "old_cycles": 4287.0,
+     "op": "ffn.experts_gu.r0"
+    },
+    {
+     "cls": "field",
+     "cycles": 3856.2,
+     "grades": {
+      "priced": 3856.2
+     },
+     "n_crit": 1,
+     "old_cycles": 3856.2,
+     "op": "accept.seed"
+    },
+    {
+     "cls": "su",
+     "cycles": 3488.0,
+     "grades": {
+      "measured-old-RTL": 3488.0
+     },
+     "n_crit": 40,
+     "old_cycles": 3488.0,
+     "op": "attn.den"
+    },
+    {
+     "cls": "select",
+     "cycles": 3388.0,
+     "grades": {
+      "measured-newest-element-RTL": 2676.0,
+      "measured-old-RTL": 712.0
+     },
+     "n_crit": 8,
+     "old_cycles": 1424.0,
+     "op": "attn.idx.topk_final"
+    },
+    {
+     "cls": "field",
+     "cycles": 3297.0,
+     "grades": {
+      "measured-old-RTL": 3297.0
+     },
+     "n_crit": 3,
+     "old_cycles": 3297.0,
+     "op": "ffn.down.r0"
+    },
+    {
+     "cls": "su",
+     "cycles": 2456.0,
+     "grades": {
+      "measured-old-RTL": 408.0,
+      "measured-release-RTL": 1824.0,
+      "priced": 224.0
+     },
+     "n_crit": 35,
+     "old_cycles": 4171.2,
+     "op": "attn.q_rope"
+    },
+    {
+     "cls": "su",
+     "cycles": 2399.9,
+     "grades": {
+      "measured-old-RTL": 1479.9,
+      "measured-release-RTL": 760.0,
+      "priced": 160.0
+     },
+     "n_crit": 43,
+     "old_cycles": 4679.9,
+     "op": "attn.z_quant"
+    },
+    {
+     "cls": "su",
+     "cycles": 1394.0,
+     "grades": {
+      "measured-release-RTL": 1394.0
+     },
+     "n_crit": 2,
+     "old_cycles": 989.4,
+     "op": "eng.gate"
+    },
+    {
+     "cls": "su",
+     "cycles": 1280.1,
+     "grades": {
+      "measured-old-RTL": 1280.1
+     },
+     "n_crit": 3,
+     "old_cycles": 1280.1,
+     "op": "ffn.quant2.r0"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 1077.8,
+     "grades": {
+      "measured-old-RTL": 1077.8
+     },
+     "n_crit": 1,
+     "old_cycles": 1077.8,
+     "op": "mc.wfc_kit.intervals"
+    },
+    {
+     "cls": "embed",
+     "cycles": 1074.3,
+     "grades": {
+      "measured-old-RTL": 1074.3
+     },
+     "n_crit": 1,
+     "old_cycles": 1074.3,
+     "op": "embed"
+    },
+    {
+     "cls": "su",
+     "cycles": 882.9,
+     "grades": {
+      "measured-old-RTL": 882.9,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 1113.0,
+     "op": "attn.hc_pre"
+    },
+    {
+     "cls": "su",
+     "cycles": 879.9,
+     "grades": {
+      "measured-old-RTL": 879.9,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 1235.9,
+     "op": "ffn.hc_pre"
+    },
+    {
+     "cls": "su",
+     "cycles": 879.9,
+     "grades": {
+      "measured-old-RTL": 879.9
+     },
+     "n_crit": 3,
+     "old_cycles": 879.9,
+     "op": "ffn.swiglu.r0"
+    },
+    {
+     "cls": "field",
+     "cycles": 744.0,
+     "grades": {
+      "measured-old-RTL": 744.0
+     },
+     "n_crit": 8,
+     "old_cycles": 744.0,
+     "op": "attn.idx.q"
+    },
+    {
+     "cls": "su",
+     "cycles": 680.1,
+     "grades": {
+      "measured-old-RTL": 680.1,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 800.1,
+     "op": "attn.q_norm.sumsq"
+    },
+    {
+     "cls": "su",
+     "cycles": 636.0,
+     "grades": {
+      "measured-old-RTL": 636.0
+     },
+     "n_crit": 3,
+     "old_cycles": 636.0,
+     "op": "attn.exp.r0"
+    },
+    {
+     "cls": "su",
+     "cycles": 636.0,
+     "grades": {
+      "measured-old-RTL": 636.0
+     },
+     "n_crit": 3,
+     "old_cycles": 636.0,
+     "op": "attn.exp.r1"
+    },
+    {
+     "cls": "su",
+     "cycles": 636.0,
+     "grades": {
+      "measured-old-RTL": 636.0
+     },
+     "n_crit": 3,
+     "old_cycles": 636.0,
+     "op": "attn.exp.r2"
+    },
+    {
+     "cls": "su",
+     "cycles": 636.0,
+     "grades": {
+      "measured-old-RTL": 636.0
+     },
+     "n_crit": 3,
+     "old_cycles": 636.0,
+     "op": "attn.exp.r3"
+    },
+    {
+     "cls": "su",
+     "cycles": 636.0,
+     "grades": {
+      "measured-old-RTL": 636.0
+     },
+     "n_crit": 3,
+     "old_cycles": 636.0,
+     "op": "attn.exp.r4"
+    },
+    {
+     "cls": "su",
+     "cycles": 620.1,
+     "grades": {
+      "measured-old-RTL": 620.1
+     },
+     "n_crit": 3,
+     "old_cycles": 620.1,
+     "op": "attn.normalize.r0"
+    },
+    {
+     "cls": "su",
+     "cycles": 620.1,
+     "grades": {
+      "measured-old-RTL": 620.1
+     },
+     "n_crit": 3,
+     "old_cycles": 620.1,
+     "op": "attn.normalize.r1"
+    },
+    {
+     "cls": "su",
+     "cycles": 620.1,
+     "grades": {
+      "measured-old-RTL": 620.1
+     },
+     "n_crit": 3,
+     "old_cycles": 620.1,
+     "op": "attn.normalize.r2"
+    },
+    {
+     "cls": "su",
+     "cycles": 620.1,
+     "grades": {
+      "measured-old-RTL": 620.1
+     },
+     "n_crit": 3,
+     "old_cycles": 620.1,
+     "op": "attn.normalize.r3"
+    },
+    {
+     "cls": "su",
+     "cycles": 620.1,
+     "grades": {
+      "measured-old-RTL": 620.1
+     },
+     "n_crit": 3,
+     "old_cycles": 620.1,
+     "op": "attn.normalize.r4"
+    },
+    {
+     "cls": "su",
+     "cycles": 579.9,
+     "grades": {
+      "measured-old-RTL": 579.9,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 579.9,
+     "op": "attn.norm.rsqrt"
+    },
+    {
+     "cls": "su",
+     "cycles": 579.9,
+     "grades": {
+      "measured-old-RTL": 579.9,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 579.9,
+     "op": "attn.q_norm.rsqrt"
+    },
+    {
+     "cls": "su",
+     "cycles": 579.9,
+     "grades": {
+      "measured-old-RTL": 579.9,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 579.9,
+     "op": "ffn.norm.rsqrt"
+    },
+    {
+     "cls": "su",
+     "cycles": 576.0,
+     "grades": {
+      "measured-old-RTL": 576.0
+     },
+     "n_crit": 3,
+     "old_cycles": 576.0,
+     "op": "attn.sink.r0"
+    },
+    {
+     "cls": "su",
+     "cycles": 576.0,
+     "grades": {
+      "measured-old-RTL": 576.0
+     },
+     "n_crit": 3,
+     "old_cycles": 576.0,
+     "op": "attn.sink.r1"
+    },
+    {
+     "cls": "su",
+     "cycles": 576.0,
+     "grades": {
+      "measured-old-RTL": 576.0
+     },
+     "n_crit": 3,
+     "old_cycles": 576.0,
+     "op": "attn.sink.r2"
+    },
+    {
+     "cls": "su",
+     "cycles": 576.0,
+     "grades": {
+      "measured-old-RTL": 576.0
+     },
+     "n_crit": 3,
+     "old_cycles": 576.0,
+     "op": "attn.sink.r3"
+    },
+    {
+     "cls": "su",
+     "cycles": 576.0,
+     "grades": {
+      "measured-old-RTL": 576.0
+     },
+     "n_crit": 3,
+     "old_cycles": 576.0,
+     "op": "attn.sink.r4"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 562.5,
+     "grades": {
+      "measured-old-RTL": 562.5
+     },
+     "n_crit": 1,
+     "old_cycles": 562.5,
+     "op": "mc.markov.floor"
+    },
+    {
+     "cls": "su",
+     "cycles": 560.1,
+     "grades": {
+      "measured-old-RTL": 560.1
+     },
+     "n_crit": 3,
+     "old_cycles": 560.1,
+     "op": "attn.max.r0"
+    },
+    {
+     "cls": "su",
+     "cycles": 560.1,
+     "grades": {
+      "measured-old-RTL": 560.1
+     },
+     "n_crit": 3,
+     "old_cycles": 560.1,
+     "op": "attn.max.r1"
+    },
+    {
+     "cls": "su",
+     "cycles": 560.1,
+     "grades": {
+      "measured-old-RTL": 560.1
+     },
+     "n_crit": 3,
+     "old_cycles": 560.1,
+     "op": "attn.max.r2"
+    },
+    {
+     "cls": "su",
+     "cycles": 560.1,
+     "grades": {
+      "measured-old-RTL": 560.1
+     },
+     "n_crit": 3,
+     "old_cycles": 560.1,
+     "op": "attn.max.r3"
+    },
+    {
+     "cls": "su",
+     "cycles": 560.1,
+     "grades": {
+      "measured-old-RTL": 560.1
+     },
+     "n_crit": 3,
+     "old_cycles": 560.1,
+     "op": "attn.max.r4"
+    },
+    {
+     "cls": "su",
+     "cycles": 399.9,
+     "grades": {
+      "measured-old-RTL": 399.9
+     },
+     "n_crit": 3,
+     "old_cycles": 399.9,
+     "op": "ffn.route_w.r0"
+    },
+    {
+     "cls": "hbm",
+     "cycles": 315.0,
+     "grades": {
+      "measured-old-RTL": 315.0
+     },
+     "n_crit": 3,
+     "old_cycles": 315.0,
+     "op": "attn.scores.r0"
+    },
+    {
+     "cls": "head",
+     "cycles": 306.0,
+     "grades": {
+      "measured-old-RTL": 306.0
+     },
+     "n_crit": 1,
+     "old_cycles": 306.0,
+     "op": "head.norm.scale"
+    },
+    {
+     "cls": "su",
+     "cycles": 300.0,
+     "grades": {
+      "measured-old-RTL": 300.0,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 300.0,
+     "op": "attn.norm.sumsq"
+    },
+    {
+     "cls": "su",
+     "cycles": 300.0,
+     "grades": {
+      "measured-old-RTL": 300.0,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 300.0,
+     "op": "ffn.norm.sumsq"
+    },
+    {
+     "cls": "su",
+     "cycles": 228.0,
+     "grades": {
+      "measured-old-RTL": 228.0,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 228.0,
+     "op": "attn.norm.scale"
+    },
+    {
+     "cls": "su",
+     "cycles": 219.9,
+     "grades": {
+      "measured-old-RTL": 219.9
+     },
+     "n_crit": 3,
+     "old_cycles": 219.9,
+     "op": "attn.den.r0"
+    },
+    {
+     "cls": "su",
+     "cycles": 219.9,
+     "grades": {
+      "measured-old-RTL": 219.9
+     },
+     "n_crit": 3,
+     "old_cycles": 219.9,
+     "op": "attn.den.r1"
+    },
+    {
+     "cls": "su",
+     "cycles": 219.9,
+     "grades": {
+      "measured-old-RTL": 219.9
+     },
+     "n_crit": 3,
+     "old_cycles": 219.9,
+     "op": "attn.den.r2"
+    },
+    {
+     "cls": "su",
+     "cycles": 219.9,
+     "grades": {
+      "measured-old-RTL": 219.9
+     },
+     "n_crit": 3,
+     "old_cycles": 219.9,
+     "op": "attn.den.r3"
+    },
+    {
+     "cls": "su",
+     "cycles": 219.9,
+     "grades": {
+      "measured-old-RTL": 219.9
+     },
+     "n_crit": 3,
+     "old_cycles": 219.9,
+     "op": "attn.den.r4"
+    },
+    {
+     "cls": "su",
+     "cycles": 216.0,
+     "grades": {
+      "measured-old-RTL": 216.0,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 216.0,
+     "op": "attn.q_norm.scale"
+    },
+    {
+     "cls": "head",
+     "cycles": 195.0,
+     "grades": {
+      "priced": 195.0
+     },
+     "n_crit": 1,
+     "old_cycles": 195.0,
+     "op": "draft.fixed"
+    },
+    {
+     "cls": "su",
+     "cycles": 164.0,
+     "grades": {
+      "measured-release-RTL": 164.0
+     },
+     "n_crit": 2,
+     "old_cycles": 213.8,
+     "op": "eng.add"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 48.0,
+     "grades": {
+      "measured-old-RTL": 48.0
+     },
+     "n_crit": 1,
+     "old_cycles": 48.0,
+     "op": "mc.mtp_seq.draft_chain"
+    },
+    {
+     "cls": "head",
+     "cycles": 30.0,
+     "grades": {
+      "measured-newest-element-RTL": 30.0
+     },
+     "n_crit": 5,
+     "old_cycles": 327.5,
+     "op": "draft.markov"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 22.4,
+     "grades": {
+      "measured-old-RTL": 22.4
+     },
+     "n_crit": 1,
+     "old_cycles": 22.4,
+     "op": "mc.mtp_seq.seed_release"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 15.1,
+     "grades": {
+      "priced": 15.1
+     },
+     "n_crit": 1,
+     "old_cycles": 15.1,
+     "op": "accept.round"
+    },
+    {
+     "cls": "head",
+     "cycles": 10.0,
+     "grades": {
+      "measured-newest-element-RTL": 10.0
+     },
+     "n_crit": 1,
+     "old_cycles": 21.6,
+     "op": "head.argmax"
+    },
+    {
+     "cls": "head",
+     "cycles": 8.9,
+     "grades": {
+      "measured-old-RTL": 8.9
+     },
+     "n_crit": 1,
+     "old_cycles": 8.9,
+     "op": "head.hc_pre"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 4.2,
+     "grades": {
+      "priced": 4.2
+     },
+     "n_crit": 1,
+     "old_cycles": 4.2,
+     "op": "accept.commit"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 3.0,
+     "grades": {
+      "measured-old-RTL": 3.0
+     },
+     "n_crit": 1,
+     "old_cycles": 3.0,
+     "op": "mc.wfc_tok.edges"
+    },
+    {
+     "cls": "ctl",
+     "cycles": 1.0,
+     "grades": {
+      "measured-old-RTL": 1.0
+     },
+     "n_crit": 1,
+     "old_cycles": 1.0,
+     "op": "mc.mtp_commit"
+    },
+    {
+     "cls": "select",
+     "cycles": 0.0,
+     "grades": {
+      "measured-old-RTL": 0.0,
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 43,
+     "old_cycles": 356.0,
+     "op": "ffn.top6"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 120.0,
+     "op": "ffn.swiglu"
+    },
+    {
+     "cls": "su",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 40,
+     "old_cycles": 236.0,
+     "op": "ffn.route_w"
+    },
+    {
+     "cls": "field",
+     "cycles": 0.0,
+     "grades": {
+      "measured-release-RTL": 0.0
+     },
+     "n_crit": 2,
+     "old_cycles": 539.2,
+     "op": "eng.dot"
+    },
+    {
+     "cls": "head",
+     "cycles": 0.0,
+     "grades": {
+      "measured-old-RTL": 0.0
+     },
+     "n_crit": 1,
+     "old_cycles": 0.0,
+     "op": "head.norm.sumsq"
+    },
+    {
+     "cls": "head",
+     "cycles": 0.0,
+     "grades": {
+      "measured-old-RTL": 0.0
+     },
+     "n_crit": 1,
+     "old_cycles": 0.0,
+     "op": "head.norm.rsqrt"
+    }
+   ],
+   "price_of_record": {
+    "cycles": 1300312.5,
+    "scan_stacks_correction_cycles": 66615.0,
+    "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+    "tok_s": 3838.2,
+    "uncorrected_tok_s": 4045.4
+   },
+   "solved_path_changed": false,
+   "tau": 4.159,
+   "tok_s": 3354.9,
+   "tok_s_solved": 3354.9,
+   "workload": "mtp"
+  }
+ }
+}

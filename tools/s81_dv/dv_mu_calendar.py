@@ -354,14 +354,21 @@ def calendar_mtp(m, st, d, N=None, F=None):
     P = qup(math.ceil(d['T_mtp']))
     Sm = qup(max(g['step'] for g in st if g['copies'] == 1))
     dup_w = {g['id']: g['step'] for g in st if g['copies'] > 1}
-    n = N or math.floor(P / Sm)
-    shifts = [k * Sm for k in range(n)]
-    col = {}
-    for gid, w in dup_w.items():
-        c = assign_copies(shifts, P, w)
-        if c is None:
-            return dict(P=P, S=Sm, users=[], col={}, why=f'{gid} no colouring', n_model=d['users_mtp'])
-        col[gid] = c
+    # S81-CAL 10-20: with N omitted, step down from floor(P / Sm) until the A/B colouring exists (an odd count can
+    # need one same-copy adjacency < the duplicated window; the AR search already steps down the same way)
+    for n in ([N] if N else range(math.floor(P / Sm), 0, -1)):
+        shifts = [k * Sm for k in range(n)]
+        col, bad = {}, None
+        for gid, w in dup_w.items():
+            c = assign_copies(shifts, P, w)
+            if c is None:
+                bad = gid
+                break
+            col[gid] = c
+        if bad is None:
+            break
+    if bad is not None:
+        return dict(P=P, S=Sm, users=[], col={}, why=f'{bad} no colouring', n_model=d['users_mtp'])
     users = [dict(user=k, shift=shifts[k], kind='latency' if k == 0 else 'mtp') for k in range(n)]
     # AR fillers in the gap after the last MTP slot: greedy, each placed at the earliest shift (1-cycle grid of the
     # non-replicated AR window) where it collides with nothing on any copy (it may take either copy)
@@ -463,7 +470,27 @@ def record(mode, m, st, d, cal, svc=None):
     return rec
 
 
-def build(mode, users=None, fillers=None, split=False):
+def apply_edge_deltas(st, d, ed, hop):
+    """S81-CAL1 (10-19): fold closed RTL / compiler edge deltas into the stage windows (static schedule: every added
+    edge lengthens the window that holds it).  ed = edge_deltas.json (results/token_pass/cal1_s81_1019): per_stage_edges
+    = the largest per-layer delta (one stage group holds <= one layer's attention + the next layer's FFN), added to
+    span and occ, x6 to the MTP step (6 verify positions, the model's step law); T_ar / T_mtp deltas = the summed
+    critical-path deltas of the token (they move the period).  Offsets t are re-accumulated from the new spans."""
+    dS = int(math.ceil(ed['per_stage_edges']))
+    t = 0
+    for g in st:
+        g['span'] += dS
+        g['occ'] += dS
+        g['step'] += 6 * dS
+        g['t'] = t
+        t += g['span'] + math.ceil(hop)
+    d['T_ar'] += ed['T_ar_edges']
+    d['T_mtp'] += ed['T_mtp_edges']
+    return dict(per_stage_edges=dS, T_ar_edges=ed['T_ar_edges'], T_mtp_edges=ed['T_mtp_edges'],
+                source=ed.get('source'), ledger=ed.get('ledger_digest'))
+
+
+def build(mode, users=None, fillers=None, split=False, edge_deltas=None):
     """split: False | True (SPLIT_L20) | a SPLIT_L20-shaped dict (e.g. with compiled helper windows)"""
     sp = (split if isinstance(split, dict) else SPLIT_L20) if split else None
     m = load_model()
@@ -471,12 +498,17 @@ def build(mode, users=None, fillers=None, split=False):
         apply_split(m, sp)
     st = stage_windows(m)
     d = design(m)
+    folded = None
+    if edge_deltas:
+        folded = apply_edge_deltas(st, d, edge_deltas, m.HOP)
     svc = None
     p = OUT / 'svc_bases.json'
     if p.exists():
         svc = {k: v for k, v in json.loads(p.read_text()).items() if k.endswith('_per_user')}
     cal = calendar_ar(m, st, d, users) if mode == 'ar' else calendar_mtp(m, st, d, users, fillers)
     rec = record(mode, m, st, d, cal, svc)
+    if folded:
+        rec['edge_deltas'] = folded
     if split:
         rec['l20_split'] = dict(config=sp, decision='coordinator 0li (HANDOFF 10-19 ~15:45)',
                                 check=split_check(m, st, cal['users'], cal['P'], cal['col'], mode, sp))
@@ -495,16 +527,22 @@ def main(argv=None):
     ap.add_argument('--phase-q', type=int, default=4, help='shift / period quantum (4 = ot_dsdv_fixed_issue start phase)')
     ap.add_argument('--l20-split', action='store_true', help='S81-L20SPLIT (0li): S029 keys over 20 dies (+ S030 '
                     'helpers, measured reader) -> calendar_<mode>_l20split.json with the helper-die check')
+    ap.add_argument('--edge-deltas', help='S81-CAL1: edge_deltas.json -> calendar_<mode>_cal1.json (deltas folded)')
+    ap.add_argument('--tag', default='cal1', help='S81-CAL (10-20): output suffix for --edge-deltas records '
+                    '(e.g. cal2_s140 -> calendar_<mode>_cal2_s140.json); default cal1 (the 10-19 record)')
     a = ap.parse_args(argv)
+    ed = json.loads(Path(a.edge_deltas).read_text()) if a.edge_deltas else None
     global PHASE_Q
     PHASE_Q = a.phase_q
     modes = [a.mode] if a.mode else ['ar', 'mtp']
     rc = 0
     for mode in modes:
-        rec = build(mode, a.users, a.fillers, split=split_config() if a.l20_split else False)
+        rec = build(mode, a.users, a.fillers, split=split_config() if a.l20_split else False, edge_deltas=ed)
         f = Path(a.out) / (f'calendar_{mode}.json' if PHASE_Q == 4 else f'calendar_{mode}_q{PHASE_Q}.json')
         if a.l20_split:
             f = f.with_name(f.stem + '_l20split.json')
+        if ed:
+            f = f.with_name(f.stem + f'_{a.tag}.json')
         txt = json.dumps(rec, indent=1) + '\n'
         if a.check:
             same = f.exists() and f.read_text() == txt
