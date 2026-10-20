@@ -82,5 +82,48 @@ class ClockOutputClassification(unittest.TestCase):
         self.assertEqual(m['bad_data']['comb'], ['data_in'])
 
 
+class NamedForwardingPair(unittest.TestCase):
+    """Relay ck -> ck_o (CTS leaf + two kept inverters + output buffer)."""
+    LOG = GOOD.replace('OT_FC_DRIVER BUFx12f_ASAP7_75t_R u.u_fcb_ck.u_cell',
+                       'OT_FC_CHAIN BUFx2_ASAP7_75t_R output556\n'
+                       'OT_FC_CHAIN INVx3_ASAP7_75t_R u_ck1/_0_\n'
+                       'OT_FC_CHAIN INVx3_ASAP7_75t_R u_ck0/_0_\n'
+                       'OT_FC_CHAIN BUFx4_ASAP7_75t_R clkbuf_0_ck\n'
+                       'OT_FC_DRIVER BUFx2_ASAP7_75t_R output556').replace('OT_FC_ROOT clk_in', 'OT_FC_ROOT ck')
+
+    def test_default_tcl_is_historical(self):
+        self.assertIs(ve.forwarded_clock_tcl(), ve.FORWARDED_CLOCK_TCL)
+
+    def test_named_tcl_has_no_default_names(self):
+        t = ve.forwarded_clock_tcl('ck', 'ck_o')
+        self.assertNotIn('clk_in', t)
+        self.assertNotIn('clk_out', t)
+        self.assertIn('OT_FC_ROOT ck"', t)
+        self.assertIn('OT_FC_CHAIN', t)
+        with self.assertRaises(ve.VerdictError):
+            ve.forwarded_clock_tcl('ck]', 'ck_o')
+
+    def test_chain_receipt(self):
+        r = ve.forwarded_clock_receipt(self.LOG, 'tt', 'o', 's', 'ck', 'ck_o')
+        self.assertEqual(r['input_pin'], 'ck')
+        self.assertFalse(r['direct_root_buffer'])
+        self.assertEqual(len(r['chain_out_to_in']), 4)
+        for bad in (self.LOG.replace('OT_FC_ROOT ck', 'OT_FC_ROOT clk_in'),
+                    self.LOG.replace('OT_FC_CHAIN BUFx2_ASAP7_75t_R output556\n', '')):
+            with self.subTest(log=bad), self.assertRaises(ve.VerdictError):
+                ve.forwarded_clock_receipt(bad, 'tt', 'o', 's', 'ck', 'ck_o')
+        with self.assertRaises(ve.VerdictError):    # default pair must not accept a ck root
+            ve.forwarded_clock_receipt(self.LOG, 'tt', 'o', 's')
+
+    def test_named_merge_and_self_arc_refused(self):
+        pin = NativeModelMerge.PIN.replace('clk_out', 'ck_o').replace('clk_in', 'ck')
+        main = 'cell(x) {\npin("ck_o") { direction : output; }\n}'
+        got = ve.merge_forwarded_clock_model(main, 'cell(x) {\n' + pin + '\n}', 'ck', 'ck_o')
+        self.assertIn(pin, got)
+        selfarc = pin.replace('related_pin : "ck"', 'related_pin : "ck_o"').replace('combinational', 'rising_edge')
+        with self.assertRaises(ve.VerdictError):
+            ve.merge_forwarded_clock_model(main, 'cell(x) {\n' + selfarc + '\n}', 'ck', 'ck_o')
+
+
 if __name__ == '__main__':
     unittest.main()
