@@ -1,0 +1,3048 @@
+{
+ "lints": {
+  "reviewed_gray_fifos": {
+   "components": {
+    "inputs": {
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir.v": "cf42d815879bb3635e92071f05ceb31a1004f64ebe1aa10e2a02c69288608841",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v": "ae8045e620759351ff9b2f5fb469c32da7e5924a51d4a8b0040261a634ee0c3d",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ff.lib": "4b7aeff31a66cae303368232b2ba8fa99f0600902e0a53a2c00e356ad761f213",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ss.lib": "d28d59a0e127ac833916594e54a7483158c028bbf02e0462e323e80203b3da23",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_tt.lib": "7c6833d7970e4921d3d6725af4e8dedede326fa837485bc7214a210622ba6e31",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v": "68ae182bc55607412d5dc4a5adf117adb3fd8acb863a28e3155af85691e10c8d",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ff.lib": "c7d9a011f636c683b0ca86eecadb47b08e7f8dc7b9f783a5365a2d78acf54bbd",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ss.lib": "9c16ad8526cc8557ef88083c51d10ea52636584b022f7db81af817e593e90541",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_tt.lib": "9f5c8c6ce503974505f03ca0cf9bdf65ee44caf9e985d3931d0ba0541c5013fa",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x64_m1_p192_mir/ot_sram_1r1w_32x64_m1_p192_mir_bb.v": "ddda973cf632c347c32ad1a3b1ee22d7d9e4175c301d6cc242d6cf17284e51e4",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x64_m1_p192_mir/ot_sram_1r1w_32x64_m1_p192_mir_ff.lib": "5b09ddedbd2aeaa2b2ac95c0072deb658421fc68d5bdd7bf03ad222695e4efe1",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x64_m1_p192_mir/ot_sram_1r1w_32x64_m1_p192_mir_ss.lib": "74ef1279b29dbac7c1f2544cf8db5b9c9c45b79db719e617e6931d7a69a6d52a",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x64_m1_p192_mir/ot_sram_1r1w_32x64_m1_p192_mir_tt.lib": "1c77a821e20e418349dc9121888f5b12f46156176962d78c83da277242805a4a",
+     "physical/common_flow/ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b",
+     "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+     "rtl/physical/ot_host_async_fifo_sram.sv": "da2d391322e2cdb58f7d4b04028591f8bd754e7e6f63acf9631368b55a515d22",
+     "rtl/physical/ot_host_die_cdc_sram.sv": "a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d",
+     "rtl/physical/ot_qwen_async_fifo_w.sv": "6352f90f3f6caa5f69e56b256a191e250971ff0ce039499eea141e611921e76a",
+     "rtl/physical/ot_qwen_die_cdc_ch.sv": "67825778cf6b71b7c6cef6a30fba297d44ebd2426b1fe952a4beb444196f5a60",
+     "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_host_sram.v": "d236b37be786c8a6db55e2a2a17ecb99e3083d98d472a544c199bc5a63b55499",
+     "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_qm_credit_pacer_cdc.sv": "457a78cd9436232624f163abfb6e775d2c8257faaaeb67776da5148af71d053c",
+     "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_visibility_fence_sram.sv": "43d8e0d869fb0898d91b4ac5116896bd5073082e88e2335a0cc1620b10163bb5"
+    },
+    "policy": "reviewed_gray_fifos",
+    "spec": {
+     "cdc_synchronizers": [
+      {
+       "chain": [
+        "u_rank__u_fence.g_on.rc1",
+        "u_rank__u_fence.g_on.rc2"
+       ],
+       "dst_domain": "host",
+       "name": "fence_req",
+       "payload": [
+        "u_rank__u_fence.g_on.snapshot",
+        "u_rank__u_fence.g_on.snapshot_hi"
+       ],
+       "payload_max_delay_ps": 940.0,
+       "seen": "u_rank__u_fence.g_on.ack_host",
+       "source": "u_rank__u_fence.g_on.req",
+       "src_domain": "core",
+       "sync_max_delay_ps": 773.333,
+       "why": "toggle request; held snapshot captured into landed/fh when rc2 != ack_host"
+      },
+      {
+       "chain": [
+        "u_rank__u_fence.g_on.ac1",
+        "u_rank__u_fence.g_on.ac2"
+       ],
+       "dst_domain": "core",
+       "name": "fence_ack",
+       "source": "u_rank__u_fence.g_on.ack_host",
+       "src_domain": "host",
+       "sync_max_delay_ps": 773.333,
+       "why": "toggle acknowledge"
+      },
+      {
+       "chain": [
+        "u_rank__u_fence.g_on.fc1",
+        "u_rank__u_fence.g_on.fc2"
+       ],
+       "dst_domain": "host",
+       "name": "fence_fault",
+       "source": "u_rank__u_fence.g_on.fc",
+       "src_domain": "core",
+       "sync_max_delay_ps": 773.333,
+       "why": "sticky fault level"
+      }
+     ],
+     "children": [],
+     "clock": "multiple_cts_roots",
+     "clock_data_paths": "reviewed_gray_fifos",
+     "clock_entry_domains": {
+      "core": {
+       "inputs": [
+        "host_rst_n",
+        "u_rank__done_cr",
+        "u_rank__u_bridge__qd",
+        "u_rank__u_bridge__qv",
+        "u_rank__global_prefix_v"
+       ],
+       "outputs": [
+        "u_rank__done_d",
+        "u_rank__done_v",
+        "u_rank__u_bridge__qcr",
+        "service_faults_core"
+       ],
+       "ports": [
+        "ck_core"
+       ],
+       "ratio": [
+        1,
+        1
+       ]
+      },
+      "host": {
+       "inputs": [
+        "u_rank__qm_crn",
+        "u_rank__qm_t_d",
+        "u_rank__qm_t_v"
+       ],
+       "outputs": [
+        "u_rank__qm_d",
+        "u_rank__qm_cls",
+        "u_rank__qm_v",
+        "u_rank__qm_t_cr",
+        "service_faults_host"
+       ],
+       "ports": [
+        "ck_host"
+       ],
+       "ratio": [
+        1000000,
+        833333
+       ]
+      }
+     },
+     "clock_relationship": {
+      "kind": "independent_clock_families",
+      "periods_ps": {
+       "core": 833.333,
+       "host": 1000.0
+      }
+     },
+     "kind": "tile",
+     "macros": [
+      {
+       "at": [
+        43.2,
+        43.2
+       ],
+       "count": 1,
+       "inst": "u_rank__u_bridge__u_done.g_ib_mem.g_32.u_ib",
+       "orient": "MY",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir"
+      },
+      {
+       "at": [
+        43.2,
+        345.6
+       ],
+       "count": 1,
+       "inst": "u_rank__u_bridge__u_done.g_afw.u_af.g_mm.g_pad32.u_m",
+       "orient": "MY",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir"
+      },
+      {
+       "at": [
+        259.2,
+        43.2
+       ],
+       "count": 1,
+       "inst": "u_rank__u_bridge__u_ing.g_ib_mem.g_32.u_ib",
+       "orient": "R0",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir"
+      },
+      {
+       "at": [
+        259.2,
+        345.6
+       ],
+       "count": 1,
+       "inst": "u_rank__u_bridge__u_ing.g_afw.u_af.g_mm.g_pad32.u_m",
+       "orient": "R0",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir"
+      },
+      {
+       "at": [
+        129.6,
+        259.2
+       ],
+       "count": 1,
+       "inst": "u_rank__u_fence.g_on.u_queue",
+       "orient": "MY",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x64_m1_p192_mir"
+      }
+     ],
+     "name": "qkd_hr_cdc_host_h2a",
+     "params": {},
+     "pin_regs": {
+      "clock": "ck_core",
+      "enable": true,
+      "exclude": "^(u_rank__qm_crn|u_rank__qm_t_d|u_rank__qm_t_v|service_faults_host|u_rank__qm_cls|u_rank__qm_d|u_rank__qm_t_cr|u_rank__qm_v)$",
+      "reason": "multi-family CDC leaf (core/host): the recipe-3 pin register is single-clock, so core-family pins are registered on ck_core and the host-family pins (u_rank__qm_crn, u_rank__qm_t_d, u_rank__qm_t_v, service_faults_host, u_rank__qm_cls, u_rank__qm_d, u_rank__qm_t_cr, u_rank__qm_v) are excluded: their faces are the RTL credit channels of that family",
+      "reset": "^(host_rst_n)$"
+     },
+     "reset_landing": {
+      "copies": {
+       "host_rst_n": 32
+      },
+      "enable": true,
+      "stages": 2
+     },
+     "reviewed_gray_fifo_extensions": {
+      "dual_clock_srams": [
+       "ot_sram_1r1w2c_32x546_m1_p192_mir"
+      ],
+      "why": "Exact source/model/view fingerprints and actual Liberty per-pin read/write-clock role proof; Gray publication/synchronizer proof unchanged."
+     },
+     "sources": [
+      "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_host_sram.v",
+      "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_qm_credit_pacer_cdc.sv",
+      "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_visibility_fence_sram.sv",
+      "rtl/lib/ot_async_fifo.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/physical/ot_qwen_async_fifo_w.sv",
+      "rtl/physical/ot_qwen_die_cdc_ch.sv",
+      "rtl/physical/ot_host_async_fifo_sram.sv",
+      "rtl/physical/ot_host_die_cdc_sram.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x64_m1_p192_mir/ot_sram_1r1w_32x64_m1_p192_mir_bb.v"
+     ],
+     "top": "qkd_hr_cdc_host_sram"
+    },
+    "tool": {
+     "cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
+     "clock_entry_constraints.py": "d782579180eda6d032dc25cec1ceba9a56da00d0b28825468ce459a9e37d5464",
+     "gray_fifo_cdc_constraints.py": "375084ce607b0d9d429e2d3c56e996353305ef47b21ce3584f0948c54728fec3",
+     "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
+    },
+    "tool_data": {
+     "physical/common_flow/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78"
+    },
+    "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+   },
+   "created": "2026-10-20T07:32:14-0700",
+   "host": "ot-epyc9",
+   "key": "448b45481cf3d87a97fe2baf781fe788245f9ec923889759f92b97a09cba6cd9",
+   "record": {
+    "counts": {
+     "consumer": 0,
+     "ecap": 41,
+     "epay": 40,
+     "esrc": 3,
+     "estage": 3,
+     "esync1": 3,
+     "gated": 0,
+     "lsrc": 0,
+     "macro": 5,
+     "mem": 0,
+     "rst": 28,
+     "rstage": 0,
+     "src": 20,
+     "stage": 20,
+     "sync1": 20
+    },
+    "dual_clock_macros": {
+     "u_rank__u_bridge__u_done.g_afw.u_af.g_mm.g_pad32.u_m": {
+      "clocks": {
+       "rclk": [
+        "ck_core",
+        "core"
+       ],
+       "wclk": [
+        "ck_host",
+        "host"
+       ]
+      },
+      "input_clocks": {
+       "r_addr_in": "rclk",
+       "r_ce_in": "rclk",
+       "w_addr_in": "wclk",
+       "w_ce_in": "wclk",
+       "w_mask_in": "wclk",
+       "wd_in": "wclk"
+      },
+      "master": "ot_sram_1r1w2c_32x546_m1_p192_mir"
+     },
+     "u_rank__u_bridge__u_ing.g_afw.u_af.g_mm.g_pad32.u_m": {
+      "clocks": {
+       "rclk": [
+        "ck_host",
+        "host"
+       ],
+       "wclk": [
+        "ck_core",
+        "core"
+       ]
+      },
+      "input_clocks": {
+       "r_addr_in": "rclk",
+       "r_ce_in": "rclk",
+       "w_addr_in": "wclk",
+       "w_ce_in": "wclk",
+       "w_mask_in": "wclk",
+       "wd_in": "wclk"
+      },
+      "master": "ot_sram_1r1w2c_32x546_m1_p192_mir"
+     }
+    },
+    "events": {
+     "fence_ack": {
+      "dst_domain": "core",
+      "payload_bits": 0,
+      "payload_max_delay_ps": 0.0,
+      "seen": 0,
+      "src_domain": "host",
+      "sync_max_delay_ps": 773.333,
+      "width": 1
+     },
+     "fence_fault": {
+      "dst_domain": "host",
+      "payload_bits": 0,
+      "payload_max_delay_ps": 0.0,
+      "seen": 0,
+      "src_domain": "core",
+      "sync_max_delay_ps": 773.333,
+      "width": 1
+     },
+     "fence_req": {
+      "dst_domain": "host",
+      "payload_bits": 40,
+      "payload_max_delay_ps": 940.0,
+      "seen": 1,
+      "src_domain": "core",
+      "sync_max_delay_ps": 773.333,
+      "width": 1
+     }
+    },
+    "fifos": {
+     "f0": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_host_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "u_rank__u_bridge__u_done.g_afw.u_af",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "host"
+     },
+     "f1": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_host_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "host",
+      "scope": "u_rank__u_bridge__u_ing.g_afw.u_af",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 940.0,
+      "storage_read": false,
+      "writer": "core"
+     }
+    },
+    "gated": {},
+    "launch_aliases": {
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_bin[3]": "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray[3]",
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_bin[3]": "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray[3]",
+     "u_rank__u_fence.g_on.ack_copy[0]": "u_rank__u_fence.g_on.ack_host",
+     "u_rank__u_fence.g_on.ack_copy[1]": "u_rank__u_fence.g_on.ack_host",
+     "u_rank__u_fence.g_on.ack_copy[2]": "u_rank__u_fence.g_on.ack_host",
+     "u_rank__u_fence.g_on.ack_copy[3]": "u_rank__u_fence.g_on.ack_host",
+     "u_rank__u_fence.g_on.fc_copy[0]": "u_rank__u_fence.g_on.fc",
+     "u_rank__u_fence.g_on.fc_copy[1]": "u_rank__u_fence.g_on.fc",
+     "u_rank__u_fence.g_on.fc_copy[2]": "u_rank__u_fence.g_on.fc",
+     "u_rank__u_fence.g_on.fc_copy[3]": "u_rank__u_fence.g_on.fc",
+     "u_rank__u_fence.g_on.req_copy[0]": "u_rank__u_fence.g_on.req",
+     "u_rank__u_fence.g_on.req_copy[1]": "u_rank__u_fence.g_on.req",
+     "u_rank__u_fence.g_on.req_copy[2]": "u_rank__u_fence.g_on.req",
+     "u_rank__u_fence.g_on.req_copy[3]": "u_rank__u_fence.g_on.req"
+    },
+    "levels": {},
+    "macros": {
+     "u_rank__u_bridge__u_done.g_afw.u_af.g_mm.g_pad32.u_m": "core",
+     "u_rank__u_bridge__u_done.g_ib_mem.g_32.u_ib": "host",
+     "u_rank__u_bridge__u_ing.g_afw.u_af.g_mm.g_pad32.u_m": "host",
+     "u_rank__u_bridge__u_ing.g_ib_mem.g_32.u_ib": "core",
+     "u_rank__u_fence.g_on.u_queue": "host"
+    },
+    "periods_ps": {
+     "core": 833.333,
+     "host": 1000.0
+    },
+    "resets": [
+     {
+      "domain": "core",
+      "leaves": 2,
+      "scope": "u_rank__u_bridge__u_done.g_afw.u_af.rd_reset_conditioner",
+      "stages": 2
+     },
+     {
+      "domain": "host",
+      "leaves": 1,
+      "scope": "u_rank__u_bridge__u_done.g_afw.u_af.wr_reset_conditioner",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "leaves": 1,
+      "scope": "u_rank__u_bridge__u_done.u_rrs",
+      "stages": 2
+     },
+     {
+      "domain": "host",
+      "leaves": 3,
+      "scope": "u_rank__u_bridge__u_done.u_wrs",
+      "stages": 2
+     },
+     {
+      "domain": "host",
+      "leaves": 2,
+      "scope": "u_rank__u_bridge__u_ing.g_afw.u_af.rd_reset_conditioner",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "leaves": 1,
+      "scope": "u_rank__u_bridge__u_ing.g_afw.u_af.wr_reset_conditioner",
+      "stages": 2
+     },
+     {
+      "domain": "host",
+      "leaves": 1,
+      "scope": "u_rank__u_bridge__u_ing.u_rrs",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "leaves": 3,
+      "scope": "u_rank__u_bridge__u_ing.u_wrs",
+      "stages": 2
+     },
+     {
+      "domain": "host",
+      "scope": "u_rank__u_bridge__u_pacer.u_rsh",
+      "stages": 2
+     },
+     {
+      "domain": "host",
+      "leaves": 3,
+      "scope": "u_rank__u_fence.g_on.u_rsh",
+      "stages": 2
+     }
+    ],
+    "roles": {
+     "u_rank__fence_landed[0]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[10]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[11]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[12]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[13]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[14]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[15]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[16]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[17]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[18]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[19]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[1]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[20]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[21]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[22]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[23]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[24]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[25]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[26]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[27]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[28]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[29]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[2]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[30]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[31]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[3]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[4]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[5]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[6]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[7]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[8]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__fence_landed[9]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_bin[3]": [
+      "src",
+      "f0",
+      "rptr",
+      3
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_domain_rst_n": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray[0]": [
+      "src",
+      "f0",
+      "rptr",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray[1]": [
+      "src",
+      "f0",
+      "rptr",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray[2]": [
+      "src",
+      "f0",
+      "rptr",
+      2
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray[3]": [
+      "src",
+      "f0",
+      "rptr",
+      3
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray_w1[0]": [
+      "sync1",
+      "f0",
+      "rptr",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray_w1[1]": [
+      "sync1",
+      "f0",
+      "rptr",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray_w1[2]": [
+      "sync1",
+      "f0",
+      "rptr",
+      2
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray_w1[3]": [
+      "sync1",
+      "f0",
+      "rptr",
+      3
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray_w2[0]": [
+      "stage",
+      "f0",
+      "rptr",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray_w2[1]": [
+      "stage",
+      "f0",
+      "rptr",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray_w2[2]": [
+      "stage",
+      "f0",
+      "rptr",
+      2
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_gray_w2[3]": [
+      "stage",
+      "f0",
+      "rptr",
+      3
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_online": [
+      "src",
+      "f0",
+      "ronl",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_online_w1": [
+      "sync1",
+      "f0",
+      "ronl",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_online_w2": [
+      "stage",
+      "f0",
+      "ronl",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_reg_n[0]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_reg_n[1]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_reset_conditioner.first": [
+      "rst",
+      "r0",
+      "pipe",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_reset_conditioner.last[0]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_reset_conditioner.last[1]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_reset_conditioner.sync_rst_n[0]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_reset_conditioner.sync_rst_n[1]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.rd_rst_n": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_domain_rst_n": [
+      "rst",
+      "r1",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_pub[0]": [
+      "src",
+      "f0",
+      "wptr",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_pub[1]": [
+      "src",
+      "f0",
+      "wptr",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_pub[2]": [
+      "src",
+      "f0",
+      "wptr",
+      2
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_pub[3]": [
+      "src",
+      "f0",
+      "wptr",
+      3
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_r1[0]": [
+      "sync1",
+      "f0",
+      "wptr",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_r1[1]": [
+      "sync1",
+      "f0",
+      "wptr",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_r1[2]": [
+      "sync1",
+      "f0",
+      "wptr",
+      2
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_r1[3]": [
+      "sync1",
+      "f0",
+      "wptr",
+      3
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_r2[0]": [
+      "stage",
+      "f0",
+      "wptr",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_r2[1]": [
+      "stage",
+      "f0",
+      "wptr",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_r2[2]": [
+      "stage",
+      "f0",
+      "wptr",
+      2
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_gray_r2[3]": [
+      "stage",
+      "f0",
+      "wptr",
+      3
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_online": [
+      "src",
+      "f0",
+      "wonl",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_online_r1": [
+      "sync1",
+      "f0",
+      "wonl",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_online_r2": [
+      "stage",
+      "f0",
+      "wonl",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_reset_conditioner.first": [
+      "rst",
+      "r1",
+      "pipe",
+      0
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_reset_conditioner.last": [
+      "rst",
+      "r1",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_reset_conditioner.sync_rst_n": [
+      "rst",
+      "r1",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.g_afw.u_af.wr_rst_n": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.rr_n": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.u_rrs.first": [
+      "rst",
+      "r2",
+      "pipe",
+      0
+     ],
+     "u_rank__u_bridge__u_done.u_rrs.last": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.u_rrs.sync_rst_n": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.u_wrs.first": [
+      "rst",
+      "r3",
+      "pipe",
+      0
+     ],
+     "u_rank__u_bridge__u_done.u_wrs.last[0]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.u_wrs.last[1]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.u_wrs.last[2]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.u_wrs.sync_rst_n[0]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.u_wrs.sync_rst_n[1]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.u_wrs.sync_rst_n[2]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.wr_n": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.wr_reg_n[0]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.wr_reg_n[1]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_done.wr_reg_n[2]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_bin[3]": [
+      "src",
+      "f1",
+      "rptr",
+      3
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_domain_rst_n": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray[0]": [
+      "src",
+      "f1",
+      "rptr",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray[1]": [
+      "src",
+      "f1",
+      "rptr",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray[2]": [
+      "src",
+      "f1",
+      "rptr",
+      2
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray[3]": [
+      "src",
+      "f1",
+      "rptr",
+      3
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray_w1[0]": [
+      "sync1",
+      "f1",
+      "rptr",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray_w1[1]": [
+      "sync1",
+      "f1",
+      "rptr",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray_w1[2]": [
+      "sync1",
+      "f1",
+      "rptr",
+      2
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray_w1[3]": [
+      "sync1",
+      "f1",
+      "rptr",
+      3
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray_w2[0]": [
+      "stage",
+      "f1",
+      "rptr",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray_w2[1]": [
+      "stage",
+      "f1",
+      "rptr",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray_w2[2]": [
+      "stage",
+      "f1",
+      "rptr",
+      2
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_gray_w2[3]": [
+      "stage",
+      "f1",
+      "rptr",
+      3
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_online": [
+      "src",
+      "f1",
+      "ronl",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_online_w1": [
+      "sync1",
+      "f1",
+      "ronl",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_online_w2": [
+      "stage",
+      "f1",
+      "ronl",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_reg_n[0]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_reg_n[1]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_reset_conditioner.first": [
+      "rst",
+      "r4",
+      "pipe",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_reset_conditioner.last[0]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_reset_conditioner.last[1]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_reset_conditioner.sync_rst_n[0]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_reset_conditioner.sync_rst_n[1]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.rd_rst_n": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_domain_rst_n": [
+      "rst",
+      "r5",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_pub[0]": [
+      "src",
+      "f1",
+      "wptr",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_pub[1]": [
+      "src",
+      "f1",
+      "wptr",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_pub[2]": [
+      "src",
+      "f1",
+      "wptr",
+      2
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_pub[3]": [
+      "src",
+      "f1",
+      "wptr",
+      3
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_r1[0]": [
+      "sync1",
+      "f1",
+      "wptr",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_r1[1]": [
+      "sync1",
+      "f1",
+      "wptr",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_r1[2]": [
+      "sync1",
+      "f1",
+      "wptr",
+      2
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_r1[3]": [
+      "sync1",
+      "f1",
+      "wptr",
+      3
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_r2[0]": [
+      "stage",
+      "f1",
+      "wptr",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_r2[1]": [
+      "stage",
+      "f1",
+      "wptr",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_r2[2]": [
+      "stage",
+      "f1",
+      "wptr",
+      2
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_gray_r2[3]": [
+      "stage",
+      "f1",
+      "wptr",
+      3
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_online": [
+      "src",
+      "f1",
+      "wonl",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_online_r1": [
+      "sync1",
+      "f1",
+      "wonl",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_online_r2": [
+      "stage",
+      "f1",
+      "wonl",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_reset_conditioner.first": [
+      "rst",
+      "r5",
+      "pipe",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_reset_conditioner.last": [
+      "rst",
+      "r5",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_reset_conditioner.sync_rst_n": [
+      "rst",
+      "r5",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.g_afw.u_af.wr_rst_n": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.rr_n": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.u_rrs.first": [
+      "rst",
+      "r6",
+      "pipe",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.u_rrs.last": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.u_rrs.sync_rst_n": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.u_wrs.first": [
+      "rst",
+      "r7",
+      "pipe",
+      0
+     ],
+     "u_rank__u_bridge__u_ing.u_wrs.last[0]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.u_wrs.last[1]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.u_wrs.last[2]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.u_wrs.sync_rst_n[0]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.u_wrs.sync_rst_n[1]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.u_wrs.sync_rst_n[2]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.wr_n": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.wr_reg_n[0]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.wr_reg_n[1]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_ing.wr_reg_n[2]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_pacer.rn_h": [
+      "rst",
+      "r8",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_pacer.u_rsh.reset_pipe[0]": [
+      "rst",
+      "r8",
+      "pipe",
+      0
+     ],
+     "u_rank__u_bridge__u_pacer.u_rsh.reset_pipe[1]": [
+      "rst",
+      "r8",
+      "pipe",
+      1
+     ],
+     "u_rank__u_bridge__u_pacer.u_rsh.sync_rst_n": [
+      "rst",
+      "r8",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.ac1": [
+      "esync1",
+      "fence_ack",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.ac2": [
+      "estage",
+      "fence_ack",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.ack_copy[0]": [
+      "esrc",
+      "fence_ack",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.ack_copy[1]": [
+      "esrc",
+      "fence_ack",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.ack_copy[2]": [
+      "esrc",
+      "fence_ack",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.ack_copy[3]": [
+      "esrc",
+      "fence_ack",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.ack_host": [
+      "esrc",
+      "fence_ack",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.fc": [
+      "esrc",
+      "fence_fault",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.fc1": [
+      "esync1",
+      "fence_fault",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.fc2": [
+      "estage",
+      "fence_fault",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.fc_copy[0]": [
+      "esrc",
+      "fence_fault",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.fc_copy[1]": [
+      "esrc",
+      "fence_fault",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.fc_copy[2]": [
+      "esrc",
+      "fence_fault",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.fc_copy[3]": [
+      "esrc",
+      "fence_fault",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.fh_snapshot": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[0]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[10]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[11]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[12]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[13]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[14]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[15]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[16]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[17]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[18]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[19]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[1]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[20]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[21]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[22]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[23]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[24]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[25]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[26]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[27]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[28]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[29]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[2]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[30]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[31]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[3]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[4]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[5]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[6]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[7]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[8]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed[9]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][0]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][10]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][11]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][12]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][13]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][14]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][15]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][16]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][17]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][18]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][19]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][1]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][20]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][21]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][22]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][23]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][24]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][25]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][26]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][27]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][28]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][29]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][2]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][30]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][31]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][3]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][4]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][5]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][6]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][7]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][8]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[0][9]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][0]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][10]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][11]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][12]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][13]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][14]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][15]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][16]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][17]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][18]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][19]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][1]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][20]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][21]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][22]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][23]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][24]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][25]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][26]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][27]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][28]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][29]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][2]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][30]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][31]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][3]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][4]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][5]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][6]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][7]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][8]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_cmp[1][9]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_hi[0]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_hi[1]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_hi[2]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_hi[3]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_hi[4]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_hi[5]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_hi[6]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.landed_hi[7]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.rc1": [
+      "esync1",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.rc2": [
+      "estage",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.req": [
+      "esrc",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.req_copy[0]": [
+      "esrc",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.req_copy[1]": [
+      "esrc",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.req_copy[2]": [
+      "esrc",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.req_copy[3]": [
+      "esrc",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.rn_bank[0]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.rn_bank[1]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.rn_bank[2]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.rn_h": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.snapshot[0]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[10]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[11]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[12]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[13]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[14]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[15]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[16]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[17]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[18]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[19]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[1]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[20]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[21]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[22]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[23]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[24]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[25]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[26]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[27]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[28]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[29]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[2]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[30]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[31]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[3]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[4]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[5]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[6]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[7]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[8]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot[9]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][0]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][10]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][11]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][12]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][13]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][14]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][15]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][16]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][17]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][18]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][19]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][1]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][20]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][21]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][22]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][23]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][24]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][25]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][26]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][27]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][28]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][29]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][2]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][30]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][31]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][3]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][4]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][5]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][6]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][7]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][8]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[0][9]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][0]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][10]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][11]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][12]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][13]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][14]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][15]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][16]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][17]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][18]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][19]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][1]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][20]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][21]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][22]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][23]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][24]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][25]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][26]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][27]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][28]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][29]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][2]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][30]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][31]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][3]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][4]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][5]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][6]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][7]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][8]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_cmp[1][9]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_hi[0]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_hi[1]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_hi[2]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_hi[3]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_hi[4]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_hi[5]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_hi[6]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.snapshot_hi[7]": [
+      "epay",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.g_on.u_rsh.first": [
+      "rst",
+      "r9",
+      "pipe",
+      0
+     ],
+     "u_rank__u_fence.g_on.u_rsh.last[0]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.u_rsh.last[1]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.u_rsh.last[2]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.u_rsh.sync_rst_n[0]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.u_rsh.sync_rst_n[1]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.g_on.u_rsh.sync_rst_n[2]": [
+      "rst",
+      "r9",
+      "pipe",
+      1
+     ],
+     "u_rank__u_fence.landed_debug[0]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[10]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[11]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[12]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[13]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[14]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[15]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[16]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[17]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[18]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[19]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[1]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[20]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[21]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[22]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[23]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[24]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[25]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[26]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[27]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[28]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[29]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[2]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[30]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[31]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[3]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[4]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[5]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[6]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[7]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[8]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ],
+     "u_rank__u_fence.landed_debug[9]": [
+      "ecap",
+      "fence_req",
+      "ev",
+      0
+     ]
+    },
+    "source_sha256": {
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v": "ae8045e620759351ff9b2f5fb469c32da7e5924a51d4a8b0040261a634ee0c3d",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v": "68ae182bc55607412d5dc4a5adf117adb3fd8acb863a28e3155af85691e10c8d",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x64_m1_p192_mir/ot_sram_1r1w_32x64_m1_p192_mir_bb.v": "ddda973cf632c347c32ad1a3b1ee22d7d9e4175c301d6cc242d6cf17284e51e4",
+     "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+     "rtl/physical/ot_host_async_fifo_sram.sv": "da2d391322e2cdb58f7d4b04028591f8bd754e7e6f63acf9631368b55a515d22",
+     "rtl/physical/ot_host_die_cdc_sram.sv": "a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d",
+     "rtl/physical/ot_qwen_async_fifo_w.sv": "6352f90f3f6caa5f69e56b256a191e250971ff0ce039499eea141e611921e76a",
+     "rtl/physical/ot_qwen_die_cdc_ch.sv": "67825778cf6b71b7c6cef6a30fba297d44ebd2426b1fe952a4beb444196f5a60",
+     "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_host_sram.v": "d236b37be786c8a6db55e2a2a17ecb99e3083d98d472a544c199bc5a63b55499",
+     "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_qm_credit_pacer_cdc.sv": "457a78cd9436232624f163abfb6e775d2c8257faaaeb67776da5148af71d053c",
+     "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_visibility_fence_sram.sv": "43d8e0d869fb0898d91b4ac5116896bd5073082e88e2335a0cc1620b10163bb5"
+    },
+    "strap_crossings": [],
+    "straps": []
+   },
+   "seconds": 5
+  }
+ },
+ "schema": "opentallas.ref_tile.lint_receipt.v1"
+}

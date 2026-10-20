@@ -1,0 +1,65 @@
+{
+  "outline_um": [
+    475.2,
+    540
+  ],
+  "central_band_um": [
+    27,
+    216,
+    448.2,
+    334.8
+  ],
+  "central_band_area_um2": 50038.56,
+  "site_origin_um": [
+    2.16,
+    2.16
+  ],
+  "site_pitch_um": 0.054,
+  "row_height_um": 0.27,
+  "macro_halo_um": 10.8,
+  "boundary_corridors_um": [
+    [
+      2.16,
+      27
+    ],
+    [
+      448.2,
+      473.04
+    ]
+  ],
+  "boundary_to_macro_halo_gap_um": {
+    "W": 5.399999999999999,
+    "E": 0.43200000000001637
+  },
+  "pin_span_um": [
+    160,
+    390
+  ],
+  "pin_density_per_um": {
+    "pc_W": 5.160869565217391,
+    "pc_E": 5.004347826086956,
+    "host_W": 2.9521739130434783,
+    "host_E": 3.0695652173913044
+  },
+  "data_bus546_over113um": 4.831858407079646,
+  "capacity": {
+    "PC_area_um2": 50038.56,
+    "HOST_queue_halo_excluded_um2": 2299.995648,
+    "HOST_lower_bound_um2": 47738.564352
+  },
+  "pre_gate_actual_anchor_audit": {
+    "source": "frozen PC1j 3_4_place_resized.odb",
+    "anchors": 7565,
+    "off_grid": 0,
+    "outside_boundary_corridors": 0,
+    "W": 3844,
+    "E": 3718,
+    "N": 3,
+    "unit": "oth-ubuntu-3098535-1792506925",
+    "scope": "same-source pin/hold anchors on old pin span; new span actual hook must pass anew"
+  },
+  "timing_change_edges": 0,
+  "all_net_405_audit": "required after placed result; no analytical universal pass claim",
+  "clock_rule": "all roots actual TT/FF pinflop spread<=80ps required",
+  "full_macro_terminal_faces": "unchanged views/orientations/bindings from source-qualified inherited kits; actual all-pin reach required"
+}
