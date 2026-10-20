@@ -113,6 +113,14 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
         cal['span_tail'] = tail
         cal['span_metric'] = 'spine_go0_to_last_frame_root_ret_edges'
         cal['span_evidence'] = 'results/rtl/s81_rom12_codex_1020/fseq12/wq_b/check_P126.json (8ph64rows96RET; P125 FAIL)'
+    import xs_topo as TP
+    if TP.ENABLED and op in ('ffn.down', 'ffn.experts_gu'):
+        # S81-RATE3 (10-20): the physical-frame dealing changes the per-expert row split (down 4/4/3 instead of 4/4/2,
+        # gu 4/4/4 on 6-frame slices); measured on the release frame exes (fseq3, u_f_0L00 + u_f_3L01, Verilator 5.050):
+        # down 21 phases P130 2895 / 2896 (tail 296; P125 FAIL), gu 18 phases P145 2811 (tail 346; P144 FAIL)
+        tail = {'ffn.down': 296, 'ffn.experts_gu': 346}[op]
+        cal['span_tail'] = tail
+        cal['span_evidence'] = 'results/rtl/s81_rate3_1020/fseq3/*/{down,experts_gu}/check_P*.json'
     cal['predicted_span'] = (len(per) - 1) * P + tail
     return cal
 
