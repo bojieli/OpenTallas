@@ -1,0 +1,2159 @@
+{
+  "schema": "opentallas.grp_full_sequential_cones.v1",
+  "method": "Full Liberty-function combinational fanin/fanout traversal to sequential ff/latch, synchronous SRAM, or port boundaries. All tiny SRAM data/control inputs and all rd_out bits. No data exemptions. Endpoint Manhattan distance, NOT routed wirelength or combinational path wirelength sum.",
+  "coordinate_policy": "Actual getAvgXY for every macro ITerm; standard-cell centre and first BPin box centre as explicit proxies.",
+  "clock_exclusion": "Only actual Liberty clock input pins and declared ck/hck input ports; no net-label/ODB-signal-type clock exemption.",
+  "odb_path": "/gate/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_grp_h_s6c_asap7_ref_gate/base/4_1_cts.odb",
+  "odb_sha256": "4e673388ea7a5fb676a057a560be83f05248614d10618f4258eca7657d5ddea2",
+  "cts_log_sha256": "4a04e98910c61b7d856f97353747b51abef8e46a0b711b556479f0ea0827d634",
+  "audit_source_sha256": "1a6cd8b86ddaab7bca8de8b2a9f43ad6a7bdd8e1fcf56b9f01686e821b0a9771",
+  "die_um": [
+    0.0,
+    0.0,
+    388.8,
+    388.8
+  ],
+  "macro_inventory": [
+    {
+      "instance": "u41846_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        22.176
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        22.176,
+        182.856,
+        36.504
+      ]
+    },
+    {
+      "instance": "u41848_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        36.528
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        36.528,
+        182.856,
+        50.856
+      ]
+    },
+    {
+      "instance": "u41850_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        50.88
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        50.88,
+        182.856,
+        65.208
+      ]
+    },
+    {
+      "instance": "u41852_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        65.232
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        65.232,
+        182.856,
+        79.56
+      ]
+    },
+    {
+      "instance": "u41854_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        79.584
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        79.584,
+        182.856,
+        93.912
+      ]
+    },
+    {
+      "instance": "u41856_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        93.936
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        93.936,
+        182.856,
+        108.264
+      ]
+    },
+    {
+      "instance": "u41858_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        108.288
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        108.288,
+        182.856,
+        122.616
+      ]
+    },
+    {
+      "instance": "u41860_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        122.64
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        122.64,
+        182.856,
+        136.968
+      ]
+    },
+    {
+      "instance": "u42268_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        22.176
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        22.176,
+        355.176,
+        36.504
+      ]
+    },
+    {
+      "instance": "u42270_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        36.528
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        36.528,
+        355.176,
+        50.856
+      ]
+    },
+    {
+      "instance": "u42272_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        50.88
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        50.88,
+        355.176,
+        65.208
+      ]
+    },
+    {
+      "instance": "u42274_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        65.232
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        65.232,
+        355.176,
+        79.56
+      ]
+    },
+    {
+      "instance": "u42276_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        79.584
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        79.584,
+        355.176,
+        93.912
+      ]
+    },
+    {
+      "instance": "u42278_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        93.936
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        93.936,
+        355.176,
+        108.264
+      ]
+    },
+    {
+      "instance": "u42280_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        108.288
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        108.288,
+        355.176,
+        122.616
+      ]
+    },
+    {
+      "instance": "u42282_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        122.64
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        122.64,
+        355.176,
+        136.968
+      ]
+    },
+    {
+      "instance": "u42690_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        157.008
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        157.008,
+        182.856,
+        171.336
+      ]
+    },
+    {
+      "instance": "u42692_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        171.36
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        171.36,
+        182.856,
+        185.688
+      ]
+    },
+    {
+      "instance": "u42694_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        185.712
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        185.712,
+        182.856,
+        200.04
+      ]
+    },
+    {
+      "instance": "u42696_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        200.064
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        200.064,
+        182.856,
+        214.392
+      ]
+    },
+    {
+      "instance": "u42698_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        214.416
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        214.416,
+        182.856,
+        228.744
+      ]
+    },
+    {
+      "instance": "u42700_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        228.768
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        228.768,
+        182.856,
+        243.096
+      ]
+    },
+    {
+      "instance": "u42702_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        243.12
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        243.12,
+        182.856,
+        257.448
+      ]
+    },
+    {
+      "instance": "u42704_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        182.856,
+        257.472
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        163.2,
+        257.472,
+        182.856,
+        271.8
+      ]
+    },
+    {
+      "instance": "u43112_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        157.008
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        157.008,
+        355.176,
+        171.336
+      ]
+    },
+    {
+      "instance": "u43114_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        171.36
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        171.36,
+        355.176,
+        185.688
+      ]
+    },
+    {
+      "instance": "u43116_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        185.712
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        185.712,
+        355.176,
+        200.04
+      ]
+    },
+    {
+      "instance": "u43118_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        200.064
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        200.064,
+        355.176,
+        214.392
+      ]
+    },
+    {
+      "instance": "u43120_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        214.416
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        214.416,
+        355.176,
+        228.744
+      ]
+    },
+    {
+      "instance": "u43122_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        228.768
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        228.768,
+        355.176,
+        243.096
+      ]
+    },
+    {
+      "instance": "u43124_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        243.12
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        243.12,
+        355.176,
+        257.448
+      ]
+    },
+    {
+      "instance": "u43126_c0/u_cell",
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "origin_um": [
+        355.176,
+        257.472
+      ],
+      "orientation": "MY",
+      "bbox_um": [
+        335.52,
+        257.472,
+        355.176,
+        271.8
+      ]
+    },
+    {
+      "instance": "u44516_c0/u_cell",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "origin_um": [
+        43.2,
+        43.2
+      ],
+      "orientation": "R0",
+      "bbox_um": [
+        43.2,
+        43.2,
+        138.024,
+        123.672
+      ]
+    },
+    {
+      "instance": "u45957_c0/u_cell",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "origin_um": [
+        216.0,
+        43.2
+      ],
+      "orientation": "R0",
+      "bbox_um": [
+        216.0,
+        43.2,
+        310.824,
+        123.672
+      ]
+    },
+    {
+      "instance": "u47398_c0/u_cell",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "origin_um": [
+        43.2,
+        172.8
+      ],
+      "orientation": "R0",
+      "bbox_um": [
+        43.2,
+        172.8,
+        138.024,
+        253.272
+      ]
+    },
+    {
+      "instance": "u48839_c0/u_cell",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "origin_um": [
+        216.0,
+        172.8
+      ],
+      "orientation": "R0",
+      "bbox_um": [
+        216.0,
+        172.8,
+        310.824,
+        253.272
+      ]
+    }
+  ],
+  "synchronous_memory_proof": [
+    {
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v",
+      "sha256": "6319cdaa8f0801336233fa6f9f35c05be298be5fb4620fa9d85791603366f477",
+      "boundary": "posedge clk registered rd_out, verified in exact behavioural source"
+    },
+    {
+      "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp/ot_sram_1r1w_4x32_m1_p192_grp_rsp.v",
+      "sha256": "94c0b7a1c85e2975132b94ede7de84afb26dfe985f97f69766b9f715664729e0",
+      "boundary": "posedge clk registered rd_out, verified in exact behavioural source"
+    }
+  ],
+  "counts": {
+    "combinational_instances": 60558,
+    "actual_liberty_clock_pins_excluded": 11980,
+    "sequential_instances": 11944,
+    "power_ground_only_instances": 15489,
+    "constant_function_drivers": 3729,
+    "synchronous_sram_instances": 36,
+    "declared_clock_ports_excluded": 2
+  },
+  "role_errors": [],
+  "tiny_macro_count": 32,
+  "edge_count": 5248,
+  "max_endpoint_manhattan_um": 380.697,
+  "over405_count": 0,
+  "top30": [
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[4]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[4]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          24.492
+        ],
+        "net": "n51502_c0",
+        "net_id": 45549,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          2.3160000000000025
+        ]
+      },
+      "endpoint": {
+        "name": "u55195_c0/u_cell/D",
+        "instance": "u55195_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          384.048,
+          203.985
+        ],
+        "net": "u55195_c0/net23531",
+        "net_id": 65327
+      },
+      "endpoint_manhattan_um": 380.697,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26263/Y",
+          "input_net": "n51502_c0",
+          "output_net": "net23532"
+        },
+        {
+          "cell_output": "u55195_c0/place26262/Y",
+          "input_net": "net23532",
+          "output_net": "u55195_c0/net23531"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[5]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[5]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          24.684
+        ],
+        "net": "n51503_c0",
+        "net_id": 45550,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          2.5080000000000027
+        ]
+      },
+      "endpoint": {
+        "name": "u55306_c0/u_cell/D",
+        "instance": "u55306_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          382.806,
+          205.335
+        ],
+        "net": "u55306_c0/net23529",
+        "net_id": 61839
+      },
+      "endpoint_manhattan_um": 380.613,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26261/Y",
+          "input_net": "n51503_c0",
+          "output_net": "net23530"
+        },
+        {
+          "cell_output": "u55306_c0/place26260/Y",
+          "input_net": "net23530",
+          "output_net": "u55306_c0/net23529"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[12]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[12]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          26.028
+        ],
+        "net": "n51510_c0",
+        "net_id": 45557,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          3.8520000000000003
+        ]
+      },
+      "endpoint": {
+        "name": "u54684_c0/u_cell/D",
+        "instance": "u54684_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          384.102,
+          205.065
+        ],
+        "net": "u54684_c0/net23577",
+        "net_id": 65437
+      },
+      "endpoint_manhattan_um": 380.295,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26309/Y",
+          "input_net": "n51510_c0",
+          "output_net": "net23578"
+        },
+        {
+          "cell_output": "u54684_c0/place26308/Y",
+          "input_net": "net23578",
+          "output_net": "u54684_c0/net23577"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[0]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[0]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          23.724
+        ],
+        "net": "n51498_c0",
+        "net_id": 45544,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          1.5480000000000018
+        ]
+      },
+      "endpoint": {
+        "name": "u54751_c0/u_cell/D",
+        "instance": "u54751_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          383.292,
+          203.445
+        ],
+        "net": "u54751_c0/net23583",
+        "net_id": 65440
+      },
+      "endpoint_manhattan_um": 380.169,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26315/Y",
+          "input_net": "n51498_c0",
+          "output_net": "net23584"
+        },
+        {
+          "cell_output": "u54751_c0/place26314/Y",
+          "input_net": "net23584",
+          "output_net": "u54751_c0/net23583"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[9]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[9]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          25.452
+        ],
+        "net": "n51507_c0",
+        "net_id": 45554,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          3.2760000000000034
+        ]
+      },
+      "endpoint": {
+        "name": "u54651_c0/u_cell/D",
+        "instance": "u54651_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          383.616,
+          204.795
+        ],
+        "net": "u54651_c0/net23521",
+        "net_id": 65394
+      },
+      "endpoint_manhattan_um": 380.115,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26253/Y",
+          "input_net": "n51507_c0",
+          "output_net": "net23522"
+        },
+        {
+          "cell_output": "u54651_c0/place26252/Y",
+          "input_net": "net23522",
+          "output_net": "u54651_c0/net23521"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[25]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[25]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          28.524
+        ],
+        "net": "n51523_c0",
+        "net_id": 45571,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          6.3480000000000025
+        ]
+      },
+      "endpoint": {
+        "name": "u54828_c0/u_cell/D",
+        "instance": "u54828_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          382.86,
+          208.575
+        ],
+        "net": "u54828_c0/net23549",
+        "net_id": 65401
+      },
+      "endpoint_manhattan_um": 380.067,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26281/Y",
+          "input_net": "n51523_c0",
+          "output_net": "net23550"
+        },
+        {
+          "cell_output": "u54828_c0/place26280/Y",
+          "input_net": "net23550",
+          "output_net": "u54828_c0/net23549"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[8]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[8]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          25.26
+        ],
+        "net": "n51506_c0",
+        "net_id": 45553,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          3.084000000000003
+        ]
+      },
+      "endpoint": {
+        "name": "u55639_c0/u_cell/D",
+        "instance": "u55639_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          383.562,
+          204.525
+        ],
+        "net": "u55639_c0/net23523",
+        "net_id": 65441
+      },
+      "endpoint_manhattan_um": 379.983,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26255/Y",
+          "input_net": "n51506_c0",
+          "output_net": "net23524"
+        },
+        {
+          "cell_output": "u55639_c0/place26254/Y",
+          "input_net": "net23524",
+          "output_net": "u55639_c0/net23523"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[24]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[24]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          28.332
+        ],
+        "net": "n51522_c0",
+        "net_id": 45570,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          6.156000000000002
+        ]
+      },
+      "endpoint": {
+        "name": "u54817_c0/u_cell/D",
+        "instance": "u54817_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          383.076,
+          207.765
+        ],
+        "net": "u54817_c0/net23551",
+        "net_id": 65402
+      },
+      "endpoint_manhattan_um": 379.665,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26283/Y",
+          "input_net": "n51522_c0",
+          "output_net": "net23552"
+        },
+        {
+          "cell_output": "u54817_c0/place26282/Y",
+          "input_net": "net23552",
+          "output_net": "u54817_c0/net23551"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[28]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[28]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          29.1
+        ],
+        "net": "n51526_c0",
+        "net_id": 45574,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          6.924000000000003
+        ]
+      },
+      "endpoint": {
+        "name": "u54861_c0/u_cell/D",
+        "instance": "u54861_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          383.562,
+          208.035
+        ],
+        "net": "u54861_c0/net23543",
+        "net_id": 65397
+      },
+      "endpoint_manhattan_um": 379.653,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26275/Y",
+          "input_net": "n51526_c0",
+          "output_net": "net23544"
+        },
+        {
+          "cell_output": "u54861_c0/place26274/Y",
+          "input_net": "net23544",
+          "output_net": "u54861_c0/net23543"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[16]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[16]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          26.796
+        ],
+        "net": "n51514_c0",
+        "net_id": 45561,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          4.620000000000001
+        ]
+      },
+      "endpoint": {
+        "name": "u54728_c0/u_cell/D",
+        "instance": "u54728_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          383.4,
+          205.875
+        ],
+        "net": "u54728_c0/net23569",
+        "net_id": 65430
+      },
+      "endpoint_manhattan_um": 379.635,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26301/Y",
+          "input_net": "n51514_c0",
+          "output_net": "net23570"
+        },
+        {
+          "cell_output": "u54728_c0/place26300/Y",
+          "input_net": "net23570",
+          "output_net": "u54728_c0/net23569"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[17]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[17]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          26.988
+        ],
+        "net": "n51515_c0",
+        "net_id": 45562,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          4.812000000000001
+        ]
+      },
+      "endpoint": {
+        "name": "u54739_c0/u_cell/D",
+        "instance": "u54739_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          383.184,
+          206.145
+        ],
+        "net": "u54739_c0/net23567",
+        "net_id": 65428
+      },
+      "endpoint_manhattan_um": 379.497,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26299/Y",
+          "input_net": "n51515_c0",
+          "output_net": "net23568"
+        },
+        {
+          "cell_output": "u54739_c0/place26298/Y",
+          "input_net": "net23568",
+          "output_net": "u54739_c0/net23567"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[21]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[21]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          27.756
+        ],
+        "net": "n51519_c0",
+        "net_id": 45566,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          5.580000000000002
+        ]
+      },
+      "endpoint": {
+        "name": "u54784_c0/u_cell/D",
+        "instance": "u54784_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          383.13,
+          206.955
+        ],
+        "net": "u54784_c0/net23557",
+        "net_id": 65411
+      },
+      "endpoint_manhattan_um": 379.485,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26289/Y",
+          "input_net": "n51519_c0",
+          "output_net": "net23558"
+        },
+        {
+          "cell_output": "u54784_c0/place26288/Y",
+          "input_net": "net23558",
+          "output_net": "u54784_c0/net23557"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[13]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[13]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          26.22
+        ],
+        "net": "n51511_c0",
+        "net_id": 45558,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          4.0440000000000005
+        ]
+      },
+      "endpoint": {
+        "name": "u54695_c0/u_cell/D",
+        "instance": "u54695_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          382.86,
+          205.605
+        ],
+        "net": "u54695_c0/net23575",
+        "net_id": 65435
+      },
+      "endpoint_manhattan_um": 379.401,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26307/Y",
+          "input_net": "n51511_c0",
+          "output_net": "net23576"
+        },
+        {
+          "cell_output": "u54695_c0/place26306/Y",
+          "input_net": "net23576",
+          "output_net": "u54695_c0/net23575"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[20]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[20]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          27.564
+        ],
+        "net": "n51518_c0",
+        "net_id": 45565,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          5.388000000000002
+        ]
+      },
+      "endpoint": {
+        "name": "u54773_c0/u_cell/D",
+        "instance": "u54773_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          383.076,
+          206.685
+        ],
+        "net": "u54773_c0/net23559",
+        "net_id": 65414
+      },
+      "endpoint_manhattan_um": 379.353,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26291/Y",
+          "input_net": "n51518_c0",
+          "output_net": "net23560"
+        },
+        {
+          "cell_output": "u54773_c0/place26290/Y",
+          "input_net": "net23560",
+          "output_net": "u54773_c0/net23559"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[1]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[1]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          23.916
+        ],
+        "net": "n51499_c0",
+        "net_id": 45545,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          1.740000000000002
+        ]
+      },
+      "endpoint": {
+        "name": "u54862_c0/u_cell/D",
+        "instance": "u54862_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          382.806,
+          203.175
+        ],
+        "net": "u54862_c0/net23561",
+        "net_id": 65419
+      },
+      "endpoint_manhattan_um": 379.221,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26293/Y",
+          "input_net": "n51499_c0",
+          "output_net": "net23562"
+        },
+        {
+          "cell_output": "u54862_c0/place26292/Y",
+          "input_net": "net23562",
+          "output_net": "u54862_c0/net23561"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[29]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[29]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          29.292
+        ],
+        "net": "n51527_c0",
+        "net_id": 45575,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          7.116000000000003
+        ]
+      },
+      "endpoint": {
+        "name": "u54873_c0/u_cell/D",
+        "instance": "u54873_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          382.32,
+          208.845
+        ],
+        "net": "u54873_c0/net23541",
+        "net_id": 61851
+      },
+      "endpoint_manhattan_um": 379.029,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26273/Y",
+          "input_net": "n51527_c0",
+          "output_net": "net23542"
+        },
+        {
+          "cell_output": "u54873_c0/place26272/Y",
+          "input_net": "net23542",
+          "output_net": "u54873_c0/net23541"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[14]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[14]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          26.412
+        ],
+        "net": "n51512_c0",
+        "net_id": 45559,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          4.236000000000001
+        ]
+      },
+      "endpoint": {
+        "name": "u54706_c0/u_cell/D",
+        "instance": "u54706_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          381.051,
+          206.685
+        ],
+        "net": "u54706_c0/net23573",
+        "net_id": 65434
+      },
+      "endpoint_manhattan_um": 378.48,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26305/Y",
+          "input_net": "n51512_c0",
+          "output_net": "net23574"
+        },
+        {
+          "cell_output": "u54706_c0/place26304/Y",
+          "input_net": "net23574",
+          "output_net": "u54706_c0/net23573"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[3]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[3]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          24.3
+        ],
+        "net": "n51501_c0",
+        "net_id": 45548,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          2.1240000000000023
+        ]
+      },
+      "endpoint": {
+        "name": "u55084_c0/u_cell/D",
+        "instance": "u55084_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          382.104,
+          203.445
+        ],
+        "net": "u55084_c0/net24393",
+        "net_id": 61148
+      },
+      "endpoint_manhattan_um": 378.405,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26265/Y",
+          "input_net": "n51501_c0",
+          "output_net": "net23534"
+        },
+        {
+          "cell_output": "u55084_c0/place26264/Y",
+          "input_net": "net23534",
+          "output_net": "u55084_c0/net23533"
+        },
+        {
+          "cell_output": "u55084_c0/wire27124/Y",
+          "input_net": "u55084_c0/net23533",
+          "output_net": "u55084_c0/net24393"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[10]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[10]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          25.644
+        ],
+        "net": "n51508_c0",
+        "net_id": 45555,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          3.468
+        ]
+      },
+      "endpoint": {
+        "name": "u54662_c0/u_cell/D",
+        "instance": "u54662_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          381.699,
+          205.065
+        ],
+        "net": "u54662_c0/net23581",
+        "net_id": 65439
+      },
+      "endpoint_manhattan_um": 378.276,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26313/Y",
+          "input_net": "n51508_c0",
+          "output_net": "net23582"
+        },
+        {
+          "cell_output": "u54662_c0/place26312/Y",
+          "input_net": "net23582",
+          "output_net": "u54662_c0/net23581"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[22]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[22]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          27.948
+        ],
+        "net": "n51520_c0",
+        "net_id": 45568,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          5.772000000000002
+        ]
+      },
+      "endpoint": {
+        "name": "u54795_c0/u_cell/D",
+        "instance": "u54795_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          381.753,
+          207.225
+        ],
+        "net": "u54795_c0/net23555",
+        "net_id": 65406
+      },
+      "endpoint_manhattan_um": 378.186,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26287/Y",
+          "input_net": "n51520_c0",
+          "output_net": "net23556"
+        },
+        {
+          "cell_output": "u54795_c0/place26286/Y",
+          "input_net": "net23556",
+          "output_net": "u54795_c0/net23555"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[6]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[6]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          24.876
+        ],
+        "net": "n51504_c0",
+        "net_id": 45551,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          2.700000000000003
+        ]
+      },
+      "endpoint": {
+        "name": "u55417_c0/u_cell/D",
+        "instance": "u55417_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          381.861,
+          203.985
+        ],
+        "net": "u55417_c0/net23527",
+        "net_id": 61837
+      },
+      "endpoint_manhattan_um": 378.126,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26259/Y",
+          "input_net": "n51504_c0",
+          "output_net": "net23528"
+        },
+        {
+          "cell_output": "u55417_c0/place26258/Y",
+          "input_net": "net23528",
+          "output_net": "u55417_c0/net23527"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[18]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[18]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          27.18
+        ],
+        "net": "n51516_c0",
+        "net_id": 45563,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          5.004000000000001
+        ]
+      },
+      "endpoint": {
+        "name": "u54750_c0/u_cell/D",
+        "instance": "u54750_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          381.591,
+          206.415
+        ],
+        "net": "u54750_c0/net23565",
+        "net_id": 65422
+      },
+      "endpoint_manhattan_um": 377.982,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26297/Y",
+          "input_net": "n51516_c0",
+          "output_net": "net23566"
+        },
+        {
+          "cell_output": "u54750_c0/place26296/Y",
+          "input_net": "net23566",
+          "output_net": "u54750_c0/net23565"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[2]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[2]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          24.108
+        ],
+        "net": "n51500_c0",
+        "net_id": 45547,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          1.9320000000000022
+        ]
+      },
+      "endpoint": {
+        "name": "u54973_c0/u_cell/D",
+        "instance": "u54973_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          381.105,
+          203.715
+        ],
+        "net": "u54973_c0/net23539",
+        "net_id": 65396
+      },
+      "endpoint_manhattan_um": 377.868,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26271/Y",
+          "input_net": "n51500_c0",
+          "output_net": "net23540"
+        },
+        {
+          "cell_output": "u54973_c0/place26270/Y",
+          "input_net": "net23540",
+          "output_net": "u54973_c0/net23539"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[30]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[30]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          29.484
+        ],
+        "net": "n51528_c0",
+        "net_id": 45576,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          7.308000000000003
+        ]
+      },
+      "endpoint": {
+        "name": "u54884_c0/u_cell/D",
+        "instance": "u54884_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          381.105,
+          208.575
+        ],
+        "net": "u54884_c0/net23537",
+        "net_id": 65395
+      },
+      "endpoint_manhattan_um": 377.352,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26269/Y",
+          "input_net": "n51528_c0",
+          "output_net": "net23538"
+        },
+        {
+          "cell_output": "u54884_c0/place26268/Y",
+          "input_net": "net23538",
+          "output_net": "u54884_c0/net23537"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[11]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[11]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          25.836
+        ],
+        "net": "n51509_c0",
+        "net_id": 45556,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          3.66
+        ]
+      },
+      "endpoint": {
+        "name": "u54673_c0/u_cell/D",
+        "instance": "u54673_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          380.133,
+          205.065
+        ],
+        "net": "u54673_c0/net23579",
+        "net_id": 65438
+      },
+      "endpoint_manhattan_um": 376.518,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26311/Y",
+          "input_net": "n51509_c0",
+          "output_net": "net23580"
+        },
+        {
+          "cell_output": "u54673_c0/place26310/Y",
+          "input_net": "net23580",
+          "output_net": "u54673_c0/net23579"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[26]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[26]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          28.716
+        ],
+        "net": "n51524_c0",
+        "net_id": 45572,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          6.540000000000003
+        ]
+      },
+      "endpoint": {
+        "name": "u54839_c0/u_cell/D",
+        "instance": "u54839_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          380.997,
+          206.955
+        ],
+        "net": "u54839_c0/net23547",
+        "net_id": 65400
+      },
+      "endpoint_manhattan_um": 376.392,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26279/Y",
+          "input_net": "n51524_c0",
+          "output_net": "net23548"
+        },
+        {
+          "cell_output": "u54839_c0/place26278/Y",
+          "input_net": "net23548",
+          "output_net": "u54839_c0/net23547"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[31]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[31]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          29.676
+        ],
+        "net": "n51529_c0",
+        "net_id": 45577,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          7.5
+        ]
+      },
+      "endpoint": {
+        "name": "u54895_c0/u_cell/D",
+        "instance": "u54895_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          379.971,
+          208.575
+        ],
+        "net": "u54895_c0/net23535",
+        "net_id": 61845
+      },
+      "endpoint_manhattan_um": 376.026,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26267/Y",
+          "input_net": "n51529_c0",
+          "output_net": "net23536"
+        },
+        {
+          "cell_output": "u54895_c0/place26266/Y",
+          "input_net": "net23536",
+          "output_net": "u54895_c0/net23535"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[19]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[19]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          27.372
+        ],
+        "net": "n51517_c0",
+        "net_id": 45564,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          5.1960000000000015
+        ]
+      },
+      "endpoint": {
+        "name": "u54762_c0/u_cell/D",
+        "instance": "u54762_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          379.782,
+          206.415
+        ],
+        "net": "u54762_c0/net23563",
+        "net_id": 65398
+      },
+      "endpoint_manhattan_um": 375.981,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26295/Y",
+          "input_net": "n51517_c0",
+          "output_net": "net23564"
+        },
+        {
+          "cell_output": "u54762_c0/place26294/Y",
+          "input_net": "net23564",
+          "output_net": "u54762_c0/net23563"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[7]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[7]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          25.068
+        ],
+        "net": "n51505_c0",
+        "net_id": 45552,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          2.892000000000003
+        ]
+      },
+      "endpoint": {
+        "name": "u55528_c0/u_cell/D",
+        "instance": "u55528_c0/u_cell",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          379.863,
+          203.985
+        ],
+        "net": "u55528_c0/net24380",
+        "net_id": 66719
+      },
+      "endpoint_manhattan_um": 375.936,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26257/Y",
+          "input_net": "n51505_c0",
+          "output_net": "net23526"
+        },
+        {
+          "cell_output": "u55528_c0/place26256/Y",
+          "input_net": "net23526",
+          "output_net": "u55528_c0/net23525"
+        },
+        {
+          "cell_output": "u55528_c0/wire27111/Y",
+          "input_net": "u55528_c0/net23525",
+          "output_net": "u55528_c0/net24380"
+        }
+      ]
+    },
+    {
+      "direction": "from_ring",
+      "root": {
+        "name": "u41846_c0/u_cell/rd_out[15]",
+        "instance": "u41846_c0/u_cell",
+        "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+        "pin": "rd_out[15]",
+        "kind": "synchronous_sram_output",
+        "xy_um": [
+          182.844,
+          26.604
+        ],
+        "net": "n51513_c0",
+        "net_id": 45560,
+        "macro_origin_um": [
+          182.856,
+          22.176
+        ],
+        "orientation": "MY",
+        "pin_offset_from_origin_um": [
+          -0.012000000000000455,
+          4.428000000000001
+        ]
+      },
+      "endpoint": {
+        "name": "u54717_c0/u_cell/D",
+        "instance": "u54717_c0/u_cell",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "D",
+        "kind": "sequential_input",
+        "xy_um": [
+          379.998,
+          205.335
+        ],
+        "net": "u54717_c0/net23571",
+        "net_id": 65433
+      },
+      "endpoint_manhattan_um": 375.885,
+      "ring": "u41846_c0/u_cell",
+      "combinational_path_witness": [
+        {
+          "cell_output": "place26303/Y",
+          "input_net": "n51513_c0",
+          "output_net": "net23572"
+        },
+        {
+          "cell_output": "u54717_c0/place26302/Y",
+          "input_net": "net23572",
+          "output_net": "u54717_c0/net23571"
+        }
+      ]
+    }
+  ],
+  "status": "PASS"
+}
