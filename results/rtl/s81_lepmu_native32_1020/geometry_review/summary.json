@@ -1,0 +1,87 @@
+{
+  "source": {
+    "original_dr": "e2ced5d46",
+    "native32_rtl": "9a4faab57",
+    "native32_kit": "8195e6e4a"
+  },
+  "physical_status": "HOLD: existing n32 jobs DIAGNOSTIC; no future gate before ROOT geometry approval",
+  "band_model": {
+    "x": [
+      2.16,
+      473.04
+    ],
+    "y": [
+      259.2,
+      298.08
+    ],
+    "area_um2": 18307.8144,
+    "macro_halo_um": 2.16,
+    "state": "ANALYTICAL ONLY, no placement/reach/cut proof; not gate approval"
+  },
+  "variants": {
+    "a": {
+      "native_std_area_um2": 7693.76394,
+      "native_ff": 18128,
+      "ff_delta": 58,
+      "macros": 20,
+      "original_floorplan": {
+        "fill": 0.265,
+        "std_area": 8263.8,
+        "block_area": 62464.0,
+        "die_area": 266872.3
+      },
+      "original_placed": {
+        "fill": 0.29,
+        "std_area": 14991.1,
+        "block_area": 62464.0,
+        "die_area": 266872.3
+      },
+      "original_std_density": 0.044,
+      "original_fixed_terminal_reach_um": 111.8,
+      "clock": {
+        "tt": {
+          "all_spread_ps": 122.8,
+          "boundary_spread_ps": 117.9
+        },
+        "ff": {
+          "all_spread_ps": 115.7,
+          "boundary_spread_ps": 111.3
+        }
+      },
+      "candidate_band_std_density": 0.42024480759429156,
+      "band_macro_halo_overlap": 0
+    },
+    "h": {
+      "native_std_area_um2": 8441.17848,
+      "native_ff": 19729,
+      "ff_delta": 150,
+      "macros": 20,
+      "original_floorplan": {
+        "fill": 0.268,
+        "std_area": 8937.1,
+        "block_area": 62464.0,
+        "die_area": 266872.3
+      },
+      "original_placed": {
+        "fill": 0.297,
+        "std_area": 16868.9,
+        "block_area": 62464.0,
+        "die_area": 266872.3
+      },
+      "original_std_density": 0.0476,
+      "original_fixed_terminal_reach_um": 111.8,
+      "clock": {
+        "tt": {
+          "all_spread_ps": 141.9,
+          "boundary_spread_ps": 139.6
+        },
+        "ff": {
+          "all_spread_ps": 125.8,
+          "boundary_spread_ps": 123.6
+        }
+      },
+      "candidate_band_std_density": 0.4610696992864424,
+      "band_macro_halo_overlap": 0
+    }
+  }
+}
