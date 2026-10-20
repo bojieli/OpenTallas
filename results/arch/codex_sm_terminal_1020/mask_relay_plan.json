@@ -19,10 +19,10 @@
   {
    "name": "u_v2/u_d2",
    "box": [
-    270,
-    596,
+    290,
+    586,
     330,
-    604
+    594
    ],
    "bits": 100,
    "macro_overlaps": []
@@ -30,9 +30,9 @@
   {
    "name": "u_v3/u_d3",
    "box": [
-    270,
+    340,
     316,
-    330,
+    380,
     324
    ],
    "bits": 100,
@@ -41,9 +41,9 @@
   {
    "name": "u_v4/u_d4",
    "box": [
-    330,
+    340,
     136,
-    390,
+    380,
     144
    ],
    "bits": 100,
@@ -65,22 +65,25 @@
   {
    "from": "pin_capture",
    "to": "u_v2/u_d2",
-   "max_manhattan_um": 373.35999999999996
+   "max_manhattan_um": 383.35999999999996
   },
   {
    "from": "u_v2/u_d2",
    "to": "u_v3/u_d3",
-   "max_manhattan_um": 348
+   "max_manhattan_um": 368,
+   "obstacle_aware_manhattan_um": 380.01599999999996
   },
   {
    "from": "u_v3/u_d3",
    "to": "u_v4/u_d4",
-   "max_manhattan_um": 308
+   "max_manhattan_um": 228,
+   "obstacle_aware_manhattan_um": 338.0
   },
   {
    "from": "u_v4/u_d4",
    "to": "S_output_pin",
-   "max_manhattan_um": 267.6
+   "max_manhattan_um": 257.6,
+   "obstacle_aware_manhattan_um": 257.6
   }
  ],
  "additional_g1_bank": {
