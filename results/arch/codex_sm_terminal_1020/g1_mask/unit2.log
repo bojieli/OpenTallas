@@ -1,0 +1,11 @@
+G1_MASKPIPE_MISMATCH cycle=5 gv=1 gf=0
+G1_MASKPIPE_MISMATCH cycle=10 gv=1 gf=0
+G1_MASKPIPE_MISMATCH cycle=12 gv=1 gf=0
+G1_MASKPIPE_MISMATCH cycle=13 gv=1 gf=0
+G1_MASKPIPE_MISMATCH cycle=19 gv=1 gf=0
+G1_MASKPIPE_MISMATCH cycle=21 gv=1 gf=0
+G1_MASKPIPE_MISMATCH cycle=24 gv=1 gf=0
+G1_MASKPIPE_MISMATCH cycle=25 gv=1 gf=0
+[40966000] %Fatal: tb_ot_rp4_g1_maskpipe.sv:46: Assertion failed in tb_ot_rp4_g1_maskpipe: G1_MASKPIPE FAIL errors=1379 checked=4093
+%Error: rtl/hbm_accel/sm/repack/h2/tb_ot_rp4_g1_maskpipe.sv:46: Verilog $stop
+Aborting...
