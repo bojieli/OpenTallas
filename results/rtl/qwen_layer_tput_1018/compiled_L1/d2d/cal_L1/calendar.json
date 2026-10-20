@@ -10,7 +10,7 @@
    8,
    3,
    1,
-   9
+   10
   ],
   "K": [
    24,
@@ -24,7 +24,7 @@
    6,
    1,
    1,
-   7
+   8
   ],
   "K": [
    22,
@@ -37,7 +37,7 @@
   "CS_TXS": 2,
   "CS_RXV": 2,
   "CS_RXP": 2,
-  "CS_X3S": 2,
+  "CS_X3S": 3,
   "SC_TX": 2,
   "SC_X3": 2,
   "KS_RXV": 11,
@@ -71,7 +71,7 @@
   "STRETCH": 1,
   "TX_FIRST": 1750,
   "KV_CODEC": 2,
-  "source": "7495ad559:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv u_attn_cal",
+  "source": "1d58421b9:rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv u_attn_cal",
   "law": "TX_FIRST = RX_CMD + 2 + SERVICE_END - 31 (qkd_attn_cal_gen STRETCH = 1; TOKEN-XDIE-QWEN measured)"
  },
  "entries": {
@@ -485,9 +485,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 0,
-   "arrive": 653,
-   "rx_out": 655,
-   "wr": 641
+   "arrive": 654,
+   "rx_out": 656,
+   "wr": 642
   },
   {
    "seg": 0,
@@ -497,9 +497,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 1,
-   "arrive": 654,
-   "rx_out": 656,
-   "wr": 642
+   "arrive": 655,
+   "rx_out": 657,
+   "wr": 643
   },
   {
    "seg": 0,
@@ -509,9 +509,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 2,
-   "arrive": 655,
-   "rx_out": 657,
-   "wr": 643
+   "arrive": 656,
+   "rx_out": 658,
+   "wr": 644
   },
   {
    "seg": 0,
@@ -521,9 +521,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 3,
-   "arrive": 656,
-   "rx_out": 658,
-   "wr": 644
+   "arrive": 657,
+   "rx_out": 659,
+   "wr": 645
   },
   {
    "seg": 0,

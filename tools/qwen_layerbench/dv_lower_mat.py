@@ -56,6 +56,10 @@ from pathlib import Path
 
 import dv_lower as D
 
+# ROOT4-QWMERGE 10-19: STN kc (k steps per (round, j); dv_lower.cmd_stn kc is mandatory since MU-DQ-SLICEKC adc266442) =
+# tools/qwen_static_schedule/mu_tok_cases.MATVEC_KC under this lowering's op names (o = o_proj, gu = gate_up)
+STN_KC = {'qkv': 8, 'o': 2, 'gu': 32, 'down': 6, 'lm_head': 8}
+
 ROOT = D.ROOT
 STN_AGES = 'results/rtl/qlb_c4b_1018/dv_lower_mat/stn_ages.json'
 N, BLOCK, VM_EL = D.NSLICE, D.BLOCK, D.VM_EL
@@ -225,7 +229,7 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
             if land < lo:
                 raise LowerError(f'{name} round {r} slice {s}: STN window empty (land {land} < previous results {lo})')
             if role == 'snd':
-                c = D.cmd_stn(s, 3, 0, nw, 0, 0, 0)
+                c = D.cmd_stn(s, 3, 0, nw, 0, 0, 0, kc=STN_KC[name])
             else:
                 k = [e['block'] for e in lay[s]].index(bl[0]['block'])
                 sb = lay[s][k]['sbase'] + (1 if mutant == 'sbase1' else 0)
@@ -236,7 +240,7 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
                     db = BLOCK * bl[0]['block']
                 else:
                     db = 0 if mutant == 'amax_local' else row0 + BLOCK * bl[0]['block']
-                c = D.cmd_stn(s, MODE[lv], 0, nw, sb, dst, db, amax=amax)
+                c = D.cmd_stn(s, MODE[lv], 0, nw, sb, dst, db, kc=STN_KC[name], amax=amax)
                 for j in range(nw):
                     b = bl[j // 8] if lv == 7 else bl[0]
                     jj = j % 8 if lv == 7 else j

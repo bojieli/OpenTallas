@@ -38,10 +38,15 @@ def test_regions_and_btab():
 
 
 def test_stn_fields_match_slice2_decode():
-    c = D.cmd_stn(3, 2, 0, 8, 0x1AB, 2, 0x12345, amax=1)
+    c = D.cmd_stn(3, 2, 0, 8, 0x1AB, 2, 0x12345, kc=32, amax=1)
     f = lambda lo, w: (c >> lo) & ((1 << w) - 1)
-    assert (f(1, 3), f(4, 2), f(6, 1), f(7, 8), f(15, 9), f(24, 2), f(26, 24), f(50, 1), c >> 112) == \
-        (2, 2, 0, 8, 0x1AB, 2, 0x12345, 1, 3)
+    assert (f(1, 3), f(4, 2), f(6, 1), f(7, 8), f(15, 9), f(24, 2), f(26, 24), f(50, 1), f(59, 8), c >> 112) == \
+        (2, 2, 0, 8, 0x1AB, 2, 0x12345, 1, 31, 3)
+    # ROOT4-QWMERGE: the lowering's kc table is the compiler's (mu_tok_cases.MATVEC_KC)
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from qwen_static_schedule import mu_tok_cases as mt
+    alias = {'qkv': 'qkv', 'o': 'o_proj', 'gu': 'gate_up', 'down': 'down', 'lm_head': 'lm_head'}
+    assert {k: mt.MATVEC_KC[v] for k, v in alias.items()} == M.STN_KC
     x = D.cmd_xc(0, 1, 0x100, 0xCAFE)
     assert (x >> 1) & 7 == 0 and (x >> 4) & 3 == 0 and (x >> 6) & 1 == 1 and (x >> 7) & 0xFFFF == 0x100 and \
         (x >> 23) & 0xFFFFFFFF == 0xCAFE
