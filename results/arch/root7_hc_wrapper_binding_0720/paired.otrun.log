@@ -1,0 +1,99 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: ot-epyc7       admits  1004 GB (avail 784, growth 81, headroom 0, waiters 0/0 GB) load 53/96 running 21 disk 5387 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1802469-1792507438 after 1 s
+1
+1
+mode = 'rb', buffering = 0, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/root7-hc-binding-0720/base/physical/qwen_die_masters/io_flop_at_pins.tcl'
+
+/usr/lib/python3.14/pathlib/__init__.py:772: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_anchor_row_packing.py::SourceClosure::test_row_packer_is_consumed_with_the_anchoring_hook
+1 failed, 92 passed in 16.19s
+mode = 'rb', buffering = 0, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/root7-hc-binding-0720/cand/physical/qwen_die_masters/io_flop_at_pins.tcl'
+
+/usr/lib/python3.14/pathlib/__init__.py:772: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_anchor_row_packing.py::SourceClosure::test_row_packer_is_consumed_with_the_anchoring_hook
+1 failed, 96 passed, 14 subtests passed in 16.75s
+{
+  "hbm_hcq_tree16_c1": {
+    "original_gate_verdict": "PASS",
+    "consumed": 624,
+    "exact_original_executed_helper_view": {
+      "ok": true,
+      "why": "gate-consumed source and gate-executed overlays match; exact reviewed HC terminal-verdict stdout repair compatible: rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh"
+    },
+    "manifest_unchanged": true,
+    "gate_unchanged": true,
+    "causals": {
+      "rtl": {
+        "path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+        "ok": false,
+        "why": "route source differs from staged snapshot: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv, rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+        "method": "single target-tree blob mutation in memory; immutable receipt untouched"
+      },
+      "physical_spec": {
+        "path": "physical/ref_tile/hbm_hcq_tree16_c1/spec.json",
+        "ok": false,
+        "why": "route source differs from staged snapshot: physical/ref_tile/hbm_hcq_tree16_c1/spec.json, rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+        "method": "single target-tree blob mutation in memory; immutable receipt untouched"
+      }
+    },
+    "failed_verdict_preserved": true
+  },
+  "hbm_hcq_tree16_c1b": {
+    "original_gate_verdict": "WARN",
+    "consumed": 624,
+    "exact_original_executed_helper_view": {
+      "ok": true,
+      "why": "gate-consumed source and gate-executed overlays match; exact reviewed HC terminal-verdict stdout repair compatible: rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh"
+    },
+    "manifest_unchanged": true,
+    "gate_unchanged": true,
+    "causals": {
+      "rtl": {
+        "path": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+        "ok": false,
+        "why": "route source differs from staged snapshot: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv, rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+        "method": "single target-tree blob mutation in memory; immutable receipt untouched"
+      },
+      "physical_spec": {
+        "path": "physical/ref_tile/hbm_hcq_tree16_c1b/spec.json",
+        "ok": false,
+        "why": "route source differs from staged snapshot: physical/ref_tile/hbm_hcq_tree16_c1b/spec.json, rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh",
+        "method": "single target-tree blob mutation in memory; immutable receipt untouched"
+      }
+    },
+    "failed_verdict_preserved": true
+  }
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1802469-1792507438): exit 0
