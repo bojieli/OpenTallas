@@ -1,0 +1,168 @@
+{
+  "scope": "OLD042053_ACTUAL_CTS_GRT_DIAGNOSTIC_NOT_CURRENT_CLOSED_SIGNOFF",
+  "approved_current_jobs_preserved": [
+    "qkd_pv_join_s32_p216-p216-2c44ec2db",
+    "ot_qkh_lane8_nc32c-g1-68c8bea30"
+  ],
+  "source_manifest_sha256": "acb28b78a3869a15bf650ccb61fc31afad7de8ff2f1448ad76bc64d88a525ad0",
+  "stages": {
+    "5_1_grt": {
+      "odb_sha256": "42514292f6b28616b9aa4a70ffbb2799e338ff23c88d244f29789ca82ef9ee05",
+      "script_sha256": "e446e9a2717e29c95aacca45b6e671bed9029173e5c030e3235e0be2a590cbf0",
+      "errors": [],
+      "max_direct_pair": {
+        "net": "net11756",
+        "driver": "place11758/Y",
+        "load": "_19364_/A",
+        "driver_role": "COMB_OUTPUT",
+        "load_role": "COMB_INPUT",
+        "manhattan_um": 165.777
+      },
+      "all_direct_driver_load_pairs": 226464,
+      "max_registered_stage_endpoint_l1": {
+        "driver": "u_ot_pr_core.g_ctl\\[2\\].gc$_DFF_PN0_/QN",
+        "load": "u_ot_pr_core.we_o\\[21\\]$_DFF_PN0_/D",
+        "driver_role": "SEQ_OUTPUT",
+        "load_role": "SEQ_INPUT",
+        "manhattan_um": 393.086
+      },
+      "registered_stage_endpoints_checked": 46086,
+      "registered_stage_endpoints_over405": [],
+      "max_comb_stage_sum_manhattan_um": 426.225,
+      "unresolved_comb_nodes": 0,
+      "pg": {
+        "POWER_iterms": 103163,
+        "GROUND_iterms": 103163,
+        "physical_pg_only_instances": 4712,
+        "GROUND_nets": 1,
+        "GROUND_connected_pins": 98457,
+        "POWER_nets": 1,
+        "POWER_connected_pins": 98457
+      },
+      "pg_open_by_master": {
+        "HB2xp67_ASAP7_75t_R": 9240,
+        "BUFx2_ASAP7_75t_R": 174
+      },
+      "pg_open_by_status": {
+        "PLACED": 9414
+      },
+      "pg_open_count": 9414,
+      "pg_open_classification": [
+        {
+          "placement_status": "PLACED",
+          "do_not_touch": true,
+          "net": null,
+          "net_sigtype": null,
+          "pins": 9240
+        },
+        {
+          "placement_status": "PLACED",
+          "do_not_touch": false,
+          "net": null,
+          "net_sigtype": null,
+          "pins": 174
+        }
+      ],
+      "boundary_endpoint_roles": [
+        {
+          "roles": "LIB_CLOCK/UNCONNECTED",
+          "port_direction": "INPUT",
+          "ports": 1
+        },
+        {
+          "roles": "SEQ_OUTPUT",
+          "port_direction": "OUTPUT",
+          "ports": 514
+        },
+        {
+          "roles": "SEQ_INPUT",
+          "port_direction": "INPUT",
+          "ports": 4106
+        }
+      ]
+    },
+    "4_cts": {
+      "odb_sha256": "5d40140576bc34d8d05e89e6fad54975d7910ed70c6a8778221ae6df9934bd97",
+      "script_sha256": "e446e9a2717e29c95aacca45b6e671bed9029173e5c030e3235e0be2a590cbf0",
+      "errors": [],
+      "max_direct_pair": {
+        "net": "net11756",
+        "driver": "place11758/Y",
+        "load": "_19364_/A",
+        "driver_role": "COMB_OUTPUT",
+        "load_role": "COMB_INPUT",
+        "manhattan_um": 165.777
+      },
+      "all_direct_driver_load_pairs": 226464,
+      "max_registered_stage_endpoint_l1": {
+        "driver": "u_ot_pr_core.g_ctl\\[2\\].gc$_DFF_PN0_/QN",
+        "load": "u_ot_pr_core.we_o\\[21\\]$_DFF_PN0_/D",
+        "driver_role": "SEQ_OUTPUT",
+        "load_role": "SEQ_INPUT",
+        "manhattan_um": 393.086
+      },
+      "registered_stage_endpoints_checked": 46086,
+      "registered_stage_endpoints_over405": [],
+      "max_comb_stage_sum_manhattan_um": 426.225,
+      "unresolved_comb_nodes": 0,
+      "pg": {
+        "POWER_iterms": 103163,
+        "GROUND_iterms": 103163,
+        "physical_pg_only_instances": 4712,
+        "GROUND_nets": 1,
+        "GROUND_connected_pins": 98457,
+        "POWER_nets": 1,
+        "POWER_connected_pins": 98457
+      },
+      "pg_open_by_master": {
+        "HB2xp67_ASAP7_75t_R": 9240,
+        "BUFx2_ASAP7_75t_R": 174
+      },
+      "pg_open_by_status": {
+        "PLACED": 9414
+      },
+      "pg_open_count": 9414,
+      "pg_open_classification": [
+        {
+          "placement_status": "PLACED",
+          "do_not_touch": true,
+          "net": null,
+          "net_sigtype": null,
+          "pins": 9240
+        },
+        {
+          "placement_status": "PLACED",
+          "do_not_touch": false,
+          "net": null,
+          "net_sigtype": null,
+          "pins": 174
+        }
+      ],
+      "boundary_endpoint_roles": [
+        {
+          "roles": "LIB_CLOCK/UNCONNECTED",
+          "port_direction": "INPUT",
+          "ports": 1
+        },
+        {
+          "roles": "SEQ_OUTPUT",
+          "port_direction": "OUTPUT",
+          "ports": 514
+        },
+        {
+          "roles": "SEQ_INPUT",
+          "port_direction": "INPUT",
+          "ports": 4106
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Native Liberty roles used for every signal/clock pin and sequential boundary; no clock/data name exemption.",
+    "Non-Liberty physical-only master accepted only after every actual ITerm is POWER/GROUND; no SIGNAL/CLK pins, no name waiver.",
+    "Registered-stage endpoint L1 uses4 signed coordinate extrema through complete combinational cell graph; it is a safe conservative upperbound if any multioutput cell has independent output cones.",
+    "Sum of wire displacements along a path is a distinct reported diagnostic and is not the405um endpoint criterion.",
+    "Old stage PG open pins MUST NOT be waived or treated as final PG evidence. Current approved route and eventual final native PG audit remain mandatory.",
+    "Original12GB exit137 and stopped PG-walk prototype preserved; no receipt/adoption from incomplete prototypes."
+  ]
+}

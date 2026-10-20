@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053
+ot-run: ot-epyc7       admits   880 GB (avail 717, growth 101, headroom 0, waiters 0/0 GB) load 52/96 running 23 disk 5393 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1725363-1792506966 after 1 s
+OPENROAD: /OpenROAD-flow-scripts/tools/OpenROAD
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+AUDIT_START
+LIB_ROLES_READY 202
+READ_STAGE 4_cts
+PINS_READY 4_cts 535350
+NETS_READY 4_cts 226464
+4_cts {"errors": 0, "max_direct_pair": {"net": "net11756", "driver": "place11758/Y", "load": "_19364_/A", "driver_role": "COMB_OUTPUT", "load_role": "COMB_INPUT", "manhattan_um": 165.777}, "max_registered_stage_endpoint_l1": {"driver": "u_ot_pr_core.g_ctl\\[2\\].gc$_DFF_PN0_/QN", "load": "u_ot_pr_core.we_o\\[21\\]$_DFF_PN0_/D", "driver_role": "SEQ_OUTPUT", "load_role": "SEQ_INPUT", "manhattan_um": 393.086}, "endpoints_checked": 46086, "max_comb_stage_sum_manhattan_um": 426.225, "pg_open": 9414, "pg_open_by_master": {"HB2xp67_ASAP7_75t_R": 9240, "BUFx2_ASAP7_75t_R": 174}, "pg": {"POWER_iterms": 103163, "GROUND_iterms": 103163, "physical_pg_only_instances": 4712, "GROUND_nets": 1, "GROUND_connected_pins": 98457, "POWER_nets": 1, "POWER_connected_pins": 98457}}
+READ_STAGE 5_1_grt
+PINS_READY 5_1_grt 535350
+NETS_READY 5_1_grt 226464
+5_1_grt {"errors": 0, "max_direct_pair": {"net": "net11756", "driver": "place11758/Y", "load": "_19364_/A", "driver_role": "COMB_OUTPUT", "load_role": "COMB_INPUT", "manhattan_um": 165.777}, "max_registered_stage_endpoint_l1": {"driver": "u_ot_pr_core.g_ctl\\[2\\].gc$_DFF_PN0_/QN", "load": "u_ot_pr_core.we_o\\[21\\]$_DFF_PN0_/D", "driver_role": "SEQ_OUTPUT", "load_role": "SEQ_INPUT", "manhattan_um": 393.086}, "endpoints_checked": 46086, "max_comb_stage_sum_manhattan_um": 426.225, "pg_open": 9414, "pg_open_by_master": {"HB2xp67_ASAP7_75t_R": 9240, "BUFx2_ASAP7_75t_R": 174}, "pg": {"POWER_iterms": 103163, "GROUND_iterms": 103163, "physical_pg_only_instances": 4712, "GROUND_nets": 1, "GROUND_connected_pins": 98457, "POWER_nets": 1, "POWER_connected_pins": 98457}}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1725363-1792506966): exit 0
