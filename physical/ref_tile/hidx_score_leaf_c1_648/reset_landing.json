@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_idx_score_leaf_c1",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n reaches only the 2 synchroniser flops of ot_rst_relay_l (relay copies clear from the last stage); physical stages would shift the scheduled reset release"
+}

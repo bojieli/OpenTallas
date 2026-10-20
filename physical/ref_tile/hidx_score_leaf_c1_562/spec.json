@@ -1,0 +1,228 @@
+{
+ "kind": "tile",
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "pd": 0.72
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "job": {
+  "owner": "Claude LEAD2-HBM/L2H-IDXSCORE 1019",
+  "purpose": "IDX-SCORE leaf master, one clock root (8 per quarter)",
+  "branch": "claude/l2h-idxscore-1019",
+  "benches": [
+   {
+    "name": "chunk_rt_l_pos",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_pos pos",
+    "expect": "pass",
+    "pass_regex": "^CHUNK_RT_EQUIV PASS checks ",
+    "pass_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/pos.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_l_gap4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_gap4 gap4",
+    "expect": "pass",
+    "pass_regex": "^CHUNK_RT_EQUIV PASS checks ",
+    "pass_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/gap4.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_l_qlate1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_qlate1 qlate1",
+    "expect": "fail",
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/qlate1.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_l_seam",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_seam seam",
+    "expect": "fail",
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/seam.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_l_swap",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_swap swap",
+    "expect": "fail",
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/swap.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "name": "hidx_score_leaf_c1_562",
+ "top": "ot_hbm_idx_score_leaf_c1",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_score_leaf_c1.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_l.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_rst_relay_l.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_delay_auto.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {},
+ "outline": {
+  "w": 561.6,
+  "h": 561.6,
+  "exact": true
+ },
+ "structural_change": "L2H-IDXSCORE 2026-10-19 successor of hidx_score_leaf_1017 (r10 FAIL: CTS clk_pair[0] internal-root pin-flop spread 176.2 ps, reset_landing 40, util 68%): ONE centre-fed root clk (no internal-only roots), core ot_hbm_idx_chunk_rt_l (landed relays, segmented valid-line resets, ring-buffer delays), outline 561.6 um square sized from the r10 synthesis area 209,848 um2 (~67% util); same data ports and cycles.",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rst_n reaches only the 2 synchroniser flops of ot_rst_relay_l (relay copies clear from the last stage); physical stages would shift the scheduled reset release"
+ },
+ "clock_port": "clk",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pins": {
+  "W": [
+   "w_qv",
+   "w_q",
+   "w_kv",
+   "w_kkv",
+   "w_key",
+   "w_aux",
+   "w_bus"
+  ],
+  "E": [
+   "e_qv",
+   "e_q",
+   "e_kv",
+   "e_kkv",
+   "e_key",
+   "e_aux",
+   "e_bus"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "hb"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every leaf pin: W pin regs f_*/hb_p/b_w (flop-first), E outputs from the E pin regs g_*/e_bus"
+ },
+ "pin_ranges": {
+  "w_qv": [
+   2.16,
+   3.24
+  ],
+  "e_qv": [
+   2.16,
+   3.24
+  ],
+  "w_q": [
+   3.24,
+   97.857
+  ],
+  "e_q": [
+   3.24,
+   97.857
+  ],
+  "w_kv": [
+   97.857,
+   98.937
+  ],
+  "e_kv": [
+   97.857,
+   98.937
+  ],
+  "w_kkv": [
+   98.937,
+   100.017
+  ],
+  "e_kkv": [
+   98.937,
+   100.017
+  ],
+  "w_key": [
+   100.017,
+   462.491
+  ],
+  "e_key": [
+   100.017,
+   462.491
+  ],
+  "w_aux": [
+   462.491,
+   467.489
+  ],
+  "e_aux": [
+   462.491,
+   467.489
+  ],
+  "w_bus": [
+   467.489,
+   559.44
+  ],
+  "e_bus": [
+   467.489,
+   559.44
+  ],
+  "clk": [
+   280.26,
+   281.34
+  ],
+  "rst_n": [
+   286.2,
+   287.28
+  ],
+  "hb": [
+   264.6,
+   275.4
+  ]
+ }
+}

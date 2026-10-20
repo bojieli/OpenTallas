@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_idx_score_leaf_c1",
+ "enable": false,
+ "reason": "the RTL registers every leaf pin: W pin regs f_*/hb_p/b_w (flop-first), E outputs from the E pin regs g_*/e_bus"
+}

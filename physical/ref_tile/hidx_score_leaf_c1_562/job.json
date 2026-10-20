@@ -1,0 +1,144 @@
+{
+ "name": "hidx_score_leaf_c1_562-ref-COMMIT",
+ "block": "ot_hbm_idx_score_leaf_c1",
+ "ref_tile": true,
+ "owner": "Claude LEAD2-HBM/L2H-IDXSCORE 1019",
+ "purpose": "IDX-SCORE leaf master, one clock root (8 per quarter)",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/l2h-idxscore-1019",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_score_leaf_c1 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/ot_hbm_idx_score_leaf_c1.sv rtl/hdc/v41x/ot_hbm_idx_chunk_rt_l.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_relay_l.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/hdc/ot_hdc_delay_auto.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_l_pos",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_pos pos",
+    "expect": "pass",
+    "pass_regex": "^CHUNK_RT_EQUIV PASS checks ",
+    "pass_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/pos.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_l_gap4",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_gap4 gap4",
+    "expect": "pass",
+    "pass_regex": "^CHUNK_RT_EQUIV PASS checks ",
+    "pass_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/gap4.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_l_qlate1",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_qlate1 qlate1",
+    "expect": "fail",
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/qlate1.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_l_seam",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_seam seam",
+    "expect": "fail",
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/seam.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "chunk_rt_l_swap",
+    "cmd": "bash rtl/test/hbm_idx_static/run_chunk_rt_l_equiv.sh {RUN}/le_swap swap",
+    "expect": "fail",
+    "fail_regex": "^MISMATCH cyc",
+    "fail_witness": "results/rtl/hbm_idx_quarter_split_1018/leaf_l/swap.log",
+    "threads": 8,
+    "peak_ram_gb": 28,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_score_leaf_c1_562/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_score_leaf_c1_562/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_score_leaf_c1_562 --out {RUN}/record/views/ot_hbm_idx_score_leaf_c1  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_score_leaf_c1_562/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_score_leaf_c1_562/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_score_leaf_c1_562/hidx_score_leaf_c1_562-ref-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "L2H-IDXSCORE 2026-10-19 successor of hidx_score_leaf_1017 (r10 FAIL: CTS clk_pair[0] internal-root pin-flop spread 176.2 ps, reset_landing 40, util 68%): ONE centre-fed root clk (no internal-only roots), core ot_hbm_idx_chunk_rt_l (landed relays, segmented valid-line resets, ring-buffer delays), outline 561.6 um square sized from the r10 synthesis area 209,848 um2 (~67% util); same data ports and cycles."
+}
