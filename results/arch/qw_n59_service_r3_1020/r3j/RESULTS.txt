@@ -1,0 +1,5 @@
+R3j 71cbfd1f4 (QW-N59-6 10-20) on R3i: q_epoch select quarter 1 on its own copy, third tx_valid copy, epoch select halves.
+Six V5.050 legs PASS; mutants REJECTED as R3i; txvb (tx header copy off) REJECTED by local_mu (receipts/txvb_zero_local_mu),
+survives local_dv and local_rnd (header not observed there).
+Strict mapped census: REFUSE 1 > 32 (tx_valid_c 39: the header bits) -> R3k (fourth tx_valid copy).  KVN target audit 1523
+nets, max 26, 0 offenders; tied output bits 0.
