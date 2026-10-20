@@ -2083,6 +2083,8 @@ proc ot_ce_forwarded_visit {corner} {
     if {[llength $clocks] != 1} {error "OT_FORWARDED: $bit lacks one actual source clock (DATA input delay is not a clock)"}
     set clock [lindex $clocks 0]; set cn [get_full_name $clock]; set root [ot_cf_root $cn]
     set rc [get_clocks -quiet $root]
+    set source_points [get_property $clock sources]
+    if {[llength $source_points] != 1 || [get_full_name [lindex $source_points 0]] ne $bit || [llength [get_property $rc sources]] != 1} {error "OT_FORWARDED: source clock/root must have one actual source point for this input bit"}
     if {$cn ne [dict get $binding clock] || $root ne [dict get $binding root] || [$rc is_virtual]} {error "OT_FORWARDED: wrong or virtual actual clock/root $bit"}
     if {$judged && ![$clock is_propagated]} {error "OT_FORWARDED: ideal source clock cannot qualify $bit"}
     set wave [$clock waveform]

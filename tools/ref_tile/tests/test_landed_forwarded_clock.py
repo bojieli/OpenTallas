@@ -192,23 +192,24 @@ puts "LANDED_RESULT PASS"
         rc, out = self.run_flow()
         self.assertEqual(rc, 0, out[-6500:])
         self.assertRegex(out, r'OT_LANDED CHILD_SINK tt ck_ra h/CLK wire=')
-        for port, pin, r in (('xk\\[0\\]', 'f0/CLK', 100), ('xk\\[0\\]', 'f1/CLK', 100), ('xk\\[1\\]', 'f2/CLK', 100)):
-            m = re.search(rf'OT_LANDED FORWARDED_SINK tt {port} {pin} wire=([\d.eE+-]+) R={r}(?:\.0)? min=([\d.eE+-]+)', out)
-            self.assertIsNotNone(m, out[-6500:])
-        self.assertRegex(out, r'OT_FORWARDED SPREAD tt xk\[0\] sinks=2 child_flop_spread=[\d.]+ ps \(<= 80 at TT and FF\) PASS')
-        self.assertRegex(out, r'OT_FORWARDED SPREAD tt xk\[1\] sinks=1 child_flop_spread=20\.0 ps')
+        for port, pin in [('xk[0]', 'f0/CLK'), ('xk[0]', 'f1/CLK'), ('xk[1]', 'f2/CLK')]:
+            for edge in ('rise', 'fall'):
+                self.assertRegex(out, r'OT_FORWARDED SINK tt ' + re.escape(port) + ' ' + re.escape(pin) + r' .*edge=' + edge + r' .*local=')
+        for bit in (0, 1):
+            for edge in ('rise', 'fall'):
+                self.assertRegex(out, rf'OT_FORWARDED SPREAD tt xk\[{bit}\] input_edge={edge} .* limit=80 judged=1')
         self.assertIn('OT_MULTI_ROOT OWNERSHIP PASS roots=2', out)
         self.assertIn('LANDED_RESULT PASS', out)
 
     def test_pre_cts_reports_only(self):
         rc, out = self.run_flow('pre_cts')
         self.assertEqual(rc, 0, out[-6500:])
-        self.assertRegex(out, r'OT_FORWARDED SPREAD tt xk\[0\] sinks=2 ')
+        self.assertIn('OT_FORWARDED UNMEASURED', out)
         self.assertIn('LANDED_RESULT PASS', out)
 
     def test_mutants_fail_closed(self):
         for mutant, why in (('no_forwarded_class', r'OT_LANDED: 1 of 4 bound hard-child clock pins'),
-                            ('skewed', r'OT_LANDED: forwarded clock xk\[0\] child-flop spread [\d.]+ ps > 80 at tt')):
+                            ('skewed', r'OT_FORWARDED: xk\[0\]/(?:rise|fall) child-flop span .*exceeds80ps')):
             with self.subTest(mutant=mutant):
                 rc, out = self.run_flow(mutant)
                 self.assertNotEqual(rc, 0, out[-4000:])

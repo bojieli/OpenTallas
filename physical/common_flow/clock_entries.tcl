@@ -228,7 +228,11 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
         }
         puts "OT_HYBRID post-CTS scoped net repair on selected roots; [llength $entry_nets] hard entries unchanged"
       }
+      if {[llength $forwarded]} {
+        puts "OT_HYBRID CTS roots [join $roots { }]; verified native forwarded roots [join $forwarded { }]; independent hard-child entries excluded"
+      } else {
       puts "OT_HYBRID CTS roots [join $roots " "]; hard-child entries excluded"
+      }
     }
     if {[llength $cts_nets]} {
       puts "OT_ENTRIES done: $n independent hard entries, [llength $cts_nets] glue CTS roots, $far entry wires over $lim um"
