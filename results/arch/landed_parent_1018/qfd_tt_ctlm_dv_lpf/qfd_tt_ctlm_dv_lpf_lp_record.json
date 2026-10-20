@@ -581,8 +581,17 @@
  "flops": {
   "landing": 7298,
   "pads": 0,
-  "reset": 26
+  "reset": 26,
+  "out_regs": 2
  },
+ "out_regs": [
+  {
+   "port": "control_stores_ready",
+   "stages": 2,
+   "region": "hr",
+   "inst": "u_lpo_control_stores_ready"
+  }
+ ],
  "communicating_region_pairs": {
   "landed": [
    "core-hr"
@@ -617,7 +626,7 @@
   },
   "output_port_offset_edges": {
    "program_obs": 6,
-   "control_stores_ready": 6,
+   "control_stores_ready": 8,
    "layer_context_v": 6,
    "native_tok": 6,
    "native_pos": 6,
@@ -640,7 +649,7 @@
   "status_flag_lag_edges": {},
   "schedule": "offsets",
   "ref_params": null,
-  "max_added_edges": 6
+  "max_added_edges": 8
  },
  "warnings": [],
  "landing_implementation": {

@@ -65,6 +65,7 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     input wire ck_core,
     input wire ck_hr
 );
+    wire  control_stores_ready__o;   // out_regs: flat driver of control_stores_ready
     wire [16:0]  g_f16_st;
     wire [8:0]   g_treq;
     wire [115:0] g_cmd;
@@ -91,6 +92,8 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     wire [72:0]  hr_lo;
     wire [379:0] ib_hr;
     assign hr = {ib_hr, hr_lo};
+    // ---- OUTPUT REGISTER control_stores_ready: +2 edge(s) in region hr (out_regs; port offset +2)
+    ot_pl_pad #(.W(1), .N(2)) u_lpo_control_stores_ready (.ck(ck_hr), .d(control_stores_ready__o), .q(control_stores_ready));
     // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region core holds the root)
     wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_core), .d(rst_n), .q(lpr_root));
     wire lpr_core_l;  ot_pl_pad #(.W(1), .N(1)) u_lpr_core_l (.ck(ck_core), .d(lpr_root), .q(lpr_core_l));   // 0 hop(s) from core; landing rq release = RB (landing_reset_lead)
@@ -267,6 +270,6 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     #(.STAGE_ME((STAGE_ME != 0) ? 1 : 0))
 `endif
     u_hr (.stage_start(s_start__l_hr), .stage(s_stage__l_hr), .rom_ret_i({rom_ret_v__l_hr[1], 16'd0, 1'b0, 32'd0, 18'd0, 24'd0, 1'b0, rom_ret_v__l_hr[0], 1'b1}), .cp_active(1'b0), .cp(cp), .me_image_ready(me_image_ready), .program_obs(program_obs), .layer_context_v(lcv_h), .native_tok(ntok_h), .native_pos(npos_h), .rom_cmd(ib_q), .command_stage(command_stage), .native_cmd(native_cmd), .me_observe(me_observe), .native_ret(native_ret), .ck_head(ck_hr), .ck_pm0(ck_hr), .ck_pm1(ck_hr), .rst_n(lpr_c_u_hr), .h_start(st__l_hr[48]), .token(st__l_hr[47:30]), .pos(st__l_hr[29:12]), .prog_base(st__l_hr[11:0]), .pw_v(pw__l_hr[74]), .pw_addr(pw__l_hr[73:64]), .pw_data(pw__l_hr[63:0]), .x_oacc(su_acc__l_hr), .x_oidle(x_oidle__l_hr), .x_oprog(x_oprog__l_hr), .x_orows(x_orows__l_hr), .kv_ok(kok), .kv_write_drained(kwd), .me_mem_ok(1'b1), .m_fin_o(), .m_fidx_o(), .m_fval_o(), .kvd_v(), .kvd_wbase(), .kvd_ts(), .kvd_ks(), .kvd_js(), .kvd_wcs(), .kvd_split(), .kvd_jsh(), .kvd_tiles(), .kvd_k(), .kvd_nout(), .kvd_kindk(), .kvd_pos(), .me_clk_en(), .c_fault(hr_fault));   // region hr, t = 6
-    qfd_tt_ctlm_dv_go #(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_go (.ck(ck_hr), .rst_n(lpr_c_u_go), .pw(pw__l_hr), .st(st__l_hr), .su_obs(su_obs__l_hr), .me_observe(me_observe), .cp(cp), .me_image_ready(me_image_ready), .hr_fault(hr_fault), .dcs(dcs__l_hr), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready));   // region hr, t = 6
+    qfd_tt_ctlm_dv_go #(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_go (.ck(ck_hr), .rst_n(lpr_c_u_go), .pw(pw__l_hr), .st(st__l_hr), .su_obs(su_obs__l_hr), .me_observe(me_observe), .cp(cp), .me_image_ready(me_image_ready), .hr_fault(hr_fault), .dcs(dcs__l_hr), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready__o));   // region hr, t = 6
     qfd_tt_ctlm_dv_thru u_thru (.ck(ck_hr), .rst_n(lpr_c_u_thru), .f16_st_i(g_f16_st__l_hr), .f16_st(f16_st), .treq_i(g_treq__l_hr), .table_req(table_req), .hu_i(hu__l_hr), .fctx_i(fctx__l_hr), .lcv_i(lcv_h), .ntok_i(ntok_h), .layer_context_v(layer_context_v), .native_tok(native_tok), .npos_i(npos_h), .native_pos(native_pos), .cmd_i(g_cmd__l_hr), .cal_program_obs_i(g_cal_program_obs__l_hr), .cal_descriptor_obs_i(g_cal_descriptor_obs__l_hr), .cal_image_ready_i(g_cal_image_ready__l_hr), .emb_start_i(g_emb_start__l_hr), .emb_token_i(g_emb_token__l_hr), .ib_i(ib_q), .ib_hr(ib_hr), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs), .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token));   // region hr, t = 6
 endmodule

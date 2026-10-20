@@ -50,8 +50,8 @@ module tb_qfd_tt_ctlm_dv_lpf_lp;
     always @(posedge clk) begin : g_dli_f16_obs integer j; dli_f16_obs[0] <= fi_f16_obs; for (j = 1; j <= 0; j = j + 1) dli_f16_obs[j] <= dli_f16_obs[j - 1]; end
     wire [75:0] fo_program_obs, lo_program_obs;  reg [75:0] dlo_program_obs [0:6];
     always @(posedge clk) begin : g_dlo_program_obs integer j; dlo_program_obs[0] <= fo_program_obs; for (j = 1; j <= 6; j = j + 1) dlo_program_obs[j] <= dlo_program_obs[j - 1]; end
-    wire [0:0] fo_control_stores_ready, lo_control_stores_ready;  reg [0:0] dlo_control_stores_ready [0:6];
-    always @(posedge clk) begin : g_dlo_control_stores_ready integer j; dlo_control_stores_ready[0] <= fo_control_stores_ready; for (j = 1; j <= 6; j = j + 1) dlo_control_stores_ready[j] <= dlo_control_stores_ready[j - 1]; end
+    wire [0:0] fo_control_stores_ready, lo_control_stores_ready;  reg [0:0] dlo_control_stores_ready [0:8];
+    always @(posedge clk) begin : g_dlo_control_stores_ready integer j; dlo_control_stores_ready[0] <= fo_control_stores_ready; for (j = 1; j <= 8; j = j + 1) dlo_control_stores_ready[j] <= dlo_control_stores_ready[j - 1]; end
     wire [0:0] fo_layer_context_v, lo_layer_context_v;  reg [0:0] dlo_layer_context_v [0:6];
     always @(posedge clk) begin : g_dlo_layer_context_v integer j; dlo_layer_context_v[0] <= fo_layer_context_v; for (j = 1; j <= 6; j = j + 1) dlo_layer_context_v[j] <= dlo_layer_context_v[j - 1]; end
     wire [17:0] fo_native_tok, lo_native_tok;  reg [17:0] dlo_native_tok [0:6];
@@ -123,9 +123,9 @@ module tb_qfd_tt_ctlm_dv_lpf_lp;
             fi_ag5 = {$urandom};
             fi_f16_auth = {$urandom,$urandom,$urandom};
             fi_f16_obs = {$urandom,$urandom};
-            if (cyc > 36) begin
+            if (cyc > 38) begin
                 nc = nc + 1; if (lo_program_obs !== dlo_program_obs[5]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=program_obs cycle=%0d flat=%h landed=%h", cyc, dlo_program_obs[5], lo_program_obs); end
-                nc = nc + 1; if (lo_control_stores_ready !== dlo_control_stores_ready[5]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=control_stores_ready cycle=%0d flat=%h landed=%h", cyc, dlo_control_stores_ready[5], lo_control_stores_ready); end
+                nc = nc + 1; if (lo_control_stores_ready !== dlo_control_stores_ready[7]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=control_stores_ready cycle=%0d flat=%h landed=%h", cyc, dlo_control_stores_ready[7], lo_control_stores_ready); end
                 nc = nc + 1; if (lo_layer_context_v !== dlo_layer_context_v[5]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=layer_context_v cycle=%0d flat=%h landed=%h", cyc, dlo_layer_context_v[5], lo_layer_context_v); end
                 nc = nc + 1; if (lo_native_tok !== dlo_native_tok[5]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=native_tok cycle=%0d flat=%h landed=%h", cyc, dlo_native_tok[5], lo_native_tok); end
                 nc = nc + 1; if (lo_native_pos !== dlo_native_pos[5]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=native_pos cycle=%0d flat=%h landed=%h", cyc, dlo_native_pos[5], lo_native_pos); end
@@ -145,7 +145,7 @@ module tb_qfd_tt_ctlm_dv_lpf_lp;
                 nc = nc + 1; if (lo_table_req !== dlo_table_req[5]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=table_req cycle=%0d flat=%h landed=%h", cyc, dlo_table_req[5], lo_table_req); end
             end
         end
-        if (bad == 0 && nc > 0) $display("LP_LOCKSTEP PASS MUT=%0d compared=%0d cycles=3000 warm=36", MUT, nc);
+        if (bad == 0 && nc > 0) $display("LP_LOCKSTEP PASS MUT=%0d compared=%0d cycles=3000 warm=38", MUT, nc);
         else $display("LP_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d", MUT, bad, nc);
         $finish;
     end
