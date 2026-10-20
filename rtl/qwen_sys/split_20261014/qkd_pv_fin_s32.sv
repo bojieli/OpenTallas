@@ -40,13 +40,25 @@ module qkd_pv_fin_s32 #(
  wire [15:0] D0=LASTP-P0,D1=LASTP-P1;
  // Command-time dates remove the runtime max-word distribution.
  (* keep="true",dont_touch="true" *) reg [15:0] ADD_AGE,SUM_AGE;
- wire [15:0] PRODUCT_AGE=MUL_AGE+16'(MUL_LAT);
- (* keep="true",dont_touch="true" *) reg [15:0] age_operand,age_header,age_product;
+ (* keep="true",dont_touch="true" *) reg [15:0] PRODUCT_AGE,PRODUCT_AGE_PRED;
+ (* keep="true",dont_touch="true" *) reg [15:0] age_operand,age_header,age_product,age_sum;
  (* keep="true",dont_touch="true" *) reg [15:0] mul_operand,mul_header;
- wire [15:0] no=age_operand+16'd1,nh=age_header+16'd1,np=age_product+16'd1;
- always @(posedge ck or negedge rr[480])if(!rr[480])age_operand<=0;else age_operand<=age_d;
- always @(posedge ck or negedge rr[481])if(!rr[481])age_header<=0;else age_header<=age_d;
- always @(posedge ck or negedge rr[482])if(!rr[482])age_product<=0;else age_product<=age_d;
+ wire [15:0] no=age_operand+16'd1,nh=age_header+16'd1,np=age_product+16'd1,ns=age_sum+16'd1;
+ wire [15:0] lane_active_vec;
+ // Independent counter feedback prevents main-age input redistribution.
+ // Kept start/active images are same-phase original controls, not new stages.
+ always @(posedge ck or negedge rr[480])if(!rr[480])age_operand<=0;
+  else if(command_accept[0])age_operand<=0;
+  else if(!command_start[0]&&lane_active_vec[0]&&!fault)age_operand<=age_operand+16'd1;
+ always @(posedge ck or negedge rr[481])if(!rr[481])age_header<=0;
+  else if(command_accept[1])age_header<=0;
+  else if(!command_start[1]&&lane_active_vec[1]&&!fault)age_header<=age_header+16'd1;
+ always @(posedge ck or negedge rr[482])if(!rr[482])age_product<=0;
+  else if(command_accept[6])age_product<=0;
+  else if(!command_start[6]&&lane_active_vec[2]&&!fault)age_product<=age_product+16'd1;
+ always @(posedge ck or negedge rr[487])if(!rr[487])age_sum<=0;
+  else if(command_accept[7])age_sum<=0;
+  else if(!command_start[7]&&lane_active_vec[3]&&!fault)age_sum<=age_sum+16'd1;
  // Each shared acceptance controls original8 +two duplicated8 payload bits.
  generate for(genvar mh=0;mh<2;mh=mh+1)begin:g_mul_date_capture
   always @(posedge ck or negedge rr[483])if(!rr[483])mul_operand[8*mh+:8]<=8'hff;
@@ -57,8 +69,8 @@ module qkd_pv_fin_s32 #(
  wire [15:0] n=age+16'd1;                                  // the edge that ends this cycle
  function automatic win(input [15:0] x,input [15:0] lo);win=(x>=lo)&&(x<lo+16'd32);endfunction
  wire p0_slot=active&&win(n,P0),p1_slot=active&&win(n,P1),r_slot=active&&n==RA;
- wire add_slot=active&&win(n,ADD_AGE),sum_slot=active&&win(n,SUM_AGE);
- wire mul_slot=active&&win(n,MUL_AGE),product_slot=active&&win(np,PRODUCT_AGE);
+ wire add_slot=active&&win(ns,ADD_AGE),sum_slot=active&&win(ns,SUM_AGE);
+ wire mul_slot=active&&win(no,mul_operand),product_slot=active&&win(np,PRODUCT_AGE);
  wire [4:0] b_p0=5'(n-P0),b_p1=5'(n-P1),b_prod=5'(np-PRODUCT_AGE);
  // calendar of a new command (checked on the start edge)
  wire [15:0] c0=cal_q[15:0],c1=cal_q[31:16],cr=cal_q[47:32];
@@ -179,9 +191,10 @@ module qkd_pv_fin_s32 #(
  generate for(l=0;l<16;l=l+1)begin:g_lane
   (* keep="true",dont_touch="true" *) reg add_land,mul_land,lane_active;
   always @(posedge ck)begin
-   add_land<=active&&!fault&&win(n+16'd1,ADD_AGE);
+   add_land<=active&&!fault&&win(ns+16'd1,ADD_AGE);
    mul_land<=active&&!fault&&win(no+16'd1,mul_operand);
   end
+  assign lane_active_vec[l]=lane_active;
   always @(posedge ck or negedge rr[462+l])if(!rr[462+l])lane_active<=0;else lane_active<=active_d;
   ot_hdc_fp32_add_lat_ncr #(.LAT(ADD_LAT)) u_add(.clk(ck),.rst_n(rr[28*l]),.rst_y(rr[28*l+1]),.rst_y2(2'b11),.y2(),.valid_in(add_land&&lane_active),
    .a(opa[32*l+:32]),.b(opb[32*l+:32]),.y(sum[32*l+:32]),.err(ae[2*l+:2]),.valid_out(av[l]));
@@ -231,6 +244,21 @@ module qkd_pv_fin_s32 #(
   always @(posedge ck or negedge rr[486])if(!rr[486])SUM_AGE[8*dh+:8]<=8'(ADD_LAT>>(8*dh));
    else if(command_accept[4+dh])SUM_AGE[8*dh+:8]<=date_sum[8*dh+:8];
  end endgenerate
+ // Distinct observation/prediction dates avoid carry redistribution
+ // through one global live MUL_AGE register. Original unsummed selection.
+ (* keep="true",dont_touch="true" *) reg [47:0] product_cal[0:1];
+ wire [15:0] product_date[0:1];
+ generate for(genvar pd=0;pd<2;pd=pd+1)begin:g_product_date
+  always @(posedge ck)product_cal[pd]<=cal;
+  (* keep_hierarchy="yes" *) ot_qkd_pvfin_calendar_value #(.C(ADD_LAT+MUL_LAT+2),.IGNORE_R(MUT==3)) u_value(
+   .p0(product_cal[pd][15:0]),.p1(product_cal[pd][31:16]),.r(product_cal[pd][47:32]),.y(product_date[pd]));
+ end
+ for(genvar ph=0;ph<2;ph=ph+1)begin:g_product_date_capture
+  always @(posedge ck or negedge rr[488])if(!rr[488])PRODUCT_AGE_PRED[8*ph+:8]<=8'((MUL_LAT-1)>>(8*ph));
+   else if(command_accept[2+ph])PRODUCT_AGE_PRED[8*ph+:8]<=product_date[0][8*ph+:8];
+  always @(posedge ck or negedge rr[489])if(!rr[489])PRODUCT_AGE[8*ph+:8]<=8'((MUL_LAT-1)>>(8*ph));
+   else if(command_accept[4+ph])PRODUCT_AGE[8*ph+:8]<=product_date[1][8*ph+:8];
+ end endgenerate
  reg active_d;
  reg [15:0] age_d;
  reg [15:0] ep_d;
@@ -261,7 +289,7 @@ module qkd_pv_fin_s32 #(
     else begin
      if(sum_slot)wptr_d=wptr+5'd1;
      if(mul_slot)rptr_d=rptr+5'd1;
-     if(n==PRODUCT_AGE+16'd31)active_d=0;
+     if(np==PRODUCT_AGE+16'd31)active_d=0;
     end
    end else if(!active&&(p0v_q||p1v_q||rzv_q))fault_d=1;
  end
@@ -296,7 +324,7 @@ module qkd_pv_fin_s32 #(
  (* keep="true",dont_touch="true" *) reg [31:0] product_land;
  (* keep="true",dont_touch="true" *) reg [7:0] reciprocal_land;
  generate for(genvar oi=0;oi<32;oi=oi+1)begin:g_output_lane
-  always @(posedge ck)product_land[oi]<=active&&win(np+16'd1,PRODUCT_AGE);
+  always @(posedge ck)product_land[oi]<=active&&win(np+16'd1,PRODUCT_AGE_PRED);
   always @(posedge ck)if(product_land[oi])out_data[16*oi+:16]<=product[16*oi+:16];
  end
  for(genvar ri=0;ri<8;ri=ri+1)begin:g_rz_capture

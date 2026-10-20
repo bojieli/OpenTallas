@@ -60,5 +60,18 @@
     "shipping": 5,
     "unwrapped_R10": 3
   },
-  "structural_successor_delta_vs_R10_shipping": 0
+  "structural_successor_delta_vs_R10_shipping": 0,
+  "current_source": "R13_DRAFT_UNQUALIFIED",
+  "additional_registers_R13_vs_R10": {
+    "previous_R12_net": 240,
+    "new_sum_counter": 16,
+    "product_calendar_pin_images": 96,
+    "two_product_dates": 32,
+    "removed_unused_global_mul_date": -16,
+    "expected_net_total": 368
+  },
+  "raw_reset_roots_before_after": [
+    32,
+    32
+  ]
 }
