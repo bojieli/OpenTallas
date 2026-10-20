@@ -1,0 +1,37 @@
+{
+  "status": "SOURCE_EDGE_LEDGER_MODEL_NOT_COLD_OR_PHASE_PROOF",
+  "source": "8dec8d8d5",
+  "source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv": "6ca92536c22eeabb7388a5c35c15ca868fee2c3e992f41b9269431f438c53b2d"
+  },
+  "assumption": "one coherentcoreclock edge convention, externalquarterresetdeassertedbeforeedge1; realphase/RC/recoverychecks stillOPEN",
+  "stages": [
+    {
+      "name": "canonicalouterquarterresetlanding",
+      "edges": 2,
+      "release_edge": 2
+    },
+    {
+      "name": "histbankrst_l0/rst_l1",
+      "edges": 2,
+      "release_edge": 4
+    },
+    {
+      "name": "ot_rst_relay SYNC_STAGES2",
+      "edges": 2,
+      "release_edge": 6
+    },
+    {
+      "name": "ot_rst_relay TREE_STAGES1",
+      "edges": 1,
+      "release_edge": 7
+    }
+  ],
+  "bank_leaf_reset_release_edge": 7,
+  "first_possible_capture_of_registers_held_by_leaf_reset": 8,
+  "relative_hq3_boot_delta_TARGET": 0,
+  "data_added_edges_TARGET": 0,
+  "scope": "Unresetpayload/visibleoutputs/firstvalid/HPIPE/tree operations are NOT allproved by a resetcounter. Exact cold/arbitraryretainedSRAM and interfacepublicationobserver plus parentSCC/SLAT4 scheduleproof remainOPEN.",
+  "correction": "Earlier twointernalstage shorthand omittedbankSYNC2/TREE1; never use2 asabsolute bankbootprice."
+}
