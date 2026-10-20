@@ -1,0 +1,13 @@
+# AHUB3 native clock/placement diagnosis; successor unlaunched
+
+Collected existing exact g2l CTS checkpoint read-only, OpenROAD26Q3-1510-g6cb3f2b704 (ep5 unit681386, exit0). 99,076 native instances; full names/master/actual boxes/status preserved in compressed TSV and SHA. No source, checkpoint or progressing jobs changed. Source archive4298242d1d1b037212290b903609e506cd853083712b71c4d058c3842e397fdc.
+
+G2l and fallback g2c both CTS_RC0 but neither closes. G2l PC in→reg−83.1ps, reg→reg+0.7ps, hold+49.14ps. Fallback reg→reg−44.0ps, hold−72.87ps; rawclockspread345.0/289.9ps. Both entered original trialGRT and remain to be collected.
+
+Correct child-flop referenced per-region TT/FF clock spreads: c358.4/317.5ps; z0 111.6/89.0; z1 100.4/80.6; z2 150.9/129.2; z3 176.8/152.8. Every referenced region fails80ps. Raw all-clock includes hard-child entry pins; raw597.1/511.9core is not the final-flop spread. Actual child insertion references in raw clock JSON are preserved; no name-based clock waiver.
+
+The landed source spec supplies logical regions and centers, but actual kit place.tcl positions only five macros and pre_gpl does pin/hold hooks; it has no physical region fences or source-owned landing-site placement. Actual c-clock writer rings are placed near four different Z interfaces: u_lpl4_w bbox64.638..172.692x196.56..312.12, u_lpl5_w278.37..360.882x196.83..329.67, u_lpl6_w65.34..184.842x241.65..343.44, u_lpl7_w272.376..369.9x257.58..343.44. Their native body areas850.320/852.449/851.472/855.321um2 exclude other cohorts and are not whole-block totals. Native u_core2,992cells/795.456um2 spans x9.558..730.89/y197.37..535.95; source u_apq172 pin flops spans x3.186..732.024.
+
+Next structural step, NOT IMPLEMENTED/LAUNCHED: derive legal placement cohorts with actual source membership and 40–60% row capacity after macro OBS/PG/tap/clock obligations, local landing read/write sites and genuine clock entries beside their register mass. A compact c fence alone cannot include opposite-boundary pin flops; split IO cohorts and price any new landed boundaries/calendar ages before building. Preserve exact endpoints/loads/uncertainties; no squeeze or knob sweep. No replacement RTL, PNG, critical submission, REVIEW.json or new gate was started. Root must review resulting source/model/checklist/actualPNG before a critical submission.
+
+Live handles at handback: local controllers4012603(g2l)/4013920(g2c), original ep5 scripts492869/493031, dirs /srv/opentallas-scratch/claude/ref_gate/qkd_ahub_g2l-20261019-170552 and qkd_ahub_g2c-20261019-170553. Do not restart progressing trialGRTs.

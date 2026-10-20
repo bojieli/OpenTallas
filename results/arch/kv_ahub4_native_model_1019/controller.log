@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-kv-ahub4-native-model-1019
+ot-run: ot-epyc5       admits   915 GB (avail 749, growth 108, headroom 0, waiters 0/0 GB) load 85/128 running 27 disk 744 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-kv-ahub4-native-model-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-ahub4-native-model-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-kv-ahub4-native-model-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-ahub4-native-model-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-ahub4-native-model-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-681386-1792457041 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+AHUB_NATIVE_CELLS 99076
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-681386-1792457041): exit 0
