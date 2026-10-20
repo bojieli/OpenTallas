@@ -359,6 +359,9 @@ def cmd_die(a):
     out = Path(a.out)
     if out.exists():
         raise SystemExit('REFUSE_EXISTING_RUN_DIR')
+    import xs_capacity as XCAP   # S81-ROMOPT-B: the die compile refuses a stage map that overfills the ROM / cfg7
+    if XCAP.enabled():
+        XCAP.verdict(stage=os.environ.get("OT_XS_STAGE"))
     die = C.Die(C.die_tree(a.die_ref, a.die_src))
     periods = dict((k, int(v)) for k, v in (x.split('=') for x in a.period))
     summary = dict(schema='opentallas.s81_dv.xs_field_calendar.v1', slice=a.slice, periods_override=periods, layers={})
