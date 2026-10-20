@@ -1,0 +1,91 @@
+{
+  "normalized_graph_sha256": "7012190c37f065848f12615326e7bb7c06c1d25afcdb5f58a05634e5c2250255",
+  "raw_sha256": "e1587280165b845c2bff546a04abe975eaf5306191858355ef1c210d14cd2f50",
+  "unknown": [
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$46882",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 19724,
+      "known": 51334,
+      "source": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.21-611.28|rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.17-651.20"
+    },
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$46883",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 19724,
+      "known": 51336,
+      "source": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.21-611.28|rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.17-651.20"
+    },
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$46892",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 19717,
+      "known": 51334,
+      "source": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.21-611.28|rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.17-651.20"
+    },
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$46893",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 19717,
+      "known": 51336,
+      "source": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.21-611.28|rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.17-651.20"
+    },
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$46902",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 19715,
+      "known": 51334,
+      "source": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.21-611.28|rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.17-651.20"
+    },
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$46903",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 19715,
+      "known": 51336,
+      "source": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.21-611.28|rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.17-651.20"
+    },
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$46912",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 19673,
+      "known": 51334,
+      "source": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.21-611.28|rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.17-651.20"
+    },
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$46913",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 19673,
+      "known": 51336,
+      "source": "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.21-611.28|rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:611.17-651.20"
+    },
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$62298",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 14722,
+      "known": 22204,
+      "source": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv:135.89-135.105|/usr/local/bin/../share/yosys/techmap.v:178.4-183.7|/usr/local/bin/../share/yosys/techmap.v:178.8-178.12"
+    },
+    {
+      "cell": "$auto$simplemap.cc:298:simplemap_mux$62316",
+      "pin": "A",
+      "known_pin": "B",
+      "select": 17270,
+      "known": 22204,
+      "source": "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv:136.71-136.85|/usr/local/bin/../share/yosys/techmap.v:178.4-183.7|/usr/local/bin/../share/yosys/techmap.v:178.8-178.12"
+    }
+  ],
+  "states": 15135,
+  "macro_output_bits": 4241,
+  "input_bits": 734,
+  "observed_bits": 44570,
+  "proof": "All register effective next-state/reset/clock inputs, physical-macro input terminals and top outputs; equal symbolic current states/macro outputs; no state assumptions, no time exceptions."
+}

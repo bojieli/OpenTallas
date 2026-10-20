@@ -1,0 +1,460 @@
+
+-- Running command `read_verilog -sv /work/proof6/cut.sv; prep -top proof -flatten; opt; sat -verify -prove mismatch 0 -show target -show ux' --
+
+1. Executing Verilog-2005 frontend: /work/proof6/cut.sv
+Parsing SystemVerilog input from `/work/proof6/cut.sv' to AST representation.
+Generating RTLIL representation for module `\cut'.
+Generating RTLIL representation for module `\proof'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     \cut
+Parameter \MUT = 0
+
+2.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\cut'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\cut\MUT=s32'00000000000000000000000000000000'.
+
+2.1.3. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     $paramod\cut\MUT=s32'00000000000000000000000000000000
+Used module:     \cut
+
+2.1.4. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     $paramod\cut\MUT=s32'00000000000000000000000000000000
+Used module:     \cut
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\cut\MUT=s32'00000000000000000000000000000000.
+<suppressed ~5090 debug messages>
+Optimizing module proof.
+Optimizing module cut.
+<suppressed ~5090 debug messages>
+
+2.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\cut\MUT=s32'00000000000000000000000000000000.
+Deleting now unused module cut.
+<suppressed ~2 debug messages>
+
+2.4. Executing FUTURE pass.
+
+2.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+2.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 10180 unused cells and 111075 unused wires.
+<suppressed ~10303 debug messages>
+
+2.7. Executing CHECK pass (checking for obvious problems).
+Checking module proof...
+Found and reported 0 problems.
+
+2.8. Executing OPT pass (performing simple optimizations).
+
+2.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+2.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 121497 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 108949 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 104196 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 100801 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 97560 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 96791 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 96185 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 95847 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 95523 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 95259 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 94958 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 94703 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 94450 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 94236 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 94058 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93930 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93839 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93767 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93722 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93690 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93666 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93654 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93642 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93632 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93626 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93621 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93616 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93612 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93608 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93607 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93606 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93605 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 93604 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+<suppressed ~83679 debug messages>
+Removed a total of 27893 cells.
+
+2.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~87952 debug messages>
+
+2.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+2.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 93604 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 82024 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 79034 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 78509 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 78178 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 77918 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 77680 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 77097 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 76727 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 75766 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 73216 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 71093 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 69645 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 68249 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 66997 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 66008 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 65678 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 65208 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 64555 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 64218 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 63864 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 63642 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 63525 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 63426 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 63332 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 63208 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 63127 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 63052 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 62985 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 62903 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 62312 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61603 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61218 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61190 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61165 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61148 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61134 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61119 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61105 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61093 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61082 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61071 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61061 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61052 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61043 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61035 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61028 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61021 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61015 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61010 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61005 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 61000 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60996 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60993 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60990 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60987 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60984 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60982 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60980 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60979 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60978 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 60977 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+<suppressed ~97881 debug messages>
+Removed a total of 32627 cells.
+
+2.8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 0 unused cells and 10357 unused wires.
+<suppressed ~1 debug messages>
+
+2.8.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+2.8.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.8.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~45836 debug messages>
+
+2.8.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+2.8.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 60977 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+2.8.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+2.8.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+2.8.14. Finished fast OPT passes. (There is nothing left to do.)
+
+2.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 9 bits (of 10) from port A of cell proof.$shl$/work/proof6/cut.sv:111125$65838 ($shl).
+
+2.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+2.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.12. Executing OPT pass (performing simple optimizations).
+
+2.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+2.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 60977 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+2.12.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+2.12.4. Finished fast OPT passes.
+
+2.13. Executing SORT pass.
+
+2.14. Printing statistics.
+
+=== proof ===
+
+        +----------Local Count, excluding submodules.
+        | 
+   141317 wires
+   424549 wire bits
+   130952 public wires
+   369597 public wire bits
+        6 ports
+    20125 port bits
+    60977 cells
+    17247   $and
+    25565   $mux
+     1422   $not
+    13671   $or
+        1   $reduce_or
+        2   $scopeinfo
+        1   $shl
+     3068   $xor
+
+2.15. Executing CHECK pass (checking for obvious problems).
+Checking module proof...
+Found and reported 0 problems.
+
+3. Executing OPT pass (performing simple optimizations).
+
+3.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+3.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 60977 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+3.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~45836 debug messages>
+
+3.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+3.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 60977 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+3.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+3.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+3.9. Finished fast OPT passes. (There is nothing left to do.)
+
+4. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 60977 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+Import show expression: \target
+Import show expression: \ux
+
+Solving problem with 504281 variables and 1286492 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 14922451f7, time: 58.02s, user: 75.51s, system: 2.08s, MEM: 1347.55 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 37% 2x check (28 sec), 17% 6x opt_merge (13 sec), ...
