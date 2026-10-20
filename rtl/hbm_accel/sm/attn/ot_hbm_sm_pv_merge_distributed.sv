@@ -6,7 +6,7 @@
 // (ev2[96]) taken from the first capture (one edge early); 8 ev_write[9] from the first capture; 9 the e_busy
 // reset group never asserted (stale state survives a reassert); 10 second-level node 3 asserted synchronously (no
 // stopped-clock reset); 11 first_operand[7] from the first tag capture (one edge early).
-module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0)(
+module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0, FAN32=0)(
  input wire clk,rst_n,ev,input wire [511:0] sum,input wire [15:0] tag_d,
  output reg pv_v,output reg [511:0] pv_y,output reg [15:0] pv_tag,output reg fault,
  input wire pub_start,input wire [2:0] pub_slot,
@@ -76,7 +76,7 @@ module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0)(
  wire [63:0] first_c = (MUT==11) ? {first2[63:8],first1[0],first2[6:0]} : first2;
  wire [53:0] rcore_c = (MUT==9) ? {reset_core_n[53:14],1'b1,reset_core_n[12:0]} : reset_core_n;
  wire cpv,cpub,cfault;wire [511:0] cy;wire [15:0] ctag,cptag;wire[31:0] cdata;wire[3:0] cword;wire[2:0] cslot;
- ot_hbm_sm_pv_merge_distributed_core #(.TAGW(16),.LV(4),.MUT(MUT),.PUBLISH(1),.TURNREG(1),.SAFE(2)) u_core(
+ ot_hbm_sm_pv_merge_distributed_core #(.TAGW(16),.LV(4),.MUT(MUT),.PUBLISH(1),.TURNREG(1),.SAFE(2),.FAN32(FAN32)) u_core(
   .clk(clk),.rst_core_n(rcore_c),.ev_operand(ev_op_c),.ev_write(ev_wr_c),.ev_entry(ev_en_c),.fold_operand(fold2c),.pub_operand(pub2c),.pub_slot_tag(pubslot2t),
   .first_operand(first_c),
   .ev(ev_sch_c),.sum(sum2),.tag_d(tag2),.pv_v(cpv),.pv_y(cy),.pv_tag(ctag),.fault(cfault),

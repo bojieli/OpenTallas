@@ -19,7 +19,7 @@
 // off reads a junk word (exposes wrong-age copies).  XRAND 1 (with --x-initial unique / +verilator+rand+reset+2): unreset payload starts random, so payload fields are
 // compared only under their valid (pv_v / pub_v); control/valid/fault bits stay compared every edge.
 module tb_pv_merge_distributed;
-    parameter integer MUT = 0;
+    parameter integer MUT = 0, FAN32 = 0;
     parameter integer TURNREG = 1;                    // HH-12: the smh_pvm kit form (registered turn state)
     parameter integer SAFE = 2, TIGHT = 0, PUBEARLY = 0, REASSERT = 0, XRAND = 0;
     localparam integer R0 = 4;
@@ -34,7 +34,7 @@ module tb_pv_merge_distributed;
         .pub_v(pub_v), .pub_data(pub_data), .pub_word(pub_word), .pub_out_slot(pub_out_slot), .pub_tag(pub_tag),
         .fold_start(fold_start), .fold_a(fold_a), .fold_b(fold_b));
     wire dv,dp,df;wire[511:0]dy;wire[15:0]dt,dpt;wire[31:0]dd;wire[3:0]dw;wire[2:0]ds;
-    ot_hbm_sm_pv_merge_distributed #(.MUT(MUT)) candidate(.clk(clk),.rst_n(rst_n),.ev(ev),.sum(sum),.tag_d(tag_d),
+    ot_hbm_sm_pv_merge_distributed #(.MUT(MUT),.FAN32(FAN32)) candidate(.clk(clk),.rst_n(rst_n),.ev(ev),.sum(sum),.tag_d(tag_d),
       .pv_v(dv),.pv_y(dy),.pv_tag(dt),.fault(df),.pub_start(pub_start),.pub_slot(pub_slot),
       .pub_v(dp),.pub_data(dd),.pub_word(dw),.pub_out_slot(ds),.pub_tag(dpt),
       .fold_start(fold_start),.fold_a(fold_a),.fold_b(fold_b));

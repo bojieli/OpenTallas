@@ -55,7 +55,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     //      one word_next copy per pub_data bit.  Each copy is the same register as its original (same D, reset, edge), so
     //      the module is cycle-identical to SAFE 1; every copy drives <= ~32 loads.  Only ev (the input-pin capture) and
     //      tag_d stay single sources.
-    parameter integer SAFE=2
+    parameter integer SAFE=2, FAN32=0
 )(
     input wire clk,
     input wire [53:0] rst_core_n,
@@ -152,8 +152,16 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             wire [1:0] er;
             wire       vo;
             // (b) DRST 0: no reset on the adder datapath (valid bits only)
+            if (FAN32 != 0) begin : g_fan32
+                // Exact root-approved LAT7/DRST0/CUTS=-1 component; no new edges.
+                // Unsupported ALAT/FAN32 profiles fail closed in the wrapper.
+                ot_hdc_fp32_add_lat_fan32 #(.LAT(ALAT), .DRST(0), .CUTS(-1), .SAFE_DIST(FAN32)) u_m (
+                    .clk(clk), .rst_n(rst_core_n[1+l/4]), .valid_in(ov), .a(oa[32*l +: 32]),
+                    .b(ob[32*l +: 32]), .y(my[32*l +: 32]), .err(er), .valid_out(vo));
+            end else begin : g_released
             ot_hdc_fp32_add_lat #(.LAT(ALAT), .DRST(0)) u_m (.clk(clk), .rst_n(rst_core_n[1+l/4]), .valid_in(ov), .a(oa[32*l +: 32]),
                 .b(ob[32*l +: 32]), .y(my[32*l +: 32]), .err(er), .valid_out(vo));
+            end
             assign mf[l] = vo && (er != 2'd0);
         end
         assign vres = my;
