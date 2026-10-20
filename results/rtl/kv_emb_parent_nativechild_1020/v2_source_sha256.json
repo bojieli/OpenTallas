@@ -1,0 +1,62 @@
+{
+  "source_commit": "0b31512ad",
+  "remote_verified": true,
+  "files": [
+    {
+      "path": "tools/qwen_kv_die/emb_parent_nativechild_gate.sh",
+      "sha256": "1ae6300f7a0c5b1a4402ab87c5d3a522ebb6a482084c27fe113de9a0619c17e6"
+    },
+    {
+      "path": "results/rtl/kv_emb_parent_nativechild_1020/tb_parent.sv",
+      "sha256": "18ed2f7beb543d41930ff38dd181537b47e050b55f847b568f51ecb3115644eb"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv",
+      "sha256": "65cb0ddc0646f53d5010c0e6e351fd22f8961fbe54c5b56a24d2bc42124f20fa"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx_n32child.sv",
+      "sha256": "ea3cfd7e9dce775bdff5468d43dd591d6e24071e7cf20d1e7ed813c79c04e36b"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx_native32.sv",
+      "sha256": "64d1e72150ec32a025d96775293646421f91bfd89a765ff266956d48fbf29c83"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx.sv",
+      "sha256": "c8265e99c453d3a25a8ad43be16d7de207ea8838ff95bc335a862ec6ce0d30cd"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv",
+      "sha256": "506309f9b9f7eef12001dfae93adae0c60f814c417aba91bf744a2648c439fa7"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+      "sha256": "5e044e368c9553fb6b747060a8a9ab45defb68619f86f16d40521e8e2b2a2ad2"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+      "sha256": "e1a3bbdd455fb984a96df8463844e351613e5bbb6f6e3c417766097c5d17b211"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+      "sha256": "b4031ee0138af2cf4567626e185d81ded805bb1ba274ee03763a74232dc95a49"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join_fan32.sv",
+      "sha256": "c66d85face0804d2bfa5141b169d4f86efdbdaf36c1099d3da72f6a6ae518031"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "path": "results/rtl/kv_rowctx_native32_1020/baseline/ot_pin_regs_wrapper.v",
+      "sha256": "2450838a0dacd7c7f48be1d351c169127124a9318378640cd0bbc33a1ec9ba13"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+    }
+  ]
+}
