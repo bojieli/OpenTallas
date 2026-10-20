@@ -1,0 +1,24 @@
+## tt endpoints 320046 violating 17246
+RST:field -> RST:field	359/9190	-9818	rstt_rst_field_2805/q0 -> rstt_rst_field_9172/d
+CB16* -> SLICE2E*	4112/12336	-9068	c16_E3_2/rs[117] -> dvs_E3/rs_n0[117]
+RST:field -> CB16*	29/768	-8843	rstt_rst_field_148/q0 -> c16_W3_2/rst_c2r1[0]
+CB16* -> SLICE2W*	4112/12336	-7633	c16_W2_1/rs_o[189] -> dvs_W2/rs_s1[189]
+RLY -> LAND*	1765/7793	-2288	rly_dvw_st_wi_21/b[656] -> rly_dvw_st_wi_22/a[656]
+RLY_H0* -> LAND*	6/1666	-363	rly_dvw_rr_wi_0/b[1] -> rly_dvw_rr_wi_1/a[1]
+COLL_IO* -> LAND_H0*	513/513	-358	io_collective/out_valid[0] -> rly_dvw_rv_wi_0/a[0]
+CB16* -> CB16*	2578/61872	-326	c16_W5_2/bco2[146] -> c16_W5_3/bc2[146]
+RST:seq_ctlm -> RST:seq_ctlm	1/36	-251	rstt_rst_seq_ctlm_15/q0 -> rstt_rst_seq_ctlm_18/d
+RLY -> d2d_static	2/2	-250	rly_lnk_fwd_lrst_2/b[0] -> d2d_rom/fwd_link_rst_n
+RLY -> RLY	2/68450	-246	rly_rst_d2d__fo1_1/b[0] -> rly_rst_d2d__fo1_2/a[0]
+LAND* -> d2d_static	1304/1304	-245	rly_lnk_x3_1/b[61] -> d2d_rom/x3[61]
+RST:io -> RLY_H0	2/3	-228	rstt_rst_io_7/q0 -> rly_serdes0_rxv_0/en
+RST:io -> ot_serdes_112g_x12_phy_s597	2/3	-222	rstt_rst_io_2/q0 -> io_serdes_1/rst_n
+LAND -> d2d_static	8/8	-207	rly_sf_collective_drained_2/b[0] -> d2d_rom/collective_drained
+LAND_H0* -> d2d_static	549/549	-199	rly_lnk_native_tx_payload_0/b[20] -> d2d_rom/native_tx_payload[20]
+UCIE_KV* -> d2d_static	585/585	-190	ucie_kv/rx_flit[554] -> d2d_rom/fdi_rx_flit[554]
+LAND -> COLL_IO*	2/2	-169	rly_serdes0_up_1/b[0] -> io_collective/serdes_up[0]
+LAND* -> COLL_IO*	1196/1746	-142	rly_serdes2_rxv_7/b[0] -> io_collective/serdes_rx_valid[2]
+RST:io -> LAND*	4/16	-141	rstt_rst_io_9/q0 -> rly_serdes0_tx_2/rs[0]
+RST:io -> RLY_H0*	4/15	-123	rstt_rst_io_8/q0 -> rly_serdes0_rx_0/en[0]
+LAND* -> sys_face	42/808	-64	rly_dvw_tt_ctlm_dc_1/b[55] -> sys_face/seq_dc[55]
+LAND_H0* -> sys_face	69/70	-63	rly_dvw_tt_ctlm_cal_descriptor_obs_0/b[37] -> sys_face/seq_descriptor_obs[37]
