@@ -32,7 +32,22 @@ module ot_hbm_r14_aq_pc_safe #(
   parameter integer PULLIN = 8,
   parameter integer ROW_REGIONS = 0, BANK_REGIONS = 0,
   // L2H-BW: 1 = spread-pin p192 macro family (see ot_hbm_svc_sram128_n64)
-  parameter integer SRAM_P192 = 0
+  parameter integer SRAM_P192 = 0,
+  // HBM-MC3 (10-19): 1 = the column-issue decision (wr_ok, 53 native endpoints on hdie_pc_ctrl_mc3_p540) is computed in
+  // three logically identical cones from DISTINCT kept head-bank copies, so no copy drives > 32 endpoints and Yosys/ABC
+  // cannot merge them: wr_ok (column outputs, q_n, timers), wr_ok_q (queue read pointers, SRAM read address,
+  // successor copies) and wr_ok_h (head capture/push selects).  0 = original single cone (other users byte-identical).
+  parameter integer WROK_COPIES = 0,
+  // HBM-MC3c (10-19): 1 = the owner registers the enqueue (post stage, +1 edge) and drives wr_v as 9 KEPT copies
+  // (wr_v_regions[g] = banks 4g..4g+3 count/look-row/tail-set, [8] = queue push); room for the in-flight entry is
+  // the owner's job (wr_r2 = room for two).  0 = wr_v (other users byte-identical).
+  parameter integer WV_REGIONS = 0,
+  // HBM-MC3c (10-19): 1 = head-bank ACT override: when the HEAD entry's bank is closed (not refresh-blocked, tRP/tRFC
+  // done) it is the registered ACT candidate (ac2) instead of the per-group bank-0-first winner.  0 = only the fixed bank-0-first candidate:
+  // with all 32 banks needed and REFpb re-closing low banks every 118 cycles, a closed high-index head bank can starve for
+  // ever (measured: face_txn with POST_REG=1 stalls at 7909/12944 beats, head bank 31 closed).  The head row equals
+  // look_row[head bank] (captured when the head reaches that bank), so held/need/orow stay consistent.
+  parameter integer ACT_HEAD = 0
 )(
   input  wire        clk, rst_n, input wire[63:0]reset_regions,
   input  wire        slot_parity, input wire [7:0] refresh_reload,
@@ -42,6 +57,7 @@ module ot_hbm_r14_aq_pc_safe #(
   input  wire        wr_v, input wire [4:0] wr_bank, input wire [4:0] wr_col, input wire [RW_ROW-1:0] wr_row,
   input wire [8*RW_ROW-1:0] wr_row_regions, input wire[39:0]wr_bank_regions,
   input  wire        wr_rd, output wire wr_r, output wire col_we, output wire col_aq,
+  input  wire [8:0]  wr_v_regions, output wire wr_r2,
   output wire [31:0] dbg_held
 );
   localparam [2:0] PRE=0, ACT=1, REFPB=6;
@@ -59,7 +75,8 @@ module ot_hbm_r14_aq_pc_safe #(
   // FIFO metadata is SRAM. Only the head and per-bank summaries are flops.
   wire [255:0] qm;
   wire [WQW-1:0] qwp = WQW'(q_rp + q_n);
-  wire qpush=wr_v&&wr_r;
+  wire [8:0] wv=WV_REGIONS!=0?wr_v_regions:{9{wr_v}};
+  wire qpush=wv[8]&&wr_r;
   wire[4:0]incoming_bank_region[0:7];
   for(genvar g=0;g<8;g=g+1)begin:BANK_INPUT_REGION
     assign incoming_bank_region[g]=(BANK_REGIONS==8?wr_bank_regions[g*5+:5]:wr_bank)
@@ -75,7 +92,8 @@ module ot_hbm_r14_aq_pc_safe #(
   // SRAM clk->q therefore ends at the head flops, outside column eligibility.
   // The two overlapped heads sustain one pop per edge, including ring wrap.
   (* keep="true",dont_touch="true" *) reg[WQW-1:0]q_rp_plus1,q_rp_plus2;
-  wire [WQW-1:0] qread=wr_ok ? q_rp_plus2 : q_rp_plus1;
+  wire wr_ok_q, wr_ok_h, wr_ok_s, wr_ok_p;
+  wire [WQW-1:0] qread=wr_ok_q ? q_rp_plus2 : q_rp_plus1;
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
   reg [29:0] qhead;
   (* keep="true",dont_touch="true" *) reg head_read_global;
@@ -95,11 +113,11 @@ module ot_hbm_r14_aq_pc_safe #(
     always @(posedge clk or negedge rst_n)if(!rst_n)begin
       successor_local[g]<=1;fresh_local[g]<=0;
     end else begin
-      successor_local[g]<=wr_ok?q_rp_plus1+1'b1:q_rp_plus1;
+      successor_local[g]<=wr_ok_s?q_rp_plus1+1'b1:q_rp_plus1;
       fresh_local[g]<=qpush;
     end
-    assign head_push_regions[g]=qpush&&((q_n_local[g]==0)||(wr_ok&&q_n_local[g]==1));
-    assign head_capture_regions[g]=head_push_regions[g]||(wr_ok&&q_n_local[g]>1);
+    assign head_push_regions[g]=qpush&&((q_n_local[g]==0)||(wr_ok_h&&q_n_local[g]==1));
+    assign head_capture_regions[g]=head_push_regions[g]||(wr_ok_h&&q_n_local[g]>1);
   end
   for(genvar g=0;g<4;g=g+1)begin:HEAD_WORD_LOCAL
     localparam LO=(g==3)?20:g*8;
@@ -113,6 +131,21 @@ module ot_hbm_r14_aq_pc_safe #(
     assign head_d[LO+:B]=head_capture_regions[g]?
        (head_push_regions[g]?pushed[LO+:B]:pref):held_word;
   end
+  // Four equivalent bank-next sources use the already kept regional
+  // forwarding identities. Each serves at most one quarter of ACT selectors;
+  // copying selector flops alone would overload the canonical head mux.
+  wire [4:0] head_bank_d_regions[0:3];
+  for(genvar g=0;g<4;g=g+1)begin:HEAD_BANK_NEXT_REGION
+    wire [4:0] pref=(fresh_local[g]&&fresh_addr_local[g]==successor_local[g])?
+      qfresh_data[29:25]:qm[29:25];
+    assign head_bank_d_regions[g]=head_capture_regions[g]?
+      (head_push_regions[g]?wr_bank:pref):head_bank_global;
+  end
+`ifndef SYNTHESIS
+  always @(negedge clk)if(rst_n)
+    for(integer g=0;g<4;g=g+1)
+      if(head_bank_d_regions[g]!==head_d[29:25])$fatal(1,"BW_AQ_BANK_NEXT_REGION_MISMATCH");
+`endif
   for(genvar g=0;g<8;g=g+1)begin:HEAD_LOCAL
     always @(posedge clk)
       `ifdef BW_AQ_MUT_HEAD
@@ -154,10 +187,14 @@ module ot_hbm_r14_aq_pc_safe #(
       else look_valid_regions[g]<={3{q_n_next!=0}};
     for(genvar k=0;k<3;k=k+1)begin:WORD
       if(g==0)begin
-        if(k==0)assign look_bank_words[g][k]=head_bank_local;
+        if(k==0)begin
+          (* keep="true",dont_touch="true" *) reg [4:0] bank_q;
+          always @(posedge clk)bank_q<=head_d[29:25];
+          assign look_bank_words[g][k]=bank_q;
+        end
         else assign look_bank_words[g][k]=look_head_bank_local[k-1];
       end else begin
-        always @(posedge clk)look_bank_regions[g][k]<=head_d[29:25];
+        always @(posedge clk)look_bank_regions[g][k]<=head_bank_d_regions[g%4];
         assign look_bank_words[g][k]=look_bank_regions[g][k];
       end
     end
@@ -166,7 +203,7 @@ module ot_hbm_r14_aq_pc_safe #(
   // Same-edge reset copies from the parent relay: each bank resets its own
   // 27 timer flops and seven count bits rather than a thousand-sink reset net.
   for(genvar b=0;b<32;b=b+1)begin:BCOUNT
-    wire bp=(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ)))&&incoming_bank_region[b/4]==b;
+    wire bp=(wv[b/4]&&(q_n_local[b/8]!=(WQW+1)'(WQ)))&&incoming_bank_region[b/4]==b;
     wire [WQW:0] bn_next=bank_n[b]+(bp&&!bank_col[b]?(WQW+1)'(1):
                     (!bp&&bank_col[b]?{(WQW+1){1'b1}}:(WQW+1)'(0)));
     always @(posedge clk or negedge reset_regions[b])if(!reset_regions[b])bank_n[b]<=0;
@@ -186,7 +223,7 @@ module ot_hbm_r14_aq_pc_safe #(
           if(look_valid_regions[b/4][k]&&
              look_bank_words[b/4][k]==5'(b))
             look_row[b][k*8+bit_]<=head_local[b/4][k*8+bit_+1];
-          else if(wr_v&&(q_n_local[b/8]!=(WQW+1)'(WQ))&&incoming_bank_region[b/4]==b&&
+          else if(wv[b/4]&&(q_n_local[b/8]!=(WQW+1)'(WQ))&&incoming_bank_region[b/4]==b&&
               (k==0?bank_n[b]:bank_n_word_local[k-1][b])==0)
             look_row[b][k*8+bit_]<=
 `ifdef BW_AQ_MUT_WRROW
@@ -204,7 +241,7 @@ module ot_hbm_r14_aq_pc_safe #(
   (* keep="true",dont_touch="true" *) reg [2:0] tail_set_regions[0:7];
   for(genvar t=0;t<8;t=t+1)begin:TAIL_SET_REGION
     always @(posedge clk or negedge rst_n)if(!rst_n)tail_set_regions[t]<=0;
-      else if(wr_v&&(q_n_local[t/2]!=(WQW+1)'(WQ)))tail_set_regions[t]<=incoming_bank_region[t][4:2];
+      else if(wv[t]&&(q_n_local[t/2]!=(WQW+1)'(WQ)))tail_set_regions[t]<=incoming_bank_region[t][4:2];
   end
   // ---- bank / group state ---------------------------------------------------------------
   (* keep="true",dont_touch="true" *) reg[31:0]open,open_column;
@@ -237,12 +274,18 @@ module ot_hbm_r14_aq_pc_safe #(
         blk_valid_regions[g]<=blk_clear?1'b0:(blk_set?1'b1:blk_valid);
       end
   end
+  (* keep="true",dont_touch="true" *) reg[4:0]command_bank_tail;
+  (* keep="true",dont_touch="true" *) reg command_valid_tail;
+  always @(posedge clk or negedge reset_regions[35])
+    if(!reset_regions[35])begin command_bank_tail<=0;command_valid_tail<=0;end
+    else begin command_bank_tail<=r_bank;command_valid_tail<=row_grant;end
   for(genvar b=0;b<32;b=b+1)begin:BANK_CONTROL_DECODE
     if(b/8==0)begin
       assign c_oh[b]=command_bank_valid&&command_bank_local==5'(b);
       assign blk[b]=blk_valid&&blk_bank==5'(b);
     end else begin
-      assign c_oh[b]=command_valid_regions[b/8]&&command_bank_regions[b/8]==5'(b);
+      assign c_oh[b]=b>=28?(command_valid_tail&&command_bank_tail==5'(b)):
+        (command_valid_regions[b/8]&&command_bank_regions[b/8]==5'(b));
       assign blk[b]=blk_valid_regions[b/8]&&blk_bank_regions[b/8]==5'(b);
     end
   end
@@ -302,6 +345,28 @@ module ot_hbm_r14_aq_pc_safe #(
     act_b=ac2_b;act_row=ac2_row;act_cand_oh=ac2_oh;
     act_cand=ac2_v&&|(ac2_oh&need&~open&~blk&act_row_match);
   end
+  // ACT_HEAD: the head entry's bank wins the ACT candidate stage (ac2) whenever it is closed, not refresh-blocked and
+  // past tRP/tRFC; four KEPT head-bank copies (same edge as head_bank_local) each decide one destination group (ac2_oh
+  // low/high half, ac2_v/ac2_b + row copy 0, row copy 1) so no copy or decision drives > 32 endpoints.
+  // Each eligibility lookup has its own kept bank capture; no 5-bit
+  // selector drives three 32:1 muxes plus the destination decoder.
+  (* keep="true",dont_touch="true" *) reg [4:0] ah_local[0:6][0:3];
+  (* keep="true",dont_touch="true" *) reg [RW_ROW-1:0] ahrow_local[0:1];
+  wire [6:0] head_req; wire [31:0] aok_z;
+  for(genvar k=0;k<7;k=k+1)begin:ACT_HEAD_REQ
+    for(genvar m=0;m<4;m=m+1)begin:SELECTOR
+      always @(posedge clk)ah_local[k][m]<=head_bank_d_regions[k%4];
+    end
+    assign head_req[k]=ACT_HEAD!=0&&q_n_local[k%4]!=0&&
+      !open[ah_local[k][0]]&&!blk[ah_local[k][1]]&&aok_z[ah_local[k][2]]
+`ifdef BW_AQ_MUT_NO_ACT_HEAD
+      &&1'b0
+`endif
+      ;
+  end
+  for(genvar k=0;k<2;k=k+1)begin:ACT_HEAD_ROW
+    always @(posedge clk)ahrow_local[k]<=head_d[19:1];
+  end
   always @(posedge clk or negedge reset_regions[63])begin
     if(!reset_regions[63])begin ac_v<=0;ac2_v<=0;ac2_b<=0;ac2_oh<=0;
       for(integer k=0;k<2;k=k+1)ac2_row_local[k]<=0;
@@ -357,11 +422,17 @@ module ot_hbm_r14_aq_pc_safe #(
         for(integer g=0;g<4;g=g+1)if(!found&&ac_v[g])begin found=1;ac2_v<=1;ac2_b<=ac_b[g];
         end
       end
+      // ACT_HEAD override (last assignment wins); the head row equals look_row[head bank], so act_row_match holds
+      for(integer b=0;b<32;b=b+1)if(head_req[b/16])ac2_oh[b]<=(ah_local[b/16][3]==5'(b));
+      if(head_req[6])begin ac2_v<=1;ac2_b<=ah_local[6][3];end
+      for(integer k=0;k<2;k=k+1)
+        for(integer bit_=0;bit_<RW_ROW;bit_=bit_+1)
+          if(head_req[2+k*2+bit_/10])ac2_row_local[k][bit_]<=ahrow_local[k][bit_];
     end
   end
   assign dbg_held = held;
   // ---- per-bank timing ------------------------------------------------------------------
-  wire [31:0] rcd_z, rcdw_z, ras_z, rtp_z, aok_z, aok_busy;
+  wire [31:0] rcd_z, rcdw_z, ras_z, rtp_z, aok_busy;   // aok_z declared above (ACT_HEAD)
   wire hit_rd = col_v && !col_we, hit_wr = col_v && col_we;
   for (genvar b = 0; b < 32; b = b + 1) begin : bank
     reg [4:0] rcd, ras, wrr; reg [8:0] aok; reg [2:0] rtp;
@@ -478,16 +549,41 @@ module ot_hbm_r14_aq_pc_safe #(
   wire[31:0]hb_oh_cfg=32'b1<<head_bank_cfg;
   wire cfg_bank_ready=q_ne&&|(hb_oh_cfg&open_column&head_timer_ready&~blk&~pre_fl&head_row_match);
   assign col_v_regions[0]=wr_ok;
+  generate if(WROK_COPIES!=0)begin:g_wrok_copies
+    (* keep="true",dont_touch="true" *) reg [4:0] head_bank_q, head_bank_h, head_bank_s, head_bank_p;
+    always @(posedge clk)begin head_bank_q<=head_d[29:25]; head_bank_h<=head_d[29:25]; head_bank_s<=head_d[29:25]; head_bank_p<=head_bank_d_regions[2]; end
+    wire [31:0] hb_oh_p=32'b1<<head_bank_p;
+    (* keep="true" *) wire rdy_p=q_ne&&|(hb_oh_p&open&head_timer_ready&~blk&~pre_fl&head_row_match);
+    assign wr_ok_p=rdy_p&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
+    wire [31:0] hb_oh_s=32'b1<<head_bank_s;
+    (* keep="true" *) wire rdy_s=q_ne&&|(hb_oh_s&open&head_timer_ready&~blk&~pre_fl&head_row_match);
+    assign wr_ok_s=rdy_s&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
+    wire [31:0] hb_oh_q=32'b1<<head_bank_q, hb_oh_h=32'b1<<head_bank_h;
+    (* keep="true" *) wire rdy_q=q_ne&&|(hb_oh_q&open&head_timer_ready&~blk&~pre_fl&head_row_match);
+    (* keep="true" *) wire rdy_h=q_ne&&|(hb_oh_h&open&head_timer_ready&~blk&~pre_fl&head_row_match);
+    assign wr_ok_q=rdy_q&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
+    assign wr_ok_h=rdy_h&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
+  end else begin:g_wrok_one
+    assign wr_ok_q=wr_ok; assign wr_ok_h=wr_ok; assign wr_ok_s=wr_ok; assign wr_ok_p=wr_ok;
+  end endgenerate
   assign col_v_regions[1]=cfg_bank_ready&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
 `ifndef SYNTHESIS
   always @(negedge clk)if(rst_n)begin
     if(open_column!==open)$fatal(1,"BW_AQ_OPEN_REGION_MISMATCH");
     if(col_v_regions[1]!==col_v)$fatal(1,"BW_AQ_COLUMN_REGION_MISMATCH");
+    if(wr_ok_q!==wr_ok||wr_ok_h!==wr_ok||wr_ok_s!==wr_ok||wr_ok_p!==wr_ok)$fatal(1,"BW_AQ_WROK_COPY_MISMATCH");
   end
 `endif
 
   assign col_bank = hb; assign col_col = hc;
   assign wr_r = q_n != (WQW+1)'(WQ);
+  assign wr_r2 = q_n < (WQW+1)'(WQ-1);
+`ifndef SYNTHESIS
+  always @(negedge clk)if(WV_REGIONS!=0&&rst_n)begin
+    if(wr_v_regions!=={9{wr_v_regions[8]}})$fatal(1,"BW_AQ_WV_COPY_MISMATCH");
+    if(wr_v_regions[8]&&!wr_r)$fatal(1,"BW_AQ_POST_OVERFLOW");
+  end
+`endif
   // ---- row command: REFpb due > forced PRE > ACT (oldest queued closed bank) > PRE (open row no entry needs) ----------
   wire forced_pre = ref_pend && |(blk & open & ras_z & rtp_z);
   wire [31:0] pre_cand = open & ~held & ~blk & ras_z & rtp_z;
@@ -597,7 +693,8 @@ module ot_hbm_r14_aq_pc_safe #(
       case({qpush,wr_ok})
         2'b10:q_n<=q_n+1'b1;2'b01:q_n<=q_n-1'b1;default:q_n<=q_n;
       endcase
-      if (wr_ok) begin q_rp<=q_rp_plus1;q_rp_plus1<=q_rp_plus1+1'b1;q_rp_plus2<=q_rp_plus2+1'b1;end
+      if (wr_ok_q) begin q_rp<=q_rp_plus1;q_rp_plus1<=q_rp_plus1+1'b1;end
+      if(wr_ok_p)q_rp_plus2<=q_rp_plus2+1'b1;
       if (col_aq) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
       if (col_we) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
       if (rrds_c != 0) rrds_c <= rrds_c - 1'b1;
