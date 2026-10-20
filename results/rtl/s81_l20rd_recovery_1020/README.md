@@ -1,0 +1,1 @@
+Recovered paused L20RD draft, not adopted. Separate dsdv_idx_rg_r32 top preserves existing reader. Recovered rg_full plus e32/vring body; fixed code read loop from16 to8 32-bit lanes per256-bit SRAM. Production bench/native census/gate required before adoption. Baseline ENG1 strict native276 nets>32, max3892,962ps/29levels.
