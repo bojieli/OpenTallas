@@ -11,8 +11,11 @@
 // metadata, on edge E + 10 + VM_RT (E = the edge the instruction is sampled by the leaf: "VM capture P+10").
 // Mutants (must FAIL): MUT 1 VM_RT = LAT-1 (one short), MUT 2 VM_RT = 0 (the closed v5 leaf / today), MUT 3 lanes NOT
 // padded (VM_RT = LAT but each bank answers at its raw lane latency).
+// L2H-COLLP 10-19: MULP=1 benches the v74p leaf (MUL_PIPE 1): it samples the uop pipe d3 word (inst_d3 here) and every
+// assembled pair lands one edge later (E + 11 + VM_RT, E = the v74 sample edge). MUT 4 (with MULP 1) expects the v74 edge: must FAIL.
 module tb_hgi_coll_ctl_v74_safephys;
- parameter integer LAT = 74, MUT = 0,SHAPE=0,DENSE=0;
+ parameter integer LAT = 74, MUT = 0,SHAPE=0,DENSE=0,MULP=0;
+ localparam integer EXPSH = (MUT == 4) ? 0 : MULP;
  localparam integer VM_RT = (MUT == 1) ? LAT - 1 : (MUT == 2) ? 0 : LAT;
  localparam integer NOPS = DENSE?2048:600;
  reg clk = 0; always #0.416 clk = ~clk;
@@ -32,7 +35,7 @@ module tb_hgi_coll_ctl_v74_safephys;
  wire [23:0] held; wire [47:0] wseq, rseq, xseq; wire [31:0] cycles;
  // HBM-ARGMAX 10-19: +define+CTL_Q3 benches the q3 leaf (kit hcoll_v5r_ctl3_v74); default = the q2 leaf
 ot_hgi_coll_ctl_v5_core_safephys
-  #(.NPT(SHAPE==0?1:2),.SOLO(SHAPE==0?0:1),.VM_RT(VM_RT),.SAFE_DELAY(MUT==2?0:1)) dut(.clk_control(clk), .rst_n(rst_n), .inst(inst), .tap_iteration(32'd0),
+  #(.NPT(SHAPE==0?1:2),.SOLO(SHAPE==0?0:1),.VM_RT(VM_RT),.SAFE_DELAY(MUT==2?0:1),.MUL_PIPE(MULP)) dut(.clk_control(clk), .rst_n(rst_n), .inst(MULP ? inst_d3 : inst), .tap_iteration(32'd0),
   .tap_steps(88'd0), .hgi_start(1'b0), .hgi_busy(1'b0), .issue_done(1'b0), .tkm_done(1'b0), .tkm_busy(1'b0),
   .dest_v(15'd0), .rc_v(1'b0), .rc_tag(3'd0), .vm_rv(vm_rv), .vm_req_pin(vm_rq), .inj_req_pin(inj_req),
   .inj_idx_pin(inj_idx), .inj_addr_pin(inj_addr), .delivery_obase_pin(del_obase), .rgx_addr_pin(rgx_addr),
@@ -98,14 +101,14 @@ ot_hgi_coll_ctl_v5_core_safephys
     // the leaf samples inst at the next posedge (cyc + 1 there): request pin after it, assembled on E + 10 + VM_RT
     for (integer j = 0; j < 4; j = j + 1) begin
      exp_d[nexp] = {word(perm[2*j+1], inst[1034 + perm[2*j+1]*17 +: 16]), word(perm[2*j], inst[1034 + perm[2*j]*17 +: 16])};
-     exp_m[nexp] = m; exp_j[nexp] = 2'(j); exp_e[nexp] = cyc + 1 + 10 + LAT; nexp = nexp + 1;
+     exp_m[nexp] = m; exp_j[nexp] = 2'(j); exp_e[nexp] = cyc + 1 + 10 + LAT + EXPSH; nexp = nexp + 1;
     end
    end
    @(negedge clk);
   end
   inst = 0; repeat (LAT + 40) @(negedge clk);
   if (errors == 0 && faults == 0 && ngot == nexp)
-   $display("COLL_VMRT PASS LAT%0d VM_RT%0d pairs%0d lanes_padded_to_budget", LAT, VM_RT, ngot);
+   $display("COLL_VMRT PASS LAT%0d VM_RT%0d pairs%0d lanes_padded_to_budget MULP%0d", LAT, VM_RT, ngot, MULP);
   else begin
    $display("COLL_VMRT FAIL MUT%0d LAT%0d VM_RT%0d errors%0d protocol_fault_edges%0d got%0d exp%0d", MUT, LAT, VM_RT, errors, faults, ngot, nexp);
    $fatal(1, "COLL VM_RT");

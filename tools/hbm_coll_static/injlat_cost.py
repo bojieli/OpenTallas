@@ -12,6 +12,10 @@ H-NETLIST/suport: no SU-bound stream event at (P+1+Rq) mod 4 == 2):
   * COLL.ALL_REDUCE_SUM (qwen): dINJLAT + ceil(beats/3) with beats = its inject beats (charged as 16, conservative);
   * COLL.TOPK_MERGE (IDX frames through cij_SW, no SU phase rule) and COLL.ARGMAX_MERGE: dINJLAT;
   * COLL.ROW_GATHER sources VM words (vm_rq, no SU inject): 0.
+ISSUE EDGES (L2H-COLLP 2026-10-19, --issue-edges N): a uniform +N COLL issue edge (v74p protocol leaf MUL_PIPE 1: the
+iteration-product combine takes one more registered rung, so the parent feeds the leaf the uop-pipe d3 word and every
+other COLL child d4; every COLL output moves N edges later). Every COLL op record (ALL_GATHER, GROUP_REDUCE_MCAST,
+ALL_REDUCE_SUM, TOPK_MERGE, ARGMAX_MERGE, ROW_GATHER, ...) pays +N cycles of latency; the II-1 stream is unchanged.
 Method = tools/throughput/accepted_cost.py hbm_schedule: S2 schedule of the exact per-die program, fixed cycles
 added to every record of each op (edges counted 1:1 as schedule cycles, conservative).
 """
@@ -54,7 +58,28 @@ def main():
     ap.add_argument('--injlat', type=int, nargs='+', default=[12, 14, 16, 20, 24, 30, 36, 48])
     ap.add_argument('--g96', nargs='*', default=[], help='I:cycles of g96_calendar --injlat I --su-rq 0')
     ap.add_argument('--out', type=Path)
+    ap.add_argument('--issue-edges', type=int, nargs='*', default=None,
+                    help='price a uniform +N COLL issue edge on every COLL op record (v74p MUL_PIPE); prints and writes only that')
     a = ap.parse_args()
+    if a.issue_edges is not None:
+        out = {'schema': 'opentallas.hcoll.issue_edge_cost.v1', 'mechanism': __doc__, 'workloads': {}}
+        for model in ('ds', 'qwen'):
+            run, count = schedule(model)
+            base = run({})
+            colls = {k: v for k, v in count.items() if k.startswith('COLL.')}
+            rows = []
+            for n in (a.issue_edges or [1]):
+                new = run({k: float(n) for k in colls})
+                per_op = {}
+                for op in colls:
+                    one = run({op: float(n)})
+                    per_op[op] = {'records': colls[op], 'cycles_per_record': n, 'added_cycles': round(one - base, 1)}
+                rows.append({'issue_edges': n, 'base_cycles': round(base, 1), 'cycles': round(new, 1),
+                             'added_cycles': round(new - base, 1), 'e2e_loss_pct': round(100 * (1 - base / new), 4), 'per_op': per_op})
+                print(model, 'issue_edges', n, 'base', round(base, 1), 'added', round(new - base, 1), 'loss%', rows[-1]['e2e_loss_pct'])
+            out['workloads'][model] = {'coll_records': colls, 'rows': rows}
+        if a.out: a.out.write_text(json.dumps(out, indent=1) + '\n')
+        return
     g96 = {int(k): float(v) for k, v in (x.split(':') for x in a.g96)}
     base_g96 = g96.get(12)
     out = {'schema': 'opentallas.hcoll.injlat_cost.v1', 'method': __doc__.strip().splitlines()[0], 'mechanism': __doc__,

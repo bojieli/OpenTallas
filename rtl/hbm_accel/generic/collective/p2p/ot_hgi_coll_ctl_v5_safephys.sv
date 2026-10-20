@@ -8,7 +8,12 @@
 // the delayed instruction arrive together and ctl_v5 keeps only field+partial adders. Every expression keeps the
 // V4 truncation exactly: 16'(it*s)=low16(it[15:0]*s); 40'(it*s) = zext(low32(it*s)) = zext(low32(pl+(ph<<16)));
 // link 40'(it)*40'(s8) = pl8+(ph8<<16).
-module ot_hgi_coll_iter_mul_safephys(
+// L2H-COLLP 10-19 PIPE=1 (v74p; gates v74w/v74x: TT setup -14..-53 ps placement-RC on the stage-3 combine pd->m_rgx_l /
+// pc->m_del_l, ~19 levels): the 7-term combine off() is split into two registered rungs (stage 3a: u = {p2,p0} +
+// {p3[7:0],p1,8'd0} and w = {q0,8'd0} + {q1,16'd0} + {q2[7:0],24'd0}, both exact concatenation identities of off();
+// stage 3b: u + w mod 2^32). m_idx/m_vm/m_lk_* are computed in 3a and re-registered in 3b. Products land ONE edge later
+// (4 flop stages from the tap pins instead of 3); PIPE=0 is the v74 module, edge- and bit-identical.
+module ot_hgi_coll_iter_mul_safephys #(parameter integer PIPE=0)(
  input wire clk,
  input wire [31:0] iteration,
  input wire [15:0] s_idx,s_vm,s_iaddr,s_del,s_rgx,
@@ -55,6 +60,7 @@ module ot_hgi_coll_iter_mul_safephys(
  function automatic [31:0] off(input [15:0] p0,p1,p2,p3,q0,q1,q2);
   off=32'({16'd0,p0}+{8'd0,p1,8'd0}+{p2,16'd0}+{p3[7:0],24'd0}+{8'd0,q0,8'd0}+{q1,16'd0}+{q2[7:0],24'd0});
  endfunction
+generate if(PIPE==0)begin:g_s3
  always @(posedge clk)begin
   m_idx<=16'(pa[0]+{pa[1][7:0],8'd0}+{pa[2][7:0],8'd0});
   m_vm<=16'(pv[0]+{pv[1][7:0],8'd0}+{pv[2][7:0],8'd0});
@@ -64,6 +70,27 @@ module ot_hgi_coll_iter_mul_safephys(
   m_iaddr_h<=16'd0;m_del_h<=16'd0;m_rgx_h<=16'd0;
   m_lk_l<=24'({8'd0,pk[0]}+{pk[1],8'd0});m_lk_h<=24'({8'd0,pk[2]}+{pk[3],8'd0});
  end
+end else begin:g_s3p
+ // stage 3a: exact split of off() (no bit of {p2,p0} / {p3,p1} overlaps, so the concatenations equal the sums)
+ reg [15:0] xa,xv;reg [31:0] ub,wb,uc,wc,ud,wd;reg [23:0] xl,xh;
+ function automatic [31:0] off_u(input [15:0] p0,p1,p2,p3);off_u=32'({p2,p0}+{p3[7:0],p1,8'd0});endfunction
+ function automatic [31:0] off_w(input [15:0] q0,q1,q2);off_w=32'({8'd0,q0,8'd0}+{q1,16'd0}+{q2[7:0],24'd0});endfunction
+ always @(posedge clk)begin
+  xa<=16'(pa[0]+{pa[1][7:0],8'd0}+{pa[2][7:0],8'd0});
+  xv<=16'(pv[0]+{pv[1][7:0],8'd0}+{pv[2][7:0],8'd0});
+  ub<=off_u(pb[0],pb[1],pb[2],pb[3]);wb<=off_w(pb[4],pb[5],pb[6]);
+  uc<=off_u(pc[0],pc[1],pc[2],pc[3]);wc<=off_w(pc[4],pc[5],pc[6]);
+  ud<=off_u(pd[0],pd[1],pd[2],pd[3]);wd<=off_w(pd[4],pd[5],pd[6]);
+  xl<=24'({8'd0,pk[0]}+{pk[1],8'd0});xh<=24'({8'd0,pk[2]}+{pk[3],8'd0});
+ end
+ // stage 3b
+ always @(posedge clk)begin
+  m_idx<=xa;m_vm<=xv;
+  m_iaddr_l<=ub+wb;m_del_l<=uc+wc;m_rgx_l<=ud+wd;
+  m_iaddr_h<=16'd0;m_del_h<=16'd0;m_rgx_h<=16'd0;
+  m_lk_l<=xl;m_lk_h<=xh;
+ end
+end endgenerate
 endmodule
 
 module ot_hgi_coll_q_static_ctl_v5_safephys #(
