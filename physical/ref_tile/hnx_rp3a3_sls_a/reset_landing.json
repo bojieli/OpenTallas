@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hnx_att4_sleaf_s",
+ "enable": false,
+ "reason": "RTL lands the reset at the face in single flops (N: rst_n -> r1 -> r2; S: f_rst -> g1, g1 = the N leaf's r1 + the seam register) then one kept split stage (r3v / g2v, 8 copies, <= 32 loads a copy) feeds the core"
+}

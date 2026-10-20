@@ -1,0 +1,326 @@
+{
+ "name": "hnx_rp3a3_sls_b",
+ "top": "ot_hnx_att4_sleaf_s",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hbm_next/att/ot_hnx_att4_smerge_h.sv",
+  "rtl/hbm_next/att/ot_hnx_att4_sleaf.sv",
+  "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43/hnx_sram_1r1w_128x256_r43_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "f_rst"
+ ],
+ "macros": [
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "inst": "*u_h.g_lane?0?.g_lv?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    43.2,
+    86.4
+   ],
+   "inst": "*u_h.g_lane?0?.g_lv?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    43.2,
+    129.6
+   ],
+   "inst": "*u_h.g_lane?0?.g_lv?2?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    172.8,
+    43.2
+   ],
+   "inst": "*u_h.g_lane?1?.g_lv?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    172.8,
+    86.4
+   ],
+   "inst": "*u_h.g_lane?1?.g_lv?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    172.8,
+    129.6
+   ],
+   "inst": "*u_h.g_lane?1?.g_lv?2?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    302.4,
+    43.2
+   ],
+   "inst": "*u_h.g_lane?2?.g_lv?0?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    302.4,
+    86.4
+   ],
+   "inst": "*u_h.g_lane?2?.g_lv?1?.u_ring"
+  },
+  {
+   "view": "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "count": 1,
+   "at": [
+    302.4,
+    129.6
+   ],
+   "inst": "*u_h.g_lane?2?.g_lv?2?.u_ring"
+  }
+ ],
+ "pins": {
+  "N": [
+   "f_sum",
+   "clk",
+   "xs_out",
+   "f_pd",
+   "f_tag",
+   "xt_out",
+   "f_ev",
+   "f_ps",
+   "f_pl",
+   "f_psl",
+   "f_flt",
+   "f_rst"
+  ],
+  "S": [
+   "sum_hi",
+   "tag_hi",
+   "pub_data",
+   "pub_word",
+   "pub_out_slot",
+   "pub_out_lane",
+   "pub_tag",
+   "pub_v",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "f_sum": [
+   8,
+   204
+  ],
+  "clk": [
+   212,
+   220
+  ],
+  "xs_out": [
+   228,
+   328
+  ],
+  "f_pd": [
+   332,
+   356
+  ],
+  "f_tag": [
+   358,
+   382
+  ],
+  "xt_out": [
+   384,
+   396
+  ],
+  "f_ev": [
+   398,
+   402
+  ],
+  "f_ps": [
+   403,
+   405
+  ],
+  "f_pl": [
+   406,
+   409
+  ],
+  "f_psl": [
+   410,
+   414
+  ],
+  "f_flt": [
+   416,
+   418
+  ],
+  "f_rst": [
+   420,
+   423
+  ],
+  "sum_hi": [
+   8,
+   300
+  ],
+  "tag_hi": [
+   302,
+   326
+  ],
+  "pub_data": [
+   328,
+   376
+  ],
+  "pub_word": [
+   378,
+   384
+  ],
+  "pub_out_slot": [
+   386,
+   391
+  ],
+  "pub_out_lane": [
+   392,
+   396
+  ],
+  "pub_tag": [
+   398,
+   418
+  ],
+  "pub_v": [
+   420,
+   422
+  ],
+  "fault": [
+   424,
+   427
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 0.0,
+  "macro_halo_x_um": 5.4,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:HNX-SM4/ATT4",
+  "branch": "claude/hnx-att4-leaf-1020",
+  "tag": "leafsb",
+  "purpose": "HNEXT.ATT4 cluster-leaf successor of hnx_rp3a3_spvm_safe_nf (TT/FF pin-flop spread 127/114 on one 18.5k-sink root; GRT killed by the 4 h stall watchdog, rc 137): leaf S = words 8..15 (S face of the parent), 9 SRAMs + 8 adders + an identical control replica, own clock root, every pin registered; floorplan variant B (compact abutted rows). Below release (next-release HBM die P=3).",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/gpu",
+   "rtl/hbm_next/att",
+   "rtl/proto",
+   "tools/hbm_next",
+   "tools/hgi_sim",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43",
+   "physical/hbm_next/att4/leaf_1020",
+   "tools/orfs_allcorner_spef.py",
+   "physical/common_flow/ot_keep_regs.tcl",
+   "physical/common_flow/ot_rst_copies.tcl",
+   "physical/common_flow/ot_rst_copies.py"
+  ],
+  "benches": [
+   {
+    "name": "att4_scl_lockstep_exact",
+    "cmd": "HNX_ATT_SAFE_RESET=1 python3 tools/hbm_next/att4_pub_bench.py run --nl 3 --top scl --work {RUN}/bench/scl --out {RUN}/bench/scl.json --mut 0",
+    "expect": "pass",
+    "pass_regex": "^PASS HNX_ATT4_PUB",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "att4_scl_seam_mut8",
+    "cmd": "HNX_ATT_SAFE_RESET=1 python3 tools/hbm_next/att4_pub_bench.py run --nl 3 --top scl --work {RUN}/bench/scl8 --out {RUN}/bench/scl8.json --mut 8",
+    "expect": "fail",
+    "fail_regex": "^FAIL HNX_ATT4_PUB",
+    "fail_witness": "results/arch/hbm_next_1019/att4/leaf_1020/witness/scl_m8.log",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "att4_scl_pubhalf_mut9",
+    "cmd": "HNX_ATT_SAFE_RESET=1 python3 tools/hbm_next/att4_pub_bench.py run --nl 3 --top scl --work {RUN}/bench/scl9 --out {RUN}/bench/scl9.json --mut 9",
+    "expect": "fail",
+    "fail_regex": "^FAIL HNX_ATT4_PUB",
+    "fail_witness": "results/arch/hbm_next_1019/att4/leaf_1020/witness/scl_m9.log",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hnx_rp3a3_sls_b/views",
+  "record_to": "results/arch/hbm_next_1019/att4/leaf_1020/hnx_rp3a3_sls_b",
+  "hold_merge": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every pin: inputs land in one pin register (N leaf ev_a/sum_a/tag_a/ps_a/pl_a/psl_a + seam xs_g/xt_g; S leaf seam *_g + S-face sum_hb/tag_hb), every output is a flop (feed-throughs driven straight from the pin registers, f_pd/f_flt, S-face pub_*/fault); a kit flop would add an unscheduled edge"
+ },
+ "std_area_um2": 7500.0,
+ "util": 0.5,
+ "outline": {
+  "w": 432.0,
+  "h": 216.0
+ },
+ "params": {
+  "NL": 3
+ },
+ "recipe": 4,
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL lands the reset at the face in single flops (N: rst_n -> r1 -> r2; S: f_rst -> g1, g1 = the N leaf's r1 + the seam register) then one kept split stage (r3v / g2v, 8 copies, <= 32 loads a copy) feeds the core"
+ },
+ "io_flop_at_pins": {
+  "enable": true
+ },
+ "defines": [
+  "OT_HNX_ATT_SAFE_RESET",
+  "OT_FP_DATA_NORST"
+ ],
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true
+}
