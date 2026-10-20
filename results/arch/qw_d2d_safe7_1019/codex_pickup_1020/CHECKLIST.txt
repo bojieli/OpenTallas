@@ -1,0 +1,13 @@
+SF7w coordinator review packet (2026-10-20)
+Exact original source snapshot gate start9c875b9bc; no RTL change in this branch. Three mutant fail-regex corrections only.
+Geometry hash0f6ebd7467796ce286c209108d3175810e6c3931ec64f60c4a5cc1699144892c matches coordinator23:14 REVIEW; original receipt preserved.
+1 Pins: PR=1 functional ports; RTL2-stage face reset capture. Native all-root synthesis table includes reset; maxFF32/comb32/input22/macro1, unsafe_non_tie0. Spec reset opt-out explanatory '~160' describes prior architecture, not measured SF7 result; measured census governs.
+2 Reach: actual previous native gate pickup maxL1 365.686um, outline388.8x172.8; no change/cycles.
+3 Fanout: native_summary.json+receipts/native/pickup_all_roots.tsv.gz, all native non-tie drivers<=32. Const TIEHI/TIELO1256/132 synthesis roots split by floorplan repair_tie_fanout; not tied functional inputs.
+4 Depth: textbook463.4ps, reg->reg TT placement+161.6ps, FF hold+35.74ps. Diagnostic, not final SS closure.
+5 Storage: 4x64x137 SRAM; calendars2x1kb each, fixed1bit capture delays<=10 kept as earlier waiver (no new storage).
+6 Floorplan: PNGs actually inspected; four SRAMs at x43.2/129.6/216/302.4,y43.2 lattice. Full width standard-cell bands N/S, no islands. Density concentrated near pin flops, no filled macro-face strip. Pin pitch0.192um=5.21/um. Fill25%,aspect2.25 pin-bound coordinator waiver retained.
+7 Clock: N-centre194.412 beside pin mass, insertionTT371.6/FF308.9ps; pinflop spread66.3/62.1ps. io_hold0.03ns. Die compensation/landing still required.
+8 Schedule: zero added cycles, lockstep200k PASS+5 source mutants and pair35layer PASS+3 exchange mutant witnesses; regex now targets actual terminal XQ_FAIL errors=nonzero inside run.log rather than outer wrapper absent from witness.
+PG correction: original CTS/GRT native failures were intermediate pre-global_connect unbound UNPROTECTED terminals. closure_infra confirms canonical global_connect clears all8 original checkpoints tozero in memory; not finalflow failure. Own diagnostic exact-copy bind preserves original input hash+signal placement/protection fingerprint, audit in pg_copy when complete. Final6_final PG audit remains REQUIRED before closure adoption.
+No new REVIEW written; await Qwen lead actualPNG/census review before submit.
