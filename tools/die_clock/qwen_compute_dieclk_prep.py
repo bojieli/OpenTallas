@@ -14,6 +14,7 @@ which targets.json lists so the report can say which R are not measured yet).
 import argparse
 import collections
 import json
+import hashlib
 import re
 from pathlib import Path
 
@@ -47,12 +48,38 @@ def norm(p):
     return p[:-3] if p.endswith('[0]') else p
 
 
+def receiver_target(path):
+    """Prove the emitted model is only identity wires; never default a real clock pin to zero."""
+    raw = Path(path).read_bytes()
+    text = re.sub(r'/\*.*?\*/|//[^\n]*', '', raw.decode(), flags=re.S)
+    modules = re.findall(r'\bmodule\s+qfd_clkrx\s*\((.*?)\)\s*;(.*?)\bendmodule\b', text, re.S)
+    if len(modules) != 1:
+        raise ValueError('receiver proof requires exactly one qfd_clkrx module')
+    header, body = modules[0]
+    ports = [x.strip() for x in header.split(',')]
+    if not ports or ports[0] != 'input wire pll_fwd':
+        raise ValueError('receiver proof requires scalar pll_fwd input')
+    outputs = []
+    for port in ports[1:]:
+        m = re.fullmatch(r'output wire (pll_\w+)', port)
+        if not m or m[1] == 'pll_fwd':
+            raise ValueError('receiver proof requires scalar clock outputs')
+        outputs.append(m[1])
+    expected = ''.join(f'assign {p}=pll_fwd;' for p in outputs)
+    if not outputs or len(set(outputs)) != len(outputs) or re.sub(r'\s+', '', body) != re.sub(r'\s+', '', expected):
+        raise ValueError('receiver proof is not an exact combinational identity')
+    return dict(view='MODEL_PASS_THROUGH_R0', source='emitted RTL identity proof; no native physical receiver',
+                rtl_sha256=hashlib.sha256(raw).hexdigest(), rtl=str(path),
+                insertion_per_clock_pin_ps={'pll_fwd': [0.0, 0.0, 0.0]})
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--geom', required=True, type=Path)
     ap.add_argument('--clocks-dir', required=True, type=Path)
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--die', default='qwen_compute')
+    ap.add_argument('--receiver-rtl', type=Path, help='bound emitted qfd_clkrx identity model (explicit diagnostic R0)')
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     cl = {c: read_clocks(a.clocks_dir / f'clocks_{c}.tcl') for c in ('tt', 'ff', 'ss')}
@@ -85,6 +112,10 @@ def main():
         trees.append(dict(name=name, root=r, period=round(per.get(dom, 833.333333), 6), domain=dom, select='all',
                           sinks=len(roots[r])))
         fam[name] = [r]
+    if a.receiver_rtl:
+        if 'qfd_clkrx' in masters:
+            raise ValueError('receiver model must not overwrite a native insertion target')
+        masters['qfd_clkrx'] = receiver_target(a.receiver_rtl)
     varying = {f'{m}/{p}': sorted(v) for (m, p), v in spread.items() if len(v) > 1}
     spec = dict(die=a.die, note='Q-CLK 10-18 landed-regions standard: one tree per qfd_clkrx output (region), NO '
                 'balance_group; only intra-region flop spread / pairs judged (<= 80 ps TT + FF); cross-region pairs '

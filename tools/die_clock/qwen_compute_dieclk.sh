@@ -8,7 +8,7 @@
 #                                                    without a landing, budget 60 ps, judged as one family)
 # D holds tools/ (die_clock, die_clock_check.py, die_clock_geom_dump.py).  Results: D/<VARIANT>/STATUS, check_*.txt,
 # landed_pairs.json, png/.
-set -u
+set -uo pipefail
 MODE=$1; D=$2; TL=${DC_TOOLS:-tools}   # tools dir under D (a variant may bring its own copy)
 say() { echo "$(date '+%F %T %Z') QCLK $*" | tee -a $D/STATUS.log; }
 IMG=openroad/orfs:asap7lock
@@ -29,7 +29,12 @@ if [ "$MODE" = prep ]; then
   $DK "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -no_init -exit /work/$TL/die_clock_geom_dump.py --odb /work/floorplan_ck.odb --out /work/geom --pairs --roots $ROOTS > /work/geom.log 2>&1" \
     || { say "geom dump FAIL"; exit 1; }
   say "geom: $(grep -c ROOT_MISSING $D/geom.log) roots missing, $(wc -l < $D/geom/clknets.tsv) entry pins, $(grep GEOM_DUMP_PAIRS $D/geom.log)"
-  python3 $D/$TL/die_clock/qwen_compute_dieclk_prep.py --geom $D/geom --clocks-dir $D/libs --out $D --die "$(basename $C)" | tee -a $D/STATUS.log
+  RECEIVER_ARGS=()
+  if [ -n "${DC_RECEIVER_RTL:-}" ]; then
+    cp "$DC_RECEIVER_RTL" "$D/receiver_model.sv" || exit 1
+    RECEIVER_ARGS=(--receiver-rtl "$D/receiver_model.sv")
+  fi
+  python3 $D/$TL/die_clock/qwen_compute_dieclk_prep.py --geom $D/geom --clocks-dir $D/libs --out $D --die "$(basename $C)" "${RECEIVER_ARGS[@]}" | tee -a $D/STATUS.log || { say "native target prep FAIL"; exit 1; }
   python3 $D/$TL/die_clock/qwen_landed_pairs.py --geom $D/geom --lanes $D/fwd_lanes.json --out $D/landed_pairs_pre.json | tee -a $D/STATUS.log
   # v1: neighbour pairs = every cross-region data pair the standard leaves unlanded (GAP), as tree names
   python3 - $D <<'PY'
