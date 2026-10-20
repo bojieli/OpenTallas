@@ -1,0 +1,6 @@
+2026-10-19T18:36:24-07:00 start host=ot-epyc8 bundle=f2bf7ac6ab737d10811c355c0d8e8ddbd82f8bfb
+2026-10-19T19:03:44-07:00 build rr18 rc=0 bin=ok
+2026-10-19T19:03:47-07:00 rr18 post_n1_g0: HNX_FUSED_CYCLES op=post N=1 rgap=0 KX=4 MUT=0 cycles=212 done=1 fault=0 reads=3203 writes=2560 HNX_FUSED PASS op=post N=1 words=20480  
+2026-10-19T19:03:49-07:00 rr18 pre_n1_g0: HNX_FUSED_CYCLES op=pre N=1 rgap=0 KX=4 MUT=0 cycles=422 done=1 fault=0 reads=3201 writes=640 HNX_FUSED PASS op=pre N=1 words=5120  
+2026-10-19T19:03:49-07:00 rr18 SUMMARY pass=2 fail=0 noresult=0
+2026-10-19T19:03:49-07:00 done

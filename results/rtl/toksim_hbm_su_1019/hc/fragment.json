@@ -1,0 +1,68 @@
+{
+ "group": "su/hc (fork B)",
+ "updated_utc": "2026-10-20T02:07:45Z",
+ "designs": {
+  "ds_ar": {
+   "HC.HC_MIX": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 20480, 1, \"FP32\"], \"B\": [\"HBM\", 1, 1, \"BF16\"], \"O\": [\"VM\", 24, 1, \"FP32\"]}": {
+      "cycles": 1055,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_hc_root_static(QDRLY2,QCHX11) + 4 x [ot_hbm_hc_qcen_static(CHX11,DRLY2) + ot_hbm_hc_bankq0/_ft/bankq_static ring] + ot_hbm_hc_q_static (hc_<q> client in ot_hbm_hc_qhub_static) + ot_hgi_sfu_lg_pair_leaf + 18/15 HC tap",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "tools/hbm_static/toksim_su/hc/run_hc_cases.sh stages ring_die (rtl/test/tb_hbm_hc_eng4_static.sv) + qclient_t (tools/hbm_static/toksim_su/hc/tb_hbm_hc_q_static_t.sv)",
+      "job": "ot-epyc8:/srv/opentallas-scratch/claude/toksim-hbm-su/hc/out_ring_die (unit oth-ubuntu-241445-1792460075) + ot-epyc5:.../out_qclient_t (oth-ubuntu-889644-1792460143)",
+      "verilator": "5.050 (ring); iverilog 2.3.5 (hc_q client)",
+      "notes": "P1 K 20,480, 24 mixes + sigmoid + Sinkhorn 20, bit-exact (24/24 mixes, 96/96 result words vs hdc_golden_v41 chunk8 + tail ref; MUT 1 FAIL 24/96). Composed of two RTL benches on the die config (CPR 1, DRLY 2, XRLY 0 -> RAW0 178): engine span ingest event TB -> last result word = 1009 (HH-9 anchor DRLY1/RAW0 176 re-run: 1007); + hc_q VM read lead 26 (first LG read issue -> wave 0 due at the engine pin TB+1, RD_CAPTURE 23 at the 18/15 tap, measured first rq 2726 -> XWAVE 2753) + result store 20 (result at hc_q pin -> LG write issue +2 -> write-done back +18, measured 3583 -> 3603). NOT in the span: (a) the 24-row weight ingest (480 waves/quarter, t 9..1929 = ~1,935 edges before TB) -- the bench preloads the layer's mix weights into the bank SRAMs; per layer they must be re-ingested, so HC unit occupancy is ~2,990/record, off the data path only if the compiler issues it during the previous gap; (b) root<->quarter die crossing relays (die.v pb0 wires them direct; model term hc_xr 22 modelled); (c) programme start (+9 edges launch -> first issue, once per programme). 1.2 GHz engine edges (833 ps)."
+     }
+    },
+    "ratio": 0.9072,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "engine+VM legs measured 1055 vs model 1162.9: x0.907; measured already contains the hc_tree (RAW0 178 incl. CPR/DRLY) -- do not add hc_tree 41 on top; weight re-ingest (~1,935 edges/record) is unpriced occupancy"
+   },
+   "FUSED.HC_PRE_NORM": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 20480, 1, \"FP32\"], \"B\": [\"HBM\", 5120, 1, \"FP32\"], \"C\": [\"VM\", 4, 1, \"FP32\"], \"O\": [\"VM\", 5120, 1, \"BF16\"]}": {
+      "cycles": 422,
+      "golden": "PASS",
+      "rtl_master": "ot_hnx_fused_top (op pre)",
+      "rtl_source": "claude/hbm-next-units-fusedsram-1019@f2bf7ac6a",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/hc/hnx_fused_bench_rr.sh stage rr18 (rtl/hbm_next/fused/tb/tb_hnx_fused.sv)",
+      "job": "ot-epyc8:/srv/opentallas-scratch/claude/toksim-hbm-su/hc/out_fused_rr18 (oth-ubuntu-252031-1792460183)",
+      "verilator": "5.050",
+      "notes": "NO FUSED HC datapath is bound in the d4g GEN2e3 die.v (HC masters implement HC.HC_MIX only; LB2-HBM / COORD decision owed); newest bench-passing RTL = next-release static N-row engine ot_hnx_fused_top (32 lanes, KX 4, rgap 0, x/gain stores in 1R1W SRAM). N 1 (AR), D 5,120, 4 streams: job launch -> done = 422 at VM read return RR 18 (die SU/HC tap profile); 406 at RR 10 (m0 stage re-run; branch README 404 pre-SRAM). Bit-exact 5,120 words vs hdc_golden_v41 chunk8; m1 mutant FAIL. Gain read from VM: the HBM gain (B in HBM) DMA/first access is NOT in the span."
+     }
+    },
+    "ratio": 0.647,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "pending": [],
+    "where_model_wrong": "priced on the credited P6 LL engine (649) that is not on the die; static engine measures 422 (x0.647) but has no d4g slot yet"
+   },
+   "FUSED.HC_POST": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 5120, 1, \"FP32\"], \"B\": [\"VM\", 20480, 1, \"FP32\"], \"C\": [\"VM\", 20, 1, \"FP32\"], \"O\": [\"VM\", 20480, 1, \"FP32\"]}": {
+      "cycles": 212,
+      "golden": "PASS",
+      "rtl_master": "ot_hnx_fused_top (op post)",
+      "rtl_source": "claude/hbm-next-units-fusedsram-1019@f2bf7ac6a",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/hc/hnx_fused_bench_rr.sh stage rr18",
+      "job": "ot-epyc8:/srv/opentallas-scratch/claude/toksim-hbm-su/hc/out_fused_rr18 (oth-ubuntu-252031-1792460183)",
+      "verilator": "5.050",
+      "notes": "NO FUSED HC datapath is bound in the d4g GEN2e3 die.v (HC masters implement HC.HC_MIX only; LB2-HBM / COORD decision owed); newest bench-passing RTL = next-release static N-row engine ot_hnx_fused_top (32 lanes, KX 4, rgap 0, x/gain stores in 1R1W SRAM). N 1, D 5,120 x 4 streams (20,480 out words): launch -> done 212 at RR 18; 196 at RR 10. Bit-exact 20,480 words; m1 mutant FAIL."
+     }
+    },
+    "ratio": 1.3046,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "pending": [],
+    "where_model_wrong": "model 162.5 below the static engine's 212 (x1.305): 5 VM reads/sector + VM round trip not in the price; no d4g master"
+   }
+  }
+ }
+}

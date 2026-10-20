@@ -1,0 +1,103 @@
+{
+ "designs": {
+  "ds_ar": {
+   "FUSED.QDQ_FP8": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"O\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": 58,
+      "golden": "PASS",
+      "rtl_master": "ot_hgi_qdq_host_split #(RL7,WC4,COMPACT1) (die hb_quant_NW)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_qdq_span.sh + tb_toksim_qdq_split.sv",
+      "job": "ot-epyc5 oth-ubuntu-922078-1792460461 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/qdq",
+      "verilator": "5.050",
+      "notes": "512-word FP8 QDQ (qdqvec record 0 = DS production vector, out_0 re-checked = hdc_golden_v41.qdq_fp8 512/512) on the split vs monolith lockstep: 16 beats, first VM read request -> record_done (bank commit) = 58 edges at 833 ps (stream clock); doorbell -> record_done 74 (host target48 / record calendar issue at +8 included). Bench VM model = fixed 7 edges at the quant pins (RL7); die GEN2c relay lanes to the NW banks NOT included. 8-record anchor re-run: split_last_write 158 (= 10-18 anchor), record pipeline 16 beats/record + 42-edge fill. Mutant RL5 -> LOCKSTEP_FAIL (witness qdq/qdq1_mut2.log)."
+     }
+    },
+    "ratio": 2.32,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "price 25 = issue beats only (16 + dispatch); the record latency is 16 beats + 38-edge decoder/bank pipeline + 5 split edges = 58"
+   }
+  },
+  "qwen": {
+   "FUSED.ROW_NORM": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"HBM\", 4096, 1, \"BF16\"], \"O\": [\"VM\", 4096, 1, \"BF16\"]}": {
+      "cycles": null,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_su_reduce_static (in ot_hbm_su_static_qcore, clk_red = pll_serial)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_rms_reduce.sh + rms_reduce_compile.py (tb tools/hbm_static/su_reduce_tb.cpp)",
+      "job": "ot-epyc5 oth-ubuntu-922126-1792460461 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/rms/d4096",
+      "verilator": "5.050",
+      "measured_lower_bound": 1832.0,
+      "notes": "NO FUSED.ROW_NORM engine/lowering exists in d4g (no norm engine in die.v; col_sfu grid lanes cannot reduce / rsqrt: tools/hbm_layer_vehicle/sfu_fused_compile.py audit) -> it runs as the SU ss/rs/y chain. MEASURED here: the sum-of-squares on the bound reducer (one operand/edge, LAT 9, RAW 10, csum8 + pairwise, exact cycles + bit-exact csum golden, phase mutant FAILS): d4096 = 1374 serial edges = 1832.0 edges at 833 ps (serial 3:4). (quarter 1024 squares 1323 + 4-root combine 51; the stree/RF transit of the 3 remote roots is NOT included) NOT included: lane x*x issue/stage to the reducer, RF/stree scalar transit, rsqrt on the quarter-0 FULL lane side pipe, the y = x*r*g pass with the HBM gain read (first access), VM drain. Lower bound only."
+     },
+     "{\"A\": [\"VM\", 1024, 1, \"FP32\"], \"B\": [\"HBM\", 128, 1, \"BF16\"], \"O\": [\"VM\", 1024, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_su_reduce_static (in ot_hbm_su_static_qcore, clk_red = pll_serial)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_rms_reduce.sh + rms_reduce_compile.py (tb tools/hbm_static/su_reduce_tb.cpp)",
+      "job": "ot-epyc5 oth-ubuntu-922126-1792460461 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/rms/seg128_q2",
+      "verilator": "5.050",
+      "measured_lower_bound": 529.3,
+      "notes": "NO FUSED.ROW_NORM engine/lowering exists in d4g (no norm engine in die.v; col_sfu grid lanes cannot reduce / rsqrt: tools/hbm_layer_vehicle/sfu_fused_compile.py audit) -> it runs as the SU ss/rs/y chain. MEASURED here: the sum-of-squares on the bound reducer (one operand/edge, LAT 9, RAW 10, csum8 + pairwise, exact cycles + bit-exact csum golden, phase mutant FAILS): seg128_q2 = 397 serial edges = 529.3 edges at 833 ps (serial 3:4). (2 heads of 128 on one quarter: q_norm 8 heads / 4 quarters) NOT included: lane x*x issue/stage to the reducer, RF/stree scalar transit, rsqrt on the quarter-0 FULL lane side pipe, the y = x*r*g pass with the HBM gain read (first access), VM drain. Lower bound only."
+     },
+     "{\"A\": [\"VM\", 256, 1, \"FP32\"], \"B\": [\"HBM\", 128, 1, \"BF16\"], \"O\": [\"VM\", 256, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_su_reduce_static (in ot_hbm_su_static_qcore, clk_red = pll_serial)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_rms_reduce.sh + rms_reduce_compile.py (tb tools/hbm_static/su_reduce_tb.cpp)",
+      "job": "ot-epyc5 oth-ubuntu-922126-1792460461 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/rms/seg128_k1",
+      "verilator": "5.050",
+      "measured_lower_bound": 270.7,
+      "notes": "NO FUSED.ROW_NORM engine/lowering exists in d4g (no norm engine in die.v; col_sfu grid lanes cannot reduce / rsqrt: tools/hbm_layer_vehicle/sfu_fused_compile.py audit) -> it runs as the SU ss/rs/y chain. MEASURED here: the sum-of-squares on the bound reducer (one operand/edge, LAT 9, RAW 10, csum8 + pairwise, exact cycles + bit-exact csum golden, phase mutant FAILS): seg128_k1 = 203 serial edges = 270.7 edges at 833 ps (serial 3:4). (1 head of 128 a quarter: k_norm 2 heads) NOT included: lane x*x issue/stage to the reducer, RF/stree scalar transit, rsqrt on the quarter-0 FULL lane side pipe, the y = x*r*g pass with the HBM gain read (first access), VM drain. Lower bound only."
+     }
+    },
+    "ratio": null,
+    "grade": "pending",
+    "pending": [
+     {
+      "job": "none launched",
+      "result_path": null,
+      "what": "full ROW_NORM record = SU ss/rs/y chain on ot_hbm_su_static_top; needs the SU lowering (fork A suvop machinery); compose from units/su.json SU.VOP q_norm.ss/rs/y measurements"
+     }
+    ],
+    "where_model_wrong": "price 175/125 assumes a D4096 norm engine that d4g does not have; the bound reducer alone needs >= 1832 (d4096) / 529 (q seg128) / 271 (k seg128) edges",
+    "ratio_lower_bound": 1.8
+   },
+   "SFU.GLU": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 3072, 1, \"FP32\"], \"B\": [\"VM\", 3072, 1, \"FP32\"], \"C\": [\"VM\", 3072, 1, \"FP32\"], \"O\": [\"VM\", 3072, 1, \"BF16\"]}": {
+      "cycles": 467,
+      "golden": "PASS",
+      "rtl_master": "ot_hgi_sfu_core_split3 #(LWB15,LG_PATH15) [core split2] + ot_hgi_sfu_programme_store_r10 #(PAGE_AW1) + sfu LG pair taps",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_glu_span.sh + tb_toksim_glu_split.sv + gen_glu_case.py",
+      "job": "ot-epyc9 oth-ubuntu-293088-1792460722 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/glu_r15_w3072_o1_l190",
+      "verilator": "5.050",
+      "notes": "Canonical Qwen3-8B swiglu fixture (hbm-sim P8191 L0, 3072 words, route scalar C; golden = machine u_glu words, VM readback 3072/3072 exact) on ONE sfucore: ot_hgi_sfu_core_split2 (core of the bound split3) + programme store r10 (D5) in lockstep (6.6k edges, 0 mismatch) with the reference split engine at R=15 die relays (LG_PATH 15) + LG pair taps 14/11 (= die.v defaults) + 8 ot_vms_bank_static banks; 16 SiLU lanes, 16 words/edge in and out.  Span = io_start_v -> last VM write done at the tap: overlap calendar (as compiled, make_qswiglu_io_calendar OVERLAP) 467 edges (first VM read 20, first/last write 264/455); serial calendar (default) 844; TAP 24/21 budget (= R 20 round trip) 482. Drain lag 190 rows after arith start is the minimum (SiLU horizon 46 + 122 + lead): earlier drains FAIL bit-exact (glu_r15_w3072_o1_l130, glu_r15_w3072_o1_l64, glu_r15_w768_o1_l100, glu_r15_w768_o1_l130, glu_r15_w768_o1_l160, glu_r15_w768_o1_l48, glu_r15_w768_o1_l64, glu_r20_w768_o1_l64). 833 ps stream clock. Per-quadrant split (768 words a core, 4 cores in parallel; NOT what the fixture/compiler of record does): 323 edges (glu_r15_w768_o1_l190 PASS).",
+      "tap_24_21_cycles": 482,
+      "serial_calendar_cycles": 844,
+      "per_core_768_cycles": 323
+     }
+    },
+    "ratio": 3.803,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "price 120 = \"GLU fast path 60 / half width\" estimate; one 16-lane SFU core needs 192 beats in + 192 out + the 168-edge SiLU horizon + 2x15 LG relays"
+   }
+  }
+ }
+}
