@@ -23,7 +23,9 @@ module qkd_rst_region_po #(parameter integer IGNORE=255, parameter integer HOLD=
   reg [1:0] ps;
   always @(posedge ck or negedge por_n) if (!por_n) ps <= 2'b00; else ps <= {ps[0], 1'b1};
   wire pr_n = ps[1];
-  reg b_int; (* keep *) reg b_pin;
+  // BOTH copies keep (ot_keep_regs.tcl keeps only flops driving keep wires; gate 1: b_int unkept -> merged into b_pin)
+  (* keep = "true", dont_touch = "true" *) reg b_int;
+  (* keep = "true", dont_touch = "true" *) reg b_pin;
   assign b = b_pin;
   reg [IW-1:0] ign; reg a_q; reg [DW-1:0] cnt; reg rel; reg [HW-1:0] hold;
   wire live = (MUT == 1) ? 1'b1 : (MUT == 4 ? (32'(ign[8:0]) >= 32'(IGNORE)) : (ign >= IGN_TC));
