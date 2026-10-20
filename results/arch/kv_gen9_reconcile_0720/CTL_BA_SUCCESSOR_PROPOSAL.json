@@ -1,0 +1,139 @@
+{
+  "scope": "STRUCTURAL_PROPOSAL_ONLY no candidate RTL/view/gate adoption; ZERO added token edges is an unproven target",
+  "intended_top": "qkd_kvs_ctl_ba_s32",
+  "external_contract": {
+    "source": "after_r.sv.gz",
+    "sha256": "82693c8c3b3ac00d6760a298200917a3169263d04a7fc421f802022d5c8a9b83",
+    "actual_selected_ports_preserved_exactly": true,
+    "port_declarations": [
+      "    input wire ck",
+      "    input wire rst_n",
+      "    input wire [142:0] boot__boot_pr",
+      "    input wire [3:0] boot__boot_image_target",
+      "    input wire [0:0] boot__boot_image_ready",
+      "    input wire [0:0] boot__boot_image_fault",
+      "    input wire [15:0] boot__boot_image_epoch",
+      "    input wire [63:0] boot__boot_image_digest",
+      "    input wire [173:0] d2d__svc",
+      "    input wire [0:0] por_n",
+      "    input wire [292:0] embgw__bw",
+      "    input wire [0:0] st",
+      "    input wire [81:0] auth",
+      "    input wire [58:0] cht",
+      "    input wire [1:0] chg",
+      "    input wire [11:0] d2d__skw",
+      "    input wire [0:0] oobs__host_launch_quiet",
+      "    input wire [5:0] oobs__host_upstream_quiet",
+      "    input wire [521:0] d2d__srx",
+      "    input wire [58:0] d2d__kvn_word_identity",
+      "    input wire [1:0] d2d__kvn_word_generation",
+      "    output wire [0:0] boot__link_cfg_tx_we",
+      "    output wire [0:0] boot__link_cfg_rx_we",
+      "    output wire [5:0] boot__link_cfg_addr",
+      "    output wire [31:0] boot__link_cfg_data",
+      "    output wire [60:0] kvi",
+      "    output wire [0:0] oobs__kv_drained_local",
+      "    output wire [0:0] oobs__kv_flush_local",
+      "    output wire [0:0] oobs__kv_active_local",
+      "    output wire [15:0] dcfg__age_vport__0_16",
+      "    output wire [15:0] dcfg__age_vport__16_16",
+      "    output wire [15:0] dcfg__age_vport__32_16",
+      "    output wire [15:0] dcfg__age_vport__48_16",
+      "    output wire [22:0] kg",
+      "    output wire [15:0] dcfg__age_vport__64_16",
+      "    output wire [15:0] dcfg__age_vport__80_16",
+      "    output wire [15:0] dcfg__age_vport__96_16",
+      "    output wire [15:0] dcfg__age_vport__112_16",
+      "    output wire [15:0] dcfg__age_vport__128_16",
+      "    output wire [15:0] dcfg__age_vport__144_16",
+      "    output wire [15:0] dcfg__age_vport__160_16",
+      "    output wire [15:0] dcfg__age_vport__176_16",
+      "    output wire [15:0] dcfg__age_vport__192_16",
+      "    output wire [15:0] dcfg__age_vport__208_16",
+      "    output wire [15:0] dcfg__age_vport__224_16",
+      "    output wire [15:0] dcfg__age_vport__240_16",
+      "    output wire [20:0] lp",
+      "    output wire [0:0] boot__setup_ready",
+      "    output wire [0:0] own__native_reserved",
+      "    output wire [0:0] own__ownership_valid",
+      "    output wire [0:0] cf_root__fault",
+      "    output wire [15:0] dcfg__age_pv",
+      "    output wire [108:0] o_attn",
+      "    output wire [72:0] o_emb",
+      "    output wire [1117:0] o_hroot_WS",
+      "    input wire [143:0] i_hroot_WS",
+      "    output wire [1117:0] o_hroot_WN",
+      "    input wire [143:0] i_hroot_WN",
+      "    output wire [1117:0] o_hroot_ES",
+      "    input wire [143:0] i_hroot_ES",
+      "    output wire [1117:0] o_hroot_EN",
+      "    input wire [143:0] i_hroot_EN"
+    ],
+    "no_CTLLVM_or_CTLSRAM_parameter_in_actual_selected_top": true
+  },
+  "source_authority_gap": {
+    "actual_d11r_legacy_module_equal_to_producer": false,
+    "producer_replays_MU_modules": true,
+    "equivalence_or_MU_cold_proof": false
+  },
+  "boot_cfg_age_schema": {
+    "NRST": 43,
+    "CAP": 1,
+    "AGES": 1,
+    "first_age_word": 76,
+    "last_age_word": 94,
+    "seal_word": 95,
+    "total_cfg_words_including_seal": 96,
+    "old_nonage_S32_seal_word": 76,
+    "added_cfg_words_vs_nonage_S32": 19,
+    "age_storage_bits": 304,
+    "age_layout": [
+      "word76 ATTENTION {D_RL,D_QK,F_DLY,PV_LEAD} 4x8",
+      "word77 PAIR0 FIRST_INPUT_AGE 8bits zero padding",
+      "word78 PAIR1 FIRST_INPUT_AGE 8bits zero padding",
+      "word79..94 VPORT0..15 {DQ,RT} 16bits zero padding"
+    ],
+    "functional_reset_retains_age_configuration": true,
+    "POR_release_original": "two synchronised stages; preserve async assertion and exact release unless separately priced",
+    "boot_edge_price": "NOT MEASURED; dispatcher handoff/capture cadence and19addedwords require actual fullboot proof, not scalar +19cycles"
+  },
+  "member_plan": [
+    {
+      "instance": "u_dcfg",
+      "actual": "qkd_kv_die_cfg_a NRST43/CAP1/AGES1",
+      "proposed": "new qkd_kv_die_cfg_a_s32 family REQUIRED; existing qkd_kv_die_cfg_s32 lacks304agebits/19words and cannot substitute",
+      "requirements": [
+        "preserve all95preseal writes, padding, order, no duplicate, terminal seal95",
+        "ages read zero until seal, capability gated, functional reset retains, POR invalidates",
+        "causal mutants off-by-one age, preseal leak, age write drop, wrong pair packing, wrong VPORT index",
+        "native32 on exact mapped source including age seal gating, POR distribution, enables, decoder, data fanout"
+      ]
+    },
+    {
+      "instance": "u_boot/u_lprg/u_own",
+      "actual": "fresh producer MU variants versus stale selected legacy variants",
+      "proposed": "reconcile intended MU source first; only then port/parameter-matched safe32 member forks",
+      "requirements": [
+        "four concurrent users/context rearm, boot authority/tag/token/epoch, table indexing and stop/restart",
+        "cold retained FF+SRAM arbitrary state with actual first-use producer dominance",
+        "preserve all source-selected ages and complete issued-output/fault traces, controls causal"
+      ]
+    },
+    {
+      "instance": "u_fanr/u_wprg/u_wrn/u_oobs",
+      "proposed": "inspect provenS32 forks against freshBA exactparams/wiring; no qualification transfer from45portparent",
+      "requirements": [
+        "compare full member functions and register-depth graph",
+        "writer compiled_word_slot/index privatecopy wiring must remain internal and exact",
+        "reset/boot/hclk/cclk and fault publication checked at real parent boundaries"
+      ]
+    }
+  ],
+  "integration_requirements": [
+    "new distinct top/view identity carrying62portABI including o_attn109 and17age exports",
+    "no public default flag enable until CLOSED source+native+405+PG+clock proof and full MU/cold/reset/calendar transaction qualification",
+    "no d11case edits, old diagnostic failures remain",
+    "recompute full poststation static/boot/calendar images and eliminate all stale/unresolved stages; actualshell reset graph includes PVFIN total+4 vslegacy pending sourceproof",
+    "lane8+2 requires admitted hardC HXK15, not overridingclosedHXK13; new compute g5 pilot remains separate physical qualification"
+  ]
+}
