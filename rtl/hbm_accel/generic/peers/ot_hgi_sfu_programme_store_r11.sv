@@ -115,11 +115,18 @@ module ot_hgi_sfu_programme_store_r11 #(
  // gate), 6 ST status combine (relay KR+KS: it sees the leaf status KS edges late, so its reset is KS edges later too)
  localparam integer NS=7, S_CFG=0, S_IOCFG=1, S_IOL=2, S_PSV=3, S_N7=4, S_N10=5, S_ST=6;
  wire [NS-1:0] rb_s,rbd1_s;
+ wire [3:0] st_rb_word;
  for(genvar s=0;s<NS;s=s+1)begin:g_rs
   localparam integer K=(s==S_ST)?KR+KS:KR;
   (* keep = "true", dont_touch = "true" *) reg [K-1:0] q;
   (* keep = "true", dont_touch = "true" *) reg ra,rb,rbd1;
   always @(posedge clk)begin q<={q[K-2:0],rs2};ra<=q[K-1];rb<=ra;rbd1<=rb;end
+  if(s==S_ST)begin:g_word_reset
+   // Same release edge as rb, one kept reset per16-bit status ordinal half.
+   (* keep = "true", dont_touch = "true" *) reg [3:0] rb_word;
+   always @(posedge clk)rb_word<={4{ra}};
+   assign st_rb_word=rb_word;
+  end
   assign rb_s[s]=rb;
   assign rbd1_s[s]=rbd1;
  end
@@ -263,12 +270,21 @@ module ot_hgi_sfu_programme_store_r11 #(
  reg [31:0] c_io_o,c_po;
  always @(posedge clk)
   if(!rb_s[S_ST])begin
-   c_ia<=0;c_id<=0;c_io_o<=0;c_pa<=0;c_pd<=0;c_po<=0;c_f<=0;
+   c_ia<=0;c_id<=0;c_pa<=0;c_pd<=0;c_f<=0;
   end else begin
-   c_ia<=|aio;c_id<=&dio;c_io_o<=so[8];
-   c_pa<=|pa;c_pd<=&pd;c_po<=so[0];
+   c_ia<=|aio;c_id<=&dio;
+   c_pa<=|pa;c_pd<=&pd;
    if(io_fault||p_fault)c_f<=1;
   end
+ // Preserve each ordinal bit capture edge; local reset leaves bound all drivers.
+ for(genvar h=0;h<2;h=h+1)begin:g_status_word
+  always @(posedge clk)begin
+   if(!st_rb_word[h])c_io_o[h*16+:16]<=0;
+   else c_io_o[h*16+:16]<=so[8][h*16+:16];
+   if(!st_rb_word[2+h])c_po[h*16+:16]<=0;
+   else c_po[h*16+:16]<=so[0][h*16+:16];
+  end
+ end
  // KP pad stages (pure delay; the last is the S-face pin register) so the status keeps the io_word shift
  localparam integer TW=1+1+32+1+1+32+1;
  (* keep = "true", dont_touch = "true" *) reg [KP*TW-1:0] st_pad;
