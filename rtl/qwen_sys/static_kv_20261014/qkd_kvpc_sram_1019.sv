@@ -24,6 +24,12 @@
 `ifndef OT_KVPC_SRAM_1019_SV
 `define OT_KVPC_SRAM_1019_SV
 
+// KV-PC6 10-20: kept AND leaf (fixed width, no parameters: a parameterised keep_hierarchy module is renamed by Yosys and
+// loses the attribute).  N leaves on the same operands = one decision replicated as logic, each copy <= 32 loads.
+(* keep_hierarchy = "yes" *) module ot_kvpc6_and2 (input wire a, input wire b, output wire y);
+    assign y = a & b;
+endmodule
+
 // Logical WORDS x BITS memory on ceil(BITS/64) native 32 x 64 dual-clock banks.  WCLK_MAP: bank k writes on
 // wclk[WCLK_MAP[4k+:4]] (several storage roots; all the same clock family).  Unused high data bits are written 0.
 module qkd_kvpc_ram2c #(
@@ -328,6 +334,7 @@ module ot_async_fifo_kvpc_s #(
     input  wire             rd_clk,
     input  wire             rd_rst_n,
     output wire             rd_valid,
+    output wire             rd_valid_k,   // KV-PC6: == rd_valid, a second kept leaf (consumer-side copy family load)
     input  wire             rd_ready,
     output wire [WIDTH-1:0] rd_data,
     output reg              rd_underflow
@@ -377,7 +384,15 @@ module ot_async_fifo_kvpc_s #(
                             rd_gray_w2[PTR_W-3:0]});
     assign rd_empty_next = (rd_gray_next == wr_gray_r2);
     assign wr_ready = wr_domain_rst_n && rd_online_w2 && !wr_full;
-    assign rd_valid = rd_domain_rst_n && wr_online_r2 && !rd_empty;
+    // KV-PC6 (i4 pc_h census: rd_valid of the up FIFO drove 34 pins): two kept leaves of the same AND; copy 0 is rd_valid
+    // (rd_fire, the read address, the consumer's valid), copy 1 is rd_valid_k (the consumer's kept er_v copy family)
+    wire rd_valid_pre = rd_domain_rst_n && wr_online_r2;
+    wire [1:0] rd_valid_c;
+    for (genvar q = 0; q < 2; q = q + 1) begin : g_rd_valid
+        ot_kvpc6_and2 u_l (.a(rd_valid_pre), .b(!rd_empty), .y(rd_valid_c[q]));
+    end
+    assign rd_valid = rd_valid_c[0];
+    assign rd_valid_k = rd_valid_c[1];
     // storage: native banks; the write is the original's (inside the wr_domain_rst_n-released branch, on wr_fire)
     generate if (SRAM != 0) begin : g_sram
         qkd_kvpc_ram2c #(.WORDS(DEPTH), .BITS(WIDTH), .NW(1), .WCLK_MAP(64'd0), .MUT(MUT == 1 ? 1 : 0)) u_mem (
@@ -445,18 +460,18 @@ module ot_qkd_static_emb_cdc_kvpc_s #(parameter integer ENABLE=0, DEPTH=8, MUT=0
  output wire c_v,output wire [286:0] c_d,output wire [61:0] c_context,
  input wire h_credit,output wire s_credit,
  input wire h_v,input wire [257:0] h_d,
- output wire e_v,output wire [257:0] e_d,
+ output wire e_v,output wire e_v_k,output wire [257:0] e_d,
  output reg fault_core,output reg fault_hbm
 );
  wire down_ready,up_ready,credit_ready;
- wire down_valid,up_valid,credit_valid;
+ wire down_valid,up_valid,up_valid_k,credit_valid;
  wire [348:0] down_data;
  wire [257:0] up_data;
  wire [0:0] credit_data;
  ot_async_fifo_kvpc_s #(.WIDTH(349),.DEPTH(DEPTH),.MUT(MUT)) down(
   .wr_clk(clk),.wr_rst_n(rst_n),.wr_valid(ENABLE!=0 && s_v),
   .wr_ready(down_ready),.wr_data({s_context,s_d}),.wr_overflow(),
-  .rd_clk(hclk),.rd_rst_n(hrst_n),.rd_valid(down_valid),
+  .rd_clk(hclk),.rd_rst_n(hrst_n),.rd_valid(down_valid),.rd_valid_k(),
   .rd_ready(1'b1),.rd_data(down_data),.rd_underflow());
 `ifdef OT_KVPC_CDC_UP_MUT
  localparam integer UP_MUT = 1;        // tile-bench mutant: up FIFO bank permutation
@@ -466,16 +481,17 @@ module ot_qkd_static_emb_cdc_kvpc_s #(parameter integer ENABLE=0, DEPTH=8, MUT=0
  ot_async_fifo_kvpc_s #(.WIDTH(258),.DEPTH(DEPTH),.MUT(UP_MUT)) up(
   .wr_clk(hclk),.wr_rst_n(hrst_n),.wr_valid(ENABLE!=0 && h_v),
   .wr_ready(up_ready),.wr_data(h_d),.wr_overflow(),
-  .rd_clk(clk),.rd_rst_n(rst_n),.rd_valid(up_valid),
+  .rd_clk(clk),.rd_rst_n(rst_n),.rd_valid(up_valid),.rd_valid_k(up_valid_k),
   .rd_ready(1'b1),.rd_data(up_data),.rd_underflow());
  ot_async_fifo_kvpc_s #(.WIDTH(1),.DEPTH(DEPTH),.SRAM(0)) credit(
   .wr_clk(hclk),.wr_rst_n(hrst_n),.wr_valid(ENABLE!=0 && h_credit),
   .wr_ready(credit_ready),.wr_data(1'b1),.wr_overflow(),
-  .rd_clk(clk),.rd_rst_n(rst_n),.rd_valid(credit_valid),
+  .rd_clk(clk),.rd_rst_n(rst_n),.rd_valid(credit_valid),.rd_valid_k(),
   .rd_ready(1'b1),.rd_data(credit_data),.rd_underflow());
  assign c_v=ENABLE!=0 && down_valid;
  assign c_d=down_data[286:0];assign c_context=down_data[348:287];
  assign e_v=ENABLE!=0 && up_valid;
+ assign e_v_k=ENABLE!=0 && up_valid_k;
  assign e_d=up_data;
  assign s_credit=ENABLE!=0 && credit_valid;
  always @(posedge clk or negedge rst_n)

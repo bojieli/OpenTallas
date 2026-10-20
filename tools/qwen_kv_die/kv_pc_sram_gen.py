@@ -117,6 +117,15 @@ WOBS_SUBS = [
      "   if(pw[(r/16)*18+0]&&pw[(r/16)*18+3 -: 3]==3'd1&&pw[(r/16)*18+8 -: 5]==5'(r))open_row[r][9:0]<=po[18:9];\n"
      "   if(pw[(r/16)*18+9]&&pw[(r/16)*18+12 -: 3]==3'd1&&pw[(r/16)*18+17 -: 5]==5'(r))open_row[r][18:10]<=po[27:19];\n"
      "  end"),
+    # KV-PC6 (i4 census: the po[3:0] decode drove 30 opened + 3 pins): per row from its own pw copy (copy r / 8)
+    ("   if(po[0])case(po[3:1])\n    3'd1:opened[po[8:4]]<=1;\n    3'd0:opened[po[8:4]]<=0;\n    3'd5:opened<=0;\n"
+     "    default:;\n   endcase\n",
+     "   for(integer r=0;r<32;r=r+1)\n"
+     "    if(pw[(r/8)*9+0])begin\n"
+     "     if(pw[(r/8)*9+3 -: 3]==3'd1&&pw[(r/8)*9+8 -: 5]==5'(r))opened[r]<=1;\n"
+     "     else if(pw[(r/8)*9+3 -: 3]==3'd0&&pw[(r/8)*9+8 -: 5]==5'(r))opened[r]<=0;\n"
+     "     else if(pw[(r/8)*9+3 -: 3]==3'd5)opened[r]<=0;\n"
+     "    end\n"),
 ]
 
 # KV-PC SAFE item 3 (terminal census 1248d0585 + kv-pc-contract drivers.json: 188 FF roots > 32 loads).  Copies per
@@ -167,7 +176,7 @@ PORT_Y1 = [
 ]
 
 # KV-PC5-A 10-20: scheduler native32 restructure of ot_qkd_static_kv_timing (inserted into kv_pc_sram_gen.py)
-NSG, NSW, NRD, NWR, NDA, NEV = 18, 8, 19, 14, 17, 22
+NSG, NSW, NRD, NWR, NDA, NEV = 18, 8, 19, 14, 18, 22
 NHG = 7          # head groups: sb/sc/swe, srw lo, srw hi, sb_oh 4 x 8
 CTX_SL = 14
 NCS = (347 + CTX_SL - 1) // CTX_SL     # 25 context slices
@@ -218,7 +227,7 @@ EV_BLOCK = f'''    // KV-PC5: registered row-command event copies (exact: c_v <=
     (* keep *) reg [2:0] lead_qv;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) lead_qv <= {{3{{RW'(RPH + PERIOD) == RW'(LEAD)}}}}; else lead_qv <= {{3{{ref_n == RW'(LEAD)}}}};
-    wire [16:0] desc_acc_c;
+    wire [17:0] desc_acc_c;
     wire [31:0] open_nx;
     assign open_nx[15:0] = (row_gnt && {ev(14, "act")}) ? (open[15:0] | c_oh[15:0]) : (row_gnt && {ev(14, "pre")}) ? (open[15:0] & ~c_oh[15:0]) :
                            (row_gnt && {ev(14, "pall")}) ? 16'b0 : open[15:0];
@@ -485,7 +494,8 @@ DESC_OLD = '''        if (desc_v && !streaming && !fault_r) begin
 DESC_NEW = '''        // KV-PC5: the descriptor accept per load group from its own desc_acc copy (same statements, same order)
         if (desc_acc_c[6]) j <= first_sector;
         if (desc_acc_c[7]) n <= desc_n;
-        if (desc_acc_c[8]) row <= desc_row;
+        if (desc_acc_c[8]) row[9:0] <= desc_row[9:0];        // KV-PC6: row lo / hi per copy (38-load leaf, i4)
+        if (desc_acc_c[17]) row[18:10] <= desc_row[18:10];
         if (desc_acc_c[9]) begin context_active<=context_accept;context_v<=desc_vpass;context_kb<=desc_k_order_b;context_k0<=desc_k_count0; end
         if (desc_acc_c[10]) ordinal<=0;
         if (desc_acc_c[11]) context_count<=desc_n[8:0];
@@ -527,15 +537,25 @@ TIM_PC5 = [
     # KV-PC5: c_oh = onehot(c_bank) registered from r_bank (every consumer qualifies c_oh by c_op in {ACT, PRE, REFPB},
     # where the old r_oh was exactly onehot(r_bank): blk = 1 << rb, sb_oh / wab_oh one-hot of sb / wab, act_oh / pre_oh
     # the lowest-first one-hots of act_sel / pre_sel); removes the 32-bit priority mux of r_oh (74 / 81-load selects)
-    ('''c_bank <= r_bank; c_oh <= r_oh; c_w <= W && r_w;''', '''c_bank <= r_bank; c_oh <= 32'b1 << r_bank; c_w <= W && r_w;'''),
+    ('''c_bank <= r_bank; c_oh <= r_oh; c_w <= W && r_w;''', '''c_bank <= r_bank; c_oh <= c_oh_d; c_w <= W && r_w;'''),
+    # KV-PC6 (i4 pc_h census: an r_bank bit drove 32 decode pins of c_oh + c_bank): onehot(r_bank) as a predecode
+    # (r_bank[1:0] -> 4, r_bank[4:2] -> 8) and 32 kept AND leaves, so no r_bank bit sees more than the predecoders
+    ('''    reg r_v, r_prio; reg [2:0] r_op; reg [4:0] r_bank;''',
+     '''    reg r_v, r_prio; reg [2:0] r_op; reg [4:0] r_bank;
+    wire [3:0] c_oh_lo = 4'b1 << r_bank[1:0];
+    wire [7:0] c_oh_hi = 8'b1 << r_bank[4:2];
+    wire [31:0] c_oh_d;                                       // == 32'b1 << r_bank
+    for (genvar q = 0; q < 32; q = q + 1) begin : g_c_oh_d
+      ot_kvpc5_and2 u_l (.a(c_oh_lo[q & 3]), .b(c_oh_hi[q >> 2]), .y(c_oh_d[q]));
+    end'''),
     ('''    always @* s_pblk = ((S && slot_next && r_v && r_sp) ? r_oh : 32'b0)''',
      '''    always @* s_pblk = ((S && slot_next && r_v && r_sp) ? sb_oh : 32'b0)'''),
     ('''    wire s_hit = sq_ne && so_v && so_b == sb && so_row == srw && |(sb_oh & open);
     wire [31:0] shold = s_hit ? sb_oh : 32'b0;''',
-     '''    // KV-PC5: s_hit as two kept leaf copies (1 = the 32-bit shold mask)
-    wire [1:0] s_hit_c;
-''' + leaves('s_hit_c', 2, 'sq_ne && so_v && so_b == sb && so_row == srw', '|(sb_oh & open)') + '''    wire s_hit = s_hit_c[0];
-    wire [31:0] shold = s_hit_c[1] ? sb_oh : 32'b0;'''),
+     '''    // KV-PC5: s_hit as kept leaf copies (KV-PC6: 1 / 2 = the shold mask lo / hi; i4 pc_h 33 loads on one copy)
+    wire [2:0] s_hit_c;
+''' + leaves('s_hit_c', 3, 'sq_ne && so_v && so_b == sb && so_row == srw', '|(sb_oh & open)') + '''    wire s_hit = s_hit_c[0];
+    wire [31:0] shold = {s_hit_c[2] ? sb_oh[31:16] : 16'b0, s_hit_c[1] ? sb_oh[15:0] : 16'b0};'''),
     ('''        sq_n <= 0; sq_rp <= 0; sb <= 0; sc <= 0; srw <= 0; swe <= 0;''',
      '''        sq_n <= 0; sq_rp <= 0; sb <= 0; sc <= 0; srw <= 0; swe <= 0; swe_bk <= 8'b0;'''),
     ('''    wire wr_ok, wr_ok0, rd_ok0;''',
@@ -684,7 +704,10 @@ UCTL_PC5 = [
    if (ctl_ws_qv[16 + e]) begin fifo[e][31:28] <= cmd_q[31:28]; first_fifo[e] <= first_q; end
   end
 ''' + _hg(0, 'head[13:0]', 'ctl_a1_0', 'cmd_q[13:0]') + _hg(1, 'head[27:14]', 'ctl_a1_1', 'cmd_q[27:14]')
-     + _hg(2, 'head[31:28]', 'ctl_a1_2[13:10]', 'cmd_q[31:28]') + _hg(2, 'head_first', 'ctl_a1_2[9:0]', 'first_q')),
+     + _hg(2, 'head[31:28]', 'ctl_a1_2[13:10]', 'cmd_q[31:28]') +
+     '  // KV-PC6: head_first (2 kept copies; i4 census bits 35 loads) loads under an enable, the same cases as _hg\n'
+     '  if (ctl_pop_c[3] ? (ctl_hf_qv[29] || ctl_push_c[3]) : (ctl_hf_qv[28] && ctl_push_c[3]))\n'
+     '    head_first <= (ctl_pop_c[3] && ctl_hf_qv[29]) ? ctl_a1_2[9:0] : first_q;\n'),
     (' output reg row_v,output reg [2:0] row_op,output reg [4:0] row_bank,',
      ' output reg row_v,output reg [2:0] row_op,output reg [4:0] row_bank,\n'
      ' output reg [31:0] row_act_oh,   // KV-PC5: == {32{row_v && row_op == ACT}} & onehot(row_bank), registered'),
@@ -1177,7 +1200,9 @@ ERK_CDC = [
      "    reg          er_v, er_cr, er_f;\n"
      "    (* keep *) reg [19:0] erk_q;                     // KV-PC5-C: er_v copies (same D, same reset)\n"
      "    assign erk = erk_q;\n"
-     "    always @(posedge ck or negedge rs_q) if (!rs_q) erk_q <= 20'd0; else erk_q <= {20{e_v}};\n"),
+     "    always @(posedge ck or negedge rs_q) if (!rs_q) erk_q <= 20'd0; else erk_q <= {20{e_v_k}};   // KV-PC6: own up-FIFO valid leaf\n"),
+    ("    wire         e_v, s_credit, f_core;\n", "    wire         e_v, e_v_k, s_credit, f_core;\n"),
+    (".e_v(e_v), .e_d(e_d),", ".e_v(e_v), .e_v_k(e_v_k), .e_d(e_d),"),
 ]
 ERK_CTRL = [("    output wire [260:0] er,\n", "    output wire [260:0] er,\n    output wire [19:0]  erk,\n"),
             ("        .es(es), .er(er), .cfg_stack(cfg_stack),", "        .es(es), .er(er), .erk(erk), .cfg_stack(cfg_stack),")]
@@ -1295,13 +1320,13 @@ CLONES = [
      [('rp', 3, 2),
       ('col_bank', 5, 11, ('output reg [4:0] col_bank,col_col,', 'output wire [4:0] col_bank,output reg [4:0] col_col,')),
       ('col_col', 5, 3, ('output reg [4:0] col_col,', 'output wire [4:0] col_col,')),
-      ('row_row', 19, 2, ('output reg [18:0] row_row,', 'output wire [18:0] row_row,'))]),
+      ('row_row', 19, 2, ('output reg [18:0] row_row,', 'output wire [18:0] row_row,')), ('head_first', 10, 2)]),
     (TIM, 'ot_qkd_static_kv_timing', 'ot_qkd_static_kv_timing_kvpc_s',
      [("    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;",
        "    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;\n"
        "    initial if (SQW != 2 || WQW != 2) $error(\"ot_qkd_static_kv_timing_kvpc_s: kept copy widths assume SQD 4, WQ 4\");")] + TIM_PC5,
      [('sq_rp', 2, 2), ('wq_rp', 2, 2), ('wq_rp1', 2, 2), ('context_active', 1, 5), ('streaming', 1, 10),
-      ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2)]),
+      ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2), ('bsel', 5, 2)]),
     ('REWRITE', 'qkd_kvpc_s_chain'),
     (ESM, 'qkd_static_kv_pc_es_merge_b', 'qkd_kvpc_s_esm', ESM_HQ + ESM_ERK, [('own', 1, 11)]),
     (STRAP, 'qkd_embedding_static_pc_strap', 'qkd_kvpc_s_emb_strap', STRAP_SUBS),

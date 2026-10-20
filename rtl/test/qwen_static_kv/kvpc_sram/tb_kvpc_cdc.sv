@@ -18,7 +18,7 @@ module tb_kvpc_cdc;
     reg [286:0] s_d;
     reg [61:0] s_ctx;
     reg [257:0] h_d;
-    wire r_cv, d_cv, r_sc, d_sc, r_ev, d_ev, r_fc, d_fc, r_fh, d_fh;
+    wire r_cv, d_cv, r_sc, d_sc, r_ev, d_ev, d_evk, r_fc, d_fc, r_fh, d_fh;
     wire [286:0] r_cd, d_cd;
     wire [61:0] r_cc, d_cc;
     wire [257:0] r_ed, d_ed;
@@ -27,12 +27,13 @@ module tb_kvpc_cdc;
         .h_d(h_d), .e_v(r_ev), .e_d(r_ed), .fault_core(r_fc), .fault_hbm(r_fh));
     ot_qkd_static_emb_cdc_kvpc_s #(.ENABLE(1), .MUT(`KVPC_MUT)) u_dut (.clk(ck), .rst_n(rst_n), .hclk(hck),
         .hrst_n(hrst_n), .s_v(s_v), .s_d(s_d), .s_context(s_ctx), .c_v(d_cv), .c_d(d_cd), .c_context(d_cc),
-        .h_credit(h_credit), .s_credit(d_sc), .h_v(h_v), .h_d(h_d), .e_v(d_ev), .e_d(d_ed), .fault_core(d_fc),
+        .h_credit(h_credit), .s_credit(d_sc), .h_v(h_v), .h_d(h_d), .e_v(d_ev), .e_v_k(d_evk), .e_d(d_ed), .fault_core(d_fc),
         .fault_hbm(d_fh));
     integer bad, chk, ncv, nev, ninfo, seed, edges, t, rate;
     task compare(input [8*3-1:0] ph); begin
         chk = chk + 1;
-        if ({r_cv, r_sc, r_ev, r_fc, r_fh} !== {d_cv, d_sc, d_ev, d_fc, d_fh} ||
+        // KV-PC6: e_v_k (the second kept valid leaf) must equal e_v and the reference on every edge
+        if ({r_cv, r_sc, r_ev, r_ev, r_fc, r_fh} !== {d_cv, d_sc, d_ev, d_evk, d_fc, d_fh} ||
             (r_cv && {r_cd, r_cc} !== {d_cd, d_cc}) || (r_ev && r_ed !== d_ed)) begin
             bad = bad + 1;
             if (bad < 10) $display("MISMATCH %s t=%0t cv %b/%b cd %h/%h ev %b/%b ed %h/%h sc %b/%b fc %b/%b fh %b/%b", ph,
