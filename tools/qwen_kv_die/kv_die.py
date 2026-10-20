@@ -773,9 +773,14 @@ if RST_PIN_REG:
 # KV-HEALTH 10-19 (OT_KV_RST_HOLD=273, kvsys_prep binds the qkd_rst_region_pr_h273 view only when it audits PASS, else it
 # exports 128): the health retirement reset contract (263 edges) needs HOLD 273; wrapper of _pr, same ports and straps
 RST_HOLD = int(__import__('os').environ.get('OT_KV_RST_HOLD', '128'))
+# KV-BIND4 10-19: OT_KV_RST_HOLD_CELL (kvsys_prep exports the cell whose view audited PASS) selects the native-pin
+# successor qkd_rst_region_pr_h273b (dedicated output launch flop, same ports / straps / calendar) over h273.
+RST_HOLD_CELL = __import__('os').environ.get('OT_KV_RST_HOLD_CELL', 'qkd_rst_region_pr_h273')
+if RST_HOLD_CELL not in ('qkd_rst_region_pr_h273', 'qkd_rst_region_pr_h273b'):
+    raise SystemExit('OT_KV_RST_HOLD_CELL: unknown HOLD273 reset root ' + RST_HOLD_CELL)
 if RST_PIN_REG and RST_HOLD == 273:
-    SPLIT_BINDINGS['qkd_rst_region'] = dict(SPLIT_BINDINGS['qkd_rst_region'], module='qkd_rst_region_pr_h273',
-        file='rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273.sv')
+    SPLIT_BINDINGS['qkd_rst_region'] = dict(SPLIT_BINDINGS['qkd_rst_region'], module=RST_HOLD_CELL,
+        file=f'rtl/qwen_sys/split_20261014/{RST_HOLD_CELL}.sv')
 SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
     ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
 # v1.4.4 PV16 wide pairs (die-placed children via kv_expand) behind their wires-only KV-die face qkd_pvw_die (one die word
