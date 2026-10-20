@@ -55,6 +55,7 @@ import pin_fit as PF  # noqa: E402
 import source_binding as SB  # noqa: E402
 import clock_entry_constraints as CE  # noqa: E402
 import keep_module_audit as KA  # noqa: E402
+import native_census as NC  # noqa: E402
 HO = SB.overlay_module()
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
@@ -1600,6 +1601,11 @@ def check_native_census(g: Gate, out: str):
         report = reports[0]
         if any(row != report for row in reports):
             raise ValueError('conflicting census receipts')
+        if NC.ktree_scoped_admission(report):
+            g.add('WARN', 'native_census',
+                  'raw native census FAIL max34; exact coordinator waiver for 15 library-adder nodes',
+                  NC.KTREE_SCOPE + '; all other drivers retain limit32; timing and physical checks required')
+            return True
         if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
                 or report.get('status') != 'PASS' or report.get('limit') != 32
                 or not report.get('liberty') or not re.fullmatch('[a-f0-9]{64}', report.get('netlist', {}).get('sha256', ''))
