@@ -1,0 +1,250 @@
+{
+  "clock_exclusion": "Declared spec clock ports ck/hck excluded as roots; actual Liberty clock pins excluded at terminals; no ODB-label-based data exemption.",
+  "method": "Truth-functional unary BUF/INV traversal using actual loaded TT/FF Liberty files; source driver to distinct nontransparent/nonclock endpoint Manhattan distance. Macro-pin actual getAvgXY; standard-cell instance-centre/BPin-centre coordinate proxy. Only roots with tiny-ring macro driver or endpoint retained; these are transparent-root-to-terminal reaches, not complete sequential combinational-cone path lengths.",
+  "odb_sha256": "d20e084135040271a49f70442ddc13c34b328cd7c66bebe10a54093bfbe4f9d2",
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib",
+      "sha256": "ef97a2870902c999e683e2bc0a33fa68e1020b5d08782c0a5fee3cb34892da26"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib",
+      "sha256": "67ee0c7bc4add793c938528c15ef9c1bec025e72452e34599631089cab1f4c73"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp/ot_sram_1r1w_4x32_m1_p192_grp_rsp_ff.lib",
+      "sha256": "12d35027207971d7aaf3b3d109e18933a2237543925dd4e71905a1ee807ddcd7"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp/ot_sram_1r1w_4x32_m1_p192_grp_rsp_tt.lib",
+      "sha256": "8f81b456c16dbdfd9446acf3c7b587b54b06ba1fbfdc6bc836e982a39f68e651"
+    }
+  ],
+  "role_errors": [],
+  "transparent_instances": 43771,
+  "roots_with_endpoints": 2064,
+  "max_endpoint_manhattan_um": 381.021,
+  "over405": [],
+  "top30": [
+    {
+      "driver": "u43458_c0/u_cell/rd_out[13]",
+      "net": "n53345_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 381.021
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[9]",
+      "net": "n53341_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.817
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[29]",
+      "net": "n53361_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.811
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[1]",
+      "net": "n53333_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.679
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[4]",
+      "net": "n53336_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.589
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[21]",
+      "net": "n53353_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.511
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[8]",
+      "net": "n53340_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.307
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[17]",
+      "net": "n53349_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.307
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[0]",
+      "net": "n53332_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.277
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[24]",
+      "net": "n53356_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.205
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[12]",
+      "net": "n53344_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.133
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[25]",
+      "net": "n53357_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 380.067
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[28]",
+      "net": "n53360_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 379.707
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[16]",
+      "net": "n53348_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 379.581
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[18]",
+      "net": "n53350_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 379.521
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[22]",
+      "net": "n53354_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 379.509
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[20]",
+      "net": "n53352_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 379.461
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[10]",
+      "net": "n53342_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 378.924
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[26]",
+      "net": "n53358_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 378.741
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[14]",
+      "net": "n53346_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 378.669
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[5]",
+      "net": "n53337_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 378.345
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[31]",
+      "net": "n53363_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 377.889
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[30]",
+      "net": "n53362_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 377.838
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[15]",
+      "net": "n53347_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 377.505
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[27]",
+      "net": "n53359_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 377.388
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[2]",
+      "net": "n53334_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 377.274
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[6]",
+      "net": "n53338_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 377.1
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[19]",
+      "net": "n53351_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 376.953
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[7]",
+      "net": "n53339_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 376.827
+    },
+    {
+      "driver": "u43458_c0/u_cell/rd_out[11]",
+      "net": "n53343_c0",
+      "terminal_count": 2,
+      "max_endpoint_manhattan_um": 376.653
+    }
+  ]
+}

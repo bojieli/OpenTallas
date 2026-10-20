@@ -24,7 +24,10 @@ for inst in b.getInsts():
  if not role:errors.append('missingcell:'+inst.getMaster().getName());continue
  ins=[];outs=[]
  for t in its:
-  pr=role['pins'].get(t.getMTerm().getName())
+  pn=t.getMTerm().getName();pr=role['pins'].get(pn)
+  if pr is None:
+   bm=re.fullmatch(r'(.*)\[(-?\d+)\]',pn)
+   if bm and int(bm[2]) in role['bus_order'].get(bm[1],[]):pr=role['pins'].get(bm[1])
   if not pr:errors.append('missingpin:'+inst.getMaster().getName()+'/'+t.getMTerm().getName());continue
   if pr['direction']=='input':
    if not pr['clock']:ins.append(t);loads.setdefault(t.getNet().getId(),[]).append(t)
@@ -44,9 +47,10 @@ for t in b.getBTerms():
  elif t.getIoType()=='OUTPUT':loads.setdefault(n.getId(),[]).append(t)
 macro_names={i.getName() for i in b.getInsts() if 'grp_rsp' in i.getMaster().getName()}
 macro_nets={t.getNet().getId() for i in b.getInsts() if i.getName() in macro_names for t in i.getITerms() if t.getNet()}
+print("DEBUG",len(macro_names),len(roots),len(loads),len(trans),len(errors),errors[:5],[(n,roles[n].get("sequential"),list(roles[n].get("pins",{}).items())[:2]) for n in roles if "grp_rsp" in n])
 rows=[]
 for driver,net,name in roots:
- if name=="port:ck" or nmap[net].getSigType()=="CLOCK":continue
+ if name in ('port:ck','port:hck'):continue
  dp=point(driver)
  if dp is None:continue
  stack=[net];seen=set();ends={}
@@ -59,5 +63,5 @@ for driver,net,name in roots:
    else:ends[(hasattr(t,'getInst'),t.getId())]=t
  vals=[(abs(dp[0]-sp[0])+abs(dp[1]-sp[1]))/u for t in ends.values() if (sp:=point(t)) is not None]
  if vals and ((hasattr(driver,'getInst') and driver.getInst().getName() in macro_names) or any(hasattr(t,'getInst') and t.getInst().getName() in macro_names for t in ends.values())):rows.append(dict(driver=name,net=nmap[net].getName(),terminal_count=len(ends),max_endpoint_manhattan_um=round(max(vals),3)))
-rows.sort(key=lambda r:-r['max_endpoint_manhattan_um']);result=dict(clock_exclusion='Declared spec clock port ck plus ODB CLOCK nets; Liberty clock pins excluded at terminals.',method='Truth-functional unary BUF/INV traversal using ten actual loaded TT/FF Liberty files; source driver to distinct nontransparent/nonclock endpoint Manhattan distance. Macro-pin actual getAvgXY; standard-cell instance-centre/BPin-centre coordinate proxy. Only roots with tiny-ring macro driver or endpoint retained; these are transparent-root-to-terminal reaches, not complete sequential combinational-cone path lengths.',odb_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),liberty=receipts,role_errors=sorted(set(errors)),transparent_instances=len(trans),roots_with_endpoints=len(rows),max_endpoint_manhattan_um=rows[0]['max_endpoint_manhattan_um'],over405=[x for x in rows if x['max_endpoint_manhattan_um']>405],top30=rows[:30]);Path('/out/placed_reach_union.json').write_text(json.dumps(result,indent=2)+'\n');print({k:v for k,v in result.items() if k not in ['top30','liberty','over405']});print('over405',len(result['over405']))
-if errors:raise SystemExit(2)
+rows.sort(key=lambda r:-r['max_endpoint_manhattan_um']);result=dict(clock_exclusion='Declared spec clock ports ck/hck excluded as roots; actual Liberty clock pins excluded at terminals; no ODB-label-based data exemption.',method='Truth-functional unary BUF/INV traversal using actual loaded TT/FF Liberty files; source driver to distinct nontransparent/nonclock endpoint Manhattan distance. Macro-pin actual getAvgXY; standard-cell instance-centre/BPin-centre coordinate proxy. Only roots with tiny-ring macro driver or endpoint retained; these are transparent-root-to-terminal reaches, not complete sequential combinational-cone path lengths.',odb_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),liberty=receipts,role_errors=sorted(set(errors)),transparent_instances=len(trans),roots_with_endpoints=len(rows),max_endpoint_manhattan_um=rows[0]['max_endpoint_manhattan_um'] if rows else None,over405=[x for x in rows if x['max_endpoint_manhattan_um']>405],top30=rows[:30]);Path('/out/placed_reach_union.json').write_text(json.dumps(result,indent=2)+'\n');print({k:v for k,v in result.items() if k not in ['top30','liberty','over405']});print('over405',len(result['over405']))
+if errors or not rows:raise SystemExit(2)
