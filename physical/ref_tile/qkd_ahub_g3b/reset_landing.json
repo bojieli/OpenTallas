@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_ahub_static_dw_g3_lp",
+ "enable": false,
+ "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_c) -> u_lpr_<region> reset forests (depth 2, per-chunk leaves <= 32 loads) -> per-child u_lprc_* pads (reference schedule: +7 so every landing is warm first); the port net has ONE sink. Reset release +10 edges vs the flat parent (record compiler.reset_release_added_edges), once per reset."
+}

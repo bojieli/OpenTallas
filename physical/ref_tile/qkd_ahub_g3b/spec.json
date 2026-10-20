@@ -1,0 +1,565 @@
+{
+ "name": "qkd_ahub_g3b",
+ "top": "qkd_ahub_static_dw_g3_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g3_lp.sv",
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw_safe.sv",
+  "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_pipe.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/hdc/nearhbm/ot_nhb_tiles_bb.v",
+  "rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v"
+ ],
+ "params": {
+  "Z_LAND": 6,
+  "AP_LAND": 3,
+  "FR_LAND": 3
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_c",
+ "clock_ports": [
+  "ck_c",
+  "ck_w",
+  "ck_e",
+  "ck_z0",
+  "ck_z1",
+  "ck_z2",
+  "ck_z3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c"
+   ],
+   "inputs": [
+    "rst_n",
+    "hs_start",
+    "hs_ep",
+    "hs_layer",
+    "hs_ctx",
+    "hs_cal_lo",
+    "hs_cal_r"
+   ],
+   "outputs": [
+    "hf"
+   ]
+  },
+  "w": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_w"
+   ],
+   "inputs": [
+    "ap0",
+    "ap1"
+   ],
+   "outputs": [
+    "am0",
+    "am1",
+    "fr_valid",
+    "fr_epoch",
+    "fr_rz"
+   ]
+  },
+  "e": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_e"
+   ],
+   "inputs": [
+    "ap2",
+    "ap3"
+   ],
+   "outputs": [
+    "am2",
+    "am3"
+   ]
+  },
+  "z0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_z0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "z1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_z1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "z2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_z2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "z3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_z3"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/arch/kv_ahub4_1019/qkd_ahub_static_dw_g3_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_c) -> u_lpr_<region> reset forests (depth 2, per-chunk leaves <= 32 loads) -> per-child u_lprc_* pads (reference schedule: +7 so every landing is warm first); the port net has ONE sink. Reset release +10 edges vs the flat parent (record compiler.reset_release_added_edges), once per reset."
+ },
+ "pins": {
+  "N": [
+   "hs_start",
+   "hs_ep",
+   "hs_layer",
+   "hs_ctx",
+   "hs_cal_lo",
+   "hs_cal_r",
+   "hf",
+   "ck_c",
+   "rst_n",
+   "ck_z2",
+   "ck_z3"
+  ],
+  "S": [
+   "ck_z0",
+   "ck_z1"
+  ],
+  "W": [
+   "ap0",
+   "am0",
+   "fr_valid",
+   "fr_epoch",
+   "fr_rz",
+   "ap1",
+   "am1",
+   "ck_w"
+  ],
+  "E": [
+   "ap2",
+   "am2",
+   "ap3",
+   "am3",
+   "ck_e"
+  ]
+ },
+ "pin_ranges": {
+  "ap0": [
+   194.4,
+   229.68
+  ],
+  "am0": [
+   229.68,
+   259.2
+  ],
+  "fr_valid": [
+   301.32,
+   302.4
+  ],
+  "fr_epoch": [
+   295.2,
+   301.32
+  ],
+  "fr_rz": [
+   259.2,
+   295.2
+  ],
+  "ap1": [
+   302.4,
+   325.92
+  ],
+  "am1": [
+   325.92,
+   345.6
+  ],
+  "ap2": [
+   194.4,
+   229.68
+  ],
+  "am2": [
+   229.68,
+   259.2
+  ],
+  "ap3": [
+   259.2,
+   282.72
+  ],
+  "am3": [
+   282.72,
+   302.4
+  ],
+  "hs_start": [
+   194.4,
+   198.72
+  ],
+  "hs_ep": [
+   198.72,
+   226.8
+  ],
+  "hs_layer": [
+   226.8,
+   237.6
+  ],
+  "hs_ctx": [
+   237.6,
+   259.2
+  ],
+  "hs_cal_lo": [
+   410.4,
+   464.4
+  ],
+  "hs_cal_r": [
+   464.4,
+   475.2
+  ],
+  "hf": [
+   259.2,
+   280.8
+  ],
+  "rst_n": [
+   300.0,
+   304.0
+  ],
+  "ck_c": [
+   358.0,
+   360.0
+  ],
+  "ck_z2": [
+   118.0,
+   120.0
+  ],
+  "ck_z3": [
+   594.0,
+   596.0
+  ],
+  "ck_z0": [
+   118.0,
+   120.0
+  ],
+  "ck_z1": [
+   594.0,
+   596.0
+  ],
+  "ck_w": [
+   350.0,
+   352.0
+  ],
+  "ck_e": [
+   304.0,
+   306.0
+  ]
+ },
+ "outline": {
+  "w": 734.4,
+  "h": 540.0,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "macros": [],
+ "inter": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "u_zh0",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "u_zh1",
+   "at": [
+    518.4,
+    43.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "u_zh2",
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+   "count": 1,
+   "inst": "u_zh3",
+   "at": [
+    518.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf",
+   "count": 1,
+   "inst": "u_recip",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every pin itself: hs -> u_io pin flops (start / epoch / layer / T / cal_q / cal_r_q), ap0..3 -> u_apq (ot_qkd_drly N 1), am = u_core am registers, fr = u_rw relay register (WF_RLY 1), hf = u_io fault register; a recipe pin register would add an unpriced edge to AP_OFS / FR_OFS (GEN7 binding AP[-40,-40,-38,-39], FR -7). The four am copies per bit are kept and split per face by keep_pin_regs + pin_reg_split (the 105 face copies of 4b05445f7, now at source level)."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true,
+  "macro_out_pins": [
+   "y",
+   "vo",
+   "fault"
+  ]
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 3,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  }
+ },
+ "orfs_vars": {},
+ "job": {
+  "owner": "Claude:KV-AHUB4 10-19",
+  "branch": "claude/kv-ahub4-g2-1019",
+  "tag": "v1",
+  "purpose": "KV-AHUB4 (LEAD2-KV, K.STA.AHUB): face-split landed hub g3 (7 region roots c/w/e/z0..3, 15 landings, fenced regions), variant B: core at the block centre above the reciprocal leaf, Z trees at the corners; fenced regions",
+  "benches": [
+   {
+    "name": "ahub_g3_m0",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "pass_witness": "results/rtl/qwen_kv_ahub4_1019/m0.log"
+   },
+   {
+    "name": "ahub_g3_m13",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m13 13",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=13 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/m13.log"
+   },
+   {
+    "name": "ahub_g3_m14",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m14 14",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=14 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/m14.log"
+   },
+   {
+    "name": "ahub_g3_m15",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m15 15",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=15 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/m15.log"
+   },
+   {
+    "name": "ahub_g3_m17",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m17 17",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=17 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/m17.log"
+   },
+   {
+    "name": "ahub_g3_m18",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m18 18",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=18 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/m18.log"
+   },
+   {
+    "name": "ahub_g3_m19",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m19 19",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=19 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/m19.log"
+   },
+   {
+    "name": "ahub_g3_m1",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=1 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/m1.log"
+   },
+   {
+    "name": "ahub_g3_m11",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m11 11",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=11 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/m11.log"
+   },
+   {
+    "name": "ahub_g3_m12",
+    "cmd": "bash tools/qwen_kv_die/ahub4/g3_bench.sh {RUN}/bench/m12 12",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^AHUB_DW PASS",
+    "fail_regex": "^AHUB_DW FAIL mut=12 errors=",
+    "fail_witness": "results/rtl/qwen_kv_ahub4_1019/m12.log"
+   },
+   {
+    "name": "ahub_g3_lp_lockstep",
+    "cmd": "SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator LP_ROOT=$PWD bash rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g3_lp_bench.sh {RUN}/bench/lp",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^BENCH_EXIT 0",
+    "pass_witness": "results/rtl/qwen_kv_ahub4_1019/lp_bench.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/common/landed_parent",
+   "rtl/qwen_sys/split_20261014",
+   "rtl/test/qwen_kv_die",
+   "tools/qwen_kv_die",
+   "tools/landed_parent",
+   "physical/ref_tile/ot_nhb_zh_m5",
+   "physical/ref_tile/qkh_recip_ref",
+   "results/arch/kv_ahub4_1019",
+   "results/rtl/qwen_kv_ahub4_1019"
+  ],
+  "cycles_added": 9,
+  "views_to": "physical/ref_tile/qkd_ahub_g3b/views",
+  "record_to": "results/rtl/ref_tile/qkd_ahub_g3b"
+ },
+ "floorplan_note": "KV-AHUB4 10-19 variant B: core at the block centre above the reciprocal leaf, Z trees at the corners; fenced regions. Children: u_zh0 MX at 43.2,43.2, u_zh1 MX at 518.4,43.2, u_zh2 R0 at 43.2,345.6, u_zh3 R0 at 518.4,345.6, u_recip R0 at 259.2,43.2. Clock entries: ck_c N 358-360, ck_w W 350-352, ck_e E 304-306, ck_z0 bottom 118-120, ck_z1 bottom 594-596, ck_z2 top 118-120, ck_z3 top 594-596. Region fences (lp_fences.tcl): c [194.4, 259.2, 518.4, 388.8]; w [2.16, 186.0, 43.2, 354.0]; e [680.4, 186.0, 732.24, 310.0]; z0 [43.2, 194.4, 194.4, 237.6] + [43.2, 2.16, 194.4, 43.2]; z1 [518.4, 194.4, 669.6, 237.6] + [518.4, 2.16, 669.6, 43.2]; z2 [43.2, 302.4, 194.4, 345.6] + [43.2, 496.8, 194.4, 537.84]; z3 [518.4, 302.4, 669.6, 345.6] + [518.4, 496.8, 669.6, 537.84]",
+ "structural_change": "NEW kit (KV-AHUB4 10-19, after qkd_ahub_g2l gate l1 FAIL clock_rule ck_c 374.1/331.4 and g2c FAIL): (1) the W / E face IO leaves the core root: qkd_ahub_static_dw_g3 (g2 + face split) -> lp.py qkd_ahub_static_dw_g3_lp with 7 regions c / w / e / z0..z3, 15 landings (am c->w/e, fr c->w, ap w/e->c, zi c->z, zo z->c); (2) one placement fence per region (landing halves beside source / reader); (3) hard children tapped early by their insertion on their region root (TritonCTS macro tree, measured at g2l).",
+ "cycle_cost": "vs g2: ap +3 (core input ages AP_OFS + 3, AP_OFS die meaning unchanged), am +3 at the ASTK pins, fr 0 (u_io leads by WF_RLY + 3), Z round trip +6 as g2; compiler deltas proven on the 7 HKV-DIE3 calendars in results/arch/kv_ahub4_1019/README.md (handed to lanes/KV-GEN9.md). Reset release +10 edges once.",
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qkd_ahub_g3b/lp_fences.tcl"
+ ]
+}
