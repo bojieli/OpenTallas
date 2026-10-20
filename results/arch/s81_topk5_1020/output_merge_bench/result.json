@@ -1,0 +1,31 @@
+{
+  "source_commit": "4b6f1e3cd",
+  "mode": "paired defaultOFF and OT_S81PH_SEL_OMERGE1",
+  "result": {
+    "default": {
+      "expected_beats": 73,
+      "got_beats": 73,
+      "mismatches": 0
+    },
+    "candidate": {
+      "expected_beats": 73,
+      "got_beats": 73,
+      "mismatches": 0
+    }
+  },
+  "fixture": "Unmodified production indexed13 512candidates/quarter topk_final sorted golden static hostcalendar",
+  "golden_fixture_inputs_sha256": {
+    "meta.json": "fa8252cca1ec31630eeb2865d2c0349415380a404fde3c8267d1f5625987f4c7",
+    "exp.txt": "c06d795369befd7bebca8ba407e10f4049b078663d77fc68c4ba3fe2699bbffc",
+    "stim.txt": "2ea5a6be819e3d6f3a17d163b140cb817204cff49ea72cda5643e61174c3d561"
+  },
+  "guarded_mux_source_sha256": "229d341255bfeeab33ee6205336f9448c66afc1361712799ff3fa7dfdd6c8ea8",
+  "tool": "Verilator5.050 pinned by actualbenchscript",
+  "native_model_import": "None; actual source RTL and declared SRAMbehavior .v, no synthesizedstandardcellmodel",
+  "latency": "OMERGE adds exactly2 internaloutputedges; unchanged externallycompiled TAIL_BUDGET slack in thisfixture doesNOTremovecharge; schedulehandoff retained beforeadoption",
+  "limitations": [
+    "Initial reset in productionfixture plusdirectleafrepeatedreset1397checks; fullsliceinflightreset/occupationproof stillowed.",
+    "Partial outputcut only; wholequarter all-driver/native/reset/packer/reach/hardening unqualified.",
+    "No gate or releaseadoption from this behavioralresult."
+  ]
+}
