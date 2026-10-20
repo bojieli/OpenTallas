@@ -1,6 +1,7 @@
 # e86 FAN32 enabled-capture and source-safety scope
 
 Source 4aa724d4e, opt-in FAN32=1/PRE=1/CREP=1; default FAN32=0.
+Mapped top is ot_hgi_coll_tkm_tile_e86, not the generic diagnostic probe tile.
 No extra pipeline edge, no inherited physical qualification.
 
 ## up_in first capture
@@ -42,12 +43,15 @@ cannot establish V2 qualification.
    all-driver/reset native census pending. No physical gate before zero >32.
 4. Depth: OPEN. up_in uses only enabled mux. Insertion still includes85-bit
    comparator, count/selection and OR logic; actual max depth/timing, including
-   runtime tau_o selection, must fit the unchanged clock target and uncertainty.
+   all active mapped selectors, must fit the unchanged clock target and uncertainty.
 5. Storage: OPEN source-role review. Sorted X state64x86bits and continuously
-   accessed compare/control state are distributed pipeline/algorithmic state;
-   tau_o also has runtime-indexed X selection. The generic >2kb runtime-array
-   rule must be explicitly reconciled with this parallel comparator/shift
-   structure before claiming PASS. No SRAM waiver or legacy CLOSED transfer.
+   accessed compare/control state are distributed parallel comparator/shift
+   algorithmic state. The actual e86 wrapper ties tau controls to zero and
+   leaves tau_o unconnected, so generic runtime-indexed tau selection is pruned
+   from the synthesis top (verify mapped graph). There is no random-indexed
+   read/write array in this top. Reconcile the storage rule against the actual
+   parallel algorithmic role, not the generic diagnostic probe. No SRAM waiver
+   or legacy CLOSED transfer is claimed.
 6. Floorplan: OPEN until exact fresh synthesis cell area,40-60% std-cell band,
    four related regions, face capacity and complete source-cut model are priced.
    No new macros/ports; no lattice exemption.
@@ -58,3 +62,24 @@ cannot establish V2 qualification.
    schedule is accepted; actual physical phase or relay additions must be priced.
 
 Any criterion still OPEN blocks gate. Native32 PASS alone is not approval.
+
+## Exact parent clear and first-use source trace
+
+ot_hgi_coll_tkm_static.sv has synchronous functional clr = busy &&
+(tick==1 || tick==clear2). Each clear is ONE parent tick; production does not
+hold it for four edges. The standalone bench holds its initial clear four
+edges, then also exercises random single-cycle clear reassertions while active.
+Those are separate scopes and must not be conflated.
+
+Initial issue1 is tick>=9, and entry_v is itself registered before dv[0]. Thus
+source calendar leaves at least ticks2..8 idle between tick1 clear and issue1.
+The second read2=clear2+5; actual buffer read/entry registers add more latency
+before tile input. Both waveforms must be traced, including every regional
+root, to certify actual clear capture and first usable input. No changed
+schedule or >=4-held-clear production assumption is introduced here.
+
+All five roots of each parent tile instance are wired tile_clk[t] in RTL. This
+is an RTL common-source relation, not proof of physical insertion phase. The
+regional related-clock and actual boundary-age audit remains open. The parent
+instantiation does NOT set FAN32; default0 remains. Standalone synthesis sets
+FAN32=1 via exact Tcl dict, candidate only, no production bind.
