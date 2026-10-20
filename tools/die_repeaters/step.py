@@ -51,7 +51,7 @@ DESIGNS = {
     # stage counts by construction; the fclk-vs-data audit (fclk_audit.tcl) runs after the repair on the fclk globs
     # (cfg fclk_globs, default = repeat_nets; OT_DIE_REPAIR_FCLK_GLOBS adds), policy report|fail (OT_DIE_REPAIR_FCLK_POLICY)
     's81': dict(reach='s81', skip=('n_clk_*', 'n_rst_*', 'n_ck_col_*', 'n_rs_col_*'),
-                buffers=('BUFx8_ASAP7_75t_R',), fclk_audit=1),
+                buffers=('BUFx8_ASAP7_75t_R',), fclk_audit=1, corridor=1),
     'qwen_compute': dict(reach='qwen_compute', skip=('n_clk_*', 'n_fck_*')),   # + n_rst_* unless OT_ROUTE_RESET=1
     'qwen_kv': dict(reach='qwen_kv', skip=('n_clk_*', 'n_fck_*')),
     # Q-DIE12 10-18 (dv2f14bn TT: ~38k half-cycle hop bits -56..-77 ps): a forwarded-lane die (OT_SPLIT_FWD_LANES, n_fck_*
@@ -69,12 +69,14 @@ DESIGNS = {
 
 
 def _reach(design):
+    """planning reach of the die = min(measured reach, owner 405-um planning hop) (S81-DIECHAIN 10-19: the census
+    used the measured s81 455 um, above the owner's 405-um single-cycle wire rule)"""
     key = DESIGNS[design]['reach']
     if key is None:
         return 0.0
     try:
         import die_reach
-        return die_reach.reach_um(key)
+        return die_reach.plan_reach_um(key)
     except Exception:      # noqa: BLE001 -- a missing reach table only disables the over-reach report
         return 0.0
 
@@ -89,7 +91,7 @@ def config(design, report, **kw):
         raise SystemExit(f'die_repeaters: unknown design {design!r} (known: {sorted(DESIGNS)})')
     c = dict(DEFAULTS, design=design, report=report, reach_um=_reach(design),
              skip_nets=list(DESIGNS[design]['skip']))
-    for k_ in ('buffers', 'fclk_audit', 'repeat_nets', 'fclk_policy'):
+    for k_ in ('buffers', 'fclk_audit', 'repeat_nets', 'fclk_policy', 'corridor'):
         if k_ in DESIGNS[design]:
             v_ = DESIGNS[design][k_]
             c[k_] = list(v_) if isinstance(v_, tuple) else v_
@@ -113,6 +115,10 @@ def config(design, report, **kw):
     for ek, ck in (('OT_DIE_REPAIR_PASSES', 'repair_passes'), ('OT_DIE_REPAIR_POST_GRT_ROUNDS', 'post_grt_rounds')):
         if env.get(ek):
             c[ck] = int(env[ek])
+    if env.get('OT_DIE_REPAIR_CORRIDOR'):
+        c['corridor'] = int(env['OT_DIE_REPAIR_CORRIDOR'])
+    if env.get('OT_DIE_REPAIR_POST_REACH'):
+        c['post_reach'] = env['OT_DIE_REPAIR_POST_REACH']
     if env.get('OT_DIE_REPAIR_OVER_REACH'):
         c['over_reach'] = env['OT_DIE_REPAIR_OVER_REACH']
     for k, v in kw.items():
@@ -128,6 +134,8 @@ def config(design, report, **kw):
         raise SystemExit("die_repeaters: over_reach must be 'report' or 'fail'")
     if c.get('post_drv', 'report') not in ('report', 'fail'):
         raise SystemExit("die_repeaters: post_drv must be 'report' or 'fail'")
+    if c.get('post_reach', 'report') not in ('report', 'fail'):
+        raise SystemExit("die_repeaters: post_reach must be 'report' or 'fail'")
     if c.get('fclk_policy', 'report') not in ('report', 'fail'):
         raise SystemExit("die_repeaters: fclk_policy must be 'report' or 'fail'")
     if c['legalize'] not in ('spread', 'snap', 'dpl', 'none'):
@@ -194,6 +202,14 @@ def check(report):
          f"resized={r.get('resized')} non_buffer={r.get('non_buffer_inserted')} skip_nets={r.get('skip_nets')} "
          f"longest={r.get('longest_um')} over_reach({r.get('reach_um')})={r.get('over_reach_nets')} "
          f"post_slew={r.get('post_slew_violators')} post_cap={r.get('post_cap_violators')} legalize={r.get('legalize')!r}")
+    if 'post_longest_segment_um' in r:
+        cs = r.get('corridor_stats') or {}
+        s += (f" corridor={r.get('corridor')} chains={cs.get('chains')} trees={cs.get('trees')} "
+              f"corridor_max_seg={cs.get('max_seg_um')} post_longest_seg={r.get('post_longest_segment_um')} "
+              f"post_seg_over_reach={r.get('post_segments_over_reach')}")
+    if r.get('longest_um') == 0 and (r.get('long_wires_scanned') or 0) > 0:     # the mu2 broken-census signature
+        ok = False
+        s = s.replace('DIE_REPEATERS PASS', 'DIE_REPEATERS FAIL') + ' CENSUS_BROKEN(longest 0 over scanned nets)'
     if r.get('warnings'):     # warn, never fail (e.g. spread displacement > max_wire/2: a lane over a block)
         s += f" WARN({len(r['warnings'])}) max_disp={r.get('spread_max_disp_um')}: " + '; '.join(r['warnings'])
     return ok, s
@@ -227,6 +243,10 @@ def main(argv=None):
     t.add_argument('--fclk-equalize', action='store_true', help='delay-match each forwarded clock to its bundle: BUFs in front of the capture clock pin where the deepest data bit is > 1 stage deeper (DIE-S81-LEAD 10-19)')
     t.add_argument('--fclk-policy', choices=['report', 'fail'], help='|fclk - data| > 1 on a hop: report (default) or fail')
     t.add_argument('--over-reach', choices=['report', 'fail'])
+    t.add_argument('--corridor', type=int, choices=[0, 1], help='re-place chain repeaters on their free L-path corridor '
+                   '(stage count kept) before the spread (s81 default 1)')
+    t.add_argument('--post-reach', choices=['report', 'fail'], help='repeated segments longer than the reach after '
+                   'legalisation: report (default) or fail')
     t.add_argument('--post-drv', choices=['report', 'fail'], help='residual slew/cap violators after repair: report (default) or fail')
     t.add_argument('--rc-layer')
     t.add_argument('--repair-args')
@@ -254,7 +274,7 @@ def main(argv=None):
                     legalize=a.legalize, spread_util=a.spread_util, spread_util_hard=a.spread_util_hard, bin_um=a.bin_um, repair_passes=a.repair_passes,
                     post_grt_rounds=a.post_grt_rounds, max_wire_um=a.max_wire_um, slew_ps=a.slew_ps, receiver_slew=rs,
                     skip_nets=a.skip, repeat_nets=a.repeat_nets, fclk_globs=a.fclk_globs, fclk_policy=a.fclk_policy, fclk_equalize=1 if a.fclk_equalize else None,
-                    over_reach=a.over_reach, post_drv=a.post_drv, rc_layer=a.rc_layer, repair_args=a.repair_args)
+                    over_reach=a.over_reach, post_drv=a.post_drv, corridor=a.corridor, post_reach=a.post_reach, rc_layer=a.rc_layer, repair_args=a.repair_args)
     if a.libs_file:
         body = body.replace('[dict create ', '[dict create libs [concat $ot_die_rep_libs ' + _tcl_list(libs) + '] ', 1)
         body = body.replace(f' libs {_tcl_list(libs)}', '', 1) if libs else body

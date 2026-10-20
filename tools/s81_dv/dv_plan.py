@@ -45,6 +45,8 @@ P4H = False                       # p4h (10-17, coordinator COORD ~11:15): the t
                                   # per regional controller, in the PHY-front region freed by the 4 row-0 S-tier frames over the PHY
 P4H_DROP = ((3, 'L'), (3, 'R'), (4, 'L'), (4, 'R'))   # frame columns whose row-0 S-tier frame (9 slots) gives way
 RSV_GAP, RSV_CH, RSV_GU = 40.0, 200.0, 110.0     # p4h: gap between regional slices (upper-row rq/rd lanes) / channel above the controllers
+RSV_VX = 0.0                      # --rsv-vcol K (S81-DIE11 mu7, p4l MU): K x 43.2-um lattice columns added to every svc_rs column
+                                  # gap (vertical die channels through the service band at x 10-22 mm; the band span is unchanged)
 P4I = False                       # p4i (10-17, coordinator 0cj ~15:00): coll_edge deleted (end-column rung = relays only; the end
                                   # slices carry the cross-die link endpoints), regional service slices dsdv_svc_rs chained
                                   # neighbour-only toward the centre (fixed order, centre fold), HP beat kind, host/job paths
@@ -275,7 +277,7 @@ def place_rsv(P, facts):
     # each upper slice takes the column gap (left or right) nearest its controller; a gap is RSV_GU wide per
     # controller it carries (RSV_GAP when none); two passes so the assignment sees the sized gaps
     cxs = [DIE_W / 2 - 4250 + (k + 0.5) * 8500.0 / CTRL_N for k in range(CTRL_N)]
-    gaps = [RSV_GU] * 7
+    gaps = [RSV_GU + RSV_VX] * 7
     for _ in range(3):
         w = (x1 - x0 - sum(gaps)) / 8
         xs = [x0]
@@ -287,7 +289,7 @@ def place_rsv(P, facts):
             cand = [g for g in (j, j + 1) if 1 <= g <= 7]
             gap_of[j] = min(cand, key=lambda g: abs(gmid[g] - cxs[2 * j + 1]))
         cnt = [sum(1 for v in gap_of.values() if v == g) for g in range(1, 8)]
-        gaps = [RSV_GU * n if n else RSV_GAP for n in cnt]
+        gaps = [(RSV_GU * n if n else RSV_GAP) + RSV_VX for n in cnt]
     w = (x1 - x0 - sum(gaps)) / 8
     xs = [x0]
     for g in gaps:
@@ -1451,6 +1453,7 @@ def main():
     ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
     ap.add_argument('--idxrd', type=int, default=0, choices=(0, 3), help='S81-DIEPLACE2 (p4l MU): 3 = 8 in-line index readers dsdv_idx_rg2 (one per controller pair) above the controllers, service band widened into the column-2/5 voids, row-1 band frames dropped (0 default, byte-identical)')
     ap.add_argument('--ctrl-view-size', nargs=2, type=float, metavar=('W', 'H'), help='MODEL ONLY: actual controller body centered in each unchanged 531.25-um PHY pitch; rederive reader/service rows and all links')
+    ap.add_argument('--rsv-vcol', type=int, default=0, help='S81-DIE11 mu7 (p4l MU): add K x 43.2-um lattice columns to every svc_rs column gap (V die channels)')
     ap.add_argument('--array-y-shift', type=float, default=0.0, help='MODEL ONLY: move the array/street origins north, retaining die outline and the 250-um north frame guard')
     ap.add_argument('--pathfix', action='store_true', help='MU-DIE-S81/PATH (p4l): street lanes keep their realized band (pin span / relay body) clear of blocks and neighbour relays')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
@@ -1476,9 +1479,11 @@ def main():
     PATHFIX = a.pathfix
     assert not PATHFIX or P4L, '--pathfix needs --p4l'
     MU = a.mu
-    global LK_SLOTS, IDXRD
+    global LK_SLOTS, IDXRD, RSV_VX
     LK_SLOTS = a.lk_slots
     IDXRD = a.idxrd
+    RSV_VX = 43.2 * a.rsv_vcol
+    assert not a.rsv_vcol or (P4L and MU), '--rsv-vcol needs --p4l --mu'
     assert not IDXRD or (P4L and MU), '--idxrd needs --p4l --mu'
     assert not MU or P4L, '--mu needs --p4l'
     NO_MIX4 = NO_MIX4 or P4L
