@@ -1,0 +1,100 @@
+TB_S81_DIE_LAYER program 62 ops, 8 field phases, 7869 partials, 5 coll messages / 720 records, 640 y words, 1120 golden rows (640 H_STORE), MUT 0 HMUT 0 NG 16
+MISMATCH VM row 3072 got f76873f2ebc053f5 want f86974f2ec4a51f4
+MISMATCH VM row 3073 got 7479ee5c6dfad8f9 want 7479ef5b6ef9d8f9
+MISMATCH VM row 3074 got dedddee2e85141f1 want dedcdbe2e85339f1
+MISMATCH VM row 3075 got fefdf9def3ec5b5d want fefdf9dcf3ec5d5f
+MISMATCH VM row 3076 got edf6dae5f058f150 want eef6dde4f05bf151
+OPT 0 port 2 dur 0 start 1265 end 1438
+OPT 1 port 2 dur 0 start 1438 end 1611
+OPT 2 port 10 dur 0 start 1915 end 2672
+OPT 3 port 2 dur 0 start 2673 end 3006
+OPT 4 port 2 dur 0 start 3006 end 3020
+OPT 5 port 2 dur 6 start 3020 end 3469
+OPT 6 port 9 dur 243 start 2672 end 2915
+OPT 7 port 9 dur 244 start 2917 end 3161
+OPT 8 port 9 dur 197 start 3163 end 3360
+OPT 9 port 0 dur 628 start 3476 end 3671
+OPT 10 port 9 dur 212 start 3362 end 3574
+OPT 11 port 9 dur 1 start 3576 end 3577
+OPT 12 port 9 dur 637 start 3579 end 4216
+OPT 13 port 2 dur 0 start 4218 end 4232
+OPT 14 port 3 dur 434 start 3671 end 3713
+OPT 15 port 1 dur 3 start 3713 end 3716
+OPT 16 port 1 dur 3 start 3718 end 3721
+OPT 17 port 3 dur 1024 start 3713 end 3832
+OPT 18 port 1 dur 288 start 3723 end 4011
+OPT 19 port 1 dur 283 start 4013 end 4296
+OPT 20 port 4 dur 650 start 4296 end 4946
+OPT 21 port 0 dur 1040 start 4017 end 4131
+OPT 22 port 1 dur 118 start 4298 end 4416
+OPT 23 port 4 dur 301 start 4948 end 5249
+OPT 24 port 4 dur 104 start 5251 end 5355
+OPT 25 port 1 dur 187 start 5356 end 5543
+OPT 26 port 1 dur 236 start 5545 end 5781
+OPT 27 port 1 dur 72 start 5783 end 5855
+OPT 28 port 4 dur 144 start 5781 end 5925
+OPT 29 port 1 dur 196 start 5857 end 6053
+OPT 30 port 1 dur 245 start 6055 end 6300
+OPT 31 port 0 dur 2222 start 6306 end 6423
+OPT 32 port 1 dur 80 start 6423 end 6503
+OPT 33 port 0 dur 549 start 6509 end 6631
+OPT 34 port 3 dur 827 start 6631 end 7813
+OPT 35 port 2 dur 113 start 6664 end 7839
+OPT 36 port 2 dur 0 start 7839 end 7853
+OPT 37 port 2 dur 9 start 7853 end 8302
+OPT 38 port 9 dur 229 start 7839 end 8068
+OPT 39 port 9 dur 254 start 8070 end 8324
+OPT 40 port 9 dur 197 start 8326 end 8523
+OPT 41 port 0 dur 977 start 8308 end 8429
+OPT 42 port 9 dur 212 start 8525 end 8737
+OPT 43 port 9 dur 637 start 8739 end 9376
+OPT 44 port 2 dur 0 start 9378 end 9392
+OPT 45 port 1 dur 186 start 8429 end 8615
+OPT 46 port 0 dur 634 start 8436 end 8551
+OPT 47 port 3 dur 422 start 8615 end 8648
+OPT 48 port 1 dur 118 start 8648 end 8766
+OPT 49 port 1 dur 246 start 8768 end 9014
+OPT 50 port 5 dur 9 start 8766 end 8775
+OPT 51 port 5 dur 44 start 8777 end 8821
+OPT 52 port 0 dur 1858 start 8828 end 8985
+OPT 53 port 1 dur 259 start 9016 end 9275
+OPT 54 port 1 dur 95 start 9277 end 9372
+OPT 55 port 1 dur 3 start 9374 end 9377
+OPT 56 port 1 dur 6 start 9379 end 9385
+OPT 57 port 1 dur 191 start 9387 end 9578
+OPT 58 port 0 dur 2028 start 9584 end 9725
+OPT 59 port 3 dur 827 start 9725 end 10762
+OPT 60 port 2 dur 113 start 9757 end 10786
+OPT 61 port 2 dur 0 start 10786 end 10867
+HIO hin=0 hin_bad=0 hout=0
+MIX4_REAL reads=4161 writes=640 golden_output_injection=0 native_layer=0
+SUMMARY jobs=1 layer_cycles=9625 (header 1250 -> H_STORE done 10875) stage_done_cycle=11480 jobs_done=1/1 dones=62/62 phases_released=8 field_phases=8 capture_writes=5048 mismatching_roots=0 coll_words_die0=720 coll_errors=0 coll_incomplete=0 y_exact=640/640 y_bad=0 y_consumed=640 norm_rows_exact=132/480 hstore_rows_exact=0/640 ref_fault=0 dut_fault=0 ctrl_flt=0 fvec=0000 stuck=0 ep_faults=0 gather_stage_fault=0 hc_fcode=0 max_done_latency=9 errors=0 first_coll_send=1111
+XFER PIPE=0 HST=0 HLMUT=0 HTX=0 HWM=8 LVM=10 | landing last row 1892 (header 1250) hland stream=0 vm=0 | H_STORE take 10786 first row written 10788 rows 640 done 10875 | hop go -1 first flit -1 last flit -1 flits 0 exact 0/640 bad 0 early_reads 0 min_lead_rows -1 | xfer_cycles=-1 (header -> last hand-off flit) | PGAP=0 first payload flit 1251 layer_adj=9625 xfer_adj=-1 (from the cycle before the first payload flit)
+TB_S81_DIE_LAYER FAIL
+- /srv/opentallas-scratch/claude/s81-mix4-hl-e2ea3b7a5/src/rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_layer.sv:978: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 351.866 s; speed 27.210 ns/s
+- Verilator: cpu 351.847 s on 1 threads; allocated 169 MB
+	Command being timed: "/srv/opentallas-scratch/claude/s81-mix4-hl-e2ea3b7a5/out/obj_mut_mix/sim +DIR=/srv/opentallas-scratch/claude/s81-mix4-hl-e2ea3b7a5/out/stim_L1"
+	User time (seconds): 351.85
+	System time (seconds): 0.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:51.88
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 154096
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 6383
+	Voluntary context switches: 1
+	Involuntary context switches: 414
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
