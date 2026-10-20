@@ -1,0 +1,5 @@
+`verilator_config
+// TOKSIM-S81B/LEG: one generated module per ring stop / landing / relay station
+no_inline -module "ot_s81sl_rstop"
+no_inline -module "ot_s81_land"
+no_inline -module "ot_dvrly_st"

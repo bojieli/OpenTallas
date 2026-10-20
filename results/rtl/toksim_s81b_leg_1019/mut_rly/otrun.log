@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-leg
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-leg
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-leg
+ot-run: ot-epyc8       admits  1055 GB (avail 852, growth 113, headroom 0, waiters 0/0 GB) load 61/128 running 29 disk 309 GB 
+ot-run: ot-epyc9       admits   718 GB (avail 803, growth 300, headroom 0, waiters 0/0 GB) load 170/128 running 63 disk 653 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81b-leg
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81b-leg
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-412022-1792462905 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+BUILD_OK
+LEG_CFG NS 6320
+MISMATCH t 0 f 0 k 0 cyc 64
+MISMATCH t 0 f 0 k 1 cyc 365
+MISMATCH t 0 f 0 k 2 cyc 366
+MISMATCH t 0 f 0 k 3 cyc 367
+MISMATCH t 0 f 0 k 4 cyc 668
+MISMATCH t 0 f 0 k 5 cyc 669
+MISMATCH t 0 f 0 k 6 cyc 670
+LEG_STATS beats 6320 checked 790 mismatches 790 extra 1999380 stop_faults 0000 land_faults 0000000000000000000000000000 last_cycle 2000200
+FAIL leg_s81: checked 790/6320 mismatches 790 extra 1999380 faults 0000/0000000000000000000000000000
+BENCH_FAIL
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-412022-1792462905): exit 1
