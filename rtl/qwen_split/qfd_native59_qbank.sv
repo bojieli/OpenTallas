@@ -126,7 +126,7 @@ endmodule
 // qfd_native59_dv_service then runs on them exactly as it ran on the raw pins (one edge later), with its kept same-edge
 // replicas now per LANE SLICE.  Outputs registered (see the file header).
 // QB_MUT (split-only mutants, lockstep must FAIL): 1 qb_row leaves unregistered (one edge early), 2 dd_o relay one stage short.
-module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0)(
+module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0)(
  input wire ck,rst_n,
  input wire[547:0]dd_i,input wire layer_context_v,input wire[5:0]command_stage,
  input wire q_slot,input wire[4:0]q_slot_beat,
@@ -229,7 +229,10 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0)(
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin qv_b<=0;qbt_b<=0;qb_v<=0;qb_beat<=0;qb_full<=0;qb_committed<=0;qb_bad<=0;end
   else begin
-   qv_b<=qv_a;qbt_b<=qbt_a;qb_v<=qv_b;qb_beat<=qbt_b;qb_full<=full_q;
+   qv_b<=qv_a;qbt_b<=qbt_a;
+   // v4 opt-in: validity/beat use the same A->B output pipeline as qrow_a->qrow_r.
+   // v3 additionally sampled qv_b/qbt_b, so valid/beat arrived one edge after the row.
+   qb_v<=(QB_ALIGN!=0)?qv_a:qv_b;qb_beat<=(QB_ALIGN!=0)?qbt_a:qbt_b;qb_full<=full_q;
    qb_committed<=qctx_a&&(&as_a);
    qb_bad<=qhi_a||(|dup_a);
   end
