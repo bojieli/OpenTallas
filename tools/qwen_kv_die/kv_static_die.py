@@ -2112,6 +2112,18 @@ def _die_joins(m, K, B, add, fk, rec):
             bus('hps_dcal_flt', 'health_src', 1, [('dcal', 'flt')])
         rec['notes'].append('KV-BIND4 health_src: kc_<st>.kf x4' + ('' if DCAL_FLT else ' + dcal.flt')
                             + ' exported to the health plane')
+    _kd = K                  # the kv_die module (inject's K)
+    if getattr(_kd, 'HOST_RT_OBSX', False):     # KV-FRAMEPINS 10-20: the five die observations -> the HOST observation window (kv_die OBSX)
+        names_ = {i_.name for i_ in m['insts']}
+        miss_ = [n_ for n_ in ('dcal', 'd2d_kv', 'host') if n_ not in names_]
+        if miss_ or not _kd.DCAL_BC4:
+            raise ValueError(f'kv_static_die OBSX: needs the bc4 dcal + d2d_kv + host instances (missing {miss_}, '
+                             f'DCAL_BC4={_kd.DCAL_BC4})')
+        bus('ks_obs_dcal', 'kv_oneway', 3, [('dcal', 'dob'), ('host', 'odc')])       # adm_done, cal_ready, running
+        bus('ks_obs_dlay', 'kv_oneway', 6, [('dcal', 'lay'), ('host', 'odl')])       # layer (run index)
+        bus('ks_obs_rcy', 'kv_oneway', 32, [('d2d_kv', 'rcy'), ('host', 'odr')])     # recovery_cycles
+        rec['notes'].append('KV-FRAMEPINS OBSX: dcal dob/lay + d2d_kv rcy -> host odc/odl/odr (window snapshot, '
+                            'observation only, 0 token edges)')
     rec['opens'] += [
         *([] if BOOT else [dict(where='hsl_<st>_<k>.land_es (x128, 288 b)', owner='KVJ-C3 (writer 4-lane -> PC fan-out feeds '
                                 'the HOST slice)')]),
