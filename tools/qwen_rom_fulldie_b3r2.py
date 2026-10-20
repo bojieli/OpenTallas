@@ -4277,7 +4277,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     _ckof.setdefault(i_, []).append((bid_, p_.lstrip('*')))
             elif bits_ == 1:
                 for i_, p_ in eps_[1:]:
-                    if p_.lstrip('*') in FWD_RST_PORTS:
+                    if p_.lstrip('*') in FWD_RST_PORTS or re.fullmatch(r'rst_c\d+r\d+', p_.lstrip('*')):
                         _rstof.setdefault(i_, {})[p_.lstrip('*')] = bid_
         _fdi = _os_r.environ.get('OT_SPLIT_FWD_LANES_FDI', '0') == '1'
         _frst = _os_r.environ.get('OT_SPLIT_FWD_LANES_RST', '0') == '1'
@@ -4290,9 +4290,27 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             return next((b_ for b_, p_ in c_ if p_ == 'ck'), None) or next((b_ for b_, p_ in c_ if p_ == 'clk'), None) or \
                 (c_[0][0] if c_ else None)
 
-        def _fwd_rst(inst):
+        # QW-GEN3 10-19 (dv2f19g3r: 264 landed c_b16 links stayed PLAIN relays, 'source / sink reset pin not found'):
+        # a qfd_c_b16_dv has 16 REGIONAL reset pins rst_c<c>r<r> (Q-CB16RST), no rst_n: the lane takes the regional
+        # reset of the region that holds the bus port's pin register (die_clock16 port_domains: port -> ck_cXrY)
+        _pdom = {}
+        if _os_r.environ.get('OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS'):
+            try:
+                _pdom = json.loads(Path(_os_r.environ['OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS']).read_text()).get('port_domains', {})
+            except (OSError, ValueError):
+                _pdom = {}
+
+        def _fwd_rst(inst, port=None):
             r_ = _rstof.get(inst, {})
-            return next((p_ for p_ in FWD_RST_PORTS if p_ in r_), None)
+            p0 = next((p_ for p_ in FWD_RST_PORTS if p_ in r_), None)
+            if p0 is not None:
+                return p0
+            reg = sorted(p_ for p_ in r_ if re.fullmatch(r'rst_c\d+r\d+', p_))
+            if not reg:
+                return None
+            d_ = _pdom.get(re.sub(r'\d+$', lambda mm: mm.group(0), (port or '').lstrip('*')))
+            want = ('rst_' + d_[3:]) if d_ and d_.startswith('ck_') else None
+            return want if want in reg else reg[0]
 
         def _fwd_ok(pl_):
             bid_, cl_, eps_ = pl_['bid'], pl_['cl'], pl_['eps']
@@ -4319,8 +4337,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 return 'BUMP'
             if _fwd_clock(si_) is None or _fwd_clock(di_) is None:
                 return 'source or sink without a clock trunk'
-            if _fwd_rst(si_) is None or _fwd_rst(di_) is None:
-                return f'source / sink reset pin not found (src {_fwd_rst(si_)}, dst {_fwd_rst(di_)})'
+            if _fwd_rst(si_, sp_) is None or _fwd_rst(di_, dp_) is None:
+                return f'source / sink reset pin not found (src {_fwd_rst(si_, sp_)}, dst {_fwd_rst(di_, dp_)})'
             return None
     fwd_eq = {}
     if FWDL:
@@ -4355,7 +4373,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             why_ = _fwd_ok(pl)
             if why_ in (None, 'RST', 'BUMP'):
                 n_ = len(pl['frames'])
-                (si_, _), (di_, _) = eps
+                (si_, sp_), (di_, dp_) = eps
                 es_ = int(_lpE.get(bid, {}).get('E') or FWD_LANE_E_STA)
                 e_ = fwd_e_est(n_) + es_ - FWD_LANE_E_STA
                 k_ = _lpE.get(bid, {}).get('K')
@@ -4363,7 +4381,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if bid in fwd_eq:          # Q-COLLCAL: the bus group's E / landing MCP / total-E K
                     es_, e_, k_ = fwd_eq[bid]['E_sta'], fwd_eq[bid]['E'], fwd_eq[bid]['K']
                 fwd = dict(bid=bid, cl=cl, bits=bits, n=n_, src=si_, dst=di_, src_ck=_fwd_clock(si_), dst_ck=_fwd_clock(di_),
-                           src_rst=[si_, _fwd_rst(si_)], dst_rst=[di_, _fwd_rst(di_)], E=e_, E_sta=es_, K=k_,
+                           src_rst=[si_, _fwd_rst(si_, sp_)], dst_rst=[di_, _fwd_rst(di_, dp_)], E=e_, E_sta=es_, K=k_,
                            lane={'RST': 'reset', 'BUMP': 'bump'}.get(why_, 'data'),
                            E_basis='land plan (die STA)' if bid in _lpE else 'estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA',
                            K_basis='land plan' if _lpE.get(bid, {}).get('K') is not None else 'E mod 8 (assumes G = R0); re-derive with the reset calendar',
