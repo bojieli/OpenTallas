@@ -99,3 +99,84 @@ are on ot-epyc7 `/srv/opentallas-scratch/claude/toksim-s81-su`.
 Pending runs are listed in `pending_results.txt` (TOKSIM-S81/SU svc_rs release rerun, TOKSIM-S81/IDX window_load,
 XDIE u relaunch). After they land: drop the new records into `elements/`, rerun `python3 tools/toksim_s81_compose.py`
 and commit.
+
+## TOKSIM-S81B update (10-19 23:15 PT)
+
+Six new element records on release 19bf4121e (Verilator 5.050, every returned row bit-exact vs the CPU golden):
+FGU (ffn.experts_gu 3680, ffn.shared_gu 798), FWOA (attn.wo_a 2222 -> 4862, attn.wo_b 548.9 -> 1464), FDOWN (ffn.down 3084 incl.
+195 priced tail), HCL (HC chain 1046.8 -> 748, embed 323 + 751.3 priced, head.norm.scale 438 ...), SMX (attn.max/exp/den/sink/normalize;
+gather pending), LEG (on-die leg 134 -> 140 a crossing, worst case; the landing mutant is caught only by the latency law check).
+
+Composer changes (`tools/toksim_s81_compose.py`):
+- **strict admission**: a measured op folds only with `bit_exact: true`; exceptions: 0-cycle ops merged into a covering op, and
+  curation maps of an op another record measured bit-exact. Excluded ops are listed in `cycles.json:excluded_not_bit_exact`
+  (attn.wq_b: FIELD matched the TOK2 baseline, not the golden; draft.head, draft.markov).
+- **LEG xdie hook**: an element op with `xdie_part` scales every priced base xdie term of that part by measured/old
+  (`cycles.json:xdie_parts_measured`).
+- FGU/FDOWN fold only into the L0 old-price shape class (zz_curation `by_old`); other layer classes keep committed numbers.
+
+| workload | cycles (fixed) | tok/s | measured | on-chip measured |
+|---|---:|---:|---:|---:|
+| 1 user AR | 1,260,658 | **951.9** | 59.3 % | 68.7 % |
+| 1 user MTP | 1,653,056 | **3,019.1** | 45.9 % | 51.7 % |
+| 46 users AR | | 43,787 aggregate | | |
+| 10 users MTP | | 30,191 aggregate | | |
+
+FSMALL (69b66ae1f): attn.a_proj 628 -> 531 folded; ffn.router and attn.idx.q pending (seq bench tied the return input; FGU's
++RETIRE bench at 4cd48a7ab fixes that).
+
+Biggest remaining measured-old-RTL: ffn.experts_gu/down in non-L0 layer classes, attn.wq_b, ffn.router, attn.a_proj (FSMALL running),
+attn.gather, MTP draft blocks. Cross-die MU co-sim job u relaunched as out_u4 (--mem 200; u2/u3 were memcg OOM at 40 GB).
+
+## TOKSIM-S81C update (10-20 00:20 PT) -- supersedes the numbers above
+
+| workload | cycles / token (fixed) | solved | tok/s | measured | on-chip measured | PHY modelled |
+|---|---:|---:|---:|---:|---:|---:|
+| 1 user AR | 1,414,882.7 | 1,436,546.2 | **848.1** | 79.6 % | 90.7 % | 12.2 % |
+| 1 user MTP (tau 4.159) | 1,801,047.4 | 1,801,047.4 | **2,771.1** | 65.1 % | 72.7 % | 10.4 % |
+| 46 users AR | per-user bound | | **39,014 agg** | | | |
+| 10 users MTP | per-user bound | | **27,711 agg** | | | |
+
+Sensitivity (not folded): the S81-RATEFIX wq_b pipelined calendar P126 (1,987, bit-exact vs golden) gives AR 889.2 / MTP 2,875.3
+tok/s once the die-level DV compiler emits it.
+
+New records (all Verilator 5.050, every returned row checked against the model golden, not a baseline):
+- **WQBG** attn.wq_b: golden check (hdc_golden_v41 segment sums + cap_model.golden_sub/golden_row, fixture shard tie) of all 625
+  frame-root words / 512 rows for P600, P224 and P126: bit-exact; P223 and P124 caught. The baseline was correct. Now admitted at
+  3,359 (+195 priced tail). `claude/toksim-s81c-wqbg-1019@c18b28c61`.
+- **FSGU** ffn.experts_gu: 3,680 in every old shape class (the old per-layer differences came from the old m221pq placement; on
+  p4l every layer has the same 24 phases on u_f_0L00). L1/L2/L14/L3/L20/L24/L21 + L0 control. `claude/toksim-s81c-fsgu-1019@32be4735b`.
+  attn.a_proj sparse classes: only the 448-row part (531) is placed by xs_place; compressor/indexer rows are a compiler gap -> not folded.
+- **FSDN** ffn.down: 3,084 in all 40 layers (L0 control, L2, L14, L20). `claude/toksim-s81c-fsdn-1019@70faab57b`.
+- **FSEQ** ffn.router 977.2 -> 1,419 (5-phase BF sequence, period floor 231: at <=230 return words carry the next phase's segment
+  index -- RTL schedule constraint NOTICE). attn.idx.q field projection (indexer.wq_b rows) 757 incremental behind wq_b on the same
+  frames (P126; standalone 925). `claude/toksim-s81c-fseq-1019@11d0bd085`.
+- **IDXQF** (LEAD decision): attn.idx.q_field is a new DAG node inserted serially wq_b -> idx.q_field -> idx.q (SU qbank 93) in
+  L2/8/14/20/24/28/32/36 (`insert` records in the composer). No double count: the sparse-layer wq_b old 1559.6 priced 8192 wq_b +
+  4096 indexer rows and is fully replaced by the fullsix wq_b-only 3,359. Flag: the frame bench measures wq_b alone at 1,554 on one
+  frame vs the slice fullsix 3,359 (epoch source schedule P224); the composer keeps the slice number.
+- **MTPD** draft.head 8,416 (+34) / draft.markov 6 / draft.fixed 0, golden bit-exact (5 drafts x 3 owners, mutant caught);
+  head.argmax_merge RTL part 119 -> 111 recorded, not folded (-8). wave.busy / mc.* / draft blocks stay old (no release run).
+  `claude/toksim-s81c-mtpd-1019@580280548`.
+- **XUG2** XDIE job u on guard 2 / win 3: out_u5 ep5 oth-ubuntu-554994-1792476654 (parallel to guard-1 out_u4 ep7); MU rows stay
+  per-user bound until it lands.
+
+- **GATH** attn.gather 808 -> 577 (L2/8/14), 819 -> 618 (L20), L24..36 old (no fixture); SEL_IDS scanner 1 id/cycle over 512 ids
+  (2 of 16 owner views so far, 28-view job ep6 oth-ubuntu-447079-1792480437 may raise it). attn.window_load all classes -> 532
+  (HBM-latency bound; compiled W_SLACK 560 assumes HBM latency <= 56: NOTICE). `claude/toksim-s81c-gath-1019@cf69c2a03`.
+
+Still old: attn.a_proj sparse classes 18.6k, attn.gather L24..36, idx.score/topk_local non-fixture layers 11.2k (AR);
+MTP adds wave.busy 161.5k, mc.* 28.9k, draft-block layers.
+
+## MTPW source-pinned wave update (CODEX 2026-10-20)
+
+Five wave.busy positions now derive dynamically from V.S029 components and retain their individual grades (47136.2 cycles/position; handoff0). MTP V.L-prefixed index-projection insertions previously skipped are included. MTP adds80191cycles total ->1881238.4stepcycles,2652.9acceptedtok/s; AR fixed848.1tok/s unchanged. mc.* old charges remain. Fleet4tests+selftest+--checkPASS; evidence results/rtl/codex_token_compose_1020. MU numbers remain partial composition estimates pending strict XDIE qualification.
+
+
+## Conservative source-age update (CODEX 2026-10-20)
+
+Current partial baseline: AR833.6tok/s on1439541.6conservativecycles (fixed1417878.1),80.03% measured on that same path; MTP2648.1acceptedtok/s on1884677.8stepcycles,71.47% measured. Rate and grade accounting use max(fixed,re-solved), while fixed-path diagnostics remain separate. MU estimates38346AR/26481MTPaggregate are composition estimates; release qualification remainsOPEN.
+
+APSP adds source-pinned L2/L20/L24 field measurements at1677/1670/1670, GATH includes all16 owner views for L2/L20 (worst577/624). CAL1 avoids source-age double counting via included_by_record and retains every added budget edge as priced-edge. Unselected newLEP/SVC/rstop obligations are metadata only.
+
+P126 WQBP1987+priced195 is explicitly PROPOSED ONLY until its CAP/deadline/programme contract is repaired and full-stage bit-exactPASS. Baseline remains3359+195. `--scenario wqbp-p126` writes scenarios/wqbp-p126.json, labels its eligibility and proposed component grade, and cannot overwrite this baseline. No prototype gain enters the release or MU headline. See results/rtl/codex_token_compose_1020 for9tests+selftest/check and complete immutable component receipts.
