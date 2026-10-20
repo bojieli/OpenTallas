@@ -644,6 +644,20 @@
         "oth-ubuntu-3038228-1792486535"
       ],
       "data_edge_delta": 0
+    },
+    "component_native": {
+      "status": "FAIL_OTHER_FAMILIES",
+      "roots": 19432,
+      "offenders": 107,
+      "max": 2597,
+      "cr_bit_loads": [
+        3,
+        3
+      ],
+      "kept_onehot_FFs": 92,
+      "onehot_max_loads": 8,
+      "scope": "Read pointer/select producer fixed; component and fullleaf not qualified.",
+      "unit": "oth-ubuntu-3207652-1792486708"
     }
   },
   "constant_roles": {
