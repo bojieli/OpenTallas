@@ -1,0 +1,17 @@
+{
+ "name": "codex-rowctx-native32-mutants-m0-52073fb01d",
+ "mode": "mutants",
+ "mut": 0,
+ "sources": {
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx_native32.sv": "64d1e72150ec32a025d96775293646421f91bfd89a765ff266956d48fbf29c83",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx.sv": "224c9937f1283c4f1462c7032e5275aa6de1ab4f241fc0951cadfdc328dd63ac",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib": "6b00b7c554b89a7d24e02281ebef210c45b9de8b659130daeb852fd159c43d54",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef": "36346864c98588e41d85c8c9f095ce69bfe477119633ca9458aef3ee41127070",
+  "tools/qwen_kv_die/attn_rv_1019/fanout_census.py": "c71d865b2385177144d2ba83880d74ea684cffc4613cf6acf6e602531451971c",
+  "results/rtl/kv_rowctx_native32_1020/tb_rowctx_native32.sv": "c413a658de2a05ae95fa99ba6f3c99c08e758800d81edecf3243c4515d46a909",
+  "results/rtl/kv_rowctx_native32_1020/baseline/ot_pin_regs_wrapper.v": "1fa80a0ae7dae373734f019fb7b689b27296a8da37e2dc652ae8678bcb05a48b",
+  "tools_snapshot/ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+ }
+}
