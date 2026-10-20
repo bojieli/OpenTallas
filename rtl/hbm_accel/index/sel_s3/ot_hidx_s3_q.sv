@@ -21,9 +21,28 @@
 //   * the tie budget, last_id and the S2/S3/S4 valid bits are replicated per lane group / consumer;
 //   * histogram: per-lane (lane, bin-quarter) match flags + 4-bit bin copies feed the 64 bin counters; clears per 2 bins,
 //     adds per 4 bins; the 64:1 read is a registered one-hot bin select (4 kept address copies, 16 decodes each);
+//   * the histogram path has its own kept copy of each lane's valid + key (rawh), s1_pass is copied per lane, the
+//     pack prefix network is a kept module (ot_hidx_s3_pfx) per chunk copy;
 //   * reset: ot_rst_relay with 15 regional leaves (2 sync + region stage = the 2-stage landing), <= 31 loads per leaf.
 // DMUT (bench only, 0 in every kit): 1 tie compare >= ; 3 lane-5 SRAM write-data select one edge late; 5 histogram read
 //   returned one edge later than its op tags.
+// Pack prefix network (kept hierarchy, SYNTH_KEEP_MODULES): positions of the selected lanes in 4-lane groups.  As its
+// own module ABC cannot flatten the popcounts into the 16 x 16 one-hot match decode (that put up to 63 loads on the
+// low lanes' valid bits).
+module ot_hidx_s3_pfx(input wire [15:0] ch,output wire [79:0] pos,output wire [4:0] cnt);
+ wire [1:0] p_loc[0:15];wire [2:0] p_gt[0:3];wire [3:0] p_gb[0:3];
+ for(genvar g=0;g<4;g=g+1)begin:gg
+  assign p_loc[4*g]=2'd0;assign p_loc[4*g+1]=2'(ch[4*g]);assign p_loc[4*g+2]=2'(ch[4*g])+2'(ch[4*g+1]);
+  assign p_loc[4*g+3]=(2'(ch[4*g])+2'(ch[4*g+1]))+2'(ch[4*g+2]);
+  assign p_gt[g]=(3'(ch[4*g])+3'(ch[4*g+1]))+(3'(ch[4*g+2])+3'(ch[4*g+3]));
+ end
+ assign p_gb[0]=4'd0;assign p_gb[1]=4'(p_gt[0]);assign p_gb[2]=4'(p_gt[0])+4'(p_gt[1]);
+ assign p_gb[3]=(4'(p_gt[0])+4'(p_gt[1]))+4'(p_gt[2]);
+ for(genvar l=0;l<16;l=l+1)begin:gp
+  assign pos[5*l+:5]=5'(p_gb[l/4])+5'(p_loc[l]);
+ end
+ assign cnt=(5'(p_gt[0])+5'(p_gt[1]))+(5'(p_gt[2])+5'(p_gt[3]));
+endmodule
 module ot_hidx_s3_q #(parameter integer DMUT=0)(
  input wire clk,
  input wire rst_n,
@@ -118,14 +137,14 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  end
  // ---------------- P2: histogram chains per 8 bins (from p1[6]) ----------------
  // h0 op3 -> clears (per 2 bins); h3 op2 / h4 op4 -> h5 -> h6; h7 = h3 | h6 -> adds (per 4 bins)
- wire [3:0] f_hcl[0:7];wire [1:0] f_h2v[0:7];wire f_h7[0:7];
+ wire [3:0] f_hcl[0:7];wire [3:0] f_h2v[0:7];wire f_h7[0:7];
  for(genvar g=0;g<8;g=g+1)begin:gh
   (* keep *) reg h0,h3,h4,h5,h6,h7;
   (* keep *) reg [3:0] hcl;
-  (* keep *) reg [1:0] h2v;
+  (* keep *) reg [3:0] h2v;             // adds per 2 bins
   always @(posedge clk)begin
    h0<=p1[6][3:0]==3;h3<=p1[6][3:0]==2;h4<=p1[6][3:0]==4;h5<=h4;h6<=h5;h7<=h3||h6;
-   hcl<={4{h0}};h2v<={2{h7}};
+   hcl<={4{h0}};h2v<={4{h7}};
   end
   assign f_hcl[g]=hcl;assign f_h2v[g]=h2v;assign f_h7[g]=h7;
  end
@@ -155,13 +174,19 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  reg rv;reg [3:0] rop;reg [1:0] rpass;reg [7:0] raddr;
  (* keep *) reg s16_id,s16_c,s14;      // s1_v && s1_op==6 (idbad / valid copies + hazards), s1_v && s1_op==4 (scan)
  (* keep *) reg [7:0] s16_l;           // last_id half replicas
- wire [1:0] spq[0:3];                  // s1_pass per 4 lanes
- for(genvar g=0;g<4;g=g+1)begin:gsp
+ wire [1:0] spq[0:15];                 // s1_pass per lane
+ for(genvar g=0;g<16;g=g+1)begin:gsp
   (* keep *) reg [1:0] q;
   always @(posedge clk)q<=rpass;
   assign spq[g]=q;
  end
  reg [7:0] s1_addr;reg [LW-1:0] rawr;
+ wire [16:0] rawh[0:15];               // kept histogram-path copy of each lane's valid + key (compare path: rawr)
+ for(genvar l=0;l<16;l=l+1)begin:grh
+  (* keep *) reg [16:0] q;
+  always @(posedge clk)q<=raw[l*EW+:17];
+  assign rawh[l]=q;
+ end
  always @(posedge clk)begin
   rop<=qop;rpass<=qpass;raddr<=qaddr;
   s1_addr<=raddr;rawr<=raw[LW-1:0];
@@ -203,18 +228,18 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  for(genvar g=0;g<4;g=g+1)begin:gtie
   (* keep *) reg [13:0] tg;             // ties pin flop copy
   (* keep *) reg [13:0] tie_rem;
-  (* keep *) reg comp;
+  (* keep *) reg [1:0] comp;            // comp_started, one copy per tavail half
   always @(posedge clk)tg<=ties;
-  wire [13:0] tavail=comp?tie_rem:tg;
+  wire [13:0] tavail={comp[1]?tie_rem[13:7]:tg[13:7],comp[0]?tie_rem[6:0]:tg[6:0]};
   wire [13:0] tuse=({9'd0,s2_ecnt}<tavail)?{9'd0,s2_ecnt}:tavail;
   wire [13:0] trem=tavail-tuse;
   always @(posedge clk or negedge rr[4+g])begin
    if(!rr[4+g])begin tie_rem<=0;comp<=0;end
    else begin
-    if(s2v_t[2*g])begin tie_rem[6:0]<=trem[6:0];end
-    else if(op1t[g])begin tie_rem[6:0]<=0;end
-    if(s2v_t[2*g+1])begin tie_rem[13:7]<=trem[13:7];comp<=1;end
-    else if(op1t[g])begin tie_rem[13:7]<=0;comp<=0;end
+    if(s2v_t[2*g])begin tie_rem[6:0]<=trem[6:0];comp[0]<=1;end
+    else if(op1t[g])begin tie_rem[6:0]<=0;comp[0]<=0;end
+    if(s2v_t[2*g+1])begin tie_rem[13:7]<=trem[13:7];comp[1]<=1;end
+    else if(op1t[g])begin tie_rem[13:7]<=0;comp[1]<=0;end
    end
   end
   for(genvar j=0;j<4;j=j+1)begin:gl
@@ -243,18 +268,11 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  wire [4:0] c_cnt[0:2];
  for(genvar k=0;k<3;k=k+1)begin:gpk
   wire [15:0] ch=chv[k];
-  wire [1:0] p_loc[0:15];wire [2:0] p_gt[0:3];wire [3:0] p_gb[0:3];wire [4:0] c_pos[0:15];
-  for(genvar g=0;g<4;g=g+1)begin:gg
-   assign p_loc[4*g]=2'd0;assign p_loc[4*g+1]=2'(ch[4*g]);assign p_loc[4*g+2]=2'(ch[4*g])+2'(ch[4*g+1]);
-   assign p_loc[4*g+3]=(2'(ch[4*g])+2'(ch[4*g+1]))+2'(ch[4*g+2]);
-   assign p_gt[g]=(3'(ch[4*g])+3'(ch[4*g+1]))+(3'(ch[4*g+2])+3'(ch[4*g+3]));
-  end
-  assign p_gb[0]=4'd0;assign p_gb[1]=4'(p_gt[0]);assign p_gb[2]=4'(p_gt[0])+4'(p_gt[1]);
-  assign p_gb[3]=(4'(p_gt[0])+4'(p_gt[1]))+4'(p_gt[2]);
+  wire [79:0] pos;wire [4:0] c_pos[0:15];
+  ot_hidx_s3_pfx u_pfx(.ch(ch),.pos(pos),.cnt(c_cnt[k]));
   for(genvar l=0;l<16;l=l+1)begin:gp
-   assign c_pos[l]=5'(p_gb[l/4])+5'(p_loc[l]);
+   assign c_pos[l]=pos[5*l+:5];
   end
-  assign c_cnt[k]=(5'(p_gt[0])+5'(p_gt[1]))+(5'(p_gt[2])+5'(p_gt[3]));
   for(genvar i=0;i<16;i=i+1)begin:gi
    reg [12:0] acc;
    always @*begin
@@ -331,8 +349,8 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  wire h_scan=s14;
  wire [3:0] h1_mq[0:15];wire [3:0] h1_b4[0:15][0:3];
  for(genvar l=0;l<16;l=l+1)begin:gh1
-  wire [16:0] hs={(f_ing[l][1]?in_p2[l*EW+9+:8]:rawr[l*EW+9+:8]),(f_ing[l][0]?in_p2[l*EW+:9]:rawr[l*EW+:9])};
-  wire [1:0] hp=f_ing[l][1]?2'd0:spq[l/4];
+  wire [16:0] hs={(f_ing[l][1]?in_p2[l*EW+9+:8]:rawh[l][16:9]),(f_ing[l][0]?in_p2[l*EW+:9]:rawh[l][8:0])};
+  wire [1:0] hp=f_ing[l][1]?2'd0:spq[l];
   wire [15:0] hk=orderkey(hs[16:1]);
   wire hm=(f_ing[l][1]||h_scan)&&hs[0]&&((hk&pmask(hp))==(thq[4+l/8]&pmask(hp)));
   wire [5:0] hb=6'((hk>>pshift(hp))&pbins(hp));
@@ -358,7 +376,7 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   end
   always @(posedge clk)begin
    h2<=cnt;
-   hv<=f_hcl[b/8][(b%8)/2]?14'd0:hv+(f_h2v[b/8][(b%8)/4]?14'(h2):14'd0);
+   hv<=f_hcl[b/8][(b%8)/2]?14'd0:hv+(f_h2v[b/8][(b%8)/2]?14'(h2):14'd0);
   end
   assign hist[b]=hv;
  end

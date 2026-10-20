@@ -119,7 +119,10 @@
    "v": "M5",
    "group_max": 1
   },
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_hidx_s3_pfx"
+  ]
  },
  "pin_regs": {
   "enable": false,
