@@ -169,6 +169,8 @@ def layer_calendar(cals, starts=None, gap=0):
         for t, v in c['iss'].items():
             if t == XC.T_OFFCFG and n:
                 continue
+            if t in (XC.TS - 20, XC.TS) and segmented:
+                continue
             if t in (XC.TS - 20, XC.TS):
                 v = XC.isd(**({'prime': 1} if t == XC.TS - 20 else {'start': 1}), base=base, length=len(c['packed']))
             T = S + t

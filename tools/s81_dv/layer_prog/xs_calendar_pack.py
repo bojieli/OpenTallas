@@ -31,13 +31,13 @@ def dedup_stream(phase, stream):
 def split_intervals(cal):
     """Rows use the original absolute calendar age; intervals rebase time only.
 
-    Phase n interval starts launch_n-20. The previous interval contains that
+    Phase n interval starts launch_n. The previous interval contains that
     phase's accept/CFG (launch-62/-52 at cfg_lead52) and ends >=2 edges after
     its last action. PRIME is20 edges before START. Admission checks the actual
     events, rather than assuming a shape's gap is wide enough.
     """
     raw = [(w >> 75, w & ACTION_MASK) for w in cal['packed'] if not w & END]
-    starts = [0] + [p['launch']-20 for p in cal['phases'][1:]]
+    starts = [0] + [p['launch'] for p in cal['phases'][1:]]
     assert all(a < b for a,b in zip(starts,starts[1:]))
     chunks = []
     for i,b in enumerate(starts):
