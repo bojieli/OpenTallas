@@ -1,0 +1,37 @@
+{
+ "ncyc": 10445,
+ "mutant": null,
+ "t_first_in": 829,
+ "t_last_in": 9534,
+ "window": [
+  10174,
+  10249
+ ],
+ "drain": {
+  "vi_n_edge": 10164,
+  "vo_edge": 10166,
+  "payload": 680283,
+  "n": 76,
+  "d": 1
+ },
+ "words": 36,
+ "sel_per_quarter": [
+  122,
+  132,
+  117,
+  141
+ ],
+ "golden_ok": true,
+ "golden": "golden rule over the subtree keys [43691, 87382) (dies [1])",
+ "shard": {
+  "k_dies": 3,
+  "die": 1,
+  "rank": 0,
+  "base": 43691,
+  "keys": 43691,
+  "children": [],
+  "child_arrival": [],
+  "t_q": 829,
+  "depth": 1
+ }
+}
