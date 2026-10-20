@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_sm_pv_merge_distributed",
+ "enable": false,
+ "reason": "source-registered (H.STA.BLK.14.3.1 PVMD): ot_hbm_sm_pv_merge_distributed registers every input at the pin (first captures: sum1/tag1/slot/fold regs, 5 ev, 2 first-tag, pub/fold captures) and again in kept second copies (<= 32 loads each), and every output once (pv_*/pub_*/fault output regs); a flow pin register would add a third input edge"
+}

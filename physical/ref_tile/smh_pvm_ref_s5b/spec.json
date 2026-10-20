@@ -1,0 +1,315 @@
+{
+ "name": "smh_pvm_ref_s5b",
+ "top": "ot_hbm_sm_pv_merge_distributed",
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "die",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed_core.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 9023.13918,
+ "pg_layer": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R180"
+  }
+ ],
+ "pins": {
+  "N": [
+   "ev",
+   "sum",
+   "tag_d",
+   "clk",
+   "rst_n",
+   "pv_v",
+   "pv_y",
+   "pv_tag",
+   "pub_start",
+   "pub_slot",
+   "fold_start",
+   "fold_a",
+   "fold_b",
+   "pub_v",
+   "pub_data",
+   "pub_word",
+   "pub_out_slot",
+   "pub_tag",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 40 -no_obstruction_aware"
+  },
+  "pin_min_tracks": 4
+ },
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-SMATT",
+  "branch": "claude/hbm-pvm-dist-1019",
+  "tag": "smh_pvm_ref_s5b",
+  "purpose": "H.STA.BLK.14.3.1 PVM distributed source (successor of smh_pvm_ref_s4a, input-fanout waiver rejected): ot_hbm_sm_pv_merge_distributed = Codex fae1ece6e reviewed + fixed: 2 input edges at the source (+1 vs SAFE2, priced), 137 kept ev copies / 66 first-tag / fold+pub copies, 2->8->54 reset release tree, NS 64 operand slices, every no-reset register out of async-reset processes; fleet census max 32 loads outside the shared fp32 adder; parallel variant: 432 x 302.4 (+86.4 um), macro x 129.6 / y 43.2 R180 (lattice), W 127 / E 131 / N 103 um bands for the doubled source copies beside both data-contact faces, single centre root",
+  "benches": [
+   {
+    "name": "pvmd_exact",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_exact 0 2 0 0 0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/exact.log"
+   },
+   {
+    "name": "pvmd_tight",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_tight 0 2 1 0 0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/tight.log"
+   },
+   {
+    "name": "pvmd_reassert",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_reassert 0 2 0 0 1 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/reassert.log"
+   },
+   {
+    "name": "pvmd_stopclk",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_stopclk 0 2 0 0 2 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/stopclk.log"
+   },
+   {
+    "name": "pvmd_tight_reassert",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_tight_reassert 0 2 1 0 1 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/tight_reassert.log"
+   },
+   {
+    "name": "pvmd_xrand_exact",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_xrand_exact 0 2 0 0 0 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/xrand_exact.log"
+   },
+   {
+    "name": "pvmd_xrand_tight",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_xrand_tight 0 2 1 0 0 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/xrand_tight.log"
+   },
+   {
+    "name": "pvmd_xrand_reassert",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_xrand_reassert 0 2 0 0 1 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/xrand_reassert.log"
+   },
+   {
+    "name": "pvmd_xrand_stopclk",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_xrand_stopclk 0 2 0 0 2 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/xrand_stopclk.log"
+   },
+   {
+    "name": "pvmd_pubearly",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_pubearly 0 2 1 1 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/pubearly.log"
+   },
+   {
+    "name": "pvmd_mut1",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut1 1 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut1.log"
+   },
+   {
+    "name": "pvmd_mut2",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut2 2 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut2.log"
+   },
+   {
+    "name": "pvmd_mut3",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut3 3 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut3.log"
+   },
+   {
+    "name": "pvmd_mut4",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut4 4 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut4.log"
+   },
+   {
+    "name": "pvmd_mut5",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut5 5 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut5.log"
+   },
+   {
+    "name": "pvmd_mut6",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut6 6 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut6.log"
+   },
+   {
+    "name": "pvmd_mut7",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut7 7 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut7.log"
+   },
+   {
+    "name": "pvmd_mut8",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut8 8 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut8.log"
+   },
+   {
+    "name": "pvmd_mut11",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut11 11 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut11.log"
+   },
+   {
+    "name": "pvmd_mut9_reassert",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut9_reassert 9 2 0 0 1 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut9_reassert.log"
+   },
+   {
+    "name": "pvmd_mut10_stopclk",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut10_stopclk 10 2 0 0 2 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut10_stopclk.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/sm/attn/test",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "results/arch/hbm_pvm_distributed_source_1019"
+  ],
+  "views_to": "physical/ref_tile/smh_pvm_ref_s5b/views",
+  "record_to": "results/rtl/ref_tile/smh_pvm_ref_s5b"
+ },
+ "layer_cap": "M5",
+ "outline": {
+  "w": 432.0,
+  "h": 302.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "source-registered (H.STA.BLK.14.3.1 PVMD): ot_hbm_sm_pv_merge_distributed registers every input at the pin (first captures: sum1/tag1/slot/fold regs, 5 ev, 2 first-tag, pub/fold captures) and again in kept second copies (<= 32 loads each), and every output once (pv_*/pub_*/fault output regs); a flow pin register would add a third input edge"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n: g_reset_first (2 flops, D=1) -> g_reset_second (8) -> g_reset_core (54) async-assert / sync-release keep_hierarchy flops, <= 32 loads each; the core releases 3 edges after rst_n (scheduled constant)"
+ },
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 8,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_order_waiver": {
+  "sum": "Channel-routed standalone PVM arithmetic input, not an abutted bit-matched neighbour face. Shared N86.4..259.2 envelope constrains actual macro reach; overlaps other real input groups and does not specify a die joint. Any later abutted integration needs a separate exact bit-order contract."
+ },
+ "orfs_vars": {
+  "MACRO_ROWS_HALO_X": "6.48",
+  "MACRO_ROWS_HALO_Y": "2.16"
+ }
+}

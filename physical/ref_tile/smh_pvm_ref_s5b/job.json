@@ -1,0 +1,288 @@
+{
+ "name": "smh_pvm_ref_s5b-smh_pvm_ref_s5b-COMMIT",
+ "block": "ot_hbm_sm_pv_merge_distributed",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-HBM/L2H-SMATT",
+ "purpose": "H.STA.BLK.14.3.1 PVM distributed source (successor of smh_pvm_ref_s4a, input-fanout waiver rejected): ot_hbm_sm_pv_merge_distributed = Codex fae1ece6e reviewed + fixed: 2 input edges at the source (+1 vs SAFE2, priced), 137 kept ev copies / 66 first-tag / fold+pub copies, 2->8->54 reset release tree, NS 64 operand slices, every no-reset register out of async-reset processes; fleet census max 32 loads outside the shared fp32 adder; parallel variant: 432 x 302.4 (+86.4 um), macro x 129.6 / y 43.2 R180 (lattice), W 127 / E 131 / N 103 um bands for the doubled source copies beside both data-contact faces, single centre root",
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbm-pvm-dist-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/sm/attn/test",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "results/arch/hbm_pvm_distributed_source_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_sm_pv_merge_distributed u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/gpu/ot_gpu_fadd.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed_core.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_distributed.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pvmd_exact",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_exact 0 2 0 0 0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/exact.log"
+   },
+   {
+    "name": "pvmd_tight",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_tight 0 2 1 0 0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/tight.log"
+   },
+   {
+    "name": "pvmd_reassert",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_reassert 0 2 0 0 1 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/reassert.log"
+   },
+   {
+    "name": "pvmd_stopclk",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_stopclk 0 2 0 0 2 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/stopclk.log"
+   },
+   {
+    "name": "pvmd_tight_reassert",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_tight_reassert 0 2 1 0 1 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/tight_reassert.log"
+   },
+   {
+    "name": "pvmd_xrand_exact",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_xrand_exact 0 2 0 0 0 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/xrand_exact.log"
+   },
+   {
+    "name": "pvmd_xrand_tight",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_xrand_tight 0 2 1 0 0 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/xrand_tight.log"
+   },
+   {
+    "name": "pvmd_xrand_reassert",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_xrand_reassert 0 2 0 0 1 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/xrand_reassert.log"
+   },
+   {
+    "name": "pvmd_xrand_stopclk",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_xrand_stopclk 0 2 0 0 2 1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^PVM PASS checked=",
+    "min_count_regex": "^PVM PASS checked=(\\d+)",
+    "pass_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/xrand_stopclk.log"
+   },
+   {
+    "name": "pvmd_pubearly",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_pubearly 0 2 1 1 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/pubearly.log"
+   },
+   {
+    "name": "pvmd_mut1",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut1 1 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut1.log"
+   },
+   {
+    "name": "pvmd_mut2",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut2 2 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut2.log"
+   },
+   {
+    "name": "pvmd_mut3",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut3 3 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut3.log"
+   },
+   {
+    "name": "pvmd_mut4",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut4 4 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut4.log"
+   },
+   {
+    "name": "pvmd_mut5",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut5 5 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut5.log"
+   },
+   {
+    "name": "pvmd_mut6",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut6 6 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut6.log"
+   },
+   {
+    "name": "pvmd_mut7",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut7 7 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut7.log"
+   },
+   {
+    "name": "pvmd_mut8",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut8 8 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut8.log"
+   },
+   {
+    "name": "pvmd_mut11",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut11 11 2 0 0 0 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut11.log"
+   },
+   {
+    "name": "pvmd_mut9_reassert",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut9_reassert 9 2 0 0 1 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut9_reassert.log"
+   },
+   {
+    "name": "pvmd_mut10_stopclk",
+    "cmd": "bash rtl/hbm_accel/sm/attn/test/run_pv_merge_distributed_bench.sh {RUN}/pvmd_mut10_stopclk 10 2 0 0 2 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^PVM FAIL mismatches=[1-9]",
+    "fail_witness": "results/arch/hbm_pvm_distributed_source_1019/bench/mut10_stopclk.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/smh_pvm_ref_s5b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/smh_pvm_ref_s5b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/smh_pvm_ref_s5b --out {RUN}/record/views/ot_hbm_sm_pv_merge_distributed --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/smh_pvm_ref_s5b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/smh_pvm_ref_s5b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/smh_pvm_ref_s5b/smh_pvm_ref_s5b-smh_pvm_ref_s5b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}
