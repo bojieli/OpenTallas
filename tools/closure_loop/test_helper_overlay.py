@@ -21,6 +21,9 @@ import source_binding as SB
 
 class HelperOverlay(unittest.TestCase):
     def setUp(self):
+        # Match committed helper modes under any fleet host umask. Python data
+        # tar extraction strips group-write; mode drift tests opt in explicitly.
+        self.addCleanup(os.umask, os.umask(0o022))
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name) / 'repo'
         self.daemon = Path(self.tmp.name) / 'daemon'
@@ -34,6 +37,7 @@ class HelperOverlay(unittest.TestCase):
         self.new = b'# newer main helper\n'
         self.commit_helper(self.old)
         (self.daemon / self.rel).write_bytes(self.old)
+        (self.daemon / self.rel).chmod(0o644)
         self.tip = self.commit_helper(self.new)
         self.stack = []
         for p in (patch.object(CL, 'HERE', self.daemon / 'tools/closure_loop'), patch.object(CL, 'REPO', self.root),
@@ -56,6 +60,7 @@ class HelperOverlay(unittest.TestCase):
 
     def commit_helper(self, data):
         (self.root / self.rel).write_bytes(data)
+        (self.root / self.rel).chmod(0o644)
         self.git('add', self.rel)
         self.git('commit', '-m', 'helper update')
         head = self.git('rev-parse', 'HEAD')
@@ -411,6 +416,61 @@ class HelperOverlay(unittest.TestCase):
         CL.ship_helpers('local', str(run), job)
         self.assertFalse(job['helper_overlay_verification']['mutation'])
 
+    def add_future_helper(self):
+        rel = 'physical/common_flow/clock_family.tcl'
+        for root in (self.root, self.daemon):
+            p = root / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes(b'# future helper must not enter an old frozen route\n')
+        self.git('add', rel)
+        self.git('commit', '-m', 'add future helper')
+        self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+        return '../../' + rel
+
+    def test_old_plan_relocation_uses_frozen_members_even_if_current_helpers_change(self):
+        job, origin = self.installed_job()
+        before = (origin / 'cl/orfs_hold_mm.tcl').read_bytes()
+        stamp = (origin / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns
+        future = self.add_future_helper()
+        destination = Path(self.tmp.name) / 'old-plan-relocated'
+        relocated = dict(job, bench_helper_origin=dict(host='local', run=str(origin)))
+        # Also cover a legacy helper removed from today's global list: frozen
+        # membership, not today's names, defines what the route executed.
+        with patch.object(CL, 'HELPERS', (future,)), patch.object(HO, 'HELPERS', (future,)):
+            CL.ship_helpers('local', str(destination), relocated)
+        self.assertEqual((destination / 'cl/orfs_hold_mm.tcl').read_bytes(), before)
+        self.assertFalse((destination / 'cl/clock_family.tcl').exists())
+        self.assertEqual((origin / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns, stamp)
+        self.assertEqual(HO.verify_installed_plan(destination / 'cl', job['route_overlay_plan'])['status'],
+                         'verified_original')
+
+    def test_publish_refresh_never_appends_new_global_helper_to_old_plan(self):
+        job, run = self.installed_job()
+        newest = b'# reviewed publish-only refresh\n'
+        self.commit_helper(newest)
+        (self.daemon / self.rel).write_bytes(newest)
+        future = self.add_future_helper()
+        with patch.object(CL, 'HELPERS', ('../orfs_hold_mm.tcl', future)), \
+                patch.object(HO, 'HELPERS', ('../orfs_hold_mm.tcl', future)), \
+                patch.object(HO, 'PUBLISH_ONLY', (self.rel,)), patch.object(CL, 'event'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), newest)
+        self.assertFalse((run / 'cl/clock_family.tcl').exists())
+        self.assertEqual([row['path'] for row in job['route_overlay_plan']['files']], [self.rel])
+        self.assertEqual(HO.verify_installed_plan(run / 'cl', job['route_overlay_plan'])['status'],
+                         'verified_original')
+
+    def test_frozen_transport_refuses_missing_extra_or_changed_rows(self):
+        _, binding = self.gate()
+        plan = binding['route_overlay_plan']
+        payloads = {self.rel: self.new}
+        modes = {self.rel: plan['files'][0]['mode']}
+        self.assertEqual(CL.frozen_helper_transport_rows(plan, payloads, modes)[0][1], self.new)
+        for data, mode in [({}, modes), (dict(payloads, extra=b'x'), modes),
+                           ({self.rel:b'changed'}, modes), (payloads, {self.rel:0o777})]:
+            with self.subTest(data=data, mode=mode), self.assertRaisesRegex(ValueError, 'FROZEN_HELPER_OVERLAY'):
+                CL.frozen_helper_transport_rows(plan, data, mode)
+
     def test_publish_helper_drift_to_main_ships_current_bytes(self):
         _, binding = self.gate()
         gate_plan = binding['route_overlay_plan']
@@ -441,6 +501,148 @@ class HelperOverlay(unittest.TestCase):
             CL.ship_helpers('local', str(run), job)               # now verified against the refreshed plan
             self.assertFalse(job['helper_overlay_verification']['mutation'])
 
+    def test_publish_refresh_ignores_unrelated_route_helper_drift(self):
+        # TW5-BANKLATSU 10-19: main also moved a NON-publish route helper since the route froze; the installed run must
+        # still get the publish helper at main while every other helper keeps its frozen (executed) bytes
+        pub = 'tools/view_export_x.py'
+        (self.root / pub).write_bytes(b'# exporter v1\n'); self.git('add', pub); self.git('commit', '-m', 'exporter v1')
+        self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+        (self.daemon / pub).write_bytes(b'# exporter v1\n')
+        with patch.object(CL, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'PUBLISH_ONLY', (pub,)), patch.object(CL, 'event'):
+            plan, _ = HO.capture_plan(self.daemon, self.root)
+            job = {'freeze_helper_overlay': True, 'route_overlay_plan': plan}
+            run = Path(self.tmp.name) / 'resumed2'
+            CL.ship_helpers('local', str(run), job)
+            self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), self.new)
+            route_later = b'# route helper changed on main later\n'
+            self.commit_helper(route_later); (self.daemon / self.rel).write_bytes(route_later)
+            fixed = b'# exporter fix on main\n'
+            (self.root / pub).write_bytes(fixed); self.git('add', pub); self.git('commit', '-m', 'exporter fix')
+            self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+            (self.daemon / pub).write_bytes(fixed)
+            CL.ship_helpers('local', str(run), job)
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), fixed)
+            self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), self.new)      # frozen route helper kept
+            self.assertTrue(job['helper_overlay_verification']['mutation'])
+            self.assertEqual([r['path'] for r in job['helper_overlay_sanctioned']], [pub])
+            rows = {f['path']: f for f in job['route_overlay_plan']['files']}
+            self.assertEqual(rows[pub]['resolution'], 'publish_refresh')
+            self.assertEqual(rows[self.rel]['git_blob'], HO.blob_id(self.new))
+
+    def test_interrupted_publish_refresh_is_adopted(self):
+        # QXPQ-UNSTICK 10-19: the publish refresh rewrote cl/ (exporter + sidecar) on the host, then the daemon restarted
+        # before the job state was saved; the stored job kept the old plan and every step failed 'sidecar differs'
+        # (dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb NEEDS_HUMAN).  The run must be re-entered with the installed plan.
+        import copy
+        pub = 'tools/view_export_x.py'
+        (self.root / pub).write_bytes(b'# exporter v1\n'); self.git('add', pub); self.git('commit', '-m', 'exporter v1')
+        self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+        (self.daemon / pub).write_bytes(b'# exporter v1\n')
+        with patch.object(CL, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'PUBLISH_ONLY', (pub,)), patch.object(CL, 'event'):
+            plan, _ = HO.capture_plan(self.daemon, self.root)
+            job = {'freeze_helper_overlay': True, 'route_overlay_plan': plan}
+            run = Path(self.tmp.name) / 'interrupted'
+            CL.ship_helpers('local', str(run), job)
+            saved = copy.deepcopy(job)                       # the state on disk before the refresh
+            fixed = b'# exporter fix on main\n'
+            (self.root / pub).write_bytes(fixed); self.git('add', pub); self.git('commit', '-m', 'exporter fix')
+            self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+            (self.daemon / pub).write_bytes(fixed)
+            CL.ship_helpers('local', str(run), job)          # refresh shipped; this job dict is then lost (restart)
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), fixed)
+            with self.assertRaisesRegex(ValueError, 'sidecar differs'):
+                HO.verify_installed_plan(run / 'cl', saved['route_overlay_plan'])
+            CL.ship_helpers('local', str(run), saved)        # old code: FROZEN_HELPER_OVERLAY sidecar differs
+            self.assertEqual(saved['route_overlay_plan'], job['route_overlay_plan'])
+            self.assertEqual(saved['route_overlay_plan_gate'], plan)
+            self.assertEqual(len(saved['helper_overlay_publish_adoptions']), 1)
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), fixed)
+            self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), self.new)
+            # a non-publish difference in the sidecar still refuses
+            bad = copy.deepcopy(saved)
+            rows = bad['route_overlay_plan']['files']
+            for r in rows:
+                if r['path'] != pub:
+                    r['sha256'] = '0' * 64
+            bad['route_overlay_plan']['content_sha256'] = HO.digest(rows)
+            with self.assertRaisesRegex(ValueError, 'FROZEN_HELPER_OVERLAY'):
+                CL.ship_helpers('local', str(run), bad)
+            CL.ship_helpers('local', str(run), job)                                     # verifies, no mutation
+            self.assertFalse(job['helper_overlay_verification']['mutation'])
+            payloads, _src = HO.recover_frozen_payloads(self.root, CL.HELPER_STORE, job['route_overlay_plan'])
+            self.assertEqual((payloads[pub], payloads[self.rel]), (fixed, self.new))     # reinstall = executed bytes
+
+    def test_restart_during_publish_refresh_ship_is_safe(self):
+        # DAEMON-FIX2 10-19: the job state is saved BEFORE cl/ changes (write-ahead checkpoint) and the remote unpack is
+        # staged (sidecar last).  A daemon killed while the refresh ships leaves job = new plan, run = old plan; the
+        # restarted daemon re-enters the run from the SAVED state without NEEDS_HUMAN and ends on main's exporter.
+        from contextlib import contextmanager
+        pub = 'tools/view_export_x.py'
+        (self.root / pub).write_bytes(b'# exporter v1\n'); self.git('add', pub); self.git('commit', '-m', 'exporter v1')
+        self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+        (self.daemon / pub).write_bytes(b'# exporter v1\n')
+        name = 'df2-restart-ship-test'
+        seen = []
+
+        @contextmanager
+        def remote(host, **_kw):                     # the "remote host" is a local sh running SHIP_HELPERS_SH
+            seen.append(CL.load_job(name)['route_overlay_plan']['content_sha256'])
+            if host == 'killed':
+                raise SystemExit('daemon restarted mid-ship')
+            yield ['sh', '-c']
+        receipt = CL.installed_helper_receipt         # verify in process (the patched PUBLISH_ONLY does not reach ssh)
+        with patch.object(CL, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'HELPERS', ('../orfs_hold_mm.tcl', '../view_export_x.py')), \
+                patch.object(HO, 'PUBLISH_ONLY', (pub,)), patch.object(CL, 'event'), \
+                patch.object(CL, 'is_local', side_effect=lambda h: h == 'local'), \
+                patch.object(CL, 'installed_helper_receipt', lambda h, r, f, **kw: receipt('local', r, f, **kw)), \
+                patch.object(CL, 'transport_command', remote):
+            plan, _ = HO.capture_plan(self.daemon, self.root)
+            CL.save_job({'name': name, 'status': 'READY', 'freeze_helper_overlay': True, 'route_overlay_plan': plan})
+            job = CL.load_job(name)
+            run = Path(self.tmp.name) / 'restart'
+            CL.ship_helpers('ot-x', str(run), job)
+            CL.save_job(job)
+            self.assertEqual(seen, [plan['content_sha256']])
+            self.assertEqual([p.name for p in (run / 'cl').iterdir() if p.name.startswith('.ship')], [])
+            fixed = b'# exporter fix on main\n'
+            (self.root / pub).write_bytes(fixed); self.git('add', pub); self.git('commit', '-m', 'exporter fix')
+            self.git('update-ref', 'refs/remotes/origin/main', self.git('rev-parse', 'HEAD'))
+            (self.daemon / pub).write_bytes(fixed)
+            with self.assertRaises(SystemExit):
+                CL.ship_helpers('killed', str(run), CL.load_job(name))       # refresh decided, killed before cl/ moved
+            on_disk = CL.load_job(name)
+            self.assertNotEqual(seen[-1], plan['content_sha256'])           # checkpoint: new plan saved before the ship
+            self.assertEqual(on_disk['route_overlay_plan']['content_sha256'], seen[-1])
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), b'# exporter v1\n')   # cl/ untouched
+            CL.ship_helpers('ot-x', str(run), on_disk)                       # restarted daemon, saved state
+            CL.save_job(on_disk)
+            self.assertEqual((run / 'cl/view_export_x.py').read_bytes(), fixed)
+            self.assertEqual(HO.verify_installed_plan(run / 'cl', CL.load_job(name)['route_overlay_plan'])['status'],
+                             'verified_original')
+
+    def test_ship_script_interrupted_transfer_leaves_cl_unchanged(self):
+        run = Path(self.tmp.name) / 'cut'
+        (run / 'cl').mkdir(parents=True)
+        (run / 'cl/a.tcl').write_bytes(b'old\n')
+        buf = io.BytesIO()
+        with tarfile.open(fileobj=buf, mode='w') as tf:
+            for n, d in (('a.tcl', b'new\n' * 4000), ('helper_overlay_plan.json', b'{}\n')):
+                ti = tarfile.TarInfo(n); ti.size = len(d); tf.addfile(ti, io.BytesIO(d))
+        cmd = CL.SHIP_HELPERS_SH.format(cl=str(run / 'cl'))
+        r = subprocess.run(['sh', '-c', cmd], input=buf.getvalue()[:9000], capture_output=True)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertEqual((run / 'cl/a.tcl').read_bytes(), b'old\n')
+        self.assertFalse((run / 'cl/helper_overlay_plan.json').exists())
+        r = subprocess.run(['sh', '-c', cmd], input=buf.getvalue(), capture_output=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual((run / 'cl/a.tcl').read_bytes(), b'new\n' * 4000)
+        self.assertEqual(sorted(p.name for p in (run / 'cl').iterdir() if p.name.startswith('.')), [])
+
     def test_installed_run_non_publish_drift_keeps_frozen_bytes(self):
         _, binding = self.gate()
         job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
@@ -456,6 +658,7 @@ class HelperOverlay(unittest.TestCase):
         (self.daemon / self.rel).write_bytes(foreign)
         frozen, _ = HO.capture_plan(self.daemon, self.root)          # daemon_only resolution
         (self.daemon / self.rel).write_bytes(self.old)
+        (self.daemon / self.rel).chmod(0o644)
         current, _ = HO.capture_plan(self.daemon, self.root)
         with patch.object(HO, 'FLEET_RUN', (self.rel,)):
             ok, why, rows = HO.compare_plans_sanctioned(frozen, current, self.root)
