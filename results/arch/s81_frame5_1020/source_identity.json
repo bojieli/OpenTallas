@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.frame_behavioral_source_identity.v1",
+  "behavioral_source": "b850173cf13c8f9b0aaabe2ddd48fa277563e036",
+  "gate_source": "f9d44ffae830feaf2199c238107caa8c77a78bd0",
+  "unchanged_roots": {
+    "rtl": "8cc863ff6b37e45c562b5b0e712f4528f50f505b",
+    "tools/s81_dv": "67083117c8d9e200378042a25a3918c8d41e74ff",
+    "tools/landed_parent": "3caa5612df728789c6b042c63c6647036beab0f9"
+  },
+  "basis": "git diff --name-only empty for entire rtl/, tools/s81_dv/, tools/landed_parent/; actual Verilator5.050 witness logs committed by original owner",
+  "manual_functional_rerun": false
+}
