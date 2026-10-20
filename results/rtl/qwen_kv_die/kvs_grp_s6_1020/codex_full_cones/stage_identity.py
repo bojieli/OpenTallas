@@ -341,10 +341,16 @@ result={'schema':'opentallas.grp_stage_pin_identity.v1','status':'ERROR' if erro
     'spec_path':str(spec_path),'spec_sha256':hashlib.sha256(spec_path.read_bytes()).hexdigest(),
     'liberty':receipts,'synchronous_memory_proof':memory_receipts,'die_um':die_um,
     'role_errors':sorted(set(errors)),'counts':dict(counts),'port_bits':port_bits,
+    'constant_function_sources':list(constant_descriptors.values()),
+    'output_port_sources':[
+        {'port':t.getName(),'roots':list(cone(t.getNet().getId(),'backward').values()),
+         'constant_sources':list(constants(t.getNet().getId()).values())}
+        for t in block.getBTerms() if t.getNet() and t.getIoType()=='OUTPUT' and t.getSigType() not in ('POWER','GROUND')],
     'sequential_instances':seq_records,'data_stage_edges':seq_data_edges,
     'combinational_cells':combinational_records}
 with gzip.open(OUT/'stage_identity.json.gz','wt') as f:json.dump(result,f,separators=(',',':'))
-summary={k:v for k,v in result.items() if k not in ('port_bits','sequential_instances','data_stage_edges','combinational_cells','liberty')}
+result['role_errors']=sorted(set(errors));result['status']='ERROR' if errors else 'PASS'
+summary={k:v for k,v in result.items() if k not in ('port_bits','sequential_instances','data_stage_edges','combinational_cells','liberty','constant_function_sources','output_port_sources')}
 summary.update(port_bit_count=len(port_bits),sequential_instance_count=len(seq_records),
     data_stage_edge_count=len(seq_data_edges),combinational_cell_count=len(combinational_records),
     boundary_classes=dict(collections.Counter(r['boundary_classification'] for r in seq_records)))
