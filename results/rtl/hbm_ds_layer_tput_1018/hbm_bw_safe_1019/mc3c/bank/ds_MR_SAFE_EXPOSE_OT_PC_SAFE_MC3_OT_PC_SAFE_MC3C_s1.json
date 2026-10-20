@@ -12,60 +12,60 @@
  "layers": 4,
  "blocks": 156,
  "rc": 0,
- "bw": "BW blocks=156 sectors_per_pc=8300 hbm_cycles=9282 B_per_edge=93.15 steady_blocks=148 steady_cycles=8656 steady_B_per_edge=93.84 peak=104.17",
+ "bw": "BW blocks=156 sectors_per_pc=8300 hbm_cycles=9486 B_per_edge=91.14 steady_blocks=148 steady_cycles=8860 steady_B_per_edge=91.68 peak=104.17",
  "pcs": [
-  "PC0 cols=8300 returns=8300 acts=624 refs=86 gaps>8=23 gap_cycles=727 first=1 done=9272",
-  "PC1 cols=8300 returns=8300 acts=624 refs=86 gaps>8=23 gap_cycles=731 first=1 done=9275",
-  "PC2 cols=8300 returns=8300 acts=624 refs=86 gaps>8=23 gap_cycles=735 first=1 done=9280",
-  "PC3 cols=8300 returns=8300 acts=624 refs=86 gaps>8=23 gap_cycles=739 first=1 done=9283"
+  "PC0 cols=8300 returns=8300 acts=624 refs=88 gaps>8=27 gap_cycles=918 first=1 done=9476",
+  "PC1 cols=8300 returns=8300 acts=624 refs=88 gaps>8=27 gap_cycles=922 first=1 done=9479",
+  "PC2 cols=8300 returns=8300 acts=624 refs=88 gaps>8=27 gap_cycles=926 first=1 done=9484",
+  "PC3 cols=8300 returns=8300 acts=624 refs=88 gaps>8=27 gap_cycles=930 first=1 done=9487"
  ],
  "fault": [],
  "done": [
-  "DONE dram_reads=33200 refreshes=344"
+  "DONE dram_reads=33200 refreshes=352"
  ],
  "expose": [
   {
    "busy": 8300,
    "empty": 32,
    "refresh": 0,
-   "closed": 288,
-   "conflict": 30,
-   "trcd": 447,
-   "other": 174,
+   "closed": 417,
+   "conflict": 31,
+   "trcd": 515,
+   "other": 180,
    "acts": 624
   },
   {
    "busy": 8300,
    "empty": 32,
    "refresh": 0,
-   "closed": 287,
-   "conflict": 30,
-   "trcd": 451,
-   "other": 174,
+   "closed": 415,
+   "conflict": 32,
+   "trcd": 519,
+   "other": 180,
    "acts": 624
   },
   {
    "busy": 8300,
    "empty": 32,
    "refresh": 0,
-   "closed": 290,
-   "conflict": 30,
-   "trcd": 453,
-   "other": 174,
+   "closed": 420,
+   "conflict": 32,
+   "trcd": 519,
+   "other": 180,
    "acts": 624
   },
   {
    "busy": 8300,
    "empty": 32,
    "refresh": 0,
-   "closed": 293,
-   "conflict": 30,
-   "trcd": 453,
-   "other": 174,
+   "closed": 423,
+   "conflict": 32,
+   "trcd": 519,
+   "other": 180,
    "acts": 624
   }
  ],
- "B_per_edge": 93.15,
- "steady_B_per_edge": 93.84,
- "hbm_cycles": 9282
+ "B_per_edge": 91.14,
+ "steady_B_per_edge": 91.68,
+ "hbm_cycles": 9486
 }

@@ -42,10 +42,11 @@ module ot_hbm_r14_aq_pc_safe #(
   // (wr_v_regions[g] = banks 4g..4g+3 count/look-row/tail-set, [8] = queue push); room for the in-flight entry is
   // the owner's job (wr_r2 = room for two).  0 = wr_v (other users byte-identical).
   parameter integer WV_REGIONS = 0,
-  // HBM-MC3c (10-19): 1 = ACT candidate order starts at the HEAD entry's bank (its group first, then cyclically; inside
-  // a group from the head bank cyclically).  0 = fixed index order (bank 0 first): with all 32 banks needed and REFpb
-  // re-closing low-index banks every 118 cycles, a high-index closed head bank can starve for ever (measured: face_txn
-  // with POST_REG=1 stalls at 7909/12944 beats, head bank 31 closed, ACTs always granted to banks 0..30).
+  // HBM-MC3c (10-19): 1 = head-bank ACT override: when the HEAD entry's bank is closed (and not refresh-blocked) the row
+  // command issues ACT(head bank, head row) ahead of the per-group candidate.  0 = only the fixed bank-0-first candidate:
+  // with all 32 banks needed and REFpb re-closing low banks every 118 cycles, a closed high-index head bank can starve for
+  // ever (measured: face_txn with POST_REG=1 stalls at 7909/12944 beats, head bank 31 closed).  The head row equals
+  // look_row[head bank] (captured when the head reaches that bank), so held/need/orow stay consistent.
   parameter integer ACT_HEAD = 0
 )(
   input  wire        clk, rst_n, input wire[63:0]reset_regions,
@@ -319,21 +320,8 @@ module ot_hbm_r14_aq_pc_safe #(
     act_b=ac2_b;act_row=ac2_row;act_cand_oh=ac2_oh;
     act_cand=ac2_v&&|(ac2_oh&need&~open&~blk&act_row_match);
   end
-  // ACT_HEAD: kept head-bank copies for the group stage (one per group) and the registered head group for the
-  // three winner-selection sites (S2, one-hot, row words), captured on the same edge as the group candidates.
-  (* keep="true",dont_touch="true" *) reg[4:0]act_head_local[0:3];
-  (* keep="true",dont_touch="true" *) reg[1:0]ac_hg_local[0:2];
-  for(genvar g=0;g<4;g=g+1)begin:ACT_HEAD_LOCAL
-`ifdef BW_AQ_MUT_NO_ACT_HEAD
-    always @(posedge clk)act_head_local[g]<=5'd0;   // MUTANT: fixed bank-0-first ACT order (head bank starves)
-`else
-    always @(posedge clk)act_head_local[g]<=ACT_HEAD!=0?head_d[29:25]:5'd0;
-`endif
-  end
-  function automatic integer rot_g(input integer i,input [1:0] hg);rot_g=(i+hg)%4;endfunction
   always @(posedge clk or negedge reset_regions[63])begin
     if(!reset_regions[63])begin ac_v<=0;ac2_v<=0;ac2_b<=0;ac2_oh<=0;
-      for(integer k=0;k<3;k=k+1)ac_hg_local[k]<=0;
       for(integer k=0;k<2;k=k+1)ac2_row_local[k]<=0;
       for(integer k=0;k<5;k=k+1)ac_v_local[k]<=0;
       for(integer g=0;g<4;g=g+1)begin ac_b[g]<=0;ac_row[g]<=0;end
@@ -344,16 +332,13 @@ module ot_hbm_r14_aq_pc_safe #(
         // eliminate a wide conditional hold-enable without another edge.
         ac_b[g]<=0;ac_row[g]<=0;
         for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=0;
-        for(integer jj=0;jj<8;jj=jj+1)begin:SJ
-          integer j;j=(act_head_local[g][4:3]==2'(g))?((jj+act_head_local[g][2:0])%8):jj;
-          if(!found&&bank_n[g*8+j]!=0&&!open[g*8+j]&&!blk[g*8+j])begin
+        for(integer j=0;j<8;j=j+1)if(!found&&bank_n[g*8+j]!=0&&!open[g*8+j]&&!blk[g*8+j])begin
           found=1;ac_v[g]<=1;
           for(integer k=0;k<5;k=k+1)ac_v_local[k][g]<=1;ac_b[g]<=5'(g*8+j);
-        end end
+        end
         for(integer w=0;w<3;w=w+1)begin:ACT_ROW_WORD
           reg found_word;found_word=0;
-          for(integer jj=0;jj<8;jj=jj+1)begin:WJ
-            integer j;j=(act_head_local[g][4:3]==2'(g))?((jj+act_head_local[g][2:0])%8):jj;
+          for(integer j=0;j<8;j=j+1)
             if(!found_word&&(w==0?bank_n_word_local[0][g*8+j]:
                 w==1?bank_n_word_local[1][g*8+j]:bank_n[g*8+j])!=0&&
                 !open[g*8+j]&&!blk[g*8+j])begin
@@ -361,42 +346,34 @@ module ot_hbm_r14_aq_pc_safe #(
               for(integer k=0;k<8;k=k+1)if(w*8+k<RW_ROW)
                 ac_row[g][w*8+k]<=look_row[g*8+j][w*8+k];
             end
-          end
         end
       end
-      for(integer k=0;k<3;k=k+1)ac_hg_local[k]<=act_head_local[k][4:3];
           for(integer k=0;k<2;k=k+1)begin
             for(integer b=0;b<RW_ROW;b=b+1)
               begin:SROW
                 reg found_row;
                 found_row=0;ac2_row_local[k][b]<=ac2_row_local[0][b];
-                for(integer jj=0;jj<4;jj=jj+1)begin:RJ
-                  integer j;j=rot_g(jj,ac_hg_local[0]);
-                  if(!found_row&&ac_v_local[b/8][j])begin
+                for(integer j=0;j<4;j=j+1)if(!found_row&&ac_v_local[b/8][j])begin
                   found_row=1;ac2_row_local[k][b]<=ac_row[j][b];
-                end end
+                end
               end
           end
       // Independent existing-edge one-hot captures use retained local valid
       // state, avoiding one winner enable driving 32 one-hot plus row flops.
       for(integer b=0;b<32;b=b+1)begin:ACT_ONEHOT_LOCAL
         reg found;found=0;ac2_oh[b]<=0;
-        for(integer gg=0;gg<4;gg=gg+1)begin:OG
-          integer g;g=rot_g(gg,ac_hg_local[1]);
-          if(!found&&ac_v_local[3+b/16][g])begin
+        for(integer g=0;g<4;g=g+1)if(!found&&ac_v_local[3+b/16][g])begin
           found=1;
 `ifdef BW_AQ_MUT_ACT
           ac2_oh[b]<=((ac_b[g]^5'd1)==5'(b));
 `else
           ac2_oh[b]<=(ac_b[g]==5'(b));
 `endif
-        end end
+        end
       end
       begin:S2 reg found;found=0;ac2_v<=0;
-        for(integer gg=0;gg<4;gg=gg+1)begin:S2G
-          integer g;g=rot_g(gg,ac_hg_local[2]);
-          if(!found&&ac_v[g])begin found=1;ac2_v<=1;ac2_b<=ac_b[g];
-        end end
+        for(integer g=0;g<4;g=g+1)if(!found&&ac_v[g])begin found=1;ac2_v<=1;ac2_b<=ac_b[g];
+        end
       end
     end
   end
@@ -584,6 +561,14 @@ module ot_hbm_r14_aq_pc_safe #(
   wire ep_start = ref_choice_fresh && (PULLIN > 0) && !ep && !ref_pend && 32'(pin) < PULLIN && ref_c > RW'(LEAD + 12) && bkey < 7'd16 &&
                   sact >= 4'd6;
   wire ep_rdy = ep && !(|(blk & open)) && (|(blk & aok_z)) && noact_c == 0 && sact >= 4'(T_RREFD + 2) && ref_c > RW'(LEAD + 2);
+  // ACT_HEAD override (registered head bank/row; one 32:1 select each, no wide fanout)
+  wire head_closed = ACT_HEAD!=0 && q_ne && !(|(hb_oh & open)) && !(|(hb_oh & blk))
+`ifdef BW_AQ_MUT_NO_ACT_HEAD
+                     && 1'b0   // MUTANT: no head override (fixed bank-0-first ACT order only)
+`endif
+                     ;
+  wire act_ok_h = head_closed && (|(hb_oh & aok_z)) && rrdl_z[hb[1:0]] && rrds_c == 0 && faw_ok && !act_block &&
+                  noact_c == 0 && !((ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1) || ep_start) && hb == bsel);
   wire act_ok = act_cand && (|(act_cand_oh & aok_z)) && rrdl_z[act_b[1:0]] && rrds_c == 0 && faw_ok && !act_block &&
                 noact_c == 0 && !((ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1) || ep_start) && act_b == bsel);
   (* keep="true",dont_touch="true" *) reg r_v; reg [2:0] r_op; reg [4:0] r_bank; reg [31:0] r_oh; reg [RW_ROW-1:0] r_row;
@@ -593,6 +578,7 @@ module ot_hbm_r14_aq_pc_safe #(
     if (ref_due_n && ref_pend) begin r_v = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
     else if (ep_rdy) begin r_v = 1; r_op = REFPB; r_bank = rb; r_oh = blk; end
     else if (forced_pre) begin r_v = 1; r_op = PRE; r_bank = rb; r_oh = blk; end
+    else if (act_ok_h) begin r_v = 1; r_op = ACT; r_bank = hb; r_oh = hb_oh; r_row = hrow; end
     else if (act_ok) begin r_v = 1; r_op = ACT; r_bank = act_b; r_oh = act_cand_oh; r_row = act_row; end
     else if (|pre_cand) begin r_v = 1; r_op = PRE; r_bank = pre_sel; r_oh = 32'b1 << pre_sel; end
   end

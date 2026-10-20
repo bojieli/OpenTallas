@@ -60,7 +60,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     //   9 kept copies.  Room for the in-flight entry: posting uses wr_r2 (two free) while the stage holds an entry.
     //   The read-reservation check no longer exempts writes (enqueue needs read_reserved<RQ for every entry), so the
     //   post decision and the u_post read address are independent of the SRAM output.  POST_REG also sets the AQ's
-    //   ACT_HEAD=1 (ACT candidates start at the head entry's bank): with the shifted enqueue timing the fixed bank-0-first
+    //   ACT_HEAD=1 (head-bank ACT override when the head bank is closed): with the shifted enqueue timing the fixed bank-0-first
     //   ACT order starved a closed high-index head bank for ever (face_txn stalled at 7909/12944 beats).  0 = unchanged.
     parameter integer POST_REG=0
 )(
