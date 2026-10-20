@@ -2,7 +2,7 @@
   "source_rtl_commit": "e2e0a4482",
   "source_rtl_sha256": "ebb8a1db04be94e4ae83cb023ca06b3d7c2959c6f6256801ebd799819557f4c3",
   "gold": "0ae0a0d9c",
-  "status": "BEHAVIOR_PASS_NATIVE_PENDING",
+  "status": "BEHAVIOR_PASS_NATIVE_FAIL_STOPPED_CLAUDE_BACK",
   "expected_added_ff_vs_R10": 400,
   "new_token_edges": 0,
   "new_boot_edges_vs_R10_shipping": 0,
@@ -29,6 +29,18 @@
     9,
     15
   ],
-  "reset_earliest_fullblock": "RUNNING unit3200405-1792508668/session85117",
-  "age_date_controls": "RUNNING unit3260163-1792508724/session69993"
+  "reset_earliest_fullblock": "PASS E6 first start capture/E7accept; E5 negative rejected",
+  "age_date_controls": {
+    "one_edge_phase_bias": "DETECTED",
+    "shifted_add_date": "DETECTED"
+  },
+  "native_verdict": {
+    "max_dynamic_loads": 48,
+    "violations": 4,
+    "role_errors": 0,
+    "roots_examined": 182224,
+    "netlist_sha256": "437e0f6038acec471ea8bfd2af95ecc67065ec494e059837f018bb85364a61d9",
+    "area_um2": 41097.53546
+  },
+  "all_own_jobs": "TERMINAL; no running own job remains"
 }

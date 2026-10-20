@@ -1,0 +1,12 @@
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+cmd 0: 0 beats
+cmd 0 fault ref 0 dut 1
+cmd 1: 0 beats
+cmd 1 fault ref 0 dut 1
+cmd 2: 0 beats
+cmd 2 fault ref 0 dut 1
+FAIL 6 mismatches (0 beats, 0 compared) cold_errors=0 cold_checks=0
+- results/rtl/kv_pvfin_shipping_1020/tb_earliest_start.sv:139: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 700ns; walltime 0.103 s; speed 6.789 us/s
+- Verilator: cpu 0.103 s on 1 threads; allocated 18 MB

@@ -1,0 +1,14 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+COLD MISMATCH cycle=49 valid=0/0 fault=1/0
+COLD MISMATCH cycle=50 valid=0/0 fault=1/0
+COLD MISMATCH cycle=51 valid=0/0 fault=1/0
+COLD MISMATCH cycle=52 valid=0/0 fault=1/0
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+FAIL 80 mismatches (0 beats, 0 compared) cold_errors=3766 cold_checks=0
+COLD MISMATCH cycle=25 valid=0/0 fault=1/0
+COLD MISMATCH cycle=26 valid=0/0 fault=1/0
+COLD MISMATCH cycle=27 valid=0/0 fault=1/0
+COLD MISMATCH cycle=28 valid=0/0 fault=1/0
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+FAIL 96 mismatches (0 beats, 0 compared) cold_errors=13779 cold_checks=0
+PVFIN_KIT FAIL mut=0 (see above)
