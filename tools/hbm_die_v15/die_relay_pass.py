@@ -52,6 +52,29 @@ def load_case(c, contract, coverage=None):
                                 reason='missing_placement' if inst not in pl else 'missing_lef'))
             continue
         v = pl[inst]; lv = L[mas]
+        if coverage is not None:
+            # Identity defects must refuse qualification without erasing real
+            # endpoints. Geometry still uses the parsed module's LEF below.
+            placed_master = v['master']
+            if not isinstance(placed_master, str) or not placed_master:
+                defects.append(dict(instance=inst, master=mas, reason='missing_placement_master'))
+                continue
+            if mas != placed_master:
+                defects.append(dict(instance=inst, master=mas, placement_master=placed_master,
+                                    reason='placement_master_mismatch'))
+            declared = (contract or {}).get('instances', {}).get(inst, {})
+            if 'master' in declared and declared['master'] != mas:
+                defects.append(dict(instance=inst, master=mas, contract_master=declared['master'],
+                                    reason='contract_master_mismatch'))
+            invalid = [k for k in ('x', 'y', 'w', 'h')
+                       if isinstance(v.get(k), bool) or not isinstance(v.get(k), (int, float))
+                       or not math.isfinite(v[k]) or (k in ('w', 'h') and v[k] <= 0)]
+            if v['orient'] not in ('R0', 'MX', 'MY', 'R180', 'R90', 'R270', 'MXR90', 'MYR90'):
+                invalid.append('orient')
+            if invalid:
+                defects.append(dict(instance=inst, master=mas, fields=invalid,
+                                    reason='invalid_placement_geometry'))
+                continue
         for pm in re.finditer(r'\.(\w+)\((.*?)\)(?:,|$)', m.group(3), re.S):
             p, e = pm.group(1), pm.group(2).strip()
             if e:

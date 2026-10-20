@@ -124,6 +124,52 @@ END tile
         self.assertEqual(r.returncode,0)
         self.assertTrue(out['geometry_qualified'])
         self.assertFalse(out['native_release_qualified'])
+    def test_master_mismatch_keeps_real_endpoints_and_refuses(self):
+        # Both real LEFs exist and have nonempty pins: no missing-LEF/drop
+        # effect can accidentally make this identity control pass.
+        (self.root/'views'/'other.lef').write_text(self.lef.read_text().replace('tile','other'))
+        self.placement['b']['x']=100
+        self.placement['b']['master']='other';self.emit()
+        r=self.run_case()
+        self.assertEqual(r['buses_checked'],1)
+        self.assertEqual(r['geometry_coverage']['by_reason'],dict(placement_master_mismatch=1))
+        self.assertFalse(r['geometry_qualified'])
+        self.assertEqual(self.run_case(False)['verdict'],'PASS')
+    def test_contract_master_mismatch_keeps_real_endpoints(self):
+        (self.root/'views'/'other.lef').write_text(self.lef.read_text().replace('tile','other'))
+        c=json.loads(self.contract.read_text());c['instances']['b']['master']='other'
+        self.contract.write_text(json.dumps(c));self.placement['b']['x']=100;self.emit()
+        r=self.run_case()
+        self.assertEqual(r['buses_checked'],1)
+        self.assertEqual(r['geometry_coverage']['by_reason'],dict(contract_master_mismatch=1))
+        self.assertFalse(r['geometry_qualified'])
+    def test_missing_placement_master_explicitly_refuses(self):
+        del self.placement['b']['master'];self.emit()
+        r=self.run_case()
+        self.assertEqual(r['geometry_coverage']['by_reason'],dict(missing_placement_master=1))
+        self.assertFalse(r['geometry_qualified'])
+    def test_missing_outline_and_orientation_refuse(self):
+        for key in ('x','y','w','h','orient'):
+            with self.subTest(key=key):
+                value=self.placement['b'].pop(key);self.emit()
+                r=self.run_case()
+                self.assertEqual(r['geometry_coverage']['by_reason'],dict(invalid_placement_geometry=1))
+                self.assertFalse(r['geometry_qualified'])
+                self.placement['b'][key]=value
+    def test_invalid_outline_and_orientation_refuse(self):
+        for key,value in [('w',0),('h',-1),('x',float('nan')),('y',float('inf')),('orient','BOGUS')]:
+            with self.subTest(key=key,value=value):
+                old=self.placement['b'][key];self.placement['b'][key]=value;self.emit()
+                self.assertFalse(self.run_case()['geometry_qualified'])
+                self.placement['b'][key]=old
+    def test_cli_master_mismatch_cannot_be_ordinary_pass(self):
+        self.placement['b']['x']=100;self.placement['b']['master']='other'
+        (self.root/'views'/'other.lef').write_text(self.lef.read_text().replace('tile','other'))
+        self.emit();r,out=self.cli()
+        self.assertEqual(r.returncode,1)
+        self.assertIn('REACH_CHECK FAIL',r.stdout)
+        self.assertFalse(out['geometry_qualified'])
+
     def test_unknown_direction_is_refused(self):
         self.lef.write_text(self.lef.read_text().replace('DIRECTION INPUT','DIRECTION INOUT'))
         self.assertEqual(self.run_case()['geometry_coverage']['by_reason'],dict(unknown_signal_direction=1))
