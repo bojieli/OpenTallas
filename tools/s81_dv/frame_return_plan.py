@@ -270,7 +270,7 @@ def golden_vals(mat, x, nseg):
     return {r: [int(G.bits(G.csum(blocks[r, e0 // 32:(e0 + el) // 32]))) for e0, el in segs] for r in range(mat.rows)}
 
 
-def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg_extra=None, assign=None):
+def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg_extra=None, assign=None, frame_schedule=None):
     """legalise one K-split phase of the frame: every q pair one segment; returns the plan (schedule data).
     land_e: the _l4 successor (dsfd_cfifo_crs4) with every x lane at landing latency E (one E per frame); None = crs
     seg_extra: optional MEASURED element-work term per segment (TOK-S81-GAPS/XS, PV trace), added to E(pair, seg) before
@@ -280,6 +280,21 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
     topo = load_topology(master)
     off, e0 = emission(master)
     e0 += x_shift(land_e)
+    if frame_schedule:
+        import hashlib
+        schedule = json.loads(Path(frame_schedule).read_text())
+        for f, sha in schedule['source_sha256'].items():
+            assert hashlib.sha256((ROOT/f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
+        assert land_e is not None, 'landed frame schedule requires the actual cfifo landing E'
+        assert schedule['topology']['master'] == master
+        topo = schedule['topology']
+        off = dict(off)
+        for pair in pairs:
+            st = schedule['station_inputs'][f'e{pair}']
+            assert st['all_x_inputs_equal_added_edges'], ('unaligned x calendar', pair)
+            add, = st['added_edges']
+            assert all(c['added_edges'] == add for c in st['control'].values()), ('unaligned go/cfg', pair)
+            off[pair] += add
     nsr = len(pairs) // nseg
     # the phase stream does not depend on which pair holds which segment: take it from a scratch placement
     scratch = I.Field(16, 1, 0, depth=8192, active=len(pairs), pp=True, fast=True)
@@ -312,6 +327,7 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
     return dict(schema=SCHEMA, master=master, win=WIN, rst=RST, cf=CF, K=mat.K, nseg=nseg, super_rows=nsr,
                 rows=mat.rows, topology=dict(nodes=topo['nodes'], root=topo['root'], root_link=topo['root_link'],
                                              r1_skew=topo['r1_skew']),
+                frame_schedule=str(frame_schedule) if frame_schedule else None,
                 emission=dict(rule='E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)', e0=e0, off=off,
                               seg_extra=sx,
                               cfifo='dsfd_cfifo_crs' if land_e is None else 'dsfd_cfifo_crs4', land_e=land_e,

@@ -29,7 +29,7 @@ module tb_ot_s81sl_slice_c1x_lp;
     always @(posedge clk) begin : g_dlo_ro_w integer j; dlo_ro_w[0] <= fo_ro_w; for (j = 1; j <= 0; j = j + 1) dlo_ro_w[j] <= dlo_ro_w[j - 1]; end
     wire [275:0] fo_vo, lo_vo;  reg [275:0] dlo_vo [0:0];
     always @(posedge clk) begin : g_dlo_vo integer j; dlo_vo[0] <= fo_vo; for (j = 1; j <= 0; j = j + 1) dlo_vo[j] <= dlo_vo[j - 1]; end
-    wire [1103:0] fo_bo, lo_bo;  reg [1103:0] dlo_bo [0:0];
+    wire [512:0] fo_bo, lo_bo;  reg [512:0] dlo_bo [0:0];
     always @(posedge clk) begin : g_dlo_bo integer j; dlo_bo[0] <= fo_bo; for (j = 1; j <= 0; j = j + 1) dlo_bo[j] <= dlo_bo[j - 1]; end
     wire [4415:0] fo_xc, lo_xc;  reg [4415:0] dlo_xc [0:0];
     always @(posedge clk) begin : g_dlo_xc integer j; dlo_xc[0] <= fo_xc; for (j = 1; j <= 0; j = j + 1) dlo_xc[j] <= dlo_xc[j - 1]; end

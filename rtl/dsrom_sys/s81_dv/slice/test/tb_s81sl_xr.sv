@@ -15,17 +15,18 @@
 //   i.e. CTL n+2, V re-inject / SC relay n+2, RD pair j n+3+j, packed send n+3; partials and rstd are unchanged.
 // Checks every cycle: ci_dir, ci_b[0], c_v, sw_v, x_go, x_sv, rb_v, is_v, cfg_v, fault (= 0), bo (HB: whole word); payloads
 // whenever their valid is up (ci_b / bo: the unused pack words of a short send are stale don't-care).
-// Then 13 illegal programs, each from reset, must raise the sticky fault.
+// Then 13 illegal programs (14 on C3: BIND mu4 10-19 adds a dir-B send config with pairs > 2), each from reset, must raise
+// the sticky fault.  Band port B (C3) is 513 b = {pk[511:0], valid}: legal B configs carry at most 2 pairs.
 // Prints XRB ... err=<n> and PASS / FAIL.  Mutants (RTL): +define+OT_S81SL_XR_MUT_{HOPS,ROW,PORDER,NOCOL} must FAIL.
 module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, parameter integer NC = 6000);
-    localparam integer W = 1104, V = 276, NS = NC + 16;
+    localparam integer W = 1104, V = 276, BW = 513, NS = NC + 16;
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
     // ---------------------------------------------------------------- DUT
     reg rst_n = 1'b0; reg [3:0] sid = 4'd0;
     reg dl_ev = 0, dl_wv = 0, dl_vv = 0; reg [W-1:0] dl_e = 0, dl_w = 0, bi = 0; reg [V-1:0] dl_vb = 0;
     reg [4:0] lo_v = 0, p_v = 0; reg [1279:0] lo_d = 0; reg [159:0] p_d = 0; reg x_rbv = 0; reg [31:0] x_rbd = 0;
-    wire [2:0] ci_dir; wire [W-1:0] ci_b, bo; wire [4:0] c_v, sw_v; wire rb_v; wire [159:0] c_d; wire [49:0] sw_a;
+    wire [2:0] ci_dir; wire [W-1:0] ci_b; wire [BW-1:0] bo; wire [4:0] c_v, sw_v; wire rb_v; wire [159:0] c_d; wire [49:0] sw_a;
     wire [39:0] sw_m; wire [1279:0] sw_d; wire [31:0] rb_d; wire [159:0] is_d, cfg_d; wire x_go, x_sv, is_v, cfg_v, fault;
     wire [31:0] x_eps, x_s; wire [7:0] x_si;
     // ENG ports (RTL-BUILD-S81 10-18): idle here (the ENG collector is covered by tb_s81sl_slice_eng); x_mode / x_scale are
@@ -46,7 +47,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
             .rb_v(rb_v), .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v),
             .g_c(g_c), .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_scale(x_scale), .x_eps(x_eps), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv),
             .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
-        assign bo = {W{1'b0}};
+        assign bo = {BW{1'b0}};
     end endgenerate
     // ---------------------------------------------------------------- random (xorshift64, seeded)
     reg [63:0] rs;
@@ -62,7 +63,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
     reg [W-1:0] i_b [0:NS-1]; reg [V-1:0] i_vb [0:NS-1]; reg [4:0] i_lov [0:NS-1]; reg [1279:0] i_lod [0:NS-1];
     reg [4:0] i_pv [0:NS-1]; reg [159:0] i_pd [0:NS-1]; reg i_rbv [0:NS-1]; reg [31:0] i_rbd [0:NS-1];
     reg x_civ [0:NS-1]; reg [2:0] x_cidir [0:NS-1]; reg [W-1:0] x_cib [0:NS-1]; reg [W-1:0] x_cim [0:NS-1];
-    reg [W-1:0] x_bo [0:NS-1]; reg [W-1:0] x_bom [0:NS-1];
+    reg [BW-1:0] x_bo [0:NS-1]; reg [BW-1:0] x_bom [0:NS-1];
     reg [4:0] x_cv [0:NS-1]; reg [159:0] x_cd [0:NS-1]; reg [4:0] x_swv [0:NS-1]; reg [49:0] x_swa [0:NS-1];
     reg [39:0] x_swm [0:NS-1]; reg [1279:0] x_swd [0:NS-1]; reg x_go_e [0:NS-1]; reg [31:0] x_eps_e [0:NS-1];
     reg x_mode_e [0:NS-1]; reg [31:0] x_scale_e [0:NS-1];
@@ -88,6 +89,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
     function automatic [15:0] mine_mask(); mine_mask = r32() | (16'd1 << sid); endfunction
     function automatic [15:0] other_mask(); other_mask = r32() & ~(16'd1 << sid); endfunction
     // ---------------------------------------------------------------- generator + model (the compiler's view)
+    integer nbs = 0;
     integer n, k, j, nctl = 0, nrd = 0, nsend = 0, nvre = 0, nsc = 0, npart = 0, nrw = 0, nlo = 0;
     // send config: pending (issued at cycle cp_n, effective from cp_n + 1) and effective
     reg cp_on; integer cp_n; reg [159:0] cp_b; reg ef_on; reg [3:0] ef_dir; reg [2:0] ef_kind; reg [4:0] ef_hops;
@@ -102,7 +104,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                 i_ev[n] = 0; i_wv[n] = 0; i_vv[n] = 0; i_b[n] = 0; i_lov[n] = 0; t = rw(); i_lod[n] = {t, t[159:0]};
                 i_pv[n] = 0; t = rw(); i_pd[n] = t[159:0]; i_rbv[n] = 0; i_rbd[n] = r32();
                 if (HB != 0) begin t = rw(); i_b[n] = t[W-1:0]; i_b[n][0] = 1'b0; end
-                x_civ[n] = 0; x_cidir[n] = 0; x_cib[n] = 0; x_cim[n] = 0; x_bo[n] = 0; x_bom[n] = {W{1'b1}};
+                x_civ[n] = 0; x_cidir[n] = 0; x_cib[n] = 0; x_cim[n] = 0; x_bo[n] = 0; x_bom[n] = {BW{1'b1}};
                 x_cv[n] = 0; x_cd[n] = 0; x_swv[n] = 0; x_swa[n] = 0; x_swm[n] = 0; x_swd[n] = 0; x_go_e[n] = 0; x_mode_e[n] = 0; x_scale_e[n] = 0;
                 x_eps_e[n] = 0; x_isv[n] = 0; x_isd[n] = 0; x_cfgv[n] = 0; x_cfgd[n] = 0; x_xsv[n] = 0; x_xsi[n] = 0;
                 x_xs[n] = 0; x_rbv_e[n] = 0; x_rbd_e[n] = 0; r_ci[n] = 0; r_sw[n] = 0;
@@ -121,6 +123,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                     if (tgt == 5'd4) begin
                         ok = (pn == 0) && !cp_on;
                         body[43] = ru(3) == 0;
+                        if (HB != 0 && body[3]) body[42] = 1'b0;     // B: at most 2 pairs (513-b band word)
                     end
                     if (tgt == 5'd5) begin
                         if (lm == 0) lm = 5'd1 << ru(5);
@@ -224,7 +227,11 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                             if (ef_dir[2:0] != 3'd0) begin
                                 x_civ[n + 2] = 1; x_cidir[n + 2] = ef_dir[2:0]; x_cib[n + 2] = bt; x_cim[n + 2] = mk;
                             end
-                            if (HB != 0 && ef_dir[3]) begin x_bo[n + 2] = bt; x_bom[n + 2] = mk; end
+                            if (HB != 0 && ef_dir[3]) begin
+                                x_bo[n + 2] = {pkm[511:0], 1'b1}; x_bom[n + 2] = {BW{1'b1}};
+                                if (ef_np == 0) for (j = 257; j < BW; j = j + 1) x_bom[n + 2][j] = 1'b0;
+                                nbs = nbs + 1;
+                            end
                             pn = 0;
                         end else pn = pn + 1;
                     end
@@ -288,7 +295,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
         end
     endtask
     // illegal programs: each from reset, must leave fault = 1
-    reg [W-1:0] cfgb; integer cs, nfail_ill = 0;
+    reg [W-1:0] cfgb; integer cs, nfail_ill = 0, nill;
     task automatic cfg_send(input scv);
         reg [159:0] b; begin
             b = 0; b[3:0] = 4'b0001; b[42:41] = 2'd0; b[43] = scv;
@@ -296,7 +303,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
         end
     endtask
     task automatic illegal(input integer c);
-        reg [1119:0] t; begin
+        reg [1119:0] t; reg [159:0] b14; begin
             do_reset(); t = rw();
             case (c)
                 1: begin dl_ev = 1; dl_e = ctl_beat(mine_mask(), 2, 0, 0); dl_wv = 1; dl_w = ctl_beat(mine_mask(), 3, 0, 0); end
@@ -314,6 +321,7 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                 10: begin dl_ev = 1; dl_e = ctl_beat(mine_mask(), 7, 0, 0); end
                 11: begin cfg_send(1); dl_ev = 1; dl_e = 0; dl_e[3:1] = 5; dl_wv = 1; dl_w = 0; dl_w[3:1] = 5; end
                 12: begin cfg_send(0); dl_ev = 1; dl_e = ctl_beat(mine_mask(), 4, 0, 0); lo_v = 5'b00100; end
+                14: begin b14 = 0; b14[3:0] = 4'b1000; b14[42:41] = 2'd2; dl_ev = 1; dl_e = ctl_beat(mine_mask(), 5'd4, 5'd0, b14); end
                 default: begin cfg_send(1); dl_ev = 1; dl_e = 0; dl_e[3:1] = 5; dl_vv = 1; dl_vb = ctl_beat(other_mask(), 0, 0, 0); end
             endcase
             @(negedge clk); idle(); repeat (8) @(negedge clk);
@@ -331,9 +339,10 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
         end
         $display("XRB hb=%0d seed=%0d sid=%0d cycles=%0d ctl=%0d rd=%0d rowwr=%0d lo=%0d sends=%0d vreinj=%0d screl=%0d parts=%0d err=%0d",
             HB, SEED, sid, NS, nctl, nrd, nrw, nlo, nsend, nvre, nsc, npart, err);
-        for (cs = 1; cs <= 13; cs = cs + 1) illegal(cs);
-        $display("XRILL missed=%0d of 13", nfail_ill);
-        if (err == 0 && nfail_ill == 0 && nsend > 50 && nrd > 200 && nvre > 100 && nsc > 20 && npart > 20) $display("PASS");
+        nill = (HB != 0) ? 14 : 13;
+        for (cs = 1; cs <= nill; cs = cs + 1) illegal(cs);
+        $display("XRILL missed=%0d of %0d bsends=%0d", nfail_ill, nill, nbs);
+        if (err == 0 && nfail_ill == 0 && nsend > 50 && nrd > 200 && nvre > 100 && nsc > 20 && npart > 20 && (HB == 0 || nbs > 10)) $display("PASS");
         else $display("FAIL");
         $finish;
     end

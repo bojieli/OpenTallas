@@ -1,12 +1,15 @@
 `timescale 1ns/1ps
-// Private per-head SO receiver. See tools/s81_dv/sm_target/MODEL.md.
-// No public parent instantiates this module. No END/destination acknowledgment
-// is synthesized here. Config authority is independent of the returned rows.
+// Per-head SO receiver. See tools/s81_dv/sm_target/MODEL.md.
+// S81-SMWIRE (10-19): instantiated inside every dsdv_svc_rs_c (16 on the die). HEAD < 0 (the die build) takes the head
+// from the head strap pin (the slice's role tile, static from reset, captured in a pin flop); HEAD >= 0 keeps the
+// original bench parameter. No END/destination acknowledgment is synthesized here: the booked retire joins the
+// slice done (dsdv_svc_rs_c) and the fault joins the slice fault. Config authority is independent of the returned rows.
 module dsdv_sm_so_target #(
     parameter integer HEAD = 0,
     parameter integer MUT = 0
 ) (
     input wire clk, rst_n,
+    input wire [3:0] head,
     input wire cfg_v,
     input wire [19:0] cfg_owner,
     input wire [7:0] cfg_se_jid, cfg_so_jid,
@@ -36,6 +39,9 @@ module dsdv_sm_so_target #(
         if (!rst_n) reset_landing <= 0;
         else reset_landing <= {reset_landing[0],1'b1};
     wire rn = reset_landing[1];
+    reg [3:0] head_q;
+    always @(posedge clk) head_q <= head;
+    wire [3:0] hd = (HEAD >= 0) ? 4'(HEAD) : head_q;
     // All input pins land, including all unused bits of the returned row.
     reg cp_v, wp_v, op_v;
     reg [113:0] cp;
@@ -71,9 +77,9 @@ module dsdv_sm_so_target #(
     reg [3:0] nb;
     reg [767:0] pack;
 
-    wire [13:0] expected_a = obase + 14'(8*nw) + 14'(HEAD/2);
-    wire [15:0] expected_m = (HEAD%2) ? 16'hff00 : 16'h00ff;
-    wire [255:0] payload = (HEAD%2) ? wp_d[511:256] : wp_d[255:0];
+    wire [13:0] expected_a = obase + 14'(8*nw) + {11'd0, hd[3:1]};
+    wire [15:0] expected_m = hd[0] ? 16'hff00 : 16'h00ff;
+    wire [255:0] payload = hd[0] ? wp_d[511:256] : wp_d[255:0];
     reg [11:0] bad;
     always @* begin
         bad = 0;
@@ -136,8 +142,8 @@ module dsdv_sm_so_target #(
         end
         // Unconditional output capture avoids a 1024-load output enable.
         g_d <= {row_data,pack};
-        g_idx <= 7'(8*(HEAD%8)) + {4'd0,rd_row[4:2]};
-        g_owner <= owner; g_group <= (HEAD >= 8);
+        g_idx <= {1'b0, hd[2:0], rd_row[4:2]};
+        g_owner <= owner; g_group <= hd[3];
         retire_owner <= owner;
     end
     always @(posedge clk or negedge rn) begin

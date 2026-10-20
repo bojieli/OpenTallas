@@ -1,0 +1,26 @@
+{
+ "cell": "dsfd_rly_66_SW",
+ "view": "physical/ref_tile/s81_rly_66_sw/views/dsfd_rly_66_SW",
+ "lib_cell": "dsfd_rly_66_SW",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 62.2,
+ "spread_ps": 2.4,
+ "outputs": 66,
+ "inputs": 67,
+ "launch_ps": 185.6,
+ "launch_pin": "o[39]",
+ "capture_ps": 119.8,
+ "capture_pin": "i[41]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 2.2,
+ "ff_launch_min_ps": 115.9,
+ "ff_hold_need_ps": -57.6,
+ "pass": true,
+ "fail_why": ""
+}

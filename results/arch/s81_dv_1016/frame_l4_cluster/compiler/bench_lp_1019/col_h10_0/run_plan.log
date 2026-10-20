@@ -1,0 +1,31 @@
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e15w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e15w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e15e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e15e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e10w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e10w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e10e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e10e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e5w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e5w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e5e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e5e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e1w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e1w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e1e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h10_0/vec_plan/f_e1e_0.viamap.hex:0: $readmem file not found
+RET 356 18ea90e0410000049
+RET 357 18f695a4210004049
+RET 364 08f6bfa5a10000449
+RET 365 18da59d5210004449
+RET 371 08f126f8210008089
+RET 372 0908a4a981000c089
+RET 379 18ed287d610010049
+RET 380 08cf95f4e10014049
+RET 386 08ee951e010010449
+RET 387 18f09ab7210014449
+END edges=3063 ret_words=10 xo_checked=3061 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:122: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 15.461 s; speed 198.466 ns/s
+- Verilator: cpu 15.430 s on 1 threads; allocated 60 MB
