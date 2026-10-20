@@ -178,7 +178,11 @@ module dsdv_sh_sd #(
     // S81-SHLK s10d: the stack-write payload enable pop_q && dst[s] (dst decoded from h_q) drove 291 hw payload flops
     // per stack (~585 loads).  HWC kept copies: popq_c[g] (= pop_q) and hk_c[g] (= the decode inputs {hwe, ha, hd[65:64]}
     // of h_q, captured from mem_q on the same edge), each copy decoding its own dst for one 30-bit payload slice.
+`ifdef OT_S81_SH_S10E
+    localparam integer HWC = 20;                    // S81-SHLK12 s10e: <= 15-bit slices (2 load pins a flop: <= 32)
+`else
     localparam integer HWC = 10;
+`endif
     function automatic [NS-1:0] dec_dst(input [31:0] a, input [1:0] m, input we);
         reg [1:0] c; reg bd; reg [NS-1:0] d; reg mk; reg [31:0] ki; reg [29:0] px; integer kq;
         begin

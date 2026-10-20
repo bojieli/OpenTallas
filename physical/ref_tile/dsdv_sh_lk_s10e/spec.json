@@ -10,12 +10,18 @@
   "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
   "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
   "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+  "rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_afifo_n32.sv",
+  "rtl/dsrom_sys/s81_ingest/ot_s81_fence_n32.sv",
+  "rtl/hdc/ingest/ot_s81_ing_stream_n32.sv",
   "rtl/hdc/ingest/ot_rom_host_ingest.sv",
   "physical/rom_host_ingest/rtl/dsfd_host.sv",
   "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
   "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
   "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv",
+  "rtl/hdc/ingest/ot_rom_host_ingest_n32.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_n32.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_native_n32.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
   "rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_bb.v",
@@ -60,6 +66,24 @@
    "at": [
     216.0,
     129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1",
+   "inst": "u_h.host.u_hi.u_eng.u_rae",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1",
+   "inst": "u_h.host.u_hi.u_eng.u_rao",
+   "at": [
+    216.0,
+    216.0
    ],
    "orient": "R0"
   }
@@ -406,7 +430,7 @@
  },
  "outline": {
   "w": 345.6,
-  "h": 194.4
+  "h": 280.8
  },
  "io_flop_at_pins": {
   "cols": 4,
@@ -415,7 +439,8 @@
  "keep_pin_regs": true,
  "std_area_um2": 10000.0,
  "fill_reason": {
-  "macro_bound": "S81-SHLK s10: four right-sized dual-clock masters (2 x 16x257 89.4x39.4 for the host FIFO, 2 x 16x289 99.1x44.0 for the request / svc FIFOs; 15,787 um2) on a 2x2 43.2-lattice grid (x 43.2 / 216.0, y 43.2 / 129.6), read faces toward the 73.7-um centre channel, write faces to the 41-um W band / 28-um E band; 42-um middle band, 41-um S band, 23-um N band. sr9 synthesis std area 9,897 um2: fill ~39% = (15,787 + ~10,000) / 67,185; outline 345.6 x 194.4 vs sr9 518.4 x 280.8 (-60%). s10c = s10w floorplan (73.7-um channel: s10 30.5-um channel overflowed 146 / s10b 4 at M4 x~131) + s10b/s10c RTL."
+  "macro_bound": "S81-SHLK s10: four right-sized dual-clock masters (2 x 16x257 89.4x39.4 for the host FIFO, 2 x 16x289 99.1x44.0 for the request / svc FIFOs; 15,787 um2) on a 2x2 43.2-lattice grid (x 43.2 / 216.0, y 43.2 / 129.6), read faces toward the 73.7-um centre channel, write faces to the 41-um W band / 28-um E band; 42-um middle band, 41-um S band, 23-um N band. sr9 synthesis std area 9,897 um2: fill ~39% = (15,787 + ~10,000) / 67,185; outline 345.6 x 194.4 vs sr9 518.4 x 280.8 (-60%). s10c = s10w floorplan (73.7-um channel: s10 30.5-um channel overflowed 146 / s10b 4 at M4 x~131) + s10b/s10c RTL.",
+  "pin_bound": "S81-SHLK12 s10e census iteration: width set by pin demand (N 1207 pins / S 913 over 345.6 um, s10d gate 99% faces); height by the third macro row (realigner ring, 2 x 16x257). Std area to be measured by this gate; outline is re-derived before the CTS gate."
  },
  "children": [],
  "inter": [],
@@ -439,7 +464,7 @@
   "OT_S81_SH_S10E"
  ],
  "reset_relay_split": {
-  "max_loads": 32
+  "max_loads": 16
  },
  "reroute_reason": {
   "kind": "rtl_change",

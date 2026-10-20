@@ -91,7 +91,10 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     input  wire [5:0]    sq_i,            // L1 status {fault, code 4, busy}
     input  wire          vf_i             // L2 fault (via L1)
 );
-`ifdef OT_S81_SH_APIPE10
+`ifdef OT_S81_SH_S10E
+    // S81-SHLK12 s10e: 32 relay copies (<= 16 reset loads a copy after the synthesis copy pass)
+    wire [31:0] rr__ot_rlv; ot_rst_relay #(.REGIONS(32)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr__ot_rlv)); wire rn = rr__ot_rlv[0];
+`elsif OT_S81_SH_APIPE10
     wire [15:0] rr__ot_rlv; ot_rst_relay #(.REGIONS(16)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr__ot_rlv)); wire rn = rr__ot_rlv[0];
 `elsif OT_S81_SH_APIPE9
     wire [7:0] rr__ot_rlv; ot_rst_relay #(.REGIONS(8)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr__ot_rlv)); wire rn = rr__ot_rlv[0];
@@ -147,12 +150,47 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     wire csr_t = hv && hcl == 2'd0 && hd[7:0] == 8'h13;
     wire csr_g = hv && hcl == 2'd0 && hd[7:0] == 8'h14;
     wire to_ing = hv && !csr_p && !csr_l && !csr_t && !csr_g;
+`ifdef OT_S81_SH_S10E
+    // S81-SHLK12 s10e: the CSR decode steered 506 output flops from fi[0..8] / fi[513..514] (fi[2] 206 loads, decode
+    // gates 203..267).  NK kept clones of those 11 pin-flop bits (same D as fi), one per <= 32-bit output slice; each
+    // slice decodes its own clone (pw 2 slices, pl 1, tw 7, cf 9).  Same values, same edge.
+    localparam integer NK = 19;
+    (* keep *) reg [NK*11-1:0] fic;
+    always @(posedge ck) fic <= {NK{f_host[514:513], f_host[8:1], rn & f_host[0]}};
+    wire [35:0]  pw_d = {1'b1, hd[102:96], hd[59:32]};
+    wire [8:0]   pl_d = {1'b1, hd[39:32]};
+    wire [193:0] tw_d = {1'b1, hd[14:8], hd[16 +: 186]};
+    wire [266:0] cf_d = {1'b1, hd[17:8], hd[32 +: 256]};
+    function automatic dec(input [10:0] c, input [7:0] a);   // c = {hcl 2, hd[7:0], hv}
+        dec = c[0] && c[10:9] == 2'd0 && c[8:1] == a;
+    endfunction
+    genvar ks;
+    for (ks = 0; ks < NK; ks = ks + 1) begin : g_csr
+        wire [10:0] c = fic[11*ks +: 11];
+        if (ks < 2) begin : g_pw
+            localparam integer LO = 18 * ks;
+            always @(posedge ck) pw_o[LO +: 18] <= (rn && dec(c, 8'h10)) ? pw_d[LO +: 18] : 18'd0;
+        end else if (ks == 2) begin : g_pl
+            always @(posedge ck) pl_o <= (rn && dec(c, 8'h11)) ? pl_d : 9'd0;
+        end else if (ks < 10) begin : g_tw
+            localparam integer LO = 28 * (ks - 3), NB = (ks == 9) ? 194 - 28 * 6 : 28;
+            always @(posedge ck) tw_o[LO +: NB] <= (rn && dec(c, 8'h13)) ? tw_d[LO +: NB] : {NB{1'b0}};
+        end else begin : g_cf
+            localparam integer LO = 30 * (ks - 10), NB = (ks == 18) ? 267 - 30 * 8 : 30;
+            always @(posedge ck) cf_o[LO +: NB] <= (rn && dec(c, 8'h14)) ? cf_d[LO +: NB] : {NB{1'b0}};
+        end
+    end
+`ifndef SYNTHESIS
+    always @(posedge ck) if (fic != {NK{fi[514:513], fi[8:1], fi[0]}} && $time > 0 && rn) $fatal(1, "dsdv_sh_lk: CSR clone diverged");
+`endif
+`else
     always @(posedge ck) begin
         pw_o <= (rn && csr_p) ? {1'b1, hd[102:96], hd[59:32]} : 36'd0;
         pl_o <= (rn && csr_l) ? {1'b1, hd[39:32]} : 9'd0;
         tw_o <= (rn && csr_t) ? {1'b1, hd[14:8], hd[16 +: 186]} : 194'd0;
         cf_o <= (rn && csr_g) ? {1'b1, hd[17:8], hd[32 +: 256]} : 267'd0;
     end
+`endif
     // ---- host ingest (clk_h = clk_i = ck, as dsfd_host_c on a layer die) and per-stack decode (NS 1, STATIC)
     wire t_v, ov, owe, ocr, hf, sf; wire [63:0] t_d; wire [31:0] oa; wire [255:0] od; wire [7:0] ack; wire [4:0] crn;
     reg tcr_l;
@@ -169,7 +207,9 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     // mux -> dq paths start at a ck_ic flop; every host word +1 ck_ic edge, rate unchanged) + 8 kept realigner pointer
     // copies in the engine (ra_rp -> 512-b shift fanout; no cycle change).  Host path f_host -> s_hw / t_host = +2 edges
     // vs the dsfd_host_c golden (tb HSH 2).
-`ifdef OT_S81_SH_APIPE10
+`ifdef OT_S81_SH_S10E
+    dsfd_host_native_n32 #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(10))     // S81-SHLK12 s10e: native-32 host ingest
+`elsif OT_S81_SH_APIPE10
     dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(10))
 `elsif OT_S81_SH_APIPE9
     dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(9))
