@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hdc_v41x_attn_hgrp_s81",
+ "enable": false,
+ "reason": "Source-registered (ot_hdc_v41x_attn_hgrp_s header): every input lands in a flop at the pin (R0 r_iv/r_ibank/r_ib, per-head kept ot_hdc_v41x_kreg copies of ld_*, hh/gsel from gid) and every output is a flop (ov, oy, oflt); recipe pin_regs would add a second unpriced stage on every score / p.v beat."
+}
