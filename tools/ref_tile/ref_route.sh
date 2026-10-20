@@ -63,7 +63,7 @@ if [ "${OT_PG_STRICT:-0}" = 1 ]; then
   PG=(--orfs-var OT_PG_STRICT=1 --orfs-var OT_PG_HELPER=/src/physical/common_flow/native_pg_binding.tcl --step-tcl PRE_FINAL_REPORT=physical/common_flow/native_pg_bootstrap.tcl)
 fi
 SO=(); [ -n "$STOP" ] && SO=(--pnr-stop-after $STOP)
-# synthesis cap: unlimited for a route; the gate's floorplan smoke passes SYNTH_TIMEOUT (a SHARE stall fails in minutes)
+# Synthesis is unlimited by default; positive SYNTH_TIMEOUT is an explicit opt-in cap.
 STO=${SYNTH_TIMEOUT:-unlimited}
 export OT_ORFS_NUM_CORES=${NC:-8} OT_SYNTH_TIMEOUT_SECONDS=$STO OT_FLOW_TIMEOUT_SECONDS=unlimited
 export OT_MM_FF_SDC=${OT_MM_FF_SDC:-$K/signoff.sdc}
