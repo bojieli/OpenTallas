@@ -1,0 +1,47 @@
+ot-run: ot-epyc5       admits   877 GB (avail 727, growth 113, headroom 0, waiters 0/0 GB) load 46/128 running 34 disk 168 GB 
+ot-run: ot-epyc6       admits  1116 GB (avail 895, growth 113, headroom 0, waiters 0/0 GB) load 241/128 running 40 disk 4769 GB 
+ot-run: ot-epyc7       admits   605 GB (avail 524, growth 101, headroom 0, waiters 0/0 GB) load 59/96 running 34 disk 5760 GB 
+ot-run: ot-epyc9       admits   779 GB (avail 646, growth 101, headroom 0, waiters 0/0 GB) load 72/128 running 38 disk 193 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-cdc-batch-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-cdc-batch-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1479342-1792482212 after 1 s
+test_all_pairs_and_bounds_before_queries (test_cdc_batch_constraints.Batch.test_all_pairs_and_bounds_before_queries) ... ok
+test_kept_mapped_hierarchy_name_is_exactly_normalized (test_cdc_batch_constraints.Batch.test_kept_mapped_hierarchy_name_is_exactly_normalized) ... ok
+test_missing_path_still_fails (test_cdc_batch_constraints.Batch.test_missing_path_still_fails) ... ok
+test_nonfinite_path_still_fails (test_cdc_batch_constraints.Batch.test_nonfinite_path_still_fails) ... ok
+test_only_existing_pre_mm_deferral_allowed (test_cdc_batch_constraints.Batch.test_only_existing_pre_mm_deferral_allowed) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.030s
+
+OK
+test_actual_graph_async_pair (test_cdc_sync_constraints.ActualGraph.test_actual_graph_async_pair) ... ok
+test_actual_graph_normal_and_mutants (test_cdc_sync_constraints.ActualGraph.test_actual_graph_normal_and_mutants) ... ok
+test_async_pair_admitted_through_synchronizers (test_cdc_sync_constraints.AsyncPair.test_async_pair_admitted_through_synchronizers) ... ok
+test_async_pair_needs_the_declared_structure (test_cdc_sync_constraints.AsyncPair.test_async_pair_needs_the_declared_structure) ... ok
+test_async_structural_mutants_refused (test_cdc_sync_constraints.AsyncPair.test_async_structural_mutants_refused) ... ok
+test_hbm_ratio_still_refused_on_related_profiles (test_cdc_sync_constraints.AsyncPair.test_hbm_ratio_still_refused_on_related_profiles) ... ok
+test_flattened_submodule_admitted (test_cdc_sync_constraints.Hierarchy.test_flattened_submodule_admitted) ... ok
+test_admitted_and_bounded_only (test_cdc_sync_constraints.Lint.test_admitted_and_bounded_only) ... ok
+test_exception_on_same_domain_path_refused (test_cdc_sync_constraints.Lint.test_exception_on_same_domain_path_refused) ... ok
+test_missing_group_for_actual_crossing_refused (test_cdc_sync_constraints.Lint.test_missing_group_for_actual_crossing_refused) ... ok
+test_schema_and_bounds_refused (test_cdc_sync_constraints.Lint.test_schema_and_bounds_refused) ... ok
+test_structural_mutants_refused (test_cdc_sync_constraints.Lint.test_structural_mutants_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.743s
+
+OK
+test_actual_flow_wrapper_and_forged_nested_namespace (test_cdc_seam_constraints.MixedGraph.test_actual_flow_wrapper_and_forged_nested_namespace) ... ok
+test_mapped_both_dispatches_and_bad_window_is_timed (test_cdc_seam_constraints.MixedGraph.test_mapped_both_dispatches_and_bad_window_is_timed) ... ok
+test_arbitrary_or_overlapping_crossings_refused (test_cdc_seam_constraints.MixedLint.test_arbitrary_or_overlapping_crossings_refused) ... ok
+test_positive_dispatch_preserves_seam_constraints (test_cdc_seam_constraints.MixedLint.test_positive_dispatch_preserves_seam_constraints) ... ok
+test_receipt_key_covers_window_and_roots (test_cdc_seam_constraints.MixedLint.test_receipt_key_covers_window_and_roots) ... ok
+test_seam_cannot_cover_bad_synchronizer (test_cdc_seam_constraints.MixedLint.test_seam_cannot_cover_bad_synchronizer) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.550s
+
+OK
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1479342-1792482212): exit 0

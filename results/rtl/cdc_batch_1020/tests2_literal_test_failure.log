@@ -1,0 +1,28 @@
+ot-run: ot-epyc5       admits   896 GB (avail 740, growth 113, headroom 0, waiters 0/0 GB) load 45/128 running 36 disk 168 GB 
+ot-run: ot-epyc6       admits  1117 GB (avail 896, growth 113, headroom 0, waiters 0/0 GB) load 219/128 running 40 disk 4769 GB 
+ot-run: ot-epyc7       admits   610 GB (avail 528, growth 101, headroom 0, waiters 0/0 GB) load 58/96 running 35 disk 5760 GB 
+ot-run: ot-epyc9       admits   781 GB (avail 648, growth 101, headroom 0, waiters 0/0 GB) load 72/128 running 38 disk 204 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-cdc-batch-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-cdc-batch-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3926980-1792482186 after 0 s
+test_all_pairs_and_bounds_before_queries (test_cdc_batch_constraints.Batch.test_all_pairs_and_bounds_before_queries) ... ok
+test_kept_mapped_hierarchy_name_is_exactly_normalized (test_cdc_batch_constraints.Batch.test_kept_mapped_hierarchy_name_is_exactly_normalized) ... FAIL
+test_missing_path_still_fails (test_cdc_batch_constraints.Batch.test_missing_path_still_fails) ... ok
+test_nonfinite_path_still_fails (test_cdc_batch_constraints.Batch.test_nonfinite_path_still_fails) ... ok
+test_only_existing_pre_mm_deferral_allowed (test_cdc_batch_constraints.Batch.test_only_existing_pre_mm_deferral_allowed) ... ok
+
+======================================================================
+FAIL: test_kept_mapped_hierarchy_name_is_exactly_normalized (test_cdc_batch_constraints.Batch.test_kept_mapped_hierarchy_name_is_exactly_normalized)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-cdc-batch-1020/tools/ref_tile/test_cdc_batch_constraints.py", line 57, in test_kept_mapped_hierarchy_name_is_exactly_normalized
+    self.assertIn('u_q.req[0].u_q.q', p.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'u_q.req[0].u_q.q' not found in 'NESTED unrelated.u_ot_pr_core/u_q/q unrelated.u_ot_pr_core.u_q.q\n'
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.062s
+
+FAILED (failures=1)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3926980-1792482186): exit 1
