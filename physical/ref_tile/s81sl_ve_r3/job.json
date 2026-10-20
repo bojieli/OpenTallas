@@ -1,0 +1,137 @@
+{
+ "name": "s81sl_ve_r3-s81sl_ve_r3-COMMIT",
+ "block": "ot_s81sl_ve",
+ "ref_tile": true,
+ "owner": "Claude:S81-VE",
+ "purpose": "S81-VE r3: SAFE-DESIGN ve (valid-only regional reset, kept copies, one-hot ring selects) to closure (TT setup / FF hold / DRC 0 + native audit).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81-ve-r3-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/eng",
+   "rtl/dsrom_sys/engram/mix",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_slice/ve_bench.sh",
+   "tools/s81_dv/ve_golden.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_ve u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/hdc/v41x/ot_dsrom_divc.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "slve_exact",
+    "cmd": "bash tools/s81_slice/ve_bench.sh {RUN}/slve_exact 0 0",
+    "expect": "pass",
+    "pass_regex": "^PASS ve MUT=0 GAP=0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slve_g2s5",
+    "cmd": "bash tools/s81_slice/ve_bench.sh {RUN}/slve_g2s5 0 2 5",
+    "expect": "pass",
+    "pass_regex": "^PASS ve MUT=0 GAP=2$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slve_mut1",
+    "cmd": "bash tools/s81_slice/ve_bench.sh {RUN}/slve_mut1 1 0",
+    "expect": "fail",
+    "fail_regex": "MUTANT 1 REJECTED mismatches=[1-9]",
+    "fail_witness": "results/rtl/s81_ve_r3_1019/witness_slve_mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slve_mut2",
+    "cmd": "bash tools/s81_slice/ve_bench.sh {RUN}/slve_mut2 2 1 1",
+    "expect": "fail",
+    "fail_regex": "MUTANT 2 REJECTED mismatches=[1-9]",
+    "fail_witness": "results/rtl/s81_ve_r3_1019/witness_slve_mut2.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slve_mut3",
+    "cmd": "bash tools/s81_slice/ve_bench.sh {RUN}/slve_mut3 3 0",
+    "expect": "fail",
+    "fail_regex": "MUTANT 3 REJECTED mismatches=[1-9]",
+    "fail_witness": "results/rtl/s81_ve_r3_1019/witness_slve_mut3.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sl_ve_r3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_ve_r3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_ve_r3 --out {RUN}/record/views/ot_s81sl_ve  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_ve_r3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_ve_r3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_ve_r3/s81sl_ve_r3-s81sl_ve_r3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-VE r3 10-19 (SAFE-DESIGN rebuild after route b571a8c2c NEEDS_RTL; r2 gate: one merged reset sync 2,320 loads, 1,230 roots >32): one ot_rst_relay with 18 kept region copies (<=32 reset loads each, valid/control only; FP units ve-local valid-only-reset copies; reset valid lines replaced by unit valid_out chaining); ring row selects one-hot per 8-bit slice (kept); kept operand copies per multiplier decode and per add lane gate; pack hold enable 24 kept copies; tree/pack data free of wide enables. Calendars unchanged (reduce 129 / add 44); outline from synthesis area at util 0.50."
+}

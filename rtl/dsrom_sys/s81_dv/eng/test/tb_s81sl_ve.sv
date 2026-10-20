@@ -15,7 +15,9 @@ module tb_s81sl_ve #(parameter integer MUT = 0, GAP = 1, LM = 5, LA = 4);
     string dir;
     integer i, c, e, cyc = 0, bad = 0, np = 0, no = 0, t_r0 = -1, t_p_last = -1, t_a0 = -1, t_o_last = -1;
     always @(posedge clk) cyc <= cyc + 1;
-    always @(posedge clk) begin
+    // outputs are checked only once reset is released (every unreset register powers up random in this bench, and the
+    // outputs during reset assertion are don't-care: the parent's reset covers them)
+    always @(posedge clk) if (rst_n) begin
         if (p_v) begin
             if (p_c != np[1:0]) begin bad = bad + 1; $display("BAD partial copy %0d expected %0d", p_c, np); end
             if (p_hh !== pm[3*np] || p_kk !== pm[3*np+1] || p_dd !== pm[3*np+2]) begin
@@ -34,8 +36,8 @@ module tb_s81sl_ve #(parameter integer MUT = 0, GAP = 1, LM = 5, LA = 4);
             no = no + 1; t_o_last = cyc;
         end
         if (fault && MUT == 0) $fatal(1, "fault at cycle %0d", cyc);
-        if (cyc > 5000) $fatal(1, "timeout");
     end
+    always @(posedge clk) if (cyc > 5000) $fatal(1, "timeout");
     initial begin
         if (!$value$plusargs("dir=%s", dir)) $fatal(1, "dir required");
         $readmemh({dir, "/h.mem"}, hm); $readmemh({dir, "/k.mem"}, km); $readmemh({dir, "/w.mem"}, wm);

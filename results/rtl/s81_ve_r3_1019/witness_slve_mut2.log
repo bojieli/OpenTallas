@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits   893 GB (avail 738, growth 113, headroom 0, waiters 0/0 GB) load 119/128 running 43 disk 562 GB 
+ot-run: ot-epyc6       admits   681 GB (avail 590, growth 113, headroom 0, waiters 0/0 GB) load 87/128 running 41 disk 559 GB 
+ot-run: ot-epyc7       admits   664 GB (avail 566, growth 101, headroom 0, waiters 0/0 GB) load 120/96 running 39 disk 502 GB 
+ot-run: ot-epyc9       skipped: no /tmp/s81ve3/src
+ot-run: ot-pve1        skipped: no /tmp/s81ve3/src
+ot-run: ot-agidock128  skipped: no /tmp/s81ve3/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3644873-1792476458 after 0 s
+BAD partial copy 1: hh 436d5394/436d5394 kk 41d07aab/41d07aac dd bf7f1b16/bf7f1b16
+BAD partial copy 2: hh 434f069b/434f069a kk 41c0a9e5/41c0a9e5 dd 3edf52d3/3edf52d1
+MUTANT 2 REJECTED mismatches=2
+FAIL ve MUT=2
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3644873-1792476458): exit 1

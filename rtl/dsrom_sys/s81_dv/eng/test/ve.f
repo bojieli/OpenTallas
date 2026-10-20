@@ -1,3 +1,4 @@
+rtl/lib/ot_rst_relay.sv
 rtl/hdc/ot_hdc_fastfp.sv
 rtl/hdc/ot_hdc_fp32_f12.sv
 rtl/hdc/ot_hdc_fp32_mul_lat.sv
@@ -22,5 +23,6 @@ rtl/hdc/v41x/ot_dsrom_aq12.sv
 rtl/hdc/v41x/ot_dsrom_divc.sv
 rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv
 rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv
+rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv
 rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv
 rtl/dsrom_sys/s81_dv/eng/test/tb_s81sl_ve.sv

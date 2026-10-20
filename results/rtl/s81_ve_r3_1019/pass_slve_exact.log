@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       admits   893 GB (avail 738, growth 113, headroom 0, waiters 0/0 GB) load 119/128 running 43 disk 562 GB 
+ot-run: ot-epyc6       admits   681 GB (avail 590, growth 113, headroom 0, waiters 0/0 GB) load 87/128 running 41 disk 559 GB 
+ot-run: ot-epyc7       admits   664 GB (avail 566, growth 101, headroom 0, waiters 0/0 GB) load 120/96 running 39 disk 502 GB 
+ot-run: ot-epyc9       skipped: no /tmp/s81ve3/src
+ot-run: ot-pve1        skipped: no /tmp/s81ve3/src
+ot-run: ot-agidock128  skipped: no /tmp/s81ve3/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3645573-1792476458 after 0 s
+PASS ot_s81sl_ve beat 4 copies x 64: 12 partials + 256 outputs bit exact; reduce first-in -> last partial 129 cyc (GAP 0), add first-in -> last out 44 cyc
+PASS ve MUT=0 GAP=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3645573-1792476458): exit 0
