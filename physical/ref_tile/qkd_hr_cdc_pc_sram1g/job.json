@@ -1,0 +1,138 @@
+{
+ "name": "qkd_hr_cdc_pc_sram1g-sram1g-COMMIT",
+ "block": "qkd_hr_cdc_pc_sram",
+ "ref_tile": true,
+ "owner": "KV-HOST7",
+ "purpose": "PC SRAM CDC 1e: domain-sided (core E / phy W) with a 228 um full-width band; every pin and pin flop in the band next to its clock (1c: pins over macro rows, TT spread 121)",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-host7-1020",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_hr_cdc_pc_sram u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc_sram.v rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_host_async_fifo_sram.sv rtl/physical/ot_host_die_cdc_sram.sv physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "host_cdc_safe_exact",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/exact exact",
+    "pass_regex": "PASS HOST_CDC_SAFE exact-cycle miter"
+   },
+   {
+    "name": "host_cdc_safe_tput",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/tput tput",
+    "pass_regex": "PASS HOST_CDC_SAFE_TPUT"
+   },
+   {
+    "name": "host_cdc_safe_mutant_addr",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/mutant_addr mutant_addr",
+    "fail_regex": "^FAIL SRAM transfer value mismatch",
+    "fail_witness": "rtl/test/host_cdc_safe_1020/witnesses/mutant_addr.log"
+   },
+   {
+    "name": "host_cdc_safe_mutant_bypass",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/mutant_bypass mutant_bypass",
+    "fail_regex": "^FAIL SRAM transfer value mismatch",
+    "fail_witness": "rtl/test/host_cdc_safe_1020/witnesses/mutant_bypass.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_hr_cdc_pc_sram1g/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_hr_cdc_pc_sram1g/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_hr_cdc_pc_sram1g --out {RUN}/record/views/qkd_hr_cdc_pc_sram --macro-view physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_hr_cdc_pc_sram1g/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_hr_cdc_pc_sram1g/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_hr_cdc_pc_sram1g/qkd_hr_cdc_pc_sram1g-sram1g-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "PC SRAM CDC sram1g after 1e placed-reach FAIL 285 pairs (max 597.8 reset / 550.6 data: cells sprawled above the top macro row; AF write faces opposed their writer domains): domain-matched macro columns (phy W column MY: rx IB + rx AF; core E column R0: tx IB + tx AF) so every macro read face (LEF W) opens on the centre channel toward its reader and the writer sits on its own half; outline 475.2x540 (1e 648); std rows ONLY in the full-width central band y216..334.8 (POST_FLOORPLAN row hook, no cell can sprawl to the corners); all data pins/pin flops in the band beside their clocks (W phy, E core), host_rst_n at the N-face centre above the band so the 2-stage landing sits mid-band.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "Mapped native census found ir2187/wq_row1092loads and runtime flop arrays above2kb. Dedicated opt-in SRAM channel preserves effective4/8 FIFO capacities and exact PIPE2 transfers, with kept source state/reset/select copies.",
+  "source": "results/arch/kv_host_cdc_safe_1020/old_gate_native/qkd_hr_cdc_pc.json"
+ }
+}
