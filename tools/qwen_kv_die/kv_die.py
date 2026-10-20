@@ -3621,7 +3621,14 @@ def _relays(m):
                 elif not idxs and PV_T and bid.startswith(('pvta_', 'pvtb_', 'pvc_')):
                     idxs = [len(path_) - 1]          # KVPLAN2 2215: a stage that sat off the path end -- spots at the end
                 offl_ = offs_wide if st_.get('wide') else offs
-                got = _spot(idxs, offl_, prev_pt_, rch, pad_, at_end)
+                term_ = False
+                if RLY_FINE and not idxs and not at_end:
+                    # KV-BIND12 10-20: the chain sits at its path end (the ring cell at the load's pin centroid) but the
+                    # load's FARTHEST pin is still out of reach (OT_KV_D2D_PINS: a 548-b word spread over 393 um of the
+                    # D2D S face; d18a att tx_payload stage 10 remaining 374 > 340): one more stage at the free spot around
+                    # the path end nearest the load (progress required), as a tree hop does at its leader
+                    idxs, term_ = [len(path_) - 1], True
+                got = _spot(idxs, offl_, prev_pt_, rch, pad_, at_end or term_)
                 if got is None and RLY_FINE:
                     # KV-BIND12 10-20 (OT_KV_RLY_FINE=1): before refusing, the same path points with sub-cell offsets.  The
                     # G-lattice offsets from a path row land a relay only at py + k G - fh / 2: an 82.08-um 548-b relay in the
@@ -3630,7 +3637,7 @@ def _relays(m):
                     # a 0-overlap spot 259-321 um from every D2D pin exists).  Only chains that would raise reach here, so
                     # every plan that built is unchanged.
                     fine_ = [(dx_, dy_ + f_) for dx_, dy_ in offl_ for f_ in RLY_FINE_STEPS]
-                    got = _spot(idxs, fine_, prev_pt_, rch, pad_, at_end)
+                    got = _spot(idxs, fine_, prev_pt_, rch, pad_, at_end or term_)
                     if got is not None:
                         m.setdefault('rly_fine', []).append((bid, st_['k'], round(got[0], 3), round(got[1], 3)))
                 if got is None and phy_b and bid not in tree_meta and remaining_() <= reach_():
