@@ -1,0 +1,15 @@
+# Exact PEER source admission review — held at Claude return 05:09
+
+This packet preserves completed evidence only. It grants no wrapper suppression, generic reset waiver, physical qualification, or gate admission. No shared helper or runtime policy was changed.
+
+The generated source SHA256 is `1277bb49de6e8e577c431282c5d8a057211f6e0ff06e6674b78b37393fce4336`; actual mapped SHA256 is `bc09cdfa274dce50304b1fd0831f1097fc524c237885c8f656e947ff9f9d9203`. Top is `qkd_hr_core_peer_n32`, parameters `{}`, defines `[]`. Claude receiving commit `b563ab79b` contains those exact generated source bytes. Existing source/native/cold/lifecycle evidence is preserved at `42aa6ca7d` and summarized in README.md.
+
+Completed review-only boundary audit (`review_input_capture.py` and `.json`): 2800 non-clock input bits terminate exclusively at plain positive-edge ck_core D captures; 3223 output bits are direct core-clock register outputs through unary buffers/inverters; 277 outputs are reserved-constant candidates. Zero structural violations. Fleet session45865/unit oth-ubuntu-328888-1792497996 on ot-epyc6 terminated exit0. The fresh exact constant-set match is still OPEN; prior original-source reserved-field inventory and full-pin correspondence remain separate evidence.
+
+Read-only interface snapshot: origin/main `a61bf2e1fa682b031c6554f0d77e9ec7d005fae9` has no adopted source_native API. Review-only prototypes `d2279b996` / `bdf2c09cf` cover ORDER plain12/288 and MU0PROMPT1/4, excluding PEER. Claude p32a/b kits declare pin_regs.enable=false and reset_landing.enable=false with explanatory reasons; those declarations do not establish authority. ROOT must decide any exact-source path while preserving actual canonical checks.
+
+Preserved reset evidence: prior canonical default raw reset landing PASS (por_n and host_rst_n each two plain FF loads); optional outer2/64 BRP REFUSED for mixed final publication polarity. Detailed source graph includes outer4/128 and regional6/14/323 reset stages, physical ASR polarity and clocks. Regional asynchronous assertion/three-edge release remains source behavior. No generic BRP fit is claimed. A named downstream three-edge publication/first-valid admission observer remains OPEN; observe from the actual regional reset root, since varying registered PLL inputs prevent an unconditional global raw-POR edge-count claim.
+
+Other retained evidence: actual native62936 roots/max32/zero offenders; all58502 primitive/full-pin correspondence and three singleton SRAMs; direct clk2fflogic cold477 pairs/175 families with652 independent physical states audited; causal D/clock negatives; real-SRAM V5.050 lifecycle PASS99984 compared edges. These do not complete wrapper authority or physical closure. Physical reach, clock/timing/hold, slot/fill and rendered placement review remain OPEN.
+
+At STOP05:09 there are no live owned jobs. Claude p32a/b gates launched05:01:42 at b563ab79b, PIDs3324129/30+31/32, receiving WT kv-host7-1020 and /home/ubuntu/scratch/kv-host7/gate_peer_p32{a,b}.{log,json}, were left untouched. No new launch, submit, merge, source/model/proof continuation occurred after stop.
