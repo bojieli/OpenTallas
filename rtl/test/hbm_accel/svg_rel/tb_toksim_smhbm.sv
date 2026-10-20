@@ -115,7 +115,12 @@ module tb_toksim_smhbm;
   .col_we(col_we),.col_bank(col_bank),.col_col(col_col),.col_data(col_data),.col_strb(col_strb),.dram_rvalid(dram_rvalid),.dram_rdata(dram_rdata));
  // ---------------- the d4g die SM master
  wire[42:0]request;wire sm_rv,sm_fault,sm_sfault;wire[11:0]rrow;wire[255:0]rdata;
- ot_hbm_accel_smh_attn #(.ENABLE_INT8(1)) sm(.clk(stream),.rst_n(srst),.command({cmd_ext,command}),.kv_desc(kv_desc),.packet(packet),
+`ifdef TOKSIM_I8W
+ // HBM-QINT8B (10-20): + the opt-in WIDE INT8 front (ot_hbm_sm_i8w_front, command mode 3, 128 codes/edge)
+ ot_hbm_accel_smh_attn #(.ENABLE_INT8(1),.INT8W(1)) sm(
+`else
+ ot_hbm_accel_smh_attn #(.ENABLE_INT8(1)) sm(
+`endif.clk(stream),.rst_n(srst),.command({cmd_ext,command}),.kv_desc(kv_desc),.packet(packet),
   .request(request),.xw_en(xw_en),.xw_addr(xw_addr),.xw_grp(xw_grp),.xw_data(xw_data),
   .rv(sm_rv),.rrow(rrow),.rdata(rdata),.fault(sm_fault),.schedule_fault(sm_sfault));
  // ---------------- checks / trace

@@ -38,6 +38,7 @@ rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_native_col.sv rtl/hbm_accel/sm/attn/ot_hbm_
 rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_tile.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_desc_static.sv
 rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv
 rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv rtl/hbm_accel/sm/static/ot_smh_static_int8.sv
+rtl/hbm_accel/sm/attn/ot_hbm_sm_i8w_front.sv
 rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv rtl/hbm_accel/sm/ot_hbm_accel_smh.sv rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv
 rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv rtl/hbm_accel/sm/ot_hbm_accel_stack.sv
 rtl/hbm_accel/sm/static/ot_smh_static_feed.sv rtl/hbm_accel/sm/static/ot_smh_static_front.sv
@@ -169,6 +170,52 @@ def qwen_block_programme(Gn, items, r0):
     return svg, xc, order, npk
 
 
+# HBM-QINT8B (10-20): TOKSIM_QWEN_MODE=int8w = the WIDE INT8 front (ot_hbm_sm_i8w_front, build define TOKSIM_I8W ->
+# ot_hbm_accel_smh_attn #(.INT8W(1)), command mode 3).  An op's R rows pair A = r, B = r + Rh (Rh = ceil(R / 2)); a block
+# = one wave of IL A-items x C8 t = 64 packed lines, ONE line an edge, each word reads its own line (no converter
+# offset, no svg mark) and carries A's command; low 64 codes = A (left side, x column 0), high = B (right, x column 4).
+QBLKW = S.IL
+
+
+def qwen_block_programme_w(Gn, items, r0):
+    order = [(items[s_][0], items[s_][1], t) if s_ < len(items) else None for t in range(S.C8) for s_ in range(S.IL)]
+    n = len(order)
+    svg, xc = [], []
+    for w, it in enumerate(order):
+        if it is not None:
+            r, g, t = it
+            rr = r - r0
+            c = S.MV.cmd_word(mode=3, valid=1, first=int(t == 0), last=int(t == S.C8 - 1), row=rr,
+                              glast=int(g == Gn - 1), slot=rr & 7, xaddr=g * S.C8 + t, pkt=1, pkt_tag=w)
+        else:
+            c = S.MV.cmd_word(mode=3, pkt=1, pkt_tag=w)
+        svg.append(S.svg_word(c & ((1 << 83) - 1), (w, w), retire=(w == n - 1)))
+        xc.append(c >> 83)
+    return svg, xc, order, n
+
+
+def codes_pair_w(W, order, p, Rh):
+    """packed line p = {codes of (B = A + Rh, g, t), codes of (A, g, t)}; mutant TOKSIM_I8MUT=halfswap swaps line 0."""
+    it = order[p]
+    if it is None:
+        return 0
+    r, g, t = it
+    K, R = W.shape[1], W.shape[0]
+    word = 0
+    for h, rr in enumerate((r, r + Rh)):
+        if rr >= R:
+            continue
+        for j in range(S.MV.LF):
+            k = (g * S.MV.LF + j) * S.C8 + t
+            if k < K:
+                word |= (int(W[rr, k]) & 0xFF) << (8 * j + 512 * h)
+    if I8MUT == "halfswap" and p == 0:
+        word = (word >> 512) | ((word & ((1 << 512) - 1)) << 512)
+    if I8MUT == "wbit" and p == 0:
+        word ^= 1
+    return word
+
+
 def codes_pair(W, order, p):
     """packed line p = {codes of slot 2p+1, codes of slot 2p} (qwen_sm_mv_unit.codes_line lane order)."""
     word = 0
@@ -208,7 +255,7 @@ def qwen_records(tags, seed):
     return out
 
 
-def compile_qwen(tags, seed=20261019):
+def compile_qwen(tags, seed=20261019, wide=False):
     from hbm_svc_packed136_image import sector_address
     import numpy as _np  # noqa: F401
     store = S.Store(S.ATT_RESERVED)
@@ -220,14 +267,22 @@ def compile_qwen(tags, seed=20261019):
     kd = dict(name="qwen", layer=0, d0=0, ops=[], exp={}, recs=recs)
     for r in recs:
         _, Gn, xw = S.MV.pack(0, r["W"].astype(np.float32), r["x"])
-        r.update(Gn=Gn, xw=xw, blocks=[])
-        items = [(rr, g) for rr in range(r["R"]) for g in range(Gn)]
-        for bi in range(0, len(items), QBLK):
-            it = items[bi:bi + QBLK]
+        Rh = -(-r["R"] // 2) if wide else r["R"]
+        if wide:
+            xw = [w | (w << (4 * S.MV.XC)) for w in xw]        # x in column 0 (rows A) and column 4 (rows B)
+        r.update(Gn=Gn, xw=xw, blocks=[], Rh=Rh, wide=wide)
+        items = [(rr, g) for rr in range(Rh) for g in range(Gn)]
+        for bi in range(0, len(items), QBLKW if wide else QBLK):
+            it = items[bi:bi + (QBLKW if wide else QBLK)]
             r0 = it[0][0]
-            svg, xc, order, npk = qwen_block_programme(Gn, it, r0)
-            pb, pl = store.add(svg, xc)
-            lines = [codes_pair(r["W"], order, p) for p in range(npk)]
+            if wide:
+                svg, xc, order, npk = qwen_block_programme_w(Gn, it, r0)
+                pb, pl = store.add(svg, xc)
+                lines = [codes_pair_w(r["W"], order, p, Rh) for p in range(npk)]
+            else:
+                svg, xc, order, npk = qwen_block_programme(Gn, it, r0)
+                pb, pl = store.add(svg, xc)
+                lines = [codes_pair(r["W"], order, p) for p in range(npk)]
             b = dict(k=r["k"], r0=r0, n_lines=npk, prog=(pb, pl), nwords=len(svg), lines=lines, head=bi == 0,
                      lstep=0, fmt=0, row_base=len(descs) * S.BSCALE, layer_stride=0, expert_stride=0, id_sel=0,
                      dram_row=len(descs) * S.BSCALE, desc_i=len(descs))
@@ -348,6 +403,8 @@ def compile_all(fix_root, smw_root, layers, mut=""):
         tags = os.environ.get("TOKSIM_QWEN_TAGS", "qkv").split("+")
         if os.environ.get("TOKSIM_QWEN_MODE", "bf16w") == "int8":
             return compile_qwen(tags)
+        if os.environ.get("TOKSIM_QWEN_MODE", "bf16w") == "int8w":
+            return compile_qwen(tags, wide=True)
         recs = qwen_bf16w_records(tags)
         lr = S.layer_records
         S.layer_records = lambda fix, smw: recs
@@ -359,6 +416,30 @@ def compile_all(fix_root, smw_root, layers, mut=""):
 
 
 S.compile_all = compile_all
+_check = S.check
+
+
+def check(c, res):
+    """int8w records: row tag r -> column 0 = acc[r], column 1 = acc[r + Rh] (qwen_sm_mv_unit.check_run_i8w)."""
+    recs = {(k["name"], r["k"]): r for k in c["kinds"] for r in k["recs"]}
+    if not any(r.get("wide") for r in recs.values()):
+        return _check(c, res)
+    import qwen_sm_mv_unit as QU
+    out, ok_all = [], True
+    ops = c["ops"]
+    for i, op in enumerate(ops):
+        r = recs[(op["layer"], op["k"])]
+        lo, hi = op["first_cmd_abs"], ops[i + 1]["first_cmd_abs"] if i + 1 < len(ops) else 1 << 40
+        e = dict(name="sm0", rows=list(range(r["R"])), Rh=r["Rh"], first_line=lo, window_end=hi)
+        ro, ok = QU.check_run_i8w([e], [x for x in res if lo <= x[0] < hi], r["acc"])
+        ro = ro[0]
+        out.append(dict(op, verdict=ro["verdict"], results=ro["results"], n_bad=ro["n_bad"], bad=ro["bad"][:4],
+                        n_missing=ro["n_missing"], span_first_cmd_to_last_result=ro["cycles_first_line_to_last_result"]))
+        ok_all &= ok
+    return out, ok_all
+
+
+S.check = check
 
 
 def main(argv=None):
