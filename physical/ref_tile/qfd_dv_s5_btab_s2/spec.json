@@ -1,0 +1,154 @@
+{
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "synth_keep_modules": [
+   "qfd_dv_s5_btab_sel_copy"
+  ]
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "children": [],
+ "inter": [],
+ "name": "qfd_dv_s5_btab_s2",
+ "top": "qfd_dv_s5_btab_safe",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "reset_ports": [],
+ "outline": {
+  "w": 280.8,
+  "h": 194.4
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?0?*u_m",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?1?*u_m",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?2?*u_m",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?3?*u_m",
+   "at": [
+    172.8,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "bt_re",
+   "bt_word",
+   "bt_q",
+   "ck"
+  ],
+  "W": [
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_data"
+  ],
+  "E": [],
+  "S": []
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "SRAM macro input registers and sixteen kept one-hot select captures register every read/write input; bt_q is the direct 256-bit capture flop Q. Zero added cycles, no resettable state."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "no reset port: pure data path (macros + capture flops, no state that outlives a word; valids live in the station)"
+ },
+ "job": {
+  "owner": "Codex:QW-SLICE6",
+  "branch": "codex/qw-slice6-t6-1020",
+  "tag": "btab-s2",
+  "purpose": "Structural successor: kept bounded one-hot read selection BEFORE capture, direct flop outputs, unchanged two-edge SRAM read age; no prior safe closure",
+  "extra_paths": [
+   "rtl/test/qwen_dv/s5/run_btab_safe.sh",
+   "rtl/test/qwen_dv/s5/tb_btab_safe.sv",
+   "rtl/test/full_sm_service/sram_models.sv",
+   "results/arch/qw_slice6_1019/btab_safe_1020"
+  ],
+  "benches": [
+   {
+    "name": "btab_safe_exact",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_btab_safe.sh {RUN}/btab pass",
+    "expect": "pass",
+    "pass_regex": "BTAB_EQ PASS",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "btab_safe_bankmut",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_btab_safe.sh {RUN}/btabm mutant",
+    "expect": "fail",
+    "fail_regex": "BTAB_EQ FAIL",
+    "fail_witness": "results/arch/qw_slice6_1019/btab_safe_1020/bench/run_mutant.log",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "fill_reason": {
+  "pin_bound": "1051 table-write pins on W require >=175.2 um; four SRAMs and continuous capture band set safe pin-bound outline; output pins occupy full N face."
+ }
+}
