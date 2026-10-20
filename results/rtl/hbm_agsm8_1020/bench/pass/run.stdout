@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+AGSM8_SEG 0 fire L+3 last_landing_write L+131 go L+132 (q0) lead 1
+AGSM8_SEG 1 fire L+132 last_landing_write L+260 go L+261 (q0) lead 1
+AGSM8_SEG 2 fire L+261 last_landing_write L+389 go L+390 (q0) lead 1
+AGSM8_SEG 3 fire L+390 last_landing_write L+518 go L+519 (q0) lead 1
+AGSM8_SEG 4 fire L+519 last_landing_write L+647 go L+648 (q0) lead 1
+AGSM8_SEG 5 fire L+648 last_landing_write L+776 go L+777 (q0) lead 1
+AGSM8_SEG 6 fire L+777 last_landing_write L+905 go L+906 (q0) lead 1
+AGSM8 PASS lanes=1 vm_rt=74 bank_rt=72 sp=129 span=128 segs=7 vm_words_checked=2128 xload_ok=28 reads=2016 writes=2128 train_launch_to_last_landing=905 launch_to_last_go=906
+AGSM8_CHAIN pass PASS (scenario 0 bit-exact + faults 1..4 caught)

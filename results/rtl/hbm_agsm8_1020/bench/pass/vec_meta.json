@@ -1,0 +1,54 @@
+{
+ "nseg": 7,
+ "R": 2,
+ "n": 2304,
+ "slice": 576,
+ "Bs": 18,
+ "Es": 1,
+ "F": 19,
+ "stride": 24,
+ "vm_rt": 74,
+ "sp": 129,
+ "sp_min": 129,
+ "span_fire_to_last_write": 128,
+ "fire_from_launch": 3,
+ "go_lat": 4,
+ "t_start": [
+  0,
+  129,
+  258,
+  387,
+  516,
+  645,
+  774
+ ],
+ "go_off": [
+  128,
+  257,
+  386,
+  515,
+  644,
+  773,
+  902
+ ],
+ "last_write_rel_launch": [
+  131,
+  260,
+  389,
+  518,
+  647,
+  776,
+  905
+ ],
+ "go_rel_launch": [
+  132,
+  261,
+  390,
+  519,
+  648,
+  777,
+  906
+ ],
+ "train_launch_to_last_landing": 905,
+ "separate_records_note": "7 records today: each its own CP dispatch + COLL wait; the census prices 260.2 each"
+}

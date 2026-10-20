@@ -1,0 +1,13 @@
+AGSM8_SEG 0 fire L+3 last_landing_write L+131 go L+132 (q0) lead 1
+AGSM8_SEG 1 fire L+131 last_landing_write L+259 go L+260 (q0) lead 1
+AGSM8_SEG 2 fire L+259 last_landing_write L+387 go L+388 (q0) lead 1
+AGSM8_SEG 3 fire L+387 last_landing_write L+515 go L+516 (q0) lead 1
+AGSM8_SEG 4 fire L+515 last_landing_write L+643 go L+644 (q0) lead 1
+AGSM8_SEG 5 fire L+643 last_landing_write L+771 go L+772 (q0) lead 1
+AGSM8_SEG 6 fire L+771 last_landing_write L+899 go L+900 (q0) lead 1
+AGSM8 unexpected fault gq1111 ra0000 rb0000 rs0000 ks0000
+AGSM8 FAIL errors=1
+- rtl/hbm_accel/generic/collective/p2p/tb_agsm8_chain.sv:355: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.120 s; speed 11.244 us/s
+- Verilator: cpu 0.120 s on 1 threads; allocated 14 MB

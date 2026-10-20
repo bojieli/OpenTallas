@@ -1,0 +1,10 @@
+batch {"AR": {"schedule": 876019.0, "token_cycles": 902285.5, "tok_s": 1330.0}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+interleave {"AR": {"schedule": 865596.1, "token_cycles": 891743.5, "tok_s": 1345.7}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+train_go {"AR": {"schedule": 849516.1, "token_cycles": 875479.7, "tok_s": 1370.7}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+go {"AR": {"schedule": 859804.1, "token_cycles": 885885.3, "tok_s": 1354.6}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+base_rb {"AR": {"schedule": 868624.7, "token_cycles": 894806.7, "tok_s": 1341.1}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+base {"AR": {"schedule": 868624.7, "token_cycles": 894806.7, "tok_s": 1341.1}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+ep_wait {"AR": {"schedule": 880391.0, "token_cycles": 906707.5, "tok_s": 1323.5}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+ep_static {"AR": {"schedule": 873338.2, "token_cycles": 899574.1, "tok_s": 1334.0}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+train_go_s129 {"AR": {"schedule": 853881.3, "token_cycles": 879894.8, "tok_s": 1363.8}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+batch_s129 {"AR": {"schedule": 878649.3, "token_cycles": 904945.9, "tok_s": 1326.0}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}

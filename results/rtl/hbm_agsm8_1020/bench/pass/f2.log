@@ -1,0 +1,35 @@
+AGSM8 VM q0 b0 unreserved read cyc189 sector 1080 (exp 0 0000)
+AGSM8 VM q1 b0 unreserved read cyc189 sector 3080 (exp 0 0000)
+AGSM8 VM q2 b0 unreserved read cyc189 sector 5080 (exp 0 0000)
+AGSM8 VM q3 b0 unreserved read cyc189 sector 7080 (exp 0 0000)
+AGSM8 VM q0 b0 unreserved read cyc190 sector 1088 (exp 0 0000)
+AGSM8 VM q1 b0 unreserved read cyc190 sector 3088 (exp 0 0000)
+AGSM8 VM q2 b0 unreserved read cyc190 sector 5088 (exp 0 0000)
+AGSM8 VM q3 b0 unreserved read cyc190 sector 7088 (exp 0 0000)
+AGSM8 VM q0 b0 unreserved read cyc192 sector 1090 (exp 0 0000)
+AGSM8 VM q0 b3 unreserved read cyc192 sector 1083 (exp 0 0000)
+AGSM8 VM q1 b0 unreserved read cyc192 sector 3090 (exp 0 0000)
+AGSM8 VM q1 b3 unreserved read cyc192 sector 3083 (exp 0 0000)
+AGSM8 VM q2 b0 unreserved read cyc192 sector 5090 (exp 0 0000)
+AGSM8 VM q2 b3 unreserved read cyc192 sector 5083 (exp 0 0000)
+AGSM8 VM q3 b0 unreserved read cyc192 sector 7090 (exp 0 0000)
+AGSM8 VM q3 b3 unreserved read cyc192 sector 7083 (exp 0 0000)
+AGSM8 VM q0 b0 unreserved read cyc193 sector 1098 (exp 0 0000)
+AGSM8 VM q0 b3 unreserved read cyc193 sector 108b (exp 0 0000)
+AGSM8 VM q1 b0 unreserved read cyc193 sector 3098 (exp 0 0000)
+AGSM8 VM q1 b3 unreserved read cyc193 sector 308b (exp 0 0000)
+AGSM8 FAULT PASS scenario=2 gq1111 ra0000 rb0000 ks0000 ld0000
+- rtl/hbm_accel/generic/collective/p2p/tb_agsm8_chain.sv:331: Verilog $finish
+AGSM8_SEG 0 fire L+3 last_landing_write L+-155 go L+132 (q0) lead 287
+AGSM8_SEG 1 fire L+132 last_landing_write L+151 go L+261 (q0) lead 110
+AGSM8_SEG 2 fire L+261 last_landing_write L+389 go L+390 (q0) lead 1
+AGSM8_SEG 3 fire L+390 last_landing_write L+518 go L+519 (q0) lead 1
+AGSM8_SEG 4 fire L+519 last_landing_write L+647 go L+648 (q0) lead 1
+AGSM8_SEG 5 fire L+648 last_landing_write L+776 go L+777 (q0) lead 1
+AGSM8_SEG 6 fire L+777 last_landing_write L+905 go L+906 (q0) lead 1
+AGSM8 unexpected fault gq1111 ra0000 rb0000 rs0000 ks0000
+AGSM8 FAIL errors=1189
+- rtl/hbm_accel/generic/collective/p2p/tb_agsm8_chain.sv:355: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.120 s; speed 11.322 us/s
+- Verilator: cpu 0.120 s on 1 threads; allocated 14 MB
