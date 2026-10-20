@@ -3,7 +3,7 @@
  "block": "qkd_hr_cdc_pc",
  "ref_tile": true,
  "owner": "CLAUDE:KV-HOST3",
- "purpose": "KV-HOST3 PG re-close of CLOSED qkd_hr_cdc_pc-c3-50430b600 (pg_binding: native PG terminals unbound by the old hold ECO); same RTL/outline",
+ "purpose": "HOST root cluster r2 child qkd_hr_cdc_pc (pre-route gate + route; parent qkd_host_root is CRITICAL)",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {

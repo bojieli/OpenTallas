@@ -68,6 +68,17 @@
      "macros": [],
      "name": "qkd_hr_cdc_pc",
      "params": {},
+     "pin_regs": {
+      "clock": "ck_core",
+      "enable": true,
+      "exclude": "^(u_rank__d_ccr|u_rank__u_phy__pad_d|u_rank__u_phy__pad_v|service_faults_phy|u_rank__d_cd|u_rank__d_cv|u_rank__u_phy__pad_cr)$",
+      "reason": "multi-family CDC leaf (core/phy): the recipe-3 pin register is single-clock, so core-family pins are registered on ck_core and the phy-family pins (u_rank__d_ccr, u_rank__u_phy__pad_d, u_rank__u_phy__pad_v, service_faults_phy, u_rank__d_cd, u_rank__d_cv, u_rank__u_phy__pad_cr) are excluded: their faces are the RTL credit channels of that family",
+      "reset": "^(host_rst_n)$"
+     },
+     "reset_landing": {
+      "enable": true,
+      "stages": 2
+     },
      "sources": [
       "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc.v",
       "rtl/lib/ot_async_fifo.sv",
@@ -78,15 +89,19 @@
      "top": "qkd_hr_cdc_pc"
     },
     "tool": {
-     "cdc_sync_constraints.py": "a19cd09032f4060592af8e1590392e673095e686a15c75f0d041018de7bceb22",
-     "clock_entry_constraints.py": "50e48bf7b88c5540f38b60ba9118bb34f0c319897b5769a3dbd37d413fb604ea",
-     "gray_fifo_cdc_constraints.py": "e281f191526d4ffdcb9ab927607fe878679d04a5659b1e39d98f9166fe0a62d3"
+     "cdc_sync_constraints.py": "dbad0153f6038fb22766740110007f16e781ff3b5b7fe206ec59a4173da51506",
+     "clock_entry_constraints.py": "d782579180eda6d032dc25cec1ceba9a56da00d0b28825468ce459a9e37d5464",
+     "gray_fifo_cdc_constraints.py": "e281f191526d4ffdcb9ab927607fe878679d04a5659b1e39d98f9166fe0a62d3",
+     "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
+    },
+    "tool_data": {
+     "physical/common_flow/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78"
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-19T04:37:23-0700",
-   "host": "ot-epyc7",
-   "key": "1f4a9b8a7e9b8d34c36ba9f0bf9efcc27dc9b73d8c4bc2f0f040f75aa403a54a",
+   "created": "2026-10-19T22:09:19-0700",
+   "host": "ot-epyc5",
+   "key": "45dc54b280b0209617468f08979b9863a64eee261131806a5badca580c948d50",
    "record": {
     "counts": {
      "consumer": 0,
@@ -66299,7 +66314,7 @@
      "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc.v": "0a8ab591ce02a7348ba8f2db5d710d931ddeb1bb150fc7091b78e5ce7280cb9b"
     }
    },
-   "seconds": 15
+   "seconds": 50
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
