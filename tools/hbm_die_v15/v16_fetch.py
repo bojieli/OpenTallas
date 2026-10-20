@@ -122,7 +122,8 @@ def expected_memory_macros(commit):
     root = Path(__file__).resolve().parents[2]
     result = subprocess.run(['git', '-C', str(root), 'grep', '-n', '-E',
                              r'module[[:space:]]+[A-Za-z_]', commit, '--',
-                             ':(glob)physical/asap7_memory_macros_v2/*/*_bb.v'],
+                             ':(glob)physical/asap7_memory_macros_v2/*/*_bb.v',
+                             ':(glob)physical/asap7_memory_macros/*/*_bb.v'],
                             capture_output=True, text=True)
     if result.returncode not in (0, 1):
         raise ValueError('Cannot resolve expected mapped memory definitions from Git')

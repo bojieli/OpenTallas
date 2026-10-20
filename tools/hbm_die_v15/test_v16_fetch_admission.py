@@ -11,6 +11,17 @@ from v16_fetch import REMOTE_PY, check_direct_master, check_sources, check_etm_s
 
 
 class FetchAdmission(unittest.TestCase):
+    def test_first_generation_p192_simulation_array_is_refused(self):
+        module = 'ot_sram_1r1w_128x64_m1_p192'
+        catalog = expected_memory_macros('HEAD')
+        canonical = catalog[module]
+        self.assertEqual(canonical, 'physical/asap7_memory_macros/' + module + '/' + module + '_bb.v')
+        simulation = canonical[:-len('_bb.v')] + '.v'
+        blob = ('module ' + module + '; reg [63:0] arr[0:127]; endmodule').encode()
+        with self.assertRaisesRegex(ValueError, 'Mapped memory .* resolves to'):
+            check_mapped_memory_resolution(dict(actual_macro_declarations=[],actual_library_reads=[],source_file_sha256={}),
+                                           {simulation: blob}, catalog)
+
     def test_current_contract_membership_and_parameter_binding(self):
         entry = dict(representative='a', instances=['a', 'b'], master='M', params={'N': 2})
         instance = dict(master='M', params={'N': 2},
