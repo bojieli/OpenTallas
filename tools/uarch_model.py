@@ -17407,3 +17407,55 @@ QWEN_VM_RO6_PIN_E3_COMPOSITION_1016 = dict(
     parent_clock_ff_before=55382, parent_clock_ff_after=12198,
     unmapped_memory_bits=80, all_leaf_clocks=2571, additional_edges=0,
     SU_VL=20, row_RL=18, compiler_adopted=False, physical_qualified=False)
+
+
+def s81_svc7_hgrp_native_candidate_model():
+    """Conservative source-sized candidate; no physical/performance admission.
+
+    The measured hgrp_ns maps 3196 drivers above32 loads. Preserve the
+    golden eight-product left fold and four-chunk binary tree. Partitioning
+    alone does not cure the existing FP arithmetic's internal control loads.
+    A bit-cone arithmetic probe measures whether independent kept cones
+    actually meet32 before committing the full parent to that implementation.
+    """
+    return dict(
+        status="pre-synthesis candidate; NOT adopted",
+        measured_base=dict(std_um2=85061.950740, flops=90823,
+                           over32_drivers=3196, core_latency_edges=42),
+        heads=4, chunks_per_head=4, products_per_chunk=8,
+        products_per_edge=128, products_per_engine_edge=16*128,
+        fp_adds_per_group=4*(4*7+3),
+        arithmetic_order="each chunk left-fold8; chunk sums binary tree4",
+        stationary_bits_per_chunk=5*8*16,
+        stationary_bits_per_group=4*4*5*8*16,
+        skew_policy="replace every delay>=3 with synchronous SRAM ring",
+        skew_rings_per_chunk=6,
+        provisional_macro="ot_sram_1r1w_32x64_m1",
+        provisional_skew_macros_per_group=4*4*6,
+        provisional_skew_macro_um2=4*4*6*31.968*17.28,
+        arithmetic_probe=dict(
+            master="ot_s81svc7_add_bit", replicated_output_cones=35,
+            function="existing fp32 add, CUTS101010, one selected result bit",
+            input_registered_edges=2, output_registered=True,
+            old_add_edges=4, candidate_add_edges=6,
+            upper_area_multiplier=35,
+            area_status="measure mapped retained cones; bound is pessimistic"),
+        candidate_core_latency_edges=8+7*6+2*6,
+        candidate_group_latency_edges=2+(8+7*6+2*6)+1,
+        old_group_latency_edges=2+42+1,
+        provisional_added_edges=20,
+        candidate_latency_note="mul8/add6 budget only; SRAM capture must be composed",
+        boundary_bits=dict(chunk_load=8*16, chunk_operand=8*18,
+                           chunk_result=33, head_result=33),
+        floorplan=dict(chunk_um=[259.2,259.2],
+                       aspect=1, utilization_target=[0.4,0.6],
+                       one_hop_reach_um=405, max_pins_per_um=6,
+                       chunk_pin_face_capacity=259.2*6,
+                       status="provisional envelope; resize from native synthesis"),
+        obligations=["all35 add output cones native<=32",
+                     "mul and dequant native<=32",
+                     "reset equal-age regional leaves<=32",
+                     "all pins registered; no functional ties",
+                     "SRAM skew golden offset and production period1",
+                     "compile measured added edges before adoption"],
+        physical_qualified=False, compiler_adopted=False)
