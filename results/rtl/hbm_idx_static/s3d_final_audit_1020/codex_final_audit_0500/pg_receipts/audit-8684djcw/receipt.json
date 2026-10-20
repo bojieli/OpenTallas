@@ -1,0 +1,83 @@
+{
+  "binding_scope": "native_master_pg_terminal_binding_only",
+  "checked": 12318,
+  "container_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "domain_rules_sha256": "5b77fdd21e4f39efb2ddf8605985ee3fd6f33bc531e3b0c71d9f622010bd56cc",
+  "failure_count": 0,
+  "input_odb": "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/routes/hidx_sel_s3d_a_s3da_db0cdd31d/work/orfs/results/asap7/opentallas_ot_hidx_s3_ctl_asap7_ref_hidx_sel_s3d_a_s3da_db0cdd31d/base/6_final.odb",
+  "input_spef": "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/routes/hidx_sel_s3d_a_s3da_db0cdd31d/work/orfs/results/asap7/opentallas_ot_hidx_s3_ctl_asap7_ref_hidx_sel_s3d_a_s3da_db0cdd31d/base/6_final.spef",
+  "native_audit": "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/codex_final_audit_0500/pg_receipts/audit-8684djcw/native_audit.json",
+  "native_audit_sha256": "e6955d2131feabe7ec6e33ac38b7a9e8db6ebc50d3b03a9e011444c7fc8ca61f",
+  "native_exit": 0,
+  "native_result": {
+    "block": "ot_hidx_s3_ctl",
+    "checked": 12318,
+    "domain_rules": [
+      {
+        "inst_pattern": ".*",
+        "net": "VDD",
+        "pin_pattern": "^VDD$",
+        "region": "",
+        "role": "POWER"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VDD",
+        "pin_pattern": "^VDDCE$",
+        "region": "",
+        "role": "POWER"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VDD",
+        "pin_pattern": "^VDDPE$",
+        "region": "",
+        "role": "POWER"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VSS",
+        "pin_pattern": "^VSS$",
+        "region": "",
+        "role": "GROUND"
+      },
+      {
+        "inst_pattern": ".*",
+        "net": "VSS",
+        "pin_pattern": "^VSSE$",
+        "region": "",
+        "role": "GROUND"
+      }
+    ],
+    "failure_count": 0,
+    "failures": [],
+    "instance_count": 6159,
+    "mapping_error": "",
+    "pg_master_count": 64,
+    "regions": [],
+    "roles": {
+      "GROUND": 6159,
+      "POWER": 6159
+    },
+    "schema": "native_pg_audit.v1",
+    "status": "PASS"
+  },
+  "odb_sha256": "5612d74ede2a09f93dc81f91abc4f4b3e3d2e7d779b0a96a4e8ebe0d770bcc78",
+  "openroad_sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+  "parasitic_model": "routed_extracted",
+  "parasitic_qualification": "source_output_pair_hash_binding_not_independent_rc_equivalence",
+  "roles": {
+    "GROUND": 6159,
+    "POWER": 6159
+  },
+  "schema": "opentallas.native_pg_receipt.v1",
+  "source_dependencies": {
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/codex_final_audit_0500/physical/common_flow/audit_native_pg.tcl": "5039f7899aee4140b5160ced4bc9792096d854b4edbb57d93184f268441d2a2a",
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/codex_final_audit_0500/physical/common_flow/native_pg_binding.tcl": "ecc2257f9b66cb0f6087712304151411efd1c51a7bf3c0635979c6878af13fb8",
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/codex_final_audit_0500/tools/closure_loop/pg_receipt.py": "62540384f484100a7b37e7f4942cc65009de78395981d78439855ca23ab9edfe"
+  },
+  "spef_design": "ot_hidx_s3_ctl",
+  "spef_sha256": "23a9bc31e1d86b05ce028fb6a6f093fbc9794acfb3f703952aa759564a01d267",
+  "status": "PASS",
+  "transaction": "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/codex_final_audit_0500/pg_receipts/audit-8684djcw"
+}

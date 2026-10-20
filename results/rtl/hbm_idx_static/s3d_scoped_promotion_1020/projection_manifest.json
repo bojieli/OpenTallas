@@ -1,0 +1,842 @@
+{
+  "schema": "opentallas.s3d.scoped_immutable_promotion.v1",
+  "base": "dd875958b",
+  "source": "db0cdd31da20bb8fc7ba0a97c21c360853c4c295",
+  "record": "bae6465e5959de56b158fd4956b2caf52174fa18",
+  "record_paths_sha256": {
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/abstract.json": "f4fc65c142efd39e839b6438f7e6af9fda2c0ae2f7815b858e69fc5d3a38a6c4",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/child_lint.json": "c0e407d3f876b57590cb810b089cf5838667a0b09a7ad7aaed36b9d159a96121",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/export_ff.log": "53bafff546dd699e3590029f234a66e0c61783953649233591be5178594234be",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/export_ff.tcl": "eab0c1fbeb11702c908d75e985fe51126111d2a016d67096a250065232fd159c",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/export_ss.log": "ed016c3064c4774f1c84b30fdbb510a7060215769d3d2490481e1ffc96696eac",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/export_ss.tcl": "1df966553b1385736aa019b2185292495877d49bf1c9b6db9383fedc8aaff634",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/export_tt.log": "dfe301483499a0b1bd977d1cdc99241409519e637bde059a80320885188e3586",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/export_tt.tcl": "9bac40de80b3f85e04d377986fc6263e47e8c76092dc64bb43e69328fa6f1188",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/insertion.json": "4a4fc21d692c62cb58c43bf0540138b492d72dfa36af5daa8f1e8fe65e727952",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/ot_hidx_s3_ctl.lef": "bcda92519fe6a7167bfeb443b69c23ab45fc58361fa55bf465c1a9f12e37d93f",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/ot_hidx_s3_ctl_ff.lib": "53531aaba8ebe3560907cdc842a4ee64467579043f3f59cfbbca1c5e758a9d68",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/ot_hidx_s3_ctl_ss.lib": "00399c1ccf7730e974496eb64d36287abc02c8fe643c2391bf82908a47396f29",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/ot_hidx_s3_ctl_tt.lib": "093ce17a3045a8f87683b1dc14514356a341a8c6f4e33810db6927780e35b2e2",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/provenance/abstract_pin_stub.json": "900d99857750df8cf5b61bd6922b64c235e81521cb3a0b3f3db7ed356dc25b7c",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/provenance/raw/ot_hidx_s3_ctl.lef": "ff63ae8b68c2fcf01316e40a9ef6ec3a97873aec9615d877a6104bdd073dff89",
+    "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl/provenance/view_export.abstract.json": "16ee91d02b8073c4b00d930853ecd3f40c2de704558dec2b646f1c6a175f5a6c",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_s3_fan32_equiv_c6.log": "5c6c201aa06db41049cda9e5769537a6643ed55ac245afcd1955afae6bc7bc40",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_s3_fan32_equiv_d1.log": "fd403df4ae916dd558593dc68930bc35583d437393deb30df275794f3c51a101",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_s3_fan32_equiv_d3.log": "cd98745517995c848679e514af976b92970b62a6e74de1a25f5fb0713f8dcc95",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_s3_fan32_equiv_d5.log": "06d849429e98f8c36abb45ca424f0bf7415185ad2a0ea0b68a6b2c36fdbb2b6e",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_d1.log": "615c7a6813bfa703ca88948d9267c8201396800bbd51916d675fef55688fdb2a",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_d3.log": "a3f8a2de6c49d2ad54ca700de00ea3fda4ff1030da1b60d4bdbcad25baf93049",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_d5.log": "5f7c96d7209f88ba469d3177ee2eb15dce16fb79df2353937af8c9d5b6366bbe",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_d6.log": "77aa55a8f11c11db41256e43a5e1d2a524e0531eb90ebc7c0374ab58a68fcdef",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_dr3.log": "7e41aa2208aa4dbade5ebee2f2b135f39f26e5795577d658b74b5a3d92a9e9ef",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_l1.log": "95de2221041432966afb511658fc49981a99cf891ad59df6edb50924ee28e17a",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_l2.log": "e6b7295ea741c7326a802a40193e30855ec41ba58b4d5c30ef205ba5b9ba130c",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_rt7.log": "3cecdab0e86a929e2c6c070501991814652063894d2eb95a1dfdf14581855833",
+    "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/verdict.json": "54856c161af7dac4d6466a92387c0ddda6b93335b4350d0f32d23a7edc1615e5",
+    "results/rtl/ref_tile/hidx_sel_s3d_a/hidx_sel_s3d_a-s3da-99938559c/STATUS": "8d6822dd7f18e4b280bb0825b3e103f309590ad2120674cd7b5c72ede2b74a12",
+    "results/rtl/ref_tile/hidx_sel_s3d_a/hidx_sel_s3d_a-s3da-99938559c/corner_sta.json": "6ff6dc851e9755459419c66901e1c2d1444c836f46a15c4a965ddd4bf4b06cf1",
+    "results/rtl/ref_tile/hidx_sel_s3d_a/hidx_sel_s3d_a-s3da-99938559c/export.log": "e70291abe1f386d7e8b9bcf0d3e7db666be469a0d2624c28a8c597dab97f7d7a",
+    "results/rtl/ref_tile/hidx_sel_s3d_a/hidx_sel_s3d_a-s3da-99938559c/signoff.sdc": "c0be77a71eb2da5dfc153f0eaf669d99df4c9a331aa6f0462fd47a465e29a760",
+    "results/rtl/ref_tile/hidx_sel_s3d_a/hidx_sel_s3d_a-s3da-99938559c/status": "5bb5d9867f9a86488fa0e9746a35929b9294e1e9cb29b209c5d9fbf3d1661d12"
+  },
+  "exact_record_path_count": 34,
+  "source_files": {
+    "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv": {
+      "sha256": "9f9ca973102d2dc88532cabbb4eedf3013e33d8e096a55076614c6cc5d0d1fc5",
+      "git_blob": "68889004151ad88c6a6f804e14eb6b7b87d13c3b"
+    },
+    "rtl/lib/ot_rst_relay.sv": {
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "git_blob": "0259a926697bf544c4456016d1d475a2ae542e34"
+    }
+  },
+  "constant_output_bits": [],
+  "source_constant_output_review": "No exported output bit is mapped constant; exact set empty, hence no reserved field/stub exemption is claimed. Source outputs cw14,thr16,ties4x14,fault1 =87 registered functional bits.",
+  "native_constant_cell_functions": [
+    {
+      "instance": "u_ot_pr_core.d_go\\[0\\]$_DFF_PN0__3",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net2"
+    },
+    {
+      "instance": "u_ot_pr_core.b_v$_DFF_PN0__2",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net1"
+    },
+    {
+      "instance": "u_ot_pr_core.b_clr$_DFF_PN0__1",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net"
+    },
+    {
+      "instance": "u_ot_pr_core.d_go\\[1\\]$_DFF_PN0__4",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net3"
+    },
+    {
+      "instance": "u_ot_pr_core.d_go\\[2\\]$_DFF_PN0__5",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net4"
+    },
+    {
+      "instance": "u_ot_pr_core.d_go\\[3\\]$_DFF_PN0__6",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net5"
+    },
+    {
+      "instance": "u_ot_pr_core.fault$_DFF_PN0__7",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net6"
+    },
+    {
+      "instance": "u_ot_pr_core.found$_DFF_PN0__8",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net7"
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[0\\]$_DFF_PN0__9",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net8"
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[1\\]$_DFF_PN0__10",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net9"
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[2\\]$_DFF_PN0__11",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net10"
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[3\\]$_DFF_PN0__12",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net11"
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[4\\]$_DFF_PN0__13",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net12"
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[5\\]$_DFF_PN0__14",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net13"
+    },
+    {
+      "instance": "u_ot_pr_core.out5\\[6\\]$_DFF_PN0__15",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net14"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[0\\]$_DFFE_PN0P__16",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net15"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[10\\]$_DFFE_PN0P__17",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net16"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[11\\]$_DFFE_PN0P__18",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net17"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[12\\]$_DFFE_PN0P__19",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net18"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[13\\]$_DFFE_PN0P__20",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net19"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[1\\]$_DFFE_PN0P__21",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net20"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[2\\]$_DFFE_PN0P__22",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net21"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[3\\]$_DFFE_PN0P__23",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net22"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[4\\]$_DFFE_PN0P__24",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net23"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[5\\]$_DFFE_PN0P__25",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net24"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[6\\]$_DFFE_PN0P__26",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net25"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[7\\]$_DFFE_PN0P__27",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net26"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[8\\]$_DFFE_PN0P__28",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net27"
+    },
+    {
+      "instance": "u_ot_pr_core.rank_left\\[9\\]$_DFFE_PN0P__29",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net28"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[0\\]$_DFFE_PN0P__30",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net29"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[10\\]$_DFFE_PN0P__31",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net30"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[11\\]$_DFFE_PN0P__32",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net31"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[12\\]$_DFFE_PN0P__33",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net32"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[13\\]$_DFFE_PN0P__34",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net33"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[14\\]$_DFFE_PN0P__35",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net34"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[15\\]$_DFFE_PN0P__36",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net35"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[1\\]$_DFFE_PN0P__37",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net36"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[2\\]$_DFFE_PN0P__38",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net37"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[3\\]$_DFFE_PN0P__39",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net38"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[4\\]$_DFFE_PN0P__40",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net39"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[5\\]$_DFFE_PN0P__41",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net40"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[6\\]$_DFFE_PN0P__42",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net41"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[7\\]$_DFFE_PN0P__43",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net42"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[8\\]$_DFFE_PN0P__44",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net43"
+    },
+    {
+      "instance": "u_ot_pr_core.thr\\[9\\]$_DFFE_PN0P__45",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net44"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[0\\]$_DFFE_PN0P__46",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net45"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[10\\]$_DFFE_PN0P__47",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net46"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[11\\]$_DFFE_PN0P__48",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net47"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[12\\]$_DFFE_PN0P__49",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net48"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[13\\]$_DFFE_PN0P__50",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net49"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[1\\]$_DFFE_PN0P__51",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net50"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[2\\]$_DFFE_PN0P__52",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net51"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[3\\]$_DFFE_PN0P__53",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net52"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[4\\]$_DFFE_PN0P__54",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net53"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[5\\]$_DFFE_PN0P__55",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net54"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[6\\]$_DFFE_PN0P__56",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net55"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[7\\]$_DFFE_PN0P__57",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net56"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[8\\]$_DFFE_PN0P__58",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net57"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_0\\[9\\]$_DFFE_PN0P__59",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net58"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[0\\]$_DFFE_PN0P__60",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net59"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[10\\]$_DFFE_PN0P__61",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net60"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[11\\]$_DFFE_PN0P__62",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net61"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[12\\]$_DFFE_PN0P__63",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net62"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[13\\]$_DFFE_PN0P__64",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net63"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[1\\]$_DFFE_PN0P__65",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net64"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[2\\]$_DFFE_PN0P__66",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net65"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[3\\]$_DFFE_PN0P__67",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net66"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[4\\]$_DFFE_PN0P__68",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net67"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[5\\]$_DFFE_PN0P__69",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net68"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[6\\]$_DFFE_PN0P__70",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net69"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[7\\]$_DFFE_PN0P__71",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net70"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[8\\]$_DFFE_PN0P__72",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net71"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_1\\[9\\]$_DFFE_PN0P__73",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net72"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[0\\]$_DFFE_PN0P__74",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net73"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[10\\]$_DFFE_PN0P__75",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net74"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[11\\]$_DFFE_PN0P__76",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net75"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[12\\]$_DFFE_PN0P__77",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net76"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[13\\]$_DFFE_PN0P__78",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net77"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[1\\]$_DFFE_PN0P__79",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net78"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[2\\]$_DFFE_PN0P__80",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net79"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[3\\]$_DFFE_PN0P__81",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net80"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[4\\]$_DFFE_PN0P__82",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net81"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[5\\]$_DFFE_PN0P__83",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net82"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[6\\]$_DFFE_PN0P__84",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net83"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[7\\]$_DFFE_PN0P__85",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net84"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[8\\]$_DFFE_PN0P__86",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net85"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_2\\[9\\]$_DFFE_PN0P__87",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net86"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[0\\]$_DFFE_PN0P__88",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net87"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[10\\]$_DFFE_PN0P__89",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net88"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[11\\]$_DFFE_PN0P__90",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net89"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[12\\]$_DFFE_PN0P__91",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net90"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[13\\]$_DFFE_PN0P__92",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net91"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[1\\]$_DFFE_PN0P__93",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net92"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[2\\]$_DFFE_PN0P__94",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net93"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[3\\]$_DFFE_PN0P__95",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net94"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[4\\]$_DFFE_PN0P__96",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net95"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[5\\]$_DFFE_PN0P__97",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net96"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[6\\]$_DFFE_PN0P__98",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net97"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[7\\]$_DFFE_PN0P__99",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net98"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[8\\]$_DFFE_PN0P__100",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net99"
+    },
+    {
+      "instance": "u_ot_pr_core.ties_3\\[9\\]$_DFFE_PN0P__101",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net100"
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[0\\]$_DFF_PN0__102",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net101"
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[1\\]$_DFF_PN0__103",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net102"
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[2\\]$_DFF_PN0__104",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net103"
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[3\\]$_DFF_PN0__105",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net104"
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[4\\]$_DFF_PN0__106",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net105"
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.rst_n\\[5\\]$_DFF_PN0__107",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net106"
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.sync_q\\[0\\]$_DFF_PN0__108",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net107"
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.sync_q\\[0\\]$_DFF_PN0__109",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net108"
+    },
+    {
+      "instance": "u_ot_pr_core.u_rr.sync_q\\[1\\]$_DFF_PN0__110",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net109"
+    },
+    {
+      "instance": "u_ot_pr_core.z_clr$_DFF_PN0__111",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "pin": "H",
+      "function": "1",
+      "net": "net110"
+    }
+  ],
+  "clock_source_review": "Source ot_hidx_s3_ctl and ot_rst_relay sequential blocks use posedge clk. Parent source port clk feeds relay clk directly; actual pinned-Liberty clock pins466/466 reached from actual clk port through complete unary connectivity. Source has no other clock port or combinational/generated-clock assignment.",
+  "native_clock_pins_total": 466,
+  "native_clock_pins_reached": 466,
+  "top_pin_bits": 217,
+  "functional_output_bits": 87,
+  "data_input_bits": 128,
+  "storage": "No SRAM, ROM, latch or private array in this ctl tile. Stateful source registers retained and checked by pinned behavioral/mutant receipts; parent quadrants not adopted.",
+  "qualification_scope": "Exact immutable child view; no parent bind, age model, rate or source-helper adoption."
+}
