@@ -1,0 +1,103 @@
+{
+ "scope": "PLANNED bounded station boxes against actual phase-declared closed LEF rectangles; no placed proof or current real-XS child binding",
+ "source": "364f635c3",
+ "latency": "+2 result edges vs legacy -> gout+5",
+ "registered_stages_north": 4,
+ "storage": "four100b distributed physical reach relays, with196um+ Y separation; NOT co-located temporal padding; total400b, +100b vs prior+1. G1 computes capture/mask/OR,254FF per leaf (+96mask+2valid/fault vs prior156)",
+ "stations": [
+  {
+   "name": "pin_capture",
+   "box": [
+    181.44,
+    810.8,
+    228.96,
+    820.8
+   ],
+   "bits": 100,
+   "macro_overlaps": []
+  },
+  {
+   "name": "u_v2/u_d2",
+   "box": [
+    270,
+    596,
+    330,
+    604
+   ],
+   "bits": 100,
+   "macro_overlaps": []
+  },
+  {
+   "name": "u_v3/u_d3",
+   "box": [
+    270,
+    316,
+    330,
+    324
+   ],
+   "bits": 100,
+   "macro_overlaps": []
+  },
+  {
+   "name": "u_v4/u_d4",
+   "box": [
+    330,
+    136,
+    390,
+    144
+   ],
+   "bits": 100,
+   "macro_overlaps": []
+  },
+  {
+   "name": "S_output_pin",
+   "box": [
+    423.36,
+    0,
+    453.6,
+    0
+   ],
+   "bits": 100,
+   "macro_overlaps": []
+  }
+ ],
+ "hops": [
+  {
+   "from": "pin_capture",
+   "to": "u_v2/u_d2",
+   "max_manhattan_um": 373.35999999999996
+  },
+  {
+   "from": "u_v2/u_d2",
+   "to": "u_v3/u_d3",
+   "max_manhattan_um": 348
+  },
+  {
+   "from": "u_v3/u_d3",
+   "to": "u_v4/u_d4",
+   "max_manhattan_um": 308
+  },
+  {
+   "from": "u_v4/u_d4",
+   "to": "S_output_pin",
+   "max_manhattan_um": 267.6
+  }
+ ],
+ "additional_g1_bank": {
+  "box": [
+   270,
+   136,
+   330,
+   144
+  ],
+  "bits": 254,
+  "note": "exact mapped FF count pending; macrochannels21.52um below/28.8um above"
+ },
+ "obligations": [
+  "native32 all drivers incl reset",
+  "fulllegacy+5 exact",
+  "full placed allnet reach",
+  "new real XS475.2-wide successor reframe",
+  "critical geometry/phase review before layout gate"
+ ]
+}
