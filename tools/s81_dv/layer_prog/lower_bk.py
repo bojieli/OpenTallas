@@ -58,6 +58,16 @@ FWD = 2                   # ot_dsdv_vstop forward: 2 flops (input, output)
 PIN_TO_PIN = RELAY + FWD - 1   # bench edge convention (value sampled at edge e -> vo after edge e + 2), measured
 K_MAX = 512
 TAIL_BUDGET = 640         # edges from the last ingress beat at the vi pin to the drain window's first slot (bench-asserted)
+# S81-RATEFIX 10-19: the FINAL select's own worst-case tail (4 x <= 512 candidates, k <= 512: every quarter holds <= 32
+# lines at pass 2 / pass 3 / emit, so the native tail ~60 + NL2 + NL3 + NLo is bounded by the 512-in-one-quarter case).
+# Measured on the successor quarter RTL (INDEXED13 + FIFO_SRAM + P192 + SUCC + RST64 + FAN32, Verilator 5.050): the
+# drain-window sweep results/arch/s81_ratefix_topk_1019 (real L20, ties, all-in-one-quarter -inf and zeros) passes down
+# to TAIL_FINAL_MIN; TAIL_FINAL = that + TAIL_FINAL_MARGIN.  The 640 budget stays for topk_local / split jobs.
+# Sweep (tail_sweep / tail_sweep2, ot-epyc9 10-19): real L20 passes at 240 (fails 220), ties at 220 (fails 200),
+# all-in-one-quarter -inf / zeros at 260 (fail 240) -> worst case 260.
+TAIL_FINAL_MIN = 260
+TAIL_FINAL_MARGIN = 16
+TAIL_FINAL = TAIL_FINAL_MIN + TAIL_FINAL_MARGIN   # 276 (was TAIL_BUDGET 640: -364 edges per final select)
 MAX_WORDS = 512 // 16 + 4 + 1   # worst-case egress words of one segment: sum_q ceil(sel_q / 16) <= 32 + 4, + DONE
 D_DRAIN = 1               # drain CTL extra delay d: d[1:0] != 0 keeps the slices' target field >= 8
 BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_bk'
@@ -273,7 +283,7 @@ def expected_words(sel_per_q, keys_of, tag, boot_done=True):
 
 
 def plan_select(keys_lanes, pos_lanes, bases, k, tag, t0, sparse=False, boot_done=True, ik=4, ek=5, uid=0x5B,
-                lanes=None, avail=None):
+                lanes=None, avail=None, tail=None):
     """the whole bk_sel job: ingress beats, drain CTL, expected egress beats at vo_s (bench / replay timing).
     lanes: pre-built lane words (append jobs); avail: ingress pacing (see ingress_schedule)"""
     if lanes is None:
@@ -300,7 +310,7 @@ def plan_select(keys_lanes, pos_lanes, bases, k, tag, t0, sparse=False, boot_don
     n = 2 * (MAX_WORDS + (1 if boot_done else 0))
     assert n <= 255
     # window: first slot at the vo_s pin edge W0 = t_last + TAIL_BUDGET; the CTL leaves vo_s at W0 - LW - d
-    w0 = t_last + TAIL_BUDGET
+    w0 = t_last + (TAIL_BUDGET if tail is None else tail)
     c_vo = w0 - LW - D_DRAIN
     c_vi = c_vo - PIN_TO_PIN                      # the CTL beat at the vi_n pin (southbound: relay u_rn + vstop)
     p = drain_payload(uid, n, D_DRAIN)
@@ -412,8 +422,10 @@ def job_topk_final(fx, t0=100, tag=0x22, boot_done=False, mut=None, k_dies=1, in
     if mut:
         kl = mut(kl, pl, np.sort(load_op(fx, 'attn.idx.topk_final')))
     lanes = [lane_words_indexed13(kl[q], pl[q], bases[q], k, q, tag) for q in range(4)] if indexed13 else None
-    plan = plan_select(kl, pl, bases, k, tag, t0, sparse=True, boot_done=boot_done, lanes=lanes)
+    tail = TAIL_FINAL if (indexed13 and k_dies == 1) else TAIL_BUDGET
+    plan = plan_select(kl, pl, bases, k, tag, t0, sparse=True, boot_done=boot_done, lanes=lanes, tail=tail)
     plan['indexed13'] = bool(indexed13)
+    plan['tail_budget'] = tail
     gold = np.sort(load_op(fx, 'attn.idx.topk_final'))
     plan['golden_ok'] = bool(np.array_equal(np.asarray(plan['selection']), gold)) and \
         (closure is None or all(closure.values()))
