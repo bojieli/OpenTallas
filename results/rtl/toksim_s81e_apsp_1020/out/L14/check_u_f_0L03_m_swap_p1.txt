@@ -1,0 +1,5 @@
+MISMATCH edge 402 row 1 lo 0 k 0 got 3bdf7268/0 want 3b65d36c/0
+MISMATCH edge 405 row 0 lo 0 k 0 got 3b65d36c/0 want 3bdf7268/0
+PLAN_MISMATCH predicted 2 words, got 2; first diff ((402, 1, (0, 0, 5), 996529004, 0), (402, 1, (0, 0, 5), 1004499560, 0))
+XS_PLACE_CHECK FAIL u_f_0L03 attn.cmp_idx phase 1 mutant=swap rows=2 fixture_rows=2 errors=3 END edges=1068 ret_words=2 xo_checked=1066 fault=0
+APSP_SCALED_TIE 0/0

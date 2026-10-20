@@ -208,26 +208,26 @@
  ],
  "multi_user": {
   "ar": {
-   "aggregate_tok_s": 38365.0,
+   "aggregate_tok_s": 38456.0,
    "base_aggregate_tok_s": 55780,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 989260,
    "calendar_record": "results/arch/mu_s81_1018/calendar_ar_cal1.json (claude/s81-cal1-1019@152d70002; lemma PASS 5,474 windows 0 collisions; fleet ep5 oth-ubuntu-548701-1792476636 byte-identical)",
-   "pct_measured_per_user": 80.25,
-   "per_user_tok_s": 834.0,
+   "pct_measured_per_user": 81.02,
+   "per_user_tok_s": 836.0,
    "qualification": "partial component composition; full MU release RTL token pass still open",
    "users": 46
   },
   "mtp": {
-   "aggregate_tok_s": 26491.0,
+   "aggregate_tok_s": 26539.0,
    "base_aggregate_tok_s": 36985,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 1312908,
    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp_cal1.json (claude/s81-cal1-1019@152d70002; 10 users + 1 filler, lemma PASS 1,309 windows 0 collisions)",
-   "pct_measured_per_user": 71.64,
-   "per_user_tok_s": 2649.1,
+   "pct_measured_per_user": 72.21,
+   "per_user_tok_s": 2653.9,
    "qualification": "partial component composition; full MU release RTL token pass still open",
    "users": 10
   }
@@ -237,16 +237,16 @@
  "schema": "opentallas.toksim_s81.v1",
  "workloads": {
   "ar": {
-   "T_cycles": 1438802.6,
-   "T_cycles_fixed": 1417139.1,
-   "T_cycles_solved": 1438802.6,
+   "T_cycles": 1435411.7,
+   "T_cycles_fixed": 1413748.2,
+   "T_cycles_solved": 1435411.7,
    "base_T_cycles": 989618.6,
    "base_tok_s": 1212.6,
    "by_grade": {
     "measured-current-RTL": 109119.0,
     "measured-newest-element-RTL": 201825.0,
-    "measured-old-RTL": 27104.4,
-    "measured-release-RTL": 843638.0,
+    "measured-old-RTL": 15349.5,
+    "measured-release-RTL": 852002.0,
     "modelled-PHY": 172975.0,
     "priced": 79361.2,
     "priced-edge": 4780
@@ -254,8 +254,8 @@
    "by_grade_fixed": {
     "measured-current-RTL": 109119.0,
     "measured-newest-element-RTL": 177985.0,
-    "measured-old-RTL": 26270.9,
-    "measured-release-RTL": 846648.0,
+    "measured-old-RTL": 14516.0,
+    "measured-release-RTL": 855012.0,
     "modelled-PHY": 172975.0,
     "priced": 79361.2,
     "priced-edge": 4780
@@ -263,8 +263,8 @@
    "by_grade_solved": {
     "measured-current-RTL": 109119.0,
     "measured-newest-element-RTL": 201825.0,
-    "measured-old-RTL": 27104.4,
-    "measured-release-RTL": 843638.0,
+    "measured-old-RTL": 15349.5,
+    "measured-release-RTL": 852002.0,
     "modelled-PHY": 172975.0,
     "priced": 79361.2,
     "priced-edge": 4780
@@ -785,12 +785,12 @@
     }
    ],
    "grade_accounting_basis": "same path as conservative rate (fixed if tied, otherwise longest)",
-   "pct_measured": 80.25,
-   "pct_measured_fixed": 80.0,
-   "pct_measured_on_chip": 91.21,
-   "pct_measured_solved": 80.25,
-   "pct_modelled_phy": 12.02,
-   "per_accepted_cycles": 1438802.6,
+   "pct_measured": 81.02,
+   "pct_measured_fixed": 80.79,
+   "pct_measured_on_chip": 92.12,
+   "pct_measured_solved": 81.02,
+   "pct_modelled_phy": 12.05,
+   "per_accepted_cycles": 1435411.7,
    "per_op": [
     {
      "cls": "field",
@@ -873,10 +873,9 @@
     },
     {
      "cls": "field",
-     "cycles": 34803.9,
+     "cycles": 31413.0,
      "grades": {
-      "measured-old-RTL": 11754.9,
-      "measured-release-RTL": 22009.0,
+      "measured-release-RTL": 30373.0,
       "priced-edge": 1040
      },
      "n_crit": 40,
@@ -2353,7 +2352,7 @@
      },
      "already_included": {},
      "node": "L8.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -3064,7 +3063,7 @@
      },
      "already_included": {},
      "node": "L14.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -4726,7 +4725,7 @@
      },
      "already_included": {},
      "node": "L28.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -5206,7 +5205,7 @@
      },
      "already_included": {},
      "node": "L32.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -5686,7 +5685,7 @@
      },
      "already_included": {},
      "node": "L36.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -6260,22 +6259,22 @@
     }
    ],
    "tau": null,
-   "tok_s": 834.0,
-   "tok_s_fixed": 846.8,
-   "tok_s_solved": 834.0,
+   "tok_s": 836.0,
+   "tok_s_fixed": 848.8,
+   "tok_s_solved": 836.0,
    "workload": "ar"
   },
   "mtp": {
-   "T_cycles": 1883938.8,
-   "T_cycles_fixed": 1883938.8,
-   "T_cycles_solved": 1883938.8,
+   "T_cycles": 1880547.9,
+   "T_cycles_fixed": 1880547.9,
+   "T_cycles_solved": 1880547.9,
    "base_T_cycles": 1381860.8,
    "base_tok_s": 3611.7,
    "by_grade": {
     "measured-current-RTL": 122693.0,
     "measured-newest-element-RTL": 238335.0,
-    "measured-old-RTL": 184095.0,
-    "measured-release-RTL": 988533.0,
+    "measured-old-RTL": 172340.1,
+    "measured-release-RTL": 996897.0,
     "modelled-PHY": 205943.6,
     "priced": 138199.2,
     "priced-edge": 6140
@@ -6283,8 +6282,8 @@
    "by_grade_fixed": {
     "measured-current-RTL": 122693.0,
     "measured-newest-element-RTL": 238335.0,
-    "measured-old-RTL": 184095.0,
-    "measured-release-RTL": 988533.0,
+    "measured-old-RTL": 172340.1,
+    "measured-release-RTL": 996897.0,
     "modelled-PHY": 205943.6,
     "priced": 138199.2,
     "priced-edge": 6140
@@ -6292,8 +6291,8 @@
    "by_grade_solved": {
     "measured-current-RTL": 122693.0,
     "measured-newest-element-RTL": 238335.0,
-    "measured-old-RTL": 184095.0,
-    "measured-release-RTL": 988533.0,
+    "measured-old-RTL": 172340.1,
+    "measured-release-RTL": 996897.0,
     "modelled-PHY": 205943.6,
     "priced": 138199.2,
     "priced-edge": 6140
@@ -7178,12 +7177,12 @@
     }
    ],
    "grade_accounting_basis": "same path as conservative rate (fixed if tied, otherwise longest)",
-   "pct_measured": 71.64,
-   "pct_measured_fixed": 71.64,
-   "pct_measured_on_chip": 80.43,
-   "pct_measured_solved": 71.64,
-   "pct_modelled_phy": 10.93,
-   "per_accepted_cycles": 452978.8,
+   "pct_measured": 72.21,
+   "pct_measured_fixed": 72.21,
+   "pct_measured_on_chip": 81.09,
+   "pct_measured_solved": 72.21,
+   "pct_modelled_phy": 10.95,
+   "per_accepted_cycles": 452163.5,
    "per_op": [
     {
      "cls": "wave",
@@ -7298,10 +7297,10 @@
     },
     {
      "cls": "field",
-     "cycles": 38628.9,
+     "cycles": 35238.0,
      "grades": {
-      "measured-old-RTL": 15501.9,
-      "measured-release-RTL": 22009.0,
+      "measured-old-RTL": 3747.0,
+      "measured-release-RTL": 30373.0,
       "priced-edge": 1118
      },
      "n_crit": 43,
@@ -9663,7 +9662,7 @@
      },
      "already_included": {},
      "node": "V.L8.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -10374,7 +10373,7 @@
      },
      "already_included": {},
      "node": "V.L14.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -12036,7 +12035,7 @@
      },
      "already_included": {},
      "node": "V.L28.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -12516,7 +12515,7 @@
      },
      "already_included": {},
      "node": "V.L32.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -12996,7 +12995,7 @@
      },
      "already_included": {},
      "node": "V.L36.attn.a_proj",
-     "record": null
+     "record": "results/token_pass/measured_s81_1019/elements/zz_curation.json"
     },
     {
      "added": {
@@ -13624,9 +13623,9 @@
     }
    ],
    "tau": 4.159,
-   "tok_s": 2649.1,
-   "tok_s_fixed": 2649.1,
-   "tok_s_solved": 2649.1,
+   "tok_s": 2653.9,
+   "tok_s_fixed": 2653.9,
+   "tok_s_solved": 2653.9,
    "workload": "mtp"
   }
  },

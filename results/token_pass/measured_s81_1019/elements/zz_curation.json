@@ -257,8 +257,13 @@
    },
    "per_layer": {
     "L2": 1677,
+    "L8": 1677,
+    "L14": 1677,
     "L20": 1670,
-    "L24": 1670
+    "L24": 1670,
+    "L28": 1670,
+    "L32": 1670,
+    "L36": 1670
    },
    "evidence": "FSMALL.json dense628->531 + APSP.json sparse per-layer fullfield sequence; explicit curation of bit-exact records",
    "note": "Combine coverage maps without replacing unmatched sparse layers"

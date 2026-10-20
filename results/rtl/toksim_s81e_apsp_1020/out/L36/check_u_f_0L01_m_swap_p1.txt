@@ -1,0 +1,4 @@
+MISMATCH edge 404 row 0 lo 0 k 0 got 00000000/0 want 3d688c6a/0
+PLAN_MISMATCH predicted 1 words, got 1; first diff ((404, 0, (0, 0, 5), 1030261866, 0), (404, 0, (0, 0, 5), 0, 0))
+XS_PLACE_CHECK FAIL u_f_0L01 attn.cmp_idx phase 1 mutant=swap rows=1 fixture_rows=0 errors=2 END edges=1067 ret_words=1 xo_checked=1065 fault=0
+APSP_SCALED_TIE 1/1

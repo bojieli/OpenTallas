@@ -1,0 +1,57 @@
+{
+ "L8": {
+  "complete_sequence_frames": 8,
+  "passing_period": 231,
+  "failing_period": 230,
+  "worst_go_to_root": 1507,
+  "wire_budget": 170,
+  "cycles": 1677,
+  "all_sequence_checks_pass": true,
+  "mutants_rejected": "all m_shift/m_swap check_rc=1",
+  "singles": "all phases check_rc=0"
+ },
+ "L14": {
+  "complete_sequence_frames": 8,
+  "passing_period": 231,
+  "failing_period": 230,
+  "worst_go_to_root": 1507,
+  "wire_budget": 170,
+  "cycles": 1677,
+  "all_sequence_checks_pass": true,
+  "mutants_rejected": "all m_shift/m_swap check_rc=1",
+  "singles": "all phases check_rc=0"
+ },
+ "L28": {
+  "complete_sequence_frames": 2,
+  "passing_period": 231,
+  "failing_period": 230,
+  "worst_go_to_root": 1500,
+  "wire_budget": 170,
+  "cycles": 1670,
+  "all_sequence_checks_pass": true,
+  "mutants_rejected": "all m_shift/m_swap check_rc=1",
+  "singles": "all phases check_rc=0"
+ },
+ "L32": {
+  "complete_sequence_frames": 2,
+  "passing_period": 231,
+  "failing_period": 230,
+  "worst_go_to_root": 1500,
+  "wire_budget": 170,
+  "cycles": 1670,
+  "all_sequence_checks_pass": true,
+  "mutants_rejected": "all m_shift/m_swap check_rc=1",
+  "singles": "all phases check_rc=0"
+ },
+ "L36": {
+  "complete_sequence_frames": 2,
+  "passing_period": 231,
+  "failing_period": 230,
+  "worst_go_to_root": 1500,
+  "wire_budget": 170,
+  "cycles": 1670,
+  "all_sequence_checks_pass": true,
+  "mutants_rejected": "all m_shift/m_swap check_rc=1",
+  "singles": "all phases check_rc=0"
+ }
+}
