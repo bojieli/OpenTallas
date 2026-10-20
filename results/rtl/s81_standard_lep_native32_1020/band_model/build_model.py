@@ -6,7 +6,7 @@ must come from the immutable source under test; pass --source its commit.
 import argparse, fnmatch, hashlib, json, re
 from collections import defaultdict
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--mapped',type=Path,required=True);p.add_argument('--spec',type=Path,required=True);p.add_argument('--source',required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--band',type=float,nargs=4,default=[2.16,259.2,473.04,298.08]);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--mapped',type=Path,required=True);p.add_argument('--spec',type=Path,required=True);p.add_argument('--source',required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--floorplan',type=Path);p.add_argument('--band',type=float,nargs=4,default=[2.16,259.2,473.04,298.08]);a=p.parse_args()
 s=json.loads(a.spec.read_text());raw=a.mapped.read_bytes();m=json.loads(raw)['modules'][s['top']];box=a.band
 constants=set()
 constant_cells=[]
@@ -15,7 +15,8 @@ for cn,cc in m['cells'].items():
   expected='H' if cc['type'].startswith('TIEHI') else 'L'
   if set(cc['connections'])!={expected}:raise ValueError(('unexpected tie cell pins',cn))
   constants.update(cc['connections'][expected]);constant_cells.append([cn,cc['type']])
-fp=json.loads((a.root/'physical/ref_tile'/s['name']/'floorplan.json').read_text());placements=fp['blocks'];ext=defaultdict(list);names=defaultdict(list);missing=[];macros=0
+fp_path=a.floorplan or (a.root/'physical/ref_tile'/s['name']/'floorplan.json')
+fp=json.loads(fp_path.read_text());placements=fp['blocks'];ext=defaultdict(list);names=defaultdict(list);missing=[];macros=0
 for n,c in m['cells'].items():
  if not c['type'].startswith('ot_sram_1r1w_'):continue
  macros+=1;matches=[b for b in placements if fnmatch.fnmatchcase(n.replace('\\',''),b['inst'])]
