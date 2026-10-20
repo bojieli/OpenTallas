@@ -18,7 +18,7 @@
 //     (tools/s81_dv/svc_rs/svc7_bound_graph.py, same input functions/clock/reset per copy); reset: the kit lands
 //     rst_n in 2 stages at the face and the replicator builds the equal-age leaf copies.
 // Reset contract (landed-reset standard, S81-SVC8 decision): rst_n asserted >= 4 edges; no iv / ld_v while
-// asserted or in the first 4 edges after release (the rings' local landing); outputs are compared outside that
+// asserted or in the first 6 edges after release (source landing 2 + ring landing 2); outputs compared outside that
 // window.  Stationary weights are written before first use (compiler contract).
 // SVC8_HGRP_MUT (bench mutants): 1 = gid ignored, 2 = head-0 fault dropped (the old group's OT_HGRP_MUT codes);
 // SVC8_MUT_BANK: chunk position 3 reads the bank of position 2; SVC8_RING_MUT_ADDR: ring read offset D-1.
@@ -55,12 +55,18 @@ module ot_s81svc8_hgrp_s81 (
     reg  [3:0] of_r;
     assign oflt = (MUT == 2) ? {of_r[3:1], 1'b0} : of_r;
 
+    // -- reset: 2-stage landing in the source (the kit's flow landing sits in front of it); every reset load below
+    //    takes rst_l, whose equal-age leaf copies (<= 32 loads each) the mapped-graph replicator builds
+    (* keep *) reg rl0, rl1;
+    always @(posedge clk) begin rl0 <= rst_n; rl1 <= rl0; end
+    wire rst_l = rl1;
+
     // -- R0: boundary registers
     reg              r_iv;
     reg [BW-1:0]     r_ibank;
     reg [TD*18-1:0]  r_ib;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) r_iv <= 1'b0;
+    always @(posedge clk or negedge rst_l) begin
+        if (!rst_l) r_iv <= 1'b0;
         else r_iv <= iv;
     end
     always @(posedge clk) begin
@@ -85,8 +91,8 @@ module ot_s81svc8_hgrp_s81 (
         end
     endgenerate
     always @(posedge clk) d1_bank <= r_ibank;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) d1_v <= 1'b0;
+    always @(posedge clk or negedge rst_l) begin
+        if (!rst_l) d1_v <= 1'b0;
         else d1_v <= r_iv;
     end
 
@@ -106,7 +112,7 @@ module ot_s81svc8_hgrp_s81 (
             end else begin : g_r
                 wire [BW-1:0] bo;
                 ot_s81svc8_ring #(.W(4*18 + BW), .D(FPL * (gp - 1)), .M(128)) u_ring (
-                    .clk(clk), .rst_n(rst_n), .i({d1_bank, li}), .o({bo, lo}));
+                    .clk(clk), .rst_n(rst_l), .i({d1_bank, li}), .o({bo, lo}));
 `ifdef SVC8_MUT_BANK
                 if (gp == 3) begin : g_mb
                     assign sk_bank[gp*BW +: BW] = sk_bank[2*BW +: BW];
@@ -129,7 +135,7 @@ module ot_s81svc8_hgrp_s81 (
             assign dfi[gk] = sk_b[gk*18 + 16] & ~sk_b[gk*18 + 17];
         end
         ot_s81svc8_ring #(.W(TD + 1), .D(FML), .M(64)) u_dfring (
-            .clk(clk), .rst_n(rst_n), .i({d1_v, dfi}), .o({v_p, dfq}));
+            .clk(clk), .rst_n(rst_l), .i({d1_v, dfi}), .o({v_p, dfq}));
     endgenerate
 
     // -- heads
@@ -143,14 +149,14 @@ module ot_s81svc8_hgrp_s81 (
             wire [7:0]       r_ld_grp;
             wire [PWORDS*TD*16-1:0] r_ld_w;
             wire             r_ld_w2v;
-            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rv (.clk(clk), .rst_n(rst_n), .d(ld_v), .q(r_ld_v));
-            ot_hdc_v41x_kreg #(.W(1 + BW + 8 + 1), .R(0)) u_rc (.clk(clk), .rst_n(rst_n),
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rv (.clk(clk), .rst_n(rst_l), .d(ld_v), .q(r_ld_v));
+            ot_hdc_v41x_kreg #(.W(1 + BW + 8 + 1), .R(0)) u_rc (.clk(clk), .rst_n(rst_l),
                 .d({ld_mode, ld_bank, ld_grp, ld_w2v}), .q({r_ld_mode, r_ld_bank, r_ld_grp, r_ld_w2v}));
-            ot_hdc_v41x_kreg #(.W(PWORDS*TD*16), .R(0)) u_rw (.clk(clk), .rst_n(rst_n), .d(ld_w), .q(r_ld_w));
+            ot_hdc_v41x_kreg #(.W(PWORDS*TD*16), .R(0)) u_rw (.clk(clk), .rst_n(rst_l), .d(ld_w), .q(r_ld_w));
             reg [7:0] hh;
             always @(posedge clk) hh <= gid_m * HG + gh;
             wire [PWORDS*R*16-1:0] r_ld_wp;
-            ot_hdc_v41x_kreg #(.W(PWORDS*R*16), .R(0)) u_rp (.clk(clk), .rst_n(rst_n),
+            ot_hdc_v41x_kreg #(.W(PWORDS*R*16), .R(0)) u_rp (.clk(clk), .rst_n(rst_l),
                 .d(ld_wp[gh*PWORDS*R*16 +: PWORDS*R*16]), .q(r_ld_wp));
             wire [R*16-1:0] pcol = r_ld_wp[0 +: R*16];
             wire [R*16-1:0] pcol2 = r_ld_wp[R*16 +: R*16];
@@ -188,14 +194,14 @@ module ot_s81svc8_hgrp_s81 (
             wire [NVS-1:0] vdi, vdo;
             if (gh == 0) begin : g_rv
                 ot_s81svc8_ring #(.W(NFH + NVS), .D(FPL), .M(64)) u_fring (
-                    .clk(clk), .rst_n(rst_n), .i({vdi, fdi}), .o({vdo, fdo}));
+                    .clk(clk), .rst_n(rst_l), .i({vdi, fdi}), .o({vdo, fdo}));
                 for (gk = 0; gk < NVS; gk = gk + 1) begin : g_v
                     assign vdi[gk] = vst[gk];
                     assign vst[gk + 1] = vdo[gk];
                 end
             end else begin : g_rn
                 ot_s81svc8_ring #(.W(NFH), .D(FPL), .M(64)) u_fring (
-                    .clk(clk), .rst_n(rst_n), .i(fdi), .o(fdo));
+                    .clk(clk), .rst_n(rst_l), .i(fdi), .o(fdo));
                 assign vdi = {NVS{1'b0}};
                 assign vdo = {NVS{1'b0}};
             end
@@ -211,7 +217,7 @@ module ot_s81svc8_hgrp_s81 (
                 for (gk = 1; gk < 8; gk = gk + 1) begin : g_a
                     wire [31:0] s;
                     wire sf;
-                    ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1),
+                    ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_l), .v(1'b1),
                         .a(acc[(gk-1)*32 +: 32]), .b(p[gp*256 + gk*32 +: 32]), .y(s), .fault(sf));
                     assign fdi[gp*7 + gk - 1] = af[gk-1] | pf[gp*8 + gk];
                     assign acc[gk*32 +: 32] = s;
@@ -223,7 +229,7 @@ module ot_s81svc8_hgrp_s81 (
             for (gp = 0; gp < NC - 1; gp = gp + 1) begin : g_node
                 wire [31:0] s;
                 wire sf;
-                ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1),
+                ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_l), .v(1'b1),
                     .a(tn[(2*gp+1)*32 +: 32]), .b(tn[(2*gp+2)*32 +: 32]), .y(s), .fault(sf));
                 assign fdi[7*NC + gp] = tf[2*gp+1] | tf[2*gp+2];
                 assign tn[gp*32 +: 32] = s;
@@ -236,8 +242,8 @@ module ot_s81svc8_hgrp_s81 (
         end
     endgenerate
 
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) ov <= 1'b0;
+    always @(posedge clk or negedge rst_l) begin
+        if (!rst_l) ov <= 1'b0;
         else ov <= vst[NVS];
     end
 endmodule
