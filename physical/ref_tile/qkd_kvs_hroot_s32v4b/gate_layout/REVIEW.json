@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.tile_visual_review.v1",
  "reviewer": "codex coordinator takeover KV gate collection",
- "time": "2026-10-20T03:59:56.627321-07:00",
- "gate_commit": "2026-10-20T02:52:30-0700",
+ "time": "2026-10-20T04:28:38.753228-07:00",
+ "gate_commit": "2026-10-20T04:26:32-0700",
  "geometry_sha256": "c6fbb406291658249f15c550681d19fa0f652baaeea5416a249362a1c7b9f8e7",
  "geometry": {
   "schema": "opentallas.ref_tile.review_geometry.v1",
@@ -21,7 +21,7 @@
   "pin_spread": "Full N/S/E faces, maximum N5.29/S5.06 pins/um <6; clock root W.",
   "clock_entry": "W-face clock root; measured TT/FF insertion 425.4/357.0 ps, boundary spreads 50.7/49.8 ps; parent compensation or landed boundary required.",
   "shape": "Square300.2x300.2, no macros, density central fence visible, GRT0.",
-  "reach": "Actual exact CTS ODB audit PASS max344.277um/0>405,9254 roots,22360 transparent BUF/INV instances,0Liberty role errors; evidence results/rtl/kv_gate_takeover_1020/reach_s32v4b.json.",
+  "reach": "CURRENT exact96eadbfa5 CTS ODB 947085a98a26946e88dd6eee080e2d236798aac8607bbb2805f054f0e6b56686 PASS max344.277um/0>405/9254roots/0Liberty errors; kv_gate_takeover_1020/reach_current_s32v4b.json. Earlier gate/audit preserved separately.",
   "protocol": "Synchronous sampled reset 4 assert/release edges (2 landing+2core), HROOT_LAND_EDGES2 each4chains; +3 release edges vs k1 once boot. Exact/mutant/offphase receipts remain pinned."
  }
 }
