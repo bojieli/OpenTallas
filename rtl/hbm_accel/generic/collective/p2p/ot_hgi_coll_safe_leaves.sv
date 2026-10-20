@@ -377,11 +377,11 @@ module ot_hgi_coll_static_program_target_s128 #(
     wire desc=dv && tm_q;
     wire dacc=desc && !(occupied || lv || draining || checking || seen!=0 || fault || cv || dbad_q);
     // COLLFJ native census 10-20: six 256-bit write enables had logical fanout 264.
-    // Eight kept write-enable copies per segment each serve one 32-bit chunk.
+    // Sixteen kept write-enable copies per segment each serve one 16-bit chunk.
     // The SRAM-style write landing is one internal edge later; first assembly read
     // is drain step 1, two edges after the final accepted frame, so output edges stay exact.
     generate if(ASSEMBLY_PIPE!=0)begin:g_assembly_pipe
-        (* keep = "true" *) reg [47:0] we_copy;
+        (* keep = "true" *) reg [95:0] we_copy;
         reg [255:0] payload;
         always @(posedge clk) payload<=data_q;
         (* keep = "true" *) reg [3:0] meta_we;
@@ -393,12 +393,12 @@ module ot_hgi_coll_static_program_target_s128 #(
                 if(meta_we[mc])metadata[mc*16+:16]<=payload[mc*16+:16];
         end
         for(genvar sg=0;sg<6;sg=sg+1)begin:g_seg
-            for(genvar ch=0;ch<8;ch=ch+1)begin:g_chunk
+            for(genvar ch=0;ch<16;ch=ch+1)begin:g_chunk
                 always @(posedge clk or negedge rst_n)
-                    if(!rst_n)we_copy[sg*8+ch]<=0;
-                    else we_copy[sg*8+ch]<=frame && !frame_bad && seg_q[sg];
+                    if(!rst_n)we_copy[sg*16+ch]<=0;
+                    else we_copy[sg*16+ch]<=frame && !frame_bad && seg_q[sg];
                 always @(posedge clk)
-                    if(we_copy[sg*8+ch])assembly[sg*256+ch*32+:32]<=payload[ch*32+:32];
+                    if(we_copy[sg*16+ch])assembly[sg*256+ch*16+:16]<=payload[ch*16+:16];
             end
         end
     end endgenerate
