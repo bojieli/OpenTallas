@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_d2d_static_sf7w",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T23:14:00-07:00",
+ "gate_commit": "9c875b9bc",
+ "checklist": {
+  "lattice": "4 SRAM macros in one row on lattice, clear channels",
+  "std_cell_band": "low even std density; only pin-register rows along N/S faces are dense (expected)",
+  "pin_spread": "3,668 ports, N 83% / S 58% / W 84% face use, <=5.2 pins/um",
+  "clock_entry": "ck N centre; pin-flop spread 66.3/62.1 TT/FF, insertion 371.6/308.9 guidance",
+  "shape": "388.8x172.8 aspect 2.25 ACCEPTED (pin-bound faces), fill 25% pin-bound; PG-bind fix included"
+ },
+ "notes": "COORD 10-19 23:25: approved (Q.STA.D2D; aspect 2.25 accepted as pin-bound; earlier gate GRT0, FF hold +30)",
+ "geometry_sha256": "0f6ebd7467796ce286c209108d3175810e6c3931ec64f60c4a5cc1699144892c"
+}
