@@ -1,0 +1,62 @@
+{
+  "top": "qfd_dv_s5_vm8",
+  "sha256": "d198e97e6a0ff21147bd9f4535612964766f4698a1716300fd88b7546aea329c",
+  "nonclock_drivers_over32": 0,
+  "flop_drivers_over32": 0,
+  "raw_ports_over32": 0,
+  "max_nonclock_loads": 32,
+  "rst_n_loads": 2,
+  "metrics": {
+    "clock_roots": [
+      {
+        "root": "port:ck_rd",
+        "ff": 8077,
+        "icg": 0,
+        "macro_pins": 10,
+        "example": "_36870_"
+      },
+      {
+        "root": "port:ck_su",
+        "ff": 3850,
+        "icg": 0,
+        "macro_pins": 8,
+        "example": "_36869_"
+      },
+      {
+        "root": "port:ck_wr",
+        "ff": 3107,
+        "icg": 0,
+        "macro_pins": 0,
+        "example": "_36866_"
+      }
+    ],
+    "hier_subblocks": 0,
+    "clock_max_root_sinks": 8087,
+    "clock_max_root": "port:ck_rd",
+    "high_fanout_top": [],
+    "hf_max_port": 0,
+    "hf_max_reset": 0,
+    "hf_max_net": 0,
+    "reset_landing": [
+      {
+        "port": "rst_n",
+        "sinks": 2,
+        "flops": 2,
+        "macros": 0
+      }
+    ],
+    "in_to_out_bits": 0,
+    "in_to_reg_levels": 0,
+    "reg_to_out_levels": 0,
+    "icg_enable_from_port": 0,
+    "depth_ps": 286.7,
+    "depth_path": [
+      "_46749_",
+      "_36870_/D"
+    ],
+    "depth_levels": 8
+  },
+  "violations": [],
+  "verdict": "PASS_FANOUT_ONLY",
+  "qualification": "Mapped fanout census only; reset landing/pins/reach/storage still require their own proof"
+}

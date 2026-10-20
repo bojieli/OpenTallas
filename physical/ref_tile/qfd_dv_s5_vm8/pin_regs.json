@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_vm8",
+ "enable": false,
+ "reason": "the RTL registers every input and every output at its pin (qfd_dv_s5_vm8: p* input registers, answer / fault output registers; +1 in / +1 out priced in the slice2 schedule, bench tb_vm8 proves the edges); a flow pin register would add a second, unpriced edge"
+}
