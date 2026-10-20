@@ -1,0 +1,60 @@
+{
+  "candidate_source_commit": "b14d8812e",
+  "original_DUT_source_commit": "3f0f4b600",
+  "source_hashes": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv": "afcd737af00b983b10e0aaef11cc58a7e976eb263caf8d99290a12a7eec3d222",
+    "rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv": "08bc0cb9bac615c4ca16ef1539815736b5095b41fe934c343f133c8db217b8b3",
+    "rtl/test/qwen_dv/s5/tb_btab_firstuse.sv": "7ed49944a82c9273f18cdb5f893f073b8bf9c9485cdf5de9a14eff456cb3e707",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "positive": {
+    "unit": "oth-ubuntu-3066341-1792508550",
+    "host": "ot-epyc7",
+    "status": "TERMINAL0",
+    "seeds": [
+      1,
+      17,
+      999
+    ],
+    "comparisons_per_seed": 921,
+    "first_defined_per_seed": 512,
+    "checks_before_global_initialization": 507,
+    "first_defined": "read sample3/output4,row37/bank0,only1 initialized row",
+    "physical_macro_model": true,
+    "OT_MEM_NO_INIT": true,
+    "FF_and_SRAM_independent_initial_draws": true,
+    "mask": "Only semantically undefined unwritten-row reads or no read command; no fixed-cycle/global-warmup mask"
+  },
+  "negatives": {
+    "unit": "oth-ubuntu-3197964-1792508666",
+    "host": "ot-epyc7",
+    "status": "TERMINAL0 expected failures verified",
+    "bank": "Source actual select polarity mutant, caught firstdefined outputcycle4",
+    "age": "Output register adds1edge to actualDUT output observed, caught firstdefined outputcycle4",
+    "drop": "Suppress actualfirstwrite in candidate only, caught firstdefined outputcycle4"
+  },
+  "source_equations_cofactors": 16384,
+  "scope": "Source-equation certificate plus actual RTL/physical macro functional simulation; no new mapped equivalence/formal universal state claim. Existing final native/timing/geometry audit remains source-bound because DUT is unchanged.",
+  "parent_obligations": [
+    "Every consumed read addresses a row with a complete prior write",
+    "Read response consumed at correct fixed age",
+    "Actual parent install/calendar/provenance, replica count, nominal clock compensation and neighbor composition remain owed"
+  ],
+  "artifacts": {
+    "SOURCE_CONTRACT.json": "ea29516c1b39dfb355df9c5fb3d245410cd7892ef20e057c2fc9068b7c0e08d4",
+    "README.md": "ca72ff9cd5f76a16c38fd75fdefda3bade0c02acfc688f973c3f721d7638c734",
+    "source_contract.py": "3f3bb831a652771c83b16ab9d3c3c0fcc2c5ddbcdb2b2cb4decb2809fed76bfd",
+    "neg_bank/build.log": "3c0b9e7bc2f97e6afa93105fc75bf913906f5735f20dce7cb46a8ab85bb82193",
+    "neg_bank/run.log": "305d7f0d60d123c5afb6235c519c14a96f25c20f999a18a750ae372580c1aeb8",
+    "neg_drop/build.log": "d14a87e80c0f44545948b4f928b5f5b8dece21050f5e93356721625b03ab301b",
+    "neg_drop/run.log": "b879f2b08ddd23b53110af70cf4f4c19a7187756c89f4bef986416bba3c82284",
+    "pass/build.log": "47081fe02c2753306b856607fcafe5269086551c70c0b7ca63459a23db581389",
+    "pass/seed999.log": "baa92eebf97a19d19d99ad24e2ed4d26449dc85d996f02689ce2b431175320fd",
+    "pass/seed17.log": "b417f28401505c69d3ee8ec3d24548232b3b640a46cf01f926872a44cf5dd84f",
+    "pass/seed1.log": "757765c629b4f0a3cf02b8b4a7a5255bfc94b451be4f3e4f9c72b66b2c47fca2",
+    "neg_age/build.log": "c7f2ac4b3906b7f9225aa0d09aab40facbe499e1f5e0d76c6a75d487fd8483b5",
+    "neg_age/run.log": "8ad07749af9ee1c6b6ae7957e5b29becb8b03dee27cf8970221c7cfd23e3efdb"
+  },
+  "legacy_reference_body_exact_original": true,
+  "old_bench_remains_unchanged": true
+}

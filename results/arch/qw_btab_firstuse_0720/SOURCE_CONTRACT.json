@@ -1,0 +1,64 @@
+{
+  "scope": "Exact source-equation/per-bit Boolean selection certificate plus actual-role reset inventory. NOT full RTL/netlist formal equivalence or universal initialization simulation.",
+  "DUT_sha256": "afcd737af00b983b10e0aaef11cc58a7e976eb263caf8d99290a12a7eec3d222",
+  "physical_macro_model_sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "macro_TT_Lib_sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+  "selection_cofactor_checks": 16384,
+  "selection_PASS": true,
+  "first_defined_contract": {
+    "read_sample_edge": "R, r_ce_in qualified at selected bank",
+    "defined_iff": "Selected logical row has received a complete common1024-bit write strictly before this sample; no value obligation for unwritten-row reads.",
+    "output_edge": "visible after R+1; downstream sequential consumer can sample at R+2",
+    "no_cycle_warmup": "Checks start at each row/bank first defined read, not fixedcycle136 or global full preload.",
+    "memory_behavior": "Actual physical model: read-before-write when CE read/write same row on same edge. Read of previously uninitialized row concurrent with first write is undefined; next read is defined.",
+    "Liberty_phase": "Actual rd_out timing arc rising_edge and input setup_rising/hold_rising. Liberty does not independently specify collision data value.",
+    "source_equations": [
+      "AtR: t1_bank<=requested_bank; all16select copies<=onehot(requested_bank); selected SRAM rd_out<=prewrite row word.",
+      "AtR+1: legacy t2_bank<=t1_bank and btcap<=rd; candidate each16bitq<=OR of rd_i AND onehot_i.",
+      "For arbitrary other-bank rd bits and arbitrary prior selection/output FF state, afterR+1 both yield the selected prewrite word."
+    ],
+    "write_obligation": "Each tw_kind2 write updates all256bits in all4banks at tw_addr[8:2], full1024-bit group; no partial-write initialization assumption."
+  },
+  "typed_no_reset_inventory": {
+    "declared_functional_reset_ports": [],
+    "source_standardFF_event": "posedge ck only",
+    "actual_native_standardFF_roles": {
+      "DFFHQNx1_ASAP7_75t_R": {
+        "state_variables": "IQN,IQNN",
+        "next_state": "!D",
+        "clocked_on": "CLK",
+        "clear": null,
+        "preset": null
+      },
+      "DFFHQNx2_ASAP7_75t_R": {
+        "state_variables": "IQN,IQNN",
+        "next_state": "!D",
+        "clocked_on": "CLK",
+        "clear": null,
+        "preset": null
+      }
+    },
+    "actual_native_standardFF_async_controls": 0,
+    "macro_functional_event": "posedge clk only; row/column repair inputs are constant0, not reset",
+    "SRAM_array_reset": false,
+    "framework_typed_receipt": "No new framework reset-proof override or waived receipt manufactured. No-reset source/native role inventory is the asserted scope."
+  },
+  "capacity": {
+    "logical_words": 512,
+    "logical_word_bits": 256,
+    "nominal_SRAM_instances": 4,
+    "nominal_rows_per_instance": 128,
+    "nominal_bits_per_row": 256,
+    "logical_bits": 131072,
+    "nominal_physical_capacity_bits": 131072,
+    "logical_KiB": 16,
+    "nominal_physical_KiB": 16,
+    "nominal_physical_to_logical_ratio": 1,
+    "physical_cells_including_spares": 134160,
+    "spare_inclusive_ratio": 1.0235595703125,
+    "spare_inclusive_KiB": 16.376953125,
+    "not_32KiB": true,
+    "parent_replica_scope": "Single BTAB leaf only. Parent BTAB/BSCALE duplicate readers may require two leaves/32KiB aggregate physical; parent multiplicity/replica ratio not qualified here."
+  },
+  "parent_scope": "No global full-table boot/install guarantee is asserted. Parent must prove every consumed read references an initialized row and honors fixed read age; unused/uninstalled rows remain arbitrary. This is a required interface obligation, not an allowed implicit zero fill."
+}

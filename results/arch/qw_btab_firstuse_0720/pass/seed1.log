@@ -1,0 +1,10 @@
+BTAB_INDEPENDENT_STARTUP ff_distinct=1 unwritten_SRAM_distinct=1 physical_model=1 mem_no_init=1 reset_ports=0
+BTAB_FIRST_DEFINED sample=3 output=4 row=37 bank=0 initialized_rows=1
+BTAB_FIRST_DEFINED sample=4 output=5 row=37 bank=1 initialized_rows=1
+BTAB_FIRST_DEFINED sample=5 output=6 row=37 bank=2 initialized_rows=1
+BTAB_FIRST_DEFINED sample=6 output=7 row=37 bank=3 initialized_rows=2
+BTAB_FIRSTUSE_PASS checks=921 first_defined=512 early_before_global_init=507 collisions=162 cycles=1155 read_sample_to_output_edges=1 no_warmup_mask=1
+- rtl/test/qwen_dv/s5/tb_btab_firstuse.sv:122: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.006 s; speed 1.847 ms/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB

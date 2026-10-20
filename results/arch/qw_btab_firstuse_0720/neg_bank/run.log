@@ -1,0 +1,4 @@
+BTAB_INDEPENDENT_STARTUP ff_distinct=1 unwritten_SRAM_distinct=1 physical_model=1 mem_no_init=1 reset_ports=0
+[35000] %Fatal: tb_btab_firstuse.sv:85: Assertion failed in tb_btab_firstuse.monitor: BTAB_FIRSTUSE_FAIL cycle=4 sample=3 row=37 bank=0 initialized_rows=1 age=0 drop=0 ref=4d2b5cbe4d2a5cbf4d295cbc4d285cbd4d2f5cba4d2e5cbb4d2d5cb84d2c5cb9 got=5466ef18c705cf9980c25c2893bf6456243b41876c428427a85fbdcc9c8ea41d expected=4d2b5cbe4d2a5cbf4d295cbc4d285cbd4d2f5cba4d2e5cbb4d2d5cb84d2c5cb9
+%Error: rtl/test/qwen_dv/s5/tb_btab_firstuse.sv:85: Verilog $stop
+Aborting...
