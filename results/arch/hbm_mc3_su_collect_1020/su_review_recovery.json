@@ -1,0 +1,22 @@
+{
+  "status": "REVIEW_WITHHELD",
+  "viewed_four_pngs": true,
+  "qcore": {
+    "source": "cfb59e890",
+    "findings": [
+      "Macro origins86.4,43.2 and86.4,172.8 literal43.2 lattice.",
+      "Density distributed through nearly entire outline rather than one std band.",
+      "Gate old WARN0FAIL/GRT0; actual native5_1_grt audit pending.",
+      "Old worktree removed; no review or submit mutation."
+    ]
+  },
+  "cx_ijq": {
+    "source": "52b4c9280",
+    "findings": [
+      "Macrofree216x388.8 outline; printed fill4.8%.",
+      "Density diffuse interior plus E-edge cells.",
+      "Original gatehostep8 retired; original nativeODB not yet located.",
+      "Old worktree removed; no review or submit mutation."
+    ]
+  }
+}
