@@ -1,0 +1,362 @@
+{
+ "name": "smh_rp4ahn_w562_standin",
+ "top": "ot_hbm_smh_rp4ah_n",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+  "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
+  "rtl/hbm_accel/sm/repack/h2/ot_hbm_smh_rp4h.sv",
+  "rtl/hbm_accel/sm/repack/h2a/ot_hbm_smh_rp4ah.sv"
+ ],
+ "params": {
+  "SOFTBEAT": 1,
+  "GN": 2,
+  "XB": 1
+ },
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 561.6,
+  "h": 1425.6
+ },
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "u_lf0.u_merge"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    216.0,
+    388.8
+   ],
+   "orient": "R0",
+   "inst": "u_lf0.u_qk"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    43.2,
+    518.4
+   ],
+   "orient": "MX",
+   "inst": "u_lf0.u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu",
+   "count": 1,
+   "at": [
+    216.0,
+    518.4
+   ],
+   "orient": "R0",
+   "inst": "u_lf0.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu",
+   "count": 1,
+   "at": [
+    345.6,
+    518.4
+   ],
+   "orient": "R0",
+   "inst": "u_lf0.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_xs_p192c_standin/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    43.2,
+    734.4
+   ],
+   "orient": "MX",
+   "inst": "u_lf0.u_xs"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+   "count": 1,
+   "at": [
+    86.4,
+    388.8
+   ],
+   "orient": "MX",
+   "inst": "u_row0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+   "count": 1,
+   "at": [
+    475.2,
+    388.8
+   ],
+   "orient": "MX",
+   "inst": "u_rowe0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rin_n",
+   "clk",
+   "bin"
+  ],
+  "E": [
+   "rout_n",
+   "bout"
+  ],
+  "N": [
+   "gin",
+   "xs_a1",
+   "xs_g1",
+   "xs_a2",
+   "xs_g2",
+   "attn"
+  ],
+  "S": [
+   "xo_b",
+   "rst_n",
+   "xo_g0",
+   "xo_gp"
+  ]
+ },
+ "orfs_vars": {
+  "OT_IO_REF_CLASS": "1",
+  "POST_TAPCELL_TCL": "physical/ref_tile_specs/smh/smh_rp4ahn_w562_standin_stations.tcl",
+  "OT_CKKM_K": "32",
+  "OT_CKKM_PORT": "clk"
+ },
+ "refglob": "*",
+ "io_flop_at_pins": {
+  "cols": 10,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every data pin is registered in RTL: inputs rin (ot_rp4l_pinrow), bin (pinbeat), xs straps (5-stage strap), gin (u_gn u_v/u_d), xi_* (u_lands / u_xgi / u_xpi); outputs rout / bout launched by the hard row_e / beat_e flops, xo_* by u_xbo / u_xgo / u_xpo, gout by the u_gs output registers.  Recipe-3 pin registers would add cycles to the priced lp schedule.  rp4a: the static attn strap lands in 2 kept stages (u_as_n / u_as_s)."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_delay": true,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5 M7"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude LEAD3-HBM/L2H-SMATT/RP4A",
+  "branch": "claude/l2h-rp4a-1019",
+  "tag": "rp4ahn_w562_standin",
+  "purpose": "DIAGNOSTIC (x store = stand-in; never submit): HBM SM attention tile rp4a (n half, frame 561.6 x 1425.6) as two hardened halves from the L2H-SM9 rp4 halves; geometry / clock / congestion evidence for the 475.2+ SM frame re-plan (H.STA.BLK.9.1) and the rp4a parent (H.STA.BLK.14.6).",
+  "structural_change": "rp4h halves (L2H-SM9) with the attention leaf (ot_hbm_sm_attn_leafh native column inlined: x store, block-dot, 2 tcl_gu, tct, PV merge s3 SAFE2 hard; sync glue resets; static attn straps registered); leaf stack forced by the closed children's pin faces (PVM R0 bottom, tct R0, tcl/bdc, xs MX, all on 43.2); regional k-means clock roots K=32 (clock_split_km.tcl, clk on the W face at half height); GN/GS kept gather relays (+3 uniform on gout, priced) and XB beat-crossing relay keep every hop <= ~375 um; io_hold_margin 0.03.",
+  "extra_paths": [
+   "tools/hbm_sm_repack_1015",
+   "rtl/hbm_accel/sm/repack/h2",
+   "rtl/hbm_accel/sm/repack/h2a",
+   "results/arch/l2h_rp4a_1019/bench"
+  ],
+  "benches": [
+   {
+    "name": "h2a_lockstep",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2a 0 1 13 2 1 1",
+    "expect": "pass",
+    "pass_regex": "^H2A_LOCKSTEP PASS MUT=0 compared=",
+    "pass_witness": "results/arch/l2h_rp4a_1019/bench/g211/mut0.log",
+    "threads": 4,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "h2a_mut1",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am1 1 1 13 2 1 1",
+    "expect": "fail",
+    "fail_regex": "^H2A_LOCKSTEP FAIL MUT=1 mismatches=[1-9]",
+    "fail_witness": "results/arch/l2h_rp4a_1019/bench/g211/mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "h2a_mut2",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am2 2 1 13 2 1 1",
+    "expect": "fail",
+    "fail_regex": "^H2A_LOCKSTEP FAIL MUT=2 mismatches=[1-9]",
+    "fail_witness": "results/arch/l2h_rp4a_1019/bench/g211/mut2.log",
+    "threads": 4,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "h2a_mut3",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am3 3 1 13 2 1 1",
+    "expect": "fail",
+    "fail_regex": "^H2A_LOCKSTEP FAIL MUT=3 mismatches=[1-9]",
+    "fail_witness": "results/arch/l2h_rp4a_1019/bench/g211/mut3.log",
+    "threads": 4,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "h2a_mut5",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a/run_rp4ah2_one.sh {RUN}/h2am5 5 1 13 2 1 1",
+    "expect": "fail",
+    "fail_regex": "^H2A_LOCKSTEP FAIL MUT=5 mismatches=[1-9]",
+    "fail_witness": "results/arch/l2h_rp4a_1019/bench/g211/mut5.log",
+    "threads": 4,
+    "peak_ram_gb": 24
+   }
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "child_clock_ref": "boundary",
+ "pin_ranges": {
+  "clk": [
+   712.26,
+   713.3399999999999
+  ],
+  "rin_n": [
+   302.4,
+   475.2
+  ],
+  "bin": [
+   1041.12,
+   1420.56
+  ],
+  "rout_n": [
+   302.4,
+   475.2
+  ],
+  "bout": [
+   1041.12,
+   1420.56
+  ],
+  "gin": [
+   216.0,
+   248.4
+  ],
+  "xs_a1": [
+   250.56,
+   254.88
+  ],
+  "xs_g1": [
+   257.04,
+   259.2
+  ],
+  "xs_a2": [
+   261.36,
+   264.6
+  ],
+  "xs_g2": [
+   266.76,
+   268.92
+  ],
+  "attn": [
+   271.08,
+   273.24
+  ],
+  "xo_b": [
+   4.32,
+   410.4
+  ],
+  "rst_n": [
+   412.56,
+   413.64
+  ],
+  "xo_g0": [
+   415.8,
+   428.76
+  ],
+  "xo_gp": [
+   430.92,
+   461.16
+  ]
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n itself: ot_rp4h_rst u_rst = two KEPT face stages (l0, l1) then one KEPT copy per consumer (c[*], 1-12 loads each); the port net has ONE sink (u_rst.l0).  Depth 3 = the lp regional reset run, so the halves stay cycle-exact with ot_hbm_smh_rp4_flat_lp (bench H2_LOCKSTEP)."
+ },
+ "diagnostic": true,
+ "clock": "cts",
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "standins": {
+  "xs": "smh_xs_ring_p192c_1019 (475.2 x 302.4, gate WARN clean, COORD review) not closed"
+ }
+}
