@@ -15,6 +15,7 @@ if m==1:s=s.replace('.fill_token(tok)','.fill_token(tok ^ 18\'d1)')
 if m==2:s=s.replace('.emb_tx_payload(rowtx__emb_tx_payload)',".emb_tx_payload(bad_payload)").replace('    wire        st;',"    wire [547:0] bad_payload; assign rowtx__emb_tx_payload=bad_payload ^ 548'd1;\n    wire        st;")
 if m==3:s=s.replace('assign emb_fault = cf | jf | rf;','assign emb_fault = cf | jf;')
 if m==4:s=s.replace('.PIPE_JOIN(PIPE_JOIN)', '.PIPE_JOIN(0)')
+if m==5:s=s.replace('.row_open(row_open), .ctx_v', ".row_open(1'b0), .ctx_v")
 assert m==0 or s!=(e/'qkd_kvs_emb_ctx_n32child.sv').read_text()
 (o/'dut.sv').write_text(s)
 PY

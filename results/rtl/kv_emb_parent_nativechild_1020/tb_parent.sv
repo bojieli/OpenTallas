@@ -56,6 +56,10 @@ module tb_parent;
   reset();row(991,108,0);
   slot=1;tick();slot=0;repeat(20)tick();
   if(!nf)$fatal(1,"FAIL parent missing 66th-slot fault");
+  reset();ctx=record(777,123);repeat(100)tick();
+  // No return words: row stays open after the 66-edge minimum gap.
+  ctx=record(778,124);repeat(30)tick();
+  if(!nf)$fatal(1,"FAIL parent missing open-row overlap fault");
   quiet();repeat(15)tick();
   if(checks<900||beats<260||starts<4||words<260)$fatal(1,"FAIL parent coverage checks=%0d beats=%0d starts=%0d words=%0d",checks,beats,starts,words);
   if(errors)$fatal(1,"FAIL parent mismatches=%0d",errors);
