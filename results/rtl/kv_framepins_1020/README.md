@@ -29,7 +29,7 @@ die observations through the window: the five join the window snapshot.  `dcal.f
 
 ## Cycle price
 0 token edges, 0 die-calendar edges, 0 STATUS edges (off every token path; read by the host).  The snapshot sees each
-source `relay_stages(bus)` edges late.  All bits of one bus are equally late, so a multi-bit value is never torn.
+source `relay_stages(bus)` edges late.  Equal stage counts give equal edge ages in the common-edge RTL model. They do not prove physical multi-bit coherence across regional clock trees.
 `relay_stages` comes from the relay plan of the next GEN9 prep.  The bench is parameterised by it (3 / 3 / 4 here).  Window read latency unchanged
 (fixed 3 edges after AR).  Area: +41 window pin-register flops in the HOST cluster plus the relay stations.
 
@@ -62,3 +62,9 @@ flops (PASS).  6/7 floorplan / clock: same core clock, regional relay stations (
 ## CODEX sticky coverage completion
 
 The updated actual OBSX-shape path bench now injects one-edge fault pulses, removes them before capture, and checks every sticky fault bit in the window against an independent accumulated vector. Fleet Verilator 5.050: positive PASS (46 words, 12 captures); all six mutants m1 through m6 FAIL, including m3 (12 sticky errors). Exact witnesses and source hashes are in `sticky/`. The earlier m3 PASS remains historical evidence of the prior coverage gap. Production source is unchanged from d8221c4bf; this completion changes the bench only. No native census or physical qualification is claimed.
+
+## Physical coherence HOLD
+
+OBSX remains diagnostic. Its current bench drives sources, relay clocks and HOST sampling from one ideal edge. It proves RTL connectivity, fixed edge lag and CSR snapshot/read behavior in that model. It does not establish the actual source-to-relay-to-HOST phase relationship, a stable sampling aperture, or atomic landing across regional clock trees. No completed fresh GEN9 manifest or native clock/landing receipt currently supplies those facts. Before adoption, each of the three buses needs source and receiver clock ownership, measured or bounded phase/skew at the flops, a legal stable window including data transitions at the boundary, and an atomic landed transfer if the clocks differ. CSR capture copies also need actual clock/timing qualification. Equal relay-stage counts and observer status do not waive these requirements.
+
+The generator default-output check passes against the GEN9 baseline (3332a9408). The current origin/main snapshot has no OBS root artifact, so equality to a main-existing OBS output is not claimed. ROOT must compose the prerequisite OBS generator/root first, preserve its default bytes, and recompute kv_open_tail_roles.GENERATOR against the actual composed kv_static_die.py; the GEN9 hash 79939e3d is not a transferable main receipt.

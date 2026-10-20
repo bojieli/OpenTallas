@@ -1,0 +1,14 @@
+{
+  "adoption": "HOLD",
+  "coherence": "unqualified; common-edge RTL bench only",
+  "default_generator_check": "UP TO DATE against GEN9 baseline3332a9408",
+  "default_sha256": {
+    "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obs.sv": "f8abac1b4a44d580d9b188a245cd40b5369aad347a26d7d87ac3ca4e9d26c9e5",
+    "rtl/qwen_sys/kv_host_obs_20261019/host_obs_map.json": "74b77657e62537adc5421526f43fb1e2fd215e154a567636b21d7a18c208069b",
+    "rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv": "a1b75ea94bd285110b82024dc14857372017809f403ec8aed1d6a19ce8dd9450"
+  },
+  "origin_main": "ff56c6ba1d376008f01ca063613a55a10064b31f",
+  "main_obs_artifact": "absent; no default-main equality claim",
+  "static_generator_branch_sha256": "79939e3d6fc1af2385be25af66b45d454d629082b6e97a4f7a0eb33436522a6c",
+  "main_repin_required": true
+}

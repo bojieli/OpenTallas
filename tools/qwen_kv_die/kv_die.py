@@ -902,7 +902,9 @@ if HOST_RT_OBS:
 # new groups odc / odl / odr, which feed the window snapshot above the 1,335 HOST bits (46 words, 0x1900-0x19B4).
 # Producers unchanged (closed bc4 / sfm2 view pins already exist); no tie, no stub.  Price: observation only -- 0 token /
 # calendar / STATUS edges; the snapshot sees each source (relay_stages + 1 window pin reg) edges late (all bits of a bus
-# equally late, so a multi-bit value is never torn).
+# equally late in a common-edge RTL model only). Physical multi-bit coherence requires the actual
+# source/relay/HOST clock phase and landing capture-window proof; equal stage counts do not qualify it.
+# OT_KV_HOST_OBSX remains diagnostic until that proof and the native timing/census gates pass.
 HOST_RT_OBSX = HOST_RT_OBS and os.environ.get('OT_KV_HOST_OBSX', '0') == '1'
 if HOST_RT_OBSX:
     HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv'
