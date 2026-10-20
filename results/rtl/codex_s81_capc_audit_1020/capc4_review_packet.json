@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.coordinator_review_packet.v1",
+  "kit": "s81sl_capc4",
+  "gate_source": "f72f9f0680b76cfefcdc60605e00f1bce3dc4747",
+  "gate_verdict": "WARN",
+  "gate_items": [
+    {
+      "severity": "WARN",
+      "check": "fill",
+      "message": "fill 36% = (macros/children 50239 + std 700) / outline 139744 um2 < 50%",
+      "fix": ""
+    },
+    {
+      "severity": "WARN",
+      "check": "clock_rule",
+      "message": "root port:clk: 1,179 sinks on the largest root; measured TT insertion 859.4 ps, FF insertion 699.0 ps, TT pin-flop spread 50.7 ps, FF pin-flop spread 47.4 ps; WARN: insertion 859.4 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+      "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+    },
+    {
+      "severity": "WARN",
+      "check": "fill",
+      "message": "fill 36% = (hard macros 50239.2 + synthesized std cells 428.2) / outline 139744.1 um2; pin demand per face: S 273 pins over 323.8/337.0 um (96%), N 341 pins over 323.4/337.0 um (96%), W 311 pins over 405.7/414.7 um (98%), E 311 pins over 364.8/414.7 um (88%) (< 50%)",
+      "fix": ""
+    }
+  ],
+  "actual_pngs_inspected": [
+    "physical/ref_tile/s81sl_capc4/gate_layout/floorplan.png",
+    "physical/ref_tile/s81sl_capc4/gate_layout/density.png"
+  ],
+  "checklist": [
+    {
+      "item": 1,
+      "status": "PASS",
+      "evidence": "Same seven RTL files as exact CLOSED capc2. All boundary pins registered; raw reset two FF loads. Existing two reset release edges preserved."
+    },
+    {
+      "item": 2,
+      "status": "PASS_CTS_FINAL_OWED",
+      "evidence": "Actual CTS ODB conservative pin bbox reach max 383.629um; zero >405, all transparent BUF/INV collapsed. Reset rst_l0-to-l1 included. Remeasure final route before adoption."
+    },
+    {
+      "item": 3,
+      "status": "PASS",
+      "evidence": "Actual native all-driver census max 16, zero >32 including reset; unknown standard masters zero."
+    },
+    {
+      "item": 4,
+      "status": "PASS_SOURCE_UNCHANGED",
+      "evidence": "No RTL/data-depth changes from CLOSED TT+259.08/FF+25.46 DRC0 source; fresh routed timing still owed. Gate is physical admission, not signoff timing."
+    },
+    {
+      "item": 5,
+      "status": "PASS",
+      "evidence": "Storage remains inside original qualified hard children; no new flop bank or memory."
+    },
+    {
+      "item": 6,
+      "status": "EXCEPTION_REQUEST_PIN_LIMITED",
+      "evidence": "337.0x414.7um aspect1.23. Five existing hard children remain contained on original grid, connected standard area/bands with wide channels; actual floorplan and density viewed, no trapped hot island. Fill36%; faces S96/N96/W98/E88% occupied, unable shrink without pin-face crowding. Trial GRT zero overflow, worst layer M3 9.01%."
+    },
+    {
+      "item": 7,
+      "status": "PASS_LINKED_PAIR_MEANS_FINAL_OWED",
+      "evidence": "Root S clock beside pin-register mass. Actual CTS soft pin spread TT50.7/FF47.4ps. Linked hard-child effective mean differences max TT33.5/FF40.3ps; full child+soft span TT74.9/FF84.7ps retained caveat. Child references are boundary means, not per-child extrema. Insertion TT859.4/FF699ps guidance warning, parent compensation required. Hold margin0.03ns."
+    },
+    {
+      "item": 8,
+      "status": "PASS",
+      "evidence": "Exactly zero added cycles, unchanged static schedule; only rt_e pin span and existing rst_l1 physical location changed."
+    }
+  ],
+  "qualification_limits": [
+    "CTS PG unbound1514 are ordinary unprotected birth stage; final native PG must be zero.",
+    "No final timing/DRC/native adoption claim.",
+    "Spec/physical consumed bytes remain immutable after gate. Submit metadata wrapper belongs only in generated job.json."
+  ],
+  "coordinator_action": "Review actual PNGs and concrete pin-limited fill exception; authorize REVIEW/submit only after main native_reach support/runtime sync and exact dry-run."
+}
