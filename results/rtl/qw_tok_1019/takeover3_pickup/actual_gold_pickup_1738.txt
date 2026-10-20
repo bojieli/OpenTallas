@@ -1,0 +1,16 @@
+Tue Oct 20 00:35:49 UTC 2026
+    PID     ELAPSED %CPU   RSS COMMAND
+1583528  1-08:03:09 3957 12623756 python3 tools/qwen_hbmacc_position_oracle_gpu.py --run --device cpu --prep-dir /srv/opentallas-scratch/claude/tokpass-qwen-1018/fx/prep/tp4 --layers 36 --head --tokens /srv/opentallas-scratch/claude/tokpass-qwen-1018/fx/inputs/prompt_tokens_8192.txt --positions 8191 --embedding-npz /srv/opentallas-scratch/claude/tokpass-qwen-1018/fx/inputs/prompt_embedding.npz --out /srv/opentallas-scratch/claude/tokpass-qwen-1018/fx/gold/tp4
+position 7632 done (112607 s)
+position 7648 done (113016 s)
+position 7664 done (113590 s)
+position 7680 done (114438 s)
+position 7696 done (114878 s)
+position 7712 done (115133 s)
+4415cc14183f1d091e7ad77f74109f22c1b06e9b404bbafeb1a6cb4401300c4f  /srv/opentallas-scratch/claude/qw-gold4-shared-prefix-1019/src/tools/qwen_layerbench/gold4_shared_prefix.py
+{
+ "schema": "opentallas.qwen-rom-position-oracle-gpu-prep.v1",
+ "at": "2026-10-08T07:42:25Z",
+ "stages": "/home/ubuntu/w12/st_tp4_sw64/stages.txt",
+ "stages_sha256": "9baae78a5335861b7e77f7fb7a78757866145ca9bbd2e287bd778605180890d6",
+ "pins": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/pins/tp4.json",
