@@ -1,0 +1,245 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 50% = (macros/children 1709476 + std 84666) / outline 3613041 um2 < 50%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_su12_sfu': 'M6'}",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (f) face-pin access: 1277 of 2251 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aibase[0] M6 (0.016,181.056), aibase[10] M6 (0.016,181.056), aibase[11] M6 (0.016,181.056))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_su12_sfu: (h) pockets: 2613 open own-layer pocket rects on M6 (5894.73 um2; gaps < 2.048 um between the child's own obstacles; largest (151.573,131.936)-(178.163,133.504), (116.821,263.888)-(137.315,265.28), (11.075,170.4)-(29.077,171.968)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M6 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc9 for 128 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hbm_sfucore_k9y_20261019-232453.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hbm_sfucore_k9y_20261019-232453.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/hbm_sfucore_k9y-20261019-232453",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook_execution",
+   "message": "missing unique actual textbook verdict or failed lint execution; RC=[]",
+   "fix": "inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate"
+  },
+  {
+   "severity": "FAIL",
+   "check": "synth_smoke",
+   "message": "ORFS synthesis did not finish within 2700 s (yosys SHARE / ABC stall class): FAILED: TimeoutExpired: Command '['docker', 'run', '--rm', '-v', '/srv/opentallas-scratch/claude/ref_gate/hbm_sfucore_k9y-20261019-232453/src:/src:ro', '-v', '/srv/opentallas-scratch/claude/ref_gate/hbm_sfucore_k9y-20261019-232453/routes/gate/work/orfs:/work', '-w', '/OpenROAD-flow-scripts/flow', 'openroad/orfs:latest', 'bash', '-lc', \"trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/script",
+   "fix": "decoded constant-index slices instead of runtime part-selects; replicate instead of wide shifters"
+  },
+  {
+   "severity": "WARN",
+   "check": "layout_images",
+   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
+   "fix": ""
+  }
+ ]
+}
