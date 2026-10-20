@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       admits   593 GB (avail 529, growth 113, headroom 0, waiters 0/0 GB) load 80/128 running 41 disk 321 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/xdie-s81-mu/stage/goldens_g2
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/xdie-s81-mu/stage/goldens_g2
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/xdie-s81-mu/stage/goldens_g2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/xdie-s81-mu/stage/goldens_g2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/xdie-s81-mu/stage/goldens_g2
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-554994-1792476654 after 0 s
+VERILATOR Verilator 5.050 2026-07-01 rev v5.050
+GEN_ARGS_OK ar46d (guard 1 reproduces goldens/ar46d byte-identically)
+GEN_G2_OK ar46d beats 278024 instances 414 last issue 104125 gate True
+GEN_ARGS_OK ar46r (guard 1 reproduces goldens/ar46r byte-identically)
+GEN_G2_OK ar46r beats 278024 instances 414 last issue 972967 gate True
+GEN_ARGS_OK mtp10d (guard 1 reproduces goldens/mtp10d byte-identically)
+GEN_G2_OK mtp10d beats 60440 instances 90 last issue 31909 gate True
+GEN_ARGS_OK mtp10r (guard 1 reproduces goldens/mtp10r byte-identically)
+GEN_G2_OK mtp10r beats 60440 instances 90 last issue 1134571 gate True
