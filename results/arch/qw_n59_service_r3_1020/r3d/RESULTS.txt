@@ -1,0 +1,14 @@
+R3d 2cd2693c2 (QW-N59-6 10-20) on R3c f03c8a431: formatter g_safe32 per-segment/lane hv + lo predecode registered at the
+di/dv edge, 26 kept slot_q copies (word_data 4-byte groups + 10 KVN control pubs), eb_r 32 copies from two epoch_begin pubs;
+parent 5 kept p_lcv/p_stage copies + 24 kept p_dd[547:537] copies (lane we+waddr / wdata halves).  Exact, 0 added edges.
+Verilator 5.050 six legs (ep9 /srv/opentallas-scratch/claude/qw-n59-6-r3d-1020): default_rnd, local_rnd, local_reset8,
+local_mu, local_dv, component: all PASS (receipts/<leg>/DONE + wrapper.log).
+Causal mutants (local_dv, fail regex 'N59(DV|MU)_FAIL' in out/wrapper.log), all REJECTED:
+hvlane0_zero: N59DV_FAIL SPLIT lockstep: 252 of 360 edges differ (split vs reference)
+cq0_zero: N59DV_FAIL SPLIT lockstep: 251 of 360 edges differ (split vs reference)
+ddc0_zero: N59DV_FAIL SPLIT lockstep: 252 of 360 edges differ (split vs reference)
+Strict mapped census (receipts/synth_recv): REFUSE, max 528 -> 216 but 430 > 32 (20,830 FF): 263 reset copies saturated
+(rst_cp_fmt 189 / rst_cp_pin 74 at 35 loads: the new flops), 113 hv nets (ABC folded hv into the 8-bit value muxes), 16
+word_data group enables at 64 (a DFFE enable costs 2 mapped loads per bit), plus the R3c child cones (begin / request /
+beat / vm_q_epoch / emb).  -> R3e (child publications) and R3f (<= 16 enable bits per publication, registered one-hot seat
+hits, A/B face pin copies, wider reset copies).
