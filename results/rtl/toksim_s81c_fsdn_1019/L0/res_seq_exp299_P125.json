@@ -1,0 +1,66 @@
+{
+ "op": "ffn.down",
+ "frame": "u_f_0L00",
+ "per": 125,
+ "nph": 3,
+ "rows": 10,
+ "go0": 63,
+ "last_go": 313,
+ "first_ret": 341,
+ "last_ret": 602,
+ "words": 24,
+ "go0_to_last_ret": 539,
+ "fixture_rows": 10,
+ "errors": [
+  "FAULT edge 405 status 11 lx 0",
+  "FAULT edge 406 status 11 lx 0",
+  "FAULT edge 407 status 11 lx 0",
+  "FAULT edge 408 status 11 lx 0"
+ ],
+ "phases": [
+  {
+   "i": 0,
+   "vec": "p59",
+   "phase": 59,
+   "mat": "exp299.w2",
+   "rows": 4,
+   "go": 63,
+   "shift": 0,
+   "words": 10,
+   "first_ret": 341,
+   "last_ret": 352,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 1,
+   "vec": "p60",
+   "phase": 60,
+   "mat": "exp299.w2",
+   "rows": 4,
+   "go": 188,
+   "shift": 125,
+   "words": 10,
+   "first_ret": 466,
+   "last_ret": 477,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 2,
+   "vec": "p61",
+   "phase": 61,
+   "mat": "exp299.w2",
+   "rows": 2,
+   "go": 313,
+   "shift": 250,
+   "words": 4,
+   "first_ret": 599,
+   "last_ret": 602,
+   "fixture_rows": 2,
+   "pass_": true
+  }
+ ],
+ "end": "END edges=2388 ret_words=24 xo_checked=2386 fault=4 spine_fault=0",
+ "pass": false
+}

@@ -1,0 +1,61 @@
+{
+ "op": "ffn.down",
+ "frame": "u_f_0L00",
+ "per": 130,
+ "nph": 3,
+ "rows": 10,
+ "go0": 63,
+ "last_go": 323,
+ "first_ret": 341,
+ "last_ret": 612,
+ "words": 24,
+ "go0_to_last_ret": 549,
+ "fixture_rows": 10,
+ "errors": [],
+ "phases": [
+  {
+   "i": 0,
+   "vec": "p47",
+   "phase": 47,
+   "mat": "exp61.w2",
+   "rows": 4,
+   "go": 63,
+   "shift": 0,
+   "words": 10,
+   "first_ret": 341,
+   "last_ret": 352,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 1,
+   "vec": "p48",
+   "phase": 48,
+   "mat": "exp61.w2",
+   "rows": 4,
+   "go": 193,
+   "shift": 130,
+   "words": 10,
+   "first_ret": 471,
+   "last_ret": 482,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 2,
+   "vec": "p49",
+   "phase": 49,
+   "mat": "exp61.w2",
+   "rows": 2,
+   "go": 323,
+   "shift": 260,
+   "words": 4,
+   "first_ret": 609,
+   "last_ret": 612,
+   "fixture_rows": 2,
+   "pass_": true
+  }
+ ],
+ "end": "END edges=2413 ret_words=24 xo_checked=2411 fault=0 spine_fault=0",
+ "pass": true
+}

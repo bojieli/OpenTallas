@@ -1,0 +1,67 @@
+{
+ "op": "ffn.down",
+ "frame": "u_f_0L00",
+ "per": 125,
+ "nph": 3,
+ "rows": 10,
+ "go0": 63,
+ "last_go": 313,
+ "first_ret": 343,
+ "last_ret": 614,
+ "words": 26,
+ "go0_to_last_ret": 551,
+ "fixture_rows": 10,
+ "errors": [
+  "FAULT edge 405 status 11 lx 0",
+  "FAULT edge 406 status 11 lx 0",
+  "FAULT edge 407 status 11 lx 0",
+  "FAULT edge 408 status 11 lx 0",
+  "PHASE_FAIL p77: ['MISMATCH edge 351 row 0 lo 4 k 2 got bc5dca68/0 want bc204014/0', 'MISMATCH edge 352 row 1 lo 4 k 2 got 3aa8b840/0 want bb75df58/0']"
+ ],
+ "phases": [
+  {
+   "i": 0,
+   "vec": "p75",
+   "phase": 75,
+   "mat": "shared.w2",
+   "rows": 4,
+   "go": 63,
+   "shift": 0,
+   "words": 10,
+   "first_ret": 343,
+   "last_ret": 366,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 1,
+   "vec": "p76",
+   "phase": 76,
+   "mat": "shared.w2",
+   "rows": 4,
+   "go": 188,
+   "shift": 125,
+   "words": 10,
+   "first_ret": 468,
+   "last_ret": 491,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 2,
+   "vec": "p77",
+   "phase": 77,
+   "mat": "shared.w2",
+   "rows": 2,
+   "go": 313,
+   "shift": 250,
+   "words": 6,
+   "first_ret": 601,
+   "last_ret": 614,
+   "fixture_rows": 2,
+   "pass_": false
+  }
+ ],
+ "end": "END edges=2388 ret_words=26 xo_checked=2386 fault=4 spine_fault=0",
+ "pass": false
+}

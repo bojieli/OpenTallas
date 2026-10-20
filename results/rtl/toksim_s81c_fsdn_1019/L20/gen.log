@@ -1,0 +1,24 @@
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 50/89 mat shared.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 966 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 51/89 mat shared.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 966 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 52/89 mat shared.w2 rows 2 nseg 5 faults 0 ret_words 6 calendar measured_class T 964 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 53/89 mat exp41.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 54/89 mat exp41.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 55/89 mat exp41.w2 rows 2 nseg 5 faults 0 ret_words 4 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 56/89 mat exp65.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 57/89 mat exp65.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 58/89 mat exp65.w2 rows 2 nseg 5 faults 0 ret_words 4 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 59/89 mat exp158.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 60/89 mat exp158.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 61/89 mat exp158.w2 rows 2 nseg 5 faults 0 ret_words 4 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 62/89 mat exp164.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 63/89 mat exp164.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 64/89 mat exp164.w2 rows 2 nseg 5 faults 0 ret_words 4 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 65/89 mat exp259.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 66/89 mat exp259.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 67/89 mat exp259.w2 rows 2 nseg 5 faults 0 ret_words 4 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 68/89 mat exp266.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 69/89 mat exp266.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 70/89 mat exp266.w2 rows 2 nseg 5 faults 0 ret_words 4 calendar measured_class T 952 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 53/89 mat exp41.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 952 mutant swap
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 53/89 mat exp41.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 953 mutant shift
+TOKSIM_FSDN_GEN L20 u_f_0L00 {"shared.w2": [[50, 51, 52], [4, 4, 2], 2304], "exp41.w2": [[53, 54, 55], [4, 4, 2], 2304], "exp65.w2": [[56, 57, 58], [4, 4, 2], 2304], "exp158.w2": [[59, 60, 61], [4, 4, 2], 2304], "exp164.w2": [[62, 63, 64], [4, 4, 2], 2304], "exp259.w2": [[65, 66, 67], [4, 4, 2], 2304], "exp266.w2": [[68, 69, 70], [4, 4, 2], 2304]}
