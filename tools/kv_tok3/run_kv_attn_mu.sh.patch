@@ -1,0 +1,21 @@
+--- /home/ubuntu/artifacts/kv-tok3-1019/pickup_orig/tools/qwen_layerbench/run_kv_attn_mu.sh	2026-10-19 16:55:17.323027883 -0700
++++ /home/ubuntu/artifacts/kv-tok3-1019/pickup3/tools/qwen_layerbench/run_kv_attn_mu.sh	2026-10-19 17:06:29.588877815 -0700
+@@ -10,7 +10,7 @@
+ H=$(cd "$(dirname "$0")" && pwd)
+ export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
+ TOP=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['top'])" $SL/slice.json)
+-for f in kva_grp_map.svh kva_ports.svh; do [ -f $SL/$f ] || { echo "KVA_BUILD_FAIL missing $SL/$f"; exit 2; }; done
++for f in kva_grp_map.svh kva_ports.svh kva_auth_defs.svh authority.svh kva_fault_bind.svh; do   # KV-TOK3: + generated startup repair [ -f $SL/$f ] || { echo "KVA_BUILD_FAIL missing $SL/$f"; exit 2; }; done
+ # MU-TOK-KV3: the bench never reaches inside a hier block: pvw_<p>.fault is read from the parent net on its port
+ python3 - "$SL/$TOP.sv" > $SL/kva_hier_refs.svh <<'PY' || exit 2
+ import re, sys
+@@ -32,7 +32,8 @@
+ # (hier_block in $W/hier.vlt; default the head-unit leaves, 7k of the vehicle's instances).  Verilator 5.050's _hier.mk
+ # runs a block twice under make -j (PCH race, HBM-TKM3), so the blocks are verilated serially and the C++ built -j.
+ VFILES="-f $SL/$TOP.f $MAC/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2.v $MAC/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v
+-    $KSRC/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v $W/tb_$TOP.sv"
++    $KSRC/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v $W/tb_$TOP.sv
++    $H/kva_authority_path.sv $H/kva_identity_scoreboard_n.sv"
+ QKDEF=""; [ "${KVA_QK_ONLY:-0}" = 1 ] && QKDEF="+define+KVA_QK_ONLY"
+ # KV-TOK 10-19: the LAND=1 attention ctl (MU dies) holds its record codec in generate block g_ld
+ CC=dut.kvs_attn.u_attn.ctl.codec.fault_cause

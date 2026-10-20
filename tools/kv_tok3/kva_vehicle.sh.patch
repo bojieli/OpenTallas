@@ -1,0 +1,11 @@
+--- /home/ubuntu/artifacts/kv-tok3-1019/pickup_orig/tools/qwen_layerbench/kva_vehicle.sh	2026-10-19 16:55:18.929058754 -0700
++++ /home/ubuntu/artifacts/kv-tok3-1019/pickup3/tools/qwen_layerbench/kva_vehicle.sh	2026-10-19 17:06:29.576877586 -0700
+@@ -51,6 +51,8 @@
+   ${BOOT_AGE_ARGS[@]} --out $SL/kva_grp_map.svh --facts $SL/kva_grp_facts.json --stacks $STK >> $OUT/cut.log 2>&1 || { echo "KVA_MAP_FAIL $VEH"; tail -5 $OUT/cut.log; exit 2; }
+ python3 $H/kva_mu_ports.py --slice $SL/slice.json --relay-stages $R/case_kv/relay_stages.json --relay-check $R/relay_check.json \
+   --out $SL/kva_ports.svh >> $OUT/cut.log 2>&1 || { echo "KVA_PORTS_FAIL $VEH"; tail -5 $OUT/cut.log; exit 2; }
++# KV-TOK3 10-19: startup repair (observation authority + source-fault bind) generated from THIS cut; refuse -> no verdict
++python3 -I $H/gen_kva_authority.py --cut-dir $SL --out $SL >> $OUT/cut.log 2>&1 || { echo "KVA_AUTH_FAIL $VEH"; tail -3 $OUT/cut.log; exit 2; }
+ tail -3 $OUT/cut.log
+ [ -n "${KVA_CUT_ONLY:-}" ] && { echo "KVA_CUT_ONLY $VEH MU=$MU"; exit 0; }
+ KVA_QK_ONLY=$QK KVA_HIER="${KVA_HIER-$HDEF}" bash $H/run_kv_attn_mu.sh $SL $OUT/run $K $CASES
