@@ -1,0 +1,12 @@
+m_all {"AR": {"schedule": 868624.7, "token_cycles": 894806.7, "tok_s": 1341.1}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+p_floor {"AR": {"schedule": 738048.2, "token_cycles": 762737.8, "tok_s": 1573.3}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+p_fetch {"AR": {"schedule": 828492.7, "token_cycles": 854216.0, "tok_s": 1404.8}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+p_fetch_xlr {"AR": {"schedule": 804625.1, "token_cycles": 830075.6, "tok_s": 1445.7}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+p_fix {"AR": {"schedule": 744180.3, "token_cycles": 768940.0, "tok_s": 1560.6}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+p_xpipe {"AR": {"schedule": 817229.9, "token_cycles": 842824.5, "tok_s": 1423.8}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+ag_m_all 
+ag_p_fix 
+ag_p_floor 
+ag_m_all {"AR": {"schedule": 853881.3, "token_cycles": 879894.8, "tok_s": 1363.8}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+ag_p_fix {"AR": {"schedule": 720771.4, "token_cycles": 745263.6, "tok_s": 1610.2}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
+ag_p_floor {"AR": {"schedule": 714639.3, "token_cycles": 739061.4, "tok_s": 1623.7}, "qwen": {"schedule": 1171850.9, "token_cycles": 1172221.0, "tok_s": 1023.7}}
