@@ -1,0 +1,5 @@
+Default-off closed-view equivalence: IN PROGRESS, no PASS claimed.
+
+Gold: exact source ae6b0c59a (closed qfd_tt_head_static_h16c), kit STAGE_ME1 and all other hard-head defaults. Gate:6e943b668 hardware, same params, new SEGCAL default0. Source SHA256 pairs in sources.json; top static_hr IO declaration byte-identical, interface.json. Macro models/sources matched unchanged; new start_base is internal to the fixed-issue child, inactive at SEG0.
+
+Fleet ep7 /srv/opentallas-scratch/claude/codex-qw-segcal-1019/src, old files in closed_ae6b (created from git show ae6b0c59a:<source>). run.sh is full Yosys proc/flatten/memory_map + equiv_struct/equiv_simple/equiv_induct/equiv_status-assert. run_optimized.sh adds opt-full before equiv_make to remove redundant muxes. Both use identical source/params; preserve the original run. Local logs scratch/codex-qw-segcal-1019/closed_equiv{,_optimized}.log. Final logs appear in this directory on fleet. No exact defaultOFF equivalence is admitted before an actual equiv_status-assert terminal PASS.

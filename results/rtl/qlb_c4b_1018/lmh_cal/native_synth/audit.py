@@ -29,6 +29,7 @@ const_outputs={n:v['bits'] for n,v in m['ports'].items()if v['direction']=='outp
 out=dict(schema='opentallas.segcal.native-driver-census.v1',flat_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),cells=len(m['cells']),flops=len(seq),macros=macros,maximum_nonclock_driver_loads=drivers[0]['loads'],violations=bad,top_drivers=drivers[:30],input_port_loads=ports,constant_output_bits=const_outputs,status='FAIL' if bad else 'PASS_FANOUT_ONLY',not_proven=['storage source-array classification','registered functional boundaries','placed reach <=405um'])
 for d in bad:
  d['netnames']=[n for n,v in m['netnames'].items()if d['bit'] in v['bits']]
+out['first_seq_attributes']=[dict(inst=n,attributes=c.get('attributes'))for n,c in m['cells'].items()if c['type'].startswith(('DFF','SDFF','DF'))][:5]
 storage={}
 out['fifo_netname_samples']=[n for n in m['netnames']if 'fq' in n][:24]
 out['head_netname_samples']=[n for n in m['netnames']if 'hq' in n][:8]

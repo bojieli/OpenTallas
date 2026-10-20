@@ -1080,6 +1080,43 @@
     "registered functional boundaries",
     "placed reach <=405um"
   ],
+  "first_seq_attributes": [
+    {
+      "inst": "c_fault$_DFF_P_",
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "/out/1_2_yosys.raw.v:268350.24-268354.4"
+      }
+    },
+    {
+      "inst": "command_stage[0]$_DFF_P_",
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "/out/1_2_yosys.raw.v:268355.24-268359.4"
+      }
+    },
+    {
+      "inst": "command_stage[1]$_DFF_P_",
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "/out/1_2_yosys.raw.v:268360.24-268364.4"
+      }
+    },
+    {
+      "inst": "command_stage[2]$_DFF_P_",
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "/out/1_2_yosys.raw.v:268365.24-268369.4"
+      }
+    },
+    {
+      "inst": "command_stage[3]$_DFF_P_",
+      "attributes": {
+        "module_not_derived": "00000000000000000000000000000001",
+        "src": "/out/1_2_yosys.raw.v:268370.24-268374.4"
+      }
+    }
+  ],
   "fifo_netname_samples": [
     "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.fqrd_nx[0]",
     "u_ot_pr_core.u_head.u_ctrl_me.g_hfc.fqrd_nx[1]",
