@@ -7,9 +7,10 @@ module tb_parent;
  qkd_kvs_emb_ctx_n32child dut(.ck(ck),.rst_n(rst_n),.i_ctx(ctx),.d2d__emb_tx_slot(slot),.i_ctl(ctl),.i_hroot_WS(a),.i_hroot_WN(b),.i_hroot_ES(c),.i_hroot_EN(d),.rowtx__emb_tx_v(nv),.rowtx__emb_tx_payload(np),.px_st(ns),.px_tok(nt),.px_tep(ne),.emb_fault(nf));
  qkd_kvs_emb_ctx_bound_reference #(.NATIVE32(1),.PIPE_JOIN(1)) gold(.ck(ck),.rst_n(rst_n),.i_ctx(ctx),.d2d__emb_tx_slot(slot),.i_ctl(ctl),.i_hroot_WS(a),.i_hroot_WN(b),.i_hroot_ES(c),.i_hroot_EN(d),.rowtx__emb_tx_v(ov),.rowtx__emb_tx_payload(op),.px_st(os),.px_tok(ot),.px_tep(oe),.emb_fault(of));
  integer checks=0,errors=0,beats=0,starts=0,words=0,warm=0,seed=17193;
+ reg initialized=0;
  always @(negedge ck) begin
   if(!rst_n)warm=0;else warm=warm+1;
-  if(warm>20)begin
+  if(initialized && warm>0)begin
    checks++;
    // Identity and payload fields are meaningful on their registered valid.
    if({nv,ns,nf}!=={ov,os,of} || ((nv||ov) && np!==op) ||
@@ -21,7 +22,7 @@ module tb_parent;
  end
  task tick;begin @(negedge ck);#0.01;end endtask
  task quiet;begin ctx=0;slot=0;ctl=0;a=0;b=0;c=0;d=0;end endtask
- task reset;begin quiet();rst_n=0;repeat(7)tick();rst_n=1;repeat(30)tick();end endtask
+ task reset;begin quiet();rst_n=0;repeat(7)tick();initialized=1;rst_n=1;repeat(30)tick();end endtask
  function automatic[98:0] record(input integer tk,input integer ep);
   record={1'b1,1'b1,5'd0,4'd12,6'd63,16'(ep),5'd0,2'd0,16'(ep),6'd0,18'(tk),13'd0,6'd0};
  endfunction
