@@ -147,7 +147,21 @@ def specs(rw, rh):
          "route": dict(route, threads=32, peak_ram_gb=192, pin_balance={"group_max": 1, "h": "M4", "v": "M5"}),
          "safe_design_checklist": CHECKLIST, **OPTOUT,
          "job": job("qfd_dv_slice2_stn8", "QW-SLICE3: slice2 station, 8 regional CTS roots (one per SU-lane region), landed fault ring", 192)}
-    return a, b
+    # variant c (parallel, PARALLEL rule): clock + reset pins at the centre of the W face (clock entry beside the
+    # register mass instead of the face corner; g3 measured TT insertion 310.8 ps with ck at the corner)
+    c = json.loads(json.dumps(a))
+    c["name"] = "qfd_dv_slice2_stnrgc"
+    wl = [n for n in region_pins["W"] if n not in ("ck", "rst_n")]
+    tot, acc, k = sum(REGION_W[n] for n in wl), 0, 0
+    while acc + REGION_W[wl[k]] / 2 <= tot / 2:
+        acc += REGION_W[wl[k]]; k += 1
+    c["pins"]["W"] = wl[:k] + ["ck", "rst_n"] + wl[k:]   # width midpoint of the face
+    rc = {}
+    for f, names in c["pins"].items():
+        spread(names, REGION_W, 4.32, (rh if f in "WE" else rw) - 4.32, rc)
+    c["pin_ranges"] = rc
+    c["job"] = job("qfd_dv_slice2_stnrgc", "QW-SLICE3: station region tile, variant c (centre clock entry)", 64)
+    return a, b, c
 
 
 def main():
