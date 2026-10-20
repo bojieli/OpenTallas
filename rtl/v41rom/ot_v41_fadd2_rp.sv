@@ -58,7 +58,7 @@ module ot_v41_fadd2_rp #(
     wire [10:0] swap_k;
     if (CUT[0]) begin : g_swap_k
         (* keep *) reg [10:0] r;
-        always @(posedge clk) r <= {11{(b_exp0 > a_exp0) || ((b_exp0 == a_exp0) && !age0)}};
+        always @(posedge clk) r <= {11{EXT0 != 0 ? (o0_ext[34] || (o0_ext[33] && o0_ext[32])) : ((b_exp0 > a_exp0) || ((b_exp0 == a_exp0) && !age0))}};
         assign swap_k = r;
     end else begin : g_swap_wire
         assign swap_k = {11{swap1}};

@@ -324,6 +324,31 @@ module ot_v41_bterm4_w10 #(
         p5a_nan <= p4_nan; p5a_s <= p4_s; p5a_z <= (p4_m == 41'd0);
         p5a_eb <= p4_eb; p5a_nm <= nma; p5a_lz <= lza;
     end
+`ifdef OT_BF_FINE32
+    // Capture fine-shift predicates with P5a data, one kept set per <=9-bit slice.
+    // These are functions of nma on the SAME P5a edge; no data or valid stage added.
+    wire fn4 = nma[40:37] == 0;
+    wire [40:0] fnm4 = fn4 ? nma << 4 : nma;
+    wire fn2 = fnm4[40:39] == 0;
+    wire [40:0] fnm2 = fn2 ? fnm4 << 2 : fnm4;
+    wire fn1 = !fnm2[40];
+    (* keep *) reg [2:0] p5_fine_k[0:4];
+    wire [40:0] fine_nm;
+    for(genvar fj=0;fj<5;fj++) begin : g_fine_slice
+        localparam integer FW = fj==4 ? 5 : 9;
+        always @(posedge clk) begin
+`ifdef OT_BF_FINE32_MUT_SEL
+            p5_fine_k[fj] <= {fn4 ^ (fj==3),fn2,fn1};
+`else
+            p5_fine_k[fj] <= {fn4,fn2,fn1};
+`endif
+        end
+        wire [40:0] a4 = p5_fine_k[fj][2] ? p5a_nm << 4 : p5a_nm;
+        wire [40:0] a2 = p5_fine_k[fj][1] ? a4 << 2 : a4;
+        wire [40:0] a1 = p5_fine_k[fj][0] ? a2 << 1 : a2;
+        assign fine_nm[9*fj+:FW] = a1[9*fj+:FW];
+    end
+`endif
     // -- P5b: normalise, fine (4 / 2 / 1) -----------------------------------------------------------
     reg [40:0] nm;
     reg [5:0]  lz;
@@ -343,7 +368,12 @@ module ot_v41_bterm4_w10 #(
     always @(posedge clk) begin
         p5_nan <= p5a_nan; p5_s <= p5a_s;
         p5_z <= p5a_z;
-        p5_ebl <= p5a_eb - $signed({6'd0, lz}); p5_nm <= nm;
+        p5_ebl <= p5a_eb - $signed({6'd0, lz});
+`ifdef OT_BF_FINE32
+        p5_nm <= fine_nm;
+`else
+        p5_nm <= nm;
+`endif
     end
 
     // -- P6: round to 24 bits (the golden's float32 of the exact dot) -----------------------------
