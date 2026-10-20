@@ -1,0 +1,477 @@
+{
+ "scope": "MODEL ONLY: exact minimum bottleneck source-origin displacement on enumerated36legalpoints, not stage reach proof. Source/bytebank identities fixed; no extra FF/edges. New stage reaches/parent station replans remain unqualified.",
+ "outline_um": [
+  388.8,
+  432
+ ],
+ "minimum_possible_max_origin_L1_shift_um": 213.36,
+ "preceding_infeasible_threshold_um": 213.168,
+ "assignment": [
+  {
+   "inst": "u43458_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    22.176
+   ],
+   "new_origin_um": [
+    172.8,
+    172.8
+   ],
+   "origin_L1_shift_um": 160.224
+  },
+  {
+   "inst": "u43460_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    36.528
+   ],
+   "new_origin_um": [
+    172.8,
+    86.4
+   ],
+   "origin_L1_shift_um": 59.472
+  },
+  {
+   "inst": "u43462_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    50.88
+   ],
+   "new_origin_um": [
+    172.8,
+    43.2
+   ],
+   "origin_L1_shift_um": 17.28
+  },
+  {
+   "inst": "u43464_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    65.232
+   ],
+   "new_origin_um": [
+    172.8,
+    129.6
+   ],
+   "origin_L1_shift_um": 73.968
+  },
+  {
+   "inst": "u43466_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    79.584
+   ],
+   "new_origin_um": [
+    172.8,
+    259.2
+   ],
+   "origin_L1_shift_um": 189.216
+  },
+  {
+   "inst": "u43468_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    93.936
+   ],
+   "new_origin_um": [
+    172.8,
+    216.0
+   ],
+   "origin_L1_shift_um": 131.664
+  },
+  {
+   "inst": "u43470_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    108.288
+   ],
+   "new_origin_um": [
+    172.8,
+    302.4
+   ],
+   "origin_L1_shift_um": 203.712
+  },
+  {
+   "inst": "u43472_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    122.64
+   ],
+   "new_origin_um": [
+    129.6,
+    302.4
+   ],
+   "origin_L1_shift_um": 213.36
+  },
+  {
+   "inst": "u43880_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    22.176
+   ],
+   "new_origin_um": [
+    345.6,
+    216.0
+   ],
+   "origin_L1_shift_um": 203.904
+  },
+  {
+   "inst": "u43882_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    36.528
+   ],
+   "new_origin_um": [
+    345.6,
+    172.8
+   ],
+   "origin_L1_shift_um": 146.352
+  },
+  {
+   "inst": "u43884_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    50.88
+   ],
+   "new_origin_um": [
+    345.6,
+    129.6
+   ],
+   "origin_L1_shift_um": 88.8
+  },
+  {
+   "inst": "u43886_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    65.232
+   ],
+   "new_origin_um": [
+    345.6,
+    43.2
+   ],
+   "origin_L1_shift_um": 32.112
+  },
+  {
+   "inst": "u43888_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    79.584
+   ],
+   "new_origin_um": [
+    345.6,
+    86.4
+   ],
+   "origin_L1_shift_um": 16.896
+  },
+  {
+   "inst": "u43890_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    93.936
+   ],
+   "new_origin_um": [
+    345.6,
+    259.2
+   ],
+   "origin_L1_shift_um": 175.344
+  },
+  {
+   "inst": "u43892_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    108.288
+   ],
+   "new_origin_um": [
+    345.6,
+    302.4
+   ],
+   "origin_L1_shift_um": 204.192
+  },
+  {
+   "inst": "u43894_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    122.64
+   ],
+   "new_origin_um": [
+    302.4,
+    302.4
+   ],
+   "origin_L1_shift_um": 212.88
+  },
+  {
+   "inst": "u44302_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    157.008
+   ],
+   "new_origin_um": [
+    172.8,
+    345.6
+   ],
+   "origin_L1_shift_um": 198.192
+  },
+  {
+   "inst": "u44304_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    171.36
+   ],
+   "new_origin_um": [
+    129.6,
+    345.6
+   ],
+   "origin_L1_shift_um": 207.84
+  },
+  {
+   "inst": "u44306_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    185.712
+   ],
+   "new_origin_um": [
+    172.8,
+    388.8
+   ],
+   "origin_L1_shift_um": 212.688
+  },
+  {
+   "inst": "u44308_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    200.064
+   ],
+   "new_origin_um": [
+    216.0,
+    345.6
+   ],
+   "origin_L1_shift_um": 198.336
+  },
+  {
+   "inst": "u44310_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    214.416
+   ],
+   "new_origin_um": [
+    129.6,
+    388.8
+   ],
+   "origin_L1_shift_um": 207.984
+  },
+  {
+   "inst": "u44312_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    228.768
+   ],
+   "new_origin_um": [
+    86.4,
+    345.6
+   ],
+   "origin_L1_shift_um": 193.632
+  },
+  {
+   "inst": "u44314_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    243.12
+   ],
+   "new_origin_um": [
+    43.2,
+    302.4
+   ],
+   "origin_L1_shift_um": 179.28
+  },
+  {
+   "inst": "u44316_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    163.2,
+    257.472
+   ],
+   "new_origin_um": [
+    86.4,
+    302.4
+   ],
+   "origin_L1_shift_um": 121.728
+  },
+  {
+   "inst": "u44724_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    157.008
+   ],
+   "new_origin_um": [
+    345.6,
+    345.6
+   ],
+   "origin_L1_shift_um": 198.672
+  },
+  {
+   "inst": "u44726_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    171.36
+   ],
+   "new_origin_um": [
+    302.4,
+    345.6
+   ],
+   "origin_L1_shift_um": 207.36
+  },
+  {
+   "inst": "u44728_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    185.712
+   ],
+   "new_origin_um": [
+    345.6,
+    388.8
+   ],
+   "origin_L1_shift_um": 213.168
+  },
+  {
+   "inst": "u44730_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    200.064
+   ],
+   "new_origin_um": [
+    259.2,
+    302.4
+   ],
+   "origin_L1_shift_um": 178.656
+  },
+  {
+   "inst": "u44732_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    214.416
+   ],
+   "new_origin_um": [
+    216.0,
+    302.4
+   ],
+   "origin_L1_shift_um": 207.504
+  },
+  {
+   "inst": "u44734_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    228.768
+   ],
+   "new_origin_um": [
+    302.4,
+    388.8
+   ],
+   "origin_L1_shift_um": 193.152
+  },
+  {
+   "inst": "u44736_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    243.12
+   ],
+   "new_origin_um": [
+    259.2,
+    345.6
+   ],
+   "origin_L1_shift_um": 178.8
+  },
+  {
+   "inst": "u44738_c0/u_cell",
+   "master": "ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "orient": "MY",
+   "old_origin_um": [
+    335.52,
+    257.472
+   ],
+   "new_origin_um": [
+    259.2,
+    388.8
+   ],
+   "origin_L1_shift_um": 207.648
+  }
+ ],
+ "free_origins_um": [
+  [
+   43.2,
+   345.6
+  ],
+  [
+   43.2,
+   388.8
+  ],
+  [
+   86.4,
+   388.8
+  ],
+  [
+   216.0,
+   388.8
+  ]
+ ]
+}
