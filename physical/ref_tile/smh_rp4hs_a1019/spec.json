@@ -1,0 +1,308 @@
+{
+ "name": "smh_rp4hs_a1019",
+ "top": "ot_hbm_smh_rp4h_s",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+  "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/hbm_accel/sm/repack/h2/ot_hbm_smh_rp4h.sv"
+ ],
+ "params": {},
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 457.92,
+  "h": 691.2
+ },
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "u_lf1.u_lh.u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    216.0,
+    172.8
+   ],
+   "orient": "R0",
+   "inst": "u_lf1.u_lh.u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    345.6,
+    172.8
+   ],
+   "orient": "R0",
+   "inst": "u_lf1.u_lh.u_tcc.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.u_lh.u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.u_lh.u_xs"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+   "count": 1,
+   "at": [
+    129.6,
+    561.6
+   ],
+   "orient": "MX",
+   "inst": "u_row1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+   "count": 1,
+   "at": [
+    388.8,
+    561.6
+   ],
+   "orient": "MX",
+   "inst": "u_rowe1"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rin_s"
+  ],
+  "E": [
+   "rout_s"
+  ],
+  "S": [
+   "gout",
+   "xss_a1",
+   "xss_g1",
+   "xss_a2",
+   "xss_g2"
+  ],
+  "N": [
+   "xi_b",
+   "rst_n",
+   "clk",
+   "xi_g0",
+   "xi_gp"
+  ]
+ },
+ "orfs_vars": {
+  "OT_IO_REF_CLASS": "1",
+  "POST_TAPCELL_TCL": "physical/ref_tile_specs/smh/smh_rp4hs_a1019_stations.tcl"
+ },
+ "refglob": "*",
+ "io_flop_at_pins": {
+  "cols": 10,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every data pin is registered in RTL: inputs rin (ot_rp4l_pinrow), bin (pinbeat), xs straps (5-stage strap), gin (u_gn u_v/u_d), xi_* (u_lands / u_xgi / u_xpi); outputs rout / bout launched by the hard row_e / beat_e flops, xo_* by u_xbo / u_xgo / u_xpo, gout by the u_gs output registers.  Recipe-3 pin registers would add cycles to the priced lp schedule."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_delay": true,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5 M7"
+  }
+ },
+ "job": {
+  "owner": "Claude LEAD2-HBM/L2H-SM9",
+  "branch": "claude/l2h-sm9-1019",
+  "tag": "rp4hs_a1019",
+  "purpose": "HBM SM tile rp4, safe-design successor of smh_tile_rp4lp as two hardened halves (this kit = the s half, 691.2 um (pairs with n_a)); closure of the MATVEC tile body (template of the rp4a attention tile).",
+  "structural_change": "smh_tile_rp4lp (457.92 x 1598.4, aspect 3.49, 13/18 macros off the 43.2 lattice, 2,069-b landing read select 8,284 loads, gate1 GRT ovf 51,363, gate2 CTS rc 2) split along its lp region cut into two hardened halves (ot_hbm_smh_rp4h_n / _s) abutting in the SM frame slot: no landing (registered tile-to-tile crossing on the abutment face, judged per linked child-flop pair at die level), the two hard 216x43.2 land children replaced by soft kept landing registers (rl1 no longer crosses a macro), every macro on the 43.2 lattice, BF16 columns / transpose re-oriented so operand inputs face the x store and sums face the transpose, one clock root per half with clk on the abutment face beside the n half's.  Latency identical to the lp record (gout +3, all else 0).",
+  "extra_paths": [
+   "tools/hbm_sm_repack_1015",
+   "rtl/hbm_accel/sm/repack/h2",
+   "results/arch/l2h_sm9_1019/bench"
+  ],
+  "benches": [
+   {
+    "name": "h2_lockstep",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2/run_rp4h2_one.sh {RUN}/h2 0 0",
+    "expect": "pass",
+    "pass_regex": "^H2_LOCKSTEP PASS MUT=0 compared=",
+    "pass_witness": "results/arch/l2h_sm9_1019/bench/mut0.log",
+    "threads": 4,
+    "peak_ram_gb": 48
+   },
+   {
+    "name": "h2_mut1",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2/run_rp4h2_one.sh {RUN}/h2m1 1 0",
+    "expect": "fail",
+    "fail_regex": "^H2_LOCKSTEP FAIL MUT=1 mismatches=[1-9]",
+    "fail_witness": "results/arch/l2h_sm9_1019/bench/mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 48
+   },
+   {
+    "name": "h2_mut2",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2/run_rp4h2_one.sh {RUN}/h2m2 2 0",
+    "expect": "fail",
+    "fail_regex": "^H2_LOCKSTEP FAIL MUT=2 mismatches=[1-9]",
+    "fail_witness": "results/arch/l2h_sm9_1019/bench/mut2.log",
+    "threads": 4,
+    "peak_ram_gb": 48
+   },
+   {
+    "name": "h2_mut3",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2/run_rp4h2_one.sh {RUN}/h2m3 3 0",
+    "expect": "fail",
+    "fail_regex": "^H2_LOCKSTEP FAIL MUT=3 mismatches=[1-9]",
+    "fail_witness": "results/arch/l2h_sm9_1019/bench/mut3.log",
+    "threads": 4,
+    "peak_ram_gb": 48
+   }
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "child_clock_ref": "boundary",
+ "pin_ranges": {
+  "gout": [
+   181.44,
+   280.8
+  ],
+  "xss_a1": [
+   285.12,
+   289.44
+  ],
+  "xss_g1": [
+   291.6,
+   293.76
+  ],
+  "xss_a2": [
+   295.92,
+   299.16
+  ],
+  "xss_g2": [
+   301.32,
+   303.48
+  ],
+  "rin_s": [
+   500.4,
+   686.88
+  ],
+  "rout_s": [
+   500.4,
+   686.88
+  ],
+  "xi_b": [
+   4.32,
+   397.44
+  ],
+  "rst_n": [
+   399.6,
+   400.68
+  ],
+  "clk": [
+   403.92,
+   405.0
+  ],
+  "xi_g0": [
+   408.24,
+   421.2
+  ],
+  "xi_gp": [
+   423.36,
+   453.6
+  ]
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n itself: ot_rp4h_rst u_rst = two KEPT face stages (l0, l1) then one KEPT copy per consumer (c[*], 1-12 loads each); the port net has ONE sink (u_rst.l0).  Depth 3 = the lp regional reset run, so the halves stay cycle-exact with ot_hbm_smh_rp4_flat_lp (bench H2_LOCKSTEP)."
+ }
+}

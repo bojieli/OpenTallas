@@ -1,0 +1,11 @@
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-635061-1792455737 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+MUT 0: H2_LOCKSTEP PASS
+MUT 1: H2_LOCKSTEP FAIL
+MUT 2: H2_LOCKSTEP FAIL
+MUT 3: H2_LOCKSTEP FAIL
+MUT sb0: H2_LOCKSTEP PASS
+MUT sb1: H2_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-635061-1792455737): exit 0
