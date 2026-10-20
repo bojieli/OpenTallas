@@ -4,12 +4,22 @@
  "date": "2026-10-19 18:55 PT",
  "scope": "Qwen3-8B KV-die attention (QK+softmax+PV16) at T8192, 1 user and 4 users",
  "stages": [
-  {"stage": "kv_attention_1u_full", "cycles_start_to_retire": null, "grade": "PENDING",
+  {
+   "stage": "kv_attention_1u_full",
+   "cycles_start_to_retire": null,
+   "grade": "PENDING",
    "verdict": "NOT MEASURED on current RTL",
-   "reason": "No full QK+softmax+PV attention vehicle exists on GEN9 (not built yet; kvs14r-3923bb422-gen9s/gen9d in progress) nor on the newest bound die kvs14r-4db097403-codexmub (NOT_A_DIE_RESULT; RELAY_CHECK_FAIL_DIAGNOSTIC_ONLY). KV-TOK3/KV-TOK2 vehicles (G7 WSQK) are QK-only and still running at 18:50."},
-  {"stage": "kv_attention_4u_full", "cycles_start_to_retire": null, "grade": "PENDING",
+   "reason": "No full QK+softmax+PV attention vehicle exists on GEN9 (not built yet; kvs14r-3923bb422-gen9s/gen9d in progress) nor on the newest bound die kvs14r-4db097403-codexmub (NOT_A_DIE_RESULT; RELAY_CHECK_FAIL_DIAGNOSTIC_ONLY). KV-TOK3/KV-TOK2 vehicles (G7 WSQK) are QK-only and still running at 18:50.",
+   "next": "full_vehicle_1019 job2"
+  },
+  {
+   "stage": "kv_attention_4u_full",
+   "cycles_start_to_retire": null,
+   "grade": "PENDING",
    "verdict": "NOT MEASURED",
-   "rtl_semantics": "qkd_attn_service_root (gen9 b9f3c1c30d): request_ready = !running && boot_count==80. One request at a time, so 4 users are served back to back: occupancy >= 4 x per-user service (from the old unit number, 4 x 1,561 = 6,244 + accept edges). This is DERIVED, not measured."}
+   "rtl_semantics": "qkd_attn_service_root (gen9 b9f3c1c30d): request_ready = !running && boot_count==80. One request at a time, so 4 users are served back to back: occupancy >= 4 x per-user service (from the old unit number, 4 x 1,561 = 6,244 + accept edges). This is DERIVED, not measured.",
+   "next": "full_vehicle_1019 job2"
+  }
  ],
  "old_reference_not_counted": {
   "what": "KVJ-B2 unit service _sr (qkd_attn_service_root + w16 PV16 service), REAL TP4 L0/L1 P8191 operands, 16/16 exact, mutants shift/pos 4/4 FAIL, 1,561 service cycles at T8192 (claude/qw-kvattn-1018 0e509e763)",
@@ -21,7 +31,22 @@
   "qwk_slice_attn (QW-KVATTN2, kvs14p)": "run1 killed (exit 143), run2 on ep6 never got past the build (03:15, no run logs). Old die. It does not retarget to 4db097403: the masters qkd_astk_strip_er_die, qkd_pvw_die_t and qkd_seq_static_s are absent there (renamed), and qkd_pv16_vport became qkd_pv16_vport_b."
  },
  "release_attention_rtl": "qkd_kvs_attn_r16 (claude/kv-attn2b-1019 @69bab6da2; kits rv3/rv4 routing, RETIRE_STATIC=1 STATUS_DELAY=213, tx_first 1751)",
- "price": {"1u": 1555, "window": 1816},
+ "price": {
+  "1u": 1555,
+  "window": 1816
+ },
  "verilator": "5.050 (old reference)",
- "measured_numbers": "none on current RTL"
+ "measured_numbers": "none on current RTL",
+ "full_vehicle_1019": {
+  "lane": "TOKSIM-KVATTN2",
+  "state": "RUNNING (no measured number yet)",
+  "vehicle": "tb_kvattn_rel = qkd_kvs_attn_fl r16 (RETIRE_STATIC=1 STATUS_DELAY=213, release kit rv3 CLOSED) + kvattn_rel_dp (4 native QK stacks / AHUB / V capture / 2 PV16 pairs / final join), claude/toksim-kvattn-1019 7d5abff9e (GEN9 d1f3c6ea2 merged; vehicle RTL byte-identical to 1e5dd5383)",
+  "golden": "tools/qwen_tp8_attention_native.py vectors (CPU)",
+  "verilator": "5.050",
+  "runs": "u1/u4 x T1024/4096/8192 + u1_T8191 + u1_T4096_peaky + 7 mutants + u1_T32768_bound",
+  "job": "ot-epyc5 unit oth-ubuntu-1518301-1792473305 (spilled from ep6), out /srv/opentallas-scratch/claude/toksim-kvattn-1019/out_1e5dd5383/record.json",
+  "context_bound": "release RTL: ctx T<=8192 (cal_gen f2), position<=8191 (service root / kvs_ctl); 32k context NOT supported",
+  "seam_note": "vehicle = tile d2d RX landing -> tile TX records, 0 die relays; die seam K word 0x03030416 [22,4,3,3] added in composition",
+  "previous_attempt": "job1 ep6 19:09 SIGTERM at 19:14 during build (agent client died), no run"
+ }
 }
