@@ -43,7 +43,7 @@ if [ "$PH" = chain ]; then
   cd "$D/src" || exit 2
   C=$D/case_$TAG; rm -rf "$C"
   python3 tools/s81_dv/dv_rvcase.py --plan "$D/plan_mu6/plan.json" --bind-dir "$D/bind_mu6/bind" --bind-table "$TBL" --land-plan "$LP" --out "$C" \
-    --view-refs "$CREF" "$SRC" "$MAIN" --die-repair --dieflow-ref "$DIEFLOW" --corners tt ff ss --macro-views > "$D/case_gen_$TAG.log" 2>&1
+    --view-refs "$CREF" "$SRC" "$MAIN" --die-repair --dieflow-ref "$DIEFLOW" --dcc-ref "$MAIN" --corners tt ff ss --macro-views > "$D/case_gen_$TAG.log" 2>&1
   RC=$?; echo "CASE_RC $TAG $RC corridor=1 macro_views=1 native_consumer=1 ctrl_ref=$CREF src=$SRC" >> "$S"; [ $RC -eq 0 ] || exit $RC
   python3 - "$C" >> "$S" <<'PY'
 import json,sys
