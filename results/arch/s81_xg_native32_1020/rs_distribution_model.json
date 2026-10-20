@@ -28,16 +28,16 @@
       "vertical": 276,
       "nx": 346,
       "gather": 3099,
-      "control_deliveries": 2489,
+      "control_deliveries": 2487,
       "fault": 1
     },
-    "total_signal_and_clock_reset_bits": 13752,
+    "total_signal_and_clock_reset_bits": 13750,
     "steady_budget": "E/W1104b each per cycle; V276b/cycle; own at most one276b fragment/cycle; three gather streams of1024data+metadata/cycle. Not all injection sources may collide; existing sticky-fault semantics retained.",
     "hard_boundary": "RS and XS sibling hard leaves, no computation MACs. Existing XS3 remains separately blocked; no whole-XG qualification."
   },
   "geometry_model": {
     "existing_outline": "864x518.4 or907.2x561.6, no macro",
-    "pin_perimeter_lower_bound_um_at6perum": 2292.0,
+    "pin_perimeter_lower_bound_um_at6perum": 2291.6666666666665,
     "potential_outline_only": [
       777.6,
       604.8
