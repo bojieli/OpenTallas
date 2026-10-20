@@ -2,7 +2,7 @@
 `default_nettype none
 // HBM-NEXT (hnx, 2026-10-19): fork of rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv for the 2^19-word
 // VM (A0 + A1 data macros, 17-bit sector).  Port widths +1 on every record (rq 18, wq/dq/kq 282, xq/xq2/eg 277, pq 286);
-// clk_macro3 = the A1 macro's direct clock entry.  RG 5 / WG 2 / EG_WIDE 1 as the d4g SE/NE master.
+// safe3 (10-20): SRAM clock pins on the core clk root with their launch/capture registers.  RG 5 / WG 2 / EG_WIDE 1 as the d4g SE/NE master.
 module ot_hnx_vms_bank_q0_core #(parameter integer MUT = 0) (
     input wire [17:0] rq0,
     output wire [256:0] rr0,
@@ -20,7 +20,7 @@ module ot_hnx_vms_bank_q0_core #(parameter integer MUT = 0) (
     output wire wq_done1,
     input wire [2:0] bid,
     input wire [1:0] sid,
-    input wire clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, clk_macro3,
+    input wire clk, clk_n, clk_s, clk_e, clk_w,
     input wire rst_n,
     input wire rslot_v,
     input wire [2:0] rslot,
@@ -51,7 +51,6 @@ module ot_hnx_vms_bank_q0_core #(parameter integer MUT = 0) (
  .bid(bid),
  .sid(sid),
  .clk(clk), .clk_n(clk_n), .clk_s(clk_s), .clk_e(clk_e), .clk_w(clk_w),
- .clk_macro0(clk_macro0), .clk_macro1(clk_macro1), .clk_macro2(clk_macro2), .clk_macro3(clk_macro3),
  .rst_n(rst_n),
  .rslot_v(rslot_v),
  .rslot(rslot),

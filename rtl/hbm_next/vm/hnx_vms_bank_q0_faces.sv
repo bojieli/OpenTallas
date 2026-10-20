@@ -1,7 +1,7 @@
 // HBM-NEXT (hnx, 2026-10-19): fork of rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv (ot_pin_regs
 // wrapper, one literal input pin register per data input on its face clock, as d4g).  2^19-word VM bank: rq 18, wq/dq/kq 282,
-// xq/xq2/eg 277, pq 286; clk_macro3 = A1 macro clock entry.  MUT is a bench-only hook (0 in every physical build).
-module hnx_vms_bank_q0_faces #(parameter integer MUT = 0) (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, clk_macro3, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+// xq/xq2/eg 277, pq 286; safe3 (10-20): all four SRAMs clocked from the core clk root (no direct macro entries).  MUT is a bench-only hook (0 in every physical build).
+module hnx_vms_bank_q0_faces #(parameter integer MUT = 0) (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
   input [17:0] rq0;
   wire [17:0] rq0__ot_pr;
   (* keep *) reg [17:0] rq0__ot_q;
@@ -54,7 +54,7 @@ module hnx_vms_bank_q0_faces #(parameter integer MUT = 0) (rq0, rr0, rq1, rr1, r
   (* keep *) reg [1:0] sid__ot_q;
   always @(posedge clk_n) sid__ot_q <= sid;
   assign sid__ot_pr = sid__ot_q;
-  input clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, clk_macro3;
+  input clk, clk_n, clk_s, clk_e, clk_w;
   input rst_n;
   input rslot_v;
   wire [0:0] rslot_v__ot_pr;
@@ -108,5 +108,5 @@ module hnx_vms_bank_q0_faces #(parameter integer MUT = 0) (rq0, rr0, rq1, rr1, r
   assign pq__ot_pr = pq__ot_q;
   output [265:0] pr;
   output [17:0] status;
-  ot_hnx_vms_bank_q0_core #(.MUT(MUT)) u_ot_pr_core (.rq0(rq0__ot_pr), .rr0(rr0), .rq1(rq1__ot_pr), .rr1(rr1), .rq2(rq2__ot_pr), .rr2(rr2), .rq3(rq3__ot_pr), .rr3(rr3), .rq4(rq4__ot_pr), .rr4(rr4), .wq0(wq0__ot_pr), .wq_done0(wq_done0), .wq1(wq1__ot_pr), .wq_done1(wq_done1), .bid(bid__ot_pr), .sid(sid__ot_pr), .clk(clk), .clk_n(clk_n), .clk_s(clk_s), .clk_e(clk_e), .clk_w(clk_w), .clk_macro0(clk_macro0), .clk_macro1(clk_macro1), .clk_macro2(clk_macro2), .clk_macro3(clk_macro3), .rst_n(rst_n), .rslot_v(rslot_v__ot_pr), .rslot(rslot__ot_pr), .wslot_v(wslot_v__ot_pr), .wslot(wslot__ot_pr), .dq(dq__ot_pr), .dq_done(dq_done), .kq(kq__ot_pr), .kq_done(kq_done), .xq(xq__ot_pr), .xq_done(xq_done), .xq2(xq2__ot_pr), .xq2_done(xq2_done), .eg(eg), .pq(pq__ot_pr), .pr(pr), .status(status));
+  ot_hnx_vms_bank_q0_core #(.MUT(MUT)) u_ot_pr_core (.rq0(rq0__ot_pr), .rr0(rr0), .rq1(rq1__ot_pr), .rr1(rr1), .rq2(rq2__ot_pr), .rr2(rr2), .rq3(rq3__ot_pr), .rr3(rr3), .rq4(rq4__ot_pr), .rr4(rr4), .wq0(wq0__ot_pr), .wq_done0(wq_done0), .wq1(wq1__ot_pr), .wq_done1(wq_done1), .bid(bid__ot_pr), .sid(sid__ot_pr), .clk(clk), .clk_n(clk_n), .clk_s(clk_s), .clk_e(clk_e), .clk_w(clk_w), .rst_n(rst_n), .rslot_v(rslot_v__ot_pr), .rslot(rslot__ot_pr), .wslot_v(wslot_v__ot_pr), .wslot(wslot__ot_pr), .dq(dq__ot_pr), .dq_done(dq_done), .kq(kq__ot_pr), .kq_done(kq_done), .xq(xq__ot_pr), .xq_done(xq_done), .xq2(xq2__ot_pr), .xq2_done(xq2_done), .eg(eg), .pq(pq__ot_pr), .pr(pr), .status(status));
 endmodule

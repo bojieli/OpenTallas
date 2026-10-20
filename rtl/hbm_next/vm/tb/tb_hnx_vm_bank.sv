@@ -76,7 +76,7 @@ module tb_hnx_vm_bank;
             .rq3(h_rq[b][3]), .rr3(h_rr[b][3]), .rq4(h_rq[b][4]), .rr4(h_rr[b][4]),
             .wq0(h_wq[b][0]), .wq_done0(h_done[b][0]), .wq1(h_wq[b][1]), .wq_done1(h_done[b][1]),
             .bid(3'(bidof(b))), .sid(2'(SID)), .clk(clk), .clk_n(clk), .clk_s(clk), .clk_e(clk), .clk_w(clk),
-            .clk_macro0(clk), .clk_macro1(clk), .clk_macro2(clk), .clk_macro3(clk), .rst_n(rst_n),
+            .rst_n(rst_n),
             .rslot_v(rslot_v[b]), .rslot(rslot[b]), .wslot_v(wslot_v[b]), .wslot(wslot[b]),
             .dq(h_dq[b]), .dq_done(h_done[b][2]), .kq(h_kq[b]), .kq_done(h_done[b][3]), .xq(h_xq[b]), .xq_done(h_done[b][4]),
             .xq2(h_x2[b]), .xq2_done(h_done[b][5]), .eg(h_eg[b]), .pq(h_pq[b]), .pr(h_pr[b]), .status(h_st[b]));

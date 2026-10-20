@@ -41,7 +41,8 @@ module ot_hnx_vms_bank_q0_body #(
 ) (
     input wire clk, rst_n,
     input wire clk_n, clk_s, clk_e, clk_w,
-    input wire clk_macro0, clk_macro1, clk_macro2, clk_macro3, // direct SRAM clock entries: A0, B, C, A1
+    // safe3 (10-20): no direct SRAM clock entries; u_a/u_b/u_c/u_a1 clk = core clk, the same CTS root as the m_* launch
+    // and c_* capture registers (the safe2 raw entries made every rd_out->c_* hop a distinct-entry crossing).
     input wire [2:0] bid,               // strap: bank identity (die constant)
     input wire [1:0] sid,               // strap: slice / quadrant identity (die constant)
     input wire rslot_v,
@@ -369,13 +370,13 @@ module ot_hnx_vms_bank_q0_body #(
         assign wchk[gk*7 +: 7]   = m_wd[gk*39 + 32 +: 7];
     end
     wire [255:0] rdA, rdA1, rdB, rdC;
-    ot_sram_1r1w_1024x256_m2_r2c2 u_a (.clk(clk_macro0), .r_ce_in(m_rA), .r_addr_in(m_ra), .rd_out(rdA),
+    ot_sram_1r1w_1024x256_m2_r2c2 u_a (.clk(clk), .r_ce_in(m_rA), .r_addr_in(m_ra), .rd_out(rdA),
         .w_ce_in(m_wA), .w_addr_in(m_wa), .wd_in(wdat), .w_mask_in(mskA), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_sram_1r1w_1024x256_m2_r2c2 u_b (.clk(clk_macro1), .r_ce_in(m_rB), .r_addr_in(m_ra), .rd_out(rdB),
+    ot_sram_1r1w_1024x256_m2_r2c2 u_b (.clk(clk), .r_ce_in(m_rB), .r_addr_in(m_ra), .rd_out(rdB),
         .w_ce_in(m_wB), .w_addr_in(m_wa), .wd_in({88'd0, wchk, wchk, wchk}), .w_mask_in(mskB), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_sram_1r1w_1024x256_m2_r2c2 u_c (.clk(clk_macro2), .r_ce_in(m_rC), .r_addr_in(m_ra), .rd_out(rdC),
+    ot_sram_1r1w_1024x256_m2_r2c2 u_c (.clk(clk), .r_ce_in(m_rC), .r_addr_in(m_ra), .rd_out(rdC),
         .w_ce_in(m_wC), .w_addr_in(m_wa), .wd_in(wdat), .w_mask_in(mskC), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_sram_1r1w_1024x256_m2_r2c2 u_a1 (.clk(clk_macro3), .r_ce_in(m_rA1), .r_addr_in(m_ra), .rd_out(rdA1),
+    ot_sram_1r1w_1024x256_m2_r2c2 u_a1 (.clk(clk), .r_ce_in(m_rA1), .r_addr_in(m_ra), .rd_out(rdA1),
         .w_ce_in(m_wA1), .w_addr_in(m_wa), .wd_in(wdat), .w_mask_in(mskA1), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
 
     // ------------------------------------------------------------------ M (macro edge) -> C (capture) -> D -> R
