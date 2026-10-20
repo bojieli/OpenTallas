@@ -423,6 +423,10 @@ def compile_rec(a):
     seed = (rng.integers(-2000, 2000, size=(512, 512)).astype(F) * F(1 / 1024.)).astype(F)
     seed = np.where(np.abs(seed) < F(1 / 64.), F(0.75), seed).astype(F)
     if mods.get('ci_sfu') == 2: seed = np.abs(seed).astype(F)          # rsqrt argument: a sum of squares
+    # Phased production compiler may provide an explicit full external VM seed image.
+    if getattr(a, 'seed_override', None) is not None:
+        seed = np.asarray(a.seed_override, dtype=F).copy()
+        assert seed.shape == (512, 512), ('seed image shape', seed.shape)
     # element placement: element e -> issue g, quarter q, lane b
     def place(e):
         if PT:
