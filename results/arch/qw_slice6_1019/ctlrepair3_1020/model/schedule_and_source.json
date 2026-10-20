@@ -1,0 +1,19 @@
+{
+  "shape": "opt-in cap16 repair3/HARD1/MU_NU4/MUT0",
+  "original_cells": 21925,
+  "constructed_cells": 22552,
+  "source_ff_count": 7206,
+  "operator_boundary_contract": "all boolean operators kept; each body maps independently; genericNOT transparent terminalfanout cap16; mappedoperator input footprint must be<=2 for<=32 internalroot ceiling",
+  "steady_state_added_edges": 0,
+  "reset_assertion_added_edges": 1,
+  "reset_release_added_edges": 1,
+  "public_leaf": "qfd_dv_s5_ctl_repair3_leaf scalar-port wrapper; HARD0 delegates original module",
+  "pure_rtl_proof": "PASS151677 comparisons/8000edges+2midrunresets; actualMUT11 FAIL5",
+  "native_qualification": "NOTYETRUN",
+  "source_sha256": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair3.sv": "b282d76b67eb9dcd4e07f9374e6dbd3d47fd20e28c93ee3ecf340be5bf1f61dc",
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair3_helpers.sv": "989c4dee85256e2bd36feea8f67a42074b9e5481f43da239d81a01388c28974e",
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair3_leaf.sv": "dc5558f13030033e6d28c24152a7a95be5e03f5093d63562b69f1c8f4590048e",
+    "tools/qwen_dv/bound_math_netlist.py": "831dec6080cdfa9c645193c09fb1aa5af9f018b8fffd2babc46fbdf10e329045"
+  }
+}
