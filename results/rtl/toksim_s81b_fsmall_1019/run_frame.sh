@@ -7,7 +7,7 @@
 # usage: run_frame.sh <layer> <frame> <op> ["PERS"]   (R = staging root on ot-epyc9)
 set -u
 R=/srv/opentallas-scratch/claude/toksim-s81b-fsmall; L=$1; F=$2; OP=$3; PERS=${4:-"600 400 300 260 220 200 180 160 140"}
-V=$R/vec/$L/$F; O=$R/run/$L/$F; mkdir -p $O; Q=tools/s81_dv/layer_prog/qf_producer
+V=$R/vec/$L/$F; O=$R/run/$L/$F/$OP; mkdir -p $O; Q=tools/s81_dv/layer_prog/qf_producer
 case $F in u_f_?L00|u_f_?R00) B=s_h9nx_e5;; u_f_?L01|u_f_?R01) B=s_h10_e2;; u_f_?L02|u_f_?R02) B=s_h9MX_e1;; u_f_?L03|u_f_?R03) B=s_h9nx_e2;; esac
 X=$R/$B/obj/Vtb_toksim_fgu_seq; [ -x $X ] || { echo "NO_EXE $X"; exit 3; }
 cd $R/src
