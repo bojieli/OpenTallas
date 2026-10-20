@@ -173,14 +173,39 @@ def check_addrs(cls, addrs, wds, what=""):
     return check_wrapped(cls, [(a >> 3, a & 7, w) for a, w in zip(addrs, wds)], what)
 
 
+def check_runtime_spaced(cls, n, words_each, gap_words, what=""):
+    """HBM-ROTLAYOUT-ML: a stream whose bank sets are RUNTIME values (1-copy rows read by indexed DMA, e.g. Engram rows
+    by hashed id) cannot be rotated; it is safe for ANY set sequence only if every read is isolated: each read starts
+    >= max(T_HIDE, REF_WIN, R4_GAP) column-word times after the previous read AND after the last block of the stream
+    before the window, and the next stream's HEAD starts as late after the last read (then R1 / R2 / R4a hold for every
+    set sequence and a refresh fits between any two reads, so R4b does not apply).  gap_words = idle word-times the
+    compiler inserts after each read.  Returns a summary (window length) or raises LayoutRefused."""
+    need = max(T_HIDE, REF_WIN, R4_GAP)
+    per = words_each + gap_words
+    if cls not in CLASSES:
+        raise LayoutRefused(f"ROTLAYOUT REFUSED {what}: unknown stream class {cls!r}")
+    if n and gap_words < need:
+        raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: runtime-set reads spaced {gap_words} idle word-times "
+                            f"(< {need}): an unrotatable stream must be isolated read by read")
+    # for ANY set sequence: R1 (same set, other row) sees >= gap_words >= T_HIDE idle word-times between two reads; R2
+    # sees the previous read's words + gap >= REF_WIN before any read, so no earlier block is inside its window; R4a sees
+    # a >= R4_GAP gap between; the lead / trail of `need` word-times does the same against the neighbouring streams.
+    return dict(cls=cls, what=what, blocks=n, words_each=words_each, gap_words=gap_words, lead_words=need,
+                window_words=need + n * per, verdict="ISOLATED")
+
+
 def require_all(results):
     seen = {r["cls"] for r in results}
-    return dict(classes_checked=sorted(seen), all_rotated=all(r["verdict"] == "ROTATED" for r in results))
+    return dict(classes_checked=sorted(seen), all_rotated=all(r["verdict"] in ("ROTATED", "ISOLATED") for r in results))
 
 
 # ------------------------------------------------------------------------------------------------ the layout
-def assign_sets(tokens, cls="weights", what="", beam=4000, heads=None):
-    """tokens = fetch order [('ne', words) | ('r', b_i, words)] -> (sets, triples, deviations).  Beam search over the
+def assign_sets(tokens, cls="weights", what="", beam=4000, heads=None, plans=None, info=None):
+    """tokens = fetch order [('ne', words) | ('r', b_i, words) | ('t', table)] -> (sets, triples, deviations).
+    HBM-ROTLAYOUT-ML (10-19): ('t', table) = one runtime-indexed table LOOKUP SLOT of plans[table] (hbm_table_images.plan:
+    nb blocks, copy_sets); the slot takes any copy whose sets keep the rotation (inside HEAD a copy must equal HEAD), so
+    the set is a function of the slot POSITION, never of the entry id; `sets` is per BLOCK (a lookup expands to nb
+    blocks) and info['copies'] (if given) receives the copy of every lookup slot.  Beam search over the
     fetch order: an ne block steps +1, -1, -2, +2 or +3 from the previous set (the first three are HEAD); a routed
     block kind b_i takes its copy triple (base = previous set +1 / -1 / +2 at its first occurrence, triples disjoint,
     then cycled by position).  Every partial assignment must keep R1 + R2; states are merged on what the checks can still
@@ -191,15 +216,42 @@ def assign_sets(tokens, cls="weights", what="", beam=4000, heads=None):
     n = len(tokens)
     win = max(T_HIDE, REF_WIN)
     # state: (seq tuple of (None, set, words), triples tuple, dev, parent-chain list of sets)
-    states = [((), (), 0, [])]
+    states = [((), (), 0, [], ())]
+    nblk = 0
     for i, t in enumerate(tokens):
         nxt = {}
-        for seq, tri, dev, path in states:
+        if t[0] == "t":
+            pl = plans[t[1]]
+            tws = tuple(words(n) for n in pl["lines"])
+        for seq, tri, dev, path, cps in states:
             prev = seq[-1][1] if seq else None
             trd = dict(tri)
+            if t[0] == "t":                            # lookup slot: one option per copy, its nb blocks in order
+                for j, cs in enumerate(pl["copy_sets"]):
+                    if any(s_ != HEAD[nblk + k] for k, s_ in enumerate(cs) if nblk + k < len(HEAD)):
+                        continue
+                    sq, good = seq, True
+                    for s_, w in zip(cs, tws):
+                        sq = sq + ((None, s_, w),)
+                        if _r1(sq, len(sq) - 1) is not None or _r2(sq, len(sq) - 1) is not None:
+                            good = False
+                            break
+                    if not good:
+                        continue
+                    acc, cut = 0, len(sq)
+                    while cut > 0 and acc < win + 68:
+                        cut -= 1
+                        acc += sq[cut][2]
+                    sq = sq[cut:]
+                    dd = 0 if prev is None or cs[0] == (prev + 1) % NSETS else 1
+                    key = (tuple(x[1:] for x in sq), tri)
+                    cand = (sq, tri, dev + dd, path + list(cs), cps + (j,))
+                    if key not in nxt or nxt[key][2] > cand[2]:
+                        nxt[key] = cand
+                continue
             if t[0] == "ne":
-                if i < len(HEAD):
-                    opts = [(HEAD[i], 0, None)]
+                if nblk < len(HEAD):
+                    opts = [(HEAD[nblk], 0, None)]
                 else:
                     opts = [((prev + st) % NSETS, int(st != 1), None) for st in (1, 7, 6, 2, 3)]
             else:
@@ -228,9 +280,10 @@ def assign_sets(tokens, cls="weights", what="", beam=4000, heads=None):
                     acc += sq[cut][2]
                 sq = sq[cut:]
                 key = (tuple(x[1:] for x in sq), tuple(sorted(tr2.items())))
-                cand = (sq, tuple(sorted(tr2.items())), dev + dd, path + [s_])
+                cand = (sq, tuple(sorted(tr2.items())), dev + dd, path + [s_], cps)
                 if key not in nxt or nxt[key][2] > cand[2]:
                     nxt[key] = cand
+        nblk += plans[t[1]]["nb"] if t[0] == "t" else 1
         states = sorted(nxt.values(), key=lambda c: c[2])[:beam]
         if not states:
             raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: no rotated assignment for block {i} of {n}")
@@ -245,8 +298,13 @@ def assign_sets(tokens, cls="weights", what="", beam=4000, heads=None):
     good = [c for c in states if wrap_ok(c[0])]
     if not good:
         raise LayoutRefused(f"ROTLAYOUT REFUSED {cls} {what}: no rotated assignment of {n} blocks that wraps into HEAD")
-    seq, tri, dev, sets = good[0]
-    check_stream(cls, [(None, s_, t[-1]) for s_, t in zip(sets, tokens)], what)
+    seq, tri, dev, sets, cps = good[0]
+    blk_words = []
+    for t in tokens:
+        blk_words += [words(n) for n in plans[t[1]]["lines"]] if t[0] == "t" else [t[-1]]
+    check_stream("tables" if cps else cls, [(None, s_, w) for s_, w in zip(sets, blk_words)], what)
+    if info is not None:
+        info["copies"] = list(cps)
     return sets, dict(tri), dev
 
 
@@ -302,7 +360,23 @@ def layout_bw(kd, recs, nonexp, exp_blocks, L, nexp=384, heads=None):
             routed[id(b)] = (s_, b_i)
     toks = [("r", routed[id(b)][1], words(b["n_lines"])) if id(b) in routed else ("ne", words(b["n_lines"]))
             for b in order]
-    sets, triples, nadj = assign_sets(toks, "weights", f"kind {kd.get('name')}", heads=heads)
+    # HBM-ROTLAYOUT-ML: runtime-indexed table lookup SLOTS that are tokens of this kind's stream (the embedding lookups
+    # of the token, at the head of the first layer's stream: hbm_table_images.lookup_slots) -- laid out jointly
+    lk = kd.get("lookups") or []
+    plans = kd.get("lookup_plans") or {}
+    info = {}
+    sets, triples, nadj = assign_sets([("t", nm) for nm in lk] + toks, "weights", f"kind {kd.get('name')}", heads=heads,
+                                      plans=plans, info=info)
+    nlb = sum(plans[nm]["nb"] for nm in lk)
+    lsets, sets = sets[:nlb], sets[nlb:]
+    kd["lookup_blocks"] = []
+    q = 0
+    for p_, (nm, j) in enumerate(zip(lk, info.get("copies", []))):
+        for kk, n in enumerate(plans[nm]["lines"]):
+            assert lsets[q] == plans[nm]["copy_sets"][j][kk]
+            kd["lookup_blocks"].append(dict(table=nm, slot=p_, copy=j, part=kk, n_lines=n, runtime_row=True,
+                                            dram_row=lsets[q], bank_set=lsets[q]))
+            q += 1
     want = {id(b): s for b, s in zip(order, sets)}
     p, offs = -1, {}
     for b in order:
@@ -313,7 +387,9 @@ def layout_bw(kd, recs, nonexp, exp_blocks, L, nexp=384, heads=None):
             p += 1
         offs[id(b)] = p
     lstride = 8 * (p // 8 + 1)
-    kd["rotlayout"] = dict(sets=sets, triples={str(k): v for k, v in triples.items()}, phase_steps=nadj)
+    kd["rotlayout"] = dict(sets=sets, triples={str(k): v for k, v in triples.items()}, phase_steps=nadj,
+                           lookup_slots=[dict(table=nm, slot=p_, copy=j, sets=list(plans[nm]["copy_sets"][j]))
+                                         for p_, (nm, j) in enumerate(zip(lk, info.get("copies", [])))])
 
     def after(row_top):
         kbase = row_top
@@ -339,6 +415,11 @@ def layout_bw(kd, recs, nonexp, exp_blocks, L, nexp=384, heads=None):
             kd.update(ebase=eb, elstride=elstride)
         return top
     kd["row_top_after"] = after
+
+
+def kind_order(kd):
+    """fetch order of a compiled kind: its table lookup slots (runtime rows, block dicts from layout_bw) then its blocks"""
+    return list(kd.get("lookup_blocks") or []) + [b for r in kd["recs"] for b in r["blocks"]]
 
 
 def kind_seq(order):

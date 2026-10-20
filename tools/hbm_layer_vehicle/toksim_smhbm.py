@@ -24,6 +24,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import smb_unit as S  # noqa: E402
 import hbm_bank_layout as BL  # noqa: E402  HBM-ROTLAYOUT: the one HBM bank layout + refusal check
+import hbm_table_images as TI  # noqa: E402  HBM-ROTLAYOUT-ML: embedding lookup slots in the first layer's stream
 
 ROOT = S.ROOT
 TB = "rtl/test/hbm_accel/svg_rel/tb_toksim_smhbm.sv"
@@ -228,11 +229,36 @@ def compile_qwen(tags, seed=20261019):
     # laid out rotated across bank sets by hbm_bank_layout.static_run (never desc index x BSCALE: BSCALE 8 put every
     # block on bank set 0 = 26 B/edge on the successor controller) and refused unless the check passes (R1/R2/R3 +
     # wrap into the next stream's head).
-    addrs, nadj = BL.static_run(0, [b["n_lines"] for b in descs], "weights", "qwen compile_qwen")
+    # HBM-ROTLAYOUT-ML: the token's embedding lookups (Qwen: 4 phase copies, 16 slots = DFlash verify b16; the home SM
+    # is runtime, so every SM's first-layer stream carries the slots, unused ones read entry 0) are TOKENS at the head
+    # of this stream (hbm_table_images.layout_with_lookups behind the LM-head tail); TOKSIM_QWEN_LOOKUPS=0 = no slots.
+    nls = [b["n_lines"] for b in descs]
+    if int(os.environ.get("TOKSIM_QWEN_LOOKUPS", 1)):
+        lay = TI.layout_with_lookups("HBM-Qwen", nls, "qwen compile_qwen", tails=[TI.head_run_tail()[0]])
+        addrs, p_ = [], -1
+        for st in lay["weight_sets"]:
+            p_ += 1
+            while p_ % BL.NSETS != st:
+                p_ += 1
+            addrs.append(p_)
+        nadj = lay["deviations"]
+        tbase = -(-(addrs[-1] + 1) // BL.NSETS)
+        n_ent = -(-151936 // TI.N_SM)
+        lookups = dict(table="embedding", plan={k: v for k, v in lay["plan"].items() if k != "what"}, slots=lay["slots"],
+                       copies=lay["copies"], lookup_sets=lay["lookup_sets"], base_row=tbase, entries_per_sm=n_ent,
+                       dummy_entry=0, dummy_bytes_per_sm_token=lay["dummy_bytes_per_sm"],
+                       combined_check=lay["check"], src=TI.EMBED["HBM-Qwen"]["src"])
+        if (tbase + n_ent) * BL.NSETS >= S.BLK_MAX:
+            raise SystemExit("embedding table overflows the block address field")
+    else:
+        addrs, nadj = BL.static_run(0, nls, "weights", "qwen compile_qwen")
+        lookups = None
     for b, a in zip(descs, addrs):
         b.update(row_base=a, dram_row=a, bank_set=a & 7)
     kd["rotlayout"] = dict(BL.check_addrs("weights", addrs, [BL.words(b["n_lines"]) for b in descs], "qwen weights"),
-                           phase_steps=nadj, sets=[a & 7 for a in addrs])
+                           phase_steps=nadj, sets=[a & 7 for a in addrs], lookups=lookups)
+    if lookups and lookups["combined_check"]["verdict"] != "ROTATED":
+        raise BL.LayoutRefused(f"ROTLAYOUT REFUSED qwen lookups + weights: {lookups['combined_check']}")
     for b in descs:
         raw = b"".join(int(x).to_bytes(136, "little") for x in b["lines"])
         total = ((len(b["lines"]) * 136 + 127) // 128) * 4
