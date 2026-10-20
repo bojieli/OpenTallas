@@ -175,12 +175,14 @@ module dsdv_idx_rg_r32 #(
     (* keep = "true" *) reg [7:0] q_kind;
     reg  [7:0] qe_head;
     (* keep = "true" *) reg [21:0] hg;        // hgo copies for the field / state loads
-    (* keep = "true" *) reg [31:0] qe_h;      // even-word hold enable copies
-    (* keep = "true" *) reg [34:0] qe_l;
+    (* keep = "true" *) reg [63:0] qe_h;      // even-word hold enable copies
+    (* keep = "true" *) reg [69:0] qe_l;
     (* keep = "true" *) reg qe_l_valid;
-    wire qodd_a,qodd_b;
-    dsdv_idx_query_odd u_qa(.p(pay_job),.pw(pw),.y(qodd_a));
-    dsdv_idx_query_odd u_qb(.p(pay_job),.pw(pw),.y(qodd_b));      // odd-word load enable copies
+    wire [3:0] qodd, qeven;
+    generate for(genvar qc=0;qc<4;qc=qc+1) begin:g_qpred
+        dsdv_idx_query_odd u_odd(.p(pay_job),.pw(pw),.y(qodd[qc]));
+        dsdv_idx_query_even u_even(.p(pay_job),.pw(pw),.y(qeven[qc]));
+    end endgenerate
     reg  [511:0] qhold;
     reg  [511:0] ql_c;
     reg  [31:0]  ql_s;
@@ -204,16 +206,16 @@ module dsdv_idx_rg_r32 #(
         integer k;
         q_d1 <= q_d; q_kind <= {8{q_d[511]}};
         hgo <= hdr_go; hg <= {22{hdr_go}};
-        qe_h <= {32{q_ld0}}; qe_l <= {{17{qodd_b}},{18{qodd_a}}}; qe_l_valid <= qodd_a;
+        qe_h <= {{16{qeven[3]}},{16{qeven[2]}},{16{qeven[1]}},{16{qeven[0]}}};
+        qe_l <= {{16{qodd[3]}},{18{qodd[2]}},{18{qodd[1]}},{18{qodd[0]}}}; qe_l_valid <= qodd[0];
         qe_head <= 8'(pw[6:1]);
         ql_v <= qe_l_valid; ql_h <= qe_head;
-        for (k = 0; k < 32; k = k + 1) begin
-            if (qe_h[k]) qhold[16*k+:16] <= q_d1[16*k+:16];
-            if (qe_l[k]) ql_c[16*k+:16] <= qhold[16*k+:16];
+        for (k = 0; k < 64; k = k + 1) begin
+            if (qe_h[k]) qhold[8*k+:8] <= q_d1[8*k+:8];
+            if (qe_l[k]) ql_c[8*k+:8] <= qhold[8*k+:8];
         end
-        if(qe_l[32]) ql_s[15:0] <= q_d1[15:0];
-        if(qe_l[33]) ql_s[31:16] <= q_d1[31:16];
-        if(qe_l[34]) ql_w <= q_d1[47:32];
+        for(k=0;k<4;k=k+1) if(qe_l[64+k]) ql_s[8*k+:8] <= q_d1[8*k+:8];
+        for(k=0;k<2;k=k+1) if(qe_l[68+k]) ql_w[8*k+:8] <= q_d1[32+8*k+:8];
         if (hg[0]) begin gat <= q_kind[3]; ik <= q_d1[103:101]; om <= q_d1[106:104]; end
         if(hg[9]) jb[9:0] <= q_d1[9:0];
         if(hg[10]) jb[19:10] <= q_d1[19:10];
@@ -1230,4 +1232,8 @@ endmodule
 // keep_hierarchy preserves actual Boolean-driver populations through the ABC partition.
 (* keep_hierarchy = "yes" *) module dsdv_idx_query_odd(input wire p,input wire[11:0]pw,output wire y);
 assign y=p && pw<12'd64 && pw[0];
+endmodule
+
+(* keep_hierarchy = "yes" *) module dsdv_idx_query_even(input wire p,input wire[11:0]pw,output wire y);
+assign y=p && pw<12'd64 && !pw[0];
 endmodule
