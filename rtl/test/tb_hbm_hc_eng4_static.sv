@@ -57,6 +57,10 @@ module tb_hbm_hc_eng4_static;
 `ifndef HC_CPR
 `define HC_CPR 0
 `endif
+    // HBM-HC5 10-20: +define+HC_SAFE=1 = root SAFE 1 (SRAM mix store; tail domain + result pins 2 edges later)
+`ifndef HC_SAFE
+`define HC_SAFE 0
+`endif
     // HC-XRDU 10-18: LANDED root <-> quarter links.  HC_XRD/HC_XRU/HC_XRDQ/HC_XRUQ = the root's compiled parameters;
     // HC_DIE_XRDQ / HC_DIE_XRUQ = the die's compiled per-quarter link latency (byte q, edges from driver pin to sink pin:
     // a landed lane = ceil(N/2) + 1 + E, tools/hbm_die_v16/d4g_hc_xr.py), modelled here as that many register stages
@@ -86,7 +90,7 @@ module tb_hbm_hc_eng4_static;
     // quarter-side copies after the die links
     wire [3:0] ld_v, ld_ss, li_v, li_kind, lps_v, lps_f, l_fault; wire [27:0] ld_nv; wire [39:0] ld_wa, ld_xa, li_word;
     wire [7:0] li_slot; wire [19:0] li_lo, li_w; wire [47:0] li_cnt; wire [127:0] lps;
-    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .XRD(`HC_XRD), .XRU(`HC_XRU), .XRDQ(`HC_XRDQ), .XRUQ(`HC_XRUQ), .QCHX(11 * `HC_CPR)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
+    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .XRD(`HC_XRD), .XRU(`HC_XRU), .XRDQ(`HC_XRDQ), .XRUQ(`HC_XRUQ), .QCHX(11 * `HC_CPR), .SAFE(`HC_SAFE)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured),
         .qd_v(qd_v), .qd_ss(qd_ss), .qd_nv(qd_nv), .qd_wa(qd_wa), .qd_xa(qd_xa), .qi_v(qi_v), .qi_kind(qi_kind),

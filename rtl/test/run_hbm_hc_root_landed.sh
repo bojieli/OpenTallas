@@ -34,11 +34,11 @@ src=(rtl/test/tb_hbm_hc_eng4_static.sv $H/ot_hbm_hc_root_static.sv $H/ot_hbm_hc_
 python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case" --split --npos 1 --raw0 "$raw0" --rs 104 --ding "$ding" > "$out/vectors.log"
 "$vl" --binary --timing --hierarchical -j "${HC_BUILD_JOBS:-16}" -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
   --top-module tb_hbm_hc_eng4_static +define+MUT=$mut +define+OT_FP_DATA_NORST \
-  +define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_QDRLY=2 +define+HC_XRD=$xrd +define+HC_XRU=$xru \
+  +define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_SAFE=${HC_SAFE:-0} +define+HC_CPR=${HC_CPR:-0} +define+HC_QDRLY=2 +define+HC_XRD=$xrd +define+HC_XRU=$xru \
   "+define+HC_XRDQ=$xrdq" "+define+HC_XRUQ=$xruq" "+define+HC_DIE_XRDQ=$dxd" "+define+HC_DIE_XRUQ=$dxu" -Mdir "$out/obj" -o Vroot \
   rtl/test/tb_hbm_hc_eng4_static_hier.vlt "${src[@]}" > "$out/build.log" 2>&1
 set +e; (cd "$out/case" && "$out/obj/Vroot" $(cat plus.txt)) > "$out/run.log" 2>&1; rc=$?; set -e
 grep -E "HC_ENG_DONE|HC_ENG PASS|HC_ENG FAIL|HC_ENG_FAULT|MISMATCH" "$out/run.log" || true
-echo "HC_ROOT_LANDED MUT=$mut XRD=$xrd XRU=$xru XRDQ=$xrdq XRUQ=$xruq DIE_XRDQ=$dxd DIE_XRUQ=$dxu DING=$ding RAW0=$raw0 rc=$rc"
+echo "HC_ROOT_LANDED SAFE=${HC_SAFE:-0} CPR=${HC_CPR:-0} MUT=$mut XRD=$xrd XRU=$xru XRDQ=$xrdq XRUQ=$xruq DIE_XRDQ=$dxd DIE_XRUQ=$dxu DING=$ding RAW0=$raw0 rc=$rc"
 rm -rf "$out/obj"
 exit $rc

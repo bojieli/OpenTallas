@@ -19,7 +19,7 @@
 //   parallel (no one-wave-an-edge stagger).
 // STATIC: no ready, credit or backpressure.  New fault: a quarter subtree sum not on its due edge (ps_v != expected).
 // Pin registers: every input lands in a pin flop, every output is a flop; rst_n through ot_rst_relay.
-// MUT (bench): 2 = tail pre-sigmoid eps dropped (unit 0).
+// MUT (bench): 2 = tail pre-sigmoid eps dropped (unit 0); 21 = SAFE mix SRAM lane write mask dropped (whole line).
 // ELEM-GAPS/HBMB 2026-10-18: every runtime-indexed part-select replaced by decoded constant-index slices (gate synthesis
 // stalled in yosys SHARE); function and cycles unchanged.
 // HC-XRDU 2026-10-18 (RELEASE_TREE H.STA.WIRE.8): LANDED root <-> quarter links.  On the d4g die the root <-> hub links are
@@ -40,6 +40,7 @@ module ot_hbm_hc_root_static #(
     parameter integer QDRLY = 1,                 // quarter's centre <-> bank relays (ot_hbm_hc_qeng_static DRLY)
     parameter integer QCHX = 0,                  // HH-9 10-19: quarter bank-chain pin-register edges (qeng CPR 1 -> 11)
     parameter integer TLA  = 7,                  // quarter tree adder stages
+    parameter integer SAFE = 0,                  // HBM-HC5 10-20: 1 = SRAM mix store + tail domain TD = 2 edges later (below)
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -227,8 +228,24 @@ module ot_hbm_hc_root_static #(
             if (psv_q != {4{xv[SYS_LAT-1]}}) ps_fault <= 1'b1;
         end
 
+    // ------------------------------------------------------------------ tail-domain events
+    // HBM-HC5 10-20 (H.STA.BLK.1.1, SAFE 1): the 6,144-b mix store is SRAM.  The tail reads the 24 mixes of its position
+    // from three ot_sram_1r1w_128x256 macros (rows 8m .. 8m + 7 in macro m, address = position) instead of an 8-way
+    // 768-b select over 6,144 flops, so every event on the tail side (table fetch e_tf, tail launch e_tl, emit) runs
+    // TD = 2 edges later than its programme edge: read issued one edge after e_tl (it sees every mix write of an edge
+    // <= e_tl - 1, exactly what the flop store gave the tail at e_tl), data on rd_out one edge later, inner tail launch
+    // on the next edge.  The programme (compiler) is unchanged; the result pins move +2 edges (HC_MIX + 2, ledger).
+    // The completeness check (have map) and every mix-write fault keep their programme edges.  SAFE 0 = TD 0 =
+    // byte-identical to the previous form.
+    localparam integer TD = SAFE ? 2 : 0;
+    wire t_tl, t_tf, t_emit, t_tunit, t_eunit; wire [2:0] t_tpos; wire [6:0] t_tset; wire [3:0] t_qmask;
+    ot_hdc_delay #(.W(3), .D(TD), .RESET(1)) u_tdv (.clk(clk), .rst_n(rst_tail), .d({e_tl, e_tf, e_emit}),
+        .q({t_tl, t_tf, t_emit}));
+    ot_hdc_delay #(.W(16), .D(TD), .RESET(0)) u_tdd (.clk(clk), .rst_n(rst_tail),
+        .d({e_tunit, e_tpos, e_tset, e_qmask, e_eunit}), .q({t_tunit, t_tpos, t_tset, t_qmask, t_eunit}));
+
     // ------------------------------------------------------------------ mix store
-    reg [8*24*32-1:0] mixes; reg [191:0] have; reg mix_fault; reg [3:0] gm_open;
+    reg [191:0] have; reg mix_fault; reg [3:0] gm_open;
     always @(posedge clk or negedge rst_mix) begin
         if (!rst_mix) begin have <= 0; mix_fault <= 0; gm_open <= 0; end
         else begin
@@ -246,16 +263,89 @@ module ot_hbm_hc_root_static #(
             end
         end
     end
-    always @(posedge clk) begin
-        for (integer p = 0; p < 8; p = p + 1) for (integer r = 0; r < 24; r = r + 1) begin
-            if (o_valid && o_pos == 3'(p) && o_idx == 5'(r)) mixes[(p*24 + r)*32 +: 32] <= o_data;
-            for (integer q = 0; q < 4; q = q + 1)
-                if (gv_q[q] && gm_open[q] && gp_q[q*3 +: 3] == 3'(p) && gr_q[q*5 +: 5] == 5'(r))
-                    mixes[(p*24 + r)*32 +: 32] <= gd_q[q*32 +: 32];
+    // have map of the launching position (programme edge e_tl): decoded AND-OR select
+    reg [23:0] have_at;
+    always @* begin
+        have_at = 24'd0;
+        for (integer p = 0; p < 8; p = p + 1) if (e_tpos == 3'(p)) have_at = have_at | have[p*24 +: 24];
+    end
+    wire [767:0] mix_at;              // the 24 mixes of the launching position, at the inner tail launch (t_tl)
+    wire mix_wfault;
+    genvar gm, gj, gk;
+    if (SAFE == 0) begin : g_mixf
+        reg [8*24*32-1:0] mixes; reg [767:0] ma;
+        always @(posedge clk) begin
+            for (integer p = 0; p < 8; p = p + 1) for (integer r = 0; r < 24; r = r + 1) begin
+                if (o_valid && o_pos == 3'(p) && o_idx == 5'(r)) mixes[(p*24 + r)*32 +: 32] <= o_data;
+                for (integer q = 0; q < 4; q = q + 1)
+                    if (gv_q[q] && gm_open[q] && gp_q[q*3 +: 3] == 3'(p) && gr_q[q*5 +: 5] == 5'(r))
+                        mixes[(p*24 + r)*32 +: 32] <= gd_q[q*32 +: 32];
+            end
+        end
+        // position e_tpos of the mix store: decoded AND-OR select (no runtime part-select)
+        always @* begin
+            ma = 768'd0;
+            for (integer p = 0; p < 8; p = p + 1) if (e_tpos == 3'(p)) ma = ma | mixes[p*768 +: 768];
+        end
+        assign mix_at = ma; assign mix_wfault = 1'b0;
+    end else begin : g_mixs
+        // write stage (one register edge): writer k = 0 core word, 1 .. 4 quadrant k - 1 gathered word (the flop
+        // store's priority: a later writer of the same slot wins).  Per macro m: one-hot lane selects, lane masks, the
+        // address (position) and the five source words land in flops; the lane mux behind them feeds wd_in directly
+        // (select flop -> 32 mux bits, mask flop -> 32 mask pins, source bit -> 24 lanes).  Two writers into one macro
+        // on one edge must name the same position (they merge through the lane mask); different positions = fault
+        // (static contract: the compiler never schedules that; the programmes here write one word an edge).
+        wire [4:0] sv; wire [14:0] sp; wire [24:0] sr; wire [159:0] sd;
+        assign sv[0] = o_valid && o_idx < 5'd24; assign sp[2:0] = o_pos; assign sr[4:0] = o_idx;
+        assign sd[31:0] = o_data;
+        for (gk = 0; gk < 4; gk = gk + 1) begin : g_src
+            assign sv[gk+1] = gv_q[gk] && gm_open[gk] && gr_q[gk*5 +: 5] < 5'd24;
+            assign sp[(gk+1)*3 +: 3] = gp_q[gk*3 +: 3]; assign sr[(gk+1)*5 +: 5] = gr_q[gk*5 +: 5];
+            assign sd[(gk+1)*32 +: 32] = gd_q[gk*32 +: 32];
+        end
+        reg [159:0] wd_s; reg [2:0] w_ce; reg [8:0] w_pos; reg [119:0] w_sel; reg [23:0] w_lane; reg wf;
+        always @(posedge clk) wd_s <= sd;
+        always @(posedge clk or negedge rst_mix)
+            if (!rst_mix) begin w_ce <= 3'd0; wf <= 1'b0; end
+            else for (integer m = 0; m < 3; m = m + 1) begin
+                w_ce[m] <= 1'b0;
+                for (integer k = 0; k < 5; k = k + 1) if (sv[k] && sr[k*5+3 +: 2] == 2'(m)) begin
+                    w_ce[m] <= 1'b1;
+                    for (integer k2 = 0; k2 < k; k2 = k2 + 1)
+                        if (sv[k2] && sr[k2*5+3 +: 2] == 2'(m) && sp[k2*3 +: 3] != sp[k*3 +: 3]) wf <= 1'b1;
+                end
+            end
+        always @(posedge clk) for (integer m = 0; m < 3; m = m + 1) begin
+            for (integer k = 0; k < 5; k = k + 1) if (sv[k] && sr[k*5+3 +: 2] == 2'(m)) w_pos[m*3 +: 3] <= sp[k*3 +: 3];
+            for (integer j = 0; j < 8; j = j + 1) begin
+                w_lane[m*8 + j] <= 1'b0;
+                for (integer k = 0; k < 5; k = k + 1) w_sel[(m*8 + j)*5 + k] <= 1'b0;
+                for (integer k = 0; k < 5; k = k + 1) if (sv[k] && sr[k*5 +: 5] == 5'(m*8 + j)) begin
+                    w_lane[m*8 + j] <= 1'b1;
+                    for (integer k2 = 0; k2 < 5; k2 = k2 + 1) w_sel[(m*8 + j)*5 + k2] <= (k2 == k);
+                end
+            end
+        end
+        assign mix_wfault = wf;
+        // read: issued the edge after e_tl, position e_tpos; rd_out holds until the next read
+        reg rd_req; reg [2:0] rd_pos;
+        always @(posedge clk or negedge rst_mix) if (!rst_mix) rd_req <= 1'b0; else rd_req <= e_tl;
+        always @(posedge clk) rd_pos <= e_tpos;
+        for (gm = 0; gm < 3; gm = gm + 1) begin : g_m
+            reg [255:0] wd, wm;
+            always @* for (integer j = 0; j < 8; j = j + 1) begin
+                wd[j*32 +: 32] = 32'd0;
+                for (integer k = 0; k < 5; k = k + 1)
+                    wd[j*32 +: 32] = wd[j*32 +: 32] | ({32{w_sel[(gm*8 + j)*5 + k]}} & wd_s[k*32 +: 32]);
+                wm[j*32 +: 32] = (MUT == 21) ? {32{1'b1}} : {32{w_lane[gm*8 + j]}};   // MUT 21: lane mask dropped
+            end
+            ot_sram_1r1w_128x256_m1_r2c2 u_mix (.clk(clk), .r_ce_in(rd_req), .r_addr_in({4'd0, rd_pos}),
+                .rd_out(mix_at[gm*256 +: 256]), .w_ce_in(w_ce[gm]), .w_addr_in({4'd0, w_pos[gm*3 +: 3]}), .wd_in(wd),
+                .w_mask_in(wm), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
         end
     end
 
-    // ------------------------------------------------------------------ bases/scales table
+    // ------------------------------------------------------------------ bases/scales table (tail domain)
     reg [2:0] tf_cnt; reg [6:0] tf_set; reg [1:0] tf_row_q; reg tf_rd_q; reg [895:0] hold; reg tbl_fault;
     wire [255:0] tbl_rd;
     wire tf_rd = tf_cnt != 3'd0;
@@ -268,7 +358,7 @@ module ot_hbm_hc_root_static #(
         else begin
             tf_rd_q <= tf_rd; tf_row_q <= tf_row;
             if (tf_rd) tf_cnt <= tf_cnt - 1'b1;
-            if (e_tf) begin if (tf_rd) tbl_fault <= 1'b1; tf_cnt <= 3'd4; tf_set <= e_tset; end
+            if (t_tf) begin if (tf_rd) tbl_fault <= 1'b1; tf_cnt <= 3'd4; tf_set <= t_tset; end
             if (tbl_we_q && seq_active) tbl_fault <= 1'b1;
         end
     end
@@ -277,20 +367,11 @@ module ot_hbm_hc_root_static #(
     // set layout: base i = row i/7 word i%7 = hold word i (i < 24); scale j = row 3 word 3 + j = hold word 24 + j
     wire [767:0] t_bases = hold[767:0]; wire [95:0] t_scales = hold[863:768];
 
-    // ------------------------------------------------------------------ tail units
+    // ------------------------------------------------------------------ tail units (tail domain)
     wire [1:0] tv, tfl; wire [1535:0] tres; reg [2:0] tpos [0:1]; reg [1:0] tready; reg tail_fault;
-    // position e_tpos of the mix store / have map: decoded AND-OR select (no runtime part-select)
-    reg [767:0] mix_at; reg [23:0] have_at;
-    always @* begin
-        mix_at = 768'd0; have_at = 24'd0;
-        for (integer p = 0; p < 8; p = p + 1) if (e_tpos == 3'(p)) begin
-            mix_at = mix_at | mixes[p*768 +: 768]; have_at = have_at | have[p*24 +: 24];
-        end
-    end
-    wire [767:0] tres_e = e_eunit ? tres[1535:768] : tres[767:0];
     genvar gu;
     for (gu = 0; gu < 2; gu = gu + 1) begin : g_tail
-        wire go = e_tl && e_tunit == gu;
+        wire go = t_tl && t_tunit == gu;
         ot_hbm_hc_tail_unit_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_tail),
             .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
             .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
@@ -300,20 +381,47 @@ module ot_hbm_hc_root_static #(
         else begin
             for (integer u = 0; u < 2; u = u + 1) begin
                 if (tv[u]) tready[u] <= 1'b1;
-                if (e_tl && e_tunit == u) begin tready[u] <= 1'b0; tpos[u] <= e_tpos; end
+                if (t_tl && t_tunit == u) begin tready[u] <= 1'b0; tpos[u] <= t_tpos; end
             end
             if (e_tl && have_at != 24'hffffff) tail_fault <= 1'b1;
-            if (e_emit && !tready[e_eunit]) tail_fault <= 1'b1;
+            if (t_emit && !tready[t_eunit]) tail_fault <= 1'b1;
         end
     end
 
     // ------------------------------------------------------------------ result pins (all flops)
     always @(posedge clk or negedge rst_pin) begin
         if (!rst_pin) result_v <= 4'd0;
-        else result_v <= e_emit ? e_qmask : 4'd0;
+        else result_v <= t_emit ? t_qmask : 4'd0;
     end
-    always @(posedge clk) if (e_emit) for (integer q = 0; q < 4; q = q + 1) if (e_qmask[q]) begin
-        result_position[q*3 +: 3] <= tpos[e_eunit]; result[q*768 +: 768] <= tres_e;
+    if (SAFE == 0) begin : g_resf
+        wire [767:0] tres_e = t_eunit ? tres[1535:768] : tres[767:0];
+        always @(posedge clk) if (t_emit) for (integer q = 0; q < 4; q = q + 1) if (t_qmask[q]) begin
+            result_position[q*3 +: 3] <= tpos[t_eunit]; result[q*768 +: 768] <= tres_e;
+        end
+    end else begin : g_ress
+        // SAFE: the emit enables / unit select reach 3,072 result flops through KEPT copies (one per 32 loads):
+        // en_c[q*24 + c] = emit && qmask[q] and us_c[q*24 + c] = emit unit, for result word c of quarter q.  They are
+        // the second tail-domain delay stage (loaded from the first, d1), so they rise on the same edge as t_emit.
+        reg e_emit_d1, e_eunit_d1; reg [3:0] e_qmask_d1;
+        always @(posedge clk or negedge rst_tail) if (!rst_tail) e_emit_d1 <= 1'b0; else e_emit_d1 <= e_emit;
+        always @(posedge clk) begin e_qmask_d1 <= e_qmask; e_eunit_d1 <= e_eunit; end
+        (* keep = "true", dont_touch = "true" *) reg [95:0] en_c;
+        (* keep = "true", dont_touch = "true" *) reg [95:0] us_c;
+        reg [3:0] en_p; reg us_p;
+        always @(posedge clk) begin
+            for (integer q = 0; q < 4; q = q + 1) begin
+                en_c[q*24 +: 24] <= {24{e_emit_d1 && e_qmask_d1[q]}};
+                us_c[q*24 +: 24] <= {24{e_eunit_d1}};
+                en_p[q] <= e_emit_d1 && e_qmask_d1[q];
+            end
+            us_p <= e_eunit_d1;
+        end
+        always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) begin
+            if (en_p[q]) result_position[q*3 +: 3] <= tpos[us_p];
+            for (integer c = 0; c < 24; c = c + 1)
+                if (en_c[q*24 + c])
+                    result[q*768 + c*32 +: 32] <= us_c[q*24 + c] ? tres[768 + c*32 +: 32] : tres[c*32 +: 32];
+        end
     end
 
     // ------------------------------------------------------------------ status
@@ -321,7 +429,7 @@ module ot_hbm_hc_root_static #(
         if (!rst_pin) begin fault <= 0; program_active <= 0; program_done <= 0; end
         else begin
             program_active <= seq_active; program_done <= seq_done;
-            if (seq_fault || ev_fault || ps_fault || (|qf_q) || core_fault || mix_fault || tbl_fault || tail_fault ||
+            if (seq_fault || ev_fault || ps_fault || (|qf_q) || core_fault || mix_fault || mix_wfault || tbl_fault || tail_fault ||
                 (|tfl) || ptgt_fault || ttgt_fault) fault <= 1'b1;
         end
     end
