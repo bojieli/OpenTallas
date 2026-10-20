@@ -1,4 +1,4 @@
-# hv16_dbk_cpl_l1b (HBM-HC7-DBK 10-20, H.STA.BLK.12) -- PARALLEL FALLBACK of hv16_dbk_cpl_l1: same RTL, pins and stations, child halo 10.8 um
+# hv16_dbk_cpl_l1b (HBM-HC7-DBK 10-20, H.STA.BLK.12) -- PARALLEL FALLBACK of hv16_dbk_cpl_l1: same RTL and stations, child halo 10.8 um, lanes 2/7 rr groups pulled toward their banks (S/N x 466-600, <= 6 pins/um)
 Master: `ot_hgi_dma_back_static_vp4_banks_cpl` (rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cpl.sv),
 same ports as `_cp`, same children (8 landing banks, CLOSED rt80 controller, collar leaf), same floorplan as s1.
 Fallback in parallel: hv16_dbk_cpl_l1b (identical, child halo 10.8 um).
@@ -10,7 +10,7 @@ bank_read_en[7] -> bank7 454.7/408.2, reset landing E y 2.4 -> u_rst_bk leaves 4
 
 ## Structure (one failed review = structural redesign)
 * rr landing: every rr bit -> kept clk_land[b] register at its face (io_flop_at_pins); valid bit landed twice: wv_q half way
-  port -> bank write_en, cv_q half way port -> controller rr_valid_i.  rr valid ports moved beside each bank
+  port -> bank write_en, cv_q half way port -> controller rr_valid_i.  rr valid ports moved beside each bank; lanes 1/6 (column-1 banks) whole rr group on S/N x 262-398 beside their bank (gate 061045: clk_land[1] spread 83.5 with lane 1 data on the W face)
   (results/arch/hbm_dbkcpl_land_1020/make_pins.py: W y 130.8/150.0/260.3/389.9/519.4, S x 446.1, N x 273.4/446.1).
 * read path: bank_read_en / output_en / read slot / read address relayed one edge per bank (kept), half way between the
   controller face pin and the bank pin.  write_slot NOT relayed (write frame = controller frame); bank 5 takes the W copy.

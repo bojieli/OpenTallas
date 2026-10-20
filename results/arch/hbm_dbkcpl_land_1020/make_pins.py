@@ -11,6 +11,7 @@ Every new position is the nearest actual track (0.012 + 0.048 k um, the measured
 clearance from every other pin on the same layer and face.  python3 make_pins.py SRC OUT"""
 import re, sys
 SRC, OUT = sys.argv[1], sys.argv[2]
+COMPACT27 = len(sys.argv) > 3 and sys.argv[3] == "--compact27"   # fallback l1b: lanes 2 / 7 also pulled over their bank
 PITCH, OFF, CLEAR = 0.048, 0.012, 0.096
 MOVE = {  # port -> (layer, face, target um along the face)
     "rr[256]":  ("M4", "W", 130.7),    # bank0 write_en (100.5, 130.7)
@@ -23,9 +24,23 @@ MOVE = {  # port -> (layer, face, target um along the face)
     "rr[2055]": ("M5", "N", 446.1),    # bank7 write_en (446.1, 519.4)
     "rst_n":    ("M4", "E", 195.0),    # beside clk_rst (E 190.0)
 }
-ADD = {f"clk_land[{b}]": v for b, v in enumerate([("M4", "W", 44.0), ("M4", "W", 128.0), ("M5", "S", 563.0), ("M4", "W", 210.0),
-                                                   ("M4", "W", 332.0), ("M4", "W", 412.0), ("M4", "W", 495.0), ("M5", "N", 563.0)])}
+ADD = {f"clk_land[{b}]": v for b, v in enumerate([("M4", "W", 44.0), ("M5", "S", 330.0), ("M5", "S", 563.0), ("M4", "W", 210.0),
+                                                   ("M4", "W", 332.0), ("M4", "W", 412.0), ("M5", "N", 330.0), ("M5", "N", 563.0)])}
+# gate 20261020-061045: clk_land[1] boundary spread 83.5 > 80 -- lane 1's rr data sat on the W face (y 86-170) while
+# bank 1 and its read relays sit at x 259-400: one region tree spanned ~300 um.  Lanes 1 and 6 (the column-1 banks) move
+# their whole rr group to the face beside their bank (S / N x 262-398, interleaved with that bank's wd group), so each
+# lane's landing flops, valid copies and read relays form one compact region; their clk_land roots sit in the middle.
+for b, face in ((1, "S"), (6, "N")):
+    for i in range(256):
+        MOVE[f"rr[{b * 257 + i}]"] = ("M5", face, 262.0 + 136.0 * (i + 0.5) / 256)
+MOVE["rr[513]"] = ("M5", "S", 273.3)       # lane 1 valid beside bank 1's write_en (273.3, 130.7)
+if COMPACT27:   # lanes 2 / 7: rr group from x 523-604 to x 466-600 (pulled toward bank 2 / 7 at x 432-572, <= 6 pins/um), clk_land at x 520
+    for b, face in ((2, "S"), (7, "N")):
+        for i in range(256):
+            MOVE[f"rr[{b * 257 + i}]"] = ("M5", face, 466.0 + 134.0 * (i + 0.5) / 256)
 lines = open(SRC).read().splitlines()
+if COMPACT27:
+    ADD["clk_land[2]"] = ("M5", "S", 520.0); ADD["clk_land[7]"] = ("M5", "N", 520.0)
 lines += [f"ot_assigned_pin_exact {{{n}}} {l} {f} 0.000000" for n, (l, f, _) in ADD.items()]
 MOVE.update(ADD)
 pat = re.compile(r"ot_assigned_pin_exact \{(\S+)\} (\S+) (\S) ([\d.]+)$")
@@ -53,7 +68,7 @@ for l in lines:
         out.append(f"ot_assigned_pin_exact {{{name}}} {lay} {face} {hit:.6f}")
     else:
         out.append(l)
-out[0] = ("# HBM-HC7-DBK hv16_dbk_cpl_l1: exact pin plan = s1 plan @ca6707526 with rr valid beside each bank and rst_n beside "
+out[0] = ("# HBM-HC7-DBK hv16_dbk_cpl_l1" + ("b (--compact27)" if COMPACT27 else "") + ": exact pin plan = s1 plan @ca6707526 with rr valid beside each bank and rst_n beside "
           "clk_rst (results/arch/hbm_dbkcpl_land_1020/make_pins.py); ODB readback mandatory.")
 assert len(done) == len(MOVE), set(MOVE) - set(done)
 open(OUT, "w").write("\n".join(out) + "\n")
