@@ -1,0 +1,86 @@
+{
+ "summary": {
+  "lane": "HBM-ATTN-MB",
+  "design": "DS",
+  "layer": 2,
+  "mode": "mb",
+  "subrun": 0,
+  "nrun": 8,
+  "lat": {
+   "req_lead": 8,
+   "qk_first": 63,
+   "qk_land_meas": 70,
+   "qk_land": 78,
+   "qk_clear": 8,
+   "pv_node": 160,
+   "out": 40,
+   "x_lead": 8,
+   "pre": 48,
+   "chain_gap": 80,
+   "p_war": 2
+  },
+  "dmut": 0,
+  "smut": "",
+  "sms": [
+   "sm_SW0"
+  ],
+  "busiest_span": {
+   "pv": 784
+  },
+  "cross_sm_merge": null,
+  "passed": 1,
+  "runs": 1,
+  "source": {
+   "att_kv_json": "/srv/opentallas-scratch/claude/hbm-attn-mb/kv/ds/L02/att_kv.json",
+   "npz_sha256": "5a5427bb429666291f063415816f89003518c54152d5244865357b4f42af3035",
+   "layer": 2,
+   "rank": 0,
+   "qk_priced": [
+    {
+     "i": 63,
+     "start": 10427.06,
+     "end": 11032.36,
+     "base_cost": 547
+    }
+   ],
+   "pv_priced": [
+    {
+     "i": 67,
+     "start": 11577.74,
+     "end": 12547.17,
+     "base_cost": 808
+    }
+   ],
+   "ring": {
+    "n": 128,
+    "m": 128,
+    "on": true,
+    "first": 0
+   },
+   "c_rows": 512
+  },
+  "rtl": "ot_hbm_accel_smh_attn (bundle master_files.json, defines OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY,OT_SMH_ATTN_INT8)",
+  "verdict": "PASS"
+ },
+ "runs": [
+  {
+   "sm": "sm_SW0",
+   "kind": "pv",
+   "mode": "mb",
+   "pass_": true,
+   "rc": 0,
+   "fault": false,
+   "span": 784,
+   "span_first_word": 833,
+   "prefetch": 49,
+   "words_resident": 832,
+   "nsub": 1,
+   "results": 512,
+   "expected": 512,
+   "mismatches": 0,
+   "result_rows": 64,
+   "first_result": 778,
+   "last_result": 841
+  }
+ ]
+}

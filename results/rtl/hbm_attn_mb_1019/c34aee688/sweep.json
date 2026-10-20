@@ -1,0 +1,340 @@
+{
+ "table": {
+  "ds_qk_x": [
+   {
+    "lat": {
+     "x_lead": 0
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "qk": 669
+    }
+   },
+   {
+    "lat": {
+     "x_lead": 8
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "qk": 677
+    }
+   },
+   {
+    "lat": {
+     "x_lead": 4
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "qk": 677
+    }
+   },
+   {
+    "lat": {
+     "x_lead": 2
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "qk": 677
+    }
+   }
+  ],
+  "ds_pv_node": [
+   {
+    "lat": {
+     "pv_node": 100
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 724
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 60
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "pv": 622
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 120
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 744
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 140
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 764
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 80
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "pv": 642
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 160
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 784
+    }
+   }
+  ],
+  "qw_qk_x": [
+   {
+    "lat": {
+     "x_lead": 16
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "qk": 1196
+    }
+   },
+   {
+    "lat": {
+     "x_lead": 8
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "qk": 1188
+    }
+   },
+   {
+    "lat": {
+     "x_lead": 10
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "qk": 1196
+    }
+   },
+   {
+    "lat": {
+     "x_lead": 20
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "qk": 1204
+    }
+   },
+   {
+    "lat": {
+     "x_lead": 24
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "qk": 1204
+    }
+   },
+   {
+    "lat": {
+     "x_lead": 12
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "qk": 1196
+    }
+   },
+   {
+    "lat": {
+     "x_lead": 32
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "qk": 1212
+    }
+   }
+  ],
+  "qw_pv": [
+   {
+    "lat": {
+     "pv_node": 80,
+     "chain_gap": 40
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "pv": 485
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 100,
+     "chain_gap": 40
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "pv": 508
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 120,
+     "chain_gap": 40
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "pv": 525
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 160,
+     "chain_gap": 40
+    },
+    "verdict": "FAIL",
+    "busiest": {
+     "pv": 565
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 80,
+     "chain_gap": 100
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1760
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 80,
+     "chain_gap": 60
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1640
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 100,
+     "chain_gap": 60
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1708
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 80,
+     "chain_gap": 80
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1688
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 120,
+     "chain_gap": 80
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1848
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 100,
+     "chain_gap": 100
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1828
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 100,
+     "chain_gap": 80
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1780
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 160,
+     "chain_gap": 60
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1960
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 120,
+     "chain_gap": 100
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1920
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 160,
+     "chain_gap": 80
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 2008
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 160,
+     "chain_gap": 100
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 2080
+    }
+   },
+   {
+    "lat": {
+     "pv_node": 120,
+     "chain_gap": 60
+    },
+    "verdict": "PASS",
+    "busiest": {
+     "pv": 1800
+    }
+   }
+  ]
+ },
+ "chosen": {
+  "ds_qk_x": {
+   "x_lead": 4
+  },
+  "ds_pv_node": {
+   "pv_node": 100
+  },
+  "qw_qk_x": {
+   "x_lead": 12
+  },
+  "qw_pv": {
+   "pv_node": 80,
+   "chain_gap": 60
+  }
+ }
+}

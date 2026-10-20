@@ -1,0 +1,146 @@
+{
+ "summary": {
+  "stage": "L0",
+  "L": 0,
+  "ops": 1,
+  "passed": 1,
+  "dmut": 0,
+  "smut": "",
+  "lat": {
+   "req_lead": 8,
+   "q_pub_margin": 8,
+   "pv_node": 160,
+   "fold_step": 2,
+   "fold_l2": 20,
+   "fold_pub": 40,
+   "out": 40,
+   "q_land_min": 54,
+   "q_land_max": 54
+  },
+  "calibration": {
+   "q_land_min": 54,
+   "q_land_max": 54,
+   "per_column": {
+    "0": {
+     "landings": 128,
+     "control_delay": 23,
+     "min": 54,
+     "max": 54
+    },
+    "1": {
+     "landings": 128,
+     "control_delay": 19,
+     "min": 54,
+     "max": 54
+    },
+    "2": {
+     "landings": 128,
+     "control_delay": 15,
+     "min": 54,
+     "max": 54
+    },
+    "3": {
+     "landings": 128,
+     "control_delay": 11,
+     "min": 54,
+     "max": 54
+    },
+    "4": {
+     "landings": 128,
+     "control_delay": 11,
+     "min": 54,
+     "max": 54
+    },
+    "5": {
+     "landings": 128,
+     "control_delay": 15,
+     "min": 54,
+     "max": 54
+    },
+    "6": {
+     "landings": 128,
+     "control_delay": 19,
+     "min": 54,
+     "max": 54
+    },
+    "7": {
+     "landings": 128,
+     "control_delay": 23,
+     "min": 54,
+     "max": 54
+    }
+   },
+   "slots": 128,
+   "op": "qk_sm_SW0",
+   "rc": 0,
+   "fault": false
+  },
+  "source": {
+   "att_kv_json": "/srv/opentallas-scratch/claude/hbm-attn-mb/kv/qwen/L0/att_kv.json",
+   "npz_sha256": "ecf6522ddfc6040f651ad79fba64cfe5bfafbaa7e90fab0f6379a25a7f88a81e",
+   "stage": "L0",
+   "L": 0,
+   "rank": 0,
+   "qk_priced": [
+    {
+     "i": 14,
+     "start": 4484.4,
+     "end": 5465.2,
+     "cost": 980.8,
+     "base_cost": 980.8
+    }
+   ],
+   "pv_priced": [
+    {
+     "i": 18,
+     "start": 6295.6,
+     "end": 7276.4,
+     "cost": 980.8,
+     "base_cost": 980.8
+    }
+   ],
+   "P": 8192
+  },
+  "cross_block_merge": null,
+  "per_sm_span_sum": {
+   "sm_SW0": {
+    "qk": 1195,
+    "pv": 0,
+    "pv_ops": 0
+   }
+  },
+  "cross_sm_merge_scope": "pairwise over the 64 block nodes (golden order), composed in Python: the cross-SM PV merge has no on-die owner (VEH-ATT finding 3)",
+  "rtl": "ot_hbm_accel_smh_attn die master (GEN2b bundle master_files.json + defines OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY) in tb_hbm_smh_attn (PROBE build: extra G/S probe prints only)",
+  "wall_s": 16.8,
+  "verdict": "PASS"
+ },
+ "ops": [
+  {
+   "name": "qk_sm_SW0",
+   "sm": "sm_SW0",
+   "kind": "qk",
+   "block": null,
+   "rows": 512,
+   "rc": 0,
+   "fault": false,
+   "calendar": {
+    "first_line": 123,
+    "last_consume": 1199,
+    "lines": 482,
+    "t_cfg": 114,
+    "end": 1317
+   },
+   "first_word": 114,
+   "lines": 482,
+   "results": 2048,
+   "expected": 2048,
+   "mismatches": 0,
+   "result_rows": 256,
+   "first_result": 334,
+   "last_result": 1309,
+   "pass": true,
+   "span_first_word_to_last_result": 1195,
+   "span_first_line_to_last_result": 1186
+  }
+ ]
+}
