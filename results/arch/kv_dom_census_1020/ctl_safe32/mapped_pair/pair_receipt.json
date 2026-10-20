@@ -1,0 +1,29 @@
+{
+  "cases": [
+    {
+      "mut": 0,
+      "rc": 0,
+      "expected": true,
+      "line": "CTL_PAIR_PASS checks59360 edges3000 fulloutputs warmresets2 matchedzeroInit"
+    },
+    {
+      "mut": 1,
+      "rc": 1,
+      "expected": true,
+      "line": "[30006000] %Fatal: pair_tb.sv:175: Assertion failed in tb: CTL_PAIR_FAIL checks59360 failures2968"
+    }
+  ],
+  "canonical_coupon": "3905a5c7d",
+  "seq_types": [
+    "DFFASRHQNx1_ASAP7_75t_R",
+    "DFFHQNx1_ASAP7_75t_R"
+  ],
+  "sources": {
+    "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_mu6c-20261019-230301/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_ctl_asap7_ref_gate/base/1_2_yosys.v": "c69dce340b87b1ba00e58fc3467d6892d3dafccc7b6cba0292c8668344c494a4",
+    "/srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020/qkd_kvs_ctl_s32.sv": "00edd2ab38f9d3893b8b5573d7d6862a8af646371d330ec995b7c23098b26433",
+    "/srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020/library_verified.v": "0127391ce67a6e88bb1388e31509feb149adafcebdae68a46253023f2a1f205a",
+    "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_mu6c-20261019-230301/src/physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v": "1bdf64bab7d0c928d2dfea819140fecdba170b882da922585f68d1c1b2c49738",
+    "/srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020/pair_tb.sv": "09307e1a1e91d86510b32b206a4d5556293a902de557c575d8de35aefb2aeadd"
+  },
+  "scope": "Mapped vs emitted HDL full-port parser parity under matched zero initialization only; independent initial-state convergence proved separately; not highlevelRTL first-use qualification"
+}
