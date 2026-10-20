@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       admits    15 GB (avail 412, growth 402, headroom 0, waiters 2/99 GB) load 143/128 running 28 disk 1532 GB 
+ot-run: -> ot-epyc5 (will queue: admits 15 GB < 48 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 48 = 34 GB, admissible 18 GB: available 411 GB, growth charged 399 GB (x0.5), young 276 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-431488-1792408121 after 101 s
+Verilator 5.050 2026-07-01 rev v5.050
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+EQ MUT 0: FLAT_EQ PASS
+EQ MUT 1: FLAT_EQ FAIL
+EQ_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-431488-1792408121): exit 0

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_su_programme_pslice_c5_lp",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n has ONE sink, u_lpr_root (ot_pl_pad on ck_h beside the W-face pin), then the regional reset runs u_lpr_* (depth 6, priced in the landed record); a kit landing would add 2 unpriced release edges"
+}

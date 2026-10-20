@@ -1,0 +1,5 @@
+FLAT_EQ PASS MUT=0 compared=19979 valid_cycles=6993 nonzero_cmd=4794 fault_cycles=11911
+- rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_programme_pslice_c5_flat_eq.sv:37: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.378 s; speed 52.861 us/s
+- Verilator: cpu 0.378 s on 1 threads; allocated 9 MB

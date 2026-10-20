@@ -1,0 +1,154 @@
+{
+ "name": "hbm_su_pslice_c5_lp_diag-diag1-COMMIT",
+ "block": "ot_hbm_su_programme_pslice_c5_lp",
+ "ref_tile": true,
+ "owner": "Claude:PL-PSLICE",
+ "purpose": "landed per-quarter SU programme cluster pslice_c5 (pgp_<q>)",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/pl-pslice-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/landed_parent",
+   "rtl/common/landed_parent",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/adapters/static_su/programme",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/landed_parent_1018/pslice_c5"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_programme_pslice_c5_lp u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/programme/landed/diag/ot_hbm_su_programme_pslice_c5_lp.sv rtl/common/landed_parent/ot_pl_land.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lp_lockstep_mut0",
+    "cmd": "ONLY=0 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp_bench.sh {RUN}/bench/lp0",
+    "expect": "pass",
+    "pass_regex": "MUT 0: LP_LOCKSTEP PASS",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lp_mut1_bypass",
+    "cmd": "ONLY=1 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp_bench.sh {RUN}/bench/lp1",
+    "expect": "fail",
+    "fail_regex": "MUT 1: LP_LOCKSTEP FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5/bench/bench_summary.log"
+   },
+   {
+    "name": "lp_mut2_read_k1",
+    "cmd": "ONLY=2 SIM=verilator bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/ot_hbm_su_programme_pslice_c5_lp_bench.sh {RUN}/bench/lp2",
+    "expect": "fail",
+    "fail_regex": "MUT 2: LP_LOCKSTEP FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5/bench/bench_summary.log"
+   },
+   {
+    "name": "flat_eq_mut0",
+    "cmd": "ONLY=0 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat_eq_bench.sh {RUN}/bench/eq0",
+    "expect": "pass",
+    "pass_regex": "EQ MUT 0: FLAT_EQ PASS",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "flat_eq_mut1_phase",
+    "cmd": "ONLY=1 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat_eq_bench.sh {RUN}/bench/eq1",
+    "expect": "fail",
+    "fail_regex": "EQ MUT 1: FLAT_EQ FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/arch/landed_parent_1018/pslice_c5/bench/bench_summary.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_pslice_c5_lp_diag/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_pslice_c5_lp_diag/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_pslice_c5_lp_diag --out {RUN}/record/views/ot_hbm_su_programme_pslice_c5_lp --macro-view physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s --macro-view physical/ref_tile/hbm_su_pghead_r5/views/ot_hbm_su_programme_pghead > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_su_pslice_c5_lp_diag/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s",
+   "physical/ref_tile/hbm_su_pghead_r5/views/ot_hbm_su_programme_pghead"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_su_pslice_c5_lp_diag/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_su_pslice_c5_lp_diag/hbm_su_pslice_c5_lp_diag-diag1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "hold_merge": "PL-PSLICE diagnostic: L slots hold the S view stand-in (pgcol_l not closed)",
+ "structural_change": "PL-PSLICE (PARENTS-LANDED 10-18, landed-regions-standard-1018): pslice_c5 (head + 7 S + 3 L leaves, r5 per-column split) as a LANDED parent: 4 clock regions h / l / sw / se, each its own CTS root; all 41 cross-region nets landed (D 4, E = K = 2, +3 edges; 5,073 landing flops, 0 pads); 1-bit regional reset runs (depth 5). The head's status inputs (l_fault / l_valid) are read 6 edges after its own time (lp.py lag_pins). Compiler: leaves +3 edges, reset release +5, leaf faults reach the fault port +3 later relative to command/done than in the flat cluster."
+}
