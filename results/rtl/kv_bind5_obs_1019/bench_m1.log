@@ -1,14 +1,14 @@
-ERR word 0 got 00000000 exp 63ef81f4
-ERR word 1 got 00000000 exp 76b65ae1
-ERR word 2 got 00000000 exp cba6dde2
-ERR word 3 got 00000000 exp 23629cef
-ERR word 4 got 00000000 exp a25a723d
-ERR word 5 got 00000000 exp 9e03dd87
-ERR word 6 got 00000000 exp 63295966
-ERR word 7 got 00000000 exp d201e4c1
-ERR word 8 got 00000000 exp 6862f0b2
-TB_QKD_HOST_OBS_CSR FAIL errors=251
-- /srv/opentallas-scratch/claude/kv-bind5-obs-1019/src/rtl/test/qwen_host/tb_qkd_host_obs_csr.sv:130: Verilog $finish
+ERR word 0 got 00000000 exp 1c5f1286
+ERR word 1 got 00000000 exp 6d08f124
+ERR word 2 got 00000000 exp 85d9b529
+ERR word 3 got 00000000 exp 26a84f5d
+ERR word 4 got 00000000 exp c1db56df
+ERR word 5 got 00000000 exp 47932585
+ERR word 6 got 00000000 exp 9399c0a0
+ERR word 7 got 00000000 exp 4f5c37c7
+ERR word 8 got 00000000 exp 75499ee4
+TB_QKD_HOST_OBS_CSR FAIL errors=257
+- /srv/opentallas-scratch/claude/kv-bind5-obs-1019/rt/rtl/test/qwen_host/tb_qkd_host_obs_csr.sv:130: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.000 s; speed 2.514 ms/s
-- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 1us; walltime 0.001 s; speed 1.240 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

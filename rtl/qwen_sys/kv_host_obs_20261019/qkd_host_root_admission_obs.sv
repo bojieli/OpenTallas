@@ -499,7 +499,6 @@ module qkd_host_root_admission_obs #(
  input wire native_host_drained,
  input wire native_collective_busy,
  input wire native_kv_flush,
- output wire[31:0] service_status,
  input wire[2:0] die_id,
  input wire por_n,
  input wire pll_locked,
@@ -531,8 +530,6 @@ module qkd_host_root_admission_obs #(
  output wire hbm_rst_n,
  output wire boot_go,
  output wire die_rst_n,
- output wire sys_ready,
- output wire source_cr,
  output wire[282:0] hb,
  input wire hb_cr,
  input wire[12:0] est,
@@ -577,6 +574,7 @@ module qkd_host_root_admission_obs #(
  wire ingest_permission;
  wire[15:0] local_service_epoch;
  wire[25:0] service_diag_raw;
+ wire[31:0] service_status;
  wire record_tx_v;
  wire record_fault;
  wire program_authorized_footer_v;
@@ -589,7 +587,9 @@ module qkd_host_root_admission_obs #(
  wire[181:0] hc;
  wire[7:0] seen;
  wire irq;
+ wire sys_ready;
  wire[31:0] fault_src;
+ wire source_cr;
  wire available;
  wire marker_v;
  wire[65:0] marker;
@@ -609,8 +609,8 @@ module qkd_host_root_admission_obs #(
  wire coordinator_fault;
  wire recovery_complete;
  // KV-BIND5-OBS: the observation window bus (LSB first = host_obs_map.json order)
- localparam integer OBS_NB=1301,OBS_NF=71;
- wire[OBS_NB-1:0] obs_bits={recovery_complete,coordinator_fault,program_consensus,engine_result_cr,participant_pos,participant_token,participant_trace,accepted_ranks,dispatched,dispatch_valid,peer_protocol_fault,service_faults,physical_ack_n,landed,issued,marker,marker_v,available,fault_src,irq,seen,hc,program_auth_digest,program_auth_epoch,program_expected_dw,program_expected_pw,program_auth_v,program_authorized_footer64,program_authorized_footer_v,record_fault,record_tx_v,service_diag_raw,local_service_epoch,ingest_permission,service_abort,service_ready,native_pr,package_abort,host_deferred,host_admission_open};
+ localparam integer OBS_NB=1335,OBS_NF=71;
+ wire[OBS_NB-1:0] obs_bits={recovery_complete,coordinator_fault,program_consensus,engine_result_cr,participant_pos,participant_token,participant_trace,accepted_ranks,dispatched,dispatch_valid,peer_protocol_fault,service_faults,physical_ack_n,landed,issued,marker,marker_v,available,source_cr,fault_src,sys_ready,irq,seen,hc,program_auth_digest,program_auth_epoch,program_expected_dw,program_expected_pw,program_auth_v,program_authorized_footer64,program_authorized_footer_v,record_fault,record_tx_v,service_status,service_diag_raw,local_service_epoch,ingest_permission,service_abort,service_ready,native_pr,package_abort,host_deferred,host_admission_open};
  wire[OBS_NF-1:0] obs_flt={fault_src,service_faults,seen,irq,coordinator_fault,peer_protocol_fault,record_fault,service_abort,package_abort};
  initial if(MU==0)$fatal(1,"qkd_host_root_admission_obs: the observation window exists in MU 1 only");
 generate if(MU==0)begin:g_plain

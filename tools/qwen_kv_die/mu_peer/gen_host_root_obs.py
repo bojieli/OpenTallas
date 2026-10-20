@@ -2,13 +2,13 @@
 """KV-BIND5-OBS 10-19: the HOST root with its observation window -- qkd_host_root_admission_obs, generated from the MU 1
 release root rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv (gen_host_root_mu.py; that file is UNCHANGED).
 
-Why: bind v2 on the GEN9 die reports 40 HOST-root outputs OUTPUT_OPEN (class c: CSR / trace observations, admission
+Why: bind v2 on the GEN9 die reports 43 HOST-root outputs OUTPUT_OPEN (class c: CSR / trace observations, admission
 certificates, host fault / abort levels) plus dcal adm_done / cal_ready / running / layer and the D2D end's
 recovery_cycles.  None has a die consumer by design: they are observations of the HOST.  The real reader is the HOST
 itself, over the register path the host already uses (AXI4-Lite through the control packet engine, the ot_host_if
 handshake): qkd_host_obs_csr sits on the AXI between the packet master (u_packet.u_axi) and the control CSR slave
 (u_control) in qkd_host_control_packet_admission and serves window 0x1800-0x19FF of the CSR's free system region.
-  * the 40 outputs leave the root's port list and become internal nets read by the window (their producers are
+  * the 43 outputs leave the root's port list and become internal nets read by the window (their producers are
     unchanged: no tie, no stub, no deleted logic);
   * the five die observations enter as new root inputs obs_dcal_* / obs_d2d_recovery_cycles (die buses from dcal / d2d);
   * the fault-class subset (FLT) is also kept STICKY in the window (a 1-cycle abort / fault pulse stays visible until the
@@ -28,12 +28,13 @@ from pathlib import Path
 SRC_REL = 'rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv'
 OUT_REL = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obs.sv'
 MAP_REL = 'rtl/qwen_sys/kv_host_obs_20261019/host_obs_map.json'
-# bind v2 OUTPUT_OPEN qkd_host_root_admission (GEN9 kvs14r replay, KV-BIND3 pass2_fixed.json): observation outputs
+# bind v2 OUTPUT_OPEN qkd_host_root_admission (GEN9 kvs14r replay, KV-BIND3 pass2_fixed.json, whose per-master list is
+# truncated at 40 names: the full set is 43 = + service_status / source_cr / sys_ready): observation outputs
 OBS = ['host_admission_open', 'host_deferred', 'package_abort', 'native_pr', 'service_ready', 'service_abort',
-       'ingest_permission', 'local_service_epoch', 'service_diag_raw', 'record_tx_v', 'record_fault',
+       'ingest_permission', 'local_service_epoch', 'service_diag_raw', 'service_status', 'record_tx_v', 'record_fault',
        'program_authorized_footer_v', 'program_authorized_footer64', 'program_auth_v', 'program_expected_pw',
-       'program_expected_dw', 'program_auth_epoch', 'program_auth_digest', 'hc', 'seen', 'irq',
-       'fault_src', 'available', 'marker_v', 'marker', 'issued', 'landed', 'physical_ack_n',
+       'program_expected_dw', 'program_auth_epoch', 'program_auth_digest', 'hc', 'seen', 'irq', 'sys_ready',
+       'fault_src', 'source_cr', 'available', 'marker_v', 'marker', 'issued', 'landed', 'physical_ack_n',
        'service_faults', 'peer_protocol_fault', 'dispatch_valid', 'dispatched', 'accepted_ranks', 'participant_trace',
        'participant_token', 'participant_pos', 'engine_result_cr', 'program_consensus', 'coordinator_fault',
        'recovery_complete']

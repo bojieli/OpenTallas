@@ -6,12 +6,12 @@
 // its own data; (6) random interleaving of window / CSR transactions.  PASS line: "TB_QKD_HOST_OBS_CSR PASS".
 module tb_qkd_host_obs_csr;
 `ifndef OBS_NB
-`define OBS_NB 1301
+`define OBS_NB 1335
 `endif
 `ifndef OBS_NF
 `define OBS_NF 71
 `endif
-    // default = the generated HOST root's window (host_obs_map.json: 1301 obs + 71 sticky bits, 43 words)
+    // default = the generated HOST root's window (host_obs_map.json: 1335 obs + 71 sticky bits, 44 words)
     localparam integer NB = `OBS_NB, NF = `OBS_NF, NT = NB + NF, NW = (NT + 31) / 32;
 `ifndef OBS_MUT
 `define OBS_MUT 0

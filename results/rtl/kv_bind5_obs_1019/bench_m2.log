@@ -1,26 +1,26 @@
-ERR word 0 got 76b65ae1 exp 63ef81f4
-ERR word 1 got cba6dde2 exp 76b65ae1
-ERR word 2 got 23629cef exp cba6dde2
-ERR word 3 got a25a723d exp 23629cef
-ERR word 4 got 9e03dd87 exp a25a723d
-ERR word 5 got 63295966 exp 9e03dd87
-ERR word 6 got d201e4c1 exp 63295966
-ERR word 7 got 6862f0b2 exp d201e4c1
-ERR word 8 got 5b370e6d exp 6862f0b2
-ERR ctrl 00470515
+ERR word 0 got 6d08f124 exp 1c5f1286
+ERR word 1 got 85d9b529 exp 6d08f124
+ERR word 2 got 26a84f5d exp 85d9b529
+ERR word 3 got c1db56df exp 26a84f5d
+ERR word 4 got 47932585 exp c1db56df
+ERR word 5 got 9399c0a0 exp 47932585
+ERR word 6 got 4f5c37c7 exp 9399c0a0
+ERR word 7 got 75499ee4 exp 4f5c37c7
+ERR word 8 got f3d18b37 exp 75499ee4
+ERR ctrl 00470537
 ERR nb 00000000
-ERR ctrl 00470515
+ERR ctrl 00470537
 ERR nb 00000000
-ERR ctrl 00470515
+ERR ctrl 00470537
 ERR nb 00000000
-ERR ctrl 00470515
+ERR ctrl 00470537
 ERR nb 00000000
-ERR ctrl 00470515
+ERR ctrl 00470537
 ERR nb 00000000
-ERR ctrl 00470515
+ERR ctrl 00470537
 ERR nb 00000000
-TB_QKD_HOST_OBS_CSR FAIL errors=265
-- /srv/opentallas-scratch/claude/kv-bind5-obs-1019/src/rtl/test/qwen_host/tb_qkd_host_obs_csr.sv:130: Verilog $finish
+TB_QKD_HOST_OBS_CSR FAIL errors=271
+- /srv/opentallas-scratch/claude/kv-bind5-obs-1019/rt/rtl/test/qwen_host/tb_qkd_host_obs_csr.sv:130: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.001 s; speed 1.548 ms/s
+- Verilator: $finish at 1us; walltime 0.001 s; speed 1.378 ms/s
 - Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
