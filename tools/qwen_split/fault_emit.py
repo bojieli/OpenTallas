@@ -403,8 +403,14 @@ def post(v, m, G):
     new_buses, nn = [], [0]
     owner_of_root = {it.name: o for o, it in roots.items()}
 
-    def new_node(kind, cx, cy, cj, rj, owner, ok=None):
-        s = occ.site(v, cx, cy, ok=ok) or occ.site(v, cx, cy, rmax=1200.0, step=8.64, ok=ok)
+    def new_node(kind, cx, cy, cj, rj, owner, ok=None, at=None):
+        if at is not None:
+            if not occ.free((at[0], at[1], at[0] + W, at[1] + H)):
+                raise ValueError(f'fault emit: routed {kind} box {at} no longer free')
+            occ.add((at[0], at[1], at[0] + W, at[1] + H))
+            s = at
+        else:
+            s = occ.site(v, cx, cy, ok=ok) or occ.site(v, cx, cy, rmax=1200.0, step=8.64, ok=ok)
         if s is None:
             raise ValueError(f'fault emit: no free site for a {kind} near ({cx:.1f}, {cy:.1f})')
         nm = f'flt_{kind}{nn[0]}'
@@ -447,6 +453,65 @@ def post(v, m, G):
             leaves[cj].append(lf)
         worst_src = max(worst_src, _man(_ctr(nodes[lf]['it']), xy))
         new_buses.append((f'flt_s_{inst}_{port}', CLS, 1, [(inst, port), (lf, take(lf))]))
+    def _free_near(px, py, slack=26.0, step=4.32):
+        """lower-left of a free node box centred within `slack` (Manhattan) of (px, py), not booked."""
+        k = int(slack / step)
+        for ring in range(0, k + 1):
+            st = ring * step
+            cand = [(0.0, 0.0)] if ring == 0 else \
+                [(dx, dy) for dx in (-st, st) for dy in [i * step for i in range(-ring, ring + 1)]] + \
+                [(dx, dy) for dy in (-st, st) for dx in [i * step for i in range(-ring + 1, ring)]]
+            for dx, dy in sorted(cand, key=lambda t_: abs(t_[0]) + abs(t_[1])):
+                if abs(dx) + abs(dy) > slack:
+                    continue
+                x0, y0 = v.dn(px - W / 2 + dx, v.GX), v.dn(py - H / 2 + dy, v.GY)
+                if occ.free((x0, y0, x0 + W, y0 + H)):
+                    return x0, y0
+        return None
+
+    def _hop_route(c0, t):
+        """QW-G5F3 10-20: A* over free node boxes (each hop <= REACH_UM centre to centre) from c0 until within REACH_UM
+        of t; detours through row gaps / channels around hard blocks (dv2f20g5f4: the straight line from a leaf near
+        (10688, 13116) crossed a cluster with no free box).  -> list of lower-lefts, or None."""
+        import heapq
+        S_ = REACH_UM - 2 * 26.0 - 4.0
+        dirs = [(S_, 0), (-S_, 0), (0, S_), (0, -S_), (S_ / 2, S_ / 2), (S_ / 2, -S_ / 2), (-S_ / 2, S_ / 2), (-S_ / 2, -S_ / 2),
+                (S_ / 2, 0), (-S_ / 2, 0), (0, S_ / 2), (0, -S_ / 2)]
+        q = 43.2
+        start = (c0[0], c0[1])
+        heap = [(math.ceil(_man(start, t) / S_), 0, start, None)]
+        back, seen = {}, set()
+        back[(round(start[0] / 43.2), round(start[1] / 43.2))] = (None, None, 0)
+        n_exp = 0
+        while heap and n_exp < 40000:
+            f_, g_, p_, ll = heapq.heappop(heap)
+            key = (round(p_[0] / q), round(p_[1] / q))
+            if key in seen:
+                continue
+            seen.add(key)
+            n_exp += 1
+            if g_ > 0 and _man(p_, t) <= REACH_UM:
+                out = []
+                k_ = key
+                while k_ is not None and back[k_][0] is not None:
+                    out.append(back[k_][0])
+                    k_ = back[k_][1]
+                return out[::-1]
+            for dx, dy in dirs:
+                s_ = _free_near(p_[0] + dx, p_[1] + dy)
+                if s_ is None:
+                    continue
+                cc = (s_[0] + W / 2, s_[1] + H / 2)
+                if _man(p_, cc) > REACH_UM:
+                    continue
+                k2 = (round(cc[0] / q), round(cc[1] / q))
+                if k2 in seen:
+                    continue
+                if k2 not in back or back[k2][2] > g_ + 1:
+                    back[k2] = (s_, key, g_ + 1)
+                heapq.heappush(heap, (g_ + 1 + math.ceil(max(0.0, _man(cc, t) - REACH_UM) / S_), g_ + 1, cc, s_))
+        return None
+
     # 2. each leaf joins the nearest attached node of its clock root (roots first), hops every <= REACH_UM
     for cj, ls in sorted(leaves.items()):
         att = [r.name for r in root_ck[cj]]
@@ -463,6 +528,17 @@ def post(v, m, G):
                     connect(cur, tgt)
                     break
                 t = _ctr(by[tgt])
+                if os.environ.get('OT_SPLIT_FAULT_ASTAR', '1') == '1':
+                    route = _hop_route(c0, t)
+                    if route is None:
+                        raise ValueError(f'fault emit: no hop route from {cur} {c0} to {tgt} {t} (A*)')
+                    for ll in route:
+                        hop = new_node('hop', 0, 0, cj, nodes[cur]['rs'], nodes[cur]['owner'], at=ll)
+                        if _man(_ctr(nodes[cur]['it']), _ctr(nodes[hop]['it'])) > REACH_UM:
+                            raise ValueError(f'fault emit: A* hop for {cur} too far')
+                        connect(cur, hop)
+                        cur = hop
+                    continue
                 f = REACH_UM * 0.9 / d
                 hx, hy = c0[0] + (t[0] - c0[0]) * f, c0[1] + (t[1] - c0[1]) * f
                 # QW-G5F3 10-20: the hop site must stay within REACH_UM of the current node AND make >= 40 um progress to the
