@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       admits   856 GB (avail 713, growth 113, headroom 0, waiters 0/0 GB) load 48/128 running 36 disk 167 GB 
+ot-run: ot-epyc6       admits  1085 GB (avail 873, growth 113, headroom 0, waiters 0/0 GB) load 216/128 running 40 disk 4770 GB 
+ot-run: ot-epyc7       admits   623 GB (avail 537, growth 101, headroom 0, waiters 0/0 GB) load 56/96 running 30 disk 5760 GB 
+ot-run: ot-epyc9       admits   737 GB (avail 643, growth 127, headroom 0, waiters 0/0 GB) load 72/128 running 41 disk 193 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1714328-1792482244 after 1 s
+SYNTH_DRIVER_RC=0
+N59_CENSUS_COMPLETE unit=svc synth_rc=0 strict_census_rc=3
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1714328-1792482244): exit 0

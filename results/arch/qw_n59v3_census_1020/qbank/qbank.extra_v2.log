@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: ot-epyc9       admits   706 GB (avail 638, growth 144, headroom 0, waiters 0/0 GB) load 82/128 running 38 disk 190 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-4041524-1792482539 after 0 s
+qfd_native59_qbank over32 328 max [{'net': '_64866_/Y (OR2x2_ASAP7_75t_R)', 'loads': 259, 'flops': 0, 'example': None, 'upstream_source_examples': ['DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[5][6]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[5][5]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[5][3]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[5][4]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[5][2]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[5][0]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[5][1]$_DFF_P_/QN']}, {'net': '_55083_/Y (NAND2x1_ASAP7_75t_R)', 'loads': 249, 'flops': 0, 'example': None, 'upstream_source_examples': ['DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[2][6]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[2][5]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[2][3]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[2][4]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[2][1]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[2][0]$_DFF_P_/QN', 'DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qc_rep[2][2]$_DFF_P_/QN']}] tied output bits 0 large families []
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-4041524-1792482539): exit 0

@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: ot-epyc9       admits   753 GB (avail 641, growth 114, headroom 0, waiters 0/0 GB) load 85/128 running 37 disk 191 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-4030810-1792482491 after 1 s
+qfd_native59_qbank over32 328 max [{'net': '_64866_/Y (OR2x2_ASAP7_75t_R)', 'loads': 259, 'flops': 0, 'example': None}, {'net': '_55083_/Y (NAND2x1_ASAP7_75t_R)', 'loads': 249, 'flops': 0, 'example': None}] tied output bits 0 large families [{'family': 'u_ot_pr_core.u_qseat.g_lane', 'bits': 2192}]
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-4030810-1792482491): exit 0

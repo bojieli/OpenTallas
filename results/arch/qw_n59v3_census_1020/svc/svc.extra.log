@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/svc
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/svc
+ot-run: ot-epyc7       admits   643 GB (avail 551, growth 101, headroom 0, waiters 0/0 GB) load 67/96 running 42 disk 5749 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/svc
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/svc
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/svc
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2252736-1792482875 after 1 s
+qfd_native59_svc over32 272 max [{'net': 'u_ot_pr_core.u_formatter.selected[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)', 'loads': 2065, 'flops': 0, 'example': None, 'upstream_source_examples': ['DFFASRHQNx1_ASAP7_75t_R u_ot_pr_core.u_formatter.selected[1]$_DFF_PN0_/QN']}, {'net': 'u_ot_pr_core.g_slot[0].result_slot$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)', 'loads': 1202, 'flops': 0, 'example': None, 'upstream_source_examples': ['DFFASRHQNx1_ASAP7_75t_R u_ot_pr_core.g_slot[0].result_slot$_DFF_PN0_/QN']}] tied output bits 0 large families []
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2252736-1792482875): exit 0
