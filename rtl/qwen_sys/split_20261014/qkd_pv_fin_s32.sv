@@ -41,9 +41,9 @@ module qkd_pv_fin_s32 #(
  // Command-time dates remove the runtime max-word distribution.
  (* keep="true",dont_touch="true" *) reg [15:0] ADD_AGE,SUM_AGE;
  (* keep="true",dont_touch="true" *) reg [15:0] PRODUCT_AGE,PRODUCT_AGE_PRED;
- (* keep="true",dont_touch="true" *) reg [15:0] age_operand,age_header,age_product,age_sum;
+ (* keep="true",dont_touch="true" *) reg [15:0] age_operand,age_header,age_product,age_sum,age_mulissue;
  (* keep="true",dont_touch="true" *) reg [15:0] mul_operand,mul_header;
- wire [15:0] no=age_operand+16'd1,nh=age_header+16'd1,np=age_product+16'd1,ns=age_sum+16'd1;
+ wire [15:0] no=age_operand+16'd1,nh=age_header+16'd1,np=age_product+16'd1,ns=age_sum+16'd1,ni=age_mulissue+16'd1;
  wire [15:0] lane_active_vec;
  // Independent counter feedback prevents main-age input redistribution.
  // Kept start/active images are same-phase original controls, not new stages.
@@ -59,6 +59,11 @@ module qkd_pv_fin_s32 #(
  always @(posedge ck or negedge rr[487])if(!rr[487])age_sum<=0;
   else if(command_accept[7])age_sum<=0;
   else if(!command_start[7]&&lane_active_vec[3]&&!fault)age_sum<=age_sum+16'd1;
+ // Separate issue counter/date from SRAM-prefetch address arithmetic.
+ always @(posedge ck or negedge rr[490])if(!rr[490])age_mulissue<=0;
+  else if(command_start[8])begin
+   if(!lane_active_vec[4]&&!cal_bad)age_mulissue<=0;
+  end else if(lane_active_vec[4]&&!fault)age_mulissue<=age_mulissue+16'd1;
  // Each shared acceptance controls original8 +two duplicated8 payload bits.
  generate for(genvar mh=0;mh<2;mh=mh+1)begin:g_mul_date_capture
   always @(posedge ck or negedge rr[483])if(!rr[483])mul_operand[8*mh+:8]<=8'hff;
@@ -70,7 +75,7 @@ module qkd_pv_fin_s32 #(
  function automatic win(input [15:0] x,input [15:0] lo);win=(x>=lo)&&(x<lo+16'd32);endfunction
  wire p0_slot=active&&win(n,P0),p1_slot=active&&win(n,P1),r_slot=active&&n==RA;
  wire add_slot=active&&win(ns,ADD_AGE),sum_slot=active&&win(ns,SUM_AGE);
- wire mul_slot=active&&win(no,mul_operand),product_slot=active&&win(np,PRODUCT_AGE);
+ wire mul_slot=active&&win(ni,MUL_AGE),product_slot=active&&win(np,PRODUCT_AGE);
  wire [4:0] b_p0=5'(n-P0),b_p1=5'(n-P1),b_prod=5'(np-PRODUCT_AGE);
  // calendar of a new command (checked on the start edge)
  wire [15:0] c0=cal_q[15:0],c1=cal_q[31:16],cr=cal_q[47:32];
@@ -192,7 +197,7 @@ module qkd_pv_fin_s32 #(
   (* keep="true",dont_touch="true" *) reg add_land,mul_land,lane_active;
   always @(posedge ck)begin
    add_land<=active&&!fault&&win(ns+16'd1,ADD_AGE);
-   mul_land<=active&&!fault&&win(no+16'd1,mul_operand);
+   mul_land<=active&&!fault&&win(ni+16'd1,MUL_AGE);
   end
   assign lane_active_vec[l]=lane_active;
   always @(posedge ck or negedge rr[462+l])if(!rr[462+l])lane_active<=0;else lane_active<=active_d;
