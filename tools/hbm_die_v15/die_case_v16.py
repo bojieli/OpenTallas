@@ -955,17 +955,8 @@ def main():
         if s_ in cell_of and is_rly(s_) and e['source'][1] == 'o':
             succ[s_] = t_
     left = [n for n in inst if n not in pl]
-    done = set()
-    for n in left:
-        if n in done:
-            continue
-        head = n
-        while pred.get(head) in left and pred[head] not in done and pred[head] != n:
-            head = pred[head]
-        chain = [head]
-        while succ.get(chain[-1]) in left and succ[chain[-1]] not in chain:
-            chain.append(succ[chain[-1]])
-        done.update(chain)
+    from relay_chain_groups import linear_chains
+    for chain in linear_chains(left, pred, succ):
         a_ = pred.get(chain[0]); b_ = succ.get(chain[-1])
         p0 = centre(a_) if a_ in pl else None; p1 = centre(b_) if b_ in pl else None
         p0 = p0 or p1 or (W / 2, H / 2); p1 = p1 or p0
