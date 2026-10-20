@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits   735 GB (avail 628, growth 113, headroom 0, waiters 0/0 GB) load 37/128 running 20 disk 505 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hroot-leaf-cold-v2-0720
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hroot-leaf-cold-v2-0720
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hroot-leaf-cold-v2-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hroot-leaf-cold-v2-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hroot-leaf-cold-v2-0720
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3079336-1792507815 after 0 s
+positive seed=17 rc=0
+positive seed=1020 rc=0
+wrong seed=17 rc=1
+wrong seed=1020 rc=1
+bypass seed=17 rc=1
+bypass seed=1020 rc=1
+reset seed=17 rc=1
+reset seed=1020 rc=1
+late seed=17 rc=1
+late seed=1020 rc=1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3079336-1792507815): exit 0

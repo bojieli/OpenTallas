@@ -1,0 +1,10 @@
+positive seed=17 rc=0
+positive seed=1020 rc=0
+wrong seed=17 rc=1
+wrong seed=1020 rc=1
+bypass seed=17 rc=1
+bypass seed=1020 rc=1
+reset seed=17 rc=1
+reset seed=1020 rc=1
+late seed=17 rc=1
+late seed=1020 rc=1

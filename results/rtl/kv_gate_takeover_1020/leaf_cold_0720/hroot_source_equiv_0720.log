@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   768 GB (avail 651, growth 113, headroom 0, waiters 0/0 GB) load 35/128 running 20 disk 503 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hroot-source-equiv-0720
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hroot-source-equiv-0720
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hroot-source-equiv-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hroot-source-equiv-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hroot-source-equiv-0720
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3234727-1792508756 after 0 s
+Traceback (most recent call last):
+  File "<stdin>", line 8, in <module>
+RuntimeError: expected exactly5 actual NLDM RVT TT libs
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3234727-1792508756): exit 1
