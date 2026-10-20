@@ -63,6 +63,7 @@
  "referenced": [
   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_safe32.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_hroot_safe32.sv",
+  "physical/qwen_kv_hroot_safe32_1020/central_fence_release.tcl",
   "physical/qwen_kv_hroot_safe32_1020/central_fence_s32v4.tcl",
   "physical/ref_tile/qkd_kvs_hroot_s32v4b/kit.env",
   "physical/ref_tile/qkd_kvs_hroot_s32v4b/clock.sdc",

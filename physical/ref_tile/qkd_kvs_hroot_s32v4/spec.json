@@ -192,5 +192,8 @@
  },
  "pin_hook_after_flops": [
   "physical/qwen_kv_hroot_safe32_1020/central_fence_s32v4.tcl"
+ ],
+ "pre_cts_extra": [
+  "physical/qwen_kv_hroot_safe32_1020/central_fence_release.tcl"
  ]
 }
