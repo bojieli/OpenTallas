@@ -1741,6 +1741,8 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
     level, text = TL.clock_rule_eval(rec["max_root_sinks"], rec)
     rec["verdict"] = ("REFUSE" if level == "FAIL" else "UNKNOWN" if rec["max_root_sinks"] is None else level)
     rec["text"] = text
+    if cts and domains and (spec or {}).get("clock") != "multiple_cts_roots":
+        other_roots(rec, domains, spec)
     if (spec or {}).get("clock") == "multiple_cts_roots":
         expected = set(spec["clock_ports"])
         actual = [d.get("source") for d in domains]
@@ -1793,6 +1795,40 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
                     rec[f"{c}_pin_spread_ps"], rec[f"{c}_pin_spread_basis"] = max(vals), "per_root"
         if issues:
             rec["verdict"], rec["text"] = "REFUSE", "; ".join(issues)
+    return rec
+
+
+def other_roots(rec: dict, domains: list, spec: dict | None) -> dict:
+    """KV-CLKFIX 2026-10-19 (Gate-Rule: tightening): the clock rule judged at EVERY measured root, not only the largest.
+    A two-clock kit (KV pc / grp / ctrl: core_clk on ck + hclk on hck) reported only its largest root, so the second
+    root's pin-flop spread was never judged (qkd_ctrl_pc ks2: clock_rule on pll_hbm only, ck unjudged).  Each other
+    GATE_CK_DOMAIN with a measured pin-flop (boundary register; child-flop for a wires-only cluster) spread is judged by
+    the same 0dq rule; a FAIL there REFUSES the gate.  A root without pin flops (macro-only storage clocks) is listed,
+    not judged (0dq judges pin flops).  rec["other_roots"] = [{source, clock, sinks, <c>_pin_spread_ps, verdict, text}]."""
+    root = (rec.get("root") or "").removeprefix("port:")
+    prim = [d for d in domains if d.get("source") == root or d.get("clock") == root]
+    skip = {id(prim[0])} if rec.get("measured_clock") and len(prim) == 1 else set()
+    rows, fails = [], []
+    for d in domains:
+        if id(d) in skip:
+            continue
+        m = corner_spreads({}, with_child_flops(d, spec))
+        ev = {k: v for k, v in m.items() if k.endswith(("_pin_spread_ps", "_pin_spread_basis", "_insertion_ps"))}
+        n = ((d.get("tt") or {}).get("all") or {}).get("n")
+        row = dict(source=d.get("source"), clock=d.get("clock"), sinks=n,
+                   **{k: ev.get(k) for k in ("tt_pin_spread_ps", "ff_pin_spread_ps", "tt_insertion_ps", "ff_insertion_ps")})
+        if not any(TL._num(ev.get(f"{c}_pin_spread_ps")) for c in ("tt", "ff")):
+            row.update(verdict="INFO", text="no pin-flop (boundary register) arrivals on this root: not judged")
+        else:
+            level, why = TL.clock_rule_eval(n if isinstance(n, int) else None, ev)
+            row.update(verdict="REFUSE" if level == "FAIL" else level, text=why)
+            if level == "FAIL":
+                fails.append(f"root {d.get('source')} ({d.get('clock')}): {why}")
+        rows.append(row)
+    rec["other_roots"] = rows
+    if fails:
+        rec["verdict"] = "REFUSE"
+        rec["text"] = "; ".join(([] if rec.get("text") is None else [f"root {rec.get('root')}: {rec['text']}"]) + fails)
     return rec
 
 
@@ -2256,6 +2292,10 @@ def clock_item(g: Gate, rec: dict) -> None:
             g.add("INFO", "clock_child_pair", f"{row['corner'].upper()} root {row['root']} linked {row['a']}-{row['b']}: "
                   f"boundary-flop arrival difference {row['ps']} ps ({row['a']} {row['a_range'][0]}..{row['a_range'][1]}, "
                   f"{row['b']} {row['b_range'][0]}..{row['b_range'][1]}; limit {TL.CLK_SPREAD_MAX_PS:g})")
+    for r in rec.get("other_roots") or []:
+        g.add("INFO", "clock_root", f"root {r['source']} ({r['clock']}, {r['sinks']} sinks): TT pin-flop spread "
+              f"{r.get('tt_pin_spread_ps')} / FF {r.get('ff_pin_spread_ps')} ps, insertion TT {r.get('tt_insertion_ps')} / "
+              f"FF {r.get('ff_insertion_ps')} ps; {r['verdict']} (limit {TL.CLK_SPREAD_MAX_PS:g})")
     for row in rec.get("landed_child_links") or []:
         g.add("INFO", "clock_landed_link", f"{row['a']} -> {row['b']} crosses regions through landing {row['landing']}_w/_r")
     if rec["verdict"] == "REFUSE":
