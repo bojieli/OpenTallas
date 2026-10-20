@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.hbm_bw_unit.v1",
+ "pattern": "ds_nodup",
+ "defines": [
+  "MR",
+  "SAFE",
+  "EXPOSE",
+  "OT_PC_SAFE_MC3"
+ ],
+ "seed": 1,
+ "layers": 4,
+ "blocks": 156,
+ "rc": 0,
+ "bw": "BW blocks=156 sectors_per_pc=8300 hbm_cycles=15431 B_per_edge=56.03 steady_blocks=148 steady_cycles=14805 steady_B_per_edge=54.87 peak=104.17",
+ "pcs": [
+  "PC0 cols=8300 returns=8300 acts=624 refs=136 gaps>8=157 gap_cycles=6586 first=1 done=15421",
+  "PC1 cols=8300 returns=8300 acts=624 refs=136 gaps>8=157 gap_cycles=6590 first=1 done=15424",
+  "PC2 cols=8300 returns=8300 acts=624 refs=136 gaps>8=157 gap_cycles=6594 first=1 done=15429",
+  "PC3 cols=8300 returns=8300 acts=624 refs=136 gaps>8=157 gap_cycles=6598 first=1 done=15432"
+ ],
+ "fault": [],
+ "done": [
+  "DONE dram_reads=33200 refreshes=544"
+ ],
+ "expose": [
+  {
+   "busy": 8300,
+   "empty": 31,
+   "refresh": 0,
+   "closed": 3334,
+   "conflict": 450,
+   "trcd": 3024,
+   "other": 281,
+   "acts": 624
+  },
+  {
+   "busy": 8300,
+   "empty": 31,
+   "refresh": 0,
+   "closed": 3337,
+   "conflict": 450,
+   "trcd": 3024,
+   "other": 281,
+   "acts": 624
+  },
+  {
+   "busy": 8300,
+   "empty": 31,
+   "refresh": 0,
+   "closed": 3342,
+   "conflict": 450,
+   "trcd": 3024,
+   "other": 281,
+   "acts": 624
+  },
+  {
+   "busy": 8300,
+   "empty": 31,
+   "refresh": 0,
+   "closed": 3345,
+   "conflict": 450,
+   "trcd": 3024,
+   "other": 281,
+   "acts": 624
+  }
+ ],
+ "B_per_edge": 56.03,
+ "steady_B_per_edge": 54.87,
+ "hbm_cycles": 15431
+}

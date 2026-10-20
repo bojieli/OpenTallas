@@ -1,0 +1,317 @@
+{
+ "budget": {
+  "descriptors": 154,
+  "table_rows": 256,
+  "programme_words_matvec": 152,
+  "attention_reserved": 1019,
+  "store_top": 1171,
+  "store_words": 2048,
+  "distinct_programmes": 19,
+  "per_kind": [
+   {
+    "name": "L00",
+    "layer": 0,
+    "descriptors": 29,
+    "nonexpert_blocks": 17,
+    "routed_expert_descriptors": 12,
+    "lstride": 32,
+    "kbase": 0,
+    "estride": 8,
+    "expert_ids": {
+     "0": 61,
+     "1": 69,
+     "2": 112,
+     "3": 170,
+     "4": 299,
+     "5": 357
+    },
+    "ids_at_rc": 5813,
+    "rc_end": 11323
+   },
+   {
+    "name": "L02",
+    "layer": 2,
+    "descriptors": 32,
+    "nonexpert_blocks": 20,
+    "routed_expert_descriptors": 12,
+    "lstride": 32,
+    "kbase": 3104,
+    "estride": 8,
+    "expert_ids": {
+     "0": 33,
+     "1": 36,
+     "2": 59,
+     "3": 182,
+     "4": 279,
+     "5": 352
+    },
+    "ids_at_rc": 7487,
+    "rc_end": 12997
+   },
+   {
+    "name": "L14",
+    "layer": 14,
+    "descriptors": 39,
+    "nonexpert_blocks": 27,
+    "routed_expert_descriptors": 12,
+    "lstride": 40,
+    "kbase": 12416,
+    "estride": 8,
+    "expert_ids": {
+     "0": 26,
+     "1": 29,
+     "2": 114,
+     "3": 155,
+     "4": 334,
+     "5": 352
+    },
+    "ids_at_rc": 9446,
+    "rc_end": 14956
+   },
+   {
+    "name": "head",
+    "layer": 0,
+    "descriptors": 54,
+    "nonexpert_blocks": 54,
+    "routed_expert_descriptors": 0,
+    "lstride": 64,
+    "kbase": 59096,
+    "estride": 0,
+    "expert_ids": {},
+    "ids_at_rc": null,
+    "rc_end": 11950
+   }
+  ],
+  "install_ingress_edges": 612,
+  "per_layer_ingress_edges_this_sm": 3,
+  "blocks_addressed": 59160,
+  "rotlayout": {
+   "classes_checked": [
+    "embed_head",
+    "experts",
+    "weights"
+   ],
+   "all_rotated": true,
+   "checks": 23,
+   "per_kind": {
+    "L00": {
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      5,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      7,
+      0,
+      1,
+      2
+     ],
+     "triples": {
+      "0": [
+       4,
+       5,
+       6
+      ],
+      "1": [
+       7,
+       0,
+       1
+      ]
+     },
+     "phase_steps": 2
+    },
+    "L02": {
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      5,
+      6,
+      5,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      0,
+      1,
+      2
+     ],
+     "triples": {
+      "0": [
+       4,
+       5,
+       6
+      ],
+      "1": [
+       0,
+       1,
+       2
+      ]
+     },
+     "phase_steps": 3
+    },
+    "L14": {
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      3,
+      4,
+      5,
+      3,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      0,
+      1,
+      2
+     ],
+     "triples": {
+      "0": [
+       4,
+       5,
+       6
+      ],
+      "1": [
+       0,
+       1,
+       2
+      ]
+     },
+     "phase_steps": 2
+    },
+    "head": {
+     "sets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2,
+      3,
+      1,
+      2
+     ],
+     "triples": {},
+     "phase_steps": 1
+    }
+   }
+  }
+ },
+ "events": {
+  "NI": 624,
+  "NX": 25688,
+  "ND": 3,
+  "END": 53100
+ }
+}

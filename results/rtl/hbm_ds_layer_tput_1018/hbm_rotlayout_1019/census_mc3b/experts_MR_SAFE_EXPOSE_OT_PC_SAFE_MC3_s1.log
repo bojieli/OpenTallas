@@ -1,0 +1,82 @@
+BW blocks=48 sectors_per_pc=2040 hbm_cycles=2570 B_per_edge=82.68 steady_blocks=40 steady_cycles=2055 steady_B_per_edge=84.45 peak=104.17
+PC0 cols=2040 returns=2040 acts=192 refs=29 gaps>8=10 gap_cycles=365 first=1 done=2563
+PC1 cols=2040 returns=2040 acts=192 refs=28 gaps>8=6 gap_cycles=258 first=1 done=2452
+PC2 cols=2040 returns=2040 acts=192 refs=29 gaps>8=10 gap_cycles=374 first=1 done=2571
+PC3 cols=2040 returns=2040 acts=192 refs=29 gaps>8=7 gap_cycles=269 first=1 done=2473
+EXPOSE pc0 busy=2040 empty=31 refresh=0 closed=197 conflict=0 trcd=203 other=91 acts=192
+EXPOSE pc1 busy=2040 empty=31 refresh=0 closed=165 conflict=0 trcd=128 other=87 acts=192
+EXPOSE pc2 busy=2040 empty=31 refresh=0 closed=208 conflict=0 trcd=202 other=89 acts=192
+EXPOSE pc3 busy=2040 empty=31 refresh=0 closed=148 conflict=0 trcd=163 other=90 acts=192
+BLK 0 row 2116 slot 1 words 51 ret 124 123 124 123
+BLK 1 row 2339 slot 2 words 51 ret 178 177 178 177
+BLK 2 row 2080 slot 3 words 51 ret 230 233 234 233
+BLK 3 row 2178 slot 1 words 51 ret 284 287 288 287
+BLK 4 row 2108 slot 2 words 51 ret 336 338 339 338
+BLK 5 row 2301 slot 3 words 51 ret 388 390 391 390
+BLK 6 row 2178 slot 5 words 34 ret 425 427 428 427
+BLK 7 row 2301 slot 6 words 34 ret 512 515 516 519
+BLK 8 row 2108 slot 7 words 34 ret 575 550 581 586
+BLK 9 row 2116 slot 5 words 34 ret 610 585 616 621
+BLK 10 row 2080 slot 6 words 34 ret 645 620 651 656
+BLK 11 row 2339 slot 7 words 34 ret 700 656 704 711
+BLK 12 row 2446 slot 1 words 51 ret 752 708 756 763
+BLK 13 row 2631 slot 2 words 51 ret 806 762 810 817
+BLK 14 row 2653 slot 3 words 51 ret 893 814 897 904
+BLK 15 row 2743 slot 1 words 51 ret 947 868 951 958
+BLK 16 row 2433 slot 2 words 51 ret 999 920 1003 1010
+BLK 17 row 2788 slot 3 words 51 ret 1050 971 1054 1061
+BLK 18 row 2743 slot 5 words 34 ret 1087 1008 1109 1098
+BLK 19 row 2653 slot 6 words 34 ret 1123 1101 1145 1134
+BLK 20 row 2631 slot 7 words 34 ret 1220 1137 1232 1231
+BLK 21 row 2433 slot 5 words 34 ret 1256 1173 1268 1267
+BLK 22 row 2446 slot 6 words 34 ret 1291 1208 1303 1302
+BLK 23 row 2788 slot 7 words 34 ret 1326 1243 1338 1337
+BLK 24 row 2831 slot 1 words 51 ret 1379 1296 1391 1390
+BLK 25 row 2827 slot 2 words 51 ret 1477 1350 1489 1492
+BLK 26 row 2829 slot 3 words 51 ret 1529 1402 1541 1544
+BLK 27 row 3148 slot 1 words 51 ret 1580 1453 1592 1595
+BLK 28 row 3093 slot 2 words 51 ret 1632 1505 1644 1647
+BLK 29 row 2820 slot 3 words 51 ret 1683 1556 1695 1698
+BLK 30 row 3148 slot 5 words 34 ret 1805 1694 1813 1762
+BLK 31 row 2827 slot 6 words 34 ret 1841 1730 1849 1798
+BLK 32 row 2820 slot 7 words 34 ret 1876 1765 1884 1833
+BLK 33 row 2829 slot 5 words 34 ret 1912 1801 1920 1869
+BLK 34 row 2831 slot 6 words 34 ret 1948 1837 1956 1905
+BLK 35 row 3093 slot 7 words 34 ret 1994 1883 2002 1941
+BLK 36 row 3424 slot 1 words 51 ret 2046 1935 2054 1993
+BLK 37 row 3453 slot 2 words 51 ret 2098 1987 2106 2045
+BLK 38 row 3483 slot 3 words 51 ret 2189 2078 2197 2099
+BLK 39 row 3319 slot 1 words 51 ret 2243 2132 2251 2153
+BLK 40 row 3376 slot 2 words 51 ret 2294 2183 2302 2204
+BLK 41 row 3318 slot 3 words 51 ret 2348 2237 2356 2258
+BLK 42 row 3318 slot 5 words 34 ret 2385 2274 2393 2295
+BLK 43 row 3453 slot 6 words 34 ret 2421 2310 2429 2331
+BLK 44 row 3319 slot 7 words 34 ret 2457 2346 2465 2367
+BLK 45 row 3376 slot 5 words 34 ret 2492 2381 2500 2402
+BLK 46 row 3424 slot 6 words 34 ret 2527 2416 2535 2437
+BLK 47 row 3483 slot 7 words 34 ret 2563 2452 2571 2473
+DONE dram_reads=8160 refreshes=115
+- /srv/opentallas-scratch/claude/hbm-rotlayout-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv:163: Verilog $finish
+BW_ROW_GRANT_TRUTH 00=828 01=460 10=876 11=413
+BW_REFRESH_CLEAR_TRUTH group=0 00=2548 01=0 10=29 11=0
+BW_REFRESH_CLEAR_TRUTH group=1 00=2548 01=0 10=29 11=0
+BW_REFRESH_CLEAR_TRUTH group=2 00=2548 01=0 10=29 11=0
+BW_REFRESH_CLEAR_TRUTH group=3 00=2548 01=0 10=29 11=0
+BW_ROW_GRANT_TRUTH 00=825 01=464 10=875 11=413
+BW_REFRESH_CLEAR_TRUTH group=0 00=2548 01=0 10=29 11=0
+BW_REFRESH_CLEAR_TRUTH group=1 00=2548 01=0 10=29 11=0
+BW_REFRESH_CLEAR_TRUTH group=2 00=2548 01=0 10=29 11=0
+BW_REFRESH_CLEAR_TRUTH group=3 00=2548 01=0 10=29 11=0
+BW_ROW_GRANT_TRUTH 00=835 01=453 10=877 11=412
+BW_REFRESH_CLEAR_TRUTH group=0 00=2549 01=0 10=28 11=0
+BW_REFRESH_CLEAR_TRUTH group=1 00=2549 01=0 10=28 11=0
+BW_REFRESH_CLEAR_TRUTH group=2 00=2549 01=0 10=28 11=0
+BW_REFRESH_CLEAR_TRUTH group=3 00=2549 01=0 10=28 11=0
+BW_ROW_GRANT_TRUTH 00=824 01=465 10=875 11=413
+BW_REFRESH_CLEAR_TRUTH group=0 00=2548 01=0 10=29 11=0
+BW_REFRESH_CLEAR_TRUTH group=1 00=2548 01=0 10=29 11=0
+BW_REFRESH_CLEAR_TRUTH group=2 00=2548 01=0 10=29 11=0
+BW_REFRESH_CLEAR_TRUTH group=3 00=2548 01=0 10=29 11=0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.092 s; speed 28.686 us/s
+- Verilator: cpu 0.091 s on 1 threads; allocated 9 MB

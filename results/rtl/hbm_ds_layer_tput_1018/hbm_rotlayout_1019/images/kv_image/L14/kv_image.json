@@ -1,0 +1,578 @@
+{
+ "schema": "opentallas.hbm_vehicle_att_kv_image.v1",
+ "lane": "VEH-ATT2",
+ "source": {
+  "att_kv_json": "results/rtl/hbm_ds_layer_tput_1018/veh_att_1019/kv/L14/att_kv.json",
+  "npz_sha256": "96f26103948ca59c7c6cff7e4adaa55496042ab1f346638ff0ed83d9f0401953",
+  "layer": 14,
+  "rank": 0,
+  "qk_priced": [
+   {
+    "i": 126,
+    "start": 15746.91,
+    "end": 16352.21,
+    "base_cost": 547
+   }
+  ],
+  "pv_priced": [
+   {
+    "i": 130,
+    "start": 16897.59,
+    "end": 17867.01,
+    "base_cost": 808
+   }
+  ],
+  "ring": {
+   "n": 128,
+   "m": 128,
+   "on": true,
+   "first": 0
+  },
+  "c_rows": 512
+ },
+ "nrun": 8,
+ "file": "phy_SW.hex (+HBM_IMG_DIR: ot_hbm3e_phy_rc_e8p5 DRAM model, lines '<sector30 hex> <256-b hex>')",
+ "phy_hex_sha256": "b0570bb499ae149ee0aa17b0688b99dfe7f88daca7673e9dbf2b7924d24d8466",
+ "sectors": 5600,
+ "allocation": {
+  "row0": 16384,
+  "block_lines": 64,
+  "law": "svg_SW<k> (id_sm k) PCs 4k..4k+3; block b at block address hbm_bank_layout.static_run(KV_ROW0*8) = DRAM row addr>>3, bank set addr&7 (HBM-ROTLAYOUT); hbm_svc_packed136_image.sector_address == overlap_owner_id k_addr"
+ },
+ "readback": "every in-slice SM's image decodes to exactly the 136-B line stream of the unit pre-check (op_lines), whose rows decode bit-exact to the fixture K rows (kv8/kv4_encode)",
+ "blocks": [
+  {
+   "sm": "sm_SW0",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row_base": 16384,
+   "bank_set": 0,
+   "block_address": 131072,
+   "first_sector": 536870912,
+   "last_sector": 536873039,
+   "bytes_sha256": "87510fb0cadb5217e4d09bb3b16fb2c309f7ae280197c6da97754bf4926b4d61"
+  },
+  {
+   "sm": "sm_SW0",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row_base": 16384,
+   "bank_set": 1,
+   "block_address": 131073,
+   "first_sector": 536875012,
+   "last_sector": 536877131,
+   "bytes_sha256": "dab3df95e4366a6924d9a83a02aae967b72ffd6a8b8f9619274bdf1cf463ef31"
+  },
+  {
+   "sm": "sm_SW0",
+   "in_slice": true,
+   "block": 2,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row_base": 16384,
+   "bank_set": 2,
+   "block_address": 131074,
+   "first_sector": 536879112,
+   "last_sector": 536881223,
+   "bytes_sha256": "e43d356def2cd6a9d1d101f9a8498ae064eca03b1e947754b14b428ecf8491ec"
+  },
+  {
+   "sm": "sm_SW0",
+   "in_slice": true,
+   "block": 3,
+   "lines": 57,
+   "rows_field": 57,
+   "total_sectors": 244,
+   "pcs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "row_base": 16385,
+   "bank_set": 1,
+   "block_address": 131081,
+   "first_sector": 536907813,
+   "last_sector": 536909717,
+   "bytes_sha256": "47f6b7a08a4b8cb4f009f62fa223e37c5b8476072f7cbe900249080b658043bf"
+  },
+  {
+   "sm": "sm_SW1",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "row_base": 16384,
+   "bank_set": 0,
+   "block_address": 131072,
+   "first_sector": 536870928,
+   "last_sector": 536873055,
+   "bytes_sha256": "18632da9624ed95af64214a59db17fd3a8cc95a027a435a53082c336d6a04d85"
+  },
+  {
+   "sm": "sm_SW1",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "row_base": 16384,
+   "bank_set": 1,
+   "block_address": 131073,
+   "first_sector": 536875028,
+   "last_sector": 536877147,
+   "bytes_sha256": "1449d51e9a3382e6e989aad269eb9e76cc53414b7cd9754f87c7cef489e208d0"
+  },
+  {
+   "sm": "sm_SW1",
+   "in_slice": true,
+   "block": 2,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "row_base": 16384,
+   "bank_set": 2,
+   "block_address": 131074,
+   "first_sector": 536879128,
+   "last_sector": 536881239,
+   "bytes_sha256": "b7977ea64291296ff238655797565ea3e2cb42cf6a4fd67723b1c206c8149465"
+  },
+  {
+   "sm": "sm_SW1",
+   "in_slice": true,
+   "block": 3,
+   "lines": 57,
+   "rows_field": 57,
+   "total_sectors": 244,
+   "pcs": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "row_base": 16385,
+   "bank_set": 1,
+   "block_address": 131081,
+   "first_sector": 536907829,
+   "last_sector": 536909701,
+   "bytes_sha256": "11bd06b6c277923e79a7f9e33e56368d4b7b0f6923df2abbd9b73336729a69ab"
+  },
+  {
+   "sm": "sm_SW2",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "row_base": 16384,
+   "bank_set": 0,
+   "block_address": 131072,
+   "first_sector": 536870944,
+   "last_sector": 536873071,
+   "bytes_sha256": "29a097b4f09568a3e85e17d621011fbd6e29a187dc0bebc6cd1dc5bb45ce142f"
+  },
+  {
+   "sm": "sm_SW2",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "row_base": 16384,
+   "bank_set": 1,
+   "block_address": 131073,
+   "first_sector": 536875044,
+   "last_sector": 536877163,
+   "bytes_sha256": "146ba32679b84d99dd7e5850f24268316ea582f27307e032ec9db5462dc4d1b2"
+  },
+  {
+   "sm": "sm_SW2",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "row_base": 16384,
+   "bank_set": 2,
+   "block_address": 131074,
+   "first_sector": 536879144,
+   "last_sector": 536879404,
+   "bytes_sha256": "39ae4949e50d4905c0e15ce161115467fb592915fa6d994340071651c114f8ff"
+  },
+  {
+   "sm": "sm_SW3",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "row_base": 16384,
+   "bank_set": 0,
+   "block_address": 131072,
+   "first_sector": 536870960,
+   "last_sector": 536873087,
+   "bytes_sha256": "55cf67ed8b1550cf6fb7328de9a828960919d5ab06af087117f6c86f13a10fc1"
+  },
+  {
+   "sm": "sm_SW3",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "row_base": 16384,
+   "bank_set": 1,
+   "block_address": 131073,
+   "first_sector": 536875060,
+   "last_sector": 536877179,
+   "bytes_sha256": "a1015d48f928f94a15e0a247f37ae6624377b8ff88081048cfb60dc6dd325891"
+  },
+  {
+   "sm": "sm_SW3",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    12,
+    13,
+    14,
+    15
+   ],
+   "row_base": 16384,
+   "bank_set": 2,
+   "block_address": 131074,
+   "first_sector": 536879160,
+   "last_sector": 536879420,
+   "bytes_sha256": "73e9394e5aaf722ed889ec7df204395bb593d42aeb45a6ff0ffce08c978ae869"
+  },
+  {
+   "sm": "sm_SW4",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "row_base": 16384,
+   "bank_set": 0,
+   "block_address": 131072,
+   "first_sector": 536870976,
+   "last_sector": 536872975,
+   "bytes_sha256": "be4e5a912f27313c3798ceb80994dcab49e6fca11e2e1b87fc8a545e91499181"
+  },
+  {
+   "sm": "sm_SW4",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "row_base": 16384,
+   "bank_set": 1,
+   "block_address": 131073,
+   "first_sector": 536875076,
+   "last_sector": 536877067,
+   "bytes_sha256": "c2ed1ea99a36e20557c41b92d33f8ee306953c79d233f418c339ad67d55e3b7d"
+  },
+  {
+   "sm": "sm_SW4",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    16,
+    17,
+    18,
+    19
+   ],
+   "row_base": 16384,
+   "bank_set": 2,
+   "block_address": 131074,
+   "first_sector": 536879176,
+   "last_sector": 536879436,
+   "bytes_sha256": "a2e78ec884b469a9d6bd1c4bdb79c015037a1d2869895f979fd976fac99239fc"
+  },
+  {
+   "sm": "sm_SW5",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "row_base": 16384,
+   "bank_set": 0,
+   "block_address": 131072,
+   "first_sector": 536870992,
+   "last_sector": 536872991,
+   "bytes_sha256": "281478cd20e91d1b03c5d5ce369f293210ecb9325c51512a3c79d841464a0910"
+  },
+  {
+   "sm": "sm_SW5",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "row_base": 16384,
+   "bank_set": 1,
+   "block_address": 131073,
+   "first_sector": 536875092,
+   "last_sector": 536877083,
+   "bytes_sha256": "e3a5068d15bcbd6d18602f3b4edd6e300e9f24ca29b505976631b0355f82c785"
+  },
+  {
+   "sm": "sm_SW5",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    20,
+    21,
+    22,
+    23
+   ],
+   "row_base": 16384,
+   "bank_set": 2,
+   "block_address": 131074,
+   "first_sector": 536879192,
+   "last_sector": 536879452,
+   "bytes_sha256": "f83813d4f1c60828946cb6f1165183fc1397b7226146cef71ef821b022d01723"
+  },
+  {
+   "sm": "sm_SW6",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "row_base": 16384,
+   "bank_set": 0,
+   "block_address": 131072,
+   "first_sector": 536871008,
+   "last_sector": 536873007,
+   "bytes_sha256": "f5cb892f234602ee94100cda0c94c7a302f42a3b1128aa381b34abff77ec6cc7"
+  },
+  {
+   "sm": "sm_SW6",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "row_base": 16384,
+   "bank_set": 1,
+   "block_address": 131073,
+   "first_sector": 536875108,
+   "last_sector": 536877099,
+   "bytes_sha256": "ed8e2f5349196a6d5a532a4e79e52ddd80a187459f4b478d21273fc669f8d5c8"
+  },
+  {
+   "sm": "sm_SW6",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    24,
+    25,
+    26,
+    27
+   ],
+   "row_base": 16384,
+   "bank_set": 2,
+   "block_address": 131074,
+   "first_sector": 536879208,
+   "last_sector": 536879468,
+   "bytes_sha256": "3c6d6563bc769e3e05dbb35725ebba70d9a0dc0b0fae51fb722f329446ef6280"
+  },
+  {
+   "sm": "sm_SW7",
+   "in_slice": true,
+   "block": 0,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "row_base": 16384,
+   "bank_set": 0,
+   "block_address": 131072,
+   "first_sector": 536871024,
+   "last_sector": 536873023,
+   "bytes_sha256": "0803bf704f1dc95dfa531c44d2a4e00d557d2302bf5ec0b67ddb2d338b8025fc"
+  },
+  {
+   "sm": "sm_SW7",
+   "in_slice": true,
+   "block": 1,
+   "lines": 64,
+   "rows_field": 64,
+   "total_sectors": 272,
+   "pcs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "row_base": 16384,
+   "bank_set": 1,
+   "block_address": 131073,
+   "first_sector": 536875124,
+   "last_sector": 536877115,
+   "bytes_sha256": "8e92ca254627855d62f2a9427858e7bfa00bcbf780bfa78f5faa8795b326817c"
+  },
+  {
+   "sm": "sm_SW7",
+   "in_slice": true,
+   "block": 2,
+   "lines": 8,
+   "rows_field": 8,
+   "total_sectors": 36,
+   "pcs": [
+    28,
+    29,
+    30,
+    31
+   ],
+   "row_base": 16384,
+   "bank_set": 2,
+   "block_address": 131074,
+   "first_sector": 536879224,
+   "last_sector": 536879484,
+   "bytes_sha256": "c71f50ed3c68402db5ffbc9864f348ec5ee2f66689957f62b0c6f13da04b1010"
+  },
+  {
+   "sm": "sm_NW0",
+   "in_slice": false,
+   "rows": 64,
+   "note": "sm_NW* is outside the SW slice: its QK scores / PV node are replayed at the boundary"
+  },
+  {
+   "sm": "sm_NW1",
+   "in_slice": false,
+   "rows": 64,
+   "note": "sm_NW* is outside the SW slice: its QK scores / PV node are replayed at the boundary"
+  }
+ ],
+ "descriptor_note": "issuer descriptor per block: rows = lines, row_base = block_address>>3, base[9:7] = bank_set, pcs = the SM's own four PCs, total = ceil(rows*136/128)*4 (sm_images.py / VEH-FMT-SM2 owns the row ABI)"
+}
