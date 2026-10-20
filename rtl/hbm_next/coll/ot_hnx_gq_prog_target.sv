@@ -73,6 +73,7 @@ module ot_hnx_gq_prog_target #(parameter integer PCW=8, parameter integer NRW=16
     // ---- next-state of the write strobe and of install_open (exactly the assignments of the control block below)
     wire cfg_hit=cv && target==tid;
     wire dsc_hit=dv && target==tid;
+    wire dsc_bad=program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW);
     wire cfg_bad=program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) ||
                  data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address};
     wire we_n=cfg_hit && !cfg_bad;
@@ -82,7 +83,7 @@ module ot_hnx_gq_prog_target #(parameter integer PCW=8, parameter integer NRW=16
         ot_hnx_gq_tgt_wen #(.PCW(PCW)) u_w(.cv(cv),.target(target),.tid(tid),.program_active(program_active),
             .scanning(scanning),.lv(lv),.address(address),.hdr(data_q[255:224]),.we(wen_k[k]));
     end
-    initial if(NRW>16 || NRW*NWC>90)$fatal(1,"ot_hnx_gq_prog_target: NRW <= 16, <= 90 strobes");
+    initial if(NRW>16 || NRW*NWC>160)$fatal(1,"ot_hnx_gq_prog_target: NRW <= 16, <= 160 strobes");
     (* keep = "true" *) reg [NRW*NWC-1:0] row_we_c;
     for(genvar r=0;r<NRW;r=r+1)begin:g_rw
         wire wk=(r<6)?wen_k[1]:(r<11)?wen_k[2]:wen_k[3];
@@ -95,10 +96,16 @@ module ot_hnx_gq_prog_target #(parameter integer PCW=8, parameter integer NRW=16
     assign program_row_we=row_we_c;
     // program_start_v next-state and its kept copies
     wire sv_n=lv && armed && launch_ready && !cv && !dv;
+    // s4 census r1: the launch / descriptor load enables of the reset-free config registers (33 bits each) drove 41 / 50
+    // loads -> 4 kept-hierarchy instances each (<= 9 bits, ~2 loads per enabled bit)
+    wire [3:0] sv_k,dk_k;
+    for(genvar k=0;k<4;k=k+1)begin:g_svk
+        ot_hnx_gq_tgt_and2 u_s(.a(lv && armed),.b(launch_ready && !cv && !dv),.y(sv_k[k]));
+        ot_hnx_gq_tgt_and2 u_d(.a(dsc_hit),.b(!dsc_bad),.y(dk_k[k]));
+    end
     (* keep = "true" *) reg [NSV-1:0] sv_c;
     always @(posedge clk or negedge reset_live) if(!reset_live)sv_c<='0; else sv_c<={NSV{sv_n}};
     assign program_start_vc=sv_c;
-    wire dsc_bad=program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW);
     wire io_n=dsc_hit ? 1'b0 : (program_cfg_we ? 1'b1 : install_open);
     // scan pointer next-state
     wire scan_start=dsc_hit && !dsc_bad && !(validated && base==stored_base && limit==stored_limit);
@@ -132,8 +139,14 @@ module ot_hnx_gq_prog_target #(parameter integer PCW=8, parameter integer NRW=16
     // configuration registers without a reset value (load conditions are 0 while cv / dv / lv are in reset)
     always @(posedge clk)begin
         if(wen_k[0])program_cfg_addr<=address[PCW-1:0];
-        if(dsc_hit && !dsc_bad)begin stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;end
-        if(sv_n)begin program_start_base<=stored_base;program_start_limit<=stored_limit;program_start_loops<=stored_loops;end
+        if(dk_k[0])stored_base<=base[PCW-1:0];
+        if(dk_k[1])stored_limit<=limit[PCW:0];
+        if(dk_k[2])stored_loops[7:0]<=loops[7:0];
+        if(dk_k[3])stored_loops[15:8]<=loops[15:8];
+        if(sv_k[0])program_start_base<=stored_base;
+        if(sv_k[1])program_start_limit<=stored_limit;
+        if(sv_k[2])program_start_loops[7:0]<=stored_loops[7:0];
+        if(sv_k[3])program_start_loops[15:8]<=stored_loops[15:8];
     end
     always @(posedge clk or negedge reset_live)
         if(!reset_live)begin
@@ -183,6 +196,12 @@ module ot_hnx_gq_prog_target #(parameter integer PCW=8, parameter integer NRW=16
                 else program_start_v<=1;
             end
         end
+endmodule
+
+// a AND b in its own kept hierarchy (one instance per enable group: ABC cannot share the gate)
+(* keep_hierarchy = "yes" *)
+module ot_hnx_gq_tgt_and2(input wire a,b,output wire y);
+    assign y=a&&b;
 endmodule
 
 // we_n of the target (cfg_hit && !cfg_bad), one kept-hierarchy instance per strobe group (Yosys / ABC cannot share it)

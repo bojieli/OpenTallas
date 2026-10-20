@@ -141,9 +141,10 @@ module ot_hnx_coll_gq_issue #(
     //  7-10 VM read request (2 banks each) | 11 read expectations | 12,13 read expectation line | 14 ring-A cmd |
     //  15 ring-B cmd | 16 ring-B late cmd | 17 ring-A merge outputs | 18,19 ISA capture | 20,21 quantisers 0/1.
     // Index / one-hot copies, row registers and data registers carry no reset (loaded before use: launch / fire).
-    // s4: REGIONS 40 (the s4 control copies add ~170 reset flops; ot_rst_copies re-spreads every load over the 40 copies)
-    wire [39:0] rl;
-    ot_rst_relay #(.REGIONS(40)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    // s4: REGIONS 32 (the s4 control copies add ~200 reset flops; ot_rst_copies re-spreads every load over the 32 copies;
+    // 40 made the relay's own sync stage drive 40 copies)
+    wire [31:0] rl;
+    ot_rst_relay #(.REGIONS(32)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
     wire rn = rl[0];
     reg flt_q; wire flt_n = flt_q;
     reg [135:0] vm_rq; wire [2055:0] vm_rr = {vm_rr_hi, vm_rr_lo};
@@ -179,9 +180,9 @@ module ot_hnx_coll_gq_issue #(
     // HNX-GQ s4 (census s3: lib target reset_live 293 / scan_row 261 / install_open 159; row-file write decode 1,351):
     // ot_hnx_gq_prog_target (rtl/hbm_next/coll/ot_hnx_gq_prog_target.sv) = the hc_<q> safe copy ot_hnx_prog_target
     // (kept bitmap copies, 2-stage scan = +2 INITIALIZATION edges before configured) + kept per-row write strobes p_rw
-    // (NWC = 5 per row, each <= 28 row-file enables) and kept launch copies p_svc, both on the SAME edges as
+    // (NWC = 10 per row, each <= 14 row-file enables) and kept launch copies p_svc, both on the SAME edges as
     // program_cfg_we / program_start_v (registered from their next-state): 0 schedule edges.
-    localparam integer NWC = 5, NSV = 9;
+    localparam integer NWC = 10, NSV = 10;
     wire p_we, p_sv; wire [7:0] p_wa, p_sb; wire [255:0] p_wd; wire [8:0] p_sl; wire [15:0] p_lp;
     wire [16*NWC-1:0] p_rw; wire [NSV-1:0] p_svc;
     ot_hnx_gq_prog_target #(.PCW(8), .NRW(16), .NWC(NWC), .NSV(NSV)) u_target(
@@ -192,12 +193,12 @@ module ot_hnx_coll_gq_issue #(
         .program_start_loops(p_lp), .configured(configured), .fault(tgt_fault), .program_row_we(p_rw),
         .program_start_vc(p_svc));
     localparam integer DW = 137;   // HNX: + nm1 [104:101], rs_A [120:105], rs_O [136:121]
-    localparam integer NRC = 5, RCW = 28;
+    localparam integer NRC = 5, RCW = 28, WCW = 14;   // WCW: write / B / R mux chunk (~2 loads per muxed bit)
     reg [DW-1:0] rf [0:15];
-    // row r, bit x is written by strobe copy x / RCW of row r (= p_we && p_wa == r, p_wa < 16)
+    // row r, bit x is written by strobe copy x / WCW of row r (= p_we && p_wa == r, p_wa < 16)
     always @(posedge clk)
         for (integer r = 0; r < 16; r = r + 1)
-            for (integer x = 0; x < DW; x = x + 1) if (p_rw[r*NWC + x / RCW]) rf[r][x] <= p_wd[x];
+            for (integer x = 0; x < DW; x = x + 1) if (p_rw[r*NWC + x / WCW]) rf[r][x] <= p_wd[x];
     // ------------------------------------------------------------------ calendar
     // HNX-GQ s3 (SAFE-DESIGN item 5, registered single read): the 16 x 137 b row file (2,192 b, written only by the F20
     // target) has ONE read port, a one-hot AND-OR on NRC = 5 kept copies of the row one-hot (each copy bit loads <= 28 row
@@ -207,11 +208,11 @@ module ot_hnx_coll_gq_issue #(
     // HNX-GQ s4 (census s3: fire 885, lq 246, wrap 129, ev_in_v 167, i_adv 92, kx/g_kn 92): the calendar is written in
     // NEXT-STATE form (*_n below; every calendar register loads its *_n), and every wide control is a bank of KEPT register
     // copies loaded with the control's value for the next edge, computed from the *_n:
-    //   fire = run && rv && cur < lim && tl == R[18:3]    -> fire_c[22] (fire_fn copy B) + fire_x[18] (copy A, ex clear)
-    //   wrap = run && !lq && tl == per - 1, wrap_ld = wrap && lps > 1 -> w_c[2], wl_c[13]
-    //   ev_in_v = iss && iph != 2 -> evi_c[15];  i_adv = ev_in_v && lastk && !iend -> ia_c[6]
+    //   fire = run && rv && cur < lim && tl == R[18:3]    -> fire_c[42] (fire_fn B / C) + fire_x[18] (A, ex clear)
+    //   wrap = run && !lq && tl == per - 1, wrap_ld = wrap && lps > 1 -> w_c[2], wl_c[18]
+    //   ev_in_v = iss && iph != 2 -> evi_c[19];  i_adv = ev_in_v && lastk && !iend -> ia_c[10]
     //   lastk = kx == g_kn - 1, iend = ir == g_n -> lk_c[2], ie_c[2] (no reset: consumed only under ev_in_v)
-    //   lq = p_sv -> lq_c[12]; p_sv -> the target's p_svc[9]
+    //   lq = p_sv -> lq_c[17]; p_sv -> the target p_svc[10]
     // Each copy feeds <= ~30 loads and every copy group derives its own select terms, so ABC cannot re-merge them.
     // A copy equals the original control on every edge (state(n+1) = *_n(n), copy(n+1) = f(*_n(n)) = f(state(n+1)));
     // the reset value of each copy is f(reset state) = 0.  0 schedule edges.
@@ -226,14 +227,14 @@ module ot_hnx_coll_gq_issue #(
             for (integer x = 0; x < DW; x = x + 1) rd_t[x] = rd_t[x] | (rf[j][x] & cur_ohc[x / RCW][j]);
     end
     wire [DW-1:0] rc = R;
-    (* keep = "true" *) reg [21:0] fire_c;
+    (* keep = "true" *) reg [41:0] fire_c;   // [0..20] from fire_fn B, [21..41] from fire_fn C
     (* keep = "true" *) reg [17:0] fire_x;
     (* keep = "true" *) reg [1:0]  w_c;
-    (* keep = "true" *) reg [12:0] wl_c;
-    (* keep = "true" *) reg [14:0] evi_c;
-    (* keep = "true" *) reg [5:0]  ia_c;
+    (* keep = "true" *) reg [17:0] wl_c;
+    (* keep = "true" *) reg [18:0] evi_c;
+    (* keep = "true" *) reg [9:0]  ia_c;
     (* keep = "true" *) reg [1:0]  lk_c, ie_c;
-    (* keep = "true" *) reg [11:0] lq_c;
+    (* keep = "true" *) reg [16:0] lq_c;
     wire fire = fire_c[0], wrap = w_c[0], wrap_ld = wl_c[0], ev_in_v = evi_c[1];
     // gather state (held while busy)
     reg busy; reg g_qbg, g_r2, g_self; reg [9:0] g_f; reg [7:0] g_bs; reg [15:0] g_src, g_dst, g_str;
@@ -243,10 +244,10 @@ module ot_hnx_coll_gq_issue #(
     reg [3:0] ir, g_n; reg [2:0] it3; reg [15:0] g_rso; reg [9:0] kx;
     // s4 kept copies of held gather fields (census s3: g_r2 155, g_rsa 100, g_src 44, g_qbg 110 with iph/iss)
     (* keep = "true" *) reg [7:0]  g_qbg_c;        // one per VM read bank
-    (* keep = "true" *) reg [5:0]  g_r2_c;         // 0,1 qa | 2 sfv/scd | 3 pr_s | 4 qc_ohd | 5 pp
-    (* keep = "true" *) reg [12:0] g_src_c [0:3];  // sb rows 4k .. 4k+3
-    (* keep = "true" *) reg [15:0] g_rsa_c [0:3];  // sb rows 4k .. 4k+3 (copy 0 also nb)
-    (* keep = "true" *) reg [13:0] rq_c [0:1];     // {R[1], R[49:37]} for the qa fire loads (qa 0-3 / 4-7)
+    (* keep = "true" *) reg [9:0]  g_r2_c;         // 0..3 qa pairs | 4 sfv/scd | 5,6 pr_s rings | 7 qc_ohd | 8 pp_em | 9 pp_d
+    (* keep = "true" *) reg [12:0] g_src_c [0:7];  // sb rows 2k, 2k+1
+    (* keep = "true" *) reg [15:0] g_rsa_c [0:7];  // sb rows 2k, 2k+1 (copy 0 also nb)
+    (* keep = "true" *) reg [13:0] rq_c [0:3];     // {R[1], R[49:37]} for the qa fire loads (qa pairs)
     wire [9:0] f_kn = rc[1] ? 10'((rc[28:19] + 10'd1) >> 1) : rc[28:19];
     wire [7:0] f_es = 8'((rc[36:29] + 8'd31) >> 5);
     wire [2:0] f_rk = rc[1] ? {f_kn[1:0], 1'b0} : f_kn[2:0];          // R K mod 8
@@ -270,8 +271,8 @@ module ot_hnx_coll_gq_issue #(
         busy_n = fire_c[0] ? 1'b1 : (!iss && busy && drain == 6'd0) ? 1'b0 : busy;
         iss_n = fire_c[0] ? 1'b1 : i_end ? 1'b0 : iss;
         drain_n = fire_c[0] ? drain : i_end ? 6'(ND - 1) : (!iss && busy && drain != 6'd0) ? drain - 6'd1 : drain;
-        g_kn_n = fire_c[21] ? f_kn : g_kn;
-        g_n_n = fire_c[21] ? rc[104:101] : g_n;
+        g_kn_n = fire_c[7] ? f_kn : g_kn;
+        g_n_n = fire_c[7] ? rc[104:101] : g_n;
         ik_n = ik; kx_n = kx; ir_n = ir; it3_n = it3; iph_n = iph;
         if (fire_c[1]) begin
             ik_n = 10'd0; iph_n = 2'd0; ir_n = 4'd0; it3_n = 3'd0; kx_n = 10'd0;
@@ -286,7 +287,7 @@ module ot_hnx_coll_gq_issue #(
             end
             iph_n = (iph == 2'd2) ? 2'd0 : iph + 2'd1;
         end
-        for (integer x = 0; x < DW; x = x + 1) R_n[x] = wl_c[3 + x / RCW] ? B[x] : rd_t[x];
+        for (integer x = 0; x < DW; x = x + 1) R_n[x] = wl_c[3 + x / WCW] ? B[x] : rd_t[x];
     end
     // ---- copies for the next edge
     wire wrap_n = run_n && !p_svc[1] && tl_n == per_n - 16'd1;
@@ -294,35 +295,36 @@ module ot_hnx_coll_gq_issue #(
     wire evi_n = iss_n && iph_n != 2'd2;
     wire lk_n = kx_n == g_kn_n - 10'd1, ie_n = ir_n == g_n_n;
     wire ia_n = evi_n && lk_n && !ie_n;
-    wire fire_na, fire_nb;
+    wire fire_na, fire_nb, fire_nc;
     ot_hnx_gq_fire_fn u_fire_a(.run(run_n), .rv(rv_n), .cur(cur_n), .lim(lim_n), .tl(tl_n), .ts(R_n[18:3]), .f(fire_na));
     ot_hnx_gq_fire_fn u_fire_b(.run(run_n), .rv(rv_n), .cur(cur_n), .lim(lim_n), .tl(tl_n), .ts(R_n[18:3]), .f(fire_nb));
+    ot_hnx_gq_fire_fn u_fire_c(.run(run_n), .rv(rv_n), .cur(cur_n), .lim(lim_n), .tl(tl_n), .ts(R_n[18:3]), .f(fire_nc));
     always @(posedge clk or negedge rl[0]) begin
         if (!rl[0]) begin
             fire_c <= '0; fire_x <= '0; w_c <= '0; wl_c <= '0; evi_c <= '0; ia_c <= '0; lq_c <= '0;
         end else begin
-            fire_c <= {22{fire_nb}}; fire_x <= {18{fire_na}}; w_c <= {2{wrap_n}}; wl_c <= {13{wrap_ld_n}};
-            evi_c <= {15{evi_n}}; ia_c <= {6{ia_n}}; lq_c <= {12{p_sv}};
+            fire_c <= {{21{fire_nc}}, {21{fire_nb}}}; fire_x <= {18{fire_na}}; w_c <= {2{wrap_n}}; wl_c <= {18{wrap_ld_n}};
+            evi_c <= {19{evi_n}}; ia_c <= {10{ia_n}}; lq_c <= {17{p_sv}};
         end
     end
     always @(posedge clk) begin lk_c <= {2{lk_n}}; ie_c <= {2{ie_n}}; end
     always @(posedge clk) begin
         R <= R_n;
-        rq_c[0] <= {R_n[1], R_n[49:37]}; rq_c[1] <= {R_n[1], R_n[49:37]};
+        for (integer k = 0; k < 4; k = k + 1) rq_c[k] <= {R_n[1], R_n[49:37]};
     end
     // B: row b0 (lq: from the read port; a write to row b0: the strobe copies of row b0)
-    wire [NWC-1:0] bwe;
+    wire [NWC-1:0] bwe;                               // chunk c = B bits [c*WCW +: WCW]
     for (genvar c = 0; c < NWC; c = c + 1) begin : g_bwe
         wire [15:0] t; for (genvar r = 0; r < 16; r = r + 1) begin : g_r assign t[r] = p_rw[r*NWC + c] & b0_oh[r]; end
         assign bwe[c] = |t;
     end
     always @(posedge clk)
         for (integer x = 0; x < DW; x = x + 1)
-            if (lq_c[2 + x / RCW]) B[x] <= rd_t[x];
-            else if (bwe[x / RCW]) B[x] <= p_wd[x];
+            if (lq_c[2 + x / WCW]) B[x] <= rd_t[x];
+            else if (bwe[x / WCW]) B[x] <= p_wd[x];
     generate for (genvar c = 0; c < NRC; c = c + 1) begin : g_cur_oh
-        wire tw = run && !lq_c[7 + c] && wl_c[8 + c], tf = run && !lq_c[7 + c] && fire_c[11 + c];
-        wire [15:0] d = p_svc[4 + c] ? (16'd1 << p_sb[3:0]) : tw ? b0_oh : tf ? {cur_ohc[c][14:0], cur_ohc[c][15]} : cur_ohc[c];
+        wire tw = run && !lq_c[12 + c] && wl_c[13 + c], tf = run && !lq_c[12 + c] && fire_c[11 + c];
+        wire [15:0] d = p_svc[5 + c] ? (16'd1 << p_sb[3:0]) : tw ? b0_oh : tf ? {cur_ohc[c][14:0], cur_ohc[c][15]} : cur_ohc[c];
         ot_hnx_coll_aq_cff #(.W(16)) u_ff(.clk(clk), .d(d), .q(cur_ohc[c]));
     end endgenerate
     // calendar valids (region 0)
@@ -355,7 +357,7 @@ module ot_hnx_coll_gq_issue #(
         end else begin
             cur <= cur_n; b0 <= b0_n; ik <= ik_n; iph <= iph_n; ir <= ir_n; it3 <= it3_n; kx <= kx_n;
             g_kn <= g_kn_n; g_n <= g_n_n;
-            if (p_svc[1]) b0_oh <= 16'd1 << p_sb[3:0];
+            if (p_svc[4]) b0_oh <= 16'd1 << p_sb[3:0];
         end
     end
     // period counter (region 2) and loop counter (region 3)
@@ -367,26 +369,31 @@ module ot_hnx_coll_gq_issue #(
         if (!rl[3]) lps <= 16'd0;
         else lps <= lps_n;
     end
-    always @(posedge clk or negedge rl[3]) if (!rl[3]) ld_fire <= 1'b0; else ld_fire <= fire_c[16];
+    always @(posedge clk or negedge rl[3]) if (!rl[3]) ld_fire <= 1'b0; else ld_fire <= fire_c[16];   // (sfv bank)
     always @(posedge clk) ld_desc <= {rc[1], rc[2], rc[0], rc[28:19], rc[36:29], rc[68:53], rc[84:69], rc[136:121]};
     // held gather fields: groups of <= 29 enables per fire copy
     always @(posedge clk) begin
-        if (fire_c[2]) begin g_qbg <= rc[0]; g_r2 <= rc[1]; g_self <= rc[2]; g_f <= rc[28:19]; g_bs <= rc[36:29];
-                             g_qbg_c <= {8{rc[0]}}; end
-        if (fire_c[3]) begin g_src <= rc[52:37]; g_r2_c <= {6{rc[1]}}; end
+        // s4 census r1: ~2 loads per enabled bit -> <= 16 bits per fire copy
+        if (fire_c[2]) begin g_qbg <= rc[0]; g_r2 <= rc[1]; g_self <= rc[2]; g_f <= rc[28:19]; end
+        if (fire_c[3]) begin g_src <= rc[52:37]; end
         if (fire_c[4]) g_dst <= rc[68:53];
         if (fire_c[5]) g_str <= rc[84:69];
         if (fire_c[6]) g_rso <= rc[136:121];
-        for (integer k = 0; k < 4; k = k + 1) if (fire_c[7 + k]) begin g_src_c[k] <= rc[49:37]; g_rsa_c[k] <= rc[120:105]; end
+        if (fire_c[22]) begin g_bs <= rc[36:29]; g_qbg_c <= {8{rc[0]}}; end
+        if (fire_c[23]) g_r2_c <= {10{rc[1]}};
+        for (integer k = 0; k < 8; k = k + 1) begin
+            if (fire_c[24 + k]) g_src_c[k] <= rc[49:37];
+            if (fire_c[32 + k]) g_rsa_c[k] <= rc[120:105];
+        end
     end
     // HNX source row bases sb[r] = low 13 b of g_src + r rs_A (sector-local), registered one edge after the fire. HNX-GQ
     // (n1 route TT -112 soff -> 13-b add -> bank decode -> ld_p_d): the table holds the full row base (one add, from held
     // registers), and it is read only by the one-edge-ahead pre-stages below (entries reach them >= 7 edges after issue);
     // the issue-edge QBG request reads the running sums qa (row change: nb = next row's base, kept by one add per row).
-    // s4: rows 4k .. 4k+3 read their own held copies g_src_c[k] / g_rsa_c[k].
+    // s4: rows 2k, 2k+1 read their own held copies g_src_c[k] / g_rsa_c[k].
     reg [12:0] sb [0:15];
     always @(posedge clk) for (integer r = 0; r < 16; r = r + 1)
-        sb[r] <= g_src_c[r / 4] + ((MUT == 6) ? 13'd0 : 13'(r * g_rsa_c[r / 4]));
+        sb[r] <= g_src_c[r / 2] + ((MUT == 6) ? 13'd0 : 13'(r * g_rsa_c[r / 2]));
     // row base through a registered row one-hot (s4, census s3: ev_k[13] row field 74 loads on the 16:1 sb read)
     function automatic [15:0] row_src_oh(input [15:0] oh);
         reg [12:0] a; a = 13'd0;
@@ -409,10 +416,11 @@ module ot_hnx_coll_gq_issue #(
         for (integer s = 1; s < ND; s = s + 1) begin ev_k[s] <= ev_k[s-1]; ev_f[s] <= ev_f[s-1]; ev_c[s] <= ev_c[s-1]; end
     end
     // s4: registered row one-hots of the entries at the pre-stages 7 / 13 / 22, and a kept copy of the stage-22 entry
-    reg [15:0] roh7, roh13, roh22;
+    reg [15:0] roh13, roh22;
+    (* keep = "true" *) reg [15:0] roh7 [0:1];          // per ring (census r1: a roh7 term drove 34 loads)
     (* keep = "true" *) reg [16:0] ek22c;
     always @(posedge clk) begin
-        roh7 <= 16'd1 << ev_k[S_QCAP-2][16:13]; roh13 <= 16'd1 << ev_k[S_PR-3][16:13]; roh22 <= 16'd1 << ev_k[S_P-3][16:13];
+        roh7[0] <= 16'd1 << ev_k[S_QCAP-2][16:13]; roh7[1] <= 16'd1 << ev_k[S_QCAP-2][16:13]; roh13 <= 16'd1 << ev_k[S_PR-3][16:13]; roh22 <= 16'd1 << ev_k[S_P-3][16:13];
         ek22c <= ev_k[S_P-3];
     end
     // flit decode of an entry; HNX entry fields (s4: the ring-split flag is an argument, read from a kept copy)
@@ -436,7 +444,7 @@ module ot_hnx_coll_gq_issue #(
     // 8 kept per-bank copies (census s3: qa[2][2] 94, sfv / scd 97).
     reg [12:0] qa [0:7]; reg [12:0] nb; reg [7:0] qoh [0:7];
     (* keep = "true" *) reg [1:0] sfvc [0:7], scdc [0:7];
-    wire [9:0] i_kn = (ia_c[5] && MUT != 8) ? 10'd0 : ik + 10'd1;  // ik after this issue edge
+    wire [9:0] i_kn = (ia_c[9] && MUT != 8) ? 10'd0 : ik + 10'd1;  // ik after this issue edge
     reg [1:0] sfv_n, scd_n;
     always @* begin : nb_sf
         sfv_n = sfv; scd_n = scd;
@@ -448,25 +456,25 @@ module ot_hnx_coll_gq_issue #(
             end
         end else if (evi_c[2])
             for (integer r = 0; r < 2; r = r + 1) begin : nb_s1
-                sfv_n[r] = fv(g_r2_c[2], i_kn, r); scd_n[r] = is_code(flit_i(g_r2_c[2], i_kn, r));
+                sfv_n[r] = fv(g_r2_c[4], i_kn, r); scd_n[r] = is_code(flit_i(g_r2_c[4], i_kn, r));
             end
     end
     always @(posedge clk or negedge rl[6])
         if (!rl[6]) begin sfv <= 2'd0; scd <= 2'd0; for (integer b = 0; b < 8; b = b + 1) begin sfvc[b] <= 2'd0; scdc[b] <= 2'd0; end end
         else begin sfv <= sfv_n; scd <= scd_n; for (integer b = 0; b < 8; b = b + 1) begin sfvc[b] <= sfv_n; scdc[b] <= scd_n; end end
     always @(posedge clk)
-        if (fire_c[16]) nb <= rc[49:37] + ((MUT == 6) ? 13'd0 : rc[117:105]);
+        if (fire_c[21]) nb <= rc[49:37] + ((MUT == 6) ? 13'd0 : rc[117:105]);
         else if (ia_c[0]) nb <= nb + ((MUT == 6) ? 13'd0 : g_rsa_c[0][12:0]);
-    // qa: groups g = {qa[2g], qa[2g+1]} on their own control copies
+    // qa: every register on its own control copies (census r1: 26-b groups drove 37..54)
     reg [12:0] qa_n [0:7];
     always @* for (integer q = 0; q < 8; q = q + 1) begin : nb_qa
         reg [10:0] i0, i1; reg r2q; reg [13:0] rq;
-        rq = rq_c[q / 4]; r2q = g_r2_c[q / 4];
+        rq = rq_c[q / 2]; r2q = g_r2_c[q / 2];
         i0 = rq[13] ? 11'(q / 4) : ((q / 4) == 0 ? 11'd0 : 11'h7ff);
         i1 = flit_i(r2q, (MUT != 8) ? 10'd0 : ik + 10'd1, q / 4);
-        if (fire_c[17 + q / 2])      qa_n[q] = rq[12:0] + 13'({i0, 2'b00} + (q % 4));
-        else if (ia_c[1 + q / 2])    qa_n[q] = nb + 13'({i1, 2'b00} + (q % 4));
-        else if (evi_c[3 + q / 2])   qa_n[q] = qa[q] + (r2q ? 13'd8 : 13'd4);
+        if (fire_c[q < 4 ? 17 + q : (q < 7 ? 4 + q : 40)]) qa_n[q] = rq[12:0] + 13'({i0, 2'b00} + (q % 4));
+        else if (ia_c[1 + q])        qa_n[q] = nb + 13'({i1, 2'b00} + (q % 4));
+        else if (evi_c[3 + q])       qa_n[q] = qa[q] + (r2q ? 13'd8 : 13'd4);
         else                         qa_n[q] = qa[q];
     end
     always @(posedge clk) for (integer q = 0; q < 8; q = q + 1) begin qa[q] <= qa_n[q]; qoh[q] <= oh8(qa_n[q][2:0]); end
@@ -489,12 +497,12 @@ module ot_hnx_coll_gq_issue #(
             qc_v[r] <= ev_v[S_QCAP-1] && g_qbg && ev_f[S_QCAP-1][r] && ev_c[S_QCAP-1][r];
         end
     always @(posedge clk) for (integer r = 0; r < 2; r = r + 1) begin : nb_pq
-        pr_s[r] <= sec_add(row_src_oh(roh13), 13'(flit_i(g_r2_c[3], ek(ev_k[S_PR-2]), r)));
+        pr_s[r] <= sec_add(row_src_oh(roh13), 13'(flit_i(g_r2_c[5 + r], ek(ev_k[S_PR-2]), r)));
     end
     always @* for (integer r = 0; r < 2; r = r + 1) begin : nb_pqd
         reg [10:0] i; reg [15:0] s;
-        i = flit_i(g_r2_c[4], ek(ev_k[S_QCAP-1]), r);
-        for (integer w = 0; w < 4; w = w + 1) begin s = sec_add(row_src_oh(roh7), 13'({i, 2'b00} + w)); qc_ohd[r*4+w] = oh8(s[2:0]); end
+        i = flit_i(g_r2_c[7], ek(ev_k[S_QCAP-1]), r);
+        for (integer w = 0; w < 4; w = w + 1) begin s = sec_add(row_src_oh(roh7[r]), 13'({i, 2'b00} + w)); qc_ohd[r*4+w] = oh8(s[2:0]); end
     end
     // ------------------------------------------------------------------ VM reads (issue) + response check
     // s4: one request mux per bank on its own copies (g_qbg_c[b], evi_c[7+b], sfvc[b] / scdc[b], qoh[.][b]); the same
@@ -503,7 +511,7 @@ module ot_hnx_coll_gq_issue #(
     reg [135:0] vm_rq_d;
     always @* for (integer b = 0; b < 8; b = b + 1) begin : nb_rqd
         vm_rq_d[b*17 +: 17] = 17'd0;
-        if (g_qbg_c[b] && evi_c[7 + b]) begin
+        if (g_qbg_c[b] && evi_c[11 + b]) begin
             for (integer r = 0; r < 2; r = r + 1)
                 if (sfvc[b][r] && scdc[b][r])
                     for (integer w = 0; w < 4; w = w + 1)
@@ -561,11 +569,11 @@ module ot_hnx_coll_gq_issue #(
         if (!rl[6]) pp_v <= 2'd0;
         else for (integer r = 0; r < 2; r = r + 1) pp_v[r] <= ev_v[S_P-2] && ev_f[S_P-2][r];
     always @(posedge clk) for (integer r = 0; r < 2; r = r + 1) begin : nb_pp
-        reg [10:0] i; i = flit_i(g_r2_c[5], ek(ek22c), r);
+        reg [10:0] i; i = flit_i(g_r2_c[8], ek(ek22c), r);
         pp_em[r] <= (ev_v[S_P-2] && g_qbg && ev_f[S_P-2][r] && ev_c[S_P-2][r]) ? (64'd1 << i[5:0]) : 64'd0;
     end
     always @* for (integer r = 0; r < 2; r = r + 1) begin : nb_ppd
-        reg [10:0] i; reg [15:0] s; i = flit_i(g_r2_c[5], ek(ev_k[S_P-2]), r); s = sec_add(row_src_oh(roh22), 13'(i));
+        reg [10:0] i; reg [15:0] s; i = flit_i(g_r2_c[9], ek(ev_k[S_P-2]), r); s = sec_add(row_src_oh(roh22), 13'(i));
         pp_d[r] = {g_qbg ? 8'd0 : oh8(s[2:0]), g_qbg && ev_c[S_P-2][r], g_qbg && !ev_c[S_P-2][r] && i == {3'b0, g_bs},
                    g_qbg && !ev_c[S_P-2][r] && i != {3'b0, g_bs}};
     end
