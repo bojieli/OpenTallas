@@ -109,7 +109,45 @@ REVIEWED = {
         sha256=('6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b',),
         chains=(('wptr', 'wgray', ('wg_r1', 'wg_r2'), 'w2r'), ('rptr', 'rgray', ('rg_w1', 'rg_w2'), 'r2w')),
         valid='link', read_stage=None, min_ptr_bits=3),
+    # ELEM-GAPS/HBMB 2026-10-18 (re-applied on main by L2H-IDXSCORE/SVG 2026-10-19): the HBM service SPSC FIFO,
+    # ot_async_fifo structure -- binary/Gray wr_/rd_ pointers updated on their own edge, async_reg 2-flop syncs wr_gray ->
+    # wr_gray_r1 -> wr_gray_r2 (reader) and rd_gray -> rd_gray_w1 -> rd_gray_w2 (writer), online flags synchronised the
+    # same way; storage mem[wr_bin] written on wr_fire on the Gray update edge; rd_data = mem[rd_bin] (FWFT).
+    # read-valid = rd_reset && wr_online_r2 && !empty, empty = (rd_gray == wr_gray_r2) COMBINATIONAL:
+    # 'conditioned_neq' = the conditioned reset/online terms AND the 'link' Gray inequality.  The sha256 is the
+    # async_gray_fifo_constraints.SOURCES entry of the same file (QF-SFAULT 10-18 revision, FIFO lines unchanged).
+    'ot_hbm_svc_async_fifo': dict(
+        path='rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv',
+        sha256=('3b85c58128cd8f8eeccf6e962c8cbe3672d56d3e10d044343307eb72a4712fe1',
+                '08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b'),
+        chains=(('wptr', 'wr_gray', ('wr_gray_r1', 'wr_gray_r2'), 'w2r'),
+                ('rptr', 'rd_gray', ('rd_gray_w1', 'rd_gray_w2'), 'r2w'),
+                ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
+                ('ronl', 'rd_online', ('rd_online_w1', 'rd_online_w2'), 'r2w')),
+        valid='conditioned_neq', read_stage=None, rd_rst_wire='rd_reset', rd_rst_conditioner='u_rd_reset'),
+    # L2H-IDXSCORE/SVG 2026-10-19: the same FIFO with its storage in ONE dual-clock 1R1W SRAM macro
+    # (ot_hbm_svc_async_fifo_sram; checklist item 5).  Same pointer / online chains as ot_hbm_svc_async_fifo.  No flop
+    # storage: the macro's write pins (w_*, wd_*) are driven from the writer family and its read pins (r_*) from the
+    # reader family (both proved on the actual cones, extension mode), its rd_out is a reader-family leaf.  The only
+    # reader of rd_out is the 2-entry output buffer, captured when the fetch slot is PUBLISHED: f_gray != wr_gray_r2
+    # (proved exactly by the storage SAT miter with rd_out as the storage bits), so a slot is read >= 1 reader edge
+    # after its write edge (the write pointer is updated on the macro write edge and crosses two reader flops).
+    'ot_hbm_svc_async_fifo_sram': dict(
+        path='rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv',
+        sha256=('3d3e7a5be43931bdb6cd70f10f167bc804037ff8dfb7cb74e0c2d613e61c99a7',),
+        chains=(('wptr', 'wr_gray', ('wr_gray_r1', 'wr_gray_r2'), 'w2r'),
+                ('rptr', 'rd_gray', ('rd_gray_w1', 'rd_gray_w2'), 'r2w'),
+                ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
+                ('ronl', 'rd_online', ('rd_online_w1', 'rd_online_w2'), 'r2w')),
+        valid='macro_publish', read_stage=None, publish_reg='f_gray',
+        storage_macro=re.compile(r'g_m\w+\.u_mem')),
 }
+# Dual-clock register-file macros (tools/mem_compiler sram_gen.py 1r1w2c): admitted ONLY as the storage of a reviewed
+# FIFO declaring storage_macro (above); write pins timed to wclk, read pins and rd_out to rclk.
+DUAL_MACRO = re.compile(r'ot_sram_1r1w2c_\w+')
+DUAL_CLOCKS = ('wclk', 'rclk')
+DUAL_WRITE_PIN = re.compile(r'(?:w_|wd_)\w*')
+DUAL_READ_PIN = re.compile(r'r_\w*')
 STORAGE = re.compile(r'mem\[\d+\](?:\[\d+\])?')
 RESERVED_ATTRIBUTE = re.compile(rb'\b(?:src|hdlname|module\w*|cell_\w*|keep_hierarchy)\s*=')
 BDD_NODE_LIMIT = 2_000_000
@@ -297,6 +335,8 @@ def _liberty_clock(text, master):
             clocks.add(pin)
         if key == 'related_pin' and 'timing' in groups:
             related.update(value.split())
+    if DUAL_MACRO.fullmatch(master) and clocks == set(DUAL_CLOCKS) and not related - clocks:
+        return DUAL_CLOCKS[1]          # outputs (rd_out) are rclk leaves; wclk is checked in _extension_leaves
     if len(clocks) != 1 or related - clocks:
         raise GrayFifoError(f'reviewed_gray_fifos macro {master} must have exactly one Liberty clock pin relating '
                             f'every arc (clocks {sorted(clocks)}, related {sorted(related)})')
@@ -556,7 +596,8 @@ def _extension_leaves(spec, ext, net, module, port_domain):
         actual[mc['type']] = actual.get(mc['type'], 0) + 1
     if actual != declared:
         raise GrayFifoError(f'reviewed_gray_fifos elaborated macros {actual} differ from the declared macros {declared}')
-    macro_domain = {}
+    macro_domain, dual = {}, {}
+    net.dual_macros = dual                 # cell -> (write family, read family); owned by reviewed SRAM FIFOs only
     for cname, mc in sorted(net.macros.items()):
         name = cname.lstrip('\\')
         ck = mc['conn'].get(mc['clock'], [])
@@ -564,9 +605,26 @@ def _extension_leaves(spec, ext, net, module, port_domain):
             raise GrayFifoError(f'reviewed_gray_fifos macro {name} clock pin {mc["clock"]} is not tied directly to one '
                                 'declared clock root')
         fam = macro_domain[cname] = net.clock_domain[ck[0]]
+        wfam = None
+        if DUAL_MACRO.fullmatch(mc['type']):
+            wk = mc['conn'].get(DUAL_CLOCKS[0], [])
+            if mc['dirs'].get(DUAL_CLOCKS[0]) != 'input' or len(wk) != 1 or wk[0] not in net.clock_domain:
+                raise GrayFifoError(f'reviewed_gray_fifos dual-clock macro {name} wclk is not tied directly to one '
+                                    'declared clock root')
+            wfam = net.clock_domain[wk[0]]
+            dual[cname] = (wfam, fam)
         for pin, bits in sorted(mc['conn'].items()):
             if pin == mc['clock'] or mc['dirs'][pin] != 'input':
                 continue
+            pfam = fam
+            if wfam is not None:
+                if pin == DUAL_CLOCKS[0]:
+                    continue
+                if DUAL_WRITE_PIN.fullmatch(pin):
+                    pfam = wfam
+                elif not DUAL_READ_PIN.fullmatch(pin):
+                    raise GrayFifoError(f'reviewed_gray_fifos dual-clock macro {name} pin {pin} is neither a write '
+                                        '(w_ / wd_) nor a read (r_) pin')
             for b in bits:
                 for leaf in net.cone(b):
                     if leaf in net.flops:
@@ -576,9 +634,9 @@ def _extension_leaves(spec, ext, net, module, port_domain):
                             net.macros[net.driver[leaf][1]]['clock']][0])
                     else:
                         ldom = port_domain.get(leaf)
-                    if ldom != fam:
+                    if ldom != pfam:
                         what = net.key(leaf) if leaf in net.flops else (net.driver.get(leaf) or ('', str(leaf)))[1]
-                        raise GrayFifoError(f'reviewed_gray_fifos macro {name} ({fam}) input {pin} reads {what} '
+                        raise GrayFifoError(f'reviewed_gray_fifos macro {name} ({pfam}) input {pin} reads {what} '
                                             f'({ldom}); a macro must sit in one clock family')
     straps = {}
     for p in ext.get('die_constant_inputs', []):
@@ -742,6 +800,9 @@ def _valid_lit(net, aig, fifo, memo):
     kind, terms = fifo['valid']
     if kind == 'false':
         return 0
+    if kind == 'and_neq':   # AND(terms[0]) & OR_i(a_i ^ b_i)
+        neq = _valid_lit(net, aig, dict(valid=('neq', terms[1])), memo)
+        return aig.and_(_valid_lit(net, aig, dict(valid=('and', terms[0])), memo), neq)
     if kind == 'neq':
         valid = 0
         for a, b in terms:
@@ -849,6 +910,7 @@ def _lint(spec, root):
         role[q] = r
 
     fifos, resets, scopes, dead = {}, [], _scopes(document, spec, reviewed_files), []
+    macro_storage = {}
     for scope, base in scopes:
         if base == RESET_SYNC[0]:
             pipe = bits_of(scope, 'reset_pipe')
@@ -953,20 +1015,46 @@ def _lint(spec, root):
             valid = ('false', ())
         elif r['valid'] == 'link':
             valid = ('neq', tuple(zip(stage['rptr'][4], stage['wptr'][5][-1])))
+        elif r['valid'] == 'macro_publish':
+            pub = bits_of(scope, r['publish_reg'])
+            if len(pub) != len(stage['wptr'][5][-1]) or any(net.domain(q) != reader for q in pub) or storage:
+                raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) lost its publish pointer '
+                                    f'{r["publish_reg"]} or keeps flop storage')
+            valid = ('neq', tuple(zip(pub, stage['wptr'][5][-1])))
+            cells = [c for c in getattr(net, 'dual_macros', {}) if c.lstrip('\\').startswith(prefix) and
+                     r['storage_macro'].fullmatch(c.lstrip('\\')[len(prefix):])]
+            if len(cells) != 1:
+                raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} ({base}) needs exactly one dual-clock '
+                                    f'storage macro (found {len(cells)}; extension mode with the macro declared; '
+                                    f'dual-clock macros under it '
+                                    f'{[c for c in getattr(net, "dual_macros", {}) if prefix in c][:3]})')
+            if net.dual_macros[cells[0]] != (writer, reader):
+                raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} storage macro families '
+                                    f'{net.dual_macros[cells[0]]} differ from writer/reader ({writer}, {reader})')
+            macro_storage[fid] = (cells[0], dict(scope=scope, valid=valid, reader=reader,
+                                                 storage={b for b in net.macros[cells[0]]['conn']['rd_out']
+                                                          if isinstance(b, int)}))
         else:
-            empty = bits_of(scope, 'rd_empty')
+            empty = bits_of(scope, 'rd_empty') if r['valid'] == 'conditioned' else [None]
             # rd_domain_rst_n: the reviewed source's own wire; if synthesis dropped the name, the reviewed
             # rd_reset_conditioner output (ot_async_fifo EXT_RST 0 places it in a generate block).
-            rst = [net.bit_of.get(prefix + 'rd_domain_rst_n')]
+            rst = [net.bit_of.get(prefix + r.get('rd_rst_wire', 'rd_domain_rst_n'))]
             if not isinstance(rst[0], int):
+                cname = re.escape(r.get('rd_rst_conditioner', 'rd_reset_conditioner'))
                 conditioner = [c for c, b in scopes if b == RESET_SYNC[0] and
-                               re.fullmatch(re.escape(prefix) + r'(?:[A-Za-z_]\w*\.)?rd_reset_conditioner', c)]
+                               re.fullmatch(re.escape(prefix) + r'(?:[A-Za-z_]\w*\.)?' + cname, c)]
                 rst = bits_of(conditioner[0], 'reset_pipe')[-1:] if len(conditioner) == 1 else [None]
             if len(empty) != 1 or not isinstance(rst[0], int) or len(stage['wonl'][5][-1]) != 1:
                 raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} lost its read-valid registers')
-            if net.domain(empty[0]) != reader:
-                raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
-            valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
+            if r['valid'] == 'conditioned_neq':
+                pairs = tuple(zip(stage['rptr'][4], stage['wptr'][5][-1]))
+                if not pairs or net.domain(rst[0]) != reader:
+                    raise GrayFifoError(f'reviewed_gray_fifos {scope or "<top>"} lost its read-valid registers')
+                valid = ('and_neq', (((rst[0], 1), (stage['wonl'][5][-1][0], 1)), pairs))
+            else:
+                if net.domain(empty[0]) != reader:
+                    raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
+                valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
         head = {b for k, b in net.bit_of.items() if isinstance(b, int) and b not in net.flops and
                 re.fullmatch(re.escape(prefix + ('rdata' if base == 'ot_link_afifo' else 'rd_data')) + r'(?:\[\d+\])?', k)}
         fifos[fid] = dict(scope=scope, module=base, writer=writer, reader=reader, valid=valid, head=head,
@@ -975,6 +1063,24 @@ def _lint(spec, root):
                           storage_max_delay_ps=round(period[reader] - SETUP_UNCERTAINTY_PS, 3))
     if not fifos:
         raise GrayFifoError('reviewed_gray_fifos requires at least one actual reviewed FIFO instance')
+    owned = {c for c, _ in macro_storage.values()}
+    for c in sorted(set(getattr(net, 'dual_macros', {})) - owned):
+        raise GrayFifoError(f'reviewed_gray_fifos dual-clock macro {c.lstrip(chr(92))} is not the storage macro of a '
+                            'reviewed SRAM FIFO')
+    if macro_storage:
+        # storage macro gating: every reader of rd_out is a reader-family flop whose next state is independent of
+        # rd_out while the fetch slot is unpublished (exact SAT miter, rd_out = the storage bits)
+        mcons = {}
+        for q, f in net.flops.items():
+            for fid, (c, mf) in macro_storage.items():
+                if net.cone(f['d']) & mf['storage'] or (f['r'] is not None and net.cone(f['r']) & mf['storage']):
+                    if net.domain(q) != mf['reader']:
+                        raise GrayFifoError(f'reviewed_gray_fifos {net.key(q)} reads storage macro {c.lstrip(chr(92))} '
+                                            f'off the reader family {mf["reader"]}')
+                    mcons.setdefault(q, set()).add(fid)
+        if not mcons:
+            raise GrayFifoError('reviewed_gray_fifos storage macro outputs are unread')
+        _miter_storage_proof(net, mcons, {fid: mf for fid, (c, mf) in macro_storage.items()})
     storage_owner = {q: fid for fid, f in fifos.items() for q in f['storage']}
     levels = {}
     for g in (ext or {}).get('level_synchronizers', []):
@@ -1099,11 +1205,14 @@ def _lint(spec, root):
         kind, terms = fifo['valid']
         if kind == 'false':
             v = 0
-        elif kind == 'neq':
+        elif kind in ('neq', 'and_neq'):
             v = 0
-            for a, b in terms:
+            for a, b in (terms[1] if kind == 'and_neq' else terms):
                 x, y = _bdd_of(net, bdd, a, level, cache), _bdd_of(net, bdd, b, level, cache)
                 v = bdd.ite(v, 1, bdd.ite(x, bdd.neg(y), y))
+            for b, polarity in (terms[0] if kind == 'and_neq' else ()):
+                x = _bdd_of(net, bdd, b, level, cache)
+                v = bdd.ite(v, x if polarity else bdd.neg(x), 0)
         else:
             v = 1
             for b, polarity in terms:
