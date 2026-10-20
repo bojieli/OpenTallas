@@ -1,0 +1,5 @@
+# Full mapped-driver follow-up (separate from native pin boundary)
+
+Read-only native OpenDB census ran on ALL14 exact original gate 1_synth.odb checkpoints on ot-agidock128, unit oth-ubuntu-652534-1792482263 exit0. All original input SHA256 checks pass after the run. The reusable existing SF7 native_dump census treats BUF/INV/HB transparently and counts real FF, combinational, macro, and input loads including resets; clock sinks excluded. Raw compressed tables, SHA checks, logs, and executable wrappers are retained. Full mapped Verilog remains in the remote artifact directory, not duplicated here.
+
+The ten SRAM masters d8s/d8sn widths151/173/174/182/183 PASS: maximum32loads, zero non-tie drivers above32. Four flop masters107/116, both main/fallback, FAIL:57/65 drivers above32, maximum128. HOLD their bind under the binding native32 rule pending structural repair, regardless of CLOSED route or passing pin-boundary audit. The prior14 routed Liberty IO receipts remain valid in their stated limited scope and do not qualify internal fanout. SRAM integration still requires actual per-instance K/reset/warm/phase/schedule binding and final consumer context proof.
