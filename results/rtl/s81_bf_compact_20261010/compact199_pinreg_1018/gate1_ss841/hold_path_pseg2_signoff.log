@@ -1,0 +1,88 @@
+ot-run: ot-epyc4       admits   102 GB (avail 410, growth 339, headroom 0, waiters 6/902 GB) load 216/128 running 58 disk 621 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-346151-1792394845 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+BF_IO boundary registers 776 insertion mean max 594.3876575438144 min 575.8933873853094
+GATE_PC constraints signoff /src/physical/s81_bf_hier/signoff_col.sdc (TT placement RC; diagnostic)
+Startpoint: pseg[2]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: pseg[2] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock core_clk (rise edge)
+ 531.1  531.1   clock network delay (propagated)
+   0.0  531.1 ^ pseg[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  51.5  582.6 ^ pseg[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  19.8  602.4 ^ hold42363/Y (BUFx2_ASAP7_75t_R)
+  18.1  620.5 ^ hold40875/Y (BUFx2_ASAP7_75t_R)
+  21.9  642.4 ^ hold42364/Y (BUFx2_ASAP7_75t_R)
+  23.0  665.4 ^ hold16743/Y (BUFx2_ASAP7_75t_R)
+  20.4  685.7 ^ hold42365/Y (BUFx2_ASAP7_75t_R)
+  17.9  703.7 ^ hold40876/Y (BUFx2_ASAP7_75t_R)
+  20.5  724.1 ^ hold42366/Y (BUFx2_ASAP7_75t_R)
+  20.3  744.4 ^ place14261/Y (BUFx3_ASAP7_75t_R)
+  18.4  762.8 ^ hold42367/Y (BUFx2_ASAP7_75t_R)
+  18.7  781.5 ^ hold40877/Y (BUFx2_ASAP7_75t_R)
+  18.0  799.5 ^ hold42368/Y (BUFx2_ASAP7_75t_R)
+  17.0  816.6 ^ hold16744/Y (BUFx2_ASAP7_75t_R)
+  18.4  835.0 ^ hold42369/Y (BUFx2_ASAP7_75t_R)
+  19.0  853.9 ^ hold40878/Y (BUFx2_ASAP7_75t_R)
+  18.6  872.6 ^ hold42370/Y (BUFx2_ASAP7_75t_R)
+  12.9  885.5 v _293102_/Y (INVx1_ASAP7_75t_R)
+  22.9  908.3 v hold42371/Y (BUFx2_ASAP7_75t_R)
+  18.2  926.5 v hold40879/Y (BUFx2_ASAP7_75t_R)
+  17.2  943.7 v hold16745/Y (BUFx2_ASAP7_75t_R)
+  17.1  960.8 v hold40880/Y (BUFx2_ASAP7_75t_R)
+  18.5  979.4 v output3602/Y (BUFx2_ASAP7_75t_R)
+  22.3 1001.7 v hold40881/Y (BUFx2_ASAP7_75t_R)
+  24.6 1026.3 v hold16746/Y (BUFx2_ASAP7_75t_R)
+  28.1 1054.4 v hold40882/Y (BUFx2_ASAP7_75t_R)
+   0.6 1055.0 v pseg[2] (out)
+       1055.0   data arrival time
+
+   0.0    0.0   clock core_clk (rise edge)
+   0.0    0.0   clock network delay (propagated)
+  25.0   25.0   clock uncertainty
+   0.0   25.0   clock reconvergence pessimism
+ 625.9  650.9   output external delay
+        650.9   data required time
+-------------------------------------------------------
+        650.9   data required time
+       -1055.0   data arrival time
+-------------------------------------------------------
+        404.1   slack (MET)
+
+
+PQREG pseg[2]$_DFF_P_ DFFHQNx1_ASAP7_75t_R
+PQREG prow[14]$_DFF_P_ DFFHQNx1_ASAP7_75t_R
+GPIN_OUT 1641
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-346151-1792394845): exit 0

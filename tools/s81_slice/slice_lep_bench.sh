@@ -6,8 +6,8 @@ V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V
 D=""; [ $M = swap ] && D="+define+OT_S81SL_LEP_MUT_SWAP"; [ $BV = lepe_nh ] && D="$D +define+TB_SLEP_NH"; M0=$M; M=${M}_$BV
 MAC="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
 CEN="rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv
- rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
- rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv
+ rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv
+ rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs_ctl.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv
  rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv
  rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_stream_rom4_sel.sv rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv rtl/v41rom/ot_v41_kreg.sv rtl/common/ot_prefix.sv"
 LEP="rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
