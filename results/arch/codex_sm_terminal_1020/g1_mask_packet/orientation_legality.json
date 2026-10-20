@@ -1,0 +1,95 @@
+{
+ "scope": "No legal MX admission: pin-track transform is necessary but insufficient. Immutable LEFs unchanged. ROOT conditional+24nm exception cannot be used until legal orientation proven or native premirrored view closes.",
+ "masters": [
+  {
+   "inst": "u_lf0.u_lh.u_tcc.u_tr",
+   "lef": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct/ot_hbm_accel_smh_tct.lef",
+   "sha256": "0242d1bcaa88899b3252ca6b07563ff0e79982a0db7494726770b682579b3a4f",
+   "orientation": "R0",
+   "symmetry_tokens": [],
+   "header_before_first_pin": "VERSION 5.8 ;\nBUSBITCHARS \"[]\" ;\nDIVIDERCHAR \"/\" ;\nUNITS\n    DATABASE MICRONS 1000 ;\nEND UNITS\n\nMACRO ot_hbm_accel_smh_tct\n  FOREIGN ot_hbm_accel_smh_tct 0 0 ;\n  CLASS BLOCK ;\n  SIZE 194.4 BY 71.28 ;\n",
+   "MX_legality_admitted": null,
+   "verdict": "R0 unchanged"
+  },
+  {
+   "inst": "u_lf0.u_lh.u_tcc.u_h0",
+   "lef": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl/ot_hbm_accel_smh_tcl.lef",
+   "sha256": "5194b6082b18693f3cbc8f35be26d5f1a7522d4696b20979c4d3dab910adb28c",
+   "orientation": "R0",
+   "symmetry_tokens": [],
+   "header_before_first_pin": "VERSION 5.8 ;\nBUSBITCHARS \"[]\" ;\nDIVIDERCHAR \"/\" ;\nUNITS\n    DATABASE MICRONS 1000 ;\nEND UNITS\n\nMACRO ot_hbm_accel_smh_tcl\n  FOREIGN ot_hbm_accel_smh_tcl 0 0 ;\n  CLASS BLOCK ;\n  SIZE 86.4 BY 120.96 ;\n",
+   "MX_legality_admitted": null,
+   "verdict": "R0 unchanged"
+  },
+  {
+   "inst": "u_lf0.u_lh.u_tcc.u_h1",
+   "lef": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl/ot_hbm_accel_smh_tcl.lef",
+   "sha256": "5194b6082b18693f3cbc8f35be26d5f1a7522d4696b20979c4d3dab910adb28c",
+   "orientation": "R0",
+   "symmetry_tokens": [],
+   "header_before_first_pin": "VERSION 5.8 ;\nBUSBITCHARS \"[]\" ;\nDIVIDERCHAR \"/\" ;\nUNITS\n    DATABASE MICRONS 1000 ;\nEND UNITS\n\nMACRO ot_hbm_accel_smh_tcl\n  FOREIGN ot_hbm_accel_smh_tcl 0 0 ;\n  CLASS BLOCK ;\n  SIZE 86.4 BY 120.96 ;\n",
+   "MX_legality_admitted": null,
+   "verdict": "R0 unchanged"
+  },
+  {
+   "inst": "u_lf0.u_lh.u_bdc",
+   "lef": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc.lef",
+   "sha256": "7973c9cd767a352f893c6215fd221b7f762de5f4b6f6a4b7e4dc24fa893fd749",
+   "orientation": "MX",
+   "symmetry_tokens": [],
+   "header_before_first_pin": "VERSION 5.8 ;\nBUSBITCHARS \"[]\" ;\nDIVIDERCHAR \"/\" ;\nUNITS\n    DATABASE MICRONS 1000 ;\nEND UNITS\n\nMACRO ot_hbm_accel_smh_bdc\n  FOREIGN ot_hbm_accel_smh_bdc 0 0 ;\n  CLASS BLOCK ;\n  SIZE 112.32 BY 142.56 ;\n",
+   "MX_legality_admitted": false,
+   "verdict": "BLOCKED absent explicit immutable master MX symmetry proof"
+  },
+  {
+   "inst": "u_lf0.u_lh.u_xs",
+   "lef": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs/ot_hbm_accel_smh_xs.lef",
+   "sha256": "5d49d927f64e2d0a54c5bd6d1a24823218b3c194a5d85cf3a50e7c6dab3af2ef",
+   "orientation": "MX",
+   "symmetry_tokens": [],
+   "header_before_first_pin": "VERSION 5.8 ;\nBUSBITCHARS \"[]\" ;\nDIVIDERCHAR \"/\" ;\nUNITS\n    DATABASE MICRONS 1000 ;\nEND UNITS\n\nMACRO ot_hbm_accel_smh_xs\n  FOREIGN ot_hbm_accel_smh_xs 0 0 ;\n  CLASS BLOCK ;\n  SIZE 302.4 BY 157.68 ;\n",
+   "MX_legality_admitted": false,
+   "verdict": "BLOCKED absent explicit immutable master MX symmetry proof"
+  },
+  {
+   "inst": "u_row0",
+   "lef": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w/ot_smh_tr_group_row_w.lef",
+   "sha256": "fea3a450ff27f4b8a09034770db4153bc87dc2a470741443dec2b3fea7c48036",
+   "orientation": "MX",
+   "symmetry_tokens": [],
+   "header_before_first_pin": "VERSION 5.8 ;\nBUSBITCHARS \"[]\" ;\nDIVIDERCHAR \"/\" ;\nUNITS\n    DATABASE MICRONS 1000 ;\nEND UNITS\n\nMACRO ot_smh_tr_group_row_w\n  FOREIGN ot_smh_tr_group_row_w 0 0 ;\n  CLASS BLOCK ;\n  SIZE 86.4 BY 90.72 ;\n",
+   "MX_legality_admitted": false,
+   "verdict": "BLOCKED absent explicit immutable master MX symmetry proof"
+  },
+  {
+   "inst": "u_rowe0",
+   "lef": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e/ot_smh_tr_group_row_e.lef",
+   "sha256": "341a1c58148db6889592c54725ebeebb5edfab1d0125e04f2a497ec3d4a62046",
+   "orientation": "MX",
+   "symmetry_tokens": [],
+   "header_before_first_pin": "VERSION 5.8 ;\nBUSBITCHARS \"[]\" ;\nDIVIDERCHAR \"/\" ;\nUNITS\n    DATABASE MICRONS 1000 ;\nEND UNITS\n\nMACRO ot_smh_tr_group_row_e\n  FOREIGN ot_smh_tr_group_row_e 0 0 ;\n  CLASS BLOCK ;\n  SIZE 43.2 BY 90.72 ;\n",
+   "MX_legality_admitted": false,
+   "verdict": "BLOCKED absent explicit immutable master MX symmetry proof"
+  },
+  {
+   "inst": "g_hbeat.u_beat_t",
+   "lef": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e/ot_smh_tr_group_beat_e.lef",
+   "sha256": "22e6523b03f8401f0c06f8f1548bac7d98aff18424ae4727ae60926ba7a1c29c",
+   "orientation": "MX",
+   "symmetry_tokens": [],
+   "header_before_first_pin": "VERSION 5.8 ;\nBUSBITCHARS \"[]\" ;\nDIVIDERCHAR \"/\" ;\nUNITS\n    DATABASE MICRONS 1000 ;\nEND UNITS\n\nMACRO ot_smh_tr_group_beat_e\n  FOREIGN ot_smh_tr_group_beat_e 0 0 ;\n  CLASS BLOCK ;\n  SIZE 43.2 BY 216 ;\n",
+   "MX_legality_admitted": false,
+   "verdict": "BLOCKED absent explicit immutable master MX symmetry proof"
+  },
+  {
+   "inst": "g_hbeat.u_beate",
+   "lef": "physical/ref_tile/smh_tr_group_beat_e_ref/views/ot_smh_tr_group_beat_e/ot_smh_tr_group_beat_e.lef",
+   "sha256": "22e6523b03f8401f0c06f8f1548bac7d98aff18424ae4727ae60926ba7a1c29c",
+   "orientation": "MX",
+   "symmetry_tokens": [],
+   "header_before_first_pin": "VERSION 5.8 ;\nBUSBITCHARS \"[]\" ;\nDIVIDERCHAR \"/\" ;\nUNITS\n    DATABASE MICRONS 1000 ;\nEND UNITS\n\nMACRO ot_smh_tr_group_beat_e\n  FOREIGN ot_smh_tr_group_beat_e 0 0 ;\n  CLASS BLOCK ;\n  SIZE 43.2 BY 216 ;\n",
+   "MX_legality_admitted": false,
+   "verdict": "BLOCKED absent explicit immutable master MX symmetry proof"
+  }
+ ]
+}

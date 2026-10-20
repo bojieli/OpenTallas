@@ -16,7 +16,11 @@ The supplied hook groups100FF/station and fails mismatched counts; it is NOT
 bound to a gate kit yet. The existing io_flop_at_pins hook anchors first capture.
 
 Actual immutable closed-master geometry, including orientation and required
-MX Y phase, is native_master_phase.json. Every base anchor is43.2*k. The ONLY
+MX Y phase, is native_master_phase.json. Every base anchor is43.2*k. MX legality is BLOCKED: none of these immutable LEFs declares SYMMETRY.
+orientation_legality.json includes exact SHA and headers. Track transforms
+do not prove that MX is allowed. The conditional phase exception is NOT
+admitted until legal orientation evidence or premirrored native views close.
+The ONLY
 physical offsets are +0.024um Y on MX XS/row/beat masters whose immutable LEFs
 have off-track pins at the base and zero off-track after offset. TCL/TCT/BDC
 remain unshifted. All master SHA256 and old/new native track counts are included;
@@ -46,7 +50,8 @@ no new arithmetic long cone. Keep hook preserves eight source select copies.
 5 Storage PASS MODEL:254FF G1 compute,400b physical distributed GN relays;
 no new indexed runtime arrays. All state/capacity counted above. Placement
 must enforce the spatial hook rather than temporal padding.
-6 Geometry PARTIAL: current closed-master stand-in phase is explicit/proven,
+6 Geometry BLOCKED: absent immutable SYMMETRY prevents legalMX admission;
+current closed-master stand-in transformed pin phase is explicit/proven,
 macro channels and relay boxes shown. Full release XS child/frame geometry,
 pin-face reach and PG/cell access still owed; this packet grants NO gateGO.
 7 Clock PARTIAL: original single root/regional clock contract unchanged,
