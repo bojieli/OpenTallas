@@ -21,6 +21,6 @@ if [ "$MODE" = sync ]; then
 fi
 NAME=$1; LAYERS=$2; shift 2; ENVS="$*"
 VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
-J="cd $SRC && export $VL HDC_V41_ARITH=chunk8 $ENVS && flock $L/work/build.lock python3 -c 'import sys;sys.argv=[\"x\"];sys.path.insert(0,\"tools/hbm_layer_vehicle\");import toksim_smhbm as T;from pathlib import Path;T.build(Path(\"$L/work\"),None,[])' > $L/out/build_$NAME.log 2>&1; python3 tools/hbm_layer_vehicle/toksim_smhbm.py run --fix $SRC/results/rtl/hbm_ds_layer_tput_1018/fixtures --smw $L/smw --work $L/work --layers $LAYERS --name $NAME --out $L/out/$NAME.json > $L/out/$NAME.log 2>&1; echo ${NAME}_RC \$?; tail -n 2 $L/out/$NAME.log"
+J="cd $SRC && export $VL HDC_V41_ARITH=chunk8 $ENVS && flock $L/work/build.lock python3 -c 'import sys;sys.argv=[\"x\"];sys.path.insert(0,\"tools/hbm_layer_vehicle\");import toksim_smhbm as T;from pathlib import Path;T.build(Path(\"$L/work\"),None,[])' > $L/out/build_$NAME.log 2>&1; python3 tools/hbm_layer_vehicle/toksim_smhbm.py run --fix $SRC/results/rtl/hbm_ds_layer_tput_1018/fixtures --smw $L/smw --work $L/work --layers $LAYERS --name $NAME --out $L/out/$NAME.json ${EXTRA:-} > $L/out/$NAME.log 2>&1; echo ${NAME}_RC \$?; tail -n 2 $L/out/$NAME.log"
 /home/ubuntu/bin/ot-run --mem ${MEM:-48} --threads 16 --dir "$L" -- bash -c "$J"
 echo "TOKSIM_SMHBM_DONE $NAME"

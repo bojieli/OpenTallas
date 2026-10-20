@@ -133,10 +133,13 @@ module tb_toksim_smhbm;
   cr_q<=svg.feed.cache_ready;br_q<=svg.feed.block_ready;
   if(sm_sfault)begin $display("FAULT sm_schedule cycle %0d",cyc);$fatal(1,"sm schedule_fault");end
   if(sm_fault)begin $display("FAULT sm_arith cycle %0d",cyc);$fatal(1,"sm fault");end
-  if(svg_fault)begin $display("FAULT svg cycle %0d issuer %0d feed %0d (desc %0d cdc %0d cache %0d prog %0d s1 %0d fl %0d)",cyc,svg.issuer.fault,svg.feed.fault,
-   svg.feed.descriptor_fault,svg.feed.cdc_fault,svg.feed.cache_fault,svg.feed.programme_fault,svg.feed.feed_fault,svg.feed.inj_f);
+  if(svg_fault)begin $display("FAULT svg cycle %0d issuer %0d feed %0d (desc %0d cdc %0d cache %0d prog %0d s1 %0d fl %0d i8 %0d)",cyc,svg.issuer.fault,svg.feed.fault,
+   svg.feed.descriptor_fault,svg.feed.cdc_fault,svg.feed.cache_fault,svg.feed.programme_fault,svg.feed.feed_fault,svg.feed.inj_f,svg.feed.i8_f);
    $display("ISSUER rc %0d sq_n %0d gq_n %0d gh_at %0d go_busy %0d cache_ready %b block_ready %b a_v %0d p_v %0d st_v %0d s_blk %0d rd_q %0d",svg.issuer.rc,svg.issuer.sq_n,svg.issuer.gq_n,svg.issuer.gh_at,svg.issuer.go_busy,svg.issuer.cache_ready,svg.issuer.block_ready,svg.issuer.a_v,svg.issuer.p_v,svg.issuer.st_v,svg.issuer.s_blk,svg.issuer.rd_q);$fatal(1,"svg fault");end
   if(xc_fault)begin $display("FAULT xc cycle %0d",cyc);$fatal(1,"xc fault");end
+  // HBM-QINT8: the svg S1 copy's INT8 view must equal the packet the SM front sees (valid every edge, tag when valid)
+  if(svg.feed.s1_packet[1098]!=sm.f_packet[1098]||(sm.f_packet[1098]&&svg.feed.s1_packet[1097:1088]!=sm.f_packet[1097:1088]))begin
+   $display("FAULT i8view cycle %0d svg %0d/%0d sm %0d/%0d",cyc,svg.feed.s1_packet[1098],svg.feed.s1_packet[1097:1088],sm.f_packet[1098],sm.f_packet[1097:1088]);$fatal(1,"i8 view");end
   if(cp_fault)begin $display("FAULT cp_svg cycle %0d",cyc);$fatal(1,"cp fault");end
  end
  // event player: inputs change after the edge, sampled at the next one

@@ -124,6 +124,7 @@ for _k in ("OP_GAP", "X_GAP", "DRAIN", "BUSY"):
 QWEN = {  # census_shapes.json qwen SM.MATVEC: tag -> (K = n, m per die); rows per SM = ceil(m / 16)
     "qkv": (4096, 1536), "o": (1024, 4096), "gu": (4096, 6144), "down": (3072, 4096), "head": (4096, 37984)}
 I8_LAT = 2
+I8MUT = os.environ.get("TOKSIM_I8MUT", "")   # HBM-QINT8 compiler negative controls (see qwen_block_programme)
 QBLK = 2 * S.IL      # items per INT8 block: two group-slot waves = 128 issue slots = 64 packed 128-code lines (<= 64 rows)
 
 
@@ -157,7 +158,11 @@ def qwen_block_programme(Gn, items, r0):
                                   glast=int(g == Gn - 1), slot=rr & 7, xaddr=g * S.C8 + t, pkt=1, pkt_tag=j // 2)
             else:
                 c = S.MV.cmd_word(mode=0, pkt=1, pkt_tag=j // 2)
-        svg.append(S.svg_word(c & ((1 << 83) - 1), read, retire=(w == n - 1)))
+        # HBM-QINT8: the svg word carries the same packed-line mark at PREL bit [118] (ot_hbm_svc_sm_feed_programmed_rel_id
+        # S1 copy models the SM converter from it).  Mutants: TOKSIM_I8MUT=nomark (svg mark dropped, xc kept) / late (svg
+        # mark one word late).
+        sm = read is not None if I8MUT not in ("nomark", "late") else (I8MUT == "late" and w % 2 == 1 and (w - 1) // 2 < npk)
+        svg.append(S.svg_word(c & ((1 << 83) - 1), read, retire=(w == n - 1)) | (int(sm) << 118))
         xc.append((c >> 83) | (mark if read is not None else 0))
     return svg, xc, order, npk
 
