@@ -1,0 +1,91 @@
+{
+  "schema": "opentallas.topk5.partition_model.v1",
+  "stage": "sizing before candidate RTL; no physical qualification",
+  "quarter": {
+    "source": "b6bba788c",
+    "lanes": 16,
+    "index_bits": 20,
+    "PW": 37,
+    "CB": 11,
+    "mapped_flop_bits": 42019,
+    "mapped_std_um2": 34711.9,
+    "existing_hard_macros": 16,
+    "macro_area_um2": 66326.7,
+    "outline_um": [
+      324,
+      540
+    ],
+    "existing_fifo_bits": {
+      "FQ": 4736,
+      "OFQ": 2372
+    },
+    "line_pool_macros": 6,
+    "FIFO_macros": 10,
+    "histograms": 2
+  },
+  "histogram_partition": {
+    "independent_arithmetic_banks_per_hist": 8,
+    "bins_per_bank": 32,
+    "counter_bits_per_bank": 352,
+    "fixed_updates_per_cycle": 32,
+    "runtime_indexed_counter_storage": false,
+    "input_bits_per_bank": {
+      "digits": 128,
+      "en": 16,
+      "valid": 1,
+      "clear": 1,
+      "group_select": 4,
+      "clock_reset": 2
+    },
+    "output_bits_per_bank": {
+      "registered_two_group_sums": 30,
+      "registered_selected_bins": 176,
+      "busy": 1
+    },
+    "port_rate_bytes_per_cycle": {
+      "digits_and_en": 18,
+      "group_sums": 3.75,
+      "selected_bins": 22
+    },
+    "cut_bits_per_cycle_per_bank": 359,
+    "source_copy_cost": {
+      "hist_input_broadcast": 8,
+      "gsel_register_copies_per_bank": 16,
+      "max_gsel_input_D_loads": 16,
+      "clear_and_v1_copies_per_bank": 16
+    },
+    "RTL_inventory_estimate_flops_per_bank": 1700,
+    "sizing_method": "native mapped-bank synthesis required before outline/kit; initial86.4square is a trial size only, no gate admitted",
+    "candidate_bank_outline_um": [
+      86.4,
+      86.4
+    ],
+    "cut_pin_density_per_um": 1.0387731481481481,
+    "parent_layout_options": "16 independently hardened banks total plus actual SRAM line/FIFO and packer/controller; one cluster level only. Model parent cut+relay before replica gate.",
+    "transport": "static registered multicast; separate landed regions required for links exceeding405um or unequal child insertion",
+    "latency_provisional": {
+      "bank_group_select_capture_extra_edges": 1,
+      "bank_busy_output_capture_extra_edges": 1,
+      "multicast_and_collect_edges": "not yet measured; must price after physical partition",
+      "gsum_bank_arithmetic_edges": "unchanged relative original HPIPE1 when same input capture"
+    },
+    "storage_rule_basis": "real32-bin parallel arithmetic state352bits per independently hardened bank, not cosmetic array split. Every counter updates constant-index each cycle; selected gbin is two-way fixed slices, no generic runtime address flop memory."
+  },
+  "native_blockers": {
+    "old_max_fanout": 1184,
+    "old_OVER32": 1778,
+    "old_seq_OVER32": 444,
+    "old_FAR405": 174,
+    "old_max_reach_um": 624.744,
+    "original_gate_preserved": true
+  },
+  "adoption_gates": [
+    "bank exact miter vs all256-bin golden including saturation/clear and group selection",
+    "mutant rejection",
+    "native mapped bank ALL_DRIVER<=32 inclreset",
+    "real bank hardening and outline from synth40-60pct",
+    "native effective reach<=405 and registered allpins",
+    "onelevel composed bank collect+multicast static schedule and production quarterbench",
+    "price all boundary edges before gate/adoption"
+  ]
+}
