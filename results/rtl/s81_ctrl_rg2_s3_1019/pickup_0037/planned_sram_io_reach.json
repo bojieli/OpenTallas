@@ -1,0 +1,328 @@
+{
+ "scope": "planned native SRAM data-pin to corresponding IO-flop anchor at explicit tile pin; no physical placement claim; includes no extra inward-column margin",
+ "count": 2468,
+ "max_manhattan_um": 457.125,
+ "over405": 42,
+ "worst32": [
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 3,
+   "port": "rd[556]",
+   "macro_pin": "rd_out[3]",
+   "manhattan_um": 457.125,
+   "euclidean_um": 330.741
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 2,
+   "port": "rd[555]",
+   "macro_pin": "rd_out[2]",
+   "manhattan_um": 456.9,
+   "euclidean_um": 330.677
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 1,
+   "port": "rd[554]",
+   "macro_pin": "rd_out[1]",
+   "manhattan_um": 456.645,
+   "euclidean_um": 330.597
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 0,
+   "port": "rd[553]",
+   "macro_pin": "rd_out[0]",
+   "manhattan_um": 456.42,
+   "euclidean_um": 330.535
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 3,
+   "port": "rd[276]",
+   "macro_pin": "rd_out[3]",
+   "manhattan_um": 455.028,
+   "euclidean_um": 329.611
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 2,
+   "port": "rd[275]",
+   "macro_pin": "rd_out[2]",
+   "manhattan_um": 454.761,
+   "euclidean_um": 329.527
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 1,
+   "port": "rd[274]",
+   "macro_pin": "rd_out[1]",
+   "manhattan_um": 454.548,
+   "euclidean_um": 329.472
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 0,
+   "port": "rd[273]",
+   "macro_pin": "rd_out[0]",
+   "manhattan_um": 454.317,
+   "euclidean_um": 329.409
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 20,
+   "port": "rd[552]",
+   "macro_pin": "rd_out[20]",
+   "manhattan_um": 452.169,
+   "euclidean_um": 327.081
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 19,
+   "port": "rd[551]",
+   "macro_pin": "rd_out[19]",
+   "manhattan_um": 451.956,
+   "euclidean_um": 327.023
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 18,
+   "port": "rd[550]",
+   "macro_pin": "rd_out[18]",
+   "manhattan_um": 451.725,
+   "euclidean_um": 326.956
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 17,
+   "port": "rd[549]",
+   "macro_pin": "rd_out[17]",
+   "manhattan_um": 451.476,
+   "euclidean_um": 326.88
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 16,
+   "port": "rd[548]",
+   "macro_pin": "rd_out[16]",
+   "manhattan_um": 451.245,
+   "euclidean_um": 326.814
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 15,
+   "port": "rd[547]",
+   "macro_pin": "rd_out[15]",
+   "manhattan_um": 451.044,
+   "euclidean_um": 326.765
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 14,
+   "port": "rd[546]",
+   "macro_pin": "rd_out[14]",
+   "manhattan_um": 450.801,
+   "euclidean_um": 326.694
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 13,
+   "port": "rd[545]",
+   "macro_pin": "rd_out[13]",
+   "manhattan_um": 450.564,
+   "euclidean_um": 326.627
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 12,
+   "port": "rd[544]",
+   "macro_pin": "rd_out[12]",
+   "manhattan_um": 450.357,
+   "euclidean_um": 326.577
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 11,
+   "port": "rd[543]",
+   "macro_pin": "rd_out[11]",
+   "manhattan_um": 450.132,
+   "euclidean_um": 326.517
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 20,
+   "port": "rd[272]",
+   "macro_pin": "rd_out[20]",
+   "manhattan_um": 450.084,
+   "euclidean_um": 325.955
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 10,
+   "port": "rd[542]",
+   "macro_pin": "rd_out[10]",
+   "manhattan_um": 449.913,
+   "euclidean_um": 326.462
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 19,
+   "port": "rd[271]",
+   "macro_pin": "rd_out[19]",
+   "manhattan_um": 449.841,
+   "euclidean_um": 325.883
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 9,
+   "port": "rd[541]",
+   "macro_pin": "rd_out[9]",
+   "manhattan_um": 449.652,
+   "euclidean_um": 326.385
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 18,
+   "port": "rd[270]",
+   "macro_pin": "rd_out[18]",
+   "manhattan_um": 449.604,
+   "euclidean_um": 325.816
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 8,
+   "port": "rd[540]",
+   "macro_pin": "rd_out[8]",
+   "manhattan_um": 449.433,
+   "euclidean_um": 326.33
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 17,
+   "port": "rd[269]",
+   "macro_pin": "rd_out[17]",
+   "manhattan_um": 449.397,
+   "euclidean_um": 325.765
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 7,
+   "port": "rd[539]",
+   "macro_pin": "rd_out[7]",
+   "manhattan_um": 449.22,
+   "euclidean_um": 326.28
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 16,
+   "port": "rd[268]",
+   "macro_pin": "rd_out[16]",
+   "manhattan_um": 449.172,
+   "euclidean_um": 325.704
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 6,
+   "port": "rd[538]",
+   "macro_pin": "rd_out[6]",
+   "manhattan_um": 448.989,
+   "euclidean_um": 326.221
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 15,
+   "port": "rd[267]",
+   "macro_pin": "rd_out[15]",
+   "manhattan_um": 448.917,
+   "euclidean_um": 325.629
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 5,
+   "port": "rd[537]",
+   "macro_pin": "rd_out[5]",
+   "manhattan_um": 448.74,
+   "euclidean_um": 326.152
+  },
+  {
+   "pc": 0,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 14,
+   "port": "rd[266]",
+   "macro_pin": "rd_out[14]",
+   "manhattan_um": 448.692,
+   "euclidean_um": 325.57
+  },
+  {
+   "pc": 1,
+   "fifo": "r",
+   "leg": "read",
+   "bit": 4,
+   "port": "rd[536]",
+   "macro_pin": "rd_out[4]",
+   "manhattan_um": 448.545,
+   "euclidean_um": 326.113
+  }
+ ]
+}

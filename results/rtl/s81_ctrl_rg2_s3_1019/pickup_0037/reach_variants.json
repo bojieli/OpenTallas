@@ -1,0 +1,2600 @@
+{
+ "scope": "pre-gate per-bit macro LEF data-pin to corresponding IO-flop anchor; Manhattan planning, no routed reach claim; add inward anchor margin separately",
+ "legs": 2468,
+ "pinplan_sha256": "591f47f8569a3e8305f54ca92216515ddc3ee20ee02f636442afb9a7f9cc5ad2",
+ "lef_sha256": "58b16ad50d4ccec3c44f45d2ec7ae9eed3e8426cc7357c4c2d2d20aa89a9f64a",
+ "variants": [
+  {
+   "swap_rows": false,
+   "q_orient": "R0",
+   "r_orient": "R180",
+   "max_manhattan_um": 302.739,
+   "over405": 0,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 276,
+     "port": "kr_data[511]",
+     "macro_pin": "wd_in[276]",
+     "manhattan_um": 302.739
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 275,
+     "port": "kr_data[510]",
+     "macro_pin": "wd_in[275]",
+     "manhattan_um": 302.49
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 274,
+     "port": "kr_data[509]",
+     "macro_pin": "wd_in[274]",
+     "manhattan_um": 302.295
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 273,
+     "port": "kr_data[508]",
+     "macro_pin": "wd_in[273]",
+     "manhattan_um": 302.058
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 272,
+     "port": "kr_data[507]",
+     "macro_pin": "wd_in[272]",
+     "manhattan_um": 301.815
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 271,
+     "port": "kr_data[506]",
+     "macro_pin": "wd_in[271]",
+     "manhattan_um": 301.578
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 270,
+     "port": "kr_data[505]",
+     "macro_pin": "wd_in[270]",
+     "manhattan_um": 301.371
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 269,
+     "port": "kr_data[504]",
+     "macro_pin": "wd_in[269]",
+     "manhattan_um": 301.146
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "MX",
+   "r_orient": "MX",
+   "max_manhattan_um": 329.91,
+   "over405": 0,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[1]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 329.91
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[2]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 329.685
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 2,
+     "port": "rq[3]",
+     "macro_pin": "wd_in[2]",
+     "manhattan_um": 329.478
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 3,
+     "port": "rq[4]",
+     "macro_pin": "wd_in[3]",
+     "manhattan_um": 329.241
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 4,
+     "port": "rq[5]",
+     "macro_pin": "wd_in[4]",
+     "manhattan_um": 328.998
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 5,
+     "port": "rq[6]",
+     "macro_pin": "wd_in[5]",
+     "manhattan_um": 328.797
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 6,
+     "port": "rq[7]",
+     "macro_pin": "wd_in[6]",
+     "manhattan_um": 328.566
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 7,
+     "port": "rq[8]",
+     "macro_pin": "wd_in[7]",
+     "manhattan_um": 328.317
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "R0",
+   "r_orient": "MY",
+   "max_manhattan_um": 342.669,
+   "over405": 0,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 3,
+     "port": "rd[556]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 342.669
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 2,
+     "port": "rd[555]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 342.444
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 1,
+     "port": "rd[554]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 342.189
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 0,
+     "port": "rd[553]",
+     "macro_pin": "rd_out[0]",
+     "manhattan_um": 341.964
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 3,
+     "port": "rd[276]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 340.572
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 2,
+     "port": "rd[275]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 340.305
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 1,
+     "port": "rd[274]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 340.092
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 0,
+     "port": "rd[273]",
+     "macro_pin": "rd_out[0]",
+     "manhattan_um": 339.861
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "MX",
+   "r_orient": "MY",
+   "max_manhattan_um": 352.233,
+   "over405": 0,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[0]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 352.233
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[1]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 351.642
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 3,
+     "port": "k_addr[2]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 351.021
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 4,
+     "port": "k_addr[3]",
+     "macro_pin": "rd_out[4]",
+     "manhattan_um": 350.394
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[30]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 349.914
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 5,
+     "port": "k_addr[4]",
+     "macro_pin": "rd_out[5]",
+     "manhattan_um": 349.773
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[31]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 349.305
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 6,
+     "port": "k_addr[5]",
+     "macro_pin": "rd_out[6]",
+     "manhattan_um": 349.194
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "MX",
+   "r_orient": "R180",
+   "max_manhattan_um": 352.233,
+   "over405": 0,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[0]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 352.233
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[1]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 351.642
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 3,
+     "port": "k_addr[2]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 351.021
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 4,
+     "port": "k_addr[3]",
+     "macro_pin": "rd_out[4]",
+     "manhattan_um": 350.394
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[30]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 349.914
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 5,
+     "port": "k_addr[4]",
+     "macro_pin": "rd_out[5]",
+     "manhattan_um": 349.773
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[31]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 349.305
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 6,
+     "port": "k_addr[5]",
+     "macro_pin": "rd_out[6]",
+     "manhattan_um": 349.194
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "MY",
+   "r_orient": "MY",
+   "max_manhattan_um": 370.611,
+   "over405": 0,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[0]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 370.611
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[1]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 370.404
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 3,
+     "port": "k_addr[2]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 370.167
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 4,
+     "port": "k_addr[3]",
+     "macro_pin": "rd_out[4]",
+     "manhattan_um": 369.924
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 5,
+     "port": "k_addr[4]",
+     "macro_pin": "rd_out[5]",
+     "manhattan_um": 369.687
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 6,
+     "port": "k_addr[5]",
+     "macro_pin": "rd_out[6]",
+     "manhattan_um": 369.492
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 7,
+     "port": "k_addr[6]",
+     "macro_pin": "rd_out[7]",
+     "manhattan_um": 369.243
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 8,
+     "port": "k_addr[7]",
+     "macro_pin": "rd_out[8]",
+     "manhattan_um": 369.012
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "MY",
+   "r_orient": "R180",
+   "max_manhattan_um": 370.611,
+   "over405": 0,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[0]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 370.611
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[1]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 370.404
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 3,
+     "port": "k_addr[2]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 370.167
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 4,
+     "port": "k_addr[3]",
+     "macro_pin": "rd_out[4]",
+     "manhattan_um": 369.924
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 5,
+     "port": "k_addr[4]",
+     "macro_pin": "rd_out[5]",
+     "manhattan_um": 369.687
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 6,
+     "port": "k_addr[5]",
+     "macro_pin": "rd_out[6]",
+     "manhattan_um": 369.492
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 7,
+     "port": "k_addr[6]",
+     "macro_pin": "rd_out[7]",
+     "manhattan_um": 369.243
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 8,
+     "port": "k_addr[7]",
+     "macro_pin": "rd_out[8]",
+     "manhattan_um": 369.012
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "MX",
+   "r_orient": "MY",
+   "max_manhattan_um": 376.197,
+   "over405": 0,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 276,
+     "port": "kr_data[511]",
+     "macro_pin": "wd_in[276]",
+     "manhattan_um": 376.197
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 275,
+     "port": "kr_data[510]",
+     "macro_pin": "wd_in[275]",
+     "manhattan_um": 375.564
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 274,
+     "port": "kr_data[509]",
+     "macro_pin": "wd_in[274]",
+     "manhattan_um": 374.985
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 273,
+     "port": "kr_data[508]",
+     "macro_pin": "wd_in[273]",
+     "manhattan_um": 374.364
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 276,
+     "port": "kr_data[255]",
+     "macro_pin": "wd_in[276]",
+     "manhattan_um": 373.884
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 272,
+     "port": "kr_data[507]",
+     "macro_pin": "wd_in[272]",
+     "manhattan_um": 373.737
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 275,
+     "port": "kr_data[254]",
+     "macro_pin": "wd_in[275]",
+     "manhattan_um": 373.269
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 271,
+     "port": "kr_data[506]",
+     "macro_pin": "wd_in[271]",
+     "manhattan_um": 373.116
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "R0",
+   "r_orient": "MX",
+   "max_manhattan_um": 405.414,
+   "over405": 1,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 276,
+     "port": "rd[535]",
+     "macro_pin": "rd_out[276]",
+     "manhattan_um": 405.414
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 275,
+     "port": "rd[534]",
+     "macro_pin": "rd_out[275]",
+     "manhattan_um": 404.787
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 274,
+     "port": "rd[533]",
+     "macro_pin": "rd_out[274]",
+     "manhattan_um": 404.166
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 273,
+     "port": "rd[532]",
+     "macro_pin": "rd_out[273]",
+     "manhattan_um": 403.575
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 276,
+     "port": "rd[255]",
+     "macro_pin": "rd_out[276]",
+     "manhattan_um": 403.287
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 272,
+     "port": "rd[531]",
+     "macro_pin": "rd_out[272]",
+     "manhattan_um": 402.966
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 275,
+     "port": "rd[254]",
+     "macro_pin": "rd_out[275]",
+     "manhattan_um": 402.678
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 271,
+     "port": "rd[530]",
+     "macro_pin": "rd_out[271]",
+     "manhattan_um": 402.363
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "MX",
+   "r_orient": "MX",
+   "max_manhattan_um": 405.414,
+   "over405": 1,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 276,
+     "port": "rd[535]",
+     "macro_pin": "rd_out[276]",
+     "manhattan_um": 405.414
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 275,
+     "port": "rd[534]",
+     "macro_pin": "rd_out[275]",
+     "manhattan_um": 404.787
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 274,
+     "port": "rd[533]",
+     "macro_pin": "rd_out[274]",
+     "manhattan_um": 404.166
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 273,
+     "port": "rd[532]",
+     "macro_pin": "rd_out[273]",
+     "manhattan_um": 403.575
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 276,
+     "port": "rd[255]",
+     "macro_pin": "rd_out[276]",
+     "manhattan_um": 403.287
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 272,
+     "port": "rd[531]",
+     "macro_pin": "rd_out[272]",
+     "manhattan_um": 402.966
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 275,
+     "port": "rd[254]",
+     "macro_pin": "rd_out[275]",
+     "manhattan_um": 402.678
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 271,
+     "port": "rd[530]",
+     "macro_pin": "rd_out[271]",
+     "manhattan_um": 402.363
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "MY",
+   "r_orient": "MX",
+   "max_manhattan_um": 405.414,
+   "over405": 1,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 276,
+     "port": "rd[535]",
+     "macro_pin": "rd_out[276]",
+     "manhattan_um": 405.414
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 275,
+     "port": "rd[534]",
+     "macro_pin": "rd_out[275]",
+     "manhattan_um": 404.787
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 274,
+     "port": "rd[533]",
+     "macro_pin": "rd_out[274]",
+     "manhattan_um": 404.166
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 273,
+     "port": "rd[532]",
+     "macro_pin": "rd_out[273]",
+     "manhattan_um": 403.575
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 276,
+     "port": "rd[255]",
+     "macro_pin": "rd_out[276]",
+     "manhattan_um": 403.287
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 272,
+     "port": "rd[531]",
+     "macro_pin": "rd_out[272]",
+     "manhattan_um": 402.966
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 275,
+     "port": "rd[254]",
+     "macro_pin": "rd_out[275]",
+     "manhattan_um": 402.678
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 271,
+     "port": "rd[530]",
+     "macro_pin": "rd_out[271]",
+     "manhattan_um": 402.363
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "MX",
+   "r_orient": "R0",
+   "max_manhattan_um": 406.14,
+   "over405": 2,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 163,
+     "port": "kr_data[398]",
+     "macro_pin": "wd_in[163]",
+     "manhattan_um": 406.14
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 162,
+     "port": "kr_data[397]",
+     "macro_pin": "wd_in[162]",
+     "manhattan_um": 405.537
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 161,
+     "port": "kr_data[396]",
+     "macro_pin": "wd_in[161]",
+     "manhattan_um": 404.892
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 160,
+     "port": "kr_data[395]",
+     "macro_pin": "wd_in[160]",
+     "manhattan_um": 404.289
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 163,
+     "port": "kr_data[142]",
+     "macro_pin": "wd_in[163]",
+     "manhattan_um": 403.821
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 159,
+     "port": "kr_data[394]",
+     "macro_pin": "wd_in[159]",
+     "manhattan_um": 403.692
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 162,
+     "port": "kr_data[141]",
+     "macro_pin": "wd_in[162]",
+     "manhattan_um": 403.212
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 158,
+     "port": "kr_data[393]",
+     "macro_pin": "wd_in[158]",
+     "manhattan_um": 403.077
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "R0",
+   "r_orient": "R0",
+   "max_manhattan_um": 407.148,
+   "over405": 7,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 164,
+     "port": "rq[165]",
+     "macro_pin": "wd_in[164]",
+     "manhattan_um": 407.148
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 165,
+     "port": "rq[166]",
+     "macro_pin": "wd_in[165]",
+     "manhattan_um": 406.527
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 163,
+     "port": "kr_data[398]",
+     "macro_pin": "wd_in[163]",
+     "manhattan_um": 406.14
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 166,
+     "port": "rq[167]",
+     "macro_pin": "wd_in[166]",
+     "manhattan_um": 405.948
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 162,
+     "port": "kr_data[397]",
+     "macro_pin": "wd_in[162]",
+     "manhattan_um": 405.537
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 167,
+     "port": "rq[168]",
+     "macro_pin": "wd_in[167]",
+     "manhattan_um": 405.315
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 164,
+     "port": "rq[506]",
+     "macro_pin": "wd_in[164]",
+     "manhattan_um": 405.063
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 161,
+     "port": "kr_data[396]",
+     "macro_pin": "wd_in[161]",
+     "manhattan_um": 404.892
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "R0",
+   "r_orient": "MX",
+   "max_manhattan_um": 407.148,
+   "over405": 5,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 164,
+     "port": "rq[165]",
+     "macro_pin": "wd_in[164]",
+     "manhattan_um": 407.148
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 165,
+     "port": "rq[166]",
+     "macro_pin": "wd_in[165]",
+     "manhattan_um": 406.527
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 166,
+     "port": "rq[167]",
+     "macro_pin": "wd_in[166]",
+     "manhattan_um": 405.948
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 167,
+     "port": "rq[168]",
+     "macro_pin": "wd_in[167]",
+     "manhattan_um": 405.315
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 164,
+     "port": "rq[506]",
+     "macro_pin": "wd_in[164]",
+     "manhattan_um": 405.063
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 168,
+     "port": "rq[169]",
+     "macro_pin": "wd_in[168]",
+     "manhattan_um": 404.7
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 165,
+     "port": "rq[507]",
+     "macro_pin": "wd_in[165]",
+     "manhattan_um": 404.412
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 169,
+     "port": "rq[170]",
+     "macro_pin": "wd_in[169]",
+     "manhattan_um": 404.103
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "R0",
+   "r_orient": "MY",
+   "max_manhattan_um": 407.148,
+   "over405": 5,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 164,
+     "port": "rq[165]",
+     "macro_pin": "wd_in[164]",
+     "manhattan_um": 407.148
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 165,
+     "port": "rq[166]",
+     "macro_pin": "wd_in[165]",
+     "manhattan_um": 406.527
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 166,
+     "port": "rq[167]",
+     "macro_pin": "wd_in[166]",
+     "manhattan_um": 405.948
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 167,
+     "port": "rq[168]",
+     "macro_pin": "wd_in[167]",
+     "manhattan_um": 405.315
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 164,
+     "port": "rq[506]",
+     "macro_pin": "wd_in[164]",
+     "manhattan_um": 405.063
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 168,
+     "port": "rq[169]",
+     "macro_pin": "wd_in[168]",
+     "manhattan_um": 404.7
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 165,
+     "port": "rq[507]",
+     "macro_pin": "wd_in[165]",
+     "manhattan_um": 404.412
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 169,
+     "port": "rq[170]",
+     "macro_pin": "wd_in[169]",
+     "manhattan_um": 404.103
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "MY",
+   "r_orient": "R0",
+   "max_manhattan_um": 408.348,
+   "over405": 11,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[1]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 408.348
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[2]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 407.739
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 2,
+     "port": "rq[3]",
+     "macro_pin": "wd_in[2]",
+     "manhattan_um": 407.148
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 3,
+     "port": "rq[4]",
+     "macro_pin": "wd_in[3]",
+     "manhattan_um": 406.527
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[342]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 406.239
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 163,
+     "port": "kr_data[398]",
+     "macro_pin": "wd_in[163]",
+     "manhattan_um": 406.14
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 4,
+     "port": "rq[5]",
+     "macro_pin": "wd_in[4]",
+     "manhattan_um": 405.9
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[343]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 405.66
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "MY",
+   "r_orient": "MX",
+   "max_manhattan_um": 408.348,
+   "over405": 9,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[1]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 408.348
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[2]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 407.739
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 2,
+     "port": "rq[3]",
+     "macro_pin": "wd_in[2]",
+     "manhattan_um": 407.148
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 3,
+     "port": "rq[4]",
+     "macro_pin": "wd_in[3]",
+     "manhattan_um": 406.527
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[342]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 406.239
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 4,
+     "port": "rq[5]",
+     "macro_pin": "wd_in[4]",
+     "manhattan_um": 405.9
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[343]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 405.66
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 5,
+     "port": "rq[6]",
+     "macro_pin": "wd_in[5]",
+     "manhattan_um": 405.315
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "MY",
+   "r_orient": "MY",
+   "max_manhattan_um": 408.348,
+   "over405": 9,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[1]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 408.348
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[2]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 407.739
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 2,
+     "port": "rq[3]",
+     "macro_pin": "wd_in[2]",
+     "manhattan_um": 407.148
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 3,
+     "port": "rq[4]",
+     "macro_pin": "wd_in[3]",
+     "manhattan_um": 406.527
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[342]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 406.239
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 4,
+     "port": "rq[5]",
+     "macro_pin": "wd_in[4]",
+     "manhattan_um": 405.9
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[343]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 405.66
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 5,
+     "port": "rq[6]",
+     "macro_pin": "wd_in[5]",
+     "manhattan_um": 405.315
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "R0",
+   "r_orient": "R180",
+   "max_manhattan_um": 432.339,
+   "over405": 228,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 276,
+     "port": "kr_data[511]",
+     "macro_pin": "wd_in[276]",
+     "manhattan_um": 432.339
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 275,
+     "port": "kr_data[510]",
+     "macro_pin": "wd_in[275]",
+     "manhattan_um": 432.09
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 274,
+     "port": "kr_data[509]",
+     "macro_pin": "wd_in[274]",
+     "manhattan_um": 431.895
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 273,
+     "port": "kr_data[508]",
+     "macro_pin": "wd_in[273]",
+     "manhattan_um": 431.658
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 272,
+     "port": "kr_data[507]",
+     "macro_pin": "wd_in[272]",
+     "manhattan_um": 431.415
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 271,
+     "port": "kr_data[506]",
+     "macro_pin": "wd_in[271]",
+     "manhattan_um": 431.178
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 270,
+     "port": "kr_data[505]",
+     "macro_pin": "wd_in[270]",
+     "manhattan_um": 430.971
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 269,
+     "port": "kr_data[504]",
+     "macro_pin": "wd_in[269]",
+     "manhattan_um": 430.746
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "MX",
+   "r_orient": "R180",
+   "max_manhattan_um": 432.339,
+   "over405": 223,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 276,
+     "port": "kr_data[511]",
+     "macro_pin": "wd_in[276]",
+     "manhattan_um": 432.339
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 275,
+     "port": "kr_data[510]",
+     "macro_pin": "wd_in[275]",
+     "manhattan_um": 432.09
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 274,
+     "port": "kr_data[509]",
+     "macro_pin": "wd_in[274]",
+     "manhattan_um": 431.895
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 273,
+     "port": "kr_data[508]",
+     "macro_pin": "wd_in[273]",
+     "manhattan_um": 431.658
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 272,
+     "port": "kr_data[507]",
+     "macro_pin": "wd_in[272]",
+     "manhattan_um": 431.415
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 271,
+     "port": "kr_data[506]",
+     "macro_pin": "wd_in[271]",
+     "manhattan_um": 431.178
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 270,
+     "port": "kr_data[505]",
+     "macro_pin": "wd_in[270]",
+     "manhattan_um": 430.971
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 269,
+     "port": "kr_data[504]",
+     "macro_pin": "wd_in[269]",
+     "manhattan_um": 430.746
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "MY",
+   "r_orient": "R180",
+   "max_manhattan_um": 432.339,
+   "over405": 232,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 276,
+     "port": "kr_data[511]",
+     "macro_pin": "wd_in[276]",
+     "manhattan_um": 432.339
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 275,
+     "port": "kr_data[510]",
+     "macro_pin": "wd_in[275]",
+     "manhattan_um": 432.09
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 274,
+     "port": "kr_data[509]",
+     "macro_pin": "wd_in[274]",
+     "manhattan_um": 431.895
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 273,
+     "port": "kr_data[508]",
+     "macro_pin": "wd_in[273]",
+     "manhattan_um": 431.658
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 272,
+     "port": "kr_data[507]",
+     "macro_pin": "wd_in[272]",
+     "manhattan_um": 431.415
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 271,
+     "port": "kr_data[506]",
+     "macro_pin": "wd_in[271]",
+     "manhattan_um": 431.178
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 270,
+     "port": "kr_data[505]",
+     "macro_pin": "wd_in[270]",
+     "manhattan_um": 430.971
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "write",
+     "bit": 269,
+     "port": "kr_data[504]",
+     "macro_pin": "wd_in[269]",
+     "manhattan_um": 430.746
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "R180",
+   "r_orient": "R0",
+   "max_manhattan_um": 444.366,
+   "over405": 330,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[1]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 444.366
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[2]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 444.141
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 2,
+     "port": "rq[3]",
+     "macro_pin": "wd_in[2]",
+     "manhattan_um": 443.934
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 3,
+     "port": "rq[4]",
+     "macro_pin": "wd_in[3]",
+     "manhattan_um": 443.697
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 4,
+     "port": "rq[5]",
+     "macro_pin": "wd_in[4]",
+     "manhattan_um": 443.454
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 5,
+     "port": "rq[6]",
+     "macro_pin": "wd_in[5]",
+     "manhattan_um": 443.253
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 6,
+     "port": "rq[7]",
+     "macro_pin": "wd_in[6]",
+     "manhattan_um": 443.022
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 7,
+     "port": "rq[8]",
+     "macro_pin": "wd_in[7]",
+     "manhattan_um": 442.773
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "R180",
+   "r_orient": "MX",
+   "max_manhattan_um": 444.366,
+   "over405": 328,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[1]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 444.366
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[2]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 444.141
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 2,
+     "port": "rq[3]",
+     "macro_pin": "wd_in[2]",
+     "manhattan_um": 443.934
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 3,
+     "port": "rq[4]",
+     "macro_pin": "wd_in[3]",
+     "manhattan_um": 443.697
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 4,
+     "port": "rq[5]",
+     "macro_pin": "wd_in[4]",
+     "manhattan_um": 443.454
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 5,
+     "port": "rq[6]",
+     "macro_pin": "wd_in[5]",
+     "manhattan_um": 443.253
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 6,
+     "port": "rq[7]",
+     "macro_pin": "wd_in[6]",
+     "manhattan_um": 443.022
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 7,
+     "port": "rq[8]",
+     "macro_pin": "wd_in[7]",
+     "manhattan_um": 442.773
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "R180",
+   "r_orient": "MY",
+   "max_manhattan_um": 444.366,
+   "over405": 328,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[1]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 444.366
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[2]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 444.141
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 2,
+     "port": "rq[3]",
+     "macro_pin": "wd_in[2]",
+     "manhattan_um": 443.934
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 3,
+     "port": "rq[4]",
+     "macro_pin": "wd_in[3]",
+     "manhattan_um": 443.697
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 4,
+     "port": "rq[5]",
+     "macro_pin": "wd_in[4]",
+     "manhattan_um": 443.454
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 5,
+     "port": "rq[6]",
+     "macro_pin": "wd_in[5]",
+     "manhattan_um": 443.253
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 6,
+     "port": "rq[7]",
+     "macro_pin": "wd_in[6]",
+     "manhattan_um": 443.022
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 7,
+     "port": "rq[8]",
+     "macro_pin": "wd_in[7]",
+     "manhattan_um": 442.773
+    }
+   ]
+  },
+  {
+   "swap_rows": true,
+   "q_orient": "R180",
+   "r_orient": "R180",
+   "max_manhattan_um": 444.366,
+   "over405": 551,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 0,
+     "port": "rq[1]",
+     "macro_pin": "wd_in[0]",
+     "manhattan_um": 444.366
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 1,
+     "port": "rq[2]",
+     "macro_pin": "wd_in[1]",
+     "manhattan_um": 444.141
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 2,
+     "port": "rq[3]",
+     "macro_pin": "wd_in[2]",
+     "manhattan_um": 443.934
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 3,
+     "port": "rq[4]",
+     "macro_pin": "wd_in[3]",
+     "manhattan_um": 443.697
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 4,
+     "port": "rq[5]",
+     "macro_pin": "wd_in[4]",
+     "manhattan_um": 443.454
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 5,
+     "port": "rq[6]",
+     "macro_pin": "wd_in[5]",
+     "manhattan_um": 443.253
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 6,
+     "port": "rq[7]",
+     "macro_pin": "wd_in[6]",
+     "manhattan_um": 443.022
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "write",
+     "bit": 7,
+     "port": "rq[8]",
+     "macro_pin": "wd_in[7]",
+     "manhattan_um": 442.773
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "R0",
+   "r_orient": "R0",
+   "max_manhattan_um": 457.125,
+   "over405": 42,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 3,
+     "port": "rd[556]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 457.125
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 2,
+     "port": "rd[555]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 456.9
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 1,
+     "port": "rd[554]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 456.645
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 0,
+     "port": "rd[553]",
+     "macro_pin": "rd_out[0]",
+     "manhattan_um": 456.42
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 3,
+     "port": "rd[276]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 455.028
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 2,
+     "port": "rd[275]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 454.761
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 1,
+     "port": "rd[274]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 454.548
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 0,
+     "port": "rd[273]",
+     "macro_pin": "rd_out[0]",
+     "manhattan_um": 454.317
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "MX",
+   "r_orient": "R0",
+   "max_manhattan_um": 457.125,
+   "over405": 42,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 3,
+     "port": "rd[556]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 457.125
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 2,
+     "port": "rd[555]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 456.9
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 1,
+     "port": "rd[554]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 456.645
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 0,
+     "port": "rd[553]",
+     "macro_pin": "rd_out[0]",
+     "manhattan_um": 456.42
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 3,
+     "port": "rd[276]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 455.028
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 2,
+     "port": "rd[275]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 454.761
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 1,
+     "port": "rd[274]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 454.548
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 0,
+     "port": "rd[273]",
+     "macro_pin": "rd_out[0]",
+     "manhattan_um": 454.317
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "MY",
+   "r_orient": "R0",
+   "max_manhattan_um": 457.125,
+   "over405": 42,
+   "worst8": [
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 3,
+     "port": "rd[556]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 457.125
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 2,
+     "port": "rd[555]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 456.9
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 1,
+     "port": "rd[554]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 456.645
+    },
+    {
+     "pc": 1,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 0,
+     "port": "rd[553]",
+     "macro_pin": "rd_out[0]",
+     "manhattan_um": 456.42
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 3,
+     "port": "rd[276]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 455.028
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 2,
+     "port": "rd[275]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 454.761
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 1,
+     "port": "rd[274]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 454.548
+    },
+    {
+     "pc": 0,
+     "fifo": "r",
+     "leg": "read",
+     "bit": 0,
+     "port": "rd[273]",
+     "macro_pin": "rd_out[0]",
+     "manhattan_um": 454.317
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "R180",
+   "r_orient": "R0",
+   "max_manhattan_um": 466.689,
+   "over405": 222,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[0]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 466.689
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[1]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 466.098
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 3,
+     "port": "k_addr[2]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 465.477
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 4,
+     "port": "k_addr[3]",
+     "macro_pin": "rd_out[4]",
+     "manhattan_um": 464.85
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[30]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 464.37
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 5,
+     "port": "k_addr[4]",
+     "macro_pin": "rd_out[5]",
+     "manhattan_um": 464.229
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[31]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 463.761
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 6,
+     "port": "k_addr[5]",
+     "macro_pin": "rd_out[6]",
+     "manhattan_um": 463.65
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "R180",
+   "r_orient": "MX",
+   "max_manhattan_um": 466.689,
+   "over405": 181,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[0]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 466.689
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[1]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 466.098
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 3,
+     "port": "k_addr[2]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 465.477
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 4,
+     "port": "k_addr[3]",
+     "macro_pin": "rd_out[4]",
+     "manhattan_um": 464.85
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[30]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 464.37
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 5,
+     "port": "k_addr[4]",
+     "macro_pin": "rd_out[5]",
+     "manhattan_um": 464.229
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[31]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 463.761
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 6,
+     "port": "k_addr[5]",
+     "macro_pin": "rd_out[6]",
+     "manhattan_um": 463.65
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "R180",
+   "r_orient": "MY",
+   "max_manhattan_um": 466.689,
+   "over405": 180,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[0]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 466.689
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[1]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 466.098
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 3,
+     "port": "k_addr[2]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 465.477
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 4,
+     "port": "k_addr[3]",
+     "macro_pin": "rd_out[4]",
+     "manhattan_um": 464.85
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[30]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 464.37
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 5,
+     "port": "k_addr[4]",
+     "macro_pin": "rd_out[5]",
+     "manhattan_um": 464.229
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[31]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 463.761
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 6,
+     "port": "k_addr[5]",
+     "macro_pin": "rd_out[6]",
+     "manhattan_um": 463.65
+    }
+   ]
+  },
+  {
+   "swap_rows": false,
+   "q_orient": "R180",
+   "r_orient": "R180",
+   "max_manhattan_um": 466.689,
+   "over405": 180,
+   "worst8": [
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[0]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 466.689
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[1]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 466.098
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 3,
+     "port": "k_addr[2]",
+     "macro_pin": "rd_out[3]",
+     "manhattan_um": 465.477
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 4,
+     "port": "k_addr[3]",
+     "macro_pin": "rd_out[4]",
+     "manhattan_um": 464.85
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 1,
+     "port": "k_addr[30]",
+     "macro_pin": "rd_out[1]",
+     "manhattan_um": 464.37
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 5,
+     "port": "k_addr[4]",
+     "macro_pin": "rd_out[5]",
+     "manhattan_um": 464.229
+    },
+    {
+     "pc": 1,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 2,
+     "port": "k_addr[31]",
+     "macro_pin": "rd_out[2]",
+     "manhattan_um": 463.761
+    },
+    {
+     "pc": 0,
+     "fifo": "q",
+     "leg": "read",
+     "bit": 6,
+     "port": "k_addr[5]",
+     "macro_pin": "rd_out[6]",
+     "manhattan_um": 463.65
+    }
+   ]
+  }
+ ]
+}

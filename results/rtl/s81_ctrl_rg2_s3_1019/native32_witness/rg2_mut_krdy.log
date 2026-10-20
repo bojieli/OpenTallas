@@ -1,0 +1,85 @@
+ERR (a) pc 1 request 35: PHY saw tag 00824 addr 00009400, issued tag 00823 addr 0000bccc
+ERR (a) pc 23 request 31: PHY saw tag 0b821 addr 000030d4, issued tag 0b81f addr 00002cb0
+ERR (a) pc 11 request 35: PHY saw tag 05824 addr 000032b4, issued tag 05823 addr 00005aec
+ERR (a) pc 20 request 33: PHY saw tag 0a022 addr 00000ea4, issued tag 0a021 addr 0000b64c
+ERR (a) pc 11 request 36: PHY saw tag 05825 addr 00008088, issued tag 05824 addr 000032b4
+ERR (a) pc 5 request 31: PHY saw tag 02822 addr 000066b8, issued tag 0281f addr 00004f7c
+ERR (a) pc 11 request 37: PHY saw tag 05826 addr 0000c116, issued tag 05825 addr 00008088
+ERR (a) pc 9 request 39: PHY saw tag 04828 addr 0000d851, issued tag 04827 addr 0000f384
+ERR (a) pc 20 request 34: PHY saw tag 0a024 addr 0000057b, issued tag 0a022 addr 00000ea4
+ERR (a) pc 1 request 36: PHY saw tag 00827 addr 00009508, issued tag 00824 addr 00009400
+ERR phase 0: no progress for 512 cks cycles (cycle 1121)
+ERR phase 0: timeout
+ERR (c) phase 0: response beats dut 2184 ref 2514 expected 2514
+ERR (d) pc 0 accepted 44 != 48
+ERR (d) pc 1 accepted 44 != 48
+ERR (d) pc 2 accepted 43 != 48
+ERR (d) pc 3 accepted 43 != 48
+ERR (d) pc 4 accepted 42 != 48
+ERR (d) pc 5 accepted 41 != 48
+ERR (d) pc 6 accepted 44 != 48
+ERR (d) pc 8 accepted 44 != 48
+ERR (d) pc 9 accepted 42 != 48
+ERR (d) pc 10 accepted 43 != 48
+ERR (d) pc 11 accepted 40 != 48
+ERR (d) pc 12 accepted 43 != 48
+ERR (d) pc 13 accepted 41 != 48
+ERR (d) pc 15 accepted 38 != 48
+ERR (d) pc 16 accepted 46 != 48
+ERR (d) pc 17 accepted 44 != 48
+ERR (d) pc 18 accepted 43 != 48
+ERR (d) pc 19 accepted 41 != 48
+ERR (d) pc 20 accepted 42 != 48
+ERR (d) pc 21 accepted 44 != 48
+ERR (d) pc 22 accepted 46 != 48
+ERR (d) pc 23 accepted 39 != 48
+ERR (d) pc 24 accepted 45 != 48
+ERR (d) pc 26 accepted 42 != 48
+ERR (d) pc 27 accepted 46 != 48
+ERR (d) pc 28 accepted 43 != 48
+ERR (d) pc 29 accepted 44 != 48
+ERR (d) pc 30 accepted 45 != 48
+ERR (d) phase 0: write-done dut 500 ref 526 writes 526
+phase 0: 1536 requests (526 writes, 2514 read beats) on 32 PCs; responses dut 2184 ref 2514
+ERR phase 1: no progress for 512 cks cycles (cycle 1154)
+ERR phase 1: timeout
+ERR (c) phase 1: response beats dut 2181 ref 2550 expected 2550
+ERR (d) pc 0 accepted 42 != 48
+ERR (d) pc 1 accepted 41 != 48
+ERR (d) pc 3 accepted 46 != 48
+ERR (d) pc 4 accepted 42 != 48
+ERR (d) pc 5 accepted 45 != 48
+ERR (d) pc 6 accepted 43 != 48
+ERR (d) pc 7 accepted 42 != 48
+ERR (d) pc 8 accepted 42 != 48
+ERR (d) pc 9 accepted 41 != 48
+ERR (d) pc 10 accepted 39 != 48
+ERR (d) pc 11 accepted 45 != 48
+ERR (d) pc 12 accepted 38 != 48
+ERR (d) pc 13 accepted 47 != 48
+ERR (d) pc 15 accepted 40 != 48
+ERR (d) pc 16 accepted 42 != 48
+ERR (d) pc 17 accepted 43 != 48
+ERR (d) pc 18 accepted 42 != 48
+ERR (d) pc 19 accepted 44 != 48
+ERR (d) pc 20 accepted 45 != 48
+ERR (d) pc 21 accepted 43 != 48
+ERR (d) pc 22 accepted 47 != 48
+ERR (d) pc 23 accepted 43 != 48
+ERR (d) pc 24 accepted 40 != 48
+ERR (d) pc 25 accepted 42 != 48
+ERR (d) pc 26 accepted 45 != 48
+ERR (d) pc 27 accepted 47 != 48
+ERR (d) pc 28 accepted 42 != 48
+ERR (d) pc 29 accepted 47 != 48
+ERR (d) pc 30 accepted 44 != 48
+ERR (d) pc 31 accepted 47 != 48
+ERR (d) phase 1: write-done dut 486 ref 505 writes 505
+phase 1: 1536 requests (505 writes, 2550 read beats) on 32 PCs; responses dut 2181 ref 2550
+latency min (the crossing alone): request rq issue -> PHY accept 6.95 cks cycles; response PHY accept -> rd 5.26 cks cycles
+latency: request rq issue -> PHY accept mean 14.91 max 46.91 cks cycles; response PHY -> rd mean 5.73 max 6.18 cks cycles (cks 833 ps, ckh 1024 ps)
+TB_DSFD_CTRL FAIL errors=1011
+- rtl/dsrom_sys/s81_ph/test/tb_dsfd_ctrl.sv:255: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 683.381 s; speed 2.944 ns/s
+- Verilator: cpu 683.273 s on 1 threads; allocated 218 MB

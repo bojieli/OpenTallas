@@ -29,7 +29,8 @@
    "at": [
     86.4,
     43.2
-   ]
+   ],
+   "orient": "R180"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
@@ -45,7 +46,8 @@
    "at": [
     345.6,
     43.2
-   ]
+   ],
+   "orient": "R180"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
@@ -107,7 +109,7 @@
   "macro_halo_um": 5.4,
   "io_hold_margin_ns": 0.03
  },
- "structural_change": "Measured23 nonclock roots>32: reset159/116 and group32 enable64. Opt-in G12 plus kept PCR/FIFO reset leaves; asynchronous assertion, release PCR+1/FIFO+1 edges, steady data0. Separate8-region roots on both core/PHY clocks. Gate blocked until census all<=32 and full checklist passes.",
+ "structural_change": "Measured23 nonclock roots>32: reset159/116 and group32 enable64. Opt-in G12 plus kept PCR/FIFO reset leaves; asynchronous assertion, release PCR+1/FIFO+1 edges, steady data0. Separate8-region roots on both core/PHY clocks. Gate blocked until census all<=32 and full checklist passes. Response SRAMs R180: native per-bit LEF-to-IO-anchor payload reach0>405/max302.739 (was42/max457.125); requestSRAMsR0. Native32 production32PC exactPASS and3causalmutantFAILs committed.",
  "job": {
   "owner": "Claude:LEAD2-S81/LINK-CTRL",
   "branch": "codex/s81-ctrl-coll-pickup-1019",
@@ -222,8 +224,6 @@
   "physical/s81_ctrl_rg2/clock_split_hclk.tcl"
  ],
  "native32_gate_blockers": [
-  "production exact and causal mutants terminal evidence",
-  "actual pin seam compared with native PHY manifest",
-  "physical reach <=405 and registered pins native proof"
+  "post-placement native reach/pin/clock/PG audit (pre-gate payload/native fanout and production benches passed)"
  ]
 }
