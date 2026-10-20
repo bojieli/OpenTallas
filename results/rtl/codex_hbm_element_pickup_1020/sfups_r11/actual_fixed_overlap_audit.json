@@ -1,0 +1,92 @@
+{
+  "source": "actual failed3_3_place_gp-failed.odb, read-only dump",
+  "rows": 73012,
+  "macros": 11,
+  "non_tap_fixed_std": 22826,
+  "macro_std_overlap_count": 0,
+  "macro_std_examples": [],
+  "fixed_std_overlap_count": 97,
+  "fixed_std_overlap_examples": [
+    [
+      "g_il\\[0\\].a\\[42\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[43\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[55\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[44\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[56\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[45\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[58\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[47\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[59\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[48\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[60\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[49\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[61\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[50\\]$_DFF_P_"
+    ],
+    [
+      "g_il\\[0\\].a\\[51\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[52\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[64\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[53\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[65\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[54\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[67\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[56\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[68\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[57\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[69\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[58\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[70\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[59\\]$_DFF_P_"
+    ],
+    [
+      "g_il\\[0\\].a\\[60\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[61\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[73\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[62\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[74\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[63\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[76\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[65\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[77\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[66\\]$_DFF_P_"
+    ],
+    [
+      "g_cd\\[3\\].q\\[78\\]$_DFF_P_",
+      "g_il\\[0\\].a\\[67\\]$_DFF_P_"
+    ]
+  ],
+  "scope": "Actual FIRM/fixed positions only; excludes movable GPL standard cells, excludes tapcell std. Positive-area intersections only, no halo checks."
+}

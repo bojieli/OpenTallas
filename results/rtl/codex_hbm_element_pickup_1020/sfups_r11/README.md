@@ -14,3 +14,5 @@ Eight-item review:
 8 Schedule: original r11 ledger D10 / DS8 / advance5 / reset7 unchanged; no new source/gate in this pickup.
 
 Native census ran on fleet ep5 unit oth-ubuntu-1632811-1792483279, actual mapped original netlist and gate_dump; --set hf_report=32 hf_max=32 hf_port_refuse=32 hf_reset_refuse=32 hf_refuse=32. Output verdict WARN is a FAIL under the binding pre-gate all-driver rule.
+
+Actual failed-ODB read-only followup (01:35 PT): 73,012 fixed records =50,175 LOCKED taps,22,826 FIRM stdcells,11FIRM macros. Excluding taps, measured0 macro/std intersections and97 positive-area std/std intersections. Example g_il[0].a[42] DFFHQNx2 x1045.008..1046.142,y590.22..590.49 and a[43] x1043.928..1045.062,sameY overlap0.054x0.27um: actual cellwidth1.134 while placementpitch1.08. This proves illegal fixed geometry; does not prove the exclusive cause of GPL Inf/NaN or timing failure. Fix placement ownership/actual-master packing and reset74 source before any successor. Dump Tcl reads original3_3_place_gp-failed.odb only.
