@@ -1,0 +1,68 @@
+{
+ "name": "qfd_tt_ctlm_dv_wtn_b",
+ "top": "qfd_tt_ctlm_dv_wtn",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv",
+  "rtl/qwen_dv/qfd_dv_typed_witness_control.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 120.96,
+  "h": 60.48,
+  "exact": true
+ },
+ "slot_change_request": "NEW QW-F16PROG4 hard child of qfd_tt_ctlm_dv_gi (F16WTN=1): SAFE_PHYS F16 typed witness control, 4666 FF / 2682.3 um2 native census (QW-F16PROG3 84215) -> 120.96 x 60.48 (PARALLEL fallback: 2:1, shorter W->E start/obs -> st cone) (~48% util incl. CTS/buffer reserve); W inputs pw/auth/start/retire/obs (225 bits, 2.9/um), E status st (17).",
+ "pins": {
+  "W": [
+   "pw",
+   "auth",
+   "start",
+   "retire",
+   "obs"
+  ],
+  "E": [
+   "st"
+  ],
+  "N": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "QW-F16PROG4",
+  "branch": "claude/qw-f16prog4-1019",
+  "tag": "wtn1b",
+  "purpose": "QW-F16PROG4 10-19: CTLM F16 witness face (SAFE_PHYS controller) pre-route gate: depth/timing/fanout (checklist 4)."
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true
+}
