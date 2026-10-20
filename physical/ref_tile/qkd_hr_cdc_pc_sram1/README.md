@@ -20,4 +20,4 @@ SAFE checklist:
 7 PENDING physical: same two real independent family roots, no weakened budget; spread/PG/boundary references need gate/native audit.
 8 PASS leaf steady schedule: zero edges changed in member miter; parent wire-hop/calendar consequences unmeasured until repack.
 
-V5.050 exact-cycle miter passes3431/3431 full-width transfers over asynchronous clocks and reset flush. Wrong macro read address and removed same-row bypass both fail with committed witnesses. A full-production-shape saturation leg at the one-frame-per-two-read-edge budget is being collected separately before adoption.
+V5.050 exact-cycle miter passes3431/3431 full-width transfers over asynchronous clocks and reset flush. Wrong macro read address and removed same-row bypass both fail with committed witnesses. The full-width saturation leg passes: 1,408 frames / 1,761 read edges = 0.7995 frames/edge against the 0.5 frame/edge production peer service budget, with the same cycle-by-cycle legacy miter (4,185 total transfers).

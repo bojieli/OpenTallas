@@ -97,5 +97,12 @@
     "rtl/physical/ot_host_die_cdc_sram.sv": "a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d",
     "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc_sram.v": "d40fa9b7eb00878d5a2b39d75e2eaf517f630ecf3043d4979b00617835213061",
     "physical/common_flow/ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+  },
+  "throughput": {
+    "received": 1408,
+    "read_edges": 1761,
+    "frames_per_read_edge": 0.7995457126632595,
+    "budget": 0.5,
+    "pass_": true
   }
 }

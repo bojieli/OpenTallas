@@ -179,7 +179,54 @@
     "branch": "codex/kv-host-cdc-safe-1020",
     "tag": "sram1",
     "purpose": "SRAM-backed native-safe CDC PC successor; no steady-cycle change; expanded slot owed",
-    "benches": []
+    "benches": [
+      {
+        "name": "host_cdc_safe_exact",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 24,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/exact exact",
+        "pass_regex": "PASS HOST_CDC_SAFE exact-cycle miter"
+      },
+      {
+        "name": "host_cdc_safe_tput",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 24,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/tput tput",
+        "pass_regex": "PASS HOST_CDC_SAFE_TPUT"
+      },
+      {
+        "name": "host_cdc_safe_mutant_addr",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 24,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/mutant_addr mutant_addr",
+        "fail_regex": "^FAIL SRAM transfer value mismatch",
+        "fail_witness": "rtl/test/host_cdc_safe_1020/witnesses/mutant_addr.log"
+      },
+      {
+        "name": "host_cdc_safe_mutant_bypass",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 24,
+        "needs": [
+          "verilator"
+        ],
+        "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/mutant_bypass mutant_bypass",
+        "fail_regex": "^FAIL SRAM transfer value mismatch",
+        "fail_witness": "rtl/test/host_cdc_safe_1020/witnesses/mutant_bypass.log"
+      }
+    ]
   },
   "children": [],
   "inter": [],
