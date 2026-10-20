@@ -1,0 +1,31 @@
+{
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--user",
+    "1000:1000",
+    "-v",
+    "/srv/opentallas-scratch/claude/codex-s81-native-reexport-review-1020:/stage",
+    "-v",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_sn-h1-41e90080d:/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_sn-h1-41e90080d:ro",
+    "-v",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_we-h1-41e90080d:/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_we-h1-41e90080d:ro",
+    "-v",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_512_ew-h1-41e90080d:/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_512_ew-h1-41e90080d:ro",
+    "-v",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_562_we-h1-41e90080d:/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_562_we-h1-41e90080d:ro",
+    "-v",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_ns-h1-41e90080d:/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_ns-h1-41e90080d:ro",
+    "-v",
+    "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_sn-h1-41e90080d:/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_sn-h1-41e90080d:ro",
+    "--entrypoint",
+    "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+    "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "-no_init",
+    "-exit",
+    "-python",
+    "/stage/repair_guard.py"
+  ],
+  "returncode": 0
+}

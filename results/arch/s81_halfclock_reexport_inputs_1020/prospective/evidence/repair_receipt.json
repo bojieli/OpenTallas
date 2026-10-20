@@ -1,0 +1,1497 @@
+{
+  "scope": "ROOT08:02 private PG-only model; no historical signoff or original rewrite; no ETM timing yet",
+  "cases": [
+    {
+      "master": "dsfd_dvrlyh_276_SN",
+      "status": "PROSPECTIVE_PG_ONLY_MODEL_NO_SIGNOFF",
+      "original_pg_status": "FAIL",
+      "original_odb": "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_sn-h1-41e90080d/routes/s81dv_rlyh_276_sn_h1_41e90080d/work/orfs/results/asap7/opentallas_dsfd_dvrlyh_276_SN_asap7_ref_s81dv_rlyh_276_sn_h1_41e90080d/base/6_final.odb",
+      "original_sha256": "bb96e7d8f8e8f9ac87bcdc96d3be8d61f6e8f8ab7938b9af86ed8c71b7c00ef3",
+      "repaired_odb": "/stage/repair/dsfd_dvrlyh_276_SN_PG_REPAIRED_MODEL_ONLY.odb",
+      "repaired_sha256": "ead3e2446bcf06b4e71d633e532311425ede73e0bc1f6311c88cac93eb0de9fd",
+      "nativePG_unbound_after": 0,
+      "changes": [
+        [
+          "clkbuf_leaf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_1_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_1_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_9_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_9_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_8_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_8_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_7_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_7_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_6_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_6_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_5_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_5_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_2_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_2_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_4_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_4_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_3_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_3_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_10_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_10_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_11_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_11_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_12_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_12_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_13_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_13_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_14_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_14_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_15_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_15_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_16_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_16_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_17_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_17_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_18_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_18_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_19_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_19_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_20_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_20_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_21_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_21_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_22_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_22_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_23_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_23_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_1_0__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_1_0__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_1_1__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_1_1__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ]
+      ],
+      "geometry_all_signal_and_clock_topology_sha256": "c0502169c99858494d336df60836e223fa9b42471512343008e8b65f681df3cb",
+      "causals": [
+        {
+          "case": "wrongrail",
+          "rejected": true,
+          "reason": "wrong rail sigtype"
+        },
+        {
+          "case": "unbound",
+          "rejected": true,
+          "reason": "unbound PG"
+        },
+        {
+          "case": "signalrewire",
+          "rejected": true,
+          "reason": "instance/master/geometry/signal or clock topology changed"
+        }
+      ],
+      "Liberty_pg_roles": {
+        "BUFx8_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        },
+        "BUFx4_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        }
+      }
+    },
+    {
+      "master": "dsfd_dvrlyh_276_WE",
+      "status": "PROSPECTIVE_PG_ONLY_MODEL_NO_SIGNOFF",
+      "original_pg_status": "FAIL",
+      "original_odb": "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_276_we-h1-41e90080d/routes/s81dv_rlyh_276_we_h1_41e90080d/work/orfs/results/asap7/opentallas_dsfd_dvrlyh_276_WE_asap7_ref_s81dv_rlyh_276_we_h1_41e90080d/base/6_final.odb",
+      "original_sha256": "00dc83770c4da7b60eda8f0fd76e31e1035b8cbc7a9d1faf7a97d46885529c27",
+      "repaired_odb": "/stage/repair/dsfd_dvrlyh_276_WE_PG_REPAIRED_MODEL_ONLY.odb",
+      "repaired_sha256": "4970fba494a7e485b257763cd51a334382826d31969cf8e4442033b1dd0a6572",
+      "nativePG_unbound_after": 0,
+      "changes": [
+        [
+          "clkbuf_leaf_8_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_8_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_7_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_7_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_1_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_1_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_6_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_6_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_2_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_2_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_5_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_5_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_3_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_3_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_4_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_4_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_9_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_9_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_1_0__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_1_0__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_1_1__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_1_1__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ]
+      ],
+      "geometry_all_signal_and_clock_topology_sha256": "ab733527a8852d720ab6a07efd5f7d94eab4d3caad2c006120c65c3a0e55fc32",
+      "causals": [
+        {
+          "case": "wrongrail",
+          "rejected": true,
+          "reason": "wrong rail sigtype"
+        },
+        {
+          "case": "unbound",
+          "rejected": true,
+          "reason": "unbound PG"
+        },
+        {
+          "case": "signalrewire",
+          "rejected": true,
+          "reason": "instance/master/geometry/signal or clock topology changed"
+        }
+      ],
+      "Liberty_pg_roles": {
+        "BUFx16f_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        },
+        "BUFx8_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        }
+      }
+    },
+    {
+      "master": "dsfd_dvrlyh_512_EW",
+      "status": "PROSPECTIVE_PG_ONLY_MODEL_NO_SIGNOFF",
+      "original_pg_status": "FAIL",
+      "original_odb": "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_512_ew-h1-41e90080d/routes/s81dv_rlyh_512_ew_h1_41e90080d/work/orfs/results/asap7/opentallas_dsfd_dvrlyh_512_EW_asap7_ref_s81dv_rlyh_512_ew_h1_41e90080d/base/6_final.odb",
+      "original_sha256": "4c03ca7c18c0dd642521aeb40fcd3a9159d382d47865567af6c5249e8a7a9177",
+      "repaired_odb": "/stage/repair/dsfd_dvrlyh_512_EW_PG_REPAIRED_MODEL_ONLY.odb",
+      "repaired_sha256": "58e6f6f82087a72131068744ea897c1e12e6f42df15e4c6602e39e2725be1687",
+      "nativePG_unbound_after": 0,
+      "changes": [
+        [
+          "clkbuf_leaf_16_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_16_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_1_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_1_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_2_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_2_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_15_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_15_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_3_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_3_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_4_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_4_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_5_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_5_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_14_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_14_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_6_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_6_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_7_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_7_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_8_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_8_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_13_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_13_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_9_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_9_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_10_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_10_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_11_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_11_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_12_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_12_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_1_0__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_1_0__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_1_1__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_1_1__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ]
+      ],
+      "geometry_all_signal_and_clock_topology_sha256": "fb47b8e142d3bd2dfe8bf48686d1c63086079b4fb6112e4c7f8bb08d612f5e33",
+      "causals": [
+        {
+          "case": "wrongrail",
+          "rejected": true,
+          "reason": "wrong rail sigtype"
+        },
+        {
+          "case": "unbound",
+          "rejected": true,
+          "reason": "unbound PG"
+        },
+        {
+          "case": "signalrewire",
+          "rejected": true,
+          "reason": "instance/master/geometry/signal or clock topology changed"
+        }
+      ],
+      "Liberty_pg_roles": {
+        "BUFx24_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        },
+        "BUFx16f_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        }
+      }
+    },
+    {
+      "master": "dsfd_dvrlyh_562_WE",
+      "status": "PROSPECTIVE_PG_ONLY_MODEL_NO_SIGNOFF",
+      "original_pg_status": "FAIL",
+      "original_odb": "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_562_we-h1-41e90080d/routes/s81dv_rlyh_562_we_h1_41e90080d/work/orfs/results/asap7/opentallas_dsfd_dvrlyh_562_WE_asap7_ref_s81dv_rlyh_562_we_h1_41e90080d/base/6_final.odb",
+      "original_sha256": "c247468b1c168bd71d3c20e937ccb08e0b0b8bf2939f6a6380271e7ebd22bd5d",
+      "repaired_odb": "/stage/repair/dsfd_dvrlyh_562_WE_PG_REPAIRED_MODEL_ONLY.odb",
+      "repaired_sha256": "d8c6be68c38e0676e854b95fd504cdf89e48ff7e7d4850c121fc900ec8bfdb14",
+      "nativePG_unbound_after": 0,
+      "changes": [
+        [
+          "clkbuf_1_0__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_1_0__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_1_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_1_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_2_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_2_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_18_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_18_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_3_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_3_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_4_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_4_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_5_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_5_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_6_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_6_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_17_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_17_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_7_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_7_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_8_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_8_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_9_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_9_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_10_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_10_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_16_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_16_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_11_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_11_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_12_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_12_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_13_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_13_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_14_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_14_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_leaf_15_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_leaf_15_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_1_1__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_1_1__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ]
+      ],
+      "geometry_all_signal_and_clock_topology_sha256": "f4bdb87beaf799d0a9c672fdfdf4e73480dfd0a13dcadb8b6c429d7bfc5fa5e1",
+      "causals": [
+        {
+          "case": "wrongrail",
+          "rejected": true,
+          "reason": "wrong rail sigtype"
+        },
+        {
+          "case": "unbound",
+          "rejected": true,
+          "reason": "unbound PG"
+        },
+        {
+          "case": "signalrewire",
+          "rejected": true,
+          "reason": "instance/master/geometry/signal or clock topology changed"
+        }
+      ],
+      "Liberty_pg_roles": {
+        "BUFx24_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        },
+        "BUFx16f_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        }
+      }
+    },
+    {
+      "master": "dsfd_dvrlyh_70_NS",
+      "status": "PROSPECTIVE_PG_ONLY_MODEL_NO_SIGNOFF",
+      "original_pg_status": "FAIL",
+      "original_odb": "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_ns-h1-41e90080d/routes/s81dv_rlyh_70_ns_h1_41e90080d/work/orfs/results/asap7/opentallas_dsfd_dvrlyh_70_NS_asap7_ref_s81dv_rlyh_70_ns_h1_41e90080d/base/6_final.odb",
+      "original_sha256": "6e8c1767648097931cd1f0f77256183d986fe10c426027788b5e32db6e4f52ab",
+      "repaired_odb": "/stage/repair/dsfd_dvrlyh_70_NS_PG_REPAIRED_MODEL_ONLY.odb",
+      "repaired_sha256": "e2d8637faa635dba5ff4a56b644e7504705f4ff24bc3ac6cfe0d66f4bad69af3",
+      "nativePG_unbound_after": 0,
+      "changes": [
+        [
+          "clkbuf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_0__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_0__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_1__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_1__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_2__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_2__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_3__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_3__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_4__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_4__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_5__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_5__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_6__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_6__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_7__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_7__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ]
+      ],
+      "geometry_all_signal_and_clock_topology_sha256": "a134895230d50890c7af40b28cbd0bd46a72066b93bea52f6dd35f6ba4308f52",
+      "causals": [
+        {
+          "case": "wrongrail",
+          "rejected": true,
+          "reason": "wrong rail sigtype"
+        },
+        {
+          "case": "unbound",
+          "rejected": true,
+          "reason": "unbound PG"
+        },
+        {
+          "case": "signalrewire",
+          "rejected": true,
+          "reason": "instance/master/geometry/signal or clock topology changed"
+        }
+      ],
+      "Liberty_pg_roles": {
+        "BUFx4_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        }
+      }
+    },
+    {
+      "master": "dsfd_dvrlyh_70_SN",
+      "status": "PROSPECTIVE_PG_ONLY_MODEL_NO_SIGNOFF",
+      "original_pg_status": "FAIL",
+      "original_odb": "/srv/opentallas-scratch/claude/closure-loop/s81dv_rlyh_70_sn-h1-41e90080d/routes/s81dv_rlyh_70_sn_h1_41e90080d/work/orfs/results/asap7/opentallas_dsfd_dvrlyh_70_SN_asap7_ref_s81dv_rlyh_70_sn_h1_41e90080d/base/6_final.odb",
+      "original_sha256": "2bfb9f5499b54c3204ad206786b66f571f8326390da09cb72e6e5426b264fc5b",
+      "repaired_odb": "/stage/repair/dsfd_dvrlyh_70_SN_PG_REPAIRED_MODEL_ONLY.odb",
+      "repaired_sha256": "4d7c8683d2e518eb08766299f8f259bacb4803d48de5fa5843adc7efafe0f565",
+      "nativePG_unbound_after": 0,
+      "changes": [
+        [
+          "clkbuf_3_0__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_0__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_0_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_1__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_1__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_2__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_2__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_3__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_3__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_4__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_4__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_5__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_5__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_6__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_6__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ],
+        [
+          "clkbuf_3_7__f_ck",
+          "VDD",
+          null,
+          "VDD"
+        ],
+        [
+          "clkbuf_3_7__f_ck",
+          "VSS",
+          null,
+          "VSS"
+        ]
+      ],
+      "geometry_all_signal_and_clock_topology_sha256": "434b8fe776bbc694abceb97a1fe3d26554ce690cac5214582054302f0f5bf005",
+      "causals": [
+        {
+          "case": "wrongrail",
+          "rejected": true,
+          "reason": "wrong rail sigtype"
+        },
+        {
+          "case": "unbound",
+          "rejected": true,
+          "reason": "unbound PG"
+        },
+        {
+          "case": "signalrewire",
+          "rejected": true,
+          "reason": "instance/master/geometry/signal or clock topology changed"
+        }
+      ],
+      "Liberty_pg_roles": {
+        "BUFx4_ASAP7_75t_R": {
+          "VDD": {
+            "pg_type": "primary_power",
+            "voltage_name": "VDD"
+          },
+          "VSS": {
+            "pg_type": "primary_ground",
+            "voltage_name": "VSS"
+          }
+        }
+      }
+    }
+  ]
+}
