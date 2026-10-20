@@ -35,8 +35,8 @@
  ],
  "reset_ports": [],
  "outline": {
-  "w": 194.4,
-  "h": 280.8
+  "w": 172.8,
+  "h": 239.76
  },
  "macros": [
   {
@@ -44,8 +44,8 @@
    "count": 1,
    "inst": "*g_btb?0?*u_m",
    "at": [
-    64.8,
-    86.4
+    51.84,
+    51.84
    ],
    "at_exact": true,
    "orient": "R0"
@@ -55,8 +55,8 @@
    "count": 1,
    "inst": "*g_btb?1?*u_m",
    "at": [
-    64.8,
-    127.488
+    51.84,
+    92.928
    ],
    "at_exact": true,
    "orient": "R0"
@@ -66,8 +66,8 @@
    "count": 1,
    "inst": "*g_btb?2?*u_m",
    "at": [
-    64.8,
-    168.576
+    51.84,
+    134.016
    ],
    "at_exact": true,
    "orient": "R0"
@@ -77,8 +77,8 @@
    "count": 1,
    "inst": "*g_btb?3?*u_m",
    "at": [
-    64.8,
-    209.664
+    51.84,
+    175.104
    ],
    "at_exact": true,
    "orient": "R0"
@@ -149,5 +149,8 @@
     "fail_witness": "results/arch/qw_slice6_1019/witness/btab_mut.log"
    }
   ]
+ },
+ "fill_reason": {
+  "pin_bound": "tw_* (1,051 b) enters on the E face at 4.4 pins/um over the 4-stack height (face 99% occupied); the 4 macros (15,575 um2) set the rest, std cells are 508 um2"
  }
 }

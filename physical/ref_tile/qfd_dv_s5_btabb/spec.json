@@ -35,8 +35,8 @@
  ],
  "reset_ports": [],
  "outline": {
-  "w": 285.12,
-  "h": 194.4
+  "w": 267.84,
+  "h": 172.8
  },
  "macros": [
   {
@@ -44,8 +44,8 @@
    "count": 1,
    "inst": "*g_btb?0?*u_m",
    "at": [
-    38.88,
-    86.4
+    22.896,
+    69.12
    ],
    "at_exact": true,
    "orient": "MY"
@@ -55,8 +55,8 @@
    "count": 1,
    "inst": "*g_btb?1?*u_m",
    "at": [
-    38.88,
-    127.488
+    22.896,
+    110.208
    ],
    "at_exact": true,
    "orient": "MY"
@@ -66,8 +66,8 @@
    "count": 1,
    "inst": "*g_btb?2?*u_m",
    "at": [
-    164.16,
-    86.4
+    148.176,
+    69.12
    ],
    "at_exact": true,
    "orient": "R0"
@@ -77,8 +77,8 @@
    "count": 1,
    "inst": "*g_btb?3?*u_m",
    "at": [
-    164.16,
-    127.488
+    148.176,
+    110.208
    ],
    "at_exact": true,
    "orient": "R0"
@@ -94,11 +94,10 @@
   "W": [
    "tw_we",
    "tw_kind",
-   "tw_addr"
-  ],
-  "E": [
+   "tw_addr",
    "tw_data"
   ],
+  "E": [],
   "N": []
  },
  "pin_regs": {
@@ -149,5 +148,8 @@
     "fail_witness": "results/arch/qw_slice6_1019/witness/btab_mut.log"
    }
   ]
+ },
+ "fill_reason": {
+  "pin_bound": "tw_* (1,051 b) on the W face + bt_q (266 b) on S, faces >= 95% occupied; 4 macros 15,575 um2, std cells 508 um2"
  }
 }

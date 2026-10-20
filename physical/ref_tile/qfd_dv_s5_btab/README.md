@@ -7,8 +7,8 @@ whole budget of the bt_word -> bt_q round trip). Region 0 issues bt_re / bt_word
 ~1.3 mm away) the loop would cross two landings (+6) and break the closed BT_LAT 1. Beside r0 the loop is local: answer 2
 edges after bt_re exactly as qfd_dv_vm (0 added edges); regions 1..7 receive their bt_q slice landed +3 = their own +3
 region offset. The SU copy (copy 1) stays in qfd_dv_s5_vm; both copies see the same tw_* writes.
-Kits: `qfd_dv_s5_btab` (main: one abutted N-S 4-stack, capture channel W, full-width std-cell band S, tw on E) and
-`qfd_dv_s5_btabb` (parallel fallback: 2 x 2, two abutted stacks with read pins facing a centre capture channel, bt_q on S).
+Kits: `qfd_dv_s5_btab` (main, 172.8 x 239.76: one abutted N-S 4-stack, capture channel W, full-width std-cell band S, tw on E) and
+`qfd_dv_s5_btabb` (parallel fallback, 267.84 x 172.8: 2 x 2, two abutted stacks with read pins facing a centre capture channel, tw on W, bt_q on S).
 
 SAFE-DESIGN checklist (owner 10-19):
 1. Pins: bt_re / bt_word / tw_* go straight into the macros' own input registers (and the t1_bank flop); bt_q = capture
@@ -19,6 +19,6 @@ SAFE-DESIGN checklist (owner 10-19):
 4. Depth: PASS -- capture -> 4:1 mux -> pin.
 5. Storage: PASS -- 4 x 128x256 SRAM macros (128 kb); 1 kb capture flops.
 6. Floorplan: macros on the lattice (at_exact abutted stacks, pitch 41.088), >= 20 um channels on pin faces, a
-   full-width std-cell band; aspect 1.44 (main) / 1.47 (fallback).
+   full-width std-cell band; aspect 1.39 (main) / 1.55 (fallback); gate1 FAIL fill 30% (outline too big) -> outlines shrunk to fill ~39% / ~35%, faces pin-bound (fill_reason).
 7. Clock: single centre-fed root (~1.0k flops + 4 macro clocks), io_hold_margin 0.03.
 8. Schedule: static, 0 added edges.
