@@ -9,7 +9,7 @@
 // Compare every read tag/beat/data and write bank/column/strobe/data in order;
 // require full request/beat/write conservation and <=10%+64-edge slowdown.
 module tb;
-  parameter integer MUT_ID_TAG=0, NREQ=6000, RATE_CHECK=0, RST_FOREST=0, PCID_LOCAL=0;
+  parameter integer MUT_ID_TAG=0, NREQ=6000, RATE_CHECK=0, RST_FOREST=0, PCID_LOCAL=0, RST_LEAVES=192, WROK_COPIES=0;
   reg clk=0; always #512 clk=~clk;
   reg rst_n=0; reg [4:0] pc_id=5'd9; reg [7:0] refresh_reload=8'd151;
   reg [29:0] ra[0:NREQ-1]; reg [3:0] rl[0:NREQ-1]; reg rw[0:NREQ-1]; reg [16:0] rt[0:NREQ-1];
@@ -28,7 +28,7 @@ module tb;
     .kr_data(kr_data[0]),.k_wr_done(k_wr_done[0]),.row_v(row_v[0]),.row_op(row_op[0]),.row_bank(row_bank[0]),.row_row(row_row[0]),
     .col_v(col_v[0]),.col_we(col_we[0]),.col_bank(col_bank[0]),.col_col(col_col[0]),.col_data(col_data[0]),.col_strb(col_strb[0]),
     .dram_rvalid(dv[0]),.dram_rdata(dd[0]),.pc_fault(pc_fault[0]),.owner_fault_split(of[0]));
-  ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(.BW_MUT_ID_TAG(MUT_ID_TAG),.SRAM_P192(1),.PURE_FACE(1),.RESET_LANDING(2),.RST_FOREST(RST_FOREST),.PCID_LOCAL(PCID_LOCAL)) b(.clk(clk),.rst_n(rst_n),.pc_id(pc_id),.refresh_reload(refresh_reload),
+  ot_hbm_svc_pc_ctrl_leaf_cfg_safe_face #(.BW_MUT_ID_TAG(MUT_ID_TAG),.SRAM_P192(1),.PURE_FACE(1),.RESET_LANDING(2),.RST_FOREST(RST_FOREST),.PCID_LOCAL(PCID_LOCAL),.RST_LEAVES(RST_LEAVES),.WROK_COPIES(WROK_COPIES)) b(.clk(clk),.rst_n(rst_n),.pc_id(pc_id),.refresh_reload(refresh_reload),
     .k_v(kv[1]),.k_rdy(k_rdy[1]),.k_we(rw[idx[1]%NREQ]),.k_addr(ra[idx[1]%NREQ]),.k_len(rl[idx[1]%NREQ]),.k_tag(rt[idx[1]%NREQ]),
     .k_wdata(rd[idx[1]%NREQ]),.k_wstrb(rs[idx[1]%NREQ]),.kr_v(kr_v[1]),.kr_rdy(krr[1]),.kr_tag(kr_tag[1]),.kr_beat(kr_beat[1]),
     .kr_data(kr_data[1]),.k_wr_done(k_wr_done[1]),.row_v(row_v[1]),.row_op(row_op[1]),.row_bank(row_bank[1]),.row_row(row_row[1]),

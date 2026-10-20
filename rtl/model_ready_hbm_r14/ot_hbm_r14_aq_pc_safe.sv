@@ -32,7 +32,12 @@ module ot_hbm_r14_aq_pc_safe #(
   parameter integer PULLIN = 8,
   parameter integer ROW_REGIONS = 0, BANK_REGIONS = 0,
   // L2H-BW: 1 = spread-pin p192 macro family (see ot_hbm_svc_sram128_n64)
-  parameter integer SRAM_P192 = 0
+  parameter integer SRAM_P192 = 0,
+  // HBM-MC3 (10-19): 1 = the column-issue decision (wr_ok, 53 native endpoints on hdie_pc_ctrl_mc3_p540) is computed in
+  // three logically identical cones from DISTINCT kept head-bank copies, so no copy drives > 32 endpoints and Yosys/ABC
+  // cannot merge them: wr_ok (column outputs, q_n, timers), wr_ok_q (queue read pointers, SRAM read address,
+  // successor copies) and wr_ok_h (head capture/push selects).  0 = original single cone (other users byte-identical).
+  parameter integer WROK_COPIES = 0
 )(
   input  wire        clk, rst_n, input wire[63:0]reset_regions,
   input  wire        slot_parity, input wire [7:0] refresh_reload,
@@ -75,7 +80,8 @@ module ot_hbm_r14_aq_pc_safe #(
   // SRAM clk->q therefore ends at the head flops, outside column eligibility.
   // The two overlapped heads sustain one pop per edge, including ring wrap.
   (* keep="true",dont_touch="true" *) reg[WQW-1:0]q_rp_plus1,q_rp_plus2;
-  wire [WQW-1:0] qread=wr_ok ? q_rp_plus2 : q_rp_plus1;
+  wire wr_ok_q, wr_ok_h;
+  wire [WQW-1:0] qread=wr_ok_q ? q_rp_plus2 : q_rp_plus1;
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
   reg [29:0] qhead;
   (* keep="true",dont_touch="true" *) reg head_read_global;
@@ -95,11 +101,11 @@ module ot_hbm_r14_aq_pc_safe #(
     always @(posedge clk or negedge rst_n)if(!rst_n)begin
       successor_local[g]<=1;fresh_local[g]<=0;
     end else begin
-      successor_local[g]<=wr_ok?q_rp_plus1+1'b1:q_rp_plus1;
+      successor_local[g]<=wr_ok_q?q_rp_plus1+1'b1:q_rp_plus1;
       fresh_local[g]<=qpush;
     end
-    assign head_push_regions[g]=qpush&&((q_n_local[g]==0)||(wr_ok&&q_n_local[g]==1));
-    assign head_capture_regions[g]=head_push_regions[g]||(wr_ok&&q_n_local[g]>1);
+    assign head_push_regions[g]=qpush&&((q_n_local[g]==0)||(wr_ok_h&&q_n_local[g]==1));
+    assign head_capture_regions[g]=head_push_regions[g]||(wr_ok_h&&q_n_local[g]>1);
   end
   for(genvar g=0;g<4;g=g+1)begin:HEAD_WORD_LOCAL
     localparam LO=(g==3)?20:g*8;
@@ -478,11 +484,23 @@ module ot_hbm_r14_aq_pc_safe #(
   wire[31:0]hb_oh_cfg=32'b1<<head_bank_cfg;
   wire cfg_bank_ready=q_ne&&|(hb_oh_cfg&open_column&head_timer_ready&~blk&~pre_fl&head_row_match);
   assign col_v_regions[0]=wr_ok;
+  generate if(WROK_COPIES!=0)begin:g_wrok_copies
+    (* keep="true",dont_touch="true" *) reg [4:0] head_bank_q, head_bank_h;
+    always @(posedge clk)begin head_bank_q<=head_d[29:25]; head_bank_h<=head_d[29:25]; end
+    wire [31:0] hb_oh_q=32'b1<<head_bank_q, hb_oh_h=32'b1<<head_bank_h;
+    (* keep="true" *) wire rdy_q=q_ne&&|(hb_oh_q&open&head_timer_ready&~blk&~pre_fl&head_row_match);
+    (* keep="true" *) wire rdy_h=q_ne&&|(hb_oh_h&open&head_timer_ready&~blk&~pre_fl&head_row_match);
+    assign wr_ok_q=rdy_q&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
+    assign wr_ok_h=rdy_h&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
+  end else begin:g_wrok_one
+    assign wr_ok_q=wr_ok; assign wr_ok_h=wr_ok;
+  end endgenerate
   assign col_v_regions[1]=cfg_bank_ready&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
 `ifndef SYNTHESIS
   always @(negedge clk)if(rst_n)begin
     if(open_column!==open)$fatal(1,"BW_AQ_OPEN_REGION_MISMATCH");
     if(col_v_regions[1]!==col_v)$fatal(1,"BW_AQ_COLUMN_REGION_MISMATCH");
+    if(wr_ok_q!==wr_ok||wr_ok_h!==wr_ok)$fatal(1,"BW_AQ_WROK_COPY_MISMATCH");
   end
 `endif
 
@@ -597,7 +615,7 @@ module ot_hbm_r14_aq_pc_safe #(
       case({qpush,wr_ok})
         2'b10:q_n<=q_n+1'b1;2'b01:q_n<=q_n-1'b1;default:q_n<=q_n;
       endcase
-      if (wr_ok) begin q_rp<=q_rp_plus1;q_rp_plus1<=q_rp_plus1+1'b1;q_rp_plus2<=q_rp_plus2+1'b1;end
+      if (wr_ok_q) begin q_rp<=q_rp_plus1;q_rp_plus1<=q_rp_plus1+1'b1;q_rp_plus2<=q_rp_plus2+1'b1;end
       if (col_aq) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
       if (col_we) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
       if (rrds_c != 0) rrds_c <= rrds_c - 1'b1;

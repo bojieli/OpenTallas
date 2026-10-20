@@ -49,7 +49,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     //   their users, so no pc_id net spans the tile.  pc_id is a static strap (stable before reset release).
     parameter integer RST_FOREST=0,
     parameter integer RST_LEAVES=192,
-    parameter integer PCID_LOCAL=0
+    parameter integer PCID_LOCAL=0,
+    // WROK_COPIES=1 (HBM-MC3b): AQ column-issue decision in three identical cones from distinct kept head-bank copies
+    parameter integer WROK_COPIES=0
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -423,7 +425,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     ot_hbm_svc_sram128_n64 #(.W(21),.P192(SRAM_P192)) u_response_identity(.clk(clk),.r_ce(response_read),
       .r_addr(7'(response_read_address)),.rd(response_meta21),
       .w_ce(response_write),.w_addr(7'(response_wp)),.wd(pending_meta[20:0]));
-    ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.BANK_REGIONS(8),.WQ(QD),.MRKEY(MRKEY),.SRAM_P192(SRAM_P192)) controller(
+    ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.BANK_REGIONS(8),.WQ(QD),.MRKEY(MRKEY),.SRAM_P192(SRAM_P192),.WROK_COPIES(WROK_COPIES)) controller(
         .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_sp),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         .col_v(),.col_v_regions(cv_regions),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),.ref_fault_regions(pc_fault_regions),

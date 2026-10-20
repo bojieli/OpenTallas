@@ -1,0 +1,11 @@
+BW_SAFE_TXN_DATA_PASS reqs=6000 beats=12944 wcols=759 wdone=759
+BW_FACE_TXN PASS reqs=6000 beats=12944 wcols=759 wdone=759 edges_h9b=88783 edges_safe=166921
+- rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv:78: Verilog $finish
+BW_ROW_GRANT_TRUTH 00=72747 01=10808 10=75120 11=8435
+BW_REFRESH_CLEAR_TRUTH group=0 00=163655 01=2032 10=1379 11=44
+BW_REFRESH_CLEAR_TRUTH group=1 00=163655 01=2032 10=1379 11=44
+BW_REFRESH_CLEAR_TRUTH group=2 00=163655 01=2032 10=1379 11=44
+BW_REFRESH_CLEAR_TRUTH group=3 00=163655 01=2032 10=1379 11=44
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 171us; walltime 1.232 s; speed 138.898 us/s
+- Verilator: cpu 1.232 s on 1 threads; allocated 12 MB

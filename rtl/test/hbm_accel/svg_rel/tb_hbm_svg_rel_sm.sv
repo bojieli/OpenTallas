@@ -94,7 +94,7 @@ module tb_hbm_svg_rel_sm;
    ,.BW_MUT_ID_TAG(1)
 `endif
 `ifdef FACE_MC3
-   ,.RST_FOREST(1),.PCID_LOCAL(1)   // HBM-MC3: reset forest + local pc_id copies (the hdie_pc_ctrl_mc3_* kits)
+   ,.RST_FOREST(1),.PCID_LOCAL(1),.RST_LEAVES(256),.WROK_COPIES(1)   // HBM-MC3b: reset forest (256 leaves) + local pc_id + wr_ok copies (hdie_pc_ctrl_mc3b_* kits)
 `endif
   ) u(
    .clk(hbm),.rst_n(hrst),.pc_id(5'(p)),.refresh_reload(reload),
