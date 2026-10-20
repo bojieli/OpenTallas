@@ -38,6 +38,8 @@ if [ "$PH" = chain ]; then
   grep -q "STRICT_BIND PASS" "$S" || { echo BIND_STRICT_FAIL >> "$S"; exit 3; }
   CT=$(git --git-dir=$G ls-tree -r --name-only "$CREF" physical/ref_tile/ | grep "views/dsfd_ctrl_rg2/forwarded_clock.json")
   [ -n "$CT" ] || { echo "NO_NATIVE_CTRL_VIEW $CREF" >> "$S"; exit 5; }; echo "CTRL_VIEW_FILE $CREF $CT" >> "$S"
+  # die tools also read these results files (dv_diecase reach table, cost ledger, MU calendars): add them from SRC
+  git --git-dir=$G archive "$SRC" results/arch/die_reach_1016.json results/arch/accepted_cost_ledger_1013.json results/arch/mu_s81_1018 | tar -xf - -C "$D/src" || exit 2
   cd "$D/src" || exit 2
   C=$D/case_$TAG; rm -rf "$C"
   python3 tools/s81_dv/dv_rvcase.py --plan "$D/plan_mu6/plan.json" --bind-dir "$D/bind_mu6/bind" --bind-table "$TBL" --land-plan "$LP" --out "$C" \
