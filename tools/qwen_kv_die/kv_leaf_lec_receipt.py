@@ -68,7 +68,7 @@ def main(argv=None):
                              f"; reset held {r['reset']['cycles']} edges then every output compared every cycle; "
                              'all registers power up 0 on both sides (datapath unreset); hard macros cut',
                              closed_job=a.closed_job, closed_commit=a.closed_commit, gate_sha256=r['gate_sha256'],
-                             view_tie='view TT/FF liberty == closed job record/views liberty', record_libs=libs,
+                             view_tie='view TT/FF liberty bytes == the closed job liberty (record/views or closed_archive final)', record_libs=libs,
                              wrapper=r.get('wrapper'), sources=r['sources'], aig=r.get('aig'),
                              abc_log_sha256=r['engine']['abc_log_sha256'], aig_sha256=r['aig_sha256'],
                              lec=Path(a.lec).name, lec_sha256=sha(a.lec), control=ctl))
