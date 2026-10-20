@@ -36,9 +36,9 @@
    "cid"
   ],
   "W": [
+   "sid",
    "ck",
    "rst_n",
-   "sid",
    "tap_fault"
   ]
  },
@@ -64,7 +64,12 @@
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.03,
   "pin_min_tracks": 2,
-  "period_ps": 833.333
+  "period_ps": 833.333,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
  },
  "safe_design_checklist": {
   "1_pins": "PASS: ot_qfd_xs_tap registers its inputs (E1 pin registers) and launches hw from flops; cid HARD 1 register; lq_bad OR -> fault join is sticky status; rst_n 2-stage landing",
@@ -72,7 +77,7 @@
   "3_fanout": "gate textbook_lint high_fanout (hw broadcast: one copy, the parent lands 4 column copies)",
   "4_depth": "inherited ot_qfd_xs_tap STATIC_SCHEDULE 1 (closed in the heads cluster)",
   "5_storage": "PASS: no indexed flop array > 2 kb (tap queue <= 2 entries)",
-  "6_floorplan": "pin-bound: hw 1,567 on N, hr+xt 1,503 on S (<= 6 pins/um); aspect <= 2:1; no macros",
+  "6_floorplan": "pin-bound (util ~5%: 2.4k um2 std, 6.2k flops, 3.1k pins): hw 1,567 over the whole N face (5.3/um), hr+xt 1,503 over S (5.0/um) by pin_ranges; aspect 2:1; no macros",
   "7_clock": "one centre-fed root; io_hold_margin 0.03",
   "8_schedule": "HARD 1: cid (4 sid + c, static after SETID) +1 edge = 0 steady cycles; everything else as qfd_dv_heads"
  },
@@ -132,6 +137,56 @@
     "fail_regex": "S5_EQ FAIL",
     "fail_witness": "results/arch/qw_slice6_1019/witness/tap_d9.log"
    }
+  ]
+ },
+ "pin_ranges": {
+  "hw": [
+   4.32,
+   297.83
+  ],
+  "hr_q": [
+   4.32,
+   92.023
+  ],
+  "xt_v": [
+   92.273,
+   93.188
+  ],
+  "xt_a": [
+   93.438,
+   97.848
+  ],
+  "xt_d": [
+   98.098,
+   296.665
+  ],
+  "xt_bad": [
+   296.915,
+   297.83
+  ],
+  "lq_bad": [
+   4.32,
+   124.121
+  ],
+  "cid": [
+   124.371,
+   146.63
+  ],
+  "sid": [
+   4.32,
+   39.71
+  ],
+  "ck": [
+   39.96,
+   75.35
+  ],
+  "rst_n": [
+   75.6,
+   110.99
+  ],
+  "tap_fault": [
+   111.24,
+   146.63
   ]
  }
 }
