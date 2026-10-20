@@ -1,0 +1,8 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_xr3-s81sl_xr3-e656ad73c bench bench_smwire_soen_mut host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/s81sl_xr3-s81sl_xr3-e656ad73c log cl/bench_smwire_soen_mut.a1b1.log captured 2026-10-20T07:05:20-07:00
+# fail_regex '^SMWIRE MISMATCH gather data'
+E2E rtlmut_OT_S81SL_XR_MUT_SOEN expect=fail smwire=FAIL caught=NO -> OK | SMWIRE stats mut=0 route=1 gather s3=192 s4=192 s2=192 n3=0 lat(head0 beat -> port) s3=17 s4=19 s2=19 n3=-1 head1 +tree hop: s3=22 checks=589824 faults sot 00 gw 00 land 0 xr 0 rstop 0000
+E2E_DONE bad=0 define=OT_S81SL_XR_MUT_SOEN
+SMWIRE MISMATCH gather data st 0 idx 16
+SMWIRE MISMATCH gather data st 1 idx 16
+SMWIRE MISMATCH gather data st 2 idx 16
