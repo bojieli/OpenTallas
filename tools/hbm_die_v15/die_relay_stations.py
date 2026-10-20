@@ -101,8 +101,11 @@ def main():
         d = drv[0]
         if max(RP.md(d[2], l[2]) for l in lds) <= R:
             continue
-        # one bus per (driver instance, sink-instance set): every port of the same route shares the stations
-        key = (d[0], tuple(sorted({l[0] for l in lds})))
+        # one bus per (driver instance, sink-instance set): every port of the same route shares the stations.
+        # HBM-GENREACH 10-20: reset ports form their OWN bus (key flag): a reset port grouped with data ports of the same
+        # sink set made the whole bus 'reset_forest' and dropped its data stations (GEN2c: hc_<q> rstb_s+wc_s+xb_d5..7 ->
+        # hcb_<q>6, 787 b, 13 mm with no relay; 2,598 never-inserted buses in fp_hops_classified.json)
+        key = (d[0], tuple(sorted({l[0] for l in lds})), bool(re.match(r'(por_|rst|reset)', RP.base(d[1]))))
         b = buses[key]; b['bits'] += 1; b['dpts'].append(d[2]); b['nets'].append(n); b.setdefault('ports', set()).add(RP.base(d[1]))
         for l in lds:
             b['spts'][l[0]].append(l[2])
@@ -114,26 +117,26 @@ def main():
         _ROUTER = RR.Router(man['placement'], man['die_um'], R, G=a.route_grid, carved=man.get('carved_feedthrough'),
                             keepouts=[s_['keepout'] for s_ in json.load(open(a.root_keepouts))['sites']] if getattr(a, 'root_keepouts', None) else None)
         jobs = []
-        for (di, sk), b in buses.items():
+        for (di, sk, _rf), b in buses.items():
             if pl[di]['master'] == 'ot_hbm_su_programme' or any(re.match(r'(por_|rst|reset)', p_) for p_ in b['ports']):
                 continue
-            jobs.append(((di, sk), bus_points(b), 48 if b['bits'] <= 48 else 624, list(b['spts'])))
+            jobs.append(((di, sk, _rf), bus_points(b), 48 if b['bits'] <= 48 else 624, list(b['spts'])))
         import multiprocessing as mp
         with mp.get_context('fork').Pool(a.jobs) as pool:
             for key, res in pool.imap_unordered(_plan_job, jobs, chunksize=4):
                 routed[key] = res
         viol = [(h, f'{k[0]} -> {len(k[1])} sinks: {w}') for k, r_ in routed.items() for h, w in r_[3]]
         print(f'routed {len(routed)} buses; hop violations {len(viol)}; worst {sorted(viol)[-5:] if viol else None}', flush=True)
-    for (di, sk), b in sorted(buses.items(), key=lambda kv: -kv[1]['bits']):
+    for (di, sk, _rf), b in sorted(buses.items(), key=lambda kv: -kv[1]['bits']):
         dp = '+'.join(sorted(b['ports']))
         root, spts = bus_points(b); sinks = list(b['spts'])
         P, par, dist = tree(root, spts)
         kids = collections.Counter(p for p in par if p >= 0)
         if a.route_grid > 0:
-            if (di, sk) not in routed:
+            if (di, sk, _rf) not in routed:
                 depth = [max(0, math.ceil(dist[i] / R) - 1) for i in range(1, len(P))]
             else:
-                rsl, rtail, depth, rviol = routed[(di, sk)]
+                rsl, rtail, depth, rviol = routed[(di, sk, _rf)]
         else:
             depth = [max(0, math.ceil(dist[i] / R) - 1) for i in range(1, len(P))]
         dmax = max(depth)
@@ -173,7 +176,7 @@ def main():
         rows.append(dict(driver=f'{di}.{dp}', driver_master=pl[di]['master'], bits=bits, cls=cls,
                          domain=dom_of.get(di, 'UNKNOWN'), depth=dmax, sinks=sinks,
                          sink_depths=depth, stations=stations, branch_points=branch, pads=pads,
-                         hop_violations=(rviol if a.route_grid > 0 and (di, sk) in routed else []),
+                         hop_violations=(rviol if a.route_grid > 0 and (di, sk, _rf) in routed else []),
                          nets=b['nets'] if bits <= 4 else f"{len(b['nets'])} nets ({b['nets'][0]}..)"))
     res = dict(schema='opentallas.hbm.die_relay_stations.v1', case=str(c), reach_um=R,
                die_um=man['die_um'], placement_sha='see manifest input_sha256', buses=len(rows),
