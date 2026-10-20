@@ -1,0 +1,108 @@
+{
+ "summary": {
+  "layer": 0,
+  "ops": 1,
+  "passed": 0,
+  "dmut": 0,
+  "smut": "early",
+  "nrun": 1,
+  "subrun": 0,
+  "lat": {
+   "req_lead": 8,
+   "qk_first": 63,
+   "qk_land_meas": 70,
+   "qk_land": 78,
+   "qk_clear": 8,
+   "pv_node": 160,
+   "out": 40
+  },
+  "source": {
+   "att_kv_json": "/srv/opentallas-scratch/claude/toksim-hbm-att/kv/ds/L00/att_kv.json",
+   "npz_sha256": "73f387ebf6b6bac503c2fc988c05b9c97651cfa61e8488856c03c8a4d88bcd37",
+   "layer": 0,
+   "rank": 0,
+   "qk_priced": [
+    {
+     "i": 19,
+     "start": 2594.67,
+     "end": 3031.5,
+     "base_cost": 411
+    }
+   ],
+   "pv_priced": [
+    {
+     "i": 24,
+     "start": 3536.88,
+     "end": 4185.69,
+     "base_cost": 580
+    }
+   ],
+   "ring": {
+    "n": 128,
+    "m": 128,
+    "on": true,
+    "first": 0
+   },
+   "c_rows": 0
+  },
+  "cross_sm_merge": null,
+  "programme_residency": null,
+  "spans_first_word_to_last_result": {
+   "sm_SW0": {
+    "qk": [
+     227
+    ]
+   }
+  },
+  "cross_sm_merge_scope": "pairwise over the SM (sub-run) nodes padded to the golden pad, composed in Python here; the on-die merge (SU lane-store tree + COLL ring all-gather) is benched by att_merge_su.py on these RTL nodes (<out>.nodes.npz)",
+  "rtl": "ot_hbm_accel_smh_attn die master (GEN2b bundle master_files.json + views.json defines OT_SMH_FC_HIER,OT_SMH_HIER,OT_SMH_XLK,OT_FP_DATA_NORST,OT_SMH_DRST0,OT_SMH_RSTRELAY,OT_SMH_ATTN_INT8) in tb_hbm_smh_attn",
+  "wall_s": 1.8,
+  "verdict": "FAIL"
+ },
+ "ops": [
+  {
+   "name": "qk_sm_SW0",
+   "sm": "sm_SW0",
+   "subrun": 0,
+   "kind": "qk",
+   "kv4": 0,
+   "rows": 8,
+   "rc": 0,
+   "fault": false,
+   "calendar": {
+    "first_line": 123,
+    "last_consume": 239,
+    "lines": 32,
+    "qk": [
+     {
+      "wave": 0,
+      "rows": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7
+      ],
+      "last_consume": 239,
+      "clear": 247,
+      "publish": 309
+     }
+    ],
+    "end": 349
+   },
+   "results": 8,
+   "expected": 8,
+   "mismatches": 2,
+   "result_rows": 1,
+   "first_result": 341,
+   "last_result": 341,
+   "pass": false,
+   "span_first_line_to_last_result": 218,
+   "span_first_word_to_last_result": 227,
+   "span_first_any_to_last_result": 333
+  }
+ ]
+}
