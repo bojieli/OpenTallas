@@ -45,3 +45,7 @@ Mutants FAIL: m2 xt c41, m21 xt c262, m22 bad c206, m31 so_e c33, m32 tw c55, m3
 | 6 | floorplan | WAIVED pin-bound: 6,946 pins, 259.2 x 380.16, W/E 5.85 / S 5.9 / N 4.4 pins/um, no macros, one std-cell band |
 | 7 | clock | single ck centre of S, TritonCTS leaf; spread <= 80 ps TT+FF checked at the gate; io_hold_margin 0.03 |
 | 8 | schedule | static; +2 edges on xw_* priced above and handed to slice2 / GEN3 |
+
+## Gate (10-19 22:20, --cts --remote auto)
+WARN, 0 fail. Synth 6,548 um2 (util 6.8 %), 12,527 flops; depth 376.7 ps, reach 268.9 um; CTS TT 416.2 / FF 348.0, spread
+TT 63.9 / FF 60.2 ps (<= 80 PASS); placement TT in->reg +56.5, reg->reg +97.8, reg->out +112.1. PNG as t2, narrower.
