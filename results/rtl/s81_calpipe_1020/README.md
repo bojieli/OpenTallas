@@ -39,7 +39,7 @@ Static checks run on every emission:
 - **MU:** user windows modulo the MU period are disjoint, and the field busy span is <= the slot.
 
 Fleet ep9 runs (`compiler/run_fcal.sh`, evidence in `compiler/evidence/`):
-- `dvc_L0` / `dvc_L2` (dv_layer_compile, real fixtures): all 7 (L0) / 8 (L2) field op calendars were emitted as
+- `dvc_L0` / `dvc_L2` (dv_layer_compile, real fixtures): all 7 field op calendars were emitted per layer (L2: idx.q rides in the wq_b calendar, 17 phases; a first L2 run that also emitted it separately is kept as `dvc_L2_dup_idxq`) as
   prog/xs/<id>.calendar.json, with ROM images and is_d; static PASS.
 - `die_nominal` (L0 L2 L14 L20): every op is static PASS. MU: 46 AR / 10+1 MTP slot calendar (calendar_{ar,mtp}_cal1,
   claude/s81-cal1-1019@152d70002), 0 collisions. The field busy span is 12,486 (L0) / 13,250 (sparse), against an AR slot of
