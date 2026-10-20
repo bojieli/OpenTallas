@@ -29,14 +29,14 @@ MUTANT
  CORE="$W/core_mut12.sv"
 fi
 if [ "$M" = 13 ]; then
- # r4 causal mutant: the c_sr/c_q role counters lose their asynchronous reset (STOPCLK REASSERT 2 must fail).
+ # r4/r5 causal mutant: the c_sr role counter loses their asynchronous reset (STOPCLK REASSERT 2 must fail).
  python3 - "$CORE" "$W/core_mut13.sv" <<'MUTANT'
 import sys
 from pathlib import Path
 s=Path(sys.argv[1]).read_text()
-a='always @(posedge clk or negedge rst_core_n[14]) if(!rst_core_n[14]) begin c_sr<=0; c_q<=0; end'
+a='always @(posedge clk or negedge rst_core_n[14]) if(!rst_core_n[14]) c_sr<=0;'
 if s.count(a)!=1: raise SystemExit('MUT13 REFUSED: role counter source shape differs')
-Path(sys.argv[2]).write_text(s.replace(a,'always @(posedge clk) if(1\'b0) begin c_sr<=0; c_q<=0; end'))
+Path(sys.argv[2]).write_text(s.replace(a,'always @(posedge clk) if(1\'b0) c_sr<=0;'))
 MUTANT
  CORE="$W/core_mut13.sv"
 fi

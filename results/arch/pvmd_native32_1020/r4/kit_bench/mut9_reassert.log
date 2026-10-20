@@ -1,9 +1,9 @@
-ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4163176-1792488554 after 1 s
-FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/hbm-smatt5-pvm-r4-1020/k_mut9_reassert/native_cells.v
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-337004-1792489538 after 3 s
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/hbm-smatt5-pvm-r4-1020/r5_mut9_reassert/native_cells.v
 Verilator 5.050 2026-07-01 rev v5.050
-[7000] %Fatal: tb_pv_merge_distributed.sv:61: Assertion failed in tb_pv_merge_distributed: DISTRIBUTED_ALL_OUTPUT_AGE_MISMATCH
-%Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:61: Verilog $stop
-%Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:61: Verilog $stop
+[7000] %Fatal: tb_pv_merge_distributed.sv:46: Assertion failed in tb_pv_merge_distributed: DISTRIBUTED_ALL_OUTPUT_AGE_MISMATCH
+%Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:46: Verilog $stop
+%Error: rtl/hbm_accel/sm/attn/test/tb_pv_merge_distributed.sv:46: Verilog $stop
 Aborting...
 PVM FAIL mismatches=121 (pv 8, pub 112, done None)
-ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4163176-1792488554): exit 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-337004-1792489538): exit 1

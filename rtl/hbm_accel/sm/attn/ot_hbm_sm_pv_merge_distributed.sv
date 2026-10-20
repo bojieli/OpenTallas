@@ -49,10 +49,11 @@ module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0, FAN32=0)(
  endgenerate
  reg [511:0] sum1,sum2; reg [15:0] tag1,tag2;
  reg [2:0] pubslot1,pubslot2,folda1,folda2,foldb1,foldb2;
- (* keep *) reg [14:0] pubslot2t;                   // 5 kept pub_slot copies (node_tag read mux x4, slot0)
+ (* keep *) reg [26:0] pubslot2t;                   // r5: 9 kept pub_slot copies (node_tag read mux x8 (2 bits each), slot0)
+ (* keep *) reg [1:0] first2c;                      // r5: 2 kept tag_d[14] second captures (= tag2[14]) for the core ev_c copies
  always @(posedge clk) begin
   sum1<=sum;sum2<=sum1;tag1<=tag_d;tag2<=tag1;
-  pubslot1<=pub_slot;pubslot2<=pubslot1;pubslot2t<={5{pubslot1}};
+  pubslot1<=pub_slot;pubslot2<=pubslot1;pubslot2t<={9{pubslot1}};first2c<={2{tag1[14]}};
   folda1<=fold_a;folda2<=folda1;foldb1<=fold_b;foldb2<=foldb1;
  end
  // pub / fold commands: first capture -> control second capture (+ 4 fold_start copies for the fd0_k slices)
@@ -77,7 +78,7 @@ module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0, FAN32=0)(
  wire [53:0] rcore_c = (MUT==9) ? {reset_core_n[53:14],1'b1,reset_core_n[12:0]} : reset_core_n;
  wire cpv,cpub,cfault;wire [511:0] cy;wire [15:0] ctag,cptag;wire[31:0] cdata;wire[3:0] cword;wire[2:0] cslot;
  ot_hbm_sm_pv_merge_distributed_core #(.TAGW(16),.LV(4),.MUT(MUT),.PUBLISH(1),.TURNREG(1),.SAFE(2),.FAN32(FAN32)) u_core(
-  .clk(clk),.rst_core_n(rcore_c),.ev_operand(ev_op_c),.ev_write(ev_wr_c),.ev_entry(ev_en_c),.fold_operand(fold2c),.pub_operand(pub2c),.pub_slot_tag(pubslot2t),
+  .clk(clk),.rst_core_n(rcore_c),.ev_operand(ev_op_c),.ev_write(ev_wr_c),.ev_entry(ev_en_c),.fold_operand(fold2c),.pub_operand(pub2c),.pub_slot_tag(pubslot2t),.first_copy(first2c),
   .first_operand(first_c),
   .ev(ev_sch_c),.sum(sum2),.tag_d(tag2),.pv_v(cpv),.pv_y(cy),.pv_tag(ctag),.fault(cfault),
   .pub_start(pub2),.pub_slot(pubslot2),.pub_v(cpub),.pub_data(cdata),.pub_word(cword),.pub_out_slot(cslot),.pub_tag(cptag),

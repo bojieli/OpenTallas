@@ -38,22 +38,7 @@ module tb_pv_merge_distributed;
       .pv_v(dv),.pv_y(dy),.pv_tag(dt),.fault(df),.pub_start(pub_start),.pub_slot(pub_slot),
       .pub_v(dp),.pub_data(dd),.pub_word(dw),.pub_out_slot(ds),.pub_tag(dpt),
       .fold_start(fold_start),.fold_a(fold_a),.fold_b(fold_b));
-    wire [26:0] provenance_counts;
-    generate for(genvar pc=0;pc<9;pc=pc+1) begin:g_provenance_observe
-        if(FAN32 != 0) begin:g_live
-            assign provenance_counts[3*pc+:3]=candidate.u_core.g_operand_provenance[pc].g_local.count;
-        end else begin:g_off
-            assign provenance_counts[3*pc+:3]=3'd0;
-        end
-    end endgenerate
-    // r4 (HBM-SMATT5): the six bp role counters are cleared by the stopped-clock reset too.
-    wire [17:0] role_counts;
-    generate if(FAN32 != 0) begin:g_role_observe
-        assign role_counts={candidate.u_core.g_bp_roles.c_ent,candidate.u_core.g_bp_roles.c_tag,candidate.u_core.g_bp_roles.c_sw,
-                            candidate.u_core.g_bp_roles.c_nt,candidate.u_core.g_bp_roles.c_sr,candidate.u_core.g_bp_roles.c_q};
-    end else begin:g_role_off
-        assign role_counts=18'd0;
-    end endgenerate
+    // r5: the core reports whether every provenance counter / role counter / one-hot ring holds its reset value
     reg [585:0] prior_ref; reg compare_started=0; integer cmp_n=0;
     // All output bits compared every edge, including invalid payload. No X masks.
     always @(negedge clk) begin
@@ -107,7 +92,7 @@ module tb_pv_merge_distributed;
                 {candidate.pub1,candidate.pub2,candidate.fold1,candidate.fold2} !== 4'd0 ||
                 candidate.u_core.e_busy !== 8'd0 || candidate.u_core.bp !== 3'd0 || (|candidate.u_core.fd1_k) !== 1'b0 ||
                 (|candidate.u_core.pd1_k) !== 1'b0 || (|candidate.u_core.pa_k) !== 1'b0 ||
-                {candidate.pv_v,candidate.pub_v,candidate.fault} !== 3'd0 || dut.u_core.e_busy !== 8'd0 || provenance_counts !== 27'd0 || role_counts !== 18'd0)
+                {candidate.pv_v,candidate.pub_v,candidate.fault} !== 3'd0 || dut.u_core.e_busy !== 8'd0 || candidate.u_core.roles_reset_clear !== 1'b1)
                 $fatal(1, "STOPCLK_RESET_NOT_PROPAGATED first %b second %b core %h busy %h", candidate.reset_first_n,
                        candidate.reset_second_n, candidate.reset_core_n, candidate.u_core.e_busy);
             $display("PVM STOPCLK reset tree + captures + core state + all provenance counters cleared with no clock edge");
