@@ -147,9 +147,20 @@ module ot_qfd_su_kv_static_posted #(
   // ht[seg][lane] = (dv && seat address[7:4] == seg) ? one-hot(seat address[3:0]) : 0, i.e. one registered hit bit per
   // seat and lane (hits[seat][lane] = ht[seat/16][lane][seat%16] == dv && di == seat on every edge, reset 0).
   (* keep = "true" *) reg[15:0]ht[0:15][0:7];
+  // R3h: the ht D-side decode reads 4 kept copies (one per 4-segment group) of the face registers it needs -- we_q[7:0]
+  // and per lane wa_q {[23:20],[10:0]} -- captured from the same ports at the same edge as we_q / wa_q (reset 0): the
+  // R3f census had the shared partial address decodes at 36-44 loads (64 ht flops each).
+  (* keep = "true" *) reg[14:0]wac[0:3][0:7];(* keep = "true" *) reg[7:0]wec[0:3];
+  integer gq,jq;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n)begin for(gq=0;gq<4;gq=gq+1)begin wec[gq]<=0;for(jq=0;jq<8;jq=jq+1)wac[gq][jq]<=0;end end
+   else for(gq=0;gq<4;gq=gq+1)begin wec[gq]<=kv_we[7:0];for(jq=0;jq<8;jq=jq+1)wac[gq][jq]<={kv_waddr[24*jq+20+:4],kv_waddr[24*jq+:11]};end
+  function automatic [7:0] seat_ix(input [14:0] w);   // == ix of the original decode (aa = wa[23:4], da = wa[3:0])
+   seat_ix=(w[14:11]==4'd0)?{1'b0,w[10:4]}:{1'b1,w[6:4],w[3:0]};
+  endfunction
   (* keep = "true" *) reg[63:0]dc[0:15];reg[7:0]de;
   integer j,seg;reg[23:0]da;reg[19:0]aa;reg[16:0]ww;reg[12:0]dp;
-  reg[7:0]ix;reg[8:0]co;reg[2:0]permit;
+  reg[7:0]ix,ixg;reg[8:0]co;reg[2:0]permit;
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)begin for(seg=0;seg<16;seg=seg+1)begin dc[seg]<=0;for(j=0;j<8;j=j+1)ht[seg][j]<=0;end de<=0;end
    else begin
@@ -162,7 +173,8 @@ module ot_qfd_su_kv_static_posted #(
      else begin ix={1'b1,ww[2:0],da[3:0]};dp=ww[15:3];end
      ix=ix^8'(MUT_LANE!=0);
      for(seg=0;seg<16;seg=seg+1)begin
-      ht[seg][j]<=(we_q[j]&&(ix[7:4]==4'(seg)))?(16'd1<<ix[3:0]):16'd0;dc[seg][8*j+:8]<=co[7:0];
+      ixg=seat_ix(wac[seg/4][j])^8'(MUT_LANE!=0);
+      ht[seg][j]<=(wec[seg/4][j]&&(ixg[7:4]==4'(seg)))?(16'd1<<ixg[3:0]):16'd0;dc[seg][8*j+:8]<=co[7:0];
      end
      if(we_q[j])begin
       if(!active||aa>=2*VBASE||(aa<VBASE?aa[16]:ww[16])||dp!=pos)de[0]<=1;

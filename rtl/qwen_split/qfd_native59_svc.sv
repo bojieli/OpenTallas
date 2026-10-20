@@ -247,7 +247,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // Family widths = ceil(region reset loads / 28) from the SAFE2 synthesized netlist (textbook 10-19: fmt 5,517,
  // svc 2,830, pin 2,173, rec 2,139, top 1,599, land 1,420 bit loads (safe3 gate), x3 577, ctx < 256); the pass re-points loads,
  // the gate's high_fanout lint on 1_2_yosys.v is the witness.
- (* keep = "true" *) reg[(LOCAL32?256:200)-1:0]rst_cp_fmt;(* keep = "true" *) reg[(LOCAL32?80:24)-1:0]rst_cp_x3;(* keep = "true" *) reg[103:0]rst_cp_svc;
+ (* keep = "true" *) reg[(LOCAL32?288:200)-1:0]rst_cp_fmt;(* keep = "true" *) reg[(LOCAL32?80:24)-1:0]rst_cp_x3;(* keep = "true" *) reg[103:0]rst_cp_svc;
  (* keep = "true" *) reg[79:0]rst_cp_rec;(* keep = "true" *) reg[11:0]rst_cp_ctx;(* keep = "true" *) reg[55:0]rst_cp_land;
  (* keep = "true" *) reg[(LOCAL32?128:80)-1:0]rst_cp_pin;(* keep = "true" *) reg[(LOCAL32?64:48)-1:0]rst_cp_top;   // R3f: LOCAL32 regions grew   // QW-N59-4: qseen/qctx moved to the bank (1,599 - ~520 loads)
  always @(posedge ck or negedge rst_n)
@@ -321,8 +321,8 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // base halves, +6 kreq copies, +7..10 landing tag quarters, +11/12 issued halves, +13/14 covered halves, +15..18 s_optag
  // quarters.  Copies 0..24 / 0..18 load the A face register (bnd_*), the rest the B face copy (<= 32 loads per face
  // flop).  ws_pub: 2 kept copies of p_kvs (formatter word_data group halves).  Same D / reset as the originals: exact.
- localparam integer NNC=48,NRQ=43;   // R3g: rq 38..42 = q_open (q_frame_tag quarters, q_window/q_count)
- wire[NNC-1:0]nc_pub;wire[10:0]ddc[0:23];wire[NRQ-1:0]rq_pub;wire[1:0]pu_pub[0:2];wire[1:0]ws_pub;
+ localparam integer NNC=50,NRQ=43;   // R3h: nc 48/49 = q_epoch_tag select quarters 2/3   // R3g: rq 38..42 = q_open (q_frame_tag quarters, q_window/q_count)
+ wire[NNC-1:0]nc_pub;wire[10:0]ddc[0:23];wire[NRQ-1:0]rq_pub;wire[1:0]pu_pub[0:3];wire[1:0]ws_pub;
  wire lcv_fb,cmd0_fb;wire[5:0]stage_fb;
  generate if(LOCAL32&&RECV_INPUTS)begin:g_face_b
   (* keep = "true" *) reg lcv_b,cmd0_b;(* keep = "true" *) reg[5:0]stage_b;
@@ -333,15 +333,15 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  end endgenerate
  generate if(LOCAL32)begin:g_pin_pub
   (* keep = "true" *) reg[NNC-1:0]lcv_c;(* keep = "true" *) reg[5:0]stage_c[0:NNC-1];(* keep = "true" *) reg[10:0]dd_c[0:23];
-  (* keep = "true" *) reg[NRQ-1:0]rq_c;(* keep = "true" *) reg[1:0]pu_c[0:2];(* keep = "true" *) reg[1:0]ws_c;
+  (* keep = "true" *) reg[NRQ-1:0]rq_c;(* keep = "true" *) reg[1:0]pu_c[0:3];(* keep = "true" *) reg[1:0]ws_c;
   integer pk;
   always @(posedge ck or negedge rst_pin)
-   if(!rst_pin)begin lcv_c<=0;for(pk=0;pk<NNC;pk=pk+1)stage_c[pk]<=0;for(pk=0;pk<24;pk=pk+1)dd_c[pk]<=0;rq_c<=0;pu_c[0]<=0;pu_c[1]<=0;pu_c[2]<=0;ws_c<=0;end
+   if(!rst_pin)begin lcv_c<=0;for(pk=0;pk<NNC;pk=pk+1)stage_c[pk]<=0;for(pk=0;pk<24;pk=pk+1)dd_c[pk]<=0;rq_c<=0;pu_c[0]<=0;pu_c[1]<=0;pu_c[2]<=0;pu_c[3]<=0;ws_c<=0;end
    else begin
     for(pk=0;pk<NNC;pk=pk+1)begin lcv_c[pk]<=(pk<25)?bnd_layer_context_v:lcv_fb;stage_c[pk]<=(pk<25)?bnd_command_stage:stage_fb;end
     for(pk=0;pk<24;pk=pk+1)dd_c[pk]<=bnd_dd_i[547:537];
     for(pk=0;pk<NRQ;pk=pk+1)rq_c[pk]<=(pk<19||(pk>=38&&pk<41))?bnd_native_cmd[0]:cmd0_fb;
-    pu_c[0]<=bnd_native_position[17:16];pu_c[1]<=bnd_native_position[17:16];pu_c[2]<=bnd_native_position[17:16];ws_c<={2{bnd_kv_word_slot}};
+    pu_c[0]<=bnd_native_position[17:16];pu_c[1]<=bnd_native_position[17:16];pu_c[2]<=bnd_native_position[17:16];pu_c[3]<=bnd_native_position[17:16];ws_c<={2{bnd_kv_word_slot}};
    end
   for(genvar k=0;k<NNC;k=k+1)begin:g_nc
    assign nc_pub[k]=lcv_c[k]&&stage_c[k]>=1&&stage_c[k]<=36;
@@ -349,13 +349,13 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   for(genvar k=0;k<24;k=k+1)begin:g_ddc
    assign ddc[k]=dd_c[k];
   end
-  assign rq_pub=rq_c;assign pu_pub[0]=pu_c[0];assign pu_pub[1]=pu_c[1];assign pu_pub[2]=pu_c[2];assign ws_pub=ws_c;
+  assign rq_pub=rq_c;assign pu_pub[0]=pu_c[0];assign pu_pub[1]=pu_c[1];assign pu_pub[2]=pu_c[2];assign pu_pub[3]=pu_c[3];assign ws_pub=ws_c;
  end else begin:g_pin_alias
   assign nc_pub={NNC{p_lcv&&p_stage>=1&&p_stage<=36}};
   for(genvar k=0;k<24;k=k+1)begin:g_ddc
    assign ddc[k]=p_dd[547:537];
   end
-  assign rq_pub={NRQ{p_cmd[0]}};assign pu_pub[0]=p_pos[17:16];assign pu_pub[1]=p_pos[17:16];assign pu_pub[2]=p_pos[17:16];assign ws_pub={2{p_kvs}};
+  assign rq_pub={NRQ{p_cmd[0]}};assign pu_pub[0]=p_pos[17:16];assign pu_pub[1]=p_pos[17:16];assign pu_pub[2]=p_pos[17:16];assign pu_pub[3]=p_pos[17:16];assign ws_pub={2{p_kvs}};
  end endgenerate
  wire[4:0]emit_beat_pub[0:3];   // R3e/g: kept copies of dr_o[516:512], 2 per landing slot (check / pipe, issued decode)
  // ---------------------------------------------------------------- command context (unchanged child)
@@ -379,11 +379,12 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[13:0]fseq_rd={fseq[c_user_h][13:7],fseq[c_user_r][6:0]};
  wire[13:0]c_seq=(fstart[c_user_r]&&c_l0&&MUT!=6)?fseq_rd+14'd1:fseq_rd;
  wire[1:0]c_tag=(MUT==5&&c_user==2'd3)?2'd0:c_user;
- wire[15:0]c_epoch=(MU==0||c_user==2'd0)?p_he:{c_seq,c_tag};
+ wire[1:0]c_user_e=MU?pu_pub[3]:2'd0;   // R3h: == c_user (begin_tag epoch select)
+ wire[15:0]c_epoch=(MU==0||c_user_e==2'd0)?p_he:{c_seq,c_tag};
  integer fu;
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin for(fu=0;fu<4;fu=fu+1)fseq[fu]<=MU_SEQ0;fstart<=0;mu_fault<=0;end
-  else if(MU!=0&&native_context&&c_user!=2'd0)begin
+  else if(MU!=0&&native_context&&c_user_w!=2'd0)begin   // R3h: c_user_w == c_user
    fseq[c_user_w]<=c_seq;if(c_l0)fstart[c_user_w]<=1'b1;
    if({1'b0,c_user}>=3'(NU)||(!c_l0&&!fstart[c_user]))mu_fault<=1'b1;
   end
@@ -449,8 +450,8 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    end
    if(vq_pub[0])q_epoch_tag[14:0]<=nc_pub[19]?begin_tag[14:0]:context_tag[14:0];
    if(vq_pub[1])q_epoch_tag[29:15]<=nc_pub[19]?begin_tag[29:15]:context_tag[29:15];
-   if(vq_pub[2])q_epoch_tag[44:30]<=nc_pub[20]?begin_tag[44:30]:context_tag[44:30];
-   if(vq_pub[3])q_epoch_tag[58:45]<=nc_pub[20]?begin_tag[58:45]:context_tag[58:45];
+   if(vq_pub[2])q_epoch_tag[44:30]<=nc_pub[48]?begin_tag[44:30]:context_tag[44:30];
+   if(vq_pub[3])q_epoch_tag[58:45]<=nc_pub[49]?begin_tag[58:45]:context_tag[58:45];
    // R3g: q_open (== request_slot) captures in <= 16-bit groups on kept p_cmd[0] copies (qo[k] == q_open); same order.
    if(q_open&&(q_window||!q_committed))qtag_fault<=1;
    if(qo[4])begin q_window<=1;q_count<=0;end
@@ -511,7 +512,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // ---------------------------------------------------------------- operation context slots (MU-D2D-OVL; NS = 1: as built)
  localparam integer NS=(MCTX!=0)?2:1;
  reg nf,fs,bs;                       // slot of the next begin, the front (latest begun) slot, the back (oldest active) slot
- wire[NS-1:0]s_active,s_completed,s_svc_fault,s_rec_fault,s_land_fault,s_commit_complete,s_tx_v;
+ wire[NS-1:0]s_active,s_completed,s_svc_fault,s_rec_fault,s_land_fault,s_commit_complete,s_tx_v,s_tx_vb;   // R3h: s_tx_vb == s_tx_v
  wire[NS-1:0]s_req_v,s_kq_v,s_vm_write_v;wire[58:0]s_vm_write_tag[0:NS-1];wire[19:0]s_vm_write_word[0:NS-1];
  wire[4:0]s_vm_write_beat[0:NS-1];wire[511:0]s_vm_write_data[0:NS-1];wire[24:0]s_vm_pub[0:NS-1];wire[547:0]s_tx_payload[0:NS-1];wire[94:0]s_ret[0:NS-1];
  reg[58:0]s_optag[0:NS-1];reg[NS-1:0]s_vis_seen;
@@ -592,7 +593,9 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    if(s_vm_pub[si][22])vmw_tag[29:0]=vmw_tag[29:0]|s_vm_write_tag[si][29:0];
    if(s_vm_pub[si][23])vmw_tag[58:30]=vmw_tag[58:30]|s_vm_write_tag[si][58:30];
    for(vb=0;vb<512;vb=vb+1)if(s_vm_pub[si][vb/24])vmw_data[vb]=vmw_data[vb]|s_vm_write_data[si][vb];
-   ntx_v=ntx_v|s_tx_v[si];if(NS==1||s_tx_v[si])ntx_p=ntx_p|s_tx_payload[si];   // NS 1: the codec register as built
+   ntx_v=ntx_v|s_tx_v[si];   // NS 1: the codec register as built; R3h: each payload half under its own valid copy
+   if(NS==1||s_tx_v[si])ntx_p[273:0]=ntx_p[273:0]|s_tx_payload[si][273:0];
+   if(NS==1||s_tx_vb[si])ntx_p[547:274]=ntx_p[547:274]|s_tx_payload[si][547:274];
   end
  end
  assign vm_write_v=vmw_v;assign vm_write_word=vmw_word;assign vm_write_beat=vmw_beat;assign vm_write_tag=vmw_tag;assign vm_write_data=vmw_data;
@@ -661,7 +664,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT),.RX_FREE(1),.TX_FREE(MCTX!=0),.LOCAL32(LOCAL32))u_record(   // QW-N59-4: free rx (svc2) / tx (svc3, MCTX 1: payload merged under tx_v) capture, output-exact
   .ck(ck),.rst_n(rst_rec),.operation_tag(s_optag[gs]),.kernel_request_v(s_req_v[gs]),.kernel_request_pub(kreq_pub),.kernel_request_tag(req_tag),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
-  .tx_slot(p_ts&&f),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(s_tx_v[gs]),.tx_payload(s_tx_payload[gs]),
+  .tx_slot(p_ts&&f),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(s_tx_v[gs]),.tx_payload(s_tx_payload[gs]),.tx_valid_pub(s_tx_vb[gs]),
   .rx_result_pub(rx_result_pub),.slot_back_pub(slot_back_pub),.rx_event(p_rv&&b),.rx_payload(p_rp),.rx_slot(p_rs&&b),.rx_slot_kind(p_rk),.rx_slot_beat(p_rb),
   .result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),.result_slot(result_slot),.result_slot_pub(result_slot_pub),.result_slot_beat(result_slot_beat),
   .kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),.fault(s_rec_fault[gs]));
