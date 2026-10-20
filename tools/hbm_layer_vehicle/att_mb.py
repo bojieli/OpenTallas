@@ -52,6 +52,8 @@ import qwen_att_unit as QU  # noqa: E402
 F = np.float32
 # MB latencies (calibrated by the sweep in run_att_mb.sh; see README):
 #   x_lead     QK: command cycles from the last x beat of q word t to the first consume of step t
+#              (Qwen h128 needs more than DS: becde1162 sweep x_lead 0/2/4/8 -> 62/42/25/4 mismatches, all wave 0,
+#              head-3 columns 6/7 = the last beats of each q word; the per-column x landing is staggered)
 #   pre        cycles from the converter configure to the first x beat (prefetch window; the die fills it in the gap)
 #   chain_gap  PV chain: block k+1's chunk-last consumes >= block k's publish command + chain_gap
 MB_LAT = dict(x_lead=8, pre=48, chain_gap=80, p_war=2)
@@ -663,21 +665,26 @@ def cmd_campaign(a):
     qwc = ["qwen", "--kv", a.kv_qw, "--stage", a.stage, "--L", str(a.L), "--bundle", a.bundle, "--jobs", str(a.jobs)]
     pool = cf.ThreadPoolExecutor(a.jobs)
     # 0. builds (d0 shared by every run of a work dir; KVMUT 2 for the converter negative control) + Qwen QK calibration
-    for d in (0, 2):
-        build(W / "w", Path(a.bundle).resolve(), d)
     calib = W / "qprobe" / f"calib_{a.stage}_L{a.L}.json"
-    if not calib.exists():
+
+    def probe():
+        if calib.exists():
+            return 0
         r = subprocess.run([sys.executable, str(HERE / "qwen_att_unit.py"), "run", "--kv", a.kv_qw, "--stage", a.stage,
                             "--L", str(a.L), "--bundle", a.bundle, "--work", str(W / "qprobe"), "--out",
                             str(out / "qwen_probe_qk_sm0.json"), "--sms", "0", "--kinds", "qk"],
                            capture_output=True, text=True)
         (out / "qwen_probe_qk_sm0.log").write_text(r.stdout + r.stderr)
+        return r.returncode
+    bf = [pool.submit(build, W / "w", Path(a.bundle).resolve(), d) for d in (0, 2)] + [pool.submit(probe)]
+    for f in bf:
+        f.result()
     qwc += ["--calib", str(calib)]
     # 1. sweeps on SM 0 (all in parallel)
     sweeps = dict(
         ds_qk_x=[("ds", ["--sms", "0", "--kinds", "qk"], dict(x_lead=v)) for v in (0, 2, 4, 8)],
         ds_pv_node=[("ds", ["--sms", "0", "--kinds", "pv"], dict(pv_node=v)) for v in (60, 80, 100, 120, 140, 160)],
-        qw_qk_x=[("qw", ["--sms", "0", "--kinds", "qk"], dict(x_lead=v)) for v in (0, 2, 4, 8)],
+        qw_qk_x=[("qw", ["--sms", "0", "--kinds", "qk"], dict(x_lead=v)) for v in (8, 10, 12, 16, 20, 24, 32)],
         qw_pv=[("qw", ["--sms", "0", "--kinds", "pv"], dict(pv_node=n, chain_gap=g))
                for n in (80, 100, 120, 160) for g in (40, 60, 80, 100)],
     )
