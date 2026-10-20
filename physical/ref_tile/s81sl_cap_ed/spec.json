@@ -1,0 +1,172 @@
+{
+ "name": "s81sl_cap_ed",
+ "top": "ot_s81sl_cap_ed",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv"
+ ],
+ "params": {
+  "D": 23
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "i_v",
+   "i_t",
+   "i_d",
+   "i_e",
+   "i_f"
+  ],
+  "E": [
+   "o_v",
+   "o_t",
+   "o_d",
+   "o_e",
+   "o_f"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "LEAD2-S81/TOK2 10-19 TOK.DS.BENCH.1 CAP-ED: NEW leaf ot_s81sl_cap_ed (static E-column delay D=23 between the E capture tree u_te and the root u_rt): the first coupled QF diagnostic 757a340ff proved the CAP root takes one word per edge and the six frames never merge; exact packing (cap_ed_calendar/root_pack.py) gives a legal global calendar only with the E column +23 edges. ot_hdc_delay_rf 66 x 21 = 1,386 b register-file ring (pin in reg -> RF -> pin out reg, no flop->flop hold chain), primed valid mask, sticky fault bypass. +23 edges on E return words (latency only; schedule owned by the compiler).",
+ "job": {
+  "owner": "Claude:LEAD2-S81/TOK2",
+  "branch": "claude/tok2-capd-1019",
+  "tag": "s81sl_cap_ed",
+  "purpose": "TOK.DS.BENCH.1 CAP-ED: static E-column delay leaf (D=23) between u_te and u_rt in ot_s81sl_cap; benched standalone (tb_s81sl_cap_ed base + D22/D24 RTL mutants).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_slice",
+   "results/rtl/s81_qf_producer_1019/cap_ed_calendar"
+  ],
+  "benches": [
+   {
+    "name": "caped_base",
+    "cmd": "bash tools/s81_slice/cap_ed_bench.sh {RUN}/caped_base 23",
+    "expect": "pass",
+    "pass_regex": "^TB_CAP_ED PASS checks [0-9]+ D 23$",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "caped_mut_d22",
+    "cmd": "bash tools/s81_slice/cap_ed_bench.sh {RUN}/caped_d22 22",
+    "expect": "fail",
+    "fail_regex": "^TB_CAP_ED FAIL checks [0-9]+ errs [0-9]+ D 23 DUT 22$",
+    "fail_witness": "results/rtl/s81_qf_producer_1019/cap_ed_calendar/bench/mut_d22.run.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "caped_mut_d24",
+    "cmd": "bash tools/s81_slice/cap_ed_bench.sh {RUN}/caped_d24 24",
+    "expect": "fail",
+    "fail_regex": "^TB_CAP_ED FAIL checks [0-9]+ errs [0-9]+ D 23 DUT 24$",
+    "fail_witness": "results/rtl/s81_qf_producer_1019/cap_ed_calendar/bench/mut_d24.run.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_cap_ed/views",
+  "record_to": "results/rtl/ref_tile/s81sl_cap_ed"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: ot_hdc_delay_rf lands every input in its pin input register and every output leaves its pin output register; o_f is a sticky flop; recipe-3 pin_regs would add unpriced edges to the D=23 calendar."
+ },
+ "util": 0.5,
+ "outline": {
+  "w": 38.88,
+  "h": 34.56
+ },
+ "keep_pin_regs": true,
+ "pin_ranges": {
+  "i_v": [
+   4.32,
+   5.4
+  ],
+  "i_t": [
+   5.4,
+   15.12
+  ],
+  "i_d": [
+   15.12,
+   24.84
+  ],
+  "i_e": [
+   24.84,
+   25.92
+  ],
+  "i_f": [
+   25.92,
+   27.0
+  ],
+  "o_v": [
+   4.32,
+   5.4
+  ],
+  "o_t": [
+   5.4,
+   15.12
+  ],
+  "o_d": [
+   15.12,
+   24.84
+  ],
+  "o_e": [
+   24.84,
+   25.92
+  ],
+  "o_f": [
+   25.92,
+   27.0
+  ],
+  "clk": [
+   17.28,
+   19.44
+  ],
+  "rst_n": [
+   19.44,
+   21.6
+  ]
+ },
+ "why_floorplan": "38.88 x 34.56 (1,344 um2; ~1.55k flops + 21:1 x 66 read mux, est. ~650 um2 cells -> ~48 % util, aspect 1.13): input word W face (66 pins over 21.6 um = 3.1 pins/um, faces u_te), output word E face (faces u_rt E port), clk/rst_n S face mid; no macros, one std-cell band, one clock root.",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "children": [],
+ "inter": [],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

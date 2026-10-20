@@ -19,7 +19,15 @@ from pq_calendar import viamap
 from lower_vs import ctl_payload
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--fixture',required=True);p.add_argument('--contract',required=True);p.add_argument('--raw-program',required=True);p.add_argument('--out',required=True);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--fixture',required=True);p.add_argument('--contract',required=True);p.add_argument('--raw-program',required=True);p.add_argument('--out',required=True)
+ # TOK.DS.BENCH.1 CAP-ED (LEAD2-S81/TOK2 10-19): global 12-pair placement from the exact root packing (packD_<D>.json)
+ p.add_argument('--placements',default=None);p.add_argument('--edly',type=int,default=0);a=p.parse_args()
+ glob=json.loads(Path(a.placements).read_text()) if a.placements else None
+ if glob:assert glob['complete_search'] and glob['solution'] and a.edly>0
+ # frame order of the packing (root_pack.py KIND) and the MEASURED frame-exit offset of each frame's own relative return
+ # model (757a340ff diagnostic: every actual return word t - plan rel = 1434 h10 / 1430 h9_MX / 1436 h9, all 624 words)
+ ORDER=['L01','L02','L03','R01','R02','R03'];OFFS={'L01':1434,'L02':1430,'L03':1436,'R01':1434,'R02':1430,'R03':1436}
+ absedges={}
  out=Path(a.out)
  if out.exists():raise SystemExit('REFUSE_EXISTING_RUN_DIR')
  fx=XP.Fix(a.fixture);meta=json.loads(Path(a.contract).read_text())
@@ -28,12 +36,25 @@ def main():
  for epoch in meta['phase_contracts']:
   for f in epoch['frames']:
    name=f['frame'];master=LX.base_master(f['master'])
-   q,_=B.frame_pairs(master);qa=q[:9];assert len(qa)==9
+   q,_=B.frame_pairs(master)
+   if glob:
+    qa=q[:12];assert len(qa)==12;cand=glob['solution'][str(ORDER.index(name[-3:]))]
+    fixed={qa[i]:[tuple(v)] for i,v in enumerate(cand['assign']) if v}
+   else:
+    qa=q[:9];assert len(qa)==9;fixed=None
    rows=[r['original_weight_row'] for r in f['rows']]
    m=XP.FMat('wq_b','fp8',fx.w('wq_b'),fx.sc('wq_b'),rows,'attn.wq_b')
-   plan=XP.phase_plan(f['master'],f['lk'],qa,0,m,x,3,4000)
+   plan=XP.phase_plan(f['master'],f['lk'],qa,0,m,x,3,4000,assign=fixed)
    assert plan['faults']==0,(name,epoch['epoch'],plan['faults'])
-   field=fields.setdefault(name,I.Field(16,1,0,depth=8192,active=10,pp=True,fast=True))
+   if glob:
+    assert [int(k) for k in plan['emission']['off']]==qa,('pool pair order != frame q[:12]',name)
+    shift=OFFS[name[-3:]]+(a.edly if name[-3]=='R' else 0)
+    ab=[w[0]+shift for w in plan['ret']]
+    full=sorted(cand['edges'])
+    if len(rows)==6:assert sorted(ab)==full,('global calendar edges differ from the packing',name,epoch['epoch'],ab,full)
+    else:assert set(ab)<=set(full),('partial epoch leaves the packing',name,epoch['epoch'])
+    absedges.setdefault(epoch['epoch'],[]).extend(ab)
+   field=fields.setdefault(name,I.Field(16,1,0,depth=8192,active=12 if glob else 10,pp=True,fast=True))
    ph=XP.add_planned(field,plan,m,3)
    words=field.stream[ph['sbase']:ph['sbase']+ph['nbeat']]
    i=epoch['epoch']
@@ -42,6 +63,8 @@ def main():
    frameplans.append(dict(epoch=i,frame=name,master=f['master'],lk=f['lk'],rows=rows,pairs=qa,
     phase=ph,placement=plan['placement'],return_model=plan['ret'],emission=plan['emission'],
     calendar='MEASURED_CLASS_MODEL; actual frame/CAP bench still required'))
+ if glob:
+  for i,ab in absedges.items():assert len(ab)==len(set(ab)),('CAP root edge repeats',i,sorted(ab))
  # These are actual source programme words from all90 legalised row assignments.
  phase=[];stream=[]
  for i,w in enumerate(common):
@@ -84,6 +107,8 @@ def main():
    scope='Exclusive private selected programme only; production/MU overlaps not granted'),
   runtime_checks_required=['all15 actual stream read/valid/source/ex/macros','macro commit dates','g_wpar and selector readback',
    'END retains but no laterGW/overwrite','reset invalidates; reinstall raw path required','mode/slot/port lifetimes'],
+  global_calendar=None if not glob else dict(placements=a.placements,edly=a.edly,frame_order=ORDER,measured_frame_offsets=OFFS,
+   root_edges_per_epoch={str(i):sorted(v) for i,v in absedges.items()},rule='union of all frames exit edges (R +edly) has no repeat'),
   fixture_raw_sha256=hashlib.sha256((Path(a.fixture)/'ops/attn.q_norm.scale.bin').read_bytes()).hexdigest())
  (out/'contract.json').write_text(json.dumps(rec,indent=2)+'\n')
  print('RETAINED_XS_PROGRAM_MODEL_PASS frames6 epochs15 rows512 common_streams15 calendarrows',len(cals),'QB20_vs_reload300; ACTUAL_READS_UNPROVED')

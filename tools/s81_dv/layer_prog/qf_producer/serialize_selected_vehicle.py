@@ -24,15 +24,16 @@ def main():
  frames={};seen=set();retags=0
  for pl in rec['plans']:
   name=pl['frame'];base=pl['master'].replace('_MX','').removesuffix('_l4');q,bf=B.frame_pairs(base)
-  f=frames.setdefault(name,dict(field=I.Field(16,1,0,depth=8192,active=10,pp=True,fast=True),q=q,bf=bf,pairs=pl['pairs'],master=pl['master']))
-  assert f['pairs']==pl['pairs'] and len(pl['pairs'])==9
+  npq=len(pl['pairs']);assert npq in (9,12)  # 12 = TOK.DS.BENCH.1 CAP-ED global placement (12 physical Q pairs)
+  f=frames.setdefault(name,dict(field=I.Field(16,1,0,depth=8192,active=10 if npq==9 else 12,pp=True,fast=True),q=q,bf=bf,pairs=pl['pairs'],master=pl['master']))
+  assert f['pairs']==pl['pairs']
   mat=XP.FMat('wq_b','fp8',fx.w('wq_b'),fx.sc('wq_b'),pl['rows'],'attn.wq_b')
   plan=dict(assign_slots=[(p['field_slot'],p['super_row'],p['seg']) for p in pl['placement']])
   orig=I._place;I._place=__import__('frame_return_plan').place_fn(plan['assign_slots'],3)
   try:ph=I.add_phase(f['field'],[mat])
   finally:I._place=orig
   assert ph==pl['phase'],('frozen writer metadata changed',name,pl['epoch'])
-  for slot in range(9):
+  for slot in range(npq):
    cfg=f['field'].cfg[-1][slot]
    for wi in list(range(8))+list(range(17,25)):
     v=cfg[wi]
