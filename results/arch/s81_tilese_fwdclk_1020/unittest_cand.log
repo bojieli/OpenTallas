@@ -1,0 +1,65 @@
+ot-run: ot-epyc5       admits  1142 GB (avail 913, growth 113, headroom 0, waiters 0/0 GB) load 38/128 running 32 disk 245 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/cand
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/cand
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/cand
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/cand
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-tilese-fwdclk/cand
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-755149-1792528366 after 0 s
+test_forwarded_sinks_counted_owned_and_judged (tests.test_landed_forwarded_clock.ForwardedOpenroad.test_forwarded_sinks_counted_owned_and_judged) ... ok
+test_mutants_fail_closed (tests.test_landed_forwarded_clock.ForwardedOpenroad.test_mutants_fail_closed) ... ok
+test_pre_cts_reports_only (tests.test_landed_forwarded_clock.ForwardedOpenroad.test_pre_cts_reports_only) ... ok
+test_opt_in_and_byte_identical_without_the_key (tests.test_landed_forwarded_clock.ForwardedSpec.test_opt_in_and_byte_identical_without_the_key) ... ok
+test_refusals (tests.test_landed_forwarded_clock.ForwardedSpec.test_refusals) ... ok
+test_check_only_and_multi_clock_child (tests.test_landed_cluster_kit.LandedClusterOpenroad.test_check_only_and_multi_clock_child) ... ok
+test_check_only_pin_reached_in_multi_mode_pre_cts (tests.test_landed_cluster_kit.LandedClusterOpenroad.test_check_only_pin_reached_in_multi_mode_pre_cts) ... ok
+test_child_on_region_root_measured_at_its_flops (tests.test_landed_cluster_kit.LandedClusterOpenroad.test_child_on_region_root_measured_at_its_flops) ... ok
+test_mutants_fail_closed (tests.test_landed_cluster_kit.LandedClusterOpenroad.test_mutants_fail_closed) ... ok
+test_accepted_and_generates_landed_body_and_multicycles (tests.test_landed_cluster_kit.LandedClusterSpec.test_accepted_and_generates_landed_body_and_multicycles) ... ok
+test_leaf_tile_and_hybrid_paths_unchanged (tests.test_landed_cluster_kit.LandedClusterSpec.test_leaf_tile_and_hybrid_paths_unchanged) ... ok
+test_refusals (tests.test_landed_cluster_kit.LandedClusterSpec.test_refusals) ... ok
+test_co_timed_at_the_flops_passes (tests.test_landed_raw_child_pins.RawPinGate.test_co_timed_at_the_flops_passes) ... ok
+test_equal_pin_arrival_model_fails (tests.test_landed_raw_child_pins.RawPinGate.test_equal_pin_arrival_model_fails) ... ok
+test_tolerance_edges (tests.test_landed_raw_child_pins.RawPinGate.test_tolerance_edges) ... ok
+test_mutants_fail_closed (tests.test_landed_raw_child_pins.RawPinOpenroad.test_mutants_fail_closed) ... ok
+test_plain_landed_kit_with_generated_pre_cts_dicts (tests.test_landed_raw_child_pins.RawPinOpenroad.test_plain_landed_kit_with_generated_pre_cts_dicts) ... ok
+test_raw_pin_visited_in_multi_mode_pre_cts (tests.test_landed_raw_child_pins.RawPinOpenroad.test_raw_pin_visited_in_multi_mode_pre_cts) ... ok
+test_tap_delivers_the_record_offset_post_cts (tests.test_landed_raw_child_pins.RawPinOpenroad.test_tap_delivers_the_record_offset_post_cts) ... ok
+test_tritoncts_alone_gives_equal_pin_arrival_and_fails (tests.test_landed_raw_child_pins.RawPinOpenroad.test_tritoncts_alone_gives_equal_pin_arrival_and_fails) ... ok
+test_generated_sdc_binds_raw_pins_and_keeps_plain_landed_bytes (tests.test_landed_raw_child_pins.RawPinRecord.test_generated_sdc_binds_raw_pins_and_keeps_plain_landed_bytes) ... ok
+test_record_sdc_without_the_entry_model_refused (tests.test_landed_raw_child_pins.RawPinRecord.test_record_sdc_without_the_entry_model_refused) ... ok
+test_reference_and_tolerance_come_from_the_closed_record (tests.test_landed_raw_child_pins.RawPinRecord.test_reference_and_tolerance_come_from_the_closed_record) ... ok
+test_refusals_fail_closed (tests.test_landed_raw_child_pins.RawPinRecord.test_refusals_fail_closed) ... ok
+test_targets_are_the_record_offsets_and_hooks_arm_the_tap (tests.test_landed_raw_child_pins.RawPinTapTargets.test_targets_are_the_record_offsets_and_hooks_arm_the_tap) ... ok
+test_tapped_clk_passes_equal_pin_arrival_fails (tests.test_landed_multi_root_record.MultiRootGate.test_tapped_clk_passes_equal_pin_arrival_fails) ... ok
+test_tap_on_the_boundary_pin (tests.test_landed_multi_root_record.MultiRootOpenroad.test_tap_on_the_boundary_pin) ... ok
+test_without_tap_fails (tests.test_landed_multi_root_record.MultiRootOpenroad.test_without_tap_fails) ... ok
+test_generated_reference_must_match_the_routed_view (tests.test_landed_multi_root_record.MultiRootRecord.test_generated_reference_must_match_the_routed_view) ... ok
+test_hybrid_record_unchanged (tests.test_landed_multi_root_record.MultiRootRecord.test_hybrid_record_unchanged) ... ok
+test_reference_anchor_and_tolerance_from_the_record (tests.test_landed_multi_root_record.MultiRootRecord.test_reference_anchor_and_tolerance_from_the_record) ... ok
+test_refusals_fail_closed (tests.test_landed_multi_root_record.MultiRootRecord.test_refusals_fail_closed) ... ok
+test_second_boundary_root_is_co_timed (tests.test_landed_multi_root_record.MultiRootRecord.test_second_boundary_root_is_co_timed) ... ok
+test_tap_delays_the_boundary_pin_to_the_anchor (tests.test_landed_multi_root_record.MultiRootRecord.test_tap_delays_the_boundary_pin_to_the_anchor) ... ok
+test_committed_files_are_the_generator_output_and_bind (tests.test_landed_multi_root_record.Unregistered.test_committed_files_are_the_generator_output_and_bind) ... skipped 'pgslice_lg child views not checked out'
+test_real_references (tests.test_landed_multi_root_record.Unregistered.test_real_references) ... skipped 'pgslice_lg child views not checked out'
+test_refuses_registered_or_foreign_view (tests.test_landed_multi_root_record.Unregistered.test_refuses_registered_or_foreign_view) ... skipped 'pgslice_lg child views not checked out'
+test_boundary_80_exact_passes (tests.test_hybrid_clock_rule_0dq.ClockRuleProc.test_boundary_80_exact_passes) ... ok
+test_insertion_alone_warns (tests.test_hybrid_clock_rule_0dq.ClockRuleProc.test_insertion_alone_warns) ... ok
+test_large_deep_tree_with_tight_pin_spread_passes_with_warn (tests.test_hybrid_clock_rule_0dq.ClockRuleProc.test_large_deep_tree_with_tight_pin_spread_passes_with_warn) ... ok
+test_pin_spread_over_80_fails_at_tt_and_ff_only (tests.test_hybrid_clock_rule_0dq.ClockRuleProc.test_pin_spread_over_80_fails_at_tt_and_ff_only) ... ok
+test_every_body_judges_spread_not_sinks (tests.test_hybrid_clock_rule_0dq.NoSinkOrInsertionHardFail.test_every_body_judges_spread_not_sinks) ... ok
+test_landed_child_flop_extent_is_judged (tests.test_hybrid_clock_rule_0dq.NoSinkOrInsertionHardFail.test_landed_child_flop_extent_is_judged) ... ok
+
+----------------------------------------------------------------------
+Ran 43 tests in 30.021s
+
+OK (skipped=3)
+
+RAW_PIN with tap: OT_LANDED RAW_PIN tt ck_ra h/CKP wire=177.58576624687805 R=15.0 eff=192.58576624687805 co_timed=h/CLK eff_ref=188.90269805880104 skew=3.7 tol=50 PASS
+OT_LRT DONE tt h/CKP buffers=4 raw-ref=87.6 target=85.0 residual=2.6
+
+RAW_PIN TritonCTS alone: OT_LANDED RAW_PIN tt ck_ra h/CKP wire=88.92569355329049 R=15.0 eff=103.92569355329049 co_timed=h/CLK eff_ref=188.88813332043856 skew=-85.0 tol=50 FAIL
+
+multi-root RAW_PIN with tap: OT_LANDED RAW_PIN tt ck_ra h/CKP wire=88.9235008628081 R=170.0 eff=258.9235008628081 co_timed=h/CLK eff_ref=254.97500567037739 skew=3.9 tol=50 PASS
+OT_LRT DONE tt h/CLK buffers=3 raw-ref=65.7 target=70.0 residual=-4.3
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-755149-1792528366): exit 0
