@@ -107,7 +107,13 @@ module ot_hbm_idx_client_static_quad #(parameter integer TP=96,RANK_W=(TP<=1?1:$
   .addr(sel_addr),.k(10'd512),.in_line(sel_in),.out_v(unused_ov),.out_line(unused_ol),.selected_v(selected_v),.selected_line(selected_line),
   .threshold_observe(threshold),.selected_observe(selected_count),.fault(sf));
  wire[9:0]total;
- ot_hbm_idx_topk_link_static link(.clk(clk_link),.clk_mem(clk_link_mem),.rst_n(rst_n),.clear(link_clear),.ingest_v(ingest_v),
+// idx_link: pipelined successor (HBM-IDXPIPE 10-18, outputs +5, calendar --link-pipe 5); OT_IDX_HIST_LINK = historical.
+`ifdef OT_IDX_HIST_LINK
+ ot_hbm_idx_topk_link_static link(
+`else
+ ot_hbm_idx_topk_link_static_p link(
+`endif
+  .clk(clk_link),.clk_mem(clk_link_mem),.rst_n(rst_n),.clear(link_clear),.ingest_v(ingest_v),
   .selected_line(selected_line),.flush(link_flush),.emit_v(link_emit),.emit_group(link_group),.rank(8'(rank)),.gbase(gbase),
   .tx_v(tx_v),.tx(tx),.fault(lf),.selected_count(total));
 endmodule

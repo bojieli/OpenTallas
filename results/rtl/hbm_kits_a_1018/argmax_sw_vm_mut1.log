@@ -1,0 +1,7 @@
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2049683-1792371679 after 0 s
+STREAM record hangs busy (no fault) at cyc 381
+ARGMAX_SW_VM FAIL
+rtl/test/hbm_netlist_v16/tb_argmax_sw_vm.sv:73: $finish called at 770000 (1ps)
+ARGMAX_SW_VM_BENCH MUT=1 FAIL
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2049683-1792371679): exit 1

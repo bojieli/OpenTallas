@@ -35,7 +35,7 @@ module tb_selector_static;
   end
  end
  initial begin
-  repeat(4)@(negedge clk);rst_n=1;
+  repeat(4)@(negedge clk);rst_n=1;repeat(4)@(negedge clk); // core ot_rst_relay: 3-edge release
   for(frame=0;frame<3;frame=frame+1)begin
    fn=$sformatf("lines%0d.hex",frame);$readmemh(fn,lines);
    fn=$sformatf("gold%0d.hex",frame);$readmemh(fn,gold);
@@ -50,14 +50,14 @@ module tb_selector_static;
    for(integer p=1;p<3;p=p+1)begin
     tick(3,0,p);
     for(integer a=0;a<171;a=a+1)tick(4,a,p);
-    tick(0,0,p);tick(0,0,p);
+    repeat(4)tick(0,0,p); // scan drain: op4 -> hist H3 is 4 edges (pipelined core)
     for(integer b=(p==2?63:31);b>=0;b=b-1)tick(5,b,p);
     tick(0,0,p);
    end
    for(integer a=0;a<171;a=a+1)tick(6,a,2);
-   tick(0,0,2);tick(0,0,2);tick(7,0,2);tick(0,0,2);
+   repeat(5)tick(0,0,2);tick(7,0,2);tick(0,0,2); // op7 >= last op6 + 6 (S5 merge), op8 >= op7 + 2
    for(integer a=0;a<32;a=a+1)tick(8,a,2);
-   tick(0,0,2);repeat(3+2*(SHELL!=0))tick(0,0,2); // SHELL: pin flops add +1 in / +1 out edge to the last emit
+   tick(0,0,2);repeat(6+3*(SHELL!=0))tick(0,0,2); // L2H-IDXSEL 10-19: core inputs +2 (P1 relay + P2 kept copies), fault +1; SHELL: pin +1 in, +2 out (relay + pin)
    for(integer j=0;j<10944;j=j+1)if(gold[j]!==seen[j])errors++;
    if(checked!=512||fault)errors++;
    $display("IDX_SELECTOR_STATIC SHELL%0d MUT%0d frame%0d checked%0d errors%0d fault%0d edges%0d firstemit%0d threshold%h selected%h",SHELL,MUT,frame,checked,errors,fault,cyc-beginframe,firstemit-beginframe,threshold_observe,selected_observe);
