@@ -1,0 +1,136 @@
+{
+  "job": "ot_qkh_ktree_lkp-lkp1-52f03a544",
+  "classification": "infrastructure_hook_dependency_missing",
+  "reason": "route crashed twice (rc=1 ok-check failed;; first error: ot_qkh_ktree_lkp_lkp1_52f03a544/flow.log: Error: cts.tcl, 6 invalid command name \"ot_pg_install_unsupported_birth_guards\" [step do-4_1_cts]; resource=False)",
+  "source_commit": "52f03a5442b6cb93f381472a9a7b0189efd8339a",
+  "route_attempts": 2,
+  "old_job_status": "NEEDS_HUMAN",
+  "old_job_mutated": false,
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.463 MB sources in 41 modules, into 0.016 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 2.202 s (elab=0.234, cvt=1.910, bld=0.000); cpu 2.202 s on 1 threads; allocated 231.879 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_kpv_lockstep_miter_and_lane_injection": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "Verilator 5.050 2026-07-01 rev v5.050\nPASS ktree_lk lockstep_edges=4060 mismatches=0 lane_injections=32 detected=32\n",
+      "track": "parallel"
+    },
+    "bench_mut1_lanes_ignored_old_wiring": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "Verilator 5.050 2026-07-01 rev v5.050\nFAIL ktree_lk lockstep_edges=4060 mismatches=0 lane_injections=32 detected=0 ref_false=0\n",
+      "track": "parallel"
+    }
+  },
+  "crashes": [
+    {
+      "stage": "route",
+      "host": "ot-epyc9",
+      "attempt": 1,
+      "why": "rc=1 ok-check failed;; first error: ot_qkh_ktree_lkp_lkp1_52f03a544/flow.log: Error: cts.tcl, 6 invalid command name \"ot_pg_install_unsupported_birth_guards\" [step do-4_1_cts]",
+      "resource": false,
+      "tail": "ource /work/hooks/pre_cts_ot_cts_fix.tcl\nError: cts.tcl, 6 invalid command name \"ot_pg_install_unsupported_birth_guards\"\n\nElapsed time: 0:05.57[h:]min:sec. CPU time: user 5.14 sys 0.43 (99%). Peak memory: 453728KB.\nElapsed time: 1:04.78[h:]min:sec. CPU time: user 70.21 sys 2.69 (112%). Peak memory: 545504KB.\nElapsed time: 0:04.25[h:]min:sec. CPU time: user 3.87 sys 0.38 (99%). Peak memory: 409200KB.\nElapsed time: 0:04.19[h:]min:sec. CPU time: user 3.84 sys 0.34 (99%). Peak memory: 373684KB.\nElapsed time: 0:05.51[h:]min:sec. CPU time: user 5.08 sys 0.42 (99%). Peak memory: 411680KB.\nElapsed time: 0:04.25[h:]min:sec. CPU time: user 3.94 sys 0.30 (99%). Peak memory: 376280KB.\nElapsed time: 0:04.72[h:]min:sec. CPU time: user 4.20 sys 0.52 (99%). Peak memory: 411348KB.\nElapsed time: 1:44.66[h:]min:sec. CPU time: user 196.11 sys 13.62 (200%). Peak memory: 1132956KB.\nElapsed time: 1:00.69[h:]min:sec. CPU time: user 78.22 sys 7.58 (141%). Peak memory: 641108KB.\nElapsed time: 1:21.99[h:]min:sec. CPU time: user 97.58 sys 7.08 (127%). Peak memory: 827468KB.\nElapsed time: 0:04.70[h:]min:sec. CPU time: user 4.37 sys 0.33 (99%). Peak memory: 376352KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/4_1_cts.odb] Error 2\n\npartial record written to /srv/opentallas-scratch/claude/closure-loop/ot_qkh_ktree_lkp-lkp1-52f03a544/routes/ot_qkh_ktree_lkp_lkp1_52f03a544/physical.json\n",
+      "first_error": "ot_qkh_ktree_lkp_lkp1_52f03a544/flow.log: Error: cts.tcl, 6 invalid command name \"ot_pg_install_unsupported_birth_guards\" [step do-4_1_cts]"
+    },
+    {
+      "stage": "route",
+      "host": "ot-epyc9",
+      "attempt": 2,
+      "why": "rc=1 ok-check failed;; first error: ot_qkh_ktree_lkp_lkp1_52f03a544/flow.log: Error: cts.tcl, 6 invalid command name \"ot_pg_install_unsupported_birth_guards\" [step do-4_1_cts]",
+      "resource": false,
+      "tail": "ource /work/hooks/pre_cts_ot_cts_fix.tcl\nError: cts.tcl, 6 invalid command name \"ot_pg_install_unsupported_birth_guards\"\n\nElapsed time: 0:05.80[h:]min:sec. CPU time: user 5.33 sys 0.46 (99%). Peak memory: 457076KB.\nElapsed time: 1:14.10[h:]min:sec. CPU time: user 79.72 sys 2.97 (111%). Peak memory: 535700KB.\nElapsed time: 0:04.99[h:]min:sec. CPU time: user 4.53 sys 0.45 (99%). Peak memory: 407456KB.\nElapsed time: 0:04.95[h:]min:sec. CPU time: user 4.50 sys 0.44 (99%). Peak memory: 375688KB.\nElapsed time: 0:05.79[h:]min:sec. CPU time: user 5.36 sys 0.43 (99%). Peak memory: 412272KB.\nElapsed time: 0:05.34[h:]min:sec. CPU time: user 4.89 sys 0.44 (99%). Peak memory: 379144KB.\nElapsed time: 0:05.25[h:]min:sec. CPU time: user 4.78 sys 0.46 (99%). Peak memory: 411252KB.\nElapsed time: 2:32.01[h:]min:sec. CPU time: user 267.03 sys 13.49 (184%). Peak memory: 1140688KB.\nElapsed time: 1:09.57[h:]min:sec. CPU time: user 84.35 sys 6.28 (130%). Peak memory: 632500KB.\nElapsed time: 1:15.38[h:]min:sec. CPU time: user 92.63 sys 7.55 (132%). Peak memory: 833712KB.\nElapsed time: 0:04.85[h:]min:sec. CPU time: user 4.44 sys 0.41 (99%). Peak memory: 375332KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/4_1_cts.odb] Error 2\n\npartial record written to /srv/opentallas-scratch/claude/closure-loop/ot_qkh_ktree_lkp-lkp1-52f03a544/routes/ot_qkh_ktree_lkp_lkp1_52f03a544/physical.json\n",
+      "first_error": "ot_qkh_ktree_lkp_lkp1_52f03a544/flow.log: Error: cts.tcl, 6 invalid command name \"ot_pg_install_unsupported_birth_guards\" [step do-4_1_cts]"
+    }
+  ],
+  "clock_rule": {
+    "evidence": {
+      "max_root_sinks": 10866,
+      "root": "port:clk",
+      "cts": true,
+      "tt_insertion_ps": 196.9,
+      "tt_spread_ps": 11.4,
+      "tt_pin_spread_ps": 7.6,
+      "ff_insertion_ps": 161.4,
+      "ff_spread_ps": 11.6,
+      "ff_pin_spread_ps": 7.2,
+      "declared_clock": null,
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "clk",
+          "clock": "core_clk",
+          "tt": {
+            "clock_family": {
+              "core_clk": 10866
+            },
+            "boundary": {
+              "n": 563,
+              "mean": 191.9,
+              "min": 188.7,
+              "max": 196.3
+            },
+            "all": {
+              "n": 10866,
+              "mean": 190.7,
+              "min": 185.5,
+              "max": 196.9
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          },
+          "ff": {
+            "boundary": {
+              "n": 563,
+              "mean": 156.1,
+              "min": 153.2,
+              "max": 160.4
+            },
+            "all": {
+              "n": 10866,
+              "mean": 154.9,
+              "min": 149.8,
+              "max": 161.4
+            },
+            "child_flop": null,
+            "macros": null
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "10,866 sinks on the largest root; measured TT insertion 196.9 ps, FF insertion 161.4 ps, TT pin-flop spread 7.6 ps, FF pin-flop spread 7.2 ps (spread <= 80 ps)"
+    },
+    "sinks": 10866,
+    "ok": true,
+    "level": "PASS",
+    "text": "10,866 sinks on the largest root; measured TT insertion 196.9 ps, FF insertion 161.4 ps, TT pin-flop spread 7.6 ps, FF pin-flop spread 7.2 ps (spread <= 80 ps)",
+    "closed_stands": false,
+    "mode": "refuse"
+  },
+  "remote_host": "ot-epyc9",
+  "remote_run": "/srv/opentallas-scratch/claude/closure-loop/ot_qkh_ktree_lkp-lkp1-52f03a544",
+  "recovery_owner": "/root/closure_infra",
+  "adoption_requirements": [
+    "Recover using repaired shared PG helper overlay with immutable history retained.",
+    "Require CLOSED, native_pin_audit own-R on exact record view, rederive head_lane_perm for monotonic kp_in face pins, then bind OT_KV_KPV_LK=1."
+  ],
+  "files": {
+    "flow.log": "90ce6f1213a03f07788c4f54720c131dc04eb710267d3c312a06da6e20678f0c",
+    "failed_state.json": "c8cfbc9814fb133b132630fd8d99a28071eeb5101849287763a6ba94a20be8ce",
+    "physical.json": "477f5a6ad29c362a36b0c7a5d35e2107a72e02754bf71aadcdb6f7f0e3b5551c",
+    "status": "6cf538bbd0c561c38f5915e6843e42b788cc8c8b36fa3b9bc3dcff2a692d20dd",
+    "STATUS": "2c39a692eb4b5794205ae70817353381ed89a0d1fe43b760b7719f04fdff2303"
+  }
+}

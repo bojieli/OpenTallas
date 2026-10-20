@@ -1,0 +1,49 @@
+OT_ORFS_CORNER=TC (tt_overlay v2): corner WC reads the TT liberties (std cells + macro _tt.lib); orfs corner WC, hold corners WC,BC
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/ref_tile/ot_qkh_ktree_lkp/signoff.sdc]
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+-----------------------------------
+Design area 7238 um^2 53% utilization.
+OT_PREROUTE_GATE: dump /work/reports/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/preroute_gate_dump.json (1039 paths <= +300.0 ps, find 240 ms, classify 86 ms)
+preroute_gate: PASS: reg2reg ws 220.7 ps, <0: 0, <+250: 10; macro ws n/a ps, <0: 0, <+250: 0; io ws n/a ps, <0: 0, <+250: 0
+OT_PREROUTE_GATE: 0.455 s
+write_db /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/3_place.sdc
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb           75            814 e20358443b3f2dd51f79
+cp /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/3_5_place_dp.odb /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+Error: cts.tcl, 6 invalid command name "ot_pg_install_unsupported_birth_guards"
+
+Elapsed time: 0:05.80[h:]min:sec. CPU time: user 5.33 sys 0.46 (99%). Peak memory: 457076KB.
+Elapsed time: 1:14.10[h:]min:sec. CPU time: user 79.72 sys 2.97 (111%). Peak memory: 535700KB.
+Elapsed time: 0:04.99[h:]min:sec. CPU time: user 4.53 sys 0.45 (99%). Peak memory: 407456KB.
+Elapsed time: 0:04.95[h:]min:sec. CPU time: user 4.50 sys 0.44 (99%). Peak memory: 375688KB.
+Elapsed time: 0:05.79[h:]min:sec. CPU time: user 5.36 sys 0.43 (99%). Peak memory: 412272KB.
+Elapsed time: 0:05.34[h:]min:sec. CPU time: user 4.89 sys 0.44 (99%). Peak memory: 379144KB.
+Elapsed time: 0:05.25[h:]min:sec. CPU time: user 4.78 sys 0.46 (99%). Peak memory: 411252KB.
+Elapsed time: 2:32.01[h:]min:sec. CPU time: user 267.03 sys 13.49 (184%). Peak memory: 1140688KB.
+Elapsed time: 1:09.57[h:]min:sec. CPU time: user 84.35 sys 6.28 (130%). Peak memory: 632500KB.
+Elapsed time: 1:15.38[h:]min:sec. CPU time: user 92.63 sys 7.55 (132%). Peak memory: 833712KB.
+Elapsed time: 0:04.85[h:]min:sec. CPU time: user 4.44 sys 0.41 (99%). Peak memory: 375332KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_qkh_ktree_lk_asap7_ref_ot_qkh_ktree_lkp_lkp1_52f03a544/base/4_1_cts.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/closure-loop/ot_qkh_ktree_lkp-lkp1-52f03a544/routes/ot_qkh_ktree_lkp_lkp1_52f03a544/physical.json
