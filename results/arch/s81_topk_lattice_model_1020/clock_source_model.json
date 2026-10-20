@@ -1,0 +1,1004 @@
+{
+  "status": "MODEL_SOURCE_FIX_NOT_IMPLEMENTED_ROOT_REVIEW_REQUIRED",
+  "source": "8dec8d8d5",
+  "bug": "immediateK16 split occursbefore clock_spine wrapper; wrapperbalances16BUFrootA and suppressesoriginalregionalCTS",
+  "stages": [
+    {
+      "stage": 1,
+      "operation": "Construct exactlyownedregionnets for ALL stdFF plus32nativehardclockpins fromsourcebit/domain graph, sameexistingcore ck clock; not merelykmeansorcopied oldrootrefs",
+      "requires": "native actualpinroles/clocksource/polarity/gating/root-SCC identity"
+    },
+    {
+      "stage": 2,
+      "operation": "Buildbalancedtoprootdistribution toexplicitregionalrootbuffers; rootAbalanceONLY metric, notleafqualification",
+      "requires": "physicalPG atbirth, rows/band/sourceownership"
+    },
+    {
+      "stage": 3,
+      "operation": "EXPLICIT regional CTS on enumeratedownedregionalnets, usingoriginalCTS implementation onthese nets without re-enteringwholeport spine wrapper",
+      "requires": "allregionalnetscovered exactlyonce; topnetworkexcluded; hardnativephasecompensation mustbeactualchildclocktargetaware; no guessedsharedfallback"
+    },
+    {
+      "stage": 4,
+      "operation": "Measure actualTT/FF bothrise/fall all31kstdFF +all32nativeclockpins plusHIST32 internalnativefloprefs, linked launch/capture phase/SPEF/cap/slew and holdmargin30",
+      "requires": "<=80ps exactpolicy atlinkednativeflops+boundary; everyownership/root/polarity/Nan/absentclock conflict failclosed; rawSRAM unchangedarcs coverclockphase"
+    },
+    {
+      "stage": 5,
+      "operation": "Prove exactparentSCC quarter-control-glue ONEclockregion/SLAT4 and actualevery-stage405/fullband/PG/cold",
+      "requires": "no newdata/resetedge; anyneededlandingblocksproposaluntilcompilerfullSCCrepricing/proof"
+    }
+  ],
+  "forbidden": [
+    "blindOT_SPINE_CTS_REST1",
+    "new syntheticclock object to satisfycoverage",
+    "arc transplant or edits",
+    "falsepath/data mask",
+    "oldMXsymmetry/parentadoptionassumption",
+    "rootAspread passed off as leafspread"
+  ],
+  "clock_inventory": [
+    {
+      "inst": "u_ot_pr_core.u_q.u_mem.g_b[0].g_w[0].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        388.812,
+        43.980000000000004
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib",
+          "sha256": "67ee0c7bc4add793c938528c15ef9c1bec025e72452e34599631089cab1f4c73",
+          "clock_true": true,
+          "capacitance": "18.6995",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib",
+          "sha256": "ef97a2870902c999e683e2bc0a33fa68e1020b5d08782c0a5fee3cb34892da26",
+          "clock_true": true,
+          "capacitance": "19.7269",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_mem.g_b[0].g_w[1].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        388.812,
+        130.38000000000002
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib",
+          "sha256": "67ee0c7bc4add793c938528c15ef9c1bec025e72452e34599631089cab1f4c73",
+          "clock_true": true,
+          "capacitance": "18.6995",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib",
+          "sha256": "ef97a2870902c999e683e2bc0a33fa68e1020b5d08782c0a5fee3cb34892da26",
+          "clock_true": true,
+          "capacitance": "19.7269",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_mem.g_b[0].g_w[2].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        388.812,
+        216.78
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib",
+          "sha256": "67ee0c7bc4add793c938528c15ef9c1bec025e72452e34599631089cab1f4c73",
+          "clock_true": true,
+          "capacitance": "18.6995",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib",
+          "sha256": "ef97a2870902c999e683e2bc0a33fa68e1020b5d08782c0a5fee3cb34892da26",
+          "clock_true": true,
+          "capacitance": "19.7269",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_mem.g_b[1].g_w[0].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        518.412,
+        43.98000000000003
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib",
+          "sha256": "67ee0c7bc4add793c938528c15ef9c1bec025e72452e34599631089cab1f4c73",
+          "clock_true": true,
+          "capacitance": "18.6995",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib",
+          "sha256": "ef97a2870902c999e683e2bc0a33fa68e1020b5d08782c0a5fee3cb34892da26",
+          "clock_true": true,
+          "capacitance": "19.7269",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_mem.g_b[1].g_w[1].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        518.412,
+        130.38000000000005
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib",
+          "sha256": "67ee0c7bc4add793c938528c15ef9c1bec025e72452e34599631089cab1f4c73",
+          "clock_true": true,
+          "capacitance": "18.6995",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib",
+          "sha256": "ef97a2870902c999e683e2bc0a33fa68e1020b5d08782c0a5fee3cb34892da26",
+          "clock_true": true,
+          "capacitance": "19.7269",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_mem.g_b[1].g_w[2].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        518.412,
+        216.77999999999997
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib",
+          "sha256": "67ee0c7bc4add793c938528c15ef9c1bec025e72452e34599631089cab1f4c73",
+          "clock_true": true,
+          "capacitance": "18.6995",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_ff.lib",
+          "sha256": "ef97a2870902c999e683e2bc0a33fa68e1020b5d08782c0a5fee3cb34892da26",
+          "clock_true": true,
+          "capacitance": "19.7269",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_fq.g_bank[0].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        43.212,
+        389.58000000000004
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_fq.g_bank[1].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        129.61200000000002,
+        389.58000000000004
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_fq.g_bank[2].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        216.012,
+        389.58000000000004
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_fq.g_bank[3].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        302.41200000000003,
+        389.58
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_fq.g_bank[4].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        388.812,
+        389.58
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hc.g_bank[0].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        63.132,
+        43.242
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hc.g_bank[1].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        149.532,
+        43.242
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hc.g_bank[2].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        235.932,
+        43.242
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hc.g_bank[3].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        322.332,
+        43.242
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hc.g_bank[4].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        63.132,
+        129.642
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hc.g_bank[5].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        149.532,
+        129.642
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hc.g_bank[6].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        235.932,
+        129.642
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hc.g_bank[7].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        322.332,
+        129.642
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hf.g_bank[0].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        63.132,
+        475.242
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hf.g_bank[1].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        149.532,
+        475.242
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hf.g_bank[2].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        235.932,
+        475.242
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hf.g_bank[3].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        322.332,
+        475.242
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hf.g_bank[4].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        63.132,
+        561.642
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hf.g_bank[5].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        149.532,
+        561.642
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hf.g_bank[6].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        235.932,
+        561.642
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_hf.g_bank[7].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "S",
+      "at": [
+        322.332,
+        561.642
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_tt.lib",
+          "sha256": "dc6d088c82e81145f514bc11f61766ef4eba112efa2b8eb88d545a0acc09e07e",
+          "clock_true": true,
+          "capacitance": "5.9563",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank_ff.lib",
+          "sha256": "726f7cdb373a58a46052c39ff738db724070bd5ddb4910413407faa2fc3e7a6a",
+          "clock_true": true,
+          "capacitance": "6.2120",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "HIST32 actual finalboundaryTT114min106.8max120.3/FF94.2min86.5max100.7; nativeLib maxclocktable128 is differentstatistic; do not transplant"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank[0].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        43.212,
+        216.78
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank[1].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        129.612,
+        216.78
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank[2].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        216.012,
+        216.78
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank[3].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        43.212,
+        259.98
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    },
+    {
+      "inst": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank[4].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "pin": "clk",
+      "native_IO": "INPUT",
+      "face": "W",
+      "at": [
+        129.612,
+        259.98
+      ],
+      "source_clock": "existing single core ck root",
+      "native_libraries": {
+        "tt": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib",
+          "sha256": "16518b1f675fc4d29119e7c74a822d7e9e6893a2006ba35c696d88609e6704e9",
+          "clock_true": true,
+          "capacitance": "13.4295",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        },
+        "ff": {
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_ff.lib",
+          "sha256": "bb01e29f9d14f7d6bf0a2d76bc365895ef54e6e804956a850a786ce68baa719b",
+          "clock_true": true,
+          "capacitance": "14.4569",
+          "reference": "native clock pin + unchanged full macro arcs; no synthetic offset"
+        }
+      },
+      "phase_ownership": "MODEL_ONLY_NOT_CURRENT_GATE_QUALIFICATION",
+      "internal_native_reference": "rawSRAM clock INPUT true, unchanged native read/write setup/hold arcs; no additional scalar insertion invented"
+    }
+  ],
+  "proposed_code_boundary": "Ownfuturekit orchestration only AFTERROOTreviews sourceplan; no globalhelperdefaultchange or newgate implemented",
+  "open": "regionalassignment/nativephasecompensation/actualODBclockownership stillmustbeimplemented+verified; this isnotclockclosure"
+}
