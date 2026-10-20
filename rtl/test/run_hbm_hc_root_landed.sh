@@ -32,14 +32,17 @@ src=(rtl/test/tb_hbm_hc_eng4_static.sv $H/ot_hbm_hc_root_static.sv $H/ot_hbm_hc_
  rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/lib/ot_rst_relay.sv
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
+# HBM-HC7-ROOT 10-20: HC_NATIVE="NETLIST.v CELLS.v" adds the gate-cloned root (module ot_hbm_hc_root_static_nat) in
+# lockstep with the RTL dut (+define+HC_NATIVE; HC_NATIVE_EQ PASS/FAIL).
+nat=(); natdef=""; if [ -n "${HC_NATIVE:-}" ]; then read -r nv cv <<< "$HC_NATIVE"; nat=("$(realpath "$nv")" "$(realpath "$cv")"); natdef="+define+HC_NATIVE"; fi
 python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case" --split --npos 1 --raw0 "$raw0" --rs 104 --ding "$ding" > "$out/vectors.log"
 "$vl" --binary --timing --hierarchical -j "${HC_BUILD_JOBS:-16}" -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
   --top-module tb_hbm_hc_eng4_static +define+MUT=$mut +define+OT_FP_DATA_NORST \
   +define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_SAFE=${HC_SAFE:-0} +define+HC_TAILC=${HC_TAILC:-0} +define+HC_PTFS=${HC_PTFS:-0} +define+HC_CPR=${HC_CPR:-0} +define+HC_QDRLY=2 +define+HC_XRD=$xrd +define+HC_XRU=$xru \
-  "+define+HC_XRDQ=$xrdq" "+define+HC_XRUQ=$xruq" "+define+HC_DIE_XRDQ=$dxd" "+define+HC_DIE_XRUQ=$dxu" -Mdir "$out/obj" -o Vroot \
-  rtl/test/tb_hbm_hc_eng4_static_hier.vlt "${src[@]}" > "$out/build.log" 2>&1
+  "+define+HC_XRDQ=$xrdq" "+define+HC_XRUQ=$xruq" "+define+HC_DIE_XRDQ=$dxd" "+define+HC_DIE_XRUQ=$dxu" $natdef -Mdir "$out/obj" -o Vroot \
+  rtl/test/tb_hbm_hc_eng4_static_hier.vlt "${src[@]}" "${nat[@]}" > "$out/build.log" 2>&1
 set +e; (cd "$out/case" && "$out/obj/Vroot" $(cat plus.txt)) > "$out/run.log" 2>&1; rc=$?; set -e
-grep -E "HC_ENG_DONE|HC_ENG PASS|HC_ENG FAIL|HC_ENG_FAULT|MISMATCH" "$out/run.log" || true
+grep -E "HC_NATIVE_EQ|NATIVE_MISMATCH|HC_ENG_DONE|HC_ENG PASS|HC_ENG FAIL|HC_ENG_FAULT|MISMATCH" "$out/run.log" || true
 echo "HC_ROOT_LANDED SAFE=${HC_SAFE:-0} TAILC=${HC_TAILC:-0} PTFS=${HC_PTFS:-0} CPR=${HC_CPR:-0} MUT=$mut XRD=$xrd XRU=$xru XRDQ=$xrdq XRUQ=$xruq DIE_XRDQ=$dxd DIE_XRUQ=$dxu DING=$ding RAW0=$raw0 rc=$rc"
 rm -rf "$out/obj"
 exit $rc
