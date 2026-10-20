@@ -30,7 +30,7 @@ module ot_hdc_fp32_add_lat_ncr #(
     wire a_zero = (a[30:0] == 31'd0);
     wire b_zero = (b[30:0] == 31'd0);
     wire bypass = nonfinite || a_zero || b_zero;
-    wire [31:0] bypass_code = nonfinite ? 32'd0 : (a_zero ? (b_zero ? 32'd0 : b) : a);
+
     wire cmp_c;
     wire [30:0] cmp_s;
     ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
@@ -40,34 +40,39 @@ module ot_hdc_fp32_add_lat_ncr #(
     ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
     // A1 -> A2 cut (u_ca): the valid bit is the one reset flop, the rest plain data flops
     reg         x_v;
-    reg         x_swap, x_byp, x_nf, x_sub, x_as, x_bs;
-    reg  [31:0] x_code;
-    reg  [7:0]  x_aexp, x_bexp, x_dab, x_dba;
+    reg         x_byp, x_nf, x_sub, x_as, x_bs;
+    (* keep="true", dont_touch="true" *) reg [6:0] x_swap;
+    (* keep="true",dont_touch="true" *) reg [27:0] x_dab_oh,x_dba_oh;
+    (* keep="true",dont_touch="true" *) reg x_dab_big,x_dba_big;
+    reg [31:0] x_code_a,x_code_b;
+    (* keep="true",dont_touch="true" *) reg [3:0] x_az_dist,x_bz_dist,x_nf_dist;
+    reg  [7:0]  x_aexp, x_bexp;
     reg  [23:0] x_aman, x_bman;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) x_v <= 1'b0;
         else x_v <= valid_in;
     always @(posedge clk) begin
-        x_swap <= !cmp_c; x_byp <= bypass; x_nf <= nonfinite; x_code <= bypass_code;
+        x_swap <= {7{!cmp_c}}; x_byp <= bypass; x_nf <= nonfinite; x_code_a<=a;x_code_b<=b;
+        x_az_dist<={4{a_zero}};x_bz_dist<={4{b_zero}};x_nf_dist<={4{nonfinite}};
         x_sub <= a[31] ^ b[31]; x_as <= a[31]; x_bs <= b[31];
-        x_aexp <= a_exp; x_bexp <= b_exp; x_aman <= a_man; x_bman <= b_man; x_dab <= dab; x_dba <= dba;
+        x_aexp <= a_exp; x_bexp <= b_exp; x_aman <= a_man; x_bman <= b_man; x_dab_big<=(dab>=28);x_dba_big<=(dba>=28);
     end
     // ---- A2 ----------------------------------------------------------------------------------------
-    function automatic [27:0] jam28;
-        input [23:0] man;
-        input [7:0]  d;
-        reg [27:0] val, lost;
-        begin
-            val = {1'b0, man, 3'b000};
-            if (d >= 8'd28) jam28 = {27'd0, |val};
-            else begin
-                lost = val & ~({28{1'b1}} << d[4:0]);
-                jam28 = (val >> d[4:0]) | {27'd0, |lost};
-            end
-        end
+    genvar j;
+    generate for(j=0;j<28;j=j+1)begin:jam_capture
+      always @(posedge clk)begin x_dab_oh[j]<=(dab==j);x_dba_oh[j]<=(dba==j);end
+    end endgenerate
+    function automatic [27:0] jam28oh;
+      input [23:0] man;input [27:0] oh;input big;
+      reg [27:0] val,acc;integer i;
+      begin
+        val={1'b0,man,3'b000};acc={27'd0,big && (|val)};
+        for(i=0;i<28;i=i+1)acc=acc|({28{oh[i]}} & ((val>>i)|{27'd0,|(val & ((28'd1<<i)-1))}));
+        jam28oh=acc;
+      end
     endfunction
-    wire [27:0] small_a = jam28(x_aman, x_dba);
-    wire [27:0] small_b = jam28(x_bman, x_dab);
+    wire [27:0] small_a=jam28oh(x_aman,x_dba_oh,x_dba_big);
+    wire [27:0] small_b=jam28oh(x_bman,x_dab_oh,x_dab_big);
 
     reg        s1_v, s1_byp, s1_sub, s1_sign, s1_nf;
     reg [31:0] s1_code;
@@ -78,15 +83,23 @@ module ot_hdc_fp32_add_lat_ncr #(
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= x_v;
     end
-    wire [27:0] small_s = x_swap ? small_a : small_b;
+    wire [27:0] small_s;
+    genvar k;
+    generate for(k=0;k<4;k=k+1)begin:small_select
+      assign small_s[7*k+:7]=x_swap[k]?small_a[7*k+:7]:small_b[7*k+:7];
+    end endgenerate
     always @(posedge clk) begin
         s1_byp <= x_byp;
         s1_nf <= x_nf;
-        s1_code <= x_code;
+        s1_code[7:0]<=x_nf_dist[0]?8'd0:(x_az_dist[0]?(x_bz_dist[0]?8'd0:x_code_b[7:0]):x_code_a[7:0]);
+        s1_code[15:8]<=x_nf_dist[1]?8'd0:(x_az_dist[1]?(x_bz_dist[1]?8'd0:x_code_b[15:8]):x_code_a[15:8]);
+        s1_code[23:16]<=x_nf_dist[2]?8'd0:(x_az_dist[2]?(x_bz_dist[2]?8'd0:x_code_b[23:16]):x_code_a[23:16]);
+        s1_code[31:24]<=x_nf_dist[3]?8'd0:(x_az_dist[3]?(x_bz_dist[3]?8'd0:x_code_b[31:24]):x_code_a[31:24]);
         s1_sub <= x_sub;
-        s1_sign <= x_swap ? x_bs : x_as;
-        s1_exp <= x_swap ? x_bexp : x_aexp;
-        s1_big <= x_swap ? x_bman : x_aman;
+        s1_sign <= x_swap[4] ? x_bs : x_as;
+        s1_exp <= x_swap[4] ? x_bexp : x_aexp;
+        s1_big[11:0] <= x_swap[5] ? x_bman[11:0] : x_aman[11:0];
+        s1_big[23:12] <= x_swap[6] ? x_bman[23:12] : x_aman[23:12];
 `ifdef KVP3_MUT4
         s1_small <= {1'b0, small_s[25:0]};             // bench mutant 4 (must FAIL): a live bit dropped
 `else
@@ -105,15 +118,16 @@ module ot_hdc_fp32_add_lat_ncr #(
     reg         t_v;
     reg         t_byp, t_sub, t_sign, t_nf;
     reg  [31:0] t_code;
-    reg  [7:0]  t_exp;
+    (* keep="true",dont_touch="true" *) reg [26:0] sentinel;
     reg  [27:0] sum;
+    (* keep="true",dont_touch="true" *) reg [2:0] sum_copies;
     reg  [26:1] t_dif;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) t_v <= 1'b0;
         else t_v <= s1_v;
     always @(posedge clk) begin
-        t_byp <= s1_byp; t_sub <= s1_sub; t_sign <= s1_sign; t_nf <= s1_nf; t_code <= s1_code; t_exp <= s1_exp;
-        sum <= sum_w; t_dif <= dif_w[26:1];
+        t_byp <= s1_byp; t_sub <= s1_sub; t_sign <= s1_sign; t_nf <= s1_nf; t_code <= s1_code; sentinel<=((s1_exp>=1)&&(s1_exp<=27))?(27'd1 << (5'd27-s1_exp[4:0])):27'd0;
+        sum <= sum_w; sum_copies<={3{sum_w[27]}}; t_dif <= dif_w[26:1];
     end
     // ---- B2 ----------------------------------------------------------------------------------------
 `ifdef KVP3_MUT1
@@ -122,9 +136,11 @@ module ot_hdc_fp32_add_lat_ncr #(
     wire [26:0] dif = {t_dif, sum[0]};                 // dif_w[0] == sum_w[0] == s1_small[0]
 `endif
     wire carry = sum[27];
-    wire [26:0] add_val = carry ? {sum[27:2], sum[1] | sum[0]} : sum[26:0];
-    wire [7:0]  room = t_exp - 8'd1;
-    wire [26:0] sentinel = (room <= 8'd26) ? (27'd1 << (5'd26 - room[4:0])) : 27'd0;
+    wire [26:0] shifted_add={sum[27:2],sum[1]|sum[0]};
+    wire [26:0] add_val;
+    generate for(k=0;k<3;k=k+1)begin:add_select
+      assign add_val[9*k+:9]=sum_copies[k]?shifted_add[9*k+:9]:sum[9*k+:9];
+    end endgenerate
     wire [5:0]  lz_w;
     ot_hdc_lzc32 u_lzc (.x({dif | sentinel, 5'b11111}), .n(lz_w));
     // HSPLIT: {t_exp, dif} for the pass-through from a kept second copy of the B1 -> B2 register (same edge, same value)
@@ -140,14 +156,25 @@ module ot_hdc_fp32_add_lat_ncr #(
     reg  [26:0] w_add;
     reg  [27:0] w_dif;
     reg  [4:0]  lz;
+    (* keep="true",dont_touch="true" *) reg [26:0] lz_oh;
+    (* keep="true",dont_touch="true" *) reg [3:0] w_sub_dist;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) w_v <= 1'b0;
         else w_v <= t_v;
     always @(posedge clk) begin
         w_byp <= t_byp; w_sub <= t_sub; w_sign <= t_sign; w_nf <= t_nf; w_code <= t_code; w_exp <= p_exp;
-        w_add <= add_val; w_dif <= p_dif; lz <= lz_w[4:0]; w_carry <= carry;
+        w_add <= add_val; w_dif <= p_dif; lz <= lz_w[4:0]; w_carry <= carry; w_sub_dist<={4{t_sub}};
+
     end
-    wire [26:0] sub_val = w_dif[26:0] << lz[4:0];
+    generate for(j=0;j<27;j=j+1)begin:normal_capture
+      always @(posedge clk)lz_oh[j]<=(lz_w[4:0]==j);
+    end endgenerate
+    reg [26:0] sub_val;
+    integer si;
+    always @*begin
+      sub_val=0;
+      for(si=0;si<27;si=si+1)sub_val=sub_val|((w_dif[26:0]<<si)&{27{lz_oh[si]}});
+    end
     wire [7:0]  exp_sub, exp_add;
     wire exp_sub_c, exp_add_c;
     ot_hdc_ksadd_k #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
@@ -165,7 +192,10 @@ module ot_hdc_fp32_add_lat_ncr #(
         s2_byp <= w_byp; s2_nf <= w_nf; s2_code <= w_code; s2_sign <= w_sign;
         s2_zero <= w_sub && (w_dif == 28'd0);
         s2_exp <= w_sub ? exp_sub : exp_add;
-        s2_val <= w_sub ? sub_val : w_add;
+        s2_val[6:0]<=w_sub_dist[0]?sub_val[6:0]:w_add[6:0];
+        s2_val[13:7]<=w_sub_dist[1]?sub_val[13:7]:w_add[13:7];
+        s2_val[20:14]<=w_sub_dist[2]?sub_val[20:14]:w_add[20:14];
+        s2_val[26:21]<=w_sub_dist[3]?sub_val[26:21]:w_add[26:21];
     end
 
     // ---- C1 ----------------------------------------------------------------------------------------
@@ -179,25 +209,30 @@ module ot_hdc_fp32_add_lat_ncr #(
     reg  [31:0] u_code;
     reg  [7:0]  u_exp;
     reg  [23:0] rnd;
+    (* keep="true",dont_touch="true" *) reg [1:0] rnd_c_dist;
+    (* keep="true",dont_touch="true" *) reg [3:0] u_byp_dist;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) u_v <= 1'b0;
         else u_v <= s2_v;
     always @(posedge clk) begin
         u_byp <= s2_byp; u_zero <= s2_zero; u_sign <= s2_sign; u_nf <= s2_nf; u_code <= s2_code; u_exp <= s2_exp;
-        rnd <= rnd_w; rnd_c <= rnd_cw;
+        rnd <= rnd_w; rnd_c <= rnd_cw; rnd_c_dist<={2{rnd_cw}};u_byp_dist<={4{s2_byp}};
     end
     // ---- C2 ----------------------------------------------------------------------------------------
-    wire [23:0] man = rnd_c ? {1'b1, rnd[23:1]} : rnd;
+    wire [23:0] shifted_rnd={1'b1,rnd[23:1]};
+    wire [23:0] man={rnd_c_dist[1]?shifted_rnd[23:12]:rnd[23:12],rnd_c_dist[0]?shifted_rnd[11:0]:rnd[11:0]};
     wire [8:0]  e = {1'b0, u_exp} + {8'd0, rnd_c};
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
     wire over = (u_exp == 8'hff) || (e >= 9'd255);
-    always @(posedge clk or negedge rst_y) begin
-        if(!rst_y)y<=32'd0;
-        else if(u_byp)y<=u_code;
-        else if(u_zero || over)y<=32'd0;
-        else y<=(code[30:0]==31'd0)?32'd0:code;
-    end
+    generate for(k=0;k<4;k=k+1)begin:out_region
+      always @(posedge clk or negedge rst_y)begin
+        if(!rst_y)y[8*k+:8]<=8'd0;
+        else if(u_byp_dist[k])y[8*k+:8]<=u_code[8*k+:8];
+        else if(u_zero || over)y[8*k+:8]<=8'd0;
+        else y[8*k+:8]<=(code[30:0]==31'd0)?8'd0:code[8*k+:8];
+      end
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n)begin err<=E_NONE;valid_out<=1'b0;end
         else begin
@@ -260,7 +295,8 @@ module ot_qwen_nearhbm_prod_ncr (
     reg         v2, s2_bad, s2_zero, s2_sign, s2_ovf, s2_normal;
     reg [11:0]  s2_p;
     reg [7:0]   s2_be;
-    reg [4:0]   s2_sh;
+    (* keep="true",dont_touch="true" *) reg [22:0] s2_sh_oh;
+    wire [4:0] sh_w=(!be[10] && (be != 11'd0)) ? (5'd23 - {1'b0, lz}) : s1_e[4:0];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) v2 <= 1'b0; else v2 <= v1;
     end
@@ -272,9 +308,17 @@ module ot_qwen_nearhbm_prod_ncr (
         s2_normal <= !be[10] && (be != 11'd0);
         s2_ovf <= !be[10] && (be >= 11'd255);
         s2_be <= be[7:0];
-        s2_sh <= (!be[10] && (be != 11'd0)) ? (5'd23 - {1'b0, lz}) : s1_e[4:0];
+
     end
-    wire [34:0] sh = {23'd0, s2_p} << s2_sh;
+    genvar pj;
+    generate for(pj=0;pj<23;pj=pj+1)begin:shift_capture
+      always @(posedge clk)s2_sh_oh[pj]<=(sh_w==pj);
+    end endgenerate
+    reg [22:0] sh;integer sj;
+    always @*begin
+      sh=0;
+      for(sj=0;sj<23;sj=sj+1)sh=sh|(({11'd0,s2_p}<<sj)&{23{s2_sh_oh[sj]}});
+    end
     reg         v3, s3_bad, s3_zero, s3_ovf;
     reg [31:0]  s3_y;
     always @(posedge clk or negedge rst_n) begin

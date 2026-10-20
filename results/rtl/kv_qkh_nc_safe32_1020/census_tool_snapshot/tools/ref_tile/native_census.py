@@ -72,10 +72,16 @@ def liberty_roles(paths):
         for typ, _, body in libs:
             if typ != 'library':
                 continue
-            for typ, name, body in groups(body):
+            members = list(groups(body))
+            types = {}
+            for typ, name, tb in members:
+                if typ == 'type' and attr(tb, 'bit_from') is not None and attr(tb, 'bit_to') is not None:
+                    hi, lo = int(attr(tb, 'bit_from')), int(attr(tb, 'bit_to'))
+                    types[name] = list(range(hi, lo + (1 if lo >= hi else -1), 1 if lo >= hi else -1))
+            for typ, name, body in members:
                 if typ != 'cell':
                     continue
-                pins, seq = {}, False
+                pins, bus_order, seq = {}, {}, False
                 for kind, pn, pb in groups(body):
                     seq |= kind in ('ff', 'latch', 'ff_bank', 'latch_bank')
                     if kind not in ('pin', 'bus'):
@@ -91,6 +97,9 @@ def liberty_roles(paths):
                     inherited = pin_role(pb)
                     pins[pn] = inherited
                     if kind == 'bus':
+                        order = types.get(attr(pb, 'bus_type'))
+                        if order is not None:
+                            bus_order[pn] = order
                         for child_kind, child_name, child_body in groups(pb):
                             if child_kind != 'pin':
                                 continue
@@ -104,7 +113,7 @@ def liberty_roles(paths):
                                 pins[child_name] = pr
                 if not pins:
                     continue
-                role = {'pins': pins, 'sequential': seq}
+                role = {'pins': pins, 'sequential': seq, 'bus_order': bus_order}
                 if name in cells and cells[name] != role:
                     raise ValueError(f'conflicting Liberty roles across corners: {name}')
                 cells[name] = role
@@ -115,6 +124,7 @@ def liberty_roles(paths):
 
 def census(g, roles):
     drivers, loads, ports, transparent = {}, {}, {}, {}
+    output_sources, constant_sources = {}, {}
     constants = {g.find(i) for name, i in g.net_id.items() if name in ("1'0", "1'1")}
     errors = []
     for name, (direction, net) in g.ports.items():
@@ -131,8 +141,23 @@ def census(g, roles):
             continue
         ins, outs = [], []
         for pn, nets in pins.items():
+            order = role.get('bus_order', {}).get(pn)
+            if order is not None and len(order) != len(nets):
+                errors.append(f'Liberty bus width mismatch {master}/{pn}: {len(order)} vs {len(nets)}')
+                continue
+            if order is None and len(nets) > 1:
+                # Without an explicit Liberty bus type, varying indexed roles
+                # cannot be safely matched to a packed Verilog connection.
+                indexed = [p for name, p in role['pins'].items() if name == pn or name.startswith(pn + '[')]
+                def category(p):
+                    f = re.sub(r'[\s()]', '', p.get('function') or '')
+                    return p['direction'], p['clock'], f if f in ('0','1',"1'b0","1'b1") else 'dynamic'
+                if len({category(p) for p in indexed}) > 1:
+                    errors.append(f'ambiguous packed Liberty bus roles without type order {master}/{pn}')
+                    continue
             for bit, net in enumerate(nets):
-                p = (role['pins'].get(f'{pn}[{len(nets)-1-bit}]') if len(nets) > 1 else None) or role['pins'].get(pn) or role['pins'].get(TL._base(pn))
+                idx = order[bit] if order is not None else len(nets)-1-bit
+                p = (role['pins'].get(f'{pn}[{idx}]') if len(nets) > 1 or order is not None else None) or role['pins'].get(pn) or role['pins'].get(TL._base(pn))
                 if p is None:
                     errors.append(f'missing Liberty pin {master}/{pn}[{bit}] instance {name}')
                     continue
@@ -144,6 +169,9 @@ def census(g, roles):
                         errors.append(f'multiple drivers net {g.net_name[net]}')
                     drivers[net] = (ci, pn)
                     outs.append((net, p['function']))
+                    output_sources[net] = {'kind': 'liberty_function', 'instance': name, 'master': master,
+                                           'pin': f'{pn}[{idx}]' if len(nets) > 1 or order is not None else pn,
+                                           'function': p['function']}
                 else:
                     ins.append((pn, net))
                     if not p['clock']:
@@ -160,9 +188,25 @@ def census(g, roles):
             for dst, function in outs:
                 if function is not None and re.sub(r'[\s()]', '', function) in ('0', '1', "1'b0", "1'b1"):
                     constants.add(dst)
+                    constant_sources[dst] = output_sources[dst]
     for net in loads:
         if net not in drivers and net not in constants:
             errors.append(f'undriven dynamic net {g.net_name[net]}')
+    # Report constants for independent source-contract review. Packed protocol
+    # fields/instance IDs may be constant; mapped topology cannot decide whether
+    # a bit is a reserved field or an illegal functional tie-off.
+    const_reached, todo, output_bits = set(), [(x, x, []) for x in constants], []
+    while todo:
+        x, source, path = todo.pop()
+        if x in const_reached:
+            continue
+        const_reached.add(x)
+        provenance = constant_sources.get(source, {'kind': 'literal', 'net': g.net_name[source]})
+        for _, name, _ in ports.get(x, ()):
+            output_bits.append({'port_bit': name, 'source': provenance, 'transparent_path': path})
+        for ci, _, _ in loads.get(x, ()):
+            if ci in transparent:
+                todo.append((transparent[ci][1], source, path + [g.cells[ci][1]]))
     violations, counts, max_loads, examined = [], [], 0, 0
     for net, driver in drivers.items():
         if net in constants or driver[0] in transparent:
@@ -191,7 +235,11 @@ def census(g, roles):
                                'endpoints': [list(e) for e in sorted(endpoints, key=str)[:40]]})
     return {'status': 'FAIL' if errors or violations else 'PASS', 'limit': 32,
             'roots_examined': examined, 'max_dynamic_loads': max_loads,
-            'driver_counts': counts, 'role_errors': errors, 'violations': violations}
+            'driver_counts': counts, 'constant_output_bits': output_bits,
+            'functional_pin_contract': 'NOT_EVALUATED',
+            'pin_registration_contract': 'NOT_EVALUATED', 'storage_contract': 'NOT_EVALUATED',
+            'independent_source_contract_audit_required': True,
+            'role_errors': errors, 'violations': violations}
 
 
 def main():

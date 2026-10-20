@@ -35,12 +35,12 @@ module tb_qkh_nc;
     reg         av; reg [31:0] aa, ab;
     wire [31:0] ay0, ay1; wire [1:0] ae0, ae1; wire avo0, avo1;
     ot_hdc_fp32_add_lat_nr #(.LAT(7)) u_add0 (.clk(clk), .rst_n(rst_n), .valid_in(av), .a(aa), .b(ab), .y(ay0), .err(ae0), .valid_out(avo0));
-    ot_hdc_fp32_add_lat_nc #(.LAT(7)) u_add1 (.clk(clk), .rst_n(rst_n), .valid_in(av), .a(aa), .b(ab), .y(ay1), .err(ae1), .valid_out(avo1));
+    ot_hdc_fp32_add_lat_ncr #(.LAT(7)) u_add1 (.clk(clk), .rst_n(rst_n), .rst_y(rst_n), .valid_in(av), .a(aa), .b(ab), .y(ay1), .err(ae1), .valid_out(avo1));
     // ---- product -------------------------------------------------------------------------------------------------
     reg         pv; reg [15:0] pa; reg [7:0] pk;
     wire [31:0] py0, py1; wire pf0, pf1, pvo0, pvo1;
     ot_qwen_nearhbm_prod    u_prod0 (.clk(clk), .rst_n(rst_n), .valid_in(pv), .a(pa), .k(pk), .y(py0), .fault(pf0), .valid_out(pvo0));
-    ot_qwen_nearhbm_prod_nc u_prod1 (.clk(clk), .rst_n(rst_n), .valid_in(pv), .a(pa), .k(pk), .y(py1), .fault(pf1), .valid_out(pvo1));
+    ot_qwen_nearhbm_prod_ncr u_prod1 (.clk(clk), .rst_n(rst_n), .rst_y(rst_n), .valid_in(pv), .a(pa), .k(pk), .y(py1), .fault(pf1), .valid_out(pvo1));
     // ---- lane8 ---------------------------------------------------------------------------------------------------
     reg [3:0] lc; reg [63:0] lrow; reg [15:0] le; reg [11:0] llt; reg [1:0] lhid, lbs; reg lqv; reg [5:0] lqb; reg [127:0] lqd;
     wire [31:0] lkp0, lkp1; wire lkpv0, lkpv1, lgf0, lgf1; wire [63:0] lnb0, lnb1;
@@ -84,8 +84,9 @@ module tb_qkh_nc;
         void'($value$plusargs("n=%d", n));
         void'($value$plusargs("warm=%d", warm));
         if ($value$plusargs("seed=%d", seed)) void'($urandom(seed));
-        if (mode == "prod") n = 1 << 24;
+        if (mode == "prod")begin n=1<<24;void'($value$plusargs("prod_n=%d",n));end
         pcount = 0;
+        void'($value$plusargs("prod_start=%h",pcount));
         drive();
         repeat (8) @(posedge clk);
         rst_n <= 1'b1;
