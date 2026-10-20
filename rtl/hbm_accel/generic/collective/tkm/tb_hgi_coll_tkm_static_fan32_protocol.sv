@@ -8,6 +8,7 @@ module tb_hgi_coll_tkm_static_fan32_protocol;
  reg[3:0]slots=0,valids=0;reg[2179:0]flits=0;
  wire wv,busy,done,fault;wire[39:0]wa;wire[15:0]wm;wire[511:0]wd;wire[31:0]cycles;
  integer G,N,K,PF,NOUT,HASR,OB,RB,GB,errs=0,words=0,elapsed=0,expected,slotmut=0,rotate=0;
+ integer protocol_mut=0;reg[31:0] bad_read2;
  bit seeno[0:2047],seenr[0:2047];string dir;
  ot_hgi_coll_tkm_static #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.FAN32(FAN32),.RANK_W(TIE_W_MUT?7:$clog2(TP)))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
  .cfg_n(12'(N)),.cfg_k(13'(K)),.cfg_nout(13'(NOUT)),.cfg_g(8'(G)),.cfg_gbase(8'(GB)),.cfg_pf(16'(PF)),
@@ -44,6 +45,8 @@ module tb_hgi_coll_tkm_static_fan32_protocol;
   end
  end
  initial begin
+  if($value$plusargs("PROTOCOL_MUT=%d",protocol_mut))begin end
+  if(protocol_mut==1)force dut.clr=1'b0;
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"missing DIR");
   if($value$plusargs("SLOT_MUT=%d",slotmut))begin end
   if($value$plusargs("ROTATE=%d",rotate))begin end
@@ -52,6 +55,8 @@ module tb_hgi_coll_tkm_static_fan32_protocol;
   G=cfg[0];N=cfg[1];K=cfg[2];HASR=cfg[4];NOUT=cfg[5];OB=cfg[9];RB=cfg[10];GB=G>=96?0:(int'(cfg[3])/G)*G;PF=(N+7)/8;
   expected=8+((G*PF+3)/4)*8+2*(TL*((KMAX+63)/64)+8)+3*((NOUT+3)/4)+24+1;
   repeat(10)@(negedge clk);rst_n=1;repeat(10)@(negedge clk);start=1;@(negedge clk);start=0;
+  if(protocol_mut==2)begin bad_read2=dut.clear2-6;force dut.read2=bad_read2;end
+  $display("PARENT_PROTOCOL_MODE %0d",protocol_mut);
   while(!done&&elapsed<expected+20)begin @(negedge clk);elapsed=elapsed+1;end
   if(!done||cycles!=32'(expected))begin errs=errs+1;$display("TIMELINE got%0d expected%0d done%0d",cycles,expected,done);end
   if(fault!=(cfg[6]!=0||slotmut!=0))begin errs=errs+1;$display("FAULT got%0d",fault);end
@@ -69,8 +74,19 @@ module tb_hgi_coll_tkm_static_fan32_protocol;
   if(active&&(t<16||dut.clr||t+4>=int'(dut.clear2)&&t<=int'(dut.clear2)+14||wv||dut.cap_tap))
    $display("PARENT_PROTOCOL_PRE time=%0t tick=%0d clr=%b ins=%b read=%b bufv=%b clearX0=%b clearX63=%b cap=%b wv=%b first=%0d clear2=%0d read2=%0d second=%0d",$time,t,dut.clr,dut.entry_v,dut.read_v,dut.buf_valid,c0,c63,dut.cap_tap,wv,dut.first,dut.clear2,dut.read2,dut.second);
   #0.001;
-  if(active&&(t==4||t==int'(dut.clear2)+3)&&(!c0||dut.g_tiles[0].e86.u_tile.u.X[0]!==0))$fatal(1,"PROTOCOL_CLEAR_X0");
-  if(active&&(t==4||t==int'(dut.clear2)+3)&&(!c63||dut.g_tiles[0].e86.u_tile.u.X[63]!==0))$fatal(1,"PROTOCOL_CLEAR_X63");
+  if(active&&protocol_mut==0&&(t==4||t==int'(dut.clear2)+3)&&(!c0||dut.g_tiles[0].e86.u_tile.u.X[0]!==0))$fatal(1,"PROTOCOL_CLEAR_X0");
+  if(active&&protocol_mut==0&&(t==4||t==int'(dut.clear2)+3)&&(!c63||dut.g_tiles[0].e86.u_tile.u.X[63]!==0))$fatal(1,"PROTOCOL_CLEAR_X63");
   if(active&&(c0||c63))$display("PARENT_PROTOCOL_CAPTURE time=%0t oldtick=%0d X0=%h X63=%h",$time,t,dut.g_tiles[0].e86.u_tile.u.X[0],dut.g_tiles[0].e86.u_tile.u.X[63]);
+ end
+// Every kept clear/select copy must select the same actual capture edge.
+ for(genvar pos=0;pos<64;pos=pos+1)begin:g_capture_contract
+  for(genvar word=0;word<5;word=word+1)begin:g_word
+   always @(posedge clk)begin
+    if(rst_n&&busy&&protocol_mut==0&&(dut.tick==4||dut.tick==dut.clear2+3))begin
+     if(dut.g_tiles[0].e86.u_tile.u.g_crep.g_xr[pos].g_s[word].m!==4'b0001)
+      $fatal(1,"PROTOCOL_NONUNIFORM_CLEAR pos=%0d word=%0d",pos,word);
+    end
+   end
+  end
  end
 endmodule
