@@ -64,11 +64,12 @@
 // Pins: every input lands in a flop at the pin, every output leaves a flop.  One clock ck.  Reset rst: async assert,
 // 2-flop synchronous release.
 // MUT (bench negative controls only): 1 lane hash off by one, 2 rk always returned to the slice, 3 scale sector of the
-// neighbouring cell, 4 region 0's part-1 beat one cycle late, 5 response of the slice swallowed, 6 spec om ignored.
+// neighbouring cell, 4 region 0's part-1 beat one cycle late, 5 response of the slice swallowed, 6 spec om ignored,
+// 7 score-FIFO memory read address off by one (S81-MUBUF4).
 // S81-L20 idxrd2 (10-19, SAFE checklist 5/6): every memory is a 1R1W 1024 x 256 macro (ot_sram_1r1w_1024x256_m2_r2c2:
-// 70.47 um faces, 415 contacts = 5.89 / um <= 6; the 256x256 family is 10.0 / um).  7 macros: landing 4 (code rows
+// 70.47 um faces, 415 contacts = 5.89 / um <= 6; the 256x256 family is 10.0 / um).  8 macros: landing 4 (code rows
 // 0..127, the PC's scale rows 128..143 in its half-0 macro: 8 scales a row), list 2, item queue 1 (show-ahead head
-// buffer).  The scale register file (2 x 128 x 32 b) and the item queue flops (256 x 29 b) are gone.  The consumer
+// buffer), score FIFO 1 (S81-MUBUF4 10-20, was 64 x 38 flops; same show-ahead head).  The scale register file (2 x 128 x 32 b) and the item queue flops (256 x 29 b) are gone.  The consumer
 // reads a scale ROW once (row cache, write-through on scale writes), then pops up to 8 keys of the row at 1 a cycle.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_idx_rg #(
@@ -666,10 +667,21 @@ module dsdv_idx_rg #(
     // metadata beside the engine (in key order)
     reg [20:0] mq [0:SQD-1];
     reg [SQW-1:0] mq_w, mq_r;
-    // score FIFO -> word assembler
-    reg [37:0] sq [0:SQD-1];                  // {w 16, lane 4, lw, fault, score 16}
-    reg [SQW-1:0] sq_w, sq_r;
-    reg [SQW:0]   sq_n;
+    // score FIFO -> word assembler.  S81-MUBUF4 (10-20, SAFE 5 storage > 2 kb): the 64 x 38 b flop FIFO (2,432 b,
+    // runtime-indexed) is now a dsdv_idx_m1k macro (u_sq, 8th 1024x256 macro) with a registered write port and the item
+    // queue's 3-entry show-ahead head buffer (1 pop a cycle sustained).  Entry {w 16, lane 4, lw, fault, score 16}.
+    // Cost: +3 edges engine output -> assembler pop (write register, macro read, head load); throughput unchanged.
+    // mq (64 x 21 b = 1,344 b) stays in flops (< 2 kb).
+    reg [SQW-1:0] sq_w, sq_r;                // memory write / read pointers
+    reg [SQW:0]   sm_n;                      // scores in the memory not yet read
+    wire [255:0]  sq_q;
+    reg           zr_f;                      // memory read issued last edge: sq_q holds it now
+    reg [37:0]    zh [0:2];                  // show-ahead head buffer
+    reg [1:0]     zh_n;
+    reg           zw_v;                      // registered write port (every macro write pin driven by a flop)
+    reg [SQW-1:0] zw_a;
+    reg [37:0]    zw_d;
+    wire          zr_e = (sm_n != 0) && ({1'b0, zh_n} + {2'b0, zr_f} <= 3'd2);   // arrival never overflows 3 entries
     reg           a_v;                       // assembling word
     reg [15:0]    a_w; reg [15:0] a_lv; reg [255:0] a_s; reg a_f;
     reg           r_v;                       // ready word
@@ -679,19 +691,34 @@ module dsdv_idx_rg #(
     // a finished word moves to r when r is free or taken this cycle; the NEXT word starts assembling in the same cycle,
     // so a word of 2 scores (gather: up to 2 keys a region a word) still meets the next slot 2 cycles later
     wire          a_mv = a_v && a_done && (!r_v || r_take);
-    wire          sq_pop = (sq_n != 0) && !(a_v && a_done && !a_mv);
+    wire          sq_pop = (zh_n != 0) && !(a_v && a_done && !a_mv);
     always @(posedge ck or negedge rn)
-        if (!rn) begin mq_w <= 0; mq_r <= 0; sq_w <= 0; sq_r <= 0; sq_n <= 0; infl <= 0; a_v <= 1'b0; a_done <= 1'b0;
+        if (!rn) zw_v <= 1'b0; else zw_v <= o_v;
+    always @(posedge ck) begin zw_a <= sq_w; zw_d <= {mq[mq_r], o_f[0], o_s}; end
+    dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_sq (
+        .ck(ck), .re(zr_e), .ra(10'(sq_r ^ ((MUT == 7) ? SQW'(1) : SQW'(0)))), .rd(sq_q),
+        .we(zw_v), .wa(10'(zw_a)), .wd({{(256-38){1'b0}}, zw_d}), .wm({256{1'b1}}));
+    always @(posedge ck or negedge rn)
+        if (!rn) begin sq_r <= 0; sm_n <= 0; zr_f <= 1'b0; zh_n <= 2'd0; end
+        else begin : g_zh
+            reg [1:0] n1;
+            zr_f <= zr_e;
+            if (zr_e) sq_r <= sq_r + 1'b1;
+            sm_n <= sm_n + (zw_v ? 1'b1 : 1'b0) - (zr_e ? 1'b1 : 1'b0);
+            n1 = zh_n - (sq_pop ? 2'd1 : 2'd0);
+            if (sq_pop) begin zh[0] <= zh[1]; zh[1] <= zh[2]; end
+            if (zr_f) zh[n1] <= sq_q[37:0];
+            zh_n <= n1 + (zr_f ? 2'd1 : 2'd0);
+        end
+    always @(posedge ck or negedge rn)
+        if (!rn) begin mq_w <= 0; mq_r <= 0; sq_w <= 0; infl <= 0; a_v <= 1'b0; a_done <= 1'b0;
                        r_v <= 1'b0; end
         else begin
             if (k_v) begin mq[mq_w] <= k_m; mq_w <= mq_w + 1'b1; end
-            if (o_v) begin
-                sq[sq_w] <= {mq[mq_r], o_f[0], o_s}; sq_w <= sq_w + 1'b1; mq_r <= mq_r + 1'b1;
-            end
-            sq_n <= sq_n + (o_v ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
+            if (o_v) begin sq_w <= sq_w + 1'b1; mq_r <= mq_r + 1'b1; end
             infl <= infl + (ipop ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
             if (sq_pop) begin : g_as
-                reg [37:0] t; t = sq[sq_r]; sq_r <= sq_r + 1'b1;
+                reg [37:0] t; t = zh[0];
                 if (!a_v || a_done) begin
                     a_v <= 1'b1; a_w <= t[37:22]; a_lv <= 16'd1 << t[21:18]; a_s <= 256'(t[15:0]) << (16 * t[21:18]);
                     a_f <= t[16]; a_done <= t[17];
