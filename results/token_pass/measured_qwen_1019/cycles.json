@@ -59,7 +59,7 @@
       "end": 2554,
       "cycles": 1825,
       "priced_cycles": 1681,
-      "grade": "NEWEST"
+      "grade": "DIAG"
      },
      {
       "stage": "attention return: dr words land (PORTS dd windows) + o_proj x stream (DV)",
@@ -83,7 +83,7 @@
       "end": 3477,
       "cycles": 541,
       "priced_cycles": 856,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "residual 1: AR landing + post-scale + add + SSQ + x stream (DV)",
@@ -123,7 +123,7 @@
       "end": 5593,
       "cycles": 541,
       "priced_cycles": 714,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "residual 2 + SSQ + x stream (DV)",
@@ -135,10 +135,9 @@
      }
     ],
     "critical_path_cycles_by_grade": {
-     "DIAG": 2817,
-     "REL": 1394,
-     "PLAN_GAP": 36,
-     "NEWEST": 1825
+     "DIAG": 3560,
+     "REL": 2476,
+     "PLAN_GAP": 36
     },
     "tile": [
      {
@@ -209,15 +208,14 @@
     }
    ],
    "token_cycles_by_grade": {
-    "DIAG": 101525,
-    "REL": 50240,
+    "DIAG": 128302,
+    "REL": 89235,
     "PLAN_GAP": 1297,
-    "NEWEST": 65773,
     "PRICED": 5245
    },
-   "pct_measured": 51.8,
-   "pct_rel": 22.4,
-   "pct_newest": 29.4,
+   "pct_measured": 39.8,
+   "pct_rel": 39.8,
+   "pct_newest": 0.0,
    "price_of_record": {
     "tok_s": 4810.9,
     "cycles": 249431,
@@ -235,9 +233,31 @@
   },
   "4u": {
    "users": 4,
-   "status": "PENDING",
-   "grade": "PENDING",
-   "note": "4u link co-sim re-measure -> TOKSIM-QW/LINK; previous MU-D2D-OVL F16 frame 13,708.2 aggregate (u0 4,768.1) is pre-current-RTL and does not count"
+   "status": "NEWEST",
+   "grade": "NEWEST",
+   "frame_cycles": 4026800,
+   "tokens_per_frame": [
+    16,
+    15,
+    8,
+    7
+   ],
+   "cycles_per_token_by_user": [
+    251675,
+    268453,
+    503350,
+    575257
+   ],
+   "aggregate_cycles_per_token": 87539,
+   "aggregate_tok_s": 13708.2,
+   "per_user_tok_s": [
+    4768.1,
+    4470.1,
+    2384.0,
+    2086.0
+   ],
+   "source": "TOKSIM-QW/LINK: codec2 OVL 4-user D2D pair fullframe, real D2D ends + PHY model, 63,098 C->K + 57,783 K->C frames exact, one-playhead/collide/slot/user mutants FAIL; OVL hardware is NOT in qw-gen3 (newest = codex/sysface-ovl-1019); producers/consumers modelled -> link-schedule rate, not a full 4-user token run. MU ctx real link REL: slot->compute 18, period 249,600; TP8 4u window E 286 = 1u",
+   "note": "release die uses the serial MU calendar; no paired 4u TB exists for it (owed). Frame user 0 at 16 tok/frame = 4,768 tok/s vs 1u composed below."
   }
  }
 }
