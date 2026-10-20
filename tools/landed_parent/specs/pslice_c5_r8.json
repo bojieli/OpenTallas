@@ -1,0 +1,207 @@
+{
+ "why": "L2H-PSLICE 10-19 r8 (structural redesign after real7 FAIL: reset relay u_lpr_root on ck_h crossed into ck_t / ck_b -112 / -136 ps TT (-1190 SS), ck_l soft vs child 568 ps, ck_t 286 ps over 5 leaves 1.7 mm, ck_b 156 ps): EVERY LEAF is its own clock region (11 roots: head + 10 leaves, each tree <= one leaf ~350 x 450 um, entry at the leaf's clk pin on its command face) and every region lands its OWN reset port (regional_reset_ports, 3 plain stages on its own root: 2 landing + 1 reach relay across the 453-um L leaf); no reset root, no cross-region reset path. Landings unchanged (D 8, E = K = 3, shared rings, per-leaf reads). Previous form: PL-PSLICE 10-18: HBM SU programme per-quarter cluster pslice_c5 (pgp_<q>) as a LANDED parent. Its S leaves (TT boundary insertion 309.5 / FF 252.6) and L leaves (483.1 / 394.7) are 174 ps apart, and t",
+ "top": "ot_hbm_su_programme_pslice_c5_flat8",
+ "top_lp": "ot_hbm_su_programme_pslice_c5_lp8",
+ "sources": [
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pslice_c5_flat8.sv"
+ ],
+ "child_sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_part.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+ ],
+ "out_dir": "rtl/hbm_accel/generic/adapters/static_su/programme/landed",
+ "record_dir": "results/arch/landed_parent_1018/pslice_c5_r8",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "regions": [
+  {
+   "name": "h",
+   "insts": [
+    "u_h"
+   ],
+   "centre": [
+    86.4,
+    561.6
+   ],
+   "why": "head (cfg pin stage + column decode + fault OR) at the W end of the channel beside the W-face cfg pins; its shared write rings + status reads in the band on its E face"
+  },
+  {
+   "name": "c0",
+   "insts": [
+    "u_c0"
+   ],
+   "centre": [
+    1360.8,
+    172.8
+   ],
+   "why": "leaf u_c0 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  },
+  {
+   "name": "c1",
+   "insts": [
+    "u_c1"
+   ],
+   "centre": [
+    216.0,
+    270.0
+   ],
+   "why": "leaf u_c1 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  },
+  {
+   "name": "c2",
+   "insts": [
+    "u_c2"
+   ],
+   "centre": [
+    604.8,
+    270.0
+   ],
+   "why": "leaf u_c2 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  },
+  {
+   "name": "c3",
+   "insts": [
+    "u_c3"
+   ],
+   "centre": [
+    993.6,
+    270.0
+   ],
+   "why": "leaf u_c3 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  },
+  {
+   "name": "c4",
+   "insts": [
+    "u_c4"
+   ],
+   "centre": [
+    1706.4,
+    172.8
+   ],
+   "why": "leaf u_c4 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  },
+  {
+   "name": "c5",
+   "insts": [
+    "u_c5"
+   ],
+   "centre": [
+    280.8,
+    777.6
+   ],
+   "why": "leaf u_c5 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  },
+  {
+   "name": "c6",
+   "insts": [
+    "u_c6"
+   ],
+   "centre": [
+    626.4,
+    777.6
+   ],
+   "why": "leaf u_c6 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  },
+  {
+   "name": "c7",
+   "insts": [
+    "u_c7"
+   ],
+   "centre": [
+    972.0,
+    777.6
+   ],
+   "why": "leaf u_c7 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  },
+  {
+   "name": "c8",
+   "insts": [
+    "u_c8"
+   ],
+   "centre": [
+    1317.6,
+    777.6
+   ],
+   "why": "leaf u_c8 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  },
+  {
+   "name": "c9",
+   "insts": [
+    "u_c9"
+   ],
+   "centre": [
+    1663.2,
+    777.6
+   ],
+   "why": "leaf u_c9 alone (one hard child + its per-leaf read halves / status rings): local tree <= one leaf, entry at its clk pin"
+  }
+ ],
+ "port_regions": {
+  "start": "h",
+  "length": "h",
+  "fault": "h",
+  "busy": "c0",
+  "valid": "c0",
+  "done": "c0",
+  "edge_index": "c0",
+  "command_c0": "c0",
+  "command_c1": "c1",
+  "command_c2": "c2",
+  "command_c3": "c3",
+  "command_c4": "c4",
+  "command_c5": "c5",
+  "command_c6": "c6",
+  "command_c7": "c7",
+  "command_c8": "c8",
+  "command_c9": "c9"
+ },
+ "lag_pins": [
+  {
+   "inst": "u_h",
+   "pins": [
+    "l_fault",
+    "l_valid"
+   ],
+   "why": "status return: the head configures every leaf (cfg landed +3 into each leaf region) and ORs their sticky faults / checks their valid lockstep; that is a cross-region loop, so the status inputs are landed back and read at one common lag (all leaves alike: no false lockstep fault)"
+  }
+ ],
+ "D": 8,
+ "E": 3,
+ "bench": {
+  "cycles": 20000,
+  "reset_cycles": 16,
+  "sim": "verilator",
+  "why": "load phase (cycles < 8000: a configuration write on half the edges, every row / local bank) then run phase (starts 1 in 40, rare writes 1 in 100 so the write-on-start leaf fault rises late and is compared through the lagged status path)",
+  "expr": {
+   "cfg_we": "(cyc < 8000) ? (($urandom % 2) == 0) : (($urandom % 100) == 0)",
+   "cfg_bank": "{11'($urandom % 10), 5'($urandom % 7)}",
+   "cfg_row": "7'($urandom)",
+   "start": "(cyc >= 8000) && (($urandom % 40) == 0)",
+   "length": "16'(1 + $urandom % 120)"
+  },
+  "mut_waivers": {
+   "4": "PL-PSLICE bench 10-18: MUT 4 (the first reset child's reset run one stage long) PASSES lockstep over 20,000 edges because every child of this parent is reset-phase-insensitive: no free-running state (the producer is idle until a start; SRAM is not reset), so one more reset edge is invisible unless a write lands on exactly that edge. The reset offsets themselves are proven by MUT 0 (every child reset delayed t(child) + RB) and the flat-eq bench."
+  }
+ },
+ "floorplan": "tools/landed_parent/specs/pslice_c5_r8_kit.py (1900.8 x 950.4, same leaf placement as real7; 11 regions h + c0..c9)",
+ "why_E": "10-18 PL-KIT re-plan: E = K = 3 (+4 edges per landing, was +3): the write rings are fenced beside the head at the W end of the channel, so the ring -> read hop carries the whole run (up to ~1.7 mm to the E ends of the t and b regions, ~0.85-1.2 ns/mm repeated); 3 T leaves ~2.4 ns. Owner 10-18: landing latency cost accepted. D = 8 ring slots: ot_pl_land needs D a power of two and K in 1..D-1 (the K+1 = 4 read mutant needs D > 4); hold multicycle D-1 = 7.",
+ "reader_per_inst": true,
+ "share_rings": true,
+ "why_reader_per_inst": "TW2-PSLICE2 real7 10-19: real6 (CTS PASS, GRT ovf 0) failed setup -870 ps / TNS -364 ns on 1,453 read registers: one read half per REGION sat by wirelength next to the head's ring (l/t readers at x 224..590 although their leaves span 43..1857), so the same-root rc -> 8:1 mux -> o path and o -> far leaf ran ~1-2 mm in one cycle, and the l/t/b soft flops sat ~1 mm from the region's children (per-pair clock spread h 96 / l 168 / t ~364 / b 143 ps TT). Now every reader leaf has its own read half beside it (kit fence) and ONE ring per (net, source region) beside the head is read by all of them: the long hop is the multicycle ring -> read bank (E = 3), offsets / K / D / E unchanged, ring flops 3x fewer.",
+ "regional_reset_ports": {
+  "stages": 3,
+  "why": "L2H-PSLICE r8: each region's reset lands beside its own pin on its own root (2 landing stages) + 1 reach relay (the L leaf is 453.6 um tall: pin on the command face, every reset sink -- read halves, child rst_n -- on the cfg face); same depth in every region so all landing epochs start on one edge"
+ },
+ "why_regions": "real7 per-root child-flop spread TT h 97 / l 568 / t 286 / b 156 ps: a root spanning several leaves (t: 5 leaves 1.7 mm; l: 3 L leaves 1.1 mm) cannot hold <= 80 ps between soft landing flops and child flops; one root per leaf keeps every tree inside one leaf footprint"
+}

@@ -70,6 +70,10 @@ SHIP_HELPERS = ("tools/orfs_hold_mm.py", "tools/orfs_hold_mm.tcl", "tools/fp_mar
                 "tools/textbook_lint.py", "physical/common_flow/macro_cts_cluster.tcl")
 
 
+def ship_helpers(spec=None):
+    return SHIP_HELPERS + (tuple(HO.helper_paths(HO.PG_HELPERS)) if HO.pg_strict(spec or {}) else ())
+
+
 class Gate:
     def __init__(self):
         self.items = []
@@ -491,7 +495,7 @@ def check_sources(g: Gate, job: dict, extra_seeds=(), commit=None):
     out_all = sorted(p for p in seen if not any(p == s or p.startswith(s + "/") for s in synced))
     if True:   # the loop ships these flow helpers into every job (closure_loop HELPERS / tt_overlay TTB_FILES)
         soft |= {f"physical/common_flow/{n}" for n in ("macro_sliver_block.tcl", "edge_sliver_block.tcl",
-                                                       "macro_cts_cluster.tcl", "io_ref_routed.sdc")}
+                                                       "macro_cts_cluster.tcl", "io_ref_routed.sdc", "clock_family.tcl")}
         soft |= {f"physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                        "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")}
     outside = [p for p in out_all if p not in soft]
@@ -786,6 +790,19 @@ def check_kit_shell(g: Gate, kd: Path):
     return True
 
 
+def check_pg_kit_policy(g, kd, spec, job=None):
+    strict = HO.pg_strict(spec)
+    if job is not None and HO.pg_strict(job) != strict:
+        g.add("FAIL", "pg_policy", "job and kit spec PG policies differ", "generate a matching job and kit")
+        return False
+    env = _kit_env(kd) or ""
+    flags = re.findall(r"(?m)^export OT_PG_STRICT=(.*)$", env)
+    if flags != (["1"] if strict else []):
+        g.add("FAIL", "pg_policy", "kit.env does not carry the spec's exact PG policy", "regenerate kit.env from the authoritative spec")
+        return False
+    return True
+
+
 def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     stale = stale_multi_root_sdcs(kd)
     if stale:
@@ -793,6 +810,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
               "proof (f489fa9d5): ORFS synth_odb fails 'related crossing lacks actual finite max STA path' under OT_HOLD_MM",
               "rebase on main and re-run ref_tile.py gen for this kit, commit, then gate")
     spec = RT.load_spec(str(kd / "spec.json"))
+    check_pg_kit_policy(g, kd, spec, job)
     try:
         fresh = RT.gen(str(kd / "spec.json"), spec.get("std_area_um2"), write=False)
     except RT.SpecError as ex:
@@ -978,7 +996,8 @@ ot_layout() {{  # ot_layout ODB TAG: tools/ref_tile/layout_dump.tcl on the odb, 
   [ -s $C/gate_layout_$2.json ] && python3 -c "import zlib,base64,sys;print('GATE_LAYOUT_B64 '+sys.argv[2]+' '+base64.b64encode(zlib.compress(open(sys.argv[1],'rb').read(),9)).decode())" $C/gate_layout_$2.json $2
 }}
 ot_layout $NB/3_2_place_iop.odb floorplan
-python3 tools/textbook_lint.py check --netlist $B/1_2_yosys.v --dump $C/gate_dump.json --out $R/textbook.json --mode refuse --refuse-checks {RC} | sed 's/^/GATE_TB /'
+python3 tools/textbook_lint.py check --netlist $B/1_2_yosys.v --dump $C/gate_dump.json --out $R/textbook.json --mode refuse --refuse-checks {RC}{TBX}{BRP} | sed 's/^/GATE_TB /'
+echo "GATE_TB_RC=${{PIPESTATUS[0]}}"
 python3 - $B/1_2_yosys.v {TOP} <<'EOP'
 import re,sys,json
 t=open(sys.argv[1]).read(); m=re.search(r"module\s+\\?"+re.escape(sys.argv[2])+r"\s*\((.*?)\);(.*?)endmodule",t,re.S)
@@ -1006,11 +1025,19 @@ python3 tools/ref_tile/keep_module_audit.py netlist $B/1_2_yosys.v {TOP}
 # tools/ref_tile/port_latency.py; the closure loop records the same export from the route at CLOSE for the compilers
 [ -s $B/ot_pin_regs.tsv ] && [ -s $B/ot_pin_regs_wrapper.v ] && python3 -c "import zlib,base64,sys;print('GATE_PIN_REGS_B64 '+' '.join(base64.b64encode(zlib.compress(open(f,'rb').read(),9)).decode() for f in sys.argv[1:]))" $B/ot_pin_regs.tsv $B/ot_pin_regs_wrapper.v
 if [ "{CTS}" = 1 ]; then
-  ot_capped gate_cts_${{R##*/}} docker run --rm --name gate_cts_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
+  ot_capped gate_cts_${{R##*/}} docker run --rm --name gate_cts_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; CTSRC=$?; echo "GATE_CTS_RC=$CTSRC"
   grep -h "\[ERROR" $R/cts.log | head -3 | sed 's/^/GATE_CTSERR /'
   grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   grep -h "OT_SPINE done port" $R/cts.log $C/logs/asap7/*/base/4_1_cts.log 2>/dev/null | head -1 | sed 's/^/GATE_SPINE_DONE /'
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
+  # A failed prerequisite must not restart placement through a downstream make target.
+  if [ "$CTSRC" -ne 0 ]; then
+    echo "GATE_CK_SKIPPED=cts_failed"
+    echo "GATE_PATH_CLASSES_SKIPPED=cts_failed"
+    echo "GATE_PLACED_LAYOUT_SKIPPED=cts_failed"
+    [ "{TRIAL}" != 1 ] || echo "GATE_GRT_SKIPPED=cts_failed"
+    exit 0
+  fi
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
   python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','child_flop','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
@@ -1037,11 +1064,13 @@ fi
 """
 
 
-def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
+def ship_tar(paths, overlay_payloads=None, overlay_modes=None, spec=None):
     import io
     import tarfile
+    helpers = ship_helpers(spec)
     if overlay_payloads is None:
-        plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, paths=[h for h in SHIP_HELPERS if (DAEMON_TREE / h).exists()])
+        plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, paths=[h for h in helpers if (DAEMON_TREE / h).exists()],
+                                                 pg_strict=HO.pg_strict(spec or {}))
         overlay_modes = {f["path"]: f["mode"] for f in plan["files"]}
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
@@ -1054,7 +1083,7 @@ def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
                        or "__pycache__" in ti.name or "source_binding_history" in Path(ti.name).parts
                        or "gate_layout" in Path(ti.name).parts
                        or Path(ti.name).name in SB.EXCLUDED else ti)
-        for h in SHIP_HELPERS:      # the loop's shipped flow helpers win over the snapshot's copies
+        for h in helpers:      # the loop's shipped flow helpers win over the snapshot's copies
             f = DAEMON_TREE / h
             if f.exists():
                 payload = overlay_payloads[h]
@@ -1077,7 +1106,7 @@ def gate_consumed(data: bytes, kd: Path, spec: dict, referenced, entries) -> dic
         job = {}
     extra = [str(x) for x in ((job.get("source") or {}).get("extra_paths") or [])]
     views = [it["view"] for it in list(spec.get("macros") or []) + list(spec.get("children") or []) if it.get("view")]
-    seeds = list(spec.get("sources") or []) + sorted(referenced) + list(SB.GATE_TOOLS) + list(SHIP_HELPERS)
+    seeds = list(spec.get("sources") or []) + sorted(referenced) + list(SB.GATE_TOOLS) + list(ship_helpers(spec))
     paths = SB.consumed_closure(SB.archive_contents(data), seeds, [kit, *views, *extra], PATH_RE)
     # the kit's job.json is the route's job spec, not a gate input (no remote step reads it; submit_check re-checks the
     # submitted job itself): its tag/purpose edits never invalidate a gate
@@ -1146,12 +1175,12 @@ def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
     return SB.consumed_record(paths, binding["files"], "reconstructed from the gate's staged manifest blobs")
 
 
-def absent_working_inputs(seeds):
+def absent_working_inputs(seeds, spec=None):
     # The archive is made from the working tree, not git show.  A sparse checkout
     # can contain the hook but omit a committed helper that the hook sources.
     # Check those transitive inputs before choosing a host or shipping a run.
     seen, _, soft = referenced_closure(sorted(seeds), SB.git_head(ROOT))
-    overlaid = {p for p in SHIP_HELPERS if (DAEMON_TREE / p).is_file()}
+    overlaid = {p for p in ship_helpers(spec) if (DAEMON_TREE / p).is_file()}
     return sorted(p for p in seen - soft - overlaid if not (ROOT / p).is_file())
 
 
@@ -1206,7 +1235,7 @@ def gate_disk_budget(spec: dict, data: bytes, override=None) -> dict:
 
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool, disk=None):
     fp = json.loads((kd / "floorplan.json").read_text())
-    absent = absent_working_inputs(set(fp["referenced"]))
+    absent = absent_working_inputs(set(fp["referenced"]), spec)
     if absent:
         g.add("FAIL", "sources", f"{len(absent)} committed input(s) absent from the working-tree archive: {absent[:8]}",
               "materialize the referenced files in the sparse checkout before rerunning the gate")
@@ -1222,8 +1251,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     R = f"/srv/opentallas-scratch/claude/ref_gate/{spec['name']}-{ts}"
     start_commit = SB.git_head(ROOT)
     daemon_commit = SB.git_head(DAEMON_TREE)
-    route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT)
-    data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
+    route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, pg_strict=HO.pg_strict(spec))
+    data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]}, spec=spec)
     budget = gate_disk_budget(spec, data, disk)
     auto = host == "auto"
     threads = int(spec.get("route", {}).get("threads", 8))
@@ -1251,7 +1280,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     host = picked.stdout.strip()
     g.add("INFO", "remote", f"ot-run selected {host} for {mem} GB memory; disk pick {budget['pick_gb']} GiB, "
           f"runtime {budget['runtime_gb']} GiB includes {budget['reserve_gb']} GiB work reserve plus snapshot staging")
-    binding = SB.snapshot(data, ROOT, start_commit, DAEMON_TREE, daemon_commit, SHIP_HELPERS)
+    binding = SB.snapshot(data, ROOT, start_commit, DAEMON_TREE, daemon_commit, ship_helpers(spec))
     binding["disk_admission"] = budget
     binding["route_overlay_plan"] = route_plan
     binding["consumed"] = gate_consumed(data, kd, spec, ref, binding["files"])
@@ -1259,13 +1288,12 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     g.source_binding = binding
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
-                          RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
+                          RC=",".join(GATE_REFUSE), TBX=textbook_reset_args(spec) + reset_landing_args(spec), BRP=(" --balanced-reset-profile $R/src/{}/reset_landing.json".format(kd.relative_to(ROOT)) if (spec.get('reset_landing') or {}).get('first_copies') else ""), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1, GRTX=trial_grt_make_args(spec), CLKS=",".join(RT.declared_clock_ports(spec)),
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
-    tbx = textbook_reset_args(spec) + reset_landing_args(spec)
-    if tbx:
-        tb = f"--refuse-checks {','.join(GATE_REFUSE)} | sed 's/^/GATE_TB /'"
-        sh = sh.replace(tb, tb.replace(" | sed", tbx + " | sed", 1), 1)
+    if HO.pg_strict(spec):
+        sh = sh.replace("export OT_ORFS_CORNER_OVERRIDE=TC\n",
+                        "export OT_ORFS_CORNER_OVERRIDE=TC\nexport OT_PG_JOB_STRICT=1\n", 1)
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -1418,6 +1446,10 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
         g.add("WARN", "layout_images", "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log")
     parent = is_parent_kit(spec)
     fpd = dumps.get("floorplan")
+    if parent and (spec.get("fill_reason") or {}).get("lattice_channel_bound") is not None and not fpd:
+        g.measured_band_fill = {"valid": False, "errors": ["missing actual floorplan dump"]}
+        g.add("FAIL", "measured_band_fill", "missing actual floorplan dump",
+              "collect source-bound floorplan and placed occupancy evidence")
     if parent and fpd:
         st = fpd.get("stats", {})
         fill = float(st.get("fill") or 0.0)
@@ -1426,6 +1458,18 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
         reason = str((spec.get("fill_reason") or {}).get("pin_bound", "")).strip()
         msg = (f"fill {fill:.0%} = (hard macros {st.get('block_area')} + synthesized std cells {st.get('std_area')}) / "
                f"outline {st.get('die_area')} um2; pin demand per face: {dem}")
+        structural = (spec.get("fill_reason") or {}).get("lattice_channel_bound")
+        if structural is not None:
+            measured = RT.measured_band_fill(spec, fpd, dumps.get("placed"))
+            g.measured_band_fill = measured
+            if measured["valid"]:
+                reason = (f"measured lattice/channel band: {measured['band_area_um2']:.3f} um2, "
+                          f"density {measured['band_density']:.2%}, outside approved "
+                          f"{measured['outside_area_um2']:.3f} um2")
+            else:
+                reason = ""  # pin-bound text cannot override an invalid structural claim
+                g.add("FAIL", "measured_band_fill", "; ".join(measured["errors"]),
+                      "fix actual placement/row envelope; preserve this failed receipt")
         if fill < FILL_FAIL and not reason:
             g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%})", "shrink the outline / regroup the macros, or record "
                   "\"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin "
@@ -1514,11 +1558,27 @@ def check_actual_pin_geometry(g: Gate, out: str):
               "rerun the actual placed-IO dump and fp_margin_lint pins check; old CTS measurements alone cannot qualify geometry")
 
 
+def check_textbook_execution(g: Gate, out: str):
+    """A missing/failed lint process cannot silently become an unknown-clock warning.
+
+    Historical frozen logs predate the RC marker, but still need a real unique
+    verdict. New scripts emit PIPESTATUS[0], preserving argparse/tool failures.
+    """
+    codes=re.findall(r'^GATE_TB_RC=(\S+)$',out,re.M)
+    verdicts=re.findall(r'^GATE_TB textbook_lint: (PASS|WARN|REFUSE) \S+ cells ',out,re.M)
+    if len(verdicts)!=1 or (codes and (len(codes)!=1 or codes[0] != ('3' if verdicts[0] == 'REFUSE' else '0'))):
+        g.add('FAIL','textbook_execution','missing unique actual textbook verdict or failed lint execution; RC='+str(codes),
+              'inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate')
+        return False
+    return True
+
+
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
                    cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
     """One parser for live runs and fully verified frozen-run recovery."""
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
+    check_textbook_execution(g,out)
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if binding.get("staged_remeasurement"):
         if not SB.staged_remeasurement_matches_log(binding, out.encode()):
@@ -2243,7 +2303,7 @@ def reset_landing_record(out: str) -> dict | None:
     return {"max_sinks": mx, "ports": ports, "over": over, "waived": waived, "ok": not over or waived}
 
 
-def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, note: list | None = None) -> dict | None:
+def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, note: list | None = None, spec=None) -> dict | None:
     """The kit's gate result when it is bound to this exact source commit and to the daemon overlays the gate executed
     (SB.validate: route-only helper drift does not invalidate a gate).  why: receives the refusal reason."""
     def no(reason):
@@ -2260,6 +2320,10 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
         tile = [kd.name, d.get("kit")]
+        policy_spec = spec
+        if policy_spec is None:
+            policy_spec = json.loads((kd / "spec.json").read_text()) if (kd / "spec.json").exists() else {}
+        strict = HO.pg_strict(policy_spec)
         try:     # S81-DEC5 10-18: the kit job's recorded clock_rule_waiver also judges the relaxing-rule requirement
             w = json.loads((kd / "job.json").read_text()).get("clock_rule_waiver")
             if isinstance(w, dict) and isinstance(d.get("clock"), dict):
@@ -2273,8 +2337,10 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             pass
         try:
             ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"),
-                                     tile=[t for t in tile if t], gate=d)
+                                     tile=[t for t in tile if t], gate=d, pg_strict=strict)
         except TypeError:                                    # an older source_binding without the gate / tile scope
+            if strict:
+                return no("strict PG policy requires policy-aware source binding")
             try:
                 ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"),
                                          tile=[t for t in tile if t])
@@ -2302,13 +2368,15 @@ def kit_clock_evidence(kd: Path, source_commit=None) -> dict | None:
     return rec["clock"] if rec else None
 
 
-def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, closed_stands: bool = False, source_commit=None) -> dict:
+def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, closed_stands: bool = False, source_commit=None, spec=None) -> dict:
     """SUBMIT side of the measured clock rule.  The kit's committed gate result decides when it exists; without one the
     sink count of this block's latest synthesized design (known_sinks, from the loop's job history) does.  A kit with no
     gate result and no history passes here and is judged by the in-flow lint right after synthesis (FLOORPLAN_MARGIN,
     before placement).  closed_stands: a CLOSED tile is not re-judged."""
     why, note = [], []
-    rec = kit_gate_evidence(kd, source_commit, why, note)
+    spec = spec if spec is not None else (json.loads((kd / "spec.json").read_text()) if (kd / "spec.json").exists() else {})
+    strict = HO.pg_strict(spec)
+    rec = kit_gate_evidence(kd, source_commit, why, note, spec=spec)
     ev = upgrade_clock_record(rec["clock"]) if rec else None
     if rec and note and "reported, not refused" in note[0]:
         g.add("INFO", "source_binding", note[0][:1500])
@@ -2324,14 +2392,16 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     if rec and not closed_stands:
         frozen = rec["source_binding"].get("route_overlay_plan")
         if frozen is None:
+            if strict:
+                raise ValueError("strict PG job requires a strict frozen helper plan")
             # Legacy v2 has exact six-helper evidence, not a historical full route plan.
-            frozen, _ = HO.capture_plan(DAEMON_TREE, ROOT)
+            frozen, _ = HO.capture_plan(DAEMON_TREE, ROOT, pg_strict=strict)
             frozen["gate_verified_paths"] = rec["source_binding"].get("daemon_overlays", [])
             frozen["scope"] = "legacy_gate_exact_overlays_with_current_full_route_plan"
         else:
             # Route-only helpers are not bound by the gate: when they moved since the gate, the route freezes today's
             # effective plan (whose gate-executed rows SB.validate just proved equal to the staged ones).
-            current, _ = HO.capture_plan(DAEMON_TREE, ROOT)
+            current, _ = HO.capture_plan(DAEMON_TREE, ROOT, pg_strict=strict)
             if relaxed:
                 # the relaxed paths changed since the gate: the route must run TODAY's (relaxed) helpers, never the
                 # gate-frozen pre-relaxation bytes (the old in-flow lint would still FAIL on the relaxed rule)
@@ -2439,6 +2509,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
            "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", host), "cts": bool(cts),
            "commit": g.source_binding.get("commit"), "source_binding": g.source_binding,
            "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
+    if getattr(g, "measured_band_fill", None):
+        out["measured_band_fill"] = g.measured_band_fill
     if getattr(g, "trial_route", None):
         out["trial_route"] = g.trial_route      # a gate without this record predates the every-kit trial GRT
     if getattr(g, "port_latency", None):
@@ -2478,8 +2550,13 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
     arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc", OFLOP_TCL, RT.ASSIGNED_PIN_EXACT_TCL,
           getattr(RT, "M6_PIN_ACCESS_TCL", "physical/common_flow/m6_pin_access.tcl")])
     sp = json.loads((dst / kit / "spec.json").read_text())
+    if sp.get("registered_cluster_candidate"):
+        # gen_job ships the receipt and its hashed evidence; reproduce that closure during submit replay.
+        candidate_job = json.loads((dst / kit / "job.json").read_text())
+        arch(candidate_job.get("source", {}).get("extra_paths", []))
     # sdc_extra too: without it RT.gen raised FileNotFoundError and the whole gate went SKIP for every kit that has one
-    arch(list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))
+    arch(RT.clock_entry_constraints.single_clock_contract.evidence_paths(sp)
+         + list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))
          + [it["view"] for it in sp.get("macros", []) + sp.get("children", [])]
          + ([sp["contract"]["file"]] if sp.get("contract") else [])
          # job.benches_from too (flowfix 10-13): gen_job reads the shared bench template, and without it the whole gate
@@ -2494,6 +2571,9 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
          # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
          + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]
+         # boundary_tcl / pre_cts_extra (RH-DBKCPL 10-19): ref_tile gen reads each at ROOT; without them the submit check
+         # of hv16_dbk_cpl (child_pocket_guard.tcl) went SKIP "gate error FileNotFoundError" -- binding never checked
+         + [x for k in ("boundary_tcl", "pre_cts_extra") for x in sp.get(k, []) if isinstance(x, str)]
          # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
          # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
          + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]
@@ -2576,7 +2656,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
                         g.add("FAIL", "kit", f"{kit}/kit.env missing at {commit}", "commit the generated kit")
                     else:
                         ROOT = RT.ROOT = Path(td)
-                        check_kit(g, Path(td) / kit, None)
+                        check_kit(g, Path(td) / kit, spec)
                         ROOT = RT.ROOT = Path(repo)
                         if spec.get("auto_react_parent"):
                             # a loop successor (-arh / -arg / -hs) re-routes a kit whose parent already placed its pins
@@ -2589,7 +2669,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
                                       .get("referenced", []), commit)
                         check_slot_fit(g, Path(td) / kit, spec, repo, commit)
                         if clock_mode != "off":
-                            check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands, commit)
+                            check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands, commit, spec=spec)
                             apply_clock_rule_waiver(g, spec)
                             if clock_mode != "refuse":
                                 for i in g.items:
