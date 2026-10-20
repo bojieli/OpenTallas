@@ -15,7 +15,7 @@ SHA=$(git -C "$WT" rev-parse "$REV")
 if [ "${NOSYNC:-0}" != 1 ]; then
 ssh "$HOST" "mkdir -p $OUT/src $OUT/out $OUT/work && rm -rf $OUT/src/*" || exit 2
 git -C "$WT" archive "$SHA" tools/hbm_layer_vehicle tools/hdc_golden_v41.py tools/hdc_golden.py tools/rtl_gpu_sm_exact.py \
-  tools/rtl_hdc_v41_blockdot_campaign.py tools/hbm_svc_packed136_image.py tools/w19_payload_loader.py \
+  tools/rtl_hdc_v41_blockdot_campaign.py tools/hbm_svc_packed136_image.py tools/w19_payload_loader.py configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json \
   rtl/hbm_accel/loader/service_native rtl/hbm_accel/sm/static rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv \
   rtl/test/hbm_accel/svg_rel rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_forest.sv rtl/model_ready_hbm_r14 \
   physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \
