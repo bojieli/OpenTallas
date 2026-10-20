@@ -141,7 +141,8 @@ PORT_Y1 = [
 ]
 
 # KV-PC5-A 10-20: scheduler native32 restructure of ot_qkd_static_kv_timing (inserted into kv_pc_sram_gen.py)
-NSG, NSW, NRD, NWR, NDA, NEV = 16, 6, 19, 14, 17, 21
+NSG, NSW, NRD, NWR, NDA, NEV = 18, 8, 19, 14, 17, 22
+NHG = 7          # head groups: sb/sc/swe, srw lo, srw hi, sb_oh 4 x 8
 CTX_SL = 14
 NCS = (347 + CTX_SL - 1) // CTX_SL     # 25 context slices
 
@@ -171,11 +172,26 @@ def ev_bits(k):
 EV_BLOCK = f'''    // KV-PC5: registered row-command event copies (exact: c_v <= slot_next && r_v, c_op <= r_op, c_s <= S && .. r_s),
     // {NEV} kept groups x {{actS, rfp, rfa, pall, pre, act}}; X(t) == (c_v && c_op == X)(t).  Group k serves one load group:
     // 0-7 bank groups (4 banks), 8 bank-group timers, 9/10 open lo/hi, 11/12 stale lo/hi, 13 rrds/refreshed, 14/15
-    // open_nx lo/hi, 16/17 ready_stale_next lo/hi, 18 ready_blk_next, 19 wopen, 20 REFpb bookkeeping.
+    // open_nx lo/hi, 16/17 ready_stale_next lo/hi, 18 ready_blk_next, 19 wopen, 20 REFpb blk, 21 REFpb counters.
     (* keep *) reg [{NEV * 6 - 1}:0] ev_qv;
-    wire [5:0] ev_d = {ev_bits(0)};
+    // the six field values as two kept leaf copies (each feeds half of the groups)
+    wire [11:0] ev_d;
+    wire ev_sv = slot_next && r_v;
+    for (genvar q = 0; q < 2; q = q + 1) begin : g_evd
+      ot_kvpc5_and2 u_a (.a(ev_sv), .b(r_op == ACT), .y(ev_d[q*6 + 0]));
+      ot_kvpc5_and2 u_p (.a(ev_sv), .b(r_op == PRE), .y(ev_d[q*6 + 1]));
+      ot_kvpc5_and2 u_l (.a(ev_sv), .b(r_op == PREALL), .y(ev_d[q*6 + 2]));
+      ot_kvpc5_and2 u_f (.a(ev_sv), .b(r_op == REFAB), .y(ev_d[q*6 + 3]));
+      ot_kvpc5_and2 u_r (.a(ev_sv), .b(r_op == REFPB), .y(ev_d[q*6 + 4]));
+      ot_kvpc5_and2 u_s (.a(ev_sv), .b(S && r_s && r_op == ACT), .y(ev_d[q*6 + 5]));
+    end
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) ev_qv <= {{{NEV * 6}{{1'b0}}}}; else ev_qv <= {{{NEV}{{ev_d}}}};
+      if (!rst_n) ev_qv <= {{{NEV * 6}{{1'b0}}}};
+      else ev_qv <= {{{{{NEV - NEV // 2}{{ev_d[11:6]}}}}, {{{NEV // 2}{{ev_d[5:0]}}}}}};
+    // KV-PC5: ref_c == LEAD as registered copies (ref_c <= ref_n at every non-reset edge): 0 blk/rb, 1 ready_blk_next
+    (* keep *) reg [1:0] lead_qv;
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) lead_qv <= {{2{{RW'(RPH + PERIOD) == RW'(LEAD)}}}}; else lead_qv <= {{2{{ref_n == RW'(LEAD)}}}};
     wire [16:0] desc_acc_c;
     wire [31:0] open_nx;
     assign open_nx[15:0] = (row_gnt && {ev(14, "act")}) ? (open[15:0] | c_oh[15:0]) : (row_gnt && {ev(14, "pre")}) ? (open[15:0] & ~c_oh[15:0]) :
@@ -196,39 +212,41 @@ SQ_DECL = f'''    reg [SQW:0] sq_n; reg [SQW-1:0] sq_rp;
     // KV-PC5 (native32): the static queue keeps its entries in flat per-entry registers written UNGATED into the free
     // slot (rp + n, none when full: a write to a non-live slot is never read), and every wide read / load uses a
     // registered one-hot select computed from the next-state queue pointers (lookahead, no added edge), as kept copies
-    // per <= {CTX_SL}-bit slice.  col_context = head entry (sq_n != 0) or the registered s_context (empty queue): exactly the
-    // old shead_context at every non-reset edge (empty: the old head loaded s_context every cycle; non-empty: it held
-    // sq_context[sq_rp], which no write touches while live).
-    reg [4*347-1:0] sq_ctx_f; reg [346:0] sq_bp;
+    // per <= {CTX_SL}-bit slice.  col_context = entry sq_rp ALWAYS: non-empty it is the head (no write touches a live
+    // entry); empty, slot sq_rp is the free slot, written with s_context at every edge, so it holds s_context of the
+    // previous edge = the old shead_context (which loaded s_context on every empty edge).  The context writes stop in
+    // reset and the select freezes there (the old head held through reset; observed in the strap-release window).
+    reg [4*347-1:0] sq_ctx_f;
     reg [19:0] sq_bk_f, sq_cl_f; reg [75:0] sq_rw_f; reg [3:0] sq_we_f; reg [127:0] sq_oh_f;
-    (* keep *) reg [{NCS * 5 - 1}:0] sq_csel_qv;   // per context slice {{empty, head one-hot & !empty}}
+    (* keep *) reg [{NCS * 4 - 1}:0] sq_csel_qv;   // per context slice: head one-hot
     (* keep *) reg [{NCS * 4 - 1}:0] sq_cws_qv;    // per context slice: write slot one-hot
     (* keep *) reg [19:0] sq_sws_qv;              // write slot one-hot: bank/col/we, row lo, row hi, oh lo, oh hi
-    (* keep *) reg [29:0] sq_hf_qv;               // head groups {{n >= 2, n == 0, onehot(rp + 1)}}: sb/sc/swe, srw lo/hi, sb_oh lo/hi'''
+    (* keep *) reg [{NHG * 6 - 1}:0] sq_hf_qv;   // head groups {{n >= 2, n == 0, onehot(rp + 1)}}: sb/sc/swe, srw lo/hi, sb_oh 4 x 8
+    (* keep *) reg [7:0] swe_bk;                 // KV-PC5: swe for the 8 bank groups (identical to swe)'''
 
 SQ_LOOK = f'''    // ---- KV-PC5 static queue lookahead (next-state pointers -> registered one-hot copies) ----------------------------
     wire sq_push = s_v && s_r;
-    wire [SQW:0] sq_n_nx = sq_n + (sq_push ? 1'b1 : 1'b0) - (s_go_c[15] ? 1'b1 : 1'b0);
-    wire [SQW-1:0] sq_rp_nx = s_go_c[15] ? SQW'(sq_rp + 1'b1) : sq_rp;
+    wire [SQW:0] sq_n_nx = sq_n + (sq_push ? 1'b1 : 1'b0) - (s_go_c[17] ? 1'b1 : 1'b0);
+    wire [SQW-1:0] sq_rp_nx = s_go_c[17] ? SQW'(sq_rp + 1'b1) : sq_rp;
     wire [3:0] sq_rpoh_nx = 4'b1 << sq_rp_nx;
     wire [3:0] sq_r1oh_nx = 4'b1 << SQW'(sq_rp_nx + 1'b1);
     wire [3:0] sq_wsoh_nx = (sq_n_nx != (SQW+1)'(SQD)) ? (4'b1 << SQW'(sq_rp_nx + sq_n_nx[SQW-1:0])) : 4'b0;
     wire sq_eq0_nx = sq_n_nx == 0; wire sq_ge2_nx = sq_n_nx >= 2;
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) begin sq_sws_qv <= {{5{{4'b0001}}}}; sq_hf_qv <= {{5{{6'b010010}}}}; end
-      else begin sq_sws_qv <= {{5{{sq_wsoh_nx}}}}; sq_hf_qv <= {{5{{sq_ge2_nx, sq_eq0_nx, sq_r1oh_nx}}}}; end
+      if (!rst_n) begin sq_sws_qv <= {{5{{4'b0001}}}}; sq_hf_qv <= {{{NHG}{{6'b010010}}}}; end
+      else begin sq_sws_qv <= {{5{{sq_wsoh_nx}}}}; sq_hf_qv <= {{{NHG}{{sq_ge2_nx, sq_eq0_nx, sq_r1oh_nx}}}}; end
     // the context select / write slot / bypass FREEZE while the scheduler is in reset (the old shead_context held its
     // pre-reset value through reset; at the first edge after release they load f(n = 0, rp = 0) like the old chg).
     // Not reset: their only consumers are the context entries and col_context (no initial value is observed before
     // the first post-reset edge loads them: KVPC sched bench strap-release window).
-    always @(posedge clk) if (rst_n) begin
-      sq_csel_qv <= {{{NCS}{{sq_eq0_nx, sq_rpoh_nx & {{4{{!sq_eq0_nx}}}}}}}}; sq_cws_qv <= {{{NCS}{{sq_wsoh_nx}}}};
-      sq_bp <= s_context;
+    always @(posedge clk) begin
+      if (rst_n) sq_csel_qv <= {{{NCS}{{sq_rpoh_nx}}}};
+      sq_cws_qv <= {{{NCS}{{sq_wsoh_nx}}}};
     end
     wire [31:0] sq_s_oh = 32'b1 << s_bank;
     always @(posedge clk) begin
       for (integer e = 0; e < 4; e = e + 1) begin
-        for (integer x = 0; x < 347; x = x + 1) if (sq_cws_qv[(x / {CTX_SL}) * 4 + e]) sq_ctx_f[e * 347 + x] <= s_context[x];
+        for (integer x = 0; x < 347; x = x + 1) if (sq_cws_qv[(x / {CTX_SL}) * 4 + e] && rst_n) sq_ctx_f[e * 347 + x] <= s_context[x];
         if (sq_sws_qv[e]) begin sq_bk_f[e*5 +: 5] <= s_bank; sq_cl_f[e*5 +: 5] <= s_col; sq_we_f[e] <= s_we; end
         if (sq_sws_qv[4 + e]) sq_rw_f[e*19 +: 10] <= s_row[9:0];
         if (sq_sws_qv[8 + e]) sq_rw_f[e*19 + 10 +: 9] <= s_row[18:10];
@@ -238,8 +256,7 @@ SQ_LOOK = f'''    // ---- KV-PC5 static queue lookahead (next-state pointers -> 
     end
     for (genvar x = 0; x < 347; x = x + 1) begin : g_sqcr
       localparam integer Q = x / {CTX_SL};
-      assign col_context[x] = sq_csel_qv[Q*5 + 4] ? sq_bp[x] :
-        |(sq_csel_qv[Q*5 +: 4] & {{sq_ctx_f[3*347 + x], sq_ctx_f[2*347 + x], sq_ctx_f[347 + x], sq_ctx_f[x]}});
+      assign col_context[x] = |(sq_csel_qv[Q*4 +: 4] & {{sq_ctx_f[3*347 + x], sq_ctx_f[2*347 + x], sq_ctx_f[347 + x], sq_ctx_f[x]}});
     end
     // the entry after the head (rp + 1) for each head group, by its own registered one-hot
     function automatic [31:0] sq_rd1(input [3:0] oh, input [127:0] f, input integer w, input integer off);
@@ -252,9 +269,13 @@ SQ_LOOK = f'''    // ---- KV-PC5 static queue lookahead (next-state pointers -> 
     wire       sq_a1_we = |(sq_hf_qv[3:0] & sq_we_f);
     wire [9:0] sq_a1_rl = sq_rd1(sq_hf_qv[9:6], {{52'b0, sq_rw_f}}, 19, 0);
     wire [8:0] sq_a1_rh = sq_rd1(sq_hf_qv[15:12], {{52'b0, sq_rw_f}}, 19, 10);
-    wire [15:0] sq_a1_ol = sq_rd1(sq_hf_qv[21:18], sq_oh_f, 32, 0);
-    wire [15:0] sq_a1_oh = sq_rd1(sq_hf_qv[27:24], sq_oh_f, 32, 16);
-    wire [18:0] srw_tw = 19'(srw + 19'(TWIN_ROFF));'''
+    wire [7:0] sq_a1_o0 = sq_rd1(sq_hf_qv[21:18], sq_oh_f, 32, 0);
+    wire [7:0] sq_a1_o1 = sq_rd1(sq_hf_qv[27:24], sq_oh_f, 32, 8);
+    wire [7:0] sq_a1_o2 = sq_rd1(sq_hf_qv[33:30], sq_oh_f, 32, 16);
+    wire [7:0] sq_a1_o3 = sq_rd1(sq_hf_qv[39:36], sq_oh_f, 32, 24);
+    wire [31:0] sq_a1_o = {{sq_a1_o3, sq_a1_o2, sq_a1_o1, sq_a1_o0}};
+    wire [18:0] srw_tw = 19'(srw + 19'(TWIN_ROFF));
+    wire swe_nx = s_go_c[10] ? (sq_hf_qv[5] ? sq_a1_we : s_we) : (sq_hf_qv[4] ? s_we : swe);'''
 
 SQ_BLOCK_OLD = '''        if (S) begin : sq
           reg [SQW-1:0] rpn; reg chg;
@@ -297,15 +318,16 @@ SQ_BLOCK_NEW = ('''        if (S) begin : sq
           sq_rp <= sq_rp_nx;
 '''
     + head_stmt(0, 'sb', 'sq_a1_bk', 's_bank', 'sb ^ 5\'d2') + head_stmt(0, 'sc', 'sq_a1_cl', 's_col', None)
-    + head_stmt(0, 'swe', 'sq_a1_we', 's_we', None)
+    + '          swe <= swe_nx;\n'
     + head_stmt(1, 'srw[9:0]', 'sq_a1_rl', 's_row[9:0]', 'srw_tw[9:0]')
     + head_stmt(2, 'srw[18:10]', 'sq_a1_rh', 's_row[18:10]', 'srw_tw[18:10]')
-    + head_stmt(3, 'sb_oh[15:0]', 'sq_a1_ol', 'sq_s_oh[15:0]', 'ab_oh[15:0]')
-    + head_stmt(4, 'sb_oh[31:16]', 'sq_a1_oh', 'sq_s_oh[31:16]', 'ab_oh[31:16]')
-    + '''          if (s_go_c[15] || sq_n == 0) begin sfl <= 1'b0; scm <= 1'b0; end
+    + ''.join(head_stmt(3 + h, f'sb_oh[{8 * h + 7}:{8 * h}]', f'sq_a1_o[{8 * h + 7}:{8 * h}]', f'sq_s_oh[{8 * h + 7}:{8 * h}]',
+                        f'ab_oh[{8 * h + 7}:{8 * h}]') for h in range(4))
+    + '          swe_bk <= {8{swe_nx}};\n'
+    + '''          if (s_go_c[17] || sq_n == 0) begin sfl <= 1'b0; scm <= 1'b0; end
           else if (s_sw_c[0]) sfl <= 1'b1;
           else if (s_hit || (row_fire && c_op == ACT && c_s)) scm <= 1'b1;
-          if (!sq_ne || s_go_c[15] || sq_n == 0 || s_sw_c[0]) swait <= 0; else if (swait != 8'hff) swait <= swait + 1'b1;''')
+          if (!sq_ne || s_go_c[17] || sq_n == 0 || s_sw_c[0]) swait <= 0; else if (swait != 8'hff) swait <= swait + 1'b1;''')
 
 WQ_DECL_OLD = '''    reg [31:0] wq_oh [0:WQ-1]; reg [WQW-1:0] wq_rp1;'''
 WQ_DECL_NEW = '''    reg [31:0] wq_oh [0:WQ-1]; reg [WQW-1:0] wq_rp1;
@@ -420,8 +442,9 @@ def sc_(k, h):
 CASE_NEW = ('        // KV-PC5: the row-command case per load group from its own registered event copy (exclusive fields)\n'
             + oc(9, 0) + oc(10, 1) + sc_(11, 0) + sc_(12, 1)
             + f'''        if (row_gnt && {ev(13, "act")}) rrds_c <= 2'(T_RRDS - 1);
-        if (row_gnt && {ev(20, "rfp")}) begin
-          noact_c <= 4'(T_RREFD - 1); ref_pend <= 0; blk <= 0;
+        if (row_gnt && {ev(20, "rfp")}) blk <= 0;
+        if (row_gnt && {ev(21, "rfp")}) begin
+          noact_c <= 4'(T_RREFD - 1); ref_pend <= 0;
           if (PI && ep && !ref_pend) begin ep <= 0; pin <= pin + 1'b1; end
         end
         if (row_gnt && {ev(13, "rfp")}) refreshed <= (&(refreshed | (32'b1 << rb))) ? 32'b0 : (refreshed | (32'b1 << rb));''')
@@ -475,6 +498,14 @@ RDOH_NEW = '''        // KV-PC5: rd_oh lo / hi and rd_bgoh each from their own d
         if (desc_acc_c[5]) rd_bgoh <= 4'b1 << first_sector[1:0]; else if (rd_ok_c[8]) rd_bgoh <= 4'b1 << j_p1[1:0];'''
 
 TIM_PC5 = [
+    ('''    wire s_hit = sq_ne && so_v && so_b == sb && so_row == srw && |(sb_oh & open);
+    wire [31:0] shold = s_hit ? sb_oh : 32'b0;''',
+     '''    // KV-PC5: s_hit as two kept leaf copies (1 = the 32-bit shold mask)
+    wire [1:0] s_hit_c;
+''' + leaves('s_hit_c', 2, 'sq_ne && so_v && so_b == sb && so_row == srw', '|(sb_oh & open)') + '''    wire s_hit = s_hit_c[0];
+    wire [31:0] shold = s_hit_c[1] ? sb_oh : 32'b0;'''),
+    ('''        sq_n <= 0; sq_rp <= 0; sb <= 0; sc <= 0; srw <= 0; swe <= 0;''',
+     '''        sq_n <= 0; sq_rp <= 0; sb <= 0; sc <= 0; srw <= 0; swe <= 0; swe_bk <= 8'b0;'''),
     ('''    wire wr_ok, wr_ok0, rd_ok0;''',
      f'''    wire wr_ok, wr_ok0, rd_ok0;
     wire [{NWR - 1}:0] wr_ok_c;   // KV-PC5: kept leaf copies of wr_ok (0 = wr_ok)'''),
@@ -498,6 +529,9 @@ TIM_PC5 = [
     wire [31:0] ready_blk_next = (row_fire && c_op == REFPB) ? 32'b0 :''',
      f'''    wire [31:0] ready_stale_next = {{{half(16, 17, 2)}, {half(0, 16, 1)}}};
     wire [31:0] ready_blk_next = (row_gnt && {ev(18, "rfp")}) ? 32'b0 :'''),
+    ('''      (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;''', '''      (REF_MODE && lead_qv[1]) ? (32'b1 << bsel) : blk;'''),
+    ('''          if (REF_MODE && ref_c == RW'(LEAD)) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end''',
+     '''          if (REF_MODE && lead_qv[0]) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end'''),
     ('''      wire wr_e = (W && wr_ok && hb_oh[b] && !(AQ && hr)) || (s_go && swe && sb_oh[b]);
       wire act_e = row_fire && c_op == ACT && c_oh[b];
       wire pre_e = row_fire && ((c_op == PRE && c_oh[b]) || c_op == PREALL);
@@ -505,12 +539,12 @@ TIM_PC5 = [
       wire rfp_e = row_fire && c_op == REFPB && c_oh[b];
       wire rd_e  = (rd_ok && rd_oh[b]) || (AQ && wr_ok && hr && hb_oh[b]) || (s_go && !swe && sb_oh[b]);''',
      f'''      // KV-PC5: this bank group's own decision / event copies
-      wire wr_e = (W && wr_ok_c[6 + (b >> 2)] && hb_oh[b] && !(AQ && hr)) || (s_go_c[2 + (b >> 2)] && swe && sb_oh[b]);
+      wire wr_e = (W && wr_ok_c[6 + (b >> 2)] && hb_oh[b] && !(AQ && hr)) || (s_go_c[2 + (b >> 2)] && swe_bk[b >> 2] && sb_oh[b]);
       wire act_e = row_gnt && {bank_ix(0)} && c_oh[b];
       wire pre_e = row_gnt && (({bank_ix(1)} && c_oh[b]) || {bank_ix(2)});
       wire rfa_e = row_gnt && {bank_ix(3)};
       wire rfp_e = row_gnt && {bank_ix(4)} && c_oh[b];
-      wire rd_e  = (rd_ok_c[11 + (b >> 2)] && rd_oh[b]) || (AQ && wr_ok_c[6 + (b >> 2)] && hr && hb_oh[b]) || (s_go_c[2 + (b >> 2)] && !swe && sb_oh[b]);'''),
+      wire rd_e  = (rd_ok_c[11 + (b >> 2)] && rd_oh[b]) || (AQ && wr_ok_c[6 + (b >> 2)] && hr && hb_oh[b]) || (s_go_c[2 + (b >> 2)] && !swe_bk[b >> 2] && sb_oh[b]);'''),
     ('''      wire act_g = row_fire && c_op == ACT && c_bank[1:0] == 2'(g);
       // FAW slot g takes this ACT if it is the lowest free slot
       wire ccdl_e = (rd_ok && rd_bgoh[g]) || (W && wr_ok && hb[1:0] == 2'(g)) || (s_go && sb[1:0] == 2'(g));
