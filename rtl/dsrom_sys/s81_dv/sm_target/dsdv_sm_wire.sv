@@ -19,7 +19,7 @@
 //                 cfg_v pulses on the edge after payload word 1 (the target's pin flop captures it one edge later).
 //   dsdv_sm_gw    the GATHER WORD serializer: one 1024-b target beat (g_v, every 4 edges, 8 a head) -> 3 words of the
 //                 half's P.V return tree (513 b, the existing child -> parent lanes, 5 edges a hop, compiled windows):
-//                   lo {0, d[511:0]}, hi {0, d[1023:512]}, hdr {1, 473'd0, magic 8'h5A, owner 20, head 4, group, idx 7}
+//                   lo {0, d[511:0]}, hi {0, d[1023:512]}, hdr {1, 472'd0, magic 8'h5A, owner 20, head 4, group, idx 7}
 //                 on the 3 edges after g_v.  A beat while the previous one is still serialising is a fault.
 //   dsdv_sm_gx    the ENTRY STAMP: marks the entry's pv words inside the booked gather window as SO gather words in the
 //                 48 spare bits of the existing 562-b pv lane (pv_x[47] = SO, pv_x[44:43] = route), so the landing
@@ -108,9 +108,9 @@ module dsdv_sm_gw (
         end
     always @(posedge clk)
 `ifdef OT_SMWIRE_MUT_ORDER
-        gw_d <= g_v ? {1'b0, hi} : (n == 2'd1) ? {1'b0, g_d[511:0]} : {1'b1, 473'd0, 8'h5A, h};   // mutant: lo / hi swap
+        gw_d <= g_v ? {1'b0, hi} : (n == 2'd1) ? {1'b0, g_d[511:0]} : {1'b1, 472'd0, 8'h5A, h};   // mutant: lo / hi swap
 `else
-        gw_d <= g_v ? {1'b0, g_d[511:0]} : (n == 2'd1) ? {1'b0, hi} : {1'b1, 473'd0, 8'h5A, h};
+        gw_d <= g_v ? {1'b0, g_d[511:0]} : (n == 2'd1) ? {1'b0, hi} : {1'b1, 472'd0, 8'h5A, h};
 `endif
 endmodule
 

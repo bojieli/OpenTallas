@@ -9,7 +9,7 @@ ROOT=$(cd "$(dirname "$0")/../../.." && pwd); cd "$ROOT"
 O=${1:-out_e2e}; DEFN=${2:-}; mkdir -p "$O"
 VL=${OPENTALLAS_TOOLS_ROOT:-$HOME/.local/opentallas-tools}/verilator-5.050/bin/verilator
 "$VL" --version > "$O/tool.txt"
-python3 tools/s81_dv/sm_target/make_bench_e2e.py > /dev/null
+[ -f rtl/dsrom_sys/s81_dv/sm_target/test/tb_smwire_e2e.sv ] || python3 tools/s81_dv/sm_target/make_bench_e2e.py > /dev/null
 S=rtl
 "$VL" --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-TIMESCALEMOD \
  --top-module tb_smwire_e2e -Mdir "$O/obj" -j 16 --unroll-count 4 -fno-dfg \

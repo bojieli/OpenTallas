@@ -226,32 +226,32 @@ module dsdv_svc_rs_c #(
         .o_rjid(o_rjid));
     assign w_st = {o_rjid, o_den, o_alive, o_fo, o_fu};
     // ------------------------------------------------------------------ S81-SMWIRE: SO target, config source, gather words
-    wire t_cfg_v; wire [19:0] t_owner; wire [7:0] t_se, t_so; wire [13:0] t_obase; wire [15:0] t_first, t_last, t_read, t_ret;
-    wire [1:0] t_route; wire [15:0] t_gw0, t_gw1; wire [2:0] sot_fc;
-    wire t_gv, t_ggrp, t_ret_v, t_ret_e, t_f; wire [6:0] t_gidx; wire [1023:0] t_gd; wire [19:0] t_gown, t_rown;
-    wire [11:0] t_fc; wire gw_v, gw_f; wire [512:0] gw_d;
+    wire zt_cfg_v; wire [19:0] zt_owner; wire [7:0] zt_se, zt_so; wire [13:0] zt_obase; wire [15:0] zt_first, zt_last, zt_read, zt_ret;
+    wire [1:0] zt_route; wire [15:0] zt_gw0, zt_gw1; wire [2:0] sot_fc;
+    wire zt_gv, zt_ggrp, zt_ret_v, zt_ret_e, zt_f; wire [6:0] zt_gidx; wire [1023:0] zt_gd; wire [19:0] zt_gown, zt_rown;
+    wire [11:0] zt_fc; wire gw_v, gw_f; wire [512:0] gw_d;
     reg so_pend;
     generate if (SMT) begin : g_smt
-        dsdv_svc_sot u_sot (.clk(ck), .rst_n(rn), .tile(tile), .q_v(cs[0]), .q_d(cs[512:1]), .cfg_v(t_cfg_v),
-            .cfg_owner(t_owner), .cfg_se_jid(t_se), .cfg_so_jid(t_so), .cfg_obase(t_obase), .cfg_first(t_first),
-            .cfg_last(t_last), .cfg_read(t_read), .cfg_retire(t_ret), .route(t_route), .gw_first(t_gw0), .gw_last(t_gw1),
+        dsdv_svc_sot u_sot (.clk(ck), .rst_n(rn), .tile(tile), .q_v(cs[0]), .q_d(cs[512:1]), .cfg_v(zt_cfg_v),
+            .cfg_owner(zt_owner), .cfg_se_jid(zt_se), .cfg_so_jid(zt_so), .cfg_obase(zt_obase), .cfg_first(zt_first),
+            .cfg_last(zt_last), .cfg_read(zt_read), .cfg_retire(zt_ret), .route(zt_route), .gw_first(zt_gw0), .gw_last(zt_gw1),
             .fault_code(sot_fc));
-        dsdv_sm_so_target #(.HEAD(-1)) u_tgt (.clk(ck), .rst_n(rst), .head(tile), .cfg_v(t_cfg_v), .cfg_owner(t_owner),
-            .cfg_se_jid(t_se), .cfg_so_jid(t_so), .cfg_obase(t_obase), .cfg_first(t_first), .cfg_last(t_last),
-            .cfg_read(t_read), .cfg_retire(t_ret), .op_st(sm_st), .op_kind(sm_kind), .op_jid(sm_jid),
-            .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .g_v(t_gv), .g_idx(t_gidx), .g_d(t_gd),
-            .g_owner(t_gown), .g_group(t_ggrp), .retired(t_ret_v), .retire_error(t_ret_e), .retire_owner(t_rown),
-            .fault(t_f), .fault_code(t_fc));
-        dsdv_sm_gw u_gw (.clk(ck), .rst_n(rn), .head(tile), .g_v(t_gv), .g_idx(t_gidx), .g_d(t_gd), .g_owner(t_gown),
-            .g_group(t_ggrp), .gw_v(gw_v), .gw_d(gw_d), .fault(gw_f));
+        dsdv_sm_so_target #(.HEAD(-1)) u_tgt (.clk(ck), .rst_n(rst), .head(tile), .cfg_v(zt_cfg_v), .cfg_owner(zt_owner),
+            .cfg_se_jid(zt_se), .cfg_so_jid(zt_so), .cfg_obase(zt_obase), .cfg_first(zt_first), .cfg_last(zt_last),
+            .cfg_read(zt_read), .cfg_retire(zt_ret), .op_st(sm_st), .op_kind(sm_kind), .op_jid(sm_jid),
+            .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .g_v(zt_gv), .g_idx(zt_gidx), .g_d(zt_gd),
+            .g_owner(zt_gown), .g_group(zt_ggrp), .retired(zt_ret_v), .retire_error(zt_ret_e), .retire_owner(zt_rown),
+            .fault(zt_f), .fault_code(zt_fc));
+        dsdv_sm_gw u_gw (.clk(ck), .rst_n(rn), .head(tile), .g_v(zt_gv), .g_idx(zt_gidx), .g_d(zt_gd), .g_owner(zt_gown),
+            .g_group(zt_ggrp), .gw_v(gw_v), .gw_d(gw_d), .fault(gw_f));
         // joined completion: a configured SO keeps the slice's done low until its booked retire is clean
         always @(posedge ck or negedge rn)
             if (!rn) so_pend <= 1'b0;
-            else if (t_cfg_v) so_pend <= 1'b1;
-            else if (t_ret_v && !t_ret_e) so_pend <= 1'b0;
+            else if (zt_cfg_v) so_pend <= 1'b1;
+            else if (zt_ret_v && !zt_ret_e) so_pend <= 1'b0;
     end else begin : g_nosmt
-        assign t_cfg_v = 1'b0; assign t_route = 2'd0; assign t_gw0 = 16'd0; assign t_gw1 = 16'd0; assign sot_fc = 3'd0;
-        assign t_f = 1'b0; assign t_ret_v = 1'b0; assign t_ret_e = 1'b0; assign gw_v = 1'b0; assign gw_f = 1'b0;
+        assign zt_cfg_v = 1'b0; assign zt_route = 2'd0; assign zt_gw0 = 16'd0; assign zt_gw1 = 16'd0; assign sot_fc = 3'd0;
+        assign zt_f = 1'b0; assign zt_ret_v = 1'b0; assign zt_ret_e = 1'b0; assign gw_v = 1'b0; assign gw_f = 1'b0;
         assign gw_d = '0;
         always @(posedge ck) so_pend <= 1'b0;
     end endgenerate
@@ -301,7 +301,7 @@ module dsdv_svc_rs_c #(
     always @(posedge ck or negedge rn) if (!rn) pv_v <= 1'b0; else pv_v <= ENTRY && rm_v && par == 3'd0;
     always @(posedge ck) pv_d <= rm_d;
     generate if (ENTRY && SMT) begin : g_gx
-        dsdv_sm_gx u_gx (.clk(ck), .rst_n(rn), .cfg_v(t_cfg_v), .route(t_route), .gw_first(t_gw0), .gw_last(t_gw1),
+        dsdv_sm_gx u_gx (.clk(ck), .rst_n(rn), .cfg_v(zt_cfg_v), .route(zt_route), .gw_first(zt_gw0), .gw_last(zt_gw1),
             .w_v(rm_v && par == 3'd0), .pv_x(pv_x));
     end else begin : g_nogx
         assign pv_x = 48'd0;
@@ -310,7 +310,7 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ controller status, local fault
     // hs = {fault, live} per PC controller (dsfd_svc_hs's synchroniser and rule: a fault, or live dropping after it
     // rose, is a sticky slice fault; the job-done half of dsfd_svc_hs lives at the entry's job gate, not here)
-    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | t_f | (|sot_fc) | gw_f | (t_ret_v && t_ret_e);
+    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | zt_f | (|sot_fc) | gw_f | (zt_ret_v && zt_ret_e);
     (* async_reg = "true" *) reg [1:0] hs0, hs1;
     reg hs_up, hs_hf, hs_f;
     always @(posedge ck or negedge rn)
