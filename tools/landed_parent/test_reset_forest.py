@@ -36,6 +36,24 @@ forest_child #(.W(W)) u1(.clk(clk),.rst_n(rst_n),.i(hop),.o(o));endmodule\n''')
         assert r['flops']['reset']==old.record(op,'forest_top_lp',ort)['flops']['reset']+92
         assert r['compiler']==old.record(op,'forest_top_lp',ort)['compiler']
         assert p.sdc(plan,'forest_top_lp')==old.sdc(op,'forest_top_lp')
+        lead=copy.deepcopy(s);lead['landing_reset_lead']=True
+        lp_lead=lp.Parent(lead);lead_plan=lp_lead.plan()
+        lead_rtl,lead_rt=lp_lead.emit(lead_plan,'forest_top_lp')
+        lead_record=lp_lead.record(lead_plan,'forest_top_lp',lead_rt)
+        assert lp.audit(lead,lead_rtl)['ok'],lp.audit(lead,lead_rtl)
+        assert 'ot_pl_land_reset_forest_lead' in lead_rtl
+        assert '.LATE((MUT == 5))' in lead_rtl
+        assert '.scalar_q(lpr_core)' in lead_rtl
+        assert lead_record['compiler']==r['compiler']
+        assert lead_record['reset']['same_depth_forest']['regional_stages']==3
+        assert all(row['FFs']==1+row['branches']+1 for row in
+                   lead_record['reset']['same_depth_forest']['regions'].values())
+        # Exactly one root fanout load per branch at the smallest paid depth.
+        shallow=copy.deepcopy(lead);shallow['regions'][1]['centre']=[650,0]
+        pp=lp.Parent(shallow);pr=pp.reset_forest_plan(pp.plan())
+        assert pr['regional_stages']==2
+        assert pr['root_D_loads']==sum(v['branches'] for v in pr['regions'].values())
+        print('RESET_FOREST_LEAD_COMPILER_AGE_AND_ACCOUNTING PASS')
         for mutate in ('not_boolean','no_chunks','not_enough_paid_depth','too_many_leaves','too_many_root_loads'):
             q=copy.deepcopy(s)
             if mutate=='not_boolean':q['landing_reset_forest']=1

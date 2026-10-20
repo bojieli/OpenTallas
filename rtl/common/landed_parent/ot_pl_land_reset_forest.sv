@@ -1,6 +1,40 @@
 // Private opt-in: bounded reset distribution using the existing run depth.
 // Requires ot_pl_land_field_copy_bit from ot_pl_land_field_copies.sv.
 `default_nettype none
+// Opt-in lead forest. q[1:] feeds only the landing rq flops; rq is
+// the final paid reset stage. Index zero reserves one branch load for
+// scalar_q, which retains the ordinary child reset age. No new edge.
+module ot_pl_land_reset_forest_lead #(
+    parameter integer DEPTH=2, LEAVES=47, ROOT_LOADS=1, LATE=0
+)(input wire ck,d, output wire [LEAVES-1:0] q, output wire scalar_q);
+    localparam integer BRANCHES=(LEAVES+31)/32;
+    wire [DEPTH-2:0] prefix;
+    wire [BRANCHES-1:0] branch;
+    assign prefix[0]=d;
+    generate if(DEPTH<2 || LEAVES<1 || LEAVES>1024 || ROOT_LOADS<1 || ROOT_LOADS>32 || (LATE!=0 && LATE!=1)) begin:g_invalid_shape
+        OT_LAND_RESET_FOREST_LEAD_REQUIRES_PAID_DEPTH2_BOUNDED_LOADS u_bad();
+    end
+    for(genvar s=0;s<DEPTH-2;s=s+1) begin:g_prefix
+        (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(s)) u_ff(
+            .ck(ck),.d(prefix[s]),.q(prefix[s+1]));
+    end
+    for(genvar b=0;b<BRANCHES;b=b+1) begin:g_branch
+        (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(1024+b)) u_ff(
+            .ck(ck),.d(prefix[DEPTH-2]),.q(branch[b]));
+    end
+    for(genvar l=0;l<LEAVES;l=l+1) begin:g_leaf
+        if(LATE) begin:g_mutant
+            ot_pl_land_field_copy_bit #(.ID(2048+l)) u_ff(.ck(ck),.d(branch[l/32]),.q(q[l]));
+        end else begin:g_lead assign q[l]=branch[l/32]; end
+    end endgenerate
+    (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(4096)) u_scalar(
+        .ck(ck),.d(branch[0]),.q(scalar_q));
+`ifndef SYNTHESIS
+    initial if(DEPTH<2 || LEAVES<1 || LEAVES>1024 || ROOT_LOADS<1 || ROOT_LOADS>32 || (LATE!=0 && LATE!=1))
+        $fatal(1,"LAND_RESET_FOREST_LEAD_SHAPE");
+`endif
+endmodule
+
 module ot_pl_land_reset_forest #(
     parameter integer DEPTH=8, LEAVES=47, ROOT_LOADS=1
 )(input wire ck,d, output wire [LEAVES-1:0] q);

@@ -110,6 +110,7 @@ LIB_PORTS['ot_pl_land_chunk_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
+LIB_PORTS['ot_pl_land_reset_forest_lead'] = dict(LIB_PORTS['ot_pl_pad'], scalar_q='out')
 
 
 
@@ -477,8 +478,6 @@ class Parent:
         self.reset_lead = spec.get("landing_reset_lead", False)
         if type(self.reset_lead) is not bool:
             raise SystemExit("landing_reset_lead must be an explicit boolean")
-        if self.reset_lead and self.reset_forest:
-            raise SystemExit("landing_reset_lead is not implemented with landing_reset_forest")
         # QW-CTLM3 10-19: landing_mcp false -- NO data multicycle: ring -> read is timed single-cycle (conservative: the
         # read samples a slot written >= K edges earlier), every cone (slot data, valid, selectors) at full STA.
         self.mcp = spec.get("landing_mcp", True)
@@ -769,7 +768,10 @@ class Parent:
             if row['leaves'] > 1024:
                 raise SystemExit(f'landing_reset_forest {region}: {row["leaves"]} leaves exceeds1024')
             row['branches'] = math.ceil(row['leaves'] / 32)
-            row['FFs'] = depth - 2 + row['branches'] + row['leaves']
+            # With lead, each ring's own rq is the last paid reset stage.
+            # A branch drives at most 32 rq inputs; index zero instead feeds
+            # the one final scalar-child reset flop, at the original age.
+            row['FFs'] = depth - 2 + row['branches'] + (1 if self.reset_lead else row['leaves'])
             scalar_uses = sum(self.region[ins['inst']] == region and any(
                 pin in (self.S.get('reset_pins') or []) and ex.strip() == self.rst
                 for pin, ex in ins['conns'].items()) for ins in self.insts)
@@ -839,9 +841,15 @@ class Parent:
                               if RB-1 == 2 else str(len(self.regions)))
         for r in self.regions:
             if forest:
-                w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
-                w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
-                  f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
+                if self.reset_lead:
+                    w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r};')
+                    late = '(MUT == 5)' if mut else '0'
+                    w(f'    ot_pl_land_reset_forest_lead #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr}), .LATE({late})) u_lpr_{r} '
+                      f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves), .scalar_q(lpr_{r})); // ring rq supplies the final reset stage')
+                else:
+                    w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
+                    w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
+                      f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
             elif self.reset_lead:
                 w(f"    wire lpr_{r}_l;  ot_pl_pad #(.W(1), .N({RB - 2})) u_lpr_{r}_l (.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_l));"
                   f"   // {hops[r]} hop(s) from {rr}; landing rq release = RB (landing_reset_lead)")
