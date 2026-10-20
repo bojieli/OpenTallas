@@ -1194,6 +1194,8 @@ KSD.D2D_LISTS = (D2DS_SVC, SEQST_RX, SEQST_KW)
 # KV-WIRE2 ASTK (KSD.ASTK_ST): engine faces 413 / 633 b (qkd_ectl3_kiss_st), heads without the node beat (r4_s / r4_ft_s:
 # no nb, no ck_a* / ck_b* entries), the strip die face qkd_astk_strip_er_die (clock entry ck_d = RTL ck_er: the element
 # libs know ck_<letter><n> entries; no ck_v*)
+if __import__('os').environ.get('OT_KV_QKH_SAFE32', '0') == '1' and not KSD.ASTK_ST:
+    raise ValueError('OT_KV_QKH_SAFE32 requires the static ASTK head source')
 if KSD.ASTK_ST:
     ENG_IN, ENG_OUT = 633, 413
     HEAD_CLK[:] = [c_ for c_ in HEAD_CLK if not c_.startswith(('ck_a', 'ck_b'))]
@@ -1201,10 +1203,13 @@ if KSD.ASTK_ST:
     # KV-DCAL2 10-19 (K.STA.ECTL KPV_LOCKSTEP): OT_KV_KPV_LK=1 binds the _lk heads (u_kt = ot_qkh_ktree_lk: every lane's
     # kpv read, lane mismatch -> lane fault, +0 cycles); needs the CLOSED ot_qkh_ktree_lk view (kv_expand.VIEWS)
     _LK = __import__('os').environ.get('OT_KV_KPV_LK', '0') == '1'
+    _QKH32 = __import__('os').environ.get('OT_KV_QKH_SAFE32', '0') == '1'
+    if _QKH32 and not _LK:
+        raise ValueError('OT_KV_QKH_SAFE32 requires OT_KV_KPV_LK=1')
     for _mn, _mod in (('qkd_rhead', 'ot_qkh_head_native_r4_s'), ('qkd_rhead_ft', 'ot_qkh_head_native_r4_ft_s')):
         _hb = SPLIT_BINDINGS[_mn]
-        SPLIT_BINDINGS[_mn] = dict(_hb, module=_mod + ('_lk' if _LK else ''),
-            file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s' + ('_lk' if _LK else '') + '.sv',
+        SPLIT_BINDINGS[_mn] = dict(_hb, module=_mod + ('_lk' if _LK else '') + ('_nc32c' if _QKH32 else ''),
+            file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s' + ('_lk' if _LK else '') + ('_nc32c' if _QKH32 else '') + '.sv',
             ports={k_: v_ for k_, v_ in _hb['ports'].items() if k_ not in ('nb', 'ck_a0', 'ck_b0')},
             sliced={k_: v_ for k_, v_ in _hb['sliced'].items() if not k_.startswith(('ck_a', 'ck_b'))})
     for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):      # in_e: W stack lanes (ie) + E stack lanes (iee), 256 b each
