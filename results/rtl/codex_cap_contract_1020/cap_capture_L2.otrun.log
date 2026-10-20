@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc9       admits   152 GB (avail 305, growth 198, headroom 0, waiters 0/0 GB) load 64/128 running 34 disk 157 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-529131-1792485873 after 0 s
+FULLSIX_SOURCE_CHECK errors=3 rawwrites=320 gathers=20 epochs=15
+FULLSIX_PREPARATORY_TRACE_END CAPfault=0 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL
+LAYER_CAPTURE_COMPONENT_DONE layer=L2 original_simulator_exit=1 full_stage_qualified=false
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-529131-1792485873): exit 0

@@ -1,0 +1,16 @@
+{
+  "scope": "Frozen compiler return plan + calibrated frame offsets + unchanged CAP model; consumer OPEN",
+  "source_plan_frame_PASS": true,
+  "source_plan_frame_words": 625,
+  "cfg_program_PIN_PASS": true,
+  "cfg_words": 15,
+  "model_capture_PASS": true,
+  "model_faults": [],
+  "expected_cw_words": 512,
+  "actual_cw_words": 512,
+  "frame_missing": [],
+  "frame_extra": [],
+  "cw_missing": [],
+  "cw_extra": [],
+  "full_stage_qualified": false
+}
