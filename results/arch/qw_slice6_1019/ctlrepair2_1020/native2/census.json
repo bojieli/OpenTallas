@@ -1,0 +1,70 @@
+{
+  "top": "qfd_dv_s5_ctl_repair2",
+  "sha256": "51ff2d4c236685fa991ae6020f11d15459204748bd18c4409fe61868d73f5aa2",
+  "nonclock_drivers_over32": 3,
+  "flop_drivers_over32": 3,
+  "raw_ports_over32": 0,
+  "max_nonclock_loads": 40,
+  "rst_n_loads": 2,
+  "metrics": {
+    "clock_roots": [
+      {
+        "root": "port:ck[0]",
+        "ff": 7206,
+        "icg": 0,
+        "macro_pins": 0,
+        "example": "u_0._2_"
+      }
+    ],
+    "hier_subblocks": 0,
+    "clock_max_root_sinks": 7206,
+    "clock_max_root": "port:ck[0]",
+    "high_fanout_top": [],
+    "hf_max_port": 0,
+    "hf_max_reset": 0,
+    "hf_max_net": 0,
+    "reset_landing": [
+      {
+        "port": "rst_n[0]",
+        "sinks": 2,
+        "flops": 2,
+        "macros": 0
+      }
+    ],
+    "in_to_out_bits": 0,
+    "in_to_reg_levels": 0,
+    "reg_to_out_levels": 0,
+    "icg_enable_from_port": 0,
+    "depth_ps": 488.4,
+    "depth_path": [
+      "u_1618._2_",
+      "u_3978._2_/D"
+    ],
+    "depth_levels": 16
+  },
+  "violations": [
+    {
+      "driver": "u_6323._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 40,
+      "flop_loads": 1,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_6249._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 1,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_6250._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 1,
+      "port_driver": false,
+      "flop_driver": true
+    }
+  ],
+  "verdict": "FAIL",
+  "qualification": "Mapped fanout census only; reset landing/pins/reach/storage still require their own proof"
+}
