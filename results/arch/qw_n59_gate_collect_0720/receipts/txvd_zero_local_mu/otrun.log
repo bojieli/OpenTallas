@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/qw-n59-collect-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/qw-n59-collect-0720
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/qw-n59-collect-0720
+ot-run: ot-epyc9       admits  1080 GB (avail 831, growth 75, headroom 0, waiters 0/0 GB) load 40/128 running 29 disk 116 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qw-n59-collect-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qw-n59-collect-0720
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3821994-1792506354 after 0 s
+N59SVC_FAIL local_mu rc=1
+Verilator 5.050 2026-07-01 rev v5.050
+mu_ovl_positive UNEXPECTED FAIL rc=1
+N59SPLIT_ERR cycle 139: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 143: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 144: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 145: split output != reference 4 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59MU_FAIL SPLIT lockstep: 462 of 2458 edges differ (split vs reference)
+N59SPLIT_FAIL mu_ovl_positive
+N59SPLIT_BENCH_EXIT 1
+N59_RELEASE_EXIT case=txvd_zero_local_mu code=1
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3821994-1792506354): exit 1

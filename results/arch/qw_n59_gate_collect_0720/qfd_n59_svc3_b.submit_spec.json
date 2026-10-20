@@ -1,0 +1,247 @@
+{
+  "name": "qfd_n59_svc3_b-sv3b-COMMIT",
+  "block": "qfd_native59_svc",
+  "ref_tile": true,
+  "owner": "Claude:QW-N59-6",
+  "purpose": "QW-N59-6 v3 (10-20) service child of the hardened native59 split (Q.STA.N59): svc2 + RECV_INPUTS=1 LOCAL32=1 with the R3c..R3h same-edge publications (strict mapped native census all drivers/resets <= 32); own root; landed into the parent by lp.py.",
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/qw-n59-svc-collect-0720",
+    "commit": "COMMIT",
+    "extra_paths": [
+      "rtl/test/qwen_split",
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+      "rtl/qwen_sys/vm_nox_20261014",
+      "rtl/qwen_sys/static_embedding_20261014",
+      "results/rtl/mu_qwen_1018/n59_split4v2",
+      "results/arch/qw_n59_gate_collect_0720",
+      "results/arch/qw_n59v6_service_1020",
+      "results/arch/qw_n59_service_r3_1020/r3k/receipts"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "lint",
+        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_native59_svc #(.NU(4), .MCTX(1), .EMB_RELAY(1), .RECV_INPUTS(1), .LOCAL32(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_native59_svc.sv rtl/qwen_split/qfd_native59_dv_service.sv rtl/qwen_split/qfd_native59_command_context.sv rtl/qwen_split/qfd_native59_q_export_control.sv rtl/qwen_split/qfd_native59_static_service.sv rtl/qwen_split/qfd_native59_record_endpoint.sv rtl/qwen_split/qfd_kvn_static_transport.sv rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv && echo lint-ok",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "local_dv",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py local_dv {RUN}/bench/local_dv",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^N59SVC_PASS local_dv$"
+      },
+      {
+        "name": "local_mu",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py local_mu {RUN}/bench/local_mu",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^N59SVC_PASS local_mu$"
+      },
+      {
+        "name": "local_reset8",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py local_reset8 {RUN}/bench/local_reset8",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "^N59SVC_PASS local_reset8$"
+      },
+      {
+        "name": "bpub0_zero",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py bpub0_zero {RUN}/bench/bpub0_zero",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/bpub0_zero/wrapper.log"
+      },
+      {
+        "name": "qo0_zero",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py qo0_zero {RUN}/bench/qo0_zero",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/qo0_zero/wrapper.log"
+      },
+      {
+        "name": "cq0_zero",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py cq0_zero {RUN}/bench/cq0_zero",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/cq0_zero/wrapper.log"
+      },
+      {
+        "name": "ht0_zero",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py ht0_zero {RUN}/bench/ht0_zero",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/ht0_zero/wrapper.log"
+      },
+      {
+        "name": "eba_zero",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py eba_zero {RUN}/bench/eba_zero",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/eba_zero/wrapper.log"
+      },
+      {
+        "name": "ddc0_zero",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py ddc0_zero {RUN}/bench/ddc0_zero",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/ddc0_zero/wrapper.log"
+      },
+      {
+        "name": "wac0_zero",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py wac0_zero {RUN}/bench/wac0_zero",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/wac0_zero/wrapper.log"
+      },
+      {
+        "name": "emc0_zero",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py emc0_zero {RUN}/bench/emc0_zero",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/emc0_zero/wrapper.log"
+      },
+      {
+        "name": "optag0_zero",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py optag0_zero {RUN}/bench/optag0_zero",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_service_r3_1020/r3k/receipts/optag0_zero/wrapper.log"
+      },
+      {
+        "name": "txvd_zero_local_mu",
+        "cmd": "python3 results/arch/qw_n59_gate_collect_0720/bench_release.py txvd_zero_local_mu {RUN}/bench/txvd_zero_local_mu",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "^N59(DV|MU)_FAIL SPLIT",
+        "fail_witness": "results/arch/qw_n59_gate_collect_0720/receipts/txvd_zero_local_mu/wrapper.log"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_n59_svc3_b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_n59_svc3_b/kit.env {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 32
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_n59_svc3_b --out {RUN}/record/views/qfd_native59_svc  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/ref_tile/qfd_n59_svc3_b/signoff.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "session": "mm",
+    "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/ref_tile/qfd_n59_svc3_b/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/ref_tile/qfd_n59_svc3_b/qfd_n59_svc3_b-sv3b-COMMIT"
+    }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null
+}

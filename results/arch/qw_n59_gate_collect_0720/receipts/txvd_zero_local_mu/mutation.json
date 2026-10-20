@@ -1,0 +1,7 @@
+{
+  "path": "rtl/qwen_split/qfd_native59_record_endpoint.sv",
+  "old": "tx_valid_d<=tx_event;",
+  "new": "tx_valid_d<=1'b0;",
+  "case": "local_mu",
+  "mutated_sha256": "de1194f45866abf6a83d6a91bb691c2532bfca31fa14ef3d538ad60a8535e5ee"
+}
