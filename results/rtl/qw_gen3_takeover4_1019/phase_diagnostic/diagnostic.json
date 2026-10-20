@@ -1,0 +1,4447 @@
+{
+ "schema": "opentallas.qw.d4_phase_diagnostic.v1",
+ "qualified": false,
+ "source": "compute6f78e3de2 tools562357708 rS",
+ "input_sha256": {
+  "rS_land_plan.json": "3a7a02c22a3c048af65e841b9c445d820953bb1a1c6e610a64367ef41e32ced1",
+  "rS_long_wires.rpt": "a1e2b94e7612fcdbd28c4eb7a12bd8a8ffee6c6e4f88f1977df0f370dbf65bbf"
+ },
+ "warning": "Old D4 measured-slack counterfactual only. New D8 RTL/K mod16/reset release/first-use/macro ages are unproved. No K or binding emitted. Raw zero-slack depth is not reserved signoff.",
+ "complete_TTFF": 401,
+ "missing_TTFF": [
+  "serdes0_rxv",
+  "serdes0_up",
+  "serdes2_txv",
+  "lnk_fwd_epoch",
+  "lnk_fwd_epoch__fo1",
+  "sf_cal_start",
+  "sf_vm_drained",
+  "sf_collective_drained",
+  "sf_collective_busy",
+  "sf_crom_fault",
+  "sf_admit_ready",
+  "sf_result_v",
+  "sf_result_done",
+  "sf_result_fault",
+  "sf_prog_tx_observed_v",
+  "sf_prog_rx_v"
+ ],
+ "original_D4_window_fail": [
+  "q3h_col_0_1",
+  "q3h_col_0_2",
+  "q3h_col_1_1",
+  "q3h_col_1_2",
+  "q3h_col_2_1",
+  "q3h_col_2_2",
+  "q3h_col_3_1",
+  "q3h_col_3_2",
+  "q3h_col_16_1",
+  "q3h_col_16_2",
+  "q3h_col_17_1",
+  "q3h_col_17_2",
+  "q3h_col_18_1",
+  "q3h_col_18_2",
+  "q3h_col_19_1",
+  "q3h_col_19_2",
+  "q3h_col_20_2",
+  "q3h_col_21_2",
+  "q3h_col_22_2",
+  "q3h_col_23_2",
+  "q3h_col_24_1",
+  "q3h_col_24_2",
+  "q3h_col_25_1",
+  "q3h_col_25_2",
+  "q3h_col_26_1",
+  "q3h_col_26_2",
+  "q3h_col_27_1",
+  "q3h_col_27_2",
+  "q3h_col_44_2",
+  "q3h_col_45_2",
+  "q3h_col_46_2",
+  "q3h_col_47_2"
+ ],
+ "raw_depth_hist": {
+  "1": 107,
+  "2": 174,
+  "3": 70,
+  "4": 18,
+  "5": 22,
+  "6": 10
+ },
+ "E_changed": [
+  "serdes0_tx",
+  "serdes0_txv",
+  "serdes0_rx",
+  "serdes2_tx",
+  "serdes2_rx",
+  "serdes2_rxv",
+  "serdes2_up",
+  "lnk_rx_payload__fo1",
+  "lnk_rx_payload__fo2",
+  "lnk_kv_x3_slot",
+  "sf_cfg_tx_we",
+  "sf_status_epoch16",
+  "sf_execution_active",
+  "sf_result_cause",
+  "sf_result_tag",
+  "sf_result_gen",
+  "sf_result_token",
+  "sf_result_value",
+  "sf_result_cycles",
+  "sf_prog_rx_v__fo1",
+  "sf_prog_witness_slot",
+  "sf_prog_auth_slot",
+  "sf_prog_context_slot",
+  "sf_emb_rx_v",
+  "sf_emb_rx_slot",
+  "sf_d2d_epoch_abort",
+  "sf_io_fault",
+  "sf_io_shared_fault",
+  "sf_strap_bump_pkg_s0",
+  "sf_strap_bump_pkg_s1",
+  "sf_strap_bump_die_ps",
+  "q3h_far_W0_1_0",
+  "q3h_far_W0_1_1",
+  "q3h_far_W0_1_2",
+  "q3h_far_W0_1_3",
+  "q3h_far_W0_2_0",
+  "q3h_far_W0_2_1",
+  "q3h_far_W0_2_2",
+  "q3h_far_W0_2_3",
+  "q3h_far_W1_1_0",
+  "q3h_far_W1_1_1",
+  "q3h_far_W1_1_2",
+  "q3h_far_W1_1_3",
+  "q3h_far_W1_2_0",
+  "q3h_far_W1_2_1",
+  "q3h_far_W1_2_2",
+  "q3h_far_W1_2_3",
+  "q3h_far_W2_1_0",
+  "q3h_far_W2_1_1",
+  "q3h_far_W2_1_2",
+  "q3h_far_W2_1_3",
+  "q3h_far_W2_2_0",
+  "q3h_far_W2_2_1",
+  "q3h_far_W2_2_2",
+  "q3h_far_W2_2_3",
+  "q3h_far_W3_1_0",
+  "q3h_far_W3_1_1",
+  "q3h_far_W3_1_2",
+  "q3h_far_W3_1_3",
+  "q3h_far_W3_2_0",
+  "q3h_far_W3_2_1",
+  "q3h_far_W3_2_2",
+  "q3h_far_W3_2_3",
+  "q3h_far_W4_1_0",
+  "q3h_far_W4_1_1",
+  "q3h_far_W4_1_2",
+  "q3h_far_W4_1_3",
+  "q3h_far_W4_2_0",
+  "q3h_far_W4_2_1",
+  "q3h_far_W4_2_2",
+  "q3h_far_W4_2_3",
+  "q3h_far_W5_1_0",
+  "q3h_far_W5_1_1",
+  "q3h_far_W5_1_2",
+  "q3h_far_W5_1_3",
+  "q3h_far_E0_2_0",
+  "q3h_far_E0_2_1",
+  "q3h_far_E0_2_2",
+  "q3h_far_E0_2_3",
+  "q3h_far_E1_1_0",
+  "q3h_far_E1_1_1",
+  "q3h_far_E1_1_2",
+  "q3h_far_E1_1_3",
+  "q3h_far_E1_2_0",
+  "q3h_far_E1_2_1",
+  "q3h_far_E1_2_2",
+  "q3h_far_E1_2_3",
+  "q3h_far_E2_2_0",
+  "q3h_far_E2_2_1",
+  "q3h_far_E2_2_2",
+  "q3h_far_E2_2_3",
+  "q3h_far_E3_1_0",
+  "q3h_far_E3_1_1",
+  "q3h_far_E3_1_2",
+  "q3h_far_E3_1_3",
+  "q3h_far_E4_1_0",
+  "q3h_far_E4_1_1",
+  "q3h_far_E4_1_2",
+  "q3h_far_E4_1_3",
+  "q3h_far_E5_1_0",
+  "q3h_far_E5_1_1",
+  "q3h_far_E5_1_2",
+  "q3h_far_E5_1_3",
+  "q3h_far_E5_2_0",
+  "q3h_far_E5_2_1",
+  "q3h_far_E5_2_2",
+  "q3h_far_E5_2_3",
+  "q3h_col_0_1",
+  "q3h_col_0_2",
+  "q3h_col_1_1",
+  "q3h_col_1_2",
+  "q3h_col_2_1",
+  "q3h_col_2_2",
+  "q3h_col_3_1",
+  "q3h_col_3_2",
+  "q3h_col_4_1",
+  "q3h_col_4_2",
+  "q3h_col_5_1",
+  "q3h_col_5_2",
+  "q3h_col_6_1",
+  "q3h_col_6_2",
+  "q3h_col_7_1",
+  "q3h_col_7_2",
+  "q3h_col_8_1",
+  "q3h_col_8_2",
+  "q3h_col_9_1",
+  "q3h_col_9_2",
+  "q3h_col_10_1",
+  "q3h_col_10_2",
+  "q3h_col_11_1",
+  "q3h_col_11_2",
+  "q3h_col_12_1",
+  "q3h_col_12_2",
+  "q3h_col_13_1",
+  "q3h_col_13_2",
+  "q3h_col_14_1",
+  "q3h_col_14_2",
+  "q3h_col_15_1",
+  "q3h_col_15_2",
+  "q3h_col_16_1",
+  "q3h_col_16_2",
+  "q3h_col_17_1",
+  "q3h_col_17_2",
+  "q3h_col_18_1",
+  "q3h_col_18_2",
+  "q3h_col_19_1",
+  "q3h_col_19_2",
+  "q3h_col_20_1",
+  "q3h_col_20_2",
+  "q3h_col_21_1",
+  "q3h_col_21_2",
+  "q3h_col_22_1",
+  "q3h_col_22_2",
+  "q3h_col_23_1",
+  "q3h_col_23_2",
+  "q3h_col_24_1",
+  "q3h_col_24_2",
+  "q3h_col_25_1",
+  "q3h_col_25_2",
+  "q3h_col_26_1",
+  "q3h_col_26_2",
+  "q3h_col_27_1",
+  "q3h_col_27_2",
+  "q3h_col_28_1",
+  "q3h_col_28_2",
+  "q3h_col_29_1",
+  "q3h_col_29_2",
+  "q3h_col_30_1",
+  "q3h_col_30_2",
+  "q3h_col_31_1",
+  "q3h_col_31_2",
+  "q3h_col_32_1",
+  "q3h_col_33_1",
+  "q3h_col_34_1",
+  "q3h_col_35_1",
+  "q3h_col_35_2",
+  "q3h_col_36_1",
+  "q3h_col_36_2",
+  "q3h_col_37_1",
+  "q3h_col_37_2",
+  "q3h_col_38_1",
+  "q3h_col_38_2",
+  "q3h_col_39_1",
+  "q3h_col_39_2",
+  "q3h_col_40_1",
+  "q3h_col_40_2",
+  "q3h_col_41_1",
+  "q3h_col_41_2",
+  "q3h_col_42_1",
+  "q3h_col_42_2",
+  "q3h_col_43_1",
+  "q3h_col_43_2",
+  "q3h_col_44_1",
+  "q3h_col_44_2",
+  "q3h_col_45_1",
+  "q3h_col_45_2",
+  "q3h_col_46_1",
+  "q3h_col_46_2",
+  "q3h_col_47_1",
+  "q3h_col_47_2",
+  "dv_rs_W0_1_a",
+  "dv_rs_W0_1_b",
+  "dv_rsi_W0_3",
+  "dv_rs_W0_2_a",
+  "dv_rs_W0_2_b",
+  "dv_rsi_W1_0",
+  "dv_rs_W1_1_a",
+  "dv_rs_W1_1_b",
+  "dv_rsi_W1_3",
+  "dv_rs_W1_2_a",
+  "dv_rs_W1_2_b",
+  "dv_rsi_W2_0",
+  "dv_rs_W2_1_a",
+  "dv_rs_W2_1_b",
+  "dv_rsi_W2_3",
+  "dv_rsi_W3_0",
+  "dv_rs_W3_1_a",
+  "dv_rs_W3_1_b",
+  "dv_rsi_W3_3",
+  "dv_rs_W3_2_a",
+  "dv_rs_W3_2_b",
+  "dv_rsi_W4_0",
+  "dv_rs_W4_1_a",
+  "dv_rs_W4_1_b",
+  "dv_rsi_W4_3",
+  "dv_rs_W4_2_a",
+  "dv_rs_W4_2_b",
+  "dv_rsi_W5_0",
+  "dv_rs_W5_1_a",
+  "dv_rs_W5_1_b",
+  "dv_rsi_W5_3",
+  "dv_rs_W5_2_a",
+  "dv_rs_W5_2_b",
+  "dv_rsi_E0_0",
+  "dv_rs_E0_1_a",
+  "dv_rs_E0_1_b",
+  "dv_rsi_E0_3",
+  "dv_rs_E0_2_a",
+  "dv_rs_E0_2_b",
+  "dv_rsi_E1_0",
+  "dv_rsi_E1_3",
+  "dv_rs_E1_2_a",
+  "dv_rs_E1_2_b",
+  "dv_rsi_E2_0",
+  "dv_rs_E2_1_a",
+  "dv_rs_E2_1_b",
+  "dv_rsi_E2_3",
+  "dv_rs_E2_2_a",
+  "dv_rs_E2_2_b",
+  "dv_rs_E3_1_a",
+  "dv_rs_E3_1_b",
+  "dv_rsi_E3_3",
+  "dv_rs_E3_2_a",
+  "dv_rs_E3_2_b",
+  "dv_rs_E4_1_a",
+  "dv_rs_E4_1_b",
+  "dv_rsi_E4_3",
+  "dv_rs_E4_2_a",
+  "dv_rs_E4_2_b",
+  "dv_rs_E5_1_a",
+  "dv_rs_E5_1_b",
+  "dv_rsi_E5_3",
+  "dv_rs_E5_2_a",
+  "dv_rs_E5_2_b",
+  "dv_x0_ar_art",
+  "dv_x0_ar_ard",
+  "dv_x0_dd_dd",
+  "dv_x0_ag_ag",
+  "dvw_arv_wo",
+  "dvw_ard_wo",
+  "dvw_arl_wo",
+  "dvw_arm_wo",
+  "dvw_art_wo",
+  "dvw_rv_wi",
+  "dvw_rd_wi",
+  "dvw_rr_wi",
+  "dvw_re_wi",
+  "dvw_dd_wo",
+  "dvw_dr_wi",
+  "dvw_hr_wi",
+  "dvw_cmd_wi",
+  "dvw_ss_wo",
+  "dvw_ag_wo",
+  "dvw_st_wi",
+  "dvw_io_collective_cmd_free",
+  "dvw_embed_prov_embed_scale_q",
+  "dvw_mu_ctxrx_ctx_x"
+ ],
+ "raw_depth_over8": [],
+ "reach_report_rows_over405": 965,
+ "reach_by_driver_root": [
+  [
+   "sys_face",
+   408
+  ],
+  [
+   "rly_dvw_tt_ctlm_cal_descriptor_obs_1",
+   69
+  ],
+  [
+   "rly_dvw_tt_ctlm_dc_1",
+   56
+  ],
+  [
+   "rly_ng_tt_native_pos_0__fo1_1",
+   18
+  ],
+  [
+   "rly_ng_tt_native_tok_0__fo1_1",
+   18
+  ],
+  [
+   "rly_ng_tt_command_stage_0__fo1_1",
+   4
+  ],
+  [
+   "ckb_rom",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_0",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_6",
+   1
+  ],
+  [
+   "rly_sf_cal_start_0",
+   1
+  ],
+  [
+   "rly_sf_collective_busy_1",
+   1
+  ],
+  [
+   "rly_sf_collective_drained_1",
+   1
+  ],
+  [
+   "rly_sf_result_v_1",
+   1
+  ],
+  [
+   "rly_sf_vm_drained_1",
+   1
+  ],
+  [
+   "rly_sf_collective_busy_0",
+   1
+  ],
+  [
+   "rly_sf_crom_fault_0",
+   1
+  ],
+  [
+   "rly_sf_result_v_0",
+   1
+  ],
+  [
+   "rly_sf_vm_drained_0",
+   1
+  ],
+  [
+   "rly_sf_admit_ready_2",
+   1
+  ],
+  [
+   "rly_sf_execution_active_2",
+   1
+  ],
+  [
+   "rly_sf_result_done_2",
+   1
+  ],
+  [
+   "rly_sf_result_fault_2",
+   1
+  ],
+  [
+   "rly_sf_prog_tx_record_1",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_25",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_23",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_0",
+   1
+  ],
+  [
+   "rly_lnk_rx_payload__fo2_0",
+   1
+  ],
+  [
+   "rly_serdes2_rx_0",
+   1
+  ],
+  [
+   "rstt_rst_field_4634",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_0",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_1",
+   1
+  ],
+  [
+   "rly_serdes2_rx_1",
+   1
+  ],
+  [
+   "rly_dvw_embed_prov_embed_code_q_1",
+   1
+  ],
+  [
+   "rly_sf_result_done_0",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_21",
+   1
+  ],
+  [
+   "rly_dvw_native59_emb_scale_re_0",
+   1
+  ],
+  [
+   "rly_lnk_fwd_epoch_1",
+   1
+  ],
+  [
+   "rly_sf_prog_context_slot_0",
+   1
+  ],
+  [
+   "rly_lnk_rx_payload__fo1_1",
+   1
+  ],
+  [
+   "rly_sf_emb_rx_slot_1",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_16",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_0",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_0",
+   1
+  ],
+  [
+   "rly_dvw_mu_ctxrx_ctx_x_1",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_18",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_19",
+   1
+  ],
+  [
+   "rly_serdes2_rxv_0",
+   1
+  ],
+  [
+   "rly_serdes2_txv_7",
+   1
+  ],
+  [
+   "rly_sf_admit_ready_1",
+   1
+  ],
+  [
+   "rly_sf_d2d_epoch_abort_0",
+   1
+  ],
+  [
+   "rly_sf_execution_active_1",
+   1
+  ],
+  [
+   "rly_sf_prog_context_slot__fo1_0",
+   1
+  ],
+  [
+   "rly_sf_result_fault_1",
+   1
+  ],
+  [
+   "rly_sf_result_gen_1",
+   1
+  ],
+  [
+   "rly_dvw_re_wi_0",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_23",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_8",
+   1
+  ],
+  [
+   "rly_dvw_sys_face_seq_dh__fo1_1",
+   1
+  ],
+  [
+   "rly_serdes2_up_1",
+   1
+  ],
+  [
+   "rly_sf_cfg_data_0",
+   1
+  ],
+  [
+   "rly_sf_status_epoch16_0",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_24",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_20",
+   1
+  ],
+  [
+   "rly_sf_result_cause_2",
+   1
+  ],
+  [
+   "rly_sf_status_epoch16_1",
+   1
+  ],
+  [
+   "rly_dvw_tt_ctlm_cal_descriptor_obs_0",
+   1
+  ],
+  [
+   "rly_dvw_tt_ctlm_cal_program_obs_0",
+   1
+  ],
+  [
+   "rly_ng_tt_native_pos_0__fo1_0",
+   1
+  ],
+  [
+   "rly_ng_tt_native_tok_0__fo1_0",
+   1
+  ],
+  [
+   "rly_sf_prog_context_slot__fo1_1",
+   1
+  ],
+  [
+   "rly_serdes2_txv_6",
+   1
+  ],
+  [
+   "rly_sf_prog_tx_observed_v_0",
+   1
+  ],
+  [
+   "rly_lnk_fwd_epoch_0",
+   1
+  ],
+  [
+   "rly_lnk_fwd_epoch__fo1_0",
+   1
+  ],
+  [
+   "rly_lnk_fwd_epoch__fo1_2",
+   1
+  ],
+  [
+   "rly_sf_emb_rx_v_1",
+   1
+  ],
+  [
+   "rstt_rst_fwd_s_14",
+   1
+  ],
+  [
+   "rstt_rst_fwd_s_6",
+   1
+  ],
+  [
+   "rstt_rst_io_54",
+   1
+  ],
+  [
+   "rstt_rst_io_93",
+   1
+  ],
+  [
+   "rly_dvw_rr_wi_0",
+   1
+  ],
+  [
+   "rstt_rst_field_991",
+   1
+  ],
+  [
+   "rly_dvw_arl_wo_0",
+   1
+  ],
+  [
+   "rly_dvw_arv_wo_0",
+   1
+  ],
+  [
+   "rstt_rst_field_952",
+   1
+  ],
+  [
+   "rstt_rst_io_74",
+   1
+  ],
+  [
+   "rstt_rst_io_99",
+   1
+  ],
+  [
+   "rly_dvw_embed_prov_embed_scale_q_1",
+   1
+  ],
+  [
+   "rly_sf_result_gen_2",
+   1
+  ],
+  [
+   "rly_sf_result_token_2",
+   1
+  ],
+  [
+   "rstt_rst_field_876",
+   1
+  ],
+  [
+   "rly_sf_cal_seg_1",
+   1
+  ],
+  [
+   "rstt_rst_d2d__fo2__r4_24",
+   1
+  ],
+  [
+   "rstt_rst_field_1033",
+   1
+  ],
+  [
+   "rstt_rst_field_4095",
+   1
+  ],
+  [
+   "rstt_rst_io_140",
+   1
+  ],
+  [
+   "rstt_rst_seq_ctlm_37",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_20",
+   1
+  ],
+  [
+   "rstt_rst_io_142",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_1",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_10",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_11",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_12",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_13",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_14",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_15",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_16",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_17",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_18",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_19",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_2",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_20",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_21",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_22",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_3",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_4",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_5",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_6",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_7",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_8",
+   1
+  ],
+  [
+   "rly_dvw_dd_wo_9",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_1",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_10",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_11",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_12",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_13",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_14",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_15",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_16",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_17",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_18",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_19",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_2",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_3",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_4",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_5",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_7",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_8",
+   1
+  ],
+  [
+   "rly_dvw_st_wi_9",
+   1
+  ],
+  [
+   "rly_serdes0_rx_0",
+   1
+  ],
+  [
+   "rly_serdes2_rx_2",
+   1
+  ],
+  [
+   "rly_serdes2_rx_3",
+   1
+  ],
+  [
+   "rly_serdes2_rx_4",
+   1
+  ],
+  [
+   "rly_serdes2_rx_5",
+   1
+  ],
+  [
+   "rly_serdes2_tx_0",
+   1
+  ],
+  [
+   "rly_sf_result_token_1",
+   1
+  ],
+  [
+   "rstt_rst_seq_ctlm_19",
+   1
+  ],
+  [
+   "rly_sf_prog_rx_v__fo1_0",
+   1
+  ],
+  [
+   "rly_serdes0_tx_0",
+   1
+  ],
+  [
+   "rly_sf_prog_tx_record_0",
+   1
+  ],
+  [
+   "rly_sf_crom_fault_1",
+   1
+  ],
+  [
+   "rly_sf_prog_auth_slot_2",
+   1
+  ],
+  [
+   "rstt_rst_io_118",
+   1
+  ],
+  [
+   "rly_serdes2_tx_5",
+   1
+  ],
+  [
+   "rstt_rst_io_107",
+   1
+  ],
+  [
+   "rly_ng_tt_command_stage_0__fo1_0",
+   1
+  ],
+  [
+   "rly_ng_tt_layer_context_v_0__fo1_0",
+   1
+  ],
+  [
+   "rstt_rst_fwd_s_10",
+   1
+  ],
+  [
+   "rstt_rst_io_68",
+   1
+  ],
+  [
+   "rstt_rst_seq_29",
+   1
+  ],
+  [
+   "rstt_rst_field_3168",
+   1
+  ],
+  [
+   "rly_serdes2_tx_2",
+   1
+  ],
+  [
+   "rly_serdes2_tx_4",
+   1
+  ],
+  [
+   "rly_lnk_rx_payload__fo2_2",
+   1
+  ],
+  [
+   "rstt_rst_field_1138",
+   1
+  ],
+  [
+   "rstt_rst_field_4094",
+   1
+  ],
+  [
+   "rstt_rst_field_4632",
+   1
+  ],
+  [
+   "rstt_rst_io_62",
+   1
+  ],
+  [
+   "rly_serdes2_tx_3",
+   1
+  ],
+  [
+   "rly_sf_io_fault_1",
+   1
+  ],
+  [
+   "rly_sf_io_fault_14",
+   1
+  ],
+  [
+   "rly_sf_io_fault_15",
+   1
+  ],
+  [
+   "rly_sf_io_fault_18",
+   1
+  ],
+  [
+   "rly_sf_io_fault_19",
+   1
+  ],
+  [
+   "rly_sf_io_fault_20",
+   1
+  ],
+  [
+   "rly_sf_io_fault_21",
+   1
+  ],
+  [
+   "rly_sf_io_fault_23",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_23",
+   1
+  ],
+  [
+   "rly_serdes0_rxv_0",
+   1
+  ],
+  [
+   "rly_serdes0_up_0",
+   1
+  ],
+  [
+   "rstt_rst_field_2151",
+   1
+  ],
+  [
+   "rstt_rst_seq_24",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_12",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_15",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_18",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_21",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_6",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_9",
+   1
+  ],
+  [
+   "rly_serdes2_txv_2",
+   1
+  ],
+  [
+   "rly_serdes2_txv_5",
+   1
+  ],
+  [
+   "rly_sf_io_fault_10",
+   1
+  ],
+  [
+   "rly_sf_io_fault_16",
+   1
+  ],
+  [
+   "rly_sf_io_fault_17",
+   1
+  ],
+  [
+   "rly_sf_io_fault_22",
+   1
+  ],
+  [
+   "rly_sf_io_fault_4",
+   1
+  ],
+  [
+   "rly_sf_io_fault_7",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_10",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_13",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_16",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_19",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_22",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_24",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_4",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_7",
+   1
+  ],
+  [
+   "rly_sf_strap_bump_pkg_s1_1",
+   1
+  ],
+  [
+   "rly_lnk_rx_payload__fo1_0",
+   1
+  ],
+  [
+   "rly_sf_io_fault_0",
+   1
+  ],
+  [
+   "rly_sf_cfg_addr_1",
+   1
+  ],
+  [
+   "rstt_rst_field_1594",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_10",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_13",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_16",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_19",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_22",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_7",
+   1
+  ],
+  [
+   "rly_serdes2_rxv_2",
+   1
+  ],
+  [
+   "rly_serdes2_txv_3",
+   1
+  ],
+  [
+   "rly_sf_io_fault_11",
+   1
+  ],
+  [
+   "rly_sf_io_fault_5",
+   1
+  ],
+  [
+   "rly_sf_io_fault_8",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_0",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_11",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_14",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_17",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_2",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_20",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_5",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_8",
+   1
+  ],
+  [
+   "rly_sf_prog_auth_slot_1",
+   1
+  ],
+  [
+   "rly_serdes2_up_7",
+   1
+  ],
+  [
+   "rstt_rst_field_4093",
+   1
+  ],
+  [
+   "rstt_rst_field_4631",
+   1
+  ],
+  [
+   "rstt_rst_field_5255",
+   1
+  ],
+  [
+   "rstt_rst_seq_ctlm_20",
+   1
+  ],
+  [
+   "rly_serdes2_tx_6",
+   1
+  ],
+  [
+   "rly_sf_d2d_fault_1",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_1",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_10",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_12",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_13",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_14",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_17",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_18",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_19",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_2",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_20",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_3",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_4",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_5",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_6",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_7",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_8",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_9",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_10",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_11",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_12",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_13",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_14",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_15",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_16",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_18",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_19",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_2",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_20",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_21",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_3",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_4",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_5",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_8",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_9",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_10",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_11",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_12",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_13",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_14",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_15",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_16",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_17",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_18",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_19",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_2",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_20",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_22",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_23",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_24",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_3",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_4",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_5",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_6",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_7",
+   1
+  ],
+  [
+   "rly_dvw_dr_wi_8",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_1",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_10",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_11",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_12",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_13",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_14",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_15",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_16",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_17",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_18",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_19",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_20",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_22",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_23",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_3",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_4",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_5",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_6",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_9",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_1",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_11",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_14",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_17",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_2",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_20",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_23",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_3",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_4",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_8",
+   1
+  ],
+  [
+   "rly_dvw_mu_ctxrx_ctx_x_0",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_1",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_10",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_11",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_12",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_13",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_14",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_15",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_16",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_17",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_2",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_3",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_4",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_5",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_6",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_7",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_8",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_9",
+   1
+  ],
+  [
+   "rly_lnk_fwd_epoch__fo1_1",
+   1
+  ],
+  [
+   "rly_lnk_fwd_lrst_0",
+   1
+  ],
+  [
+   "rly_rst_d2d_0",
+   1
+  ],
+  [
+   "rly_rst_d2d__fo1_0",
+   1
+  ],
+  [
+   "rly_rst_d2d__fo2_0",
+   1
+  ],
+  [
+   "rly_rst_d2d__fo2_1",
+   1
+  ],
+  [
+   "rly_serdes2_rxv_3",
+   1
+  ],
+  [
+   "rly_serdes2_txv_1",
+   1
+  ],
+  [
+   "rly_serdes2_txv_4",
+   1
+  ],
+  [
+   "rly_serdes2_up_0",
+   1
+  ],
+  [
+   "rly_serdes2_up_2",
+   1
+  ],
+  [
+   "rly_serdes2_up_3",
+   1
+  ],
+  [
+   "rly_serdes2_up_4",
+   1
+  ],
+  [
+   "rly_sf_io_fault_12",
+   1
+  ],
+  [
+   "rly_sf_io_fault_6",
+   1
+  ],
+  [
+   "rly_sf_io_fault_9",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_12",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_15",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_18",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_3",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_6",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_9",
+   1
+  ],
+  [
+   "rly_sf_prog_witness_slot_0",
+   1
+  ],
+  [
+   "rly_sf_result_cause_1",
+   1
+  ],
+  [
+   "rly_sf_result_tag_1",
+   1
+  ],
+  [
+   "rly_sf_io_fault_24",
+   1
+  ],
+  [
+   "rly_dvw_tt_ctlm_cal_image_ready_1",
+   1
+  ],
+  [
+   "rstt_rst_field_2195",
+   1
+  ],
+  [
+   "rly_sf_strap_bump_die_ps_1",
+   1
+  ],
+  [
+   "rly_sf_cal_seg_0",
+   1
+  ],
+  [
+   "rly_dvw_ag_wo_0",
+   1
+  ],
+  [
+   "rly_dvw_ard_wo_0",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_17",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_22",
+   1
+  ],
+  [
+   "rly_dvw_cmd_wi_7",
+   1
+  ],
+  [
+   "rly_dvw_embed_prov_embed_code_q_0",
+   1
+  ],
+  [
+   "rly_dvw_embed_prov_embed_scale_q_0",
+   1
+  ],
+  [
+   "rly_dvw_hr_wi_7",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_0",
+   1
+  ],
+  [
+   "rly_dvw_ss_wo_0",
+   1
+  ],
+  [
+   "rly_serdes0_txv_0",
+   1
+  ],
+  [
+   "rly_serdes2_up_5",
+   1
+  ],
+  [
+   "rly_sf_cfg_tx_we_0",
+   1
+  ],
+  [
+   "rly_sf_execution_active_0",
+   1
+  ],
+  [
+   "rly_sf_result_cause_0",
+   1
+  ],
+  [
+   "rly_sf_result_gen_0",
+   1
+  ],
+  [
+   "rly_sf_result_tag_0",
+   1
+  ],
+  [
+   "rly_sf_strap_bump_die_ps_0",
+   1
+  ],
+  [
+   "rly_sf_strap_bump_pkg_s0_0",
+   1
+  ],
+  [
+   "rly_sf_strap_bump_pkg_s1_0",
+   1
+  ],
+  [
+   "rly_dvw_io_collective_cmd_free_24",
+   1
+  ],
+  [
+   "rly_serdes2_rx_6",
+   1
+  ],
+  [
+   "rly_serdes2_rxv_6",
+   1
+  ],
+  [
+   "rly_sf_tt_control_stores_ready_0",
+   1
+  ],
+  [
+   "rly_sf_io_shared_fault_25",
+   1
+  ],
+  [
+   "rstt_rst_d2d__fo1__r3_33",
+   1
+  ],
+  [
+   "rstt_rst_field_3182",
+   1
+  ],
+  [
+   "rly_sf_io_fault_3",
+   1
+  ],
+  [
+   "rly_dvw_tt_ctlm_cal_image_ready_0",
+   1
+  ],
+  [
+   "rly_dvw_tt_ctlm_dc_0",
+   1
+  ]
+ ],
+ "reach_note": "Driver report rows, not unique physical nets or routed path proof; includes skipped clock nets. Original repeater check reports544over425,max590.5.",
+ "lanes": [
+  {
+   "bid": "serdes0_tx",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "serdes0_txv",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "serdes0_rx",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "serdes2_tx",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 7
+  },
+  {
+   "bid": "serdes2_rx",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 6
+  },
+  {
+   "bid": "serdes2_rxv",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 6
+  },
+  {
+   "bid": "serdes2_up",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 6
+  },
+  {
+   "bid": "ng_tt_native_tok_0__fo1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "ng_tt_native_pos_0__fo1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "ng_tt_layer_context_v_0__fo1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "ng_tt_command_stage_0__fo1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_native_tx_slot",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_native_tx_slot_kind",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_native_tx_slot_beat",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_native_tx_v",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_native_tx_payload",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_native_rx_v",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_rx_payload",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_rx_payload__fo1",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "lnk_rx_payload__fo2",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "lnk_native_rx_slot",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_native_rx_slot_kind",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_native_rx_slot_beat",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_kv_x3_slot",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "lnk_x3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_x3_identity",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "lnk_x3_generation",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_cfg_tx_we",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_cfg_rx_we",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_cfg_addr",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_cfg_data",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_cal_seg",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_status_epoch16",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_execution_active",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_result_cause",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_result_tag",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_result_gen",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_result_token",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_result_value",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_result_cycles",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_prog_tx_record",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_prog_rx_v__fo1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_prog_witness_slot",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_prog_auth_slot",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_prog_context_slot",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_prog_context_slot__fo1",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_emb_rx_v",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_emb_rx_slot",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_d2d_fault",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_d2d_epoch_abort",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "sf_tt_program_obs",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_tt_control_stores_ready",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_tt_pw",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_tt_kok",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_tt_kwd",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_tt_fab",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_host_epoch_valid",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_host_fused_capability",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_host_epoch",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_host_tag",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_host_generation",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_q_slot",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_q_slot_beat",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_kv_word_slot",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_kv_word_index",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_visibility_slot",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_complete_slot",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_native_fault",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_word_v",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_word_data",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_word_token",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_word_index",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_word_scale",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_word_epoch",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_expected_slot",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_expected_token",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_expected_word",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_expected_scale",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_expected_epoch",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_fill_begin",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_fill_token",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_fill_epoch",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_emb_core_epoch",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "sf_io_fault",
+   "min_raw_depth": 3,
+   "E": 7,
+   "E_gen": 18
+  },
+  {
+   "bid": "sf_io_shared_fault",
+   "min_raw_depth": 3,
+   "E": 7,
+   "E_gen": 19
+  },
+  {
+   "bid": "sf_strap_bump_pkg_s0",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_strap_bump_pkg_s1",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "sf_strap_bump_die_ps",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "q3h_far_W0_1_0",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W0_1_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W0_1_2",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W0_1_3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W0_2_0",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W0_2_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W0_2_2",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W0_2_3",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W1_1_0",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W1_1_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W1_1_2",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W1_1_3",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W1_2_0",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W1_2_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W1_2_2",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W1_2_3",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W2_1_0",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W2_1_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W2_1_2",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W2_1_3",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W2_2_0",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W2_2_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W2_2_2",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W2_2_3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W3_1_0",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W3_1_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W3_1_2",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W3_1_3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W3_2_0",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W3_2_1",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W3_2_2",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W3_2_3",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W4_1_0",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W4_1_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W4_1_2",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W4_1_3",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W4_2_0",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W4_2_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W4_2_2",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W4_2_3",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W5_1_0",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W5_1_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W5_1_2",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W5_1_3",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W5_2_0",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W5_2_1",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W5_2_2",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_W5_2_3",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E0_1_0",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E0_1_1",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E0_1_2",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E0_1_3",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E0_2_0",
+   "min_raw_depth": 1,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E0_2_1",
+   "min_raw_depth": 1,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E0_2_2",
+   "min_raw_depth": 1,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E0_2_3",
+   "min_raw_depth": 1,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E1_1_0",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E1_1_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E1_1_2",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E1_1_3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E1_2_0",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E1_2_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E1_2_2",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E1_2_3",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E2_1_0",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E2_1_1",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E2_1_2",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E2_1_3",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E2_2_0",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E2_2_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E2_2_2",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E2_2_3",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E3_1_0",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E3_1_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E3_1_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E3_1_3",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E3_2_0",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E3_2_1",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E3_2_2",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E3_2_3",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E4_1_0",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E4_1_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E4_1_2",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E4_1_3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E4_2_0",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E4_2_1",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E4_2_2",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E4_2_3",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E5_1_0",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E5_1_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E5_1_2",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E5_1_3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E5_2_0",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E5_2_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E5_2_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_far_E5_2_3",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_0_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_0_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_1_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_1_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_2_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_2_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_3_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_3_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_4_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_4_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_5_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_5_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_6_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_6_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_7_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_7_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_8_1",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_8_2",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_9_1",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_9_2",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_10_1",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_10_2",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_11_1",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_11_2",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_12_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_12_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_13_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_13_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_14_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_14_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_15_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_15_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_16_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_16_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_17_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_17_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_18_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_18_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_19_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_19_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_20_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_20_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_21_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_21_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_22_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_22_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_23_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_23_2",
+   "min_raw_depth": 6,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_24_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_24_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_25_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_25_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_26_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_26_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_27_1",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_27_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_28_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_28_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_29_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_29_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_30_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_30_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_31_1",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_31_2",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_32_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_32_2",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_33_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_33_2",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_34_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_34_2",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_35_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_35_2",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_36_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_36_2",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_37_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_37_2",
+   "min_raw_depth": 1,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_38_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_38_2",
+   "min_raw_depth": 1,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_39_1",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_39_2",
+   "min_raw_depth": 1,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_40_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_40_2",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_41_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_41_2",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_42_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_42_2",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_43_1",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_43_2",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_44_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_44_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_45_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_45_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_46_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_46_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_47_1",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "q3h_col_47_2",
+   "min_raw_depth": 5,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W0_0",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W0_1_a",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W0_1_b",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W0_3",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W0_2_a",
+   "min_raw_depth": 2,
+   "E": 6,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W0_2_b",
+   "min_raw_depth": 2,
+   "E": 6,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W1_0",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W1_1_a",
+   "min_raw_depth": 2,
+   "E": 5,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W1_1_b",
+   "min_raw_depth": 2,
+   "E": 5,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W1_3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W1_2_a",
+   "min_raw_depth": 2,
+   "E": 5,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W1_2_b",
+   "min_raw_depth": 2,
+   "E": 5,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W2_0",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W2_1_a",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W2_1_b",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W2_3",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W2_2_a",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W2_2_b",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W3_0",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W3_1_a",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W3_1_b",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W3_3",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W3_2_a",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W3_2_b",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W4_0",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W4_1_a",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W4_1_b",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W4_3",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W4_2_a",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W4_2_b",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W5_0",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W5_1_a",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W5_1_b",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_W5_3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W5_2_a",
+   "min_raw_depth": 2,
+   "E": 5,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_W5_2_b",
+   "min_raw_depth": 2,
+   "E": 5,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E0_0",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E0_1_a",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E0_1_b",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E0_3",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E0_2_a",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E0_2_b",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E1_0",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E1_1_a",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E1_1_b",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E1_3",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E1_2_a",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E1_2_b",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E2_0",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E2_1_a",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E2_1_b",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E2_3",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E2_2_a",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E2_2_b",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E3_0",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E3_1_a",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E3_1_b",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E3_3",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E3_2_a",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E3_2_b",
+   "min_raw_depth": 4,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E4_0",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E4_1_a",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E4_1_b",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E4_3",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E4_2_a",
+   "min_raw_depth": 1,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E4_2_b",
+   "min_raw_depth": 1,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E5_0",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E5_1_a",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E5_1_b",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rsi_E5_3",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E5_2_a",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_rs_E5_2_b",
+   "min_raw_depth": 2,
+   "E": 4,
+   "E_gen": 2
+  },
+  {
+   "bid": "dv_x0_ar_arv",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_ar_art",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_ar_arm",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_ar_arl",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_ar_ard",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_dd_dd",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_rt_rv",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_rt_re",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_rt_rr",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_rt_rl",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_rt_rd",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_dr_dr",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dv_x0_ag_ag",
+   "min_raw_depth": 1,
+   "E": 2,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_arv_wo",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dvw_ard_wo",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dvw_arl_wo",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dvw_arm_wo",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dvw_art_wo",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 2
+  },
+  {
+   "bid": "dvw_rv_wi",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_rd_wi",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_rl_wi",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_rr_wi",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_re_wi",
+   "min_raw_depth": 2,
+   "E": 3,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_ccv_wo",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_ccm_wo",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_ccw_wo",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_cct_wo",
+   "min_raw_depth": 3,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_dd_wo",
+   "min_raw_depth": 3,
+   "E": 6,
+   "E_gen": 19
+  },
+  {
+   "bid": "dvw_dr_wi",
+   "min_raw_depth": 3,
+   "E": 8,
+   "E_gen": 19
+  },
+  {
+   "bid": "dvw_hr_wi",
+   "min_raw_depth": 3,
+   "E": 7,
+   "E_gen": 19
+  },
+  {
+   "bid": "dvw_cmd_wi",
+   "min_raw_depth": 3,
+   "E": 7,
+   "E_gen": 19
+  },
+  {
+   "bid": "dvw_ss_wo",
+   "min_raw_depth": 3,
+   "E": 5,
+   "E_gen": 16
+  },
+  {
+   "bid": "dvw_ag_wo",
+   "min_raw_depth": 2,
+   "E": 5,
+   "E_gen": 16
+  },
+  {
+   "bid": "dvw_st_wi",
+   "min_raw_depth": 3,
+   "E": 7,
+   "E_gen": 12
+  },
+  {
+   "bid": "dvw_io_collective_cmd_free",
+   "min_raw_depth": 3,
+   "E": 7,
+   "E_gen": 19
+  },
+  {
+   "bid": "dvw_native59_emb_code_re",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_native59_emb_code_addr",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_native59_emb_scale_re",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_native59_emb_scale_addr",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_embed_prov_embed_code_q",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dvw_embed_prov_embed_scale_q",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_sys_face_seq_dh",
+   "min_raw_depth": 1,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_sys_face_seq_dh__fo1",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 2
+  },
+  {
+   "bid": "dvw_tt_ctlm_cal_program_obs",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_tt_ctlm_cal_descriptor_obs",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_tt_ctlm_cal_image_ready",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_tt_ctlm_dc",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  },
+  {
+   "bid": "dvw_mu_ctxrx_ctx_x",
+   "min_raw_depth": 2,
+   "E": 2,
+   "E_gen": 3
+  },
+  {
+   "bid": "ng_embed_fault_0",
+   "min_raw_depth": 2,
+   "E": 1,
+   "E_gen": 1
+  }
+ ],
+ "reach_top20": [
+  {
+   "driver": "ckb_rom/pll_ck[0]",
+   "manhattan_um": 2735.4
+  },
+  {
+   "driver": "sys_face/status_epoch16[15]",
+   "manhattan_um": 590.5
+  },
+  {
+   "driver": "sys_face/status_epoch16[14]",
+   "manhattan_um": 590.2
+  },
+  {
+   "driver": "sys_face/status_epoch16[13]",
+   "manhattan_um": 590.0
+  },
+  {
+   "driver": "sys_face/status_epoch16[12]",
+   "manhattan_um": 589.7
+  },
+  {
+   "driver": "sys_face/status_epoch16[11]",
+   "manhattan_um": 589.4
+  },
+  {
+   "driver": "sys_face/status_epoch16[10]",
+   "manhattan_um": 589.2
+  },
+  {
+   "driver": "sys_face/status_epoch16[9]",
+   "manhattan_um": 588.9
+  },
+  {
+   "driver": "sys_face/status_epoch16[8]",
+   "manhattan_um": 588.7
+  },
+  {
+   "driver": "sys_face/status_epoch16[7]",
+   "manhattan_um": 588.4
+  },
+  {
+   "driver": "sys_face/status_epoch16[6]",
+   "manhattan_um": 588.1
+  },
+  {
+   "driver": "sys_face/status_epoch16[5]",
+   "manhattan_um": 587.8
+  },
+  {
+   "driver": "sys_face/status_epoch16[4]",
+   "manhattan_um": 587.6
+  },
+  {
+   "driver": "sys_face/status_epoch16[3]",
+   "manhattan_um": 587.3
+  },
+  {
+   "driver": "sys_face/status_epoch16[2]",
+   "manhattan_um": 587.0
+  },
+  {
+   "driver": "sys_face/vm_drained",
+   "manhattan_um": 586.8
+  },
+  {
+   "driver": "sys_face/status_epoch16[1]",
+   "manhattan_um": 586.8
+  },
+  {
+   "driver": "sys_face/status_epoch16[0]",
+   "manhattan_um": 586.5
+  },
+  {
+   "driver": "sys_face/result_v",
+   "manhattan_um": 571.0
+  },
+  {
+   "driver": "sys_face/emb_fill_begin",
+   "manhattan_um": 567.5
+  }
+ ]
+}
