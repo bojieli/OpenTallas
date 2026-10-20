@@ -2088,7 +2088,7 @@ proc ot_ce_forwarded_visit {corner} {
     if {$cn ne [dict get $binding clock] || $root ne [dict get $binding root] || [$rc is_virtual]} {error "OT_FORWARDED: wrong or virtual actual clock/root $bit"}
     if {$judged && ![$clock is_propagated]} {error "OT_FORWARDED: ideal source clock cannot qualify $bit"}
     set wave [$clock waveform]
-    if {[llength $wave] != 2 || [$clock period] <= 0} {error "OT_FORWARDED: invalid native clock waveform"}
+    if {[llength $wave] != 2 || ![ot_ce_finite [$clock period]] || [$clock period] <= 0} {error "OT_FORWARDED: invalid native clock waveform"}
     foreach v $wave {if {![ot_ce_finite $v]} {error "OT_FORWARDED: nonfinite native waveform"}}
     lappend ::ot_ce_fwd_root_names $root; lappend ::ot_ce_fwd_inputs $bit
     set domain [ot_ce_fwd_domain $bit]
@@ -2152,6 +2152,7 @@ proc ot_ce_forwarded_visit {corner} {
       if {[dict exists $::ot_ce_fwd_bindings $bit] && ![dict exists $seen_pins [get_full_name $pin]]} {error "OT_FORWARDED: unbound check-only/raw child clock pin [get_full_name $pin]"}
     }
   }
+  foreach bit [dict keys $::ot_ce_fwd_bindings] {ot_ce_fwd_physical_census $bit}
   dict for {key rows} $groups {
     lassign $key bit edge
     set lo [lindex [lindex $rows 0] 0]; set hi [lindex [lindex $rows 0] 1]
@@ -2162,9 +2163,76 @@ proc ot_ce_forwarded_visit {corner} {
   }
   return $hits
 }
+proc ot_ce_fwd_physical_census {bit} {
+  set block [ord::get_db_block];set source [$block findBTerm $bit]
+  set pending [list [$source getNet]];set seen {};set found {}
+  while {[llength $pending]} {
+    set net [lindex $pending end];set pending [lrange $pending 0 end-1]
+    if {$net in {"" NULL}} {error "OT_FORWARDED: disconnected clock graph"}
+    if {$net in $seen} {error "OT_FORWARDED: cyclic or reconvergent physical clock graph"}
+    lappend seen $net
+    set drivers {};foreach p [$net getITerms] {if {[$p getIoType] eq "OUTPUT"} {lappend drivers $p}}
+    set expected_drivers [expr {$net eq [$source getNet] ? 0 : 1}]
+    if {[llength $drivers] != $expected_drivers} {error "OT_FORWARDED: ambiguous/internally-driven physical root net"}
+    foreach bt [$net getBTerms] {
+      set name [$bt getName]
+      if {[$bt getIoType] eq "INPUT"} {
+        if {$name ne $bit} {error "OT_FORWARDED: physical input alias $name"}
+      } elseif {[$bt getIoType] eq "OUTPUT"} {
+        ot_ce_fwd_cts_endpoint $bit [get_ports -quiet $name]
+        lappend found $name
+      } else {error "OT_FORWARDED: unsupported physical boundary direction"}
+    }
+    foreach it [$net getITerms] {
+      if {[$it getIoType] ne "INPUT"} continue
+      set inst [$it getInst];set master [[$inst getMaster] getName]
+      set full "[$inst getName]/[[$it getMTerm] getName]"
+      if {[dict exists $::ot_ce_counts $master]} {
+        set binding [dict get $::ot_ce_fwd_bindings $bit]
+        if {![dict exists $binding pins $full] || [dict get $binding pins $full] ne $master || ![dict exists $::ot_ce_refs "$master/[[$it getMTerm] getName]"]} {error "OT_FORWARDED: unbound physical hard-child clock/data pin $full"}
+        lappend found $full
+        dict for {output proof} $::ot_ce_fwd_native_outputs {
+          if {[dict get $proof input] ne $full} continue
+          set out [$block findITerm $output]
+          if {$out in {"" NULL}} {error "OT_FORWARDED: native output physical pin missing"}
+          lappend pending [$out getNet]
+        }
+        continue
+      }
+      set inputs {};set outputs {}
+      foreach p [$inst getITerms] {
+        if {[$p getIoType] eq "INPUT"} {lappend inputs $p}
+        if {[$p getIoType] eq "OUTPUT"} {lappend outputs $p}
+      }
+      # This physical walk sees inactive SRAM clocks too; no timing-path query
+      # or get_fanout mode can make an unbound endpoint disappear.
+      if {[llength $inputs] != 1 || [llength $outputs] != 1} {error "OT_FORWARDED: unbound physical sequential/SRAM/gating/data endpoint $full"}
+      set out [lindex $outputs 0];set op [[$out getMTerm] getName];set ip [[$it getMTerm] getName];set functions {}
+      foreach library [get_libs -quiet *] {
+        set lc [$library find_liberty_cell $master]
+        if {$lc in {"" NULL}} continue
+        set lp [$lc find_liberty_port $op]
+        if {$lp in {"" NULL}} {error "OT_FORWARDED: missing physical driver Liberty output"}
+        dict set functions [string map {" " "" "\t" "" "\n" "" "(" "" ")" ""} [$lp function]] 1
+      }
+      if {[dict size $functions] != 1 || [lindex [dict keys $functions] 0] ni [list $ip !$ip ~$ip ${ip}']} {error "OT_FORWARDED: physical path is not actual unary BUF/INV $full"}
+      set next [$out getNet]
+      if {$next in {"" NULL}} {
+        puts "OT_FORWARDED PASSIVE_LOAD $full master=$master (native unary BUF/INV output unconnected)"
+      } else {lappend pending $next}
+    }
+  }
+  set binding [dict get $::ot_ce_fwd_bindings $bit]
+  set expected [concat [dict keys [dict get $binding pins]] [dict keys [dict get $binding outputs]]]
+  if {[lsort -unique $found] ne [lsort $expected]} {error "OT_FORWARDED: complete physical pin/BTerm/SRAM census mismatch $bit"}
+  return [lsort -unique $found]
+}
 proc ot_ce_fwd_cts_prepare {} {
   set ::ot_ce_fwd_cts_preflight 1
-  try {ot_ce_forwarded_visit [ot_ce_corner]} finally {set ::ot_ce_fwd_cts_preflight 0}
+  try {
+    ot_ce_forwarded_visit [ot_ce_corner]
+    foreach bit [dict keys $::ot_ce_fwd_bindings] {ot_ce_fwd_physical_census $bit}
+  } finally {set ::ot_ce_fwd_cts_preflight 0}
   return [dict keys $::ot_ce_fwd_bindings]
 }
 proc ot_ce_fwd_cts_endpoint {bit pin} {
