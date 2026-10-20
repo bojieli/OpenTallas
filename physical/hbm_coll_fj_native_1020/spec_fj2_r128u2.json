@@ -1,0 +1,227 @@
+{
+  "name": "hcoll_fj2_r128u2",
+  "top": "ot_hgi_coll_fj_q2_r128",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+    "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 103.68,
+    "h": 71.28
+  },
+  "pins": {
+    "N": [],
+    "S": [
+      "clk",
+      "rst_n",
+      "qid",
+      "cfg_v",
+      "cfg_target",
+      "cfg_addr",
+      "cfg_data",
+      "desc_v",
+      "desc_base",
+      "desc_limit",
+      "desc_loops",
+      "launch_v",
+      "configured",
+      "init_busy",
+      "program_fault",
+      "fault",
+      "fault_cause",
+      "program_active",
+      "issuer_busy",
+      "issuer_fault",
+      "issuer_uop_v",
+      "issuer_uop_pc",
+      "issuer_cfg",
+      "issuer_start",
+      "issuer_start_pc"
+    ],
+    "E": [
+      "protocol_fault",
+      "capture_fault",
+      "select_fault",
+      "unavailable_fault",
+      "arg_capture_slot",
+      "tkm_start",
+      "tkm_del_slot",
+      "tkm_dest_v"
+    ],
+    "W": [
+      "link_abort",
+      "ring_fault",
+      "writer_fault",
+      "reduce_fault"
+    ]
+  },
+  "layer_cap": "M5",
+  "recipe": 3,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir",
+      "count": 1,
+      "inst": "u.u_program.u_flow",
+      "at": [
+        43.2,
+        43.2
+      ],
+      "at_exact": true,
+      "orient": "R0"
+    }
+  ],
+  "children": [],
+  "route": {
+    "pd": 0.5,
+    "period_ps": 833.333,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 2.0,
+    "io_hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 32
+    }
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "ot_hgi_coll_fj_core registers every input at its pin in RTL (HOST F20 cfg/desc/launch frames, issuer feedback, child faults, sync rst_n D-pin flop; coordinator native audit of fj_q2 54f035ca0) and every output is flop Q (programme target issuer_cfg/start/configured/init_busy/fault, sticky fault/fault_cause); the V5 lockstep bench fixes these edges (programme +1, issue +3, child faults +1). A synthesis pin stage would add a second, unbenched rung."
+  },
+  "job": {
+    "owner": "Codex:HBM-ELEM/COLLFJ",
+    "branch": "codex/collfj-u2-1020",
+    "tag": "native32-reserve16-grid",
+    "purpose": "SAFE successor of hcoll_fj2_r128w (LEAD3-HBM 10-19, no waiver): q2 parent u_fj body ot_hgi_coll_fj_core_s128 = 12 KEPT reset copies rst__ot_rlv (<=32 loads each via reset_relay_split), flow store in ONE ot_sram_1rw_128x64 (u.u_program.u_flow, read = scan lookahead, registered write), registered frame/descriptor decode; port/edge-identical (0 cycles)",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/collective",
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hdc",
+      "rtl/qwen_sys/split_20261014",
+      "rtl/common/landed_parent",
+      "tools/landed_parent",
+      "results/arch/landed_parent_1018/collq",
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir",
+      "physical/hbm_coll_fj_native_1020"
+    ],
+    "benches": [
+      {
+        "name": "coll_q2_lp_ars_eq_s128",
+        "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q2 {RUN}/bench/q2_eq eq",
+        "expect": "pass",
+        "pass_regex": "COLL_LP_ARS_ALL_EXIT 0",
+        "threads": 16,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "note": "SAFE q2 COLL parent ot_hfd_coll_q2_lpf_ars (binds this leaf: fj_core_s128 + issuer v7) == v8x/v8g #(AR_ITER 1, ROWS 128) (old fj_core + base programme target) every output every cycle + 3 EQ mutants rejected"
+      },
+      {
+        "name": "coll_q2_fj_mut_latespc",
+        "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q2 {RUN}/bench/q2_ptmut ptmut",
+        "expect": "fail",
+        "fail_regex": "EQ_MUTANT m_latespc REJECTED",
+        "fail_witness": "results/rtl/hbm_coll_fj_1019/witness/s128_m_latespc_q2.log",
+        "threads": 16,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "note": "OT_PT_MUT_LATE_SPC in programme_target_s128: start_pc only at launch -> v7 never primed -> parent EQ must fail"
+      },
+      {
+        "name": "coll_q2_fj_mut_s128",
+        "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q2 {RUN}/bench/q2_fjmut fjmut",
+        "expect": "fail",
+        "fail_regex": "COLL_LP_ARS_FJMUT_EXIT 1",
+        "fail_witness": "results/rtl/hbm_coll_fj_1019/witness/s128_fjmut_q2.log",
+        "threads": 16,
+        "peak_ram_gb": 48,
+        "needs": [
+          "verilator"
+        ],
+        "note": "SAFE-body mutant OT_PT_MUT_LA_STALE (SRAM flow read + loaded lookahead frozen) -> parent EQ must fail"
+      },
+      {
+        "name": "pt_s128_miter",
+        "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_pt_s128_miter.sh {RUN}/bench/miter pass",
+        "expect": "pass",
+        "pass_regex": "PT_S128_EXIT 0",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "note": "random beyond-contract miter programme_target_s128 == programme_target #(ROWS 128) every output every cycle"
+      },
+      {
+        "name": "pt_s128_mut_ldhnofwd",
+        "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_pt_s128_miter.sh {RUN}/bench/m_ldh ldhnofwd",
+        "expect": "fail",
+        "fail_regex": "PT_S128_MUTANT ldhnofwd REJECTED",
+        "fail_witness": "results/rtl/hbm_coll_fj_1019/witness/s128_miter_ldhnofwd.log",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "note": "OT_PT_MUT_LDH_NOFWD: registered loaded[row] decode without the drain-completion forward -> miter must fail"
+      }
+    ],
+    "views_to": "physical/ref_tile/hcoll_fj2_r128u2/views",
+    "record_to": "results/rtl/ref_tile/hcoll_fj2_r128u2"
+  },
+  "params": {},
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "reset_landing": {
+    "enable": true,
+    "stages": 2
+  },
+  "structural_change": "Same sourcee6846a038 RTL/ports/edges and approvedliteralR0geometry asr128u. Resetdistribution synthesiscap16 reserves16loads for measured13maxpin_reg_split newbornRESETNs; originalr128uactualGRTc1 24->37/c7 24->34. Fullposthook+postGRTactualnative32 required; no reset/clock exemptions. EntirecurrentROOTcomposedPGbirth/naming/clockrecipe mustbefrozen beforephysicallaunch.",
+  "reset_relay_split": {
+    "max_loads": 16
+  },
+  "floorplan_note": "Macro W/E signal-face clearances41.04/20.52um; bare N core gap2.136um>=2um macro PG halo. No pin of any use within200nm of master N face; no tile N pins. Stock R0, no MX translation or custom LEF. S band99.36x38.88um from2.16..101.52 by2.16..41.04, std area~1574 gives40.7% band density. Pin/hold/reset hooks preserved via entry wrappers.",
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "source": "results/rtl/hbm_coll_fj_1019/codex_native_1020/r128u_postgrt_native/README.md",
+    "fix": "Unsafeclosedr128w source differs from directRTL-proven e6846a038 SRAM/bounded-control source. r128u actualGRT ODB shows pin_reg_split clone FFRESETNs grow24->37/34; u2 resetsplitcap16 reserves16 for measured13maxaddedloads while preservingoriginalresetlandingdepth/polarity. IdenticalR0(43.2,43.2),fullSband,W/E20um escapes. Mandatoryposthookall32, boundPG-before-protect and legalFIRMpacking mustPASS beforefuturegate; thenexactpostGRT32+PG+criticalreview."
+  },
+  "pin_ranges": {
+    "clk": [
+      50.0,
+      51.2
+    ],
+    "rst_n": [
+      51.2,
+      52.4
+    ]
+  },
+  "orfs_vars": {
+    "PRE_GLOBAL_PLACE_TCL": "physical/hbm_coll_fj_native_1020/fj2_u2_gpl_entry.tcl",
+    "PRE_DETAIL_PLACE_TCL": "physical/hbm_coll_fj_native_1020/fj2_u2_dpl_entry.tcl",
+    "OT_FJ_BAND": "2.16,2.16,101.52,41.04"
+  },
+  "fill_reason": "Pin/lattice-bound outline: 432 S pins require82.944um at0.192um pitch; literal stock R0 SRAM origin43.2um +37.8um width +20um E escape +2.16um margin impose width>=103.16um, chosen103.68um. Full-width S band99.36x38.88um carries measured~1574um2 stdcells (40.7% band density); global fill37.2%. Bare N2.136um includes unchanged stock2um PG halo and has no macro/tile N pins; actual PG continuity remains required."
+}
