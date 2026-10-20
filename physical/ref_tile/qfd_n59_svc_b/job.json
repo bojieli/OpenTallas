@@ -1,5 +1,5 @@
 {
- "name": "qfd_n59_svc_b-svb-COMMIT",
+ "name": "qfd_n59_svc_b-svb-e13bcf863",
  "block": "qfd_native59_svc",
  "ref_tile": true,
  "owner": "Claude:QW-N59-4",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qw-n59-4-1019",
-  "commit": "COMMIT",
+  "commit": "e13bcf863",
   "extra_paths": [
    "rtl/test/qwen_split",
    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
@@ -148,7 +148,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_n59_svc_b/qfd_n59_svc_b-svb-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_n59_svc_b/qfd_n59_svc_b-svb-e13bcf863"
   }
  ],
  "cycles_added": 0,
