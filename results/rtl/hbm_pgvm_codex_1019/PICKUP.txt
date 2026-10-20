@@ -1,0 +1,32 @@
+PGVM takeover pickup 2026-10-19 23:10 PT
+
+Immutable failures retained here are g7d SECOND attempts, before Claude fix
+91484cc12 removes dont_touch from the deterministic HB4 cells. These logs do
+not qualify any third-attempt gate; g7d third attempts are still progressing.
+The second-attempt RSZ-3006 is a placement/resizer failure at the launching
+hub inj[0].orc.f[0] net, before any clock spread or route result exists.
+No numerical or timing qualification is claimed here.
+
+PGLG source classification correction:
+rtl/common/landed_parent/ot_pl_land.sv ot_pl_land_r declares rc as its
+AW+1-bit read epoch counter. rc[0] drives exp_=rc-K -> sel -> the W-wide
+bank selection. The lane's earlier label of the 4,181-load rc[0] root as a
+sync-reset net is incorrect. Regional reset copies alone cannot fix this.
+The existing W=2448-class landing reader broadcasts one select across the
+whole bus; reader data slices with independent kept epoch counters/decoders
+are the structural successor. Preserve K, reset epoch, output edge, and all
+LAND_FAULT assertions. Slicing must also bound reset/warm/valid fanout; merely
+replicating rc leaves those shared roots. The write-side wc decode also
+requires a census; do not fix only reader-side counters.
+
+Further independent PGLG debts remain: pos_r* pin-to-logic registration and
+ck_s regional tree split. No RTL/tool changes or new gates made by this pickup.
+The running lg4 measures the landed-raw-clock anchor fix, not these debts.
+
+Live owned-family jobs at pickup (existing Claude jobs, preserved):
+SAFE3 PID3333560 pve1 CDC_SEAM enumeration advancing 23:10.
+PGLG lg4 PID2731258 agidock128 CTS ck_s 23,943 sinks at 23:00.
+SVG fg2/fg2w PIDs2740052/2740051; fg2w ep9 GPL advancing 23:10.
+g6 measurement PIDs2753013/2753014/2753015.
+g7 plain second attempts PIDs4045980/4046280/4046527.
+g7d third attempts PIDs35998/36585/37235.

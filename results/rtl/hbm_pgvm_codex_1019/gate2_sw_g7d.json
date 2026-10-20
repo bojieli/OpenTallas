@@ -1,0 +1,113 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "clock_span",
+   "message": "648.0 x 1555.2 um: one clock root over > 600 um",
+   "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: RTL registers every pin (g4: each port is a pin flop + reach relays, gen_vms_glue_tiles.py DB / DD / DC): bank-side inputs land on the tile landing flops (eg / pr / xq_done / xq2_done / status / flt) and bank-side outputs leave from the tile relay flops (xq / xq2 / pq); the hub captures cq / client_",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc7 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hfd_hgi_vms_glue_sw_g7d_20261019-223053.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hfd_hgi_vms_glue_sw_g7d_20261019-223053.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/hfd_hgi_vms_glue_sw_g7d-20261019-223053",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc7 in 497 s (gate total 980 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 21396, 'pin_rectangles': 21396, 'pin_track_checked': 21396, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 a0be2a6413191a068c4718a071a4785cbde04c7e03d50beb444b81dd4e88037f",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 43011 um2 + macros 0 in core 998270: util 4%",
+   "fix": "set \"std_area_um2\": 43011 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN hfd_hgi_vms_glue_sw_t cells 259,523 flops 107,776 depth 483.4 ps util 0.0424 reach 0.0 um (8.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 107,776 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. _296814_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 4.2% outside 45%-65% (std 42363 + macro 0 um2 in 998270 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 107,776 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 107,776 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR RSZ-3006] Failed to insert buffer before loads for net u_core.u_hub.inj\\[0\\].$fordecl_block$4250.$for_loop$4251\\[0\\].orc.f\\[0\\]",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 107,776 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 107,776 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/vm-glue-g7-1019/physical/ref_tile/hfd_hgi_vms_glue_sw_g7d/gate_layout/floorplan.png",
+   "fix": ""
+  }
+ ]
+}
