@@ -43,7 +43,7 @@ if {[$ot_lep_b findGroup ot_lep_band] eq "NULL"} {
     if {[catch {ot_candidate_birth_role [$ot_lep_b findInst $nm]} detail]} {error "LEP_BIRTH unmodelled functional cell $nm $master: $detail"}
   }
   if {[llength $ot_lep_new]} { ot_native_cell_fence_add ot_lep_band $ot_lep_new }
-  if {$stage eq "DPL_CALL" && [llength $ot_lep_new]} {ot_candidate_seed_new ot_lep_band $::ot_lep_band $ot_lep_new}
+  if {$stage in {DPL_CALL GPL_POST} && [llength $ot_lep_new]} {ot_candidate_seed_new ot_lep_band $::ot_lep_band $ot_lep_new}
   puts "LEP_BAND adopted=[llength $ot_lep_new]"
 }
 
@@ -54,6 +54,9 @@ if {![llength [info commands ::ot_lep_global_placement_orig]]} {
  proc global_placement {args} {
   ot_lep_adopt_after_birth GPL_CALL
   set result [uplevel 1 [list ::ot_lep_global_placement_orig {*}$args]]
+  # S81-TILES-C: GPL timing-driven repair births buffers (place*) inside the call; adopt + seed them into the band
+  # (same birth-role model as DPL_CALL) before the band check (lepnhwd_r3 08:31: 'unowned functional cell place49380')
+  ot_lep_adopt_after_birth GPL_POST
   ot_lep_band_check GPL
   return $result
  }
