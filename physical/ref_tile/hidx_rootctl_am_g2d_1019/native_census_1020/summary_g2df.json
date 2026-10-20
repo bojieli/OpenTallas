@@ -1,0 +1,217 @@
+{
+ "schema": "hbm-idx5.native_census_summary.v1",
+ "tool": "origin/main tools/ref_tile/native_census.py (c952e97b0/042aa171b), ORFS asap7lock TT RVT+LVT libs + macro tt lib",
+ "status": "FAIL",
+ "max_dynamic_loads": 2057,
+ "violations": 296,
+ "roots_examined": 57087,
+ "netlist": {
+  "path": "/g/routes/gate/work/orfs/results/asap7/opentallas_ot_hbm_idx_rootctl_static_am_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "b74f695fd8d53f176a6da31642bbdbe342be43cba6d1b61c8eb48839c1be73e2"
+ },
+ "role_errors": [],
+ "by_driver": [
+  {
+   "driver": "combinational (see classify)",
+   "n": 184,
+   "max_loads": 560
+  },
+  {
+   "driver": "u_ot_pr_core.topk.g_lane[].u_l.c_b[]",
+   "n": 56,
+   "max_loads": 110
+  },
+  {
+   "driver": "u_ot_pr_core.topk.cap_d[]",
+   "n": 8,
+   "max_loads": 56
+  },
+  {
+   "driver": "u_ot_pr_core.topk.fk[][]",
+   "n": 8,
+   "max_loads": 33
+  },
+  {
+   "driver": "u_ot_pr_core.topk.fz[]",
+   "n": 8,
+   "max_loads": 33
+  },
+  {
+   "driver": "u_ot_pr_core.topk.g_lane[].u_l.ins_v",
+   "n": 8,
+   "max_loads": 123
+  },
+  {
+   "driver": "u_ot_pr_core.calendar.word_index[]",
+   "n": 3,
+   "max_loads": 160
+  },
+  {
+   "driver": "u_ot_pr_core.topk.di[]",
+   "n": 3,
+   "max_loads": 2057
+  },
+  {
+   "driver": "u_ot_pr_core.topk.o_rb[]",
+   "n": 3,
+   "max_loads": 349
+  },
+  {
+   "driver": "u_ot_pr_core.topk.r_rb[]",
+   "n": 3,
+   "max_loads": 544
+  },
+  {
+   "driver": "u_ot_pr_core.topk.g_lane[].u_l.ev[]",
+   "n": 2,
+   "max_loads": 111
+  },
+  {
+   "driver": "u_ot_pr_core.topk.wi[]",
+   "n": 2,
+   "max_loads": 97
+  },
+  {
+   "driver": "u_ot_pr_core.st_r",
+   "n": 1,
+   "max_loads": 39
+  },
+  {
+   "driver": "u_ot_pr_core.tk_busy",
+   "n": 1,
+   "max_loads": 57
+  },
+  {
+   "driver": "u_ot_pr_core.tk_go_r",
+   "n": 1,
+   "max_loads": 56
+  },
+  {
+   "driver": "u_ot_pr_core.topk.cap_first",
+   "n": 1,
+   "max_loads": 40
+  },
+  {
+   "driver": "u_ot_pr_core.topk.cap_v",
+   "n": 1,
+   "max_loads": 46
+  },
+  {
+   "driver": "u_ot_pr_core.topk.k_q[]",
+   "n": 1,
+   "max_loads": 42
+  },
+  {
+   "driver": "u_ot_pr_core.topk.st[]",
+   "n": 1,
+   "max_loads": 33
+  },
+  {
+   "driver": "u_ot_pr_core.topk.t1[][]",
+   "n": 1,
+   "max_loads": 56
+  }
+ ],
+ "top20": [
+  {
+   "driver": "u_ot_pr_core.topk.di[9]$_DFF_PN0_/QN",
+   "loads": 2057,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.topk.di[8]$_DFF_PN0_/QN",
+   "loads": 1032,
+   "role": "sequential"
+  },
+  {
+   "driver": "_102247_/Y",
+   "loads": 560,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "u_ot_pr_core.topk.r_rb[2]$_DFFE_PP_/QN",
+   "loads": 544,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.topk.r_rb[1]$_DFFE_PP_/QN",
+   "loads": 528,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.topk.r_rb[0]$_DFFE_PP_/QN",
+   "loads": 524,
+   "role": "sequential"
+  },
+  {
+   "driver": "u_ot_pr_core.topk.di[10]$_DFF_PN0_/QN",
+   "loads": 519,
+   "role": "sequential"
+  },
+  {
+   "driver": "_101805_/Y",
+   "loads": 499,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_101721_/Y",
+   "loads": 485,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_070684_/Y",
+   "loads": 472,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_087700_/Y",
+   "loads": 381,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_091070_/Y",
+   "loads": 381,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_094418_/Y",
+   "loads": 381,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_097784_/Y",
+   "loads": 381,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_074636_/Y",
+   "loads": 380,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_077980_/Y",
+   "loads": 380,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_081339_/Y",
+   "loads": 380,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_084694_/Y",
+   "loads": 380,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_074285_/Y",
+   "loads": 379,
+   "role": "combinational_or_macro"
+  },
+  {
+   "driver": "_077630_/Y",
+   "loads": 379,
+   "role": "combinational_or_macro"
+  }
+ ]
+}
