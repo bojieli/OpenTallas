@@ -53,7 +53,12 @@ module ot_hdc_fp32_add_n32 #(
     wire a_zero = (a[30:0] == 31'd0);
     wire b_zero = (b[30:0] == 31'd0);
     wire bypass = nonfinite || a_zero || b_zero;
-    wire [31:0] bypass_code = nonfinite ? 32'd0 : (a_zero ? (b_zero ? 32'd0 : b) : a);
+    // Bound the combinational nonfinite/zero controls to one byte. Each
+    // hierarchy keeps its own decode; this adds no register or pipeline edge.
+    wire [31:0] bypass_code;
+    for (genvar h=0; h<4; h=h+1) begin:g_bypass_byte
+        ot_hdc_fp32_bypass_n32 #(.LO(8*h)) u_b(.a(a),.b(b),.y(bypass_code[8*h+:8]));
+    end
     wire cmp_c;
     wire [30:0] cmp_s;
     ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
@@ -258,4 +263,15 @@ module ot_hdc_w11_cut_n32 #(parameter integer W = 1, parameter integer CUT = 0, 
         end
       end
     end endgenerate
+endmodule
+
+// Byte-local exact bypass decode; synthesis hierarchy prevents a 34-load
+// shared nonfinite root. All operands remain fully dynamic.
+(* keep_hierarchy *)
+module ot_hdc_fp32_bypass_n32 #(parameter integer LO=0)(
+ input wire [31:0] a,b, output wire [7:0] y
+);
+ wire nf=(a[30:23]==8'hff)||(b[30:23]==8'hff);
+ wire az=(a[30:0]==31'd0), bz=(b[30:0]==31'd0);
+ assign y=nf?8'd0:(az?(bz?8'd0:b[LO+:8]):a[LO+:8]);
 endmodule

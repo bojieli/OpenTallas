@@ -13,5 +13,13 @@
     "qcore everyoutputedge proof+productionparams native",
     "no layouts orclosure claim before sourceall32 plusarea/PG/clock/oneband"
   ],
-  "native_iteration": "Baseline earlytechmap+unaddressablecopyfamily FAIL18/max80; includes six additional jam shift bits now explicitly copied. Safe aliases do not alter originalnetnames or cellgraph; runtime graph proof required before unchanged split."
+  "native_iteration": "Baseline earlytechmap+unaddressablecopyfamily FAIL18/max80; includes six additional jam shift bits now explicitly copied. Safe aliases do not alter originalnetnames or cellgraph; runtime graph proof required before unchanged split.",
+  "fp4_bypass_model": {
+    "trigger": "FP3 actual native sole failure !nonfinite root34 loads (32 bypass data + error)",
+    "change": "4 kept byte-local bypass decodes, identical function and pipeline edges; full dynamic operands",
+    "additional_ff": 0,
+    "additional_cycles": 0,
+    "logic_cost_upper_bound": "Three extra pairs of 8-bit exponent equality and 31-bit zero reductions plus four local 8-bit selectors; actual mapped area/cell delta required",
+    "scope": "standalone FP prototype only; no physical admission"
+  }
 }
