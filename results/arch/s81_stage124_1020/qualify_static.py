@@ -7,6 +7,7 @@ assert m['verdict']['all_pass'] and not m['verdict']['missing']
 coverage=collections.Counter(); dense=[]
 for s in m['stages']:
  c=s['capacity']; assert c['pass'] and c['layout_identical_all'],(s['stage'],c)
+ assert c['dense_layer']==s['dense_layer'] and c['experts']==s['n_experts']
  for layer,first,last in s['experts']:
   coverage.update((layer,e) for e in range(first,last+1))
  if s['dense_layer'] is not None: dense.append(s['dense_layer'])
