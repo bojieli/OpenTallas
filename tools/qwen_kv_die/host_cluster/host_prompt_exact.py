@@ -4,7 +4,7 @@ from pathlib import Path
 import importlib.util,json,re,subprocess,sys
 sp=importlib.util.spec_from_file_location('tl','textbook_lint.py');m=importlib.util.module_from_spec(sp);sys.modules['tl']=m;sp.loader.exec_module(m)
 mods=m.parse_verilog(Path('original.v').read_text());g,top=m.flatten(mods,None);ports=mods[top]
-top2='qkd_hr_core_prompt_n32';decl=['`timescale 1ns/1ps','module tb;','integer seed=251;integer n=0;','reg ck_core=0;always #5 ck_core=~ck_core;']
+top2=sys.argv[1]if len(sys.argv)>1 else'qkd_hr_core_prompt_n32';decl=['`timescale 1ns/1ps','module tb;','integer seed=251;integer n=0;','reg ck_core=0;always #5 ck_core=~ck_core;']
 ca=[];cb=[];outs=[];rand=[]
 for p in ports.ports:
  w='' if p not in ports.widths else '[%d:%d] '%ports.widths[p]

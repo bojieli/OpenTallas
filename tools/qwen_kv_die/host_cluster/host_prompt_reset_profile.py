@@ -3,7 +3,7 @@
 from pathlib import Path
 import copy,hashlib,importlib.util,json,sys
 sp=importlib.util.spec_from_file_location('tl','textbook_lint.py');m=importlib.util.module_from_spec(sp);sys.modules['tl']=m;sp.loader.exec_module(m)
-g,top=m.flatten(m.parse_verilog(Path('resynth.v').read_text()),'qkd_hr_core_prompt_n32');a=m.build(g,None)
+g,top=m.flatten(m.parse_verilog(Path('resynth.v').read_text()),sys.argv[1]if len(sys.argv)>1 else'qkd_hr_core_prompt_n32');a=m.build(g,None)
 port='u_rank__u_control__por_n';net=g.ports[port][1]
 first={ci for ci,pn,bit in a['loads'].get(net,[])}
 last=set()

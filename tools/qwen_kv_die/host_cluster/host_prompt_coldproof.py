@@ -18,7 +18,7 @@ sp.loader.exec_module(m)
 mods = m.parse_verilog(Path('original.v').read_text())
 g, original_top = m.flatten(mods, None)
 a = m.build(g, None)
-record = json.loads(Path('qkd_hr_core_prompt_n32.json').read_text())
+record = json.loads(Path((sys.argv[1]if len(sys.argv)>1 else'qkd_hr_core_prompt_n32')+'.json').read_text())
 eq = []
 for row in record['copied_cells']:
     if row['kind']=='ff':
