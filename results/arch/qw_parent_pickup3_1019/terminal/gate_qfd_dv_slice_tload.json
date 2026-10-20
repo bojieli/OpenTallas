@@ -1,0 +1,131 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers on every data input and output (+1 cycle each; kit pin_regs.json)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_dv_slice_tload_20261019-170739.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_dv_slice_tload_20261019-170739.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_dv_slice_tload-20261019-170739",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 42 s (gate total 694 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2116, 'pin_rectangles': 2116, 'pin_track_checked': 2116, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 ddc1168eb8ff26e2a4f38c78a5372e595a119d488db55bf09887ec331c3d3ac6",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 1406 um2 + macros 30656 in core 127483: util 2% (std-cell density 1.6% of placeable 88380 um2; total fill 25.1%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "port_latency",
+   "message": "elaborated pin registers: 5 input / 7 output ports +1 edge; 2 ports pass through (clock/reset/excluded/inout)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS qfd_dv_slice_tload cells 9,423 flops 3,260 depth 373.4 ps util 0.2515 reach 0.0 um (0.3 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 528.4..660.1 ps (spread 131.7), boundary mean 569.5; tt insertion all 392.6..520.1 ps (spread 127.5), boundary mean 442.0; ff insertion all 312.4..432.5 ps (spread 120.1), boundary mean 363.0; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.450 vs spec PD 0.45",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qfd_dv_slice_tload/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg    300 paths, worst slack -246.4 ps (e.g. u_ot_pr_core.u_ld.g_wek.cp[3].ff/q$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg       78 paths, worst slack 453.8 ps (e.g. u_ot_pr_core.u_ld.g_wek.cp[23].ff/q$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -2.46381470780932e-10 hold WNS 3.386479985323376e-11",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "3,264 sinks on the largest root; measured TT insertion 520.1 ps, FF insertion 432.5 ps, TT pin-flop spread 105.3 ps, FF pin-flop spread 94.9 ps; TT pin-flop spread 105.3 ps > 80 and FF pin-flop spread 94.9 ps > 80",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-f16prog4-1019/physical/ref_tile/qfd_dv_slice_tload/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-f16prog4-1019/physical/ref_tile/qfd_dv_slice_tload/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "fill",
+   "message": "fill 24% = (hard macros 30655.8 + synthesized std cells 1407.9) / outline 130636.8 um2; pin demand per face: S 0 pins over 0.0/302.4 um (0%), N 11 pins over 1.0/302.4 um (0%), W 1107 pins over 287.1/432.0 um (66%), E 1110 pins over 291.0/432.0 um (67%) (< 35%)",
+   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 14.28% used; GRT 260 s",
+   "fix": ""
+  }
+ ]
+}

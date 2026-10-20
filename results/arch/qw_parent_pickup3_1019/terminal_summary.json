@@ -1,0 +1,599 @@
+[
+  {
+    "file": "gate_qfd_dv_slice_tload.json",
+    "verdict": "FAIL",
+    "failures": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "3,264 sinks on the largest root; measured TT insertion 520.1 ps, FF insertion 432.5 ps, TT pin-flop spread 105.3 ps, FF pin-flop spread 94.9 ps; TT pin-flop spread 105.3 ps > 80 and FF pin-flop spread 94.9 ps > 80",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "FAIL",
+        "check": "fill",
+        "message": "fill 24% = (hard macros 30655.8 + synthesized std cells 1407.9) / outline 130636.8 um2; pin demand per face: S 0 pins over 0.0/302.4 um (0%), N 11 pins over 1.0/302.4 um (0%), W 1107 pins over 287.1/432.0 um (66%), E 1110 pins over 291.0/432.0 um (67%) (< 35%)",
+        "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+      }
+    ],
+    "timing": [
+      {
+        "severity": "INFO",
+        "check": "floorplan.pin_geometry",
+        "message": "actual pin geometry PASS: {'signal_clock_pins': 2116, 'pin_rectangles': 2116, 'pin_track_checked': 2116, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 ddc1168eb8ff26e2a4f38c78a5372e595a119d488db55bf09887ec331c3d3ac6",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "textbook",
+        "message": "PASS qfd_dv_slice_tload cells 9,423 flops 3,260 depth 373.4 ps util 0.2515 reach 0.0 um (0.3 s)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "cts_calibration",
+        "message": "ss insertion all 528.4..660.1 ps (spread 131.7), boundary mean 569.5; tt insertion all 392.6..520.1 ps (spread 127.5), boundary mean 442.0; ff insertion all 312.4..432.5 ps (spread 120.1), boundary mean 363.0; macro_clk flag True",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "constraints signoff /src/physical/ref_tile/qfd_dv_slice_tload/signoff.sdc (TT placement RC; diagnostic)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "macro->reg    300 paths, worst slack -246.4 ps (e.g. u_ot_pr_core.u_ld.g_wek.cp[3].ff/q$_DFF_PN0_/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->reg       78 paths, worst slack 453.8 ps (e.g. u_ot_pr_core.u_ld.g_wek.cp[23].ff/q$_DFF_PN0_/RESETN)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "setup WNS -2.46381470780932e-10 hold WNS 3.386479985323376e-11",
+        "fix": ""
+      },
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "3,264 sinks on the largest root; measured TT insertion 520.1 ps, FF insertion 432.5 ps, TT pin-flop spread 105.3 ps, FF pin-flop spread 94.9 ps; TT pin-flop spread 105.3 ps > 80 and FF pin-flop spread 94.9 ps > 80",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "INFO",
+        "check": "trial_route",
+        "message": "trial GRT: total overflow 0; worst layer M2 14.28% used; GRT 260 s",
+        "fix": ""
+      }
+    ]
+  },
+  {
+    "file": "gate_head_p192f.json",
+    "verdict": "FAIL",
+    "failures": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "4,646 sinks on the largest root; measured TT insertion 511.5 ps, FF insertion 432.4 ps, TT pin-flop spread 154.3 ps, FF pin-flop spread 139.1 ps; TT pin-flop spread 154.3 ps > 80 and FF pin-flop spread 139.1 ps > 80 (declared clock 'cts' does not waive it)",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      }
+    ],
+    "timing": [
+      {
+        "severity": "INFO",
+        "check": "floorplan.pin_geometry",
+        "message": "actual pin geometry PASS: {'signal_clock_pins': 915, 'pin_rectangles': 915, 'pin_track_checked': 915, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 f8183cdeb6b5e2d24197e29cbffd8bb7462f804c6f38a123060e3b1bd56253c1",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "textbook",
+        "message": "WARN qfd_tt_ctlm_head cells 22,816 flops 4,644 depth 600.1 ps util 0.4864 reach 0.0 um (1.0 s)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "cts_calibration",
+        "message": "ss insertion all 441.6..636.7 ps (spread 195.1), boundary mean 558.8; tt insertion all 337.6..511.5 ps (spread 173.9), boundary mean 442.6; ff insertion all 273.3..432.4 ps (spread 159.1), boundary mean 369.8; macro_clk flag True",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_head_p192f/signoff.sdc (TT placement RC; diagnostic)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->reg      289 paths, worst slack -196.0 ps (e.g. u_ot_pr_core.u_ctrl_me.g_dtab.g_ds[10].r_q[10]$_DFFE_PP_/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->macro    160 paths, worst slack -195.1 ps (e.g. u_ot_pr_core.g_psram.g_m[0].u_pm.u_p192/wd_in[268])",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "setup WNS -1.9600809864073199e-10 hold WNS 5.064609842619916e-11",
+        "fix": ""
+      },
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "4,646 sinks on the largest root; measured TT insertion 511.5 ps, FF insertion 432.4 ps, TT pin-flop spread 154.3 ps, FF pin-flop spread 139.1 ps; TT pin-flop spread 154.3 ps > 80 and FF pin-flop spread 139.1 ps > 80 (declared clock 'cts' does not waive it)",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "INFO",
+        "check": "trial_route",
+        "message": "trial GRT: total overflow 0; worst layer M2 9.01% used; GRT 258 s",
+        "fix": ""
+      }
+    ]
+  },
+  {
+    "file": "gate_head_p192c.json",
+    "verdict": "WARN",
+    "failures": [],
+    "timing": [
+      {
+        "severity": "INFO",
+        "check": "floorplan.pin_geometry",
+        "message": "actual pin geometry PASS: {'signal_clock_pins': 915, 'pin_rectangles': 915, 'pin_track_checked': 915, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4a86a4579145e4be3e11e9d32e70a61ad9ba11b59646dbbfff63aa2a504a691a",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "textbook",
+        "message": "WARN qfd_tt_ctlm_head cells 22,816 flops 4,644 depth 600.1 ps util 0.5684 reach 0.0 um (0.7 s)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "cts_calibration",
+        "message": "ss insertion all 1158.0..1348.3 ps (spread 190.3), boundary mean 1188.6; tt insertion all 810.2..1098.9 ps (spread 288.7), boundary mean 840.4; ff insertion all 613.3..930.4 ps (spread 317.1), boundary mean 642.5; macro_clk flag True",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_head_p192c/signoff.sdc (TT placement RC; diagnostic)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->macro    267 paths, worst slack -988.3 ps (e.g. u_ot_pr_core.g_psram.g_m[1].u_pm.u_p192/w_mask_in[447])",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "macro->reg     16 paths, worst slack -190.9 ps (e.g. u_ot_pr_core.prog_q[247]$_SDFFCE_PN0P_/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->reg      166 paths, worst slack -179.8 ps (e.g. u_ot_pr_core.u_ctrl_me.g_dtab.g_ds[10].r_q[11]$_DFFE_PP_/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "setup WNS -9.882604734556821e-10 hold WNS -1.4170120632428507e-10",
+        "fix": ""
+      },
+      {
+        "severity": "WARN",
+        "check": "clock_rule",
+        "message": "root port:clk: 4,646 sinks on the largest root; measured TT insertion 1098.9 ps, FF insertion 930.4 ps, TT pin-flop spread 75.8 ps, FF pin-flop spread 76.9 ps; WARN: insertion 1098.9 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+        "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+      },
+      {
+        "severity": "INFO",
+        "check": "trial_route",
+        "message": "trial GRT: total overflow 0; worst layer M3 11.62% used; GRT 276 s",
+        "fix": ""
+      }
+    ]
+  },
+  {
+    "file": "gate_qfd_dv_slice_tload_b.json",
+    "verdict": "FAIL",
+    "failures": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "3,264 sinks on the largest root; measured TT insertion 417.3 ps, FF insertion 345.5 ps, TT pin-flop spread 89.6 ps, FF pin-flop spread 79.3 ps; TT pin-flop spread 89.6 ps > 80",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "FAIL",
+        "check": "fill",
+        "message": "fill 32% = (hard macros 30655.8 + synthesized std cells 1407.9) / outline 100777.0 um2; pin demand per face: S 48 pins over 124.4/388.8 um (32%), N 11 pins over 1.0/388.8 um (0%), W 1099 pins over 140.4/259.2 um (54%), E 1102 pins over 134.1/259.2 um (52%) (< 35%)",
+        "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+      }
+    ],
+    "timing": [
+      {
+        "severity": "INFO",
+        "check": "floorplan.pin_geometry",
+        "message": "actual pin geometry PASS: {'signal_clock_pins': 2116, 'pin_rectangles': 2116, 'pin_track_checked': 2116, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 ef9d6649ee18fc361ae817d55ac0c3c78f23b88f28b3df649a4db0a056ac6cbf",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "textbook",
+        "message": "PASS qfd_dv_slice_tload cells 9,423 flops 3,260 depth 373.4 ps util 0.3272 reach 0.0 um (0.3 s)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "cts_calibration",
+        "message": "ss insertion all 412.7..535.1 ps (spread 122.4), boundary mean 448.2; tt insertion all 318.0..417.3 ps (spread 99.3), boundary mean 345.2; ff insertion all 262.7..345.5 ps (spread 82.8), boundary mean 283.1; macro_clk flag True",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "constraints signoff /src/physical/ref_tile/qfd_dv_slice_tload_b/signoff.sdc (TT placement RC; diagnostic)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "macro->reg    282 paths, worst slack -240.3 ps (e.g. u_ot_pr_core.u_ld.g_wek.cp[11].ff/q$_DFF_PN0_/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->reg       96 paths, worst slack 119.2 ps (e.g. tw_data[382]$_DFF_P_/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "setup WNS -2.4032376089166974e-10 hold WNS 3.6099151445867506e-11",
+        "fix": ""
+      },
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "3,264 sinks on the largest root; measured TT insertion 417.3 ps, FF insertion 345.5 ps, TT pin-flop spread 89.6 ps, FF pin-flop spread 79.3 ps; TT pin-flop spread 89.6 ps > 80",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "INFO",
+        "check": "trial_route",
+        "message": "trial GRT: total overflow 0; worst layer M2 22.70% used; GRT 492 s",
+        "fix": ""
+      }
+    ]
+  },
+  {
+    "file": "gate_qfd_tt_ctlm_dv_wtn_b.json",
+    "verdict": "PASS",
+    "failures": [],
+    "timing": [
+      {
+        "severity": "INFO",
+        "check": "floorplan.pin_geometry",
+        "message": "actual pin geometry PASS: {'signal_clock_pins': 244, 'pin_rectangles': 244, 'pin_track_checked': 244, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 ba6e01e08d32dce9fa19cc940d9a49bb60b22a1f327cf21f42f525ef4b47eaab",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "textbook",
+        "message": "PASS qfd_tt_ctlm_dv_wtn cells 26,854 flops 4,668 depth 471.8 ps util 0.5312 reach 3.5 um (0.7 s)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "cts_calibration",
+        "message": "ss insertion all 176.4..195.1 ps (spread 18.7), boundary mean 190.6; tt insertion all 130.7..147.3 ps (spread 16.6), boundary mean 143.1; ff insertion all 104.4..120.0 ps (spread 15.6), boundary mean 115.9; macro_clk flag False",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_dv_wtn_b/signoff.sdc (TT placement RC; diagnostic)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->reg      302 paths, worst slack 77.2 ps (e.g. u_ot_pr_core.u_ctl.gp.s_cg[2]$_SDFFE_PN0P_/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "setup WNS 7.718997663275218e-11 hold WNS 4.7381681911318196e-11",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "clock_rule",
+        "message": "root port:ck: 4,668 sinks on the largest root; measured TT insertion 147.3 ps, FF insertion 120.0 ps, TT pin-flop spread 15.9 ps, FF pin-flop spread 14.8 ps (spread <= 80 ps)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "trial_route",
+        "message": "trial GRT: total overflow 0; worst layer M2 45.61% used; GRT 117 s",
+        "fix": ""
+      }
+    ]
+  },
+  {
+    "file": "gate_head_p192b.json",
+    "verdict": "FAIL",
+    "failures": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "4,646 sinks on the largest root; measured TT insertion 583.6 ps, FF insertion 496.0 ps, TT pin-flop spread 174.4 ps, FF pin-flop spread 155.3 ps; TT pin-flop spread 174.4 ps > 80 and FF pin-flop spread 155.3 ps > 80 (declared clock 'cts' does not waive it)",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      }
+    ],
+    "timing": [
+      {
+        "severity": "INFO",
+        "check": "floorplan.pin_geometry",
+        "message": "actual pin geometry PASS: {'signal_clock_pins': 915, 'pin_rectangles': 915, 'pin_track_checked': 915, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4a86a4579145e4be3e11e9d32e70a61ad9ba11b59646dbbfff63aa2a504a691a",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "textbook",
+        "message": "WARN qfd_tt_ctlm_head cells 22,816 flops 4,644 depth 600.1 ps util 0.5684 reach 0.0 um (0.7 s)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "cts_calibration",
+        "message": "ss insertion all 467.4..720.8 ps (spread 253.4), boundary mean 623.0; tt insertion all 359.4..583.6 ps (spread 224.2), boundary mean 495.8; ff insertion all 293.8..496.0 ps (spread 202.2), boundary mean 415.7; macro_clk flag True",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_head_p192b/signoff.sdc (TT placement RC; diagnostic)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->macro    300 paths, worst slack -1019.5 ps (e.g. u_ot_pr_core.g_psram.g_m[1].u_pm.u_p192/w_mask_in[447])",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->reg      149 paths, worst slack 84.5 ps (e.g. ot_prs_00533_ff/RESETN)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "setup WNS -1.0194806110419563e-9 hold WNS -5.7773286155082815e-11",
+        "fix": ""
+      },
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "4,646 sinks on the largest root; measured TT insertion 583.6 ps, FF insertion 496.0 ps, TT pin-flop spread 174.4 ps, FF pin-flop spread 155.3 ps; TT pin-flop spread 174.4 ps > 80 and FF pin-flop spread 155.3 ps > 80 (declared clock 'cts' does not waive it)",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "INFO",
+        "check": "trial_route",
+        "message": "trial GRT: total overflow 0; worst layer M3 11.81% used; GRT 264 s",
+        "fix": ""
+      }
+    ]
+  },
+  {
+    "file": "gate_qfd_tt_ctlm_dv_wtn.json",
+    "verdict": "PASS",
+    "failures": [],
+    "timing": [
+      {
+        "severity": "INFO",
+        "check": "floorplan.pin_geometry",
+        "message": "actual pin geometry PASS: {'signal_clock_pins': 244, 'pin_rectangles': 244, 'pin_track_checked': 244, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 7f0b21744f06dddf0798750c30358b767c1ebd56ef387f87277a6be03dae2d30",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "textbook",
+        "message": "PASS qfd_tt_ctlm_dv_wtn cells 26,854 flops 4,668 depth 471.8 ps util 0.5772 reach 11.7 um (0.7 s)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "cts_calibration",
+        "message": "ss insertion all 180.5..196.6 ps (spread 16.1), boundary mean 192.4; tt insertion all 131.7..145.2 ps (spread 13.5), boundary mean 141.6; ff insertion all 103.6..116.1 ps (spread 12.5), boundary mean 112.6; macro_clk flag False",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_dv_wtn/signoff.sdc (TT placement RC; diagnostic)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->reg      302 paths, worst slack 85.7 ps (e.g. u_ot_pr_core.u_ctl.gs.sel[6].ff/q[0]$_DFF_P_/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "setup WNS 8.567702103334796e-11 hold WNS 4.598649239184738e-11",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "clock_rule",
+        "message": "root port:ck: 4,668 sinks on the largest root; measured TT insertion 145.2 ps, FF insertion 116.1 ps, TT pin-flop spread 13.1 ps, FF pin-flop spread 11.9 ps (spread <= 80 ps)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "trial_route",
+        "message": "trial GRT: total overflow 0; worst layer M2 50.60% used; GRT 110 s",
+        "fix": ""
+      }
+    ]
+  },
+  {
+    "file": "gate_head_p192d.json",
+    "verdict": "FAIL",
+    "failures": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "4,646 sinks on the largest root; measured TT insertion 642.2 ps, FF insertion 542.4 ps, TT pin-flop spread 84.6 ps, FF pin-flop spread 72.3 ps; TT pin-flop spread 84.6 ps > 80 (declared clock 'cts' does not waive it)",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      }
+    ],
+    "timing": [
+      {
+        "severity": "INFO",
+        "check": "floorplan.pin_geometry",
+        "message": "actual pin geometry PASS: {'signal_clock_pins': 915, 'pin_rectangles': 915, 'pin_track_checked': 915, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 9b58acc3448a7ec9ff7e1a23c898ea404cc97fba1d1d1bb70041692e0f627286",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "textbook",
+        "message": "WARN qfd_tt_ctlm_head cells 22,816 flops 4,644 depth 600.1 ps util 0.4864 reach 0.0 um (0.8 s)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "cts_calibration",
+        "message": "ss insertion all 628.4..799.0 ps (spread 170.6), boundary mean 720.0; tt insertion all 494.7..642.2 ps (spread 147.5), boundary mean 571.5; ff insertion all 410.9..542.4 ps (spread 131.5), boundary mean 477.6; macro_clk flag True",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_head_p192d/signoff.sdc (TT placement RC; diagnostic)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->reg      384 paths, worst slack -169.3 ps (e.g. ot_prs_00415_ff/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->macro     65 paths, worst slack -165.0 ps (e.g. u_ot_pr_core.g_psram.g_m[0].u_pm.u_p192/wd_in[277])",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "setup WNS -1.692710416278942e-10 hold WNS 3.5976166490314654e-11",
+        "fix": ""
+      },
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "4,646 sinks on the largest root; measured TT insertion 642.2 ps, FF insertion 542.4 ps, TT pin-flop spread 84.6 ps, FF pin-flop spread 72.3 ps; TT pin-flop spread 84.6 ps > 80 (declared clock 'cts' does not waive it)",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "INFO",
+        "check": "trial_route",
+        "message": "trial GRT: total overflow 0; worst layer M2 9.01% used; GRT 282 s",
+        "fix": ""
+      }
+    ]
+  },
+  {
+    "file": "gate_head_p192e.json",
+    "verdict": "FAIL",
+    "failures": [
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "4,646 sinks on the largest root; measured TT insertion 531.7 ps, FF insertion 445.9 ps, TT pin-flop spread 165.1 ps, FF pin-flop spread 144.4 ps; TT pin-flop spread 165.1 ps > 80 and FF pin-flop spread 144.4 ps > 80 (declared clock 'cts' does not waive it)",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      }
+    ],
+    "timing": [
+      {
+        "severity": "INFO",
+        "check": "floorplan.pin_geometry",
+        "message": "actual pin geometry PASS: {'signal_clock_pins': 915, 'pin_rectangles': 915, 'pin_track_checked': 915, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 06c7a064e6042318afa9529ddc538748c4de2ec73b16ee207e35e52a65f521ff",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "textbook",
+        "message": "WARN qfd_tt_ctlm_head cells 22,816 flops 4,644 depth 600.1 ps util 0.4864 reach 0.0 um (0.7 s)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "cts_calibration",
+        "message": "ss insertion all 441.2..668.5 ps (spread 227.3), boundary mean 562.6; tt insertion all 337.1..531.7 ps (spread 194.6), boundary mean 443.9; ff insertion all 273.6..445.9 ps (spread 172.3), boundary mean 369.9; macro_clk flag True",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_head_p192e/signoff.sdc (TT placement RC; diagnostic)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->macro    297 paths, worst slack -906.3 ps (e.g. u_ot_pr_core.g_psram.g_m[1].u_pm.u_p192/w_mask_in[447])",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "reg->reg      152 paths, worst slack -229.6 ps (e.g. u_ot_pr_core.u_ctrl_me.g_dtab.g_ds[8].r_q[6]$_DFFE_PP_/D)",
+        "fix": ""
+      },
+      {
+        "severity": "INFO",
+        "check": "path_classes",
+        "message": "setup WNS -9.063454431412765e-10 hold WNS 5.285716309089139e-11",
+        "fix": ""
+      },
+      {
+        "severity": "FAIL",
+        "check": "clock_rule",
+        "message": "4,646 sinks on the largest root; measured TT insertion 531.7 ps, FF insertion 445.9 ps, TT pin-flop spread 165.1 ps, FF pin-flop spread 144.4 ps; TT pin-flop spread 165.1 ps > 80 and FF pin-flop spread 144.4 ps > 80 (declared clock 'cts' does not waive it)",
+        "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+      },
+      {
+        "severity": "INFO",
+        "check": "trial_route",
+        "message": "trial GRT: total overflow 0; worst layer M3 8.28% used; GRT 266 s",
+        "fix": ""
+      }
+    ]
+  }
+]

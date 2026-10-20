@@ -19,6 +19,8 @@
 // =====================================================================================================================
 module qfd_dv_slice_tload #(
     parameter integer SLICE = 0,
+    parameter integer CAPTURE_MUT = 0,
+    parameter integer CAPTURE_STAGE = 0,
     parameter integer NWC = 34,                  // 32 data copies (32 bits each) + kind + addr
     parameter integer MUT = 0
 ) (
@@ -63,7 +65,7 @@ module qfd_dv_slice_tload #(
     wire [1:0]    l_kind;
     wire [23:0]   l_addr;
     wire [1023:0] l_data;
-    qfd_dv_table_rom_loader #(.SLICE(SLICE), .BTAB_COMPACT(1), .WE_COPIES(NWC)) u_ld (.ck(ck), .rst_n(rst_n),
+    qfd_dv_table_rom_loader #(.SLICE(SLICE), .BTAB_COMPACT(1), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT), .WE_COPIES(NWC)) u_ld (.ck(ck), .rst_n(rst_n),
         .start(l_start), .stage(l_stage), .user_id(l_user), .other_table_write(s_we),
         .tw_we(l_we), .tw_we_k(l_we_k), .tw_kind(l_kind), .tw_addr(l_addr), .tw_data(l_data),
         .busy(busy), .done(done), .fault(l_fault));

@@ -9,14 +9,14 @@
 //   - FAULT_CASE 1: a stream write in the same edge as a loader write -> joined tw_we low on that edge (both suppressed)
 //     and fault high exactly one edge later (the join's own registered fault, before the loader's p_other fault).
 // MUT (DUT parameter): see qfd_dv_slice_tload.  Pass line TLOAD_JOIN_PASS; fail lines TLOAD_*.
-module tb_qfd_dv_slice_tload #(parameter integer MUT = 0);
-    localparam integer FIRST_AGE = 5;
+module tb_qfd_dv_slice_tload #(parameter integer MUT = 0, parameter integer CAPTURE_STAGE = 0, parameter integer CAPTURE_MUT = 0);
+    localparam integer FIRST_AGE = 5 + CAPTURE_STAGE;
     reg ck = 0; always #5 ck = ~ck;
     reg rst_n = 0;
     reg [8:0] treq = 0;
     reg s_we = 0; reg [1:0] s_kind = 0; reg [23:0] s_addr = 0; reg [1023:0] s_data = 0;
     wire we, busy, done, jfault; wire [1:0] kind; wire [23:0] addr; wire [1023:0] data;
-    qfd_dv_slice_tload #(.SLICE(0), .MUT(MUT)) dut (.ck(ck), .rst_n(rst_n), .treq(treq),
+    qfd_dv_slice_tload #(.SLICE(0), .MUT(MUT), .CAPTURE_STAGE(CAPTURE_STAGE), .CAPTURE_MUT(CAPTURE_MUT)) dut (.ck(ck), .rst_n(rst_n), .treq(treq),
         .s_we(s_we), .s_kind(s_kind), .s_addr(s_addr), .s_data(s_data),
         .tw_we(we), .tw_kind(kind), .tw_addr(addr), .tw_data(data), .busy(busy), .done(done), .fault(jfault));
     reg [7:0] cr_re = 0; reg [191:0] cr_addr = 0; wire [511:0] cr_q;

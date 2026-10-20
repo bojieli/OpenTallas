@@ -1,0 +1,5 @@
+TLOAD_JOIN_PASS edge_checks=12672 reads=149640 cycles=462807 first_age=6 all36 all4 retention head_guard=1
+- src/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv:128: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5ms; walltime 0.919 s; speed 5.037 ms/s
+- Verilator: cpu 0.919 s on 1 threads; allocated 10 MB

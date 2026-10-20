@@ -27,7 +27,7 @@ LOADER_LAST_WRITE = 90
 LOADER_SLOTS = 88
 
 
-def table_write_window(cal_edge: int, die_lane_edges: int, slice_index: int) -> tuple[int, int]:
+def table_write_window(cal_edge: int, die_lane_edges: int, slice_index: int, *, capture_stage: bool = False) -> tuple[int, int]:
     """First / last VM table-write edge in slice `slice_index` for a table_load issued at `cal_edge`.
 
     The compiler reserves [first, last] on that slice's VM table-write port exclusively (no stream table write in the
@@ -36,7 +36,8 @@ def table_write_window(cal_edge: int, die_lane_edges: int, slice_index: int) -> 
         raise ValueError("die lane edges must come from the generated die (GEN), not a guess")
     sample = (cal_edge + CTLM_TREQ_EDGES + die_lane_edges + slice_index * SLICE_ROW_HOP_EDGES
               + TLOAD_FACE_EDGES + LOADER_SAMPLE_EDGES)
-    return sample + LOADER_FIRST_WRITE, sample + LOADER_LAST_WRITE
+    extra = int(capture_stage)  # source CAPTURE_STAGE; also delays done/busy drain by one edge
+    return sample + LOADER_FIRST_WRITE + extra, sample + LOADER_LAST_WRITE + extra
 
 
 def wtn_status_edge(decision_edge: int) -> int:

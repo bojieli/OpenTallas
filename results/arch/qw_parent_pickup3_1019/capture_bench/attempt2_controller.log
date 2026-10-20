@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-tload-capture3-1019/attempt2
+ot-run: ot-epyc5       admits   997 GB (avail 797, growth 99, headroom 0, waiters 0/0 GB) load 77/128 running 27 disk 751 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-tload-capture3-1019/attempt2
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-tload-capture3-1019/attempt2
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-tload-capture3-1019/attempt2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-tload-capture3-1019/attempt2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-tload-capture3-1019/attempt2
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-673541-1792456824 after 0 s
+PASS s0 edge_checks=12672 reads=149640 cycles=462807 first_age=6 all36 all4 retention head_guard=1
+PASS collision
+MUT 1 FAIL_AS_EXPECTED TLOAD_COLLISION_WRITE_NOT_SUPPRESSED
+MUT 2 FAIL_AS_EXPECTED TLOAD_UNEXPECTED_FAULT join=1
+MUT 3 FAIL_AS_EXPECTED TLOAD_COLLISION_FAULT_AGE
+MUT 4 FAIL_AS_EXPECTED TLOAD_EDGE_MISMATCH
+MUT 5 FAIL_AS_EXPECTED TLOAD_UNEXPECTED_FAULT join=0 vm=1
+F16_TLOAD_JOIN_FUNCTIONAL_PASS
+CAPTURE_MUT 1 CAUGHT
+CAPTURE_MUT 2 CAUGHT
+CAPTURE_FINAL_BENCH_PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-673541-1792456824): exit 0

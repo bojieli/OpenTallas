@@ -1,0 +1,107 @@
+{
+ "verdict": "PASS",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: the SAFE_PHYS controller already registers every input (f_* pin registers, reset landed rs1->rs2 + kept leaves) and every output (tr_q/ca_q/awc_q/fault/group regs): +2 edges total, priced in tools/qwen_static_schedule/f16_calr_edges.py; kit pin regs would add 2 more unpriced edges",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 16 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_tt_ctlm_dv_wtn_b_20261019-170520.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_tt_ctlm_dv_wtn_b_20261019-170520.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_tt_ctlm_dv_wtn_b-20261019-170520",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 71 s (gate total 426 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 244, 'pin_rectangles': 244, 'pin_track_checked': 244, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 ba6e01e08d32dce9fa19cc940d9a49bb60b22a1f327cf21f42f525ef4b47eaab",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 3479 um2 + macros 0 in core 6551: util 53%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS qfd_tt_ctlm_dv_wtn cells 26,854 flops 4,668 depth 471.8 ps util 0.5312 reach 3.5 um (0.7 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 176.4..195.1 ps (spread 18.7), boundary mean 190.6; tt insertion all 130.7..147.3 ps (spread 16.6), boundary mean 143.1; ff insertion all 104.4..120.0 ps (spread 15.6), boundary mean 115.9; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_dv_wtn_b/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      302 paths, worst slack 77.2 ps (e.g. u_ot_pr_core.u_ctl.gp.s_cg[2]$_SDFFE_PN0P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 7.718997663275218e-11 hold WNS 4.7381681911318196e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck: 4,668 sinks on the largest root; measured TT insertion 147.3 ps, FF insertion 120.0 ps, TT pin-flop spread 15.9 ps, FF pin-flop spread 14.8 ps (spread <= 80 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-f16prog4-1019/physical/ref_tile/qfd_tt_ctlm_dv_wtn_b/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-f16prog4-1019/physical/ref_tile/qfd_tt_ctlm_dv_wtn_b/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 45.61% used; GRT 117 s",
+   "fix": ""
+  }
+ ]
+}

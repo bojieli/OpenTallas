@@ -1,0 +1,131 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Unchanged closed qfd_tt_ctlm_head RTL registers every port at the face (io_flop_at_pins cols 4 places those flops FIRM at their pins, inhold/outhold); adding generated pin regs would add a cycle to every head port, outside this SRAM-only change",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 8.7 pins/um (cmd): recipe-2 hold stages take 2.92 um behind the face, the pin flops need gap 3.7 um and 5 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_tt_ctlm_head_p192b_20261019-165611.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_tt_ctlm_head_p192b_20261019-165611.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_tt_ctlm_head_p192b-20261019-165611",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 156 s (gate total 1095 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 915, 'pin_rectangles': 915, 'pin_track_checked': 915, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4a86a4579145e4be3e11e9d32e70a61ad9ba11b59646dbbfff63aa2a504a691a",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 3020 um2 + macros 52727 in core 97996: util 8% (std-cell density 7.9% of placeable 38012 um2; total fill 56.9%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qfd_tt_ctlm_head cells 22,816 flops 4,644 depth 600.1 ps util 0.5684 reach 0.0 um (0.7 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_ot_pr_core.u_ctrl_me.h_rd_c[7]$_DFFE_PN0P_ -> u_ot_pr_core.u_ctrl_me.po_me_i_obase[20]$_DFFE_PP_/D: ~600 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "1 macro channel(s) narrower than 20 um with placement rows (e.g. u_ot_pr_core.g_psram.g_m\\[0\\].u_pm.u_p192|u_ot_pr_core.g_psram.g_m\\[1\\].u_pm.u_p192 0.0 um): widen to >= 20 um or block the channel",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 467.4..720.8 ps (spread 253.4), boundary mean 623.0; tt insertion all 359.4..583.6 ps (spread 224.2), boundary mean 495.8; ff insertion all 293.8..496.0 ps (spread 202.2), boundary mean 415.7; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_head_p192b/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro    300 paths, worst slack -1019.5 ps (e.g. u_ot_pr_core.g_psram.g_m[1].u_pm.u_p192/w_mask_in[447])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      149 paths, worst slack 84.5 ps (e.g. ot_prs_00533_ff/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -1.0194806110419563e-9 hold WNS -5.7773286155082815e-11",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "4,646 sinks on the largest root; measured TT insertion 583.6 ps, FF insertion 496.0 ps, TT pin-flop spread 174.4 ps, FF pin-flop spread 155.3 ps; TT pin-flop spread 174.4 ps > 80 and FF pin-flop spread 155.3 ps > 80 (declared clock 'cts' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-sram3-1019/physical/ref_tile/qfd_tt_ctlm_head_p192b/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-sram3-1019/physical/ref_tile/qfd_tt_ctlm_head_p192b/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M3 11.81% used; GRT 264 s",
+   "fix": ""
+  }
+ ]
+}
