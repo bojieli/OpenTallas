@@ -72,5 +72,18 @@ class StaticHeadTests(unittest.TestCase):
             cur[inst]=dict(ADD_LAT="32'sb"+format(8,'032b'));pp.write_text(json.dumps(cur))
             with self.assertRaisesRegex(ValueError,'identity/role changed'):H.derive(run,die)
 
+    def test_lane8_explicit_default_instance_params_admitted(self):
+        d7="32'sb"+format(7,'032b');d12="32'sb"+format(12,'032b')
+        with tempfile.TemporaryDirectory() as d:
+            run=Path(d);die=self.fixture(run)
+            die.write_text(die.read_text().replace('ot_qkh_lane8 head__g_t_',f'ot_qkh_lane8 #(.ADD_LAT({d7}),.LTW({d12})) head__g_t_'))
+            doc=H.derive(run,die);self.assertEqual(len(doc['instances']),16)
+    def test_lane8_override_instance_params_refused(self):
+        d8="32'sb"+format(8,'032b');d12="32'sb"+format(12,'032b')
+        with tempfile.TemporaryDirectory() as d:
+            run=Path(d);die=self.fixture(run)
+            die.write_text(die.read_text().replace('ot_qkh_lane8 head__g_t_3__',f'ot_qkh_lane8 #(.ADD_LAT({d8}),.LTW({d12})) head__g_t_3__'))
+            with self.assertRaisesRegex(ValueError,'identity/role changed'):H.derive(run,die)
+
 
 if __name__=='__main__':unittest.main()

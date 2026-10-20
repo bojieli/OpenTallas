@@ -1,0 +1,88 @@
+{
+ "archive_run": "/srv/opentallas-scratch/claude/kv-params-1019/arch/ot_qkh_head_score4_native/qkh_r4_score4_1014-r4-bd7e7285a",
+ "closed": {
+  "commit": "bd7e7285ab3c5b347eff8f801d77127d700f358c",
+  "final_v_sha256": "7bb74d09b2bea5ee70fbedfb33e8204a8da976846e8750d7fb464cc67ab651c6",
+  "job": "qkh_r4_score4_1014-r4-bd7e7285a",
+  "lef_sha256": "e7ec180535629b7d1c7faa4653468ef1cd178cb68491759e7293d015d0fd6315",
+  "physical_json_sha256": "d807cd6667172e79b22ea4373194a842d2e875d82aa4a3bec8d690d540ab5d2d",
+  "spec_params": {},
+  "synth_sources": {
+   "rtl/hdc/nearhbm/ot_qkh_subtiles_bb.v": "dad31054f7380f4b1246dbfdf5b7b5150c15dd88b3e7649c1253cf44c3e55e4a",
+   "rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv": "bf404eba5181b25abd165133247a700a701dd1dc92afb6aae3b33d17abe8df41",
+   "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv": "70a431f04f9260f0354d7db127745149d55305951e96c5cd667ff01fb711b7bf",
+   "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv": "ba98603800741f246c45a86e2f9ab0f3b6a29b05cbca72dd0720b456d2ff11ed",
+   "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv": "d78b8d9905aa93bbf364880dd53d35d4d2538f01640fa3ede096aa1ea3aa4421"
+  },
+  "top": "ot_qkh_head_score4_native",
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "closed_spec_diff": {},
+ "equiv": {
+  "cells": 73,
+  "log_sha256": "6b2ee43b34ee7d36467e6590fd378b4c39afeaa1428bcfa129f3541793aecea2",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+  "proven_cells": 73,
+  "rc": 0,
+  "seconds": [
+   0.1,
+   0.2
+  ],
+  "unproven_cells": 0,
+  "unproven_sample": []
+ },
+ "expect": "pass",
+ "gate": {
+  "flops": 38,
+  "macros": {},
+  "replicas": 1
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "c1244ed250994622eb8ed2d0c6f6b3e408d218bf238f86a3164e76e367f6c42d",
+   "child_lint.json": "6383e2d86fae1cfd4c52175f27ccb5855a442974ec8eb7678c9de16ed1b6d0a4",
+   "export_ff.log": "505a060c751a38002a39f910358475ae5cacde289f80aced5984156d769db861",
+   "export_ff.tcl": "7990b3743c9b9b8ab55e40960695966798ae96dc16f605689a464480a755c8c8",
+   "export_ss.log": "274d887157464ca1802a2d672bde402f72786f24fe3795a890ff32bf7fb7e929",
+   "export_ss.tcl": "04abae108ebd44588b66e7df5b94885431924066d5c908a4d03d2074fbd13978",
+   "export_tt.log": "efae32f71b75d606282e07ff59602142f57ffca7ba0f6261170b38f3e2d8a2f2",
+   "export_tt.tcl": "e72177b9a538b87634d7dc77bbce80ffb80504830c9282ed0df726e3f6e84afd",
+   "insertion.json": "4128bb35154812b3fea43512a4a019087887122b8223b0282ffd0a4cbb084127",
+   "ot_qkh_head_score4_native.lef": "e7ec180535629b7d1c7faa4653468ef1cd178cb68491759e7293d015d0fd6315",
+   "ot_qkh_head_score4_native_ff.lib": "d7eaef68534bea57a57e27871e31c3c819f766c83ccbaf7fbfa33664b691dc92",
+   "ot_qkh_head_score4_native_ss.lib": "f0e4d44c04666680a629c446f50a7af9cdd3549ce06fb11afa25a2ddae15945f",
+   "ot_qkh_head_score4_native_tt.lib": "5519310d52a5e9fd145defb996d80fb2be163ae476cc847562939146c791193f"
+  },
+  "rtl": {
+   "path": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+   "sha256": "d78b8d9905aa93bbf364880dd53d35d4d2538f01640fa3ede096aa1ea3aa4421"
+  },
+  "view": "physical/ref_tile/qkh_r4_score4_1014/views/ot_qkh_head_score4_native"
+ },
+ "module": "ot_qkh_head_score4_native",
+ "parameters": {
+  "MUT": 0
+ },
+ "proven": true,
+ "rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+ "schema": "opentallas.kv_param_native_audit.v1",
+ "sources": {
+  "rtl/hdc/nearhbm/ot_qkh_subtiles_bb.v": "dad31054f7380f4b1246dbfdf5b7b5150c15dd88b3e7649c1253cf44c3e55e4a",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv": "bf404eba5181b25abd165133247a700a701dd1dc92afb6aae3b33d17abe8df41",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv": "70a431f04f9260f0354d7db127745149d55305951e96c5cd667ff01fb711b7bf",
+  "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv": "ba98603800741f246c45a86e2f9ab0f3b6a29b05cbca72dd0720b456d2ff11ed",
+  "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv": "d78b8d9905aa93bbf364880dd53d35d4d2538f01640fa3ede096aa1ea3aa4421"
+ },
+ "sources_changed_since_closure": [],
+ "state": {
+  "gate_only": 0,
+  "gate_only_sample": [],
+  "gold_only": 0,
+  "gold_only_sample": [],
+  "gold_regs": 37,
+  "paired": 38
+ },
+ "view": "physical/ref_tile/qkh_r4_score4_1014/views/ot_qkh_head_score4_native"
+}
