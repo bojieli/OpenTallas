@@ -89,6 +89,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     initial if (SAFE!=2 || TURNREG!=1) $fatal(1,"private distributed core requires SAFE2 TURNREG1");
     initial if (L!=16 || IL!=8 || ALAT!=7 || LV<1 || LV>8 || TAGW<6)
         $fatal(1,"PV merge requires16lanes,8slots,LAT7,LV1..8,TAGW>=6");
+    initial if(FAN32 && TAGW!=16) $fatal(1,"PVM FAN32 source distribution qualified only TAGW16");
     initial if(PUBLISH && LV>7)$fatal(1,"publication reserves unused stack level7");
     initial if(SAFE!=0 && ((SAFE!=1 && SAFE!=2) || TURNREG!=1))$fatal(1,"PV merge SAFE 1/2 requires TURNREG 1");
     genvar l;
