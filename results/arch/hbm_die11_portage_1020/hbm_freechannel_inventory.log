@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   597 GB (avail 522, growth 104, headroom 0, waiters 0/0 GB) load 22/128 running 15 disk 3625 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-43436-1792526606 after 0 s
+BIT_LOAD_INVENTORY 700937 708057 missing 0 extra 7120 [] [(('svg_NW0', 'k_addr', 0, 'vmks_NW0', 'g_k_addr', 0), 1), (('svg_NW0', 'k_addr', 1, 'vmks_NW0', 'g_k_addr', 1), 1), (('svg_NW0', 'k_addr', 2, 'vmks_NW0', 'g_k_addr', 2), 1)]
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-hbm-die11-1020/inventory_oracle.py", line 19, in <module>
+    print('BIT_LOAD_INVENTORY',len(io),len(inn),'missing',sum(missing.values()),'extra',sum(extra.values()),list(missing.items())[:3],list(extra.items())[:3]);assert inn==io
+                                                                                                                                                                      ^^^^^^^
+AssertionError
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-43436-1792526606): exit 1

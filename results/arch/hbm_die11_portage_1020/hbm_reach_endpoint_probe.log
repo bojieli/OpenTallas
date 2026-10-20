@@ -1,0 +1,22 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   589 GB (avail 516, growth 104, headroom 0, waiters 0/0 GB) load 20/128 running 15 disk 3625 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-43814-1792526636 after 0 s
+ENDPOINT_REACH_PROBE 270 physically_over405 40 instances ['hc_NE', 'hc_NW', 'hc_SE', 'hc_SW', 'sfucore_SE', 'sfucore_SW']
+{'bus': 'hc_NE.eng_fault+gathered_mix_data+gathered_mix_pos+gathered_mix_row+gathered_mix_v+ps+ps_f+ps_v', 'kind': 'source', 'inst': 'hc_NE', 'pin': [12509.9, 18403.3], 'nearest_legal_cell': (np.float64(12505.0), np.float64(17655.0)), 'distance_um': np.float64(753.2), 'endpoint_other_obstacles': []}
+{'bus': 'hc_NE.configured+hcq_fault+program_active', 'kind': 'source', 'inst': 'hc_NE', 'pin': [12499.8, 19137.5], 'nearest_legal_cell': (np.float64(12495.0), np.float64(19885.0)), 'distance_um': np.float64(752.3), 'endpoint_other_obstacles': []}
+{'bus': 'hc_NW.eng_fault+gathered_mix_data+gathered_mix_pos+gathered_mix_row+gathered_mix_v+ps+ps_f+ps_v', 'kind': 'source', 'inst': 'hc_NW', 'pin': [9658.7, 18403.3], 'nearest_legal_cell': (np.float64(9655.0), np.float64(17655.0)), 'distance_um': np.float64(752.0), 'endpoint_other_obstacles': []}
+{'bus': 'hleaf_NW.b_desc_base+b_desc_limit+b_desc_loops', 'kind': 'sink', 'inst': 'hc_NW', 'pin': [9800.7, 19137.5], 'nearest_legal_cell': (np.float64(9805.0), np.float64(19885.0)), 'distance_um': np.float64(751.8), 'endpoint_other_obstacles': []}
+{'bus': 'hc_NW.wc_e+xb_beat_e+xb_d4+xb_v_e', 'kind': 'source', 'inst': 'hc_NW', 'pin': [10238.3, 18739.5], 'nearest_legal_cell': (np.float64(10985.0), np.float64(18735.0)), 'distance_um': np.float64(751.2), 'endpoint_other_obstacles': []}
+{'bus': 'hc_NW.configured+hcq_fault+program_active', 'kind': 'source', 'inst': 'hc_NW', 'pin': [9648.6, 19137.5], 'nearest_legal_cell': (np.float64(9645.0), np.float64(19885.0)), 'distance_um': np.float64(751.1), 'endpoint_other_obstacles': []}
+{'bus': 'hc_SW.gather_done+program_done+residual_done', 'kind': 'source', 'inst': 'hc_SW', 'pin': [10238.3, 13420.6], 'nearest_legal_cell': (np.float64(10985.0), np.float64(13425.0)), 'distance_um': np.float64(751.1), 'endpoint_other_obstacles': []}
+{'bus': 'hleaf_NE.b_desc_base+b_desc_limit+b_desc_loops', 'kind': 'sink', 'inst': 'hc_NE', 'pin': [12651.9, 19137.5], 'nearest_legal_cell': (np.float64(12655.0), np.float64(19885.0)), 'distance_um': np.float64(750.6), 'endpoint_other_obstacles': []}
+{'bus': 'hc_NW.lg_rq+lg_wq', 'kind': 'source', 'inst': 'hc_NW', 'pin': [10238.3, 18581.6], 'nearest_legal_cell': (np.float64(10985.0), np.float64(18585.0)), 'distance_um': np.float64(750.1), 'endpoint_other_obstacles': []}
+{'bus': 'hc_NW.lg_rq+lg_wq', 'kind': 'source', 'inst': 'hc_NW', 'pin': [10238.3, 18581.6], 'nearest_legal_cell': (np.float64(10985.0), np.float64(18585.0)), 'distance_um': np.float64(750.1), 'endpoint_other_obstacles': []}
+{'bus': 'hc_NW.lg_rq+lg_wq', 'kind': 'source', 'inst': 'hc_NW', 'pin': [10238.3, 18581.6], 'nearest_legal_cell': (np.float64(10985.0), np.float64(18585.0)), 'distance_um': np.float64(750.1), 'endpoint_other_obstacles': []}
+{'bus': 'hc_NW.lg_rq+lg_wq', 'kind': 'source', 'inst': 'hc_NW', 'pin': [10238.3, 18581.6], 'nearest_legal_cell': (np.float64(10985.0), np.float64(18585.0)), 'distance_um': np.float64(750.1), 'endpoint_other_obstacles': []}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-43814-1792526636): exit 0

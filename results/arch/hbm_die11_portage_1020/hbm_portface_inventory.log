@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   581 GB (avail 520, growth 113, headroom 0, waiters 0/0 GB) load 23/128 running 17 disk 3616 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-40034-1792526346 after 0 s
+BIT_LOAD_INVENTORY 700937 700937 missing 0 extra 0 [] []
+FUNCTIONAL_PORT_AGES 8530 unequal 0 []
+DESTINATION_BIT_MUTANT_CAUGHT
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-40034-1792526346): exit 0

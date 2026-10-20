@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc6       admits   532 GB (avail 477, growth 104, headroom 0, waiters 0/0 GB) load 31/128 running 15 disk 3625 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-die11-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-46726-1792526822 after 0 s
+{"buses": 2640, "tile_categories": {"land0136": 10, "land048": 1, "land136": 815, "land48": 448, "land624": 460, "lh0136": 232, "lh0136_f2": 15, "lh0136_f3": 16, "lh048": 448, "lh0624": 460, "lh136": 7299, "lh136_f2": 365, "lh136_f3": 70, "lh48": 12803, "lh624": 11089, "old136": 10754, "old48": 13770, "old624": 12030}, "kinds": {"old": 1724, "fc": 849, "fc136lane": 67}, "fork_buses": 192, "inter_region_buses": 916, "equal_age_max_depth_by_domain": {"stream": 36, "hbm": 29, "serial": 37}} 61 hops over reach, 0 problems []
+BIT_LOAD_INVENTORY 700937 708057 missing 0 extra 7120 [] [(('svg_NW0', 'k_addr', 0, 'vmks_NW0', 'g_k_addr', 0), 1), (('svg_NW0', 'k_addr', 1, 'vmks_NW0', 'g_k_addr', 1), 1), (('svg_NW0', 'k_addr', 2, 'vmks_NW0', 'g_k_addr', 2), 1)]
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-hbm-die11-1020/inventory_oracle.py", line 19, in <module>
+    print('BIT_LOAD_INVENTORY',len(io),len(inn),'missing',sum(missing.values()),'extra',sum(extra.values()),list(missing.items())[:3],list(extra.items())[:3]);assert inn==io
+                                                                                                                                                                      ^^^^^^^
+AssertionError
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-46726-1792526822): exit 1
