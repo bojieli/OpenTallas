@@ -69,5 +69,30 @@
     "outputs": "audits/pvslice_dw_{pos,rp0}.audit.json; .rc03:09 STALE, runs03:12live",
     "qualification": "no new receipt; needposPROVEN+rp0NOTPROVEN with actualbase"
   },
-  "children": "qkh_gates and pvfin_source STOP sent; their own refs/jobs handed back separately; no root merges by this lane"
+  "children": {
+    "both_stopped": true,
+    "qkh_gates": {
+      "pushed_head": "b6eb8a548",
+      "local_preservation_commit": "0e96c4a0025cea7e0383fc9f2999b9a0cf5d41e3",
+      "worktree": "/home/ubuntu/wt/codex-kv-qkh-gates-1020",
+      "handback": "results/rtl/kv_qkh_gate_takeover_1020/HAND_BACK.md",
+      "validated": "actualwrappercompleteLK+2dataedges; ECTL15PASS,14/13FAIL; actualLibcorecut235input/98outputbitsPASS",
+      "unqualified": "distinctpr0top/resetcold/lag0/nativefaceanchoring/timing; 6compilerpricingfilesWIP; profiles/closure/enable; ktree exactscope productionnormalizerROOTreviewer",
+      "live_routes_submits": "noneknown"
+    },
+    "pvfin_source": {
+      "local_head": "8ac027369",
+      "remote_head": "ef3ffff27",
+      "worktree": "/home/ubuntu/wt/codex-kv-pvfin-sram-1020",
+      "dirty_state": "evidence+READMEretained",
+      "validated": "R8PASS10496coldgoldenbeats/MUT1..5/201433calendaroverflowties;4p192SRAM4.98pins/um; sharedR9byteidentical",
+      "unqualified": "R8actualnativecensus+area; noPVFINgate",
+      "live_native": {
+        "local_pid": 2740627,
+        "session": 1099,
+        "unit": "oth-ubuntu-3524543-1792496732",
+        "result": "ot-epyc5:/srv/opentallas-scratch/claude/codex-pvfin-v4-1020/src_r8/native_run.log"
+      }
+    }
+  }
 }
