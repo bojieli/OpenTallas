@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       admits   390 GB (avail 387, growth 113, headroom 0, waiters 0/0 GB) load 94/128 running 34 disk 506 GB 
+ot-run: ot-epyc6       admits  1037 GB (avail 839, growth 113, headroom 0, waiters 0/0 GB) load 111/128 running 35 disk 4035 GB 
+ot-run: ot-epyc7       admits   978 GB (avail 785, growth 101, headroom 0, waiters 0/0 GB) load 47/96 running 31 disk 5486 GB 
+ot-run: -> ot-epyc6
+ot-heavy: request 64G is charged 21G (class 'frame_bench.sh:col_h#' measured peak 12.8G, n=23+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1298965-1792499206 after 2 s
+  [plan] FRAME_BENCH PASS col_h9 rows=6 words=14 complete_at_root=0 partials=14 END edges=3063 ret_words=14 xo_checked=3061 fault=0
+FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0
+PASS frame col_h9
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1298965-1792499206): exit 0

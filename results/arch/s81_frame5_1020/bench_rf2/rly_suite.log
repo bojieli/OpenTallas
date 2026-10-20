@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       admits   636 GB (avail 559, growth 113, headroom 0, waiters 0/0 GB) load 74/128 running 34 disk 496 GB 
+ot-run: ot-epyc6       admits  1048 GB (avail 847, growth 113, headroom 0, waiters 0/0 GB) load 50/128 running 35 disk 4078 GB 
+ot-run: ot-epyc7       admits   977 GB (avail 774, growth 90, headroom 0, waiters 0/0 GB) load 36/96 running 21 disk 5443 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3569517-1792497765 after 0 s
+def_536_SW expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_536_SW W=536) 
+def_63_NW expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_63_NW W=63) 
+sl_536_SW expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_536_SW W=536) 
+sl_266_SN expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_266_SN W=266) 
+sl_63_WE expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_63_WE W=63) 
+sl_63_NW expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_63_NW W=63) 
+sl_66_NE expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_66_NE W=66) 
+sl_54_WE expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_54_WE W=54) 
+sl_38_WN expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_38_WN W=38) 
+sl_15_SN expect=pass :: RLY_BENCH PASS 0 errors in 20000 words (dsfd_rly_15_SN W=15) 
+sl_mut_536 expect=fail :: RLY_BENCH FAIL 19998 errors in 20000 words (dsfd_rly_536_SW W=536) 
+sl_rsmut_536 expect=fail :: RLY_BENCH FAIL 1 errors in 20000 words (dsfd_rly_536_SW W=536) 
+sl_rsmut_63NW expect=fail :: RLY_BENCH FAIL 1 errors in 20000 words (dsfd_rly_63_NW W=63) 
+sl_mut_63NW expect=fail :: RLY_BENCH FAIL 19998 errors in 20000 words (dsfd_rly_63_NW W=63) 
+RLY_RSSLICE_SUITE PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3569517-1792497765): exit 0

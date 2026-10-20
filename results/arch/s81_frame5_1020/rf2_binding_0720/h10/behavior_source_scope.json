@@ -1,0 +1,96 @@
+{
+  "gate_snapshot": "exact0b82shippingcohort0626/0628",
+  "bench_source": "b4f61dc77",
+  "bench_receipts": "d940166d2",
+  "declared_gate_sources": 14,
+  "mismatches": [],
+  "files": [
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land.sv",
+      "gate_snapshot_sha": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
+      "behavior_source_b4_sha": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
+      "match": true
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+      "gate_snapshot_sha": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
+      "behavior_source_b4_sha": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
+      "match": true
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+      "gate_snapshot_sha": "892cac6b5d719ef22a801d3d3dfc9a1729785fe1ad6d47953df3a1c069ebf473",
+      "behavior_source_b4_sha": "892cac6b5d719ef22a801d3d3dfc9a1729785fe1ad6d47953df3a1c069ebf473",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+      "gate_snapshot_sha": "16c0b6ad270bc3d8d2d4f14c61402e6e840e1d7f66b4471e76572e85566c7309",
+      "behavior_source_b4_sha": "16c0b6ad270bc3d8d2d4f14c61402e6e840e1d7f66b4471e76572e85566c7309",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+      "gate_snapshot_sha": "df18dbcd870f952acb0f4fa4a3f77fb51641b283ff3879943e2601d35ab8963c",
+      "behavior_source_b4_sha": "df18dbcd870f952acb0f4fa4a3f77fb51641b283ff3879943e2601d35ab8963c",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv",
+      "gate_snapshot_sha": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
+      "behavior_source_b4_sha": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv",
+      "gate_snapshot_sha": "23300ab7868673cca1ace623995db83a3f83961005efda3164f5058d05da5cee",
+      "behavior_source_b4_sha": "23300ab7868673cca1ace623995db83a3f83961005efda3164f5058d05da5cee",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv",
+      "gate_snapshot_sha": "e3584dd29cf76543149415f65808a8525e9cf19e1858c2a5d56ad5a2e45185fc",
+      "behavior_source_b4_sha": "e3584dd29cf76543149415f65808a8525e9cf19e1858c2a5d56ad5a2e45185fc",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv",
+      "gate_snapshot_sha": "6e922cfe663df02ff19aa121aa97dfd4d95c93e37ed38e5b21cfe1d7df5e24de",
+      "behavior_source_b4_sha": "6e922cfe663df02ff19aa121aa97dfd4d95c93e37ed38e5b21cfe1d7df5e24de",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv",
+      "gate_snapshot_sha": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26",
+      "behavior_source_b4_sha": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv",
+      "gate_snapshot_sha": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f",
+      "behavior_source_b4_sha": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h10_l4_lp_kit.sv",
+      "gate_snapshot_sha": "03e0e1f74ded97c2b6e799af204ff456b8bd7c8c36a2dfe545dd4d69c2152515",
+      "behavior_source_b4_sha": "03e0e1f74ded97c2b6e799af204ff456b8bd7c8c36a2dfe545dd4d69c2152515",
+      "match": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col_kit.sv",
+      "gate_snapshot_sha": "e65d7a5c26ddf0c83c189dc4ed91cc32d66d8182eec04aa343b49d20940b9112",
+      "behavior_source_b4_sha": "e65d7a5c26ddf0c83c189dc4ed91cc32d66d8182eec04aa343b49d20940b9112",
+      "match": true
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+      "gate_snapshot_sha": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878",
+      "behavior_source_b4_sha": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878",
+      "match": true
+    }
+  ],
+  "scope": "Declared gate14sourcefiles only; not proof ofhardchildinternalbehavior, upstreamclockphase, arbitraryretainedstate/coldSRAM, or currentAPIadmission.",
+  "data_edges_added": 0,
+  "reset_release_change": "OT_S81_RLY_RSSLICE RSREG=0/W>32 dataresetrelease+1ckedge; RSREG!=0 remainscycleidentical. Boot/firstvalidprice mustremain explicit beforeadoption."
+}
