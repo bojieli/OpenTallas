@@ -194,7 +194,7 @@ module ot_hbm_r14_aq_pc_safe #(
         end
         else assign look_bank_words[g][k]=look_head_bank_local[k-1];
       end else begin
-        always @(posedge clk)look_bank_regions[g][k]<=head_d[29:25];
+        always @(posedge clk)look_bank_regions[g][k]<=head_bank_d_regions[g%4];
         assign look_bank_words[g][k]=look_bank_regions[g][k];
       end
     end
