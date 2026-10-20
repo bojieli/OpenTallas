@@ -1,0 +1,5 @@
+LAND32_PASS checks=5000 mut=0
+- tools/qwen_romleaf/land32/tb_land32.sv:24: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.029 s; speed 170.744 us/s
+- Verilator: cpu 0.029 s on 1 threads; allocated 8 MB

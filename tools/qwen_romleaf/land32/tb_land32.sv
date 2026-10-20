@@ -14,6 +14,7 @@ module tb_land32;
   if(mut==1) force rb.g_c[0].g_a[0].roh=1;
   if(mut==2) force b.g_c[0].g_a[0].rq=0;
   if(mut==3) force d1.g_ring.g_c[0].p=1;
+  if(mut==4) force b.g_c[0].g_a[0].rqd=0;
   for(integer c=0;c<5000;c=c+1) begin
    @(negedge ck);rsi=(c%777>=9);
    for(integer k=0;k<W;k=k+32)i[k+:32]=$urandom;

@@ -8,7 +8,7 @@ import json
 s=json.load(open('tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json'))['sources']
 for p in s:
  if p.endswith('_bb.v'):continue
- print(p)
+ print(p.replace('rtl/hdc/ot_qwen_rom_tile_w12.sv','rtl/hdc/ot_qwen_rom_tile_w12_land32.sv').replace('rtl/hdc/ot_qwen_w12_matvec.sv','rtl/hdc/ot_qwen_w12_matvec_land32.sv'))
 PY
 )
 mapfile -t ALLSRC < <(printf '%s\n' "${SRC[@]}" rtl/lib/ot_rst_relay.sv rtl/physical/ot_qwen_tile_lsl_fp1.sv rtl/physical/ot_qwen_tile_node.sv rtl/physical/qfd_tile_nk_rp2_45.sv rtl/physical/qfd_tile_nk_rp2_romleaf_rr.sv rtl/physical/ot_qwen_tile_romleaf.sv rtl/physical/ot_qw_land4_n32.sv rtl/physical/ot_qw_land4_n32_select.sv tools/qwen_romleaf/land32/tb_full_rr9_n32.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)

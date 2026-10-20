@@ -2,14 +2,14 @@
 // Private opt-in A0 helper copy. Original ot_qw_* modules/defaults untouched.
 // External CB/vld ABI retained. Internal controls <=8 data bits, delay reset <=2 bits.
 module ot_qw_lw_n32 #(parameter W=128,D=4,CB=24,C=(W+CB-1)/CB)(input ck,rsi,input [W-1:0] i,output [D*W-1:0] bank,output [D*C-1:0] vld);
- localparam NS=(CB+7)/8, NR=(C*NS+15)/16;
+ localparam NS=(CB+5)/6, NR=(C*NS+15)/16;
  wire [NR-1:0] rr;
  for(genvar r=0;r<NR;r=r+1) begin:g_rr
  (* keep *) reg rr_q; (* keep *) always @(posedge ck) rr_q<=rsi; assign rr[r]=rr_q;end
  for(genvar c=0;c<C;c=c+1) begin:g_c
   localparam CW=(W-c*CB<CB)?W-c*CB:CB;
-  for(genvar a=0;a<(CW+7)/8;a=a+1) begin:g_a
-   localparam BW=(CW-a*8<8)?CW-a*8:8;
+  for(genvar a=0;a<(CW+5)/6;a=a+1) begin:g_a
+   localparam BW=(CW-a*6<6)?CW-a*6:6;
    (* keep *) reg rq; (* keep *) reg rqd;
    (* keep *) reg [D-1:0] woh;
    reg [D-1:0] v;
@@ -18,8 +18,8 @@ module ot_qw_lw_n32 #(parameter W=128,D=4,CB=24,C=(W+CB-1)/CB)(input ck,rsi,inpu
    (* keep *) always @(posedge ck) if(!rq) begin woh<=1;v<=0;end else begin woh<={woh[D-2:0],woh[D-1]};v<=v|woh;end
    for(genvar s=0;s<D;s=s+1) begin:g_s
     reg [BW-1:0] dq;
-    (* keep *) always @(posedge ck) if(rqd&&woh[s]) dq<=i[c*CB+a*8+:BW];
-    assign bank[s*W+c*CB+a*8+:BW]=dq;
+    (* keep *) always @(posedge ck) if(rqd&&woh[s]) dq<=i[c*CB+a*6+:BW];
+    assign bank[s*W+c*CB+a*6+:BW]=dq;
    end
    if(a==0) assign vld[c*D+:D]=v;
   end

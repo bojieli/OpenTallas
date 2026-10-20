@@ -18,6 +18,7 @@ initial begin if ($value$plusargs("MUT=%d", MUT)) begin end end
 `define M7 d8.u_g.u_tile.u_tile.u_logic.u_me
 `define RT dut.u_g.u_tile.u_tile.u_logic
 initial begin #0.2;
+ if (MUT==65) force `RT.g_splitcp.q=0;
  if (MUT==60) begin
   force `ME.g_hier.g_sl[3].g_hd.g_tx9.u_qlr2w.u_safe.g_c[0].g_a[0].roh = 4'b0001;
   force `ME.g_hier.g_sl[3].g_hd.g_tx9.u_qlr2w.u_safe.g_c[0].g_a[1].roh = 4'b0001;
@@ -27,6 +28,7 @@ initial begin #0.2;
   force `RT.g_rom_pipe.g_rph.g_rqr.g_col_land.u_qlw1sw.u_safe.g_c[5].g_a[0].woh = 4'b0001;
   force `RT.g_rom_pipe.g_rph.g_rqr.g_col_land.u_qlw1sw.u_safe.g_c[5].g_a[1].woh = 4'b0001;
   force `RT.g_rom_pipe.g_rph.g_rqr.g_col_land.u_qlw1sw.u_safe.g_c[5].g_a[2].woh = 4'b0001;
+  force `RT.g_rom_pipe.g_rph.g_rqr.g_col_land.u_qlw1sw.u_safe.g_c[5].g_a[3].woh = 4'b0001;
  end
  if (MUT==62) begin
   force `ME.g_hier.g_sl[6].g_hd.g_out9.u_qlr3.u_safe.g_c[0].g_a[0].warm = 1'b0;
