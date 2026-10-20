@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job smh_pvm_ref_s4a-smh_pvm_ref_s4a-852319483 bench bench_pvm_pubearly host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/smh_pvm_ref_s4a-smh_pvm_ref_s4a-852319483 log cl/bench_pvm_pubearly.a1b1.log captured 2026-10-19T17:59:29-07:00
+# fail_regex '^PVM FAIL mismatches=[1-9]'
+Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: $finish at 533ns; walltime 0.009 s; speed 61.857 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 8 MB
+PVM FAIL mismatches=33 (pv 0, pub 32, done {'pv': '8', 'pub': '64', 'fault': '1', 'fault_cyc': '425', 'cycles': '530'})
