@@ -13,6 +13,14 @@
 //      pair bench / DCAL cold INIT does) is accepted by the image and counted by the receipt.  Contract: POR is released
 //      >= 6 edges before the first cfg write (the boot's rst_n follows POR); an earlier write is rejected (fail-stop).
 // Prints GUARD_PASS or GUARD_FAIL <case>.  MUTFO_V 5 (TX guard disabled) must FAIL case A.
+// KV-D2D3 10-20: DUT_ORD / DUT_OVL select the dut masters (default the sfm masters; -DSFM3: qkd_d2d_static[_ovl]_sfm3)
+`ifdef SFM3
+`define DUT_ORD qkd_d2d_static_sfm3
+`define DUT_OVL qkd_d2d_static_ovl_sfm3
+`else
+`define DUT_ORD qkd_d2d_static_sfm
+`define DUT_OVL qkd_d2d_static_ovl_sfm
+`endif
 module tb;
 `ifndef MUTFO_V
 `define MUTFO_V 0
@@ -23,10 +31,10 @@ reg por_n = 0, rst_n = 0, cfg_tx_we = 0, cfg_rx_we = 0; reg [5:0] cfg_addr = 0; 
 reg cal_start = 0, cal_seg = 0;
 wire fault, epoch_abort; wire [16:0] z;
 `ifdef OVLM
-qkd_d2d_static_ovl_sfm #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP), .MUTFO(`MUTFO_V), .SRAMV(1), .FEG(1)) dut (
+`DUT_OVL #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP), .MUTFO(`MUTFO_V), .SRAMV(1), .FEG(1)) dut (
     .cal_start_rx(cal_start), .cal_seg_rx(cal_seg), .cal_user_tx(2'd0), .cal_user_rx(2'd0), .tx_user(), .rx_user(),
 `else
-qkd_d2d_static_sfm #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP), .MUTFO(`MUTFO_V), .SRAMV(1), .FEG(1)) dut (
+`DUT_ORD #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP), .MUTFO(`MUTFO_V), .SRAMV(1), .FEG(1)) dut (
 `endif
     .ck(ck), .por_n(por_n), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
     .cal_start(cal_start), .cal_seg(cal_seg), .host_link_reset_req(1'b0), .host_recovery_clear(1'b0), .host_boot_begin(1'b0),

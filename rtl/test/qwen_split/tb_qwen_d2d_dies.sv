@@ -31,8 +31,14 @@
 // KSFM (KV-SRAM-D2D 10-19, compile with -DKSFM [-DKSFM_SRAMV=2]): every KV end is the right-sized-storage master
 // qkd_d2d_static_sfm / qkd_d2d_static_ovl_sfm (ot_qwen_d2d_sfm.sv; d2d_sram 64x137 slot store, first-epoch guard on).
 `ifdef KSFM
+`ifdef KSFM3
+// KSFM3 (KV-D2D3 10-20, -DKSFM -DKSFM3): the native-census successor qkd_d2d_static_sfm3 / _ovl_sfm3 (ot_qwen_d2d_sfm3.sv)
+`define QKD_M qkd_d2d_static_sfm3
+`define QKD_OVL_M qkd_d2d_static_ovl_sfm3
+`else
 `define QKD_M qkd_d2d_static_sfm
 `define QKD_OVL_M qkd_d2d_static_ovl_sfm
+`endif
 `define QKD_NTX .NTX(3),
 `ifndef KSFM_SRAMV
 `define KSFM_SRAMV 1

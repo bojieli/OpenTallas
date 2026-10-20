@@ -22,11 +22,20 @@
 //              (segments 0 = entries 0..9, 1 = base 12: entries 12..20, 21..31; bursts, TX port 0 answered by its producer at
 //              the compiled capture edge, RX expectations answered in order with the transmitted frames);
 //              3210 boot, 3260 / 3460 / 3660 starts (seg 0, seg 1, seg 1 after a base rewrite to 21 at 3640/3641)
-//   3900..5999 random inputs again (reset at 4500)
+//   3900..5999 random inputs again (reset at 4500); SFM3: 3900..4319 legal, directed WPH image rewrites + W+2 starts
+//              (3905/3906 entry 0 -> seg-0 start 3908; 4107/4108 entry 21 -> seg-1 start 4110), random from 4320
 // Coverage asserted: >= 2 epochs, drain / link reset / retrain / recovery, 32 golden RX frames, >= 32 TX frames,
 // pointer advance across a segment (ptr >= 9 and a segment-1 run past entry 12) in BOTH ends' calendars.
 // OT_FO_CHECK (run script): every copy register in the dut compares itself with its master on every edge and prints
 // FO_COPY_MISMATCH (the run script fails on it).  With +verilator+rand+reset+2 this is the first-edge convergence proof.
+// KV-D2D3 10-20: DUT_ORD / DUT_OVL select the dut masters (default the sfm masters; -DSFM3: qkd_d2d_static[_ovl]_sfm3)
+`ifdef SFM3
+`define DUT_ORD qkd_d2d_static_sfm3
+`define DUT_OVL qkd_d2d_static_ovl_sfm3
+`else
+`define DUT_ORD qkd_d2d_static_sfm
+`define DUT_OVL qkd_d2d_static_ovl_sfm
+`endif
 module tb;
 `ifndef MUTFO_V
 `define MUTFO_V 0
@@ -42,7 +51,7 @@ localparam [31:0] TXDP = 32'h03030416;
 reg [582:0] frames [0:31];
 integer epochs = 0, drained_seen = 0, reset_seen = 0, trained_seen = 0, recovery_seen = 0, early_seen = 0, stored = 0;
 integer received = 0, cyc = 0, checks = 0, tx = 0, aborted = 0, p2_ev = 0, ptr_hi = 0, seg1_run = 0, mism = 0;
-integer p2_tx = 0, p2_rx = 0, p2_rd = 0, p2_abort = 0; reg [582:0] p2f [0:255]; reg [1:0] emb_d = 0;
+integer p2_tx = 0, p2_rx = 0, p2_rd = 0, p2_abort = 0, wph_rx = 0; reg [582:0] p2f [0:255]; reg [1:0] emb_d = 0;
 reg [19:0] slot_delay = 0;
 reg por_n = 0, rst_n = 0, cfg_tx_we = 0, cfg_rx_we = 0; reg [5:0] cfg_addr = 0; reg [31:0] cfg_data = 0;
 reg cal_start = 0, cal_seg = 0, cal_start_rx = 0, cal_seg_rx = 0; reg [1:0] cal_user_tx = 0, cal_user_rx = 0;
@@ -103,13 +112,13 @@ integer z17_checks = 0, z17_nz = 0, rejected = 0;
 `ifdef OVLM
 qkd_d2d_static_ovl #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP)) ref_dut (`CONN(r_), .cal_start_rx(cal_start_rx),
     .cal_seg_rx(cal_seg_rx), .cal_user_tx(cal_user_tx), .cal_user_rx(cal_user_rx), .tx_user(r_tx_user), .rx_user(r_rx_user));
-qkd_d2d_static_ovl_sfm #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP), .MUTFO(`MUTFO_V), .SRAMV(`SRAMV_V), .FEG(`FEG_V)) dut (`CONN(d_),
+`DUT_OVL #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP), .MUTFO(`MUTFO_V), .SRAMV(`SRAMV_V), .FEG(`FEG_V)) dut (`CONN(d_),
     .rx_zero17(d_rx_zero17), .cal_start_rx(cal_start_rx),
     .cal_seg_rx(cal_seg_rx), .cal_user_tx(cal_user_tx), .cal_user_rx(cal_user_rx), .tx_user(d_tx_user), .rx_user(d_rx_user));
 `else
 assign r_tx_user = 2'd0; assign r_rx_user = 2'd0; assign d_tx_user = 2'd0; assign d_rx_user = 2'd0;
 qkd_d2d_static #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP)) ref_dut (`CONN(r_));
-qkd_d2d_static_sfm #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP), .MUTFO(`MUTFO_V), .SRAMV(`SRAMV_V), .FEG(`FEG_V)) dut (`CONN(d_),
+`DUT_ORD #(.SAFE_RC(1), .NTX(3), .PR(1), .TXDP(TXDP), .MUTFO(`MUTFO_V), .SRAMV(`SRAMV_V), .FEG(`FEG_V)) dut (`CONN(d_),
     .rx_zero17(d_rx_zero17));
 `endif
 `define CTRL(P) {P``fwd_epoch, P``fwd_link_rst_n, P``att_tx_slot, P``att_tx_kind, P``att_tx_beat, P``att_rx_v, P``att_rx_slot, \
@@ -132,10 +141,16 @@ wire same = (`CTRL(d_) === `CTRL(r_)) && (!r_fdi_tx_v || d_fdi_tx_flit === r_fdi
 localparam integer CHECK_END = 1 << 30;
 wire same = (`FULL(d_) === `FULL(r_));
 `endif
+// KV-D2D3 (SFM3): legal window 2 extends to 4320 for the directed image-write-then-start phase (WPH, below)
+`ifdef SFM3
+localparam integer W2_END = 4320;
+`else
+localparam integer W2_END = 3900;
+`endif
 `ifdef RANDINIT
 wire in_win = 1'b1;
 `else
-wire in_win = (`FEG_V == 0) || (cyc < 1000) || (cyc >= 3020 && cyc < 3900);
+wire in_win = (`FEG_V == 0) || (cyc < 1000) || (cyc >= 3020 && cyc < W2_END);
 `endif
 // after a random phase the guard-rejected dut legitimately holds other unreset payload / SRAM words: window 2 (FEG_V 1)
 // compares every control output and every payload word with its valid, as the RANDINIT form does
@@ -181,10 +196,11 @@ task check; begin
             if (r_rx_payload !== {4'd0, {17{32'h12345678}}}) begin $display("SFO_MITER_FAIL RX_GOLDEN_DATA cycle %0d", cyc); $fatal(1); end
         end
     end
-    if (cyc >= 3200 && cyc < 3900) begin
+    if (cyc >= 3200 && cyc < W2_END) begin
         if (r_att_tx_slot || r_emb_tx_slot || r_att_rx_slot) p2_ev = p2_ev + 1;
         if (r_fdi_tx_v) begin p2_tx = p2_tx + 1; if (p2_tx <= 256) p2f[p2_tx - 1] = r_fdi_tx_flit; end
         if ((r_epoch_abort || ref_dut.u_core.u_end.end_fault) && cyc > 3215) p2_abort = 1;
+        if (cyc >= 3905 && r_att_rx_v) wph_rx = wph_rx + 1;
         if (ref_dut.u_core.u_end.u_txcal.ptr >= 9) ptr_hi = 1;
         if (ref_dut.u_core.u_end.u_txcal.ptr >= 14 && ref_dut.u_core.u_end.u_txcal.ptr <= 21) seg1_run = 1;
     end
@@ -211,7 +227,7 @@ initial begin
         por_n = (cyc >= 16 && !(cyc >= 3000 && cyc < 3020));
         rst_n = (cyc >= 16 && !(cyc >= 1200 && cyc < 1220) && !(cyc >= 3000 && cyc < 3020) && !(cyc >= 4500 && cyc < 4520));
         // ---- legal lifecycle windows: no stray control ----
-        if (cyc < 1000 || (cyc >= 3000 && cyc < 3900)) begin
+        if (cyc < 1000 || (cyc >= 3000 && cyc < W2_END)) begin
             cfg_tx_we = 0; cfg_rx_we = 0; cal_start = 0; cal_start_rx = 0; host_boot_begin = 0; host_link_reset_req = 0;
             host_recovery_clear = 0; att_tx_v = 0; emb_tx_v = 0; record_tx_observed_v = 0; fdi_rx_v = 0; fdi_tx_up = 1;
             cal_user_tx = 0; cal_user_rx = 0;
@@ -239,9 +255,18 @@ initial begin
         end
         if (cyc == 3164 || cyc == 3165) begin cfg_tx_we = (cyc == 3164); cfg_rx_we = (cyc == 3165); cfg_addr = 6'd32; cfg_data = 32'd12; end
         if (cyc == 3640 || cyc == 3641) begin cfg_tx_we = (cyc == 3640); cfg_rx_we = (cyc == 3641); cfg_addr = 6'd32; cfg_data = 32'd21; end
-        if (cyc >= 3200 && cyc < 3900) begin
+`ifdef SFM3
+        // WPH (KV-D2D3): rewrite the first entry of a segment one edge apart (TX, then RX) and start at the RX write + 2
+        // (the earliest legal start): the RX calendar's prefetched first entry (seg 0: first0_q, seg 1: first1_q via the
+        // segment-1 select) must already hold the NEW word.  Kind / beat change, so a stale read changes att_rx_kind/beat.
+        if (cyc == 3905 || cyc == 3906) begin cfg_tx_we = (cyc == 3905); cfg_rx_we = (cyc == 3906); cfg_addr = 6'd0;
+            cfg_data = (cyc == 3905) ? (p2tx(0) ^ 32'h0000_2440) : (p2rx(0) ^ 32'h0000_2440); end
+        if (cyc == 4107 || cyc == 4108) begin cfg_tx_we = (cyc == 4107); cfg_rx_we = (cyc == 4108); cfg_addr = 6'd21;
+            cfg_data = (cyc == 4107) ? (p2tx(21) ^ 32'h0000_1820) : (p2rx(21) ^ 32'h0000_1820); end
+`endif
+        if (cyc >= 3200 && cyc < W2_END) begin
             host_boot_begin = (cyc == 3210);
-            cal_start = (cyc == 3260 || cyc == 3460 || cyc == 3660); cal_seg = (cyc != 3260);
+            cal_start = (cyc == 3260 || cyc == 3460 || cyc == 3660 || cyc == 3908 || cyc == 4110); cal_seg = (cyc != 3260 && cyc != 3908);
             cal_start_rx = cal_start; cal_seg_rx = cal_seg; cal_user_tx = cyc[1:0]; cal_user_rx = cyc[2:1];
             // producers answer at the compiled capture edge (port 0: TXD 22 - 2 pin edges; port 2: TXD 3 - 2)
             att_tx_v = slot_delay[19]; slot_delay = {slot_delay[18:0], r_att_tx_slot};
@@ -266,6 +291,9 @@ initial begin
                  seg1_run, p2_tx, p2_rx, p2_abort); $fatal(1);
     end
     if (mism != 0) begin $display("SFO_MITER_FAIL mismatches %0d", mism); $fatal(1); end
+`ifdef SFM3
+    if (wph_rx < 8) begin $display("SFO_MITER_FAIL WPH coverage rx %0d", wph_rx); $fatal(1); end
+`endif
     if (z17_nz < 32) begin $display("SFO_MITER_FAIL Z17 coverage %0d", z17_nz); $fatal(1); end
     if (`FEG_V != 0 && rejected == 0) begin $display("SFO_MITER_FAIL guard never exercised"); $fatal(1); end
     $display("SFO_MITER_PASS checks=%0d tx=%0d rx=%0d epochs=%0d aborted=%0d p2_events=%0d p2_tx=%0d p2_rx=%0d z17=%0d/%0d guard_rejects=%0d sramv=%0d feg=%0d",
