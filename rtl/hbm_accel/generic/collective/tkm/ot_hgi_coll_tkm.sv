@@ -849,7 +849,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                     gn_legacy[q]  = gn_legacy[q]  | g2f[4*((q - i >= 0) ? q - i : 0) +: 4];
                 end
             for (integer j = 0; j < 4; j = j + 1)
-                if (valid_gn_legacy[q] && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j))) begin
+                if (valid_gn[q] && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j))) begin
                     ins_legacy[q] = ins_legacy[q] | q_bg[q / GP][EW*j +: EW];
                     gn_legacy[q]  = gn_legacy[q]  | gbf[16*(q / GP) + 4*j +: 4];
                 end
