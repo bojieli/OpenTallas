@@ -41,6 +41,7 @@ module ot_hbm_hc_root_static #(
     parameter integer QCHX = 0,                  // HH-9 10-19: quarter bank-chain pin-register edges (qeng CPR 1 -> 11)
     parameter integer TLA  = 7,                  // quarter tree adder stages
     parameter integer SAFE = 0,                  // HBM-HC5 10-20: 1 = SRAM mix store + tail domain TD = 2 edges later (below)
+    parameter integer TAILC = 0,                 // HBM-HCROOT6 10-20: 1 = hardened tail child tiles (+2 edges, emit TE = 2 later)
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -239,10 +240,17 @@ module ot_hbm_hc_root_static #(
     // byte-identical to the previous form.
     localparam integer TD = SAFE ? 2 : 0;
     wire t_tl, t_tf, t_emit, t_tunit, t_eunit; wire [2:0] t_tpos; wire [6:0] t_tset; wire [3:0] t_qmask;
-    ot_hdc_delay #(.W(3), .D(TD), .RESET(1)) u_tdv (.clk(clk), .rst_n(rst_tail), .d({e_tl, e_tf, e_emit}),
+    // TAILC 1: the tail child tiles return their result 2 edges later (child pin flop + fanout stage): every emit-side
+    // event (emit, its quarter mask and unit) moves TE = 2 more edges; launches / table fetches keep TD.
+    localparam integer TE = TAILC ? 2 : 0;
+    wire e_emit_te, e_eunit_te; wire [3:0] e_qmask_te;
+    ot_hdc_delay #(.W(1), .D(TE), .RESET(1)) u_tev (.clk(clk), .rst_n(rst_tail), .d(e_emit), .q(e_emit_te));
+    ot_hdc_delay #(.W(5), .D(TE), .RESET(0)) u_ted (.clk(clk), .rst_n(rst_tail), .d({e_qmask, e_eunit}),
+        .q({e_qmask_te, e_eunit_te}));
+    ot_hdc_delay #(.W(3), .D(TD), .RESET(1)) u_tdv (.clk(clk), .rst_n(rst_tail), .d({e_tl, e_tf, e_emit_te}),
         .q({t_tl, t_tf, t_emit}));
     ot_hdc_delay #(.W(16), .D(TD), .RESET(0)) u_tdd (.clk(clk), .rst_n(rst_tail),
-        .d({e_tunit, e_tpos, e_tset, e_qmask, e_eunit}), .q({t_tunit, t_tpos, t_tset, t_qmask, t_eunit}));
+        .d({e_tunit, e_tpos, e_tset, e_qmask_te, e_eunit_te}), .q({t_tunit, t_tpos, t_tset, t_qmask, t_eunit}));
 
     // ------------------------------------------------------------------ mix store
     reg [191:0] have; reg mix_fault; reg [3:0] gm_open;
@@ -372,9 +380,15 @@ module ot_hbm_hc_root_static #(
     genvar gu;
     for (gu = 0; gu < 2; gu = gu + 1) begin : g_tail
         wire go = t_tl && t_tunit == gu;
-        ot_hbm_hc_tail_unit_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_tail),
-            .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
-            .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
+        if (TAILC == 0) begin : g_u
+            ot_hbm_hc_tail_unit_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_tail),
+                .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
+                .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
+        end else begin : g_c
+            ot_hbm_hc_tail_child_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_tail),
+                .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
+                .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
+        end
     end
     always @(posedge clk or negedge rst_tail) begin
         if (!rst_tail) begin tready <= 0; tail_fault <= 0; end
@@ -405,8 +419,8 @@ module ot_hbm_hc_root_static #(
         // 8c .. 8c + 7 (24 endpoints).  They are the second tail-domain delay stage (loaded from the first, d1), so they
         // rise on the same edge as t_emit (cycles unchanged).
         reg e_emit_d1, e_eunit_d1; reg [3:0] e_qmask_d1;
-        always @(posedge clk or negedge rst_tail) if (!rst_tail) e_emit_d1 <= 1'b0; else e_emit_d1 <= e_emit;
-        always @(posedge clk) begin e_qmask_d1 <= e_qmask; e_eunit_d1 <= e_eunit; end
+        always @(posedge clk or negedge rst_tail) if (!rst_tail) e_emit_d1 <= 1'b0; else e_emit_d1 <= e_emit_te;
+        always @(posedge clk) begin e_qmask_d1 <= e_qmask_te; e_eunit_d1 <= e_eunit_te; end
         (* keep = "true", dont_touch = "true" *) reg [191:0] en_c;
         (* keep = "true", dont_touch = "true" *) reg [383:0] us_c;
         reg [3:0] en_p; reg us_p;
