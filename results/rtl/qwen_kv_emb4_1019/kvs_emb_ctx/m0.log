@@ -1,0 +1,10 @@
+# Verilator 5.050 on ot-epyc5, bench tools/qwen_kv_die/kvs_emb_ctx_bench.sh MUT=0
+INFO cyc 5409 ref ctx fault rises (take 1 hdr_ok 1 own_ok 1 fresh 1 gap 0 open 1)
+INFO cyc 9717 ref ctx fault rises (take 1 hdr_ok 1 own_ok 1 fresh 0 gap 0 open 0)
+INFO cyc 13445 ref ctx fault rises (take 0 hdr_ok 0 own_ok 1 fresh 1 gap 0 open 1)
+COVER checks=14000 starts=47 overlaps=2 malformed=1 rowtx_only_fault_edges=5399
+KVS_EMB_CTX PASS checks=14000 starts=47 overlaps=2 malformed=1 errors=0
+- rtl/qwen_sys/static_embedding_20261014/test/tb_qkd_kvs_emb_ctx_lockstep.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.011 s; speed 1.018 ms/s
+- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB
