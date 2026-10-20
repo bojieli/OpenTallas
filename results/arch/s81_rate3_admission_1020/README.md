@@ -1,0 +1,16 @@
+# Independent admission audit of S81-RATE3 012a3a074
+
+The 966.2 AR /2998.2 MTP result is a compiled-component composition, **not an admitted full-stage rate**. This audit uses an immutable source snapshot; no Claude worktree was changed or imported. No RTL or full-die simulation was launched. Twelve imported source hashes match012a3a074 exactly.
+
+- All FP/BF op groups cover their complete row universes on the actual122frames for L0/L2/L14/L20. This is row-ownership metadata coverage, not a numerical/consumer PASS.
+- Separate phase0 a_proj remains broken: rank rows192..195 and248..251 are absent (six-frame slices sid6/8). The claim that every op now deals over realframes does not cover lower_xs.placement.
+- Actual eighth-frame compile u_f_0R03 emits wq_b cfg phases0..10 because its empty a_proj is skipped. The committed shared slice calendar emits phases1..11 from u_f_0L00. phase_identity.json preserves this distinct source/cfg identity failure. Its plans were deliberately not legalised: only phase identity is asserted. The same mechanism applies to every empty eighth frame.
+- Default exact-input A/B (u_f_0R00/shared_gu, all flags off): c347cea9b already fails IndexError for empty-array indexing;012 fails earlier with empty-FP-chunk assertion. This is an inherited unsupported path, **not evidence of a new functional regression**.
+- PROP changes down ownership, so the earlier>=118-stage bound for fixed80down rows/slice is historical. Current actual padded phase policy consumes720pairedaddresses/frame/expert on all122frames:480GU+240down, or60mean addresses/qpair/expert. Even before dense weights or per-pair imbalance, max136experts/stage means110stages cannot fit15360experts; current-policy minimum is113stages. This is a necessary bound, never a selected-map admission. Balanced3/4-row chunks also mean the old compact-tail flag does not save slots on these routed-expert phases.
+- A selected stage/expert map, all dense allocations, cfg depth and actual per-pair bounds remain unadmitted. Current130-stage/520-die MU configuration cannot gain a PASS from this bound.
+- Producer images still use phase-local tags; CAP rank remap is bench-only, GU shares are disjoint, and registered descriptor updates must respect all four actual op-flag domains/FIN lifetimes. PROP also changes final_ffn's old80-row/slice source_sid and capture layout. Changed ownership/gathers need actual consumer and source-age qualification.
+- F8's earlier window starts still need SVC MU resource/lifetime occupancy. Existing field-calendar MU zero collisions does not check SVC jobs. No headline adoption.
+
+Jobs on ep9 (all terminal0):3821443-1792506288 source metadata audit,3821634-1792506311 same-input default A/B,3823043-1792506445 actual eighth-frame cfg identity. Input fixtures and dieref remain the release inputs used by RATE3. Failure logs are preserved, not rewritten.
+
+TOPK hk1/hk1l geometry is source-pinned separately in topk_geometry_price.json: approved quarter324x540 ->518.4x648 adds0.1609632mm2/quarter, **0.6438528mm2/four quarters**. Next actual die placement must admit the enlarged slots and source/destination reach/landing ages. No RTL edge or global rate is inferred from the outline; physical suite/gate and parent boundary qualification remain owned by TOPK8/die.
