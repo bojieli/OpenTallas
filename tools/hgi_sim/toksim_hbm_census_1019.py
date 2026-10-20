@@ -64,6 +64,10 @@ def measured_cost(r, L, c_model):
     m = MEAS.get(DESIGN["d"], {}).get(cls_of(r)) or MEAS.get("any", {}).get(cls_of(r))
     if not m:
         return None
+    tg = getattr(r, "tag", "") or ""
+    if any(tg.startswith(t) for t in m.get("drop_tags", [])):   # record does not exist on the measured die (e.g.
+        LAST["kind"] = "exact"                                   # Qwen TP-8: 1 KV head a die -> kv1 records dropped)
+        return 0.0
     law = m["law"]
     LAST["kind"] = "ratio" if law == "ratio" else "exact"
     if law == "shape_table":                             # exact measured production shapes; others by measured ratio
@@ -175,7 +179,11 @@ def main():
     INNER["f"] = R._job
     _job.__module__ = R.__name__
     R._job = _job
-    sys.argv = [sys.argv[0], "--bw", "45.03", "--only", ONLY, "--jobs", "16", "--out", str(out)]
+    # --bw / --bridge pass through (default 45.03 = the composed price of record; 90.67 --bridge 1 = the successor PC
+    # controller with the rotated layout, LH-REPRICE3 successor scenario) for every record that keeps its model cost
+    bw = argv[argv.index("--bw") + 1] if "--bw" in argv else "45.03"
+    extra = ["--bridge", argv[argv.index("--bridge") + 1]] if "--bridge" in argv else []
+    sys.argv = [sys.argv[0], "--bw", bw] + extra + ["--only", ONLY, "--jobs", "16", "--out", str(out)]
     return R3B.main()
 
 
