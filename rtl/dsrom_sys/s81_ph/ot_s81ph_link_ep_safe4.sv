@@ -183,13 +183,27 @@ module ot_s81ph_link_ep_safe4 #(
     ot_s81ph_kff4_10 u_k_nxt_rw (.clk(clk),.rst_n(rst_v[12]),.d(nxt_nx),.q(nxt_rw));
     ot_s81ph_kff4_10 u_k_nxt_ready (.clk(clk),.rst_n(rst_v[12]),.d(nxt_nx),.q(nxt_ready));
     ot_s81ph_kff4_10 u_k_una_rw (.clk(clk),.rst_n(rst_v[13]),.d(una_n),.q(una_rw));
+`ifdef OT_COLL_NATIVE32_OFF
+    assign una_skip = una_rw;   // v8: only the unloaded legacy snd_off / ack_skip / snd_nx cones use this name
+`else
     ot_s81ph_kff4_10 u_k_una_skip (.clk(clk),.rst_n(rst_v[13]),.d(una_n),.q(una_skip));
+`endif
 `else
     wire [SEQW-1:0] nxt_rw=nxt, nxt_ready=nxt, una_rw=una, una_skip=una;
 `endif
     // safe4: kept copy of snd for the ready / skip compares, in its own kept hierarchy (ot_s81ph_kff4_10,
     // SYNTH_KEEP_MODULES): a same-D (* keep *) reg was merged back into snd by Yosys (mapped census 10-19: 33 loads)
     wire [SEQW-1:0] snd_c;
+`ifdef OT_COLL_NATIVE32_OFF
+`ifndef OT_COLL_NATIVE32
+    initial $fatal(1, "OT_COLL_NATIVE32_OFF requires OT_COLL_NATIVE32");
+`endif
+    // v8 (S81-COLL4 10-20): the sender offset snd - una is STATE, kept as two same-edge registers (off_s: sender /
+    // replay-index skip cone; off_r: ready cone), updated from the same next-state selects as snd / una.  The skip
+    // compare d_ack > (snd + launch - una) becomes d_ack > off (+1 by the exact identity below): no subtract and no
+    // increment sit in front of the replay address / ready registers.  0 added cycles, same transfer function.
+    wire [SEQW-1:0] off_s, off_r;
+`endif
     reg  [IW-1:0]   una_i, snd_i, nxt_i;
     reg  [CW-1:0]   credits;
     reg  [CW-1:0]   fr_seen;
@@ -288,6 +302,10 @@ module ot_s81ph_link_ep_safe4 #(
     wire [SEQW-1:0] p_dack = pack - una_s;
     wire            p_bad  = p_dack > (nxt_rw - una_s);
     wire ok_d = p_take && !p_bad;
+`ifdef OT_COLL_NATIVE32_OFF
+    reg [SEQW-1:0] s2dackm1; reg s2dnz;      // = s2dack - 1, s2dack != 0 (same edge, same inputs)
+    always @(posedge clk) begin s2dackm1 <= pack + ~una_s; s2dnz <= (pack != una_s); end
+`endif
     ot_s81ph_kff4_1 u_k_oku (.clk(clk), .rst_n(rst_v[0]), .d(ok_d), .q(ok_u));
     ot_s81ph_kff4_1 u_k_okv (.clk(clk), .rst_n(rst_v[0]), .d(ok_d), .q(ok_v));
     ot_s81ph_kff4_1 u_k_okc (.clk(clk), .rst_n(rst_v[0]), .d(ok_d), .q(ok_c));
@@ -623,7 +641,13 @@ module ot_s81ph_link_ep_safe4 #(
     wire            lnch_0 = replaying && pace_ok;
     wire [SEQW-1:0] sndl_0 = lnch_0 ? snd + 1'b1 : snd, sndl_1 = snd + 1'b1;
     wire [IW-1:0]   sndil_0 = lnch_0 ? idx_add(snd_i, 1) : snd_i, sndil_1 = idx_add(snd_i, 1);
+`ifdef OT_COLL_NATIVE32_OFF
+    // L > ((D + 1) mod 2^W)  ==  (L != 0) && ((D == 2^W-1) || ((L - 1) > D))   (Codex v6 identity, SAT-proved 31 inputs)
+    wire            gto_s0 = d_ack > off_s, gto_s1 = s2dnz && ((&off_s) || (s2dackm1 > off_s));
+    wire            skip_0 = ack_ok && (lnch_0 ? gto_s1 : gto_s0), skip_1 = ack_ok && gto_s1;
+`else
     wire            skip_0 = ack_ok && (d_ack > (sndl_0 - una_skip)), skip_1 = ack_ok && (d_ack > (sndl_1 - una_skip));
+`endif
     wire [SEQW-1:0] sndnx_0 = rewind_sender_state ? una_n : (skip_0 ? rr_ack : sndl_0);
     wire [SEQW-1:0] sndnx_1 = rewind_sender_state ? una_n : (skip_1 ? rr_ack : sndl_1);
     wire [IW-1:0]   sndinx_0 = (rewind_sender || skip_0) ? una_i_n : sndil_0;
@@ -646,10 +670,14 @@ module ot_s81ph_link_ep_safe4 #(
 `else
     wire rst_una_so=rst_v[2], rst_una_cmp=rst_v[2];
 `endif
+`ifdef OT_COLL_NATIVE32_OFF
+    wire            gt_so0  = d_ack > off_r, gt_so1 = s2dnz && ((&off_r) || (s2dackm1 > off_r));
+`else
     wire [SEQW-1:0] una_so;
     ot_s81ph_kff4_10 u_k_una_so (.clk(clk), .rst_n(rst_una_so), .d(una_n), .q(una_so));
     wire [SEQW-1:0] so      = snd_c - una_so;
     wire            gt_so0  = d_ack > so, gt_so1 = d_ack > (so + 1'b1);
+`endif
     wire            skp_0   = ok_ready && (lnch_0 ? gt_so1 : gt_so0), skp_1 = ok_ready && gt_so1;
     // una_c: kept same-edge copy of una (ot_s81ph_kff4_10) for the una_n == / < compares (mapped census 10-19: una[0] 43)
     wire [SEQW-1:0] una_c;
@@ -676,6 +704,31 @@ module ot_s81ph_link_ep_safe4 #(
     // (mapped census: the select drove 156 group D loads).
     wire [IW-1:0]   sndinx_0k, sndinx_1k; wire rdy_0k, rdy_1k;
     ot_s81ph_kp4_20 u_kp_next (.a({sndinx_0, sndinx_1, rdy_0, rdy_1}), .y({sndinx_0k, sndinx_1k, rdy_0k, rdy_1k}));
+`ifdef OT_COLL_NATIVE32_OFF
+    // offset next state: own same-edge accept (nrdy_o = !rdy_r) and launch (rep_o = rep_r) copies, so accept_a /
+    // lnch_0 / ok_u keep their v3 loads.  off' = 0 on rewind or skip (snd' = una' = rr_ack / una_n); else
+    // off + launch - (ok ? d_ack : 0), d_ack = rr_ack - una exactly in an S2-apply cycle (una is frozen the cycle before).
+    wire nrdy_o, rep_o;
+    ot_s81ph_kff4_1 u_k_nrdy_o (.clk(clk), .rst_n(rst_v[14]), .d(!(accept_a ? rdy_1k : rdy_0k)), .q(nrdy_o));
+    ot_s81ph_kff4_1 u_k_rep_o (.clk(clk), .rst_n(rst_v[14]), .d(accept_a ? rep_1 : rep_0), .q(rep_o));
+    wire            accept_o = in_valid && !nrdy_o, lnch_o = rep_o && pace_ok;
+    wire [SEQW-1:0] off_p1 = off_s + 1'b1, off_md = off_s - d_ack, off_md1 = off_s - s2dackm1;
+    wire [SEQW-1:0] off_t1 = ok_ready ? off_md1 : off_p1, off_t0 = ok_v ? off_md : off_s;
+    wire [SEQW-1:0] offnx_0 = (rewind_sender_state || skip_0) ? {SEQW{1'b0}} : (lnch_o ? off_t1 : off_t0);
+    wire [SEQW-1:0] offnx_1 = (rewind_sender_state || skip_1) ? {SEQW{1'b0}} : off_t1;
+    wire [SEQW-1:0] off_d = accept_o ? offnx_1 : offnx_0;
+    ot_s81ph_kff4_10 u_k_off_s (.clk(clk), .rst_n(rst_v[13]), .d(off_d), .q(off_s));
+    ot_s81ph_kff4_10 u_k_off_r (.clk(clk), .rst_n(rst_v[14]), .d(off_d), .q(off_r));
+`ifndef SYNTHESIS
+    always @(posedge clk) if (rst_n && rst_v[2] && rst_v[3] && rst_v[13] && rst_v[14]) begin
+        if (off_s !== snd - una || off_r !== snd - una || nrdy_o !== !rdy_r || rep_o !== rep_r)
+            $fatal(1, "COLL native32 v8 offset/accept copy differs");
+        if (skip_0 !== (ack_ok && (d_ack > (sndl_0 - una))) || skip_1 !== (ack_ok && (d_ack > (sndl_1 - una))))
+            $fatal(1, "COLL native32 v8 skip predicate differs");
+        if (ok_u && (d_ack !== rr_ack - una)) $fatal(1, "COLL native32 v8 d_ack != rr_ack - una in an apply cycle");
+    end
+`endif
+`endif
 `ifndef SYNTHESIS
     always @(posedge clk) if (rst_n && ({rdy_0, rdy_1, rep_0, rep_1, skp_0, skp_1} !==
         {cok_0 && ((nxt - una_n) < RPS) && (sndnx_0 == nxt) && pok_0, cok_1 && ((nxtnx_1 - una_n) < RPS) && (sndnx_1 == nxtnx_1) && pok_1,
