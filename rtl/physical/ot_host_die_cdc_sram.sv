@@ -109,7 +109,7 @@ module ot_host_die_cdc_sram #(
         end
         always @(posedge wclk) bypass_data <= id_q; // selected only when same-edge write bypass is valid
         if (IBMEM == 1 || IBMEM == 3) begin : g_32
-            ot_sram_1r1w_32x546_m1 u_ib (.clk(wclk),.r_ce_in(1'b1),.r_addr_in(5'(next_head)),.rd_out(mq),
+            ot_sram_1r1w_32x546_m1_p192_mir u_ib (.clk(wclk),.r_ce_in(1'b1),.r_addr_in(5'(next_head)),.rd_out(mq),
                 .w_ce_in(x_wr),.w_addr_in(5'(iw[IA-1:0])),.wd_in(id_q),.w_mask_in({W{1'b1}}));
         end else begin : g_64
             // Both macro clock pins belong to the writer domain: this is an
@@ -276,7 +276,7 @@ endmodule
 // Two-edge landing with physically kept equivalent last-stage leaves, <=32 downstream loads per leaf.
 // Duplicating the final synchronizer stage preserves the original release edge.
 module ot_host_reset_bank #(parameter integer N=2)(input wire clk,async_rst_n,output wire[N-1:0]sync_rst_n);
- (* async_reg="true" *) reg first;
+ (* async_reg="true",keep="true",dont_touch="true" *) reg first;
  (* async_reg="true",keep="true",dont_touch="true" *) reg[N-1:0] last;
  always @(posedge clk or negedge async_rst_n)
  if(!async_rst_n)begin first<=0;last<=0;end else begin first<=1;last<={N{first}};end
