@@ -907,6 +907,29 @@ def merge_sta_case(root, out, name):
                     f['connections']['D'] = [m['netnames']['h_v']['bits'][0]]
                     mutated.append(s1)
         assert mutated, online
+    if name in ('merged_sync_bypassed', 'merged_sync_dropped'):
+        # ROOT-KV 10-19: a REAL missing synchroniser on the surviving shared online chain must still fail.
+        # bypassed: stage 2 samples the source flag directly (one-flop synchroniser).
+        # dropped: both stages deleted; every reader of stage 2 reads the source flag (no synchroniser at all).
+        src_bits = {q_of[n] for n in online if n.endswith('wr_online') or n.endswith('rd_online')}
+        mutated = []
+        for s2 in [n for n in online if n.endswith('_r2') or n.endswith('_w2')]:
+            f2 = flops.get(q_of[s2])
+            f1 = flops.get(f2['connections']['D'][0]) if f2 else None
+            if f1 is None or f1['connections']['D'][0] not in src_bits:
+                continue
+            src_bit = f1['connections']['D'][0]
+            if name == 'merged_sync_bypassed':
+                f2['connections']['D'] = [src_bit]
+            else:
+                s2_bit = q_of[s2]
+                for k in [k for k, c in m['cells'].items() if c is f1 or c is f2]:
+                    del m['cells'][k]
+                for c in m['cells'].values():
+                    for p, bits in c['connections'].items():
+                        c['connections'][p] = [src_bit if b == s2_bit else b for b in bits]
+            mutated.append(s2)
+        assert mutated, online
     jp, vp = out / f'{name}.json', out / f'{name}.v'
     jp.write_text(json.dumps(data))
     p = subprocess.run([YOSYS, '-Q', '-T', '-p', f'read_json {jp}; write_verilog -noattr -noexpr {vp}'],
@@ -966,3 +989,16 @@ class MergedOnline(unittest.TestCase):
         self.assertNotEqual(rc, 0, log)
         self.assertNotIn('ACTUAL_GF_GRAPH_PASS', log)
         self.assertIn('OT_GF:', log)
+
+    def test_real_missing_synchroniser_still_fails(self):
+        # ROOT-KV 10-19 (merging 8bdc5d6bf): the MERGED_ONLINE admission must not hide a real missing or short
+        # synchroniser on the chain that survives opt_merge.
+        for name in ('merged_sync_bypassed', 'merged_sync_dropped'):
+            with self.subTest(name=name):
+                out = self.root / f'sta_{name}'
+                out.mkdir()
+                rc, log, _ = merge_sta_case(self.root, out, name)
+                self.assertNotEqual(rc, 0, log)
+                self.assertNotIn('ACTUAL_GF_GRAPH_PASS', log)
+                self.assertRegex(log, r'OT_GF: unapproved actual crossing \S+online\S* -> .*\(src f\d [wr]onl')
+                self.assertNotIn('MERGED_ONLINE', log)
