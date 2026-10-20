@@ -1010,27 +1010,47 @@ endmodule
 // qfd_dv_s5_xhead: one column head ot_qfd_xhead (NH 8, NATIVE_AFFINE 1, w130 leaves: LEAF_READ_PIN_PIPE 1, FILL_LEAD 5,
 // DX 14) with its strap tile-id registers (from the die column id cid = 4 sid + c) and the corridor station retag.
 // One master x 4 (the column is the cid input, no parameter).
+// QW-SLICE6-HEADS 10-19: the leaf ports are split per write chain (w0_* = chain 0 = x leaves 0..3, w1_* = chain 1 =
+// leaves 4..7) and a_d into the fill word a_f = a_d[1566:380] and the {ib, go} part a_ib = a_d[379:0], so each bundle
+// owns one face of the 216 x 432 head (chain 0 W, chain 1 E, a_f S; <= 6 pins/um).  ONWARD_REG stays 0 (it would add
+// a dead 1,567-flop onward copy b_d): the two chains' identical write words may merge into one flop driving both faces
+// (fanout 2, <= 216 um), the read requests are per leaf.  RTL and cycles of qfd_dv_heads unchanged.
 module qfd_dv_s5_xhead #(parameter integer HEAD_MUT = 0) (
     input  wire           ck,
     input  wire           rst_n,
     input  wire [5:0]     cid,
     input  wire           fault_i,
-    input  wire [1566:0]  a_d,
+    input  wire [1186:0]  a_f,
+    input  wire [379:0]   a_ib,
     output wire [515:0]   n_d,
     output wire [515:0]   s_d,
-    output wire [1:0]     lw_v, lw_ep, lc_v, lc_ep,
-    output wire [11:0]    lw_off,
-    output wire [127:0]   lw_m,
-    output wire [2047:0]  lw_d,
-    output wire [143:0]   lw_ctl,
-    output wire [7:0]     lr_v, lr_t, lr_ep,
-    output wire [223:0]   lr_p,
-    input  wire [511:0]   lq,
-    input  wire [7:0]     lq_v,
-    input  wire [7:0]     lq_bad,
+    output wire           w0_v, w0_ep, c0_v, c0_ep, w1_v, w1_ep, c1_v, c1_ep,
+    output wire [5:0]     w0_off, w1_off,
+    output wire [63:0]    w0_m, w1_m,
+    output wire [1023:0]  w0_d, w1_d,
+    output wire [71:0]    w0_ctl, w1_ctl,
+    output wire [3:0]     r0_v, r0_t, r0_ep, r1_v, r1_t, r1_ep,
+    output wire [111:0]   r0_p, r1_p,
+    input  wire [255:0]   q0, q1,
+    input  wire [3:0]     q0_v, q1_v,
+    input  wire [3:0]     q0_bad, q1_bad,
     output wire           l_rst_n,        // the column's landed reset -> its 8 x leaves
     output wire           fault
 );
+    wire [1566:0]  a_d = {a_f, a_ib};
+    wire [1:0]     lw_v, lw_ep, lc_v, lc_ep;
+    wire [11:0]    lw_off;
+    wire [127:0]   lw_m;
+    wire [2047:0]  lw_d;
+    wire [143:0]   lw_ctl;
+    wire [7:0]     lr_v, lr_t, lr_ep;
+    wire [223:0]   lr_p;
+    wire [511:0]   lq = {q1, q0};
+    wire [7:0]     lq_v = {q1_v, q0_v};
+    wire [7:0]     lq_bad = {q1_bad, q0_bad};
+    assign {w1_v, w0_v} = lw_v; assign {w1_ep, w0_ep} = lw_ep; assign {c1_v, c0_v} = lc_v; assign {c1_ep, c0_ep} = lc_ep;
+    assign {w1_off, w0_off} = lw_off; assign {w1_m, w0_m} = lw_m; assign {w1_d, w0_d} = lw_d; assign {w1_ctl, w0_ctl} = lw_ctl;
+    assign {r1_v, r0_v} = lr_v; assign {r1_t, r0_t} = lr_t; assign {r1_ep, r0_ep} = lr_ep; assign {r1_p, r0_p} = lr_p;
     localparam integer AW = 24, NW = 18, XCW = 12, NH = 8, NCOLD = 48;
     localparam integer IBW = 3 * NW + 13 * AW + 13;
     localparam integer CW  = 1 + IBW + 128 + 8;

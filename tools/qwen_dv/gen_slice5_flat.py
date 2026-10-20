@@ -239,10 +239,17 @@ def gen(hard):
         w(f"    // ---- column {c}: xhead + 8 x leaves (two write chains of 4)")
         w(f"    wire [1:0] lw_v{c}, lw_ep{c}, lc_v{c}, lc_ep{c}; wire [11:0] lw_off{c}; wire [127:0] lw_m{c}; wire [2047:0] lw_d{c};")
         w(f"    wire [143:0] lw_ctl{c}; wire [7:0] lr_v{c}, lr_t{c}, lr_ep{c}, lq_v{c}; wire [223:0] lr_p{c}; wire [511:0] lq{c}; wire lrst{c};")
-        w(f"    qfd_dv_s5_xhead u_xh{c} (.ck(ck), .rst_n({R('rst_n')}), .cid(cid[{6*c+5}:{6*c}]), .fault_i({fchn[c+1]}), .a_d(hw),")
-        w(f"        .n_d(cw_n{c}), .s_d(cs{c}), .lw_v(lw_v{c}), .lw_ep(lw_ep{c}), .lc_v(lc_v{c}), .lc_ep(lc_ep{c}), .lw_off(lw_off{c}),")
-        w(f"        .lw_m(lw_m{c}), .lw_d(lw_d{c}), .lw_ctl(lw_ctl{c}), .lr_v(lr_v{c}), .lr_t(lr_t{c}), .lr_ep(lr_ep{c}), .lr_p(lr_p{c}),")
-        w(f"        .lq(lq{c}), .lq_v(lq_v{c}), .lq_bad(lqb{c}), .l_rst_n(lrst{c}), .fault({fchn[c]}));")
+        xc = [f".ck(ck)", f".rst_n({R('rst_n')})", f".cid(cid[{6*c+5}:{6*c}])", f".fault_i({fchn[c+1]})", ".a_f(hw[1566:380])",
+              ".a_ib(hw[379:0])", f".n_d(cw_n{c})", f".s_d(cs{c})"]
+        for h in range(2):
+            xc += [f".w{h}_v(lw_v{c}[{h}])", f".w{h}_ep(lw_ep{c}[{h}])", f".c{h}_v(lc_v{c}[{h}])", f".c{h}_ep(lc_ep{c}[{h}])",
+                   f".w{h}_off(lw_off{c}[{6*h+5}:{6*h}])", f".w{h}_m(lw_m{c}[{64*h+63}:{64*h}])",
+                   f".w{h}_d(lw_d{c}[{1024*h+1023}:{1024*h}])", f".w{h}_ctl(lw_ctl{c}[{72*h+71}:{72*h}])",
+                   f".r{h}_v(lr_v{c}[{4*h+3}:{4*h}])", f".r{h}_t(lr_t{c}[{4*h+3}:{4*h}])", f".r{h}_ep(lr_ep{c}[{4*h+3}:{4*h}])",
+                   f".r{h}_p(lr_p{c}[{112*h+111}:{112*h}])", f".q{h}(lq{c}[{256*h+255}:{256*h}])",
+                   f".q{h}_v(lq_v{c}[{4*h+3}:{4*h}])", f".q{h}_bad(lqb{c}[{4*h+3}:{4*h}])"]
+        xc += [f".l_rst_n(lrst{c})", f".fault({fchn[c]})"]
+        w(f"    qfd_dv_s5_xhead u_xh{c} (" + ", ".join(xc) + ");")
         lr = "rst_n" if hard else f"lrst{c}"
         for h in range(2):
             pre = f"x{c}{h}"

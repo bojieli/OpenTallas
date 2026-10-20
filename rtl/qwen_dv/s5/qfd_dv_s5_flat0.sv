@@ -752,10 +752,7 @@ module qfd_dv_s5_flat0 #(parameter integer MUT = 0) (
     // ---- column 0: xhead + 8 x leaves (two write chains of 4)
     wire [1:0] lw_v0, lw_ep0, lc_v0, lc_ep0; wire [11:0] lw_off0; wire [127:0] lw_m0; wire [2047:0] lw_d0;
     wire [143:0] lw_ctl0; wire [7:0] lr_v0, lr_t0, lr_ep0, lq_v0; wire [223:0] lr_p0; wire [511:0] lq0; wire lrst0;
-    qfd_dv_s5_xhead u_xh0 (.ck(ck), .rst_n(rst_n), .cid(cid[5:0]), .fault_i(fch1), .a_d(hw),
-        .n_d(cw_n0), .s_d(cs0), .lw_v(lw_v0), .lw_ep(lw_ep0), .lc_v(lc_v0), .lc_ep(lc_ep0), .lw_off(lw_off0),
-        .lw_m(lw_m0), .lw_d(lw_d0), .lw_ctl(lw_ctl0), .lr_v(lr_v0), .lr_t(lr_t0), .lr_ep(lr_ep0), .lr_p(lr_p0),
-        .lq(lq0), .lq_v(lq_v0), .lq_bad(lqb0), .l_rst_n(lrst0), .fault(fch0));
+    qfd_dv_s5_xhead u_xh0 (.ck(ck), .rst_n(rst_n), .cid(cid[5:0]), .fault_i(fch1), .a_f(hw[1566:380]), .a_ib(hw[379:0]), .n_d(cw_n0), .s_d(cs0), .w0_v(lw_v0[0]), .w0_ep(lw_ep0[0]), .c0_v(lc_v0[0]), .c0_ep(lc_ep0[0]), .w0_off(lw_off0[5:0]), .w0_m(lw_m0[63:0]), .w0_d(lw_d0[1023:0]), .w0_ctl(lw_ctl0[71:0]), .r0_v(lr_v0[3:0]), .r0_t(lr_t0[3:0]), .r0_ep(lr_ep0[3:0]), .r0_p(lr_p0[111:0]), .q0(lq0[255:0]), .q0_v(lq_v0[3:0]), .q0_bad(lqb0[3:0]), .w1_v(lw_v0[1]), .w1_ep(lw_ep0[1]), .c1_v(lc_v0[1]), .c1_ep(lc_ep0[1]), .w1_off(lw_off0[11:6]), .w1_m(lw_m0[127:64]), .w1_d(lw_d0[2047:1024]), .w1_ctl(lw_ctl0[143:72]), .r1_v(lr_v0[7:4]), .r1_t(lr_t0[7:4]), .r1_ep(lr_ep0[7:4]), .r1_p(lr_p0[223:112]), .q1(lq0[511:256]), .q1_v(lq_v0[7:4]), .q1_bad(lqb0[7:4]), .l_rst_n(lrst0), .fault(fch0));
     wire x00cv0, x00cep0, x00wv0, x00wep0; wire [5:0] x00woff0; wire [63:0] x00wm0; wire [1023:0] x00wd0; wire [71:0] x00wc0;
     wire x00cv1, x00cep1, x00wv1, x00wep1; wire [5:0] x00woff1; wire [63:0] x00wm1; wire [1023:0] x00wd1; wire [71:0] x00wc1;
     wire x00cv2, x00cep2, x00wv2, x00wep2; wire [5:0] x00woff2; wire [63:0] x00wm2; wire [1023:0] x00wd2; wire [71:0] x00wc2;
@@ -821,10 +818,7 @@ module qfd_dv_s5_flat0 #(parameter integer MUT = 0) (
     // ---- column 1: xhead + 8 x leaves (two write chains of 4)
     wire [1:0] lw_v1, lw_ep1, lc_v1, lc_ep1; wire [11:0] lw_off1; wire [127:0] lw_m1; wire [2047:0] lw_d1;
     wire [143:0] lw_ctl1; wire [7:0] lr_v1, lr_t1, lr_ep1, lq_v1; wire [223:0] lr_p1; wire [511:0] lq1; wire lrst1;
-    qfd_dv_s5_xhead u_xh1 (.ck(ck), .rst_n(rst_n), .cid(cid[11:6]), .fault_i(fch2), .a_d(hw),
-        .n_d(cw_n1), .s_d(cs1), .lw_v(lw_v1), .lw_ep(lw_ep1), .lc_v(lc_v1), .lc_ep(lc_ep1), .lw_off(lw_off1),
-        .lw_m(lw_m1), .lw_d(lw_d1), .lw_ctl(lw_ctl1), .lr_v(lr_v1), .lr_t(lr_t1), .lr_ep(lr_ep1), .lr_p(lr_p1),
-        .lq(lq1), .lq_v(lq_v1), .lq_bad(lqb1), .l_rst_n(lrst1), .fault(fch1));
+    qfd_dv_s5_xhead u_xh1 (.ck(ck), .rst_n(rst_n), .cid(cid[11:6]), .fault_i(fch2), .a_f(hw[1566:380]), .a_ib(hw[379:0]), .n_d(cw_n1), .s_d(cs1), .w0_v(lw_v1[0]), .w0_ep(lw_ep1[0]), .c0_v(lc_v1[0]), .c0_ep(lc_ep1[0]), .w0_off(lw_off1[5:0]), .w0_m(lw_m1[63:0]), .w0_d(lw_d1[1023:0]), .w0_ctl(lw_ctl1[71:0]), .r0_v(lr_v1[3:0]), .r0_t(lr_t1[3:0]), .r0_ep(lr_ep1[3:0]), .r0_p(lr_p1[111:0]), .q0(lq1[255:0]), .q0_v(lq_v1[3:0]), .q0_bad(lqb1[3:0]), .w1_v(lw_v1[1]), .w1_ep(lw_ep1[1]), .c1_v(lc_v1[1]), .c1_ep(lc_ep1[1]), .w1_off(lw_off1[11:6]), .w1_m(lw_m1[127:64]), .w1_d(lw_d1[2047:1024]), .w1_ctl(lw_ctl1[143:72]), .r1_v(lr_v1[7:4]), .r1_t(lr_t1[7:4]), .r1_ep(lr_ep1[7:4]), .r1_p(lr_p1[223:112]), .q1(lq1[511:256]), .q1_v(lq_v1[7:4]), .q1_bad(lqb1[7:4]), .l_rst_n(lrst1), .fault(fch1));
     wire x10cv0, x10cep0, x10wv0, x10wep0; wire [5:0] x10woff0; wire [63:0] x10wm0; wire [1023:0] x10wd0; wire [71:0] x10wc0;
     wire x10cv1, x10cep1, x10wv1, x10wep1; wire [5:0] x10woff1; wire [63:0] x10wm1; wire [1023:0] x10wd1; wire [71:0] x10wc1;
     wire x10cv2, x10cep2, x10wv2, x10wep2; wire [5:0] x10woff2; wire [63:0] x10wm2; wire [1023:0] x10wd2; wire [71:0] x10wc2;
@@ -890,10 +884,7 @@ module qfd_dv_s5_flat0 #(parameter integer MUT = 0) (
     // ---- column 2: xhead + 8 x leaves (two write chains of 4)
     wire [1:0] lw_v2, lw_ep2, lc_v2, lc_ep2; wire [11:0] lw_off2; wire [127:0] lw_m2; wire [2047:0] lw_d2;
     wire [143:0] lw_ctl2; wire [7:0] lr_v2, lr_t2, lr_ep2, lq_v2; wire [223:0] lr_p2; wire [511:0] lq2; wire lrst2;
-    qfd_dv_s5_xhead u_xh2 (.ck(ck), .rst_n(rst_n), .cid(cid[17:12]), .fault_i(fch3), .a_d(hw),
-        .n_d(cw_n2), .s_d(cs2), .lw_v(lw_v2), .lw_ep(lw_ep2), .lc_v(lc_v2), .lc_ep(lc_ep2), .lw_off(lw_off2),
-        .lw_m(lw_m2), .lw_d(lw_d2), .lw_ctl(lw_ctl2), .lr_v(lr_v2), .lr_t(lr_t2), .lr_ep(lr_ep2), .lr_p(lr_p2),
-        .lq(lq2), .lq_v(lq_v2), .lq_bad(lqb2), .l_rst_n(lrst2), .fault(fch2));
+    qfd_dv_s5_xhead u_xh2 (.ck(ck), .rst_n(rst_n), .cid(cid[17:12]), .fault_i(fch3), .a_f(hw[1566:380]), .a_ib(hw[379:0]), .n_d(cw_n2), .s_d(cs2), .w0_v(lw_v2[0]), .w0_ep(lw_ep2[0]), .c0_v(lc_v2[0]), .c0_ep(lc_ep2[0]), .w0_off(lw_off2[5:0]), .w0_m(lw_m2[63:0]), .w0_d(lw_d2[1023:0]), .w0_ctl(lw_ctl2[71:0]), .r0_v(lr_v2[3:0]), .r0_t(lr_t2[3:0]), .r0_ep(lr_ep2[3:0]), .r0_p(lr_p2[111:0]), .q0(lq2[255:0]), .q0_v(lq_v2[3:0]), .q0_bad(lqb2[3:0]), .w1_v(lw_v2[1]), .w1_ep(lw_ep2[1]), .c1_v(lc_v2[1]), .c1_ep(lc_ep2[1]), .w1_off(lw_off2[11:6]), .w1_m(lw_m2[127:64]), .w1_d(lw_d2[2047:1024]), .w1_ctl(lw_ctl2[143:72]), .r1_v(lr_v2[7:4]), .r1_t(lr_t2[7:4]), .r1_ep(lr_ep2[7:4]), .r1_p(lr_p2[223:112]), .q1(lq2[511:256]), .q1_v(lq_v2[7:4]), .q1_bad(lqb2[7:4]), .l_rst_n(lrst2), .fault(fch2));
     wire x20cv0, x20cep0, x20wv0, x20wep0; wire [5:0] x20woff0; wire [63:0] x20wm0; wire [1023:0] x20wd0; wire [71:0] x20wc0;
     wire x20cv1, x20cep1, x20wv1, x20wep1; wire [5:0] x20woff1; wire [63:0] x20wm1; wire [1023:0] x20wd1; wire [71:0] x20wc1;
     wire x20cv2, x20cep2, x20wv2, x20wep2; wire [5:0] x20woff2; wire [63:0] x20wm2; wire [1023:0] x20wd2; wire [71:0] x20wc2;
@@ -959,10 +950,7 @@ module qfd_dv_s5_flat0 #(parameter integer MUT = 0) (
     // ---- column 3: xhead + 8 x leaves (two write chains of 4)
     wire [1:0] lw_v3, lw_ep3, lc_v3, lc_ep3; wire [11:0] lw_off3; wire [127:0] lw_m3; wire [2047:0] lw_d3;
     wire [143:0] lw_ctl3; wire [7:0] lr_v3, lr_t3, lr_ep3, lq_v3; wire [223:0] lr_p3; wire [511:0] lq3; wire lrst3;
-    qfd_dv_s5_xhead u_xh3 (.ck(ck), .rst_n(rst_n), .cid(cid[23:18]), .fault_i(tap_fault), .a_d(hw),
-        .n_d(cw_n3), .s_d(cs3), .lw_v(lw_v3), .lw_ep(lw_ep3), .lc_v(lc_v3), .lc_ep(lc_ep3), .lw_off(lw_off3),
-        .lw_m(lw_m3), .lw_d(lw_d3), .lw_ctl(lw_ctl3), .lr_v(lr_v3), .lr_t(lr_t3), .lr_ep(lr_ep3), .lr_p(lr_p3),
-        .lq(lq3), .lq_v(lq_v3), .lq_bad(lqb3), .l_rst_n(lrst3), .fault(fch3));
+    qfd_dv_s5_xhead u_xh3 (.ck(ck), .rst_n(rst_n), .cid(cid[23:18]), .fault_i(tap_fault), .a_f(hw[1566:380]), .a_ib(hw[379:0]), .n_d(cw_n3), .s_d(cs3), .w0_v(lw_v3[0]), .w0_ep(lw_ep3[0]), .c0_v(lc_v3[0]), .c0_ep(lc_ep3[0]), .w0_off(lw_off3[5:0]), .w0_m(lw_m3[63:0]), .w0_d(lw_d3[1023:0]), .w0_ctl(lw_ctl3[71:0]), .r0_v(lr_v3[3:0]), .r0_t(lr_t3[3:0]), .r0_ep(lr_ep3[3:0]), .r0_p(lr_p3[111:0]), .q0(lq3[255:0]), .q0_v(lq_v3[3:0]), .q0_bad(lqb3[3:0]), .w1_v(lw_v3[1]), .w1_ep(lw_ep3[1]), .c1_v(lc_v3[1]), .c1_ep(lc_ep3[1]), .w1_off(lw_off3[11:6]), .w1_m(lw_m3[127:64]), .w1_d(lw_d3[2047:1024]), .w1_ctl(lw_ctl3[143:72]), .r1_v(lr_v3[7:4]), .r1_t(lr_t3[7:4]), .r1_ep(lr_ep3[7:4]), .r1_p(lr_p3[223:112]), .q1(lq3[511:256]), .q1_v(lq_v3[7:4]), .q1_bad(lqb3[7:4]), .l_rst_n(lrst3), .fault(fch3));
     wire x30cv0, x30cep0, x30wv0, x30wep0; wire [5:0] x30woff0; wire [63:0] x30wm0; wire [1023:0] x30wd0; wire [71:0] x30wc0;
     wire x30cv1, x30cep1, x30wv1, x30wep1; wire [5:0] x30woff1; wire [63:0] x30wm1; wire [1023:0] x30wd1; wire [71:0] x30wc1;
     wire x30cv2, x30cep2, x30wv2, x30wep2; wire [5:0] x30woff2; wire [63:0] x30wm2; wire [1023:0] x30wd2; wire [71:0] x30wc2;
