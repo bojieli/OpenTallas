@@ -31,8 +31,20 @@ TOPSRC = "rtl/physical/qcluster/qfd_c_b16_dv.sv"
 DIAG = "tools/ref_tile/specs_qcluster/qfd_c_b16_dv_diag16rt.json"
 DIAG_SDC = "physical/qcluster/qfd_c_b16_dv_quadrants.sdc"
 DIAG_SITES = "physical/qcluster/qfd_c_b16_dv_sites.tsv"
-KITS = {"soft": "qfd_c_b16_full", "softb": "qfd_c_b16_fullb", "ring": "qfd_c_b16_fullh", "stn": "qfd_c_b16_fullhb"}
+KITS = {"soft": "qfd_c_b16_full", "softb": "qfd_c_b16_fullb", "ring": "qfd_c_b16_fullh", "stn": "qfd_c_b16_fullhb",
+        "softk": "qfd_c_b16_fullk", "softkb": "qfd_c_b16_fullkb"}
 KIT_VARIANTS = ("soft", "softb")      # written as kits; "ring" / "stn" (all-hard landing halves) = area study, plan only
+# QW-CB16FULL2 (10-20): native-census-safe variants (default output; --legacy also rewrites soft / softb):
+#   softk  (qfd_c_b16_fullk,  MAIN):     soft rings everywhere, writer / reader = qfd_c_land_w1k / qfd_c_land_r1k (kept
+#           per-24-bit control copies: no driver > 32 loads), every ring half in its own RESERVED std-cell bay (BAY_*),
+#           flops spread over the bay at <= ~35 % (fabric_sites_place_k.tcl) instead of a 24-um 100 %-dense FIRM block
+#   softkb (qfd_c_b16_fullkb, FALLBACK): same, 3-deep pads = 3 CLOSED stn514 (fewer soft flops)
+K_VARIANTS = ("softk", "softkb")
+SOFTRING = ("soft", "softk")           # pads -> same-clock soft rings
+STNPAD = ("stn", "softb", "softkb")    # pads -> 3 CLOSED stn514
+OUT_RTL_K = "rtl/physical/qcluster/qfd_c_b16_fullk.sv"
+BAY = {"w": (56.16, 56.16), "r": (43.2, 43.2)}   # ring writer (2,056 slot flops + 2,056 enable muxes) / reader (514 + AND-OR)
+BAY_MAX_ANCHOR_UM = 160.0             # bay centre -> its hard neighbour pin (the single-cycle hop is checked below)
 HARD = ("ring", "stn")
 OUT_RTL = "rtl/physical/qcluster/qfd_c_b16_full.sv"
 OUT_SDC = {v: f"physical/qcluster/{k}_regions.sdc" for v, k in KITS.items()}
@@ -142,21 +154,45 @@ def rewrite(variant):
             out[r["line"]] = "\n".join(L)
     for tag, d in pad_triples(recs).items():
         ck = d[0]["ports"]["ck"]; reg = ck[3:]
-        if variant in ("stn", "softb"):
+        if variant in STNPAD:
             for k in range(len(d)):
                 l = lines[d[k]["line"]]
                 out[d[k]["line"]] = l.replace("qfd_q3h_stn #(.W(514), .N(1))", "qfd_c_stn514", 1)
-        elif variant == "soft":
+        elif variant in SOFTRING:
             col, row = reg[1], reg[3]
             rsi = f"trst_{col}_{row}"
+            if variant in K_VARIANTS:
+                # census (<= 32 loads): trst_<c>_<r> already feeds the A0; every ring half gets its OWN leaf copy, a sibling
+                # of the A0 leaf stage (same D, same edge -> identical reset epoch, no added cycle)
+                leaf = re.search(rf"assign rstl_t_{col}_{row} = (\w+)_q;", "\n".join(lines))[1]
+                ld = re.search(rf"u_{leaf} \(\.ck\((\w+)\), \.d\((\w+)\)", "\n".join(lines))
+                assert ld and ld[1] == ck, (leaf, ld and ld[1], ck)
+                # the leaf sits at the A0's reset-pad site, up to ~1 mm from a ring bay: the copy is a RUN of RCOPY stages
+                # tapped RCOPY - 1 stages above the leaf's D (equal depth -> the same edge as the A0 leaf), sited along the line
+                tap = ld[2]
+                for _ in range(RCOPY - 1):
+                    tap = re.search(rf"u_{tap[:-2]} \(\.ck\({ck}\), \.d\((\w+)\)", "\n".join(lines))[1]
+                RSTCOPY.setdefault(variant, {})
             for j in range(len(d) // 3):
                 name = f"land_pad_{tag}_{j}"
                 src = d[0]["ports"]["d"] if j == 0 else f"pad_{tag}_{3 * j - 1}"
+                rw = rr = rsi
+                Lr = []
+                if variant in K_VARIANTS:
+                    rw, rr = f"lrst_{name}_w", f"lrst_{name}_r"
+                    for sd, rn in (("w", rw), ("r", rr)):
+                        prev = tap
+                        for k in range(RCOPY):
+                            qn = rn if k == RCOPY - 1 else f"rq_{name}_{sd}_{k}_q"
+                            Lr.append(f"    wire [0:0] {qn};  qfd_q3h_stn #(.W(1), .N(1)) u_rq_{name}_{sd}_{k} (.ck({ck}), .d({prev}), .q({qn}));"
+                                      f"   // reset copy run {k + 1}/{RCOPY} (tap u_{tap[:-2]}; same depth as u_{leaf})")
+                            RSTCOPY[variant][f"u_fab.u_rq_{name}_{sd}_{k}"] = (f"u_fab.u_{tap[:-2]}", f"u_fab.u_{name}_{sd}", (k + 1) / (RCOPY + 1))
+                            prev = qn
                 L = [f"    // pads u_pad_{tag}_{3 * j}..{3 * j + 2} (3-deep 514-b delay) -> same-clock soft landing ring (qfd_c_land D 4 / K 2 = 3 edges, checklist 5)",
                      f"    wire [513:0] pad_{tag}_{3 * j + 2};",
-                     f"    wire [2055:0] {name}_bank;  wire [11:0] {name}_epo;  wire [3:0] {name}_vld;",
-                     f"    qfd_c_land_w #(.W(514), .D(4)) u_{name}_w (.ck({ck}), .rsi({rsi}), .i({src}), .bank({name}_bank), .epo({name}_epo), .vld({name}_vld));",
-                     f"    qfd_c_land_r #(.W(514), .D(4), .K(2)) u_{name}_r (.ck({ck}), .rsi({rsi}), .bank({name}_bank), .epo({name}_epo), .vld({name}_vld), .o(pad_{tag}_{3 * j + 2}));"]
+                     f"    wire [2055:0] {name}_bank;  wire [11:0] {name}_epo;  wire [3:0] {name}_vld;"] + Lr + [
+                     f"    qfd_c_land_w #(.W(514), .D(4)) u_{name}_w (.ck({ck}), .rsi({rw}), .i({src}), .bank({name}_bank), .epo({name}_epo), .vld({name}_vld));",
+                     f"    qfd_c_land_r #(.W(514), .D(4), .K(2)) u_{name}_r (.ck({ck}), .rsi({rr}), .bank({name}_bank), .epo({name}_epo), .vld({name}_vld), .o(pad_{tag}_{3 * j + 2}));"]
                 out[d[3 * j]["line"]] = "\n".join(L); out[d[3 * j + 1]["line"]] = ""; out[d[3 * j + 2]["line"]] = ""
                 rings.append(dict(name=name, w=514, src=ck, dst=ck, at_w=d[3 * j]["at"], at_r=d[3 * j]["at"], reg_w=reg, reg_r=reg,
                                   pads=[f"u_pad_{tag}_{3 * j + k}" for k in range(3)]))
@@ -195,9 +231,15 @@ def fabric_rtl(variant):
     txt = txt.replace("module qfd_c_b16_dv_fabric", f"module {top}_fabric", 1)
     hdr = (f"// GENERATED by tools/qwen_cluster/qc_full_kit.py from {FAB} (MUT 0 path) -- do not edit.  QW-CB16FULL variant '{variant}':\n"
            "// landings: " + ("CLOSED hard halves" if variant in HARD else "soft qfd_c_land_w rings + qfd_c_land_r1h readers") + "; 3-deep pads -> " +
-           {"ring": "hard ring pair", "stn": "3 hard stn514", "soft": "soft same-clock landing ring", "softb": "3 hard stn514"}[variant] +
+           {"ring": "hard ring pair", "stn": "3 hard stn514", "soft": "soft same-clock landing ring", "softb": "3 hard stn514",
+            "softk": "soft same-clock landing ring (w1k/r1k)", "softkb": "3 hard stn514"}[variant] +
            "; xstn -> xstn_safe.  Edge counts identical to the fabric.\n")
-    if variant not in HARD:
+    if variant in K_VARIANTS:
+        # QW-CB16FULL2 census fix (checklist 3): kept per-group control copies (qfd_c_land_k.sv, bench_land_k.sh)
+        nw, nr = txt.count("qfd_c_land_w #("), txt.count("qfd_c_land_r #(")
+        txt = txt.replace("qfd_c_land_w #(", "qfd_c_land_w1k #(").replace("qfd_c_land_r #(", "qfd_c_land_r1k #(")
+        hdr += f"// soft landing rings: {nw} x qfd_c_land_w1k + {nr} x qfd_c_land_r1k (kept per-24-bit control copies, native census <= 32 loads).\n"
+    elif variant not in HARD:
         # checklist 4/5: soft readers use qfd_c_land_r1h (registered one-hot AND-OR read, same ports / epochs / latency as
         # qfd_c_land_r; lockstep bench tools/qwen_cluster/bench_land_r1h.sh) instead of the 514-b runtime part-select
         n = txt.count("qfd_c_land_r #(")
@@ -233,6 +275,10 @@ GEOM = {  # widened channels (um); tile bands keep their width.  Sized by fit (p
     "softb": dict(L=172.8, A=319.68, T=276.48, B=276.48, R=172.8, m0=129.6, g0=172.8, g1=172.8, g2=172.8, m1=129.6),   # + room in A / B for the 45 pad stn514
     "ring": dict(L=280.8, A=496.8, T=453.6, B=496.8, R=280.8, m0=172.8, g0=388.8, g1=388.8, g2=388.8, m1=172.8),
     "stn":  dict(L=280.8, A=453.6, T=453.6, B=453.6, R=280.8, m0=172.8, g0=345.6, g1=345.6, g2=345.6, m1=172.8),
+    # QW-CB16FULL2: = the softb outline (A +43.2, B +86.4 vs soft): the smallest corridor set in which every reserved ring
+    # bay sits <= ~270 um (far corner) from its hard neighbour pin (sweep 10-20: soft geometry -> no bay site / 453 um)
+    "softk":  dict(L=172.8, A=319.68, T=276.48, B=276.48, R=172.8, m0=129.6, g0=172.8, g1=172.8, g2=172.8, m1=129.6),
+    "softkb": dict(L=172.8, A=319.68, T=276.48, B=276.48, R=172.8, m0=129.6, g0=172.8, g1=172.8, g2=172.8, m1=129.6),
 }
 
 def orient_xy(kind, orient, x, y):
@@ -312,7 +358,7 @@ def placement(variant, X, R):
         flow_up = ar[1] >= aw[1]
         cx, cy = mapv((aw[0] + ar[0]) / 2, ax), mapv((aw[1] + ar[1]) / 2, ay)
         items.append((1, X1["name"], ("stack", hk, flow_up), 194.4, 302.4, cx, cy, None, (X1["reg_w"], X1["reg_r"])))
-    if variant in ("stn", "softb"):
+    if variant in STNPAD:
         for r in recs:
             if r["mod"] == "qfd_q3h_stn" and r["par"].get("W") == "514":
                 w, h, _ = LEFS["qfd_c_stn514"]
@@ -341,7 +387,7 @@ def placement(variant, X, R):
                     put(f"u_fab.u_{n}_r{s}", f"qfd_c_land_r{hk}_narrow", x + dx, y, "MX", reg[1])
         else:
             put(n, kind, x, y, orient or "R0", reg)
-    return dict(W=W, H=H, ax=ax, ay=ay), P
+    return dict(W=W, H=H, ax=ax, ay=ay, F=F), P
 
 # ------------------------------------------------------------------------------------------------ bit-level reach
 DIR_OUT = {"q", "o", "a_d", "tap_d", "bank_w", "bank_e", "vld", "t_out", "n_y", "tie_hi", "tie_lo"}
@@ -542,6 +588,10 @@ def sdc(Xall, variant):
     return hdr + t[:a] + "\n".join(blk) + t[b:]
 
 # ------------------------------------------------------------------------------------------------------- reset sites
+BODY = {}
+RSTCOPY = {}      # variant -> {copy stage prefix: (tap stage prefix, ring half prefix, fraction along tap -> bay)}
+RCOPY = 3         # stages per pad-ring reset copy run
+
 def soft_anchor(txt, P):
     """soft landing halves: writer beside the hard pin that drives its i, reader beside the hard pin its o feeds."""
     drv, sinks, resolve, widths = netlist(txt)
@@ -549,7 +599,7 @@ def soft_anchor(txt, P):
     for (dst, b) in sinks:
         by_net[resolve(b)[1][0]].append(dst)
     A = {}
-    for m in re.finditer(r"qfd_c_land_([wr]) #\([^;]*?\)\s+(u_\w+)\s+\(([^;]*?)\);", txt):
+    for m in re.finditer(r"qfd_c_land_([wr])(?:1k|1h)? #\([^;]*?\)\s+(u_\w+)\s+\(([^;]*?)\);", txt):
         side, inst, ports = m[1], m[2], dict(PORT_RE.findall(m[3]))
         if side == "w":
             d, _ = resolve(split_expr(ports["i"])[0][:1] + (0,) if split_expr(ports["i"])[0][1] is None else split_expr(ports["i"])[0])
@@ -583,6 +633,8 @@ def sites(variant, env, P, R=(), anchor=None):
                 L.append(f"u_fab.u_{ring_of[short]}_{side}\t{nx:.3f}\t{ny:.3f}\t{max(0.0, nx - 40):.3f}\t{min(env['W'], nx + 40):.3f}")
             continue
         nx, ny = mapv(float(x), ax), mapv(float(y), ay)
+        if variant in K_VARIANTS and re.fullmatch(r"u_fab\.u_land_\w+_[wr]", p):
+            continue             # ring halves: reserved bays below
         if p in anchor:          # pulled to its hard neighbour pin, at most 100 um away from it
             axp, ayp = anchor[p]; dd = abs(nx - axp) + abs(ny - ayp)
             if dd > 100:
@@ -594,7 +646,116 @@ def sites(variant, env, P, R=(), anchor=None):
                 _, nx, ny = min(cand)
         nx = min(max(nx, 8.0), env["W"] - 8.0); ny = min(max(ny, 8.0), env["H"] - 8.0)
         L.append(f"{p}\t{nx:.3f}\t{ny:.3f}\t{max(0.0, nx - w / 2):.3f}\t{min(env['W'], nx + w / 2):.3f}")
+    if variant in K_VARIANTS:
+        L += bays(variant, env, P, R, anchor)
+        at = {l.split("\t")[0]: tuple(map(float, l.split("\t")[1:3])) for l in L[1:]}
+        hop = []
+        for cp, (sib, half, f) in sorted(RSTCOPY.get(variant, {}).items()):
+            a, b = at[sib], at[half]
+            mx, my = a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f
+            L.append(f"{cp}\t{mx:.3f}\t{my:.3f}\t{max(0.0, mx - 15):.3f}\t{min(env['W'], mx + 15):.3f}")
+            hop.append((round((abs(a[0] - b[0]) + abs(a[1] - b[1])) / (RCOPY + 1) + 40, 1), cp))   # per hop + bay half-diagonal
+        BAYS[variant]["reset_copy_hops_max_um"] = max(hop)[0] if hop else 0
+        BAYS[variant]["reset_copy_hops_over_405"] = [h for h in hop if h[0] > 405]
     return "\n".join(L) + "\n"
+
+BAYS = {}
+
+def bays(variant, env, P, R, anchor):
+    """QW-CB16FULL2: one RESERVED std-cell bay per soft ring half (BAY w / r um), outside the 21.6-um clearance of every hard
+    child, legalised (4.32 lattice, Manhattan spiral) around its hard neighbour pin (writer: the pin that drives i; reader:
+    the pin its o feeds); the ring's mapped diag site when it has no hard neighbour (pad-chain inner rings).  Lines carry the
+    bay box (ylo / yhi columns) so fabric_sites_place_k.tcl spreads the half's flops over the whole bay."""
+    F = env["F"]; ax, ay = env["ax"], env["ay"]
+    diag_at = {}
+    for l in (ROOT / DIAG_SITES).read_text().splitlines():
+        if l.startswith("#") or not l.strip():
+            continue
+        q, x, y, _, _ = l.split("\t"); diag_at[q] = (mapv(float(x), ax), mapv(float(y), ay))
+    halves, io = [], {}
+    for m in re.finditer(r"qfd_c_land_([wr])1k #\([^;]*?\)\s+(u_\w+)\s+\(([^;]*?)\);", BODY[variant]):
+        halves.append((m[1], f"u_fab.{m[2]}"))
+        pr = dict(PORT_RE.findall(m[3])); io[f"u_fab.{m[2]}"] = pr.get("i" if m[1] == "w" else "o", "").strip()
+    # soft -> soft single-cycle hops: reader o that IS a writer's i (pad chains, a landing feeding a pad ring)
+    partner = {}
+    for side, q in halves:
+        if side == "w":
+            for s2, r in halves:
+                if s2 == "r" and io[r] and io[r] == io[q]:
+                    partner[q] = r; partner[r] = q
+    pad_first = {x["name"]: x["pads"][0] for x in R if x.get("pads")}
+    out, rows, placed = [], [], {}
+    todo = sorted(halves, key=lambda t: (t[1] not in anchor, t[0], t[1]))
+    # soft -> soft hops first, as ONE joint box (reader | writer side by side) so later bays cannot push them apart;
+    # target = the pin anchors of their ring mates (the bank windows stay multicycle), else the diag site
+    for w_, r_ in sorted((k, v) for k, v in partner.items() if k.endswith("_w")):
+        if w_ in anchor or r_ in anchor:
+            continue
+        tg = [anchor[m] for m in (r_[:-1] + "w", w_[:-1] + "r") if m in anchor]
+        if not tg:
+            nm = r_[len("u_fab.u_"):-2]; key = r_ if r_ in diag_at else f"u_fab.{pad_first.get(nm, '')}"
+            tg = [diag_at.get(key, (env["W"] / 2, env["H"] / 2))]
+        cx, cy = sum(t[0] for t in tg) / len(tg), sum(t[1] for t in tg) / len(tg)
+        (rw_, rh_), (ww_, wh_) = BAY["r"], BAY["w"]
+        bw2, bh2 = rw_ + 4.32 + ww_, max(rh_, wh_)
+        x, y = legalise(F, bw2, bh2, cx, cy, lat=4.32, edge=8.64)
+        F.take(x, y, bw2, bh2, pad=1)
+        for q, (qx, qw, qh, sd) in ((r_, (x, rw_, rh_, "r")), (w_, (x + rw_ + 4.32, ww_, wh_, "w"))):
+            placed[q] = (qx, y, qw, qh); todo.remove((sd, q))
+            rows.append(dict(half=q, side=sd, anchor="pair:" + (w_ if q == r_ else r_), bay=[round(qx, 3), round(y, 3), qw, qh], anchor_far_corner_um=None))
+            out.append(f"{q}\t{qx + qw / 2:.3f}\t{y + qh / 2:.3f}\t{qx:.3f}\t{qx + qw:.3f}\t{y:.3f}\t{y + qh:.3f}")
+    while todo:
+        mate = lambda q: q[:-1] + ("r" if q.endswith("w") else "w")
+        pick = (next((t for t in todo if t[1] in anchor), None) or next((t for t in todo if partner.get(t[1]) in placed), None)
+                or next((t for t in todo if mate(t[1]) in placed), None) or todo[0])
+        todo.remove(pick); side, q = pick
+        bw, bh = BAY[side]
+        if q in anchor:
+            cx, cy = anchor[q]; src = "pin"
+        elif partner.get(q) in placed:
+            pb = placed[partner[q]]; cx, cy = pb[0] + pb[2] / 2, pb[1] + pb[3] / 2; src = "soft:" + partner[q]
+        elif mate(q) in placed:     # its own ring half (bank = multicycle window): keep the ring compact
+            pb = placed[mate(q)]; cx, cy = pb[0] + pb[2] / 2, pb[1] + pb[3] / 2; src = "mate:" + mate(q)
+        else:
+            nm = q[len("u_fab.u_"):-2]
+            key = q if q in diag_at else f"u_fab.{pad_first.get(nm, '')}"
+            cx, cy = diag_at.get(key, (env["W"] / 2, env["H"] / 2)); src = "diag" if key in diag_at else "centre"
+        pq = partner.get(q)
+        if src in ("diag", "centre") and pq and pq not in placed and pq not in anchor:
+            # joint bay pair (soft -> soft hop with no hard neighbour on either side): one box, split side by side
+            pw, ph = BAY["w" if side == "r" else "r"]
+            x, y = legalise(F, bw + 4.32 + pw, max(bh, ph), cx, cy, lat=4.32, edge=8.64)
+            F.take(x, y, bw + 4.32 + pw, max(bh, ph), pad=1)
+            placed[pq] = (x + bw + 4.32, y, pw, ph); todo.remove(("w" if side == "r" else "r", pq))
+            rows.append(dict(half=pq, side="w" if side == "r" else "r", anchor="pair:" + q, bay=[round(x + bw + 4.32, 3), round(y, 3), pw, ph], anchor_far_corner_um=None))
+            out.append(f"{pq}\t{x + bw + 4.32 + pw / 2:.3f}\t{y + ph / 2:.3f}\t{x + bw + 4.32:.3f}\t{x + bw + 4.32 + pw:.3f}\t{y:.3f}\t{y + ph:.3f}")
+        else:
+            x, y = legalise(F, bw, bh, cx, cy, lat=4.32, edge=8.64)
+            F.take(x, y, bw, bh, pad=1)
+        placed[q] = (x, y, bw, bh)
+        bx, by = x + bw / 2, y + bh / 2
+        far = max(abs(cx - xx) + abs(cy - yy) for xx in (x, x + bw) for yy in (y, y + bh)) if src == "pin" else None
+        rows.append(dict(half=q, side=side, anchor=src, bay=[round(x, 3), round(y, 3), bw, bh], anchor_far_corner_um=far and round(far, 1)))
+        out.append(f"{q}\t{bx:.3f}\t{by:.3f}\t{x:.3f}\t{x + bw:.3f}\t{y:.3f}\t{y + bh:.3f}")
+    def boxfar(a, b):
+        return round(max(abs(a[0] + i * a[2] - b[0] - j * b[2]) + abs(a[1] + k * a[3] - b[1] - l * b[3])
+                         for i in (0, 1) for j in (0, 1) for k in (0, 1) for l in (0, 1)), 1)
+    soft_hops = sorted({(boxfar(placed[r], placed[w]), r, w) for w, r in partner.items() if w.endswith("_w")}, reverse=True)
+    # bank window per crossing: writer bay -> reader bay (multicycle setup 2 / hold 3)
+    at = {r["half"]: r["bay"] for r in rows}
+    win = []
+    for q in at:
+        if q.endswith("_w") and q[:-2] + "_r" in at:
+            a, b = at[q], at[q[:-2] + "_r"]
+            win.append((round(max(abs(a[0] + i * a[2] - b[0] - j * b[2]) + abs(a[1] + k * a[3] - b[1] - l * b[3])
+                                   for i in (0, 1) for j in (0, 1) for k in (0, 1) for l in (0, 1)), 1), q[:-2]))
+    BAYS[variant] = dict(bays=rows, anchor_far_corner_max_um=max([r["anchor_far_corner_um"] or 0 for r in rows] or [0]),
+                         anchor_far_over_405=[r for r in rows if (r["anchor_far_corner_um"] or 0) > 405],
+                         bank_window_corner_max_um=max(win)[0] if win else 0, bank_window_over_650=[w for w in win if w[0] > 650],
+                         bay_area_mm2=round(sum(r["bay"][2] * r["bay"][3] for r in rows) / 1e6, 3),
+                         soft_hops_max_um=soft_hops[0][0] if soft_hops else 0, soft_hops_over_405=[h for h in soft_hops if h[0] > 405],
+                         soft_hops=soft_hops)
+    return out
 
 # ---------------------------------------------------------------------------------------------------- spec / plan
 def spec(variant, env, P, ranges, faces, diag):
@@ -602,10 +763,12 @@ def spec(variant, env, P, ranges, faces, diag):
     kids = [dict(view=VIEW[p["kind"]], count=1, inst=n, at=[p["x"], p["y"]], orient=p["orient"], at_exact=True) for n, p in P.items()]
     s = {k: v for k, v in diag.items() if k not in ("children", "pin_ranges", "pins", "relay_sites", "abut_plan", "job")}
     src = SOURCES if variant in HARD else SOURCES[:-1] + ["rtl/physical/qcluster/qfd_c_land.sv", "rtl/physical/qcluster/qfd_c_land_r1h.sv", SOURCES[-1]]
+    if variant in K_VARIANTS:
+        src = SOURCES[:-1] + ["rtl/physical/qcluster/qfd_c_land_k.sv", OUT_RTL_K]
     s.update(name=name, top=name, diagnostic=True, sources=src, sdc_extra=[OUT_SDC[variant]],
              outline=dict(w=env["W"], h=env["H"], exact=True), child_lattice_um=4.32 if variant not in HARD else 21.6, children=kids, macros=[],
              pins=faces, pin_ranges=ranges, pin_layers=diag.get("pin_layers", {}),
-             orfs_vars={"PRE_GLOBAL_PLACE_TCL": "physical/qcluster/fabric_sites_place.tcl",
+             orfs_vars={"PRE_GLOBAL_PLACE_TCL": "physical/qcluster/fabric_sites_place_k.tcl" if variant in K_VARIANTS else "physical/qcluster/fabric_sites_place.tcl",
                         "PRE_DETAIL_PLACE_TCL": "physical/qcluster/fabric_sites_release.tcl",
                         "OT_QC_SITES": OUT_SITES[variant], "GPL_TIMING_DRIVEN": "0", "GPL_ROUTABILITY_DRIVEN": "0"},
              route=dict(pd=0.5, threads=16, peak_ram_gb=192, pin_v="M5", pin_h="M4 M6", macro_halo_um=5.4,
@@ -615,13 +778,17 @@ def spec(variant, env, P, ranges, faces, diag):
                               "only where the closed xstn_safe needs it; no pocket off the link paths (QW-CB16FULL fill decision)"),
              structural_change="QW-CB16FULL: FULL 16-region landed CB16 parent, one clock region per A0, every seam crossing = "
                                + ("CLOSED hard landing halves qfd_c_land_{w,r}{257,258}_narrow" if variant in HARD else
+                                  "a soft qfd_c_land_w1k / qfd_c_land_r1k ring (kept per-24-bit control copies, native census <= 32 loads; "
+                                  "writer on the source root, reader on the destination root, each half in a RESERVED std-cell bay)"
+                                  if variant in K_VARIANTS else
                                   "a soft qfd_c_land ring (writer on the source root, reader on the destination root)")
                                + " (static D4/K2 ring, no credit), 3-deep pads = "
                                + {"ring": "same-clock hard ring pairs", "stn": "3 CLOSED stn514 relays", "soft": "same-clock soft landing rings",
-                                  "softb": "3 CLOSED stn514 relays"}[variant]
+                                  "softb": "3 CLOSED stn514 relays", "softk": "same-clock soft landing rings", "softkb": "3 CLOSED stn514 relays"}[variant]
                                + ", xstn = CLOSED xstn(w)_safe, relays = CLOSED stn514/516; netlist = the qc_gen fabric MUT 0 with "
                                "identical edge counts; A0 = diagnostic STAND-IN (no qualified A0 view).",
-             job=dict(owner="Claude:QW-CB16FULL", branch="claude/qw-cluster3-cb16-1019", tag=KITS[variant][10:],
+             job=dict(owner="Claude:QW-CB16FULL2" if variant in K_VARIANTS else "Claude:QW-CB16FULL",
+                      branch="claude/qw-cb16full2-1020" if variant in K_VARIANTS else "claude/qw-cluster3-cb16-1019", tag=KITS[variant][10:],
                       purpose="FULL CB16 landed parent (critical prefix qfd_c_b16: gate + coordinator review only, no submit)",
                       submit=False, hold_merge="QW-CB16FULL diagnostic: A0 STAND-IN", extra_paths=[PLAN],
                       no_bench_reason="critical-prefix PHYSICAL gate only; function = the qc_gen fabric MUT 0 (lockstep bench owed "
@@ -724,9 +891,9 @@ def run(write=True):
     res = {}
     plan = {}
     body = {}
-    for v in ("soft", "softb", "ring", "stn"):
+    for v in VARIANTS:
         txt, X, R = fabric_rtl(v)
-        body[v] = txt
+        body[v] = txt; BODY[v] = txt
         env, P = placement(v, X, R)
         ranges, faces, diag = pins(v, env)
         rows, unres, pairs = reach(v, txt, env, P, ranges, faces)
@@ -749,16 +916,20 @@ def run(write=True):
             unresolved_sink_bits=unres, edges=len(rows), reach_moves=moved)
         res[v] = (env, P, ranges, faces, diag, X, R)
     if write:
-        (ROOT / OUT_RTL).write_text("`timescale 1ns/1ps\n" + body["soft"] + "\n" + body["softb"])
-        for v in KIT_VARIANTS:
+        if LEGACY:
+            (ROOT / OUT_RTL).write_text("`timescale 1ns/1ps\n" + body["soft"] + "\n" + body["softb"])
+        (ROOT / OUT_RTL_K).write_text("`timescale 1ns/1ps\n" + body["softk"] + "\n" + body["softkb"])
+        for v in (KIT_VARIANTS if LEGACY else ()) + K_VARIANTS:
             env, P, ranges, faces, diag, X, R = res[v]
             (ROOT / OUT_SDC[v]).write_text(sdc(X + R, v))
             (ROOT / OUT_SITES[v]).write_text(sites(v, env, P, R, soft_anchor(body[v], P)))
             p = ROOT / "tools/ref_tile/specs_qcluster" / f"{KITS[v]}.json"
             p.write_text(json.dumps(spec(v, env, P, ranges, faces, diag), indent=1) + "\n")
         d = ROOT / PLAN; d.mkdir(parents=True, exist_ok=True)
-        (d / "plan.json").write_text(json.dumps(plan, indent=1) + "\n")
-        preview({v: res[v] for v in res}, d)
+        if LEGACY:
+            (d / "plan.json").write_text(json.dumps(plan, indent=1) + "\n")
+        (d / "plan_k.json").write_text(json.dumps({KITS[v]: dict(plan[KITS[v]], bays=BAYS.get(v)) for v in K_VARIANTS}, indent=1) + "\n")
+        preview({v: res[v] for v in res if LEGACY or v in K_VARIANTS}, d)
     return plan
 
 def preview(res, d):
@@ -774,8 +945,14 @@ def preview(res, d):
             w, h, _ = LEFS[p["kind"]]
             k = next((c for c in ("xstn", "tile", "land_w", "land_r", "stn") if c in p["kind"]), "stn")
             ax.add_patch(plt.Rectangle((p["x"], p["y"]), w, h, color=col[k], lw=0))
+        for b in (BAYS.get(v) or {}).get("bays", []):
+            x, y, w, h = b["bay"]
+            ax.add_patch(plt.Rectangle((x, y), w, h, color="#d05050" if b["side"] == "w" else "#a050c0", lw=0, alpha=0.7))
         ax.set_xlim(0, env["W"]); ax.set_ylim(0, env["H"]); ax.set_aspect("equal"); ax.set_title(f"{KITS[v]} {env['W']:.0f} x {env['H']:.0f} um (A0 STAND-IN)")
         fig.savefig(d / f"plan_preview_{v}.png", dpi=110, bbox_inches="tight"); plt.close(fig)
+
+LEGACY = "--legacy" in sys.argv
+VARIANTS = ("soft", "softb", "ring", "stn", "softk", "softkb")
 
 if __name__ == "__main__":
     plan = run(write="--check" not in sys.argv)

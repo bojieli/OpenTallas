@@ -1,0 +1,60 @@
+ot-run: ot-epyc5       admits  1086 GB (avail 874, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 25 disk 65 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw_cb16full2_1020/bench_k
+ot-run: ot-epyc7       admits   616 GB (avail 532, growth 101, headroom 0, waiters 0/0 GB) load 55/96 running 27 disk 5666 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw_cb16full2_1020/bench_k
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw_cb16full2_1020/bench_k
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw_cb16full2_1020/bench_k
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-139416-1792488166 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+== MUT0K1: K=1 source lines mutated: 0
+LAND_K_PASS K=1 edges=20000 nonzero=19983 resets=7
+- tools/qwen_cluster/tb_land_k.sv:35: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.016 s; speed 2.437 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB
+LAND_K_BENCH MUT0K1 PASS
+== MUT0K2: K=2 source lines mutated: 0
+LAND_K_PASS K=2 edges=20000 nonzero=19975 resets=7
+- tools/qwen_cluster/tb_land_k.sv:35: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.015 s; speed 2.620 ms/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 7 MB
+LAND_K_BENCH MUT0K2 PASS
+== MUT0K3: K=3 source lines mutated: 0
+LAND_K_PASS K=3 edges=20000 nonzero=19967 resets=7
+- tools/qwen_cluster/tb_land_k.sv:35: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.022 s; speed 1.785 ms/s
+- Verilator: cpu 0.022 s on 1 threads; allocated 7 MB
+LAND_K_BENCH MUT0K3 PASS
+== M1: K=2 source lines mutated: 1
+LAND_K_MISMATCH K=2 edge=13 o=1 vld=0 bank=1
+LAND_K_FAIL K=2 mism=19989 nonzero=19975 resets=7
+[40001000] %Fatal: tb_land_k.sv:37: Assertion failed in tb: fail
+%Error: tools/qwen_cluster/tb_land_k.sv:37: Verilog $stop
+Aborting...
+LAND_K_BENCH M1 FAILS AS REQUIRED
+== M2: K=2 source lines mutated: 1
+LAND_K_MISMATCH K=2 edge=14 o=1 vld=0 bank=1
+LAND_K_FAIL K=2 mism=19988 nonzero=19975 resets=7
+[40001000] %Fatal: tb_land_k.sv:37: Assertion failed in tb: fail
+%Error: tools/qwen_cluster/tb_land_k.sv:37: Verilog $stop
+Aborting...
+LAND_K_BENCH M2 FAILS AS REQUIRED
+== M3: K=2 source lines mutated: 1
+LAND_K_MISMATCH K=2 edge=2170 o=0 vld=0 bank=1
+LAND_K_FAIL K=2 mism=19 nonzero=19975 resets=7
+[40001000] %Fatal: tb_land_k.sv:37: Assertion failed in tb: fail
+%Error: tools/qwen_cluster/tb_land_k.sv:37: Verilog $stop
+Aborting...
+LAND_K_BENCH M3 FAILS AS REQUIRED
+== M4: K=2 source lines mutated: 1
+LAND_K_MISMATCH K=2 edge=13 o=1 vld=0 bank=0
+LAND_K_FAIL K=2 mism=19975 nonzero=19975 resets=7
+[40001000] %Fatal: tb_land_k.sv:37: Assertion failed in tb: fail
+%Error: tools/qwen_cluster/tb_land_k.sv:37: Verilog $stop
+Aborting...
+LAND_K_BENCH M4 FAILS AS REQUIRED
+LAND_K_BENCH_EXIT 0 CASES=MUT0K1 MUT0K2 MUT0K3 M1 M2 M3 M4
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-139416-1792488166): exit 0
