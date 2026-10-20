@@ -107,7 +107,7 @@ wire[NL-1:0] ws_rep;
 for(genvar z=0;z<NL;z=z+1) begin:g_ws
  wire ws_source;
  (* keep_hierarchy="yes" *) qfd_dv_station_cfgbit #(.ID(z)) u_c(.ck(ck),.rst_n(sr_reset[26+z]),.cfg_v(cfg_final[2*z]),.d(safe_cfg_wsrc),.q(ws_source));
- qfd_dv_ring_delay #(.W(1),.D(3)) u_d(.clk(ck),.rst_n(sr_reset[28+z]),.d(ws_source),.q(ws_rep[z]));
+ qfd_dv_ring_delay #(.W(1),.D(3+BT_LAT)) u_d(.clk(ck),.rst_n(sr_reset[28+z]),.d(ws_source),.q(ws_rep[z]));
 end
 
     reg [1:0] mode; reg wsrc; reg [7:0] nwords; reg [8:0] sbase; reg [7:0] kcm1;
