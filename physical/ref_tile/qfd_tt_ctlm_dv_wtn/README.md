@@ -13,3 +13,10 @@ SAFE-DESIGN CHECKLIST
 6 Floorplan: no macros; outline from census area 2682 um2 (+reserve) ~48% util; aspect 1.1:1 (fallback 2:1); full std-cell band.
 7 Clock: single local root (small tile); spread measured by --cts gate; io_hold_margin 0.03.
 8 Schedule: static; +2 status edges, +1 input edge, 0 SU/token cycles -- tools/qwen_static_schedule/f16_calr_edges.py.
+
+## Benches (QW-F16SUB 10-19)
+- f16_wtn_face (pass, `F16_WTN_FACE_PASS`): rtl/test/qwen_dv/run_f16_wtn_face.sh generates the 28 WTN1 stimuli from the
+  committed PW image (typed_witness_control_vectors.py) and checks the face == standalone SAFE_PHYS controller on every edge
+  of every stimulus (nominal CLEAN, 27 FAULT) + BEGIN withdrawal.  Verilator 5.050 (daemon PATH).
+- mutants f16_wtn_fmut1 (no BEGIN withdraw, `F16_FACE_BEGIN_NOT_WITHDRAWN`), fmut2 (installed epoch as identity) and fmut3
+  (retire user swap) (`F16_FACE_EDGE_MISMATCH`); committed witnesses bench_witness/ (fleet unit oth-ubuntu-588286, ot-epyc5).

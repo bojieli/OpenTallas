@@ -8,7 +8,14 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qw-f16prog4-1019",
-  "commit": "COMMIT"
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_dv/run_f16_wtn_face.sh",
+   "rtl/test/qwen_dv/tb_qwen_typed_witness_control.sv",
+   "rtl/qwen_dv/qfd_dv_typed_su_observer.sv",
+   "tools/qwen_layerbench/typed_witness_control_vectors.py",
+   "results/arch/qwen_calendar_integration_1019/witness/witness_template_packet/model_pw.hex"
+  ]
  },
  "stages": {
   "bench": [
@@ -21,6 +28,53 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "f16_wtn_face",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_wtn_face.sh {RUN}/bench/f16_wtn_face face",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "F16_WTN_FACE_PASS"
+   },
+   {
+    "name": "f16_wtn_fmut1",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_wtn_face.sh {RUN}/bench/f16_wtn_fmut1 fmut1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "F16_FACE_BEGIN_NOT_WITHDRAWN",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_wtn/bench_witness/f16_wtn_fmut1.log"
+   },
+   {
+    "name": "f16_wtn_fmut2",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_wtn_face.sh {RUN}/bench/f16_wtn_fmut2 fmut2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "F16_FACE_EDGE_MISMATCH",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_wtn/bench_witness/f16_wtn_fmut2.log"
+   },
+   {
+    "name": "f16_wtn_fmut3",
+    "cmd": "bash rtl/test/qwen_dv/run_f16_wtn_face.sh {RUN}/bench/f16_wtn_fmut3 fmut3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "F16_FACE_EDGE_MISMATCH",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_wtn/bench_witness/f16_wtn_fmut3.log"
    }
   ],
   "calibrate": {
