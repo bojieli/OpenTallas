@@ -1,6 +1,0 @@
-PASS qfd_vm_region_leaf DEPTH=8 LAW=3 DEPTHS=8 LAWS=3 SEED=3 OVFMODE=0 exact 6166 checks: pushes=1936 pops=1930 row_reads=2030 su_answers=1826 stalls=1528 pop_garbage=752 deep=351 xo_chg=1922 ro_chg=1924 so_chg=1740 nonzero_words=1465194 ovf_cycles=147
-- rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_region_leaf.sv:142: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 62us; walltime 0.118 s; speed 520.922 us/s
-- Verilator: cpu 0.118 s on 1 threads; allocated 7 MB
-maxrss_kb=4284 wall=0.12

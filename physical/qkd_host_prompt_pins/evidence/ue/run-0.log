@@ -1,6 +1,0 @@
-TRACE request cycle=        542 addr=0000
-TRACE fault cycle=        546 q=00000
-TRACE host-start cycle=        548 qualified-ready=0
-TRACE sampled-request cycle=        549 qualified-ready=0
-PASS actual HOST packet double-ECC prompt fail-closed: q3 fault4 stickyIRQ no-controller-start CQfault=00000000cafe0075
-/var/tmp/qwen-host-prompt-ue-1013/rtl/test/qwen_host/tb_qkd_host_prompt_ue.sv:199: $finish called at 569622 (1ps)

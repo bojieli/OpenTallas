@@ -1,5 +1,0 @@
-PASS real result cleanup edge=23
-PASS same-edge new issue cut edge=36
-[586000] %Fatal: endpoint_tb.sv:61: Assertion failed in endpoint_tb: RAW_POR_NOT_CLEAR edge=59
-%Error: endpoint_tb.sv:61: Verilog $stop
-Aborting...

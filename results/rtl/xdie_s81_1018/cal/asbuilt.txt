@@ -1,8 +1,0 @@
-XDIE_STATS beats 12096 landed 12096 mismatches 0 late 0 maxlate -1000000 extra 0 faults 0000000000000000 live 32/32 last_cycle 87855
-PASS xdie_s81: 12096 beats of the TP4 calendar landed bit-exact, in order, by their compiled deadlines, no fault
-BENCH_PASS asbuilt
-EXIT 0
-out_p3/asbuilt/time_build.log:	Elapsed (wall clock) time (h:mm:ss or m:ss): 7:09.46
-out_p3/asbuilt/time_build.log:	Maximum resident set size (kbytes): 9825196
-out_p3/asbuilt/time_run.log:	Elapsed (wall clock) time (h:mm:ss or m:ss): 20:32.13
-out_p3/asbuilt/time_run.log:	Maximum resident set size (kbytes): 106012

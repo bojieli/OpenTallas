@@ -1,7 +1,0 @@
-Verilator 5.050 2026-07-01 rev v5.050
-TB_DHUSER_PINREG info T=251675 H=4026800 anchor=202 end=8093802 drift=0
-TB_DHUSER_PINREG PASS MUT=0 drift=0 edges=8093802 starts=8113 per_user=1481/3463/3169 mism=0 ref_fcode=0 dut_fcode=0 drift_edge=-1
-- /srv/opentallas-scratch/claude/mu-leaf-kit2/src/rtl/test/mu_qwen_seq/tb_dhuser_pinreg.sv:80: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 8ms; walltime 3.120 s; speed 2.594 ms/s
-- Verilator: cpu 3.120 s on 1 threads; allocated 7 MB

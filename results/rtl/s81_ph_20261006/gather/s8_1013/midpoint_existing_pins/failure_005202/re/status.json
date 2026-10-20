@@ -1,6 +1,0 @@
-{
-  "route_eligible": false,
-  "source_commit": "17767c0e4",
-  "pins": "oldaccepted0ef156eff",
-  "failure": "Midpoint override tried to move a FIRM instance after the generic pin anchor. Hook must release status toPLACED before bounded relocation and restoreFIRM. Complete hook sequence is tested separately before fresh assigned-pin CTS."
-}

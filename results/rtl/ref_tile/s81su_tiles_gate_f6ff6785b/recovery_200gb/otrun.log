@@ -1,8 +1,0 @@
-ot-run: ot-epyc1tb     free   745 GB (avail 861, growth 52, headroom 64, waiters 0/0 GB) running 5 disk 1138 GB 
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81su-tilegate/f6ff6785b
-ot-run: ot-pve1        free    81 GB (avail 183, growth 70, headroom 32, waiters 0/0 GB) running 6 disk 1318 GB 
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81su-tilegate/f6ff6785b
-ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1517383-1791918059 after 0 s
-Terminated                 /usr/local/bin/ot-heavy --mem 200 --tag otrun-ubuntu-1160194-918059492 -- bash tg.sh rtl
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1517383-1791918059): exit 143

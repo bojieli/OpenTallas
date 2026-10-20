@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qfd_sys_face_control_safe",
- "enable": false,
- "reason": "RTL registers every pin: explicit generated wrapper (ot_explicit_pin_regs=1) captures every input once (+25 same-edge private copies) and every output once; receipt physical_wrapper=true sha d8b39bd8, cold/legacy/reset correspondence 77fc3afbc"
-}

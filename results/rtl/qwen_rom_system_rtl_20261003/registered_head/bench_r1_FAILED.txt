@@ -1,3 +1,0 @@
-Initial NEW bench incorrectly required all ranks to emit on the same cycle under independently stalled producers.
-FATAL: rtl/test/qwen_sys/tb_qwen_collective_headreg.sv:63: rank mismatch
-Time:250000. Bench corrected to compare ordered accepted sequences independently at all four dies. No successor RTL edit was needed.

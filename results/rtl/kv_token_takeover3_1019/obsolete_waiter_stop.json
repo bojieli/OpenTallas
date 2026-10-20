@@ -1,0 +1,12 @@
+{
+  "utc": "2026-10-20T00:36:26.154585+00:00",
+  "pid": 3163282,
+  "start_ticks": "465747517",
+  "cmdline": "bash ./gen9_waiter.sh ",
+  "children": {
+    "737913": "sleep 300 "
+  },
+  "script_sha256": "1d8f10300ee63b43b2d96edaedf80cf65c428d5e5f31db723ee61e8c28c4b170",
+  "reason": "ROOT-approved exact TERM: obsolete deleted 7f9501c62 GEN9 target and unrepaired fixture; no engine children; replacement not launched",
+  "signal_sent": "SIGTERM"
+}

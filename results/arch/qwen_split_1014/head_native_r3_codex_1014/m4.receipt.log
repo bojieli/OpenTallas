@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     admits   223 GB (avail 450, growth 112, headroom 64, waiters 0/0 GB) load 226/128 running 40 disk 892 GB 
-ot-run: ot-epyc4       admits   547 GB (avail 774, growth 110, headroom 48, waiters 0/0 GB) load 208/128 running 43 disk 729 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/head-r3-ab32d3a9b/ready
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/head-r3-ab32d3a9b/ready
-ot-run: -> ot-epyc4
-HEAD_NATIVE_FAIL checks=3515 errors=290
-[3728000] %Fatal: tb_qkh_head_native.sv:103: Assertion failed in tb_qkh_head_native
-%Error: rtl/test/qwen_split/tb_qkh_head_native.sv:103: Verilog $stop
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-144687-1792011300): exit 0

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_smh_int8_tile_safe",
- "enable": false,
- "reason": "the RTL registers every pin (inputs p_v[21:0] kept copies / p_tag / p_codes; outputs driven only by r_v / r_tag / r_data / r_sel[34:0]); cycle-exact with ot_smh_static_int8, so no flow pin register may add a cycle"
-}

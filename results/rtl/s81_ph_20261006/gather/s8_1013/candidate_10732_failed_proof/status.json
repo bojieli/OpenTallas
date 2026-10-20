@@ -1,9 +1,0 @@
-{
- "source_commit": "10732e4ef",
- "gate": "FAIL oneof14",
- "base_positive_and_existing8mutants": "PASS",
- "new_selector_phase_mutant": "NOT_DETECTED on realL2",
- "qualification": false,
- "root_not_run": "ot-run selectedotherhost where root.sh wasmissing; exit127; no root proof",
- "repair": "Use real same-edge copy for candidate valid/operand/err as well as predecode selection. Core SV remains genuinelyused prefetch take. No normal behavior/epoch change when same-D copyequivalent."
-}

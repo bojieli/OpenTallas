@@ -1,5 +1,0 @@
-PASS dvm NCOL=2 NH=8 GT=128 SMIN=4 SMAX=7 HB=3 DX=9 XOFF=3 XVMR=12 GAP=0 ops=40 cycles=7736 result_writes=2664 operand_checks=193280 fills=40 sw_beats=438 aw_beats=140 bd_ref=26 bd_dvm=23 first_result_delta=-3 reused=9
-- rtl/qwen_sys/dvm_20261014/tb_qwen_me_dvm_w12.sv:380: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 15us; walltime 274.793 s; speed 56.330 ns/s
-- Verilator: cpu 225.288 s on 1 threads; allocated 143 MB

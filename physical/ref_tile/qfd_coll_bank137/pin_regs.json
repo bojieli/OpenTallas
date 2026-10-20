@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_qkvd_llr_replay_sram_leaf",
- "enable": false,
- "reason": "RTL is pin-registered: we/wa/din are captured by wq/aq/dq at ck, dout is a register (dout <= bypass/SRAM select), and ra is the SRAM's own synchronous read-address capture at ck (plus the 6-bit hit-age compare into hit_age0/hit_age1 flops). A synthesized wrapper register on ra/we/wa would add a codec read-pipeline edge (compiled KW=2 / TX3), changing the static schedule."
-}

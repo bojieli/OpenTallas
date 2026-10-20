@@ -1,8 +1,0 @@
-EQ_MISMATCH port=del_flit cyc=2500
-EQ_MISMATCH port=del_flit cyc=2762
-LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=8 rr_v_cycles=1947 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0204
-LPF_EQ FAIL mismatches=2 of 100576 stimulus=q2ar_v5prog_vm_writer_ring_random
-- rtl/hbm_accel/generic/collective/p2p/tb_hfd_coll_q2_lpf_ar_eq.sv:133: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 0.246 s; speed 12.875 us/s
-- Verilator: cpu 0.245 s on 1 threads; allocated 11 MB

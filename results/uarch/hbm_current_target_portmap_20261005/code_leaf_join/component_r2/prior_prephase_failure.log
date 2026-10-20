@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/srv/opentallas/repos/sagan-qwen-code-join-20ddfc63b/tools/hbm_payload/extract_code_pair.py", line 22, in <module>
-    if len(sectors)!=1024:raise ValueError('incomplete actual L0 image')
-ValueError: incomplete actual L0 image

@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_d2d_static_r9j-r9j-7f431abe6 bench bench_d2d_dies_mut_slot host ot-epyc8 run /srv/opentallas-scratch/claude/closure-loop/qfd_d2d_static_r9j-r9j-7f431abe6 log cl/bench_d2d_dies_mut_slot.a1b1.log captured 2026-10-19T03:59:16-07:00
-# fail_regex '^D2D_DIES_FAIL'
-RECOVERY abort->epoch_begin KV 686 cycles, compute 0 cycles; HOST-visible 55 cycles
-frames C->S 0 S->C 0 kvn 0 results 0 host-checks 0 normal-epoch faults 750 errors 7
-D2D_DIES_FAIL

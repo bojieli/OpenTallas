@@ -1,5 +1,0 @@
-region audit: 922 register edges, 98 seam crossings (28339 b) over 27 region pairs (3 diagonal)
-FAIL R5 landing dn0_rly3: o consumers [] not all in c0r1
-FAIL R5 landing dn0_rly3: 1 other multi-bit c0r0 -> c0r1 crossings, unlanded: ['dn0_rly2']
-FAIL R6 unlanded 516-b crossing u_dn0_rly2 (c0r0) -> u_dn0_rly3 (c0r1) net dn0_rly2
-REGION_AUDIT_FAIL 3

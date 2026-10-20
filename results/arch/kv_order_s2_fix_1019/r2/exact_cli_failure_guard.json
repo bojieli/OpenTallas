@@ -1,8 +1,0 @@
-[
-  {
-    "severity": "FAIL",
-    "check": "textbook_execution",
-    "message": "missing unique actual textbook verdict or failed lint execution; RC=[]",
-    "fix": "inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate"
-  }
-]

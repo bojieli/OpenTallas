@@ -1,7 +1,0 @@
-{
-  "status": "FAILED_DRAFT_12PASS_2FAIL",
-  "scalar_failure": "r30 LockedArray.digest_data calls view(uint8) on0d F32 array: ValueError. Actual scalar auxiliary cannot load.",
-  "second_failure": "test called release_version without generation; regression invocation corrected",
-  "source_r30_sha256": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
-  "hardware_claim": false
-}

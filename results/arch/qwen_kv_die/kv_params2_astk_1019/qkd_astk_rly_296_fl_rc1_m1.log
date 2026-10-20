@@ -1,7 +1,0 @@
-FACE_LAND verilator Verilator 5.050 2026-07-01 rev v5.050
-MISMATCH c=2 port=b
-FACE_LAND FAIL top=qkd_astk_rly_296_fl mut=1 checks=20196 comparisons=20196 epochs=196 toggles=19731 errors=550 first_err=2
-[20004000] %Fatal: tb_face_land.sv:34: Assertion failed in tb_face_land: face_land contract mismatch or no output activity
-%Error: /srv/opentallas-scratch/claude/kv-params2-1019/astk/fl_m1/tb_face_land.sv:34: Verilog $stop
-Aborting...
-

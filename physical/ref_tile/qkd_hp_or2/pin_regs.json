@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_hp_or2",
- "enable": false,
- "reason": "The single output register (q <= a|b) is the one counted health-plane edge; inputs are one OR gate deep. Extra pin registers would change the priced plane latency."
-}

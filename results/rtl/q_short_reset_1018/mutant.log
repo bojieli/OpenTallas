@@ -1,8 +1,0 @@
-DBG G 16 R0 20 ed 37 result 6522 exp 6522 fault 1 wc 4 rc 0
-DBG G 20 R0 16 ed 37 result 6522 exp 6522 fault 1 wc 0 rc 4
-DBG G 16 R0 28 ed 45 result 56db exp 56db fault 1 wc 4 rc 0
-DBG G 28 R0 16 ed 45 result 56db exp 56db fault 1 wc 0 rc 4
-DBG G 420 R0 16 ed 437 result 9b44 exp 9b44 fault 1 wc 0 rc 4
-SHORT_RESET errors 5399 checks 6566
-FATAL: tools/qwen_split/bench_short_reset.sv:43: SHORT_RESET FAIL
-       Time: 12000000 Scope: tb
