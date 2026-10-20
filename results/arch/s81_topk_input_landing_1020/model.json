@@ -1,5 +1,5 @@
 {
-  "status": "RTL_INPUT_LOCKSTEP_PASS_NATIVE_AND_FULL_QUARTER_NOT_RUN",
+  "status": "GROUP7_NATIVE_FAIL_SUPERSEDED_BY_GROUP4_MODEL",
   "base": "a86fd4882",
   "current_gate_failure_observation": "HQ3 CTS setup repair108endpoints WNS~-65.85ps at u_in.g_f[50].r/D, no terminal gate failure yet",
   "opt_in": "OT_S81PH_HQ_INPUT_RAW",
@@ -23,5 +23,7 @@
     "new physical source first-stage flops at face and real second-stage path timing",
     "no duplicate gate/current live source mutation"
   ],
-  "handback": "CLAUDE IS BACK04:49: tiny canonical native not launched; default-off candidate only, no gate or adoption"
+  "handback": "CLAUDE IS BACK04:49: tiny canonical native not launched; default-off candidate only, no gate or adoption",
+  "current_model": "model_group4.json",
+  "predecessor_evidence": "native_group7/qualification.json"
 }

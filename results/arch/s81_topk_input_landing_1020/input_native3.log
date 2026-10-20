@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/native_src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/native_src
+ot-run: ot-epyc7       admits   805 GB (avail 664, growth 101, headroom 0, waiters 0/0 GB) load 64/96 running 24 disk 5490 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/native_src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/native_src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/native_src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4113083-1792498045 after 0 s
+INPUT_RAW_NATIVE PASS max 29 violations 0 roles 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4113083-1792498045): exit 0

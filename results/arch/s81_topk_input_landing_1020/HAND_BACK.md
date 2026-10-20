@@ -7,3 +7,5 @@ Completed proof2 on fleet Verilator5.050: default and RAW each23992 comparisons 
 Initial proof failed before compilation due invalid Verilator -j4 flag; preserved under failed_cli and input_landing_suite.log. Corrected only to -j4 written as separate arguments(-j 4), successful proof2 ran after load-spill ep7->ep5 and was copied back ep7.
 
 Native component synthesis was planned but NOT launched when STOP arrived. Current full-quarter HQ3 gate remains live on original a86fd4882. Do not edit its active source worktree. Input structural candidate is independent of the real-bank MODELONLY fallback46e59d924 and the qualified actual histogram leaf packet0bcc49d96.
+
+Resume 2026-10-20 05:07 PT: group7 tiny mapped native FAILED (max38/5 comb decode violations), exact receipts under native_group7. Structural group4 candidate267559433 is default off with +3FF versus legacy53 selector FF, +0edges target. Native3 and fullinput proof3 LIVE; no fullquarter native/fullquarter behavior/gate/adoption yet. Original HQ3 gate still live and unchanged.
