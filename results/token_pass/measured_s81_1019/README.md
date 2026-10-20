@@ -167,3 +167,7 @@ New records (all Verilator 5.050, every returned row checked against the model g
 
 Still old: attn.a_proj sparse classes 18.6k, attn.gather L24..36, idx.score/topk_local non-fixture layers 11.2k (AR);
 MTP adds wave.busy 161.5k, mc.* 28.9k, draft-block layers.
+
+## MTPW source-pinned wave update (CODEX 2026-10-20)
+
+Five wave.busy positions now derive dynamically from V.S029 components and retain their individual grades (47136.2 cycles/position; handoff0). MTP V.L-prefixed index-projection insertions previously skipped are included. MTP adds80191cycles total ->1881238.4stepcycles,2652.9acceptedtok/s; AR fixed848.1tok/s unchanged. mc.* old charges remain. Fleet4tests+selftest+--checkPASS; evidence results/rtl/codex_token_compose_1020. MU numbers remain partial composition estimates pending strict XDIE qualification.

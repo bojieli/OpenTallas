@@ -66,6 +66,13 @@ def load_elements(d):
         recs += [dict(o, file=rel, _curation=cur) for o in e.get('ops', [])]
     exact_ops = {o['op'] for o in recs if not o['_curation'] and o.get('bit_exact') is True}
     for o in recs:
+        if o.get('compose_hook') and o.get('grade') == 'composed-measured-ops':
+            proof = next((x for x in recs if x['file'] == o['file'] and x['op'] == 'wave.handoff'
+                          and x.get('bit_exact') is True and x.get('grade') in MEASURED), None)
+            if proof is None or proof.get('cycles') != o['compose_hook'].get('handoff_cycles'):
+                raise ValueError('composed op lacks matching exact handoff evidence: ' + o['op'])
+            ops[(o.get('dag_cls'), o['op'])] = o
+            continue
         if not admitted(o, exact_ops):
             if o.get('grade') in MEASURED:
                 excluded.append(dict(op=o['op'], file=o['file'], grade=o['grade'], bit_exact=o.get('bit_exact'),
@@ -94,11 +101,11 @@ def insert_nodes(dag, inserts):
     N = {n['id']: n for n in dag['nodes']}
     for o in inserts:
         ins = o['insert']
-        for L in ins['layers']:
-            a, b = f'L{L}.{ins["after"]}', f'L{L}.{ins["before"]}'
+        for L, prefix in [(L, prefix) for L in ins['layers'] for prefix in ('', 'V.')]:
+            a, b = f'{prefix}L{L}.{ins["after"]}', f'{prefix}L{L}.{ins["before"]}'
             if a not in N or b not in N:
                 continue
-            nid = f'L{L}.{o["op"]}'
+            nid = f'{prefix}L{L}.{o["op"]}'
             nb = N[b]
             n = dict(id=nid, label=nid, group=nb.get('group'), cls=o.get('dag_cls'), op=o['op'], kind='inserted',
                      base_cycles=0.0, cycles=0.0, layer=L, critical=bool(N[a].get('critical') and nb.get('critical')),
@@ -191,6 +198,7 @@ def compose(wl, base, dag, ops, slots, xparts=None):
     rows, cyc_new, cyc_old = [], {}, {}
     by_grade = collections.Counter()
     per_op = {}
+    node_grades, composed_ops = {}, []
     for n in dag['nodes']:
         L = lkey(n, gk)
         old = float(n['cycles'])
@@ -200,11 +208,14 @@ def compose(wl, base, dag, ops, slots, xparts=None):
             if parts:
                 vals = [xdie_part(p, xparts) for p in parts]
                 cyc_new[n['id']] = sum(c for c, _ in vals)
+                node_grades[n['id']] = collections.Counter()
+                for c, g in vals: node_grades[n['id']][g] += c
                 if n.get('critical'):
                     for c, g in vals:
                         by_grade[g] += c
             else:
                 cyc_new[n['id']] = old
+                node_grades[n['id']] = collections.Counter(priced=old)
                 if n.get('critical'):
                     by_grade['priced'] += old
             continue
@@ -212,13 +223,15 @@ def compose(wl, base, dag, ops, slots, xparts=None):
             (n.get('src') or {}).get('grade'), 'priced')
         new, how, tail = old, None, 0.0
         ov = ops.get((n.get('cls'), n.get('op'))) or ops.get((None, n.get('op')))
-        if ov:
+        if ov and not ov.get('compose_hook'):
             c, how = node_cycles(n, ov)
             if c is not None:
                 new = c
                 g = ov['grade'] if how == 'exact' else 'measured-scaled'
                 tail = float(ov.get('tail_priced') or 0.0)
         cyc_new[n['id']] = new + tail
+        node_grades[n['id']] = collections.Counter({g: new})
+        node_grades[n['id']]['priced'] += tail
         if n.get('critical'):
             by_grade[g] += new
             by_grade['priced'] += tail
@@ -230,6 +243,33 @@ def compose(wl, base, dag, ops, slots, xparts=None):
             r['grades'][g] += new
             if tail:
                 r['grades']['priced'] += tail
+    # Composite wave positions inherit every component's grade; no blanket measured promotion.
+    for n in dag['nodes']:
+        ov = ops.get((n.get('cls'), n.get('op'))) or ops.get((None, n.get('op')))
+        if not ov or not ov.get('compose_hook'):
+            continue
+        hook = ov['compose_hook']
+        group = [x for x in dag['nodes'] if x.get('group') == hook['group']
+                 and x['id'] not in hook.get('exclude', [])]
+        if not group or any(x['id'] == n['id'] or (ops.get((x.get('cls'), x.get('op'))) or {}).get('compose_hook') for x in group):
+            raise ValueError('empty or recursive composite group: ' + hook['group'])
+        grades = collections.Counter()
+        for x in group:
+            grades.update(node_grades[x['id']])
+        grades['measured-release-RTL'] += float(hook['handoff_cycles'])
+        new = sum(grades.values())
+        old = cyc_new[n['id']]
+        if n.get('critical'):
+            by_grade.subtract(node_grades[n['id']]); by_grade.update(grades)
+            row = per_op[(n.get('cls'), n.get('op'))]
+            row['cycles'] += new - old
+            row['grades'].subtract(node_grades[n['id']]); row['grades'].update(grades)
+        cyc_new[n['id']] = new
+        node_grades[n['id']] = grades
+        composed_ops.append(dict(node=n['id'], group=hook['group'], excluded=hook.get('exclude', []),
+                                 old_cycles=old, cycles=round(new, 1),
+                                 by_grade={g: round(v, 1) for g, v in sorted(grades.items()) if v},
+                                 source_nodes=[x['id'] for x in group], evidence=ov['evidence']))
     # base layer / adjust terms that are not DAG nodes (p4l DV deltas, scan option D, L20 split, residual)
     extra = []
     for t in bterms:
@@ -273,7 +313,7 @@ def compose(wl, base, dag, ops, slots, xparts=None):
         per_op=sorted(({**r, 'old_cycles': round(r['old_cycles'], 1), 'cycles': round(r['cycles'], 1),
                         'grades': {k: round(v, 1) for k, v in r['grades'].items()}} for r in per_op.values()),
                       key=lambda r: -r['cycles']),
-        extra_terms=extra)
+        extra_terms=extra, composed_ops=composed_ops)
     return out
 
 
