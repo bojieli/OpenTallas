@@ -8,6 +8,7 @@ export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 verilator --version
 source physical/ref_tile/dscoll_lane_w_ltr/kit.env
 D=()
+[ "${OT_COLL_NATIVE32:-0}" != 1 ] || D+=(-DOT_COLL_NATIVE32)
 if [ "$M" = 1 ]; then D+=(-DOT_S81PH_OLDREAD_MUT); fi
 if [ "$M" = 2 ]; then D+=(-DOT_S81PH_B64_COLLIDE_MUT); fi
 if [ "$M" = 3 ]; then D+=(-DOT_S81PH_GBX3_MUT=1); fi

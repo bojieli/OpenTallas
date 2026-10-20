@@ -43,7 +43,11 @@ module ot_s81ph_coll_lane_safe4 #(
     localparam integer HEAD_NS = (W + 1 + 15) / 16;          // credit rx forwarding slices (35)
     localparam integer HEAD_RL = (HEAD_NS + 7) / 8;          // leaves for them (8 slices x 2 flags each)
     localparam integer MEM_NS = (W + 1 + 7) / 8, MEM_NA = (MEM_NS + 3) / 4, MEM_RST = 2 * (MEM_NS + MEM_NA);
-    localparam integer EP_RN = 12, GB_RN = 22;   // = ot_s81ph_link_gbx_safe3 RN (checked there)
+    `ifdef OT_COLL_NATIVE32
+    localparam integer EP_RN = 16, GB_RN = 22;
+`else
+    localparam integer EP_RN = 12, GB_RN = 22;
+`endif   // = ot_s81ph_link_gbx_safe3 RN (checked there)
     localparam integer R_LOC = 0, R_CRX = 1, R_CTX = 2, R_HEAD = 3, R_EP = R_HEAD + HEAD_RL, R_MEM = R_EP + EP_RN,
                        R_GB = R_MEM + MEM_RST, NREG = R_GB + GB_RN;
     wire [NREG-1:0] rr;

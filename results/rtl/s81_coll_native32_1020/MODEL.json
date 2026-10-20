@@ -1,0 +1,49 @@
+{
+ "candidate": "OT_COLL_NATIVE32 v3",
+ "lane_payload_bits": 553,
+ "frame_bits": 595,
+ "credits": 512,
+ "seq_bits": 10,
+ "macro_count": 55,
+ "macro_counts": {
+  "256x64": 36,
+  "32x64": 19
+ },
+ "baseline_gate_flops": 16261,
+ "candidate_mapped_flops": 16306,
+ "added_flops_per_lane": 45,
+ "new_storage_capacity_bits": 0,
+ "steady_edges_added": 0,
+ "reset_release_edges_added": 0,
+ "counter_copy_banks": 4,
+ "extra_same_edge_ack_copy_bits": 1,
+ "reset_regions": 222,
+ "reset_regions_baseline": 218,
+ "std_band": {
+  "outline_um": [
+   706.32,
+   540
+  ],
+  "band_y_um": [
+   259.2,
+   288.0
+  ],
+  "width_um": 702.0,
+  "height_um": 28.8,
+  "baseline_std_um2": 9445,
+  "util_nominal": 0.4671672206394428,
+  "macro_channels": ">=25.9um, 50..66% model signal tracks; actual GRT unmeasured",
+  "failure": "old GPL sees full physical core but cells constrained only by removed rows; numerical divergence, cause hypothesis needs native fence gate qualification"
+ },
+ "placement_change_plan": "explicit native EXCLUSIVE full-band group, all mapped standard cells+all new repair/clock/filler cells; verified API and new-birth seed fixture, per-stage bbox+native PG/timing/reach audits mandatory",
+ "depth_ps": 621.8,
+ "depth_levels": 16,
+ "depth_status": "BLOCKED >600; no layout gate",
+ "rejected_variant_v4": {
+  "depth_ps": 686.8,
+  "root_over32": "rep_ra[0]35",
+  "change": "parallel skp address selection plus algebraic rewind equality",
+  "adopted": false
+ },
+ "next_structural_lever": "bounded carry-lookahead sender/replay next index, or explicit priced extra static pipeline edge; do not waive depth"
+}

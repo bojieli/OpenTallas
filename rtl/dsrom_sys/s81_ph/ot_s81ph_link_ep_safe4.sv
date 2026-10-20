@@ -176,6 +176,17 @@ module ot_s81ph_link_ep_safe4 #(
 
     // ======================================================================== sender
     reg  [SEQW-1:0] una, snd, nxt;
+`ifdef OT_COLL_NATIVE32
+    // Independent complete same-edge state copies for consumer cones. Four
+    // extra same-depth reset leaves separate copies from the state leaf.
+    wire [SEQW-1:0] nxt_rw, nxt_ready, una_rw, una_skip;
+    ot_s81ph_kff4_10 u_k_nxt_rw (.clk(clk),.rst_n(rst_v[12]),.d(nxt_nx),.q(nxt_rw));
+    ot_s81ph_kff4_10 u_k_nxt_ready (.clk(clk),.rst_n(rst_v[12]),.d(nxt_nx),.q(nxt_ready));
+    ot_s81ph_kff4_10 u_k_una_rw (.clk(clk),.rst_n(rst_v[13]),.d(una_n),.q(una_rw));
+    ot_s81ph_kff4_10 u_k_una_skip (.clk(clk),.rst_n(rst_v[13]),.d(una_n),.q(una_skip));
+`else
+    wire [SEQW-1:0] nxt_rw=nxt, nxt_ready=nxt, una_rw=una, una_skip=una;
+`endif
     // safe4: kept copy of snd for the ready / skip compares, in its own kept hierarchy (ot_s81ph_kff4_10,
     // SYNTH_KEEP_MODULES): a same-D (* keep *) reg was merged back into snd by Yosys (mapped census 10-19: 33 loads)
     wire [SEQW-1:0] snd_c;
@@ -194,7 +205,7 @@ module ot_s81ph_link_ep_safe4 #(
     reg             pace_ok_r;
     wire            pace_ok = (PHY_NUM == 0) || pace_ok_r;
 
-    wire [SEQW-1:0] occ = nxt - una;
+    wire [SEQW-1:0] occ = nxt_rw - una_rw;
     // PIPE (coll lane v3, s81ph-dsfd_coll_lane_w-34b3e75dd SS -971: nxt -> occ / ack compare -> una_i add ->
     // replay read address -> SRAM -> CRC -> tp, 30 levels, one cycle):
     //  (1) in_ready and replaying are REGISTERS computed from the next-state values (same function, one flop)
@@ -275,11 +286,17 @@ module ot_s81ph_link_ep_safe4 #(
     wire ok_u, ok_v, ok_c; (* keep = "true" *) reg ok_f;
     (* keep = "true" *) reg [SEQW-1:0] una_s;
     wire [SEQW-1:0] p_dack = pack - una_s;
-    wire            p_bad  = p_dack > (nxt - una_s);
+    wire            p_bad  = p_dack > (nxt_rw - una_s);
     wire ok_d = p_take && !p_bad;
     ot_s81ph_kff4_1 u_k_oku (.clk(clk), .rst_n(rst_v[0]), .d(ok_d), .q(ok_u));
     ot_s81ph_kff4_1 u_k_okv (.clk(clk), .rst_n(rst_v[0]), .d(ok_d), .q(ok_v));
     ot_s81ph_kff4_1 u_k_okc (.clk(clk), .rst_n(rst_v[0]), .d(ok_d), .q(ok_c));
+`ifdef OT_COLL_NATIVE32
+    wire ok_ready;
+    ot_s81ph_kff4_1 u_k_ok_ready (.clk(clk), .rst_n(rst_v[15]), .d(ok_d), .q(ok_ready));
+`else
+    wire ok_ready=ok_c;
+`endif
     always @(posedge clk or negedge rst_v[0])
         if (!rst_v[0]) begin pv <= 1'b0; s2v <= 1'b0; pnak <= 1'b0; ok_f <= 1'b0; una_s <= 0; end
         else begin
@@ -327,11 +344,17 @@ module ot_s81ph_link_ep_safe4 #(
 `else
     wire rewind_at_limit = at_lim;
 `endif
-    ot_s81ph_rewind4 u_rw_sender (.nxt(nxt), .una(una), .ack_ok(ack_ok), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_sender));
-    ot_s81ph_rewind4 u_rw_ready (.nxt(nxt), .una(una), .ack_ok(ack_ok), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_ready));
+    ot_s81ph_rewind4 u_rw_sender (.nxt(nxt_rw), .una(una_rw), .ack_ok(ack_ok), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_sender));
+    ot_s81ph_rewind4 u_rw_ready (.nxt(nxt_rw), .una(una_rw), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_ready));
+`ifdef OT_COLL_NATIVE32
+    wire rewind_sender_state;
+    ot_s81ph_rewind4 u_rw_sender_state (.nxt(nxt_rw), .una(una_rw), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_sender_state));
+`else
+    wire rewind_sender_state=rewind_sender;
+`endif
     wire [SEQW-1:0] snd_l   = launch ? snd + 1'b1 : snd;
     wire [IW-1:0]   snd_i_l = launch ? idx_add(snd_i, 1) : snd_i;
-    wire [SEQW-1:0] snd_off = snd_l - una;
+    wire [SEQW-1:0] snd_off = snd_l - una_skip;
     wire            retry_exh = rewind && !progress && (retry >= MR_W);
     wire            ack_skip  = ack_ok && (d_ack > snd_off);
     wire [IW-1:0]   snd_i_nx  = (rewind_sender || ack_skip) ? una_i_n : snd_i_l;
@@ -587,7 +610,7 @@ module ot_s81ph_link_ep_safe4 #(
     wire pace_ok_launch = (pace >= PTH2);
     wire pace_ok_inc    = ({1'b0, pace} + {1'b0, PNUM_W}) >= {1'b0, PCOST_W};
     wire [SEQW-1:0] nxt_nx = accept ? nxt + 1'b1 : nxt;
-    wire [SEQW-1:0] snd_nx = rewind_sender ? una_n : (ack_skip ? rr_ack : snd_l);
+    wire [SEQW-1:0] snd_nx = rewind_sender_state ? una_n : (ack_skip ? rr_ack : snd_l);
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
     wire            cred_ok_nx = 1'b1;
 `else
@@ -600,9 +623,9 @@ module ot_s81ph_link_ep_safe4 #(
     wire            lnch_0 = replaying && pace_ok;
     wire [SEQW-1:0] sndl_0 = lnch_0 ? snd + 1'b1 : snd, sndl_1 = snd + 1'b1;
     wire [IW-1:0]   sndil_0 = lnch_0 ? idx_add(snd_i, 1) : snd_i, sndil_1 = idx_add(snd_i, 1);
-    wire            skip_0 = ack_ok && (d_ack > (sndl_0 - una)), skip_1 = ack_ok && (d_ack > (sndl_1 - una));
-    wire [SEQW-1:0] sndnx_0 = rewind_sender ? una_n : (skip_0 ? rr_ack : sndl_0);
-    wire [SEQW-1:0] sndnx_1 = rewind_sender ? una_n : (skip_1 ? rr_ack : sndl_1);
+    wire            skip_0 = ack_ok && (d_ack > (sndl_0 - una_skip)), skip_1 = ack_ok && (d_ack > (sndl_1 - una_skip));
+    wire [SEQW-1:0] sndnx_0 = rewind_sender_state ? una_n : (skip_0 ? rr_ack : sndl_0);
+    wire [SEQW-1:0] sndnx_1 = rewind_sender_state ? una_n : (skip_1 ? rr_ack : sndl_1);
     wire [IW-1:0]   sndinx_0 = (rewind_sender || skip_0) ? una_i_n : sndil_0;
     wire [IW-1:0]   sndinx_1 = (rewind_sender || skip_1) ? una_i_n : sndil_1;
     wire [SEQW-1:0] nxtnx_1 = nxt + 1'b1;
@@ -618,21 +641,26 @@ module ot_s81ph_link_ep_safe4 #(
     // safe4: the same rdy / rep functions with every 10-bit compare evaluated in parallel on registers and the
     // rewind / skip / launch / ack selects applied to 1-bit results (no compare behind a 10-bit mux)
     // A distinct same-edge UNA register owns the subtraction cone; no buffered fanout claim.
+`ifdef OT_COLL_NATIVE32
+    wire rst_una_so=rst_v[14], rst_una_cmp=rst_v[15];
+`else
+    wire rst_una_so=rst_v[2], rst_una_cmp=rst_v[2];
+`endif
     wire [SEQW-1:0] una_so;
-    ot_s81ph_kff4_10 u_k_una_so (.clk(clk), .rst_n(rst_v[2]), .d(una_n), .q(una_so));
+    ot_s81ph_kff4_10 u_k_una_so (.clk(clk), .rst_n(rst_una_so), .d(una_n), .q(una_so));
     wire [SEQW-1:0] so      = snd_c - una_so;
     wire            gt_so0  = d_ack > so, gt_so1 = d_ack > (so + 1'b1);
-    wire            skp_0   = ack_ok && (lnch_0 ? gt_so1 : gt_so0), skp_1 = ack_ok && gt_so1;
+    wire            skp_0   = ok_ready && (lnch_0 ? gt_so1 : gt_so0), skp_1 = ok_ready && gt_so1;
     // una_c: kept same-edge copy of una (ot_s81ph_kff4_10) for the una_n == / < compares (mapped census 10-19: una[0] 43)
     wire [SEQW-1:0] una_c;
-    ot_s81ph_kff4_10 u_k_una (.clk(clk), .rst_n(rst_v[2]), .d(una_n), .q(una_c));
-    wire            unq_0   = ok_v ? (rr_ack == nxt) : (una_c == nxt);           // una_n == nxt
-    wire            unq_1   = ok_v ? (rr_ack == nxtnx_1) : (una_c == nxtnx_1);   // una_n == nxt + 1
-    wire            snq     = snd_c == nxt, snq1 = (snd_c + 1'b1) == nxt;
-    wire            eq_0    = rewind_ready ? unq_0 : (skp_0 ? (rr_ack == nxt) : (lnch_0 ? snq1 : snq));
-    wire            eq_1    = rewind_ready ? unq_1 : (skp_1 ? (rr_ack == nxtnx_1) : snq);
-    wire            lt_0    = ok_v ? ((nxt - rr_ack) < RPS) : ((nxt - una_c) < RPS);
-    wire            lt_1    = ok_v ? ((nxtnx_1 - rr_ack) < RPS) : ((nxtnx_1 - una_c) < RPS);
+    ot_s81ph_kff4_10 u_k_una (.clk(clk), .rst_n(rst_una_cmp), .d(una_n), .q(una_c));
+    wire            unq_0   = ok_v ? (rr_ack == nxt_ready) : (una_c == nxt_ready);           // una_n == nxt_ready
+    wire            unq_1   = ok_v ? (rr_ack == (nxt_ready + 1'b1)) : (una_c == (nxt_ready + 1'b1));   // una_n == nxt_ready + 1
+    wire            snq     = snd_c == nxt_ready, snq1 = (snd_c + 1'b1) == nxt_ready;
+    wire            eq_0    = rewind_ready ? unq_0 : (skp_0 ? (rr_ack == nxt_ready) : (lnch_0 ? snq1 : snq));
+    wire            eq_1    = rewind_ready ? unq_1 : (skp_1 ? (rr_ack == (nxt_ready + 1'b1)) : snq);
+    wire            lt_0    = ok_v ? ((nxt_ready - rr_ack) < RPS) : ((nxt_ready - una_c) < RPS);
+    wire            lt_1    = ok_v ? (((nxt_ready + 1'b1) - rr_ack) < RPS) : (((nxt_ready + 1'b1) - una_c) < RPS);
 `ifdef OT_DSROM_LINK_MUT_FREECREDIT
     wire            ck_0 = 1'b1, ck_1 = 1'b1;
 `else

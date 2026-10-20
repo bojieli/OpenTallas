@@ -1,0 +1,19 @@
+{
+ "top": "dsfd_coll_lane_w_safe4",
+ "flops": 16306,
+ "macros": 55,
+ "max_nonclock_loads": 35,
+ "sha256": "05052411946264a4c2cca0947fb5ce047b24581ee1d1f56ea4626319444ef344",
+ "nonclock_roots_over32": 1,
+ "over32": [
+  {
+   "net": "u_ot_pr_core.u.u_ep.rep_ra[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+   "loads": 35,
+   "flop_loads": 24,
+   "driver": "u_ot_pr_core.u.u_ep.rep_ra[0]$_DFF_PN0_",
+   "kind": "ff"
+  }
+ ],
+ "macro_cells_direction_inferred": 55,
+ "scope": "mapped native standard-cell roots, BUF/INV collapsed; no physical reach or complete macro-direction claim"
+}
