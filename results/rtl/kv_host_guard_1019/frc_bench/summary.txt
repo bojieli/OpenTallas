@@ -1,0 +1,14 @@
+src a5201f50f Verilator 5.050 2026-07-01 rev v5.050
+MU_HROOT lint_guard_mu: PASS LINT_GUARD_MU qkd_hr_core_guard (u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu, MU 1)
+rc[lint_guard_mu]=0
+MU_HROOT tb_mu_hroot_e2e rc=0: PASS MU_HROOT_E2E rounds=3 steps=12 writer_stages=432 rows=64+l+256u epochs={seq14,user2} retire=acceptance order
+rc[tb_mu_hroot_e2e]=0
+MU_HROOT ep1 rc=0: FAIL MU_HROOT_E2E fails=134994 retires=0 requests=1 writer_stages=145
+rc[ep1]=1
+MU_HROOT ep2 rc=0: FAIL MU_HROOT_E2E fails=18 retires=12 requests=12 writer_stages=432
+rc[ep2]=1
+rc[lint_sram]=0 lint-ok
+rc[fifo_m0]=0 PASS cycles=100140 accepted=67057 retired=64730 full=3794 empty=4081 simultaneous=44379 full_simultaneous=512 resets=121 overflow=3238 underflow=6035 zero_added_edges=1 GUARD_FIFO_VERILATOR_PASS mutant=0 observed_exit=0 
+rc[fifo_m1]=0 [76000] %Fatal: tb_guard_fifo_sram.sv:29: Assertion failed in tb_guard_fifo_sram.check: cycle 7 data got 0000000000000000 ref 1f87f86be49d628d GUARD_FIFO_VERILATOR_PASS mutant=1 observed_exit=1 
+rc[fifo_m2]=0 [66000] %Fatal: tb_guard_fifo_sram.sv:28: Assertion failed in tb_guard_fifo_sram.check: cycle 6 control got 1/  4/0/0 ref 0/  4/0/0 GUARD_FIFO_VERILATOR_PASS mutant=2 observed_exit=1 
+rc[fifo_m3]=0 [1296000] %Fatal: tb_guard_fifo_sram.sv:28: Assertion failed in tb_guard_fifo_sram.check: cycle 129 control got 1/127/1/0 ref 1/127/0/0 GUARD_FIFO_VERILATOR_PASS mutant=3 observed_exit=1 

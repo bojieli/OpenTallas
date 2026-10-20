@@ -13,14 +13,19 @@ module qkd_host_guard_fifo #(parameter W=8,
  generate if(SRAM_FIFO && W==64)begin:g_sram
  localparam MUT=`OT_HOST_GUARD_SRAM_MUTANT;
  reg[6:0]wp,rp;reg[7:0]unread;reg[3:0]credits,fc;
- reg[2:0]fw,fr;reg v1,v2,v3;
+ reg[2:0]fw;reg v1,v2,v3;
+ // SAFE item 3 (KV-HOST/GUARD frc): the head-buffer read select is 8 KEPT identical copies, one per 8-bit dout
+ // slice (fr[2] drove 305 mux loads as one flop); function and timing edges unchanged.
+ (* keep *) reg[2:0]frc[0:7];
  wire[63:0]stage1;reg[63:0]stage2,last,front[0:7];
+ integer k;
  wire take=pop&&valid;
  wire put=push&&(count<(MUT==3?127:128)||take);
  wire fetch=unread!=0&&credits!=0;
  wire enqueue=MUT==2?v2:v3;
  wire[6:0]read_addr=MUT==1?rp+7'd1:rp;
- assign valid=fc!=0;assign dout=front[fr];
+ assign valid=fc!=0;
+ genvar s;for(s=0;s<8;s=s+1)begin:g_dout assign dout[8*s+:8]=front[frc[s]][8*s+:8];end
  assign overflow=push&&!put;assign underflow=pop&&!valid;
  // The primitive provides stage1 on fetch. Stage2, last and front consume
  // v1, v2 and v3 respectively, exactly as the old bank/half/last/front path.
@@ -30,7 +35,7 @@ module qkd_host_guard_fifo #(parameter W=8,
  .clk(ck),.r_ce_in(rst_n&&fetch),.r_addr_in(read_addr),.rd_out(stage1),
  .w_ce_in(rst_n&&put),.w_addr_in(wp),.wd_in(din),.w_mask_in(64'hffffffffffffffff));
  always @(posedge ck or negedge rst_n)if(!rst_n)begin
- wp<=0;rp<=0;unread<=0;count<=0;credits<=8;fc<=0;fw<=0;fr<=0;
+ wp<=0;rp<=0;unread<=0;count<=0;credits<=8;fc<=0;fw<=0;for(k=0;k<8;k=k+1)frc[k]<=0;
  v1<=0;v2<=0;v3<=0;stage2<=0;last<=0;
  end else begin
  if(put)wp<=wp+1'b1;
@@ -39,7 +44,7 @@ module qkd_host_guard_fifo #(parameter W=8,
  if(v1)stage2<=stage1;
  if(v2)last<=stage2;
  if(enqueue)begin front[fw]<=MUT==2?stage2:last;fw<=fw+1'b1;end
- if(take)fr<=fr+1'b1;
+ if(take)for(k=0;k<8;k=k+1)frc[k]<=frc[k]+1'b1;
  case({put,take})2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;endcase
  case({put,fetch})2'b10:unread<=unread+1'b1;2'b01:unread<=unread-1'b1;endcase
  case({take,fetch})2'b10:credits<=credits+1'b1;2'b01:credits<=credits-1'b1;endcase
