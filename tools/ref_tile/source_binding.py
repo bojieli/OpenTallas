@@ -609,6 +609,30 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None, *, pg_strict=No
                     "kit declares reset_landing.first_copies: the balanced proof applies, re-gate" if hit else
                     "no reset_landing.first_copies: textbook_lint checks unchanged")))
             continue
+        if n == "every_root_spread":
+            # KV-CLKFIX 10-19: pre_route_gate.other_roots judges the 0dq pin-flop spread at EVERY measured root, not only
+            # the largest.  An older gate stays valid when it measured one root, was already judged per root
+            # (multiple_cts_roots), or every other root's recorded pin-flop (boundary / child-flop) spread is <= 80 at
+            # TT and FF; a gate without per-domain records predates it and is kept (a fresh gate judges it).
+            ck = clock if isinstance(clock, dict) else {}
+            doms = [d for d in ck.get("clock_measurements") or [] if isinstance(d, dict)]
+            if ck.get("declared_clock") == "multiple_cts_roots" or "other_roots" in ck or len(doms) <= 1:
+                rows.append(dict(requires=n, ok=True, text="every_root_spread: one measured root / judged per root: unchanged"))
+                continue
+            prim = str(ck.get("measured_clock") or "")
+            bad = []
+            for d in doms:
+                if prim and d.get("clock") == prim:
+                    continue
+                for c in ("tt", "ff"):
+                    cr = d.get(c) or {}
+                    b = (cr.get("child_flop") or {}) if (cr.get("child_flop") or {}).get("min") is not None else (cr.get("boundary") or {})
+                    if b.get("min") is not None and b.get("max") is not None and float(b["max"]) - float(b["min"]) > CLOCK_PIN_SPREAD_MAX_PS:
+                        bad.append(f"{d.get('source')} {c.upper()} {float(b['max']) - float(b['min']):.1f}")
+            rows.append(dict(requires=n, ok=not bad, over=bad, text="every_root_spread: " + (
+                f"every other measured root <= {CLOCK_PIN_SPREAD_MAX_PS:.0f} ps pin-flop spread" if not bad else
+                f"other root(s) over {CLOCK_PIN_SPREAD_MAX_PS:.0f} ps: {bad[:4]} (FAIL)")))
+            continue
         if n == "clock_pin_spread":
             sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
             tt, ff = sp.get("tt"), sp.get("ff")
