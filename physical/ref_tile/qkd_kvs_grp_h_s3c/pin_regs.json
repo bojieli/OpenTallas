@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_kvs_grp_h_s2",
+ "enable": false,
+ "reason": "The RTL registers every face (tools/qwen_kv_die/kv_grp_safe2.py): i_ctl / i_up / x__est land on kept face flops (one copy per consumer leaf), PC / K / V inputs land on the landing / row-control input flops, every output leaves a flop (no combinational input->output path); the ages are bench-proven against the unchanged tile (kvs_grp_s2_bench.py) and handed to the die schedule.  A flow-inserted pin stage would add an unpriced cycle."
+}
