@@ -119,9 +119,9 @@ module ot_hbm_idx_topk_static_f32 #(
                      E_RK2=10, E_PK1=11, E_PKO=12, E_WR=13, E_NEXT=14, E_END=15;
     localparam integer XRT = PIN_IN + RT_EXTRA;
     localparam integer CW = (8 + PIN_IN + RT_EXTRA < 16 && ACK - 1 < 16) ? 4 : 8;
-    // descriptor: 157 bits + kept duplicates of k (4) and order (2), each duplicate in a DIFFERENT enable group than its
-    // original (a flop with the same D and the same enable net would be merged back): DSW 163 in NGO groups of DG <= 14
-    localparam integer DSW = 163, DG = 14;
+    // descriptor: 157 bits + kept duplicates of k (2 x 4) and order (2), each duplicate in a DIFFERENT enable group than
+    // its original (a flop with the same D and the same enable net would be merged back): DSW 167 in NGO groups of DG 14
+    localparam integer DSW = 167, DG = 14;
     integer l, a, b;
     genvar g, c;
     // reset-free kept copies (ot_hbm_idx_kreg RST 0): every copy's D is a function of reset-held state while rst_n is
@@ -132,17 +132,17 @@ module ot_hbm_idx_topk_static_f32 #(
                  (a_mirror ? a_base[17:16] == 2'd0 : a_base[17:16] == sid) &&
                  !o_mirror && o_base[17:16] == sid && (!has_r || r_base[17:16] == sid);
     wire [DSW-1:0] dsc_in = {legal, k, order, has_r, a_mirror, o_mirror, n, m, a_base, a_str, o_base, o_str, r_base,
-                             r_str[17:9], order, r_str[8:0], k, order};
+                             k, r_str[17:9], order, r_str[8:0], k, order};
     reg  [DSW-1:0] dsc;
     wire [NGO-1:0] busy_c;
     wire [NGO-1:0] den = go_c & ~busy_c;
     generate for (g = 0; g < DSW; g = g + 1) begin : g_dsc
         always @(posedge clk) if (den[g / DG]) dsc[g] <= dsc_in[g];
     end endgenerate
-    wire legal_q; wire [3:0] k_q, k_d; wire order_q, order_d1, order_d2, has_r_q, am_q, om_q; wire [19:0] n_q, m_q;
+    wire legal_q; wire [3:0] k_q, k_d, k_m; wire order_q, order_d1, order_d2, has_r_q, am_q, om_q; wire [19:0] n_q, m_q;
     wire [17:0] a_base_q, a_str_q, o_base_q, o_str_q, r_base_q, r_str_q;
     assign {legal_q, k_q, order_q, has_r_q, am_q, om_q, n_q, m_q, a_base_q, a_str_q, o_base_q, o_str_q, r_base_q,
-            r_str_q[17:9], order_d2, r_str_q[8:0], k_d, order_d1} = dsc;
+            k_m, r_str_q[17:9], order_d2, r_str_q[8:0], k_d, order_d1} = dsc;
     // ------------------------------------------------------------ sequencer state (st registered from st_nx)
     reg [4:0] st, st_nx; reg [CW-1:0] cnt; reg flt, f_nan, s_inv;
     reg [19:0] c_row; reg [17:0] c_rb, c_le, o_rb, r_rb; reg [2:0] ol3, rl3;
@@ -278,6 +278,7 @@ module ot_hbm_idx_topk_static_f32 #(
     reg [IDW:0] col0;
     wire [IDW:0] cneg = {(IDW+1){1'b0}} - {{(IDW-2){1'b0}}, cap_off};
     wire [IDW:0] col_now = {cf_c[1] ? cneg[IDW:11] : col0[IDW:11], cf_c[0] ? cneg[10:0] : col0[10:0]};
+    wire [IDW:0] col_nowb = cf_c[3] ? cneg : col0;    // second copy: the id adders of lanes 4..7
     reg [7:0] s1_v; reg [31:0] s1_key [0:7]; reg [7:0] s1_nz; reg [IDW-1:0] s1_id [0:7]; reg s1_nan;
     reg [7:0] f_v; reg [31:0] f_w [0:7]; reg [7:0] f_isnan; reg [IDW:0] f_idx [0:7];
     reg [7:0] f_sg, f_z;
@@ -285,7 +286,7 @@ module ot_hbm_idx_topk_static_f32 #(
         f_w[l] = cap_d[32*l +: 32];
         f_v[l] = cv_c[2] && (!cf_c[2] || l[2:0] >= cap_off) && (!cap_last || l[2:0] <= cap_lastw);
         f_isnan[l] = f_w[l][30:23] == 8'hff && f_w[l][22:0] != 23'd0;
-        f_idx[l] = col_now + {{(IDW-2){1'b0}}, l[2:0]};
+        f_idx[l] = ((l < 4) ? col_now : col_nowb) + {{(IDW-2){1'b0}}, l[2:0]};
         f_sg[l] = f_w[l][31];
         f_z[l] = f_w[l][30:0] == 31'd0;
     end
@@ -422,7 +423,7 @@ module ot_hbm_idx_topk_static_f32 #(
         for (a = 0; a < 8; a = a + 1) begin o_w[a] <= pk_id[a]; r_w[a] <= pk_val[a]; end
     end
     // ------------------------------------------------------------ static writer (free-running sector words, one-hot rotate)
-    wire [7:0] kmask = 8'hff >> (4'd8 - k_d);      // the kept k duplicate (k_q: sequencer only)
+    wire [7:0] kmask = 8'hff >> (4'd8 - k_m);      // the second kept k duplicate (k_d: kgt; k_q: sequencer only)
     wire [255:0] o_flat, r_flat;
     generate for (g = 0; g < 8; g = g + 1) begin : g_flat
         assign o_flat[g*32 +: 32] = {{(32-IDW){1'b0}}, o_w[g]};
@@ -569,7 +570,7 @@ module ot_hbm_idx_topk_static_f32 #(
         if (chk_c != {12{st == E_CHK}} || upd_c != {12{st == E_NEXT && !last_row}}) bad = 1'b1;
         if (row_c != {3{st == E_ROW}} || rdn_c != {4{st == E_RD && !i_tgl}} || wr_c != {NWR{st == E_WR}}) bad = 1'b1;
         if (lclr_c != {8{st == E_RK1 || st == E_CHK}} || busy_c != {NGO{busy}} || go_c != {NGO{go}}) bad = 1'b1;
-        if (k_d !== k_q || order_d1 !== order_q || order_d2 !== order_q) bad = 1'b1;
+        if (k_d !== k_q || k_m !== k_q || order_d1 !== order_q || order_d2 !== order_q) bad = 1'b1;
         if (busy && (ol3 !== o_rb[2:0] || rl3 !== r_rb[2:0])) bad = 1'b1;
         for (l = 0; l < 33; l = l + 1) if (shk[l] != l_sh_ref) bad = 1'b1;
         for (l = 0; l < 6; l = l + 1) if (cpe[l] != ({8{st == E_SEL && s_ph == 2'd3}} & (8'd1 << s_cnt[2:0]))) bad = 1'b1;
