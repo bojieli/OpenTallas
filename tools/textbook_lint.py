@@ -73,6 +73,12 @@ THRESHOLDS = {
     "bnd_out_levels_refuse": 3,    # REFUSE register->output (closed max 2; tt_ctlm 5)
     "bnd_in_to_out_refuse": 1,     # REFUSE any combinational input->output bit (closed: none)
     "bnd_icg_port_refuse": 1,      # REFUSE an ICG enable combinational from a port (closed: none)
+    # OWNER 10-20 ~09:05 PIN REGISTERS: required only at region crossings (landing rings) and on wires over the 405 um
+    # reach; touching same-region tiles may connect directly when the combined path meets timing (die / parent STA
+    # judges it).  So input->register / register->output LEVELS are a WARN (reported), never a boundary REFUSE, unless
+    # the strict 10-15 "every pin registered" form is asked for (--set bnd_strict_pin_regs=1).  A combinational
+    # input->output bit and an ICG enable from a port stay REFUSE; a stage beyond reach_um stays a wire_reach REFUSE.
+    "bnd_strict_pin_regs": 0,
     # logic_depth: raw ASAP7 weight sum x depth_scale = ps.  depth_scale calibrated so the closed set's worst stage
     # (P6 tu_retry_phy_port, 15 levels) estimates <= ~610 ps against the 700 ps budget at 1.2 GHz
     "depth_scale": 1.667,
@@ -1099,10 +1105,11 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
     M["icg_enable_from_port"] = len(icg_en)
     if T["bnd_in_to_out_refuse"] and len(in2out) >= T["bnd_in_to_out_refuse"]:
         RF.setdefault("boundary", []).append(f"{len(in2out)} combinational input->output bit(s)")
-    if in2reg and in2reg[0][0] > T["bnd_in_levels_refuse"]:
+    strict_pins = bool(T.get("bnd_strict_pin_regs"))
+    if strict_pins and in2reg and in2reg[0][0] > T["bnd_in_levels_refuse"]:
         RF.setdefault("boundary", []).append(f"input->register {in2reg[0][0]} levels > {T['bnd_in_levels_refuse']} "
                                              f"({in2reg[0][1]} -> {in2reg[0][2]})")
-    if r2o and r2o[0][0] > T["bnd_out_levels_refuse"]:
+    if strict_pins and r2o and r2o[0][0] > T["bnd_out_levels_refuse"]:
         RF.setdefault("boundary", []).append(f"register->output {r2o[0][0]} levels > {T['bnd_out_levels_refuse']} "
                                              f"({r2o[0][1]} -> {r2o[0][2]})")
     if T["bnd_icg_port_refuse"] and len(icg_en) >= T["bnd_icg_port_refuse"]:
@@ -1123,7 +1130,10 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
         bad.append(f"{len(icg_en)} clock-gate enable(s) combinational from input ports (e.g. "
                    + ", ".join(f"{p}->{c} {l} lv" for l, p, c in icg_en[:3]) + "): register the enable first")
     if bad:
-        F["boundary"] = [b + ": register the boundary (pin flops / registered outputs)" for b in bad]
+        F["boundary"] = [b + (": register the boundary (pin flops / registered outputs)" if strict_pins else
+                              ": allowed as a same-region direct connection when the die / parent path meets timing "
+                              "(owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um")
+                         for b in bad]
 
     # ---- 4. logic depth reg -> reg
     worst = (0.0, None, None)

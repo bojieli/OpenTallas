@@ -557,9 +557,10 @@ PIN_REGS_FAIL_AFTER = "2026-10-16T19:50:00-07:00"   # OWNER RULE 19:50 PT 10-15 
 
 
 def check_pin_regs(g: Gate, kd: Path, spec: dict, now=None):
-    """OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin.  A leaf-tile
-    kit whose route does not insert pin registers (kit.env without OT_PIN_REGS=1) and records no opt-out reason is WARNed
-    until PIN_REGS_FAIL_AFTER and refused after it; re-kit it (ref_tile.py gen with recipe 3).  CLOSED tiles stand (they
+    """OWNER 10-20 09:05 (strict form: OWNER RULE 19:50 PT 2026-10-15, every pin registered).  A leaf-tile
+    kit whose route does not insert pin registers (kit.env without OT_PIN_REGS=1), records no opt-out reason and either
+    asks for the strict form (spec pin_regs_rule "every_pin") or declares region_crossing_ports is WARNed until
+    PIN_REGS_FAIL_AFTER and refused after it (any other such kit: INFO); re-kit it (ref_tile.py gen with recipe 3).  CLOSED tiles stand (they
     are not re-routed); a loop successor of an already-routed parent stays a WARN."""
     import datetime as dt
     if spec.get("kind", "tile") != "tile":
@@ -581,9 +582,22 @@ def check_pin_regs(g: Gate, kd: Path, spec: dict, now=None):
     if pr.get("enable") is False and str(pr.get("reason", "")).strip():
         g.add("INFO", "pin_regs", f"pin registers opted out: {pr['reason'][:300]}")
         return
+    # OWNER 10-20 09:05: pin registers are required only at region crossings (landing rings) and on wires over 405 um.
+    # Without the strict form or declared region_crossing_ports a kit without pin registers is INFO: same-region
+    # direct connections are judged by the die / parent STA, and a stage beyond the reach stays a textbook wire_reach
+    # REFUSE in this gate.
+    strict = RT.pin_regs_strict(spec)
+    crossing = str(spec.get("region_crossing_ports") or "").strip()
+    if not strict and not crossing:
+        g.add("INFO", "pin_regs", f"{RT.PIN_REGS_RULE}: no pin registers in this kit (no region_crossing_ports declared; "
+              "wire_reach and die / parent STA judge the direct connections)")
+        return
     late = (now or dt.datetime.now().astimezone()) >= dt.datetime.fromisoformat(PIN_REGS_FAIL_AFTER)
     sev = "FAIL" if late and not spec.get("auto_react_parent") else "WARN"
-    g.add(sev, "pin_regs", f"{RT.PIN_REGS_RULE}: this kit's ports are not registered at the pins and no opt-out is recorded"
+    what = (f"{RT.PIN_REGS_RULE_STRICT}: this kit's ports are not registered at the pins and no opt-out is recorded" if strict
+            else f"{RT.PIN_REGS_RULE}: ports matching region_crossing_ports {crossing!r} cross a region boundary and "
+                 "this kit registers no pin")
+    g.add(sev, "pin_regs", what
           + ("" if late else f" (WARN until {PIN_REGS_FAIL_AFTER}, then refused)"),
           "re-kit with recipe 3 (python3 tools/ref_tile/ref_tile.py gen <spec> with \"recipe\": 3, or delete kit.env "
           "for a new kit), or record \"pin_regs\": {\"enable\": false, \"reason\": \"...\"}")
