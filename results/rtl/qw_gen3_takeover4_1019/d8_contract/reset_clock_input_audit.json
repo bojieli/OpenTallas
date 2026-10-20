@@ -1,0 +1,356 @@
+{
+ "qualified": false,
+ "source_sha256": "ce281035efc46834270b0258607d70aa3e40ecbc1b13e5e19220e937de866258",
+ "pins": [
+  {
+   "required_pin": "rly_rst_d2d__fo1_0/ck",
+   "actual_pin": "rly_rst_d2d__fo1_0/ck[0]",
+   "arrival_fields": [
+    "23203.691406",
+    "18967.187500",
+    "12.520302"
+   ]
+  },
+  {
+   "required_pin": "rly_rst_d2d__fo1_1/ckf",
+   "actual_pin": null,
+   "arrival_fields": null
+  },
+  {
+   "required_pin": "rly_rst_d2d__fo1_2/ck",
+   "actual_pin": "rly_rst_d2d__fo1_2/ck[0]",
+   "arrival_fields": [
+    "23196.089844",
+    "18971.707031",
+    "11.902194"
+   ]
+  },
+  {
+   "required_pin": "rs_bump/ck",
+   "actual_pin": "rs_bump/ck",
+   "arrival_fields": [
+    "23152.396484",
+    "18935.115234",
+    "9.186078"
+   ]
+  },
+  {
+   "required_pin": "rstseq_rom/ck",
+   "actual_pin": "rstseq_rom/ck",
+   "arrival_fields": [
+    "22862.566406",
+    "18701.546875",
+    "9.243303"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_d2d__fo1__r3_0/clk",
+   "actual_pin": "rstt_rst_d2d__fo1__r3_0/clk",
+   "arrival_fields": [
+    "23162.878906",
+    "18943.882812",
+    "8.453640"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_d2d__fo1__r3_19/clk",
+   "actual_pin": "rstt_rst_d2d__fo1__r3_19/clk",
+   "arrival_fields": [
+    "23162.250000",
+    "18945.861328",
+    "8.690062"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_d2d__fo1__r3_20/clk",
+   "actual_pin": "rstt_rst_d2d__fo1__r3_20/clk",
+   "arrival_fields": [
+    "23158.771484",
+    "18936.082031",
+    "9.542839"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_d2d__fo1__r3_21/clk",
+   "actual_pin": "rstt_rst_d2d__fo1__r3_21/clk",
+   "arrival_fields": [
+    "23162.878906",
+    "18943.410156",
+    "8.860943"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_d2d__fo1__r3_24/clk",
+   "actual_pin": "rstt_rst_d2d__fo1__r3_24/clk",
+   "arrival_fields": [
+    "23167.982422",
+    "18939.714844",
+    "14.788778"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_d2d__fo1__r3_28/clk",
+   "actual_pin": "rstt_rst_d2d__fo1__r3_28/clk",
+   "arrival_fields": [
+    "23169.841797",
+    "18937.285156",
+    "8.845781"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_d2d__fo1__r3_31/clk",
+   "actual_pin": "rstt_rst_d2d__fo1__r3_31/clk",
+   "arrival_fields": [
+    "23168.732422",
+    "18936.261719",
+    "9.071111"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_d2d__fo1__r3_34/clk",
+   "actual_pin": "rstt_rst_d2d__fo1__r3_34/clk",
+   "arrival_fields": [
+    "23164.628906",
+    "18939.753906",
+    "8.779140"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_0/clk",
+   "actual_pin": "rstt_rst_fwd_s_0/clk",
+   "arrival_fields": [
+    "22885.501953",
+    "18722.062500",
+    "13.203764"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_1/clk",
+   "actual_pin": "rstt_rst_fwd_s_1/clk",
+   "arrival_fields": [
+    "22674.976562",
+    "18561.335938",
+    "10.221078"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_10/clk",
+   "actual_pin": "rstt_rst_fwd_s_10/clk",
+   "arrival_fields": [
+    "22209.093750",
+    "18189.753906",
+    "8.943555"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_12/clk",
+   "actual_pin": "rstt_rst_fwd_s_12/clk",
+   "arrival_fields": [
+    "22202.695312",
+    "18185.482422",
+    "10.932260"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_13/clk",
+   "actual_pin": "rstt_rst_fwd_s_13/clk",
+   "arrival_fields": [
+    "22201.841797",
+    "18184.656250",
+    "11.049469"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_14/clk",
+   "actual_pin": "rstt_rst_fwd_s_14/clk",
+   "arrival_fields": [
+    "22054.619141",
+    "18062.281250",
+    "10.589649"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_16/clk",
+   "actual_pin": "rstt_rst_fwd_s_16/clk",
+   "arrival_fields": [
+    "22047.693359",
+    "18057.951172",
+    "16.037312"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_4/clk",
+   "actual_pin": "rstt_rst_fwd_s_4/clk",
+   "arrival_fields": [
+    "22011.439453",
+    "18024.529297",
+    "9.229740"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_5/clk",
+   "actual_pin": "rstt_rst_fwd_s_5/clk",
+   "arrival_fields": [
+    "22011.375000",
+    "18024.468750",
+    "9.203848"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_6/clk",
+   "actual_pin": "rstt_rst_fwd_s_6/clk",
+   "arrival_fields": [
+    "22013.025391",
+    "18029.169922",
+    "8.804206"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_8/clk",
+   "actual_pin": "rstt_rst_fwd_s_8/clk",
+   "arrival_fields": [
+    "22209.369141",
+    "18186.806641",
+    "9.418271"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_fwd_s_9/clk",
+   "actual_pin": "rstt_rst_fwd_s_9/clk",
+   "arrival_fields": [
+    "22209.925781",
+    "18187.359375",
+    "9.565733"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_0/clk",
+   "actual_pin": "rstt_rst_seq_0/clk",
+   "arrival_fields": [
+    "23163.095703",
+    "18944.080078",
+    "8.368180"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_20/clk",
+   "actual_pin": "rstt_rst_seq_20/clk",
+   "arrival_fields": [
+    "23159.972656",
+    "18932.804688",
+    "8.630761"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_21/clk",
+   "actual_pin": "rstt_rst_seq_21/clk",
+   "arrival_fields": [
+    "23160.117188",
+    "18932.935547",
+    "8.816884"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_22/clk",
+   "actual_pin": "rstt_rst_seq_22/clk",
+   "arrival_fields": [
+    "23162.738281",
+    "18936.156250",
+    "9.137612"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_24/clk",
+   "actual_pin": "rstt_rst_seq_24/clk",
+   "arrival_fields": [
+    "23162.710938",
+    "18936.134766",
+    "9.154690"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_30/clk",
+   "actual_pin": "rstt_rst_seq_30/clk",
+   "arrival_fields": [
+    "23162.058594",
+    "18934.705078",
+    "8.479833"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_33/clk",
+   "actual_pin": "rstt_rst_seq_33/clk",
+   "arrival_fields": [
+    "23162.523438",
+    "18942.003906",
+    "9.535979"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_36/clk",
+   "actual_pin": "rstt_rst_seq_36/clk",
+   "arrival_fields": [
+    "23162.734375",
+    "18942.207031",
+    "11.032756"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_40/clk",
+   "actual_pin": "rstt_rst_seq_40/clk",
+   "arrival_fields": [
+    "23164.503906",
+    "18936.687500",
+    "9.000020"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_42/clk",
+   "actual_pin": "rstt_rst_seq_42/clk",
+   "arrival_fields": [
+    "23163.109375",
+    "18942.503906",
+    "9.233847"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_44/clk",
+   "actual_pin": "rstt_rst_seq_44/clk",
+   "arrival_fields": [
+    "23163.408203",
+    "18942.771484",
+    "9.208060"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_46/clk",
+   "actual_pin": "rstt_rst_seq_46/clk",
+   "arrival_fields": [
+    "23165.662109",
+    "18937.695312",
+    "9.154195"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_48/clk",
+   "actual_pin": "rstt_rst_seq_48/clk",
+   "arrival_fields": [
+    "23158.626953",
+    "18933.859375",
+    "8.754298"
+   ]
+  },
+  {
+   "required_pin": "rstt_rst_seq_66/clk",
+   "actual_pin": "rstt_rst_seq_66/clk",
+   "arrival_fields": [
+    "23161.851562",
+    "18941.316406",
+    "10.677051"
+   ]
+  }
+ ],
+ "missing": [
+  "rly_rst_d2d__fo1_1/ckf"
+ ]
+}
