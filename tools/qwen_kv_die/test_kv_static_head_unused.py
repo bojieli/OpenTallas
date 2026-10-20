@@ -57,5 +57,20 @@ class StaticHeadTests(unittest.TestCase):
                 p=run/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text((H.ROOT/name).read_text()+'\n')
             with self.assertRaisesRegex(ValueError,'role source changed'):H.derive(run,die,root=run)
 
+    def test_lane8_ledger_row_default_only(self):
+        d7="32'sb"+format(7,'032b');d12="32'sb"+format(12,'032b');d8="32'sb"+format(8,'032b')
+        self.assertTrue(H.lane8_default_row({}))
+        self.assertTrue(H.lane8_default_row(dict(ADD_LAT=d7,LTW=d12)))
+        self.assertFalse(H.lane8_default_row(dict(ADD_LAT=d8,LTW=d12)))
+        self.assertFalse(H.lane8_default_row(dict(XYZ=d7)))
+        self.assertFalse(H.lane8_default_row(dict(ADD_LAT='7')))
+    def test_lane8_override_in_ledger_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            run=Path(d);die=self.fixture(run)
+            pp=run/'case_kv/die.v.params.json';cur=json.loads(pp.read_text()) if pp.exists() else {}
+            inst=next(i for i in H.P.parse_die(str(die))[3] if i[0]=='ot_qkh_lane8')[1]
+            cur[inst]=dict(ADD_LAT="32'sb"+format(8,'032b'));pp.write_text(json.dumps(cur))
+            with self.assertRaisesRegex(ValueError,'identity/role changed'):H.derive(run,die)
+
 
 if __name__=='__main__':unittest.main()
