@@ -615,7 +615,14 @@
     "outline_area_um2": 167961.6,
     "area_utilization": "pending full mapped area",
     "reach": "pin placement/clock location exact data reach audit pending, no >405 waiver",
-    "global_data_wire_span_limit_um": 405
+    "global_data_wire_span_limit_um": 405,
+    "historical_outline_um": [
+      280.8,
+      280.8
+    ],
+    "historical_outline_area_um2": 78848.64,
+    "outline_delta_um2": 89112.96,
+    "outline_ratio": 2.1301775147928996
   },
   "do_not_promote": "No layout gate without complete native32, ROOT helper acceptance and physical slot approval.",
   "legacy_reset_prep_failures": [
