@@ -76,8 +76,15 @@ BUSY = 6                  # calendar done -> issuer go_busy clear -> next go
 #           a slot word is rewritten only XRD edges after the last command that reads it (liveness check, never a stall).
 #   xlr    : xl + x REUSE (smmv 3a XR): a record whose A (VM descriptor + format) equals a resident slot's, with no
 #           writer of A in between and the slot not overwritten, issues no load and reads that slot.
+#   xp     : xl + PIPELINED x-load (HBM-XLP10 10-20, RTL ot_hgi_sm_xload_cl2xp_ctlx, bench tb_hgi_xload_xpipe): the next
+#           x-load fires at the ISSUE END of the previous one (ISS = CAD x beats at P 1; cl2 waited for x_done) and its
+#           beats stay disjoint from the previous load's (x0' + F' >= last beat + 1).  Opt-in; xl / xlr unchanged.
+#   xpr    : xp + x reuse (xlr rule).
 XMODE = os.environ.get("SMB_XMODE", "bench13")
-assert XMODE in ("bench13", "die", "xl", "xlr"), XMODE
+assert XMODE in ("bench13", "die", "xl", "xlr", "xp", "xpr"), XMODE
+XSLOT_MODES = ("xl", "xlr", "xp", "xpr")       # static x ring slots (RTL XSLOT 1)
+XREUSE_MODES = ("xlr", "xpr")
+XPIPE_MODES = ("xp", "xpr")
 XRING = 128
 XRD = int(os.environ.get("SMB_XRD", 16))
 XNB = -(-MV.XC // 2048) if hasattr(MV, "XC") else 2       # beats per x word on the die (P = 1)
@@ -389,6 +396,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         prod = x_producers(fix_root / kd["name"], recs)
         xptr, wbusy, wown = 0, [0] * XRING, [None] * XRING     # ring pointer, last read edge + owner of every x word
         x_free, prev_r, prev_first = 0, None, None
+        x_iss_free, x_last_beat = 0, -(1 << 30)          # XP: previous load's issue end / last beat edge
         install_end = desc_install_t + 2 * len(descs) + 4
         flat = [b for r_ in recs for b in r_["blocks"]]          # issue order of the kind's blocks
         rm = dict(res=[], rdy=[], opn=[], dend=[], ret=[])       # residency model (rc domain), by issue index
@@ -396,12 +404,15 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
             fp = len(r["xw"])
             raw = prev_r is None or (prod[r["k"]] is not None and prod[r["k"]] > _fk(prev_r))
             reuse = None
-            if XMODE == "xlr" and prev_r is not None:
+            if XMODE in XREUSE_MODES and prev_r is not None:
                 a_r = (json.dumps(r["rec"].get("desc", {}).get("A")), r["fmt"])
                 for q in reversed(recs[:recs.index(r)]):
                     if "xload_k" not in q:
                         continue
-                    if (json.dumps(q["rec"].get("desc", {}).get("A")), q["fmt"]) == a_r and q["xw"] == r["xw"] and \
+                    same = (json.dumps(q["rec"].get("desc", {}).get("A")), q["fmt"]) == a_r and q["xw"] == r["xw"]
+                    if mut == "xr_any":         # MUTANT: reuse any resident x of the same footprint (must FAIL numerically)
+                        same = len(q["xw"]) == fp and q["xw"] != r["xw"]
+                    if same and \
                             (prod[r["k"]] is None or prod[r["k"]] < _fk(q)) and \
                             all(wown[(q["xb"] + i) % XRING] == q["xload_k"] for i in range(fp)):
                         reuse = q
@@ -410,15 +421,22 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 x0 = x_end = reuse["x_end"]
                 r.update(xb=reuse["xb"], xload_k=reuse["xload_k"], xreuse_of=reuse["k"], raw=raw, x_end=x_end, x0=x0)
             else:
-                if XMODE in ("xl", "xlr"):
+                if XMODE in XSLOT_MODES:
                     xb = 0 if (mut == "xslot0" or raw) else xptr
                 else:
                     xb = 0
                 words = [(xb + i) % XRING for i in range(fp)]
-                if XMODE in ("xl", "xlr") and not raw:
+                F_x = XLAT[r["fmt"]][0] if XMODE != "bench13" else 0
+                if XMODE in XPIPE_MODES and not raw:
+                    # pipelined: issue end of the previous load + disjoint beats (+ the slot liveness rule of xl)
+                    x0 = max(install_end, x_iss_free, x_last_beat + 1 - F_x, prev_first,
+                             max(wbusy[w] for w in words) + XRD if mut != "xslot0" else 0)
+                elif XMODE in XSLOT_MODES and not raw:
                     x0 = max(install_end, x_free, prev_first, max(wbusy[w] for w in words) + XRD if mut != "xslot0" else 0)
                 else:
                     x0 = max(cur_abs + 32, install_end)
+                    if XMODE in XPIPE_MODES:
+                        x0 = max(x0, x_iss_free, x_last_beat + 1 - F_x)
                 beats = []
                 if XMODE == "bench13":
                     for a, word in enumerate(r["xw"]):
@@ -436,6 +454,9 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                                   ((word >> (2048 * g)) & ((1 << 2048) - 1))))
                 x_end = beats[-1][0] + 1
                 x_free = x_end
+                if XMODE != "bench13":
+                    x_iss_free = x0 + XLAT[r["fmt"]][1] * len(beats)   # ISS = CAD x beats (BF 8 nb gn / BD wb gtp at P 1)
+                    x_last_beat = beats[-1][0]
                 for w in words:
                     wown[w] = r["k"]
                 xptr = (xb + fp) % XRING
@@ -707,7 +728,7 @@ def main(argv=None):
         p.add_argument("--fix", required=True)
         p.add_argument("--smw", required=True)
         p.add_argument("--layers", default="L00:0,L02:2,L14:14,head:0")
-        p.add_argument("--mut", default=os.environ.get("SMB_MUT", ""), choices=["", "late_ids", "xslot0"])
+        p.add_argument("--mut", default=os.environ.get("SMB_MUT", ""), choices=["", "late_ids", "xslot0", "xr_any"])
         if nm == "compile":
             p.add_argument("--out", required=True)
         else:

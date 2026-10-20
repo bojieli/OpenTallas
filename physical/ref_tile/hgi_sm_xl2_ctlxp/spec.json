@@ -1,0 +1,276 @@
+{
+ "name": "hgi_sm_xl2_ctlxp",
+ "top": "ot_hgi_sm_xload_cl2xp_ctlx",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2xp.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "defines": [],
+ "params": {
+  "RD_LAT": "64'h2d2b37351d1b2725"
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "clock": "clk",
+  "reason": "the RTL lands it: rst_n drives one kept async-clear flop rp1 at the S face + 2 plain release flops (ELEM-GAPS/HBMN1 n2/n3, native audit of q1 rst_n capture 455.7 ps); kit landing would add 2 more reset edges"
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "layer_cap": "M5",
+ "outline": {
+  "w": 388.8,
+  "h": 388.8,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "rr",
+   "rq"
+  ],
+  "E": [
+   "qv_lo",
+   "qo_lo",
+   "qf_lo",
+   "l_d_o",
+   "qv_hi",
+   "qo_hi",
+   "qf_hi",
+   "rn_o"
+  ],
+  "W": [
+   "c_d",
+   "c_wce",
+   "c_mhi",
+   "c_mlo",
+   "c_wa",
+   "r_ce",
+   "r_a",
+   "r_wsel",
+   "zlo",
+   "zhi",
+   "bsel",
+   "lane_en",
+   "eg_ed5",
+   "eg_ede",
+   "eg_bqv",
+   "eg_bqlast",
+   "eg_bqaddr",
+   "eg_bqb"
+  ],
+  "S": [
+   "clk_cal",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "clk",
+   "rst_n",
+   "configured",
+   "fault",
+   "active"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u_w.u_tab",
+   "at": [
+    30.24,
+    30.24
+   ],
+   "clock_entry": {
+    "port": "clk_cal",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_cal"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "rr",
+    "qo_lo",
+    "qo_hi",
+    "qf_lo",
+    "qf_hi",
+    "tgt",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
+   ],
+   "outputs": [
+    "rq",
+    "rn_o",
+    "c_d",
+    "c_wce",
+    "c_mhi",
+    "c_mlo",
+    "c_wa",
+    "r_ce",
+    "r_a",
+    "l_d_o",
+    "qv_lo",
+    "qv_hi",
+    "r_wsel",
+    "zlo",
+    "zhi",
+    "lane_en",
+    "bsel",
+    "configured",
+    "fault",
+    "active",
+    "eg_ed5",
+    "eg_ede",
+    "eg_bqv",
+    "eg_bqlast",
+    "eg_bqaddr",
+    "eg_bqb"
+   ]
+  },
+  "cal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_cal"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels -no_obstruction_aware -sink_clustering_levels 2"
+  },
+  "io_hold_margin_ns": 0.025
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "orfs_vars": {
+  "OT_OFLOP_HOPS": "3"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "cl2 rule (owner 19:50, 10-15): ctlw RTL registers every leaf pin (issuer cfg/desc pin flops, raw rr capture rr_c, flop-driven rq/c_*/r_*/l_d_o/q*/bsel/lane_en/eg_* outputs); ot_pin_regs would add a second edge per port"
+ },
+ "floorplan_note": "HBM-XLP10: floorplan / pins / CTS copied from hgi_sm_xl2_ctlx_bl. HBM-B 10-17 ctlx: d4f binds ctlw with EGRESS_SPLIT 1, so xw_*/x_done/rwq/bq_d (5,121 of 10,920 pin bits) are open/undriven; ctlx drops them (5,799 pins). Faces follow the d4f neighbours: N rr/rq from the VM banks (vmb_<q>0..7 north of xl_<q>_ctl), E l_d_o to the two quantisers (xl_<q>_aqlo/aqhi east), W the x-store/BD/egress pair bundles, S the host F20 cfg/status + clocks. 388.8^2 (9 x 43.2): N 2,192 pins 5.6/um, E 2,055 5.3/um, W 1,224 3.1/um, S 337. Calendar SRAM SW corner beside its cfg pins and the clk_cal entry; clk entry S mid.",
+ "structural_change": "HBM-XLP10 10-20 PIPELINED x-load (TOK.HDS.SMMV): NEW variant of the CLOSED hgi_sm_xl2_ctlx_bl (same floorplan, pins, CTS, RD_LAT budget vector; the closed cl2 ctlx views stand untouched). RTL ot_hgi_sm_xload_cl2xp_ctlx: the issue engine is free on the last issue edge (x_busy) instead of at x_done; per-wave bits (bdm, BD tpair-last, BF go marker + 3-b load id) ride md/L/C/tag (+5 b on the 57-stage md line, +1 b on the 13-stage tag line); per-load egress fields {bdf,la8,P,count,xb} in an 8 x 23 b context ring keyed by the load id (written at start, read at BF launch / BD engine load); x-store rows and the BD write/emit tpair counts run continuously; tc/em_off/em_wait counters removed (launch = 5-stage go pipe). Single load cycle-identical to cl2 on every connected port; compiler at(i+1) = at(i) + max(ISS, LAST+1-FIRST').",
+ "job": {
+  "owner": "Claude HBM-XLP10",
+  "branch": "claude/hbm-xlp10-1020",
+  "tag": "xp1",
+  "purpose": "d4g x-load ctl, PIPELINED (HBM-XLP10 10-20): ot_hgi_sm_xload_cl2xp_ctlx at the RD_LAT BUDGET vector; next x-load fires at the previous load's issue end (DS SM small dense records -39.6k cycles/token projected, census p_xpipe 1,423.8 tok/s). Variant of the closed hgi_sm_xl2_ctlx_bl (same floorplan, pins, CTS).",
+  "structural_change": "HBM-XLP10 10-20 PIPELINED x-load (TOK.HDS.SMMV): NEW variant of the CLOSED hgi_sm_xl2_ctlx_bl (same floorplan, pins, CTS, RD_LAT budget vector; the closed cl2 ctlx views stand untouched). RTL ot_hgi_sm_xload_cl2xp_ctlx: the issue engine is free on the last issue edge (x_busy) instead of at x_done; per-wave bits (bdm, BD tpair-last, BF go marker + 3-b load id) ride md/L/C/tag (+5 b on the 57-stage md line, +1 b on the 13-stage tag line); per-load egress fields {bdf,la8,P,count,xb} in an 8 x 23 b context ring keyed by the load id (written at start, read at BF launch / BD engine load); x-store rows and the BD write/emit tpair counts run continuously; tc/em_off/em_wait counters removed (launch = 5-stage go pipe). Single load cycle-identical to cl2 on every connected port; compiler at(i+1) = at(i) + max(ISS, LAST+1-FIRST').",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_xp_aq_tree13_1014",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xqlp.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "results/rtl/hbm_xlp10_1020"
+  ],
+  "benches": [
+   {
+    "name": "xpipe_exact",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xpipe.sh {RUN}/xp 0 0 24",
+    "expect": "pass",
+    "pass_regex": "^XLOAD_XPIPE PASS",
+    "pass_witness": "results/rtl/hbm_xlp10_1020/witness/xpipe_e0_m0.log",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "xpipe_fire_early_mutant",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xpipe.sh {RUN}/xp 1 0 24",
+    "expect": "fail",
+    "fail_regex": "^XLOAD_XPIPE FAIL EARLY=1",
+    "fail_witness": "results/rtl/hbm_xlp10_1020/witness/xpipe_e1_m0.log",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "xpipe_field_ride_mutant",
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/run_xload_xpipe.sh {RUN}/xp 0 8 24",
+    "expect": "fail",
+    "fail_regex": "^XLOAD_XPIPE FAIL EARLY=0 DMUT=8",
+    "fail_witness": "results/rtl/hbm_xlp10_1020/witness/xpipe_e0_m8.log",
+    "threads": 8,
+    "peak_ram_gb": 24
+   }
+  ],
+  "cycles_added": 0,
+  "notes": "HBM-XLP10: compiler law in tools/hbm_layer_vehicle/smb_unit.py SMB_XMODE=xp/xpr (opt-in); README results/rtl/hbm_xlp10_1020/README.md"
+ },
+ "clock_cts_roots": [
+  "clk"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "hold_budget": "die",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "new pipelined x-load control RTL (ot_hgi_sm_xload_static_cl2xp.sv); new kit and top, closed hgi_sm_xl2_ctlx / hgi_sm_xl2_ctlx_bl views untouched"
+ }
+}
