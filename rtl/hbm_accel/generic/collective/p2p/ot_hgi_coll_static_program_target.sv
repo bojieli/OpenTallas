@@ -29,6 +29,8 @@ module ot_hgi_coll_static_program_target #(
     // accept, row+1 while scanning; frames and descriptor scans never overlap, so one 1RW port suffices), and
     // issuer_start_pc is set at descriptor accept (= base, >= ROWS+2 edges before launch; the 256-row issuer v7 primes
     // its lookahead from a stable start_pc). ROWS 64/128 elaborate exactly as before (flow flops, start_pc at launch).
+    // HBM-COLLQ3-V7 (10-19, LEAD3-HBM 'SRAM v7'): ROWS 128 now ALSO sets issuer_start_pc at descriptor accept (the 128-row
+    // issuer v7 primes from it; v6 reads start_pc only on start, so every v6 port edge is unchanged). ROWS 64 unchanged.
     parameter integer ROWS=64,
     parameter integer PW=(ROWS>128)?8:(ROWS>64)?7:6      // derived; never override
 )(
@@ -167,7 +169,7 @@ module ot_hgi_coll_static_program_target #(
                 else begin
                     base<=base_q[PW-1:0];limit<=limit_q[PW:0];configured<=0;
 `ifndef OT_PT_MUT_LATE_SPC
-                    if(ROWS>128)issuer_start_pc<=base_q[PW-1:0];   // mutant: start_pc only at launch (v7 start faults)
+                    if(ROWS>64)issuer_start_pc<=base_q[PW-1:0];    // mutant: start_pc only at launch (v7 start faults)
 `endif
                     checking<=1;check_row<=0;check_bad<=0;init_busy<=1;
                     f_la<=flow[0];ld_la<=loaded[0];
