@@ -1,0 +1,53 @@
+{
+ "cls": "FWOA",
+ "written": "2026-10-19 21:43 PT",
+ "agent_branch": "claude/toksim-s81b-fwoa-1019@991824b4d",
+ "ops": [
+  {
+   "op": "attn.wo_b",
+   "old_cycles_per_instance": 548.9,
+   "cycles": 1464,
+   "dag_cls": "field",
+   "n_crit": 40,
+   "grade": "measured-release-RTL",
+   "bit_exact": true,
+   "bench": "results/rtl/toksim_s81b_fwoa_1019/run_frame_ops.sh@991824b4d (tools/s81_dv/layer_prog/xs/xs_bench.sh + xs_slice_bench.sh, tools origin/main 43a1311b7; testbenches main be4b5013 / 9770ed56)",
+   "job": "ot-epyc9 oth-ubuntu-1067944-1792470434 (g00 u_f_0L00) + oth-ubuntu-1067943-1792470434 (g01 u_f_0L01), Verilator 5.050",
+   "edges_owed": "folded +26: CAPC2 ot_s81sl_capc2 +1 in/+1 out PINPIPE + TOK2 cap EDLY +24 on E-column words (W lane-3 +16 is inside it), once per instance after the last frame-root word",
+   "definition": "per instance = max over the slice frames of the SERIAL sum of the op's field phases, each phase = first valid x word at the frame input (edge 67) -> last frame-root RET word, + old DAG priced wire tail unchanged + 26 owed CAP edges; wo_b: 1264 (u_f_0L01: 4 x 316; u_f_0L00 4 x 314 = 1256) + 146 r8 die wire + 28 s81_die_tiles + 26",
+   "shape": "4 phases x 10 rank-local rows per frame (40 rows/frame, 320/slice), fp8 K 2048, nseg 2, 2 units; real L0 fixture rows + ROM images",
+   "golden": "xs_place.py check (lower_xs.check_words): every return word on its planned edge, values bit-exact vs hdc_golden_v41 golden segment tree; xs_calendar check on the ot_s81sl_xs streamer: lockstep D 321, 0 mismatches, RET at plan + D",
+   "rtl": {
+    "module": "frame masters col_h9_l4_b / col_h10_l4_b (frame_l4) + landing + elements via tools/s81_dv/frame_bench.f; ot_s81sl_xs + calendar reader on xb",
+    "source": "19bf4121e (release GEN mu4c)",
+    "blob": "col_h9_l4_b 27f0c3db, col_h10_l4_b 44260e0f, col_h9_l4 67049616, col_h10_l4 1d355e85; all 322 DUT entries = release (blob_vs_release.txt)",
+    "in_release_source": true
+   },
+   "evidence": "results/rtl/toksim_s81b_fwoa_1019/summary.json; results/rtl/toksim_s81b_fwoa_1019/runs/fwoa_g0[01].otrun.log \"FB_CHECK p1..p4 rc=0 XS_PLACE_CHECK PASS\" + \"XB_CHECK p1..p4 rc=0 XS_CAL_CHECK PASS\"; RET 366..383 (g01 fb run_p1)",
+   "note": "16/16 phase runs PASS on 2 frames (col_h9 + col_h10 masters) on both the frame bench and the production xs streamer. Old DAG had 1 phase; the p4l field places wo_b as 4 phases/frame. Phases composed serially (no die-wide multi-phase calendar with phase overlap is compiled); col_h9_MX frames not run. The per-phase wire term of the old DAG (146/phase) is NOT rescaled to 4 phases (no repricing; parent decides)."
+  },
+  {
+   "op": "attn.wo_a",
+   "old_cycles_per_instance": 2222.0,
+   "cycles": 4862,
+   "dag_cls": "field",
+   "n_crit": 40,
+   "grade": "measured-release-RTL",
+   "bit_exact": true,
+   "bench": "results/rtl/toksim_s81b_fwoa_1019/run_frame_ops.sh@991824b4d (tools/s81_dv/layer_prog/xs/xs_bench.sh + xs_slice_bench.sh, tools origin/main 43a1311b7; testbenches main be4b5013 / 9770ed56)",
+   "job": "ot-epyc9 oth-ubuntu-1067944-1792470434 (g00 u_f_0L00) + oth-ubuntu-1067943-1792470434 (g01 u_f_0L01), Verilator 5.050",
+   "edges_owed": "folded +26: CAPC2 ot_s81sl_capc2 +1 in/+1 out PINPIPE + TOK2 cap EDLY +24 on E-column words (W lane-3 +16 is inside it), once per instance after the last frame-root word",
+   "definition": "per instance = max over the slice frames of the SERIAL sum of the op's field phases, each phase = first valid x word at the frame input (edge 67) -> last frame-root RET word, + old DAG priced wire tail unchanged + 26 owed CAP edges; wo_a: 4224 (u_f_0L00: 8 x 354 + 4 x 348; u_f_0L01 4140) + 584 r8 die wire + 28 s81_die_tiles + 26",
+   "shape": "12 BF16 pair phases per frame (8 x 6 rows + 4 x 4 rows = 64 rows/frame), shape col_h9|col_h10 E2 bseg1024, 4 segments per row; real L0 fixture rows",
+   "golden": "xs_place.py check (BF phase): values bit-exact vs golden segment, coverage = {seg} exactly once, and 64/64 rows tied to the layer fixture (fixture_rows 6/4 per phase)",
+   "rtl": {
+    "module": "frame masters col_h9_l4_b / col_h10_l4_b: BF pairs (dsfd_bf_front_roots + dsfd_bf_col, cfg7_seq_bfp static programme)",
+    "source": "19bf4121e (release GEN mu4c)",
+    "blob": "as wo_b; all DUT entries = release",
+    "in_release_source": true
+   },
+   "evidence": "results/rtl/toksim_s81b_fwoa_1019/runs/fwoa_g0[01].otrun.log \"FB_CHECK p5..p16 rc=0 XS_PLACE_CHECK PASS ... fixture_rows=6|4 errors=0\"",
+   "note": "24/24 BF phase runs PASS bit-exact on the frame bench (spine w17w10 x source, the calibration driver). On the xs-slice streamer the BF phases FAIL lockstep (883-890 edges) because xs_calendar.py emits no BF16 window rows: compiler gap (XS BF window CTL rows / xs_bf tier placement, S81-SMWIRE), not an RTL fault. Serial phase composition as wo_b; col_h9_MX not run."
+  }
+ ]
+}

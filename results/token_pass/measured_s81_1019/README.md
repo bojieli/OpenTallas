@@ -99,3 +99,28 @@ are on ot-epyc7 `/srv/opentallas-scratch/claude/toksim-s81-su`.
 Pending runs are listed in `pending_results.txt` (TOKSIM-S81/SU svc_rs release rerun, TOKSIM-S81/IDX window_load,
 XDIE u relaunch). After they land: drop the new records into `elements/`, rerun `python3 tools/toksim_s81_compose.py`
 and commit.
+
+## TOKSIM-S81B update (10-19 23:15 PT)
+
+Six new element records on release 19bf4121e (Verilator 5.050, every returned row bit-exact vs the CPU golden):
+FGU (ffn.experts_gu 3680, ffn.shared_gu 798), FWOA (attn.wo_a 2222 -> 4862, attn.wo_b 548.9 -> 1464), FDOWN (ffn.down 3084 incl.
+195 priced tail), HCL (HC chain 1046.8 -> 748, embed 323 + 751.3 priced, head.norm.scale 438 ...), SMX (attn.max/exp/den/sink/normalize;
+gather pending), LEG (on-die leg 134 -> 140 a crossing, worst case; the landing mutant is caught only by the latency law check).
+
+Composer changes (`tools/toksim_s81_compose.py`):
+- **strict admission**: a measured op folds only with `bit_exact: true`; exceptions: 0-cycle ops merged into a covering op, and
+  curation maps of an op another record measured bit-exact. Excluded ops are listed in `cycles.json:excluded_not_bit_exact`
+  (attn.wq_b: FIELD matched the TOK2 baseline, not the golden; draft.head, draft.markov).
+- **LEG xdie hook**: an element op with `xdie_part` scales every priced base xdie term of that part by measured/old
+  (`cycles.json:xdie_parts_measured`).
+- FGU/FDOWN fold only into the L0 old-price shape class (zz_curation `by_old`); other layer classes keep committed numbers.
+
+| workload | cycles (fixed) | tok/s | measured | on-chip measured |
+|---|---:|---:|---:|---:|
+| 1 user AR | 1,263,762 | **949.5** | 57.8 % | 67.0 % |
+| 1 user MTP | 1,656,160 | **3,013.5** | 44.7 % | 50.5 % |
+| 46 users AR | | 43,679 aggregate | | |
+| 10 users MTP | | 30,135 aggregate | | |
+
+Biggest remaining measured-old-RTL: ffn.experts_gu/down in non-L0 layer classes, attn.wq_b, ffn.router, attn.a_proj (FSMALL running),
+attn.gather, MTP draft blocks. Cross-die MU co-sim job u relaunched as out_u4 (--mem 200; u2/u3 were memcg OOM at 40 GB).

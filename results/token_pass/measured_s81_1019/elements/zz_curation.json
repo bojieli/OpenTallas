@@ -259,6 +259,28 @@
    "grade": "measured-release-RTL",
    "cycles": 0,
    "note": "the measured topk_local root span already contains the p4l 1-stack reader"
+  },
+  {
+   "op": "ffn.down",
+   "dag_cls": "field",
+   "grade": "measured-release-RTL",
+   "by_old": {
+    "1516.3": 3084,
+    "1517.7": 3084
+   },
+   "source": "elements/FDOWN.json (claude/toksim-s81b-fdown-1019@6e16f1d9a)",
+   "note": "TOKSIM-S81B 10-19 curation: measured on the L0 frame u_f_0L00 (release 19bf4121e, bit-exact); folded only into the DAG instances of the SAME old-price shape class as L0 (L0 + L21-23,25-27,29-31,33-35,37-39). Classes L1/2/8/14/20, L24/28/32/36 and L3-19 have other per-die expert/row counts and keep their committed numbers (never re-price). 3084 = 2889 measured + 195 priced CAP/hub tail (stated in FDOWN)."
+  },
+  {
+   "op": "ffn.experts_gu",
+   "dag_cls": "field",
+   "grade": "measured-release-RTL",
+   "by_old": {
+    "1238.9": 3680,
+    "1239.8": 3680
+   },
+   "source": "elements/FGU.json (claude/toksim-s81b-fgu-1019@4cd48a7ab)",
+   "note": "TOKSIM-S81B 10-19 curation: measured on the L0 frame u_f_0L00 (release 19bf4121e, bit-exact); folded only into the DAG instances of the SAME old-price shape class as L0 (L0 + L21-23,25-27,29-31,33-35,37-39). Classes L1/2/8/14/20, L24/28/32/36 and L3-19 have other per-die expert/row counts and keep their committed numbers (never re-price). FGU record also listed the 1852-2471 classes; not folded here."
   }
  ]
 }

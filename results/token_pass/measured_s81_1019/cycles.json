@@ -1,7 +1,38 @@
 {
+ "admission": "measured grade AND bit_exact true (0-cycle merged ops and curation maps of bit-exact ops admitted)",
  "clock_hz": 1200000000.0,
  "design": "ds_rom",
  "die": "S81 p4l-MU (release source GEN mu4c 19bf4121e)",
+ "excluded_not_bit_exact": [
+  {
+   "bit_exact": null,
+   "cycles": 3359,
+   "file": "results/token_pass/measured_s81_1019/elements/FIELD.json",
+   "grade": "measured-newest-element-RTL",
+   "op": "attn.wq_b"
+  },
+  {
+   "bit_exact": null,
+   "cycles": null,
+   "file": "results/token_pass/measured_s81_1019/elements/zz_curation.json",
+   "grade": "measured-newest-element-RTL",
+   "op": "attn.wq_b"
+  },
+  {
+   "bit_exact": null,
+   "cycles": 8416,
+   "file": "results/token_pass/measured_s81_1019/elements/zz_curation.json",
+   "grade": "measured-newest-element-RTL",
+   "op": "draft.head"
+  },
+  {
+   "bit_exact": null,
+   "cycles": 6,
+   "file": "results/token_pass/measured_s81_1019/elements/zz_curation.json",
+   "grade": "measured-newest-element-RTL",
+   "op": "draft.markov"
+  }
+ ],
  "inputs": {
   "base": "results/arch/token_path_1018/ds_rom.json",
   "dags": {
@@ -10,10 +41,34 @@
   },
   "elements": [
    {
+    "branch": "claude/toksim-s81b-fdown-1019@6e16f1d9a",
+    "cls": "FDOWN",
+    "file": "results/token_pass/measured_s81_1019/elements/FDOWN.json",
+    "written": "2026-10-19 22:40 PT"
+   },
+   {
+    "branch": "claude/toksim-s81b-fgu-1019@4cd48a7ab",
+    "cls": "FGU",
+    "file": "results/token_pass/measured_s81_1019/elements/FGU.json",
+    "written": "2026-10-19 21:45 PT"
+   },
+   {
     "branch": "claude/toksim-s81-field-1019@3d55d499a",
     "cls": "FIELD",
     "file": "results/token_pass/measured_s81_1019/elements/FIELD.json",
     "written": "2026-10-19 19:35 PT"
+   },
+   {
+    "branch": "claude/toksim-s81b-fwoa-1019@991824b4d",
+    "cls": "FWOA",
+    "file": "results/token_pass/measured_s81_1019/elements/FWOA.json",
+    "written": "2026-10-19 21:43 PT"
+   },
+   {
+    "branch": "claude/toksim-s81b-hcl-1019@d1ea8f2b6",
+    "cls": "HCL",
+    "file": "results/token_pass/measured_s81_1019/elements/HCL.json",
+    "written": "2026-10-19 21:45 PT"
    },
    {
     "branch": "claude/toksim-s81-headmu-1019@87607ecc1",
@@ -26,6 +81,18 @@
     "cls": "IDX",
     "file": "results/token_pass/measured_s81_1019/elements/IDX.json",
     "written": "2026-10-19 19:02 PT"
+   },
+   {
+    "branch": "claude/toksim-s81b-leg-1019@e3844acc3",
+    "cls": "LEG",
+    "file": "results/token_pass/measured_s81_1019/elements/LEG.json",
+    "written": "2026-10-19 21:55 PT"
+   },
+   {
+    "branch": "claude/toksim-s81b-smx-1019@f9dc25518",
+    "cls": "SMX",
+    "file": "results/token_pass/measured_s81_1019/elements/SMX.json",
+    "written": "2026-10-19 21:55 PT"
    },
    {
     "branch": "claude/toksim-s81-su-1019 (no commits: bench adaptations are env-only, job scripts in /home/ubuntu/scratch/toksim-s81/su)",
@@ -43,42 +110,42 @@
  },
  "multi_user": {
   "ar": {
-   "aggregate_tok_s": 47022.0,
+   "aggregate_tok_s": 43679.0,
    "base_aggregate_tok_s": 55780,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 980428,
    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
-   "pct_measured_per_user": 37.16,
-   "per_user_tok_s": 1022.2,
+   "pct_measured_per_user": 57.79,
+   "per_user_tok_s": 949.5,
    "users": 46
   },
   "mtp": {
-   "aggregate_tok_s": 31866.0,
+   "aggregate_tok_s": 30135.0,
    "base_aggregate_tok_s": 36985,
    "bound": "per-user token",
    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
    "calendar_period_cycles": 1303400,
    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
-   "pct_measured_per_user": 30.99,
-   "per_user_tok_s": 3186.6,
+   "pct_measured_per_user": 44.74,
+   "per_user_tok_s": 3013.5,
    "users": 10
   }
  },
  "schema": "opentallas.toksim_s81.v1",
  "workloads": {
   "ar": {
-   "T_cycles_fixed": 1173912.7,
-   "T_cycles_solved": 1187258.2,
+   "T_cycles_fixed": 1263762.1,
+   "T_cycles_solved": 1285425.6,
    "base_T_cycles": 989618.6,
    "base_tok_s": 1212.6,
    "by_grade": {
     "measured-current-RTL": 109119.0,
-    "measured-newest-element-RTL": 177662.0,
-    "measured-old-RTL": 440835.8,
-    "measured-release-RTL": 149473.0,
+    "measured-newest-element-RTL": 43625.0,
+    "measured-old-RTL": 288878.9,
+    "measured-release-RTL": 577603.0,
     "modelled-PHY": 172975.0,
-    "priced": 123847.9
+    "priced": 71561.2
    },
    "extra_terms": [
     {
@@ -577,37 +644,16 @@
      "slot": "L20.scan_d_l20split_k6"
     }
    ],
-   "pct_measured": 37.16,
-   "pct_measured_on_chip": 43.58,
-   "pct_modelled_phy": 14.73,
-   "per_accepted_cycles": 1173912.7,
+   "pct_measured": 57.79,
+   "pct_measured_on_chip": 66.96,
+   "pct_modelled_phy": 13.69,
+   "per_accepted_cycles": 1263762.1,
    "per_op": [
     {
      "cls": "field",
-     "cycles": 142160.0,
+     "cycles": 194480.0,
      "grades": {
-      "measured-newest-element-RTL": 134360.0,
-      "priced": 7800.0
-     },
-     "n_crit": 40,
-     "old_cycles": 45753.6,
-     "op": "attn.wq_b"
-    },
-    {
-     "cls": "field",
-     "cycles": 94571.5,
-     "grades": {
-      "measured-old-RTL": 94571.5
-     },
-     "n_crit": 40,
-     "old_cycles": 94571.5,
-     "op": "ffn.experts_gu"
-    },
-    {
-     "cls": "field",
-     "cycles": 88880.0,
-     "grades": {
-      "measured-old-RTL": 88880.0
+      "measured-release-RTL": 194480.0
      },
      "n_crit": 40,
      "old_cycles": 88880.0,
@@ -615,13 +661,35 @@
     },
     {
      "cls": "field",
-     "cycles": 88191.0,
+     "cycles": 133628.2,
      "grades": {
-      "measured-old-RTL": 88191.0
+      "measured-old-RTL": 74748.2,
+      "measured-release-RTL": 58880.0
+     },
+     "n_crit": 40,
+     "old_cycles": 94571.5,
+     "op": "ffn.experts_gu"
+    },
+    {
+     "cls": "field",
+     "cycles": 113272.8,
+     "grades": {
+      "measured-old-RTL": 63928.8,
+      "measured-release-RTL": 49344.0
      },
      "n_crit": 40,
      "old_cycles": 88191.0,
      "op": "ffn.down"
+    },
+    {
+     "cls": "field",
+     "cycles": 58560.0,
+     "grades": {
+      "measured-release-RTL": 58560.0
+     },
+     "n_crit": 40,
+     "old_cycles": 21956.0,
+     "op": "attn.wo_b"
     },
     {
      "cls": "select",
@@ -633,6 +701,16 @@
      "n_crit": 8,
      "old_cycles": 11784.0,
      "op": "attn.idx.topk_local"
+    },
+    {
+     "cls": "field",
+     "cycles": 45753.6,
+     "grades": {
+      "measured-old-RTL": 45753.6
+     },
+     "n_crit": 40,
+     "old_cycles": 45753.6,
+     "op": "attn.wq_b"
     },
     {
      "cls": "field",
@@ -677,16 +755,6 @@
      "op": "attn.idx.topk_final"
     },
     {
-     "cls": "field",
-     "cycles": 21956.0,
-     "grades": {
-      "measured-old-RTL": 21956.0
-     },
-     "n_crit": 40,
-     "old_cycles": 21956.0,
-     "op": "attn.wo_b"
-    },
-    {
      "cls": "su",
      "cycles": 17520.0,
      "grades": {
@@ -728,33 +796,14 @@
     },
     {
      "cls": "su",
-     "cycles": 11481.2,
+     "cycles": 8680.0,
      "grades": {
-      "measured-old-RTL": 11481.2
-     },
-     "n_crit": 40,
-     "old_cycles": 11481.2,
-     "op": "attn.exp"
-    },
-    {
-     "cls": "su",
-     "cycles": 9796.0,
-     "grades": {
-      "measured-old-RTL": 9796.0
+      "measured-release-RTL": 3400.0,
+      "priced": 5280.0
      },
      "n_crit": 40,
      "old_cycles": 9796.0,
      "op": "attn.normalize"
-    },
-    {
-     "cls": "su",
-     "cycles": 8794.6,
-     "grades": {
-      "measured-old-RTL": 8794.6
-     },
-     "n_crit": 40,
-     "old_cycles": 8794.6,
-     "op": "attn.max"
     },
     {
      "cls": "head",
@@ -766,16 +815,6 @@
      "n_crit": 1,
      "old_cycles": 8429.0,
      "op": "head.lm_head"
-    },
-    {
-     "cls": "su",
-     "cycles": 7840.0,
-     "grades": {
-      "measured-old-RTL": 7840.0
-     },
-     "n_crit": 40,
-     "old_cycles": 7840.0,
-     "op": "attn.sink"
     },
     {
      "cls": "su",
@@ -820,6 +859,16 @@
     },
     {
      "cls": "su",
+     "cycles": 4896.0,
+     "grades": {
+      "measured-release-RTL": 4896.0
+     },
+     "n_crit": 40,
+     "old_cycles": 11481.2,
+     "op": "attn.exp"
+    },
+    {
+     "cls": "su",
      "cycles": 4880.0,
      "grades": {
       "measured-release-RTL": 4600.0,
@@ -853,13 +902,13 @@
     },
     {
      "cls": "su",
-     "cycles": 3488.0,
+     "cycles": 2336.0,
      "grades": {
-      "measured-old-RTL": 3488.0
+      "measured-release-RTL": 2336.0
      },
      "n_crit": 40,
-     "old_cycles": 3488.0,
-     "op": "attn.den"
+     "old_cycles": 8794.6,
+     "op": "attn.max"
     },
     {
      "cls": "select",
@@ -884,6 +933,16 @@
     },
     {
      "cls": "su",
+     "cycles": 1730.0,
+     "grades": {
+      "measured-release-RTL": 1730.0
+     },
+     "n_crit": 40,
+     "old_cycles": 7840.0,
+     "op": "attn.sink"
+    },
+    {
+     "cls": "su",
      "cycles": 1394.0,
      "grades": {
       "measured-release-RTL": 1394.0
@@ -893,10 +952,21 @@
      "op": "eng.gate"
     },
     {
+     "cls": "su",
+     "cycles": 1280.0,
+     "grades": {
+      "measured-release-RTL": 1280.0
+     },
+     "n_crit": 40,
+     "old_cycles": 3488.0,
+     "op": "attn.den"
+    },
+    {
      "cls": "embed",
      "cycles": 1074.3,
      "grades": {
-      "measured-old-RTL": 1074.3
+      "measured-newest-element-RTL": 323.0,
+      "priced": 751.3
      },
      "n_crit": 1,
      "old_cycles": 1074.3,
@@ -925,9 +995,9 @@
     },
     {
      "cls": "head",
-     "cycles": 306.0,
+     "cycles": 438.0,
      "grades": {
-      "measured-old-RTL": 306.0
+      "measured-release-RTL": 438.0
      },
      "n_crit": 1,
      "old_cycles": 306.0,
@@ -955,9 +1025,9 @@
     },
     {
      "cls": "head",
-     "cycles": 8.9,
+     "cycles": 6.0,
      "grades": {
-      "measured-old-RTL": 8.9
+      "measured-release-RTL": 6.0
      },
      "n_crit": 1,
      "old_cycles": 8.9,
@@ -1134,22 +1204,22 @@
    },
    "solved_path_changed": true,
    "tau": null,
-   "tok_s": 1022.2,
-   "tok_s_solved": 1010.7,
+   "tok_s": 949.5,
+   "tok_s_solved": 933.5,
    "workload": "ar"
   },
   "mtp": {
-   "T_cycles_fixed": 1566172.4,
-   "T_cycles_solved": 1566172.4,
+   "T_cycles_fixed": 1656160.3,
+   "T_cycles_solved": 1656160.3,
    "base_T_cycles": 1381860.8,
    "base_tok_s": 3611.7,
    "by_grade": {
     "measured-current-RTL": 116078.0,
-    "measured-newest-element-RTL": 219772.0,
-    "measured-old-RTL": 708930.9,
-    "measured-release-RTL": 149473.0,
+    "measured-newest-element-RTL": 43625.0,
+    "measured-old-RTL": 598909.0,
+    "measured-release-RTL": 581243.0,
     "modelled-PHY": 187823.6,
-    "priced": 184094.9
+    "priced": 128481.7
    },
    "extra_terms": [
     {
@@ -1666,11 +1736,22 @@
      "slot": "wave.scan_d_l20split_k6"
     }
    ],
-   "pct_measured": 30.99,
-   "pct_measured_on_chip": 35.21,
-   "pct_modelled_phy": 11.99,
-   "per_accepted_cycles": 376574.3,
+   "pct_measured": 44.74,
+   "pct_measured_on_chip": 50.46,
+   "pct_modelled_phy": 11.34,
+   "per_accepted_cycles": 398211.2,
    "per_op": [
+    {
+     "cls": "field",
+     "cycles": 212990.0,
+     "grades": {
+      "measured-old-RTL": 18510.0,
+      "measured-release-RTL": 194480.0
+     },
+     "n_crit": 43,
+     "old_cycles": 107390.0,
+     "op": "attn.wo_a"
+    },
     {
      "cls": "wave",
      "cycles": 161546.0,
@@ -1683,31 +1764,10 @@
     },
     {
      "cls": "field",
-     "cycles": 144812.0,
+     "cycles": 133628.2,
      "grades": {
-      "measured-newest-element-RTL": 134360.0,
-      "measured-old-RTL": 2652.0,
-      "priced": 7800.0
-     },
-     "n_crit": 43,
-     "old_cycles": 48405.6,
-     "op": "attn.wq_b"
-    },
-    {
-     "cls": "field",
-     "cycles": 107390.0,
-     "grades": {
-      "measured-old-RTL": 107390.0
-     },
-     "n_crit": 43,
-     "old_cycles": 107390.0,
-     "op": "attn.wo_a"
-    },
-    {
-     "cls": "field",
-     "cycles": 94571.5,
-     "grades": {
-      "measured-old-RTL": 94571.5
+      "measured-old-RTL": 74748.2,
+      "measured-release-RTL": 58880.0
      },
      "n_crit": 40,
      "old_cycles": 94571.5,
@@ -1715,13 +1775,35 @@
     },
     {
      "cls": "field",
-     "cycles": 88191.0,
+     "cycles": 113272.8,
      "grades": {
-      "measured-old-RTL": 88191.0
+      "measured-old-RTL": 63928.8,
+      "measured-release-RTL": 49344.0
      },
      "n_crit": 40,
      "old_cycles": 88191.0,
      "op": "ffn.down"
+    },
+    {
+     "cls": "field",
+     "cycles": 61299.0,
+     "grades": {
+      "measured-old-RTL": 2739.0,
+      "measured-release-RTL": 58560.0
+     },
+     "n_crit": 43,
+     "old_cycles": 24695.0,
+     "op": "attn.wo_b"
+    },
+    {
+     "cls": "field",
+     "cycles": 48405.6,
+     "grades": {
+      "measured-old-RTL": 48405.6
+     },
+     "n_crit": 43,
+     "old_cycles": 48405.6,
+     "op": "attn.wq_b"
     },
     {
      "cls": "select",
@@ -1756,10 +1838,9 @@
     },
     {
      "cls": "head",
-     "cycles": 42250.0,
+     "cycles": 41935.0,
      "grades": {
-      "measured-newest-element-RTL": 42080.0,
-      "priced": 170.0
+      "measured-old-RTL": 41935.0
      },
      "n_crit": 5,
      "old_cycles": 41935.0,
@@ -1786,16 +1867,6 @@
      "n_crit": 8,
      "old_cycles": 1424.0,
      "op": "attn.idx.topk_final"
-    },
-    {
-     "cls": "field",
-     "cycles": 24695.0,
-     "grades": {
-      "measured-old-RTL": 24695.0
-     },
-     "n_crit": 43,
-     "old_cycles": 24695.0,
-     "op": "attn.wo_b"
     },
     {
      "cls": "su",
@@ -1862,33 +1933,14 @@
     },
     {
      "cls": "su",
-     "cycles": 11481.2,
+     "cycles": 8680.0,
      "grades": {
-      "measured-old-RTL": 11481.2
-     },
-     "n_crit": 40,
-     "old_cycles": 11481.2,
-     "op": "attn.exp"
-    },
-    {
-     "cls": "su",
-     "cycles": 9796.0,
-     "grades": {
-      "measured-old-RTL": 9796.0
+      "measured-release-RTL": 3400.0,
+      "priced": 5280.0
      },
      "n_crit": 40,
      "old_cycles": 9796.0,
      "op": "attn.normalize"
-    },
-    {
-     "cls": "su",
-     "cycles": 8794.6,
-     "grades": {
-      "measured-old-RTL": 8794.6
-     },
-     "n_crit": 40,
-     "old_cycles": 8794.6,
-     "op": "attn.max"
     },
     {
      "cls": "head",
@@ -1900,16 +1952,6 @@
      "n_crit": 1,
      "old_cycles": 8429.0,
      "op": "head.lm_head"
-    },
-    {
-     "cls": "su",
-     "cycles": 7840.0,
-     "grades": {
-      "measured-old-RTL": 7840.0
-     },
-     "n_crit": 40,
-     "old_cycles": 7840.0,
-     "op": "attn.sink"
     },
     {
      "cls": "su",
@@ -1990,6 +2032,16 @@
      "op": "ffn.bias"
     },
     {
+     "cls": "su",
+     "cycles": 4896.0,
+     "grades": {
+      "measured-release-RTL": 4896.0
+     },
+     "n_crit": 40,
+     "old_cycles": 11481.2,
+     "op": "attn.exp"
+    },
+    {
      "cls": "select",
      "cycles": 4310.0,
      "grades": {
@@ -2019,16 +2071,6 @@
      "n_crit": 1,
      "old_cycles": 3856.2,
      "op": "accept.seed"
-    },
-    {
-     "cls": "su",
-     "cycles": 3488.0,
-     "grades": {
-      "measured-old-RTL": 3488.0
-     },
-     "n_crit": 40,
-     "old_cycles": 3488.0,
-     "op": "attn.den"
     },
     {
      "cls": "field",
@@ -2066,6 +2108,26 @@
     },
     {
      "cls": "su",
+     "cycles": 2336.0,
+     "grades": {
+      "measured-release-RTL": 2336.0
+     },
+     "n_crit": 40,
+     "old_cycles": 8794.6,
+     "op": "attn.max"
+    },
+    {
+     "cls": "su",
+     "cycles": 1730.0,
+     "grades": {
+      "measured-release-RTL": 1730.0
+     },
+     "n_crit": 40,
+     "old_cycles": 7840.0,
+     "op": "attn.sink"
+    },
+    {
+     "cls": "su",
      "cycles": 1394.0,
      "grades": {
       "measured-release-RTL": 1394.0
@@ -2085,6 +2147,16 @@
      "op": "ffn.quant2.r0"
     },
     {
+     "cls": "su",
+     "cycles": 1280.0,
+     "grades": {
+      "measured-release-RTL": 1280.0
+     },
+     "n_crit": 40,
+     "old_cycles": 3488.0,
+     "op": "attn.den"
+    },
+    {
      "cls": "ctl",
      "cycles": 1077.8,
      "grades": {
@@ -2098,7 +2170,8 @@
      "cls": "embed",
      "cycles": 1074.3,
      "grades": {
-      "measured-old-RTL": 1074.3
+      "measured-newest-element-RTL": 323.0,
+      "priced": 751.3
      },
      "n_crit": 1,
      "old_cycles": 1074.3,
@@ -2401,6 +2474,16 @@
      "op": "attn.max.r4"
     },
     {
+     "cls": "head",
+     "cycles": 438.0,
+     "grades": {
+      "measured-release-RTL": 438.0
+     },
+     "n_crit": 1,
+     "old_cycles": 306.0,
+     "op": "head.norm.scale"
+    },
+    {
      "cls": "su",
      "cycles": 399.9,
      "grades": {
@@ -2411,6 +2494,16 @@
      "op": "ffn.route_w.r0"
     },
     {
+     "cls": "head",
+     "cycles": 327.5,
+     "grades": {
+      "priced": 327.5
+     },
+     "n_crit": 5,
+     "old_cycles": 327.5,
+     "op": "draft.markov"
+    },
+    {
      "cls": "hbm",
      "cycles": 315.0,
      "grades": {
@@ -2419,16 +2512,6 @@
      "n_crit": 3,
      "old_cycles": 315.0,
      "op": "attn.scores.r0"
-    },
-    {
-     "cls": "head",
-     "cycles": 306.0,
-     "grades": {
-      "measured-old-RTL": 306.0
-     },
-     "n_crit": 1,
-     "old_cycles": 306.0,
-     "op": "head.norm.scale"
     },
     {
      "cls": "su",
@@ -2555,16 +2638,6 @@
      "op": "mc.mtp_seq.draft_chain"
     },
     {
-     "cls": "head",
-     "cycles": 30.0,
-     "grades": {
-      "measured-newest-element-RTL": 30.0
-     },
-     "n_crit": 5,
-     "old_cycles": 327.5,
-     "op": "draft.markov"
-    },
-    {
      "cls": "ctl",
      "cycles": 22.4,
      "grades": {
@@ -2596,9 +2669,9 @@
     },
     {
      "cls": "head",
-     "cycles": 8.9,
+     "cycles": 6.0,
      "grades": {
-      "measured-old-RTL": 8.9
+      "measured-release-RTL": 6.0
      },
      "n_crit": 1,
      "old_cycles": 8.9,
@@ -2705,9 +2778,16 @@
    },
    "solved_path_changed": false,
    "tau": 4.159,
-   "tok_s": 3186.6,
-   "tok_s_solved": 3186.6,
+   "tok_s": 3013.5,
+   "tok_s_solved": 3013.5,
    "workload": "mtp"
+  }
+ },
+ "xdie_parts_measured": {
+  "on-die leg farthest slice <-> end slice, both ends (p4l plan, 67 cyc an end)": {
+   "file": "results/token_pass/measured_s81_1019/elements/LEG.json",
+   "grade": "measured-release-RTL",
+   "ratio": 1.044776
   }
  }
 }

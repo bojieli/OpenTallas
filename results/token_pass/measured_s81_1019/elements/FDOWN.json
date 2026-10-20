@@ -1,0 +1,50 @@
+{
+ "cls": "FDOWN",
+ "written": "2026-10-19 22:40 PT",
+ "agent_branch": "claude/toksim-s81b-fdown-1019@6e16f1d9a",
+ "ops": [
+  {
+   "op": "ffn.down",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 1954.2,
+   "old_per_instance_values": [
+    1516.3,
+    1517.7,
+    1540.7,
+    2028.2,
+    2050.7,
+    3071.5
+   ],
+   "cycles": 3084,
+   "cycles_frame": 2889,
+   "priced_tail": 195,
+   "by_expert": {
+    "shared.w2": {
+     "seq_P130_go0_to_last_ret": 561,
+     "law": "2P+301"
+    },
+    "routed.w2 (each of 6)": {
+     "seq_P130_go0_to_last_ret": 549,
+     "law": "2P+289"
+    }
+   },
+   "grade": "measured-release-RTL",
+   "definition": "frame spine go of the first down phase -> last result word at the frame root, all 21 down phases of one frame (7 experts x 3 phases 4/4/2 rows) at the minimum passing go period 130 (P<=120 faults, status 11): 20x130+289 = 2889 (per-expert sequences measured; expert-to-expert chaining at the same period composed, x of the next expert assumed ready), + priced tail 195 (frame root -> CAP + hub return, as FIELD wq_b) = 3084. All 8 frames x 16 slices run their rows in parallel.",
+   "shape": "u_f_0L00 (slice 0, frame 0) of the p4l-MU die: 70 real rank-0 rows (10 per expert: shared FP8 32x32 scales, 6 routed FP4), K 2304, real ROM images of the full L0 multi-phase field (82 phases), x = bf16(swiglu/route_w) FP8-quantised; L0 rank-0 fixture ctx 1048576",
+   "bit_exact": true,
+   "golden": "xs_place check per phase: segment-tree node values bit-exact vs golden, every row covered once, calendar edge-exact, fixture BF16 tie of every row (70/70 singles; 10/10 per expert sequence at every passing P); mutants swap/shift FAIL",
+   "rtl": {
+    "module": "col_h9_l4_nx (u_f_0L00 frame: ot_v41_rom_elem_q_qxpq_w10 q elements + BF col) + land/dsfd_cfifo_crs4 + dsfd_rly_frame_exact",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (rtl archive)",
+    "blob": "78/78 RTL files blob-identical to 19bf4121e (results/rtl/toksim_s81b_fdown_1019/rtl_blob_vs_release_19bf4121e.txt)",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_dv/layer_prog/qf_producer/toksim_fdown_frame_bench.sh + tb_toksim_fgu_seq.sv (FGU, verbatim)@claude/toksim-s81b-fdown-1019@6e16f1d9a",
+   "evidence": "results/rtl/toksim_s81b_fdown_1019/sweep_p80_170.txt ('seq_exp61 ... PASS ... PER 130 ... last_ret 612 span 549', 'seq_shared ... PER 130 ... span 561', P120 FAIL FAULT status 11), singles_p180up.txt (21/21 PASS)",
+   "job": "ot-run ot-epyc9 oth-ubuntu-1106587-1792470561 (gen+build+P180-600) and second sweep (P80-170), both done; dir ot-epyc9:/srv/opentallas-scratch/claude/toksim-s81b-fdown/fr",
+   "edges_owed": "none folded: LEAD2-S81 INBOX edges for CAP (EDLY24/WL3DLY16) fall after the frame root, inside the priced tail",
+   "note": "New > old: the p4l die deals each expert's 80 slice rows over 8 frames, so one frame runs 21 short phases serially (period floor 130). Upper bound without overlapping expert switches: sum of per-expert spans 6x549+561 = 3855 (+195). Previous fullsix attempt's 'golden != fixture 560' was a vehicle bug (bf16 tie compared 32-bit vs 16-bit), fixed, not rerun."
+  }
+ ]
+}

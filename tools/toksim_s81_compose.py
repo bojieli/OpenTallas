@@ -41,22 +41,45 @@ SCHEMA = 'opentallas.toksim_s81.v1'
 GROUP_KINDS = ('head', 'embed', 'hops', 'draft', 'wave', 'accept')
 
 
+def admitted(o, exact_ops):
+    """Strict admission (TOKSIM-S81B 10-19): a measured op folds only when its record says bit_exact true.  Two
+    exceptions, both carrying no cycles of their own: a 0-cycle op merged into a covering op, and a curation mapping
+    (zz_curation.json) of an op that another element record measured bit-exact."""
+    if o.get('grade') not in MEASURED:
+        return False
+    if o.get('bit_exact') is True:
+        return True
+    if o.get('bit_exact') is None and o.get('cycles') == 0 and not o.get('by_old') and not o.get('per_layer'):
+        return True
+    return o.get('bit_exact') is None and o.get('_curation') and o['op'] in exact_ops
+
+
 def load_elements(d):
-    """op key (dag_cls, op) -> override; slot -> override (for base layer/adjust terms)."""
-    ops, slots, files = {}, {}, []
+    """op key (dag_cls, op) -> override; slot -> override (for base layer/adjust terms); xdie part -> ratio."""
+    ops, slots, xparts, files, excluded = {}, {}, {}, [], []
+    recs = []
     for f in sorted(glob.glob(str(d / '*.json'))):
         e = json.load(open(f))
-        files.append(dict(file=str(Path(f).relative_to(ROOT)), cls=e.get('cls'), written=e.get('written'),
-                          branch=e.get('agent_branch')))
-        for o in e.get('ops', []):
-            if o.get('grade') not in MEASURED and not (o.get('slot') and o.get('term_grade')):
-                continue
-            o = dict(o, file=str(Path(f).relative_to(ROOT)))
-            if o.get('slot'):
-                slots[o['slot']] = o
-            elif o.get('cycles') is not None or o.get('by_old') or o.get('per_layer'):
-                ops[(o.get('dag_cls'), o['op'])] = o
-    return ops, slots, files
+        rel = str(Path(f).relative_to(ROOT))
+        files.append(dict(file=rel, cls=e.get('cls'), written=e.get('written'), branch=e.get('agent_branch')))
+        cur = Path(f).name.startswith('zz_curation')
+        recs += [dict(o, file=rel, _curation=cur) for o in e.get('ops', [])]
+    exact_ops = {o['op'] for o in recs if not o['_curation'] and o.get('bit_exact') is True}
+    for o in recs:
+        if not admitted(o, exact_ops):
+            if o.get('grade') in MEASURED:
+                excluded.append(dict(op=o['op'], file=o['file'], grade=o['grade'], bit_exact=o.get('bit_exact'),
+                                     cycles=o.get('cycles')))
+            continue
+        if o.get('xdie_part'):
+            # an on-die leg / crossing part of the base xdie terms, measured: scale every term of that part
+            xparts[o['xdie_part']] = dict(ratio=float(o['cycles']) / float(o['old_cycles_per_instance']),
+                                          grade=o['grade'], file=o['file'])
+        elif o.get('slot'):
+            slots[o['slot']] = o
+        elif o.get('cycles') is not None or o.get('by_old') or o.get('per_layer'):
+            ops[(o.get('dag_cls'), o['op'])] = o
+    return ops, slots, xparts, files, excluded
 
 
 def node_cycles(n, ov):
@@ -116,7 +139,16 @@ def solve(dag, cyc):
     return end[last], path[::-1]
 
 
-def compose(wl, base, dag, ops, slots):
+def xdie_part(p, xparts):
+    """(cycles, grade) of one base xdie term, with a measured part override applied."""
+    x = xparts.get(p.get('part'))
+    if x and p['grade'] == 'priced':
+        return p['total'] * x['ratio'], x['grade']
+    return p['total'], p['grade']
+
+
+def compose(wl, base, dag, ops, slots, xparts=None):
+    xparts = xparts or {}
     gk = {g['id']: g['kind'] for g in dag['groups']}
     bterms = base['workloads'][wl]['terms']
     xd = {}
@@ -133,11 +165,11 @@ def compose(wl, base, dag, ops, slots):
         if n.get('cls') in ('coll', 'hop'):
             parts = xd.get(f'{L}.xdie.{n["id"]}', [])
             if parts:
-                E = sum(p['total'] for p in parts)
-                cyc_new[n['id']] = E
+                vals = [xdie_part(p, xparts) for p in parts]
+                cyc_new[n['id']] = sum(c for c, _ in vals)
                 if n.get('critical'):
-                    for p in parts:
-                        by_grade[p['grade']] += p['total']
+                    for c, g in vals:
+                        by_grade[g] += c
             else:
                 cyc_new[n['id']] = old
                 if n.get('critical'):
@@ -235,11 +267,14 @@ def multi_user(base, res):
 
 def build(elem_dir):
     base = json.load(open(BASE))
-    ops, slots, files = load_elements(elem_dir)
-    res = {wl: compose(wl, base, json.load(open(p)), ops, slots) for wl, p in DAGS.items()}
+    ops, slots, xparts, files, excluded = load_elements(elem_dir)
+    res = {wl: compose(wl, base, json.load(open(p)), ops, slots, xparts) for wl, p in DAGS.items()}
     return dict(schema=SCHEMA, design='ds_rom', die='S81 p4l-MU (release source GEN mu4c 19bf4121e)', clock_hz=F_CLK,
                 inputs=dict(base=str(BASE.relative_to(ROOT)), dags={k: str(v.relative_to(ROOT)) for k, v in DAGS.items()},
                             elements=files),
+                admission='measured grade AND bit_exact true (0-cycle merged ops and curation maps of bit-exact ops admitted)',
+                excluded_not_bit_exact=excluded,
+                xdie_parts_measured={k: dict(v, ratio=round(v['ratio'], 6)) for k, v in xparts.items()},
                 workloads=res, multi_user=multi_user(base, res))
 
 
