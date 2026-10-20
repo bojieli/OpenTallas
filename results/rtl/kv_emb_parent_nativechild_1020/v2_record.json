@@ -1,0 +1,38 @@
+{
+  "source_commit": "0b31512ad",
+  "verilator": "5.050",
+  "remote": "/srv/opentallas-scratch/claude/codex-emb-parent-nativechild-743bbdbc0",
+  "runs": [
+    {
+      "mutant": 0,
+      "expected": "PASS",
+      "witness": "v2_m0.log",
+      "result": "satisfied"
+    },
+    {
+      "mutant": 1,
+      "expected": "FAIL",
+      "witness": "v2_m1.log",
+      "result": "satisfied"
+    },
+    {
+      "mutant": 2,
+      "expected": "FAIL",
+      "witness": "v2_m2.log",
+      "result": "satisfied"
+    },
+    {
+      "mutant": 3,
+      "expected": "FAIL",
+      "witness": "v2_m3.log",
+      "result": "satisfied"
+    },
+    {
+      "mutant": 5,
+      "expected": "FAIL",
+      "witness": "v2_m5.log",
+      "result": "satisfied"
+    }
+  ],
+  "scope": "RTL full parent exact CLOSED child boundary lockstep; no physical closure"
+}

@@ -1,0 +1,10 @@
+DIFF parent t=56000 n=0/0 o=0/0
+DIFF parent t=58000 n=0/0 o=0/0
+DIFF parent t=60000 n=0/0 o=0/0
+DIFF parent t=62000 n=0/0 o=0/0
+DIFF parent t=64000 n=0/0 o=0/0
+DIFF parent t=66000 n=0/0 o=0/0
+DIFF parent t=68000 n=0/0 o=0/0
+[3154000] %Fatal: tb_parent.sv:65: Assertion failed in tb_parent: FAIL parent mismatches=1442
+%Error: results/rtl/kv_emb_parent_nativechild_1020/tb_parent.sv:65: Verilog $stop
+Aborting...
