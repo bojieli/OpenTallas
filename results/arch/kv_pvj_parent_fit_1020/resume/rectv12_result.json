@@ -1,0 +1,37 @@
+{
+ "scope": "MODEL_ONLY; candidate pins, original station pin abstractions; not routed view or measured reach",
+ "baseline_source_sha256": "85e6bb225c010e1758b0dbcf8e24ebb20e1ab562b304c3f159ade8c787ba9458",
+ "join_pins_sha256": "b3ed85c3ad7bfcf69797a89269063d0760b7e4e77e24e845430ae69bafca632b",
+ "block_um": [
+  734.4,
+  691.2
+ ],
+ "wide_local": true,
+ "constrained_coordinates": true,
+ "small_local_relays": true,
+ "landed_structural": true,
+ "epoch_v3": true,
+ "epoch_v4": true,
+ "input_edges_added": 3,
+ "result_edges_added": 1,
+ "reset_release_extra_local_edges": 4,
+ "health_fault_arrival_extra_local_edges": 5,
+ "join_um": [
+  216,
+  216
+ ],
+ "leaf_extra_reset_edges_preaccepted": 2,
+ "total_extra_reset_edges_before_external_replan": 6,
+ "leaf_lef_sha256": {
+  "ot_qwen_tp8_pv_slice_t": "704c4fac0060f5a07f386e68533c8d921ff8411111111045b17bd90babaca47b",
+  "ot_qwen_tp8_pv_wide_ctl": "93e036351b7fd54a22dc1690da7b5bda389372d853e63cd704fc62a1110b7fbb",
+  "qkd_rlys_1": "16ff9ead66299e01d4ac15b9abc1ddb4131738df1e70f75ef5fd617e2abf6016",
+  "qkd_rlys_36": "080594245a1be830780866166e677a66ea01e439d6490bdf515287ab127e19fd",
+  "qkd_rlys_296": "ea22df937f744e96c8c773edadf088e53190d20904b019b17307f49df957a036"
+ },
+ "join_interface_alias_only": "ot_qwen_tp8_pv_join_t is a planner port alias; newS32 RTL/native view not adopted",
+ "ct_um": 345.6,
+ "ns": 3,
+ "status": "REFUSED_MODEL",
+ "error": "ValueError('F0a: no spot for replica 0 (36) near (475, 950) in (0.0, 864.0, 1900.8000000000002, 1036.8)')"
+}
