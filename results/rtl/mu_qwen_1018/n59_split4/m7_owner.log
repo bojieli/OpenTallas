@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+m7_owner OK (mutant fails)
+N59SPLIT_ERR cycle 130: split output != reference 1 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 131: split output != reference 1 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 132: split output != reference 1 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 133: split output != reference 1 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59DV_FAIL SPLIT lockstep: 242 of 363 edges differ (split vs reference)
+N59SPLIT_FAIL m7_owner
+N59SPLIT_BENCH_EXIT 1
+STAGE_RC=1

@@ -1,0 +1,23 @@
+dv_positive	SPLIT_ONLY=dv_positive bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/dv_positive
+dv_bad_q	SPLIT_ONLY=dv_bad_q bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/dv_bad_q
+mu_positive	SPLIT_ONLY=mu_positive bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/mu_positive
+mu_ovl_positive	SPLIT_ONLY=mu_ovl_positive bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/mu_ovl_positive
+mu_ovl_ret_bad	SPLIT_ONLY=mu_ovl_ret_bad bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/mu_ovl_ret_bad
+m1_q_lane	SPLIT_ONLY=m1_q_lane bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/m1_q_lane
+m2_kv_addr	SPLIT_ONLY=m2_kv_addr bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/m2_kv_addr
+m3_emb_word	SPLIT_ONLY=m3_emb_word bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/m3_emb_word
+m5_mu_tag	SPLIT_ONLY=m5_mu_tag bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/m5_mu_tag
+m7_owner	SPLIT_ONLY=m7_owner bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/m7_owner
+qb1_unreg	SPLIT_ONLY=qb1_unreg bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/qb1_unreg
+qb2_norelay	SPLIT_ONLY=qb2_norelay bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/qb2_norelay
+rnd_s1	SPLIT_ONLY=rnd_s1 bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/rnd_s1
+rnd_s2	SPLIT_ONLY=rnd_s2 bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/rnd_s2
+rnd_nu1	SPLIT_ONLY=rnd_nu1 bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/rnd_nu1
+rnd_m1_q_lane	SPLIT_ONLY=rnd_m1_q_lane bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/rnd_m1_q_lane
+rnd_qb1_unreg	SPLIT_ONLY=rnd_qb1_unreg bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/flat/rnd_qb1_unreg
+lp_dv_positive	N59_SPLIT_LP=1 SPL_SOFF=6 SPL_BOFF=2 SPL_ROFF=6 SPLIT_ONLY=dv_positive bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/lp/dv_positive
+lp_mu_ovl_positive	N59_SPLIT_LP=1 SPL_SOFF=6 SPL_BOFF=2 SPL_ROFF=6 SPLIT_ONLY=mu_ovl_positive bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/lp/mu_ovl_positive
+lp_rnd_s1	N59_SPLIT_LP=1 SPL_SOFF=6 SPL_BOFF=2 SPL_ROFF=6 SPLIT_ONLY=rnd_s1 bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/lp/rnd_s1
+lp_lp_m1_land_bypass	N59_SPLIT_LP=1 SPL_SOFF=6 SPL_BOFF=2 SPL_ROFF=6 SPLIT_ONLY=lp_m1_land_bypass bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/lp/lp_m1_land_bypass
+lp_lp_m2_land_late	N59_SPLIT_LP=1 SPL_SOFF=6 SPL_BOFF=2 SPL_ROFF=6 SPLIT_ONLY=lp_m2_land_late bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/lp/lp_m2_land_late
+lp_lp_rnd_m1_land_bypass	N59_SPLIT_LP=1 SPL_SOFF=6 SPL_BOFF=2 SPL_ROFF=6 SPLIT_ONLY=lp_rnd_m1_land_bypass bash rtl/test/qwen_split/run_native59_split_bench.sh /srv/opentallas-scratch/claude/qw-n59-4/run4/lp/lp_rnd_m1_land_bypass

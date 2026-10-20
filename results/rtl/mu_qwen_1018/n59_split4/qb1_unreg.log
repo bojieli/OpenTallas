@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+qb1_unreg OK (mutant fails)
+N59SPLIT_ERR cycle 140: split output != reference 1 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 141: split output != reference 1 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 142: split output != reference 1 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59SPLIT_ERR cycle 143: split output != reference 1 edge(s) earlier (x3 0 tx 1 dr 0 emb 0 done 0 ret 0 fault 0)
+N59MU_FAIL SPLIT lockstep: 434 of 2461 edges differ (split vs reference)
+N59SPLIT_FAIL qb1_unreg
+N59SPLIT_BENCH_EXIT 1
+STAGE_RC=1

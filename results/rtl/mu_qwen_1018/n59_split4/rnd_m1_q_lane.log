@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+rnd_m1_q_lane OK (mutant fails)
+N59RND activity: tx 0 x3 0 dr0 0 dr1 7380 done 0 fault-edges 37200 ret-changes 1 q-words 9237 kv-writes 8123 bad-dd 8293; compared 37200 mism 0 probes 9235/37200 (svc/bank mism) of 37200
+N59RND_FAIL seed 1: 0 of 37200 edges differ (outputs), probes 9235/37200
+N59SPLIT_FAIL rnd_m1_q_lane
+N59SPLIT_BENCH_EXIT 1
+STAGE_RC=1

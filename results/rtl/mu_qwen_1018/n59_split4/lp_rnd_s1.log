@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+rnd_s1 OK (pass)
+N59RND activity: tx 0 x3 0 dr0 0 dr1 7380 done 0 fault-edges 37200 ret-changes 1 q-words 9237 kv-writes 8123 bad-dd 8293; compared 37200 mism 0 probes 0/0 (svc/bank mism) of 37200
+N59RND_PASS seed 1 NU 4 MCTX 1: 37200 random edges, every output of the split == r1 (SOFF 6 BOFF 2 ROFF 6)
+N59SPLIT_BENCH_EXIT 0
+STAGE_RC=0

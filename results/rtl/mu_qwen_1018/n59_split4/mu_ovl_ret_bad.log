@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+mu_ovl_ret_bad OK (pass)
+N59MU_ERR cycle 815 op 4: user-0 tx record != NU 1
+N59MU_ERR cycle 819 op 4: user-0 tx record != NU 1
+N59MU_ERR cycle 820 op 4: user-0 tx record != NU 1
+N59MU_ERR cycle 821 op 4: user-0 tx record != NU 1
+N59MU_PASS_SPLIT lockstep: 2461 edges, every output of the split == reference (SOFF 1 BOFF 0 ROFF 1)
+N59MU_PASS RET_BAD user-2 RESULT with user tag 1 -> sticky fault at 683, no completion
+N59SPLIT_BENCH_EXIT 0
+STAGE_RC=0

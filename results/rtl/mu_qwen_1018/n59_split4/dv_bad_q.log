@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+dv_bad_q OK (pass)
+N59DV_ERR cycle 125: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 126: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 127: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 128: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_PASS_SPLIT lockstep: 363 edges, every output of the split == reference (SOFF 1 BOFF 0 ROFF 1)
+N59DV_PASS BAD_Q missing Q dd word -> sticky fault, no completion
+N59SPLIT_BENCH_EXIT 0
+STAGE_RC=0
