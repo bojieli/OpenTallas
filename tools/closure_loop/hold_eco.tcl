@@ -448,6 +448,15 @@ set ot_fill {}
 foreach vt [envd OT_VT RVT] { set t [string map {SLVT SL LVT L RVT R} $vt]; lappend ot_fill FILLERxp5_ASAP7_75t_$t FILLER_ASAP7_75t_$t }
 filler_placement $ot_fill
 check_placement -verbose
+# OT_PG_DEFAULT_CONNECT_BEGIN
+# KV-HOST2 10-19 (KV-CLOSED-PG-AUDIT): hold/vt ECO cells and re-placed fillers were written with NULL VDD/VSS ITerms
+# (cdc_pc 589,522 / cdc_host 957,466 unbound native PG terminals in CLOSED 6_final.odb).  Bind every instance to the
+# DB's own global-connect rules before any final artifact, in DEFAULT jobs too; the strict block below still asserts.
+if {[envd OT_ECO_GLOBAL_CONNECT 1] eq "1"} {
+  if {[catch {global_connect} ot_gc_err]} { error "OT_ECO global_connect failed: $ot_gc_err" }
+  puts "OT_ECO global_connect: native PG terminals bound by the DB global-connect rules"
+}
+# OT_PG_DEFAULT_CONNECT_END
 # OT_PG_STRICT_FINAL_BEGIN
 # Insertion, master replacement and filler placement invalidate earlier maps.
 # The final check visits native MASTER PG terminals, independent of PSM.

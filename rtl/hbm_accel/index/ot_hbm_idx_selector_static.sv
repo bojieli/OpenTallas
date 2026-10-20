@@ -378,8 +378,13 @@ endmodule
 // register (o1) and the pin flop (L2H-IDXSEL 10-19: q0/q1 selected_line / out_line travel up to ~500 um to the E / S face,
 // so the output path gets one registered hop more).  Clocks pass through; rst_n enters the core's ot_rst_relay.
 // Latency (tools/hbm_idx_static_calendar.py PIN table): sel_in = 3 (pin + core P1 + core P2), sel_out = 2.
-// ONE CLOCK ROOT (IDX-SMALL 2026-10-18): clk_ctl clocks every flop and all 12 SRAMs; clk_q[3:0] / clk_mem[11:0] stay as
-// ports (parents unchanged) and are unloaded.
+// REGIONAL ROOTS (L2H-IDXSEL s2, 10-19 23:40): the s1 gates (one clk_ctl root over all 42,772 sinks, std-reg insertion
+// 695..998 ps) stalled in CTS hold repair (18-23k endpoints, GATE_STALL at 14,400 s). s2 drives the core's existing clock
+// domains from their own ports: quadrant q (its lanes, histogram, pack/emit pipeline and its 3 SRAMs) on clk_q[q], the
+// choose pipeline, reset relay and every pin flop on clk_ctl. Crossings: ctl pin flop -> quadrant P1 relay / in_p1 (reg->reg),
+// quadrant output -> o1 relay (quadrant domain) -> ctl pin flop (reg->reg), selected[q] -> o1_obs (reg->reg); the ctl
+// threshold / tie copies feed quadrant compares and the quadrant histogram read feeds the ctl sums (same PLL, phase 0).
+// clk_mem stays a port (parents unchanged) and is unloaded: SRAM (q, m) is clocked by clk_q[q]. Cycles unchanged.
 module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
@@ -396,14 +401,20 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
  (* keep *) reg [2367:0] in_r;
  wire [3:0] c_out_v,c_sel_v;wire [2367:0] c_out_line,c_sel_line;wire [15:0] c_thr;wire [55:0] c_obs;wire c_fault;
  reg [3:0] o1_out_v,o1_sel_v;reg [2367:0] o1_out_line,o1_sel_line;reg [15:0] o1_thr;reg [55:0] o1_obs;reg o1_fault;
+ // o1 output relay of each quadrant's lines / valids in that quadrant's domain; observes and fault in ctl
+ for(genvar q=0;q<4;q=q+1)begin:go1
+  always @(posedge clk_q[q])begin
+   o1_out_v[q]<=c_out_v[q];o1_sel_v[q]<=c_sel_v[q];
+   o1_out_line[q*592+:592]<=c_out_line[q*592+:592];o1_sel_line[q*592+:592]<=c_sel_line[q*592+:592];
+  end
+ end
  always @(posedge clk_ctl)begin
   op_r<=op;pass_r<=pass;addr_r<=addr;k_r<=k;in_r<=in_line;
-  o1_out_v<=c_out_v;o1_out_line<=c_out_line;o1_thr<=c_thr;o1_sel_v<=c_sel_v;o1_sel_line<=c_sel_line;o1_obs<=c_obs;
-  o1_fault<=c_fault;
+  o1_thr<=c_thr;o1_obs<=c_obs;o1_fault<=c_fault;
   out_v<=o1_out_v;out_line<=o1_out_line;threshold_observe<=o1_thr;
   selected_v<=o1_sel_v;selected_line<=o1_sel_line;selected_observe<=o1_obs;fault<=o1_fault;
  end
- ot_hbm_idx_selector_static_core #(.MUT(MUT)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),
+ ot_hbm_idx_selector_static_core #(.MUT(MUT)) core(.clk_ctl(clk_ctl),.clk_q(clk_q),.clk_mem({{3{clk_q[3]}},{3{clk_q[2]}},{3{clk_q[1]}},{3{clk_q[0]}}}),.rst_n(rst_core_n),
   .op(op_r),.pass(pass_r),.addr(addr_r),.k(k_r),.in_line(in_r),.out_v(c_out_v),.out_line(c_out_line),
   .threshold_observe(c_thr),.selected_v(c_sel_v),.selected_line(c_sel_line),.selected_observe(c_obs),.fault(c_fault));
 endmodule
