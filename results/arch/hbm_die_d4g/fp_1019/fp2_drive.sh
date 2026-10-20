@@ -7,11 +7,11 @@
 # Bind rule (decision 3): the first of fp / fp86 / fprsv whose real forest reaches VAR_DONE PASS wins (atomic mkdir
 # $A/fp2_winner); the winner's driver cancels the other variants by exact PID (fp2_cancel.sh; fp only if it has no PASS);
 # a loser's driver cancels itself.  Past stream NW -> fp_cancel_old.sh (old floorplan variants + chains kx/sy).
-#   env: V, HSRC (commit == HEAD of W), W (worktree), GENPID (local ot-run pid of the GEN), RSV (reserve JSON path in src)
+#   env: V, RH (data host of the GEN dir; ot-epyc9 was die-disk-full at launch), HSRC (commit == HEAD of W), W (worktree), GENPID (local ot-run pid of the GEN), RSV (reserve JSON path in src)
 set -o pipefail
 V=${V:?V}; HSRC=${HSRC:?HSRC}; W=${W:?W}; GENPID=${GENPID:?GENPID}; RSV=${RSV:?RSV}
 A=/home/ubuntu/artifacts/hdie-d4/d4g_gen2d; L=$A/$V; B=/srv/opentallas-scratch/claude/hd4g/gen2d
-F=$B/${V}gen; RH=ot-epyc9; OTRUN=/home/ubuntu/bin/ot-run; S=$W/results/arch/hbm_die_d4g/fp_1019
+F=$B/${V}gen; RH=${RH:-ot-epyc9}; OTRUN=/home/ubuntu/bin/ot-run; S=$W/results/arch/hbm_die_d4g/fp_1019
 LANE=/home/ubuntu/claude-takeover-20261007/lanes/L2H-GEN2D-FP2.md
 note() { echo "- [L2H-GEN2D-FP2 drive $V] $(date '+%m-%d %H:%M') $*" >> $LANE; echo "NOTE $*"; }
 echo $$ > $L/drive.pid
