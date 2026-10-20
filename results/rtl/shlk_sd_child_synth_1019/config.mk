@@ -1,0 +1,15 @@
+export DESIGN_NICKNAME = shlk_sd_child
+export DESIGN_NAME = shlk_sd_child
+export PLATFORM = asap7
+export VERILOG_FILES = /src/rtl/lib/ot_rst_relay.sv /src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv /src/sd_top.sv /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192_bb.v
+export VERILOG_DEFINES = -DSYNTHESIS -DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_P192
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_REPEATABLE_BUILD = 1
+export LEC_CHECK = 0
+export NUM_CORES = 4
+export CORNER = TC
+export ASAP7_USE_VT = RVT
+export ADDER_MAP_FILE =
+export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192_tt.lib
+export SYNTH_BLACKBOXES = ot_sram_1r1w2c_16x289_m1_p192
+export SDC_FILE = /work/constraint.sdc

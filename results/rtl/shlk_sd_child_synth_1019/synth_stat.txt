@@ -1,0 +1,67 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+17. Printing statistics.
+
+=== shlk_sd_child ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     3963        -     3963        - wires
+     4856        -     4856        - wire bits
+      607        -      607        - public wires
+     1500        -     1500        - public wire bits
+       11        -       11        - ports
+      904        -      904        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     4258 9.14E+03     4258 9.14E+03 cells
+       11    0.962       11    0.962   AND2x2_ASAP7_75t_R
+       15    1.312       15    1.312   AND3x1_ASAP7_75t_R
+        5     0.51        5     0.51   AND4x1_ASAP7_75t_R
+        3     0.35        3     0.35   AND5x1_ASAP7_75t_R
+        4    0.933        4    0.933   AO211x2_ASAP7_75t_R
+      304   26.594      304   26.594   AO21x1_ASAP7_75t_R
+        3    0.437        3    0.437   AO221x1_ASAP7_75t_R
+        2     0.35        2     0.35   AO222x2_ASAP7_75t_R
+        1    0.131        1    0.131   AO22x1_ASAP7_75t_R
+        2    0.467        2    0.467   AO31x2_ASAP7_75t_R
+        1    0.117        1    0.117   AOI21x1_ASAP7_75t_R
+        1    0.204        1    0.204   AOI221x1_ASAP7_75t_R
+      135    9.842      135    9.842   BUFx2_ASAP7_75t_R
+       71    6.211       71    6.211   BUFx3_ASAP7_75t_R
+        1    0.117        1    0.117   BUFx4f_ASAP7_75t_R
+        3    0.437        3    0.437   BUFx6f_ASAP7_75t_R
+       55   20.849       55   20.849   DFFASRHQNx1_ASAP7_75t_R
+     1160  338.256     1160  338.256   DFFHQNx1_ASAP7_75t_R
+      913   39.935      913   39.935   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        4    0.525        4    0.525   MAJx2_ASAP7_75t_R
+      588   51.438      588   51.438   NAND2x1_ASAP7_75t_R
+        3    0.481        3    0.481   NAND3x1_ASAP7_75t_R
+        1    0.292        1    0.292   NAND3x2_ASAP7_75t_R
+      300   26.244      300   26.244   NOR2x1_ASAP7_75t_R
+        4    0.467        4    0.467   OA211x2_ASAP7_75t_R
+      580   59.195      580   59.195   OA21x2_ASAP7_75t_R
+        1    0.146        1    0.146   OA22x2_ASAP7_75t_R
+        4    0.875        4    0.875   OA31x2_ASAP7_75t_R
+        7    0.816        7    0.816   OAI21x1_ASAP7_75t_R
+        9    0.787        9    0.787   OR2x2_ASAP7_75t_R
+       10    0.875       10    0.875   OR3x1_ASAP7_75t_R
+       13    1.327       13    1.327   OR4x1_ASAP7_75t_R
+        3     0.35        3     0.35   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+       30    4.811       30    4.811   XNOR2x2_ASAP7_75t_R
+        7    1.123        7    1.123   XOR2x2_ASAP7_75t_R
+        1 8.54E+03        1 8.54E+03   ot_sram_1r1w2c_16x289_m1_p192
+
+   Chip area for module '\shlk_sd_child': 9137.778820
+     of which used for sequential elements: 359.105400 (3.93%)
+
