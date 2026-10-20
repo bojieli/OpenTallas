@@ -29,7 +29,7 @@ def groups(text):
             raise ValueError('raw memory Liberty has an unterminated group')
 
 
-def memory_clock(path, master):
+def memory_clock(path, master, interface=False):
     libs = list(groups(path.read_text()))
     if len(libs) != 1 or libs[0][0] != 'library':
         raise ValueError(f'raw memory needs one actual Liberty library: {path}')
@@ -38,14 +38,23 @@ def memory_clock(path, master):
         raise ValueError(f'raw memory Liberty cell differs from declared master {master}')
     children = list(groups(cells[0][1]))
     memories = [body for kind, _, body in children if kind == 'memory']
-    if len(memories) != 1 or any(kind in ('ff', 'latch') for kind, _, _ in children):
+    if any(kind in ('ff', 'latch') for kind, _, _ in children):
         raise ValueError(f'{master}: not a raw Liberty memory cell')
-    memory = memories[0]
-    if not re.search(r'\btype\s*:\s*(rom|ram)\s*;', memory):
-        raise ValueError(f'{master}: raw memory type must be rom or ram')
-    for field in ('address_width', 'word_width'):
-        if not re.search(rf'\b{field}\s*:\s*[1-9]\d*\s*;', memory):
-            raise ValueError(f'{master}: missing positive memory {field}')
+    if interface:
+        # LEAD2-S81/LINK 10-19 (spec soft_root_macro_interface_masters, opt-in): a registered-boundary IP abstract
+        # (S81 SerDes PMA: interface_timing black box with setup/hold + clk->Q arcs on one clock, no memory group) is
+        # a raw clock sink exactly like an SRAM; never a hardened child (no insertion/abstract/export views).
+        if memories or not re.search(r'\binterface_timing\s*:\s*true\s*;', cells[0][1]):
+            raise ValueError(f'{master}: interface raw sink must be an interface_timing cell without a memory group')
+    else:
+        if len(memories) != 1:
+            raise ValueError(f'{master}: not a raw Liberty memory cell')
+        memory = memories[0]
+        if not re.search(r'\btype\s*:\s*(rom|ram)\s*;', memory):
+            raise ValueError(f'{master}: raw memory type must be rom or ram')
+        for field in ('address_width', 'word_width'):
+            if not re.search(rf'\b{field}\s*:\s*[1-9]\d*\s*;', memory):
+                raise ValueError(f'{master}: missing positive memory {field}')
     clocks = [name for kind, name, body in children if kind == 'pin'
               and re.search(r'\bclock\s*:\s*true\s*;', body)
               and re.search(r'\bdirection\s*:\s*input\s*;', body)]
@@ -92,6 +101,10 @@ def contract(spec, root):
         declared[inst] = (master, view)
     if set(bindings) != set(declared) or {m for m, _ in declared.values()} != set(masters):
         raise ValueError('raw memory bindings must cover exactly the declared named macro instances')
+    iface = spec.get('soft_root_macro_interface_masters', [])
+    if not isinstance(iface, list) or not set(iface) <= set(masters):
+        raise ValueError('soft_root_macro_interface_masters must be a subset of soft_root_macro_masters')
+    iface = set(iface)
     result = {}; paths = []; validated = {}
     for inst, b in bindings.items():
         master, view = declared[inst]
@@ -105,7 +118,7 @@ def contract(spec, root):
             clocks = []
             for corner in ('tt', 'ff'):
                 rel = view / f'{master}_{corner}.lib'
-                clocks.append(memory_clock(root / rel, master)); paths.append(str(rel))
+                clocks.append(memory_clock(root / rel, master, master in iface)); paths.append(str(rel))
             if len(set(clocks)) != 1:
                 raise ValueError(f'{master}: raw TT/FF memory clock interface differs')
             validated[master] = clocks[0]

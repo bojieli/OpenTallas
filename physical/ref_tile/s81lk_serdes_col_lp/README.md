@@ -48,3 +48,9 @@ ck_tx (N) / ck_ptx (E); the S81 die master port list changes from {clk, pma_rck}
   24 pairs per PMA, y 2.0..h-2.0 clear of the face pins), M5 OBS only between the stripes (0.072 clearance), M1-M4 OBS
   unchanged; ref_tile macros[].pg_layer "M5" (opt-in) straps them M5->M6 exactly like the hard children (hard_m5).
 - Checklist delta: 6 (floorplan/PG) fixed; all other items unchanged from lpk2 above.
+- lpk3 gate 1 (2a0585ac0, ep7 s81lk_serdes_col_lp-20261019-164118): PDN PASS (macro_m5 grids on u_prx/u_ptx), placement PASS;
+  FAIL CTS "OT_HYBRID: CTS source ck_ptx must reach only standard-cell clock pins" (PMA clock pins were not declared sinks)
+  and clock_rule "unlanded cross-region link" on the declared lp CDC children u_rm/u_sts (gate read them as root None).
+  Fixes: spec soft_root_macro_masters/_bindings (u_ptx.ck -> ck_ptx, u_prx.pma_rck -> ck_syn) with new opt-in
+  soft_root_macro_interface_masters (raw_macro_clocks: interface_timing abstract, no memory group); pre_route_gate reads
+  the landed record cdc_children pin_regions so a CDC child sits on the root of the pins it uses on each net.

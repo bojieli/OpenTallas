@@ -1743,7 +1743,15 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
             if graph is None:
                 issues.append("landed cluster: the parent RTL cannot be read, cross-region links not verified")
             else:
-                bad, landed = cross_region_links(graph)
+                cdc = None
+                if spec.get("landed_record"):
+                    try:
+                        lrec = json.loads((ROOT / spec["landed_record"]).read_text())
+                        cdc = {c["inst"]: {p: f"ck_{r}" for p, r in c.get("pin_regions", {}).items()
+                                           if f"ck_{r}" in expected} for c in lrec.get("cdc_children") or []}
+                    except (OSError, ValueError, KeyError, TypeError):
+                        cdc = None
+                bad, landed = cross_region_links(graph, cdc)
                 issues += bad
                 rec["landed_child_links"] = [dict(a=a.lstrip("*"), b=b.lstrip("*"), landing=n) for a, b, n in landed]
         if not cts:
@@ -2017,7 +2025,7 @@ def parent_link_graph(spec: dict | None) -> dict | None:
             if ids and not set(ids) & ports:        # a port assign (z = y2) is the boundary, not a link
                 for a in ids[1:]:
                     parent[find(a)] = find(ids[0])
-    insts, nets, seen = {}, {}, set()
+    insts, nets, seen, pinsof = {}, {}, set(), {}
     for st in stmts:
         m = re.match(r"([A-Za-z_]\w*)\s*", st)
         if not m or m[1] in VLOG_KEYWORDS:
@@ -2039,35 +2047,47 @@ def parent_link_graph(spec: dict | None) -> dict | None:
         kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))), None)
         if kid:
             seen.add(kid)
-        conns, exprs, j = st[k + 1:e - 1], [], 0
+        conns, exprs, pnames, j = st[k + 1:e - 1], [], [], 0
         while True:
-            pm = re.compile(r"\.\s*\w+\s*\(").search(conns, j)
+            pm = re.compile(r"\.\s*(\w+)\s*\(").search(conns, j)
             if not pm:
                 break
             q = balanced(conns, pm.end() - 1)
             if q is None:
                 break
             exprs.append(conns[pm.end():q - 1])
+            pnames.append(pm[1])
             j = q
         root = sorted({x.strip() for x in exprs if x.strip() in cks})
         insts[inst] = dict(kid=kid, root=root[0] if len(root) == 1 else None, module=mod)
-        for expr in exprs:
+        for pname, expr in zip(pnames, exprs):
             for n in set(ident.findall(expr)) - ports - VLOG_KEYWORDS:
                 nets.setdefault(find(n), set()).add(inst)
+                pinsof.setdefault((find(n), inst), set()).add(pname)
     if seen != {ch["inst"] for ch in kids}:
         return None
-    return dict(insts=insts, nets=nets)
+    return dict(insts=insts, nets=nets, pinsof=pinsof)
 
 
-def cross_region_links(graph: dict) -> tuple:
+def cross_region_links(graph: dict, cdc: dict | None = None) -> tuple:
     """(issues, landed) of a landed parent's link graph: every net class whose instances sit on DIFFERENT clock roots must
     be a landing (only the two halves u_lpl_<n>_w / u_lpl_<n>_r of one landing on it) or a regional reset run
     (u_lpr_* / u_lprc_*); anything else is an "unlanded cross-region link".  landed = [(child A, child B, landing)]:
     hard-child pairs linked through one landing (A -> <n>_w ... <n>_r -> B)."""
     insts, nets = graph["insts"], graph["nets"]
     issues, halves = [], {}
+    # LEAD2-S81/LINK 10-19: a declared lp.py CDC child (landed record cdc_children: inst -> {pin: clock root}, e.g. the
+    # SerDes column rate matcher u_rm / status sync u_sts) owns the only crossing between its pin regions; on each net
+    # it sits on the root of the pins it connects there (all of one root, else it stays unresolved = FAIL)
+    def root_on(i, net):
+        r = insts[i]["root"]
+        if r is None and cdc and i in cdc:
+            rs = {cdc[i].get(p) for p in graph.get("pinsof", {}).get((net, i), ())}
+            if len(rs) == 1 and None not in rs:
+                return rs.pop()
+        return r
     for net, members in sorted(nets.items()):
-        roots = {insts[i]["root"] for i in members}
+        roots = {root_on(i, net) for i in members}
         if len(roots) < 2:
             continue
         mm = sorted(members)

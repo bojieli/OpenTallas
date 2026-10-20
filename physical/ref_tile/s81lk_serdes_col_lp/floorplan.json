@@ -240,6 +240,11 @@
   "physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc/ot_s81_kp4_enc_ss.lib",
   "physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc/ot_s81_kp4_enc_ff.lib",
   "physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc/ot_s81_kp4_enc_tt.lib",
-  "physical/ref_tile/s81lk_serdes_col_lp/place.tcl"
+  "physical/ref_tile/s81lk_serdes_col_lp/place.tcl",
+  "tools/ref_tile/raw_macro_clocks.py",
+  "physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_ff.lib",
+  "physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib",
+  "physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_ff.lib",
+  "physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib"
  ]
 }

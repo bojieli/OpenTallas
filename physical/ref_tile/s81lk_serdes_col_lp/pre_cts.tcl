@@ -2,6 +2,7 @@
 set ::ot_ce_cts_roots {ck_tx ck_ptx ck_syn ck_dly ck_chn ck_out}
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_counts [dict create {ot_s81_kp4_dsyn} 1 {ot_s81_kp4_ddly} 1 {ot_s81_kp4_dchn} 1 {ot_s81_kp4_dout} 1 {ot_s81_kp4_enc} 1]
+set ::ot_ce_raw_memory_bindings [dict create {u_prx} {master ot_s81_pma_rxm clock_pin pma_rck root ck_syn} {u_ptx} {master ot_s81_pma_txm clock_pin ck root ck_ptx}]
 source /src/physical/common_flow/clock_entries.tcl
 source /src/physical/qwen_die_masters/repair_budget.tcl
 rename clock_tree_synthesis ::ot_ref_cts_boundary_orig
