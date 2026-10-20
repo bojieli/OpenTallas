@@ -4603,6 +4603,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                           relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),
                           relay_area_mm2=round(sum(i.w * i.h for i in insts) / 1e6, 3))
     base = v.masters
+    FWD_CK_FACE = _os.environ.get('OT_SPLIT_FWD_CK_FACE', '0') == '1'
+    fwd_ck_area_ = {'rlyh0': ('ck_o',), 'rlyh': ('ckf', 'ck_o'), 'rlyr0': ('ck_o',), 'rlyr': ('ckf', 'ck_o'), 'landh': ('ckf',)}
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
@@ -4620,10 +4622,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     ep_ = {'a': 'ea', 'b': 'eb'}[port]
                     if (ep_ == 'ea' and kind_ in ('rlyh', 'landh')) or (ep_ == 'eb' and kind_ in ('rlyh0', 'rlyh')):
                         M.face(ep_, 1, f, 'M5' if f in 'NS' else 'M4', along / 2 + (bits / 2 + 2) * 0.048 * pitch_tr, pitch_tr)
+                    # QW-GRT4 10-20 (Q.GRT): the forwarded clock travels WITH its data: ck_o leaves on the data-out face
+                    # beside b, ckf enters on the data-in face beside a (mirror of the epoch bit).  As frame-centre area
+                    # pins the rN fck_* hops ran 433-563 um while their data hops stayed < 405 (centre-to-centre adds
+                    # the frame half-widths; die_repeaters over_reach 98 nets).  OT_SPLIT_FWD_CK_FACE=1.
+                    ckp_ = {'a': 'ckf', 'b': 'ck_o'}[port]
+                    if FWD_CK_FACE and ckp_ in fwd_ck_area_.get(kind_, ()):
+                        M.face(ckp_, 1, f, 'M5' if f in 'NS' else 'M4', along / 2 - (bits / 2 + 2) * 0.048 * pitch_tr, pitch_tr)
                 area_ = {'rlyh0': ('ck', 'en', 'ck_o'), 'rlyh': ('ckf', 'ck_o'),
                          'rlyr0': ('ck', 'ck_o'), 'rlyr': ('ckf', 'ck_o'), 'rlyrl': ('ck',),
                          'landh': ('ckf', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault'),
                          'landh0': ('ck_s', 'en', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'fault')}[kind_]
+                if FWD_CK_FACE:
+                    area_ = tuple(p_ for p_ in area_ if p_ not in fwd_ck_area_.get(kind_, ()))
                 for j_, p_ in enumerate(area_):
                     M.area(p_, 1, w / 2 + (-0.8 if j_ % 2 == 0 else 0.8), h / 2 + 1.62 * (j_ // 2) - 1.62 * ((len(area_) - 1) // 4), 1)
                 o[mn] = M
@@ -4687,6 +4698,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         pair_over.append((bid, cl, bits, round(Lp_, 1), lim_))
         if pair_over:
             over += [t_[:4] for t_ in pair_over if t_[:4] not in over]
+        # QW-GRT4 10-20: the forwarded-clock hop (fck_*: ck_o -> ckf, clock_trunk class, skipped above) is a relay-to-relay
+        # span as well: judged at the same reach; OT_RELAY_FCK_GATE=1 makes an over a GEN error (else reported only)
+        fck_over, fck_max = [], 0.0
+        for bid, cl, bits, eps in m['buses']:
+            if cl != 'clock_trunk' or not bid.startswith('fck_') or len(eps) < 2:
+                continue
+            pts_ = [pos2(*e) for e in eps]
+            L_ = max(q[0] for q in pts_) - min(q[0] for q in pts_) + max(q[1] for q in pts_) - min(q[1] for q in pts_)
+            fck_max = max(fck_max, L_)
+            if L_ > RELAY_REACH_UM:
+                fck_over.append((bid, cl, bits, round(L_, 1)))
+        m['r21_relays'].update(fck_max_um=round(fck_max, 1), fck_over_reach=sorted(fck_over, key=lambda t: -t[3])[:200],
+                               fck_over_reach_n=len(fck_over))
+        if _os.environ.get('OT_RELAY_FCK_GATE', '0') == '1':
+            over += fck_over
         m['r21_relays'].update(reach_um=RELAY_REACH_UM, max_pin_to_pin_um=round(hmax, 1), over_reach=sorted(over, key=lambda t: -t[3]))
         if pg_ is not None:
             m['r21_relays']['pair_check'] = dict(
@@ -4740,6 +4766,11 @@ RST_PITCH_UM = 220.0             # trunk lattice
 RST_LEAF_UM = 200.0              # sinks of one lattice cell share a leaf repeater
 RST_NET_UM = 450.0               # build limit per net (cell centres); the emitted pins are re-checked at RST_OK_UM
 RST_OK_UM = 480.0
+# QW-GRT4 10-20 (Q.GRT): every reset-tree hop is a registered single-cycle wire, so the 405-um planning reach (owner
+# 0cl / SAFE-DESIGN item 2) applies to it too: rN die_repeaters measured rst_io / rst_field / rst_fwd_s / rst_seq_ctlm
+# hops of 434-475 um under the historical 450 / 480 limits.  OT_RST_NET_UM / OT_RST_OK_UM tighten them (e.g. 380 / 405).
+RST_NET_UM = float(os.environ.get('OT_RST_NET_UM', RST_NET_UM))
+RST_OK_UM = float(os.environ.get('OT_RST_OK_UM', RST_OK_UM))
 RST_GAP_UM = 2.16                # clearance to every other instance
 
 

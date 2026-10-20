@@ -68,6 +68,15 @@ WCOL_RTL = {'native59': ('qfd_native59_dv_service', 'rtl/qwen_split/qfd_native59
             'sys_face': ('qfd_sys_face', 'rtl/qwen_split/qfd_sys_face.sv')}
 # the embedding provider is CLOSED (rr1, native audit PASS): its die master is drawn as the closed view (outline + pins)
 WCOL_VIEW = {'embed_prov': ('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_embedding_word_provider.sv')}
+# QW-GRT4 10-20 (Q.GRT, rN die_repeaters over_reach 544 > 425 um, 391 of them on sys_face nets): the die binds the CLOSED
+# qfd_sys_face view (physical/ref_tile/qfd_sys_face, N-face M5 pins) while the GEN drew top-down W-face M4 pins, so every
+# planned sys_face hop grew by the bind's pin_centroid_move (up to 321 um; status_epoch16 first relay 590 um).  The relay
+# plan must be made on the pins the die binds: OT_SPLIT_DV_WCOL_VIEW=sys_face[,...] draws those W-column masters from their
+# closed view (closed_view.install_master; RTL / view mismatch fails closed) instead of assign_pins.
+for _i in [x.strip() for x in os.environ.get('OT_SPLIT_DV_WCOL_VIEW', '').split(',') if x.strip()]:
+    if _i not in WCOL_RTL:
+        raise ValueError(f'OT_SPLIT_DV_WCOL_VIEW: {_i} is not a re-ported W-column instance ({sorted(WCOL_RTL)})')
+    WCOL_VIEW[_i] = WCOL_RTL.pop(_i)
 # one regional clock / reset per re-ported master (the pre-DV multi-root pins fold onto them)
 WCOL_REN = {'rsi': 'rst_n'}
 # MU-DQ-DHUSER 10-19 (COORD 0kg item 2: no constant strap on qfd_tt_ctlm_dv.dh_user): on the multi-user die
