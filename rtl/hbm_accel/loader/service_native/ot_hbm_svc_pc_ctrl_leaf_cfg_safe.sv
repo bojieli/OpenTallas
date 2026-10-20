@@ -452,7 +452,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       (* keep="true",dont_touch="true" *) reg[39:0]p_bank_regions;
       always @(posedge clk or negedge lrst_n)
         if(!lrst_n)begin pv_regions<=0;post_hold<=0;end
-        else begin pv_regions<={9{posted}};post_hold<=posted;end
+        else begin pv_regions<={9{enqueue_aq&&wr_post}};post_hold<=posted;end
       always @(posedge clk)begin
         p_bank<=push[318:314];p_col<=push[313:309];p_row<=qrow_post;p_rd<=push_read;p_bank_regions<=qbank_post_regions;
       end
