@@ -78,6 +78,14 @@ class RelayZeroTail(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'relay source changed'):
                 Z.derive(die, root)
 
+    def test_astk_default_only_instance_params(self):
+        z = "32'sb" + '0' * 32
+        self.assertTrue(Z.default_only('qkd_astk_rly_296_fl', {}))
+        self.assertTrue(Z.default_only('qkd_astk_rly_296_fl', {'MUT': z}))
+        self.assertFalse(Z.default_only('qkd_astk_rly_296_fl', {'MUT': "32'sb" + '0' * 31 + '1'}))
+        self.assertFalse(Z.default_only('qkd_astk_rly_296_fl', {'XYZ': z}))
+        self.assertFalse(Z.default_only('qkd_rlys_36', {'MUT': z}))
+
 
 if __name__ == '__main__':
     unittest.main()

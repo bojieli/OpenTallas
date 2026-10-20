@@ -60,17 +60,20 @@ if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
 fi
 # Index the design RTL, not historical physical/**/rtl snapshots. Explicit
 # canonical arithmetic files resolve duplicate combined-model definitions.
-python3 $R/tools/die_port_bind.py $O/die_bound.v --rtl-root rtl \
+# KV-BIND3 10-19: ONE argument list for both passes (pass 2 dropped --rtl-root/--prefer/--lib-root/ucie model: its
+# 'unresolved_children 3 / ambiguous_children 5' on the gen9d die were that, pass 1 had 0 / 0).
+BINDA=(--rtl-root rtl \
   --prefer rtl/hdc/ot_hdc_fp32_add_lat.sv --prefer rtl/hdc/ot_hdc_fp32_mul_lat.sv \
   --prefer physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v \
   --prefer physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \
   --lib-root physical/qkd_astk_strip/macros \
   --rtl-file $R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v \
-  "${F[@]}" --rtl-file $O/kv_hard_models.sv --rtl-file $O/kv_relays_dir.sv \
+  --rtl-file $O/kv_hard_models.sv --rtl-file $O/kv_relays_dir.sv \
   --rtl-file $R/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \
   --allow-model qkd_hbm3e_phy_pc --allow-model qkd_ckbump --allow-model qkd_fwdbump --allow-model ot_qkvd_ucie_x64_phy \
   --allow-model ot_qkvd_ucie_x64_phy_model \
-  --allow-model ot_qfd_serdes_112g_x12_phy --allow-model qkd_pll_analog_model \
+  --allow-model ot_qfd_serdes_112g_x12_phy --allow-model qkd_pll_analog_model)
+python3 $R/tools/die_port_bind.py $O/die_bound.v "${BINDA[@]}" "${F[@]}" \
   --strap-file $O/straps.json --out $O/port_bind_v2.json > $O/port_bind_v2.txt 2>&1
 rc=$?
 if [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${OT_KV_FUNC_OPENS:-0}" = 1 ]; then
@@ -80,10 +83,7 @@ if [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${OT_KV_FUNC_OPENS:-0}" = 1 ]; then
     --root "$R" --existing "$PADS" --out "$O/output_pads.misc.json" > "$O/output_pads.misc.log" 2>&1 \
     || { tail -3 "$O/output_pads.misc.log"; exit 3; }
   F2=(); for x in "${F[@]}"; do [ "$x" = "$PADS" ] && x="$O/output_pads.misc.json"; F2+=("$x"); done
-  python3 $R/tools/die_port_bind.py $O/die_bound.v "${F2[@]}" --rtl-file $O/kv_hard_models.sv --rtl-file $O/kv_relays_dir.sv \
-    --rtl-file $R/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v \
-    --allow-model qkd_hbm3e_phy_pc --allow-model qkd_ckbump --allow-model qkd_fwdbump --allow-model ot_qkvd_ucie_x64_phy \
-    --allow-model ot_qfd_serdes_112g_x12_phy --allow-model qkd_pll_analog_model \
+  python3 $R/tools/die_port_bind.py $O/die_bound.v "${BINDA[@]}" "${F2[@]}" \
     --strap-file $O/straps.json --out $O/port_bind_v2.json > $O/port_bind_v2.txt 2>&1
   rc=$?
 fi

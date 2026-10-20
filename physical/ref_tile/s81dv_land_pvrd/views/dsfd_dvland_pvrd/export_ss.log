@@ -18,14 +18,16 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
-OT_HYBRID CTS_MEASURE ss ck sinks=1066 reference_scope=boundary boundary_sinks=1066 min=160.611510844407 mean=171.06134039110398 max=179.8475126016819 all_mean=171.06134039110404
-OT_HYBRID CTS_MEASURE ss ck_f sinks=2071 reference_scope=boundary boundary_sinks=2059 min=181.1046181374881 mean=187.39629319799823 max=195.05891424524566 all_mean=187.419926081753
+OT_HYBRID CLOCK_RULE ss ck PASS pin_spread=25.2 scope=boundary sinks=1076
+OT_HYBRID CTS_MEASURE ss ck sinks=1076 reference_scope=boundary boundary_sinks=1072 min=159.63372354492478 mean=172.07977859957197 max=184.79455539687655 all_mean=172.10208104151874
+OT_HYBRID CLOCK_RULE ss ck_f PASS pin_spread=10.8 scope=boundary sinks=2083
+OT_HYBRID CTS_MEASURE ss ck_f sinks=2083 reference_scope=boundary boundary_sinks=2068 min=178.65778372595184 mean=183.61406198093687 max=189.44468292073657 all_mean=183.61239456589
 OT_ENTRIES LEVEL ck deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck -> ff$_DFFE_PN0P_/CLK wire=0 R=171.06134039110398 latency=16.33495280689425 phi=187.39629319799823
+OT_ENTRIES COMP ss ck -> rs__ot_rl0$_DFF_P_/CLK wire=0 R=172.07977859957197 latency=11.5342833813649 phi=183.61406198093687
 OT_ENTRIES LEVEL ck_f deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_f -> u_land.bank[0][0]$_DFFE_PP_/CLK wire=0 R=187.39629319799823 latency=0.0 phi=187.39629319799823
-OT_ENTRIES DOMAIN core 833.333008ps IO22/1105 boundary=176.9464636513013..196.18246540857612
-OT_ENTRIES DOMAIN lane 833.333008ps IO562/0 boundary=181.10461813748807..195.0589142452457
+OT_ENTRIES COMP ss ck_f -> u_ot_pr_core.u_land.bank[0][0]$_DFFE_PP_/CLK wire=0 R=183.61406198093687 latency=0.0 phi=183.61406198093687
+OT_ENTRIES DOMAIN core 833.333008ps IO22/1105 boundary=171.1680069262897..196.32883877824145
+OT_ENTRIES DOMAIN lane 833.333008ps IO562/0 boundary=178.65778372595184..189.44468292073657
 OT_MULTI_ROOT LIBERTY_CONSTANT o[1000] -> o[1000]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[1001] -> o[1001]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[1002] -> o[1002]
@@ -151,7 +153,6 @@ OT_MULTI_ROOT LIBERTY_CONSTANT o[26] -> o[26]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[27] -> o[27]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[28] -> o[28]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[29] -> o[29]
-OT_MULTI_ROOT LIBERTY_CONSTANT o[2] -> o[2]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[30] -> o[30]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[31] -> o[31]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[32] -> o[32]
@@ -159,9 +160,6 @@ OT_MULTI_ROOT LIBERTY_CONSTANT o[33] -> o[33]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[34] -> o[34]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[35] -> o[35]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[36] -> o[36]
-OT_MULTI_ROOT LIBERTY_CONSTANT o[3] -> o[3]
-OT_MULTI_ROOT LIBERTY_CONSTANT o[4] -> o[4]
-OT_MULTI_ROOT LIBERTY_CONSTANT o[50] -> o[50]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[51] -> o[51]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[564] -> o[564]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[565] -> o[565]
@@ -199,7 +197,6 @@ OT_MULTI_ROOT LIBERTY_CONSTANT o[596] -> o[596]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[597] -> o[597]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[598] -> o[598]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[599] -> o[599]
-OT_MULTI_ROOT LIBERTY_CONSTANT o[5] -> o[5]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[600] -> o[600]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[601] -> o[601]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[602] -> o[602]
@@ -300,7 +297,6 @@ OT_MULTI_ROOT LIBERTY_CONSTANT o[696] -> o[696]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[697] -> o[697]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[698] -> o[698]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[699] -> o[699]
-OT_MULTI_ROOT LIBERTY_CONSTANT o[6] -> o[6]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[700] -> o[700]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[701] -> o[701]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[702] -> o[702]
@@ -604,17 +600,17 @@ OT_MULTI_ROOT LIBERTY_CONSTANT o[997] -> o[997]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[998] -> o[998]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[999] -> o[999]
 OT_MULTI_ROOT LIBERTY_CONSTANT o[9] -> o[9]
-OT_MULTI_ROOT RELATED_PATH lane -> core max slack=97.306664 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH lane -> core min slack=160.960693 (ordinary synchronous timing retained)
-OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=3137 inputs=584 outputs=1105 async_control_pins=60
-OT_ENTRIES COMP DONE ss 2 entries phi=187.39629319799823 boundary=176.9464636513013..196.18246540857612
+OT_MULTI_ROOT RELATED_PATH lane -> core max slack=58.131721 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH lane -> core min slack=157.744263 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=3159 inputs=584 outputs=1105 async_control_pins=60
+OT_ENTRIES COMP DONE ss 2 entries phi=183.61406198093687 boundary=171.1680069262897..196.32883877824145
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_lane can not be propagated.
 OT_IOREF clock-port ck (ot_entry_0): data input delays dropped
 OT_IOREF clock-port ck_f (ot_entry_1): data input delays dropped
-OT_IOREF_EDGE ot_entry_0 boundary 1066 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE ot_entry_1 boundary 2059 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_0 boundary 1072 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 2068 negedge 0 noarc 0 inverted 0
 OT_IOREF keep core_clk (not an insertion-reference clock)
 OT_IOREF keep ot_io_lane (not an insertion-reference clock)
-OT_WS max -1.3697420975233854e-10 min 5.517489243267448e-11
+OT_WS max -1.2314255171119726e-10 min 5.372145783777427e-11
 OT_EXPORT_DONE
