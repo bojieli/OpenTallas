@@ -1,0 +1,4 @@
+# s81sl_lepnhwd_r4f (S81-TILES-D 10-20)
+S81-TILES-D r4f (r3 FAIL: one 32-um band births 14.7k GPL buffers, 73%): INCLUSIVE region of 3 boxes = W face column x2.16..32.4 + unchanged central full-width band y259.2..291.6 + E face column x451.44..473.04 (full height), so the ~2.3k W and ~2.3k E registered pins sit at their face; same source/netlist identity, full core rows.
+
+MODEL ONLY / ROOT REVIEW REQUIRED. Full core rows retained; functional cells and every post-buffer birth owned by unchanged y259.2..291.6 full-width region. Source/params/macros/edges unchanged; actual density40..60 uses only band area. Canonical native PG binder checks complete masters/rules before group adoption; no DNT changes. Production lep_band.tcl errors immediately until ROOT accepts source/model/audit/PNG packet. Existing failed gate and its uncapped diagnostics preserved separately. No new gate launched.
