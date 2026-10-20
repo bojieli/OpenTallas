@@ -5,7 +5,9 @@
 // in sm_parent_revision_model.json. Zero word is idle; nonzero needs0xa2magic.
 // Real parser/converter/pstore drive real operand ports. Faults never insert
 // cycles or wait for a late packet/operand. Normal modes reuse the legacyfront.
-module ot_hbm_sm_attn_front_static #(parameter integer KVMUT = 0)(   // KVMUT: bench negative control only (ot_hbm_sm_kv_line MUT)
+module ot_hbm_sm_attn_front_static #(parameter integer KVMUT = 0,   // KVMUT: bench negative control only (ot_hbm_sm_kv_line MUT)
+    parameter integer INT8W = 0)(  // HBM-QINT8B (10-20) opt-in, default off (0 = the netlist / behaviour as before): command
+                                   // mode 3 = one packed line as two BF16 rows of one chunk (ot_hbm_sm_i8w_front)
     input wire clk,rst_n,
     input wire [191:0] command,
     input wire [63:0] kv_desc,
@@ -25,15 +27,19 @@ module ot_hbm_sm_attn_front_static #(parameter integer KVMUT = 0)(   // KVMUT: b
     wire consume=attention && command[152];
     wire arithmetic_v=attention && command[25];
     wire pv=mode[1];
+    wire i8w_dual=(INT8W!=0) && mode==3'd3;    // constant 0 in the default build
     wire [3271:0] normal_l,normal_r;
     wire [42:0] normal_request;
     wire normal_schedule_fault,normal_fault;
+    wire [255:0] normal_rdata;
+    wire [3271:0] merged_l,merged_r;
+    wire i8w_fault;
     ot_smh_static_front u_normal(.clk(clk),.rst_n(rst_n),
-        .command(attention?83'd0:command[82:0]),.packet(attention?1099'd0:packet),
+        .command((attention||i8w_dual)?83'd0:command[82:0]),.packet((attention||i8w_dual)?1099'd0:packet),
         .expected_request(normal_request),.schedule_fault(normal_schedule_fault),
         .xw_en(xw_en),.xw_addr(xw_addr),.xw_grp(xw_grp),.xw_data(xw_data),
         .rl(normal_l),.rr(normal_r),.bl(bl),.br(br),.ql(ql),.qr(qr),
-        .rv(rv),.rrow(rrow),.rdata(rdata),.fault(normal_fault));
+        .rv(rv),.rrow(rrow),.rdata(normal_rdata),.fault(normal_fault));
     wire request_v;
     wire [31:0] request_addr;
     wire [9:0] request_tag;
@@ -81,14 +87,21 @@ module ot_hbm_sm_attn_front_static #(parameter integer KVMUT = 0)(   // KVMUT: b
         ot_hbm_sm_attn_row_launch u_row(.clk(clk),.rst_n(rst_n),
             .d({control,b_data[256*j+:256],metadata,arithmetic_v&&!pv,command[6:0]}),
             .q(a_rows[818*j+:818]));
-        assign rl[818*j+:818]=attention_q?a_rows[818*j+:818]:normal_l[818*j+:818];
-        assign rr[818*j+:818]=attention_q?a_rows[818*j+:818]:normal_r[818*j+:818];
+        assign rl[818*j+:818]=attention_q?a_rows[818*j+:818]:merged_l[818*j+:818];
+        assign rr[818*j+:818]=attention_q?a_rows[818*j+:818]:merged_r[818*j+:818];
+    end endgenerate
+    generate if(INT8W!=0)begin:g_i8w
+        ot_hbm_sm_i8w_front u_i8w(.clk(clk),.rst_n(rst_n),.command(command),.packet(packet),.attention(attention),
+            .normal_l(normal_l),.normal_r(normal_r),.attention_q(attention_q),.ml(merged_l),.mr(merged_r),
+            .rdata_n(normal_rdata),.rdata(rdata),.fault(i8w_fault));
+    end else begin:g_no_i8w
+        assign merged_l=normal_l;assign merged_r=normal_r;assign rdata=normal_rdata;assign i8w_fault=1'b0;
     end endgenerate
     always @(posedge clk or negedge rst_n)
         if(!rst_n)schedule_fault<=0;
         else begin
             if(command!=0 && (command[191:184]!=8'ha2 || |command[123:116] || |command[114:112] || command[111]))schedule_fault<=1;
-            if(!attention && mode==3)schedule_fault<=1;
+            if(!attention && mode==3 && INT8W==0)schedule_fault<=1;
             if(attention_q && (request[42]!=expected_q[42] || (request[42] && request!=expected_q)))schedule_fault<=1;
             if(!attention && command[25] && converter_busy)schedule_fault<=1;
             if(!attention && command[28] && command[27:26]!=mode[1:0])schedule_fault<=1;
@@ -99,7 +112,7 @@ module ot_hbm_sm_attn_front_static #(parameter integer KVMUT = 0)(   // KVMUT: b
                 if(consume && pv && !p_v)schedule_fault<=1;
                 if(configure && (converter_busy || command[178:166]==0 || (h128 && mode[0])))schedule_fault<=1;
             end
-            if(descriptor_fault || converter_fault || p_fault || normal_schedule_fault)schedule_fault<=1;
+            if(descriptor_fault || converter_fault || p_fault || normal_schedule_fault || i8w_fault)schedule_fault<=1;
         end
     assign fault=normal_fault;
 endmodule

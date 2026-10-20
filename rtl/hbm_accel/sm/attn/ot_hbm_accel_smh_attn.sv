@@ -32,6 +32,10 @@ module ot_hbm_accel_smh_attn #(
                                         // row_scale_*).  One packed line per two edges (the converter's fixed rate);
                                         // an overlap, a raw packet colliding with a converted beat, a mark without a
                                         // packet or a mark on an attention word is a sticky schedule_fault (no stall).
+    ,parameter integer INT8W = 0        // HBM-QINT8B (10-20) opt-in, default off: the WIDE INT8 front (ot_hbm_sm_i8w_front,
+                                        // command mode 3): one packed 128-code line an edge = rows A (columns 0..3 side)
+                                        // and B (columns 4..7 side) of one chunk as ordinary BF16 rows; column 4 leaves
+                                        // as rdata column 1 while the result mode is set (VM slot 1).  128 codes/edge.
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -108,7 +112,7 @@ module ot_hbm_accel_smh_attn #(
         assign f_packet  = packet;
         assign i8_schedule_fault = 1'b0;
     end endgenerate
-    ot_hbm_sm_attn_front_static #(.KVMUT(KVMUT)) u_front (.clk(clk), .rst_n(rst_n), .command(f_command), .kv_desc(kv_desc), .packet(f_packet),
+    ot_hbm_sm_attn_front_static #(.KVMUT(KVMUT), .INT8W(INT8W)) u_front (.clk(clk), .rst_n(rst_n), .command(f_command), .kv_desc(kv_desc), .packet(f_packet),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .request(request),
         .rl(f_rl), .rr(f_rr), .bl(f_bl), .br(f_br), .ql(f_ql), .qr(f_qr),
         .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .schedule_fault(f_schedule_fault));
