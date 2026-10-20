@@ -15,6 +15,10 @@
 // The die's clock regions (slice root, edge root) are one clock here: the landings make the leg latency independent of
 // the phase (fixed E), so cycles are the die's; the landing fault (epoch check) is collected into `fault`.
 // LEG = 0 removes the leg (gate_g5 form, for the comparison only).
+// MU = 2 (XDIE-S81-MU 10-19): the MU release die's endpoints exactly as bind_p4l3_mu (mu3 ceaed19c4 / mu4 bind) instantiates
+// them through ot_s81sl_slice_lep_mux: s_0S / s_0N / s_7S = ot_s81sl_lep_mu_a (MU_EN 1, AB_EN 0, HOST_EN 0; kit
+// s81sl_lepmua), s_7N = ot_s81sl_lep_mu #(.HOST_EN(1), .AB_EN(0)) (host plane idle here); pair A only (2 lane tiles).
+// MU = 1 stays the copy-A/B superset (ot_s81sl_lep_mu_ab at every endpoint, 4 lane tiles; the MAB die has it at s_0S).
 // ---------------------------------------------------------------------------------------------------------------------
 module xdie2_icg (input wire CLK, input wire ENA, output wire GCLK);
     reg en_l = 1'b0;
@@ -50,7 +54,7 @@ endmodule
 module xdie_s81_2_ep #(
     parameter integer SIDE = 0,        // 0 = W end (outward = W), 1 = E end
     parameter integer HOST = 0,        // 1 = s_7N (host plane present, inputs idle); MU endpoints carry none
-    parameter integer MU = 0,          // 1 = ot_s81sl_lep_mu_ab + pair B
+    parameter integer MU = 0,          // 1 = ot_s81sl_lep_mu_ab + pair B; 2 = MU-die leaves (lep_mu_a / lep_mu host)
     parameter integer LEG = 1,         // 1 = the die's lane leg (relays + landing) between lane tile and PHY
     parameter integer PLAT_S = 4,
     parameter integer DMUT = 0
@@ -69,7 +73,7 @@ module xdie_s81_2_ep #(
     output wire          fault,
     output wire [3:0]    live
 );
-    localparam integer NL = (MU != 0) ? 4 : 2;
+    localparam integer NL = (MU == 1) ? 4 : 2;
     // regional resets (die: per-region synchronised trees; one released edge here: E = K + R0 - G with R0 = G)
     reg [1:0] rsy;
     always @(posedge clk or negedge rst_n) if (!rst_n) rsy <= 2'b00; else rsy <= {rsy[0], 1'b1};
@@ -122,7 +126,26 @@ module xdie_s81_2_ep #(
     assign lgf = {|lgf2[7:6], |lgf2[5:4], |lgf2[3:2], |lgf2[1:0]};
     // ---- link-port leaf
     wire lepf;
-    generate if (MU != 0) begin : g_mu
+    generate if (MU == 2 && HOST != 0) begin : g_muh      // s_7N of the MU die
+        wire [1:0] st0 = {g_l[0].st_t[1], g_l[0].st_t[0]}, st1 = {g_l[1].st_t[1], g_l[1].st_t[0]};
+        ot_s81sl_lep_mu #(.HOST_EN(1), .AB_EN(0)) u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
+            .lo0_v(lov[0]), .lo0_r(lor[0]), .lo0_d(lod[0 +: 553]), .lo1_v(lov[1]), .lo1_r(lor[1]), .lo1_d(lod[553 +: 553]),
+            .li0_v(liv[0]), .li0_r(lir[0]), .li0_d(lid[0 +: 553]), .li1_v(liv[1]), .li1_r(lir[1]), .li1_d(lid[553 +: 553]),
+            .rxv(rxv4[1:0]), .sl_f(sf), .l0_f(lf[2:0]), .l1_f(lf[5:3]), .l0_st(st0), .l1_st(st1),
+            .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+            .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+            .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+            .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+            .l2_f(3'd0), .l3_f(3'd0), .fault(lepf));
+        assign rxv4[3:2] = 2'b00;
+    end else if (MU == 2) begin : g_mua                  // s_0S / s_0N / s_7S of the MU die
+        ot_s81sl_lep_mu_a u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
+            .lo0_v(lov[0]), .lo0_r(lor[0]), .lo0_d(lod[0 +: 553]), .lo1_v(lov[1]), .lo1_r(lor[1]), .lo1_d(lod[553 +: 553]),
+            .li0_v(liv[0]), .li0_r(lir[0]), .li0_d(lid[0 +: 553]), .li1_v(liv[1]), .li1_r(lir[1]), .li1_d(lid[553 +: 553]),
+            .rxv(rxv4[1:0]), .sl_f(sf), .l0_f(lf[2:0]), .l1_f(lf[5:3]),
+            .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0), .fault(lepf));
+        assign rxv4[3:2] = 2'b00;
+    end else if (MU != 0) begin : g_mu
         ot_s81sl_lep_mu_ab u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
             .lo0_v(lov[0]), .lo0_r(lor[0]), .lo0_d(lod[0 +: 553]), .lo1_v(lov[1]), .lo1_r(lor[1]), .lo1_d(lod[553 +: 553]),
             .li0_v(liv[0]), .li0_r(lir[0]), .li0_d(lid[0 +: 553]), .li1_v(liv[1]), .li1_r(lir[1]), .li1_d(lid[553 +: 553]),

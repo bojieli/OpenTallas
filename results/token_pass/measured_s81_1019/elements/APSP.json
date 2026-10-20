@@ -1,0 +1,32 @@
+{
+ "cls": "APSP",
+ "written": "2026-10-20 01:07 PT",
+ "agent_branch": "codex/token-compose-source-ages-1020@5ad740ccf",
+ "ops": [
+  {
+   "op": "attn.a_proj",
+   "dag_cls": "field",
+   "per_layer": {
+    "L2": 1677,
+    "L20": 1670,
+    "L24": 1670
+   },
+   "grade": "measured-release-RTL",
+   "bit_exact": true,
+   "definition": "whole field front for this layer: first a_proj phase GO through the five BF compressor/index-weights phases -> last frame-root return, worst frame at minimum passing uniform P231, +170 old DAG wire budget; parent retains separate SU postscale operations",
+   "shape": "slice0 real rank-local a_proj+compressor/indexer.weights_proj rows: L2/L20 eight frames, L24 two BF-bearing frames plus existing phase0-only frames; K5120 BF split into fiveBSEG1024phases; allgen and singles in evidence",
+   "golden": "xs_place segment-tree FP32 checks and per-row fixture ties; weights_proj rows additionally tie to fixtureattn.idx.weights after the goldenBF16 rounding+index_w_scale (same model op, no weight change)",
+   "rtl": {
+    "module": "release col_h9_l4_nx/col_h10_l4/col_h9_MX_l4 frame masters, BF front+columns via unchanged FSEQ Verilator5.050 binaries",
+    "source": "GENmu4c19bf4121e; same FSEQ binaries",
+    "in_release_source": true,
+    "blob": "existing FSEQ source pin; exact reused executables recorded in out/L*/exe.sha256"
+   },
+   "bench": "results/rtl/codex_apsp_pickup_1020/source/{tb_toksim_fgu_seq.sv,toksim_apsp_place.py,toksim_apsp_leg.sh}",
+   "evidence": "results/rtl/codex_apsp_pickup_1020/{summary.json,out/L*/res_*P231.json,out/L*/res_*P230.json,out/L*/singles.txt}",
+   "job": "ot-epyc9 oth-ubuntu-3736765(L2)/3736768(L20)/3736764(L24)-1792481302, all terminal0; no rebuild",
+   "edges_owed": "CAP_EDLD24/CAPC2_PINPIPE2 not in frame-root span or170wire tail; source-age ledger adds26",
+   "note": "Measured layer shapes only (per_layer map); other sparse layers keep their existing numbers. Scaled tie compares only the existing golden output operation; it neither changes stored weights nor asserts a new arithmetic fusion. L24 lacksBFrows on otherframes; its phase0-only runs remain covered by singles. Full die compiler transport and retirement remain open."
+  }
+ ]
+}

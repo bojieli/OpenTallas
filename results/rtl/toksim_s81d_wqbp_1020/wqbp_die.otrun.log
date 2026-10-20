@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81d-wqbp
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81d-wqbp
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81d-wqbp
+ot-run: ot-epyc9       admits   597 GB (avail 616, growth 198, headroom 0, waiters 0/0 GB) load 211/128 running 60 disk 215 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81d-wqbp
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81d-wqbp
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3765687-1792481360 after 1 s
+Invalid environment variable name evaluates to an empty string: PIPESTATUS[0]
+XS_WQB_DIE L0 {"wq_b": {"nphases": 11, "cal_rows": 750, "predicted_span": 1483, "serial_p224_predicted_span": 2463, "static_PASS": true, "negative_control": false}}
+XS_WQB_DIE L2 {"wq_b": {"nphases": 11, "cal_rows": 750, "predicted_span": 1483, "serial_p224_predicted_span": 2463, "static_PASS": true, "negative_control": false}, "wq_b+idx.q": {"nphases": 17, "cal_rows": 1158, "predicted_span": 2239, "serial_p224_predicted_span": 3807, "static_PASS": true, "negative_control": false}}
+XS_WQB_DIE L14 {"wq_b": {"nphases": 11, "cal_rows": 750, "predicted_span": 1483, "serial_p224_predicted_span": 2463, "static_PASS": true, "negative_control": false}, "wq_b+idx.q": {"nphases": 17, "cal_rows": 1158, "predicted_span": 2239, "serial_p224_predicted_span": 3807, "static_PASS": true, "negative_control": false}}
+XS_WQB_DIE L20 {"wq_b": {"nphases": 11, "cal_rows": 750, "predicted_span": 1483, "serial_p224_predicted_span": 2463, "static_PASS": true, "negative_control": false}, "wq_b+idx.q": {"nphases": 17, "cal_rows": 1158, "predicted_span": 2239, "serial_p224_predicted_span": 3807, "static_PASS": true, "negative_control": false}}
+XS_WQB_DIE_DONE pipeline None L0 L2 L14 L20
+XS_WQB_DIE L0 {"wq_b": {"nphases": 11, "cal_rows": 770, "predicted_span": 2463, "serial_p224_predicted_span": 2463, "static_PASS": true, "negative_control": false}}
+XS_WQB_DIE L2 {"wq_b": {"nphases": 11, "cal_rows": 770, "predicted_span": 2463, "serial_p224_predicted_span": 2463, "static_PASS": true, "negative_control": false}, "wq_b+idx.q": {"nphases": 17, "cal_rows": 1190, "predicted_span": 3807, "serial_p224_predicted_span": 3807, "static_PASS": true, "negative_control": false}}
+XS_WQB_DIE L14 {"wq_b": {"nphases": 11, "cal_rows": 770, "predicted_span": 2463, "serial_p224_predicted_span": 2463, "static_PASS": true, "negative_control": false}, "wq_b+idx.q": {"nphases": 17, "cal_rows": 1190, "predicted_span": 3807, "serial_p224_predicted_span": 3807, "static_PASS": true, "negative_control": false}}
+XS_WQB_DIE L20 {"wq_b": {"nphases": 11, "cal_rows": 770, "predicted_span": 2463, "serial_p224_predicted_span": 2463, "static_PASS": true, "negative_control": false}, "wq_b+idx.q": {"nphases": 17, "cal_rows": 1190, "predicted_span": 3807, "serial_p224_predicted_span": 3807, "static_PASS": true, "negative_control": false}}
+XS_WQB_DIE_DONE serial None L0 L2 L14 L20
+    raise CalendarFault(('wq_b calendar compile fault', hard))
+CalendarFault: ('wq_b calendar compile fault', [('period_ge_measured_floor_126', 124)])
+REFUSE_RC=
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3765687-1792481360): exit 0

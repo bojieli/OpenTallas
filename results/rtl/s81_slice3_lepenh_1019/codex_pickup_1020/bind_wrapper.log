@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81lepenh/src
+ot-run: ot-epyc6       admits   712 GB (avail 612, growth 113, headroom 0, waiters 0/0 GB) load 96/128 running 39 disk 5040 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81lepenh/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81lepenh/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81lepenh/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81lepenh/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-963756-1792476993 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+bind_form ot_s81sl_slice_lepe_nh_x_lp: 23 ports, 79 lines -> /srv/opentallas-scratch/claude/s81lepenh/out_bind/ot_s81sl_slice_lepe_nh_x_lp.v
+BIND ot_s81sl_slice_lepe_nh_x_lp exit 0
+DIE_PORT_BIND PASS masters=6 instances=17 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+bind_form ot_s81sl_slice_lepe_nh_x: 22 ports, 46 lines -> /srv/opentallas-scratch/claude/s81lepenh/out_bind/ot_s81sl_slice_lepe_nh_x.v
+BIND ot_s81sl_slice_lepe_nh_x exit 0
+DIE_PORT_BIND PASS masters=3 instances=4 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=9
+BIND_EXIT 0
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-963756-1792476993): exit 0
