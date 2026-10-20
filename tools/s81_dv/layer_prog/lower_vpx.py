@@ -78,15 +78,15 @@ def rd_beat(src, hops, dst_mask, leaf, row, pairs, data, kind=K_RD):
 
 # Edge constants of the send / receive path, from the RTL edge chain below; bench_vpx asserts every one of them on
 # every run (send edges, read-back edges and the receive latency must match exactly); edge chain (inward port = the edge the beat is on the slice pin):
-#   CTL beat on the slice pin -> rstop pin flop + delivery flop (2) -> xr pin flop (1) -> cvld: CFG_AT = 3
+#   CTL beat on the slice pin -> rstop pin flop + delivery flop (2) -> xr pin flop (1) -> XR2 classify flop (1) -> cvld/tg: CFG_AT = 4
 #   cvld (target 0) -> c_d flop (1) -> leaf relay DL 4 -> vp pin flop (1) -> sequencer step 0 (1) -> macro + output
-#   register + dv (2) -> lo flop (1) -> relay DL 4 -> xr lo pin flop (1): first lo pair at xr = CFG_AT + LO_AFTER_CTL
+#   register + dv (2) -> lo flop (1) -> relay DL 4 -> xr lo pin flop (1) -> XR2 lov1 flop (1): first lo pair at xr = CFG_AT + LO_AFTER_CTL
 #   pk_go the edge after the 4th pair; snd -> ci flop -> rstop ci flop -> ro flop: beat on the outward port SEND_AFTER_GO
-CFG_AT = 3
-LO_AFTER_CTL = 15
+CFG_AT = 4
+LO_AFTER_CTL = 16
 SEND_AFTER_GO = 3
-RX_WR_AFTER_PIN = 5          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> unpacker
-                             # busy flop (1) -> sw row-pair write flop (1); pair j one edge later each
+RX_WR_AFTER_PIN = 6          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> unpacker
+                             # XR2 classify flop (1) -> busy flop (1) -> sw row-pair write flop (1); pair j one edge later each
 PAIRS = 4                    # row pairs per RD beat (the 1,024-b payload)
 
 
