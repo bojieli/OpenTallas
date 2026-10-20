@@ -1,0 +1,66 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-bf6-front
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-bf6-front
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-bf6-front
+ot-run: ot-epyc9       admits  1249 GB (avail 927, growth 52, headroom 0, waiters 0/0 GB) load 20/128 running 18 disk 93 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-bf6-front
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-bf6-front
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1210971-1792523596 after 0 s
+TXN n32soq PASS BF6 front N32+SOQ five roots: exact transactions
+TXN mroh MUTANT BF6 mroh FAIL: DIFF TXN
+TXN mwsel ERROR: N32 mutant did not produce a failing case receipt
+TXN mwself MUTANT BF6 mwself FAIL: DIFF TXN
+FSMALL_BUILD_OK mroh_h10_e2
+FSMALL_BUILD_OK mwsel_h10_e2
+FSMALL_BUILD_OK n160_h10_e2
+FSMALL_BUILD_OK n160_h9MX_e1
+FSMALL_BUILD_OK n160_h9nx_e2
+FSMALL_BUILD_OK n160_h9nx_e5
+EXE n160_h9nx_e5 dcb5a6cfcb4ebf0f Verilator 5.050 2026-07-01 rev v5.050
+EXE n160_h9nx_e2 cd0c44b16cd338a9 Verilator 5.050 2026-07-01 rev v5.050
+EXE n160_h10_e2 306a086c1009b490 Verilator 5.050 2026-07-01 rev v5.050
+EXE n160_h9MX_e1 0fa1a4c9488c80d9 Verilator 5.050 2026-07-01 rev v5.050
+EXE mroh_h10_e2 12984c3ef6321f5e Verilator 5.050 2026-07-01 rev v5.050
+EXE n160_h10_e2 306a086c1009b490 Verilator 5.050 2026-07-01 rev v5.050
+EXE n160_h9nx_e5 dcb5a6cfcb4ebf0f Verilator 5.050 2026-07-01 rev v5.050
+EXE mwsel_h10_e2 159176a424103da9 Verilator 5.050 2026-07-01 rev v5.050
+EXE mwsel_h10_e2 159176a424103da9 Verilator 5.050 2026-07-01 rev v5.050
+EXE mroh_h10_e2 12984c3ef6321f5e Verilator 5.050 2026-07-01 rev v5.050
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vec/L0/u_f_0L00/seq_router_n160 5 5120 1 77
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vec/L0/u_f_0L03/seq_router_n160 5 5120 1 77
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vec/L0/u_f_0L01/seq_router_n160 5 5120 1 77
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vec/L0/u_f_0L02/seq_router_n160 5 5120 1 77
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vecw/L0/u_f_0L00/seq_woa_n160 12 4096 6 5
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vecw/L0/u_f_0L01/seq_woa_n160 12 4096 6 5
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vec/L0/u_f_0L01/seq_router_mwsel 5 5120 1 77
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vecw/L0/u_f_0L01/seq_woa_mroh 12 4096 6 5
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vecw/L0/u_f_0L01/seq_woa_mwsel 12 4096 6 5
+SEQ /srv/opentallas-scratch/claude/s81-bf6-front/vec/L0/u_f_0L01/seq_router_mroh 5 5120 1 77
+RT_SEQ router u_f_0L00 n160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op ffn.router PER 129 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 924 span 861 errors 0 []
+RT_SEQ router u_f_0L03 n160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op ffn.router PER 129 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 921 span 858 errors 0 []
+RT_SEQ router u_f_0L02 n160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op ffn.router PER 129 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 920 span 857 errors 0 []
+RT_SEQ woa u_f_0L00 n160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 129 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 1834 span 1771 errors 0 []
+RT_SEQ router u_f_0L01 n160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op ffn.router PER 129 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 920 span 857 errors 0 []
+RT_SEQ router u_f_0L01 mwsel rc=0 P=130 TOKSIM_FGU_SEQ FAIL op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 924 span 861 errors 5 ["PHASE_FAIL p77: ['MISMATCH edge 404 row 0 lo 0 k 0 got bce43e4e/0 want bd452765/0', 'PLAN_MISMATCH predicted 1 words, got 1; first diff ((404, 0, (0, 0, 5), 3175425893, 0), (404, 0, (0, 0, 5), 3169074766, 0))']", "PHASE_FAIL p78: ['MISMATCH edge 404 row 0 lo 1 k 0 got bdf960be/0 want be04e589/0', 'PLAN_MISMATCH predicted 1 words, got 1; first diff ((404, 0, (1, 0, 5), 3187991945, 0), (404, 0, (1, 0, 5), 3187237054, 0))']", "PHASE_FAIL p79: ['MISMATCH edge 404 row 0 lo 2 k 0 got be826618/0 want be91a2e6/0', 'PLAN_MISMATCH predicted 1 words, got 1; first diff ((404, 0, (2, 0, 5), 3197215462, 0), (404, 0, (2, 0, 5), 3196216856, 0))']"]
+RT_SEQ_DONE router u_f_0L01 mwsel
+RT_SEQ router u_f_0L01 mroh rc=0 P=130 TOKSIM_FGU_SEQ FAIL op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 924 span 861 errors 5 ["PHASE_FAIL p77: ['MISMATCH edge 404 row 0 lo 0 k 0 got bdbd0380/0 want bd452765/0', 'PLAN_MISMATCH predicted 1 words, got 1; first diff ((404, 0, (0, 0, 5), 3175425893, 0), (404, 0, (0, 0, 5), 3183281024, 0))']", "PHASE_FAIL p78: ['MISMATCH edge 404 row 0 lo 1 k 0 got be1541dc/0 want be04e589/0', 'PLAN_MISMATCH predicted 1 words, got 1; first diff ((404, 0, (1, 0, 5), 3187991945, 0), (404, 0, (1, 0, 5), 3189064156, 0))']", "PHASE_FAIL p79: ['MISMATCH edge 404 row 0 lo 2 k 0 got be9ca12e/0 want be91a2e6/0', 'PLAN_MISMATCH predicted 1 words, got 1; first diff ((404, 0, (2, 0, 5), 3197215462, 0), (404, 0, (2, 0, 5), 3197935918, 0))']"]
+RT_SEQ_DONE router u_f_0L01 mroh
+RT_SEQ woa u_f_0L01 n160 rc=0 P=129 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 129 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 1827 span 1764 errors 0 []
+RT_SEQ woa u_f_0L01 mwsel rc=0 P=130 TOKSIM_FGU_SEQ FAIL op attn.wo_a PER 130 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 1838 span 1775 errors 12 ["PHASE_FAIL p5: ['MISMATCH edge 401 row 1 lo 0 k 0 got 3d30415a/0 want 3d310bfe/0', 'MISMATCH edge 404 row 0 lo 0 k 0 got bc2028e7/0 want bc1e21b3/0']", "PHASE_FAIL p6: ['MISMATCH edge 401 row 1 lo 1 k 0 got 3c63fb3e/0 want 3c809e57/0', 'MISMATCH edge 404 row 0 lo 1 k 0 got bc1f1bfe/0 want bc15fd04/0']", "PHASE_FAIL p7: ['MISMATCH edge 401 row 1 lo 2 k 0 got bca4c3e6/0 want bcb172b0/0', 'MISMATCH edge 404 row 0 lo 2 k 0 got bccaac14/0 want bcbfdd0a/0']"]
+RT_SEQ_DONE woa u_f_0L01 mwsel
+RT_SEQ woa u_f_0L01 mroh rc=0 P=130 TOKSIM_FGU_SEQ FAIL op attn.wo_a PER 130 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 1838 span 1775 errors 12 ["PHASE_FAIL p5: ['MISMATCH edge 401 row 1 lo 0 k 0 got 3d3cfa2c/0 want 3d310bfe/0', 'MISMATCH edge 404 row 0 lo 0 k 0 got bc8a3c46/0 want bc1e21b3/0']", "PHASE_FAIL p6: ['MISMATCH edge 401 row 1 lo 1 k 0 got 3ca64bd4/0 want 3c809e57/0', 'MISMATCH edge 404 row 0 lo 1 k 0 got bc4a226c/0 want bc15fd04/0']", "PHASE_FAIL p7: ['MISMATCH edge 401 row 1 lo 2 k 0 got bc84550c/0 want bcb172b0/0', 'MISMATCH edge 404 row 0 lo 2 k 0 got bcfd0cbc/0 want bcbfdd0a/0']"]
+RT_SEQ_DONE woa u_f_0L01 mroh
+RT_SEQ router u_f_0L00 n160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 928 span 865 errors 0 []
+RT_SEQ_DONE router u_f_0L00 n160
+RT_SEQ router u_f_0L03 n160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 925 span 862 errors 0 []
+RT_SEQ_DONE router u_f_0L03 n160
+RT_SEQ router u_f_0L02 n160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 924 span 861 errors 0 []
+RT_SEQ_DONE router u_f_0L02 n160
+RT_SEQ woa u_f_0L00 n160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 130 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 1845 span 1782 errors 0 []
+RT_SEQ_DONE woa u_f_0L00 n160
+RT_SEQ router u_f_0L01 n160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op ffn.router PER 130 phases 5 rows 5 fixture_rows 5 go0 63 last_ret 924 span 861 errors 0 []
+RT_SEQ_DONE router u_f_0L01 n160
+RT_SEQ woa u_f_0L01 n160 rc=0 P=130 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 130 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 1838 span 1775 errors 0 []
+RT_SEQ_DONE woa u_f_0L01 n160
+BF6_FINAL_DONE
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1210971-1792523596): exit 0

@@ -68,3 +68,17 @@ Zero added cycles. Every copy is the same register function of the same inputs. 
 7. Clock: 5 related roots (ck, io_clk, io_n, io_w, io_e) as the closed kit. Spread <= 80 TT/FF comes from the gate.
    io_hold_margin 0.03.
 8. Schedule: N32 adds no cycle. SOQ contract (compiler, S81-RATE3): last partial of phase k < go_{k+1} + 160 edges.
+
+## Behaviour (Verilator 5.050, commit 515864134 RTL; bench/)
+| bench | case | result |
+|---|---|---|
+| FSEQ frame tb_toksim_fgu_seq (release frame exes, +BF_FRD_CHECK) | ffn.router, 4 frame classes 0L00-0L03, P129 / P130 | PASS, spans 857-865 (= S81-RTAG r160) |
+| FSEQ | attn.wo_a, 0L00 / 0L01, P129 / P130 | PASS, spans 1764-1782 |
+| FSEQ mutants | OT_BF6_MUT_ROH / OT_BF6_MUT_WSEL, router + wo_a, P130 | FAIL (PHASE_FAIL mismatches) |
+| die-pair txn (tools/s81/bf6_front_n32_bench.py, QP_CHECK / QT_CHECK) | n32soq | PASS: 456 rows, 912 values, 448 configs, cycles 124422 |
+| die-pair txn mutants | mroh / mwself | FAIL: DIFF TXN (fail witnesses bench/txn_mroh.log, bench/txn_mwself.log) |
+| die-pair txn mutant | mwsel | not caught here (no multi-slice BF16 beat in this vector); it is caught by FSEQ |
+
+Kit job benches must be n32soq / mroh / mwself, with those fail witnesses.
+- The spec (physical/ref_tile_specs/s81_bf6_1020) is updated.
+- The kit job.json is regenerated when the gate result is collected. job.json is not a gate input.
