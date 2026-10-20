@@ -112,7 +112,11 @@ proc ot_ce_direct_rows {corner} {
       # (FF after TT). That read carries no timing claim, so pre-CTS only it is
       # admitted when it is exactly one DECLARED corner library (digest-checked).
       # Every defined scene and every post-CTS read stays strict.
-      if {[dict get $binding scene] eq "default" && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+      # HBM-HCBANK6 10-20: a hybrid_entries CLUSTER (hard children + raw SRAM entries) reads 1_2_yosys.sdc at the
+      # floorplan step with the multi-mode scenes already defined and the BC (FF) scene current, while ot_ce_corner
+      # resolves the setup corner (TT): the same pre-CTS, no-timing-claim read, admitted under the same declared-library
+      # digest check.  Post-CTS reads of every scene stay strict.
+      if {[dict get $binding scene] in {default BC} && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
           [dict get $actual library] ne $expected_library} {
         dict for {c lib} $libraries {
           if {[lindex $lib 0] eq [dict get $actual library]} { lassign $lib want_library want_sha }

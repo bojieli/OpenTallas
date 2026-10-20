@@ -98,7 +98,7 @@ def make(src_kit, name, top, roots, mirror, anchor, tag, extra=""):
     if anchor:
         s["io_flop_at_pins"] = {"cols": 4, "allow_none": True}
     else:
-        s.pop("io_flop_at_pins", None)
+        s["io_flop_at_pins"] = False
     s.pop("slot_change_request", None)
     s["slot_change_request"] = ("HC ring bank 777.6 x 734.4 (= cb_s1 / b0_s1 slot request); master ports + 20 clock entries "
                                 f"({', '.join(roots)} glue roots, ck_l[7:0] lanes, ck_w[7:0] / ck_x[3:0] raw SRAM clocks): die "

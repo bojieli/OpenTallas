@@ -360,6 +360,7 @@
    "v": "M5"
   }
  },
+ "io_flop_at_pins": false,
  "inhold": false,
  "outhold": false,
  "keep_pin_regs": true,
@@ -581,9 +582,5 @@
   "kind": "structural",
   "failed_job": "ref_gate hbm_hcq_bank_b0_s1 10-19 (GATE_STALL post-GRT hold repair)",
   "why": "regional clock entries + SRAM orientation/placement + FAN32 (see structural_change)"
- },
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
  }
 }
