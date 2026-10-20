@@ -43,7 +43,6 @@ for kind,source in [('red',red),('sc',sc)]:
   args=[]
   for d,w,n in ports:
    sig=('ref_'+n if ref and d=='output' else n)
-   if not ref and n==('l_redsq0' if kind=='red' else 'dn_i'):sig='('+sig+' ^ MUT)'
    args.append('.'+n+'('+sig+')')
   return ','.join(args)
  t+='localparam integer MUT=`MUT;\nqfd_dv_s5_'+kind+' dut('+con(False)+');\n'+kind+'_reference refdut('+con(True)+');\n'
