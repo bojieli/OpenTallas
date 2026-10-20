@@ -48,3 +48,18 @@ Kits: `physical/ref_tile/qfd_dv_lane_h_safe1` (302.4 x 172.8) and parallel fallb
 
 ## Mutants (numeric e must FAIL; fail witnesses in witness/)
 TLS bank swap (OT_HEAD_B64_BANK_MUT), TLS slot (OT_TLS_MUT), new copy mutant OT_HS1_RON_MUT (ring_on copy 1 = 0).
+
+## Results (10-19)
+- safe1 (SRAM rings) @f1de19bf5: benches m0 PASS (e 1024/1024, a24 c640 f3 g5 k512 q512 m8 o2 n2; g ages 189/140/110/70/196
+  unchanged), mutants bank FAIL 0/1024, slot FAIL 1/1024, ron FAIL 10/1024 (witness/). Gate qfd_dv_lane_h_safe1 FAIL fill 29%:
+  synth std 5,083 um2 vs 10,146 um2 of macros whose 20 um channels dominate (spread TT/FF 31.6/31.7, GRT ovf 0). Kept copies
+  survived synthesis (10 cp1, 4 cp4, 1 cp5, 14 relays, 1 land); reset_landing rst_n 2 sinks. safe1 is history.
+- safe2 (= safe1 RTL with FLOP 1: every fixed-age ring < 2 kb as a flop ring of 16-bit slices, own pointers + leaf relays
+  on branch r_br[3]; only the 2 TLS natives) @76cd5e0d5: benches m0 PASS identical (e 1024/1024 + W10, same ages), mutants
+  bank/slot/ron FAIL 0/1/10 of 1024 (witness_safe2/). Gate qfd_dv_lane_h_safe2 151.2x129.6 WARN 0 fail: std 8,305 um2,
+  density 55%, 10,918 flops one root, TT/FF pin-flop spread 62.0/59.1 ps, TT insertion 300.7, GRT overflow 0 (M2 40%),
+  reg->reg worst +13.2 ps, hold WNS > 0, depth WARN 620 ps (md_x -> u_md s1_rows, library mul stage 1). Fallback
+  qfd_dv_lane_h_safe2w 172.8x129.6 WARN: density 47%, spread 64.1/60.1, ovf 0. PNG reviewed: TLS stack at x 43.2 on the
+  lattice, one full-width band around it, even density, no hot spots at pin faces.
+- safe2 checklist deltas vs above: 5 Storage PASS (rings are flop ring buffers, no flop->flop hold chain: write enable in,
+  read mux out; each ring < 2 kb); 6 Floorplan PASS (util 55% / 47% from synth area, 1 macro stack); macros 2.

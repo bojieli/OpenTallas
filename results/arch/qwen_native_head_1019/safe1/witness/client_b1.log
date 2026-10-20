@@ -1,0 +1,120 @@
+ot-run: ot-epyc4       admits  1139 GB (avail 910, growth 113, headroom 0, waiters 0/0 GB) load 57/128 running 33 disk 383 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: ot-epyc8       admits   847 GB (avail 706, growth 113, headroom 0, waiters 0/0 GB) load 50/128 running 32 disk 24 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-149174-1792453768 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+bench2 (e) MUT=0: PASS 1024/1024
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61] cycles
+bench2 (a) MUT=0: PASS 24/24
+bench2 (c) MUT=0: PASS 640/640
+bench2 (f) MUT=0: PASS 3/3
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         189
+  consumer norm / scale (683 rows)             86             86         140
+  QK sum of squares (128)                      16             16         110
+  QK norm (128)                                16             16          70
+  SiLU * up (128)                              16             16         196
+bench2 (g) MUT=0: PASS 5/5
+bench2 (k) MUT=0: PASS 512/512
+bench2 (q) MUT=0: PASS 512/512
+    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 1 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680
+bench2 (m) MUT=0: PASS 8/8
+    bench2 (o): ovl gap 4 MU_NU 4 FACE 1 AM_MUT 0
+bench2 (o) MUT=0: PASS 2/2
+    bench2 (n): MU_NU 4 FACE 1 AM_MUT 0
+bench2 (n) MUT=0: PASS 2/2
+m0 rc=0
+    VERILATOR BUILD FAIL:       | ^
+compilation terminated.
+make: *** [/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk:293: Vtb_vm_classes_0.o] Error 1
+make: *** Waiting for unfinished jobs....
+In file included from Vtb_vm_classes_1.cpp:21:
+Vtb___024root__41.cpp:12582:1: fatal error: closing dependency file Vtb_vm_classes_1.d: No space left on device
+12582 | }
+      | ^
+compilation terminated.
+make: *** [/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk:293: Vtb_vm_classes_1.o] Error 1
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/out/bank_mut/m0/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1/defineOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1_defineOT_HEAD_B64_BANK_MUT'
+%Error: 'make -C out/bank_mut/m0/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1/defineOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1_defineOT_HEAD_B64_BANK_MUT -f Vtb.mk -j 16' exited with 2
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --cc --exe --build -O2 -j 16 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-assign 0 --x-initial 0 --top-module tb_qfd_dv2 --prefix Vtb -GMUT=0 -GN=2 -GMU_NU=4 -GFACE=1 +define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 +define+OT_HEAD_B64_BANK_MUT -Mdir out/bank_mut/m0/obj2_n2_nu4_f1_am0_sr1_ar1_sc1_cfg1/defineOT_QFD_DV_SAFE_STORAGE_GSU_LT=1_GHD_W130=1_defineOT_HEAD_B64_BANK_MUT /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/main2.cpp /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/qwen_dv/qfd_dv_vm.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/qwen_dv/qfd_dv_stream.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/qwen_dv/qfd_dv_su8_landed.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/hdc/ot_hdc_vstream_lane.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/hdc/ot_hdc_vreduce.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/hdc/ot_hdc_fastfp.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/hdc/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/hdc/ot_hdc_fp32_mul_lat.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/hdc/ot_hdc_prefix.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/hdc/ot_hdc_delay.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/hdc/ot_hdc_sfu.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/hdc/ot_hdc_sfu_q.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/physical/ot_hdc_vred_pending_guard.sv /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/full_sm_service/sram_models.sv /srv/openta
+logs/mut_bank.log: No space left on device (os error 28)
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/tools/qwen_native_head_1019/run_safe1_production.py", line 14, in <module>
+    if __name__=='__main__': B.main()
+                             ~~~~~~^^
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/dv_bench2.py", line 795, in main
+    ok, n, errs = BENCHES[b](Path(a.work) / f"m{a.mut}", a.mut)
+                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/dv_bench.py", line 492, in bench_e
+    log = run_sim("e", ev, work, mut, ev.t + 20)
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/dv_bench2.py", line 157, in run_sim2
+    raise subprocess.CalledProcessError(r.returncode, cmd[:4])
+subprocess.CalledProcessError: Command '['verilator', '--cc', '--exe', '--build']' returned non-zero exit status 28.
+mut_bank rc=1
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 1012, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'out/slot_mut/m0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+logs/mut_slot.log: No space left on device (os error 28)
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/tools/qwen_native_head_1019/run_safe1_production.py", line 14, in <module>
+    if __name__=='__main__': B.main()
+                             ~~~~~~^^
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/dv_bench2.py", line 795, in main
+    ok, n, errs = BENCHES[b](Path(a.work) / f"m{a.mut}", a.mut)
+                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/dv_bench.py", line 492, in bench_e
+    log = run_sim("e", ev, work, mut, ev.t + 20)
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/dv_bench2.py", line 139, in run_sim2
+    work.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 1016, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 1012, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: 'out/slot_mut'
+mut_slot rc=1
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 1012, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'out/ron_mut/m0'
+logs/mut_ron.log: No space left on device (os error 28)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/tools/qwen_native_head_1019/run_safe1_production.py", line 14, in <module>
+    if __name__=='__main__': B.main()
+                             ~~~~~~^^
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/dv_bench2.py", line 795, in main
+    ok, n, errs = BENCHES[b](Path(a.work) / f"m{a.mut}", a.mut)
+                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/dv_bench.py", line 492, in bench_e
+    log = run_sim("e", ev, work, mut, ev.t + 20)
+  File "/srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1/rtl/test/qwen_dv/dv_bench2.py", line 139, in run_sim2
+    work.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 1016, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 1012, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: 'out/ron_mut'
+mut_ron rc=1
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-149174-1792453768): exit 0

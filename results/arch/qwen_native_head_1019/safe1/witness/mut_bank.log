@@ -1,0 +1,5 @@
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+bench2 (e) MUT=0: FAIL 0/1024
+    S0ST fault bits 1010001 (any,su,vm,stn,sc,stm,port)
+    silu*up: 1024/1024 mismatches, first [0] got None exp 0x0
+mut_bank rc=1
