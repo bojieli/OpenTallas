@@ -187,6 +187,12 @@ DCAL_FLT = (AFAULT and DCAL_BC and os.environ.get('OT_KV_DCAL_BC4', '0') == '1'
             and os.environ.get('OT_KV_DCAL_FLT', '0') == '1')
 if DCAL_FLT:
     AFAULT_D = AFAULT_D + [('ufd', ('dcal', 'flt'))]
+# KV-BIND4 10-19 (K.STA.RETIRE.KC, OT_KV_HEALTH=1 = the kvs14r MU-release default): the four KC heads' kf fault (qkd_ctrl_kc
+# kf, closed view N-face pin) and -- unless OT_KV_DCAL_FLT already loads it -- the bc4 calendar sequencer's sticky `fault`
+# (group flt) are exported as die health SOURCES: a 1-endpoint bus of class `health_src` (no relay plan, no reach check:
+# its only reader is the registered health plane kv_health_plane.py installs after the forwarded lanes, which latches the
+# non-sticky kf and folds both into the continuous STATUS fault path).  Never a tie, never left open.
+HEALTH_SRC = os.environ.get('OT_KV_HEALTH', '0') == '1'
 PVFIN_FILE = 'rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv'
 PVFIN_FRAME = (259.2, 259.2)            # kit qkd_pv_fin_s outline (gate pending)
 # KV-INTEG/AHUB 10-18 (RTL-BUILD-KV M2 + P6; OT_KV_AHUB_STATIC, default ON with PVFIN): the die hub `ahub` (master
@@ -1933,6 +1939,14 @@ def _die_joins(m, K, B, add, fk, rec):
     # the sequencer's kc words -> the kept kc heads (re-pointed from the removed strips)
     for st in STACKS:
         bus(f'kc_{st}', 'kv_oneway', 33, [('seq', f'kc_{st}'), (f'kc_{st}', 'kc')])
+    if HEALTH_SRC:      # KV-BIND4: fault sources the health plane reads (see HEALTH_SRC)
+        for st in STACKS:
+            bus(f'hps_kc_kf_{st}', 'health_src', 1, [(f'kc_{st}', 'kf')])
+        if (not DCAL_FLT and os.environ.get('OT_KV_DCAL_BC4', '0') == '1'
+                and any(i_.name == 'dcal' for i_ in m['insts'])):
+            bus('hps_dcal_flt', 'health_src', 1, [('dcal', 'flt')])
+        rec['notes'].append('KV-BIND4 health_src: kc_<st>.kf x4' + ('' if DCAL_FLT else ' + dcal.flt')
+                            + ' exported to the health plane')
     rec['opens'] += [
         *([] if BOOT else [dict(where='hsl_<st>_<k>.land_es (x128, 288 b)', owner='KVJ-C3 (writer 4-lane -> PC fan-out feeds '
                                 'the HOST slice)')]),

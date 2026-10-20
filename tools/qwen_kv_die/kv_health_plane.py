@@ -101,12 +101,19 @@ HP_DIRS = dict(qkd_hp_or2=dict(ck='INPUT', a='INPUT', b='INPUT', q='OUTPUT'),
                qkd_rlys_1=dict(ck='INPUT', a='INPUT', b='OUTPUT'),
                qkd_astk_fault_join=dict(ck='INPUT', rst_n='INPUT', a='INPUT', b='INPUT', q='OUTPUT'))
 HP_PIN = dict(a=[0.042, 10.812], b=[0.042, 10.956], q=[21.558, 10.812])
+# KV-BIND4 10-19: exported health sources (kv_static_die HEALTH_SRC buses) whose die-frame pin is INOUT / group-named: the RTL
+# direction (qkd_ctrl_strip.sv qkd_ctrl_kc `output kf`; qkd_d2d_cal_seq_bc4.sv `output reg fault` = die group flt, kv_die
+# dcal_binding) overrides the frame so the source's own pin is never counted as its reader; PIN_ALIAS = the LEF pin name.
+SRC_DIRS = dict(qkd_ctrl_kc=dict(kf='OUTPUT'), qkd_dcal=dict(flt='OUTPUT'))
+PIN_ALIAS = dict(qkd_dcal=dict(flt='fault'))
 
 
 def port_dirs(die, m):
     d = {p: {v['dir'] for v in pv} for p, pv in base_ports(die.macros.get(m, {}).get('pins', {})).items()}
     for p, v in HP_DIRS.get(m, {}).items():
         d.setdefault(p, {v})
+    for p, v in SRC_DIRS.get(m, {}).items():
+        d[p] = {v}
     return d
 
 
@@ -141,6 +148,9 @@ class Die:
         if m is None or i not in self.places:
             return None
         pin = m['pins'].get(port) or m['pins'].get(port + '[0]')
+        al = PIN_ALIAS.get(self.cells[i][0], {}).get(port)
+        if (pin is None or pin['xy'] is None) and al:
+            pin = m['pins'].get(al) or m['pins'].get(al + '[0]')
         if pin is None or pin['xy'] is None:
             return None
         (x, y), (w, h), pl = pin['xy'], m['size'], self.places[i]
@@ -229,6 +239,8 @@ def inventory(die):
             add('dcal', port, 'ck', 'rst_n', True, owner='KV-DCAL2')
     # every other unread fault-like OUTPUT on any die master: reported, never dropped
     known = {s['id'] for s in sources} | {c['source'] for c in covered} | {b['source'] for b in blockers}
+    known |= {f"{s['instance']}.{PIN_ALIAS[s['master']][s['port']]}" for s in sources
+              if s.get('port') in PIN_ALIAS.get(s.get('master'), {})}      # the same pin under its LEF name
     for i, (m, p, c) in sorted(die.cells.items()):
         if LAND.fullmatch(m) or i.startswith('hp_'):
             continue
