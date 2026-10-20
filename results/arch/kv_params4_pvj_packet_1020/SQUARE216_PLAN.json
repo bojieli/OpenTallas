@@ -63,8 +63,20 @@
     ],
     "pvw1_top": 26563.68,
     "serdes_host_y": 26846.91,
-    "top_gap_host_y_um": 283.23,
-    "status": "UNVERIFIED neighbor+fullfaceproducerconsumerreach; bind_chainownsactualreplan",
-    "latency": "0leafdelta;trunkrelayadditionunpriceduntilactualhopaudit"
+    "status": "FAIL actualbind_chaincollision: northpair overlaps selectedqkd_host_rt101.52um plusseq/embgw/ctl/pvfin/relays; scalarserdesYgap is notclearance",
+    "latency": "0leafdelta;trunkrelayadditionunpriceduntilactualhopaudit",
+    "top_gap_serdes_host_y_um": 283.23,
+    "selected_host": {
+      "master": "qkd_host_rt",
+      "xy": [
+        6349.536,
+        26462.16
+      ],
+      "size": [
+        777.576,
+        518.376
+      ],
+      "overlap_um": 101.52
+    }
   }
 }
