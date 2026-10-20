@@ -1,0 +1,36 @@
+{
+  "reviewer": "codex coordinator takeover 2026-10-20",
+  "time": "2026-10-20T12:45:23.169237-07:00",
+  "gate_commit": "2026-10-20T05:59:24-0700",
+  "verdict": "APPROVED",
+  "geometry_sha256": "a6b0aef4a33acec6911bbe24ce442e71905277d418d99735f54cec1f59457394",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "a6b0aef4a33acec6911bbe24ce442e71905277d418d99735f54cec1f59457394",
+    "components": {
+      "outline": "4dab0904994ed01913e7586f2f4145407935f16543249ce793484caa5afecb8d",
+      "macros": "32b78dc32c21719fb6dfe6348fb4b0d2e0530bc00d66d2e8e5e3306e0b626625",
+      "pins": "836de8e4c36dade3eb48ccf0a2cadf9dd4e97d828c75a749fef934dc18613bf8",
+      "clock_entry": "ee4d667e029d69e2a7b068ebecb001bedb0eb80bc5d9842b2119649f7693e135"
+    }
+  },
+  "checklist": {
+    "lattice": "PASS: six SRAM origins at x43.2/216 and y43.2/129.6/216; full43.2 lattice.",
+    "std_cell_band": "PASS: actually viewed density and floorplan; connected W/central channels, no isolated islands; fill31.7%, pin-bound footprint.",
+    "pin_spread": "PASS: full faces, N3.5/um S2.6/um; TT76.3ps FF66.5ps within80.",
+    "clock_entry": "PASS: E entry with local trees; reviewed measured insertion503.6/418.2 and spreads; no regional-boundary exemption used.",
+    "shape": "PASS:345.6x280.8, aspect1.23, six real SRAM,42-47um channels."
+  },
+  "evidence": {
+    "images_viewed": [
+      "physical/ref_tile/dsdv_sh_lk_s10f/gate_layout/floorplan.png",
+      "physical/ref_tile/dsdv_sh_lk_s10f/gate_layout/density.png"
+    ],
+    "grt_overflow": 0,
+    "native_max_loads": 32,
+    "gate_setup_ps": 46,
+    "gate_hold_ps": 35,
+    "depth_warning": "610ps/17levels judged by gate/route per owner09:14 freeze",
+    "scope": "geometry approval for route submission only; final route timing/DRC/function decides; no closure claim"
+  }
+}
