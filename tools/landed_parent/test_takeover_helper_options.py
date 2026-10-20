@@ -75,6 +75,7 @@ class HelperOptions(unittest.TestCase):
         model,plan,rtl,rt,rec = self.generated(dict(self.spec,landing_mcp=False))
         self.assertNotIn('set_multicycle_path',model.sdc(plan,'lpt_top_lp'))
         self.assertTrue(rec['landing_implementation']['no_data_multicycle'])
+        self.assertNotIn('compensated_phase_T',rec['landing_implementation'])
         (self.d/'record.json').write_text(json.dumps(rec))
         actual = ce.landed_sdc({'kind':'cluster','clock':'multiple_cts_roots','landed_record':str(self.d/'record.json'),
                                 'children':[{'view':'unused'}], 'clock_data_paths':'related_same_frequency',
