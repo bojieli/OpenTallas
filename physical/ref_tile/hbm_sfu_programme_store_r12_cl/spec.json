@@ -351,7 +351,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_flip11.log"
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r12_cl/bench_witness/split_mutant_flip11.log"
    },
    {
     "name": "split_mutant_early",
@@ -363,7 +363,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_early.log"
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r12_cl/bench_witness/split_mutant_early.log"
    },
    {
     "name": "split_mutant_chain11",
@@ -375,7 +375,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_chain11.log"
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r12_cl/bench_witness/split_mutant_chain11.log"
    },
    {
     "name": "split_mutant_noshift11",
@@ -387,7 +387,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_noshift11.log"
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r12_cl/bench_witness/split_mutant_noshift11.log"
    },
    {
     "name": "split_mutant_rowskew11",
@@ -399,7 +399,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_rowskew11.log"
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r12_cl/bench_witness/split_mutant_rowskew11.log"
    },
    {
     "name": "split_mutant_ioskew11",
@@ -411,7 +411,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r11_cl/fail_witness/split_mutant_ioskew11.log"
+    "fail_witness": "results/rtl/ref_tile/hbm_sfu_programme_store_r12_cl/bench_witness/split_mutant_ioskew11.log"
    }
   ]
  },

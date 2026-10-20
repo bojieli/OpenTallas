@@ -1,0 +1,11 @@
+SFU_SPLIT_EQUIV_MISMATCH edge=6028 out=0 lg_ro=0 status=1
+SFU_SPLIT_EQUIV_MISMATCH edge=6028 out=0 lg_ro=0 status=1
+[5068000] %Fatal: tb_hgi_sfu_split_equiv.sv:211: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_FAULT store=1 core=0
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:211: Verilog $stop
+Aborting...
+SFU_SPLIT_GATE MUTANT rowskew11 REJECTED (expected)
+SFU_SPLIT_EQUIV_MISMATCH edge=6028 out=0 lg_ro=0 status=1
+[5068000] %Fatal: tb_hgi_sfu_split_equiv.sv:211: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_FAULT store=1 core=0
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:211: Verilog $stop
+Aborting...
+BENCH_EXIT 1
