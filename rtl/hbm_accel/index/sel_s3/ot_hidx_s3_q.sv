@@ -57,9 +57,9 @@ endmodule
 // Opt-in exact counter recurrence: the high nine bits consume a parallel carry prefix.
 // No pipeline edge, reset, schedule, or rounding change. Keep hierarchy prevents ABC
 // recombining the prefix with the upstream dense-pack count into one long adder.
-module ot_hidx_s3_acc14 #(parameter integer MUT=0)(input wire [13:0] a,input wire [4:0] b,output wire [13:0] y);
+(* keep_hierarchy *) module ot_hidx_s3_acc14(input wire [13:0] a,input wire [4:0] b,input wire mut,output wire [13:0] y);
  wire [5:0] lo={1'b0,a[4:0]}+{1'b0,b};
- wire carry=lo[5]^(MUT!=0);
+ wire carry=lo[5]^mut;
  assign y[4:0]=lo[4:0];
  for(genvar i=5;i<14;i=i+1)begin:g_hi
   if(i==5)assign y[i]=a[i]^carry;
@@ -449,7 +449,7 @@ module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0)(
  reg [5:0] wp;reg [13:0] selected;reg [7:0] hz;reg qfault;reg [10:0] rtag;
  wire [13:0] selected_next;
  generate if(FAST_COUNT)begin:g_fast_count
-  ot_hidx_s3_acc14 #(.MUT(DMUT==7)) u_sum(.a(selected),.b(c_cnt[0]),.y(selected_next));
+  ot_hidx_s3_acc14 u_sum(.a(selected),.b(c_cnt[0]),.mut(DMUT==7),.y(selected_next));
  end else begin:g_original_count
   assign selected_next=selected+14'(c_cnt[0]);
  end endgenerate
