@@ -9,16 +9,25 @@ HDR = r'''`timescale 1ns/1ps
 // d4g die.  Same pins and semantics as hbfd_rrl_sync/hop/pad<N> (hbfd_rrl.sv), so the reset forest planner, splice and
 // die reset gate treat them identically, but small enough to home in the relay-filled channels where the 32.4 um
 // hbfd_rrl kit has no legal home (GEN2d forests ofly40/ofly57/hhpref/hhfb46 S4_FOREST_PLAN_FAIL; corridor model 154ae602c
-// homes all 810 HBM boundary pins with an 8.64 x .54 body).  Every tile asserts asynchronously (rst_n_in low clears every
-// flop at once) and releases synchronously on clk (the HBM regional root at the tile's position).
-//   hbfd_rrl_csync   : ingress at hb_ckgen.por_<dom>: 2-flop synchroniser + 1 relay flop (ot_rst_relay), age 3.
+// homes all 810 HBM boundary pins with an 8.64 x .54 body).  Every tile asserts asynchronously (rst_n_in low forces rst_n low
+// at once) and releases synchronously on clk (the HBM regional root at the tile's position).
+//   hbfd_rrl_csync   : ingress at hb_ckgen.por_<dom>: 2-flop synchroniser + 1 relay flop, age 3.
 //   hbfd_rrl_chop    : one registered transport stage (carrier station / reach hop), age 1.
 //   hbfd_rrl_cpad<N> : face landing / equal-age leaf, release age exactly N edges.  N <= 2: N flops.  N >= 3: two
 //                      registered landing flops, then a binary down-count of N-2 edges (SAFE-DESIGN item 5: no flop delay
-//                      line >= 3 deep) and a registered sticky output flop; cnt/out are cleared by rst_n_in.
+//                      line >= 3 deep) and a registered sticky output flop.
+// L2H-RRL 10-19: rst_n_in drives only the <= 2 landing flops (textbook reset_landing); later flops clear synchronously
+//                      while the landing is low and the output is gated by land[1], so assertion stays immediate.
 //                      OT_HBFD_RRLC_MUT (bench mutant only): the counter terminates one edge early.
 module hbfd_rrl_csync (input wire clk, input wire rst_n_in, output wire rst_n);
-    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u (.clk(clk), .rst_n_in(rst_n_in), .rst_n(rst_n));
+    // L2H-RRL: rst_n_in clears ONLY the 2-flop async-assert synchroniser (textbook reset_landing <= 2 sinks); the relay
+    // flop r is cleared synchronously while land[1] is low, and rst_n = land[1] & r asserts at once through land[1].
+    (* async_reg = "true", keep = "true", dont_touch = "true" *) reg [1:0] land;
+    (* keep = "true", dont_touch = "true" *) reg r;
+    always @(posedge clk or negedge rst_n_in)
+        if (!rst_n_in) land <= 2'b00; else land <= {land[0], 1'b1};
+    always @(posedge clk) r <= land[1];
+    assign rst_n = land[1] & r;
 endmodule
 module hbfd_rrl_chop (input wire clk, input wire rst_n_in, output wire rst_n);
     (* keep = "true", dont_touch = "true" *) reg q;
@@ -50,16 +59,16 @@ module hbfd_rrl_cdly #(parameter integer N = 3) (input wire clk, input wire rst_
         reg [CW-1:0] cnt;
         always @(posedge clk or negedge rst_n_in)
             if (!rst_n_in) land <= 2'b00; else land <= {land[0], 1'b1};
-        always @(posedge clk or negedge rst_n_in)
-            if (!rst_n_in) begin
-                cnt <= {CW{1'b0}}; o <= 1'b0;
-            end else if (!land[1]) begin
+        // L2H-RRL: cnt / o are cleared synchronously while land[1] is low (rst_n_in reaches only the two landing flops:
+        // textbook reset_landing <= 2 sinks); rst_n = land[1] & o asserts at once through land[1].
+        always @(posedge clk)
+            if (!land[1]) begin
                 cnt <= {CW{1'b0}}; o <= 1'b0;
             end else if (!o) begin
                 if (cnt == LAST) o <= 1'b1;
                 else cnt <= cnt + 1'b1;
             end
-        assign rst_n = o;
+        assign rst_n = land[1] & o;
     end endgenerate
 endmodule
 '''
