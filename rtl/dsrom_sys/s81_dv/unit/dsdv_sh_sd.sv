@@ -102,7 +102,14 @@ module dsdv_sh_sd #(
     // the same edge as before (HSH 6).  The pop itself never reads the head (STATIC).
     reg [288:0] h_q;
     reg pop_q;
+`ifdef OT_S81_SH_S10D
+    // s10d: h_q is read only on the edge after a pop (pop_q: decode, credits, fault, stack write), and on every pop edge
+    // it takes mem_q exactly as before; capturing every edge removes the 289-load sd_pop enable (no value seen at the
+    // boundary changes).
+    always @(posedge ck) h_q <= mem_q[288:0];
+`else
     always @(posedge ck) if (sd_pop) h_q <= mem_q[288:0];
+`endif
     always @(posedge ck or negedge rn) if (!rn) pop_q <= 1'b0; else pop_q <= sd_pop;
     assign h = h_q;
 `ifndef SYNTHESIS
@@ -166,6 +173,63 @@ module dsdv_sh_sd #(
 `ifdef OT_S81_SH_SRAM
     assign sd_pop=pop;
 `endif
+`ifdef OT_S81_SH_S10D
+`ifdef OT_S81_SH_APIPE10
+    // S81-SHLK s10d: the stack-write payload enable pop_q && dst[s] (dst decoded from h_q) drove 291 hw payload flops
+    // per stack (~585 loads).  HWC kept copies: popq_c[g] (= pop_q) and hk_c[g] (= the decode inputs {hwe, ha, hd[65:64]}
+    // of h_q, captured from mem_q on the same edge), each copy decoding its own dst for one 30-bit payload slice.
+    localparam integer HWC = 10;
+    function automatic [NS-1:0] dec_dst(input [31:0] a, input [1:0] m, input we);
+        reg [1:0] c; reg bd; reg [NS-1:0] d; reg mk; reg [31:0] ki; reg [29:0] px; integer kq;
+        begin
+            bd = 1'b0; c = 2'd0; d = {NS{1'b0}}; mk = (a == 32'hffffffff);
+            if (mk) begin
+                if (m == 2'd3) c = 2'd3; else if (m == 2'd2) c = 2'd2; else bd = 1'b1;
+            end else c = a[31] ? (a[30] ? 2'd3 : 2'd2) : 2'd0;
+            if (!we) bd = 1'b1;
+            if (c == 2'd3) begin
+                if (ENG < 0 || ENG >= NS) bd = 1'b1;
+                else d[(MUT == 3) ? 0 : ENG] = 1'b1;
+            end else if (NKV == 0) bd = 1'b1;
+            else if (c == 2'd2) begin
+                if (mk) d = KVS[NS-1:0]; else d[KV0] = 1'b1;
+            end else begin
+                ki = (MUT == 1) ? (a >> 6) : (a >> 5);
+                kq = ki % NKV;
+                d[kth(KVS, kq)] = 1'b1;
+            end
+            if (HALF != 0 && NS == 2 && c != 2'd3 && !mk) begin
+                px = (a[29:0] >> 2) ^ (a[29:0] >> 7) ^ (a[29:0] >> 12);
+                d = {NS{1'b0}};
+                d[(HALF == 2) ? px[3] : px[4]] = 1'b1;
+            end
+            if (bd) d = {NS{1'b0}};
+            dec_dst = d;
+        end
+    endfunction
+    (* keep *) reg [HWC-1:0] popq_c;
+    (* keep *) reg [35*HWC-1:0] hk_c;
+    always @(posedge ck or negedge rn) if (!rn) popq_c <= {HWC{1'b0}}; else popq_c <= {HWC{sd_pop}};
+`ifdef OT_S81_SH_MUT_S10DHW
+    always @(posedge ck) begin hk_c <= {HWC{mem_q[288:256], mem_q[65:64]}}; hk_c[35*4 + 34] <= 1'b0; end  // mutant: copy 4 sees we 0 (slice dropped)
+`else
+    always @(posedge ck) hk_c <= {HWC{mem_q[288:256], mem_q[65:64]}};
+`endif
+    wire [NS*HWC-1:0] dst_c;
+    genvar gc;
+    for (gc = 0; gc < HWC; gc = gc + 1) begin : g_hdc
+        assign dst_c[NS*gc +: NS] = dec_dst(hk_c[35*gc + 2 +: 32], hk_c[35*gc +: 2], hk_c[35*gc + 34]);
+    end
+`ifndef SYNTHESIS
+`ifndef OT_S81_SH_MUT_S10DHW
+    always @(posedge ck) if (rn && pop_q && (popq_c != {HWC{1'b1}} || dst_c != {HWC{dst}}))
+        $fatal(1, "dsdv_sh_sd: s10d payload enable copy diverged");
+`endif
+`endif
+    wire [290:0] hpl = {(cls == 2'd3) ? 2'd2 : ((cls == 2'd2) ? 2'd1 : 2'd0), hwe, ha, hd};
+    integer pb;
+`endif
+`endif
 `ifdef OT_S81_SH_APIPE10
     // (no payload hop: the h_q edge above)
 `elsif OT_S81_SH_SRAM
@@ -223,11 +287,23 @@ module dsdv_sh_sd #(
             if (asum[8]) fault <= 1'b1;
         end
 `ifdef OT_S81_SH_APIPE10
+`ifdef OT_S81_SH_S10D
+`ifdef OT_S81_SH_MUT_HQSTALE
+    always @(posedge ck)   // mutant (s10d form): emits on the pop edge, from the head register before it takes the popped word
+        for (s = 0; s < NS; s = s + 1) if (sd_pop && dst[s]) hw[292*s + 1 +: 291] <= hpl;
+`else
+    always @(posedge ck)
+        for (s = 0; s < NS; s = s + 1)
+            for (pb = 0; pb < 291; pb = pb + 1)
+                if (popq_c[pb / 30] && dst_c[NS * (pb / 30) + s]) hw[292*s + 1 + pb] <= hpl[pb];
+`endif
+`else
     always @(posedge ck)
 `ifdef OT_S81_SH_MUT_HQSTALE
         for (s = 0; s < NS; s = s + 1) if (sd_pop && dst[s]) hw[292*s + 1 +: 291] <= {(cls == 2'd3) ? 2'd2 : ((cls == 2'd2) ? 2'd1 : 2'd0), hwe, ha, hd};   // mutant: emits on the pop edge (previous head)
 `else
         for (s = 0; s < NS; s = s + 1) if (pop_q && dst[s]) hw[292*s + 1 +: 291] <= {(cls == 2'd3) ? 2'd2 : ((cls == 2'd2) ? 2'd1 : 2'd0), hwe, ha, hd};
+`endif
 `endif
 `elsif OT_S81_SH_SRAM
     always @(posedge ck)

@@ -38,7 +38,9 @@ mdef() { case $1 in 7) echo +define+OT_ING_MUT_HREGV;; 8) echo +define+OT_ING_MU
   12) echo +define+OT_ING_MUT_SPKIND;; 13) echo +define+OT_ING_MUT_MKD;; 14) echo +define+OT_S81_SH_MUT_HQSTALE;;
   15) echo +define+OT_ING_MUT_DQC;; 16) echo +define+OT_ING_MUT_HRC;; 17) echo +define+OT_ING_MUT_HPREF;;
   18) echo +define+OT_ING_MUT_HPHOLD;; 19) echo +define+OT_LINK_AFIFO_MUT_RCOPY;;
-  20) echo +define+OT_ING_MUT_S10CWA;; 21) echo +define+OT_ING_MUT_S10CISS;; *) echo +define+MUT=$1;; esac; }
+  20) echo +define+OT_ING_MUT_S10CWA;; 21) echo +define+OT_ING_MUT_S10CISS;;
+  22) echo +define+OT_S81_SH_MUT_S10DOX;; 23) echo +define+OT_S81_SH_MUT_S10DHW;; 24) echo +define+OT_ING_MUT_S10DFQ;;
+  *) echo +define+MUT=$1;; esac; }
 # S81-SHLK s10b (VL_EXTRA has -DOT_S81_SH_S10B): 15 = descriptor-queue read copy 0 stalls, 16 = hr_v copy 3 never
 # clears, 17 = st_row / st_left hi +- 1 never refreshed, 18 = refresh overwrites a fresh segment load, 19 = u_cx read copy 0 stalls
 MUTS="1 2 3 4 5 6 7 8 9 10"; case "${VL_EXTRA:-}" in *OT_S81_SH_APIPE10*) MUTS="$MUTS 11 14";; esac
@@ -49,6 +51,9 @@ case "${VL_EXTRA:-}" in *OT_S81_SH_S10B*) MUTS="$MUTS 16 19";; esac
 # 21 = registered issue counter also counts the IKEY scale-capture step (p_sc), so done counts run high
 # (20 / 21 are not exercised here -- the seqhost stream base/offset pairs and done timing do not expose them; they are
 # caught by physical/sys_takeover/host_native_pipe_bench.py s10cwa10 / s10ciss10 with HNP_S10B=1 HNP_S10C=1)
+# S81-SHLK s10d (VL_EXTRA has -DOT_S81_SH_S10D): kept enable copies; 22 = die-face ox payload enable copy 2 stuck 0,
+# 23 = svc stack-write payload copy 4 decodes we 0 (slice dropped), 24 = output-FIFO write-pointer copy 5 stalls
+case "${VL_EXTRA:-}" in *OT_S81_SH_S10D*) MUTS="$MUTS 22 23 24";; esac
 if [ "${3:-}" = base ]; then
   build base || exit 2
   for seed in $SEEDS; do

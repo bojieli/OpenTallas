@@ -64,7 +64,7 @@ if os.environ.get('HNP_S10B') == '1':
     # registered hi - 1 right after the segment load (catches a refresh that overwrites the loaded value, hphold10)
     extra["raw_b16"] = case_raw_multi(np.random.default_rng(20261020), [1, 1, 0, 1, 1], [16, 32, 16, 48, 1])
 # Exercise the actual failed block-address cone across ap1_gs[7] / sb boundary.
-if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9','pos10','apbskip10','apstale10','apxskip10','sprh10','spkind10','rac10','banktail10','rszswap10','sramcur10','dqc10','hrc10','hpref10','hphold10','cxrc10','s10cwa10','s10ciss10'):
+if mode in ('pos8','pos9','apbskip9','apstale9','apxskip9','pos10','apbskip10','apstale10','apxskip10','sprh10','spkind10','rac10','banktail10','rszswap10','sramcur10','dqc10','hrc10','hpref10','hphold10','cxrc10','s10cwa10','s10ciss10','s10dox10','s10dfq10'):
     extra['ikey_cross_sb'] = C.case_ikey(np.random.default_rng(20261019),256,first=32720,ndie=4,die=2,ns=4)
 for name, c in extra.items():
     c["nb"] = [(d >> 240) & 0xFFFF for d in c["descs"]]
@@ -111,6 +111,8 @@ defs = {"pos2": P2, "fencevis2": P2 + ["-DOT_FENCE_MUT_HRSTALE"], "apstale2": P2
         "cxrc10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_LINK_AFIFO_MUT_RCOPY"],
         # S81-SHLK s10c 10-19 (run with HNP_S10B=1 HNP_S10C=1): stage-O address add, registered issue counter
         "s10cwa10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_S10CWA"], "s10ciss10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_S10CISS"],
+        # S81-SHLK s10d 10-19 (run with HNP_S10B=1 HNP_S10C=1 HNP_S10D=1): kept enable copies (ox payload, fq write)
+        "s10dox10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_S81_SH_MUT_S10DOX"], "s10dfq10": ["-DOT_HOSTNATIVE_PIPE10", "-DOT_ING_MUT_S10DFQ"],
         "pos8": ["-DOT_HOSTNATIVE_PIPE8"], "apbskip8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APBSKIP"],
         "apstale8": ["-DOT_HOSTNATIVE_PIPE8", "-DOT_ING_MUT_APSTALE"]}[mode]
 srcs = [R / s for s in [B.SECDED] + B.HOST_RTL + ["rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
@@ -153,6 +155,8 @@ if os.environ.get('HNP_S10B') == '1':        # S81-SHLK s10b: fanout copies + sp
     defs += ['-DOT_S81_SH_S10B']
 if os.environ.get('HNP_S10C') == '1':        # S81-SHLK s10c: stage-O address add + registered issue counter
     defs += ['-DOT_S81_SH_S10C']
+if os.environ.get('HNP_S10D') == '1':        # S81-SHLK s10d: kept ox payload / fq write enable copies
+    defs += ['-DOT_S81_SH_S10D']
 if os.environ.get('HNP_BANK64') == '1':      # S81-SHLK s10: native 32x64 banks instead of the 16x546 macro
     defs += ['-DOT_S81_SH_BANK64']
     srcs += [R/'physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v']

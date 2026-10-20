@@ -247,6 +247,13 @@ module ot_rom_host_ingest #(
     // request FIFO clk_i -> ck: {we, addr, data}; writes before reads, reads capped by the return FIFO
     wire         ox_full, ox_empty, ox_ovf;
     wire [OFA:0] ox_freed, ox_cnt;
+`ifdef OT_S81_SH_S10D
+    // S81-SHLK s10d: the die-face pop (ox_pop) enabled all AW + 257 o_we / o_addr / o_d flops (~600 loads through
+    // one OR3 tree).  OXC kept enable copies, one per 29-bit payload slice, each = !empty_c & ocr_nz_c & pace_c of
+    // kept registered copies (same value, same edge as ox_pop; see the die-face block).
+    localparam integer OXC = (AW + 257 + 28) / 29;
+    wire [OXC-1:0] ox_empty_c;
+`endif
     wire [AW+256:0] ox_head;
     reg  [RFA+1:0] outst;                   // RMW reads issued, not yet handed to the engine
     wire         rd_room = outst < (1 << RFA);
@@ -372,10 +379,19 @@ module ot_rom_host_ingest #(
     // mux loads. Kept local read selectors preserve the same head/cycle.
 `ifdef OT_S81_SH_SRAM
     if (APIPE >= 9) begin : g_ox_sram
+`ifdef OT_S81_SH_S10D
+        ot_dsdv_host_afifo_sram #(.W(AW + 257), .AW(OFA), .EC(OXC)) u_ox (
+        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr_f), .wdata(ox_w_f), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
+        .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt), .rempty_c(ox_empty_c));
+`else
         ot_dsdv_host_afifo_sram #(.W(AW + 257), .AW(OFA)) u_ox (
         .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr_f), .wdata(ox_w_f), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
         .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
+`endif
     end else begin : g_ox_legacy
+`ifdef OT_S81_SH_S10D
+        assign ox_empty_c = {OXC{ox_empty}};
+`endif
 `endif
         ot_link_afifo #(.W(AW + 257), .AW(OFA), .RCOPY(32)) u_ox (
         .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr_f), .wdata(ox_w_f), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
@@ -430,6 +446,32 @@ module ot_rom_host_ingest #(
     reg           ocr_q;
     wire          pace_ok = (share_c == 9'd0) || (tok >= 256);
     assign        ox_pop = !ox_empty && ocr != 0 && pace_ok;
+`ifdef OT_S81_SH_S10D
+    // s10d kept enable copies: ocr_nz_c / pace_c hold (ocr != 0) / pace_ok of the NEXT state (registered on the
+    // same edge as ocr / tok / share_c), so ox_pop_c[k] == ox_pop every cycle; each drives one 29-bit payload slice.
+    wire [7:0]    ocr_n   = ocr + (ocr_q ? 8'd1 : 8'd0) - (ox_pop ? 8'd1 : 8'd0);
+    wire [8:0]    share_n = (tg_s[2] != tg_s[1]) ? share_seam : share_c;
+    wire [PW-1:0] tok_n   = (share_c == 9'd0) ? {PW{1'b0}}
+                          : (((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0));
+    (* keep *) reg [OXC-1:0] ocr_nz_c;
+    (* keep *) reg [OXC-1:0] pace_c;
+    always @(posedge ck or negedge rn_c)
+        if (!rn_c) begin ocr_nz_c <= {OXC{OCRED != 0}}; pace_c <= {OXC{1'b1}}; end   // reset: share_c 0 -> pace_ok 1
+        else begin
+            ocr_nz_c <= {OXC{ocr_n != 8'd0}};
+`ifdef OT_S81_SH_MUT_S10DOX
+            ocr_nz_c[2] <= 1'b0;                     // mutant: payload enable copy 2 is never refreshed (stuck 0)
+`endif
+            pace_c <= {OXC{(share_n == 9'd0) || (tok_n >= 256)}};
+        end
+    wire [OXC-1:0] ox_pop_c = ~ox_empty_c & ocr_nz_c & pace_c;
+`ifndef SYNTHESIS
+`ifndef OT_S81_SH_MUT_S10DOX
+    always @(posedge ck) if (rn_c && ox_pop_c != {OXC{ox_pop}}) $fatal(1, "ot_rom_host_ingest: s10d ox_pop copy diverged");
+`endif
+`endif
+    integer ob;
+`endif
     always @(posedge ck or negedge rn_c) begin
         if (!rn_c) begin
             o_v <= 1'b0; o_we <= 1'b0; o_addr <= 0; o_d <= 0; ocr <= OCRED; ocr_q <= 1'b0; tok <= 0;
@@ -439,7 +481,13 @@ module ot_rom_host_ingest #(
             if (share_c == 9'd0) tok <= 0;
             else tok <= ((tok + share_c > PCAP * 256) ? PCAP * 256 : tok + share_c) - (ox_pop ? 256 : 0);
             o_v <= ox_pop;
+`ifdef OT_S81_SH_S10D
+            for (ob = 0; ob < 256; ob = ob + 1) if (ox_pop_c[ob / 29]) o_d[ob] <= ox_head[ob];
+            for (ob = 0; ob < AW; ob = ob + 1) if (ox_pop_c[(256 + ob) / 29]) o_addr[ob] <= ox_head[256 + ob];
+            if (ox_pop_c[(AW + 256) / 29]) o_we <= ox_head[AW+256];
+`else
             if (ox_pop) begin o_we <= ox_head[AW+256]; o_addr <= ox_head[AW+255:256]; o_d <= ox_head[255:0]; end
+`endif
         end
     end
     always @(posedge ck) ird_q <= i_rd;

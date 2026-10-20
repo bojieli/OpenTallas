@@ -947,6 +947,12 @@ module ot_hdc_kv_ingest #(
                 p_wv <= st_go && st_wv;
                 p_sc <= st_go && st_mode == M_IKEY && st_ph == 3'd2;
             end
+`ifdef OT_S81_SH_S10D
+        // s10d: 9 kept copies of p_wv, one per 32-bit output-FIFO write group (the fq write enables were 4 x ~560 loads)
+        (* keep *) reg [8:0] p_wv_c;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) p_wv_c <= 9'd0; else p_wv_c <= {9{st_go && st_wv}};
+`endif
         // stage O: head byte b = window byte b + fine offset (8:1, fine-offset copy b / 4)
         wire [255:0] head;
         for (gb = 0; gb < 32; gb = gb + 1) begin : g_hb
@@ -968,12 +974,47 @@ module ot_hdc_kv_ingest #(
                          : (p_kind == 2'd2) ? sc_acc[0] : sc_acc[1];
         assign sc_we = p_sc; assign sc_row = p_row; assign sc_wd = head[31:0];
         // output FIFO: 4 x {addr, data}; read through 9 kept one-hot read-pointer copies (32 output bits a copy)
+`ifdef OT_S81_SH_S10D
+        // s10d: the 4-entry output FIFO is written through 9 kept one-hot write-pointer copies (fq_wh, 4 b a copy, =
+        // 1 << fq_wr) and the p_wv copies: each write enable p_wv_c[g] & fq_wh[4g+e] drives 32 data flops.  fq_nz is the
+        // registered fq_n != 0 (next state), so the pop / sp_acc enable no longer decodes fq_n.  Same values, same edges.
+        reg  [4*(AW+256)-1:0] fqf;
+        wire [AW+255:0] fqw = {p_wa, o_d};
+        (* keep *) reg [35:0] fq_wh;
+        reg             fq_nz;
+        integer         fe, fb;
+        always @(posedge clk)
+            for (fe = 0; fe < 4; fe = fe + 1)
+                for (fb = 0; fb < AW + 256; fb = fb + 1)
+                    if (p_wv_c[fb / 32] && fq_wh[4 * (fb / 32) + fe]) fqf[fe * (AW + 256) + fb] <= fqw[fb];
+`endif
         reg  [AW+255:0] fq [0:3];
         reg  [1:0]      fq_wr;
         reg  [2:0]      fq_n;
         (* keep *) reg [35:0] fq_rh;
+`ifdef OT_S81_SH_S10D
+        wire            fq_pop = fq_nz && w_rdy;
+        wire [2:0]      fq_n_n = fq_n + (p_wv ? 3'd1 : 3'd0) - (fq_pop ? 3'd1 : 3'd0);
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin fq_wh <= {9{4'b0001}}; fq_nz <= 1'b0; end
+            else begin
+`ifdef OT_ING_MUT_S10DFQ
+                if (p_wv) for (int c = 0; c < 9; c++) if (c != 5) fq_wh[4 * c +: 4] <= {fq_wh[4 * c +: 3], fq_wh[4 * c + 3]};  // mutant: write copy 5 stalls
+`else
+                if (p_wv) for (int c = 0; c < 9; c++) fq_wh[4 * c +: 4] <= {fq_wh[4 * c +: 3], fq_wh[4 * c + 3]};
+`endif
+                fq_nz <= (fq_n_n != 3'd0);
+            end
+`ifndef SYNTHESIS
+`ifndef OT_ING_MUT_S10DFQ
+        always @(posedge clk) if (rst_n && (fq_nz != (fq_n != 0) || p_wv_c != {9{p_wv}} || fq_wh != {9{4'b0001 << fq_wr}}))
+            $fatal(1, "ot_hdc_kv_ingest: s10d output FIFO copy diverged");
+`endif
+`endif
+`else
         wire            fq_pop = (fq_n != 0) && w_rdy;
         always @(posedge clk) if (p_wv) fq[fq_wr] <= {p_wa, o_d};
+`endif
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin fq_wr <= 2'd0; fq_n <= 3'd0; fq_rh <= {9{4'b0001}}; end
             else begin
@@ -988,10 +1029,19 @@ module ot_hdc_kv_ingest #(
         wire [AW+255:0] fq_h;
         for (gb = 0; gb < 9; gb = gb + 1) begin : g_fr
             wire [3:0] oh = fq_rh[4 * gb +: 4];
+`ifdef OT_S81_SH_S10D
+            assign fq_h[32 * gb +: 32] = ({32{oh[0]}} & fqf[0 * (AW + 256) + 32 * gb +: 32]) | ({32{oh[1]}} & fqf[1 * (AW + 256) + 32 * gb +: 32])
+                                       | ({32{oh[2]}} & fqf[2 * (AW + 256) + 32 * gb +: 32]) | ({32{oh[3]}} & fqf[3 * (AW + 256) + 32 * gb +: 32]);
+`else
             assign fq_h[32 * gb +: 32] = ({32{oh[0]}} & fq[0][32 * gb +: 32]) | ({32{oh[1]}} & fq[1][32 * gb +: 32])
                                        | ({32{oh[2]}} & fq[2][32 * gb +: 32]) | ({32{oh[3]}} & fq[3][32 * gb +: 32]);
+`endif
         end
+`ifdef OT_S81_SH_S10D
+        assign sp_wv = fq_nz;
+`else
         assign sp_wv = (fq_n != 0);
+`endif
         assign sp_wa = fq_h[AW+255:256];
         assign sp_wd = fq_h[255:0];
         assign sp_room = (fq_n + (p_wv ? 3'd1 : 3'd0)) <= 3'd3;
