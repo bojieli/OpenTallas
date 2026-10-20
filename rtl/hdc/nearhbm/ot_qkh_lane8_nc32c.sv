@@ -24,11 +24,9 @@ module ot_qkh_lane8_nc32c #(
     generate if(ADD_LAT!=7 || LTW!=12)begin:bad_shape ot_qkh_lane8_nc32c_requires7_12 trap();end endgenerate
     // ---- reset relay: the port drives only the relay; control flops reset from its outputs ---------------------------
     // idle1012 textbook class 2: one reset copy per lane (the shared lane copy drove 952 flops) + one for the tile control
-    wire [447:0] r32;
-    ot_rst_relay_bounded32 #(.REGIONS(224)) rst_a(.clk(clk),.rst_n_in(rst_n),.rst_n(r32[223:0]));
-    ot_rst_relay_bounded32 #(.REGIONS(224)) rst_b(.clk(clk),.rst_n_in(rst_n),.rst_n(r32[447:224]));
-    wire [8:0] rr=r32[8:0];
-    wire rc = rr[8];          // tile control / pins
+    wire [210:0] r32;
+    ot_rst_relay_bounded32 #(.REGIONS(211)) rst_a(.clk(clk),.rst_n_in(rst_n),.rst_n(r32));
+    wire rc=r32[0];
     // ---- S3: the pin flops ---------------------------------------------------------------------------------------------
     reg  [3:1]      c3;
     reg  [63:0]     row3;
@@ -50,10 +48,10 @@ module ot_qkh_lane8_nc32c #(
     genvar ci,d;
     generate for(ci=0;ci<16;ci=ci+1)begin:qcap
       always @(posedge clk)begin qbc[ci]<=q_beat_in;hdc[ci]<=hid;bsc[ci]<=bsel;end
-      always @(posedge clk or negedge r32[9])if(!r32[9])qvc[ci]<=0;else qvc[ci]<=q_valid_in;
+      always @(posedge clk or negedge r32[1])if(!r32[1])qvc[ci]<=0;else qvc[ci]<=q_valid_in;
       if(ci<8)begin:gprod
        always @(posedge clk)gg[ci]<=c_in[0];
-       always @(posedge clk or negedge r32[9])if(!r32[9])begin gk_d[ci]<=0;gk_v[ci]<=0;end
+       always @(posedge clk or negedge r32[1])if(!r32[1])begin gk_d[ci]<=0;gk_v[ci]<=0;end
         else begin gk_d[ci]<=c_in[3];gk_v[ci]<=c_in[3];end
       end
       wire w0=qvc[ci] && (qbc[ci]=={2'b00,hdc[ci],bsc[ci]});
@@ -64,23 +62,23 @@ module ot_qkh_lane8_nc32c #(
     wire [168*12-1:0] ltc;
     wire [64*3-1:0] ctc;
     wire [15:0] k1c,k2c,k3c;
-    ot_qkh_ctl_tree4_leaf #(.W(12),.DEST(168)) lt_tree(.clk(clk),.rr(r32[114:10]),.d(lt3),.q(ltc));
-    ot_qkh_ctl_tree4_leaf #(.W(3),.DEST(64)) ct_tree(.clk(clk),.rr(r32[167:115]),.d(c3[3:1]),.q(ctc));
-    ot_qkh_valid_delay16 #(.D(ADD_LAT)) kl1(.clk(clk),.rr(r32[223:168]),.d(ctc[63*3+2]),.q(k1c));
-    ot_qkh_valid_delay16 #(.D(ADD_LAT)) kl2(.clk(clk),.rr(r32[279:224]),.d(k1c[15]),.q(k2c));
-    ot_qkh_valid_delay16 #(.D(ADD_LAT)) kl3(.clk(clk),.rr(r32[335:280]),.d(k2c[15]),.q(k3c));
+    ot_qkh_ctl_tree4_leaf #(.W(12),.DEST(168)) lt_tree(.clk(clk),.rr(r32[106:2]),.d(lt3),.q(ltc));
+    ot_qkh_ctl_tree4_leaf #(.W(3),.DEST(64)) ct_tree(.clk(clk),.rr(r32[159:107]),.d(c3[3:1]),.q(ctc));
+    ot_qkh_valid_delay16 #(.D(ADD_LAT)) kl1(.clk(clk),.rr(r32[160]),.d(ctc[63*3+2]),.q(k1c));
+    ot_qkh_valid_delay16 #(.D(ADD_LAT)) kl2(.clk(clk),.rr(r32[161]),.d(k1c[15]),.q(k2c));
+    ot_qkh_valid_delay16 #(.D(ADD_LAT)) kl3(.clk(clk),.rr(r32[162]),.d(k2c[15]),.q(k3c));
     wire g3v=c3[2];
     // ---- the lanes -------------------------------------------------------------------------------------------------------
     wire [8*32-1:0] p_y, l_y, fb, obw;
     wire [7:0]      p_vo, p_f, l_vo, l_f, b_f;
     generate for (d = 0; d < 8; d = d + 1) begin : g_d
-        wire rl = rr[d];      // this lane's reset copy
+        wire rl = r32[0];      // this lane's reset copy
         // tree role: 0 2 4 6 level 1 (own pair); 1: level 2 (0, 2); 5: level 2 (4, 6); 3: level 3 (1, 5); 7: none
         localparam integer TL = (d % 2 == 0) ? 1 : ((d == 1 || d == 5) ? 2 : ((d == 3) ? 3 : 0));
         localparam integer LA = (d == 3) ? 1 : d - 1;
         localparam integer LB = (d == 3) ? 5 : d + 1;
         wire [15:0] qv = gg[d] ? q1[d * 16 +: 16] : q0[d * 16 +: 16];
-        (* keep_hierarchy *) ot_qwen_nearhbm_prod_ncr u_p (.clk(clk), .rst_n(r32[336+2*d]), .rst_y(r32[337+2*d]), .valid_in(gk_v[d] || g3v),
+        (* keep_hierarchy *) ot_qwen_nearhbm_prod_ncr u_p (.clk(clk), .rst_n(r32[163+2*d]), .rst_y(r32[164+2*d]), .valid_in(gk_v[d] || g3v),
             .a(gk_d[d] ? qv : e3), .k(row3[8*d +: 8]), .y(p_y[32*d +: 32]), .fault(p_f[d]), .valid_out(p_vo[d]));
         wire [31:0] la,lb;
         wire ktv=(TL==1)?ctc[(8*d+7)*3+2]:((TL==2)?k1c[12+(d==5)]:((TL==3)?k2c[12]:1'b0));
@@ -100,7 +98,7 @@ module ot_qkh_lane8_nc32c #(
           end else begin assign la[8*bc+:8]=va;assign lb[8*bc+:8]=vb;end
         end
         wire [1:0] err;
-        (* keep_hierarchy *) ot_hdc_fp32_add_lat_ncr #(.LAT(ADD_LAT)) u_a (.clk(clk), .rst_n(r32[352+2*d]), .rst_y(r32[353+2*d]), .valid_in(ktv || vdv),
+        (* keep_hierarchy *) ot_hdc_fp32_add_lat_ncr #(.LAT(ADD_LAT)) u_a (.clk(clk), .rst_n(r32[179+2*d]), .rst_y(r32[180+2*d]), .valid_in(ktv || vdv),
             .a(la), .b(lb), .y(l_y[32*d +: 32]), .err(err), .valid_out(l_vo[d]));
         assign l_f[d] = l_vo[d] && (err != 2'd0);
         // NC: lane 3's 1-deep pad register and the kp output register capture the same l_y word on the same edge
@@ -125,7 +123,7 @@ module ot_qkh_lane8_nc32c #(
         end
         wire [1:0]  berr;
         wire        bvo;
-        (* keep_hierarchy *) ot_hdc_fp32_add_lat_ncr #(.LAT(ADD_LAT)) u_b (.clk(clk), .rst_n(r32[368+2*d]), .rst_y(r32[369+2*d]), .valid_in(lis),
+        (* keep_hierarchy *) ot_hdc_fp32_add_lat_ncr #(.LAT(ADD_LAT)) u_b (.clk(clk), .rst_n(r32[195+2*d]), .rst_y(r32[196+2*d]), .valid_in(lis),
             .a(lpa), .b(bpa), .y(ly), .err(berr), .valid_out(bvo));
         assign b_f[d] = bvo && (berr != 2'd0);
         for(genvar bc=0;bc<4;bc=bc+1)begin:pv_write
@@ -178,14 +176,24 @@ module ot_qkh_ctl_tree4_leaf #(parameter integer W=12,DEST=100,MUT=0)(
  endgenerate
 endmodule
 
-module ot_qkh_valid_delay16 #(parameter integer D=7)(input wire clk,input wire [D*8-1:0] rr,input wire d,output wire [15:0] q);
- (* keep="true",dont_touch="true" *) reg [15:0] st[0:D-1];
- genvar t,b;
- generate for(t=0;t<D;t=t+1)begin:stage
-  for(b=0;b<16;b=b+1)begin:copy
-   always @(posedge clk or negedge rr[t*8+b/2])if(!rr[t*8+b/2])st[t][b]<=1'b0;
-   else if(t==0)st[t][b]<=d;else st[t][b]<=st[t-1][b];
-  end
- end endgenerate
- assign q=st[D-1];
+// One logical (D-1)-entry x1-bit metadata ring, followed by16 kept local output copies.
+// All ring bits reset, so the valid release age is D even with independent startup data.
+module ot_qkh_valid_delay16 #(parameter integer D=7)(input wire clk,input wire rr,input wire d,output wire [15:0] q);
+ localparam integer N=D-1;
+ reg [N-1:0] mem;
+ (* keep="true",dont_touch="true" *) reg [N-1:0] wp;
+ (* keep="true",dont_touch="true" *) reg [15:0] out_copies;
+ wire rd=|(mem&wp);
+ genvar g;
+ generate
+ if(D!=7)begin:bad ot_qkh_valid_ring_requires_D7 trap();end
+ for(g=0;g<N;g=g+1)begin:entry
+  always @(posedge clk or negedge rr)if(!rr)mem[g]<=0;else if(wp[g])mem[g]<=d;
+ end
+ endgenerate
+ always @(posedge clk or negedge rr)
+  if(!rr)wp<={{(N-1){1'b0}},1'b1};else wp<={wp[N-2:0],wp[N-1]};
+ always @(posedge clk or negedge rr)
+  if(!rr)out_copies<=0;else out_copies<={16{rd}};
+ assign q=out_copies;
 endmodule

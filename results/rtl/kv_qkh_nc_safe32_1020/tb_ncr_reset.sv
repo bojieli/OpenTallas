@@ -21,6 +21,7 @@ module tb_ncr_reset;
   if(dut.w_sub_dist!=={4{dut.w_sub}})errors++;
   if(dut.rnd_c_dist!=={2{dut.rnd_c}})errors++;
   if(dut.u_byp_dist!=={4{dut.u_byp}})errors++;
+  for(integer j=0;j<4;j++)if(!$onehot(dut.bypass_wp[j]))errors++;
  end endtask
  initial begin
   // Long reset first; unreset datapath registers start independently and converge only by sampling.

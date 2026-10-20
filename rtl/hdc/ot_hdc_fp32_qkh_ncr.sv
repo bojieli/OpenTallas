@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Default-off split-reset NC kernels. rst_y and rst_n must have identical phase/contract.
-// 32 output-data reset pins separated from <=9 control reset pins; arithmetic and ages unchanged.
+// 32 output-data reset pins separated from <=25 control reset pins; arithmetic and ages unchanged.
 module ot_hdc_fp32_add_lat_ncr #(
     parameter integer LAT = 7       // only LAT 7 (cuts A, B, C, D + HSPLIT) exists in this variant
 ) (
@@ -75,7 +75,7 @@ module ot_hdc_fp32_add_lat_ncr #(
     wire [27:0] small_b=jam28oh(x_bman,x_dab_oh,x_dab_big);
 
     reg        s1_v, s1_byp, s1_sub, s1_sign, s1_nf;
-    reg [31:0] s1_code;
+    wire [31:0] bypass_stage2;
     reg [7:0]  s1_exp;
     reg [23:0] s1_big;
     reg [26:0] s1_small;
@@ -91,10 +91,10 @@ module ot_hdc_fp32_add_lat_ncr #(
     always @(posedge clk) begin
         s1_byp <= x_byp;
         s1_nf <= x_nf;
-        s1_code[7:0]<=x_nf_dist[0]?8'd0:(x_az_dist[0]?(x_bz_dist[0]?8'd0:x_code_b[7:0]):x_code_a[7:0]);
-        s1_code[15:8]<=x_nf_dist[1]?8'd0:(x_az_dist[1]?(x_bz_dist[1]?8'd0:x_code_b[15:8]):x_code_a[15:8]);
-        s1_code[23:16]<=x_nf_dist[2]?8'd0:(x_az_dist[2]?(x_bz_dist[2]?8'd0:x_code_b[23:16]):x_code_a[23:16]);
-        s1_code[31:24]<=x_nf_dist[3]?8'd0:(x_az_dist[3]?(x_bz_dist[3]?8'd0:x_code_b[31:24]):x_code_a[31:24]);
+
+
+
+
         s1_sub <= x_sub;
         s1_sign <= x_swap[4] ? x_bs : x_as;
         s1_exp <= x_swap[4] ? x_bexp : x_aexp;
@@ -107,6 +107,28 @@ module ot_hdc_fp32_add_lat_ncr #(
 `endif
     end
 
+    // One logical 4-entry x32-bit circular bypass store (128bits), physically four8-bit banks.
+    // All banks write the A2 code each edge; reading the old current slot is a four-edge delay.
+    // The final u_code capture therefore has exactly the old age, without a five-FF hold chain.
+    reg [31:0] bypass_mem[0:3];
+    (* keep="true",dont_touch="true" *) reg [3:0] bypass_wp[0:3];
+    wire [31:0] bypass_read;
+    generate for(j=0;j<4;j=j+1)begin:bypass_bank
+      assign bypass_stage2[8*j+:8]=x_nf_dist[j]?8'd0:(x_az_dist[j]?(x_bz_dist[j]?8'd0:x_code_b[8*j+:8]):x_code_a[8*j+:8]);
+      always @(posedge clk or negedge rst_n)
+        if(!rst_n)bypass_wp[j]<=4'b0001;
+        else bypass_wp[j]<={bypass_wp[j][2:0],bypass_wp[j][3]};
+      for(genvar slot=0;slot<4;slot=slot+1)begin:entry
+        always @(posedge clk)if(bypass_wp[j][slot])bypass_mem[slot][8*j+:8]<=bypass_stage2[8*j+:8];
+      end
+      reg [7:0] rd;integer ri;
+      always @*begin
+        rd=0;
+        for(ri=0;ri<4;ri=ri+1)rd=rd|(bypass_mem[ri][8*j+:8]&{8{bypass_wp[j][ri]}});
+      end
+      assign bypass_read[8*j+:8]=rd;
+    end endgenerate
+
     // ---- B1 ----------------------------------------------------------------------------------------
     wire [27:0] big28 = {1'b0, s1_big, 3'b000};
     wire [27:0] small28 = {1'b0, s1_small};
@@ -117,7 +139,6 @@ module ot_hdc_fp32_add_lat_ncr #(
     // B1 -> B2 cut (u_cb)
     reg         t_v;
     reg         t_byp, t_sub, t_sign, t_nf;
-    reg  [31:0] t_code;
     (* keep="true",dont_touch="true" *) reg [26:0] sentinel;
     reg  [27:0] sum;
     (* keep="true",dont_touch="true" *) reg [2:0] sum_copies;
@@ -126,7 +147,7 @@ module ot_hdc_fp32_add_lat_ncr #(
         if (!rst_n) t_v <= 1'b0;
         else t_v <= s1_v;
     always @(posedge clk) begin
-        t_byp <= s1_byp; t_sub <= s1_sub; t_sign <= s1_sign; t_nf <= s1_nf; t_code <= s1_code; sentinel<=((s1_exp>=1)&&(s1_exp<=27))?(27'd1 << (5'd27-s1_exp[4:0])):27'd0;
+        t_byp <= s1_byp; t_sub <= s1_sub; t_sign <= s1_sign; t_nf <= s1_nf; sentinel<=((s1_exp>=1)&&(s1_exp<=27))?(27'd1 << (5'd27-s1_exp[4:0])):27'd0;
         sum <= sum_w; sum_copies<={3{sum_w[27]}}; t_dif <= dif_w[26:1];
     end
     // ---- B2 ----------------------------------------------------------------------------------------
@@ -151,7 +172,6 @@ module ot_hdc_fp32_add_lat_ncr #(
     // B2a -> B2b cut (u_cd)
     reg         w_v;
     reg         w_byp, w_sub, w_sign, w_nf, w_carry;
-    reg  [31:0] w_code;
     reg  [7:0]  w_exp;
     reg  [26:0] w_add;
     reg  [27:0] w_dif;
@@ -162,7 +182,7 @@ module ot_hdc_fp32_add_lat_ncr #(
         if (!rst_n) w_v <= 1'b0;
         else w_v <= t_v;
     always @(posedge clk) begin
-        w_byp <= t_byp; w_sub <= t_sub; w_sign <= t_sign; w_nf <= t_nf; w_code <= t_code; w_exp <= p_exp;
+        w_byp <= t_byp; w_sub <= t_sub; w_sign <= t_sign; w_nf <= t_nf; w_exp <= p_exp;
         w_add <= add_val; w_dif <= p_dif; lz <= lz_w[4:0]; w_carry <= carry; w_sub_dist<={4{t_sub}};
 
     end
@@ -181,7 +201,6 @@ module ot_hdc_fp32_add_lat_ncr #(
     ot_hdc_ksadd_k #(.W(8)) u_eadd (.a(w_exp), .b(8'd0), .cin(w_carry), .s(exp_add), .cout(exp_add_c));
 
     reg        s2_v, s2_byp, s2_sign, s2_zero, s2_nf;
-    reg [31:0] s2_code;
     reg [7:0]  s2_exp;
     reg [26:0] s2_val;
     always @(posedge clk or negedge rst_n) begin
@@ -189,7 +208,7 @@ module ot_hdc_fp32_add_lat_ncr #(
         else s2_v <= w_v;
     end
     always @(posedge clk) begin
-        s2_byp <= w_byp; s2_nf <= w_nf; s2_code <= w_code; s2_sign <= w_sign;
+        s2_byp <= w_byp; s2_nf <= w_nf; s2_sign <= w_sign;
         s2_zero <= w_sub && (w_dif == 28'd0);
         s2_exp <= w_sub ? exp_sub : exp_add;
         s2_val[6:0]<=w_sub_dist[0]?sub_val[6:0]:w_add[6:0];
@@ -215,7 +234,7 @@ module ot_hdc_fp32_add_lat_ncr #(
         if (!rst_n) u_v <= 1'b0;
         else u_v <= s2_v;
     always @(posedge clk) begin
-        u_byp <= s2_byp; u_zero <= s2_zero; u_sign <= s2_sign; u_nf <= s2_nf; u_code <= s2_code; u_exp <= s2_exp;
+        u_byp <= s2_byp; u_zero <= s2_zero; u_sign <= s2_sign; u_nf <= s2_nf; u_code <= bypass_read; u_exp <= s2_exp;
         rnd <= rnd_w; rnd_c <= rnd_cw; rnd_c_dist<={2{rnd_cw}};u_byp_dist<={4{s2_byp}};
     end
     // ---- C2 ----------------------------------------------------------------------------------------
