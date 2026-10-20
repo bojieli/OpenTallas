@@ -8,7 +8,12 @@ module tb_svc7_bmul;
 `else
  wire candidate_rst_n=rst_n;
 `endif
- ot_s81svc7_bmul_native dut(.clk(clk),.rst_n(candidate_rst_n),.a(a),.b(b),.pad(pad),.y(y),.flt(flt));
+`ifdef BMUL_RTL
+ ot_s81svc7_bmul_graph_input dut
+`else
+ ot_s81svc7_bmul_native dut
+`endif
+ (.clk(clk),.rst_n(candidate_rst_n),.a(a),.b(b),.pad(pad),.y(y),.flt(flt));
  reg r0,r1; reg [32:0] pins;
  always @(posedge clk) begin r0<=rst_n; r1<=r0; pins<={a,b,pad}; end
  // Independent original full 8x8 product, not the split-product source.

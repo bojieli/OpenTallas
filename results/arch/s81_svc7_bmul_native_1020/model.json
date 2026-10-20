@@ -37,5 +37,5 @@
     "scope": "mapped census/depth estimate; no routed closure",
     "latency_edges": 7
   },
-  "qualification": "native32 and exact PASS; independent initial-state SAT pending; no layout/reach/clock qualification"
+  "qualification": "HOLD: native Liberty functional models unverified; native exact and mutant provisional; SAT deliberately incomplete; area/native32 remain valid"
 }

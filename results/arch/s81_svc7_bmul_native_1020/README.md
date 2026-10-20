@@ -1,3 +1,7 @@
+# MODEL INTEGRITY HOLD
+
+COORD01:13: Liberty-to-Verilog DFFASRHQN functional model may be wrong; canonical QN/normal/clear/preset/both-active truth coupon is pending ROOT /root/kv_takeover. ALL native-cell simulation PASS/negative witnesses and unfinished SAT evidence below are PROVISIONAL and cannot qualify adoption. Exact own SAT YosysPID2342269 ep7 terminated by SIGTERM after preserving its incomplete log. No other process was stopped. Native area/fanout results remain valid. Rerun native graph exact/mutant/SAT with verified canonical cell models before adoption. Source-RTL versus golden bench separately launched, independent of native models.
+
 # SVC7 BF16 multiply bounded native leaf (candidate only)
 
 From 4347ce78d with SCC-aware helper cf32860cf (dependency; not duplicated in this source commit). No production caller changes. Preserve four heads, four chunks of eight and the original accumulation order.
@@ -19,3 +23,5 @@ Checklist before layout:
 `probe/native.v` is technology-specific proposed source. `probe/mapped.json` and retained netlists, exact Liberty functional models, input SHA receipts and all stdout logs retain provenance. The original failed attempts (missing staged prefix/lint file) remain in remote out_graph/out_graph2/retention_missing_lint; they are tooling failures, not a native qualification result. No gate, submit or performance claim.
 
 Negative control `BMUL_RESET_MUT=1` bypasses reset at candidate boundary, caught5 mismatches and BMUL_FAIL (exit1); witness in probe/verify_mut/run.log.
+
+Source RTL-only wrapper vs original full8x8 golden (no Liberty models) PASS19991 comparisons Verilator5.050, including all reset pulses; rtl_verify/run.log. Actual candidate sequential inventory only DFFHQNx1_ASAP7_75t_R (305), whose generated model QN<=~D appears consistent; no DFFASRHQN instance occurs. Await ROOT truth coupon before removing native-model HOLD. SAT process ignored SIGTERM; exact KILL of2342269 completed exit137 and no output assertion verdict.
