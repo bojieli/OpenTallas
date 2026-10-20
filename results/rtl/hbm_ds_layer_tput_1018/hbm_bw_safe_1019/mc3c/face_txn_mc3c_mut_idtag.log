@@ -1,0 +1,7 @@
+BW_SAFE_TXN_BEAT_MISMATCH i0 h9b tag00001 beat0 d5a5a0000 safe tag00000 beat0 d5a5a0000
+BW_SAFE_TXN_BEAT_MISMATCH i1 h9b tag00001 beat1 dc46d79b1 safe tag00000 beat1 dc46d79b1
+BW_SAFE_TXN_BEAT_MISMATCH i2 h9b tag00001 beat2 d6634f362 safe tag00000 beat2 d6634f362
+BW_SAFE_TXN_BEAT_MISMATCH i3 h9b tag00001 beat3 d80fc6d13 safe tag00000 beat3 d80fc6d13
+[116102144000] %Fatal: tb_hbm_pc_bw_face_txn.sv:76: Assertion failed in tb: BW_FACE_TXN FAIL errors=12944 MUT_ID_TAG=1
+%Error: rtl/hbm_accel/loader/service_native/tb_hbm_pc_bw_face_txn.sv:76: Verilog $stop
+Aborting...

@@ -51,7 +51,18 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     parameter integer RST_LEAVES=192,
     parameter integer PCID_LOCAL=0,
     // WROK_COPIES=1 (HBM-MC3b): AQ column-issue decision in three identical cones from distinct kept head-bank copies
-    parameter integer WROK_COPIES=0
+    parameter integer WROK_COPIES=0,
+    // POST_REG=1 (HBM-MC3c): register stage on the post-metadata SRAM read data.  The MC3 gates' placement-TT
+    //   macro->reg misses (-113 ps p540 / -148 ps q648 at 833 ps) all start at u_post rd_out (302 ps clk->q) and end
+    //   in the AQ enqueue cone (push_read -> enqueue_aq -> wr_v -> bank_n / look_row / head_local).  Now the post
+    //   entry (bank/col/row/read flag + the 8 regional bank/row copies) is captured in kept stage flops and enters
+    //   the AQ one edge later (+1 edge request->column latency, static: handed to the schedule and priced); wr_v is
+    //   9 kept copies.  Room for the in-flight entry: posting uses wr_r2 (two free) while the stage holds an entry.
+    //   The read-reservation check no longer exempts writes (enqueue needs read_reserved<RQ for every entry), so the
+    //   post decision and the u_post read address are independent of the SRAM output.  POST_REG also sets the AQ's
+    //   ACT_HEAD=1 (ACT candidates start at the head entry's bank): with the shifted enqueue timing the fixed bank-0-first
+    //   ACT order starved a closed high-index head bank for ever (face_txn stalled at 7909/12944 beats).  0 = unchanged.
+    parameter integer POST_REG=0
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -144,9 +155,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     (* keep="true",dont_touch="true" *) reg[2:0]sticky_regions;
     wire[319:0]head={queue_head,head_wdata},push={queue_post,256'b0};
     wire push_read=!push[319];
-    wire enqueue=unposted!=0 && (!push_read || read_reserved<RQ) && !sticky;
-    wire enqueue_aq=unposted_aq!=0&&(!push_read||read_reserved<RQ)&&!sticky;
-    wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
+    wire enqueue=unposted!=0 && (POST_REG!=0 ? read_reserved<RQ : (!push_read || read_reserved<RQ)) && !sticky;
+    wire enqueue_aq=unposted_aq!=0&&(POST_REG!=0 ? read_reserved<RQ : (!push_read||read_reserved<RQ))&&!sticky;
+    wire wr2;(* keep="true",dont_touch="true" *) reg post_hold;
+    // The K credit (count<=QD over accepted entries) already bounds AQ entries + the in-flight stage entry to QD, so
+    // wr2 never binds (a mutant ignoring it cannot overflow, measured); kept as a local structural guarantee.
+    wire wr_post=(POST_REG!=0&&post_hold)?wr2:wr;
+    wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr_post;
     wire[QW:0]unposted_next=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
     always @(posedge clk or negedge lrst_n)
       if(!lrst_n)unposted_aq<=0;else unposted_aq<=unposted_next;
@@ -425,11 +440,38 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     ot_hbm_svc_sram128_n64 #(.W(21),.P192(SRAM_P192)) u_response_identity(.clk(clk),.r_ce(response_read),
       .r_addr(7'(response_read_address)),.rd(response_meta21),
       .w_ce(response_write),.w_addr(7'(response_wp)),.wd(pending_meta[20:0]));
-    ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.BANK_REGIONS(8),.WQ(QD),.MRKEY(MRKEY),.SRAM_P192(SRAM_P192),.WROK_COPIES(WROK_COPIES)) controller(
+    // HBM-MC3c post stage (POST_REG=1): kept captures of the SRAM-read post entry; the AQ sees it one edge later.
+    wire aq_v;wire[8:0]aq_v_regions;wire[4:0]aq_bank,aq_col;wire[14:0]aq_row;wire aq_rd;
+    wire[8*19-1:0]aq_row_regions;wire[39:0]aq_bank_regions;
+    generate if(POST_REG!=0)begin:g_post_reg
+      (* keep="true",dont_touch="true" *) reg[8:0]pv_regions;
+      (* keep="true",dont_touch="true" *) reg[4:0]p_bank,p_col;
+      (* keep="true",dont_touch="true" *) reg[14:0]p_row;
+      (* keep="true",dont_touch="true" *) reg p_rd;
+      (* keep="true",dont_touch="true" *) reg[8*15-1:0]p_row_regions;
+      (* keep="true",dont_touch="true" *) reg[39:0]p_bank_regions;
+      always @(posedge clk or negedge lrst_n)
+        if(!lrst_n)begin pv_regions<=0;post_hold<=0;end
+        else begin pv_regions<={9{posted}};post_hold<=posted;end
+      always @(posedge clk)begin
+        p_bank<=push[318:314];p_col<=push[313:309];p_row<=qrow_post;p_rd<=push_read;p_bank_regions<=qbank_post_regions;
+      end
+      for(genvar g=0;g<8;g=g+1)begin:ROWQ
+        always @(posedge clk)p_row_regions[g*15+:15]<=qrow_post_regions[g*19+:15];
+        assign aq_row_regions[g*19+:19]={4'b0,p_row_regions[g*15+:15]};
+      end
+      assign aq_v=pv_regions[8];assign aq_v_regions=pv_regions;assign aq_bank=p_bank;assign aq_col=p_col;
+      assign aq_row=p_row;assign aq_rd=p_rd;assign aq_bank_regions=p_bank_regions;
+    end else begin:g_post_direct
+      always @(posedge clk)post_hold<=1'b0;
+      assign aq_v=enqueue_aq;assign aq_v_regions={9{enqueue_aq}};assign aq_bank=push[318:314];assign aq_col=push[313:309];
+      assign aq_row=qrow_post;assign aq_rd=push_read;assign aq_bank_regions=qbank_post_regions;assign aq_row_regions=qrow_post_regions;
+    end endgenerate
+    ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.BANK_REGIONS(8),.WQ(QD),.MRKEY(MRKEY),.SRAM_P192(SRAM_P192),.WROK_COPIES(WROK_COPIES),.WV_REGIONS(POST_REG),.ACT_HEAD(POST_REG)) controller(
         .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_sp),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         .col_v(),.col_v_regions(cv_regions),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),.ref_fault_regions(pc_fault_regions),
-        .wr_v(enqueue_aq),.wr_bank(push[318:314]),.wr_bank_regions(qbank_post_regions),.wr_col(push[313:309]),.wr_row({4'b0,qrow_post}),.wr_row_regions(qrow_post_regions),.wr_rd(push_read),.wr_r(wr),
+        .wr_v(aq_v),.wr_v_regions(aq_v_regions),.wr_bank(aq_bank),.wr_bank_regions(aq_bank_regions),.wr_col(aq_col),.wr_row({4'b0,aq_row}),.wr_row_regions(aq_row_regions),.wr_rd(aq_rd),.wr_r(wr),.wr_r2(wr2),
         .col_we(cwe),.col_aq(caq),.dbg_held());
     wire sticky_next=sticky||(i_v&&!legal)||kfront_fault||
       (cv_cfg&&(count==0||cwe!=head[319]||cb!=head[318:314]||cc!=head[313:309]||(!cwe&&!caq)||

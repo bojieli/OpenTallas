@@ -99,7 +99,8 @@ def run(a):
     defs += ["OT_PC_CFG_MUT_PC"] if a.pc_mut else []
     defs += ["BURST_GAPS"] if a.burst else []
     defs += ["EXPOSE"] if a.expose else []          # HBM-MC2: SAFE exposed-bank-latency census (observation only)
-    defs += ["OT_PC_SAFE_MC3"] if a.mc3 else []    # HBM-MC3: pure face + reset forest + local pc_id copies
+    defs += ["OT_PC_SAFE_MC3"] if (a.mc3 or a.mc3c) else []
+    defs += ["OT_PC_SAFE_MC3C"] if a.mc3c else []   # HBM-MC3c: + post SRAM read-data stage (+1 edge); MC3 = pure face + reset forest + local pc_id
     tag = "_".join(defs) or "base"
     import hashlib
     h = hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in FILES)).hexdigest()[:10]
@@ -141,7 +142,7 @@ def main():
     g.add_argument("--layers", type=int, default=4); g.add_argument("--seed", type=int, default=1)
     r = sp.add_parser("run"); r.add_argument("--work", required=True); r.add_argument("--pattern", required=True)
     r.add_argument("--burst", action="store_true"); r.add_argument("--pc-mut", action="store_true"); r.add_argument("--h9b", action="store_true"); r.add_argument("--safe", action="store_true"); r.add_argument("--mr", action="store_true"); r.add_argument("--mrkey0", action="store_true")
-    r.add_argument("--gaps", action="store_true"); r.add_argument("--expose", action="store_true"); r.add_argument("--mc3", action="store_true"); r.add_argument("--layers", type=int, default=4)
+    r.add_argument("--gaps", action="store_true"); r.add_argument("--expose", action="store_true"); r.add_argument("--mc3", action="store_true"); r.add_argument("--mc3c", action="store_true"); r.add_argument("--layers", type=int, default=4)
     r.add_argument("--seed", type=int, default=1); r.add_argument("--warm", type=int, default=8)
     a = ap.parse_args()
     if a.cmd == "gen":
