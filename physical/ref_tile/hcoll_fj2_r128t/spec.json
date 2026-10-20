@@ -149,7 +149,32 @@
     "needs": [
      "verilator"
     ],
-    "note": "SAFE-body mutants LA_STALE (SRAM read/loaded lookahead frozen) + LDH_NOFWD (registered loaded decode drops the drain forward)"
+    "note": "SAFE-body mutant OT_PT_MUT_LA_STALE (SRAM flow read + loaded lookahead frozen) -> parent EQ must fail"
+   },
+   {
+    "name": "pt_s128_miter",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_pt_s128_miter.sh {RUN}/bench/miter pass",
+    "expect": "pass",
+    "pass_regex": "PT_S128_EXIT 0",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "random beyond-contract miter programme_target_s128 == programme_target #(ROWS 128) every output every cycle"
+   },
+   {
+    "name": "pt_s128_mut_ldhnofwd",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_pt_s128_miter.sh {RUN}/bench/m_ldh ldhnofwd",
+    "expect": "fail",
+    "fail_regex": "PT_S128_MUTANT ldhnofwd REJECTED",
+    "fail_witness": "results/rtl/hbm_coll_fj_1019/witness/s128_miter_ldhnofwd.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "OT_PT_MUT_LDH_NOFWD: registered loaded[row] decode without the drain-completion forward -> miter must fail"
    }
   ],
   "views_to": "physical/ref_tile/hcoll_fj2_r128t/views",

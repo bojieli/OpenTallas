@@ -42,11 +42,13 @@ if [ "$WHICH" = ptmut ]; then
   echo "COLL_LP_ARS_PTMUT_EXIT $rc"; exit $rc
 fi
 if [ "$WHICH" = fjmut ]; then
-  # HBM-COLLFJ2 10-19: mutants of the SAFE fj body (ot_hgi_coll_static_program_target_s128, ot_hgi_coll_safe_leaves.sv):
-  # OT_PT_MUT_LA_STALE = SRAM flow read / loaded lookahead never advance; OT_PT_MUT_LDH_NOFWD = the registered loaded[row]
-  # decode drops the same-edge drain-completion forward.  Exit 1 when EVERY mutant is REJECTED (job: expect fail).
+  # HBM-COLLFJ2 10-19: mutant of the SAFE fj body (ot_hgi_coll_static_program_target_s128, ot_hgi_coll_safe_leaves.sv):
+  # OT_PT_MUT_LA_STALE = SRAM flow read / loaded lookahead never advance.  Exit 1 when REJECTED (job: expect fail).
+  # (OT_PT_MUT_LDH_NOFWD -- the registered loaded[row] decode without the drain-completion forward -- SURVIVES this parent
+  # programme by construction: the host contract leaves 55 edges after a row's final frame, so no frame meets the drain's
+  # last edge.  It is rejected by the beyond-contract random miter run_coll_pt_s128_miter.sh ldhnofwd.)
   nrej=0; nall=0
-  for m in "m_lastale +define+OT_PT_MUT_LA_STALE" "m_ldhnofwd +define+OT_PT_MUT_LDH_NOFWD"; do
+  for m in "m_lastale +define+OT_PT_MUT_LA_STALE"; do
     set -- $m; eq $1 $2; nall=$((nall+1))
     if grep -q '^LPF_EQ FAIL' "$OUT/$1.log" 2>/dev/null; then echo "EQ_MUTANT $1 REJECTED"; nrej=$((nrej+1)); else echo "EQ_MUTANT $1 SURVIVED"; fi
   done
