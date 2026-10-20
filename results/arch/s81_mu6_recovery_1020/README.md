@@ -1,6 +1,6 @@
 # S81 Gunit L5 historical view import and native HOLD
 
-This imports exactly the26 files changed by immutable record87bbb46b9; import_manifest.json verifies every byte against that record. No source RTL, kits, shared helpers or main policies were imported. Historical CLOSED means TT setup+26.16ps/FF hold+15.42ps/DRC0; SS setup-298.12ps is sensitivity only.
+All26 immutable files from record87bbb46b9 are QUARANTINED under results/history/s81_gunit_l5_ro3_87bbb46b9. No canonical physical/ref_tile view or closure-result paths are published. quarantine_manifest.json maps original paths to historical destinations and verifies every byte; import_manifest.json retains the original source inventory. No source RTL, kits, shared helpers or main policies were imported. Historical CLOSED means TT setup+26.16ps/FF hold+15.42ps/DRC0; SS setup-298.12ps is sensitivity only.
 
 **Binding eligibility is false.** Actual original6_final.odb has4558 unbound PG ITerms on2279 PLACED/do_not_touch cells (2272clkbuf,6delaybuf,1wire). Canonical native global_connect on a separately loaded copy preserves all4558 failures; OpenDB warns protected cells skipped. Original files were mounted read-only and preserved. TrialODB is separately retained on ep9 and is ineligible. No protections cleared, no custom connection commands, no route launches.
 
