@@ -16,12 +16,15 @@ this complete 1088-bit input INSIDE the receiver-parent RTL. It instantiates
 clock SRAM macros (34,816 allocated bits, 8,704 live ring payload bits); valid,
 epoch, pointers and output masking retain the existing ring protocol.
 
-Exact TT arrival differences at the actual named ck pins: 8718.722656 -
+Diagnostic TT arrival differences at ASSUMED ideal parent ck entries: 8718.722656 -
 8788.809570 = -70.086914 ps; FF early: 7037.440918 - 6981.118164 = +56.322754 ps.
 The model reserves 100 ps margin plus 80 ps for EACH endpoint region (160 total).
 The existing D8 SRAM aperture is [1.25 T,4.125 T], T=833.333 ps. L=5 makes macro
-age `(L-3)T+phi`, safely inside that aperture throughout the reserved interval.
-Price is +5 receiver edges / +4166.665 ps per traversal against the direct wire,
+age `(L-3)T+phi`, inside that aperture arithmetically throughout the chosen interval, without
+qualifying any physical source/receiver pair.
+This aperture arithmetic is CONDITIONAL ONLY: g5 views.json labels both slice
+masters ASSUMED ideal zero insertion; no current bound hardleaf clock/port
+map exists. D8 aperture qualification is FALSE. Price is +5 receiver edges / +4166.665 ps per traversal against the direct wire,
 136 bytes/cycle sustained. Every dependent status/scalar/calendar age still
 needs recompilation before bind. K=(L+G-R0-2) mod16 and is captured in a new
 4-bit boot register only while receiver reset is asserted (>=2 receiver edges).
@@ -70,8 +73,8 @@ The model lists each of the ten buses and its +5 receiver-edge price. Data rate
 is 2743 bits/cycle; area is 43*31.992*17.304 um² macros plus unmeasured control.
 No claimed whole-parent latency/rate or replacement of released clock pins.
 
-The successor bench checks full2743bit words (all chunks change), both exact
-signed corner phases modulo a period, four reset/restart cases, boot-offset
+The successor bench checks full2743bit words (all chunks change), both diagnostic
+signed ASSUMED-parent corner phases modulo a period, four reset/restart cases, boot-offset
 freeze under an externally changed K, and wrong-read selector mutation.
 Default candidate source is unbound; first receiver geometry, native census,
 standard equivalence and dependent calendar integration remain required.
@@ -81,3 +84,21 @@ Complete2743b cohort exact unit42030-1792526497 TERMINAL0: positive1618checks
 dependency SHA checks match this worktree. Logs retained in fleet/cohort_*.
 The receiver-parent integration remains a source candidate, not covered by the
 isolated ring mechanism witness; no mapped or physical result is inferred.
+
+## Correction: no measured native slice phase authority
+
+The consumed g5 `chain/dieclk/libs/views.json` explicitly lists qfd_dv_slice2_e
+and qfd_dv_slice2_w as ASSUMED ideal-zero insertion. Their qfd_elements_tt/ff.lib
+arcs assign synthetic related_pin ck[0] to all data ports. Measured die-tree
+arrival at those abstract entries does NOT measure the actual transmitting or
+receiving hardleaf register clock. The earlier packet's D8 fit arithmetic must
+not be read as physical aperture qualification. Both model aperture_qualified
+and all physical/source eligibility flags are FALSE; existing fleet results
+prove only the isolated SRAM ring mechanism and reset-offset behavior.
+
+The current source regional LP parent instead exports ck_wf for u_tw's ten
+outputs and declares all ten corresponding input ports in ef (ck_ef), followed
+by its existing ef->core rings. That SOURCE structure can be audited, but it
+is not the consumed g5 hard view and carries no inherited g5 arrival/phase.
+The flat single-ck parent candidates remain mechanism source prototypes.
+No further bench or gate follows until actual parent/leaf ownership is bound.

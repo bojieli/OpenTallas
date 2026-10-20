@@ -24,7 +24,9 @@
       -70.086914,
       56.322754
     ],
-    "phase_basis": "TT late difference; FF early difference, same corner/pin per subtraction",
+    "phase_basis": "TT late/FF early differences of ASSUMED ideal parent ck entries; NOT native leaf phase",
+    "clock_ownership_bound": false,
+    "phase_qualification_eligible": false,
     "D": 8,
     "width": 1088,
     "macro_count": 17,
@@ -49,7 +51,9 @@
       6
     ],
     "selected_L": 5,
-    "window_ok": true
+    "window_ok": true,
+    "aperture_qualified": false,
+    "phase_authority": "ASSUMED parent ck entry only; no bound native per-port leaf clocks"
   },
   "global_drift_scope": {
     "g5_ps": 1536.3,
@@ -3641,6 +3645,8 @@
       6
     ],
     "selected_L": 5,
-    "window_ok": true
+    "window_ok": true,
+    "aperture_qualified": false,
+    "phase_authority": "ASSUMED parent ck entry only; no bound native per-port leaf clocks"
   }
 }
