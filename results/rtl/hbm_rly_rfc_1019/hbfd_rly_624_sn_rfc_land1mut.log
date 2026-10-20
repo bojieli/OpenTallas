@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+AGE station 1 released after 2 edges (expected 3)
+AGE station 2 released after 4 edges (expected 6)
+AGE station 3 released after 6 edges (expected 9)
+AGE station 4 released after 8 edges (expected 12)
+AGE station 5 released after 10 edges (expected 15)
+RLY_RFC_BENCH FAIL 0 errors 0 rso_errors 7185 rfc_errors 0 assert_errors 1584 age_errors trials=401 ages_checked=264 (hbfd_rly_624_SN_rfc W=624) rfc_age=3 release_edges=3 window_words=36
