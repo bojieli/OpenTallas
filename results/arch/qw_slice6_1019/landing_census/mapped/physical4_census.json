@@ -1,0 +1,403 @@
+{
+  "kind": "ASAP7_TT_recursive_primitive_pin_census",
+  "top": "landing_vehicle",
+  "primitive_cells": 25665,
+  "clock_exclusion": "ck_w and ck_r only",
+  "maximum_loads": 105,
+  "violations": [
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[0].u_local.$abc$64818$auto$dfflibmap.cc:539:dfflibmap$46026[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[0].u_local/$auto$ff.cc:337:slice$7825/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[10].u_local.$abc$53451$auto$dfflibmap.cc:539:dfflibmap$38340[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[10].u_local/$auto$ff.cc:337:slice$12616/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[11].u_local.$abc$53760$auto$dfflibmap.cc:539:dfflibmap$38550[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[11].u_local/$auto$ff.cc:337:slice$12503/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[12].u_local.$abc$54069$auto$dfflibmap.cc:539:dfflibmap$38760[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[12].u_local/$auto$ff.cc:337:slice$12390/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[13].u_local.$abc$54378$auto$dfflibmap.cc:539:dfflibmap$38970[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[13].u_local/$auto$ff.cc:337:slice$12277/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[14].u_local.$abc$54687$auto$dfflibmap.cc:539:dfflibmap$39180[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[14].u_local/$auto$ff.cc:337:slice$12164/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[15].u_local.$abc$54996$auto$dfflibmap.cc:539:dfflibmap$39390[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[15].u_local/$auto$ff.cc:337:slice$12051/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[16].u_local.$abc$55305$auto$dfflibmap.cc:539:dfflibmap$39600[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[16].u_local/$auto$ff.cc:337:slice$11938/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[17].u_local.$abc$55614$auto$dfflibmap.cc:539:dfflibmap$39810[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[17].u_local/$auto$ff.cc:337:slice$11825/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[18].u_local.$abc$55923$auto$dfflibmap.cc:539:dfflibmap$40020[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[18].u_local/$auto$ff.cc:337:slice$11712/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[19].u_local.$abc$56232$auto$dfflibmap.cc:539:dfflibmap$40230[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[19].u_local/$auto$ff.cc:337:slice$11599/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[1].u_local.$abc$50670$auto$dfflibmap.cc:539:dfflibmap$36450[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[1].u_local/$auto$ff.cc:337:slice$13633/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[20].u_local.$abc$56541$auto$dfflibmap.cc:539:dfflibmap$40440[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[20].u_local/$auto$ff.cc:337:slice$11486/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[21].u_local.$abc$56850$auto$dfflibmap.cc:539:dfflibmap$40650[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[21].u_local/$auto$ff.cc:337:slice$11373/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[22].u_local.$abc$57159$auto$dfflibmap.cc:539:dfflibmap$40860[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[22].u_local/$auto$ff.cc:337:slice$11260/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[23].u_local.$abc$57468$auto$dfflibmap.cc:539:dfflibmap$41070[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[23].u_local/$auto$ff.cc:337:slice$11147/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[24].u_local.$abc$57777$auto$dfflibmap.cc:539:dfflibmap$41280[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[24].u_local/$auto$ff.cc:337:slice$11034/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[25].u_local.$abc$58086$auto$dfflibmap.cc:539:dfflibmap$41490[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[25].u_local/$auto$ff.cc:337:slice$10921/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[26].u_local.$abc$58395$auto$dfflibmap.cc:539:dfflibmap$41700[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[26].u_local/$auto$ff.cc:337:slice$10808/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[27].u_local.$abc$58704$auto$dfflibmap.cc:539:dfflibmap$41910[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[27].u_local/$auto$ff.cc:337:slice$10695/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[28].u_local.$abc$59013$auto$dfflibmap.cc:539:dfflibmap$42120[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[28].u_local/$auto$ff.cc:337:slice$10582/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[29].u_local.$abc$59322$auto$dfflibmap.cc:539:dfflibmap$42330[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[29].u_local/$auto$ff.cc:337:slice$10469/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[2].u_local.$abc$50979$auto$dfflibmap.cc:539:dfflibmap$36660[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[2].u_local/$auto$ff.cc:337:slice$13520/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[30].u_local.$abc$59631$auto$dfflibmap.cc:539:dfflibmap$42540[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[30].u_local/$auto$ff.cc:337:slice$10356/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[31].u_local.$abc$59940$auto$dfflibmap.cc:539:dfflibmap$42750[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[31].u_local/$auto$ff.cc:337:slice$10243/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[32].u_local.$abc$60249$auto$dfflibmap.cc:539:dfflibmap$42960[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[32].u_local/$auto$ff.cc:337:slice$10130/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[33].u_local.$abc$60558$auto$dfflibmap.cc:539:dfflibmap$43170[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[33].u_local/$auto$ff.cc:337:slice$10017/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[34].u_local.$abc$60867$auto$dfflibmap.cc:539:dfflibmap$43380[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[34].u_local/$auto$ff.cc:337:slice$9904/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[35].u_local.$abc$61176$auto$dfflibmap.cc:539:dfflibmap$43590[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[35].u_local/$auto$ff.cc:337:slice$9791/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[36].u_local.$abc$61485$auto$dfflibmap.cc:539:dfflibmap$43800[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[36].u_local/$auto$ff.cc:337:slice$9678/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[37].u_local.$abc$61794$auto$dfflibmap.cc:539:dfflibmap$44010[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[37].u_local/$auto$ff.cc:337:slice$9565/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[38].u_local.$abc$62103$auto$dfflibmap.cc:539:dfflibmap$44220[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[38].u_local/$auto$ff.cc:337:slice$9452/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[39].u_local.$abc$62412$auto$dfflibmap.cc:539:dfflibmap$44430[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[39].u_local/$auto$ff.cc:337:slice$9339/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[3].u_local.$abc$51288$auto$dfflibmap.cc:539:dfflibmap$36870[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[3].u_local/$auto$ff.cc:337:slice$13407/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[40].u_local.$abc$62721$auto$dfflibmap.cc:539:dfflibmap$44640[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[40].u_local/$auto$ff.cc:337:slice$9226/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[41].u_local.$abc$63030$auto$dfflibmap.cc:539:dfflibmap$44850[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[41].u_local/$auto$ff.cc:337:slice$9113/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[42].u_local.$abc$63339$auto$dfflibmap.cc:539:dfflibmap$45060[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[42].u_local/$auto$ff.cc:337:slice$9000/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[43].u_local.$abc$63648$auto$dfflibmap.cc:539:dfflibmap$45270[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[43].u_local/$auto$ff.cc:337:slice$8887/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[44].u_local.$abc$63957$auto$dfflibmap.cc:539:dfflibmap$45480[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[44].u_local/$auto$ff.cc:337:slice$8774/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[4].u_local.$abc$51597$auto$dfflibmap.cc:539:dfflibmap$37080[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[4].u_local/$auto$ff.cc:337:slice$13294/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[5].u_local.$abc$51906$auto$dfflibmap.cc:539:dfflibmap$37290[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[5].u_local/$auto$ff.cc:337:slice$13181/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[6].u_local.$abc$52215$auto$dfflibmap.cc:539:dfflibmap$37500[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[6].u_local/$auto$ff.cc:337:slice$13068/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[7].u_local.$abc$52524$auto$dfflibmap.cc:539:dfflibmap$37710[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[7].u_local/$auto$ff.cc:337:slice$12955/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[8].u_local.$abc$52833$auto$dfflibmap.cc:539:dfflibmap$37920[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[8].u_local/$auto$ff.cc:337:slice$12842/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[9].u_local.$abc$53142$auto$dfflibmap.cc:539:dfflibmap$38130[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[9].u_local/$auto$ff.cc:337:slice$12729/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[45].u_local.$abc$64266$auto$dfflibmap.cc:539:dfflibmap$45690[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[45].u_local/$auto$ff.cc:337:slice$8661/QN",
+      "loads": 69
+    },
+    {
+      "net": "landing_vehicle.g_physical.r.rsi[0]",
+      "driver": "top_input",
+      "loads": 46
+    },
+    {
+      "net": "landing_vehicle.g_physical.w.rsi[0]",
+      "driver": "top_input",
+      "loads": 46
+    }
+  ],
+  "top_drivers": [
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[0].u_local.$abc$64818$auto$dfflibmap.cc:539:dfflibmap$46026[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[0].u_local/$auto$ff.cc:337:slice$7825/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[10].u_local.$abc$53451$auto$dfflibmap.cc:539:dfflibmap$38340[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[10].u_local/$auto$ff.cc:337:slice$12616/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[11].u_local.$abc$53760$auto$dfflibmap.cc:539:dfflibmap$38550[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[11].u_local/$auto$ff.cc:337:slice$12503/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[12].u_local.$abc$54069$auto$dfflibmap.cc:539:dfflibmap$38760[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[12].u_local/$auto$ff.cc:337:slice$12390/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[13].u_local.$abc$54378$auto$dfflibmap.cc:539:dfflibmap$38970[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[13].u_local/$auto$ff.cc:337:slice$12277/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[14].u_local.$abc$54687$auto$dfflibmap.cc:539:dfflibmap$39180[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[14].u_local/$auto$ff.cc:337:slice$12164/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[15].u_local.$abc$54996$auto$dfflibmap.cc:539:dfflibmap$39390[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[15].u_local/$auto$ff.cc:337:slice$12051/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[16].u_local.$abc$55305$auto$dfflibmap.cc:539:dfflibmap$39600[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[16].u_local/$auto$ff.cc:337:slice$11938/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[17].u_local.$abc$55614$auto$dfflibmap.cc:539:dfflibmap$39810[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[17].u_local/$auto$ff.cc:337:slice$11825/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[18].u_local.$abc$55923$auto$dfflibmap.cc:539:dfflibmap$40020[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[18].u_local/$auto$ff.cc:337:slice$11712/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[19].u_local.$abc$56232$auto$dfflibmap.cc:539:dfflibmap$40230[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[19].u_local/$auto$ff.cc:337:slice$11599/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[1].u_local.$abc$50670$auto$dfflibmap.cc:539:dfflibmap$36450[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[1].u_local/$auto$ff.cc:337:slice$13633/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[20].u_local.$abc$56541$auto$dfflibmap.cc:539:dfflibmap$40440[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[20].u_local/$auto$ff.cc:337:slice$11486/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[21].u_local.$abc$56850$auto$dfflibmap.cc:539:dfflibmap$40650[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[21].u_local/$auto$ff.cc:337:slice$11373/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[22].u_local.$abc$57159$auto$dfflibmap.cc:539:dfflibmap$40860[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[22].u_local/$auto$ff.cc:337:slice$11260/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[23].u_local.$abc$57468$auto$dfflibmap.cc:539:dfflibmap$41070[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[23].u_local/$auto$ff.cc:337:slice$11147/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[24].u_local.$abc$57777$auto$dfflibmap.cc:539:dfflibmap$41280[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[24].u_local/$auto$ff.cc:337:slice$11034/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[25].u_local.$abc$58086$auto$dfflibmap.cc:539:dfflibmap$41490[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[25].u_local/$auto$ff.cc:337:slice$10921/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[26].u_local.$abc$58395$auto$dfflibmap.cc:539:dfflibmap$41700[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[26].u_local/$auto$ff.cc:337:slice$10808/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[27].u_local.$abc$58704$auto$dfflibmap.cc:539:dfflibmap$41910[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[27].u_local/$auto$ff.cc:337:slice$10695/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[28].u_local.$abc$59013$auto$dfflibmap.cc:539:dfflibmap$42120[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[28].u_local/$auto$ff.cc:337:slice$10582/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[29].u_local.$abc$59322$auto$dfflibmap.cc:539:dfflibmap$42330[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[29].u_local/$auto$ff.cc:337:slice$10469/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[2].u_local.$abc$50979$auto$dfflibmap.cc:539:dfflibmap$36660[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[2].u_local/$auto$ff.cc:337:slice$13520/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[30].u_local.$abc$59631$auto$dfflibmap.cc:539:dfflibmap$42540[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[30].u_local/$auto$ff.cc:337:slice$10356/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[31].u_local.$abc$59940$auto$dfflibmap.cc:539:dfflibmap$42750[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[31].u_local/$auto$ff.cc:337:slice$10243/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[32].u_local.$abc$60249$auto$dfflibmap.cc:539:dfflibmap$42960[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[32].u_local/$auto$ff.cc:337:slice$10130/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[33].u_local.$abc$60558$auto$dfflibmap.cc:539:dfflibmap$43170[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[33].u_local/$auto$ff.cc:337:slice$10017/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[34].u_local.$abc$60867$auto$dfflibmap.cc:539:dfflibmap$43380[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[34].u_local/$auto$ff.cc:337:slice$9904/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[35].u_local.$abc$61176$auto$dfflibmap.cc:539:dfflibmap$43590[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[35].u_local/$auto$ff.cc:337:slice$9791/QN",
+      "loads": 105
+    },
+    {
+      "net": "landing_vehicle/g_physical.w.g_chunk[36].u_local.$abc$61485$auto$dfflibmap.cc:539:dfflibmap$43800[0]",
+      "driver": "landing_vehicle/g_physical.w.g_chunk[36].u_local/$auto$ff.cc:337:slice$9678/QN",
+      "loads": 105
+    }
+  ],
+  "pass": false,
+  "limits": "Physical reach/depth/storage/registered-boundary remain separate; no cell-model equivalence claim"
+}

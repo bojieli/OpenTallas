@@ -1,0 +1,818 @@
+
+-- Running command `read_liberty -lib /work/mapped3/merged.lib; read_verilog -sv -D SYNTHESIS rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_physical.sv rtl/test/qwen_dv/landing_census/vehicle.sv; chparam -set W 1095 -set D 4 -set K 2 -set PHYSICAL 0 landing_vehicle; synth -top landing_vehicle -flatten -noabc; dfflibmap -liberty /work/mapped3/merged.lib; abc -liberty /work/mapped3/merged.lib; clean; write_json /work/mapped3/generic4.json; stat -liberty /work/mapped3/merged.lib' --
+
+1. Executing Liberty frontend: /work/mapped3/merged.lib
+Imported 202 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: rtl/common/landed_parent/ot_pl_land.sv
+Parsing SystemVerilog input from `rtl/common/landed_parent/ot_pl_land.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_land_w'.
+Warning: Replacing memory \e with list of registers. See rtl/common/landed_parent/ot_pl_land.sv:41
+Warning: Replacing memory \b with list of registers. See rtl/common/landed_parent/ot_pl_land.sv:41
+Generating RTLIL representation for module `\ot_pl_land_r'.
+Generating RTLIL representation for module `\ot_pl_land_chunk_w'.
+Generating RTLIL representation for module `\ot_pl_land_chunk_r'.
+Generating RTLIL representation for module `\ot_pl_land_local_w'.
+Warning: Replacing memory \epoch with list of registers. See rtl/common/landed_parent/ot_pl_land.sv:191
+Warning: Replacing memory \data with list of registers. See rtl/common/landed_parent/ot_pl_land.sv:191
+Generating RTLIL representation for module `\ot_pl_land_local_r'.
+Generating RTLIL representation for module `\ot_pl_pad'.
+Warning: Replacing memory \g_reg.r with list of registers. See rtl/common/landed_parent/ot_pl_land.sv:263
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/common/landed_parent/ot_pl_land_physical.sv
+Parsing SystemVerilog input from `rtl/common/landed_parent/ot_pl_land_physical.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_land_phys_chunk_w'.
+Generating RTLIL representation for module `\ot_pl_land_phys_chunk_r'.
+Generating RTLIL representation for module `\ot_pl_land_phys_local_w'.
+Warning: Replacing memory \data with list of registers. See rtl/common/landed_parent/ot_pl_land_physical.sv:40
+Generating RTLIL representation for module `\ot_pl_land_phys_local_r'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/test/qwen_dv/landing_census/vehicle.sv
+Parsing SystemVerilog input from `rtl/test/qwen_dv/landing_census/vehicle.sv' to AST representation.
+Generating RTLIL representation for module `\landing_vehicle'.
+Successfully finished Verilog frontend.
+Parameter \W = 1095
+Parameter \D = 4
+Parameter \K = 2
+Parameter \PHYSICAL = 0
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\landing_vehicle'.
+Parameter \W = 1095
+Parameter \D = 4
+Parameter \K = 2
+Parameter \PHYSICAL = 0
+Generating RTLIL representation for module `$paramod$2231e52793cc8f6d4359a069088dc9baca9efb34\landing_vehicle'.
+
+6. Executing SYNTH pass.
+
+6.1. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1.1. Analyzing design hierarchy..
+Top module:  \landing_vehicle
+Used module:     \ot_pl_land_w
+Used module:     \ot_pl_land_r
+Parameter \W = 1095
+Parameter \D = 4
+
+6.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_w'.
+Parameter \W = 1095
+Parameter \D = 4
+Generating RTLIL representation for module `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w'.
+Warning: Replacing memory \e with list of registers. See rtl/common/landed_parent/ot_pl_land.sv:41
+Warning: Replacing memory \b with list of registers. See rtl/common/landed_parent/ot_pl_land.sv:41
+Parameter \W = 1095
+Parameter \D = 4
+Parameter \K = 2
+
+6.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_pl_land_r'.
+Parameter \W = 1095
+Parameter \D = 4
+Parameter \K = 2
+Generating RTLIL representation for module `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r'.
+
+6.1.4. Analyzing design hierarchy..
+Top module:  \landing_vehicle
+Used module:     $paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w
+Used module:     $paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r
+
+6.1.5. Analyzing design hierarchy..
+Top module:  \landing_vehicle
+Used module:     $paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w
+Used module:     $paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r
+Removing unused module `\ot_pl_land_phys_local_r'.
+Removing unused module `\ot_pl_land_phys_local_w'.
+Removing unused module `\ot_pl_land_phys_chunk_r'.
+Removing unused module `\ot_pl_land_phys_chunk_w'.
+Removing unused module `\ot_pl_pad'.
+Removing unused module `\ot_pl_land_local_r'.
+Removing unused module `\ot_pl_land_local_w'.
+Removing unused module `\ot_pl_land_chunk_r'.
+Removing unused module `\ot_pl_land_chunk_w'.
+Removing unused module `\ot_pl_land_r'.
+Removing unused module `\ot_pl_land_w'.
+Removed 11 unused modules.
+
+6.2. Executing PROC pass (convert processes to netlists).
+
+6.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/common/landed_parent/ot_pl_land.sv:71$181 in module $paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.
+Marked 1 switch rules as full_case in process $proc$rtl/common/landed_parent/ot_pl_land.sv:36$154 in module $paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.
+Marked 1 switch rules as full_case in process $proc$rtl/common/landed_parent/ot_pl_land.sv:33$150 in module $paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.
+Removed a total of 0 dead cases.
+
+6.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 8 assignments to connections.
+
+6.2.4. Executing PROC_INIT pass (extract init attributes).
+
+6.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+6.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~8 debug messages>
+
+6.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:85$199'.
+Creating decoders for process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:81$186'.
+Creating decoders for process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:71$181'.
+     1/2: $0\rc[2:0]
+     2/2: $0\warm[0:0]
+Creating decoders for process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:70$180'.
+Creating decoders for process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$176'.
+     1/2: $0\e[3][2:0]
+     2/2: $0\b[3][1094:0]
+Creating decoders for process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$173'.
+     1/2: $0\e[2][2:0]
+     2/2: $0\b[2][1094:0]
+Creating decoders for process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$170'.
+     1/2: $0\e[1][2:0]
+     2/2: $0\b[1][1094:0]
+Creating decoders for process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$167'.
+     1/2: $0\e[0][2:0]
+     2/2: $0\b[0][1094:0]
+Creating decoders for process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:36$154'.
+     1/2: $1$lookahead\v$153[3:0]$159
+     2/2: $1$bitselwrite$pos$rtl/common/landed_parent/ot_pl_land.sv:38$148[1:0]$158
+Creating decoders for process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:33$150'.
+     1/1: $0\wc[2:0]
+Creating decoders for process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:32$149'.
+
+6.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.\pick' from process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:81$186'.
+No latch inferred for signal `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.\j' from process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:81$186'.
+
+6.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.\o' using process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:85$199'.
+  created $dff cell `$procdff$236' with positive edge clock.
+Creating register for signal `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.\rc' using process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:71$181'.
+  created $dff cell `$procdff$237' with positive edge clock.
+Creating register for signal `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.\warm' using process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:71$181'.
+  created $dff cell `$procdff$238' with positive edge clock.
+Creating register for signal `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.\rq' using process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:70$180'.
+  created $dff cell `$procdff$239' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\b[3]' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$176'.
+  created $dff cell `$procdff$240' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\e[3]' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$176'.
+  created $dff cell `$procdff$241' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\b[2]' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$173'.
+  created $dff cell `$procdff$242' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\e[2]' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$173'.
+  created $dff cell `$procdff$243' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\b[1]' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$170'.
+  created $dff cell `$procdff$244' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\e[1]' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$170'.
+  created $dff cell `$procdff$245' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\b[0]' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$167'.
+  created $dff cell `$procdff$246' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\e[0]' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$167'.
+  created $dff cell `$procdff$247' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\v' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:36$154'.
+  created $dff cell `$procdff$248' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$bitselwrite$pos$rtl/common/landed_parent/ot_pl_land.sv:38$148' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:36$154'.
+  created $dff cell `$procdff$249' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$lookahead\v$153' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:36$154'.
+  created $dff cell `$procdff$250' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\wc' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:33$150'.
+  created $dff cell `$procdff$251' with positive edge clock.
+Creating register for signal `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.\rq' using process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:32$149'.
+  created $dff cell `$procdff$252' with positive edge clock.
+
+6.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:85$199'.
+Removing empty process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:81$186'.
+Found and cleaned up 2 empty switches in `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:71$181'.
+Removing empty process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:71$181'.
+Removing empty process `$paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.$proc$rtl/common/landed_parent/ot_pl_land.sv:70$180'.
+Found and cleaned up 1 empty switch in `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$176'.
+Removing empty process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$176'.
+Found and cleaned up 1 empty switch in `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$173'.
+Removing empty process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$173'.
+Found and cleaned up 1 empty switch in `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$170'.
+Removing empty process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$170'.
+Found and cleaned up 1 empty switch in `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$167'.
+Removing empty process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:41$167'.
+Found and cleaned up 1 empty switch in `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:36$154'.
+Removing empty process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:36$154'.
+Found and cleaned up 1 empty switch in `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:33$150'.
+Removing empty process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:33$150'.
+Removing empty process `$paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.$proc$rtl/common/landed_parent/ot_pl_land.sv:32$149'.
+Cleaned up 8 empty switches.
+
+6.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+Optimizing module $paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.
+<suppressed ~5 debug messages>
+Optimizing module $paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.
+<suppressed ~4 debug messages>
+
+6.3. Executing CHECK pass (checking for obvious problems).
+Checking module landing_vehicle...
+Checking module $paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r...
+Checking module $paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w...
+Found and reported 0 problems.
+
+6.4. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$fd797bf13db487bbb2e90e14c388891d96014184\ot_pl_land_r.
+Deleting now unused module $paramod$466587a82f065b588334ed3c1632c268f08623bb\ot_pl_land_w.
+<suppressed ~2 debug messages>
+
+6.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+Removed 14 unused cells and 56 unused wires.
+<suppressed ~22 debug messages>
+
+6.7. Executing CHECK pass (checking for obvious problems).
+Checking module landing_vehicle...
+Found and reported 0 problems.
+
+6.8. Executing OPT pass (performing simple optimizations).
+
+6.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 55 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Computing hashes of 54 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Computing hashes of 53 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+6.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \landing_vehicle..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~19 debug messages>
+
+6.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \landing_vehicle.
+Performed a total of 0 changes.
+
+6.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 53 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+6.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \landing_vehicle..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~19 debug messages>
+
+6.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \landing_vehicle.
+Performed a total of 0 changes.
+
+6.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 53 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+
+6.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6.9. Executing FSM pass (extract and optimize FSM).
+
+6.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+6.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+6.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+6.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+
+6.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+6.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+6.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+6.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+6.10. Executing OPT pass (performing simple optimizations).
+
+6.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 53 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \landing_vehicle..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~19 debug messages>
+
+6.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \landing_vehicle.
+Performed a total of 0 changes.
+
+6.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 53 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\g_generic.r.$procdff$237 ($dff) from module landing_vehicle (D = $flatten\g_generic.r.$add$rtl/common/landed_parent/ot_pl_land.sv:74$183_Y, Q = \g_generic.r.rc, rval = 3'000).
+Adding SRST signal on $flatten\g_generic.r.$procdff$236 ($dff) from module landing_vehicle (D = \g_generic.r.pick, Q = \g_generic.r.o, rval = 1095'000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).
+Adding SRST signal on $flatten\g_generic.r.$procdff$238 ($dff) from module landing_vehicle (D = $flatten\g_generic.r.$procmux$206_Y, Q = \g_generic.r.warm, rval = 1'0).
+Adding EN signal on $auto$ff.cc:337:slice$257 ($sdff) from module landing_vehicle (D = 1'1, Q = \g_generic.r.warm).
+Adding SRST signal on $flatten\g_generic.w.$procdff$251 ($dff) from module landing_vehicle (D = $flatten\g_generic.w.$add$rtl/common/landed_parent/ot_pl_land.sv:35$152_Y, Q = \g_generic.w.wc, rval = 3'000).
+Adding SRST signal on $flatten\g_generic.w.$procdff$248 ($dff) from module landing_vehicle (D = $flatten\g_generic.w.$or$rtl/common/landed_parent/ot_pl_land.sv:38$166_Y, Q = \g_generic.w.v, rval = 4'0000).
+Adding EN signal on $flatten\g_generic.w.$procdff$246 ($dff) from module landing_vehicle (D = \i, Q = \g_generic.w.b[0]).
+Adding EN signal on $flatten\g_generic.w.$procdff$244 ($dff) from module landing_vehicle (D = \i, Q = \g_generic.w.b[1]).
+Adding EN signal on $flatten\g_generic.w.$procdff$242 ($dff) from module landing_vehicle (D = \i, Q = \g_generic.w.b[2]).
+Adding EN signal on $flatten\g_generic.w.$procdff$240 ($dff) from module landing_vehicle (D = \i, Q = \g_generic.w.b[3]).
+
+6.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+Removed 10 unused cells and 10 unused wires.
+<suppressed ~11 debug messages>
+
+6.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \landing_vehicle..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \landing_vehicle.
+Performed a total of 0 changes.
+
+6.10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 43 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+
+6.10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6.11. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 2) from port B of cell landing_vehicle.$flatten\g_generic.r.$eq$rtl/common/landed_parent/ot_pl_land.sv:83$190 ($eq).
+Removed top 2 bits (of 3) from port B of cell landing_vehicle.$flatten\g_generic.r.$eq$rtl/common/landed_parent/ot_pl_land.sv:75$185 ($eq).
+Removed top 1 bits (of 3) from port B of cell landing_vehicle.$flatten\g_generic.r.$sub$rtl/common/landed_parent/ot_pl_land.sv:68$179 ($sub).
+Removed top 1 bits (of 3) from port Y of cell landing_vehicle.$flatten\g_generic.r.$sub$rtl/common/landed_parent/ot_pl_land.sv:68$179 ($sub).
+Removed top 1 bits (of 3) from port A of cell landing_vehicle.$flatten\g_generic.r.$sub$rtl/common/landed_parent/ot_pl_land.sv:68$179 ($sub).
+Removed top 1 bits (of 2) from port B of cell landing_vehicle.$flatten\g_generic.w.$eq$rtl/common/landed_parent/ot_pl_land.sv:41$171 ($eq).
+Converting cell landing_vehicle.$flatten\g_generic.w.$neg$rtl/common/landed_parent/ot_pl_land.sv:38$164 ($neg) from signed to unsigned.
+Removed top 1 bits (of 3) from port A of cell landing_vehicle.$flatten\g_generic.w.$neg$rtl/common/landed_parent/ot_pl_land.sv:38$164 ($neg).
+
+6.12. Executing PEEPOPT pass (run peephole optimizers).
+
+6.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+
+6.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module landing_vehicle:
+  creating $macc model for $flatten\g_generic.w.$neg$rtl/common/landed_parent/ot_pl_land.sv:38$164 ($neg).
+  creating $macc model for $flatten\g_generic.w.$add$rtl/common/landed_parent/ot_pl_land.sv:35$152 ($add).
+  creating $macc model for $flatten\g_generic.r.$add$rtl/common/landed_parent/ot_pl_land.sv:74$183 ($add).
+  creating $macc model for $flatten\g_generic.r.$sub$rtl/common/landed_parent/ot_pl_land.sv:68$179 ($sub).
+  creating $alu model for $macc $flatten\g_generic.r.$sub$rtl/common/landed_parent/ot_pl_land.sv:68$179.
+  creating $alu model for $macc $flatten\g_generic.r.$add$rtl/common/landed_parent/ot_pl_land.sv:74$183.
+  creating $alu model for $macc $flatten\g_generic.w.$add$rtl/common/landed_parent/ot_pl_land.sv:35$152.
+  creating $alu model for $macc $flatten\g_generic.w.$neg$rtl/common/landed_parent/ot_pl_land.sv:38$164.
+  creating $alu cell for $flatten\g_generic.w.$neg$rtl/common/landed_parent/ot_pl_land.sv:38$164: $auto$alumacc.cc:512:replace_alu$265
+  creating $alu cell for $flatten\g_generic.w.$add$rtl/common/landed_parent/ot_pl_land.sv:35$152: $auto$alumacc.cc:512:replace_alu$268
+  creating $alu cell for $flatten\g_generic.r.$add$rtl/common/landed_parent/ot_pl_land.sv:74$183: $auto$alumacc.cc:512:replace_alu$271
+  creating $alu cell for $flatten\g_generic.r.$sub$rtl/common/landed_parent/ot_pl_land.sv:68$179: $auto$alumacc.cc:512:replace_alu$274
+  created 4 $alu and 0 $macc cells.
+
+6.15. Executing SHARE pass (SAT-based resource sharing).
+
+6.16. Executing OPT pass (performing simple optimizations).
+
+6.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 43 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \landing_vehicle..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \landing_vehicle.
+Performed a total of 0 changes.
+
+6.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 43 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+
+6.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.16.9. Finished fast OPT passes. (There is nothing left to do.)
+
+6.17. Executing MEMORY pass.
+
+6.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+6.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+6.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+6.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+6.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+6.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+
+6.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+6.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+6.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+
+6.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+6.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+
+6.19. Executing OPT pass (performing simple optimizations).
+
+6.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+<suppressed ~2 debug messages>
+
+6.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 44 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+Removed 1 unused cells and 1 unused wires.
+<suppressed ~2 debug messages>
+
+6.19.5. Finished fast OPT passes.
+
+6.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+6.21. Executing OPT pass (performing simple optimizations).
+
+6.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 43 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \landing_vehicle..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+6.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \landing_vehicle.
+Performed a total of 0 changes.
+
+6.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 43 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Removed a total of 0 cells.
+
+6.21.6. Executing OPT_SHARE pass.
+
+6.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+
+6.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+
+6.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+6.22. Executing TECHMAP pass (map to technology primitives).
+
+6.22.1. Executing Verilog-2005 frontend: /usr/local/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/local/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+6.22.2. Continuing TECHMAP pass.
+Using template $paramod$fc972a7a46956c1788f3cb5257b53c8f1df2d0cc\_90_alu for cells of type $alu.
+Using template $paramod$3ef7d3dd227da7627a99c5e5a6a4deb817573e39\_90_alu for cells of type $alu.
+Using template $paramod$ef8fb1849064cca7dc908988762d3374786d9fdb\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $sdff.
+Using extmapper simplemap for cells of type $sdffe.
+Using extmapper simplemap for cells of type $logic_and.
+Using template $paramod$constmap:4700dd0864a20052c5af7bc43dd5a99bf9b14945$paramod$7fe1424d9d826b3a6286885bc851fafa5143be2b\_90_shift_shiftx for cells of type $shiftx.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $dff.
+Using template $paramod$constmap:d6fff7a1d5912e7277ff55b9a478b5115760128b$paramod$64b19f47ed5f126636dbd98d727ec46a7ec08d71\_90_shift_shiftx for cells of type $shift.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000001 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~770 debug messages>
+
+6.23. Executing OPT pass (performing simple optimizations).
+
+6.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module landing_vehicle.
+<suppressed ~125 debug messages>
+
+6.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\landing_vehicle'.
+Computing hashes of 13236 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Computing hashes of 13224 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+Computing hashes of 13223 cells of `\landing_vehicle'.
+Finding duplicate cells in `\landing_vehicle'.
+<suppressed ~39 debug messages>
+Removed a total of 13 cells.
+
+6.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \landing_vehicle..
+Removed 13 unused cells and 212 unused wires.
+<suppressed ~14 debug messages>
+
+6.23.5. Finished fast OPT passes.
+
+6.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `landing_vehicle'. Setting top module to landing_vehicle.
+
+6.24.1. Analyzing design hierarchy..
+Top module:  \landing_vehicle
+
+6.24.2. Analyzing design hierarchy..
+Top module:  \landing_vehicle
+Removed 0 unused modules.
+
+6.25. Printing statistics.
+
+=== landing_vehicle ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       76 wires
+    29711 wire bits
+       33 public wires
+    23068 public wire bits
+        6 ports
+     2194 port bits
+    13210 cells
+     4391   $_AND_
+     4380   $_DFFE_PP_
+        2   $_DFF_P_
+       10   $_MUX_
+       18   $_NOT_
+     3298   $_OR_
+        1   $_SDFFE_PN0P_
+     1104   $_SDFF_PN0_
+        4   $_XOR_
+        2   $scopeinfo
+
+6.26. Executing CHECK pass (checking for obvious problems).
+Checking module landing_vehicle...
+Found and reported 0 problems.
+
+7. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+7.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\landing_vehicle':
+  mapped 5487 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+8. Executing ABC pass (technology mapping using ABC).
+
+8.1. Extracting gate netlist of module `\landing_vehicle' to `<abc-temp-dir>/input.blif'..
+
+8.1.1. Executed ABC.
+Extracted 18694 gates and 25278 wires to a netlist network with 6582 inputs and 6580 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0ecc081b.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+8.1.2. Re-integrating ABC results.
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     1102
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:     4385
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:        6
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:     1098
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OA222x2_ASAP7_75t_R cells:     1095
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:     4382
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:        1
+ABC RESULTS:        internal signals:    12116
+ABC RESULTS:           input signals:     6582
+ABC RESULTS:          output signals:     6580
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 13222 unused wires.
+
+9. Executing JSON backend.
+
+10. Printing statistics.
+
+=== landing_vehicle ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    16486        - wires
+    20900        - wire bits
+       17        - public wires
+     4431        - public wire bits
+        6        - ports
+     2194        - port bits
+    17566 2.51E+03 cells
+        2        -   $scopeinfo
+        1    0.087   AND3x1_ASAP7_75t_R
+        1    0.073   AOI21xp33_ASAP7_75t_R
+     5487  1.6E+03   DFFHQNx1_ASAP7_75t_R
+     1102   48.201   INVx1_ASAP7_75t_R
+     4385  255.733   NAND2xp33_ASAP7_75t_R
+        2    0.117   NOR2xp33_ASAP7_75t_R
+        6    0.437   NOR3xp33_ASAP7_75t_R
+     1098   96.053   O2A1O1Ixp33_ASAP7_75t_R
+        1    0.102   OA21x2_ASAP7_75t_R
+     1095  191.581   OA222x2_ASAP7_75t_R
+     4382  319.448   OAI21xp33_ASAP7_75t_R
+        1    0.087   OAI22xp33_ASAP7_75t_R
+        1    0.087   OAI31xp33_ASAP7_75t_R
+        1    0.087   OR2x2_ASAP7_75t_R
+        1    0.087   OR3x1_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\landing_vehicle': 2512.192320
+     of which used for sequential elements: 1600.009200 (63.69%)
+
+Warnings: 6 unique messages, 8 total
+End of script. Logfile hash: ec84a37681, time: 5.28s, user: 3.15s, system: 0.41s, MEM: 176.51 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 41% 1x abc (2 sec), 8% 16x opt_clean (0 sec), ...

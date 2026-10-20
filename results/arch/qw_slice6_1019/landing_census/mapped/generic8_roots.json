@@ -1,0 +1,598 @@
+{
+  "kind": "ASAP7_TT_recursive_primitive_pin_census",
+  "top": "landing_vehicle",
+  "primitive_cells": 34024,
+  "primitive_types": {
+    "INVx1_ASAP7_75t_R": 1104,
+    "NOR2xp33_ASAP7_75t_R": 1415,
+    "OR2x2_ASAP7_75t_R": 1,
+    "OR3x1_ASAP7_75t_R": 5,
+    "AOI21xp33_ASAP7_75t_R": 1097,
+    "AND2x2_ASAP7_75t_R": 1,
+    "NAND2xp33_ASAP7_75t_R": 7670,
+    "NOR3xp33_ASAP7_75t_R": 1103,
+    "OAI22xp33_ASAP7_75t_R": 1882,
+    "OAI31xp33_ASAP7_75t_R": 1,
+    "NOR4xp25_ASAP7_75t_R": 1,
+    "NAND3xp33_ASAP7_75t_R": 4,
+    "OAI222xp33_ASAP7_75t_R": 1405,
+    "O2A1O1Ixp33_ASAP7_75t_R": 790,
+    "OAI21xp33_ASAP7_75t_R": 7668,
+    "OAI32xp33_ASAP7_75t_R": 3,
+    "OA21x2_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 9873
+  },
+  "unmapped_internal_cells": {},
+  "asr_model_proof": "NONE: counts only, never behavioral equivalence",
+  "controls": [
+    {
+      "alias": "landing_vehicle.g_generic.r.rc[0]",
+      "direct_loads": 0,
+      "root_driver": "top_input",
+      "root_direct_loads": 0,
+      "root_through_buffers_loads": 0
+    },
+    {
+      "alias": "landing_vehicle.g_generic.r.rc[1]",
+      "direct_loads": 0,
+      "root_driver": "top_input",
+      "root_direct_loads": 0,
+      "root_through_buffers_loads": 0
+    },
+    {
+      "alias": "landing_vehicle.g_generic.r.rc[2]",
+      "direct_loads": 0,
+      "root_driver": "top_input",
+      "root_direct_loads": 0,
+      "root_through_buffers_loads": 0
+    },
+    {
+      "alias": "landing_vehicle.g_generic.r.rc[3]",
+      "direct_loads": 0,
+      "root_driver": "top_input",
+      "root_direct_loads": 0,
+      "root_through_buffers_loads": 0
+    }
+  ],
+  "max_through_buffers_loads": 2192,
+  "clock_exclusion": "ck_w and ck_r only",
+  "maximum_loads": 2192,
+  "violations": [
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28534[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73415/Y",
+      "loads": 2192,
+      "driver_type": "NAND3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28554[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73435/Y",
+      "loads": 2190,
+      "driver_type": "NOR3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28552[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73433/Y",
+      "loads": 2190,
+      "driver_type": "NOR2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28550[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73431/Y",
+      "loads": 2190,
+      "driver_type": "NOR2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28547[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73428/Y",
+      "loads": 2190,
+      "driver_type": "NOR3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28545[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73426/Y",
+      "loads": 2190,
+      "driver_type": "NOR2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28542[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73423/Y",
+      "loads": 2190,
+      "driver_type": "NOR2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n43872[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$88753/Y",
+      "loads": 2190,
+      "driver_type": "NOR3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23039[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67920/Y",
+      "loads": 1098,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23059[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67940/Y",
+      "loads": 1096,
+      "driver_type": "NAND2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23055[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67936/Y",
+      "loads": 1095,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23057[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67938/Y",
+      "loads": 1095,
+      "driver_type": "NAND3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23061[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67942/Y",
+      "loads": 1095,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23056[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67937/Y",
+      "loads": 1095,
+      "driver_type": "NAND3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23060[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67941/Y",
+      "loads": 1095,
+      "driver_type": "NAND3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23058[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67939/Y",
+      "loads": 1095,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23054[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67935/Y",
+      "loads": 1095,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:36.5-38.40",
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    }
+  ],
+  "top_drivers": [
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28534[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73415/Y",
+      "loads": 2192,
+      "driver_type": "NAND3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28554[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73435/Y",
+      "loads": 2190,
+      "driver_type": "NOR3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28552[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73433/Y",
+      "loads": 2190,
+      "driver_type": "NOR2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28550[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73431/Y",
+      "loads": 2190,
+      "driver_type": "NOR2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28547[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73428/Y",
+      "loads": 2190,
+      "driver_type": "NOR3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28545[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73426/Y",
+      "loads": 2190,
+      "driver_type": "NOR2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28542[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$73423/Y",
+      "loads": 2190,
+      "driver_type": "NOR2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n43872[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$88753/Y",
+      "loads": 2190,
+      "driver_type": "NOR3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+        "rtl/common/landed_parent/ot_pl_land.sv:33.5-35.34"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23039[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67920/Y",
+      "loads": 1098,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23059[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67940/Y",
+      "loads": 1096,
+      "driver_type": "NAND2xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23055[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67936/Y",
+      "loads": 1095,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23057[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67938/Y",
+      "loads": 1095,
+      "driver_type": "NAND3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23061[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67942/Y",
+      "loads": 1095,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23056[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67937/Y",
+      "loads": 1095,
+      "driver_type": "NAND3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23060[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67941/Y",
+      "loads": 1095,
+      "driver_type": "NAND3xp33_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23058[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67939/Y",
+      "loads": 1095,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23054[0]",
+      "driver": "landing_vehicle/$abc$66815$auto$blifparse.cc:397:parse_blif$67935/Y",
+      "loads": 1095,
+      "driver_type": "OR3x1_ASAP7_75t_R",
+      "driver_source": "",
+      "upstream_register_sources": [
+        "rtl/common/landed_parent/ot_pl_land.sv:36.5-38.40",
+        "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12"
+      ]
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$auto$dfflibmap.cc:539:dfflibmap$66813[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$26848/QN",
+      "loads": 11,
+      "driver_type": "DFFHQNx1_ASAP7_75t_R",
+      "driver_source": "rtl/common/landed_parent/ot_pl_land.sv:32.5-32.36",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$auto$dfflibmap.cc:539:dfflibmap$66809[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$10283/QN",
+      "loads": 11,
+      "driver_type": "DFFHQNx1_ASAP7_75t_R",
+      "driver_source": "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$auto$dfflibmap.cc:539:dfflibmap$66805[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$10281/QN",
+      "loads": 10,
+      "driver_type": "DFFHQNx1_ASAP7_75t_R",
+      "driver_source": "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$auto$dfflibmap.cc:539:dfflibmap$66807[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$10282/QN",
+      "loads": 10,
+      "driver_type": "DFFHQNx1_ASAP7_75t_R",
+      "driver_source": "rtl/common/landed_parent/ot_pl_land.sv:71.5-76.12",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1093]",
+      "driver": "top_input",
+      "loads": 8,
+      "driver_type": "top_input",
+      "driver_source": "",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1092]",
+      "driver": "top_input",
+      "loads": 8,
+      "driver_type": "top_input",
+      "driver_source": "",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1091]",
+      "driver": "top_input",
+      "loads": 8,
+      "driver_type": "top_input",
+      "driver_source": "",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1090]",
+      "driver": "top_input",
+      "loads": 8,
+      "driver_type": "top_input",
+      "driver_source": "",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1089]",
+      "driver": "top_input",
+      "loads": 8,
+      "driver_type": "top_input",
+      "driver_source": "",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1088]",
+      "driver": "top_input",
+      "loads": 8,
+      "driver_type": "top_input",
+      "driver_source": "",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1087]",
+      "driver": "top_input",
+      "loads": 8,
+      "driver_type": "top_input",
+      "driver_source": "",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1086]",
+      "driver": "top_input",
+      "loads": 8,
+      "driver_type": "top_input",
+      "driver_source": "",
+      "upstream_register_sources": []
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1085]",
+      "driver": "top_input",
+      "loads": 8,
+      "driver_type": "top_input",
+      "driver_source": "",
+      "upstream_register_sources": []
+    }
+  ],
+  "through_buffer_violations": [
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23039[0]",
+      "loads": 1098
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23055[0]",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23057[0]",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23059[0]",
+      "loads": 1096
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23061[0]",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23056[0]",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23060[0]",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23058[0]",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n23054[0]",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28534[0]",
+      "loads": 2192
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28554[0]",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28552[0]",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28550[0]",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28547[0]",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28545[0]",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n28542[0]",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$66815$new_n43872[0]",
+      "loads": 2190
+    }
+  ],
+  "pass": false,
+  "limits": "Physical reach/depth/storage/registered-boundary remain separate; no cell-model equivalence claim"
+}

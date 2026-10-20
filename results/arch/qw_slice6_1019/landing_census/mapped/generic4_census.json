@@ -1,0 +1,208 @@
+{
+  "kind": "ASAP7_TT_recursive_primitive_pin_census",
+  "top": "landing_vehicle",
+  "primitive_cells": 17566,
+  "clock_exclusion": "ck_w and ck_r only",
+  "maximum_loads": 2190,
+  "violations": [
+    {
+      "net": "landing_vehicle.$abc$35780$new_n16471[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$39089/Y",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n16463[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$39081/Y",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n16466[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$39084/Y",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n23037[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$45655/Y",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14265[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36883/Y",
+      "loads": 1099
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14266[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36884/Y",
+      "loads": 1097
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14269[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36887/Y",
+      "loads": 1096
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14271[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36889/Y",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14274[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36892/Y",
+      "loads": 1095
+    }
+  ],
+  "top_drivers": [
+    {
+      "net": "landing_vehicle.$abc$35780$new_n16471[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$39089/Y",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n16463[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$39081/Y",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n16466[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$39084/Y",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n23037[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$45655/Y",
+      "loads": 2190
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14265[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36883/Y",
+      "loads": 1099
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14266[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36884/Y",
+      "loads": 1097
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14269[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36887/Y",
+      "loads": 1096
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14271[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36889/Y",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n14274[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$36892/Y",
+      "loads": 1095
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$auto$dfflibmap.cc:539:dfflibmap$35778[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$13577/QN",
+      "loads": 10
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$auto$dfflibmap.cc:539:dfflibmap$33580[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$4743/QN",
+      "loads": 5
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$auto$dfflibmap.cc:539:dfflibmap$35772[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$5842/QN",
+      "loads": 5
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$auto$dfflibmap.cc:539:dfflibmap$35774[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$5843/QN",
+      "loads": 5
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n13168[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$35786/Y",
+      "loads": 5
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$auto$dfflibmap.cc:539:dfflibmap$24812[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$13576/QN",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$auto$dfflibmap.cc:539:dfflibmap$33582[0]",
+      "driver": "landing_vehicle/$auto$ff.cc:337:slice$4744/QN",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.$abc$35780$new_n13167[0]",
+      "driver": "landing_vehicle/$abc$35780$auto$blifparse.cc:397:parse_blif$35785/Y",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1093]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1092]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1091]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1090]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1089]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1088]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1087]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1086]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1085]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1084]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1083]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1082]",
+      "driver": "top_input",
+      "loads": 4
+    },
+    {
+      "net": "landing_vehicle.g_generic.w.i[1081]",
+      "driver": "top_input",
+      "loads": 4
+    }
+  ],
+  "pass": false,
+  "limits": "Physical reach/depth/storage/registered-boundary remain separate; no cell-model equivalence claim"
+}
