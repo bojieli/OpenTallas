@@ -441,6 +441,8 @@ def main():
     ap.add_argument('--lane-reach-margin-um', type=float, default=0.0,
                     help='placement-side margin under the reach for the pin-centroid span (the post-GEN per-bus pin check '
                          'd4g_reach_check.py is the authority)')
+    ap.add_argument('--lane-reach-order', choices=('area', 'chain'), default='area',
+                    help='lane-row order under --lane-reach: area (widest first) | chain (BFS from placed chain ends)')
     die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
     mw = die_reach.from_args(a, 'hbm')
@@ -769,7 +771,7 @@ def main():
                             tol_um=64.8, inst_rows=inst_rows, rows=rows_, I=I, edges=C['edges'], cell_of=cell_of, size=size,
                             kinds=kinds, lef_path_of=lambda c_: (vd / f'{c_}.lef') if (vd / f'{c_}.lef').exists() else None,
                             lef_xy_fn=lef_xy, pl=pl, mode=a.lane_reach)
-        for rid in LP.order():
+        for rid in LP.order(a.lane_reach_order):
             g_ = LP.row_geom[rid]
             got, how, wspan = LP.place(rid)
             if got is None:

@@ -252,8 +252,31 @@ class LanePlacer:
                                best_span_um=None, offending_hop=None, reason='no free spot of the row size inside the reach window'))
         return None, 'REACH_FAIL no free spot in window', None
 
-    def order(self):
-        """widest rows first (packing), as before"""
+    def order(self, how='area'):
+        """area: widest rows first (packing, as before).  chain: breadth-first from the rows that touch an already placed
+        instance (block ends first, then their successors ...), widest first inside a BFS level, so each row is placed
+        with its chain neighbour toward a placed end already fixed (hard constraint) and only the far side planned."""
+        if how == 'chain':
+            area = lambda k: -sum(self.size[self.cell_of[v[0]]][0] * self.size[self.cell_of[v[0]]][1] for v in self.rows[k].values())
+            adj = collections.defaultdict(set); lvl = {}
+            for n, lst in self.nb.items():
+                r0 = self.inst_rows[n]
+                for _, m, _ in lst:
+                    r1 = self.inst_rows.get(m)
+                    if r1 is None:
+                        if m in self.pl:
+                            lvl[r0] = 0
+                    elif r1 != r0:
+                        adj[r0].add(r1)
+            frontier = sorted(lvl, key=area); d = 0
+            while frontier:
+                nxt = set()
+                for r in frontier:
+                    for q in adj[r]:
+                        if q not in lvl:
+                            lvl[q] = d + 1; nxt.add(q)
+                d += 1; frontier = sorted(nxt, key=area)
+            return sorted(self.rows, key=lambda k: (lvl.get(k, 10 ** 9), area(k)))
         return sorted(self.rows, key=lambda k: -sum(self.size[self.cell_of[v[0]]][0] * self.size[self.cell_of[v[0]]][1]
                                                      for v in self.rows[k].values()))
 
