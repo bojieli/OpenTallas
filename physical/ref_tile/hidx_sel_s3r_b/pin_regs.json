@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hidx_s3_q",
+ "enable": false,
+ "reason": "RTL registers every pin: inputs land in kept pin flops (quadrant: cw -> 11 kept P1 copies, thr -> 6 kept threshold copies, ties -> 4 kept tie copies, in_line -> in_p1; ctl: cw_r/k_r, a_ret/a_qf), outputs are registers (quadrant: selected_v_o/selected_line_o/ret/qfault_o; ctl: cw, threshold, ties, fault); every edge is in the IDX calendar (registered_s3). A synthesis wrapper would add a second, unpriced stage. clk / rst_n pass through."
+}

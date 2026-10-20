@@ -16,6 +16,9 @@
 // before the next op3/op4/op6 (tools/hbm_idx_static_calendar.py, registered_s3).  Hazard checks (diagnostic, sticky):
 // op1 while any op5 is still in the choose loop (outstanding counter), op5 within 2 edges after an op3 on the returned
 // stream (the flat core's check, same relative window), op 8, k out of range, quadrant tags disagree, any qf.
+// HBM-IDX6 FAN32 (10-20, native32 census of s3c: d_go 61 loads, reset leaf 115): d_go is 4 kept copies (one per
+// quadrant's tie register), the reset relay has 6 regional leaves (<= 30 loads each); the dead !rc_n term of thr_n
+// (threshold is a reset flop) is dropped.  Port timing and arithmetic unchanged (lockstep bench vs ot_hidx_s3_ctl_ref).
 // DMUT (bench only): 6 = the B stage takes the tags straight from the ret pins (one edge early vs the sums).
 module ot_hidx_s3_ctl #(parameter integer DMUT=0)(
  input wire clk,
@@ -34,9 +37,9 @@ module ot_hidx_s3_ctl #(parameter integer DMUT=0)(
  function automatic [3:0] pshift(input [1:0] p);
   pshift=(p==0)?4'd11:((p==1)?4'd6:4'd0);
  endfunction
- wire [0:0] rr_n;
- ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
- wire rc_n=rr_n[0];
+ wire [5:0] rr_n;                      // 0 threshold/rank_left, 1 choose control, 2..5 ties[q]
+ ot_rst_relay #(.REGIONS(6),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
+ wire rc_n=rr_n[1];
  // ---------------- input pin flops ----------------
  (* keep *) reg [13:0] cw_r;(* keep *) reg [9:0] k_r;
  reg [24:0] a_ret[0:3];reg [3:0] a_qf;
@@ -59,41 +62,52 @@ module ot_hidx_s3_ctl #(parameter integer DMUT=0)(
  reg [13:0] rank_left;
  reg found;
  reg b_v,b_clr,z_v,z_clr,b_op1;reg [1:0] b_pass;reg [5:0] b_addr;reg [15:0] b_all;reg [15:0] b_s[0:3];reg [13:0] b_h[0:3];
- reg d_go;reg [13:0] d_r;reg [15:0] d_s[0:3];reg [13:0] d_h[0:3];
- reg [13:0] ties[0:3];
+ (* keep *) reg [3:0] d_go;reg [13:0] d_r;reg [15:0] d_s[0:3];reg [13:0] d_h[0:3];
+ wire [13:0] ties[0:3];
  reg [6:0] out5;                                 // op5 issued at the ctl pin and not yet through stage B
  reg [15:0] thr_n;
  always @*begin
   thr_n=threshold;
   if(c_op==1)thr_n=16'd0;
   if(b_v&&!found&&!({2'b0,rank_left}>b_all))thr_n=(threshold&pmask(b_pass))|(16'(b_addr)<<pshift(b_pass));
-  if(!rc_n)thr_n=16'd0;
+ end
+ always @(posedge clk or negedge rr_n[0])begin
+  if(!rr_n[0])begin threshold<=0;rank_left<=0;end
+  else begin
+   threshold<=thr_n;
+   if(c_op==1)rank_left<={4'b0,k_r};
+   if(b_v&&!found&&({2'b0,rank_left}>b_all))rank_left<=rank_left-b_all[13:0];
+  end
+ end
+ for(genvar q=0;q<4;q=q+1)begin:gtq
+  reg [13:0] t;
+  always @(posedge clk or negedge rr_n[2+q])begin
+   if(!rr_n[2+q])t<=0;
+   else if(d_go[q])begin
+    if({2'b0,d_r}<=d_s[q])t<=0;
+    else if({2'b0,d_r}-d_s[q]>={2'b0,d_h[q]})t<=d_h[q];
+    else t<=14'({2'b0,d_r}-d_s[q]);
+   end
+  end
+  assign ties[q]=t;
  end
  always @(posedge clk or negedge rc_n)begin
   if(!rc_n)begin
-   threshold<=0;rank_left<=0;found<=0;fault<=0;b_v<=0;b_clr<=0;z_v<=0;z_clr<=0;b_op1<=0;d_go<=0;out5<=0;
-   for(integer q=0;q<4;q=q+1)ties[q]<=0;
+   found<=0;fault<=0;b_v<=0;b_clr<=0;z_v<=0;z_clr<=0;b_op1<=0;d_go<=0;out5<=0;
   end else begin
    if(|a_qf)fault<=1;
    b_v<=a_v;b_clr<=a_clr;b_op1<=a_op1;
    z_v<=b_v;z_clr<=b_clr;
    out5<=out5+7'(c_op==5)-7'(b_v);
    d_go<=0;
-   threshold<=thr_n;
-   if(c_op==1)begin rank_left<={4'b0,k_r};found<=0;if(k_r>512||k_r==0)fault<=1;end
+   if(c_op==1)begin found<=0;if(k_r>512||k_r==0)fault<=1;end
    if(c_op==8)fault<=1;                          // selected-only face: no emit readback (as ot_hbm_idx_selector_static_sel)
    if(b_clr)found<=0;
    if(b_v&&!found)begin
-    if({2'b0,rank_left}>b_all)rank_left<=rank_left-b_all[13:0];
-    else begin
+    if(!({2'b0,rank_left}>b_all))begin
      found<=1;
-     if(b_pass==2)d_go<=1;
+     if(b_pass==2)d_go<=4'hf;
     end
-   end
-   if(d_go)for(integer q=0;q<4;q=q+1)begin
-    if({2'b0,d_r}<=d_s[q])ties[q]<=0;
-    else if({2'b0,d_r}-d_s[q]>={2'b0,d_h[q]})ties[q]<=d_h[q];
-    else ties[q]<=14'({2'b0,d_r}-d_s[q]);
    end
    if((c_op==1&&(out5!=0||b_v))||(a_v&&(b_clr||z_clr))||a_tagbad)fault<=1;
   end
