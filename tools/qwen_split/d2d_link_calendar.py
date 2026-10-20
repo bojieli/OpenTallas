@@ -93,10 +93,15 @@ def token_run():
 EMB_SEND = 20   # bench token run: provider row staged (one ready per buffer block at the HBM boundary) by cycle 19
 
 
-def layer_msgs(seg, base, w, txl, phy, st_ofs=38, status_delay=0):
-    """one decode layer's link messages at layer offset base; w = op windows (rmsnorm1, qkv, qknorm_rope, attn_kv)"""
+def layer_msgs(seg, base, w, txl, phy, st_ofs=38, status_delay=0, attn_tx_shift=0):
+    """one decode layer's link messages at layer offset base; w = op windows (rmsnorm1, qkv, qknorm_rope, attn_kv)
+    KV-BIND4 10-19: attn_tx_shift = edges the KV attention tile adds before its RESULT burst (r16 registered RX
+    validation, qkd_attn_cal_gen_r16 TX_SHIFT 1): the K RESULT beats and STATUS move +attn_tx_shift and attn_kv grows
+    by the same edges (priced in every layer / token window like status_delay)."""
     if type(status_delay) is not int or status_delay < 0:
         raise ValueError("status_delay must be a nonnegative static edge count")
+    if type(attn_tx_shift) is not int or attn_tx_shift < 0:
+        raise ValueError("attn_tx_shift must be a nonnegative static edge count")
     q0 = base + int(sum(w[:3]))
     a_end = q0 + int(w[3])
     m = [dict(seg=seg, src="C", cyc=q0, tx_port=0, rx_port=0, kind=1, beat=0)]
@@ -104,12 +109,12 @@ def layer_msgs(seg, base, w, txl, phy, st_ofs=38, status_delay=0):
     m += [dict(seg=seg, src="C", cyc=q0 + 33 + i, tx_port=3, rx_port=3, kind=5, beat=i) for i in range(4)]
     m.append(dict(seg=seg, src="C", cyc=q0 + st_ofs, tx_port=2, rx_port=2, kind=15, beat=0))
     # RESULT: the last beat (STATUS) out of the compute end (arrive + 2 + codec 1) at a_end
-    r_last = a_end - (txl + phy + 3)
+    r_last = a_end - (txl + phy + 3) + attn_tx_shift
     r0 = r_last - 33
     m += [dict(seg=seg, src="K", cyc=r0 + b, tx_port=0, rx_port=0, kind=3, beat=b) for b in range(32)]
     m.append(dict(seg=seg, src="K", cyc=r_last + status_delay, tx_port=0, rx_port=0, kind=4, beat=0))
-    return m, dict(q_send=q0, attn_end=a_end + status_delay, result_send=[r0, r_last + status_delay],
-                  retirement_status_delay=status_delay)
+    return m, dict(q_send=q0, attn_end=a_end + attn_tx_shift + status_delay, result_send=[r0, r_last + status_delay],
+                  retirement_status_delay=status_delay, attn_tx_shift=attn_tx_shift)
 
 
 def handoff_windows(path):
@@ -131,7 +136,8 @@ PREC_K0 = 3   # first S->C program-record slot of the token / admission run (run
 ADM_REPLAY = 1056   # admission: AUTH accepted -> 1,032-word replay + ledger commit (~1,045, Q-NETLIST) + margin
 
 
-def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None, mu=False, status_delay=0):
+def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None, mu=False, status_delay=0,
+                    attn_tx_shift=0):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
     run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles).
@@ -153,7 +159,8 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
             win[L][1] = max(win[L][1], hw["qkv"][0])
     if not all(win[L] == win[lay[1]] for L in lay[2:]):
         raise SystemExit("L1..L35 op windows differ: one replayed segment-0 image cannot serve them")
-    m0, l1 = layer_msgs(0, 0, win[lay[1]], txl, phy, st_ofs, status_delay)
+    tail = status_delay + attn_tx_shift     # per-layer edges added after attn_kv (KV-BIND4: tx shift + STATUS tail)
+    m0, l1 = layer_msgs(0, 0, win[lay[1]], txl, phy, st_ofs, status_delay, attn_tx_shift)
     emb = int(nodes["embed"]["cycles"]) if emb_window is None else emb_window
     l0_start = int(groups[0]["start"])
     e_last = emb - (txl + phy + 2)
@@ -182,16 +189,16 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     m2 = [dict(seg=2, src="K", cyc=PREC_K0 + i, tx_port=1, rx_port=1, kind=13, beat=1 + i) for i in range(2)]
     adm_w = PREC_K0 + 1 + txl + phy + 4 + ADM_REPLAY
     m2.append(dict(seg=2, src="C", cyc=adm_w, tx_port=1, rx_port=1, kind=14, beat=1))
-    ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy, st_ofs, status_delay)
-    layout = dict(source=tp_path, layers=[dict(id=g["id"], start=int(g["start"]) + i * status_delay, cycles=int(g["cycles"]) + status_delay) for i, g in enumerate(groups)],
-                  embed=dict(start=0, cycles=emb), windows=dict(L0=dict(zip(ops, [int(n) + (status_delay if i == 3 else 0) for i, n in enumerate(win[lay[0]])])),
-                  L1_35=dict(zip(ops, [int(n) + (status_delay if i == 3 else 0) for i, n in enumerate(win[lay[1]])]))), layer=l1, token_run_L0=l0,
+    ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy, st_ofs, status_delay, attn_tx_shift)
+    layout = dict(source=tp_path, layers=[dict(id=g["id"], start=int(g["start"]) + i * tail, cycles=int(g["cycles"]) + tail) for i, g in enumerate(groups)],
+                  embed=dict(start=0, cycles=emb), windows=dict(L0=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[0]])])),
+                  L1_35=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[1]])]))), layer=l1, token_run_L0=l0,
                   emb_send=[e_last - 63, e_last], emb_header_send=e_last - 64,
                   program_records=dict(k_send=[PREC_K0, PREC_K0], kinds="token run: 12 CONTEXT S->C, 14/0 WITNESS C->S",
                                        witness_send=prec_w),
                   admission=dict(k_send=[PREC_K0, PREC_K0 + 1], kinds="13/1 BEGIN, 13/2 AUTH S->C; 14/1 WITNESS C->S",
                                  witness_send=adm_w, replay_edges=ADM_REPLAY),
-                  token_period=int(d["totals"]["cycles"]) + 36 * status_delay,
+                  token_period=int(d["totals"]["cycles"]) + 36 * tail, attn_tx_shift=attn_tx_shift,
                   retirement=dict(status_delay=status_delay, token_added_edges=36 * status_delay,
                                   qualification="UNQUALIFIED: requires full source deadline/path/reset proof"),
                   result_handoff=(dict(source=handoff, op="qkv", pc=hw["qkv"][1], visible_after_go=hw["qkv"][0],
@@ -344,8 +351,11 @@ def main():
     ap.add_argument("--mu", action="store_true",
                     help="MU-KV-CTX 10-19 (Qwen ROM 4 users): add the token run's MU context slot (S->C kind 12 beat 1, one "
                          "cycle before the existing kind-12 slot); default off = the single-user images, unchanged")
+    ap.add_argument("--attn-tx-shift", type=int, default=0, help="KV-BIND4: edges the KV attention tile adds before RESULT (r16 TX_SHIFT); K RESULT/STATUS and attn_kv +N per layer")
     ap.add_argument("--status-delay", type=int, default=0, help="opt-in static STATUS-only tail per layer; priced in every layer/token window; requires retirement proof")
     a = ap.parse_args()
+    if a.attn_tx_shift < 0 or (a.attn_tx_shift and a.profile != "program"):
+        ap.error("--attn-tx-shift requires program profile and nonnegative edges")
     if a.status_delay < 0 or (a.status_delay and a.profile != "program"):
         ap.error("--status-delay requires program profile and nonnegative edges")
     if a.profile == "program" and a.host_stages is None and not a.allow_unmeasured_host:
@@ -367,7 +377,8 @@ def main():
         msgs = json.load(open(a.spec))
     elif a.profile == "program":
         msgs, layout = program_profile(txl_p, phy_p, a.token_path, host_stages=a.host_stages,
-                                        st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu, status_delay=a.status_delay)   # STATUS capture after the (+2) KVN captures
+                                        st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu, status_delay=a.status_delay,
+                                        attn_tx_shift=a.attn_tx_shift)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:
             txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
     elif a.profile == "dies_token":
