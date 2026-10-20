@@ -38,6 +38,7 @@ P4F = False                       # p4f (10-17): row-2 frames MX (no x chain ove
 P4G = False                       # p4g (10-17, coordinator 0cw+ (3)): the 8500 x 250 dsfd_ctrl strip (34:1) -> 16 regional
                                   # 2-PC controllers on the PHY face + explicit registered svc <-> controller links
 CTRL_N, CTRL_H = 16, 250.0        # p4g: 16 x (531.25 x 250 um, 2.1:1), same 2.125 mm2 as the strip
+CTRL_VIEW_W = None               # opt-in actual controller body, centered in unchanged PHY pitch
 PC_RQ, PC_RD, PC_DFI = 341, 280, 695   # per pseudo-channel: rq {wdata 256, wstrb 32, tag 17, len 4, addr 30, we, v};
                                   # rd {data 256, tag 17, beat 4, v} + rk + wd; PHY DFI 22,238 / 32 ~ 695 (dsfd_ctrl.sv)
 P4H = False                       # p4h (10-17, coordinator COORD ~11:15): the two service halves -> 16 REGIONAL service slices, one
@@ -295,11 +296,11 @@ def rsv_links(P, facts, colx):
     for k in range(CTRL_N):
         cn = f'ctrl_{k:02d}'; C = P.blocks[P.idx[cn]]
         for j in range(2):
-            x = C['x'] + cw * (j + 0.5) / 2
+            x = C['x'] + C['w'] * (j + 0.5) / 2
             P.link(f'dfi_{k:02d}_{j}', 'dfi', PC_DFI, (cn, f'dfi{j}', (x, C['y'])), ('phy_hbm', f'dfi{k}_{j}', (x, 1197.0)),
                    [(x, C['y']), (x, 1197.0)], 'PHY DFI of one pseudo-channel (abutted face)')
         rn = f'rsv_{k:02d}'; R = P.blocks[P.idx[rn]]
-        ctop = C['y'] + C['h']; xc = C['x'] + cw / 2
+        ctop = C['y'] + C['h']; xc = C['x'] + C['w'] / 2
         col = k // 2
         for cls_, bits, dx, yj in ((('rq', 2 * PC_RQ, -30, 44), ('rd', 2 * PC_RD + 2, 30, 116)) if PATHFIX else
                                    (('rq', 2 * PC_RQ, -30, 30), ('rd', 2 * PC_RD + 2, 30, 70))):
@@ -738,7 +739,9 @@ def build():
         # north face over their own PCs (DFI = abutted face) -- a square-ish tile per region, not a 34:1 strip
         cw = 8500.0 / CTRL_N
         for k in range(CTRL_N):
-            P.block(f'ctrl_{k:02d}', 'dsfd_ctrl_rg2', 'ctrl', 'south', phy_x + k * cw, 1200, cw, CTRL_H)
+            body_w = CTRL_VIEW_W if CTRL_VIEW_W is not None else cw
+            assert 0 < body_w <= cw, ('controller body exceeds PHY pitch', body_w, cw)
+            P.block(f'ctrl_{k:02d}', 'dsfd_ctrl_rg2', 'ctrl', 'south', phy_x + k * cw + (cw - body_w) / 2, 1200, body_w, CTRL_H)
     else:
         P.block('hbm_ctrl', 'dsfd_ctrl', 'ctrl', 'south', phy_x, 1210, 8500, 250)
     if P4H:
@@ -1012,7 +1015,7 @@ def build():
         for k in range(CTRL_N):
             cn = f'ctrl_{k:02d}'; C = P.blocks[P.idx[cn]]
             for j in range(2):
-                x = C['x'] + cw * (j + 0.5) / 2
+                x = C['x'] + C['w'] * (j + 0.5) / 2
                 P.link(f'dfi_{k:02d}_{j}', 'dfi', PC_DFI, (cn, f'dfi{j}', (x, C['y'])), ('phy_hbm', f'dfi{k}_{j}', (x, 1197.0)),
                        [(x, C['y']), (x, 1197.0)], 'PHY DFI of one pseudo-channel (abutted face)')
             side = 'W' if k < CTRL_N // 2 else 'E'
@@ -1024,7 +1027,7 @@ def build():
             for j, (cls_, bits, dx) in enumerate((('rq', 2 * PC_RQ, -30), ('rd', 2 * PC_RD + 2, 30))):
                 lane = 2 * m + j
                 y = ctop + 15 + 15 * lane
-                xk = C['x'] + cw / 2 + dx
+                xk = C['x'] + C['w'] / 2 + dx
                 if y <= stop - 10:
                     pts = [(sx, y), (xk, y), (xk, ctop)]
                 else:          # above the service half's top: leave its N face (lanes stacked away from the PHY)
@@ -1039,6 +1042,11 @@ def build():
                     P.link(f'hrd_{k:02d}', 'hbm', bits, ctl_e, svc_e, pts[::-1], 'HBM reads + rk/wd + {fault, live} of 2 PCs (regional controller -> svc half)')
         facts['ctrl'] = dict(n=CTRL_N, um=[round(cw, 2), CTRL_H], aspect=round(cw / CTRL_H, 2) if cw > CTRL_H else round(CTRL_H / cw, 2),
                              mm2=round(CTRL_N * cw * CTRL_H / 1e6, 3), replaces='dsfd_ctrl 8500 x 250 strip (34:1)')
+        if CTRL_VIEW_W is not None:
+            facts['ctrl'].update(um=[CTRL_VIEW_W, CTRL_H], pitch_um=cw,
+                                 aspect=round(max(CTRL_VIEW_W / CTRL_H, CTRL_H / CTRL_VIEW_W), 2),
+                                 mm2=round(CTRL_N * CTRL_VIEW_W * CTRL_H / 1e6, 3),
+                                 qualification='MODEL_ONLY actual body; closed view/bind/native qualification owed')
     # collective lanes: edge PHYs <-> end-slice outer face along the street (ring-stop feed-through to coll_edge)
     for side in 'WE':
         c = 0 if side == 'W' else NCOL - 1
@@ -1346,6 +1354,8 @@ def main():
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
     ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0S (+2 SerDes lk_WS2/3)')
     ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
+    ap.add_argument('--ctrl-view-size', nargs=2, type=float, metavar=('W', 'H'), help='actual controller body centered in unchanged PHY pitch; rederive service rows and links; no closure claim')
+    ap.add_argument('--array-y-shift', type=float, default=0.0, help='move array/street origins north, retaining die outline and 250-um north frame guard')
     ap.add_argument('--pathfix', action='store_true', help='MU-DIE-S81/PATH (p4l): street lanes keep their realized band (pin span / relay body) clear of blocks and neighbour relays')
     ap.add_argument('--no-mix4', action='store_true', help='0dv: delete mix4_w / mix4_e (Engram mix = in-slice op ENG); V rungs of columns 2 / 5 join directly')
     ap.add_argument('--lane-margin', type=float, default=120.0, help='p4k: extra column width beside the column-3 E / column-4 W slices (um)')
@@ -1353,6 +1363,13 @@ def main():
     ap.add_argument('--frame-w', type=float, default=None, help='p4: frame width override (S-ELEM bf_col 604.8 -> 1,436.832)')
     a = ap.parse_args()
     HOP_UM = a.hop_um
+    global CTRL_H, CTRL_VIEW_W, BAND
+    if a.ctrl_view_size:
+        assert a.p4l and a.mu, '--ctrl-view-size needs --p4l --mu'
+        CTRL_VIEW_W, CTRL_H = a.ctrl_view_size
+        assert CTRL_VIEW_W > 0 and CTRL_H > 0, '--ctrl-view-size must be positive'
+    assert a.array_y_shift >= 0, '--array-y-shift must be nonnegative'
+    BAND += a.array_y_shift
     global ROW0_MX, TIER_W, LANES, P4F
     ROW0_MX = a.row0_mx
     P4F = a.p4f or a.p4g or a.p4h
