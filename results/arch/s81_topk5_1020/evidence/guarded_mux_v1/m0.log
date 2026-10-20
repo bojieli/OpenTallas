@@ -1,0 +1,5 @@
+GUARDED_MUX PASS MUT=0 checks=1397
+- results/arch/s81_topk5_1020/tb_guarded_mux.sv:43: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 14us; walltime 0.005 s; speed 2.963 ms/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB

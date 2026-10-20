@@ -1,0 +1,4 @@
+GUARDED_MUX FAIL MUT=2 cycle=9 got=54fffbbafafbff9dfbf77eddfeffffebdefe9 gold=74fffbbafafbff9dfbf77eddfeffffebdefe9
+[106000] %Fatal: tb_guarded_mux.sv:37: Assertion failed in tb_guarded_mux: causal guarded mux mismatch
+%Error: results/arch/s81_topk5_1020/tb_guarded_mux.sv:37: Verilog $stop
+Aborting...
