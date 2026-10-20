@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_rst_region_pr_h273b",
+ "enable": false,
+ "reason": "All live data inputs are RTL pin captures: a enters the core a_q; dly enters eight kept dly_pin flops; b is launched by the dedicated KEPT pin twin b_pin (qkd_rst_region_po), whose only load is the pin (b_int feeds the hold logic). por_n into the original synchronizer. Extra blanket registers would change reset epochs; no timing exception added."
+}

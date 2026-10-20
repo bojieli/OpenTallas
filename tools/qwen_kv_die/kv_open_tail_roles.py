@@ -42,7 +42,10 @@ SOURCES = {
     'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv': 'c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42',
 }
 # the generator is a tool of the GEN7 tree (not of the binder's tools dir): pinned separately, checked by this prover only
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'a7063e6b1fbd8c3e3dce453d5447eec5ec7fb4b1286a202dd7611bbefc08c05a')
+# KV-BIND3 10-19: re-pinned (was a7063e6b..., 60ff34e3d).  Changes since: default-off OT_KV_GRP_PRIVATE0 / OT_KV_DCAL_FLT
+# branches, port `scalar` clock/reset classing (only set by GRP_PRIVATE0), ASTK rc1 face-land rst_release 3 -> 5 (startup
+# calendar only).  No PC / GRP chain-end text changed; GEN_ASSERT below still asserts the generator text.
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '52192834fa4a3e4ebcf1b08ecfea5a0c26e23d3ec683282d0524434c26dd8cff')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
