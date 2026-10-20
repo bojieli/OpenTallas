@@ -263,7 +263,12 @@ def _ctxrx_buses(m, out, cx_crt, has):
         # QW-GEN3 10-19 (first real GEN of BOOTCTX, dv2f19g3: 'clock / reset [clk_d2d]'): sys_face's reset is the
         # rst_d2d bus (class spine_local: rs_bump.rso_d -> d2d_rom / ucie_kv / sys_face), not a 'reset' class bus; the
         # leaf joins THAT net as one more sink (same reset as the face whose RX nets it reads).  Still fail closed below.
-        k = next((k for k, b in enumerate(out) if ('sys_face', 'rst_n') in [tuple(e) for e in b[3]]), None)
+        # dv2f19g3 try 3: joining rst_d2d made a new spine_local RELAY leg (rly_rst_d2d__fo3_*) whose release edge no
+        # projection declares (reset_calendar_audit 'undeclared reset-root relationship' on the rx_payload leg landing);
+        # take the die's reset-TREE net that tt_ctlm (and mu_dhobs) use -- a declared reset root, repeater tree + landed
+        k = next((k for k, b in enumerate(out) if b[1] == 'reset' and any(e[0] == 'tt_ctlm' for e in b[3])), None)
+        if k is None:
+            k = next((k for k, b in enumerate(out) if ('sys_face', 'rst_n') in [tuple(e) for e in b[3]]), None)
         if k is not None:
             b0, c0, n0, e0 = out[k]
             out[k] = (b0, c0, n0, list(e0) + [(n_, 'rst_n')])
