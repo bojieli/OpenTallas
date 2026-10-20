@@ -43,6 +43,15 @@ DEPS = ['rtl/lib/ot_rst_relay.sv']
 RF_SRC = 'rtl/hbm_accel/die_glue/hbfd_rly_rf_masters.sv'
 RF_DEPS = ['rtl/hbm_accel/die_glue/ot_hbm_rly_rf.sv', 'rtl/hbm_accel/die_glue/ot_hbm_rly_rr.sv',
            'rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
+# L2H-RSTFB 10-19 (H.RST.FB): --host-form rfc = the structurally safe hosted CARRIER stage (hbfd_rly_<W>_<flow>_rfc /
+# _rrfc): rfi lands in 2 async-cleared flops, then a sync carrier flop (rfo = land[1] & q): assert immediate, release
+# exactly HOST_AGE['rfc'] = 3 edges per hosted stage (the one-flop 'hop' form releases in 1).  Every age sum below charges
+# each hosted stage its form's age.
+RFC_SRC = 'rtl/hbm_accel/die_glue/hbfd_rly_rfc_masters.sv'
+RFC_DEPS = ['rtl/hbm_accel/die_glue/ot_hbm_rly_rfc.sv', 'rtl/hbm_accel/die_glue/ot_hbm_rly_rr.sv',
+            'rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
+HOST_AGE = {'hop': 1, 'rfc': 3}
+HOST_FORM = {'hop': ('_rf', 'f', RF_SRC, RF_DEPS), 'rfc': ('_rfc', 'fc', RFC_SRC, RFC_DEPS)}
 # L2H-GEN2D-RST 10-19 (H.RST): --compact = the whole forest on compact 8.64 x 2.16 um carrier tiles (hbfd_rrl_c*: same pins
 # and ages as hbfd_rrl_*, cpad<N> counts N-2 edges after two landing flops, N <= 255) with a two-stage face landing at
 # every leaf; --carrier-topology = the dedicated HBM reset carrier: the HBM domain is NOT searched but built from the
@@ -60,7 +69,7 @@ MAX_PAD = 128  # rtl/hbm_accel/die_glue/hbfd_rrl.sv defines hbfd_rrl_pad2 .. hbf
 
 
 def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False, max_root_tries=40,
-          survey=None, relay_rows=False, overfly=None, host_hops=None, compact=False, carrier=None):
+          survey=None, relay_rows=False, overfly=None, host_hops=None, compact=False, carrier=None, host_form='hop'):
     if reach <= 0 or fanout < 1:
         raise GeometryError('reach and fanout must be positive')
     if any(i['master'].startswith('hbfd_rrl_') for i in c['instances'].values()):
@@ -69,6 +78,19 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         raise GeometryError('--carrier-topology needs --compact (carrier stations are hbfd_rrl_c tiles)')
     prefix, src, max_pad, leaf_min = ('hbfd_rrl_c', CSRC, CMAX_PAD, 2) if compact else ('hbfd_rrl_', SRC, MAX_PAD, 1)
     g = Geometry(manifest, views, relay_views, reach, overfly=overfly, prefix=prefix)
+    if host_form not in HOST_AGE:
+        raise GeometryError(f'unknown host form {host_form}')
+    host_age = HOST_AGE[host_form]
+
+    def tage(t):   # release edges of one forest stage: a hosted station stage by its form, a reset tile hop 1
+        return host_age if t['kind'] == 'host' else 1
+
+    def ages_after(start, chain):   # cumulative release age after each stage of chain
+        out, a = [], start
+        for t in chain:
+            a += tage(t)
+            out.append(a)
+        return out
     W, H = manifest['die_um']
     host_use = {}
     if host_hops:
@@ -102,7 +124,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                   age_reference='ideal common-phase RTL edge model; physical recovery/removal and arrival phases OPEN',
                   homes={}, root_alternatives=[], consumed_lef_sha256=g.hashes)
     if host_hops:
-        report['host_hops'] = dict(mode=host_hops, stations=len(g.hosts),
+        report['host_hops'] = dict(mode=host_hops, form=host_form, age_per_hosted_stage=host_age, stations=len(g.hosts),
                                    stations_by_domain=dict(collections.Counter(h['dom'] for h in g.hosts)))
 
     def zone(xy):
@@ -178,7 +200,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                 last = e
         else:
             raise last
-        new_pnodes = [(t, page + i + 1) for i, t in enumerate(pre)]
+        new_pnodes = list(zip(pre, ages_after(page, pre)))
         cells = collections.defaultdict(list)
         for ref, xy in Z:   # one leaf drives sinks of ONE release target (offset class)
             cells[(int(xy[0] // (reach / 2)), int(xy[1] // (reach / 2)), offmap.get(ref[:2], 0))].append((ref, xy))
@@ -221,7 +243,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         # existing node (root or an earlier reach hop), so trunks are shared (GEN2a stream C: 30-70 s per 16 mm star
         # chain, hundreds of leaves).  Ages differ per leaf and are equalized inside the leaf (pad<N>).
         rp = g.tile_pin(root, 'rst_n')
-        nodes = [(root, page + len(pre) + 3)]
+        nodes = [(root, page + sum(map(tage, pre)) + 3)]
         leaves = []
         for leaf, chunk in sorted(placed, key=lambda t: md(rp, g.tile_pin(t[0], 'rst_n_in'))):
             end = g.tile_pin(leaf, 'rst_n_in')
@@ -241,8 +263,8 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                     last = e
             else:
                 raise last
-            nodes += [(t, src_age + i + 1) for i, t in enumerate(chain)]
-            leaves.append(dict(tile=leaf, src=src, chain=chain, sinks=chunk, age=src_age + len(chain) + leaf_min,
+            nodes += list(zip(chain, ages_after(src_age, chain)))
+            leaves.append(dict(tile=leaf, src=src, chain=chain, sinks=chunk, age=src_age + sum(map(tage, chain)) + leaf_min,
                                off=offmap.get(chunk[0][0][:2], 0)))
         return dict(zone=z, root=root, pre=pre, psrc=psrc, leaves=leaves, new_pnodes=new_pnodes)
 
@@ -503,11 +525,12 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             leaf = g.reserve('hop', dp, targets=[('rst_n', dp)])
             chain = g.chain(source, leaf)
             paths.append((dst, leaf, chain))
-        age = max(len(p[2]) + 1 for p in paths)
+        age = max(sum(map(tage, p[2])) + 1 for p in paths)
         for dst, leaf, chain in paths:
             prev = wire_chain([src, 'bridge_rst_n'], chain, 'stream', 'br_' + src, 'bridge reach hop')
-            set_stages(leaf, age - len(chain))
-            prev = wire_chain(prev, [leaf], 'stream', 'br_' + src, f'bridge leaf, {age - len(chain)} release stages')
+            n_leaf = age - sum(map(tage, chain))
+            set_stages(leaf, n_leaf)
+            prev = wire_chain(prev, [leaf], 'stream', 'br_' + src, f'bridge leaf, {n_leaf} release stages')
             edge(prev, dst, 'stream')
             drop.append([src, 'bridge_rst_n', dst[0]])
         report['domains'][f'bridge:{src}'] = dict(sinks=len(dsts), age=age, actual_leaf_ages=[age])
@@ -544,16 +567,18 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
     if host_use:
         # LH-RSTHOP: hosting stations -> _rf (base) / _rrf (already a row-reset _rr driver); rfi is the one added input,
         # driven by the forest edge (d4g_relay_splice checks it)
+        # L2H-RSTFB: --host-form rfc -> _rfc / _rrfc (2-stage landing carrier stage, age 3)
+        suf, rr_suf, hsrc, hdeps = HOST_FORM[host_form]
         byinst = {x['inst']: x for x in remaster}
         for n, dom in sorted(host_use.items()):
             x = byinst.get(n)
             if x is None:
                 old = c['instances'][n]['master']
-                x = dict(inst=n, old=old, master=old + '_rf')
+                x = dict(inst=n, old=old, master=old + suf)
                 remaster.append(x)
             else:
-                x['master'] = x['master'] + 'f'
-            x.update(source=RF_SRC, rtl_deps=list(RF_DEPS), added_inputs=['rfi'])
+                x['master'] = x['master'] + rr_suf
+            x.update(source=hsrc, rtl_deps=list(hdeps), added_inputs=['rfi'])
         report['host_hops'].update(hosted=len(host_use), hosted_by_domain=dict(collections.Counter(host_use.values())),
                                    masters=dict(collections.Counter(x['master'] for x in remaster
                                                                     if x['inst'] in host_use)))
@@ -607,6 +632,9 @@ def main():
     ap.add_argument('--host-hops', choices=('prefer', 'fallback'), default=None,
                     help='LH-RSTHOP 10-19: forest reach hops hosted in placed lane relay stations (remastered '
                          'hbfd_rly_*_rf/_rrf, one rfi->rfo flop on the station clock); default off')
+    ap.add_argument('--host-form', choices=tuple(HOST_AGE), default='hop',
+                    help='L2H-RSTFB 10-19: hosted stage form: hop = LH-RSTHOP one flop (_rf/_rrf, age 1); rfc = safe carrier '
+                         'stage (_rfc/_rrfc: 2-stage landing + carrier flop, age 3 charged per hosted stage)')
     ap.add_argument('--route-detour', type=float, default=0.0,
                     help='L2H-GEN2D-RST 10-19: bound every reset route search to path <= DETOUR x Manhattan + slack cells '
                          '(0 = legacy unbounded clock-router A*, which floods the die on a walled-off target); reach unchanged')
@@ -628,7 +656,7 @@ def main():
                            sha256=hashlib.sha256(raw).hexdigest())
         spec, rep = build(load(a.contract), load(a.manifest), a.views, a.relay_views,
                           a.reach, a.fanout, a.zones, a.mut_skew, max_root_tries=a.max_root_tries, survey=survey,
-                          relay_rows=a.relay_rows, overfly=a.overfly_masters, host_hops=a.host_hops,
+                          relay_rows=a.relay_rows, overfly=a.overfly_masters, host_hops=a.host_hops, host_form=a.host_form,
                           compact=a.compact, carrier=carrier)
     except GeometryError as e:
         a.report.write_text(json.dumps(dict(schema='opentallas.hbm.reset_forest.v2', geometry_gate='FAIL', reach_gate='FAIL',
@@ -649,7 +677,8 @@ def main():
         for p in (a.carrier_topology, a.carrier_sinks):
             rep['input_sha256'][str(p.resolve())] = hashlib.sha256(p.read_bytes()).hexdigest()
     if a.host_hops:
-        for q in [RF_SRC] + RF_DEPS[:1]:
+        _, _, hsrc, hdeps = HOST_FORM[a.host_form]
+        for q in [hsrc] + hdeps[:1]:
             p = Path(__file__).resolve().parents[2] / q
             rep['input_sha256'][str(p)] = hashlib.sha256(p.read_bytes()).hexdigest()
     a.out.write_text(json.dumps(spec) + '\n')

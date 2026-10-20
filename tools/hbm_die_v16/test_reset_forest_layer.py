@@ -400,3 +400,59 @@ def test_host_hops_cross_a_relay_filled_corridor(corridor):
         assert not any(e[0] in hosted and e[1] in ('rst_n', 'rst_n_in') for e in dst + src)
         # equal-age release is still exact
         assert all(d['actual_leaf_ages'] == [d['age']] for d in rep['domains'].values())
+
+
+def _sink_ages(spec):
+    """L2H-RSTFB: independent release-age walk over the emitted layer (hb_ckgen = 0; sync 3, hop 1, pad<N> N, hosted
+    station stage by its master: _rf/_rrf 1, _rfc/_rrfc 3 = 2 landing flops + carrier flop)."""
+    import re
+    master = {t['name']: t['master'] for t in spec['instances']}
+    master.update({x['inst']: x['master'] for x in spec['remaster']})
+
+    def stage(n):
+        m = master[n]
+        if m.endswith(('_rfc', '_rrfc')):
+            return 3
+        if m.endswith(('_rf', '_rrf')):
+            return 1
+        k = re.search(r'hbfd_rrl_c?(sync|hop|pad(\d+))$', m)
+        return 3 if k.group(1) == 'sync' else 1 if k.group(1) == 'hop' else int(k.group(2))
+    par = {}
+    for e in spec['edges']:
+        if e['dst'][0] in master and e['dst'][1] in ('rst_n_in', 'rfi'):
+            par[e['dst'][0]] = e['src'][0]
+    memo = {}
+
+    def age(n):
+        if n not in master:
+            return 0
+        if n not in memo:
+            memo[n] = age(par[n]) + stage(n)
+        return memo[n]
+    return {tuple(e['dst']): age(e['src'][0]) for e in spec['edges']
+            if e['src'][0] in master and e['dst'][1] not in ('rst_n_in', 'rfi')}
+
+
+def test_host_form_rfc_charges_three_edges(corridor, monkeypatch):
+    """L2H-RSTFB: --host-form rfc remasters hosts to _rfc and charges 3 release edges per hosted stage; the independent
+    age walk sees every sink at the domain age.  Charging 1 (the hop age) for the same _rfc masters breaks equal age."""
+    import reset_forest_layer as RFL
+    c, m, v = corridor
+    spec, rep = build(copy.deepcopy(c), m, v, reach=200, zones='quadrant', overfly='hbfd_rly', host_hops='prefer',
+                      host_form='rfc')
+    assert rep['host_hops']['form'] == 'rfc' and rep['host_hops']['age_per_hosted_stage'] == 3
+    hosted = {x['inst'] for x in spec['remaster']}
+    assert hosted and all(x['master'] == 'hbfd_rly_8_WE_rfc' and x['added_inputs'] == ['rfi']
+                          and x['source'].endswith('hbfd_rly_rfc_masters.sv') for x in spec['remaster'])
+    D = rep['domains']['stream:por_stream']['age']
+    walk = _sink_ages(spec)
+    assert walk and set(walk.values()) == {D}
+    # same corridor with the one-flop hop form: fewer edges per hosted stage
+    spec1, rep1 = build(copy.deepcopy(c), m, v, reach=200, zones='quadrant', overfly='hbfd_rly', host_hops='prefer')
+    assert set(_sink_ages(spec1).values()) == {rep1['domains']['stream:por_stream']['age']} and \
+        rep1['domains']['stream:por_stream']['age'] < D
+    # mutant: _rfc masters charged at 1 edge -> the planner's equal-age padding is wrong
+    monkeypatch.setitem(RFL.HOST_AGE, 'rfc', 1)
+    specm, repm = build(copy.deepcopy(c), m, v, reach=200, zones='quadrant', overfly='hbfd_rly', host_hops='prefer',
+                        host_form='rfc')
+    assert set(_sink_ages(specm).values()) != {repm['domains']['stream:por_stream']['age']}
