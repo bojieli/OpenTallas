@@ -11,3 +11,9 @@ Production boundary miter v1 and v2 nominalPASS79994, four mutantsFAIL (OLDREAD,
 Floorplan model: existing paid706.32x540, std band259.2..288.0; effective702x28.8=20217.6um2, std9445 ->46.7%before new45FF. Macroface channel modeled50..66%tracks,55macros lattice>=25.9gap. Previous row-deletion-only GPL used fullcore density envelope; divergence cause hypothesis requires native hardfence qualification, not accepted as proved. Proposed structural packing binds all std cells to true fullband using native EXCLUSIVE placement group; beforeeveryDP explicit ownership+NEWcells-onlyseed for births, allstd bbox+nativePG/reach/timing checks. Tool API alone verified fixture under fence_api; no fullCOLL placement qualification yet. Never use old fake-core-shrink helper.
 
 Original W_s4/E_s4b GPLfail artifacts live on CTRLpickup branch2087473b2. Original E_s4/W_s4b progress preserved; any WARN still blocked by baselinefanout violations. No submit/REVIEW.
+
+Fresh immutable v3 production witnesses (Verilator 5.050, source1f6bc84e8):
+`native_v3/bench/m0.log` PASS79994; mutants m1 FAIL20009,
+m2 COLL_COLLISION_UNSAFE, m3 FAIL79775, m4 FAIL79760. All five fleet jobs
+terminal. These validate v3 functional behavior only; depth621.8ps remains
+BLOCKED and no physical gate is permitted.
