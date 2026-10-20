@@ -1,0 +1,179 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 19% = (macros/children 32063 + std 9151) / outline 218350 um2 (lattice/channel-bound gate-rule exception (placement verification required); PLANNING ONLY birth budget 11063.902 um2, source 9151.137 um2; actual placed 40..60% still required: PLANNING/PREFLIGHT candidate: same84 SRAM origins on43.2lattice and>=22.41um physical macro channels, macro placement halo8.64um (was10.8), one entire full-width legal band y159.84..206.28. Three coarse W/C/E regions with consumer-local reset ownership, central selector/config, event7 locality. Complete original source and retainedCTS567221 conservative endpoint pairs<=404.124um. True source9151.137 distinct from retainedCTS birth-inclusive planning11063.90178; final actual placed40..60 remains mandatory. Halo8.64 puts southhalo edge159.03 belowband159.84 and northhalo207.36 aboveband206.28, eliminating rowholes; exact native proof required before gate. ROOT planning-budget tool review pending; production hook guarded.)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf).",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc7 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_dsdv_mu_hwin_c21l_20261020-045744.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_dsdv_mu_hwin_c21l_20261020-045744.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_c21l-20261020-045744",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc7 in 320 s (gate total 3571 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 353, 'pin_rectangles': 353, 'pin_track_checked': 353, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 40900296e02b02262013548b8709599f6ee970ff59ed355e959ff45768e581ba",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 9100 um2 + macros 32063 in core 214263: util 9% (std-cell density 9.1% of placeable 100291 um2; total fill 19.2%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_boot_enable: dsdv_mu_hwin_capture_1019_boot_enable survives synthesis (150 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_retire_due: dsdv_mu_hwin_capture_1019_retire_due survives synthesis (4 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_retire_advance: dsdv_mu_hwin_capture_1019_retire_advance survives synthesis (6 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_slot_step: dsdv_mu_hwin_capture_1019_slot_step survives synthesis (9 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_record: dsdv_mu_hwin_capture_1019_record survives synthesis (6 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_decode24: dsdv_mu_hwin_capture_1019_decode24 survives synthesis (32 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_fire_flag: dsdv_mu_hwin_capture_1019_fire_flag survives synthesis (96 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_cfg_bad: dsdv_mu_hwin_capture_1019_cfg_bad survives synthesis (4 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_phase_action: dsdv_mu_hwin_capture_1019_phase_action survives synthesis (3 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_early_current_hit: $paramod\\dsdv_mu_hwin_capture_1019_early_current_hit\\AW=s32'00000000000000000000000000000110 survives synthesis (148 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_mu_hwin_capture_1019_cfg_accept: $paramod$e1297cc1018fccc57d77b8dbc3a3350b67031105\\dsdv_mu_hwin_capture_1019_cfg_accept survives synthesis (9 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS dsdv_mu_hwin_capture_1019 cells 62,013 flops 13,040 depth 546.8 ps util 0.1933 reach 0.0 um (4.4 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.550 vs spec PD 0.55",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck: 13,124 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-hwin22l-1020/physical/ref_tile/dsdv_mu_hwin_c21l/gate_layout/floorplan.png",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "measured_band_fill",
+   "message": "missing actual placed-cell/row occupancy evidence",
+   "fix": "fix actual placement/row envelope; preserve this failed receipt"
+  },
+  {
+   "severity": "FAIL",
+   "check": "fill",
+   "message": "fill 19% = (hard macros 32063.2 + synthesized std cells 9349.5) / outline 218350.1 um2; pin demand per face: S 235 pins over 167.6/561.6 um (30%), N 182 pins over 83.9/561.6 um (15%), W 72 pins over 0.0/388.8 um (0%), E 72 pins over 0.0/388.8 um (0%) (< 35%)",
+   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+  }
+ ]
+}

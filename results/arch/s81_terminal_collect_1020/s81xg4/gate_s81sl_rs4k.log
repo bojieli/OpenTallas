@@ -1,0 +1,24 @@
+GATE WARN clock_span: 864.0 x 518.4 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE INFO pin_regs: pin registers opted out: Source-registered (S81 slice ring stop leaf ot_s81sl_rs): every data input lands in a pin flop (iw / ie / iv / xf_q / neo_q / nwo_q / ci_q / sid_c and the 31 capture copies' header / valid / strap copies) and every output leaves a flop (ro_e / ro_w / vo / dl_* / nx_* relay registers, g_* gather regi
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc9 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81sl_rs4k_20261020-025353.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81sl_rs4k_20261020-025353.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/s81sl_rs4k-20261020-025353
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc9 in 1374 s (gate total 9121 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 13750, 'pin_rectangles': 13750, 'pin_track_checked': 13750, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 ab29782af001b01fdbb343ad95c7d5556de5a4b024712a6c199dd181dfe3c8ec
+GATE WARN util: synthesized std area 12312 um2 + macros 0 in core 441944: util 3%  -> FIX: set "std_area_um2": 12312 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_s81sl_rs cells 83,678 flops 26,879 depth 253.4 ps util 0.0265 reach 498.8 um (3.3 s)
+GATE WARN textbook.clock_domain: clock root port clk: 26,879 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.util_channel: utilisation 2.6% outside 45%-65% (std 11709 + macro 0 um2 in 441944 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE WARN textbook.clock_guidance: clock root port:clk: 26,879 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 26,879 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE INFO cts_calibration: ss insertion all 1097.6..1255.1 ps (spread 157.5), boundary mean 1153.4; tt insertion all 847.9..983.9 ps (spread 136.0), boundary mean 889.6; ff insertion all 693.1..815.1 ps (spread 122.0), boundary mean 726.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81sl_rs4k/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      600 paths, worst slack -327.4 ps (e.g. u_ot_pr_core.fault$_DFFE_PN0P_/D)
+GATE INFO path_classes: setup WNS -3.2738223243455877e-10 hold WNS 3.3855140912919524e-12
+GATE WARN clock_rule: root port:clk: 26,879 sinks on the largest root; measured TT insertion 983.9 ps, FF insertion 815.1 ps, TT pin-flop spread 78.2 ps, FF pin-flop spread 65.9 ps; WARN: 26,879 sinks on one clock root > 15,000 (guidance); insertion 983.9 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-xg4-1020/physical/ref_tile/s81sl_rs4k/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-xg4-1020/physical/ref_tile/s81sl_rs4k/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 41.71% used; GRT 2046 s
+PRE_ROUTE_GATE: WARN (0 fail, 6 warn)
+GATE: s81sl_rs4k/gate_result.json written (exact staged source binding; commit it with the kit)

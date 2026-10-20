@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: ot-epyc7       admits   909 GB (avail 737, growth 101, headroom 0, waiters 0/0 GB) load 52/96 running 20 disk 5401 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1670819-1792506651 after 1 s
+hwin PASS 163
+lep PASS 583
+lepnh PASS 583
+ve PASS 591
+xs_a PASS 539
+xs_b PASS 539
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1670819-1792506651): exit 0

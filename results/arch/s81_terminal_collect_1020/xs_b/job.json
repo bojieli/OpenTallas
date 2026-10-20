@@ -1,0 +1,186 @@
+{
+ "name": "s81sl_xs4b-s81sl_xs4b-COMMIT",
+ "block": "ot_s81sl_xs4",
+ "ref_tile": true,
+ "owner": "Claude:S81-XG4XS",
+ "purpose": "S81 slice x streamer leaf ot_s81sl_xs4 (native-bounded successor of xs3; sibling of the ring stop leaf ot_s81sl_rs) to closure (TT setup / FF hold / DRC 0 + native audit); child of the slice parents s81dv_slice C1 / C3.",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/s81-xg4xs-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/v41rom",
+   "rtl/common",
+   "tools/s81_slice",
+   "tools/s81_static_control",
+   "tools/s81/pq_static_calendar_abi.json",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage0",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage3",
+   "results/rtl/s81_slice_1019/xg4xs"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_xs4 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/common/ot_prefix.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv",
+    "expect": "pass",
+    "pass_regex": "^XS4_EQUIV_BENCH PASS$",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutbank",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_bank bank",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4xs/xs4_equiv_bank.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutoff",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_off off",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4xs/xs4_equiv_off.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutqswap",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_qswap qswap",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4xs/xs4_equiv_qswap.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutwcopy",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_wcopy wcopy",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4xs/xs4_equiv_wcopy.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_muttpar",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_tpar tpar",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4xs/xs4_equiv_tpar.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs4_equiv_mutexp",
+    "cmd": "bash tools/s81_slice/xs4_equiv.sh {RUN}/xs4_equiv_exp exp",
+    "expect": "fail",
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_slice_1019/xg4xs/xs4_equiv_exp.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sl_xs4b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_xs4b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_xs4b --out {RUN}/record/views/ot_s81sl_xs4 --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_xs4b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_xs4b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_xs4b/s81sl_xs4b-s81sl_xs4b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-XG4XS (LEAD4-S81 10-20): native-bounded successor of the S81-XG3 x streamer leaf ot_s81sl_xs3 (= ot_s81sl_xs RD2=2; mapped native census FAIL 1,156 drivers > 32, max 2,529: g_fam pin flops, mw_m write masks 1,024 macro pins, merged AND/NAND selects, rotation / read-bank / gather selects 256-435, gi_q 493, dq_r 490, cal reader rp 398, wpar 396/287, ctl reset 548, bc_hr 536; its --cts gate placed at -4.03 ns reg->macro (w_mask_in) / -4.01 ns reg->reg (tq_s) and stalled in GRT congestion iterations at 46 % util). Rebuilt from CURRENT MAIN ot_s81sl_xs as ot_s81sl_xs4 = main x streamer with one capture edge in front (K = 1): 21 kept capture copies per gather control port bit (v / fam / idx per source), one data flop per g_d / is_d bit, 2 is_v copies; level-B = main's pin flops in decoded form: 24 write leaves (8 x 9 kept one-hot data selects of 32 pins, 4 + 4 mask-half copies of 32 pins, w_ce / w_addr, own wpar replicas), arrival-table set one-hots per source in 16-beat blocks, 22 table groups of 8 beats with own parity replica / window clear, block exponents moved from a 3.84 kb flop array to 6 SRAMs (ot_sram_1r1w2c_128x64_m1, per source x beat bit 2); issuer delay line with registered one-hot write enables and 5 one-hot read-pointer copies (own pop compare each), 8 window-open copies; read side from 5 + 1 stream-head copies in the controller, arrival-table lookups by registered factorised one-hot indices, registered one-hot read-mux lines (12 / 24 per 32-b slice) into stage-3 AND-OR; stream-ROM bank one-hot copies; native calendar reader copy (one-hot row pointers, 6 due copies with own pointer / age / active, registered row write enables); native ctl copy (config-tag one-hot, hold-in-reset payload on regional enables, 36 bv copies for the lane word select); lane = dsfd_pq_lx STATIC_X2 function; reset port -> 2 sync -> 4 early / 54 / 4-stage 39 regions, every region <= 26 loads, payload reset-free. xs4_equiv (tools/s81_slice/xs4_equiv.sh, Verilator 5.050): vs main ot_s81sl_xs + one-edge tb relay on every input, xw_v / xw_d / fault every edge: 7 production L0 / L2 programs (near / far / rand ring orders, offsets 29-61), 2 late-beat programs (fault on the same edge), 10 fault injections (duplicate / out-of-range beats, reserved / offset / random issuer words, random gather bursts), 2 in-flight resets with program restart; 6 mutants (bank / off / qswap / wcopy / tpar / exp) FAIL. SAFE checklist (owner 10-19): 1 pins waived-with-reason (source-registered: every input lands in a capture flop, every output leaves the xw_q relay / fault flop; reset_landing 2 stages ON). 2 reach PASS by structure (capture -> level B -> macro / table: two hops across the 864-wide tile; read lines -> stage-3 output registers -> lane -> relay), checked by the placed gate. 3 fanout fixed by construction (<= 32 incl. resets and macro data / mask pins), checked by the gate's mandatory mapped native census. 4 depth PASS: one-hot AND-OR muxes, factorised lookups (~10 levels). 5 storage fixed: x buffer 24 SRAM, block exponents 6 SRAM (were 3.84 kb flops), arrival tables 1.06 kb flops in 22 groups, delay line 0.49 kb, calendar rows 0.4 kb. 6 floorplan: macros on the 21.6/43.2 lattice, 34.8 um column channels for the 10 pins/um SRAM L/R faces, ROM and exponent SRAMs alternating in the S row with 21.6-22 um gaps, full-width std band N (capture) and between banks; outline from routing room (xs3 congested at 46 %): see variant. 7 clock: clock_split_km regional roots K=16, spread judged TT+FF <= 80; io_hold_margin 0.03. 8 schedule: +1 edge on the whole x streamer (gather and issuer alike; equal on xw_v / xw_d / fault) vs main ot_s81sl_xs -> MU.S81.CAL prices it; with the rs4 RELAY = 1 gather edge a gathered beat lands 2 edges and an issuer word 1 edge later than in main ot_s81sl_xg; static schedule, no ready / credit. Variant b: 864 x 518.4 (util ~42 %, row channels 23.7 um)."
+}

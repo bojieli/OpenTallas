@@ -1,0 +1,11 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ACTUAL_CORE 2160 2160 559440 386640 dbu=1000
+ACTUAL_ROWS count=172 ymin=159840 ymax=206280 area_um2=25880.083199999935
+ACTUAL_GROUP ot_hj_CENTRE type=VOLTAGE_DOMAIN cells=44404 region=ot_hj_CENTRE
+ACTUAL_GROUP ot_hj_WEST type=VOLTAGE_DOMAIN cells=13954 region=ot_hj_WEST
+ACTUAL_GROUP ot_hj_EAST type=VOLTAGE_DOMAIN cells=14152 region=ot_hj_EAST
+ACTUAL_PG bound=135412 unbound=14292 inst_dnt=0 net_dnt=0 membership=ot_hj_CENTRE 44404 ot_hj_WEST 13954 ot_hj_EAST 14152 UNGROUPED 2342
+ACTUAL_DPL_SOURCE_LINES if\ \{\ \$result\ !=\ 0\ \}\ \{ {  orfs_write_db $::env(RESULTS_DIR)/3_5_place_dp-failed.odb} {  error $errMsg} \} {} {report_metrics 3 "detailed place" true false} {} {source_step_tcl POST DETAIL_PLACE} {} {orfs_write_db $::env(RESULTS_DIR)/3_5_place_dp.odb} {orfs_write_sdc $::env(RESULTS_DIR)/3_place.sdc}

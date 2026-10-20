@@ -1,0 +1,105 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: ot-epyc7       admits   932 GB (avail 731, growth 79, headroom 0, waiters 0/0 GB) load 47/96 running 18 disk 5390 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-terminal-audit-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1792175-1792507293 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO IFP-0001] Added 1424 rows of 10320 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 561.600 388.800 ) um
+[INFO IFP-0101] Core BBox: (  2.160  2.160 ) ( 559.440 386.640 ) um
+[INFO IFP-0102] Core area:                       214263.014 um^2
+[INFO IFP-0103] Total instances area:             41027.930 um^2
+[INFO IFP-0104] Effective utilization:                0.191
+[INFO IFP-0105] Number of instances:                  59664
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 43.2 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 43.2 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 43.2 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 43.2 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[0\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 43.2 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 43.2 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 43.2 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 86.4 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 86.4 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[1\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 86.4 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 86.4 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 86.4 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 86.4 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 86.4 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[2\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 129.6 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 129.6 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 129.6 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 129.6 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 129.6 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[3\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 129.6 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 129.6 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 172.8 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 172.8 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 172.8 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[4\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 172.8 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 172.8 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 172.8 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 172.8 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 216.0 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[5\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 216.0 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 216.0 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 216.0 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 216.0 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 216.0 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[6\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 216.0 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 259.2 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 259.2 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 259.2 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 259.2 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[7\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 259.2 129.6 R0
+REF_TILE place: u_ot_pr_core.u_gap.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 259.2 86.4 R0
+REF_TILE place: u_ot_pr_core.u_gap.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 259.2 43.2 R0
+REF_TILE place: u_ot_pr_core.g_retire_early.u_retire.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 302.4 216.0 R0
+REF_TILE place: u_ot_pr_core.g_retire_early.u_retire.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 302.4 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 302.4 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 302.4 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 302.4 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 302.4 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[8\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 302.4 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 345.6 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 345.6 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 345.6 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 345.6 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[9\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 345.6 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 345.6 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 345.6 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 388.8 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 388.8 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[10\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 388.8 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 388.8 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 388.8 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 388.8 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 388.8 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[11\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 432.0 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 432.0 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 432.0 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 432.0 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 432.0 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[12\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 432.0 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 432.0 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 475.2 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 475.2 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 475.2 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[13\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 475.2 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 475.2 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 475.2 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 475.2 43.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 518.4 216.0 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[14\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 518.4 259.2 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].g_early.u_attr.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 518.4 302.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].g_early.u_payload.g_bank\[0\].u_m ot_sram_1r1w_64x16_m1 at 518.4 345.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].g_early.u_payload.g_bank\[1\].u_m ot_sram_1r1w_64x16_m1 at 518.4 129.6 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].g_early.u_payload.g_bank\[2\].u_m ot_sram_1r1w_64x16_m1 at 518.4 86.4 R0
+REF_TILE place: u_ot_pr_core.g_event_mem\[15\].g_early.u_payload.g_bank\[3\].u_m ot_sram_1r1w_64x16_m1 at 518.4 43.2 R0
+Error: full_rows_footprint.tcl, 7 couldn't read file "/newkit/hwin_cell_band.tcl": no such file or directory
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1792175-1792507293): exit 1

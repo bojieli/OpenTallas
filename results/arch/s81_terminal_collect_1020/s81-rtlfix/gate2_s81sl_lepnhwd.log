@@ -1,0 +1,30 @@
+GATE WARN fill: fill 26% = (macros/children 62464 + std 7670) / outline 266872 um2 (pin-bound: Twenty true SRAM macros (62464um2) in two TX columns at43.2lattice x5rows on86.4pitch plus two RX rows require475.2x561.6. W face 2230 pins/561.6um (<4/um), E2208/561.6 (<4/um), host S703payload+2control/475.2 (<1.5/um); NH S2. Logic is ONE full-width std-cell band y259.2..291.6 between TX banks 2 and 3 (band area 15,257 um2, synthesis std area 7670 um2 = 50% band density); the tile outline is set by macro pitch and pin faces, not a squeezed util target.)
+GATE INFO pin_regs: pin registers opted out: Source-registered as s81sl_lep / s81sl_lepnh (ro / li / ml_rd land in pin flops, ri / lo / ml_wd / mu_rt / fault leave flops); recipe pin_regs would add an unpriced stage.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc7 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81sl_lepnhwd_20261020-060447.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81sl_lepnhwd_20261020-060447.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/s81sl_lepnhwd-20261020-060447
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 191 s (gate total 228 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 4440, 'pin_rectangles': 4440, 'pin_track_checked': 4440, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 2e206c222ff919d039fa60e360b53fb923322125df00494a89e683080d2c6a31
+GATE INFO util: synthesized std area 7937 um2 + macros 62464 in core 262412: util 6% (std-cell density 6.1% of placeable 130989 um2; total fill 26.8%)
+GATE INFO keep_modules: keep ot_sram_showahead_hit5: ot_sram_showahead_hit5 survives synthesis (20 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_host_event: ot_s81sl_lep_host_event survives synthesis (18 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_tx_push: ot_s81sl_lep_tx_push survives synthesis (20 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_stamp: ot_s81sl_lep_stamp survives synthesis (5 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_vcopy: ot_s81sl_lep_vcopy survives synthesis (14 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_pair_ready: ot_s81sl_lep_pair_ready survives synthesis (2 instances)
+GATE INFO keep_modules: keep ot_sram_showahead_readptr: $paramod$88619806337f3196fa8e2b991ac227a53f2aa58e\ot_sram_showahead_readptr survives synthesis (16 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_std_enable: ot_s81sl_lep_std_enable survives synthesis (9 instances)
+GATE INFO keep_modules: keep ot_s81sl_std_tx_qualify: $paramod$6a064a464261a58e515d66f524a76103780e42dd\ot_s81sl_std_tx_qualify survives synthesis (108 instances)
+GATE INFO textbook: WARN ot_s81sl_lep_nh cells 49,392 flops 16,713 depth 333.4 ps util 0.2686 reach 0.1 um (2.1 s)
+GATE WARN textbook.clock_domain: clock root port clk: 16,713 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. _58269_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_guidance: clock root port:clk: 16,733 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,733 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR GPL-0301] Utilization inf % exceeds 100%.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE WARN clock_rule: root port:clk: 16,733 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,733 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-lepwd-1020/physical/ref_tile/s81sl_lepnhwd/gate_layout/floorplan.png
+GATE WARN fill: fill 26% = (hard macros 62464.0 + synthesized std cells 8029.8) / outline 266872.3 um2; pin demand per face: S 2 pins over 0.0/475.2 um (0%), N 0 pins over 0.0/475.2 um (0%), W 2318 pins over 559.3/561.6 um (100%), E 2296 pins over 559.3/561.6 um (100%) (pin-bound: Twenty true SRAM macros (62464um2) in two TX columns at43.2lattice x5rows on86.4pitch plus two RX rows require475.2x561.6. W face 2230 pins/561.6um (<4/um), E2208/561.6 (<4/um), host S703payload+2control/475.2 (<1.5/um); NH S2. Logic is ONE full-width std-cell band y259.2..291.6 between TX banks 2 and 3 (band area 15,257 um2, synthesis std area 7670 um2 = 50% band density); the tile outline is set by macro pitch and pin faces, not a squeezed util target.)
+PRE_ROUTE_GATE: FAIL (1 fail, 6 warn)
+GATE: s81sl_lepnhwd/gate_result.json written (exact staged source binding; commit it with the kit)
