@@ -23,6 +23,8 @@
 module ot_v41_bterm5_w10 #(
     parameter integer TW = 8,
     parameter integer NP = 0,         // 1: native partition (S81-QXPQ3: no driver > 32 loads), default 0 = unchanged
+    parameter integer OK = 1,         // NP: kept copies of otag's slot field (top OKW bits) on otag_k (NP-LANE)
+    parameter integer OKW = 1,        // NP: width of the copied slot field = otag[TW-1 -: OKW]
     parameter integer FPC = 4,        // kept copies of the FP4 select (32 = one per lane: q-element QM >= 5)
     parameter integer P0B = 0         // 3 (owner decision 2026-10-06 23:00, Z29c post-CTS at 730: q0_pm -158.8, p0_ws -> 260 ps
                                       // of wire -> product, the placer put the S1b product registers at the CSA end):
@@ -49,7 +51,12 @@ module ot_v41_bterm5_w10 #(
     output wire              ov,
     output wire [31:0]       y,
     output wire              f,
-    output wire [TW-1:0]     otag
+    output wire [TW-1:0]     otag,
+    // NP-LANE (S81-QXPQ3): OK kept copies of the LAST tag stage's slot field, cycle-identical to otag[TW-1 -: OKW]:
+    // copy j = otag_k[j*OKW +: OKW] (j = 0 .. OK-1), each its own ot_v41_kreg (never merged), so each consumer slice
+    // (the CHAIN sub-lane: chain4's accumulator read mux / slot compares) drives its <= 32 loads from its own copy.
+    // The copies load their D net in groups of <= 32 (one kept stage-(LATENCY-1) copy per group).  NP = 0: all 0.
+    output wire [OK*OKW-1:0] otag_k
 );
     localparam integer W = 42;
     localparam integer LATENCY = 17 + (P0B != 0 ? 1 : 0) + (P0B >= 3 ? 2 : 0);
@@ -58,6 +65,12 @@ module ot_v41_bterm5_w10 #(
         else                e2m1 = {c[3], {2'b00, c[2:1]} + 4'd6, c[0], 2'b00};
     endfunction
     integer i;
+    // NP: one FP4 select copy per lane (u_l1 instantiates FPC = 4: 8 lanes = 80 loads a copy); NP = 0: FPC
+    localparam integer FPN = (NP != 0) ? 32 : FPC;
+    // NP slice of output bit k of an n-bit field cut into c contiguous slices (slice 0 = the top bits)
+    function automatic integer npl_sl(input integer k, input integer n, input integer c);
+        npl_sl = ((n - 1 - k) * c) / n;
+    endfunction
 
     // valid chain (async reset), one bit a stage
     reg [LATENCY-1:0] vs;
@@ -68,8 +81,8 @@ module ot_v41_bterm5_w10 #(
     // -- S0: input capture ------------------------------------------------------------------------------
     // the FP4 select in four kept copies (ot_v41_kreg: never merged with the tag delay line's copy of the same bit,
     // Z24b post-CTS: a merged fp4 flop in the tag line drove all 32 lanes' decode, -190 ps), one per 8 lanes
-    wire [FPC-1:0]   m_fp4;
-    for (genvar g = 0; g < FPC; g = g + 1) begin : g_f4
+    wire [FPN-1:0]   m_fp4;
+    for (genvar g = 0; g < FPN; g = g + 1) begin : g_f4
         ot_v41_kreg #(.W(1)) u_f (.clk(clk), .arst_n(1'b1), .d(fp4), .q(m_fp4[g]));
     end
     reg [255:0]      m_xq, m_wq;
@@ -88,7 +101,7 @@ module ot_v41_bterm5_w10 #(
         p0_es <= m_xe + m_we;
         for (i = 0; i < 32; i = i + 1) begin
             xc = m_xq[8*i +: 8];
-            wc = m_fp4[(i * FPC) / 32] ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
+            wc = m_fp4[(i * FPN) / 32] ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
             p0_nan[i] <= (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
             p0_sg[i] <= xc[7] ^ wc[7];
             p0_xs[i] <= {(xc[6:3] != 4'd0), xc[2:0]};
@@ -183,9 +196,29 @@ module ot_v41_bterm5_w10 #(
 
     // -- S4: terms (units of 2^-18) and CSA 32 -> 15 ----------------------------------------------------
     reg [32*W-1:0] terms;
-    always @(*)
-        for (i = 0; i < 32; i = i + 1)
-            terms[W*i +: W] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
+    if (NP != 0) begin : g_np_s4
+        // NP: the S3 shift-amount register p1_sq in two kept copies per lane (one p1_sq bit drove 36 shifter cells):
+        // copy a shifts the term's low 21 bits, copy b the high 21 bits (each half's shifter only from its own copy)
+        wire [32*W-1:0] tnp;
+        for (genvar l = 0; l < 32; l = l + 1) begin : g_l
+            wire [2:0] qa, qb;
+            ot_v41_kreg #(.W(3)) u_a (.clk(clk), .arst_n(1'b1), .d(pa_sh[l][4:2]), .q(qa));
+            ot_v41_kreg #(.W(3)) u_b (.clk(clk), .arst_n(1'b1), .d(pa_sh[l][4:2]), .q(qb));
+            wire [W-1:0] tx = {{(W-12){p1_q[l][11]}}, p1_q[l]};
+            wire [W-1:0] ta = tx << {qa, 2'b00};
+`ifdef OT_NP_LANE_MUT
+            wire [W-1:0] tb = tx << {qb, 2'b01};          // negative control: the high half shifted one place too far
+`else
+            wire [W-1:0] tb = tx << {qb, 2'b00};
+`endif
+            assign tnp[W*l +: W] = {tb[W-1:21], ta[20:0]};
+        end
+        always @(*) terms = tnp;
+    end else begin : g_o_s4
+        always @(*)
+            for (i = 0; i < 32; i = i + 1)
+                terms[W*i +: W] = {{(W-12){p1_q[i][11]}}, p1_q[i]} << {p1_sq[i], 2'b00};
+    end
     // S4a (P0B >= 3): the shifted terms registered before the 32 -> 15 CSA (owner rule 3: a reduction over > 4 inputs
     // gets a register level; Z29c post-CTS at 730: p2h_c -48.3)
     reg [32*W-1:0]    t4_t;
@@ -238,54 +271,66 @@ module ot_v41_bterm5_w10 #(
     reg               p4_nan, p4_s;
     reg signed [11:0] p4_eb;
     reg [W-2:0]       p4_m;
-    always @(posedge clk) begin
-        p4_nan <= p4a_nan;
-        p4_eb <= p4a_es + 12'sd149;
-        p4_s <= p4a_s[W-1];
-        p4_m <= p4a_s[W-1] ? ng[W-2:0] : p4a_s[W-2:0];
+    if (NP == 0) begin : g_o_s8
+        always @(posedge clk) begin
+            p4_nan <= p4a_nan;
+            p4_eb <= p4a_es + 12'sd149;
+            p4_s <= p4a_s[W-1];
+            p4_m <= p4a_s[W-1] ? ng[W-2:0] : p4a_s[W-2:0];
+        end
     end
 
     // -- S9: normalise 32 / 16 ---------------------------------------------------------------------------------
     reg [40:0] nma;
     reg [5:0]  lza;
-    always @(*) begin
-        nma = p4_m; lza = 6'd0;
-        if (nma[40:9]  == 32'd0) begin nma = nma << 32; lza = lza + 6'd32; end
-        if (nma[40:25] == 16'd0) begin nma = nma << 16; lza = lza + 6'd16; end
+    if (NP == 0) begin : g_o_s9c
+        always @(*) begin
+            nma = p4_m; lza = 6'd0;
+            if (nma[40:9]  == 32'd0) begin nma = nma << 32; lza = lza + 6'd32; end
+            if (nma[40:25] == 16'd0) begin nma = nma << 16; lza = lza + 6'd16; end
+        end
     end
     reg               p5a_nan, p5a_s, p5a_z;
     reg signed [11:0] p5a_eb;
     reg [40:0]        p5a_nm;
     reg [5:0]         p5a_lz;
-    always @(posedge clk) begin
-        p5a_nan <= p4_nan; p5a_s <= p4_s; p5a_z <= (p4_m == 41'd0);
-        p5a_eb <= p4_eb; p5a_nm <= nma; p5a_lz <= lza;
+    if (NP == 0) begin : g_o_s9
+        always @(posedge clk) begin
+            p5a_nan <= p4_nan; p5a_s <= p4_s; p5a_z <= (p4_m == 41'd0);
+            p5a_eb <= p4_eb; p5a_nm <= nma; p5a_lz <= lza;
+        end
     end
 
     // -- S10: normalise 8 / 4 -----------------------------------------------------------------------------------
     reg [40:0] nmb;
     reg [5:0]  lzb;
-    always @(*) begin
-        nmb = p5a_nm; lzb = p5a_lz;
-        if (nmb[40:33] == 8'd0) begin nmb = nmb << 8; lzb = lzb + 6'd8; end
-        if (nmb[40:37] == 4'd0) begin nmb = nmb << 4; lzb = lzb + 6'd4; end
+    if (NP == 0) begin : g_o_s10c
+        always @(*) begin
+            nmb = p5a_nm; lzb = p5a_lz;
+            if (nmb[40:33] == 8'd0) begin nmb = nmb << 8; lzb = lzb + 6'd8; end
+            if (nmb[40:37] == 4'd0) begin nmb = nmb << 4; lzb = lzb + 6'd4; end
+        end
     end
     reg               p5b_nan, p5b_s, p5b_z;
     reg signed [11:0] p5b_eb;
     reg [40:0]        p5b_nm;
     reg [5:0]         p5b_lz;
-    always @(posedge clk) begin
-        p5b_nan <= p5a_nan; p5b_s <= p5a_s; p5b_z <= p5a_z;
-        p5b_eb <= p5a_eb; p5b_nm <= nmb; p5b_lz <= lzb;
+    if (NP == 0) begin : g_o_s10
+        always @(posedge clk) begin
+            p5b_nan <= p5a_nan; p5b_s <= p5a_s; p5b_z <= p5a_z;
+            p5b_eb <= p5a_eb; p5b_nm <= nmb; p5b_lz <= lzb;
+        end
     end
 
     // -- S11: normalise 2 / 1, leading-bit exponent ----------------------------------------------------------------
     reg [40:0] nm;
     reg [5:0]  lz;
-    always @(*) begin
-        nm = p5b_nm; lz = p5b_lz;
-        if (nm[40:39] == 2'd0) begin nm = nm << 2; lz = lz + 6'd2; end
-        if (nm[40] == 1'b0)    begin nm = nm << 1; lz = lz + 6'd1; end
+    if (NP == 0) begin : g_o_s11c
+        always @(*) begin
+            nm = p5b_nm; lz = p5b_lz;
+            if (nm[40:39] == 2'd0) begin nm = nm << 2; lz = lz + 6'd2; end
+            if (nm[40] == 1'b0)    begin nm = nm << 1; lz = lz + 6'd1; end
+        end
     end
     reg               p5_nan, p5_s, p5_z;
     reg signed [11:0] p5_ebl;
@@ -293,6 +338,110 @@ module ot_v41_bterm5_w10 #(
     always @(posedge clk) begin
         p5_nan <= p5b_nan; p5_s <= p5b_s; p5_z <= p5b_z;
         p5_ebl <= p5b_eb - $signed({6'd0, lz}); p5_nm <= nm;
+    end
+
+    // -- NP (S81-QXPQ3, no driver > 32 loads): S8 - S11 with kept copies --------------------------------------------
+    // The magnitude register p4_m and the normalise registers p5a_nm / p5b_nm are each kept in C copies
+    // (ot_v41_kreg); the normalise output is cut into C contiguous bit slices (slice 0 = the top bits) and slice s is
+    // formed ONLY from copy s (its own zero detects and shift selects: one select drove 33 - 65 cells).  The S7 sign
+    // p4a_s[41] (42 loads: the 41-bit sign-magnitude select) is kept in two copies, one per half of the select.
+    // The leading-zero counts come from slice 0.  Same values, same cycles as NP = 0.
+    localparam integer C8 = 2, C9 = 3, C10 = 2;
+    function automatic [46:0] npl_n32(input [40:0] m);
+        reg [40:0] x; reg [5:0] z;
+        begin
+            x = m; z = 6'd0;
+            if (x[40:9]  == 32'd0) begin x = x << 32; z = z + 6'd32; end
+            if (x[40:25] == 16'd0) begin x = x << 16; z = z + 6'd16; end
+            npl_n32 = {x, z};
+        end
+    endfunction
+    function automatic [46:0] npl_n8(input [40:0] m, input [5:0] zi);
+        reg [40:0] x; reg [5:0] z;
+        begin
+            x = m; z = zi;
+            if (x[40:33] == 8'd0) begin x = x << 8; z = z + 6'd8; end
+            if (x[40:37] == 4'd0) begin x = x << 4; z = z + 6'd4; end
+            npl_n8 = {x, z};
+        end
+    endfunction
+    function automatic [46:0] npl_n2(input [40:0] m, input [5:0] zi);
+        reg [40:0] x; reg [5:0] z;
+        begin
+            x = m; z = zi;
+            if (x[40:39] == 2'd0) begin x = x << 2; z = z + 6'd2; end
+            if (x[40] == 1'b0)    begin x = x << 1; z = z + 6'd1; end
+            npl_n2 = {x, z};
+        end
+    endfunction
+    if (NP != 0) begin : g_np_nrm
+        // S7 sign copies (same D as p4a_s[41])
+        wire [1:0] sg;
+        ot_v41_kreg #(.W(1)) u_sg0 (.clk(clk), .arst_n(1'b1), .d(s4a[W-1]), .q(sg[0]));
+        ot_v41_kreg #(.W(1)) u_sg1 (.clk(clk), .arst_n(1'b1), .d(s4a[W-1]), .q(sg[1]));
+        // S8: magnitude in C8 copies
+        wire [W-2:0] md;
+        for (genvar k = 0; k < W - 1; k = k + 1) begin : g_md
+            assign md[k] = sg[k >= (W - 1) / 2 ? 1 : 0] ? ng[k] : p4a_s[k];
+        end
+        wire [41*C8-1:0] m4;
+        for (genvar c = 0; c < C8; c = c + 1) begin : g_m4
+            ot_v41_kreg #(.W(41)) u_m (.clk(clk), .arst_n(1'b1), .d(md), .q(m4[41*c +: 41]));
+        end
+        always @(posedge clk) begin
+            p4_nan <= p4a_nan;
+            p4_eb <= p4a_es + 12'sd149;
+            p4_s <= p4a_s[W-1];
+        end
+        always @(*) p4_m = m4[40:0];     // copy 0 (read only by the S9 zero flag below)
+        // S9: slices of the 32 / 16 normalise, slice s from copy s
+        wire [47*C8-1:0] r9;
+        for (genvar c = 0; c < C8; c = c + 1) begin : g_r9
+            assign r9[47*c +: 47] = npl_n32(m4[41*c +: 41]);
+        end
+        integer k9;
+        always @(*) begin
+            for (k9 = 0; k9 < 41; k9 = k9 + 1) nma[k9] = r9[47 * npl_sl(k9, 41, C8) + 6 + k9];
+            lza = r9[5:0];
+        end
+        wire [41*C9-1:0] a5;
+        for (genvar c = 0; c < C9; c = c + 1) begin : g_a5
+            ot_v41_kreg #(.W(41)) u_m (.clk(clk), .arst_n(1'b1), .d(nma), .q(a5[41*c +: 41]));
+        end
+        always @(posedge clk) begin
+            p5a_nan <= p4_nan; p5a_s <= p4_s; p5a_z <= (m4[41*(C8-1) +: 41] == 41'd0);
+            p5a_eb <= p4_eb; p5a_lz <= lza;
+        end
+        always @(*) p5a_nm = a5[40:0];
+        // S10: slices of the 8 / 4 normalise
+        wire [47*C9-1:0] r10;
+        for (genvar c = 0; c < C9; c = c + 1) begin : g_r10
+            assign r10[47*c +: 47] = npl_n8(a5[41*c +: 41], p5a_lz);
+        end
+        integer k10;
+        always @(*) begin
+            for (k10 = 0; k10 < 41; k10 = k10 + 1) nmb[k10] = r10[47 * npl_sl(k10, 41, C9) + 6 + k10];
+            lzb = r10[5:0];
+        end
+        wire [41*C10-1:0] b5;
+        for (genvar c = 0; c < C10; c = c + 1) begin : g_b5
+            ot_v41_kreg #(.W(41)) u_m (.clk(clk), .arst_n(1'b1), .d(nmb), .q(b5[41*c +: 41]));
+        end
+        always @(posedge clk) begin
+            p5b_nan <= p5a_nan; p5b_s <= p5a_s; p5b_z <= p5a_z;
+            p5b_eb <= p5a_eb; p5b_lz <= lzb;
+        end
+        always @(*) p5b_nm = b5[40:0];
+        // S11: slices of the 2 / 1 normalise
+        wire [47*C10-1:0] r11;
+        for (genvar c = 0; c < C10; c = c + 1) begin : g_r11
+            assign r11[47*c +: 47] = npl_n2(b5[41*c +: 41], p5b_lz);
+        end
+        integer k11;
+        always @(*) begin
+            for (k11 = 0; k11 < 41; k11 = k11 + 1) nm[k11] = r11[47 * npl_sl(k11, 41, C10) + 6 + k11];
+            lz = r11[5:0];
+        end
     end
 
     // -- S12: the round-to-24 increment bit ------------------------------------------------------------------------
