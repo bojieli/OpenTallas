@@ -16,6 +16,7 @@ SRC="$S/qkd_native_attention_programme.sv $S/qkd_native_attention_static_ctl.sv 
  $ROOT/rtl/lib/face_land/qkd_kvs_attn_fl_ba5.sv $ROOT/rtl/lib/ot_rst_relay.sv $ROOT/rtl/lib/ot_pin_land.sv
  $B/qkd_kvs_attn_${RVB:-rv}.sv $ROOT/rtl/lib/face_land/qkd_kvs_attn_fl_${RVB:-rv}.sv $ROOT/rtl/test/kv_bootage_1019/tb_kvs_attn_rv_pair.sv"
 G=(-GMUT="$MUT"); for kv in "$@"; do G+=(-G"$kv"); done
+[ "${RVB:-rv}" = r16 ] && G+=(+define+RV_RS)
 TAG=$(printf '%s_' "${RVB:-rv}" "m$MUT" "$@" | tr -c 'A-Za-z0-9_\n' '_')
 mkdir -p "$RUN"; OBJ="$RUN/obj_$TAG"
 echo "KVS_RVPAIR build B=${RVB:-rv} mut=$MUT $* verilator $(verilator --version)"

@@ -3,7 +3,7 @@
  "block": "qkd_kvs_attn_fl",
  "ref_tile": true,
  "owner": "Claude:KV-ATTN2",
- "purpose": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term.",
+ "purpose": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term. KV-HEALTH/KV-RETIRE release timing: RETIRE_STATIC=1, STATUS_DELAY=213 (STATUS at compiled_end-1 = 1998 relative to the link law; end = tx_first+34+213).",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
@@ -29,7 +29,7 @@
    },
    {
     "name": "rv_pair_ba5",
-    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m0 0",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m0 0 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -41,7 +41,7 @@
    },
    {
     "name": "rv_mut1_fields_early",
-    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m1 1",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m1 1 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -49,11 +49,11 @@
      "verilator"
     ],
     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
-    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m1/verdict.log"
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m1/verdict.log"
    },
    {
     "name": "rv_mut2_check_misaligned",
-    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m2 2",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m2 2 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -61,11 +61,11 @@
      "verilator"
     ],
     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
-    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m2/verdict.log"
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m2/verdict.log"
    },
    {
     "name": "rv_mut3_admission_no_check",
-    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m3 3",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m3 3 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -73,11 +73,11 @@
      "verilator"
     ],
     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
-    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m3/verdict.log"
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m3/verdict.log"
    },
    {
     "name": "rv_mut4_tx_shift0",
-    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m4 4",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m4 4 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -85,11 +85,11 @@
      "verilator"
     ],
     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
-    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m4/verdict.log"
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m4/verdict.log"
    },
    {
     "name": "rv_mut5_status_copy_early",
-    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m5 5",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m5 5 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -97,11 +97,11 @@
      "verilator"
     ],
     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
-    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m5/verdict.log"
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m5/verdict.log"
    },
    {
     "name": "rv_mut6_face_stale_beat",
-    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m6 6",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m6 6 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -109,11 +109,11 @@
      "verilator"
     ],
     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
-    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m6/verdict.log"
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m6/verdict.log"
    },
    {
     "name": "rv_mut7_fault_root_one_pin",
-    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m7 7",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m7 7 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -121,7 +121,7 @@
      "verilator"
     ],
     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
-    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m7/verdict.log"
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m7/verdict.log"
    }
   ],
   "calibrate": {
@@ -181,9 +181,9 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term.",
+ "structural_change": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term. KV-HEALTH/KV-RETIRE release timing: RETIRE_STATIC=1, STATUS_DELAY=213 (STATUS at compiled_end-1 = 1998 relative to the link law; end = tx_first+34+213).",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term."
+  "why": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term. KV-HEALTH/KV-RETIRE release timing: RETIRE_STATIC=1, STATUS_DELAY=213 (STATUS at compiled_end-1 = 1998 relative to the link law; end = tx_first+34+213)."
  }
 }

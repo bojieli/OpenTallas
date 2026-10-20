@@ -7,7 +7,8 @@
 //   landed buses: fin +1, i_ctl +1 (ot_pin_land, one capture flop per bit at the face), unchanged from ba5;
 //     i_ctl[34] (issue) lands in NIS kept copies (one pin, NIS face flops; each copy enables <= 16 captures), +1 as before.
 // MUT: passed to the core (bench mutants only).
-module qkd_kvs_attn_fl #(parameter integer MUT=0) (
+// RETIRE_STATIC / STATUS_DELAY (KV-RETIRE, KV-HEALTH STATUS 1998 = delay 213): set by the kit (spec params); 0/0 = rv timing.
+module qkd_kvs_attn_fl #(parameter integer MUT=0, parameter integer RETIRE_STATIC=0, parameter integer STATUS_DELAY=0) (
     input wire ck, input wire rst_n,
     input wire ufs_WS, input wire ufs_WN, input wire ufs_ES, input wire ufs_EN,
     input wire ufh, input wire ufp0, input wire ufp1, input wire uff,
@@ -28,7 +29,7 @@ module qkd_kvs_attn_fl #(parameter integer MUT=0) (
     always @(posedge ck) fl_iss_c <= {NIS{i_ctl[34]}};
     (* keep = "true", dont_touch = "true" *) reg [2:0] fl_run_c;
     always @(posedge ck) fl_run_c <= {3{i_ctl[35]}};
-    qkd_kvs_attn_r16 #(.MUT(MUT), .NIS(NIS)) u_core (.ck(ck), .rst_n(rst_n), .ufs_WS(ufs_WS), .ufs_WN(ufs_WN), .ufs_ES(ufs_ES),
+    qkd_kvs_attn_r16 #(.MUT(MUT), .NIS(NIS), .RETIRE_STATIC(RETIRE_STATIC), .STATUS_DELAY(STATUS_DELAY)) u_core (.ck(ck), .rst_n(rst_n), .ufs_WS(ufs_WS), .ufs_WN(ufs_WN), .ufs_ES(ufs_ES),
         .ufs_EN(ufs_EN), .ufh(ufh), .ufp0(ufp0), .ufp1(ufp1), .uff(uff), .ufk_WS(ufk_WS), .ufk_WN(ufk_WN), .ufk_ES(ufk_ES),
         .ufk_EN(ufk_EN), .d2d__srx(d2d__srx), .d2d__rx_payload(d2d__rx_payload), .d2d__att_tx_slot(d2d__att_tx_slot),
         .d2d__att_tx_kind(d2d__att_tx_kind), .d2d__att_tx_beat(d2d__att_tx_beat), .fin(fl_land__fin),

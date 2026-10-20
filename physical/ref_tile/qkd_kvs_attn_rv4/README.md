@@ -52,4 +52,7 @@ request copies 19 (16-bit slices) + a kept running copy for the age/cycles incre
 high / control), face calendar pipe unconditional (read only on cp_sq) + 2 res_t strobe copies, guard_r16 accept enable over 4
 kept valid copies, producer tag capture without the fault term (tag read only under descriptor_valid).
 Pair lockstep vs ba5 (RVB=r16): 155,024 checks PASS; mutants 1-7 FAIL (results/rtl/kv_attn_rv_1019/r16_m*/verdict.log).
+Release timing (KV-HEALTH / KV-RETIRE, STATUS 1998): kit params RETIRE_STATIC=1, STATUS_DELAY=213 -> STATUS at compiled_end-1,
+end = tx_first + 34 + 213 = 1998 (+1 vs the rv link law: 1999 at TX_SHIFT 1 -- see lanes/KV-GEN9.md); RESULT / done unchanged.
+Pair bench in that configuration (RS=1 SD=213: B's STATUS checked 1 + 213 edges after A's) PASS; mutants FAIL (r16rs_m*).
 Post-gate facts: gate_layout/REVIEW.json and lanes/KV-ATTN2.md (this README is gate-consumed).

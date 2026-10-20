@@ -14,7 +14,7 @@
 //   10 authority token out of range.
 // Verdict: KVS_RVPAIR PASS|FAIL mode=M mut=U checks=N ...
 module tb_kvs_attn_rv_pair;
- parameter integer MUT=0,PL=0,FD=1,DQK=0,DRL=0,NCMD=3,SEED=1;
+ parameter integer MUT=0,PL=0,FD=1,DQK=0,DRL=0,NCMD=3,SEED=1,RS=0,SD=0;   // RS/SD: B RETIRE_STATIC / STATUS_DELAY (B's STATUS = A's + 1 + SD edges)
  reg ck=0;always #5 ck=~ck;
  reg rst_n=0;
  reg [108:0] ictl=0;
@@ -30,7 +30,11 @@ module tb_kvs_attn_rv_pair;
   .d2d__srx({521'd0,rx_ev}),.d2d__rx_payload(rx_pl),.d2d__att_tx_slot(sl_a),.d2d__att_tx_kind(sk_a),.d2d__att_tx_beat(sb_a),
   .fin(fin_a),.attn__tx_valid(txv_a),.attn__tx_payload(txp_a),.pvst(pvst_a),.pvfst(pvfst_a),.ahs(ahs_a),.prg(prg_a),
   .acal_WS(c0a),.acal_WN(c1a),.acal_ES(c2a),.acal_EN(c3a),.arh(arh_a),.i_ctl(ictl));
- qkd_kvs_attn_fl #(.MUT(MUT)) uB(.ck(ck),.rst_n(rst_n),.ufs_WS(ufd_b[0]),.ufs_WN(ufd_b[1]),.ufs_ES(ufd_b[2]),.ufs_EN(ufd_b[3]),
+`ifdef RV_RS
+ qkd_kvs_attn_fl #(.MUT(MUT),.RETIRE_STATIC(RS),.STATUS_DELAY(SD)) uB(
+`else
+ qkd_kvs_attn_fl #(.MUT(MUT)) uB(
+`endif.ck(ck),.rst_n(rst_n),.ufs_WS(ufd_b[0]),.ufs_WN(ufd_b[1]),.ufs_ES(ufd_b[2]),.ufs_EN(ufd_b[3]),
   .ufh(ufd_b[4]),.ufp0(ufd_b[5]),.ufp1(ufd_b[6]),.uff(ufd_b[7]),.ufk_WS(ufc_b[0]),.ufk_WN(ufc_b[1]),.ufk_ES(ufc_b[2]),.ufk_EN(ufc_b[3]),
   .d2d__srx({521'd0,rx_ev}),.d2d__rx_payload(rx_pl),.d2d__att_tx_slot(sl_b),.d2d__att_tx_kind(sk_b),.d2d__att_tx_beat(sb_b),
   .fin(fin_b),.attn__tx_valid(txv_b),.attn__tx_payload(txp_b),.pvst(pvst_b),.pvfst(pvfst_b),.ahs(ahs_b),.prg(prg_b),
@@ -39,6 +43,7 @@ module tb_kvs_attn_rv_pair;
  wire a_busy=uA.u_core.u_attn.ctl.busy, b_busy=uB.u_core.u_attn.ctl.busy;
  wire [15:0] a_age=uA.u_core.u_attn.ctl.age, b_age=uB.u_core.u_attn.ctl.age;
  wire [15:0] a_rxc=uA.u_core.u_attn.ctl.rx_cmd, a_txf=uA.u_core.u_attn.ctl.tx_first, b_txf=uB.u_core.u_attn.ctl.tx_first;
+ wire [15:0] b_last=uB.u_core.u_attn.ctl.last; wire [15:0] b_st=(RS!=0)?b_last-16'd1:b_txf+16'd33;
  wire [15:0] a_ep=uA.u_core.u_attn.ctl.ep; wire [5:0] a_ly=uA.u_core.u_attn.ctl.layer; wire [17:0] a_pos=uA.u_core.u_attn.ctl.pos;
  wire a_fault=uA.u_core.u_attn.ctl.fault, b_fault=uB.u_core.u_attn.ctl.fault;
  wire a_run=uA.u_core.u_attn_root.running, b_run=uB.u_core.u_attn_root.running;
@@ -70,8 +75,8 @@ module tb_kvs_attn_rv_pair;
    sl_a=1;sk_a=(a_age==a_txf+33)?4'd4:4'd3;sb_a=(a_age==a_txf+33)?5'd0:5'(a_age-a_txf);
    if(mode==5&&a_age==a_txf+3)sk_a=4'd4;
   end
-  if(b_busy&&((b_age>=b_txf&&b_age<b_txf+32)||b_age==b_txf+33))begin
-   sl_b=1;sk_b=(b_age==b_txf+33)?4'd4:4'd3;sb_b=(b_age==b_txf+33)?5'd0:5'(b_age-b_txf);
+  if(b_busy&&((b_age>=b_txf&&b_age<b_txf+32)||b_age==b_st))begin
+   sl_b=1;sk_b=(b_age==b_st)?4'd4:4'd3;sb_b=(b_age==b_st)?5'd0:5'(b_age-b_txf);
    if(mode==5&&b_age==b_txf+3)sk_b=4'd4;
   end
   // final-join beat stream (per tile): landed one edge later, so beat b leaves the pins at root age RESULT_AGE + b - 1
@@ -91,14 +96,19 @@ module tb_kvs_attn_rv_pair;
  // ---- lockstep check (posedge sample of the settled values): B now vs A one edge ago ----
  reg p_txv=0;reg [547:0] p_txp=0;reg [30:0] p_pvst=0;reg [64:0] p_pvfst=0;reg [164:0] p_ahs=0;reg [536:0] p_prg=0;
  reg [191:0] p_cal=0;reg [7:0] p_arh=0;reg armed=0;
+ reg st_pend=0;integer st_due=0;reg [547:0] st_pl=0;
  task automatic chk(input ok,input [8*20-1:0] what);
   begin checks=checks+1;if(!ok)begin errs=errs+1;if(errs<=10)$display("MISMATCH cyc=%0d %0s",cyc,what);end end
  endtask
  always @(posedge ck)begin
   cyc=cyc+1;
   if(armed)begin
-   chk(txv_b===p_txv,"tx_valid");
-   if(p_txv)chk(txp_b===p_txp,"tx_payload");
+   // STATUS (kind 4) moves by SD more edges under RS: checked against the queued A STATUS instead
+   if(!(SD!=0&&((p_txv&&p_txp[542:539]==4'd4)||(txv_b&&txp_b[542:539]==4'd4))))begin
+    chk(txv_b===p_txv,"tx_valid");
+    if(p_txv)chk(txp_b===p_txp,"tx_payload");
+   end
+   if(SD!=0&&txv_b&&txp_b[542:539]==4'd4)begin chk(st_pend&&cyc==st_due,"status timing");chk(txp_b===st_pl,"status payload");st_pend=0;end
    chk(pvst_b===p_pvst,"pvst");
    chk(pvfst_b===p_pvfst,"pvfst");
    chk(ahs_b===p_ahs,"ahs");
@@ -114,6 +124,7 @@ module tb_kvs_attn_rv_pair;
    if(prg_a[19])nq=nq+1;
    if(txv_a)ntx=ntx+1;
   end
+  if(SD!=0&&txv_a&&txp_a[542:539]==4'd4)begin st_pend=1;st_due=cyc+1+SD;st_pl=txp_a;end
   p_txv=txv_a;p_txp=txp_a;p_pvst=pvst_a;p_pvfst=pvfst_a;p_ahs=ahs_a;p_cal={c0a,c1a,c2a,c3a};p_prg=prg_a;p_arh=arh_a;
  end
  task automatic pulse(input integer bit_i);
@@ -145,6 +156,7 @@ module tb_kvs_attn_rv_pair;
    errs=errs+1;$display("MISMATCH reference A not legal: fault=%0d req=%0d Q=%0d TX=%0d",afault,nreq,nq,ntx);
   end
   if(mode==0&&bfault)begin errs=errs+1;$display("MISMATCH B faulted on the legal stream");end
+  if(st_pend)begin errs=errs+1;$display("MISMATCH B STATUS never sent");end
   if(mode!=0&&!afault)begin errs=errs+1;$display("MISMATCH reference A missed fault mode %0d",mode);end
   if(mode!=0&&!bfault)begin errs=errs+1;$display("MISMATCH B missed fault mode %0d",mode);end
   $display("KVS_RVPAIR %s mode=%0d mut=%0d checks=%0d errors=%0d cmds=%0d req=%0d Q=%0d TX=%0d faultA=%0d faultB=%0d",

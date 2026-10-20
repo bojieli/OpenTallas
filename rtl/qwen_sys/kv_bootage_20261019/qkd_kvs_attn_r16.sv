@@ -126,7 +126,8 @@ module qkd_native_attention_static_ctl_r16 #(
  parameter integer MUT=0,
  parameter integer NRV=19,
  parameter integer NLD=16,
- parameter integer NSS=33
+ parameter integer NSS=33,
+ parameter integer RETIRE_STATIC=0    // KV-RETIRE / KV-HEALTH: compiler-reserved STATUS at compiled_end-1 (RESULT / done ages unchanged)
 )(
  input wire ck,rst_n,
  input wire [NLD-1:0] load,
@@ -169,9 +170,11 @@ module qkd_native_attention_static_ctl_r16 #(
  wire [15:0] age_nx={run_c[1]?age_run[15:8]:age_hold[15:8],run_c[0]?age_run[7:0]:age_hold[7:0]};
  wire busy_nx=run?(run_ok?1'b1:busy):((busy&&age==last)?1'b0:busy);
  wire [15:0] tx_first_nx=load[0]?compiled_tx_first:tx_first;
+ wire [15:0] last_nx=load[0]?compiled_end:last;
  // status_slot = busy && age == tx_first + 33, as NSS kept copies computed from the next state (exact every edge)
  (* keep = "true", dont_touch = "true" *) reg [NSS-1:0] ss_c;
- wire ss_nx=busy_nx&&(age_nx==tx_first_nx+((MUT==5)?16'd32:16'd33));
+ wire [15:0] ss_age=(RETIRE_STATIC!=0)?last_nx-16'd1:tx_first_nx+16'd33;
+ wire ss_nx=busy_nx&&(age_nx==ss_age-((MUT==5)?16'd1:16'd0));
  always @(posedge ck or negedge rst_n)if(!rst_n)ss_c<=0;else ss_c<={NSS{ss_nx}};
  wire status_slot=ss_c[NSS-1];
  // compiled values: the load capture is split over the NLD-1 load copies (<= 32 flops each)
@@ -191,7 +194,8 @@ module qkd_native_attention_static_ctl_r16 #(
   else begin
    age<=age_nx;busy<=busy_nx;
    if(load[0])begin
-    if(busy||loading||loaded||compiled_rx_cmd<2||compiled_tx_first<=compiled_rx_cmd+34||compiled_end!=compiled_tx_first+34)
+    if(busy||loading||loaded||compiled_rx_cmd<2||compiled_tx_first<=compiled_rx_cmd+34||((RETIRE_STATIC==0)?(compiled_end!=compiled_tx_first+34):
+     ({1'b0,compiled_end}<{1'b0,compiled_tx_first}+17'd34)))
      local_fault<=1;
     loading<=1;
    end
@@ -302,7 +306,7 @@ module qkd_native59_descriptor_producer_r16 #(parameter integer NLD=16)(
 endmodule
 
 // Programme: qkd_native_attention_programme_ba4 LAND=1 with issue copies (NIS), the rv producer / controller.
-module qkd_native_attention_programme_r16 #(parameter integer MUT=0,parameter integer NIS=24,parameter integer NRV=19)(
+module qkd_native_attention_programme_r16 #(parameter integer MUT=0,parameter integer NIS=24,parameter integer NRV=19,parameter integer RETIRE_STATIC=0)(
  input wire ck,rst_n,
  input wire [NIS-1:0] issue,
  input wire [2:0] run,
@@ -344,7 +348,7 @@ module qkd_native_attention_programme_r16 #(parameter integer MUT=0,parameter in
   .authority_valid(authority_valid),.authority_epoch(authority_epoch),.authority_token(authority_token),
   .authority_position(authority_position),.authority_stage(authority_stage),
   .descriptor_valid(load),.descriptor(command),.tag(command_tag),.fault(producer_fault));
- qkd_native_attention_static_ctl_r16 #(.MUT(MUT),.NRV(NRV),.NLD(NLD)) ctl(
+ qkd_native_attention_static_ctl_r16 #(.MUT(MUT),.NRV(NRV),.NLD(NLD),.RETIRE_STATIC(RETIRE_STATIC)) ctl(
   .load(load),.command(command),.command_tag(command_tag),.fault(ctl_fault),
   .ck(ck),.rst_n(rst_n),.run_c(run),
   .fused_program_capability(capability_q),.authority_valid(authority_valid_q),.authority_epoch(authority_epoch_q),
@@ -523,6 +527,7 @@ module qkd_attn_cal_gen_r16 #(
  parameter integer F_DLY=127,
  parameter integer SERVICE_END=1777,
  parameter integer NV9=16,
+ parameter integer STATUS_DELAY=0,   // KV-RETIRE: compiler-priced STATUS tail (end += STATUS_DELAY); service/result unchanged
  parameter integer MUT=0
 )(
  input wire ck,rst_n,
@@ -631,7 +636,7 @@ module qkd_attn_cal_gen_r16 #(
     if(f9||r9[16]||r9[15:0]<p09||cfg_bad)fault<=1;
    end
    if(v9c[1])tx_first<=16'(TXF);
-   if(v9c[2])end_age<=16'(TXF+34);
+   if(v9c[2])end_age<=16'(TXF+34+STATUS_DELAY);
    if(v9c[3])cal_epoch<=e9;
    for(integer k=0;k<11;k=k+1)if(v9c[4+k])cal[16*k+:16]<=cal9[16*k+:16];
   end
@@ -658,7 +663,7 @@ module qkd_attn_fault_root_r16 #(parameter integer ND=8,parameter integer NC=4,p
 endmodule
 
 // The tile core (ports = qkd_kvs_attn_ba5 + the issue landing copies from the face wrapper).
-module qkd_kvs_attn_r16 #(parameter integer MUT=0,parameter integer NIS=24)(
+module qkd_kvs_attn_r16 #(parameter integer MUT=0,parameter integer NIS=24,parameter integer RETIRE_STATIC=0,parameter integer STATUS_DELAY=0)(
     input wire ck,
     input wire rst_n,
     input wire [0:0] ufs_WS,
@@ -723,7 +728,7 @@ module qkd_kvs_attn_r16 #(parameter integer MUT=0,parameter integer NIS=24)(
     wire [15:0] w_root__age,w_root__ep;wire [5:0] w_root__layer;wire [13:0] w_root__ctx;wire [175:0] w_root__cal;
     qkd_attn_fault_root_r16 #(.ND(8), .NC(4), .MUT(MUT)) u_afr (.ck(ck), .rst_n(rst_n),
         .d({uff, ufp1, ufp0, ufh, ufs_EN, ufs_ES, ufs_WN, ufs_WS}), .c({ufk_EN, ufk_ES, ufk_WN, ufk_WS}), .unit_fault(w_afr__unit_fault));
-    qkd_native_attention_programme_r16 #(.MUT(MUT), .NIS(NIS), .NRV(NRV)) u_attn (.ck(ck), .rst_n(rst_n), .issue(issue_c), .run(run_c),
+    qkd_native_attention_programme_r16 #(.MUT(MUT), .NIS(NIS), .NRV(NRV), .RETIRE_STATIC(RETIRE_STATIC)) u_attn (.ck(ck), .rst_n(rst_n), .issue(issue_c), .run(run_c),
         .fused_program_capability(attn__fused_program_capability), .authority_valid(attn__authority_valid),
         .authority_epoch(attn__authority_epoch), .authority_token(attn__authority_token), .authority_position(attn__authority_position),
         .authority_stage(attn__authority_stage), .compiled_calendar(w_attn_cal__cal), .compiled_rx_cmd(w_attn_cal__rx_cmd),
@@ -736,7 +741,7 @@ module qkd_kvs_attn_r16 #(parameter integer MUT=0,parameter integer NIS=24)(
         .result_data(w_face__result_data), .result_epoch(w_face__result_epoch), .result_layer(w_face__result_layer),
         .result_done(w_face__result_done), .service_fault(w_face__service_fault), .result_reserved(), .busy(), .fault(), .age(),
         .prg_l(prg));
-    qkd_attn_cal_gen_r16 #(.G3S2(1), .RX_CMD(2), .TX_SHIFT(1), .SERVICE_END(1777), .D_QK(255), .D_RL(255), .F_DLY(127), .MUT(MUT))
+    qkd_attn_cal_gen_r16 #(.G3S2(1), .RX_CMD(2), .TX_SHIFT(1), .SERVICE_END(1777), .D_QK(255), .D_RL(255), .F_DLY(127), .STATUS_DELAY(STATUS_DELAY), .MUT(MUT))
         u_attn_cal (.ck(ck), .rst_n(rst_n), .cfg_cal({attn_cal__cfg_cal__0, attn_cal__cfg_cal__1, attn_cal__cfg_cal__2}),
         .go(attn_cal__go), .ctx_t(attn_cal__ctx_t), .epoch(attn__authority_epoch), .cal(w_attn_cal__cal), .rx_cmd(w_attn_cal__rx_cmd),
         .tx_first(w_attn_cal__tx_first), .end_age(w_attn_cal__end_age), .cal_epoch(), .done(), .valid(), .fault());
