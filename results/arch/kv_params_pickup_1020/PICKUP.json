@@ -1,0 +1,75 @@
+{
+  "original_j0_status": "NOT_PROVEN",
+  "original_induction_cells": {
+    "cells": 9353,
+    "log_sha256": "644447f45f48b686bb28e0744c3448b85f1ce086e29ca56c3a1b4b1d3fef9d29",
+    "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct -seq 4",
+    "proven_cells": 8253,
+    "rc": 1,
+    "seconds": [
+      0.2,
+      1216.2
+    ],
+    "unproven_cells": 1100,
+    "unproven_sample": [
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236808: \\pvst_gold [30] \\pvst_gate [30]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236807: \\pvst_gold [29] \\pvst_gate [29]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236806: \\pvst_gold [28] \\pvst_gate [28]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236805: \\pvst_gold [27] \\pvst_gate [27]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236804: \\pvst_gold [26] \\pvst_gate [26]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236803: \\pvst_gold [25] \\pvst_gate [25]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236802: \\pvst_gold [24] \\pvst_gate [24]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236801: \\pvst_gold [23] \\pvst_gate [23]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236800: \\pvst_gold [22] \\pvst_gate [22]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236799: \\pvst_gold [21] \\pvst_gate [21]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236798: \\pvst_gold [20] \\pvst_gate [20]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236797: \\pvst_gold [19] \\pvst_gate [19]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236796: \\pvst_gold [18] \\pvst_gate [18]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236795: \\pvst_gold [17] \\pvst_gate [17]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236794: \\pvst_gold [16] \\pvst_gate [16]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236793: \\pvst_gold [15] \\pvst_gate [15]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236792: \\pvst_gold [14] \\pvst_gate [14]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236791: \\pvst_gold [13] \\pvst_gate [13]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236790: \\pvst_gold [12] \\pvst_gate [12]",
+      "Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$236789: \\pvst_gold [11] \\pvst_gate [11]"
+    ]
+  },
+  "source_view": {
+    "artifacts": {
+      "abstract.json": "d50980c5a7fbd86623fb4c8929c67b9fd0be1c05b66231218cfd2d453f289dc8",
+      "child_lint.json": "e6b5d0fceb0eb8da5cc37c005c10b175ef2fece608d7c055940288cebf0168ad",
+      "export_exact_abstract.log": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+      "export_exact_abstract.tcl": "7d35cc5538eb637699dfb6216f741ca25713fda2af5b5917390d7025cc3c370f",
+      "export_ff.log": "4ca1a777e01a3c1cae4d30c1eb542ba0ec036071fdd8ff70c41b885a5983d237",
+      "export_ff.tcl": "5db16b0a72288a7f1432339ec13a4640aca2196a5c9c0661c6e1123a92dedf5e",
+      "export_ss.log": "3fc140834e3dd3dc55a1462cbf4a67e55e7aba2af7a3b5cea45d07d26a10ab21",
+      "export_ss.tcl": "32057d0c50ca6e11a53474d6554974569e7d06a6042e2b23dfb2fe4290e97263",
+      "export_tt.log": "053415f580322eed9a32369ab168c3414d9eb5ebf31a8ad0fee8288786f2f95e",
+      "export_tt.tcl": "faf0ef2975f38a197df14ea9258a4568a7ce3e561052f98a1ddbb5649c9987c0",
+      "insertion.json": "f651b522d1f6f4963f5074416a2254903c67e257054610e82686b81dcf626819",
+      "provenance/abstract_pin_stub.json": "91081ada2ae63533d30bbbe1983376492d0c6a2407fb383f1902fd5842783720",
+      "provenance/raw/qkd_kvs_attn_fl.lef": "cfa776977649d05e8c98426d9e74ee773b8d773de9d91b1eed05cb77fd2b644c",
+      "provenance/view_export.abstract.json": "0d58e87f6cb3ddd33cae6f15f51442c7f83c4fc2a59bd86477f43189a630df6b",
+      "qkd_kvs_attn_fl.lef": "0d08f38db39d5ce89f03c6658963c4f058254e29ad517cc4d49603e7dc04cd45",
+      "qkd_kvs_attn_fl_ff.lib": "1ad5ecef7dd70c3cbb23d2eafb75fe48dd3a083e5312e86a9ccf80e37830bc88",
+      "qkd_kvs_attn_fl_ss.lib": "7bbf47057f5fed23a418bff350c94b47dad6616502783e64e0f61039302738ed",
+      "qkd_kvs_attn_fl_tt.lib": "5292762b1ecd2a934343881de2e59c659072f6e22dacf99a96b98f0788c1c88f"
+    },
+    "rtl": {
+      "path": "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv",
+      "sha256": "f965fd3f25325459da6255ce0524f8af12c4dd9a2a02e165a476394f5c03cd32"
+    },
+    "view": "physical/ref_tile/qkd_kvs_attn_rv3/views/qkd_kvs_attn_fl"
+  },
+  "files": {
+    "qkd_kvs_attn_fl.j0.audit.json": "743ed6bd26ed1738f83c8ebaf54083740158cc095ab09d43c0a9809b115d4c4e",
+    "equiv.log": "644447f45f48b686bb28e0744c3448b85f1ce086e29ca56c3a1b4b1d3fef9d29",
+    "audit_tool.py": "8c13efbd4ff1f11e1eecfd9870ec47bfab58ca2ae31151ce3541dba4cdc14fc1"
+  },
+  "next_job": {
+    "session": 11914,
+    "remote_out": "/srv/opentallas-scratch2/claude/codex-kv-params-audit-1020/out/attn_j0_s8.audit.json",
+    "change": "induct-seq8 vs4 only; all comparisons/reset6/base unchanged",
+    "qualified_receipt": false
+  }
+}
