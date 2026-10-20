@@ -169,6 +169,16 @@ XSRCS = ["rtl/qwen_dv/qfd_dv_su_lane.sv", "rtl/hdc/ot_hdc_vstream_lane_t.sv", "r
          "rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv"]
 
 
+# QW-SLICE6 10-19: FACE 3 = qfd_dv_s5_flat0 (the hardened one-level slice re-cut, HARD 0 leaves); run it with
+# --vflags "-GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=3" (the reference build is the same with -GFACE=0).
+S5SRCS = ["rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv", "rtl/qwen_dv/s5/qfd_dv_s5_vm.sv", "rtl/qwen_dv/s5/qfd_dv_s5_flat0.sv",
+          "rtl/qwen_dv/qfd_dv_slice_tload.sv", "rtl/qwen_dv/qfd_dv_table_rom_loader.sv",
+          "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+          "rtl/qwen_dv/qfd_dv_redstn2_regional.sv", "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+          "rtl/qwen_dv/qfd_dv_station_math_g.sv", "rtl/qwen_dv/qfd_dv_ring_delay.sv", "rtl/qwen_dv/qfd_dv_reset_tree.sv",
+          "rtl/common/landed_parent/ot_pl_land.sv", "rtl/common/landed_parent/ot_pl_land_physical.sv"]
+
+
 def run_sim2(name, ev, work, mut, ncyc, n=2):
     work.mkdir(parents=True, exist_ok=True)
     evf, lgf = work / f"{name}.ev", work / f"{name}.log"
@@ -181,9 +191,10 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
                "-Wno-TIMESCALEMOD", "--x-assign", "0", "--x-initial", "0", "--top-module", "tb_qfd_dv2",
                "--prefix", "Vtb", f"-GMUT={mut}", f"-GN={n}", f"-GMU_NU={MU_NU}", f"-GFACE={FACE}"] + \
               ([f"+define+OT_DV_AMAX_MUT={AM_MUT}"] if AM_MUT else []) + \
-              DEFINES2 + \
+              DEFINES2 + (["+define+OT_STATION_REGIONAL"] if FACE == 3 and not STATION_REGIONAL else []) + \
               VFLAGS + ["-Mdir", str(obj), str(HERE / "main2.cpp")] + \
-              [str(ROOT / s) for s in SRCS2 + (XSRCS if VFLAGS else [])]
+              [str(ROOT / s) for s in (SRCS2 if FACE != 3 else [s for s in SRCS2 if not s.endswith("qfd_dv_redstn2.sv")])
+               + (XSRCS if VFLAGS else []) + ([s for s in S5SRCS if s not in SRCS2] if FACE == 3 else [])]
         obj.mkdir(parents=True, exist_ok=True)
         with open(obj.parent / f"build_{obj.name}.log", "w") as bl:     # kept: a failed build names its error
             r = subprocess.run(cmd, stdout=bl, stderr=subprocess.STDOUT)
@@ -824,6 +835,9 @@ def main():
             MU_NU = int(f.split("=", 1)[1]); VFLAGS.remove(f)
         elif f.startswith("-GFACE="):
             FACE = int(f.split("=", 1)[1]); VFLAGS.remove(f)
+    global RESET_WARM
+    if FACE == 3:                 # QW-SLICE6: the regional station's reset trees release later (boot guard only)
+        RESET_WARM = max(RESET_WARM, 16)
     install()
     allpass = True
     for b in a.benches:

@@ -148,6 +148,16 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
             .l9_wi(l9_i), .l9_eo(l9_o), .rs_n0(rs_n[513:0]), .rs_n1(rs_n[1027:514]), .rs_s0(rs_s[513:0]),
             .rs_s1(rs_s[1027:514]), .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0),
             .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
+    end else if (FACE == 3) begin : g_s5
+        // QW-SLICE6 10-19: the wires-only re-cut of the hardened one-level slice (HARD 0 leaves), master port names;
+        // PRIVATE_CALR request lane idle (treq 0 = the PRIVATE_CALR 0 table path).  Needs the S5 sources (dv_bench2 FACE 3).
+        qfd_dv_s5_flat0 #(.MUT(MUT)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmd_i), .cmd_o(cmd_o),
+            .hr_i(hr_i), .hr_o(hr_o), .rs_s(rs_s), .rs_n(rs_n), .l9_i(l9_i), .l9_o(l9_o),
+            .st_up_i(st_up_i), .st_up_o(st_up_o), .st_dn_i(st_dn_i), .st_dn_o(st_dn_o),
+            .sc_up_i(sc_up_i), .sc_up_o(sc_up_o), .sc_dn_i(sc_dn_i), .sc_dn_o(sc_dn_o),
+            .ch_up_i(ch_up_i), .ch_dn_o(ch_dn_o), .ch_dn_i(ch_dn_i), .ch_up_o(ch_up_o),
+            .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2),
+            .cw_s3(cw_s3), .st(st), .cc_o(cc_o), .ag_up_i(ag_up_i), .ag_dn_o(ag_dn_o), .treq_i(9'd0), .treq_o());
     end else begin : g_e
         qfd_dv_slice2_e #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_i), .cmd_wo(cmd_o),
             .hr_ei(hr_i), .hr_wo(hr_o), .st_eo(st_dn_o), .st_ei(st_up_i), .st_wo(st_up_o), .st_wi(st_dn_i),
