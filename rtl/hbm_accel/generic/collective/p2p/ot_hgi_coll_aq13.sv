@@ -390,7 +390,13 @@ module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
             ra_n <= slot - ((MUT != 0) ? 4'd6 : 4'd7);
             wd_n <= d[256*k +: 256];
         end
+        // HBM-COLL6 10-20 (gq k5): OT_GQ_P192 = the same 128x256 array with its M4 pins at 0.192 um pitch (80.472 um tall,
+        // 5.1 pins/um faces instead of 10/um; identical ports and behavioural model). Default: the 41.04 um macro.
+`ifdef OT_GQ_P192
+        ot_sram_1r1w_128x256_m1_r2c2_p192_mir u_mem (
+`else
         ot_sram_1r1w_128x256_m1_r2c2 u_mem (
+`endif
             .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0,ra_n}), .rd_out(rd[256*k +: 256]),
             .w_ce_in(1'b1), .w_addr_in({3'd0,wa_n}), .wd_in(wd_n),
             .w_mask_in(256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff),

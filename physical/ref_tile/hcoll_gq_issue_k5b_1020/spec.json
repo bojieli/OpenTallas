@@ -1,0 +1,388 @@
+{
+ "name": "hcoll_gq_issue_k5b_1020",
+ "top": "ot_hgi_coll_gq_issue",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq_scale13r.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_hc.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "util": 0.52,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "qid",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "tgt_fault",
+   "active",
+   "done",
+   "fault",
+   "isa_ring",
+   "isa_lp_data"
+  ],
+  "W": [
+   "vm_rq_lo",
+   "vm_rr_lo"
+  ],
+  "S": [
+   "vm_rq_hi",
+   "vm_rr_hi"
+  ],
+  "E": [
+   "ra_lp_we",
+   "ra_lp_tag",
+   "ra_lp_data",
+   "ra_state_read_add",
+   "ra_state_read_tx",
+   "ra_state_read_rr",
+   "ra_state_add_tag",
+   "ra_state_tx_tag",
+   "ra_state_rr_tag",
+   "ra_state_add_src",
+   "ra_state_add_rhs_acc",
+   "ra_state_tx_acc",
+   "ra_add_v",
+   "ra_add_tag",
+   "ra_add_src",
+   "ra_add_rhs_acc",
+   "ra_tx_inject",
+   "ra_tx_forward",
+   "ra_tx_tag",
+   "ra_tx_dst",
+   "ra_tx_result",
+   "ra_tx_acc",
+   "ra_tx_gather",
+   "ra_tx_ttl",
+   "ra_rx_slot",
+   "ra_rx_kind",
+   "ra_rx_src",
+   "ra_rx_tag",
+   "ra_rr_local",
+   "ra_rr_local_tag",
+   "rb_lp_we",
+   "rb_lp_tag",
+   "rb_lp_data",
+   "rb_state_read_tx",
+   "rb_state_tx_tag",
+   "rb_tx_inject",
+   "rb_tx_forward",
+   "rb_tx_tag",
+   "rb_tx_ttl",
+   "rb_rx_slot",
+   "rb_rx_kind",
+   "rb_rx_src",
+   "rb_rx_tag",
+   "ld_fire",
+   "ld_desc",
+   "ld_ev_v",
+   "ld_ev_k",
+   "ld_p_v",
+   "ld_p_d"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "period_ps": 833.333333,
+  "pin_balance": {
+   "group_max": 32
+  },
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 2.16,
+  "macro_halo_x_um": 21.6
+ },
+ "job": {
+  "owner": "Claude:LEAD4-HBM/HBM-COLL6",
+  "branch": "claude/coll6-gq-k5-1020",
+  "tag": "k5b",
+  "purpose": "hcoll_gq_issue_k5b_1020: STRUCTURAL redesign of gq_issue after k3 (GRT ovf 206 in the SRAM gaps/faces) and k4/k4b (GRT congestion again): VM_RT 74 + ISSUE_AHEAD 1 RTL (HBM-COLLFUSE2-VME af944e962) with OT_GQ_P192 = the 128x256 SRAM view with pins at 0.192 um (5.1 pins/um faces, 80.472 um tall) in two regional halves: aq0 stack x86.4 R0 (busy face W), aq1 stack x345.6 MY (busy face E), each 4 macros on the 43.2 lattice (pitch 86.4, 5.9 um N/S gaps row-cut), centre band 164.4 um for the shared event/VM/ring logic, clock_split_km K=8 regional roots; outline 518.4x432.0.",
+  "benches": [
+   {
+    "name": "aq_sram_exact",
+    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
+    "expect": "pass",
+    "pass_regex": "AQ_TREE13_EXACT_PASS blocks1024 elements32768",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_sram_mut_slot",
+    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
+    "expect": "fail",
+    "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH",
+    "fail_witness": "results/rtl/gqissue_sram_1019/capture_mut_slot_fail.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_s2top_exact",
+    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top 0",
+    "expect": "pass",
+    "pass_regex": "AQ_S2TOP_EXACT_PASS SCALE13R_EQ PASS checks=2097152 .*AQ_TREE13_EXACT_PASS blocks1024 elements32768",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_s2top_mut_k",
+    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
+    "expect": "fail",
+    "fail_regex": "SCALE13R_EQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/gqissue_sram_1019/k4_s2top/s2top_mutk_fail.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "collq_ia_ia1",
+    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1 ia1",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia1 PASS"
+   },
+   {
+    "name": "collq_ia_ia2",
+    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2 ia2",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia2 PASS"
+   },
+   {
+    "name": "collq_ia_slot",
+    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_slot slot",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "fail_regex": "COLLQ_IA MUTANT slot REJECTED|COLLQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_vmearly_k4_1020/slot_fail.log"
+   },
+   {
+    "name": "collq_ia_dep",
+    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_dep dep",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "fail_regex": "COLLQ_IA MUTANT dep REJECTED|COLLQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_vmearly_k4_1020/dep_fail.log"
+   },
+   {
+    "name": "collq_ia_iaign",
+    "cmd": "OT_GQ_P192=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_iaign iaign",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "fail_regex": "COLLQ_IA MUTANT iaign REJECTED|COLLQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_vmearly_k4_1020/iaign_fail.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "tools/hgi_sim/collq_gather_1018.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "physical/hbm_xp_aq_tree13_1014/tb_aq_tree13.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "rtl/hbm_accel/generic/collective/p2p/tb_aq_scale13r_eq.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/gqissue_sram_1019",
+   "rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh",
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq_ia.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "results/rtl/hbm_vmearly_k4_1020",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir"
+  ],
+  "views_to": "physical/ref_tile/hcoll_gq_issue_k5b_1020/views",
+  "record_to": "results/arch/hbm_die_d4g/collq/route_hcoll_gq_issue_k5b_1020"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input is captured by a flop at the pin and every output is a flop Q in the RTL (gather master stage table, tools/hgi_sim/collq_gather_1018.py); automatic pin registers would add an unpriced edge"
+ },
+ "params": {
+  "VM_RT": 74,
+  "ISSUE_AHEAD": 1
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    86.4,
+    43.2
+   ],
+   "inst": "*u_aq0.u_x.g_sram?0?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    86.4,
+    129.6
+   ],
+   "inst": "*u_aq0.u_x.g_sram?1?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    86.4,
+    216.0
+   ],
+   "inst": "*u_aq0.u_x.g_sram?2?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    86.4,
+    302.4
+   ],
+   "inst": "*u_aq0.u_x.g_sram?3?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    345.6,
+    43.2
+   ],
+   "inst": "*u_aq1.u_x.g_sram?0?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    345.6,
+    129.6
+   ],
+   "inst": "*u_aq1.u_x.g_sram?1?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    345.6,
+    216.0
+   ],
+   "inst": "*u_aq1.u_x.g_sram?2?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    345.6,
+    302.4
+   ],
+   "inst": "*u_aq1.u_x.g_sram?3?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "inst": "*u_vmring.g_m?0?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "inst": "*u_vmring.g_m?1?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 4
+  }
+ },
+ "outline": {
+  "w": 518.4,
+  "h": 432.0
+ },
+ "defines": [
+  "OT_COLLQ_SRAM",
+  "OT_GQ_FAN32",
+  "OT_GQ_S2TOP",
+  "OT_GQ_P192"
+ ],
+ "structural_change": "hcoll_gq_issue_k5b_1020: STRUCTURAL redesign of gq_issue after k3 (GRT ovf 206 in the SRAM gaps/faces) and k4/k4b (GRT congestion again): VM_RT 74 + ISSUE_AHEAD 1 RTL (HBM-COLLFUSE2-VME af944e962) with OT_GQ_P192 = the 128x256 SRAM view with pins at 0.192 um (5.1 pins/um faces, 80.472 um tall) in two regional halves: aq0 stack x86.4 R0 (busy face W), aq1 stack x345.6 MY (busy face E), each 4 macros on the 43.2 lattice (pitch 86.4, 5.9 um N/S gaps row-cut), centre band 164.4 um for the shared event/VM/ring logic, clock_split_km K=8 regional roots; outline 518.4x432.0.",
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)u_rst\\.rst_n$|__ot_rlv$|u_target\\.reset_ctrl_copies$"
+ },
+ "fill_reason": {
+  "pin_bound": "SRAM-face/stack bound: 8 x 128x256 arrays in the p192 view (80.472 um tall so each W/E face carries ~410 M4 pins at 5.1 pins/um <= 6) form two 4-high stacks (338 um) with 21.6 um pin-face halos and std channels on both faces; the denser 41-um-macro versions (s1/k1/k2/k3/k4) congested at the 10 pins/um faces. Tile faces carry 651-1261 pins."
+ },
+ "orfs_vars": {
+  "MACRO_ROWS_HALO_Y": "3.24",
+  "OT_CKKM_K": "8",
+  "OT_CKKM_PORT": "clk"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ]
+}
