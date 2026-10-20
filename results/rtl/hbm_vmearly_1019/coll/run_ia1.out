@@ -1,0 +1,30 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: ot-epyc9       admits  1122 GB (avail 893, growth 108, headroom 0, waiters 0/0 GB) load 54/128 running 21 disk 632 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: -> ot-epyc9
+ot-heavy: request 16G is charged 13G (class 'run_coll_gq_ia.sh:ia#' measured peak 4.7G, n=1+0 proved); the cap stays 16G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1126258-1792470692 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+COLLQ_IA_CHECK vm_rt=74 N=1..3 sequences=1200 (DS shapes + random F<=120, R 1/2) conflicts=0 []
+COLLQ_IA_BENCH ia=1 vm_rt=74 period=871 exposed_sum=617 exposed=[13, 115, 37, 12, 70, 21, 85, 33, 43, 86, 10, 92] why=['first', 'serial', 'slot', 'raw:2', 'slot', 'slot', 'slot', 'slot', 'slot', 'slot', 'slot', 'slot']
+COLLQ_IA EXPOSED pair 0->1 measured 13 compiler 13          
+COLLQ_IA EXPOSED pair 1->2 measured 115 compiler 115          
+COLLQ_IA EXPOSED pair 2->3 measured 37 compiler 37          
+COLLQ_IA EXPOSED pair 3->4 measured 12 compiler 12          
+COLLQ_IA EXPOSED pair 4->5 measured 70 compiler 70          
+COLLQ_IA EXPOSED pair 5->6 measured 21 compiler 21          
+COLLQ_IA EXPOSED pair 6->7 measured 85 compiler 85          
+COLLQ_IA EXPOSED pair 7->8 measured 33 compiler 33          
+COLLQ_IA EXPOSED pair 8->9 measured 43 compiler 43          
+COLLQ_IA EXPOSED pair 9->10 measured 86 compiler 86          
+COLLQ_IA EXPOSED pair 10->11 measured 10 compiler 10          
+COLLQ_IA EXPOSED pair 11->0 measured 92 compiler 92          
+COLLQ_IA EXPOSED_SUM ia=1 gq_ia=1 vm_rt=74 period=871 exposed_sum=617 (12 records, one loop + boundary)
+COLLQ_IA PASS ia=1 gq_ia=1 period=871
+COLLQ PASS lanes=1 vm_rt=74 bank_rt=72 sreg=0 rows=12 loops=2 vm_words_checked=5204 reads=5600 writes=10408 isa_passthrough=38 gather_edges_F72R2=91
+COLLQ FAULT PASS scenario=5 gq1111 ra0000 rb0000 ks0000 ld1111
+COLLQ_IA_BENCH ia1 PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1126258-1792470692): exit 0

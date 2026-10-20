@@ -1,0 +1,16 @@
+{
+ "lane": "HBM-VMEARLY-COLL (10-19 night, HBM-VMEARLY-XLCOLL)",
+ "rtl": "ot_hgi_coll_gq_issue / _land / ot_hgi_coll_gq #(ISSUE_AHEAD N<=3), default 0 = today (default regression below PASS, 7 mutants rejected)",
+ "contract": "N+1 static descriptor slots, slot = field [101 +: SW] = gather j mod (N+1); a fire while the previous gather ISSUES or into a live slot faults (static check, no credit/ready)",
+ "buffer": "held gather state per slot (qbg,r2,self,F10,Bs8,src16,dst16,stride16 = 69 b/slot) + drain counter 7 b + live bit; N=1 adds ~77 flops + slot bit V=74-deep beside the existing fire delay. No SRAM needed (<2 kb); the operand data itself streams (quantiser/rings/landing), no operand store",
+ "compiler_rule": "tools/hgi_sim/collq_gather_1018.py ia_fires / ia_legal (serial gap 11, 15 plain->QBG; slot reuse fire(j-N-1)+issue_rel(K-1)+ND+1, ND=40+VM_RT; RAW: read bank sample >= producer write bank sample + 1); ia-check 1200 sequences conflicts 0",
+ "bench": "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh OUT CASE (Verilator 5.050, ot-epyc9 via ot-run); LANES 1 VM_RT 74 BANK_RT 72, 12 DS gather rows, row 3 dependent on row 2's landed words, 2 loops",
+ "exposed_edges_12_records": {"vm_rt0_ia0_reference": 516, "vm_rt74_ia0": 1404, "ia1": 617, "ia2": 366, "ia3": 260,
+   "bank_latency_part_vs_vm_rt0": {"ia0": 888, "ia1": 101, "ia2": -150, "ia3": -256}},
+ "per_pair_ia1": "[13,115,37,12,70,21,85,33,43,86,10,92] why [first,serial,slot,raw:2,slot x8]; measured = compiler on every pair",
+ "data": "bit-exact final VM images, every VM read/write at its compiled bank edge, no fault; +fault=5 (slot reuse while draining) faults at IA 1..3",
+ "mutants": {"m7 slot index ignored": "m7_fail.log regex '^COLLQ FAIL errors=' (7253 errors)",
+             "dep read before producer write retired": "dep_fail.log regex 'COLLQ RAW stale read' (234 errors; the tb RAW witness counts producer writes per word per loop)",
+             "iaign ISSUE_AHEAD ignored (RTL built 0)": "iaign_fail.log regex '^COLLQ FAIL errors=' (7253 errors)"},
+ "physical": "NOT GATED: the release gq_issue successor (L2H-SU k3 two-column SRAM, claude/l2h-gq-k3-1019) and the next-release hnx s3 rewrite ot_hgi_coll_gq.sv (510+/123- lines vs main); this change is ported onto whichever closes, then kitted at ISSUE_AHEAD 1 (the slot delay rides the SAFE_DELAY SRAM ring, not a 74-deep flop chain)"
+}

@@ -1,0 +1,32 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: ot-epyc9       admits  1122 GB (avail 893, growth 108, headroom 0, waiters 0/0 GB) load 54/128 running 21 disk 632 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/vmearly-coll/src2
+ot-run: -> ot-epyc9
+ot-heavy: request 16G is charged 12G (class 'run_coll_gq_ia.sh:dep' measured peak 3.8G, n=1+0 proved); the cap stays 16G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1126992-1792470692 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+COLLQ_IA_CHECK vm_rt=74 N=1..3 sequences=1200 (DS shapes + random F<=120, R 1/2) conflicts=0 []
+COLLQ_IA_BENCH ia=1 vm_rt=74 period=862 exposed_sum=608 exposed=[13, 115, 12, 37, 45, 46, 60, 58, 18, 111, 1, 92] why=['first', 'serial', 'slot', 'serial', 'slot', 'slot', 'slot', 'slot', 'slot', 'slot', 'slot', 'serial']
+COLLQ RAW stale read row3 loop0 q2 word 163 cyc413 writes_seen 0 (exp 1)
+COLLQ RAW stale read row3 loop0 q3 word 163 cyc413 writes_seen 0 (exp 1)
+COLLQ RAW stale read row3 loop0 q0 word 168 cyc415 writes_seen 0 (exp 1)
+COLLQ RAW stale read row3 loop0 q1 word 168 cyc415 writes_seen 0 (exp 1)
+COLLQ_IA EXPOSED pair 0->1 measured 13 compiler 13          
+COLLQ_IA EXPOSED pair 1->2 measured 115 compiler 115          
+COLLQ_IA EXPOSED pair 2->3 measured 12 compiler 12          
+COLLQ_IA EXPOSED pair 3->4 measured 37 compiler 37          
+COLLQ_IA EXPOSED pair 4->5 measured 45 compiler 45          
+COLLQ_IA EXPOSED pair 5->6 measured 46 compiler 46          
+COLLQ_IA EXPOSED pair 6->7 measured 60 compiler 60          
+COLLQ_IA EXPOSED pair 7->8 measured 58 compiler 58          
+COLLQ_IA EXPOSED pair 8->9 measured 18 compiler 18          
+COLLQ_IA EXPOSED pair 9->10 measured 111 compiler 111          
+COLLQ_IA EXPOSED pair 10->11 measured 1 compiler 1          
+COLLQ_IA EXPOSED pair 11->0 measured 92 compiler 92          
+COLLQ_IA EXPOSED_SUM ia=1 gq_ia=1 vm_rt=74 period=862 exposed_sum=608 (12 records, one loop + boundary)
+COLLQ FAIL errors=234
+COLLQ_IA MUTANT dep REJECTED: COLLQ RAW stale read row3 loop0 q0 word 160 cyc409 writes_seen 0 (exp 1)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1126992-1792470692): exit 0

@@ -129,6 +129,9 @@ module tb_hgi_coll_gq_ia;
     end
     // ---------------------------------------------------------------- VM model (per quadrant, 8 banks)
     reg [255:0] mem [0:3][0:16383];
+    // RAW witness (10-19 night): writes per VM word; a DEPENDENT row's read in loop l must see its producer row's loop-l write
+    // (count l + 1). Final images alone cannot see a stale read: loop 1 rewrites the same words.
+    integer wcnt [0:3][0:16383]; integer raw_stale = 0;
     reg [255:0] rpipe_d [0:3][0:7][0:5]; reg rpipe_v [0:3][0:7][0:5];
     reg [256:0] rr_reg [0:3][0:7];
     wire [16:0] m_rq [0:3][0:7];             // request as the bank model samples it (after rq lane DQ[b] + PIN)
@@ -176,7 +179,7 @@ module tb_hgi_coll_gq_ia;
                     if (errors < 20) $display("COLLQ VM q%0d b%0d unreserved write cyc%0d sector %h (exp %0d %h)", q, b, cyc, k[279:264], wres[q][b][cyc], wsec[q][b][cyc]);
                     errors++;
                 end
-                wres[q][b][cyc] = 0; writes++;
+                wres[q][b][cyc] = 0; writes++; wcnt[q][a] <= wcnt[q][a] + 1;
                 mem[q][a] <= k[263:8];
             end
         end
@@ -219,6 +222,23 @@ module tb_hgi_coll_gq_ia;
                 if (r_self[row] || r_qbg[row]) begin a = r_dst[row] + q * r_str[row] + i; wres[q][a%8][ie+27+KS+VM_RT] = 1; wsec[q][a%8][ie+27+KS+VM_RT] = sec(q, a); end
             end
     endtask
+    // ---------------------------------------------------------------- RAW witness: the bank sample of a dependent row's read
+    always @(posedge clk) if (rst_n && L >= 0) for (integer q = 0; q < 4; q = q + 1) for (integer b = 0; b < 8; b = b + 1) begin
+        reg [16:0] r; integer a, l;
+        r = m_rq[q][b];
+        if (r[16]) begin
+            a = int'({r[15], r[12:0]});
+            for (integer j = 0; j < NR; j = j + 1)
+                if (r_dep[j] >= 0 && a >= r_src[j] && a < r_src[j] + r_f[j]) begin
+                    l = (cyc - (L + 3 + r_t[j])) / PERIOD;
+                    if (wcnt[q][a] != l + 1) begin
+                        if (raw_stale < 10) $display("COLLQ RAW stale read row%0d loop%0d q%0d word %0d cyc%0d writes_seen %0d (exp %0d)",
+                                                     j, l, q, a, cyc, wcnt[q][a], l + 1);
+                        raw_stale++; errors++;
+                    end
+                end
+        end
+    end
     // ---------------------------------------------------------------- exposure monitor (quadrant 0 master read pins)
     always @(posedge clk) if (rst_n && L >= 0) for (integer b = 0; b < 8; b = b + 1) begin
         reg [16:0] r; integer a, ln, l;
@@ -280,7 +300,7 @@ module tb_hgi_coll_gq_ia;
         end
         for (integer q = 0; q < 4; q = q + 1) begin
             isa[q] = 0; isa_d[q] = 0; a_kq[q] = 0;
-            for (integer a = 0; a < 16384; a = a + 1) mem[q][a] = 256'd0;
+            for (integer a = 0; a < 16384; a = a + 1) begin mem[q][a] = 256'd0; wcnt[q][a] = 0; end
             for (integer b = 0; b < 8; b = b + 1) begin
                 rr_reg[q][b] = 0; for (integer d = 0; d < 6; d = d + 1) rpipe_v[q][b][d] = 0;
                 for (integer c = 0; c < NC; c = c + 1) begin rres[q][b][c] = 0; wres[q][b][c] = 0; end

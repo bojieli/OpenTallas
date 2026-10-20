@@ -1,0 +1,19 @@
+COLLQ_IA EXPOSED pair 0->1 measured 13 compiler 13          
+COLLQ_IA EXPOSED pair 1->2 measured 115 compiler 115          
+COLLQ_IA EXPOSED pair 2->3 measured 37 compiler 37          
+COLLQ_IA EXPOSED pair 3->4 measured 12 compiler 12          
+COLLQ_IA EXPOSED pair 4->5 measured 70 compiler 70          
+COLLQ_IA EXPOSED pair 5->6 measured 21 compiler 21          
+COLLQ_IA EXPOSED pair 6->7 measured 85 compiler 85          
+COLLQ_IA EXPOSED pair 7->8 measured 33 compiler 33          
+COLLQ_IA EXPOSED pair 8->9 measured 43 compiler 43          
+COLLQ_IA EXPOSED pair 9->10 measured 86 compiler 86          
+COLLQ_IA EXPOSED pair 10->11 measured 10 compiler 10          
+COLLQ_IA EXPOSED pair 11->0 measured 92 compiler 92          
+COLLQ_IA EXPOSED_SUM ia=1 gq_ia=1 vm_rt=74 period=871 exposed_sum=617 (12 records, one loop + boundary)
+COLLQ_IA PASS ia=1 gq_ia=1 period=871
+COLLQ PASS lanes=1 vm_rt=74 bank_rt=72 sreg=0 rows=12 loops=2 vm_words_checked=5204 reads=5600 writes=10408 isa_passthrough=38 gather_edges_F72R2=91
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq_ia.sv:394: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.167 s; speed 12.133 us/s
+- Verilator: cpu 0.167 s on 1 threads; allocated 15 MB
