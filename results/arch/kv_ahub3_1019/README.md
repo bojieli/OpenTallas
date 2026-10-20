@@ -22,8 +22,15 @@ every hub flop to the hard children's insertion (ot_nhb_zh 246.5 ps, ot_qkh_reci
   - **m0 PASS**: 7 passes, 680 Z words, fr exactly once per pass on pvfin's R slot, 32 beats each, am 28, FR_OFS -7, AP_OFS ffd9ffdaffd8ffd8.
   - Mutants 1-13 and 15 FAIL. **m13** (calendar NOT shifted) FAILS with 13,640 errors, so the +6 is required. **m15** (landing 0 read one edge late) FAILS with 19 errors.
   - m14 (landing 0 bypassed, 3 edges EARLY) and m16 (core reset run one stage long) PASS at the die-bench level. Both are benign there: an early Z command and a late core reset are absorbed by the calendar's slack. Both are caught cycle-exact by the lp lockstep bench (lp MUT 1 / 4), and they are not used as kit fail benches.
-- **lp.py lockstep** (`rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g2_lp_bench.sh`, Verilator): the landed parent vs the flat reference (ZW/ZR 3), cycle-exact on every output and on every u_zh* / u_recip pin. 9000 cycles, with hs_start every 2000 edges on a T 1000 calendar. MUT 0 PASS; MUT 1 / 2 / 4 FAIL. The region audit PASSES and the unland mutant FAILS it.
-- **Fallback flat bench** (FLAT=1): see run2 summary.
+- **lp.py lockstep** (`rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g2_lp_bench.sh`, Verilator 5.050): the landed parent vs the flat reference (ZW/ZR 3), cycle-exact on every output and on every u_zh* / u_recip pin. 9000 cycles; passes every 2000 edges on a T 1000 calendar, plus starts on every edge until the reference core's regional reset releases.
+  - **MUT 0 PASS** (448,205 compares).
+  - MUT 1 (landing bypass) FAIL, 23 mismatches. MUT 2 (K+1) FAIL, 18. MUT 4 (u_core reset run +1) FAIL, 23,408.
+  - BENCH_EXIT 0. The region audit PASSES and the unland mutant FAILS it.
+  - Logs: lp_bench.log, lp_mut*.log, lp_audit*.log.
+- **Fallback flat bench** (FLAT=1: `qkd_ahub_static_dw_g2` with ZW_RLY = ZR_RLY = 3 and a 2-stage reset landing): **m0 PASS** on the same 7 calendars with HUB_RECIP / HUB_PUB +6.
+  - FAIL: m1 / 11 / 12 / 13. m14 (ZR_RLY 4, root one edge late) FAILS with 19 errors.
+  - ZR_RLY 2 (one edge early) passes: early is benign, as with the landed m14.
+  - Logs: flat_m*.log.
 
 ## Safe-design checklist (design review before the gate; PNG items filled after the gate)
 1. Pins: **PASS**. Every input lands in a flop (u_io pin flops, u_apq) and every output leaves a flop (core am regs, u_rw, u_io fault). Reset: port -> u_lpr_root -> region forest -> child pads, at least 2 registered stages.

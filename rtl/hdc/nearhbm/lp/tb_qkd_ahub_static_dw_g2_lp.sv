@@ -71,7 +71,7 @@ module tb_qkd_ahub_static_dw_g2_lp;
         for (cyc = 0; cyc < 9000; cyc = cyc + 1) begin
             @(negedge clk);
             if (cyc == 16) rst = 1;
-            fi_hs_start = ((cyc % 2000) == 40);
+            fi_hs_start = ((((cyc % 2000) == 40) && (cyc > 100)) || (rst_f && !u_flat.u_core.rn[0] && (cyc > 16) && (cyc < 100)));
             fi_hs_ep = 16'(cyc / 2000 + 1);
             fi_hs_layer = 6'd4;
             fi_hs_ctx = 14'd1000;

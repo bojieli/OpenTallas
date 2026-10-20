@@ -1,7 +1,7 @@
 #!/bin/bash
 # g2_bench.sh OUT [MUT=0] (KV-AHUB3 10-19, from tools/qwen_kv_die/ahub_safe/bench.sh): the LANDED-REGION hub qkd_ahub_static_dw_g2_lp
 # (lp.py, 5 regions, 8 landings) on the HKV-DIE3 calendars with HUB_RECIP / HUB_PUB +6 (tb_qkd_ahub_static_dw_g2); MUT 13..16 expect FAIL too.
-# FLAT=1 (env): the fallback flat parent with ZW_RLY = ZR_RLY = 3 relays (kit qkd_ahub_g2c); MUT 14 there = ZR_RLY 2.
+# FLAT=1 (env): the fallback flat parent with ZW_RLY = ZR_RLY = 3 relays (kit qkd_ahub_g2c); MUT 14 there = ZR_RLY 4 (root one edge late).
 # Original header: the KV die hub element qkd_ahub_static_dw at the die's binding
 # Z_IN_STRIDE 4 AND the die's actual AP_OFS / FR_OFS (HKV-DIE3 OT_KV_AHUB_OFS) on the HKV-DIE3 production calendars,
 # lockstep with the sealed hub at stride 4 (tb_qkd_ahub_static_dw_safe).  MUT 0 expects PASS; 1..10 expect FAIL (8 = a4 offsets) (5 = DUT at stride 16; 6 / 7 = slot_h / slot_k decode

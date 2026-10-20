@@ -124,7 +124,7 @@ module tb_qkd_ahub_static_dw_g2;
     // its reset through a 2-stage kit reset landing (modelled here); FLAT 0: the landed parent.
     generate if (FLAT) begin : g_flat
         reg [1:0] rl = 2'b00;  always @(posedge ck) rl <= {rl[0], rst_n};
-        qkd_ahub_static_dw_g2 #(.Z_IN_STRIDE(DUT_ZS), .AP_OFS(DUT_AP), .FR_OFS(DUT_FR), .ZW_RLY(3), .ZR_RLY((MUT == 14) ? 2 : 3),
+        qkd_ahub_static_dw_g2 #(.Z_IN_STRIDE(DUT_ZS), .AP_OFS(DUT_AP), .FR_OFS(DUT_FR), .ZW_RLY(3), .ZR_RLY((MUT == 14) ? 4 : 3),
             .HMUT(DUT_MUT)) dut (.ck(ck), .rst_n(rl[1]),
             .hs_start(hs_d[0]), .hs_ep(hs_d[16:1]), .hs_layer(hs_d[22:17]), .hs_ctx(hs_d[36:23]), .hs_cal_lo(hs_d[148:37]),
             .hs_cal_r(hs_d[164:149]), .ap0(ap_d[0]), .ap1(ap_d[1]), .ap2(ap_d[2]), .ap3(ap_d[3]),

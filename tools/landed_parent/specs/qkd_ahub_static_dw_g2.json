@@ -120,12 +120,13 @@
    "u_recip"
   ],
   "expr": {
-   "hs_start": "((cyc % 2000) == 40)",
+   "hs_start": "((((cyc % 2000) == 40) && (cyc > 100)) || (rst_f && !u_flat.u_core.rn[0] && (cyc > 16) && (cyc < 100)))",
    "hs_ctx": "14'd1000",
    "hs_layer": "6'd4",
    "hs_ep": "16'(cyc / 2000 + 1)",
    "hs_cal_lo": "{16'd676, 16'd1002, 16'd927, 16'd840, 16'd267, 16'd579, 16'd260}",
    "hs_cal_r": "16'd1054"
-  }
+  },
+  "why_expr": "before the first regular pass (cyc 2040) starts are issued on every edge while the FLAT reference core's regional reset is still low after the port reset rose (rst_f && !u_flat.u_core.rn[0]); the last one reaches the core on its first released edge + 1, so a landed core whose reset run is one stage long (MUT 4) misses every start and runs no pass while the reference runs one (outputs diverge); later passes every 2000 edges exercise the Z trees and the reciprocal leaf"
  }
 }
