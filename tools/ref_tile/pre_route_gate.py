@@ -1526,7 +1526,12 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
                    "; no congestion report came back" if ovf else "")
                 + (f"; congestion map {imgs.get('congestion')}" if imgs.get("congestion") else "")
                 + (f"; GRT {secs.group(1)} s" if secs else ""))
-        if ovf is None:
+        if g.trial_route["rc"] != "0":
+            # OpenROAD can print zero overflow before repair crashes (for example GRT-0183).
+            # Only a successful final route may qualify that congestion table.
+            g.add("FAIL", "trial_route", "trial global route failed (GATE_GRT_RC="
+                  + g.trial_route["rc"] + "); " + note, "read the remote grt.log; preserve this failed run")
+        elif ovf is None:
             g.add("FAIL", "trial_route", "trial global route produced no congestion table (GATE_GRT_RC="
                   + re.search(r"GATE_GRT_RC=(\S+)", out).group(1) + ")", "read the remote grt.log")
         elif ovf > 0:
