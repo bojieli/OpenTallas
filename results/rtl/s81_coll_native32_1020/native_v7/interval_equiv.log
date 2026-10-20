@@ -1,0 +1,192 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `read_verilog -sv /src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv /work/interval_equiv.sv; hierarchy -top interval_equiv; setattr -mod -unset keep_hierarchy; proc; flatten; opt; sat -verify -prove bad 0 -show a,b,limit,inc' --
+
+1. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv
+Parsing SystemVerilog input from `/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81ph_link_ep_safe4'.
+Warning: Replacing memory \xp_f with list of registers. See /src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:458
+Warning: Replacing memory \xp_v with list of registers. See /src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:457
+Warning: Replacing memory \tp_f with list of registers. See /src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:416
+Warning: Replacing memory \tp_v with list of registers. See /src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:415
+Generating RTLIL representation for module `\ot_s81ph_kp4_20'.
+Generating RTLIL representation for module `\ot_s81ph_kff4_1'.
+Generating RTLIL representation for module `\ot_s81ph_kff4_10'.
+Generating RTLIL representation for module `\ot_s81ph_rewind4'.
+Generating RTLIL representation for module `\ot_s81ph_skip_interval'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /work/interval_equiv.sv
+Parsing SystemVerilog input from `/work/interval_equiv.sv' to AST representation.
+Generating RTLIL representation for module `\interval_equiv'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \interval_equiv
+Used module:     \ot_s81ph_skip_interval
+Parameter \W = 10
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81ph_skip_interval'.
+Parameter \W = 10
+Generating RTLIL representation for module `$paramod\ot_s81ph_skip_interval\W=s32'00000000000000000000000000001010'.
+
+3.3. Analyzing design hierarchy..
+Top module:  \interval_equiv
+Used module:     $paramod\ot_s81ph_skip_interval\W=s32'00000000000000000000000000001010
+
+3.4. Analyzing design hierarchy..
+Top module:  \interval_equiv
+Used module:     $paramod\ot_s81ph_skip_interval\W=s32'00000000000000000000000000001010
+Removing unused module `\ot_s81ph_skip_interval'.
+Removing unused module `\ot_s81ph_rewind4'.
+Removing unused module `\ot_s81ph_kff4_10'.
+Removing unused module `\ot_s81ph_kff4_1'.
+Removing unused module `\ot_s81ph_kp4_20'.
+Removing unused module `\ot_s81ph_link_ep_safe4'.
+Removed 6 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_s81ph_skip_interval\W=s32'00000000000000000000000000001010.
+Optimizing module interval_equiv.
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_s81ph_skip_interval\W=s32'00000000000000000000000000001010.
+<suppressed ~1 debug messages>
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module interval_equiv.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\interval_equiv'.
+Computing hashes of 19 cells of `\interval_equiv'.
+Finding duplicate cells in `\interval_equiv'.
+Computing hashes of 18 cells of `\interval_equiv'.
+Finding duplicate cells in `\interval_equiv'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \interval_equiv..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \interval_equiv.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\interval_equiv'.
+Computing hashes of 18 cells of `\interval_equiv'.
+Finding duplicate cells in `\interval_equiv'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \interval_equiv..
+Removed 0 unused cells and 13 unused wires.
+<suppressed ~1 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module interval_equiv.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \interval_equiv..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \interval_equiv.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\interval_equiv'.
+Computing hashes of 18 cells of `\interval_equiv'.
+Finding duplicate cells in `\interval_equiv'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \interval_equiv..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module interval_equiv.
+
+6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 18 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: { \a \b \limit \inc }
+
+Solving problem with 852 variables and 2353 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+Warnings: 4 unique messages, 4 total
+End of script. Logfile hash: 0ff76a5878, time: 0.08s, user: 0.10s, system: 0.03s, MEM: 27.54 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 60% 3x read_verilog (0 sec), 34% 1x sat (0 sec), ...
