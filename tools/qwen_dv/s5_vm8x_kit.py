@@ -39,12 +39,19 @@ LEAF = {
                             "w1_addr", "w1_data", "fault", "ck"]},
                 what="VM replica (2 x 1024x256 banks) + full vm7 write-merge copy; x3 in slice2 (a/b/c)",
                 faces="W 456 pins / 267.8 um = 1.7/um, S 1,054 / 259.2 = 4.1/um"),
-    "crom": dict(top="qfd_dv_s8x_crom", w=475.2, h=276.48,
-                 macros=[mac(BIG, "*g_crom?0?*u_lo", 43.2, 86.4), mac(BIG, "*g_crom?0?*u_hi", 43.2, 181.44),
-                         mac(BIG, "*g_crom?1?*u_lo", 259.2, 86.4), mac(BIG, "*g_crom?1?*u_hi", 259.2, 181.44)],
+    "crom": dict(top="qfd_dv_s8x_crom", w=259.2, h=466.56,
+                 macros=[mac(BIG, f"*g_crom?{b}?*u_{h}", 43.2, 86.4 + 95.04 * (2 * b + i)) for b in (0, 1)
+                         for i, h in enumerate(("lo", "hi"))],
                  pins={"W": ["cr_re", "cr_addr", "cr_q"], "S": ["rst_n"] + TW + ["fault", "ck"]},
-                 what="CROM 2 banks x {lo, hi} (2x2 of 1024x256) + table-write landing + table-write fault",
-                 faces="W 712 / 276.5 = 2.6/um, S 1,054 / 475.2 = 2.2/um"),
+                 what="CROM 2 banks x {lo, hi} (column of 4 x 1024x256) + table-write landing + table-write fault "
+                      "(r2: r1 2x2 475.2-wide S face -> tw pin registers 237 um from the clock pin, spread 140.7 ps)",
+                 faces="W 764 / 466.6 = 1.6/um, S 1,126 / 259.2 = 4.3/um"),
+    "crh": dict(top="qfd_dv_s8x_crh", w=259.2, h=276.48,
+                macros=[mac(BIG, "*g_crb?0?*u_m", 43.2, 86.4), mac(BIG, "*g_crb?1?*u_m", 43.2, 181.44)],
+                pins={"W": ["cr_re", "cr_addr", "q"], "S": ["rst_n", "tw_we", "tw_kind", "tw_addr", "tw_d", "fault", "ck"]},
+                what="CROM word half (lo | hi; x2 in slice2): banks 0/1 of the half (2 x 1024x256, the vmr shape) -- "
+                     "parallel fallback of crom",
+                faces="W 456 / 276.5 = 1.6/um, S 542 / 259.2 = 2.1/um"),
     "su": dict(top="qfd_dv_s8x_su", w=388.8, h=354.24,
                macros=[mac(PG, f"*g_prog?{b}?*u_{s}", 43.2, 86.4 + 69.12 * (2 * b + i)) for b in (0, 1)
                        for i, s in enumerate(("lo", "hi"))] +
@@ -52,16 +59,16 @@ LEAF = {
                pins={"E": ["bs_re", "bs_addr", "bs_q", "p_re", "p_idx", "p_q"], "S": ["rst_n"] + TW + ["fault", "ck"]},
                what="BTAB SU copy (4 x 128x256) + PROG 2 banks x {lo, hi} (4 x 256x256) = btab + prog",
                faces="E 748 / 354.2 = 2.1/um, S 1,039 / 388.8 = 2.7/um"),
-    "btab": dict(top="qfd_dv_s8x_btab", w=302.4, h=216.0,
-                 macros=[mac(BT, f"*g_btb?{b}?*u_m", 43.2 + 129.6 * (b % 2), 86.4 + 69.12 * (b // 2)) for b in range(4)],
+    "btab": dict(top="qfd_dv_s8x_btab", w=259.2, h=354.24,
+                 macros=[mac(BT, f"*g_btb?{b}?*u_m", 86.4, 86.4 + 69.12 * b) for b in range(4)],
                  pins={"E": ["bs_re", "bs_addr", "bs_q"], "S": ["rst_n"] + TW + ["fault", "ck"]},
-                 what="fallback partition: BTAB SU copy (2x2 of 128x256)",
-                 faces="E 281 / 216 = 1.3/um, S 1,037 / 302.4 = 3.4/um"),
+                 what="BTAB SU copy (column of 4 x 128x256; r2: r1 2x2 302.4-wide S face spread 107 ps)",
+                 faces="E 281 / 354.2 = 0.8/um, S 1,069 / 259.2 = 4.1/um"),
     "prog": dict(top="qfd_dv_s8x_prog", w=259.2, h=354.24,
                  macros=[mac(PG, f"*g_prog?{b}?*u_{s}", 43.2, 86.4 + 69.12 * (2 * b + i)) for b in (0, 1)
                          for i, s in enumerate(("lo", "hi"))],
                  pins={"E": ["p_re", "p_idx", "p_q"], "S": ["tw_we", "tw_kind", "tw_addr", "tw_d0", "tw_d1", "ck"]},
-                 what="fallback partition: PROG 2 banks x {lo, hi} (column of 4 x 256x256); no reset, no fault",
+                 what="PROG 2 banks x {lo, hi} (column of 4 x 256x256); no reset, no fault",
                  faces="E 467 / 354.2 = 1.3/um, S 926 / 259.2 = 3.6/um"),
 }
 
@@ -100,6 +107,10 @@ def spec(leaf):
         "reset_landing": {"enable": False, "reason": ("the RTL lands rst_n in two registered stages (rl0 -> rl1) and rl1 "
                           "resets only the sticky fault register") if rst else "no reset port (datapath-only leaf)"},
         "safe_design_checklist": chk,
+        **({"fill_reason": {"pin_bound": f"macro- and pin-bound leaf: the dense S face ({L['faces']}) carries the "
+            "registered table/VM write bus; the leaf is kept <= 259.2 um wide on that face so every pin register sits "
+            "<= 130 um from the S-centre clock pin (r1 leaves 302-475 um wide: pin-flop spread 107-146 ps); the "
+            "outline is set by the face width x macro column, not by the std-cell area"}} if leaf != "vmr" else {}),
         "structural_change": f"QW-VM8SPLIT: vm8 split into single-root leaves (COORD 09:45); this leaf = {L['what']}",
         "children": [], "inter": [],
         "job": {
@@ -110,6 +121,8 @@ def spec(leaf):
                 {"name": "vm8x_eq", "cmd": VL + "bash rtl/test/qwen_dv/s5/vm8x/bench.sh {RUN}/eq 0 0",
                  "expect": "pass", "pass_regex": "VM8X_EQ PASS", "threads": 8, "peak_ram_gb": 16, "needs": ["verilator"]},
                 {"name": "vm8x_eq_split1", "cmd": VL + "bash rtl/test/qwen_dv/s5/vm8x/bench.sh {RUN}/eq1 0 1",
+                 "expect": "pass", "pass_regex": "VM8X_EQ PASS", "threads": 8, "peak_ram_gb": 16, "needs": ["verilator"]},
+                {"name": "vm8x_eq_split2", "cmd": VL + "bash rtl/test/qwen_dv/s5/vm8x/bench.sh {RUN}/eq2 0 2",
                  "expect": "pass", "pass_regex": "VM8X_EQ PASS", "threads": 8, "peak_ram_gb": 16, "needs": ["verilator"]},
                 mut("coll"), mut("wpri"), mut("bsel"),
             ],

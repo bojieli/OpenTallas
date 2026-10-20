@@ -1,18 +1,18 @@
-# qfd_dv_s5_prog -- slice2 VM leaf (QW-VM8SPLIT, COORD 09:45 split decision)
+# qfd_dv_s5_prog -- slice2 VM leaf (QW-VM8SPLIT r2, COORD 09:45 split decision)
 
-QW-VM8SPLIT: vm8 split into single-root leaves (COORD 09:45); this leaf = fallback partition: PROG 2 banks x {lo, hi} (column of 4 x 256x256); no reset, no fault.
-RTL `rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv` (top `qfd_dv_s8x_prog`), specs `tools/qwen_dv/s5_vm8x_kit.py`. Partition (zero signals cross
-between leaves): vmr x3 + crom + su (primary); fallback = su replaced by btab + prog. One CTS root per leaf (S-centre ck).
+QW-VM8SPLIT: vm8 split into single-root leaves (COORD 09:45); this leaf = PROG 2 banks x {lo, hi} (column of 4 x 256x256); no reset, no fault.
+RTL `rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv` (top `qfd_dv_s8x_prog`), specs `tools/qwen_dv/s5_vm8x_kit.py`. Partitions (zero signals cross
+between leaves): P1 = vmr x3 + crom + btab + prog (SPLIT 1); P2 = vmr x3 + crh x2 + btab + prog (SPLIT 2, parallel fallback).
+r1 lesson: leaves 302-475 um wide on the dense S (tw / write) face -> S-face pin-register ends 130-237 um from the S-centre
+clock pin, TT pin-flop spread 107-146 ps (crom 140.7, su 145.9, btab 107.1); vmr / prog (259.2 wide) 55.7 / 38.2 PASS.
+r2: every leaf <= 259.2 um on its dense face, single macro column.
 
-## Pre-gate native census (mapped ASAP7 RVT TT + macro TT libs, openroad/orfs, fleet ep7)
-qfd_dv_s8x_prog: status PASS, 0 drivers > 32 (ports + reset included), max 16 loads, rst_n n/a (no reset) loads,
-3291 FF, std area 1150.3 um2 (fill 1.3% of 259.2 x 354.24 -- macro-bound leaf), no latches, no ties.
-Reach: outline <= 354.24 um; storage > 2 kb only in SRAM; every pin registered in RTL.
-Evidence results/arch/qw_vm8split_1020/native/qfd_dv_s8x_prog/census.json.
+## Pre-gate native census (mapped ASAP7 RVT TT + macro TT libs, openroad/orfs, fleet)
+qfd_dv_s8x_prog: PASS, 0 drivers > 32 (ports + reset included), max 16 loads, 3291 FF, std area 1150.3 um2 (macro/pin-bound,
+fill_reason recorded), no latches, no ties.  Evidence results/arch/qw_vm8split_1020/native/qfd_dv_s8x_prog/census.json.
 
-## Bench (V5.050, rtl/test/qwen_dv/s5/vm8x/bench.sh): composition qfd_dv_s5_vm8x vs qfd_dv_s5_vm7 with the vm8 priced delays
-SPLIT 0 PASS 59,620 compares / 0 mismatches; SPLIT 1 PASS 59,620 / 0; mutants coll 12,357 / wpri 31,372 / bsel 59,587 FAIL
-(witnesses results/arch/qw_vm8split_1020/bench/run_*.log).
+## Bench (V5.050): composition qfd_dv_s5_vm8x vs qfd_dv_s5_vm7 with vm8 priced delays
+SPLIT 0 / 1 / 2 PASS 59,620 compares / 0 mismatches each; mutants (SPLIT 2) coll 12,357 / wpri 31,372 / bsel 59,587 FAIL.
 
 ## Safe-design checklist
 - 1_pins: PASS: RTL registers every input and output at its pin (= vm8 pin registers); no reset (datapath only); no combinational pin arc

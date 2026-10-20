@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qfd_dv_s8x_su",
+ "top": "qfd_dv_s8x_crh",
  "enable": false,
  "reason": "the RTL lands rst_n in two registered stages (rl0 -> rl1) and rl1 resets only the sticky fault register"
 }
