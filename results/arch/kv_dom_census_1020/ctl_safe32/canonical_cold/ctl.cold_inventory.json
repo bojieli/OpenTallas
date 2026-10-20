@@ -1,0 +1,68 @@
+{
+  "rc": 0,
+  "sequential_instances": 5400,
+  "copy_equalities": 88,
+  "all_copy_outputs_distinct": true,
+  "state_init_attributes": {},
+  "cell_type_inventory": {
+    "$anyseq": 10,
+    "$scopeinfo": 91429,
+    "$mux": 2359,
+    "$and": 87,
+    "$eq": 88,
+    "$_NOT_": 14163,
+    "$_AND_": 20200,
+    "$_OR_": 11199,
+    "$not": 4202,
+    "$dffsr": 2359,
+    "$dff": 3041
+  },
+  "no_opt_merge": true,
+  "no_unknown_cells_allowed": true,
+  "macro_cut": "Shared arbitrary anyseq outputs of unchanged SRAM instances; their input/cell correspondence separately proved, no ignored unknown cells",
+  "canonical_coupon_commit": "3905a5c7d",
+  "reset_protocol": "12 halfsteps reset held low on rst_n/por_n,20 halfsteps released; core positive edges every2steps; observe12..32",
+  "cut_macro_inventory": [
+    [
+      "u.u55261_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ],
+    [
+      "u.u55262_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ],
+    [
+      "u.u55263_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ],
+    [
+      "u.u55264_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ],
+    [
+      "u.u55265_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ],
+    [
+      "u.u55266_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ],
+    [
+      "u.u55267_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ],
+    [
+      "u.u57480_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ],
+    [
+      "u.u57481_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ],
+    [
+      "u.u57482_c0.u_cell",
+      "ctl_sram_1r1w_64x64_p192"
+    ]
+  ],
+  "post_cut_anyseq": 10
+}

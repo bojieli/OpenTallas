@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020
+ot-run: ot-epyc9       admits   279 GB (avail 438, growth 243, headroom 0, waiters 0/0 GB) load 67/128 running 42 disk 165 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_ctl_safe32_1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-361056-1792485039 after 0 s
+Traceback (most recent call last):
+  File "/work/ctl_cold_pdk.py", line 34, in <module>
+    before=json.loads((root/'ctl.cold_before_cut.json').read_text())['modules']['proof'];bbs=[(n,c['type']) for n,c in before['cells'].items() if c['type'].startswith('ctl_sram_')];assert len(bbs)==10,(len(bbs),bbs);r['cut_macro_inventory']=bbs;r['post_cut_anyseq']=types.get('$anyseq',0); assert r['post_cut_anyseq']==10, r['post_cut_anyseq']; assert not any(t.startswith('ctl_sram_') for t in types)
+  File "/usr/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-361056-1792485039): exit 1
