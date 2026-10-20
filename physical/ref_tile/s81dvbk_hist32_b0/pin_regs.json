@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81ph_native_sel_hist_bank",
+ "enable": false,
+ "reason": "Every data input captures in source HPIPE1 or kept gsel banks; gsum/gbin/busy outputs are registered. No double pin stages."
+}
