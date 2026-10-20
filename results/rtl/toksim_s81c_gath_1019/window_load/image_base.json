@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.s81_dv.svc_bench_image.v1",
+ "tb_offset": -1707,
+ "mutant": null,
+ "tag": 0,
+ "j_arg": 1025,
+ "j_word": "100040100",
+ "frames": {
+  "CFG": 98,
+  "OWN_ROW": 99,
+  "WIN_LOAD": 116,
+  "ATTN_Q0": 1294,
+  "ATTN_Q1": 1423,
+  "SMJ": 1552,
+  "GO": 1555,
+  "PV": 2056
+ },
+ "go": 1555,
+ "pvs": 501,
+ "po": 538,
+ "pvo": 625,
+ "pv_first": 2236,
+ "pv_last": 2395,
+ "done_w": 2230,
+ "done_e": 2396,
+ "anchors": {
+  "scores": true,
+  "pv": true,
+  "window": true,
+  "q_bf16": true
+ },
+ "T": 128,
+ "heads": [
+  0,
+  16
+ ],
+ "st": 0,
+ "sha256": {
+  "meta.hex": "b3b459708590cb5f599d1de0826b800af87a8d57cad431bb78b53804bfc362fc",
+  "qcyc.hex": "94f6a06800122d3de02db9a2a1ed61633a3e2048823c2042caa3d96221de6275",
+  "qwd.hex": "ce56cdc621af1dec3a0bfffad31b3405b2400b469b64d5e83bcb539859a41f9c",
+  "hkey.hex": "b203ff08b9b8536d896499ddf420b07fd1acfd096cd9c011e27f70fb7fa87e56",
+  "hdat.hex": "e4d6f0b30d04cbd2433c1dff3ea97eaa687d8ba00796710c07e6025275f37114",
+  "sc.hex": "c0f9231dbd7dc26699b0627dc3760eeed7c112e0dc687c23a22437d8a504f927",
+  "pv.hex": "2ed8a599346d8d5cfb122819bab5a011e0e2a83659e64605b79bb35151e28bf2"
+ }
+}
