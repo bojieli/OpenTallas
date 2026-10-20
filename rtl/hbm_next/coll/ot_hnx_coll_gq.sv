@@ -182,7 +182,7 @@ module ot_hnx_coll_gq_issue #(
     // (kept bitmap copies, 2-stage scan = +2 INITIALIZATION edges before configured) + kept per-row write strobes p_rw
     // (NWC = 10 per row, each <= 14 row-file enables) and kept launch copies p_svc, both on the SAME edges as
     // program_cfg_we / program_start_v (registered from their next-state): 0 schedule edges.
-    localparam integer NWC = 10, NSV = 10;
+    localparam integer NWC = 10, NSV = 11;
     wire p_we, p_sv; wire [7:0] p_wa, p_sb; wire [255:0] p_wd; wire [8:0] p_sl; wire [15:0] p_lp;
     wire [16*NWC-1:0] p_rw; wire [NSV-1:0] p_svc;
     ot_hnx_gq_prog_target #(.PCW(8), .NRW(16), .NWC(NWC), .NSV(NSV)) u_target(
@@ -267,7 +267,9 @@ module ot_hnx_coll_gq_issue #(
         cur_n = p_svc[1] ? p_sb[3:0] : (run && !lq_c[0]) ? (wl_c[0] ? b0 : fire_c[0] ? cur + 4'd1 : cur) : cur;
         tl_n = p_svc[2] ? 16'd0 : lq_c[0] ? 16'd0 : run ? (wl_c[1] ? 16'd0 : w_c[1] ? tl : tl + 16'd1) : tl;
         per_n = (!p_svc[0] && lq_c[1]) ? rd_t[100:85] : per;
-        lps_n = p_svc[3] ? p_lp : wl_c[2] ? lps - 16'd1 : lps;
+        lps_n = wl_c[2] ? lps - 16'd1 : lps;
+        if (p_svc[3]) lps_n[7:0] = p_lp[7:0];
+        if (p_svc[10]) lps_n[15:8] = p_lp[15:8];
         busy_n = fire_c[0] ? 1'b1 : (!iss && busy && drain == 6'd0) ? 1'b0 : busy;
         iss_n = fire_c[0] ? 1'b1 : i_end ? 1'b0 : iss;
         drain_n = fire_c[0] ? drain : i_end ? 6'(ND - 1) : (!iss && busy && drain != 6'd0) ? drain - 6'd1 : drain;
@@ -511,6 +513,8 @@ module ot_hnx_coll_gq_issue #(
     // priority as s3 (later ring / word wins; QBG and plain reads never share an edge).
     reg [7:0] rd_exp;
     reg [135:0] vm_rq_d;
+    (* keep = "true" *) reg evp_c;                      // copy of ev_v[S_PR-1] for banks 4-7 (census r6: 34)
+    always @(posedge clk or negedge rl[4]) if (!rl[4]) evp_c <= 1'b0; else evp_c <= ev_v[S_PR-2];
     always @* for (integer b = 0; b < 8; b = b + 1) begin : nb_rqd
         vm_rq_d[b*17 +: 17] = 17'd0;
         if (g_qbg_c[b] && evi_c[11 + b]) begin
@@ -519,7 +523,7 @@ module ot_hnx_coll_gq_issue #(
                     for (integer w = 0; w < 4; w = w + 1)
                         if (qoh[r*4+w][b]) vm_rq_d[b*17 +: 17] = {1'b1, g_src[15:13], qa[r*4+w]};
         end
-        if (!g_qbg_c[b] && ev_v[S_PR-1]) begin
+        if (!g_qbg_c[b] && (b < 4 ? ev_v[S_PR-1] : evp_c)) begin
             for (integer r = 0; r < 2; r = r + 1)
                 if (pr_v[r] && pr_s[r][2:0] == 3'(b)) vm_rq_d[b*17 +: 17] = {1'b1, pr_s[r]};
         end

@@ -107,8 +107,11 @@ module ot_hnx_coll_aq_mul13r (
     // s4 r5 (census r5: an s2_amax-derived normalise net drove 33): the normalised operand is formed twice in kept
     // hierarchy (copies 0-2 / 3-5)
     wire[23:0]an_k[0:1];
-    ot_hnx_coll_aq_anorm u_an0(.a(a),.q(an_k[0]));
-    ot_hnx_coll_aq_anorm u_an1(.a(a),.q(an_k[1]));
+    // (r6: and in two output halves each, census r6: a shift-count net inside one anorm drove 35)
+    ot_hnx_coll_aq_anorm #(.LO(0),.W(12))  u_an0(.a(a),.q(an_k[0][11:0]));
+    ot_hnx_coll_aq_anorm #(.LO(12),.W(12)) u_an0h(.a(a),.q(an_k[0][23:12]));
+    ot_hnx_coll_aq_anorm #(.LO(0),.W(12))  u_an1(.a(a),.q(an_k[1][11:0]));
+    ot_hnx_coll_aq_anorm #(.LO(12),.W(12)) u_an1h(.a(a),.q(an_k[1][23:12]));
     generate for(genvar g=0;g<6;g=g+1)begin:g_s1_operand_copy
         ot_hnx_coll_scale_data_ff u_ff(.clk(clk),
 `ifdef OT_GQ_MUT_SCALE_DATA
@@ -299,7 +302,7 @@ endmodule
 
 // HNX-GQ s4: the normalised significand a_raw << lead_shift_24(a_raw) of ot_hnx_coll_aq_mul13r stage 1 (same expression)
 (* keep_hierarchy = "yes" *)
-module ot_hnx_coll_aq_anorm(input wire [31:0] a, output wire [23:0] q);
+module ot_hnx_coll_aq_anorm #(parameter integer LO = 0, parameter integer W = 24)(input wire [31:0] a, output wire [W-1:0] q);
     function automatic [4:0] lead_shift_24(input [23:0] value);
         reg [4:0] shift;
         begin
@@ -310,5 +313,6 @@ module ot_hnx_coll_aq_anorm(input wire [31:0] a, output wire [23:0] q);
         end
     endfunction
     wire [23:0] ar = {(a[30:23] != 8'd0), a[22:0]};
-    assign q = ar << lead_shift_24(ar);
+    wire [23:0] sh = ar << lead_shift_24(ar);
+    assign q = sh[LO +: W];
 endmodule
