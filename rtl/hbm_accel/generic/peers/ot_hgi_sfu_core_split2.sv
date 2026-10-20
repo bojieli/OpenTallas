@@ -45,7 +45,12 @@ module ot_hgi_sfu_core_split2 #(
  //  the consumers' regional root; synthesis spreads the loads <= 32 per copy (spec reset_relay_split). Every reset reaches
  //  its consumers 2 edges after the core port (the kit's face landing adds 2: port -> consumers 4 edges; old rst_n path
  //  2 + 3 = 5, old rst_lg/map/lane 2). Default 0 = bit-identical.
- parameter integer RST_TREE=0
+ parameter integer RST_TREE=0,
+ // L2H-SU-FB k9x (10-19): BTREE -> engine/quarter/grid (3 = four-level kept-copy controller broadcast tree on the mapper's
+ //  own 4 edges, cycle-identical); BRING -> VM bridge (1 = the 65-edge metadata / scalar-address delay lines as SRAM
+ //  ring buffers, cycle-identical). Defaults 0 = bit-identical.
+ parameter integer BTREE=0,
+ parameter integer BRING=0
 )(
  input wire clk,clk_pw,clk_pe,rst_n,
  input wire [4:0] clk_st,
@@ -192,14 +197,14 @@ module ot_hgi_sfu_core_split2 #(
   else begin {ro_v_e,ro_v_w}<=e_rov;{ro_x_e,ro_x_w}<=e_rox;end
 `endif
  localparam integer LGB=LG_PATH+1;
- ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(TAP_RR+2*LGB),.WRITE_RETURN(TAP_WR+2*LGB),.DRAIN_PIPE(DRAIN_PIPE)) u_vm(
+ ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(TAP_RR+2*LGB),.WRITE_RETURN(TAP_WR+2*LGB),.DRAIN_PIPE(DRAIN_PIPE),.BRING(BRING)) u_vm(
  .clk(clk),.rst_n(rr[0]),.clk_lg(clk_lg),.rst_lg_n(rst_lg_t),.prefetch_v(prefetch_v),.prefetch_sector(prefetch_sector),.prefetch_group(prefetch_group),
  .prefetch_local_addr(prefetch_local_addr),.prefetch_scalar(prefetch_scalar),.prefetch_word(prefetch_word),.scalar_addr(scalar_addr),
  .local_rq(b_rq),.local_rr(b_rr),.local_wq(b_wq),.local_w_done(b_wd),
  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
  .scalar_load(scalar_load),.scalar_load_addr(scalar_load_addr),.scalar_data(scalar_data),
  .drain_v(drain_v),.drain_round_bf16(drain_round_bf16),.drain_vm_sector(drain_vm_sector),.drain_result_v(drain_result_v),.drain_data(drain_data),.fault(bridge_fault));
- ot_hgi_sfu_static_engine #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.PASS_OHREP(PASS_OHREP)) u_engine(
+ ot_hgi_sfu_static_engine #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.PASS_OHREP(PASS_OHREP),.BTREE(BTREE)) u_engine(
   .clk(clk),.rst_n(rr[1]),.clk_grp(clk_st),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_t),.rst_map_n(rst_map_t),
   .compiler_control(control),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_load_addr),.scalar_data(scalar_data),
   .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),

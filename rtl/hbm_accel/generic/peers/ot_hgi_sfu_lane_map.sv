@@ -113,3 +113,111 @@ module ot_hdc_delay_ring_rep #(
         end
     endgenerate
 endmodule
+`timescale 1ns/1ps
+`default_nettype none
+// L2H-SU-FB k9x (10-19, safe-design items 2/3/5; grid BTREE=3): the controller -> 16 lane-mapper broadcast as a
+// FOUR-LEVEL REGISTERED DISTRIBUTION TREE that uses exactly the mapper's own four registered edges (no added edge).
+// Why: k9s2/k9r/k9w gates stalled in GPL (congestion 1.08-1.17, 4% tiles overflowed, 39k long wires, 424k-net
+// timing repair). The mono mapper (BTREE=0) had every one of the 1,022 broadcast bits drive 16 lane captures spread
+// over the whole 1.9 mm tile (one unregistered star hop from the N-face control register to all four faces), and
+// each lane kept its own 460-bit x 4-edge pass delay (29k flops: 22,080 ring slots + 7,360 outputs).
+// Here the four mapper edges ARE the distance hops:
+//   L0 (edge 0, 2 kept copies)  A = lanes 0-3 + 12-15 (W + S faces), B = lanes 4-11 (N + E faces)   -- pure capture
+//   L1 (edge 1, 4 kept copies)  one per face group q = j/4                                          -- pure capture
+//   L2 (edge 2, 8 copies)       one per lane pair p = j/2: both lanes' pair sums + mapped metadata (j is constant)
+//   L3 (edge 3, 16)             one per lane: ld_c final add, metadata, emit, pass
+// Same function edge for edge as ot_hgi_sfu_lane_map (mono): o_ld_c / o_o_v.. / o_emit / o_pass at edge 3 of a
+// capture at edge 0. The pass payload is a plain delay, so its 4 edges are the 4 tree levels (no per-lane ring):
+// 460 x (2+4+8+16) = 13.8k flops instead of 29k, every hop <= ~450 um on the floorplan (N face -> W/S corner over
+// 6 registered segments incl. the pin and quarter control registers). Clock: each level runs on the clk_map root of
+// its first lane (same die clock, flop-to-flop crossings judged per pair like BTREE=1); reset: each level clears its
+// emit/ld bits on its own registered rst_map_n copy (all rst_map_n release on the same edge, RST_TREE).
+module ot_hgi_sfu_bcast_tree4 #(parameter integer MUT_TREE=0) (   // MUT_TREE 1: lane 13's pass skips L2 (must FAIL)
+ input wire [15:0] clk_map, rst_map_n,
+ input wire [479:0] ld_terms,
+ input wire [23:0] i_o_v, i_i_v, i_krow,
+ input wire [3:0] i_ls, i_lvw,
+ input wire i_emit,
+ input wire [460:0] i_pass,
+ output wire [16*1200-1:0] o_ld_c,
+ output wire [16*24-1:0] o_o_v, o_i_v, o_krow,
+ output wire [16*4-1:0] o_ls, o_lvw,
+ output wire [15:0] o_emit,
+ output wire [16*461-1:0] o_pass
+);
+ localparam integer CW=480+72+8+1+461;   // terms, o/i/row, ls/lvw, emit, pass (incl. ld)
+ // ---- L0: two kept capture copies
+ wire [CW-1:0] l0 [0:1];
+ for(genvar a=0;a<2;a=a+1)begin:g_l0
+  localparam integer CK=(a==0)?0:4;
+  reg f_rst; always @(posedge clk_map[CK]) f_rst<=rst_map_n[CK];
+  (* keep = "true" *) reg [CW-3:0] d;   // data (no reset)
+  (* keep = "true" *) reg emit, ld;
+  always @(posedge clk_map[CK]) begin
+   d<={ld_terms,i_o_v,i_i_v,i_krow,i_ls,i_lvw,i_pass[459:0]};
+   if(!f_rst)begin emit<=1'b0;ld<=1'b0;end else begin emit<=i_emit;ld<=i_pass[460];end
+  end
+  assign l0[a]={d,emit,ld};
+ end
+ // ---- L1: one kept copy per face group q (q0 W, q3 S from A; q1 N, q2 E from B)
+ wire [CW-1:0] l1 [0:3];
+ for(genvar q=0;q<4;q=q+1)begin:g_l1
+  localparam integer CK=4*q;
+  localparam integer SRC=(q==0||q==3)?0:1;
+  reg f_rst; always @(posedge clk_map[CK]) f_rst<=rst_map_n[CK];
+  (* keep = "true" *) reg [CW-3:0] d;
+  (* keep = "true" *) reg emit, ld;
+  always @(posedge clk_map[CK]) begin
+   d<=l0[SRC][CW-1:2];
+   if(!f_rst)begin emit<=1'b0;ld<=1'b0;end else begin emit<=l0[SRC][1];ld<=l0[SRC][0];end
+  end
+  assign l1[q]={d,emit,ld};
+ end
+ // ---- L2 (per lane pair) + L3 (per lane)
+ for(genvar p=0;p<8;p=p+1)begin:g_l2
+  localparam integer CK=2*p;
+  reg f_rst; always @(posedge clk_map[CK]) f_rst<=rst_map_n[CK];
+  wire [479:0] t1; wire [23:0] ov1,iv1,row1; wire [3:0] ls1,lvw1; wire [459:0] ps1; wire emit1,ld1;
+  assign {t1,ov1,iv1,row1,ls1,lvw1,ps1,emit1,ld1}=l1[p/2];
+  (* keep = "true" *) reg [459:0] ps2;
+  (* keep = "true" *) reg ld2;
+  always @(posedge clk_map[CK]) begin
+   ps2<=ps1;
+   if(!f_rst) ld2<=1'b0; else ld2<=ld1;
+  end
+  for(genvar h=0;h<2;h=h+1)begin:g_ln
+   localparam integer J=2*p+h;
+   localparam [3:0] JJ=4'(J);
+   // edge 2 (mono: pair2 / meta1 -> meta2 / emit1 -> emit2), computed from the L1 copy (= mono's edge-0 capture,
+   // one edge later); mono's edge-1 term select by the constant lane index is wiring here
+   reg [23:0] pair2[0:9];
+   reg [79:0] meta2;
+   reg emit2;
+   always @(posedge clk_map[CK]) begin
+    for(integer s=0;s<5;s=s+1)begin
+     pair2[s*2]  <=(JJ[0]?t1[(s*4+0)*24+:24]:24'd0)+(JJ[1]?t1[(s*4+1)*24+:24]:24'd0);
+     pair2[s*2+1]<=(JJ[2]?t1[(s*4+2)*24+:24]:24'd0)+(JJ[3]?t1[(s*4+3)*24+:24]:24'd0);
+    end
+    meta2<={24'(ov1 + (24'(JJ)>>ls1) - (24'd5>>ls1)),
+            24'(iv1 + (24'(JJ)&((24'd1<<ls1)-1)) - (24'd5&((24'd1<<ls1)-1))),
+            24'(row1 + (24'(JJ)>>ls1) - (24'd5>>ls1)),
+            ls1,(lvw1<3 ? 4'd3 : lvw1)};
+    if(!f_rst) emit2<=1'b0; else emit2<=emit1 && (24'(JJ)<(24'd1<<lvw1));
+   end
+   // edge 3: the lane's own registers on its clk_map[J] root
+   reg f3; always @(posedge clk_map[J]) f3<=rst_map_n[J];
+   reg [1199:0] ldc3; reg [23:0] ov3,iv3,row3; reg [3:0] ls3,lvw3; reg emit3, ld3; reg [459:0] ps3;
+   always @(posedge clk_map[J]) begin
+    for(integer s=0;s<5;s=s+1) ldc3[s*240+:240]<={216'd0,24'(pair2[s*2]+pair2[s*2+1])};
+    {ov3,iv3,row3,ls3,lvw3}<=meta2;
+    ps3<=(MUT_TREE!=0 && J==13) ? ps1 : ps2;
+    if(!f3)begin emit3<=1'b0;ld3<=1'b0;end else begin emit3<=emit2;ld3<=ld2;end
+   end
+   assign o_ld_c[J*1200+:1200]=ldc3;
+   assign o_o_v[J*24+:24]=ov3; assign o_i_v[J*24+:24]=iv3; assign o_krow[J*24+:24]=row3;
+   assign o_ls[J*4+:4]=ls3; assign o_lvw[J*4+:4]=lvw3; assign o_emit[J]=emit3;
+   assign o_pass[J*461+:461]={ld3,ps3};
+  end
+ end
+endmodule
+`default_nettype wire

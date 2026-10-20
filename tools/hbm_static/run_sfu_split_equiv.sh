@@ -66,7 +66,12 @@ if [ "${CORE3:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv $P/ot_hgi_s
 # tree output never releases (must fail)
 # SYNC_RST=1 (k8, owner standard 10-16): synchronous regional resets in the SFU core files (OT_SFU_SYNC_RST)
 if [ "${SYNC_RST:-0}" = 1 ];then defs+=(-DOT_SFU_SYNC_RST); fi
-case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; gclk) defs+=(-DOT_SFU_CORE3_MUT_GCLK);; wpskew) defs+=(-DOT_SFU_STORE_MUT_WPIPE_SKEW);; wrot) defs+=(-DOT_SFU_STORE_MUT_WROT);; rsttree) defs+=(-DOT_SFU_CORE_MUT_RSTTREE);; nodrainpipe) defs+=(-DOT_SFU_BRIDGE_MUT_NODRAINPIPE);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
+# L2H-SU-FB k9x (10-19): K9X_BTREE=3 runs split3 with the four-level broadcast tree, K9X_BRING=1 with the bridge's
+# SRAM delay rings (both cycle-identical). EQ_MUT=tree4: lane 13's pass skips tree level 2; EQ_MUT=bring: every ring
+# reads one edge early (both must fail)
+if [ -n "${K9X_BTREE:-}" ];then defs+=(-DSFU_K9X_BTREE=$K9X_BTREE); fi
+if [ -n "${K9X_BRING:-}" ];then defs+=(-DSFU_K9X_BRING=$K9X_BRING); fi
+case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; gclk) defs+=(-DOT_SFU_CORE3_MUT_GCLK);; wpskew) defs+=(-DOT_SFU_STORE_MUT_WPIPE_SKEW);; wrot) defs+=(-DOT_SFU_STORE_MUT_WROT);; rsttree) defs+=(-DOT_SFU_CORE_MUT_RSTTREE);; nodrainpipe) defs+=(-DOT_SFU_BRIDGE_MUT_NODRAINPIPE);; tree4) defs+=(-DOT_SFU_GRID_MUT_TREE4);; bring) defs+=(-DOT_SFU_BRIDGE_MUT_BRING);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
 defs+=(-DSFU_IO_ROWS=$rows -DSFU_SCALAR_EDGE=$sedge)

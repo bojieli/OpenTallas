@@ -23,7 +23,9 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
  // LH-SU (10-19): WROT passed to the operand store (bank-aligned shared sector rotate)
  parameter integer WROT=0,
  // LH-SU (10-19): lane_map pass-ring one-hot replication (ot_hdc_delay_ring OHREP)
- parameter integer PASS_OHREP=0)(
+ parameter integer PASS_OHREP=0,
+ // L2H-SU-FB k9x (10-19): BTREE passed to the quarter's arithmetic grid (3 = four-level kept-copy broadcast tree)
+ parameter integer BTREE=0)(
  input wire clk,rst_n,
  input wire [4:0] clk_grp,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
@@ -59,7 +61,7 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
  wire [383:0] vm_addr;
  wire [511:0] vm_data;
  wire store_fault;
- ot_hgi_sfu_static_quarter #(.PASS_OHREP(PASS_OHREP)) u_arithmetic(
+ ot_hgi_sfu_static_quarter #(.BTREE(BTREE),.PASS_OHREP(PASS_OHREP)) u_arithmetic(
   .clk_control(clk),.rst_control_n(rst_n),.compiler_control(compiler_control),
   .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
   .vi_q(vi_q),.rd_q(rd_q),.vi_re(vi_re),.vi_addr(vi_addr),

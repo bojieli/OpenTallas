@@ -4,6 +4,8 @@
 // Each mapper adds4edges; caller must bind exact controller phase and actual cache/ACK lifetime.
 module ot_hgi_sfu_arithmetic_grid #(
  parameter integer BTREE=0,  // 1: registered broadcast tree (4 ot_hgi_sfu_bcast_e0 nodes + 16 ot_hgi_sfu_lane_map_e123), cycle-identical
+                              // 3 (L2H-SU-FB k9x 10-19): four-level kept-copy distribution tree ot_hgi_sfu_bcast_tree4
+                              //   (2/4/8/16 copies on the mapper's own four edges, pass delay = the tree), cycle-identical
  parameter integer PASS_OHREP=0  // LH-SU (10-19): lane_map pass-ring one-hot replication (g_mono)
 ) (
  input wire [15:0] clk_lane, clk_map, rst_lane_n, rst_map_n,
@@ -71,7 +73,21 @@ module ot_hgi_sfu_arithmetic_grid #(
  wire [479:0] n_terms[0:3]; wire [23:0] n_ov[0:3],n_iv[0:3],n_row[0:3]; wire [3:0] n_ls[0:3],n_lvw[0:3];
  wire n_emit[0:3],n_ld[0:3]; wire [459:0] n_pass[0:3];
  wire [460:0] c_pass={r_ld, r_ld_bank, r_bank, r_no, r_ni, r_vb, r_obase, r_aibase, r_aind, r_gsh, r_cpair, r_dst, r_srcs, r_cx_arnd, r_cx_arelu, r_cx_amin, r_cx_cclip, r_cx_imm3, r_cp_m1, r_cp_imm1, r_cm_m1, r_cm_m2, r_cm_qm, r_cm_imm1, r_ca_ad, r_ca_imm2, r_ci_sfu, r_cs_sfu, r_cs_e1, r_cs_imm2, r_ce_e2, r_ce_imm1, r_co_rnd, r_co_dst};
- if(BTREE!=0)begin:g_tree
+ wire [16*1200-1:0] t4_ld_c; wire [16*24-1:0] t4_ov,t4_iv,t4_row; wire [16*4-1:0] t4_ls,t4_lvw; wire [15:0] t4_emit;
+ wire [16*461-1:0] t4_pass;
+ if(BTREE==3)begin:g_tree4
+`ifdef OT_SFU_GRID_MUT_TREE4
+  ot_hgi_sfu_bcast_tree4 #(.MUT_TREE(1)) u_tree4(
+`else
+  ot_hgi_sfu_bcast_tree4 u_tree4(
+`endif
+   .clk_map(clk_map),.rst_map_n(rst_map_n),.ld_terms(terms),.i_o_v(r_o_v),.i_i_v(r_i_v),.i_krow(r_krow),.i_ls(r_ls),
+   .i_lvw(r_lvw),.i_emit(r_emit),.i_pass(c_pass),.o_ld_c(t4_ld_c),.o_o_v(t4_ov),.o_i_v(t4_iv),.o_krow(t4_row),
+   .o_ls(t4_ls),.o_lvw(t4_lvw),.o_emit(t4_emit),.o_pass(t4_pass));
+ end else begin:g_notree4
+  assign {t4_ld_c,t4_ov,t4_iv,t4_row,t4_ls,t4_lvw,t4_emit,t4_pass}='0;
+ end
+ if(BTREE==1)begin:g_tree
   // one edge-0 node per four lanes, clocked / reset with the first mapper of its group (same domain, own root)
   for(genvar q=0;q<4;q=q+1)begin:g_node
    ot_hgi_sfu_bcast_e0 u_node(.clk(clk_map[4*q]),.rst_n(rst_map_n[4*q]),.ld_terms(terms),.i_o_v(r_o_v),.i_i_v(r_i_v),
@@ -122,7 +138,11 @@ module ot_hgi_sfu_arithmetic_grid #(
   wire [0:0] m_co_rnd;
   wire [1:0] m_co_dst;
   wire [460:0] mapped_pass;
-  if(BTREE!=0)begin:g_e123
+  if(BTREE==3)begin:g_t4
+   assign m_ld_c=t4_ld_c[j*1200+:1200]; assign m_o_v=t4_ov[j*24+:24]; assign m_i_v=t4_iv[j*24+:24];
+   assign m_krow=t4_row[j*24+:24]; assign m_ls=t4_ls[j*4+:4]; assign m_lvw=t4_lvw[j*4+:4]; assign m_emit=t4_emit[j];
+   assign mapped_pass=t4_pass[j*461+:461];
+  end else if(BTREE==1)begin:g_e123
   ot_hgi_sfu_lane_map_e123 u_map (
 .clk(clk_map[j]),.rst_n(rst_map_n[j]),.lane_j(4'(j)),.e0_terms(n_terms[j/4]),.e0_ov(n_ov[j/4]),.e0_iv(n_iv[j/4]),
 .e0_row(n_row[j/4]),.e0_ls(n_ls[j/4]),.e0_lvw(n_lvw[j/4]),.e0_emit(n_emit[j/4]),.e0_pass(n_pass[j/4]),.e0_ld(n_ld[j/4]),

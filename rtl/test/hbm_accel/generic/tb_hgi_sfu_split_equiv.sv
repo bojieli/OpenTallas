@@ -164,7 +164,14 @@ reg io_cfg_we=0,io_start_v=0;
 `else
  wire [4:0] eq_clk_st={5{clk}};
 `endif
- ot_hgi_sfu_core_split3 #(.LG_PATH(EQ_LG),.DRAIN_PIPE(1)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_st(eq_clk_st),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
+`ifndef SFU_K9X_BTREE
+`define SFU_K9X_BTREE 0
+`endif
+`ifndef SFU_K9X_BRING
+`define SFU_K9X_BRING 0
+`endif
+ // L2H-SU-FB k9x (10-19): BTREE=3 (four-level controller broadcast tree) / BRING=1 (bridge delay lines in SRAM rings)
+ ot_hgi_sfu_core_split3 #(.LG_PATH(EQ_LG),.DRAIN_PIPE(1),.BTREE(`SFU_K9X_BTREE),.BRING(`SFU_K9X_BRING)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_st(eq_clk_st),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
   .clk_lane({16{clk}}),.clk_map({16{clk}}),.rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
   .io_word(s_io),.compiler_control(s_ctl),
   .local_rq(c_rq),.local_rr(rr_d[D-2]),.local_wq(c_wq),.local_w_done(wd_d[D-2+WQX]),
