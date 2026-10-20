@@ -1,7 +1,7 @@
 SIM Verilator 5.050 2026-07-01 rev v5.050
-KVPC_SCHED PASS edges=20000 checks=360000 active_out=156064 outs=18 errors=0 mut=0
-- /srv/opentallas-scratch/claude/kv-pc7/src-s9j/out/sched_x_m0/tb.sv:175: Verilog $finish
+KVPC_SCHED PASS edges=30000 checks=540000 active_out=234436 outs=18 errors=0 mut=0
+- /srv/opentallas-scratch/claude/kv-pc7/src-s9k/out/sched_x_m0/tb.sv:175: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 20us; walltime 0.405 s; speed 50.568 us/s
-- Verilator: cpu 0.163 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 31us; walltime 0.228 s; speed 134.926 us/s
+- Verilator: cpu 0.228 s on 1 threads; allocated 7 MB
 
