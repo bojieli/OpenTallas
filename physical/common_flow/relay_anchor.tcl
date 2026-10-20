@@ -90,7 +90,9 @@ set fh [open $::env(OT_RLY_ANCHOR) r]; set ot_ra_lines [split [read $fh] "\n"]; 
 foreach line $ot_ra_lines {
   set line [string trim $line]
   if {$line eq "" || [string index $line 0] eq "#"} continue
-  set re [lindex $line 0]; set mode [lindex $line 1]
+  # whitespace split, NOT Tcl list parsing (a list would eat the regexp's backslash escapes: \[8\] -> [8])
+  set fields [regexp -all -inline {\S+} $line]
+  set re [lindex $fields 0]; set mode [lindex $fields 1]; set line $fields
   set n 0
   foreach pair $ot_ra_ffs {
     lassign $pair name inst
