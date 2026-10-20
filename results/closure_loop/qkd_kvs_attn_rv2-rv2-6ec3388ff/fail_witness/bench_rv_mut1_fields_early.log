@@ -1,0 +1,105 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_attn_rv2-rv2-6ec3388ff bench bench_rv_mut1_fields_early host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_attn_rv2-rv2-6ec3388ff log cl/bench_rv_mut1_fields_early.a1b1.log captured 2026-10-19T17:56:30-07:00
+# fail_regex '^KVS_RVPAIR_ALL FAIL'
+KVS_RVPAIR build mut=1  verilator Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+MISMATCH cyc=142 prg valids
+MISMATCH cyc=142 prg q
+MISMATCH B faulted on the legal stream
+KVS_RVPAIR FAIL mode=0 mut=1 checks=38766 errors=15019 cmds=3 req=3 Q=96 TX=99 faultA=0 faultB=1
+KVS_RVPAIR PASS mode=1 mut=1 checks=12824 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+MISMATCH cyc=142 prg valids
+MISMATCH cyc=142 prg q
+KVS_RVPAIR FAIL mode=2 mut=1 checks=12863 errors=12 cmds=1 req=1 Q=6 TX=0 faultA=1 faultB=1
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+MISMATCH cyc=142 prg valids
+MISMATCH cyc=142 prg q
+KVS_RVPAIR FAIL mode=3 mut=1 checks=12866 errors=18 cmds=1 req=1 Q=9 TX=0 faultA=1 faultB=1
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+MISMATCH cyc=142 prg valids
+MISMATCH cyc=142 prg q
+KVS_RVPAIR FAIL mode=4 mut=1 checks=12889 errors=64 cmds=1 req=1 Q=32 TX=0 faultA=1 faultB=1
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+MISMATCH cyc=142 prg valids
+MISMATCH cyc=142 prg q
+KVS_RVPAIR FAIL mode=5 mut=1 checks=12892 errors=67 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+MISMATCH cyc=142 prg valids
+MISMATCH cyc=142 prg q
+KVS_RVPAIR FAIL mode=6 mut=1 checks=12896 errors=71 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+MISMATCH cyc=142 prg valids
+MISMATCH cyc=142 prg q
+KVS_RVPAIR FAIL mode=7 mut=1 checks=12900 errors=76 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+KVS_RVPAIR FAIL mode=8 mut=1 checks=12861 errors=8 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+MISMATCH cyc=142 prg valids
+MISMATCH cyc=142 prg q
+KVS_RVPAIR FAIL mode=9 mut=1 checks=12896 errors=71 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=10 mut=1 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR_ALL FAIL mut=1 modes=11 checks=13195 fails=9
