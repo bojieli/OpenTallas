@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_argmax_swvm_r2_g2c_1019-pg1-c456d3869 bench bench_am_g2c_vmx76 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hbm_argmax_swvm_r2_g2c_1019-pg1-c456d3869 log cl/bench_am_g2c_vmx76.a1b1.log captured 2026-10-19T16:51:27-07:00
+# fail_regex '^CASE am_vmx76 .*ARGMAX_LAT CTL_M=65 VMX_P=76 ACK_P=52 ACK_M=52 MUT=0 requests [1-9][0-9]* .*errors [1-9][0-9]* IDX_AM_PATH_LAT FAIL'
+CASE am_vmx76 WRITE 2 differs mask 00f00000/00000000 WRITE 3 differs mask 000f0000/00000000 ARGMAX_LAT CTL_M=65 VMX_P=76 ACK_P=52 ACK_M=52 MUT=0 requests 3207 writes 474 events 300 (done 204) offsets rq 1 write 77 event 117 share_fault 0/0 ties 0 errors 642 IDX_AM_PATH_LAT FAIL 
