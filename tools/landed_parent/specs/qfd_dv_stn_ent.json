@@ -1,0 +1,146 @@
+{
+ "why": "QW-SLICE4 10-19 Q.STA.SLICE.1: the slice2 reduction station as an ENTRIES cluster of the 8 closed region tiles (qfd_dv_slice2_stnrgc, record 5fb7dcb72): 8 regions, one per child, each its own clock entry ck_r<k>; ONE copy of cfg / rs_s_c / rs_n_c / nb_c lands into every region (shared ring in r0, one read half per region); per-region data ports; the closed children's sticky-fault ring hops (writer bank/vld wires) are landed between neighbour regions as loose status nets.",
+ "top": "qfd_dv_redstn2_ef",
+ "top_lp": "qfd_dv_redstn2_ef_lp",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_redstn2_ef.sv"
+ ],
+ "child_sources": [
+  "rtl/qwen_dv/qfd_dv_redstn2_regional.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "out_dir": "rtl/qwen_dv/lp",
+ "record_dir": "results/arch/qw_slice4_1019/lp",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "regions": [
+  {
+   "name": "r0",
+   "insts": [
+    "u_r0"
+   ],
+   "centre": [
+    118.8,
+    378.0
+   ],
+   "why": "station region 0 (fp32 lanes 0,1): hard child u_r0 = closed qfd_dv_redstn2_region + its read halves / ring halves; local tree, entry at the child's ck pin"
+  },
+  {
+   "name": "r1",
+   "insts": [
+    "u_r1"
+   ],
+   "centre": [
+    118.8,
+    118.8
+   ],
+   "why": "station region 1 (fp32 lanes 2,3): hard child u_r1 = closed qfd_dv_redstn2_region + its read halves / ring halves; local tree, entry at the child's ck pin"
+  },
+  {
+   "name": "r2",
+   "insts": [
+    "u_r2"
+   ],
+   "centre": [
+    334.8,
+    378.0
+   ],
+   "why": "station region 2 (fp32 lanes 4,5): hard child u_r2 = closed qfd_dv_redstn2_region + its read halves / ring halves; local tree, entry at the child's ck pin"
+  },
+  {
+   "name": "r3",
+   "insts": [
+    "u_r3"
+   ],
+   "centre": [
+    334.8,
+    118.8
+   ],
+   "why": "station region 3 (fp32 lanes 6,7): hard child u_r3 = closed qfd_dv_redstn2_region + its read halves / ring halves; local tree, entry at the child's ck pin"
+  },
+  {
+   "name": "r4",
+   "insts": [
+    "u_r4"
+   ],
+   "centre": [
+    550.8,
+    378.0
+   ],
+   "why": "station region 4 (fp32 lanes 8,9): hard child u_r4 = closed qfd_dv_redstn2_region + its read halves / ring halves; local tree, entry at the child's ck pin"
+  },
+  {
+   "name": "r5",
+   "insts": [
+    "u_r5"
+   ],
+   "centre": [
+    550.8,
+    118.8
+   ],
+   "why": "station region 5 (fp32 lanes 10,11): hard child u_r5 = closed qfd_dv_redstn2_region + its read halves / ring halves; local tree, entry at the child's ck pin"
+  },
+  {
+   "name": "r6",
+   "insts": [
+    "u_r6"
+   ],
+   "centre": [
+    766.8,
+    378.0
+   ],
+   "why": "station region 6 (fp32 lanes 12,13): hard child u_r6 = closed qfd_dv_redstn2_region + its read halves / ring halves; local tree, entry at the child's ck pin"
+  },
+  {
+   "name": "r7",
+   "insts": [
+    "u_r7"
+   ],
+   "centre": [
+    766.8,
+    118.8
+   ],
+   "why": "station region 7 (fp32 lanes 14,15): hard child u_r7 = closed qfd_dv_redstn2_region + its read halves / ring halves; local tree, entry at the child's ck pin"
+  }
+ ],
+ "loose": [
+  "flt_b0",
+  "flt_b1",
+  "flt_b2",
+  "flt_b3",
+  "flt_b4",
+  "flt_b5",
+  "flt_b6",
+  "flt_b7",
+  "flt_v0",
+  "flt_v1",
+  "flt_v2",
+  "flt_v3",
+  "flt_v4",
+  "flt_v5",
+  "flt_v6",
+  "flt_v7"
+ ],
+ "sticky_outputs": {
+  "fault": 96
+ },
+ "share_rings": true,
+ "D": 4,
+ "E": 2,
+ "mut_child": "u_r0",
+ "tb_stimulus": "rtl/test/qwen_dv/safe_storage/stn_ent_stim.svh",
+ "bench": {
+  "cycles": 16000,
+  "reset_cycles": 6,
+  "sim": "verilator"
+ }
+}

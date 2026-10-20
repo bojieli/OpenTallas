@@ -73,8 +73,12 @@ qfd_dv_redstn2 #(.MUT(MUT)) u_m (.ck(ck), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_mod
     .bt_re(m_bt_re), .bt_word(m_bt_word), .bt_q(bt_q), .r_v(m_r_v), .r_idx(m_r_idx), .r_last(m_r_last), .r_d(m_r_d), .fault(m_fault));
 // regional (per-region copies of every control input, one clock)
 wire [28:0] c = {cfg_v, cfg_mode, cfg_wsrc, cfg_nwords, cfg_sbase, cfg_kcm1};
-wire [255:0] bt_q_r = (RMUT == 1) ? {bt_q_g[255:192], bt_q_g[159:128], bt_q_g[159:0]} : bt_q_g;
 wire [513:0] g_nb_o; wire g_bt_re; wire [8:0] g_bt_word; wire g_r_v; wire [7:0] g_r_idx; wire g_r_last; wire [511:0] g_r_d; wire g_fault;
+`ifdef STN_EF
+// QW-SLICE4 10-19: the flat ENTRIES parent qfd_dv_redstn2_ef (8 explicit region instances, one control copy) as u_g
+`include "rtl/test/qwen_dv/safe_storage/stn_ef_inst.svh"
+`else
+wire [255:0] bt_q_r = (RMUT == 1) ? {bt_q_g[255:192], bt_q_g[159:128], bt_q_g[159:0]} : bt_q_g;
 qfd_dv_redstn2_rg #(.MUT(MUT),.PIN_IN(PIN),.BT_LAT(PIN)) u_g (.ck_r({8{ck}}), .rst_n_r({8{rst_n}}), .cfg_r({8{c}}),
     .rs_s_lo(rs_s[511:0]), .rs_s_hi(rs_s[1025:514]), .rs_n_lo(rs_n[511:0]), .rs_n_hi(rs_n[1025:514]),
     .rs_s_c({8{rs_s[1027:1026], rs_s[513:512]}}), .rs_n_c({8{rs_n[1027:1026], rs_n[513:512]}}),
@@ -83,6 +87,7 @@ qfd_dv_redstn2_rg #(.MUT(MUT),.PIN_IN(PIN),.BT_LAT(PIN)) u_g (.ck_r({8{ck}}), .r
 generate if (RMUT == 2) begin : g_cut
     initial begin #1; force u_g.fb[3] = 4'd0; force u_g.fv[3] = 4'd0; end
 end endgenerate
+`endif
 // fault: sticky in both; regional may lag by <= FLT_LAG (+PIN) edges and never lead.
 localparam integer OW = 514 + 1 + 9 + 1 + 8 + 1 + 512;
 wire [OW-1:0] m_out = {m_nb_o, m_bt_re, m_bt_word, m_r_v, m_r_idx, m_r_last, m_r_d};
