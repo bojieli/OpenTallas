@@ -59,3 +59,17 @@ qkd_d2d_cal_seq_pin_bc4-k22a-89fec6b77; its source d2d_cal_image.svh / _mu.svh /
 qkd_d2d_cal_seq_bc4.sv / qkd_d2d_cal_seq_pin.sv are blob-identical to GEN9's, D2D_TXDP_K = 32'h03030416 [22,4,3,3].
 The sfm2/sfm3 kits compile TXDP 0x03030416 (pair benches grep it). Status readers for dcal adm_done/cal_ready/running/
 layer and d2d recovery_cycles: KV-FRAMEPINS fc93e83d3 merged in GEN9 abbb4391c (OT_KV_HOST_OBSX=1, default off).
+
+## 5. Gate native census (the mandatory PRE_GATE_NATIVE_CENSUS hook on the gate's ORFS synthesis)
+
+| rev | commit | r7w_sfm3 | ovl_sfm3 | remaining class |
+|---|---|---|---|---|
+| r1 | 0e17d840a | FAIL max 41, 99 roots | FAIL max 37, 81 | 16-b image strobes fold into each reader mux (~2.5 pins/bit) |
+| r2 | 508cde0dd | FAIL max 38, 2 | FAIL max 36, 2 | shared seg_we / write predecode net (cfg_we, addr[5], running) |
+| r3 | aabf2e6ad | **PASS max 32, 0 violations, 30,739 roots** | **PASS max 32, 0, 30,876 roots** | -- |
+
+(`census_sfm3_r1_*.json.gz`, `census_sfm3_r2_*.json.gz`, `census_sfm3_r3/*.json.gz`; r3 gates ot-pve1
+ref_gate/qkd_d2d_static_{r7w,ovl}_sfm3-20261020-025653, past floorplan into placement / CTS.)  role_errors 0.  The 5
+constant output bits (fdi_tx_flit[554..557], [566]) are the link flit body's protocol framing constants
+(body = {0, e3, 0, 1, 00, s3, q}), checked by the receiver's slot_bad, unchanged from sfm2 -- not a tied port.
+r2 -> r3 benches: 34/34 as expected on r3 (bench_logs/, scripts/kitbench3.otrun.log).

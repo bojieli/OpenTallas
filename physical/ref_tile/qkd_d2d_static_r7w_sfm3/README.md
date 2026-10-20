@@ -24,3 +24,8 @@ Why: tools/ref_tile/native_census.py (mandatory since main 042aa171b) on the rou
    aspect 1.69, outline pin-limited -> fill_reason.pin_bound).
 7. Clock: as qkd_d2d_static_r7w_sfm2 (E-face centre root; sfm2 routed TT/FF pin-flop spread passed <= 80); gate must show <= 80.
 8. Schedule: PASS. 0 added cycles: lockstep miter vs the as-built end, every output every edge (SFM3=1 benches).
+
+## Pre-gate native census (gate hook, r3 aabf2e6ad)
+PASS: max 32 dynamic endpoint pins, 0 violations, 30739 roots, 0 role errors (reset / macro pins counted); constant outputs
+= the 5 flit framing bits (as sfm2). Storage: payload in 4 SRAMs, calendar images 1 kb flops each (<= 2 kb). Reach / pins: as
+the closed sfm2 geometry; gate textbook + CTS facts to be appended after PNG review.
