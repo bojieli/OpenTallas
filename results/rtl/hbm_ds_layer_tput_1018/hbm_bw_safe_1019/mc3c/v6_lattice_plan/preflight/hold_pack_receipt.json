@@ -1,0 +1,31 @@
+{
+  "scope": "Native own-kit deterministic pre-GPL FIRM packing only; unplaced standard cells have no qualified locations. No GPL/CTS/route.",
+  "firm_cells": 3071,
+  "placed_standard_cells": 3071,
+  "unplaced_standard_cells": 39100,
+  "firm_std_positive_area_overlaps": [],
+  "firm_macro_positive_area_overlaps": [],
+  "firm_macro_5p4halo_positive_area_overlaps": [],
+  "max_master_width_um": 0.432,
+  "max_master_height_um": 0.27,
+  "site_um": 0.054,
+  "row_pitch_um": 0.27,
+  "horizontal_hold_spacing_um": 0.054,
+  "firm_all_inside_regions": true,
+  "region_counts": {
+    "S0": 320,
+    "S3": 320,
+    "S2": 320,
+    "S1": 320,
+    "SCAP": 218,
+    "WCAP": 20,
+    "ECAP": 19,
+    "NFACE": 254,
+    "N0": 320,
+    "N1": 320,
+    "N3": 320,
+    "N2": 320
+  },
+  "source_odb_sha256": "e17ac66f8a38ad9a7868ea167f493deceb4927d8c98f3b54a3fd7fb575aa3c18",
+  "packed_native_sha256": "f881676c336cacf88cdc50dbd8465a1c1c90eed6d7da54fbbd7d46fa86c432cb"
+}
