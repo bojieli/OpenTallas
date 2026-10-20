@@ -95,8 +95,8 @@
   "reason": "ot_hgi_coll_fj_core registers every input at its pin in RTL (HOST F20 cfg/desc/launch frames, issuer feedback, child faults, sync rst_n D-pin flop; coordinator native audit of fj_q2 54f035ca0) and every output is flop Q (programme target issuer_cfg/start/configured/init_busy/fault, sticky fault/fault_cause); the V5 lockstep bench fixes these edges (programme +1, issue +3, child faults +1). A synthesis pin stage would add a second, unbenched rung."
  },
  "job": {
-  "owner": "Codex:HBM-ELEM/COLLFJ",
-  "branch": "claude/collfj-u2r-1020",
+  "owner": "Codex:HBM-COLL-COLLECT",
+  "branch": "codex/collfj-u3-regate-1020",
   "tag": "native32-rc32-grid",
   "purpose": "SAFE successor of hcoll_fj2_r128w (LEAD3-HBM 10-19, no waiver): q2 parent u_fj body ot_hgi_coll_fj_core_s128 = 12 KEPT reset copies rst__ot_rlv (<=32 loads each via reset_relay_split), flow store in ONE ot_sram_1rw_128x64 (u.u_program.u_flow, read = scan lookahead, registered write), registered frame/descriptor decode; port/edge-identical (0 cycles)",
   "extra_paths": [

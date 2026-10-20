@@ -13,3 +13,5 @@ Why: u2 (OT_RST_COPIES_MAX 16 only) gated PASS but post-GRT native census still 
 8 Schedule: PASS -- 0 external edges changed -> 0 cycles DS/Qwen.
 
 Open HOLD carried from r128u: hold-fix bind-before-protect PG bug (protected PG-unbound newborn cells, r128u 612/620). Fix 364197f30+a114c3745 (codex/pg-protect-birth-1020) NOT on origin/main at 10-20 02:30; ROOT b2fef6b6a unmerged. Gate uses origin/main helpers (tools/ref_tile, closure_loop, common_flow incl. 67cb1acc7 standard-mode PG bind). CRITICAL prefix -> COORD-REVIEW-QUEUE, no REVIEW.json / submit.
+
+Takeover PG regate: currentorigin/main68b9cad6c tools/common_flow copied afterruntimeREADY. Frozen original literal fullbuffertransparent FF/macro-to-capture audit max140.42um(q3)/141.25um(q2),0over405;3665/3680captures.688/695unreached driverpinclasses audit pending; do not assumeconstants. Freshgate must repeat mappednative32/postGRTnative32, original/protectedPG+existingruleinmemorybind, literalfullreach+allpinclasses. Criticalprefix:no REVIEW/no submit.

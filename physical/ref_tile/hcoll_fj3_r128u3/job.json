@@ -2,12 +2,12 @@
  "name": "hcoll_fj3_r128u3-native32-rc32-grid-COMMIT",
  "block": "ot_hgi_coll_fj_n2s1_r128",
  "ref_tile": true,
- "owner": "Codex:HBM-ELEM/COLLFJ",
+ "owner": "Codex:HBM-COLL-COLLECT",
  "purpose": "SAFE successor of hcoll_fj3_r128w (LEAD3-HBM 10-19, no waiver): q3 parent u_fj body ot_hgi_coll_fj_core_s128 = 12 KEPT reset copies rst__ot_rlv (<=32 loads each via reset_relay_split), flow store in ONE ot_sram_1rw_128x64 (u.u_program.u_flow, read = scan lookahead, registered write), registered frame/descriptor decode; port/edge-identical (0 cycles)",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/collfj-u2r-1020",
+  "branch": "codex/collfj-u3-regate-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
@@ -164,5 +164,6 @@
   "kind": "rtl_change",
   "source": "results/rtl/hbm_coll_fj_1019/codex_native_1020/r128u_postgrt_native/README.md",
   "fix": "Same RTL/ports/edges/geometry as r128u (e6846a038) except fj core reset copy family rst__ot_rlv RC 20 -> 32 (leaf .RC(32)). u2 (cap16 only) proved a no-op: ot_rst_copies re-points over the FIXED RTL copy count (527 loads/20 = 27) and post-GRT pin_reg_split RESETN clones gave 37/34. 32 copies -> <=17 loads each (reset_relay_split max 19 = 32 - 13 clone reserve); rst_n landing (2 stages) drives exactly 32 copies. Same single release edge."
- }
+ },
+ "branch": "codex/collfj-u3-regate-1020"
 }
