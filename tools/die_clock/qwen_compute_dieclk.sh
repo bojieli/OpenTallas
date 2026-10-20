@@ -83,7 +83,11 @@ if [ "$MODE" = regional ]; then
   python3 $D/$TL/die_clock/qwen_regional_spec.py --spec $D/spec.json --pairs $D/landed_pairs_pre.json --out-spec $D/spec_$3.json \
     --out-families $D/families_$3.json --out-owed $D/land_owed_$3.json ${DC_SPINE_SOURCE:+--source $DC_SPINE_SOURCE} \
     $([ "${DC_REGIONAL_IDEAL:-0}" = 1 ] && echo --ideal) $([ "${DC_GRID_CENTER:-0}" = 1 ] && echo --grid-center) \
+    $([ "${DC_SAFE_TREE:-1}" = 1 ] && echo --safe-tree) $([ "${DC_NEIGHBOUR_TRIM:-0}" = 1 ] && echo --neighbours) \
+    $([ "${DC_SPINE_BALANCE:-0}" = 1 ] && echo --balance-spine) \
     | tee -a $D/STATUS.log || exit 1
+  # QW-DIECLK3 10-19: the per-region families stay (intra judged per region); neighbour pairs are trimmed in the build
+  # and judged by the landed/unlanded verdict downstream
   MODE=build; PER_REGION=--per-region
 fi
 V=$3; O=$D/$V; mkdir -p $O/ff; chmod a+rwx $O $O/ff   # measure_only does not create its --out dir
@@ -97,6 +101,10 @@ fi
 $DK "$PRE openroad -python -no_init -exit /work/$TL/die_clock/build.py --measure /work/$V/tt/manifest.json --odb /work/$V/tt/clock.odb --libs /work/libs_ff.txt --corner ff --out /work/$V/ff > /work/$V/measure_ff.log 2>&1" \
   || { say "$V FF measure FAIL ($V/measure_ff.log)"; exit 1; }
 cd $O
+# QW-DIECLK3 10-19 (dv2f19g2: 281 leaf nets > 1 mm unbuffered over CB16): no clock net may reach > 405 um unbuffered and
+# the safe-tree build must record no violation; fail closed (DC_REACH_DIAG=1 continues, stamped NOT_A_DIE_RESULT)
+python3 $D/$TL/die_clock/clock_reach_check.py tt/manifest.json --out reach.json > reach.log 2>&1; RCH=$?
+say "$V $(tail -1 reach.log | cut -c1-600)"
 AT=tt/arrivals_tt.tsv; AF=$(ls ff/arrivals_ff.tsv 2>/dev/null || ls ff/*.tsv | head -1)
 python3 $D/$TL/die_clock/to_dump.py tt/manifest.json $AT dump_tt.tsv --pairs-from $D/geom/pairs.tsv
 python3 $D/$TL/die_clock/to_dump.py tt/manifest.json $AF dump_ff.tsv --pairs-from $D/geom/pairs.tsv
@@ -121,3 +129,7 @@ python3 $D/$TL/die_clock/plot.py tt/manifest.json $AT $D/geom/blocks.tsv png/die
 python3 $D/$TL/die_clock/plot.py tt/manifest.json $AF $D/geom/blocks.tsv png/die_ff.png --title "Q-CLK $V FF" >> png/plot.log 2>&1
 grep -h 'cells\|iter' build_tt.log | tail -4 >> $D/STATUS.log
 say "$V done: $O/die_clock_check.txt $O/landed_pairs.json $O/png"
+if [ $RCH != 0 ]; then
+  if [ "${DC_REACH_DIAG:-0}" = 1 ]; then echo "QCLK_REACH_FAIL_DIAGNOSTIC_ONLY" >> $O/NOT_A_DIE_RESULT; say "$V REACH FAIL: DIAGNOSTIC ONLY (DC_REACH_DIAG=1)"
+  else say "$V REACH FAIL ($O/reach.json): no die clock"; exit 1; fi
+fi

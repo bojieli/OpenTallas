@@ -29,7 +29,31 @@ if {[info exists ::env(OT_DIE_REPAIR)] && $::env(OT_DIE_REPAIR) == 1} {
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
 }
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
-set_routing_layers -signal M4-M9 -clock M4-M9
+# QW-DIECLK3 10-19: the physical die clock (tools/die_clock build.py: every net sigType CLOCK, n_dc_*) routes on its own
+# clock layers with a 2W2S NDR (OT_GRT_CLOCK_LAYERS, OT_GRT_CLOCK_NDR=1; die_chain sets both under OT_DIE_CLOCK_PHYS=1):
+# dv2f19g2 routed the n_dc_* leaves as M4 signals over capacity-0 CB16 gcells (5050 M4 overflow).  Default unchanged.
+set ot_clk_layers M4-M9
+if {[info exists ::env(OT_GRT_CLOCK_LAYERS)] && $::env(OT_GRT_CLOCK_LAYERS) ne ""} { set ot_clk_layers $::env(OT_GRT_CLOCK_LAYERS) }
+set_routing_layers -signal M4-M9 -clock $ot_clk_layers
+puts "OT_GRT_CLOCK_LAYERS $ot_clk_layers"
+if {[info exists ::env(OT_GRT_CLOCK_NDR)] && $::env(OT_GRT_CLOCK_NDR) == 1} {
+  step clock_ndr {
+    regexp {M(\d+)-M(\d+)} $ot_clk_layers -> l0 l1
+    set w {}; set sp {}
+    for {set l $l0} {$l <= $l1} {incr l} {
+      set lay [[ord::get_db_tech] findLayer M$l]
+      lappend w M$l:[expr {2.0 * [$lay getWidth] / [[ord::get_db_tech] getDbUnitsPerMicron]}]
+      lappend sp M$l:[expr {2.0 * [$lay getSpacing] / [[ord::get_db_tech] getDbUnitsPerMicron]}]
+    }
+    create_ndr -name OT_CLK_2W2S -width $w -spacing $sp
+    set rule [[ord::get_db_block] findNonDefaultRule OT_CLK_2W2S]
+    set n 0
+    foreach net [[ord::get_db_block] getNets] {
+      if {[$net getSigType] eq "CLOCK" && [regexp {^n_dc_} [$net getName]]} { $net setNonDefaultRule $rule; incr n }
+    }
+    puts "OT_GRT_CLOCK_NDR OT_CLK_2W2S nets=$n width=$w spacing=$sp"
+  }
+}
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.05
 # r22 adjfix: no PG-proxy region adjustments (the physical r5 PDN is in the odb; 0.146 = 0.05 via + 2 x 0.0439 PG proxy double-counted it)

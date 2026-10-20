@@ -32,6 +32,14 @@ def main():
     ap.add_argument('--ideal', action='store_true')
     ap.add_argument('--grid-center', action='store_true', help='QW-DIECLK2: clock sites in the 17.28-um column gaps '
                     '(build.py grid_center: centre-rule cells + exact site check against block rectangles)')
+    ap.add_argument('--safe-tree', action='store_true', help='QW-DIECLK3: build.py safe tree (every unbuffered clock '
+                    'segment <= 220 um, no run over a block > 200 um, leaves within 160 um; violations fail the build)')
+    ap.add_argument('--neighbours', action='store_true', help='QW-DIECLK3: trim every UNLANDED cross-region pair '
+                    '(GAP root pairs + land_owed src/dst roots) to --neighbour-budget at TT and FF (measured trim, '
+                    'targets only rise): region insertion matched along every unlanded crossing')
+    ap.add_argument('--neighbour-budget', type=float, default=60.0)
+    ap.add_argument('--balance-spine', action='store_true', help='QW-DIECLK3: the spine merge compensates each region '
+                    "tree's model insertion (spine.balance true, pads allowed) so region entries meet at their flops")
     a = ap.parse_args()
     sp = json.load(open(a.spec))
     for t in sp['trees']:
@@ -43,14 +51,25 @@ def main():
     if a.grid_center:
         sp['grid_center'] = True
     sp.pop('neighbours', None); sp.pop('neighbour_budget_ps', None)
+    if a.safe_tree:
+        sp['safe_tree'] = True
     if not a.ideal:
-        sp['spine'] = dict(source=src, period=a.period, balance=False)
+        sp['spine'] = dict(source=src, period=a.period, balance=bool(a.balance_spine))
     sp['note'] = (sp.get('note', '') + ' QW-DIECLK regional: local trees at regional entries (sink median)' +
                   (' on ideal entries (control)' if a.ideal else f', fed by ONE forwarded unpadded spine from {src} '
                    '(balance false: no pads, no region compensation)') +
-                  '; every region its own family; cross-region crossings LANDED (land_owed lists the GEN debt).')
+                  '; every region its own family; cross-region crossings LANDED (land_owed lists the GEN debt).' +
+                  (f' QW-DIECLK3 neighbour trim: {len(nb)} unlanded region pairs <= {a.neighbour_budget} ps TT+FF.' if nb else '') +
+                  (' Safe tree (segments <= 220 um, never over blocks).' if a.safe_tree else ''))
     lp = json.load(open(a.pairs))
     owed = lp.get('land_owed', [])
+    nb = set()
+    if a.neighbours:
+        name = {t['root']: t['name'] for t in sp['trees']}
+        rp = [tuple(p) for p in lp.get('gap_root_pairs', [])]
+        rp += [(x, y) for o in owed for x in o.get('src_root', []) for y in o.get('dst_root', [])]
+        nb = {tuple(sorted((name[x], name[y]))) for x, y in rp if x in name and y in name and name[x] != name[y]}
+        sp['neighbours'] = sorted(map(list, nb)); sp['neighbour_budget_ps'] = a.neighbour_budget
     json.dump(sp, open(a.out_spec, 'w'), indent=1)
     json.dump({t['name']: [t['root']] for t in sp['trees']}, open(a.out_families, 'w'), indent=1)
     by = {}
@@ -65,7 +84,8 @@ def main():
                    detail=owed), open(a.out_owed, 'w'), indent=1)
     print('QCLK_REGIONAL_SPEC', 'ideal entries' if a.ideal else f'forwarded spine {src} balance=false', 'trees',
           len(sp['trees']), 'stream', len(stream), 'land_owed links', len(owed), 'bits', sum(o['bits'] for o in owed),
-          'bus classes', len(by), 'grid_center', bool(a.grid_center))
+          'bus classes', len(by), 'grid_center', bool(a.grid_center), 'safe_tree', bool(a.safe_tree),
+          'neighbour_pairs', len(nb), 'balance_spine', bool(a.balance_spine))
 
 
 if __name__ == '__main__':
