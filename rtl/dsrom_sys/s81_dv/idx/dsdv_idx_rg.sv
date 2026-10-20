@@ -24,6 +24,9 @@
 //   type 8 IDX_G  gather (re-index) of NB candidate BLOCKS              len 64 + ceil(NB / 16)
 //   spec [19:0] B (scan; 0 for a gather), [40:20] N (scan count, or NB), [50:41] k (<= 512), [80:51] KB,
 //        [96:81] T0, [100:97] P (>= 2), [103:101] ik (= the selector's ingress-kind strap)
+//        [106:104] om: OPEN lanes 1..3 (S81-L20DIE 10-19, bit i-1 = lane i): the reader emits neither the HDR nor the
+//        empty BEAT of an open lane -- that lane belongs to a child die's candidate set (dsdv_idx_tx on the child, landed
+//        by dsdv_idx_vmux here), which opens it with its own HDR.  om = 0 (default) = the record behaviour.
 //   payload 0..63: query, word 2h = head h's 128 FP4 codes, word 2h + 1 = {[47:32] BF16 head weight, [31:0] scales}
 //   payload 64..: (IDX_G) candidate block list, 16 entries a word ([32 e +: 17] = block b = positions 8 b .. 8 b + 7,
 //                 the re-index candidate unit: dsrom_reindex_candidates 2,048 blocks = 16,384 keys), strictly
@@ -61,7 +64,12 @@
 // Pins: every input lands in a flop at the pin, every output leaves a flop.  One clock ck.  Reset rst: async assert,
 // 2-flop synchronous release.
 // MUT (bench negative controls only): 1 lane hash off by one, 2 rk always returned to the slice, 3 scale sector of the
-// neighbouring cell, 4 region 0's part-1 beat one cycle late, 5 response of the slice swallowed.
+// neighbouring cell, 4 region 0's part-1 beat one cycle late, 5 response of the slice swallowed, 6 spec om ignored.
+// S81-L20 idxrd2 (10-19, SAFE checklist 5/6): every memory is a 1R1W 1024 x 256 macro (ot_sram_1r1w_1024x256_m2_r2c2:
+// 70.47 um faces, 415 contacts = 5.89 / um <= 6; the 256x256 family is 10.0 / um).  7 macros: landing 4 (code rows
+// 0..127, the PC's scale rows 128..143 in its half-0 macro: 8 scales a row), list 2, item queue 1 (show-ahead head
+// buffer).  The scale register file (2 x 128 x 32 b) and the item queue flops (256 x 29 b) are gone.  The consumer
+// reads a scale ROW once (row cache, write-through on scale writes), then pops up to 8 keys of the row at 1 a cycle.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_idx_rg #(
     parameter integer MUT = 0,
@@ -71,7 +79,16 @@ module dsdv_idx_rg #(
     parameter integer IQD = 256,        // key items in flight (item queue) = the HBM request lead: >= (HBM latency ~240 + engine ~51 + jitter) x 0.5 key/cycle
     parameter integer SQD = 64,         // keys in the engine (<= ~51 at 1 key/cycle) + scores waiting for the assembler
     parameter integer LFD = 256,        // candidate-list words held (gather; 256 with SRAM_MACRO = 2 macros)
-    parameter integer RQD = 16          // read jobs queued a PC (scan: a 16-key group; gather: one key)
+    parameter integer RQD = 16,         // read jobs queued a PC (scan: a 16-key group; gather: one key)
+    // S81-L20TOK (10-20, SAFE checklist after the 57f81b048 native census FAIL: 94,962 flops on one root, 4,491 nets > 32
+    // loads, 6,736-load reset, 29-level stage -- all but ~15k flops in the flat legacy engine): ENG 1 scores with the
+    // HARDENED head-key slices (ot_hdc_v41x_idx_hslice, closed view ot_hdc_v41x_idx_hslice_m5, FPL 7 / FML 5 / QL 5):
+    // 4 x ot_hdc_v41x_idx_chunk_el (8 slices a column, systolic seams, reset through ot_rst_relay) + ot_hdc_v41x_idx_tail_l,
+    // bit for bit the chunk_l arithmetic (the bench's independent reference engine checks every score).  The engine has
+    // no output FIFO / credit: it is a fixed-latency pipeline (o_ready was tied 1).  Its metadata ring and the score
+    // queue (SQD x 21 b / SQD x 38 b, > 2 kb) are 1024 x 256 macros (2 more, 9 a reader); the score queue has a 3-entry
+    // show-ahead head like the item queue.  ENG 0 = the record flat engine (unchanged).
+    parameter integer ENG = 0
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -88,7 +105,7 @@ module dsdv_idx_rg #(
 );
     localparam integer SLW = 3;            // slot field of the read tag (LG = 8)
     initial if (LG != 8) $fatal(1, "dsdv_idx_rg: LG must be 8 (3-bit tag slot field)");
-    initial if (SRAM_MACRO && LFD != 256) $fatal(1, "dsdv_idx_rg: SRAM_MACRO list memory is 256 words");
+    initial if (LFD > 1024 || IQD > 1024) $fatal(1, "dsdv_idx_rg: list / item queue memories are 1024 words");
     localparam integer IQW = $clog2(IQD), SQW = $clog2(SQD), LFW = $clog2(LFD), RQW = $clog2(RQD);
 
     // ------------------------------------------------------------------ reset
@@ -143,6 +160,7 @@ module dsdv_idx_rg #(
     reg [15:0] t0;
     reg [3:0]  pp;
     reg [2:0]  ik;
+    reg [2:0]  om;                           // open lanes 1..3 (spec [106:104])
     reg [7:0]  tg;
     reg [15:0] j0, j1, nw;                   // first / last absolute word, word count
     reg [15:0] nlw;                          // gather: list words
@@ -180,7 +198,7 @@ module dsdv_idx_rg #(
     always @(posedge ck or negedge rn)
         if (!rn) begin
             act <= 1'b0; infr <= 1'b0; isj <= 1'b0; left <= 0; pw <= 0; ftyp <= 0; gat <= 0; jb <= 0; jn <= 0; jk <= 0;
-            kb <= 0; t0 <= 0; pp <= 0; ik <= 0; tg <= 0; j0 <= 0; j1 <= 0; nw <= 0; nlw <= 0; ql_v <= 1'b0; ql_h <= 0;
+            kb <= 0; t0 <= 0; pp <= 0; ik <= 0; om <= 0; tg <= 0; j0 <= 0; j1 <= 0; nw <= 0; nlw <= 0; ql_v <= 1'b0; ql_h <= 0;
             qset <= 0; q_done <= 1'b0; ended <= 1'b0; tc <= 0;
         end else begin
             ql_v <= 1'b0;
@@ -189,7 +207,7 @@ module dsdv_idx_rg #(
                 isj <= hdr_job;
                 if (hdr_job && !act) begin
                     act <= 1'b1; gat <= q_d[511]; jb <= q_d[19:0]; jn <= h_n; jk <= q_d[50:41]; kb <= q_d[80:51];
-                    t0 <= q_d[96:81]; pp <= q_d[100:97]; ik <= q_d[103:101]; tg <= q_d[502:495];
+                    t0 <= q_d[96:81]; pp <= q_d[100:97]; ik <= q_d[103:101]; om <= q_d[106:104]; tg <= q_d[502:495];
                     // gather: NB blocks = 8 NB ordinals = ceil(NB / 2) selector words, ceil(NB / 16) list words
                     if (q_d[511]) begin j0 <= 16'd0; j1 <= 16'(((h_n + 21'd1) >> 1) - 21'd1); nw <= 16'((h_n + 21'd1) >> 1);
                                         nlw <= 16'((h_n + 21'd15) >> 4); end
@@ -268,7 +286,6 @@ module dsdv_idx_rg #(
 
     // ------------------------------------------------------------------ landing (per PC: LG slots x 16 cells)
     // code SRAM: entry {slot, cell, sector}; scale registers; arrival bits; slot state
-    reg [31:0]  scl [0:1][0:LG*16-1];
     reg [1:0]   cdv [0:1][0:LG*16-1];        // code sectors landed
     reg         scv [0:1][0:LG*16-1];        // scale landed
     reg         sb  [0:1][0:LG-1];           // slot busy
@@ -290,49 +307,44 @@ module dsdv_idx_rg #(
     wire [255:0] lr_d [0:3];
     reg  [3:0]  lr_e;
     reg  [SLW+3:0] lr_a [0:3];
+    // scale writes (registered one edge after the response, like the code writes): PC q -> its half-0 macro, row 128 + r
+    reg  [1:0]   sw_v;
+    reg  [3:0]   sw_r [0:1];                 // {slot, cell[3]}
+    reg  [255:0] sw_d [0:1];
+    reg  [255:0] sw_m [0:1];
+    // scale row reads (consumer): one PC's half-0 macro, never in the same edge as that macro's code read
+    reg          sr_e; reg sr_pc; reg [3:0] sr_r;
     genvar gp;
     generate for (gp = 0; gp < 4; gp = gp + 1) begin : g_land
-        if (SRAM_MACRO) begin : g_m
-            ot_sram_1r1w_256x256_m2_r2c2 u_mem (
-                .clk(ck), .r_ce_in(lr_e[gp]), .r_addr_in(8'(lr_a[gp])), .rd_out(lr_d[gp]),
-                .w_ce_in(lw_v[gp]), .w_addr_in(8'(lw_a[gp])), .wd_in(lw_d[gp]), .w_mask_in({256{1'b1}}),
-                .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
-        end else begin : g_b
-            reg [255:0] mem [0:LG*16-1];
-            reg [255:0] q;
-            always @(posedge ck) begin
-                if (lw_v[gp]) mem[lw_a[gp]] <= lw_d[gp];
-                if (lr_e[gp]) q <= mem[lr_a[gp]];
-            end
-            assign lr_d[gp] = q;
-        end
+        localparam bit H0 = (gp % 2) == 0;
+        localparam integer QP = gp / 2;
+        wire         s_rd = H0 && sr_e && sr_pc == QP[0];
+        wire         s_wr = H0 && sw_v[QP];
+        dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mem (
+            .ck(ck), .re(lr_e[gp] || s_rd), .ra(s_rd ? {6'b001000, sr_r} : 10'(lr_a[gp])), .rd(lr_d[gp]),
+            .we(lw_v[gp] || s_wr), .wa(s_wr ? {6'b001000, sw_r[QP]} : 10'(lw_a[gp])),
+            .wd(s_wr ? sw_d[QP] : lw_d[gp]), .wm(s_wr ? sw_m[QP] : {256{1'b1}}));
     end endgenerate
 
     // ------------------------------------------------------------------ list memory (gather): 1 write + 1 read a cycle
-    generate if (SRAM_MACRO) begin : g_lm
-        genvar hh;
-        for (hh = 0; hh < 2; hh = hh + 1) begin : g_h
-            ot_sram_1r1w_256x256_m2_r2c2 u_mem (
-                .clk(ck), .r_ce_in(lfr_e), .r_addr_in(8'(lfr_a)), .rd_out(lf_q[256 * hh +: 256]),
-                .w_ce_in(lf_push), .w_addr_in(8'(lf_wn)), .wd_in(q_d[256 * hh +: 256]), .w_mask_in({256{1'b1}}),
-                .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
-        end
-    end else begin : g_lb
-        reg [511:0] mem [0:LFD-1];
-        reg [511:0] q;
-        always @(posedge ck) begin
-            if (lf_push) mem[lf_wn[LFW-1:0]] <= q_d;
-            if (lfr_e) q <= mem[lfr_a];
-        end
-        assign lf_q = q;
+    genvar hh;
+    generate for (hh = 0; hh < 2; hh = hh + 1) begin : g_lm
+        dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mem (
+            .ck(ck), .re(lfr_e), .ra(10'(lfr_a)), .rd(lf_q[256 * hh +: 256]),
+            .we(lf_push), .wa(10'(lf_wn[LFW-1:0])), .wd(q_d[256 * hh +: 256]), .wm({256{1'b1}}));
     end endgenerate
 
     // ------------------------------------------------------------------ walker (items + requests)
     // item {pc, slot, cell, w (word - j0), lane, lw}
     localparam integer IW = 1 + SLW + 4 + 16 + 4 + 1;
-    reg [IW-1:0] iq [0:IQD-1];
-    reg [IQW:0]  iq_n;
-    reg [IQW-1:0] iq_w, iq_r;
+    reg [IQW:0]  iq_n;                       // items queued (memory + read in flight + head buffer)
+    reg [IQW-1:0] iq_w, iq_r;                // memory write / read pointers
+    reg [IQW:0]  im_n;                       // items in the memory not yet read
+    wire [255:0] iq_q;
+    reg          ir_f;                       // memory read issued last edge: iq_q holds it now
+    reg [IW-1:0] hq [0:2];                   // show-ahead head buffer (3 entries: 1 read a cycle sustained)
+    reg [1:0]    hq_n;
+    wire         ir_e = (im_n != 0) && ({1'b0, hq_n} + {2'b0, ir_f} <= 3'd2);   // arrival never overflows the 3 entries
     reg          ipush;
     reg [IW-1:0] ipd;
     wire         ipop;
@@ -421,7 +433,7 @@ module dsdv_idx_rg #(
                                                      sne[q][e] <= 0; snr[q][e] <= 0; end
                 for (e = 0; e < LG * 16; e = e + 1) begin cdv[q][e] <= 2'b00; scv[q][e] <= 1'b0; end
             end
-            lw_v <= 4'b0000; iq_n <= 0; iq_w <= 0; lf_wn <= 0;
+            lw_v <= 4'b0000; iq_n <= 0; iq_w <= 0; lf_wn <= 0; sw_v <= 2'b00;
         end else begin : g_walk
             reg [7:0] fw;
             reg [1:0] rjpu, rjpo;                // read job queued / retired this cycle, per PC
@@ -525,11 +537,14 @@ module dsdv_idx_rg #(
             if (lfd2) begin ln_v <= 1'b1; ln_d <= lf_q; end
             if (ws == 3'd3 && gw < nlw && ln_v && !lfd2) ln_v <= 1'b0;
             // ---------------- item queue
-            if (ipush) begin iq[iq_w] <= ipd; iq_w <= iq_w + 1'b1; end
-            if (ipop) iq_r <= iq_r + 1'b1;
+            if (ipush) iq_w <= iq_w + 1'b1;
             iq_n <= iq_n + (ipush ? 1'b1 : 1'b0) - (ipop ? 1'b1 : 1'b0);
             // ---------------- responses -> landing
-            lw_v <= 4'b0000;
+            lw_v <= 4'b0000; sw_v <= 2'b00;
+            // the registered scale write lands (macro edge); the cells' scale-valid bits follow it, so a consumer row
+            // read issued after scv is seen always returns the new scale
+            for (q = 0; q < 2; q = q + 1) if (sw_v[q])
+                for (e = 0; e < 8; e = e + 1) if (sw_m[q][32 * e]) scv[q][{sw_r[q], 3'(e)}] <= 1'b1;
             for (q = 0; q < 2; q = q + 1) if (mine_rv[q]) begin : g_rsp
                 reg g; reg [SLW-1:0] s_; reg [3:0] cl; reg sc; reg [2:0] by; reg [3:0] bt;
                 g = rt[q][14]; s_ = rt[q][11 +: SLW]; cl = rt[q][10:7]; sc = rt[q][6]; by = rt[q][5:3]; bt = rb[q];
@@ -541,13 +556,15 @@ module dsdv_idx_rg #(
                     lw_v[2 * q + bt[0]] <= 1'b1; lw_a[2 * q + bt[0]] <= {s_, cc}; lw_d[2 * q + bt[0]] <= rdd[q];
                     cdv[q][{s_, cc}] <= cdv[q][{s_, cc}] | (bt[0] ? 2'b10 : 2'b01);
                 end else if (!g) begin
-                    for (e = 0; e < 8; e = e + 1) begin
-                        scl[q][{s_, bt[0], 3'(e) ^ ((MUT == 3) ? 3'd1 : 3'd0)}] <= rdd[q][32 * e +: 32];
-                        scv[q][{s_, bt[0], 3'(e)}] <= 1'b1;
-                    end
+                    sw_v[q] <= 1'b1; sw_r[q] <= {s_, bt[0]}; sw_m[q] <= {256{1'b1}};
+                    for (e = 0; e < 8; e = e + 1)
+                        sw_d[q][32 * (3'(e) ^ ((MUT == 3) ? 3'd1 : 3'd0)) +: 32] <= rdd[q][32 * e +: 32];
                 end else begin
-                    scl[q][{s_, cl}] <= sel8x32(rdd[q], by ^ ((MUT == 3) ? 3'd1 : 3'd0));
-                    scv[q][{s_, cl}] <= 1'b1;
+                    sw_v[q] <= 1'b1; sw_r[q] <= {s_, cl[3]};
+                    for (e = 0; e < 8; e = e + 1) begin
+                        sw_m[q][32 * e +: 32] <= (3'(e) == cl[2:0]) ? 32'hffff_ffff : 32'd0;
+                        sw_d[q][32 * e +: 32] <= sel8x32(rdd[q], by ^ ((MUT == 3) ? 3'd1 : 3'd0));
+                    end
                 end
             end
             for (q = 0; q < 2; q = q + 1) if (rk_in[q] && own_n[q] == 0) fw[1] = 1'b1;  // rk with no request
@@ -562,12 +579,37 @@ module dsdv_idx_rg #(
         end
 
     // ------------------------------------------------------------------ consumer: landing -> engine (one key a cycle)
-    wire [IW-1:0] ih = iq[iq_r];
+    // item queue memory + show-ahead head buffer
+    dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_iq (
+        .ck(ck), .re(ir_e), .ra(10'(iq_r)), .rd(iq_q),
+        .we(ipush), .wa(10'(iq_w)), .wd({{(256-IW){1'b0}}, ipd}), .wm({256{1'b1}}));
+    always @(posedge ck or negedge rn)
+        if (!rn) begin iq_r <= 0; im_n <= 0; ir_f <= 1'b0; hq_n <= 2'd0; end
+        else begin : g_hq
+            reg [1:0] n1;
+            ir_f <= ir_e;
+            if (ir_e) iq_r <= iq_r + 1'b1;
+            im_n <= im_n + (ipush ? 1'b1 : 1'b0) - (ir_e ? 1'b1 : 1'b0);
+            n1 = hq_n - (ipop ? 2'd1 : 2'd0);
+            if (ipop) begin hq[0] <= hq[1]; hq[1] <= hq[2]; end
+            if (ir_f) hq[n1] <= iq_q[IW-1:0];
+            hq_n <= n1 + (ir_f ? 2'd1 : 2'd0);
+        end
+    wire [IW-1:0] ih = hq[0];
     wire          h_pc = ih[IW-1];
     wire [SLW-1:0] h_sl = ih[IW-2 -: SLW];
     wire [3:0]    h_cl = ih[IW-2-SLW -: 4];
     wire [SLW+3:0] h_ci = {h_sl, h_cl};
-    wire          h_ready = (iq_n != 0) && cdv[h_pc][h_ci] == 2'b11 && scv[h_pc][h_ci];
+    wire          h_land = (hq_n != 0) && cdv[h_pc][h_ci] == 2'b11 && scv[h_pc][h_ci];
+    // scale row cache: {pc, slot, cell[3]} -> 8 scales; write-through on scale writes, pending-read merge
+    reg           sc_v; reg sc_pc; reg [3:0] sc_r; reg [255:0] sc_d;
+    reg           sr_p, sr_d1; reg [255:0] pm_d, pm_m;
+    wire          sc_hit = sc_v && sc_pc == h_pc && sc_r == {h_sl, h_cl[3]};
+    wire          h_ready = h_land && sc_hit;
+    wire          sr_go = h_land && !sc_hit && !sr_p && act;
+    function automatic [255:0] mrg(input [255:0] o, input [255:0] d, input [255:0] m);
+        mrg = (o & ~m) | (d & m);
+    endfunction
     reg  [SQW:0]  infl;                      // keys in the engine + scores waiting for the assembler
     wire          room = infl < (SQW+1)'(SQD - 2);
     assign ipop = h_ready && q_done && room && act;
@@ -578,14 +620,35 @@ module dsdv_idx_rg #(
     reg           c_v; reg c_pc; reg [31:0] c_sc; reg [15:0] c_w; reg [3:0] c_ln; reg c_lw;
     reg           f1;  reg f_pc; reg [31:0] f_sc; reg [15:0] f_w; reg [3:0] f_ln; reg f_lw;
     always @(posedge ck or negedge rn)
-        if (!rn) begin lr_e <= 4'b0000; rel_v <= 2'b00; rel0 <= 2'b00; rel1 <= 2'b00; c_v <= 1'b0; f1 <= 1'b0; end
-        else begin
+        if (!rn) begin lr_e <= 4'b0000; rel_v <= 2'b00; rel0 <= 2'b00; rel1 <= 2'b00; c_v <= 1'b0; f1 <= 1'b0;
+                       sr_e <= 1'b0; sr_p <= 1'b0; sr_d1 <= 1'b0; sc_v <= 1'b0; end
+        else begin : g_cons
+            reg [255:0] nd;
+            integer qq;
+            // scale row read: issue (sr_go) -> macro read edge (sr_e) -> load (sr_d1); scale writes landing at the read
+            // edge or later are merged (the macro returns OLD on a same-edge write)
+            sr_e <= sr_go; sr_d1 <= sr_e;
+            if (sr_go) begin sr_p <= 1'b1; sr_pc <= h_pc; sr_r <= {h_sl, h_cl[3]}; sc_v <= 1'b0; pm_m <= '0; end
+            for (qq = 0; qq < 2; qq = qq + 1)
+                if (sw_v[qq] && sr_p && sr_pc == qq[0] && sr_r == sw_r[qq] && sr_e) begin
+                    pm_d <= mrg(pm_d, sw_d[qq], sw_m[qq]); pm_m <= pm_m | sw_m[qq];
+                end
+            nd = sc_d;
+            for (qq = 0; qq < 2; qq = qq + 1)
+                if (sw_v[qq] && sc_v && sc_pc == qq[0] && sc_r == sw_r[qq]) nd = mrg(nd, sw_d[qq], sw_m[qq]);
+            if (sr_d1) begin
+                nd = mrg(lr_d[2 * sr_pc], pm_d, pm_m);
+                for (qq = 0; qq < 2; qq = qq + 1)
+                    if (sw_v[qq] && sr_pc == qq[0] && sr_r == sw_r[qq]) nd = mrg(nd, sw_d[qq], sw_m[qq]);
+                sc_v <= 1'b1; sc_pc <= sr_pc; sc_r <= sr_r; sr_p <= 1'b0;
+            end
+            sc_d <= nd;
             lr_e <= 4'b0000; rel0 <= 2'b00; rel1 <= rel0; rel_v <= rel1;
             rs1[0] <= rs0[0]; rs1[1] <= rs0[1]; rel_s[0] <= rs1[0]; rel_s[1] <= rs1[1];
             c_v <= ipop;
             if (ipop) begin
                 c_pc <= h_pc; c_w <= ih[20:5]; c_ln <= ih[4:1]; c_lw <= ih[0];
-                c_sc <= scl[h_pc][h_ci];
+                c_sc <= sc_d[32 * h_cl[2:0] +: 32];
                 lr_e[2 * h_pc] <= 1'b1; lr_e[2 * h_pc + 1] <= 1'b1;
                 lr_a[2 * h_pc] <= h_ci; lr_a[2 * h_pc + 1] <= h_ci;
                 rel0[h_pc] <= 1'b1; rs0[h_pc] <= h_sl;
@@ -604,6 +667,11 @@ module dsdv_idx_rg #(
     wire        o_v;
     wire [0:0]  o_kv, o_f;
     wire [15:0] o_s;
+    // score queue head (both engines): t_q = the oldest waiting {w 16, lane 4, lw, fault, score 16}, t_v = one waits
+    wire [37:0]   t_q;
+    wire          t_v;
+    wire          sq_pop;
+    generate if (ENG == 0) begin : g_e0
     ot_hdc_v41x_idx_engine #(.NK(1), .IH(32), .NB(4), .FD(56)) u_eng (
         .clk(ck), .rst_n(rn), .ql_v(ql_v), .ql_head(ql_h), .ql_codes(ql_c), .ql_sc(ql_s), .ql_w(ql_w),
         .k_valid(k_v), .k_ready(k_ready), .k_kv(1'b1), .k_keep(1'b1), .k_key(k_key),
@@ -616,6 +684,81 @@ module dsdv_idx_rg #(
     reg [37:0] sq [0:SQD-1];                  // {w 16, lane 4, lw, fault, score 16}
     reg [SQW-1:0] sq_w, sq_r;
     reg [SQW:0]   sq_n;
+    assign t_q = sq[sq_r];
+    assign t_v = sq_n != 0;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin mq_w <= 0; mq_r <= 0; sq_w <= 0; sq_r <= 0; sq_n <= 0; end
+        else begin
+            if (k_v) begin mq[mq_w] <= k_m; mq_w <= mq_w + 1'b1; end
+            if (o_v) begin
+                sq[sq_w] <= {mq[mq_r], o_f[0], o_s}; sq_w <= sq_w + 1'b1; mq_r <= mq_r + 1'b1;
+            end
+            sq_n <= sq_n + (o_v ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
+            if (sq_pop) sq_r <= sq_r + 1'b1;
+        end
+    end else begin : g_e1
+    // ---- hardened-slice engine: chunks (8 heads a column) + the chunk-sum tail; fixed latency, no stall
+    wire [3:0]  cv;
+    wire [3:0]  ckv;
+    wire [31:0] csum [0:3];
+    wire [3:0]  cfl;
+    genvar ce;
+    for (ce = 0; ce < 4; ce = ce + 1) begin : g_ch
+        ot_hdc_v41x_idx_chunk_el #(.NB(4), .NKT(1), .FPL(7), .FML(5), .QL(5)) u_c (
+            .clk(ck), .rst_n(rn), .hb(8'(8 * ce)), .ql_v(ql_v), .ql_head(ql_h), .ql_codes(ql_c), .ql_sc(ql_s),
+            .ql_w(ql_w), .k_v(k_v), .k_kv(1'b1), .k_key(k_key),
+            .c_v(cv[ce]), .c_kv(ckv[ce +: 1]), .c_sum(csum[ce]), .c_fault(cfl[ce +: 1]));
+    end
+    ot_hdc_v41x_idx_tail_l #(.NCH(4), .NKT(1), .FPL(7)) u_t (.clk(ck), .rst_n(rn), .i_v(cv[0]), .i_kv(ckv[0 +: 1]),
+        .i_keep(1'b1), .i_sum({csum[3], csum[2], csum[1], csum[0]}), .i_fault(cfl),
+        .o_v(o_v), .o_kv(o_kv), .o_score(o_s), .o_fault(o_f));
+    // a q-load beat reaches the slices' query registers 3 edges after it is presented; keys wait for it (as the engine
+    // candidate ot_hdc_v41x_idx_engine_hslice); the reader's q_done (5 edges after head 31) already orders this
+    reg [1:0] qst;
+    always @(posedge ck or negedge rn)
+        if (!rn) qst <= 2'd0;
+        else if (ql_v) qst <= 2'd3;
+        else if (qst != 0) qst <= qst - 2'd1;
+    assign k_ready = !ql_v && qst == 0;
+    // metadata ring (macro): written with the key, read with its score (fixed order), data one edge later
+    wire [255:0] mq_q;
+    reg  [9:0]   mq_w, mq_r;
+    reg          o_v1; reg o_f1; reg [15:0] o_s1;
+    dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mq (
+        .ck(ck), .re(o_v), .ra(mq_r), .rd(mq_q),
+        .we(k_v), .wa(mq_w), .wd({235'd0, k_m}), .wm({256{1'b1}}));
+    // score queue (macro) + 3-entry show-ahead head
+    wire [255:0] sq_q;
+    reg  [9:0]   sq_w, sq_r;
+    reg  [10:0]  sm_n;                       // entries in the macro not yet read
+    reg          sr_f;                       // macro read issued last edge
+    reg  [37:0]  sh [0:2];
+    reg  [1:0]   sh_n;
+    wire         s_re = (sm_n != 0) && ({1'b0, sh_n} + {2'b0, sr_f} <= 3'd2);
+    dsdv_idx_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_sq (
+        .ck(ck), .re(s_re), .ra(sq_r), .rd(sq_q),
+        .we(o_v1), .wa(sq_w), .wd({218'd0, mq_q[20:0], o_f1, o_s1}), .wm({256{1'b1}}));
+    assign t_q = sh[0];
+    assign t_v = sh_n != 0;
+    always @(posedge ck) begin o_f1 <= o_f[0]; o_s1 <= o_s; end
+    always @(posedge ck or negedge rn)
+        if (!rn) begin mq_w <= 0; mq_r <= 0; o_v1 <= 1'b0; sq_w <= 0; sq_r <= 0; sm_n <= 0; sr_f <= 1'b0; sh_n <= 2'd0; end
+        else begin : g_sq
+            reg [1:0] n1;
+            if (k_v) mq_w <= mq_w + 1'b1;
+            if (o_v) mq_r <= mq_r + 1'b1;
+            o_v1 <= o_v;
+            if (o_v1) sq_w <= sq_w + 1'b1;
+            sr_f <= s_re;
+            if (s_re) sq_r <= sq_r + 1'b1;
+            sm_n <= sm_n + (o_v1 ? 1'b1 : 1'b0) - (s_re ? 1'b1 : 1'b0);
+            n1 = sh_n - (sq_pop ? 2'd1 : 2'd0);
+            if (sq_pop) begin sh[0] <= sh[1]; sh[1] <= sh[2]; end
+            if (sr_f) sh[n1] <= sq_q[37:0];
+            sh_n <= n1 + (sr_f ? 2'd1 : 2'd0);
+        end
+    initial if (SQD > 1024) $fatal(1, "dsdv_idx_rg: ENG 1 queues are 1024 entries");
+    end endgenerate
     reg           a_v;                       // assembling word
     reg [15:0]    a_w; reg [15:0] a_lv; reg [255:0] a_s; reg a_f;
     reg           r_v;                       // ready word
@@ -625,19 +768,13 @@ module dsdv_idx_rg #(
     // a finished word moves to r when r is free or taken this cycle; the NEXT word starts assembling in the same cycle,
     // so a word of 2 scores (gather: up to 2 keys a region a word) still meets the next slot 2 cycles later
     wire          a_mv = a_v && a_done && (!r_v || r_take);
-    wire          sq_pop = (sq_n != 0) && !(a_v && a_done && !a_mv);
+    assign        sq_pop = t_v && !(a_v && a_done && !a_mv);
     always @(posedge ck or negedge rn)
-        if (!rn) begin mq_w <= 0; mq_r <= 0; sq_w <= 0; sq_r <= 0; sq_n <= 0; infl <= 0; a_v <= 1'b0; a_done <= 1'b0;
-                       r_v <= 1'b0; end
+        if (!rn) begin infl <= 0; a_v <= 1'b0; a_done <= 1'b0; r_v <= 1'b0; end
         else begin
-            if (k_v) begin mq[mq_w] <= k_m; mq_w <= mq_w + 1'b1; end
-            if (o_v) begin
-                sq[sq_w] <= {mq[mq_r], o_f[0], o_s}; sq_w <= sq_w + 1'b1; mq_r <= mq_r + 1'b1;
-            end
-            sq_n <= sq_n + (o_v ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
             infl <= infl + (ipop ? 1'b1 : 1'b0) - (sq_pop ? 1'b1 : 1'b0);
             if (sq_pop) begin : g_as
-                reg [37:0] t; t = sq[sq_r]; sq_r <= sq_r + 1'b1;
+                reg [37:0] t; t = t_q;
                 if (!a_v || a_done) begin
                     a_v <= 1'b1; a_w <= t[37:22]; a_lv <= 16'd1 << t[21:18]; a_s <= 256'(t[15:0]) << (16 * t[21:18]);
                     a_f <= t[16]; a_done <= t[17];
@@ -681,6 +818,9 @@ module dsdv_idx_rg #(
             4'd9: hb = bk(ik, 2'd3, 1'b1, 1'b0, 12'd0, {4'd2, tg, 227'd0, 1'b1, 16'd0});
             default: hb = '0;
         endcase
+        // open lanes (spec om): no HDR / empty BEAT of that lane (e_ix 1-3 lane 1, 4-6 lane 2, 7-9 lane 3)
+        if (MUT != 6 && ((e_ix[3:0] >= 4'd1 && e_ix[3:0] <= 4'd3 && om[0]) || (e_ix[3:0] >= 4'd4 && e_ix[3:0] <= 4'd6 && om[1]) ||
+            (e_ix[3:0] >= 4'd7 && e_ix[3:0] <= 4'd9 && om[2]))) hb = '0;
     end
     wire        slot = ended && !wdone && ew < nw && tc == et;
     wire [15:0] ej = ew + j0;                // absolute word
@@ -721,4 +861,36 @@ module dsdv_idx_rg #(
         so[275:1] <= sr[275:1] | (in_h ? hb[275:1] : 275'd0) | (slot ? ins0[275:1] : 275'd0) | (p1_due ? ins1[275:1] : 275'd0);
     always @(posedge ck or negedge rn)
         if (!rn) st <= 10'd0; else st <= {fc, act, fault};
+endmodule
+
+// ===================================================================================================================
+// dsdv_idx_m1k: 1024 x 256-b 1R1W memory, bit write mask, read latency 1 (address edge -> rd valid after it, held until
+// the next read).  SRAM_MACRO 1: ot_sram_1r1w_1024x256_m2_r2c2 (faces 5.89 contacts / um); 0: behavioural, same timing.
+// ===================================================================================================================
+module dsdv_idx_m1k #(
+    parameter bit SRAM_MACRO = 0
+) (
+    input  wire         ck,
+    input  wire         re,
+    input  wire [9:0]   ra,
+    output wire [255:0] rd,
+    input  wire         we,
+    input  wire [9:0]   wa,
+    input  wire [255:0] wd,
+    input  wire [255:0] wm
+);
+    generate if (SRAM_MACRO) begin : g_m
+        ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
+            .clk(ck), .r_ce_in(re), .r_addr_in(ra), .rd_out(rd),
+            .w_ce_in(we), .w_addr_in(wa), .wd_in(wd), .w_mask_in(wm),
+            .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
+    end else begin : g_b
+        reg [255:0] mem [0:1023];
+        reg [255:0] q;
+        always @(posedge ck) begin
+            if (we) mem[wa] <= (mem[wa] & ~wm) | (wd & wm);
+            if (re) q <= mem[ra];
+        end
+        assign rd = q;
+    end endgenerate
 endmodule

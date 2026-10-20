@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-epyc5       admits   625 GB (avail 551, growth 113, headroom 0, waiters 0/0 GB) load 77/128 running 16 disk 923 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_tree
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2090715-1792436857 after 0 s
+TREE_RD PASS {"pass_": true, "mismatches": 0, "first": [], "faults": [], "tx_span": {"1": [17963, 19406, 1431], "2": [19564, 20987, 1424]}}
+TREE_RD PASS {"pass_": true, "mismatches": 0, "first": [], "faults": [], "tx_span": {"2": [10502, 11836, 1320], "4": [10502, 11840, 1326], "5": [12103, 13410, 1307], "1": [13474, 14917, 1431], "3": [15075, 16550, 1463]}}
+TREE_RD FAIL {"pass_": false, "mismatches": 16, "first": [{"die": 0, "kind": "vo", "edge": 18049, "exp": "1343012ee0124c011180", "got": "16dd01343012ee0124c0"}, {"die": 0, "kind": "vo", "edge": 18050, "exp": "33000000000000000000", "got": "33000000000000000000"}, {"die": 0, "kind": "vo", "edge": 18051, "exp": "34d50332702f0c02e230", "got": "3864034d50332702f0c0"}, {"die": 0, "kind": "vo", "edge": 18052, "exp": "33000000000000000000", "got": "33000000000000000000"}, {"die": 0, "kind": "vo", "edge": 18053, "exp": "58af057a805796053340", "got": "5a96058af057a8057960"}, {"die": 0, "kind": "vo", "edge": 18054, "exp": "33000000000000000000", "got": "33000000000000000000"}, {"die": 0, "kind": "vo", "edge": 18055, "exp": "83f3082c707c06076a90", "got": "841a083f3082c707c060"}, {"die": 0, "kind": "vo", "edge": 18056, "exp": "33000000000000000000", "got": "33000000000000000000"}], "faults": [], "tx_span": {"2":
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2090715-1792436857): exit 1
