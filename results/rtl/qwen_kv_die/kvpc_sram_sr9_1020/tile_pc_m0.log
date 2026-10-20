@@ -1,8 +1,8 @@
 SIM Verilator 5.050 2026-07-01 rev v5.050
 KVPC_TILE PASS edges=20000 checks=528046 active_out=193218 outs=14 errors=0 mut=0
-- /srv/opentallas-scratch/claude/kv-pc7/src-s9f/out/tile_pc_m0/tb.sv:136: Verilog $finish
+- /srv/opentallas-scratch/claude/kv-pc7/src-s9g/out/tile_pc_m0/tb.sv:136: Verilog $finish
 HFX active_edges=19987 final=011
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 17us; walltime 0.405 s; speed 41.228 us/s
-- Verilator: cpu 0.405 s on 1 threads; allocated 8 MB
+- Verilator: $finish at 17us; walltime 0.664 s; speed 25.124 us/s
+- Verilator: cpu 0.644 s on 1 threads; allocated 8 MB
 

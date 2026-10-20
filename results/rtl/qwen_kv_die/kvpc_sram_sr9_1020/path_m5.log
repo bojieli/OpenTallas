@@ -10,8 +10,8 @@ OUT po mismatches=73
 OUT ko mismatches=36281
 OUT fo mismatches=5
 KVPC_PATH FAIL edges=20000 checks=1181248 errors=36359 active_out=233268 mut=5
-- /srv/opentallas-scratch/claude/kv-pc7/src-s9f/out/path_x_m5/tb.sv:238: Verilog $finish
+- /srv/opentallas-scratch/claude/kv-pc7/src-s9g/out/path_x_m5/tb.sv:238: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 17us; walltime 0.408 s; speed 40.901 us/s
-- Verilator: cpu 0.408 s on 1 threads; allocated 8 MB
+- Verilator: $finish at 17us; walltime 0.677 s; speed 24.645 us/s
+- Verilator: cpu 0.645 s on 1 threads; allocated 8 MB
 
