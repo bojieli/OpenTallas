@@ -18,16 +18,16 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_io_host can not be propagated.
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_host can not be propagated.
-OT_HYBRID CLOCK_RULE ss ck_core PASS pin_spread=13.8 scope=boundary sinks=8696
-OT_HYBRID CTS_MEASURE ss ck_core sinks=8696 reference_scope=boundary boundary_sinks=586 min=276.06270158028974 mean=281.85725107584983 max=289.8589158064968 all_mean=279.61939935063003
-OT_HYBRID CLOCK_RULE ss ck_host PASS pin_spread=29.3 scope=boundary sinks=3819
-OT_HYBRID CTS_MEASURE ss ck_host sinks=3819 reference_scope=boundary boundary_sinks=590 min=247.2496106629983 mean=262.9973656151065 max=276.5649664786371 all_mean=257.7330636355233
+OT_HYBRID CLOCK_RULE ss ck_core PASS pin_spread=16.3 scope=boundary sinks=8696
+OT_HYBRID CTS_MEASURE ss ck_core sinks=8696 reference_scope=boundary boundary_sinks=586 min=277.83153666576607 mean=283.96533048549367 max=294.1128186090727 all_mean=281.2916213975682
+OT_HYBRID CLOCK_RULE ss ck_host PASS pin_spread=51.1 scope=boundary sinks=3819
+OT_HYBRID CTS_MEASURE ss ck_host sinks=3819 reference_scope=boundary boundary_sinks=590 min=246.9724157282174 mean=263.45172754165407 max=298.0797010030605 all_mean=256.9500170973886
 OT_ENTRIES LEVEL ck_core deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_core -> host_rst_n__ot_rl0$_DFF_P_/CLK wire=0 R=281.85725107584983 latency=0.0 phi=281.85725107584983
+OT_ENTRIES COMP ss ck_core -> host_rst_n__ot_rl0$_DFF_P_/CLK wire=0 R=283.96533048549367 latency=0.0 phi=283.96533048549367
 OT_ENTRIES LEVEL ck_host deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_host -> ot_prs_00004_ff/CLK wire=0 R=262.9973656151065 latency=18.859885460743328 phi=281.85725107584983
-OT_ENTRIES DOMAIN core 833.333008ps IO550/68 boundary=276.06270158028974..289.85891580649684
-OT_ENTRIES DOMAIN host 1000.000000ps IO70/520 boundary=266.1094961237416..295.4248519393804
+OT_ENTRIES COMP ss ck_host -> ot_prs_00004_ff/CLK wire=0 R=263.45172754165407 latency=20.5136029438396 phi=283.96533048549367
+OT_ENTRIES DOMAIN core 833.333008ps IO550/68 boundary=277.831536665766..294.1128186090727
+OT_ENTRIES DOMAIN host 1000.000000ps IO70/520 boundary=267.486018672057..318.5933039469001
 OT_GF BOUNDED f0 mem mem -> rstage u_ot_pr_core.u_rank__u_bridge__u_done.g_afw.u_af.mem[0][0]$_DFFE_PP_ -> u_ot_pr_core.u_rank__u_bridge__u_done.g_afw.u_af.g_rs[0].genblk1.g_s2.rs_q[0][0]$_DFF_P_
 OT_GF BOUNDED f0 mem mem -> rstage u_ot_pr_core.u_rank__u_bridge__u_done.g_afw.u_af.mem[1][0]$_DFFE_PP_ -> u_ot_pr_core.u_rank__u_bridge__u_done.g_afw.u_af.g_rs[0].genblk1.g_s2.rs_q[0][0]$_DFF_P_
 OT_GF BOUNDED f0 mem mem -> rstage u_ot_pr_core.u_rank__u_bridge__u_done.g_afw.u_af.mem[2][0]$_DFFE_PP_ -> u_ot_pr_core.u_rank__u_bridge__u_done.g_afw.u_af.g_rs[0].genblk1.g_s2.rs_q[0][0]$_DFF_P_
@@ -5739,7 +5739,7 @@ OT_GF MERGED_ONLINE f1 ronl -> f0 wonl (host -> core)
 OT_GF MERGED_ONLINE f1 wonl -> f0 ronl (core -> host)
 OT_GF STRUCTURAL_PASS 30 crossing classes (bounded reviewed FIFO crossings only; no physical closure claim)
 OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=12515 inputs=620 outputs=588 async_control_pins=728
-OT_ENTRIES COMP DONE ss 2 entries phi=281.85725107584983 boundary=266.1094961237416..295.4248519393804
+OT_ENTRIES COMP DONE ss 2 entries phi=283.96533048549367 boundary=267.486018672057..318.5933039469001
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_host can not be propagated.
 OT_IOREF clock-port ck_core (ot_entry_0): data input delays dropped
@@ -5754,5 +5754,5 @@ OT_IOREF_EDGE ot_entry_0 boundary 586 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_1 boundary 590 negedge 0 noarc 0 inverted 0
 OT_IOREF keep core_clk (not an insertion-reference clock)
 OT_IOREF keep ot_io_host (not an insertion-reference clock)
-OT_WS max -2.0182489013365057e-10 min 6.736369795312669e-11
+OT_WS max -2.2523460874168677e-10 min 6.685124676053533e-11
 OT_EXPORT_DONE
