@@ -1,0 +1,7 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+NATIVE_ODB_COUPONS PASS [{"id": "NATIVE_nominal", "verdict": "PASS", "source_xy": [100.0005, 200.0005], "late_boundary_refused": true, "raw_sink_reach_um": 405.0005, "marginal_reach_refused": true, "duplicate_coordinate_refused": true, "physical_qualification_eligible": false}, {"id": "NATIVE_bterm", "verdict": "EXPECTED_REFUSAL", "message": "receiver removal: output still drives BTerm rx/pll_r0[0]"}, {"id": "NATIVE_data", "verdict": "EXPECTED_REFUSAL", "message": "receiver removal: non-clock/reset/data output rx/payload"}, {"id": "NATIVE_reset", "verdict": "EXPECTED_REFUSAL", "message": "receiver removal: non-clock/reset/data output rx/rst_n"}, {"id": "NATIVE_multisource", "verdict": "EXPECTED_REFUSAL", "message": "receiver removal: unknown or multiple source clock root/BTerm"}, {"id": "NATIVE_foreign", "verdict": "EXPECTED_REFUSAL", "message": "receiver removal: output still drives non-member loads rx/pll_r0[0]"}, {"id": "NATIVE_source_bterm", "verdict": "EXPECTED_REFUSAL", "message": "receiver removal: unknown or multiple source clock root/BTerm"}]
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.
