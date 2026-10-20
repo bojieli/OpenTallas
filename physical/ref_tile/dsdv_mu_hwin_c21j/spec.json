@@ -76,10 +76,10 @@
   "reason": "Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf)."
  },
  "job": {
-  "owner": "Claude:S81-HWIN21",
-  "branch": "claude/s81-hwin21g-1019",
+  "owner": "Codex:S81-HWIN21J",
+  "branch": "codex/s81-hwin21j-1020",
   "tag": "dsdv_mu_hwin_c21j",
-  "purpose": "HWIN21h: c21g (c21d re-pack + RTL config relay, +1 edge on f_mw/f_mc) + DUE_COPIES=2: retire-due compare in 2 central kept copies, 1-bit due to the 16 event count_r (c21d gate post-GRT worst cone); same function",
+  "purpose": "HWIN21j native-safe domains: kept local write data/current-hit hierarchy, 12-pointer and 4-event gn/lw state copies, four due copies; +0 edges",
   "extra_paths": [
    "rtl/lib",
    "rtl/dsrom_sys/s81_dv/unit",
@@ -88,11 +88,12 @@
    "rtl/dsrom_sys/s81_ph",
    "tools/hwin_private_package_1019",
    "results/rtl/s81_mu_hwin21cb_1019",
-   "results/rtl/s81_mu_hwin21g_1019"
+   "results/rtl/s81_mu_hwin21g_1019",
+   "results/rtl/s81_mu_hwin21j_1020"
   ],
   "benches": [
    {
-    "name": "c21h_ns47",
+    "name": "c21j_ns47",
     "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21j/run_c21j_bench.sh {RUN}/ns47 ns47",
     "expect": "pass",
     "threads": 4,
@@ -101,7 +102,7 @@
     "min_count_regex": "^MUWIN starts (\\d+) fires \\d+ expected \\d+ K \\d+ t_mf 0000 hslot 0000 hwin 00$"
    },
    {
-    "name": "c21h_ns2",
+    "name": "c21j_ns2",
     "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21j/run_c21j_bench.sh {RUN}/ns2 ns2",
     "expect": "pass",
     "threads": 4,
@@ -109,7 +110,7 @@
     "pass_regex": "^MUWIN PASS$"
    },
    {
-    "name": "c21h_mut_norelay",
+    "name": "c21j_mut_norelay",
     "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21j/run_c21j_bench.sh {RUN}/norelay norelay",
     "expect": "fail",
     "threads": 4,
@@ -118,7 +119,7 @@
     "fail_witness": "results/rtl/s81_mu_hwin21g_1019/witness_norelay.log"
    },
    {
-    "name": "c21h_mut_east_copy",
+    "name": "c21j_mut_east_copy",
     "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21j/run_c21j_bench.sh {RUN}/eastcopy eastcopy",
     "expect": "fail",
     "threads": 4,
@@ -127,13 +128,22 @@
     "fail_witness": "results/rtl/s81_mu_hwin21g_1019/witness_east_copy.log"
    },
    {
-    "name": "c21h_mut_early_mech2",
+    "name": "c21j_mut_early_mech2",
     "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21j/run_c21j_bench.sh {RUN}/mut2 mut2",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
     "fail_regex": "EARLY_MITER|CBREF_MITER",
-    "fail_witness": "results/rtl/s81_mu_hwin21g_1019/witness_mut2.log"
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/mut2.log"
+   },
+   {
+    "name": "c21j_mut_due_domain",
+    "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21j/run_c21j_bench.sh {RUN}/eastdue eastdue",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "event boot count differs",
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/eastdue.log"
    }
   ],
   "views_to": "physical/ref_tile/dsdv_mu_hwin_c21j/views",
