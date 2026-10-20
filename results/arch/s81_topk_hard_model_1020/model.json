@@ -1,0 +1,407 @@
+{
+  "status": "MODELONLY_NOT_A_GATE_OR_CLOSURE",
+  "source": "a86fd4882",
+  "qualified_bank_gate": "s81dvbk_hist32_b0r3 PASS0fail0warn max25 reach87.76; route submitted exactbd6f52e8c, CLOSED view still required",
+  "shape_um": [
+    518.4,
+    648.0
+  ],
+  "aspect": 1.25,
+  "parent_outline_um2": 335923.2,
+  "raw_sram_area_um2": 66326.698368,
+  "bank_count_per_quarter": 16,
+  "bank_count_full_topk": 64,
+  "bank_outline_total_um2": 55987.2,
+  "estimated_parent_std_um2": 14942.123492000002,
+  "estimate_basis": "parent mapped area minus16 independently mapped bank std areas; estimate only, canonical hard-child parent synth required",
+  "estimated_effective_occupancy": 0.40859345784988943,
+  "estimated_std_only_fill": 0.06995071552521559,
+  "old_quarter_outline_um2": 174960,
+  "quarter_area_growth_um2": 160963.2,
+  "full_topk_outline_growth_mm2": 0.6438528,
+  "line_wdata_capture_anchors_um": [
+    [
+      367.2,
+      142.332
+    ],
+    [
+      367.2,
+      505.212
+    ]
+  ],
+  "max_line_macro_anchor_reach_um": 237.156,
+  "packer_anchor_um": [
+    270,
+    270
+  ],
+  "max_packer_to_line_anchor_um": 283.868,
+  "latency_added_cycles_target": 0,
+  "latency_qualification": "No new register stage proposed; retain existing input/command/bank-output/queue/wdata/oq0/oq1 stages. Must prove source equivalence and measure actual parent paths; target is not yet physical qualification.",
+  "throughput": {
+    "indexed13_reserved_cycles": 1037,
+    "production_fixture_cycles": 1334,
+    "production_fixture_output_beats": 73,
+    "quarter_count": 4,
+    "price": "unchanged cycle calendar target; no MTP rate gain claimed from MODELONLY hardening"
+  },
+  "dependencies": [
+    "actual CLOSED hist32 BANK0 routed view, SS/FF boundary clock refs",
+    "hard-child parent synthesis+native32 and actual sink/driver attribution",
+    "regional/child clock compensation with true leaf insertion; no false/multicycle data paths",
+    "actual mapped placed reach<=405 on every source-owned hop",
+    "source-equivalent production exactness and causal mutants",
+    "slot_change_request: quarter324x540->518.4x648 (+194.4W,+108H); die/compiler bind approval before adoption"
+  ],
+  "placements": [
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hc.g_bank?0?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 43.2,
+      "y": 43.2,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hc.g_bank?1?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 129.60000000000002,
+      "y": 43.2,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hc.g_bank?2?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 216.0,
+      "y": 43.2,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hc.g_bank?3?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 302.40000000000003,
+      "y": 43.2,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hc.g_bank?4?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 43.2,
+      "y": 129.60000000000002,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hc.g_bank?5?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 129.60000000000002,
+      "y": 129.60000000000002,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hc.g_bank?6?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 216.0,
+      "y": 129.60000000000002,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hc.g_bank?7?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 302.40000000000003,
+      "y": 129.60000000000002,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hf.g_bank?0?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 43.2,
+      "y": 475.2,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hf.g_bank?1?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 129.60000000000002,
+      "y": 475.2,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hf.g_bank?2?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 216.0,
+      "y": 475.2,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hf.g_bank?3?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 302.40000000000003,
+      "y": 475.2,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hf.g_bank?4?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 43.2,
+      "y": 561.6,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hf.g_bank?5?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 129.60000000000002,
+      "y": 561.6,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hf.g_bank?6?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 216.0,
+      "y": 561.6,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "hist32",
+      "inst": "*u_s.u_hf.g_bank?7?.u_bank",
+      "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+      "x": 302.40000000000003,
+      "y": 561.6,
+      "w": 64.8,
+      "h": 54.0,
+      "orient": "R0",
+      "closed_view_required": true
+    },
+    {
+      "kind": "line_sram",
+      "inst": "*u_q.u_mem.g_b?0?.g_w?0?.u_m",
+      "x": 388.8,
+      "y": 21.6,
+      "w": 94.824,
+      "h": 80.472,
+      "orient": "R0"
+    },
+    {
+      "kind": "line_sram",
+      "inst": "*u_q.u_mem.g_b?0?.g_w?1?.u_m",
+      "x": 388.8,
+      "y": 102.096,
+      "w": 94.824,
+      "h": 80.472,
+      "orient": "R0"
+    },
+    {
+      "kind": "line_sram",
+      "inst": "*u_q.u_mem.g_b?0?.g_w?2?.u_m",
+      "x": 388.8,
+      "y": 182.59199999999998,
+      "w": 94.824,
+      "h": 80.472,
+      "orient": "R0"
+    },
+    {
+      "kind": "line_sram",
+      "inst": "*u_q.u_mem.g_b?1?.g_w?0?.u_m",
+      "x": 388.8,
+      "y": 384.48,
+      "w": 94.824,
+      "h": 80.472,
+      "orient": "R0"
+    },
+    {
+      "kind": "line_sram",
+      "inst": "*u_q.u_mem.g_b?1?.g_w?1?.u_m",
+      "x": 388.8,
+      "y": 464.976,
+      "w": 94.824,
+      "h": 80.472,
+      "orient": "R0"
+    },
+    {
+      "kind": "line_sram",
+      "inst": "*u_q.u_mem.g_b?1?.g_w?2?.u_m",
+      "x": 388.8,
+      "y": 545.472,
+      "w": 94.824,
+      "h": 80.472,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_ofq.g_bank?0?.u_m",
+      "x": 43.2,
+      "y": 216.0,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_ofq.g_bank?1?.u_m",
+      "x": 129.60000000000002,
+      "y": 216.0,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_ofq.g_bank?2?.u_m",
+      "x": 216.0,
+      "y": 216.0,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_ofq.g_bank?3?.u_m",
+      "x": 43.2,
+      "y": 255.984,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_ofq.g_bank?4?.u_m",
+      "x": 129.60000000000002,
+      "y": 255.984,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_fq.g_bank?0?.u_m",
+      "x": 43.2,
+      "y": 367.2,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_fq.g_bank?1?.u_m",
+      "x": 129.60000000000002,
+      "y": 367.2,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_fq.g_bank?2?.u_m",
+      "x": 216.0,
+      "y": 367.2,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_fq.g_bank?3?.u_m",
+      "x": 43.2,
+      "y": 407.18399999999997,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    },
+    {
+      "kind": "fifo_sram",
+      "inst": "*u_s.u_fq.g_bank?4?.u_m",
+      "x": 129.60000000000002,
+      "y": 407.18399999999997,
+      "w": 51.408,
+      "h": 39.96,
+      "orient": "R0"
+    }
+  ],
+  "full_width_std_band_um": {
+    "x0": 0,
+    "x1": 518.4,
+    "y0": 302.4,
+    "y1": 356.4
+  },
+  "estimated_full_band_fill_if_all_residual_std_in_band": 0.5337692719764519,
+  "hist_input_W_face_anchors_um": [
+    [
+      183.6,
+      302.4
+    ],
+    [
+      183.6,
+      356.4
+    ]
+  ],
+  "hist_gbin_E_face_capture_anchors_um": [
+    [
+      226.8,
+      302.4
+    ],
+    [
+      226.8,
+      356.4
+    ]
+  ],
+  "max_hist_input_face_planning_reach_um": 399.6,
+  "max_hist_gbin_face_capture_planning_reach_um": 399.6000000000001,
+  "hist_gsum_capture": "gsum is per-bank30b, not OR-joined: place existing sq/sq1 per-bank status flops beside N pins, preserving their two source stages; do not funnel all gsum into one common capture point"
+}

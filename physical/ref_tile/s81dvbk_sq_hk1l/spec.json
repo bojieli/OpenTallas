@@ -1,0 +1,640 @@
+{
+ "name": "s81dvbk_sq_hk1l",
+ "top": "dsdv_bksel_q",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_parts.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_slice.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_hq_tile.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+  "rtl/lib/ot_sram_showahead_1r1w.sv",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 518.4,
+  "h": 648.0
+ },
+ "pins": {
+  "N": [
+   "t_s",
+   "ck",
+   "rst",
+   "f_c",
+   "f_cr",
+   "lane"
+  ],
+  "W": [
+   "t_o"
+  ]
+ },
+ "pin_ranges": {
+  "t_s": [
+   45.36,
+   199.8
+  ],
+  "ck": [
+   199.8,
+   204.12
+  ],
+  "rst": [
+   204.12,
+   206.28
+  ],
+  "f_c": [
+   206.28,
+   221.4
+  ],
+  "f_cr": [
+   221.4,
+   223.56
+  ],
+  "lane": [
+   223.56,
+   365.04
+  ],
+  "t_o": [
+   2.16,
+   645.84
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    388.8,
+    21.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_q.u_mem.g_b?0?.g_w?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    388.8,
+    102.096
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_q.u_mem.g_b?0?.g_w?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    388.8,
+    182.592
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_q.u_mem.g_b?0?.g_w?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    388.8,
+    382.32
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_q.u_mem.g_b?1?.g_w?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    388.8,
+    462.816
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_q.u_mem.g_b?1?.g_w?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    388.8,
+    543.312
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_q.u_mem.g_b?1?.g_w?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_ofq.g_bank?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    129.6,
+    216.0
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_ofq.g_bank?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216.0,
+    216.0
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_ofq.g_bank?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    255.984
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_ofq.g_bank?3?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    129.6,
+    255.984
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_ofq.g_bank?4?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    367.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_fq.g_bank?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    129.6,
+    367.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_fq.g_bank?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    216.0,
+    367.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_fq.g_bank?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    43.2,
+    407.184
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_fq.g_bank?3?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "at": [
+    129.6,
+    407.184
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_fq.g_bank?4?.u_m"
+  }
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "tile",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: dsfd_selt_q_hq QIO (cq0/cq command, sq/sq1 status, oq/oq1 beat pin flops) and the u_in lane pin register s0; every input lands in a flop, every output leaves from one."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_x_um": 10.8,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  }
+ },
+ "structural_change": "S81-TOPK8 HARD-CHILD QUARTER: successor of the flat HQ3 (a86fd4882) whose CTS gate stalled in FF hold repair (WNS -45.1 ps at packer s1_e, 22.8k endpoints in the 30 ps margin; ideal-clock FF hold all MET => propagated skew over a flat 52.5k-sink tree; 4th flat-family hold grind after succ3/succ4/succ4k8). The 16 hist32 banks are hard children (CLOSED view, own tree, spread 13.5/14.2 ps), 518.4x648 outline with a full-width std band (model 46e59d924). Same RTL edges. INPUT_RAW: raw type bits land at the first edge, decode after it (-21 FF, +0 edges).",
+ "job": {
+  "owner": "Claude:S81-TOPK8",
+  "branch": "claude/s81-topk8-1020",
+  "tag": "hk1l",
+  "purpose": "TOPK selector quarter, HARD-CHILD hierarchy: 16 hist32 banks bound to the CLOSED s81dvbk_hist32_b0r3 view (8cadc26d5) per MODELONLY 46e59d924 geometry, + INPUT_RAW input landing; 0 added edges.",
+  "benches": [
+   {
+    "name": "hq_indexed13_production",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_ILD -DOT_S81PH_SEL_FRPR -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW' bash results/arch/s81_topk7_1020/run_hq_layer.sh {RUN}/build results/arch/s81_topk_final_1019/bench/indexed13",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^BK_LAYER PASS"
+   },
+   {
+    "name": "hq_legacy_production",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_ILD -DOT_S81PH_SEL_FRPR -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW' bash results/arch/s81_topk7_1020/run_hq_layer.sh {RUN}/build_legacy results/arch/s81_topk_final_1019/bench/legacy",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^BK_LAYER PASS"
+   },
+   {
+    "name": "hq_indexed13_identity_mutant",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_ILD -DOT_S81PH_SEL_FRPR -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW' bash results/arch/s81_topk7_1020/run_hq_layer.sh {RUN}/build_id results/arch/s81_topk_final_1019/bench/indexed13_identity",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk7_1020/hk1l/bench/indexed13_identity/verdict.txt"
+   },
+   {
+    "name": "hq_mut1_r1d_memsel",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_ILD -DOT_S81PH_SEL_FRPR -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW -DOT_S81PH_SEL_HQ_MUT=1' bash results/arch/s81_topk7_1020/run_hq_layer.sh {RUN}/build_m1 results/arch/s81_topk_final_1019/bench/indexed13",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk7_1020/hk1l/bench/mut1_indexed13/verdict.txt"
+   },
+   {
+    "name": "hq_mut2_wdata_ingsel",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_ILD -DOT_S81PH_SEL_FRPR -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW -DOT_S81PH_SEL_HQ_MUT=2' bash results/arch/s81_topk7_1020/run_hq_layer.sh {RUN}/build_m2 results/arch/s81_topk_final_1019/bench/indexed13",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk7_1020/hk1l/bench/mut2_indexed13/verdict.txt"
+   },
+   {
+    "name": "hq_mut3_bank_group",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_ILD -DOT_S81PH_SEL_FRPR -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW -DOT_S81PH_SEL_HQ_MUT=3' bash results/arch/s81_topk7_1020/run_hq_layer.sh {RUN}/build_m3 results/arch/s81_topk_final_1019/bench/indexed13",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk7_1020/hk1l/bench/mut3_indexed13/verdict.txt"
+   },
+   {
+    "name": "hq_mut4_o0_sel",
+    "cmd": "VL_EXTRA='-DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_ILD -DOT_S81PH_SEL_FRPR -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW -DOT_S81PH_SEL_HQ_MUT=4' bash results/arch/s81_topk7_1020/run_hq_layer.sh {RUN}/build_m4 results/arch/s81_topk_final_1019/bench/indexed13",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "^BK_LAYER FAIL",
+    "fail_witness": "results/arch/s81_topk7_1020/hk1l/bench/mut4_indexed13/verdict.txt"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "results/rtl/s81_dv_1016/bk_units",
+   "results/rtl/s81_dv_1016/bk_units_bk2",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc",
+   "rtl/link",
+   "tools/s81_dv/layer_prog",
+   "results/arch/s81_topk_final_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "rtl/lib",
+   "results/arch/s81_topk_succ_1019",
+   "results/arch/s81_topk_fifo_safe_1019",
+   "results/arch/s81_topk_fan32_1019",
+   "results/arch/s81_topk3_1019",
+   "results/arch/s81_topk7_1020"
+  ],
+  "views_to": "physical/ref_tile/s81dvbk_sq_hq3/views",
+  "record_to": "results/rtl/ref_tile/s81dvbk_sq_hq3",
+  "bench_sources": [
+   "rtl/lib/ot_sram_showahead_1r1w.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/common/ot_fwd_link_stage.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_parts.sv",
+   "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_slice.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_hq_tile.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv",
+   "tools/s81_dv/layer_prog/bk/tb_bk_layer.sv",
+   "tools/s81_dv/layer_prog/bk/run_bk_layer.sh",
+   "tools/s81_dv/layer_prog/lower_bk.py",
+   "results/arch/s81_topk_final_1019/bench/indexed13/stim.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13/exp.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13/meta.json",
+   "results/arch/s81_topk_final_1019/bench/indexed13_identity/stim.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13_identity/exp.txt",
+   "results/arch/s81_topk_final_1019/bench/indexed13_identity/meta.json",
+   "results/arch/s81_topk7_1020/run_hq_layer.sh",
+   "results/arch/s81_topk_final_1019/bench/legacy/stim.txt",
+   "results/arch/s81_topk_final_1019/bench/legacy/exp.txt",
+   "results/arch/s81_topk_final_1019/bench/legacy/meta.json"
+  ]
+ },
+ "defines": [
+  "OT_S81PH_SEL_INDEXED13",
+  "OT_S81PH_FIFO_SRAM",
+  "OT_SRAM_P192",
+  "OT_S81PH_SEL_SUCC",
+  "OT_S81PH_SEL_FAN32",
+  "OT_S81PH_SEL_ACC32",
+  "OT_S81PH_SEL_HQ",
+  "OT_HARD_CHILDREN",
+  "OT_S81PH_HQ_INPUT_RAW"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "first_copies": {
+   "rst": 8
+  },
+  "copies": {
+   "rst": 160
+  }
+ },
+ "fill_reason": {
+  "pin_bound": "Parent with 16 hard hist32 children (64.8x54 each) + 16 SRAM macros; model 46e59d924 estimates 40.9% total occupancy; channels sized for bank W/E pin faces (<=3.3 pins/um) and >=20 um margins."
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "Hard-child hierarchical quarter (S81-TOPK8): flat HQ3 CTS hold grind stalled; histogram banks hardened as CLOSED children."
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hc.g_bank?0?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hc.g_bank?1?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hc.g_bank?2?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hc.g_bank?3?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hc.g_bank?4?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    129.6,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hc.g_bank?5?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    216.0,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hc.g_bank?6?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    302.4,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hc.g_bank?7?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    43.2,
+    475.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hf.g_bank?0?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    129.6,
+    475.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hf.g_bank?1?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    216.0,
+    475.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hf.g_bank?2?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    302.4,
+    475.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hf.g_bank?3?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    43.2,
+    561.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hf.g_bank?4?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    129.6,
+    561.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hf.g_bank?5?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    216.0,
+    561.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hf.g_bank?6?.u_bank"
+  },
+  {
+   "view": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank",
+   "at": [
+    302.4,
+    561.6
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "*u_s.u_hf.g_bank?7?.u_bank"
+  }
+ ],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "16",
+  "OT_CKKM_PORT": "ck"
+ },
+ "hold_budget_reason": "kind cluster (hard hist32 children): boundary hold padded in this parent; die budget needs a registered-cluster receipt not yet built"
+}
