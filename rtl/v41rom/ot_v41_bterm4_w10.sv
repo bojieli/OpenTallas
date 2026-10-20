@@ -384,7 +384,21 @@ module ot_v41_bterm4_w10 #(
     ot_v41_inc #(.W(25)) u_mr (.a({1'b0, m24}), .inc(inc), .y(mr), .co(cmr));
     reg               p6_v, p6_first, p6_last, p6_nan, p6_s, p6_z;
     reg signed [11:0] p6_b;
-`ifdef OT_BF_FOREP32
+`ifdef OT_BF_SUB5
+    // Register the actual clipped shift amount with P6, one set per five bits.
+    // Eliminates the post-register exponent subtraction/clip shared by ten bits.
+    wire signed [11:0] sub_b_d = p5_ebl + $signed({11'd0,mr[24]});
+    wire [11:0] sub_r_d = 12'd1 - sub_b_d;
+    wire [4:0] sub_sh_d = sub_b_d < -12'sd24 ? 5'd26 : sub_r_d[4:0];
+    (* keep *) reg [4:0] p6_rs5_k[0:9];
+    always @(posedge clk) for(integer j=0;j<10;j++) begin
+`ifdef OT_BF_FOREP32_MUT_SUB
+        p6_rs5_k[j] <= sub_sh_d + (j==7 ? 5'd1 : 5'd0);
+`else
+        p6_rs5_k[j] <= sub_sh_d;
+`endif
+    end
+`elsif OT_BF_FOREP32
     // One exponent/shift copy for each ten output bits of the subnormal shifter.
     (* keep *) reg signed [11:0] p6_shift_b [0:4];
     always @(posedge clk)
@@ -408,7 +422,14 @@ module ot_v41_bterm4_w10 #(
     end
 
     // -- P7: scale by 2^(xe+we): exponent add done; subnormal right shift -------------------------
-`ifdef OT_BF_FOREP32
+`ifdef OT_BF_SUB5
+    wire [49:0] sw_k [0:9];
+    for(genvar j=0;j<10;j++) begin : g_sub_shift
+        assign sw_k[j] = {1'b1,p6_f,26'd0} >> p6_rs5_k[j];
+    end
+    wire [49:0] sw;
+    for(genvar b=0;b<50;b++) assign sw[b] = sw_k[b/5][b];
+`elsif OT_BF_FOREP32
     wire [49:0] sw_k [0:4];
     for (genvar j = 0; j < 5; j++) begin : g_sub_shift
         wire [11:0] rsh = 12'd1 - p6_shift_b[j];
