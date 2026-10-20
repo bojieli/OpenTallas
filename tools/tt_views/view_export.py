@@ -71,6 +71,7 @@ def forwarded_clock_tcl(inp='clk_in', outp='clk_out', explicit=False):
   if {[$ot_fc_ib getIoType] ne "INPUT" || [$ot_fc_ob getIoType] ne "OUTPUT"} {error OT_FC_PORT_DIRECTION}
   set ot_fc_in [$ot_fc_ib getNet]
   set ot_fc_net [$ot_fc_ob getNet]
+  if {[$ot_fc_net getBTerms] ne [list $ot_fc_ob]} {error OT_FC_ALIASED_OUTPUT_ROOT}
   set ot_fc_chain {}
   set ot_fc_parity 0
   set ot_fc_it {}
@@ -121,15 +122,34 @@ def forwarded_clock_tcl(inp='clk_in', outp='clk_out', explicit=False):
   set ot_fc_wave [$ot_fc_root waveform]
   if {[llength $ot_fc_wave] != 2} {error OT_FC_TWO_ROOT_EDGES}
   puts "OT_FC_WAVE [sta::time_sta_ui [lindex $ot_fc_wave 0]] [sta::time_sta_ui [lindex $ot_fc_wave 1]]"
+  puts "OT_FC_CLOCK [get_full_name $ot_fc_root]"
+  sta::update_generated_clks
+  foreach c [lsort -unique $ot_fc_delete] {
+    if {![$c is_generated]} {error OT_FC_OUTPUT_NOT_GENERATED}
+    set ot_fc_period [$ot_fc_root period]
+    set ot_fc_output_wave [$c waveform]
+    if {abs([$c period] - $ot_fc_period) > 1e-6 * $ot_fc_period || [llength $ot_fc_output_wave] != 2} {error OT_FC_OUTPUT_PERIOD}
+    for {set edge 0} {$edge < 2} {incr edge} {
+      set delta [expr {[lindex $ot_fc_output_wave $edge] - [lindex $ot_fc_wave [expr {$edge ^ $ot_fc_parity}]]}]
+      if {abs($delta - round($delta / $ot_fc_period) * $ot_fc_period) > 1e-6 * $ot_fc_period} {error OT_FC_OUTPUT_PHASE}
+    }
+    puts "OT_FC_OUTPUT_CLOCK [get_full_name $c]"
+  }
+  write_sdc /out/forwarded_clock_signoff.sdc
   foreach c [lsort -unique $ot_fc_delete] {delete_clock $c}
   unset_input_delay [get_ports @IN@]
   set_propagated_clock [all_clocks]
   sta::find_timing_paths -path_delay max -group_path_count 1
   set ot_fc_driver_pin [get_pins "[$ot_fc_inst getName]/[[$ot_fc_it getMTerm] getName]"]
   set ot_fc_pin [sta::get_port_pin [lindex [get_ports @OUT@] 0]]
+  set ot_fc_input_pin [sta::get_port_pin [lindex [get_ports @IN@] 0]]
   foreach prop {arrival_max_rise arrival_min_rise arrival_max_fall arrival_min_fall slew_max_rise slew_max_fall} {
+    set input_value [get_property $ot_fc_input_pin $prop]
+    puts "OT_FC_INPUT_METRIC $prop $input_value"
     set value [get_property $ot_fc_pin $prop]
+    puts "OT_FC_ABSOLUTE_METRIC $prop $value"
     set driver_value [get_property $ot_fc_driver_pin $prop]
+    puts "OT_FC_DRIVER_ABSOLUTE_METRIC $prop $driver_value"
     if {[string match arrival_* $prop]} {
       set edge [expr {[string match *_fall $prop] ? 1 : 0}]
       set source_edge [expr {$edge ^ $ot_fc_parity}]
@@ -183,7 +203,7 @@ def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256, inp="clk_in", 
     """Parse native propagated STA; absence is ordinary for non-forwarded tiles."""
     driver = re.findall(r"^OT_FC_DRIVER (\S+) (.+)$", log, re.M)
     if not driver:
-        if re.search(r'^OT_FC_(?:METRIC|ROOT) ', log, re.M):
+        if re.search(r'^OT_FC_', log, re.M):
             raise VerdictError('forwarded-clock provenance has no physical driver')
         if required:
             raise VerdictError('declared forwarded-clock measurement missing')
@@ -233,8 +253,45 @@ def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256, inp="clk_in", 
         raise VerdictError('incomplete native phase provenance')
     for prop, edge, phase in phases:
         expected = int(prop.endswith('_fall')) ^ parity
-        if int(edge) != expected or abs(float(phase) - wave[expected]) > 1e-6:
+        if int(edge) != expected or not math.isfinite(float(phase)) or abs(float(phase) - wave[expected]) > 1e-6:
             raise VerdictError('native input/output phase mismatch')
+    absolute = {}
+    for label in ('INPUT', 'ABSOLUTE', 'DRIVER_ABSOLUTE'):
+        rows = re.findall(r'^OT_FC_' + label + r'_METRIC (\S+) (\S+)$', log, re.M)
+        if len(rows) != len(required) or {k for k, v in rows} != set(required):
+            raise VerdictError('missing absolute input/output/driver provenance')
+        absolute[label] = {k: float(v) for k, v in rows}
+        if not all(math.isfinite(v) and v >= 0 for v in absolute[label].values()):
+            raise VerdictError('nonphysical absolute input/output/driver measurement')
+        for edge in ('rise', 'fall'):
+            if absolute[label]['arrival_min_' + edge] > absolute[label]['arrival_max_' + edge]:
+                raise VerdictError('reversed absolute early/late bounds')
+    local, driver_local, input_relative = {}, {}, {}
+    for prop in required:
+        edge = int(prop.endswith('_fall'))
+        if prop.startswith('arrival_'):
+            source_edge = edge ^ parity
+            root_prop = prop.rsplit('_', 1)[0] + ('_fall' if source_edge else '_rise')
+            input_value = absolute['INPUT'][root_prop]
+            local[prop] = absolute['ABSOLUTE'][prop] - input_value
+            driver_local[prop] = absolute['DRIVER_ABSOLUTE'][prop] - input_value
+            input_relative[prop] = absolute['INPUT'][prop] - wave[edge]
+            if abs(values[prop] - (absolute['ABSOLUTE'][prop] - wave[source_edge])) > 1e-6:
+                raise VerdictError('absolute/output phase provenance mismatch')
+            if abs(driver_values[prop] - (absolute['DRIVER_ABSOLUTE'][prop] - wave[source_edge])) > 1e-6:
+                raise VerdictError('absolute/driver phase provenance mismatch')
+        else:
+            local[prop] = absolute['ABSOLUTE'][prop]
+            driver_local[prop] = absolute['DRIVER_ABSOLUTE'][prop]
+            input_relative[prop] = absolute['INPUT'][prop]
+    for measurement in (local, driver_local):
+        if not all(math.isfinite(v) and v >= 0 for v in measurement.values()):
+            raise VerdictError('nonphysical local forwarding delay or slew')
+        for edge in ('rise', 'fall'):
+            if measurement['arrival_min_' + edge] > measurement['arrival_max_' + edge]:
+                raise VerdictError('reversed local forwarding early/late bounds')
+    if any(values[k] < driver_values[k] for k in required[:4]):
+        raise VerdictError('negative routed output-net propagation')
     return dict(corner=corner, input_pin=inp, output_pin=outp,
                 driver_cell=driver[0][0], driver_instance=driver[0][1],
                 direct_root_buffer=len(chain) == 1 and parity == 0,
@@ -242,12 +299,35 @@ def forwarded_clock_receipt(log, corner, odb_sha256, spef_sha256, inp="clk_in", 
                 timing_sense=senses[0], root_waveform_ps=wave,
                 output_rise_input_edge='fall' if parity else 'rise',
                 output_fall_input_edge='rise' if parity else 'fall',
-                units='ps', clk_in_to_clk_out_ps=values,
-                driver_y_ps=driver_values,
+                units='ps', clk_in_to_clk_out_ps=local,
+                driver_y_ps=driver_local,
+                input_absolute_ps=absolute['INPUT'], output_absolute_ps=absolute['ABSOLUTE'],
+                driver_absolute_ps=absolute['DRIVER_ABSOLUTE'],
+                input_phase_normalized_ps=input_relative, output_phase_normalized_ps=values,
+                driver_phase_normalized_ps=driver_values,
                 output_net_delta_ps={k: values[k]-driver_values[k] for k in required},
                 measured_at='physical output STA terminal including routed SPEF; propagated original primary clock',
                 odb_sha256=odb_sha256, spef_sha256=spef_sha256)
 
+
+
+def validate_forwarded_clock_sdc(text, log, inp):
+    """Check OpenSTA's canonical sign-off SDC snapshot, never a user sense label."""
+    roots = re.findall(r'^OT_FC_CLOCK (\S+)$', log, re.M)
+    outputs = re.findall(r'^OT_FC_OUTPUT_CLOCK (\S+)$', log, re.M)
+    if len(roots) != 1 or len(outputs) != len(set(outputs)):
+        raise VerdictError('missing native source-clock identity')
+    for name in outputs:
+        lines = [line for line in text.splitlines()
+                 if line.startswith('create_generated_clock ') and
+                 re.search(r'-name\s+' + re.escape(name) + r'(?:\s|$)', line)]
+        if len(lines) != 1:
+            raise VerdictError('missing canonical generated-clock source')
+        line = lines[0]
+        source = re.search(r'-source\s+\[get_ports\s+\{([^}]+)\}\]', line)
+        master = re.search(r'-master_clock\s+\[get_clocks\s+\{([^}]+)\}\]', line)
+        if source is None or source[1] != inp or (master and master[1] != roots[0]):
+            raise VerdictError('generated forwarding clock has the wrong source/master')
 
 
 def liberty_pin_group(text, pin):
@@ -272,11 +352,10 @@ def liberty_pin_group(text, pin):
 
 
 def merge_forwarded_clock_model(main, combinational, inp="clk_in", outp="clk_out", sense="positive_unate"):
-    """Use the native clock-free characterization for the one combinational path.
+    """Replace only the output pin with its native clock-free BUF/INV ETM.
 
-    Main ETM registers/setup/hold remain byte-identical. OpenSTA's sequential
-    extraction invents cross-polarity clock arcs; a clock-free second extraction
-    naturally characterizes the actual buffer as clk_in -> clk_out instead.
+    Every other pin and FF group stays byte-identical to the original sign-off
+    extraction. The native arc sense must match physical Liberty chain parity.
     """
     a, b = liberty_pin_group(main, outp)
     x, y = liberty_pin_group(combinational, outp)
@@ -886,7 +965,7 @@ def main():
                          f"write_abstract_lef /out/{a.name}.lef" if c == "ss" else "",
                          f"file copy -force {PLAT}/lef/asap7_tech_1x_201209.lef /out/pin_only_tech.lef"
                          if c == "ss" and a.pin_only_tech else "",
-                         fc_tcl,
+                         fc_tcl.replace('/out/forwarded_clock_signoff.sdc', f'/out/forwarded_clock_signoff_{c}.sdc'),
                          'if {[info exists ot_fc_root]} {', 'delete_clock [all_clocks]',
                          f'write_timing_model -library_name {a.name}_{c}_forwarded /out/forwarded_{c}.lib.raw', '}',
                          "puts \"OT_EXPORT_DONE\"", "exit", ""])
@@ -917,10 +996,15 @@ def main():
                 sha(base / '6_final.spef') if 'OT_FC_DRIVER ' in log else '',
                 *pair, required=a.forwarded_clock is not None)
             if fc is not None:
+                native_sdc = out / f'forwarded_clock_signoff_{c}.sdc'
+                validate_forwarded_clock_sdc(native_sdc.read_text(), log, pair[0])
+                fc['native_signoff_sdc_sha256'] = sha(native_sdc)
                 main_lib = out / f'{a.name}_{c}.lib'
                 comb_lib = out / f'forwarded_{c}.lib.raw'
                 fc['native_combinational_lib_sha256'] = sha(comb_lib)
-                fc['sequential_etm_before_merge_sha256'] = sha(main_lib)
+                before = out / f'sequential_{c}.lib.raw'
+                before.write_bytes(main_lib.read_bytes())
+                fc['sequential_etm_before_merge_sha256'] = sha(before)
                 merged = merge_forwarded_clock_model(main_lib.read_text(), comb_lib.read_text(), *pair, sense=fc["timing_sense"])
                 # Docker writes the native ETM as root; replace through our output
                 # directory, rather than trying to truncate its root-owned file.
