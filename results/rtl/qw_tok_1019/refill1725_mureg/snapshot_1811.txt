@@ -1,0 +1,45 @@
+=== ctlm4 d60ab04618c2a8b42de64d483a415c4642c7d572
+ctlm_mu | # exit 0 | BAD=0 | MU_CTLM BENCHES: PASS;
+ctlm_nsl12 | RUNNING | BAD=0 | 
+ctlm_rest | # exit 1 | BAD=1 | BAD  prog_m0_landed (want LANDED_LOCKSTEP PASS): LANDED_LOCKSTEP FAIL LMUT=0 compared=18068 mismatches=1254 active=1198;OK   seq: MU_SEQ BENCHES: PASS;MU_CTLM BENCHES: FAIL;
+head | RUNNING | BAD=0 | overall rc=0;
+host | # exit 0 | BAD=0 | 
+hroot | # exit 0 | BAD=0 | 
+kv | # exit 0 | BAD=0 | 
+kvctx | # exit 1 | BAD=5 | BAD  kvctx_pass (want MU_KVCTX_PASS): ;BAD  kvctx_k1 (want MU_KVCTX_FAIL): ;BAD  kvctx_k2 (want MU_KVCTX_FAIL): ;
+opseg_mut | # exit 0 | BAD=0 | MU_OPSEG BENCHES: PASS;
+opseg_pass | # exit 1 | BAD=1 | BAD  opseg_m0 (want MU_OPSEG_PASS): MU_OPSEG_FAIL mut 0: d2d_ctx C1 mu faulted: cal [] opf [(80546, '0000', 0)] rxf [] end (0, '000000', 0, 1, '0000');MU_OPSEG BENCHES: FAIL;
+sl_DHUSER | # exit 0 | BAD=0 | 
+sysface_mu0 | # exit 0 | BAD=0 | SYS_FACE_PASS MUT=0 boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact;
+sysface_mu1 | # exit 1 | BAD=0 | SYS_FACE_PASS MUT=0 boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact;
+tok | # exit 0 | BAD=0 | MU_TOK_SMOKE BENCHES: PASS;
+=== sysface3 83fc1f3550cdeee5a225db6af92cbccfa1e723ee
+ctlm_mu | # exit 0 | BAD=0 | MU_CTLM BENCHES: PASS;
+ctlm_nsl12 | RUNNING | BAD=0 | 
+ctlm_rest | # exit 0 | BAD=0 | OK   seq: MU_SEQ BENCHES: PASS;MU_CTLM BENCHES: PASS;
+head | RUNNING | BAD=0 | overall rc=0;
+host | # exit 0 | BAD=0 | 
+hroot | # exit 0 | BAD=0 | 
+kv | # exit 0 | BAD=0 | 
+kvctx | # exit 1 | BAD=2 | BAD  mu_image differs from the compiler;BAD  kvctx_pass (want MU_KVCTX_PASS): MU_KVCTX_FAIL kmut 0 rmut 0 cal cmut 0: kvctx_k0_r0_cal_c0 C8 mu native_pos user carrier: (bad, starts u1, u2, u3) = None;MU_KVCTX BENCHES: FAIL;
+opseg_mut | # exit 0 | BAD=0 | MU_OPSEG BENCHES: PASS;
+opseg_pass | # exit 0 | BAD=0 | MU_OPSEG BENCHES: PASS;
+sl_DHUSER | # exit 0 | BAD=0 | 
+sysface_mu0 | # exit 0 | BAD=0 | SYS_FACE_PASS MUT=0 MU=0 head contexts 0, boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact;
+sysface_mu1 | # exit 0 | BAD=0 | SYS_FACE_PASS MUT=0 MU=1 head contexts 4, boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact;
+tok | # exit 0 | BAD=0 | MU_TOK_SMOKE BENCHES: PASS;
+=== gen3c 864d10c8ea66ecf34e3103871f23f563c2ce25e7
+ctlm_mu | # exit 0 | BAD=0 | MU_CTLM BENCHES: PASS;
+ctlm_nsl12 | RUNNING | BAD=0 | 
+ctlm_rest | # exit 0 | BAD=0 | OK   seq: MU_SEQ BENCHES: PASS;MU_CTLM BENCHES: PASS;
+head | RUNNING | BAD=0 | overall rc=0;
+host | # exit 0 | BAD=0 | 
+hroot | # exit 0 | BAD=0 | 
+kv | # exit 0 | BAD=0 | 
+kvctx | # exit 1 | BAD=2 | BAD  mu_image differs from the compiler;BAD  kvctx_pass (want MU_KVCTX_PASS): MU_KVCTX_FAIL kmut 0 rmut 0 cal cmut 0: kvctx_k0_r0_cal_c0 C10 filler native contexts (got 0 want 108; missing [(3209, 8465, 73716), (5396, 8738, 139246)]; extra ;MU_KVCTX BENCHES: FAIL;
+opseg_mut | # exit 0 | BAD=0 | MU_OPSEG BENCHES: PASS;
+opseg_pass | # exit 0 | BAD=0 | MU_OPSEG BENCHES: PASS;
+sl_DHUSER | # exit 0 | BAD=0 | 
+sysface_mu0 | # exit 0 | BAD=0 | SYS_FACE_PASS MUT=0 MU=0 head contexts 0, boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact;
+sysface_mu1 | # exit 0 | BAD=0 | SYS_FACE_PASS MUT=0 MU=1 head contexts 4, boot 54 records, PW 1024 DW 8, 1512 events exact, row 64+scale exact;
+tok | # exit 0 | BAD=0 | MU_TOK_SMOKE BENCHES: PASS;
