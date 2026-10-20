@@ -1,0 +1,330 @@
+{
+ "name": "qfd_coll_split_q4",
+ "top": "ot_coll_split_q",
+ "kind": "tile",
+ "sources": [
+  "rtl/rom/ot_coll_tp8_split.sv",
+  "rtl/rom/ot_coll_rst_leaf.sv",
+  "rtl/rom/ot_coll_fold_slice.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_bb.v"
+ ],
+ "params": {
+  "LU": 66,
+  "LS": 391
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 220.32,
+  "h": 259.2
+ },
+ "std_area_um2": 12669,
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "pkg_s",
+   "die_ps",
+   "in_data",
+   "out_data"
+  ],
+  "W": [
+   "sx1_data",
+   "sx2_data",
+   "sr1_data",
+   "sr2_data"
+  ],
+  "E": [
+   "up_data",
+   "dp_data",
+   "ur_data",
+   "dr_data"
+  ],
+  "S": [
+   "sx0_data",
+   "sr0_data",
+   "c_tok",
+   "q_pe",
+   "q_xe"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sd*g_d?0?*g_c?0?*u_m",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sd*g_d?0?*g_c?1?*u_m",
+   "at": [
+    43.2,
+    84.576
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sd*g_d?1?*g_c?0?*u_m",
+   "at": [
+    43.2,
+    125.952
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sd*g_d?1?*g_c?1?*u_m",
+   "at": [
+    43.2,
+    167.328
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_pring*g_b?1?*u_m",
+   "at": [
+    43.2,
+    208.704
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_xf*g_st?3?*u_dr*g_b?1?*u_m",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_xf*g_st?3?*u_dr*g_b?0?*u_m",
+   "at": [
+    129.6,
+    70.8
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_xf*g_st?2?*u_dr*g_b?1?*u_m",
+   "at": [
+    129.6,
+    98.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_xf*g_st?2?*u_dr*g_b?0?*u_m",
+   "at": [
+    129.6,
+    126.0
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_rring*g_b?1?*u_m",
+   "at": [
+    129.6,
+    153.6
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_rring*g_b?0?*u_m",
+   "at": [
+    129.6,
+    181.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_pring*g_b?0?*u_m",
+   "at": [
+    129.6,
+    208.8
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin at the face: inputs land in exactly one flop (ir_q/dpr_q/drr_q/srr_q, u_tok c_tok, pk_q/di_q straps), outputs leave a flop (upd_q/urd_q/face sx regs/od_q/q_pe/q_xe); flow pin registers would add unpriced cycles"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: one ot_coll_rst_leaf u_rs at the face (two stages, async assert, sync release; rst_n has 2 sinks); rs feeds only registered relay copies (u_rsg/u_rst0/u_rst1/u_rsx) and the folds' own 2-flop leaves; every relay/leaf <= 32 sinks"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "macro_halo_um": 10.8,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 3
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "QW-COLL4 safe4 (same RTL as safe3 577229357, benches/witnesses 8f42f133d) after q3/q3w gate FAIL fill 28%/25% (outline 78382/89580 um2 vs macros 13159 + synthesized std 8838; W 560 + E 816 pins on two faces) and q3w TT spread 83.1 ps: (1) outline from SYNTHESIS area: 220.32 x 259.2 = 57107 um2, measured fill 39% (40-60%), aspect 1.18; (2) re-faceted pins over all four faces (N in/out+straps 261, W SerDes 1/2 512, E UCIe P/R 512, S SerDes 0 + C tokens ~300; no face > 2.0 pins/um averaged); (3) 12 natives in two abutted N-S stacks on the 43.2 lattice (x 43.2 S-data + P bank 1; x 129.6 xf skew rings, R ring, P bank 0), 51.8 um centre std channel, >= 20 um from every pin face; (4) one local clock root over a 220 x 259 um tile (q3 302x259 measured TT/FF spread 59.6/56.3). Zero added cycles.",
+ "job": {
+  "owner": "Claude:QW-COLL4",
+  "branch": "claude/qw-cluster3-coll-1019",
+  "tag": "q4",
+  "purpose": "QW-COLL4 Q slice safe4: safe3 RTL, outline from synthesis area, pins re-faceted over 4 faces, 2-stack natives",
+  "extra_paths": [
+   "results/rtl/coll_split_1019",
+   "rtl/test/tb_coll_tp8_static.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "rtl/test/tb_coll_tp8_static.sv",
+   "tools/qwen_coll_tp8_static_bench.py",
+   "tools/qwen_coll_tp8_bench.py",
+   "tools/hdc_golden.py",
+   "rtl/rom/ot_coll_tp8_static.sv",
+   "rtl/rom/ot_coll_sram_bank64.sv",
+   "rtl/physical/ot_qfd_io_collective_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v"
+  ],
+  "benches": [
+   {
+    "name": "split_production",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/prod --production",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_unit",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/unit",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mut_lead",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_lead --only 'reduce_8w_x16|gather_4w_x4' --mutant-define OT_COLL_SPLIT_MUT_LEAD",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_LEAD",
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_lead.log"
+   },
+   {
+    "name": "split_mut_ex",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_ex --only reduce_8w_x16 --mutant-define OT_COLL_SPLIT_MUT_EX",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_EX",
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_ex.log"
+   },
+   {
+    "name": "split_mut_sbank",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_sbank --only reduce_8w_x16 --mutant-define OT_COLL_SPLIT_MUT_SBANK",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_SBANK",
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_sbank.log"
+   },
+   {
+    "name": "split_mut_rerr",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_rerr --only fault_nan --mutant-define OT_COLL_SPLIT_MUT_RERR",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_RERR",
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_rerr.log"
+   },
+   {
+    "name": "split_mut_dr",
+    "cmd": "OT_BENCH_J=4 python3 tools/qwen_coll_tp8_static_bench.py --split --latu 66 --lats 391 --out {RUN}/mut_dr --only reduce_8w_x16 --mutant-define OT_COLL_FOLD_MUT_DR",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_FOLD_MUT_DR",
+    "fail_witness": "results/rtl/coll_split_1019/safe3/witness/mut_dr.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_coll_split_q2/views",
+  "record_to": "results/rtl/ref_tile/qfd_coll_split_q2"
+ }
+}

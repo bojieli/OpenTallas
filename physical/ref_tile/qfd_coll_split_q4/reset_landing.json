@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_coll_split_q",
+ "enable": false,
+ "reason": "the RTL lands it: one ot_coll_rst_leaf u_rs at the face (two stages, async assert, sync release; rst_n has 2 sinks); rs feeds only registered relay copies (u_rsg/u_rst0/u_rst1/u_rsx) and the folds' own 2-flop leaves; every relay/leaf <= 32 sinks"
+}
