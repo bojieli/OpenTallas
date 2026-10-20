@@ -1191,8 +1191,8 @@
    "master": "qfd_c_stn514",
    "inst": "u_fab.u_ft_0",
    "idx": 0,
-   "x": 725.76,
-   "y": 5395.68,
+   "x": 889.92,
+   "y": 5361.12,
    "w": 51.84,
    "h": 51.84,
    "orient": "MX",
@@ -1204,7 +1204,7 @@
    "master": "qfd_c_stn514",
    "inst": "u_fab.u_ft_1",
    "idx": 0,
-   "x": 803.52,
+   "x": 967.68,
    "y": 5356.8,
    "w": 51.84,
    "h": 51.84,
@@ -1218,7 +1218,7 @@
    "inst": "u_fab.u_ft_10",
    "idx": 0,
    "x": 1460.16,
-   "y": 2246.4,
+   "y": 2384.64,
    "w": 51.84,
    "h": 51.84,
    "orient": "MX",
@@ -1230,8 +1230,8 @@
    "master": "qfd_c_stn514",
    "inst": "u_fab.u_ft_11",
    "idx": 0,
-   "x": 1537.92,
-   "y": 1922.4,
+   "x": 1460.16,
+   "y": 2052.0,
    "w": 51.84,
    "h": 51.84,
    "orient": "MX",
@@ -1399,8 +1399,8 @@
    "master": "qfd_c_stn514",
    "inst": "u_fab.u_ft_9",
    "idx": 0,
-   "x": 1460.16,
-   "y": 2332.8,
+   "x": 1537.92,
+   "y": 2436.48,
    "w": 51.84,
    "h": 51.84,
    "orient": "MX",
@@ -2594,25 +2594,25 @@
   [
    "WARN",
    "macro_grid",
-   "qfd_c_stn514#0: origin (725.76, 5395.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "qfd_c_stn514#0: origin (889.92, 5361.12) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "qfd_c_stn514#0: origin (803.52, 5356.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "qfd_c_stn514#0: origin (967.68, 5356.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "qfd_c_stn514#0: origin (1460.16, 2246.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "qfd_c_stn514#0: origin (1460.16, 2384.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "macro_grid",
-   "qfd_c_stn514#0: origin (1537.92, 1922.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "qfd_c_stn514#0: origin (1460.16, 2052.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
@@ -2690,7 +2690,7 @@
   [
    "WARN",
    "macro_grid",
-   "qfd_c_stn514#0: origin (1460.16, 2332.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "qfd_c_stn514#0: origin (1537.92, 2436.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
@@ -3109,6 +3109,7 @@
   "rtl/physical/qcluster/qfd_c_land_safe.sv",
   "rtl/physical/qcluster/qfd_q3h_stn.sv",
   "rtl/physical/qcluster/qfd_c_land.sv",
+  "rtl/physical/qcluster/qfd_c_land_r1h.sv",
   "rtl/physical/qcluster/qfd_c_b16_full.sv",
   "physical/ref_tile/qfd_c_b16_full/kit.env",
   "physical/ref_tile/qfd_c_b16_full/clock.sdc",

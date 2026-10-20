@@ -16,12 +16,15 @@ CRITICAL prefix qfd_c_b16: gate + coordinator review only (no REVIEW.json, no su
 ## Safe-design checklist (owner 10-19)
 1. Pins: PASS -- every data port lands in a hard station register (flop-first / flop-last); every rst_<q> lands in its rpin
    register + equal-depth soft tree (qc_gen); soft landing halves re-register rsi.
-2. Reach: PASS -- every hard single-cycle wire <= 405 um PER BIT on the real LEF pins (max 396.6 um, 0 over);
+2. Reach: PASS -- every hard single-cycle wire <= 405 um PER BIT on the real LEF pins (max 402.8 um, 0 over; regenerated 10-19 21:50 with a hash-seed independent relay move order);
    soft landing rings are sited beside their hard neighbour pin (sites tsv, <= 100 um); bank paths are the landed
    multicycle window (setup 2 / hold 3).
 3. Fanout: PASS -- soft logic = landing rings (one bus word per slot) + 1-bit reset stages; no >32-load register (reset
    trees are qc_gen equal-depth trees).
-4. Depth: PASS -- no combinational logic between stations; ring read = registered 4:1 slot select.
+4. Depth: fixed 10-19 -- no combinational logic between stations; ring read = qfd_c_land_r1h: registered one-hot select
+   (one KEEP copy per 32 bits) + constant-index AND-OR (was qfd_c_land_r bank[sel*W +: W], gate WARN runtime_partselect).
+   Lockstep bench vs qfd_c_land_r: tools/qwen_cluster/bench_land_r1h.sh (Verilator 5.050; K 1/2/3 PASS, 3 mutants FAIL,
+   witnesses results/arch/qwen_cluster_1017/q_cluster16/full/bench_land_r1h/). No added cycle.
 5. Storage: PASS -- 3-deep delay lines are hard relay stations (no soft flop chain); no runtime-indexed flop array > 2 kb
    outside the landing ring (2,056 b ring, fixed rotating pointer, the LANDING-CONTRACT form).
 6. Floorplan: PASS/WARN -- A0 + xstn on the 43.2 lattice, stations on 4.32 (macro_grid WARN only, tracks legal; diag

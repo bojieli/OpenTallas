@@ -10,6 +10,7 @@
   "rtl/physical/qcluster/qfd_c_land_safe.sv",
   "rtl/physical/qcluster/qfd_q3h_stn.sv",
   "rtl/physical/qcluster/qfd_c_land.sv",
+  "rtl/physical/qcluster/qfd_c_land_r1h.sv",
   "rtl/physical/qcluster/qfd_c_b16_full.sv"
  ],
  "params": {},
@@ -1074,8 +1075,8 @@
    "count": 1,
    "inst": "u_fab.u_ft_0",
    "at": [
-    743.04,
-    5395.68
+    924.48,
+    5361.12
    ],
    "orient": "MX",
    "at_exact": true
@@ -1085,7 +1086,7 @@
    "count": 1,
    "inst": "u_fab.u_ft_1",
    "at": [
-    820.8,
+    1002.24,
     5356.8
    ],
    "orient": "R0",
@@ -1097,7 +1098,7 @@
    "inst": "u_fab.u_ft_10",
    "at": [
     1503.36,
-    2246.4
+    2384.64
    ],
    "orient": "MX",
    "at_exact": true
@@ -1107,8 +1108,8 @@
    "count": 1,
    "inst": "u_fab.u_ft_11",
    "at": [
-    1581.12,
-    1922.4
+    1503.36,
+    2052.0
    ],
    "orient": "MX",
    "at_exact": true
@@ -1250,8 +1251,8 @@
    "count": 1,
    "inst": "u_fab.u_ft_9",
    "at": [
-    1503.36,
-    2332.8
+    1581.12,
+    2436.48
    ],
    "orient": "MX",
    "at_exact": true
