@@ -5,11 +5,20 @@
 // No reset/storage ECC is added to the SRAM. Two unconditional payload registers
 // avoid a W-bit hit-enable cone; reset-distinct kept flags each select <=16 bits.
 module ot_sram_showahead_1r1w #(
- parameter integer W=553, AW=3, WREG=1, NS=(W+SB-1)/SB, MUT=0, LOCAL_HIT=0, SB=16
+ parameter integer W=553, AW=3, WREG=1, NS=(W+SB-1)/SB, MUT=0, LOCAL_HIT=0, SB=16, LOCAL_RA=0, DEPTH=(1<<AW)
 )(input wire clk, input wire [NS-1:0] rst_n,
  input wire we, input wire [AW-1:0] wa, input wire [W-1:0] wd,
- input wire [AW-1:0] ra, output wire [W-1:0] q);
+ input wire [AW-1:0] ra, output wire [W-1:0] q,
+ input wire advance_a,advance_b);
  localparam integer NB=(W+127)/128;
+ wire [NB*AW-1:0] read_addr_local;
+ generate for(genvar ar=0;ar<NB;ar=ar+1) begin:g_read_region
+  if(LOCAL_RA!=0) begin:g_local
+   (* keep=1 *) ot_sram_showahead_readptr #(.AW(AW),.DEPTH(DEPTH)) u_ptr(
+    .clk(clk),.rn(rst_n[(ar*128)/SB]),.advance_a(advance_a),.advance_b(advance_b),
+    .next_addr(read_addr_local[ar*AW+:AW]));
+  end else begin:g_shared assign read_addr_local[ar*AW+:AW]=ra;end
+ end endgenerate
  reg wv; reg [AW-1:0] waddr; reg [W-1:0] wdata, prevdata;
  always @(posedge clk or negedge rst_n[0]) if(!rst_n[0]) wv<=1'b0; else wv<=we;
  always @(posedge clk) begin waddr<=wa; wdata<=wd; prevdata<=wdata; end
@@ -22,8 +31,8 @@ module ot_sram_showahead_1r1w #(
   if(LOCAL_HIT) begin:g_local
    // Fixed width avoids paramod keep-name mismatch. Each output drives <=16
    // distinct slice flag D pins; no extra clock edge or shared35-load hit.
-   (* keep=1 *) ot_sram_showahead_hit5 u_current(.enable(we),.a(5'(wa)),.b(5'(ra)),.hit(local_current_hit[h]));
-   (* keep=1 *) ot_sram_showahead_hit5 u_previous(.enable((WREG!=0)&&wv),.a(5'(waddr)),.b(5'(ra)),.hit(local_previous_hit[h]));
+   (* keep=1 *) ot_sram_showahead_hit5 u_current(.enable(we),.a(5'(wa)),.b(5'(read_addr_local[((h*16*SB)/128)*AW+:AW])),.hit(local_current_hit[h]));
+   (* keep=1 *) ot_sram_showahead_hit5 u_previous(.enable((WREG!=0)&&wv),.a(5'(waddr)),.b(5'(read_addr_local[((h*16*SB)/128)*AW+:AW])),.hit(local_previous_hit[h]));
   end else begin:g_legacy
    assign local_current_hit[h]=current_hit;
    assign local_previous_hit[h]=previous_hit;
@@ -35,7 +44,7 @@ module ot_sram_showahead_1r1w #(
  wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},mwd}, raw;
  genvar b,s;
  generate for(b=0;b<NB;b=b+1) begin:g_bank
-  ot_sram_1r1w_32x128_m1 u_m(.clk(clk),.r_ce_in(1'b1),.r_addr_in(5'(ra)),
+  ot_sram_1r1w_32x128_m1 u_m(.clk(clk),.r_ce_in(1'b1),.r_addr_in(5'(read_addr_local[b*AW+:AW])),
    .rd_out(raw[b*128+:128]),.w_ce_in(mw),.w_addr_in(5'(mwa)),
    .wd_in(padded[b*128+:128]),.w_mask_in({128{1'b1}}));
  end
@@ -58,4 +67,15 @@ endmodule
 (* keep_hierarchy=1 *) module ot_sram_showahead_hit5(
  input wire enable,input wire [4:0] a,b,output wire hit);
  assign hit=enable&&(a==b);
+endmodule
+
+// Opt-in replicated circular read pointer. The next address is combinational
+// from the same logical pair-pop; no additional SRAM read/capture edge.
+(* keep_hierarchy=1 *) module ot_sram_showahead_readptr #(
+ parameter integer AW=3,DEPTH=(1<<AW))(
+ input wire clk,rn,advance_a,advance_b,output wire [AW-1:0] next_addr);
+ (* keep=1 *) reg [AW-1:0] ptr;
+ wire advance=advance_a && advance_b;
+ assign next_addr=advance?((ptr==AW'(DEPTH-1))?'0:ptr+1'b1):ptr;
+ always @(posedge clk or negedge rn) if(!rn) ptr<=0;else ptr<=next_addr;
 endmodule

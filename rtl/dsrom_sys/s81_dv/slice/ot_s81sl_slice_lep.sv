@@ -321,11 +321,20 @@ module ot_s81sl_lep_core #(
         else begin
             if (mcv) begin
                 if (wn != '0 && !(rov && wn == NBW'(1))) te <= 1'b1;     // a window while one is open
-                wn <= NBW'(NB); w_ab <= mcq[1] && ab_ok; w_t <= {mcq[33:13], mcq[12:3], mcq[2], 1'b1};
+                wn <= NBW'(NB); w_ab <= mcq[1] && ab_ok; if(NATIVE32==0 || RX_SRAM==0) w_t <= {mcq[33:13], mcq[12:3], mcq[2], 1'b1};
                 if (mcq[1] && !ab_ok) te <= 1'b1;                        // ab with user 0 / without pair B
             end else if (rov && wn != '0) wn <= wn - 1'b1;
             if (rov && wn != '0 && roq[3:1] != K_XB && roq[3:1] != K_XQ) te <= 1'b1;   // non-h beat inside a window
         end
+    if(NATIVE32!=0 && RX_SRAM!=0) begin:g_tag_payload_regions
+      wire [32:0] tag_in={mcq[33:13],mcq[12:3],mcq[2],1'b1};
+      for(genvar wt=0;wt<4;wt=wt+1) begin:g_group
+        localparam integer LO=wt*9,W=(33-LO<9)?33-LO:9;
+        wire load_tag;
+        (* keep=1 *) ot_s81sl_lep_host_enable u_load(.ne0(tag_state_reset),.ne1(mcv),.hit(1'b1),.en(load_tag));
+        always @(posedge clk) if(load_tag) w_t[LO+:W]<=tag_in[LO+:W];
+      end
+    end
     assign window_count=32'(wn);
     assign wopen = wn != '0; assign wtag = w_t; assign terr = te;
 `ifdef OT_S81SL_LEP_MUT_WRONGCOPY
@@ -530,6 +539,7 @@ module ot_s81sl_lep_core #(
     localparam integer RREP = 16, SW = (H + 1 + RREP - 1) / RREP;
     wire [3:0] li_v = {li3_v, li2_v, li1_v, li0_v}; wire [4*(H+1)-1:0] li_d = {li3_d, li2_d, li1_d, li0_d};
     wire [NL-1:0] rne, rxf; wire [NL*(H+1)-1:0] rhd; wire [NL-1:0] lir;
+    wire [NL*4-1:0] ring_meta_regions;
     wire [NL-1:0] rhostx,rksx;
     wire [NL-1:0] rnex, rhkx, rringx, rtagx;
     wire [NL-1:0] rhk;                                 // MU_EN 1: pre-decoded land bit of each lane's head row
@@ -601,18 +611,32 @@ module ot_s81sl_lep_core #(
         if (MU_EN != 0 || SAFE_STD) begin : g_sa
             wire kd = (t % 2 == 0) ? (dq[0] && (dq[3:1] == K_XB || dq[3:1] == K_XQ)) : (dq[TG - H] && dq[TG + 1 - H]);
             reg [DR-1:0] mk,mrk,mtk,mhost,mks; reg hk;
+            wire [3*AR-1:0] meta_read_next;
+            for(genvar mp=0;mp<3;mp=mp+1) begin:g_meta_ptr
+              if(NATIVE32!=0 && RX_SRAM!=0) begin:g_local
+`ifdef OT_S81SL_LEP_MUT_NOPAIR
+                wire mb=(t==0)?1'b1:rne[2*(t/2)+1];
+`else
+                wire mb=rne[2*(t/2)+1];
+`endif
+                (* keep=1 *) ot_sram_showahead_readptr #(.AW(AR),.DEPTH(DR)) u_ptr(
+                  .clk(clk),.rn(rx_state_reset),.advance_a(rne[2*(t/2)]),.advance_b(mb),
+                  .next_addr(meta_read_next[mp*AR+:AR]));
+              end else begin:g_shared assign meta_read_next[mp*AR+:AR]=rp_nx;end
+            end
+            wire [AR-1:0] host_ra=meta_read_next[0+:AR],ring_ra=meta_read_next[AR+:AR],land_ra=meta_read_next[2*AR+:AR];
             wire host_d=(t==0) && !dq[0] && dq[3:1]==3'd1;
             wire ks_d=(t==0) && !dq[0] && dq[3:1]==3'd2;
-            assign rhostx[t]=we[rp_nx]?host_d:mhost[rp_nx];
-            assign rksx[t]=we[rp_nx]?ks_d:mks[rp_nx];
+            assign rhostx[t]=we[host_ra]?host_d:mhost[host_ra];
+            assign rksx[t]=we[host_ra]?ks_d:mks[host_ra];
             wire rd=(t%2==0)?dq[0]:1'b0;
             wire td=(t%2!=0)?dq[TG-H]:1'b0;
-            assign rringx[t]=we[rp_nx]?rd:mrk[rp_nx];
-            assign rtagx[t]=we[rp_nx]?td:mtk[rp_nx];
+            assign rringx[t]=we[ring_ra]?rd:mrk[ring_ra];
+            assign rtagx[t]=we[ring_ra]?td:mtk[ring_ra];
 `ifdef OT_S81SL_LEP_MUT_STALEHD
             assign rhkx[t]=mk[rp];
 `else
-            assign rhkx[t]=we[rp_nx]?kd:mk[rp_nx];
+            assign rhkx[t]=we[land_ra]?kd:mk[land_ra];
 `endif
             integer jk;
             always @(posedge clk) begin
@@ -620,7 +644,7 @@ module ot_s81sl_lep_core #(
 `ifdef OT_S81SL_LEP_MUT_STALEHD
                 hk <= mk[rp];
 `else
-                hk <= we[rp_nx] ? kd : mk[rp_nx];
+                hk <= we[land_ra] ? kd : mk[land_ra];
 `endif
             end
             assign rhk[t] = hk;
@@ -631,9 +655,14 @@ module ot_s81sl_lep_core #(
 `else
                 wire [AR-1:0] read_next=rp_nx;
 `endif
-                ot_sram_showahead_1r1w #(.W(H+1),.AW(AR),.LOCAL_HIT(1),.SB(8)) u_rx_mem(
+                ot_sram_showahead_1r1w #(.W(H+1),.AW(AR),.LOCAL_HIT(1),.SB(8),.LOCAL_RA(NATIVE32),.DEPTH(DR)) u_rx_mem(
                     .clk(clk),.rst_n(rr[4+t*RX_NS+:RX_NS]),.we(wr),.wa(wp),.wd(dq),
-                    .ra(read_next),.q(head));
+                    .ra(read_next),.q(head),.advance_a(rne[2*(t/2)]),
+`ifdef OT_S81SL_LEP_MUT_NOPAIR
+                    .advance_b((t==0)?1'b1:rne[2*(t/2)+1]));
+`else
+                    .advance_b(rne[2*(t/2)+1]));
+`endif
                 assign rhd[t*(H+1)+:H+1]=head;
             end else begin:g_old_head
             for (c = 0; c < RREP; c = c + 1) begin : g_h
@@ -657,6 +686,14 @@ module ot_s81sl_lep_core #(
         end
         assign rne[t] = nz; assign lir[t] = cr; assign rxf[t] = f;
     end endgenerate
+    generate for(genvar rh=0;rh<NL;rh=rh+1) begin:g_ring_meta
+      if(NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0) begin:g_native
+        for(genvar rg=0;rg<4;rg=rg+1) begin:g_copy
+          (* keep=1 *) ot_s81sl_lep_vcopy u_copy(.clk(clk),.d(rringx[rh]),.q(ring_meta_regions[4*rh+rg]));
+        end
+      end else begin:g_shared assign ring_meta_regions[4*rh+:4]={4{rhd[rh*(H+1)]}};end
+    end endgenerate
+    wire [3:0] active_ring_flags=rpb?ring_meta_regions[2*4+:4]:ring_meta_regions[0+:4];
     assign li0_r = lir[0]; assign li1_r = lir[1];
     generate if (NL == 4) begin : g_rxb
         assign li2_r = lir[2]; assign li3_r = lir[3];
@@ -682,7 +719,7 @@ module ot_s81sl_lep_core #(
 `ifdef OT_S81SL_LEP_MUT_NHACC
     wire hacc = !h0[0] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);        // MUTANT: accepted even at HOST_EN 0
 `else
-    wire hacc = (HOST_EN != 0) && !rpb && !h0[0] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);
+    wire hacc = (HOST_EN != 0) && !rpb && !active_ring_flags[1] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);
 `endif
     reg [1103:1] rid; reg riv;
     assign ri = {rid, riv};
@@ -729,12 +766,12 @@ module ot_s81sl_lep_core #(
     // X's beat on ri, sM = deliver the replayed beat (cut-through wins a collision, mcol fault as before).
     wire [1103:0] bA = {rhd[2*H:H+1], rhd[H-1:0]};     // pair A frame (lane 1 high half, lane 0 low half)
     wire lA = rhk[0] && rhk[1];
-    wire gA = relp[0] && rhd[0];
+    wire gA = relp[0] && ring_meta_regions[0];
     wire [1103:0] bB; wire lB, gB;
     if (NL == 4) begin : g_mb
         assign bB = {rhd[4*H+2:3*H+3], rhd[3*H+1:2*H+2]};
         assign lB = rhk[2] && rhk[3];
-        assign gB = rpb && rhd[2*(H+1)];               // rpb: nz flops only
+        assign gB = rpb && ring_meta_regions[2*4];               // rpb: nz flops only
     end else begin : g_nmb
         assign bB = 1104'd0; assign lB = 1'b0; assign gB = 1'b0;
     end
@@ -835,7 +872,7 @@ module ot_s81sl_lep_core #(
       wire [31:0] replay_tag={1'b1,mrd[TG+2+:10],mrd[TG+12+:21]};
       for(genvar rt=0;rt<4;rt=rt+1) begin:g_byte
         wire [7:0] next_tag;
-        (* keep=1 *) ot_s81sl_lep_return8 u_tag(.cut(rr_dlv),.ring_code({rb[TG],rb[3:0]}),
+        (* keep=1 *) ot_s81sl_lep_return8 u_tag(.cut(rr_dlv),.ring_code({rb[TG],rb[3:1],active_ring_flags[2]}),
           .replay_code({mrd[TG],mrd[3:0]}),.ring_data(ring_tag[rt*8+:8]),
           .replay_data(replay_tag[rt*8+:8]),.q(next_tag));
         always @(posedge clk) rtq[rt*8+:8]<=next_tag;
@@ -867,7 +904,7 @@ module ot_s81sl_lep_core #(
             if (|rxf) perr <= 1'b1;                    // a beat landed on a full RX FIFO (credit protocol broken)
             // a released pair must be one frame (equal sequence parity); a die endpoint accepts ring / HOST / KS only
             // (ring only at HOST_EN 0 and on pair B); both pairs releasing in one cycle is a collision
-            if (rel && (h0[H] != h1[H] || (!h0[0] && !hacc))) perr <= 1'b1;
+            if (rel && (h0[H] != h1[H] || (!active_ring_flags[1] && !hacc))) perr <= 1'b1;
             if (relp[0] && relp[1]) perr <= 1'b1;
         end
     generate if (HOST_EN != 0) begin : g_hrx
