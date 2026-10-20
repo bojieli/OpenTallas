@@ -1,0 +1,372 @@
+{
+ "schema": "opentallas.hbm_table_price.v1",
+ "hbm_per_die": {
+  "stacks": 4,
+  "gb_per_stack": 36.0,
+  "src": "docs/HBM_GENERIC_INTERFACE.md Table 9-1 (144 GB = 4 x 36 GB)"
+ },
+ "slot_bytes": 8704,
+ "designs": {
+  "HBM-DS": {
+   "model": "DeepSeek-V4.1-Flash",
+   "dies": 96,
+   "tables": [
+    {
+     "name": "embedding",
+     "rows": 129280,
+     "row_bytes": 10240,
+     "per_die": "replicated (full hidden row per die)",
+     "lookups": {
+      "AR": 1,
+      "MTP": 2
+     },
+     "path": "indexed DMA.LOAD at TOKEN x 10,240 B (HGI-1 sec 7)",
+     "lines": [
+      38,
+      38
+     ],
+     "nb": 2,
+     "raw_GB": 1.3238272,
+     "v3_phase_copies": 4,
+     "v3_phase_GB": 9.00202496,
+     "row_indices_per_sm": 4040,
+     "row_field_ok": true,
+     "chosen": {
+      "law": "phase",
+      "copies": 2,
+      "family": "packed",
+      "slots": 4,
+      "copy_sets": [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        3
+       ]
+      ],
+      "GB": 4.50101248,
+      "tried": [
+       {
+        "copies": 1,
+        "family": "packed",
+        "verdict": "REFUSED",
+        "why": "ROTLAYOUT REFUSED tables HBM-DS embedding k2: no rotated assignment at token 1 ('t', 'embedding')"
+       },
+       {
+        "copies": 2,
+        "family": "packed",
+        "verdict": "ROTATED",
+        "runs": {
+         "1": {
+          "copies_used": [
+           0
+          ],
+          "deviations": 1
+         },
+         "2": {
+          "copies_used": [
+           0,
+           1
+          ],
+          "deviations": 2
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "name": "engram_l1",
+     "rows": 4000065,
+     "row_bytes": 264,
+     "per_die": "rows owned by id mod 96 (w19 f_engram_fetch)",
+     "lookups": {
+      "AR": 1,
+      "MTP": 2
+     },
+     "path": "indexed DMA.LOAD per hashed id; 24 ids/token over 96 owners = 0.25 avg, <= 24 max a die",
+     "prefetch": "ids from the last 4 token ids: issued a token ahead (0 token-path cycles)",
+     "lines": [
+      2
+     ],
+     "nb": 1,
+     "raw_GB": 1.05601716,
+     "v3_phase_copies": 8,
+     "v3_phase_GB": 278.53252608,
+     "row_indices_per_sm": 125003,
+     "row_field_ok": false,
+     "chosen": {
+      "law": "sector_rows",
+      "copies": 1,
+      "GB": 1.05601716,
+      "why": "264-B rows: one 8704-B block slot each would be 33x the row (279 GB/die with the v3 copies, row field 125,003 > 32,768); ids from the last 4 token ids: issued a token ahead (0 token-path cycles)"
+     }
+    },
+    {
+     "name": "engram_l14",
+     "rows": 4000174,
+     "row_bytes": 264,
+     "per_die": "rows owned by id mod 96",
+     "lookups": {
+      "AR": 1,
+      "MTP": 2
+     },
+     "path": "as engram_l1",
+     "prefetch": "as engram_l1",
+     "lines": [
+      2
+     ],
+     "nb": 1,
+     "raw_GB": 1.056045936,
+     "v3_phase_copies": 8,
+     "v3_phase_GB": 278.540115968,
+     "row_indices_per_sm": 125006,
+     "row_field_ok": false,
+     "chosen": {
+      "law": "sector_rows",
+      "copies": 1,
+      "GB": 1.056045936,
+      "why": "264-B rows: one 8704-B block slot each would be 33x the row (279 GB/die with the v3 copies, row field 125,006 > 32,768); as engram_l1"
+     }
+    }
+   ],
+   "static": [
+    {
+     "name": "LM head",
+     "bytes": 13789866.666666666,
+     "note": "row-sharded, streamed in full every token (embed_head class, static rotated run, 103.9 B/edge/SM) -- not row-gathered, no copies",
+     "GB": 0.014
+    },
+    {
+     "name": "RoPE / norm / sink / bias tables",
+     "bytes": 268435456.0,
+     "note": "POS-indexed rows: consecutive positions = consecutive rows, laid out as a static rotated run (no copies)",
+     "GB": 0.268
+    },
+    {
+     "name": "routed experts x3 position copies (hbm_bank_layout triples)",
+     "bytes": 9024307200.0,
+     "note": "v3 law: 3 copies of every routed block (capacity priced here: 3 x 3.01 GB)",
+     "GB": 9.024
+    },
+    {
+     "name": "dense + shared + MTP weights",
+     "bytes": 171414542.08333334,
+     "note": "static runs",
+     "GB": 0.171
+    },
+    {
+     "name": "KV (1M ctx, 4 users)",
+     "bytes": 49698133.333333336,
+     "note": "global KV 890 B/token rank-sharded + SWA window",
+     "GB": 0.05
+    }
+   ],
+   "static_GB": 9.528,
+   "fit": {
+    "v3_phase_all": {
+     "tables_GB": 566.075,
+     "total_GB": 575.602,
+     "cap_GB": 144.0,
+     "util": 3.9972,
+     "fits": false
+    },
+    "v3_phase": {
+     "tables_GB": 11.114,
+     "total_GB": 20.642,
+     "cap_GB": 144.0,
+     "util": 0.1433,
+     "fits": true
+    },
+    "chosen": {
+     "tables_GB": 6.613,
+     "total_GB": 16.141,
+     "cap_GB": 144.0,
+     "util": 0.1121,
+     "fits": true
+    },
+    "raw": {
+     "tables_GB": 3.436,
+     "total_GB": 12.964,
+     "cap_GB": 144.0,
+     "util": 0.09,
+     "fits": true
+    }
+   }
+  },
+  "HBM-Qwen": {
+   "model": "Qwen3-8B INT8",
+   "dies": 4,
+   "tables": [
+    {
+     "name": "embedding",
+     "rows": 151936,
+     "row_bytes": 4128,
+     "per_die": "replicated",
+     "lookups": {
+      "AR": 1,
+      "DFlash_b8": 8,
+      "DFlash_b16": 16
+     },
+     "path": "indexed DMA.LOAD codes + BF16 scale (qwen_compiler emb_row 4,128 B); DFlash verify = 16 indexed loads on the draft ids",
+     "lines": [
+      31
+     ],
+     "nb": 1,
+     "raw_GB": 0.627191808,
+     "v3_phase_copies": 8,
+     "v3_phase_GB": 10.579607552,
+     "row_indices_per_sm": 4748,
+     "row_field_ok": true,
+     "chosen": {
+      "law": "phase",
+      "copies": 4,
+      "family": "packed",
+      "slots": 4,
+      "copy_sets": [
+       [
+        0
+       ],
+       [
+        1
+       ],
+       [
+        2
+       ],
+       [
+        3
+       ]
+      ],
+      "GB": 5.289803776,
+      "tried": [
+       {
+        "copies": 1,
+        "family": "packed",
+        "verdict": "REFUSED",
+        "why": "ROTLAYOUT REFUSED tables HBM-Qwen embedding k8: no rotated assignment at token 1 ('t', 'embedding')"
+       },
+       {
+        "copies": 2,
+        "family": "packed",
+        "verdict": "REFUSED",
+        "why": "ROTLAYOUT REFUSED tables HBM-Qwen embedding k8: no rotated assignment at token 2 ('t', 'embedding')"
+       },
+       {
+        "copies": 2,
+        "family": "spread",
+        "verdict": "REFUSED",
+        "why": "ROTLAYOUT REFUSED tables HBM-Qwen embedding k8: no rotated assignment at token 1 ('t', 'embedding')"
+       },
+       {
+        "copies": 4,
+        "family": "packed",
+        "verdict": "ROTATED",
+        "runs": {
+         "1": {
+          "copies_used": [
+           0
+          ],
+          "deviations": 1
+         },
+         "8": {
+          "copies_used": [
+           0,
+           1,
+           2,
+           3,
+           1,
+           2,
+           3,
+           1
+          ],
+          "deviations": 2
+         },
+         "16": {
+          "copies_used": [
+           0,
+           1,
+           2,
+           3,
+           1,
+           2,
+           3,
+           1,
+           2,
+           3,
+           1,
+           2,
+           3,
+           1,
+           2,
+           3
+          ],
+          "deviations": 5
+         }
+        }
+       }
+      ]
+     }
+    }
+   ],
+   "static": [
+    {
+     "name": "LM head",
+     "bytes": 155582464.0,
+     "note": "row-sharded INT8, streamed in full",
+     "GB": 0.156
+    },
+    {
+     "name": "layer weights INT8 + scales",
+     "bytes": 1736441856.0,
+     "note": "static runs (qwen class 103.95)",
+     "GB": 1.736
+    },
+    {
+     "name": "KV FP8 (40,960 ctx, 4 users)",
+     "bytes": 3019898880,
+     "note": "2 KV heads a die (TP4)",
+     "GB": 3.02
+    },
+    {
+     "name": "RoPE / norm tables",
+     "bytes": 20971520,
+     "note": "POS-indexed static rows",
+     "GB": 0.021
+    }
+   ],
+   "static_GB": 4.933,
+   "fit": {
+    "v3_phase_all": {
+     "tables_GB": 10.58,
+     "total_GB": 15.513,
+     "cap_GB": 144.0,
+     "util": 0.1077,
+     "fits": true
+    },
+    "v3_phase": {
+     "tables_GB": 10.58,
+     "total_GB": 15.513,
+     "cap_GB": 144.0,
+     "util": 0.1077,
+     "fits": true
+    },
+    "chosen": {
+     "tables_GB": 5.29,
+     "total_GB": 10.223,
+     "cap_GB": 144.0,
+     "util": 0.071,
+     "fits": true
+    },
+    "raw": {
+     "tables_GB": 0.627,
+     "total_GB": 5.56,
+     "cap_GB": 144.0,
+     "util": 0.0386,
+     "fits": true
+    }
+   }
+  }
+ }
+}

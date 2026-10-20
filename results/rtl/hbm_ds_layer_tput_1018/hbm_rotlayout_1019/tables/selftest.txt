@@ -1,0 +1,17 @@
+ok  DS 10,240-B rows: [38, 38] x4 copies
+ok  Qwen 4,128-B rows: [31] x8 copies
+ok  REFUSED pingpong (1 copy on the HEAD sets): ROTLAYOUT REFUSED tables pingpong 1 copy on sets 0,1 (measured 16.0 B/edge): R4a block 2 (row None, set 0) re-opens set 0 2 blocks after block 0 (row 
+ok  standalone phase x4 (v3 64+42 shape) runs of 16/32/64 pass
+ok  REFUSED standalone 1-lookup run (DS AR): ROTLAYOUT REFUSED tables DS AR standalone k1 +wrap: R4a block 2 (row None, set 0) re-opens set 0 2 blocks after block 0 (row None) with only 41 words 
+ok  REFUSED standalone 2-lookup run (DS MTP): ROTLAYOUT REFUSED tables DS MTP standalone k2 +wrap: R2 block 4 set 0 is 5 sets ahead of block 3 (set 3) only 41 column words earlier (< REF_WIN 160):
+ok  REFUSED standalone 1-lookup run (Qwen AR): ROTLAYOUT REFUSED tables Qwen AR standalone k1 +wrap: R1 block 1 (row None, set 0) follows block 0 (row None, same set) with only 0 column words betwe
+ok  HBM-DS LM-head run | 1 lookup(s) + first-layer stream: copies [0], 1 phase steps, sets [0, 1, 2, 3, 4]...
+ok  HBM-DS LM-head run | 2 lookup(s) + first-layer stream: copies [0, 1], 2 phase steps, sets [0, 1, 2, 3, 4, 5]...
+ok  HBM-Qwen LM-head run | 1 lookup(s) + first-layer stream: copies [0], 1 phase steps, sets [0, 1, 2, 3, 4]...
+ok  HBM-Qwen LM-head run | 8 lookup(s) + first-layer stream: copies [0, 1, 2, 3, 1, 2, 3, 4], 2 phase steps, sets [0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5]...
+ok  HBM-Qwen LM-head run | 16 lookup(s) + first-layer stream: copies [0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6], 5 phase steps, sets [0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6, 4, 5, 6, 7]...
+ok  DS embedding: image 1600 slots (4 copies), every copy reads back exact, 40 static blocks outside the table slots
+ok  Qwen embedding: image 1600 slots (8 copies), every copy reads back exact, 40 static blocks outside the table slots
+ok  HBM-DS: tables + static 16.141 GB of 144 GB per die (11.2 %)
+ok  HBM-Qwen: tables + static 10.223 GB of 144 GB per die (7.1 %)
+SELFTEST PASS

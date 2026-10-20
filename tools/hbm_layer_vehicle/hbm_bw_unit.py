@@ -94,11 +94,16 @@ def gen(pattern, n_layers, seed):
 # with the production shapes of that class.  (row, set, words, runtime_row)
 import hbm_bank_layout as BL  # noqa: E402
 QWEN_SM = (("qkv", 4096, 1536), ("o", 1024, 4096), ("gu", 4096, 6144), ("down", 3072, 4096))  # (tag, K, m per die)
+# HBM-ROTLAYOUT-TBL: (design, copies, lookup run lengths cycled per stream) of the table-mix census patterns
+TABLE_MIX = dict(tables_mix_ds2=("HBM-DS", 2, (1, 2)), tables_mix_ds4=("HBM-DS", 4, (1, 2)),
+                 tables_mix_q4=("HBM-Qwen", 4, (1, 8, 16)), tables_mix_q8=("HBM-Qwen", 8, (1, 8, 16)))
 CLASS_PATTERNS = ("ds_rot", "weights", "experts", "kv", "embed_head", "qwen", "tables", "tables_home", "rand_rot", "tables_seq",
-                  "tables_rot")
+                  "tables_rot", "tables_pp", "tables_ppq", "tables_ppmix", "tables_q8", "pp68", "kv4") + tuple(TABLE_MIX)
 PATTERN_CLASS = dict(ds_rot="weights", ds="weights", ds_nodup="weights", packed="weights", asbuilt="weights", rand="weights",
                      weights="weights", experts="experts", kv="kv", embed_head="embed_head", qwen="weights",
-                     tables="tables", tables_home="tables", tables_seq="tables", tables_rot="tables", rand_rot="weights")
+                     tables="tables", tables_home="tables", tables_seq="tables", tables_rot="tables", rand_rot="weights",
+                     tables_pp="tables", tables_ppq="tables", tables_ppmix="weights", tables_q8="tables", pp68="tables", kv4="kv",
+                     **{k: "tables" for k in TABLE_MIX})
 
 
 def _run(base, line_list, cls, what):
@@ -145,6 +150,42 @@ def gen_class(pattern, n_layers, rng):
             e = rng.randrange(17000)
             for a, n in zip(BL.table_entry(2000, e, 2, p), (64, 42)):
                 out.append((a >> 3, a & 7, words(n), True))
+    elif pattern in ("tables_pp", "tables_ppq"):   # HBM-ROTLAYOUT-TBL DIAGNOSTIC (refused by R4, measured 16.0 / 14.3):
+        lines = (38, 38) if pattern == "tables_pp" else (33, 33)   # one copy, every lookup on the HEAD sets 0, 1
+        for _ in range(32 * n_layers):
+            e = rng.randrange(17000)
+            out += [(2000 + e, k, words(n), True) for k, n in enumerate(lines)]
+    elif pattern == "tables_ppmix":                # DIAGNOSTIC (refused by R4, measured 52-54): the same 1-copy lookups,
+        ne = [n for (_, b, l) in L14 for n in split(b, l)] + [SH2]   # k = 1/2/16/1, before each DS weight layer run
+        base = 100 * 8
+        for L in range(n_layers):
+            for k in (1, 2, 16, 1):
+                for _ in range(k):
+                    e = rng.randrange(17000)
+                    out += [(2000 + e, kk, words(38), True) for kk in range(2)]
+                blk, base = _run(base, ne, "weights", f"mix weights L{L}")
+                out += blk
+    elif pattern == "pp68":                        # DIAGNOSTIC: 2-back set revisit with FULL 68-word blocks (sets 0,1,0,1)
+        for _ in range(64 * n_layers):
+            e = rng.randrange(17000)
+            out += [(2000 + e, k, 68, True) for k in range(2)]
+    elif pattern == "kv4":                         # DIAGNOSTIC: the v3 att_images KV run of one SM (4 full blocks on
+        ne = [n for (_, b, l) in L14 for n in split(b, l)] + [SH2]   # sets 0,1,2,1 = 2-back revisit, refused by R4),
+        base = 100 * 8                             # read twice (QK, PV) after each DS weight layer run
+        for L in range(n_layers):
+            blk, base = _run(base, ne, "weights", f"kv4 weights L{L}")
+            out += blk
+            r = 16384 + 2 * L
+            kv = [(r, 0, 68, False), (r, 1, 68, False), (r, 2, 68, False), (r + 1, 1, 68, False)]
+            out += kv + kv
+    elif pattern in TABLE_MIX:                     # HBM-ROTLAYOUT-TBL production shape: embedding lookups as tokens of
+        out = gen_table_mix(pattern, n_layers, rng)    # the first layer's stream (hbm_table_images.layout_stream)
+    elif pattern == "tables_q8":                   # Qwen-shape (31-line) entries, 8 phase copies, one long run of
+        import hbm_table_images as TI              # lookups laid out by layout_stream (copy per position)
+        pl = TI.plan(4128, "tables_q8")
+        toks = [("t", "emb")] * (32 * n_layers)
+        for j in TI.layout_stream(toks, {"emb": pl}, "tables_q8")["copies"]:
+            out += [(a >> 3, a & 7, words(n), True) for a, n in TI.lookup_addrs(pl, 2000, rng.randrange(15000), j)]
     elif pattern == "tables_home":                 # REFUSED: the same lookups, every entry on its home sets only
         for _ in range(32 * n_layers):
             e = rng.randrange(70000)
@@ -162,6 +203,39 @@ def gen_class(pattern, n_layers, rng):
         for i in range(32 * n_layers):
             r = 2000 + rng.randrange(17000)
             out += [(r, (2 * i) % 8, words(64), True), (r, (2 * i + 1) % 8, words(42), True)]
+    return out
+
+
+def gen_table_mix(pattern, n_layers, rng):
+    """per bench layer, one stream per run length k: k embedding lookups (random entries, copy from the layout) + the
+    first layer's weight blocks, laid out by hbm_table_images.layout_stream (R1..R4 + wrap), then the composite is
+    re-checked.  (row, set, words, runtime_row)"""
+    import hbm_table_images as TI
+    design, copies, ks = TABLE_MIX[pattern]
+    pl = TI.plan(10240 if design == "HBM-DS" else 4128, pattern, copies=copies)
+    out, p = [], 20000 * 8 - 1
+    lay = TI.token_streams(design, pl, ks)                    # behind the actual LM-head tail, wrapped into HEAD
+    _, hsets = TI.head_run_tail()
+
+    def static(st, w):
+        nonlocal p
+        p += 1
+        while p % 8 != st:
+            p += 1
+        out.append((p >> 3, p & 7, w, False))
+    for L in range(n_layers):
+        for k in ks:
+            for st in hsets:                                   # the previous token's LM-head run
+                static(st, 68)
+            ci = iter(lay[k]["copies"])
+            for t, st in zip(TI.stream_tokens(design, {"emb": pl}, "emb", k), lay[k]["sets"]):
+                if t[0] == "t":
+                    out += [(a >> 3, a & 7, words(n), True)
+                            for a, n in TI.lookup_addrs(pl, 2000, rng.randrange(15000), next(ci))]
+                else:
+                    static(st[0], t[1])
+    BL.check_stream("tables", [(None if rt else r, s_, w) for (r, s_, w, rt) in out], f"{pattern} composite")
+    assert max(r for r, *_ in out) < 1 << 15
     return out
 
 

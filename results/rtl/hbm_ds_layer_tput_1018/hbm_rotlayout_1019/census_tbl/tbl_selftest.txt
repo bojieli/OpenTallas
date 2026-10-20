@@ -1,0 +1,15 @@
+ok  DS 10,240-B rows -> pingpong x1 [38, 38]
+ok  Qwen 4,128-B rows -> pingpong x1 [33, 33] (padded 31 -> 2 x 33 lines)
+ok  phase x4 (v3 law, 64+42) passes runs of 16/32/64
+ok  REFUSED v3 phase x4, 2-lookup run (DS MTP): ROTLAYOUT REFUSED tables v3 phase x4, 2-lookup run (DS MTP) phase x4 k2 +wrap: R2 block 4 set 0 is 5 sets ahead of block
+ok  REFUSED v3 phase x8, 1 lookup (AR, 1-block rows): ROTLAYOUT REFUSED tables v3 phase x8, 1 lookup (AR, 1-block rows) phase x8 k1 +wrap: R1 block 1 (row None, set 0) follow
+ok  REFUSED pingpong with an unpadded 64+12 split (13 words): ROTLAYOUT REFUSED tables pingpong with an unpadded 64+12 split (13 words) pingpong x1 k2: R1 block 2 (row None, set 0) f
+ok  REFUSED pingpong with unpadded 16+15 halves: ROTLAYOUT REFUSED tables pingpong with unpadded 16+15 halves pingpong x1 k2: R1 block 2 (row None, set 0) follows block 
+ok  REFUSED in context: ROTLAYOUT REFUSED tables ctx pingpong x1 k1 in context (prev tail [(0, 68)]): R1 block 1 (row None, set 0) follows block
+ok  pingpong: 40 static blocks, 30 packed into the free sets of the table's row indices
+ok  pingpong x1: image 600 slots, 16-lookup run readback exact, check ROTATED
+ok  pingpong: 40 static blocks, 30 packed into the free sets of the table's row indices
+ok  pingpong x1: image 600 slots, 16-lookup run readback exact, check ROTATED
+ok  HBM-DS: chosen laws fit (13.89 GB)
+ok  HBM-Qwen: chosen laws fit (7.578 GB)
+SELFTEST PASS

@@ -1,0 +1,29 @@
+== HBM-DS (DeepSeek-V4.1-Flash, 96 dies, HBM 4 x 36 GB / die)
+  table embedding   rows/die     129,280 row 10,240 B  raw    1.324 GB | v3 4 phase copies     9.002 GB | chosen phase x2    4.501 GB  lookups {'AR': 1, 'MTP': 2}
+      copies 1 packed: REFUSED ROTLAYOUT REFUSED tables HBM-DS embedding k2: no rotated assignment at token 1 ('t', 'embedding')
+      copies 2 packed: ROTATED {'1': {'copies_used': [0], 'deviations': 1}, '2': {'copies_used': [0, 1], 'deviations': 2}}
+  table engram_l1   rows/die   4,000,065 row    264 B  raw    1.056 GB | v3 8 phase copies   278.533 GB | chosen sector_rows x1    1.056 GB  lookups {'AR': 1, 'MTP': 2}
+  table engram_l14  rows/die   4,000,174 row    264 B  raw    1.056 GB | v3 8 phase copies   278.540 GB | chosen sector_rows x1    1.056 GB  lookups {'AR': 1, 'MTP': 2}
+  static LM head                                                 0.014 GB
+  static RoPE / norm / sink / bias tables                        0.268 GB
+  static routed experts x3 position copies (hbm_bank_layout triples)    9.024 GB
+  static dense + shared + MTP weights                            0.171 GB
+  static KV (1M ctx, 4 users)                                    0.050 GB
+  fit [v3_phase_all] tables   566.075 + static   9.528 =   575.602 GB of 144 (399.7 %) DOES NOT FIT
+  fit [v3_phase ] tables    11.114 + static   9.528 =    20.642 GB of 144 (14.3 %) FITS
+  fit [chosen   ] tables     6.613 + static   9.528 =    16.141 GB of 144 (11.2 %) FITS
+  fit [raw      ] tables     3.436 + static   9.528 =    12.964 GB of 144 (9.0 %) FITS
+== HBM-Qwen (Qwen3-8B INT8, 4 dies, HBM 4 x 36 GB / die)
+  table embedding   rows/die     151,936 row  4,128 B  raw    0.627 GB | v3 8 phase copies    10.580 GB | chosen phase x4    5.290 GB  lookups {'AR': 1, 'DFlash_b8': 8, 'DFlash_b16': 16}
+      copies 1 packed: REFUSED ROTLAYOUT REFUSED tables HBM-Qwen embedding k8: no rotated assignment at token 1 ('t', 'embedding')
+      copies 2 packed: REFUSED ROTLAYOUT REFUSED tables HBM-Qwen embedding k8: no rotated assignment at token 2 ('t', 'embedding')
+      copies 2 spread: REFUSED ROTLAYOUT REFUSED tables HBM-Qwen embedding k8: no rotated assignment at token 1 ('t', 'embedding')
+      copies 4 packed: ROTATED {'1': {'copies_used': [0], 'deviations': 1}, '8': {'copies_used': [0, 1, 2, 3, 1, 2, 3, 1], 'deviations': 2}, '16': {'copies_used': [0, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3], 'deviations': 5}}
+  static LM head                                                 0.156 GB
+  static layer weights INT8 + scales                             1.736 GB
+  static KV FP8 (40,960 ctx, 4 users)                            3.020 GB
+  static RoPE / norm tables                                      0.021 GB
+  fit [v3_phase_all] tables    10.580 + static   4.933 =    15.513 GB of 144 (10.8 %) FITS
+  fit [v3_phase ] tables    10.580 + static   4.933 =    15.513 GB of 144 (10.8 %) FITS
+  fit [chosen   ] tables     5.290 + static   4.933 =    10.223 GB of 144 (7.1 %) FITS
+  fit [raw      ] tables     0.627 + static   4.933 =     5.560 GB of 144 (3.9 %) FITS

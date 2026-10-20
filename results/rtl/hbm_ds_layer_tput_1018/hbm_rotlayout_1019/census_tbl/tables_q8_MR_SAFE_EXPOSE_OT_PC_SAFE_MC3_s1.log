@@ -1,0 +1,162 @@
+BW blocks=128 sectors_per_pc=4224 hbm_cycles=4585 B_per_edge=95.97 steady_blocks=120 steady_cycles=4236 steady_B_per_edge=97.38 peak=104.17
+PC0 cols=4224 returns=4224 acts=512 refs=46 gaps>8=3 gap_cycles=78 first=1 done=4586
+PC1 cols=4224 returns=4224 acts=512 refs=46 gaps>8=3 gap_cycles=79 first=1 done=4581
+PC2 cols=4224 returns=4224 acts=512 refs=46 gaps>8=1 gap_cycles=26 first=1 done=4532
+PC3 cols=4224 returns=4224 acts=512 refs=46 gaps>8=1 gap_cycles=26 first=1 done=4531
+EXPOSE pc0 busy=4224 empty=31 refresh=0 closed=39 conflict=0 trcd=81 other=210 acts=512
+EXPOSE pc1 busy=4224 empty=31 refresh=0 closed=38 conflict=0 trcd=79 other=208 acts=512
+EXPOSE pc2 busy=4224 empty=31 refresh=0 closed=24 conflict=0 trcd=45 other=207 acts=512
+EXPOSE pc3 busy=4224 empty=31 refresh=0 closed=23 conflict=0 trcd=44 other=208 acts=512
+BLK 0 row 4201 slot 0 words 33 ret 107 106 107 106
+BLK 1 row 11325 slot 1 words 33 ret 141 140 141 140
+BLK 2 row 15884 slot 2 words 33 ret 176 175 176 175
+BLK 3 row 15144 slot 3 words 33 ret 212 211 212 211
+BLK 4 row 14513 slot 1 words 33 ret 246 245 246 245
+BLK 5 row 3033 slot 2 words 33 ret 280 279 280 279
+BLK 6 row 6179 slot 3 words 33 ret 315 314 315 314
+BLK 7 row 3931 slot 4 words 33 ret 350 349 350 349
+BLK 8 row 10117 slot 2 words 33 ret 384 383 384 383
+BLK 9 row 14467 slot 3 words 33 ret 419 418 419 418
+BLK 10 row 9364 slot 4 words 33 ret 454 453 454 453
+BLK 11 row 9737 slot 5 words 33 ret 488 487 488 487
+BLK 12 row 12675 slot 3 words 33 ret 523 522 523 522
+BLK 13 row 8219 slot 4 words 33 ret 563 557 558 557
+BLK 14 row 14922 slot 5 words 33 ret 597 591 592 591
+BLK 15 row 5439 slot 6 words 33 ret 632 626 627 626
+BLK 16 row 3537 slot 4 words 33 ret 666 660 661 660
+BLK 17 row 9993 slot 5 words 33 ret 700 694 695 694
+BLK 18 row 2464 slot 6 words 33 ret 735 729 730 729
+BLK 19 row 16636 slot 7 words 33 ret 770 764 765 764
+BLK 20 row 15693 slot 5 words 33 ret 804 798 799 798
+BLK 21 row 8386 slot 6 words 33 ret 839 833 834 833
+BLK 22 row 9090 slot 7 words 33 ret 873 867 868 867
+BLK 23 row 11952 slot 0 words 33 ret 908 902 903 902
+BLK 24 row 14489 slot 6 words 33 ret 942 936 937 936
+BLK 25 row 14569 slot 7 words 33 ret 976 970 971 970
+BLK 26 row 2034 slot 0 words 33 ret 1011 1005 1006 1005
+BLK 27 row 13400 slot 1 words 33 ret 1046 1040 1041 1040
+BLK 28 row 9297 slot 7 words 33 ret 1080 1074 1075 1074
+BLK 29 row 6363 slot 0 words 33 ret 1115 1109 1110 1109
+BLK 30 row 13821 slot 1 words 33 ret 1149 1143 1144 1143
+BLK 31 row 15137 slot 2 words 33 ret 1183 1177 1178 1177
+BLK 32 row 5748 slot 0 words 33 ret 1218 1212 1213 1212
+BLK 33 row 11685 slot 1 words 33 ret 1252 1246 1247 1246
+BLK 34 row 3674 slot 2 words 33 ret 1287 1281 1282 1281
+BLK 35 row 16768 slot 3 words 33 ret 1322 1316 1317 1316
+BLK 36 row 7200 slot 1 words 33 ret 1357 1351 1352 1351
+BLK 37 row 2501 slot 2 words 33 ret 1391 1385 1386 1385
+BLK 38 row 2365 slot 3 words 33 ret 1425 1419 1420 1419
+BLK 39 row 2416 slot 4 words 33 ret 1460 1454 1455 1454
+BLK 40 row 12642 slot 2 words 33 ret 1494 1488 1489 1488
+BLK 41 row 10870 slot 3 words 33 ret 1528 1522 1523 1524
+BLK 42 row 2150 slot 4 words 33 ret 1562 1556 1557 1558
+BLK 43 row 16438 slot 5 words 33 ret 1596 1590 1591 1592
+BLK 44 row 8245 slot 3 words 33 ret 1630 1624 1625 1626
+BLK 45 row 13247 slot 4 words 33 ret 1665 1659 1660 1661
+BLK 46 row 5548 slot 5 words 33 ret 1700 1694 1695 1696
+BLK 47 row 8915 slot 6 words 33 ret 1736 1730 1731 1732
+BLK 48 row 13892 slot 4 words 33 ret 1771 1765 1766 1767
+BLK 49 row 2475 slot 5 words 33 ret 1807 1801 1802 1803
+BLK 50 row 10644 slot 6 words 33 ret 1842 1836 1837 1838
+BLK 51 row 5632 slot 7 words 33 ret 1877 1871 1872 1873
+BLK 52 row 14512 slot 5 words 33 ret 1912 1906 1907 1908
+BLK 53 row 9174 slot 6 words 33 ret 1946 1940 1941 1942
+BLK 54 row 10123 slot 7 words 33 ret 1999 1996 1976 1977
+BLK 55 row 11058 slot 0 words 33 ret 2033 2030 2010 2011
+BLK 56 row 5818 slot 6 words 33 ret 2067 2064 2044 2045
+BLK 57 row 7663 slot 7 words 33 ret 2133 2128 2079 2080
+BLK 58 row 5782 slot 0 words 33 ret 2167 2162 2113 2114
+BLK 59 row 13089 slot 1 words 33 ret 2201 2196 2147 2148
+BLK 60 row 5584 slot 7 words 33 ret 2236 2231 2182 2183
+BLK 61 row 14467 slot 0 words 33 ret 2272 2267 2219 2219
+BLK 62 row 9530 slot 1 words 33 ret 2306 2301 2253 2253
+BLK 63 row 6747 slot 2 words 33 ret 2341 2336 2288 2288
+BLK 64 row 2352 slot 0 words 33 ret 2376 2371 2323 2323
+BLK 65 row 8818 slot 1 words 33 ret 2410 2405 2357 2357
+BLK 66 row 15722 slot 2 words 33 ret 2445 2439 2391 2391
+BLK 67 row 11116 slot 3 words 33 ret 2480 2474 2426 2426
+BLK 68 row 12523 slot 1 words 33 ret 2516 2510 2463 2462
+BLK 69 row 3638 slot 2 words 33 ret 2550 2544 2497 2496
+BLK 70 row 5045 slot 3 words 33 ret 2584 2578 2531 2530
+BLK 71 row 12311 slot 4 words 33 ret 2619 2613 2566 2565
+BLK 72 row 13856 slot 2 words 33 ret 2654 2648 2601 2600
+BLK 73 row 16089 slot 3 words 33 ret 2688 2682 2635 2634
+BLK 74 row 6856 slot 4 words 33 ret 2723 2717 2670 2669
+BLK 75 row 3980 slot 5 words 33 ret 2758 2752 2705 2704
+BLK 76 row 14175 slot 3 words 33 ret 2794 2788 2741 2740
+BLK 77 row 7450 slot 4 words 33 ret 2828 2822 2775 2774
+BLK 78 row 16673 slot 5 words 33 ret 2862 2856 2809 2808
+BLK 79 row 13820 slot 6 words 33 ret 2897 2891 2844 2843
+BLK 80 row 13652 slot 4 words 33 ret 2932 2926 2879 2878
+BLK 81 row 10205 slot 5 words 33 ret 2966 2960 2913 2912
+BLK 82 row 8915 slot 6 words 33 ret 3001 2995 2948 2947
+BLK 83 row 10318 slot 7 words 33 ret 3035 3029 2982 2981
+BLK 84 row 15599 slot 5 words 33 ret 3070 3064 3017 3016
+BLK 85 row 16912 slot 6 words 33 ret 3105 3099 3052 3051
+BLK 86 row 12982 slot 7 words 33 ret 3139 3133 3086 3085
+BLK 87 row 5110 slot 0 words 33 ret 3173 3167 3120 3119
+BLK 88 row 6970 slot 6 words 33 ret 3207 3201 3154 3153
+BLK 89 row 6655 slot 7 words 33 ret 3242 3236 3189 3188
+BLK 90 row 11626 slot 0 words 33 ret 3276 3270 3223 3222
+BLK 91 row 16458 slot 1 words 33 ret 3310 3304 3257 3256
+BLK 92 row 10181 slot 7 words 33 ret 3344 3338 3317 3316
+BLK 93 row 15864 slot 0 words 33 ret 3379 3373 3352 3351
+BLK 94 row 10278 slot 1 words 33 ret 3413 3407 3386 3385
+BLK 95 row 8444 slot 2 words 33 ret 3448 3442 3421 3420
+BLK 96 row 11650 slot 0 words 33 ret 3482 3476 3455 3454
+BLK 97 row 15980 slot 1 words 33 ret 3517 3511 3490 3489
+BLK 98 row 2565 slot 2 words 33 ret 3551 3545 3524 3523
+BLK 99 row 9868 slot 3 words 33 ret 3586 3580 3559 3558
+BLK 100 row 5977 slot 1 words 33 ret 3620 3614 3593 3592
+BLK 101 row 14185 slot 2 words 33 ret 3654 3648 3627 3626
+BLK 102 row 15064 slot 3 words 33 ret 3689 3683 3662 3661
+BLK 103 row 8623 slot 4 words 33 ret 3725 3719 3698 3697
+BLK 104 row 8788 slot 2 words 33 ret 3760 3754 3733 3732
+BLK 105 row 12891 slot 3 words 33 ret 3796 3790 3769 3768
+BLK 106 row 4834 slot 4 words 33 ret 3830 3824 3803 3802
+BLK 107 row 8014 slot 5 words 33 ret 3864 3858 3837 3836
+BLK 108 row 10991 slot 3 words 33 ret 3899 3893 3875 3874
+BLK 109 row 16462 slot 4 words 33 ret 3933 3927 3909 3908
+BLK 110 row 13518 slot 5 words 33 ret 3967 3961 3943 3942
+BLK 111 row 14711 slot 6 words 33 ret 4002 3996 3978 3977
+BLK 112 row 13050 slot 4 words 33 ret 4036 4030 4012 4011
+BLK 113 row 14094 slot 5 words 33 ret 4070 4064 4046 4045
+BLK 114 row 8139 slot 6 words 33 ret 4107 4102 4081 4080
+BLK 115 row 3416 slot 7 words 33 ret 4142 4137 4116 4115
+BLK 116 row 9191 slot 5 words 33 ret 4178 4173 4152 4151
+BLK 117 row 12875 slot 6 words 33 ret 4213 4208 4187 4186
+BLK 118 row 10330 slot 7 words 33 ret 4247 4242 4221 4220
+BLK 119 row 3768 slot 0 words 33 ret 4282 4277 4256 4255
+BLK 120 row 14754 slot 6 words 33 ret 4316 4311 4290 4289
+BLK 121 row 4682 slot 7 words 33 ret 4350 4374 4324 4323
+BLK 122 row 10535 slot 0 words 33 ret 4385 4409 4359 4358
+BLK 123 row 15761 slot 1 words 33 ret 4419 4443 4393 4392
+BLK 124 row 8443 slot 7 words 33 ret 4483 4478 4428 4427
+BLK 125 row 8070 slot 0 words 33 ret 4517 4512 4463 4462
+BLK 126 row 10023 slot 1 words 33 ret 4552 4547 4498 4497
+BLK 127 row 14005 slot 2 words 33 ret 4586 4581 4532 4531
+DONE dram_reads=16896 refreshes=184
+- /srv/opentallas-scratch/claude/hbm-rotlayout-tbl-1019/src/rtl/test/hbm_accel/svg_rel/tb_hbm_bw_pc4.sv:163: Verilog $finish
+BW_ROW_GRANT_TRUTH 00=1091 01=1205 10=1226 11=1070
+BW_REFRESH_CLEAR_TRUTH group=0 00=4500 01=46 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=1 00=4500 01=46 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=2 00=4500 01=46 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=3 00=4500 01=46 10=45 11=1
+BW_ROW_GRANT_TRUTH 00=1093 01=1203 10=1226 11=1070
+BW_REFRESH_CLEAR_TRUTH group=0 00=4544 01=2 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=1 00=4544 01=2 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=2 00=4544 01=2 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=3 00=4544 01=2 10=45 11=1
+BW_ROW_GRANT_TRUTH 00=1093 01=1203 10=1226 11=1070
+BW_REFRESH_CLEAR_TRUTH group=0 00=4499 01=47 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=1 00=4499 01=47 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=2 00=4499 01=47 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=3 00=4499 01=47 10=45 11=1
+BW_ROW_GRANT_TRUTH 00=1094 01=1202 10=1226 11=1070
+BW_REFRESH_CLEAR_TRUTH group=0 00=4544 01=2 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=1 00=4544 01=2 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=2 00=4544 01=2 10=45 11=1
+BW_REFRESH_CLEAR_TRUTH group=3 00=4544 01=2 10=45 11=1
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.160 s; speed 29.348 us/s
+- Verilator: cpu 0.160 s on 1 threads; allocated 9 MB

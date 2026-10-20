@@ -10,5 +10,5 @@ ok  asbuilt     weights    ROTLAYOUT REFUSED weights asbuilt: R1 block 1 (row 10
 ok  rand        weights    ROTLAYOUT REFUSED weights rand: R1 block 1 (row 18651, set 0) follows block 0 (row 4402, same set) with only 0 column words between (< T_HIDE 35): not rotated a
 ok  ds_nodup    weights    ROTLAYOUT REFUSED weights ds_nodup: R2 block 26 set 6 is 4 sets ahead of block 23 (set 2) only 102 column words earlier (< REF_WIN 160): REFpb may hold that set
 ok  experts     experts    ROTLAYOUT REFUSED experts experts: R2 block 6 set 5 is 4 sets ahead of block 3 (set 1) only 153 column words earlier (< REF_WIN 160): REFpb may hold that set (n
-ok  tables_home tables     ROTLAYOUT REFUSED tables tables_home: R2 block 6 set 6 is 5 sets ahead of block 5 (set 1) only 45 column words earlier (< REF_WIN 160): REFpb may hold that set 
+ok  tables_home tables     ROTLAYOUT REFUSED tables tables_home: R4a block 2 (row None, set 6) re-opens set 6 2 blocks after block 0 (row None) with only 45 words between (< 64; measured 
 SELFTEST PASS
