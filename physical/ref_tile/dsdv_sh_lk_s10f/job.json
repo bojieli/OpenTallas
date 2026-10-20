@@ -58,7 +58,7 @@
     "expect": "pass",
     "pass_regex": "^SEQHOST_POSITIVE_CASES PASS 6$",
     "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/",
-    "threads": 8,
+    "threads": 16,
     "peak_ram_gb": 8
    },
    {
@@ -304,6 +304,6 @@
  "structural_change": "S81-SHLK12 s10e = native-32 structural successor of s10c/s10d (both routes DRC2 M4 SRAM-pin/VSS shorts + 264/323 mapped roots >32): stream engine ot_s81_ing_stream_n32 (realigner ring in 2 x 16x257 SRAM, clone control domains, write-behind descriptor queue, 12-16-b enable slices), native-32 host wrapper / completion FIFO / fence copies, reset copy trees, CSR decode clones; pre-gate native census PASS max 32 (from 526). Same values on the same edges (lockstep + seqhost HSH 8); no edge added. s10f: same RTL as s10e with the pin-access variant SRAM abstracts (*_pa: PG straps 1.5 um and M4 OBS 1.0 um back from the pin faces).",
  "reroute_reason": {
   "kind": "rtl_change",
-  "note": "parallel fallback of dsdv_sh_lk_s10e (pin-access SRAM views); structural successor of s10c/s10d"
+  "note": "parallel fallback of dsdv_sh_lk_s10e (pin-access SRAM views); structural successor of s10c/s10d; priorfd0fc801b stopped on aggregatelegacy-mutant coverage11/24, not route/timing. Positive recipe now explicitly retains2seeds+2pair+collision+regiondrop; all current individual causal benches/witnesses remain."
  }
 }

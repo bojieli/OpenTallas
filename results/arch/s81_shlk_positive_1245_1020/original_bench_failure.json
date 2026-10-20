@@ -1,0 +1,42 @@
+{
+  "name": "dsdv_sh_lk_s10f-dsdv_sh_lk_s10f-fd0fc801b",
+  "status": "NEEDS_RTL",
+  "created": "2026-10-20T12:47:44-07:00",
+  "updated": "2026-10-20T12:56:59-07:00",
+  "host": "ot-epyc7",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/dsdv_sh_lk_s10f-dsdv_sh_lk_s10f-fd0fc801b",
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 3.072 MB sources in 37 modules, into 0.018 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.308 s (elab=0.068, cvt=0.181, bld=0.000); cpu 0.308 s on 1 threads; allocated 60.383 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_seqhost_exact": {
+      "expect": "pass",
+      "rc": 1,
+      "ok": false,
+      "tail": "=0/0 busy=0/0\nmutant 10 detected: \nmutant 11 NOT detected\nmutant 14 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/10/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0\nmutant 16 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/10/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0\nmutant 19 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/20/2195/0 unit_st=00000000000 g_fault=0/0 busy=0/0\nmutant 23 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/20/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0\nmutant 24 NOT detected\nlint clean: verilator -Wall, 0 errors, 0 unwaived warnings in dsdv_seq_host.sv (reused modules unchanged)\nSEQHOST_GATE FAIL\n",
+      "track": "parallel"
+    }
+  },
+  "events": [
+    "2026-10-20T12:47:44-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/dsdv_sh_lk_s10f-dsdv_sh_lk_s10f-fd0fc801b.json",
+    "2026-10-20T12:47:45-07:00 STRUCTURE-REPEAT: 3 failed routes of dsdv_sh_lk since its last CLOSED; structural_change: S81-SHLK12 s10e = native-32 structural successor of s10c/s10d (both routes DRC2 M4 SRAM-pin/VSS shorts + 264/323 mapped roots >32): stream engine ot_s81_ing_stream_n32 (realigner ring in 2 x 16x257 SRAM, clone control domains, write-behind descriptor queue, 12-16-b enable slices), native-32 host wra",
+    "2026-10-20T12:47:46-07:00 CLOSED-STANDS PASS: dsdv_sh_lk is CLOSED with a published view (dsdv_sh_lk-dsdv_sh_lk-ef442ffba @ ef442ffba); reroute_reason rtl_change: 15 of 23 RTL source file(s) differ from ef442ffba: physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1/ot_sram_1r1w2c_16x257_m1_bb.v, physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1/ot_sram_1r1w2c_16x289_m1_bb.v, rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv (verified)",
+    "2026-10-20T12:48:06-07:00 RELAXING-RULE ALLOWLIST: gate kept across 409eb6810; ",
+    "2026-10-20T12:48:06-07:00 CLOCK-RULE at submit: 14,318 sinks on the largest root; measured TT insertion 503.6 ps, FF insertion 418.2 ps, TT pin-flop spread 76.3 ps, FF pin-flop spread 66.5 ps; WARN: insertion 503.6 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+    "2026-10-20T12:48:06-07:00 REF_GATE WARN (refuse): fill: fill 32% = (macros/children 22841 + std 7840) / outline 97044 um2 (pin-bound: S81-SHLK12 s10e: measured synth std area 7,840 um2 (chip 30,671 incl. 6 macros 22,830): fill 32%. Width 345.6 is pin-bound (N 1207 / S 913 pins, 3.5 / 2.6 per um); height 280.8 holds three macro rows with 42-47-um row channels and 10.8-um halos on the macros' pin faces (the 16x257 / 16x289 masters carry ~10 pins/um on their 39-44-um side faces; s10c/s10d DRC2 M4 shorts were at those pins). Shrinking would narrow those pin-face channels.) | sources: 22 referenced file(s) do not exist: ['physical/common_flow/anchor_row_packing.tcl', 'physical/common_flow/cg_pushdown.tcl', 'physical/common_flow/clk_net_protect.tcl', 'physical/common_flow/grt_macro_top_layer.tcl', 'physical/common_flow/link_budget_consistent.sdc', 'physical/common_flow/link_budget_hook.tcl'] (fix: commit them / fix the path) | clock_rule: 14,318 sinks on the largest root; measured TT insertion 503.6 ps, FF insertion 418.2 ps, TT pin-flop spread 76.3 ps, FF pin-flop spread 66.5 ps; WARN: insertion 503.6 ps > 300 (guidance; boundary matched by parent compensation / landing) (fix: guidance only (owner 10-17 0dq): the check is pin-flop spre",
+    "2026-10-20T12:48:19-07:00 benches run in parallel with calibrate/route (22 benches; spec bench_first opts out)",
+    "2026-10-20T12:49:21-07:00 git-mirror sync fd0fc801b8b0 via upstream in 4s + extract 48s; 9536 views / 22.6 GB hard-linked from the host view store",
+    "2026-10-20T12:49:23-07:00 source fd0fc801b8b0 synced to ot-epyc7:/srv/opentallas-scratch/claude/closure-loop/dsdv_sh_lk_s10f-dsdv_sh_lk_s10f-fd0fc801b/src",
+    "2026-10-20T12:49:24-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-20T12:49:31-07:00 launched route (attempt 1) on ot-epyc7",
+    "2026-10-20T12:51:07-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-20T12:51:08-07:00 bench track: launched bench_seqhost_exact (bench_seqhost_exact.a1b1) beside route",
+    "2026-10-20T12:56:31-07:00 bench failed: stopped route (route.a1)",
+    "2026-10-20T12:56:31-07:00 NEEDS_RTL: bench_seqhost_exact expected PASS but rc=1",
+    "2026-10-20T12:56:59-07:00 auto-react: block dsdv_sh_lk has a live or closed sibling job; no action"
+  ]
+}
