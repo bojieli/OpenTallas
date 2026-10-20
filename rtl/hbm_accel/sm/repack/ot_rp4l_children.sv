@@ -60,7 +60,16 @@ module ot_rp4l_gs(input wire clk, input wire rst_n, input wire [49:0] g1in, inpu
  ot_hbm_accel_smh_kreg #(.W(48)) u_god0 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(g0m[47:0]), .q(gout[50 +: 48]));
  genvar k;
  for (k = 0; k < 2; k = k + 1) begin : g_gl
-  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50+48 +: 2]), .q(gout[(2+k)*50+48 +: 2]));
-  ot_hbm_accel_smh_kreg #(.W(48)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50 +: 48]), .q(gout[(2+k)*50 +: 48]));
+  wire [49:0] pass;
+`ifdef OT_SMH_G1_CAPTURE
+  // Match the added leaf G1 capture edge on both through lanes. All four
+  // gout lanes therefore retain one uniform +4 age relative to flat legacy.
+  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_cap_v (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50+48 +: 2]), .q(pass[49:48]));
+  ot_hbm_accel_smh_kreg #(.W(48)) u_cap_d (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(gpm[k*50 +: 48]), .q(pass[47:0]));
+`else
+  assign pass = gpm[k*50 +: 50];
+`endif
+  ot_hbm_accel_smh_kreg #(.W(2), .RST(`OT_RP4_RK)) u_v3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(pass[48 +: 2]), .q(gout[(2+k)*50+48 +: 2]));
+  ot_hbm_accel_smh_kreg #(.W(48)) u_d3 (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(pass[0 +: 48]), .q(gout[(2+k)*50 +: 48]));
  end
 endmodule
