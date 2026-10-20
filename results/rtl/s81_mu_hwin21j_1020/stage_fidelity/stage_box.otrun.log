@@ -1,0 +1,40 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: ot-epyc9       admits    95 GB (avail 199, growth 132, headroom 0, waiters 0/0 GB) load 45/128 running 29 disk 151 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-540239-1792486086 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "odb": "/out/stage_assigned.odb",
+  "odb_sha256": "fad442ecceeb21922c99ea50766f2c1a2ad414ef359c481ab51c60d0614a2a3a",
+  "roots": 49340,
+  "roles": {
+    "comb": 34874,
+    "ff": 12951,
+    "macro": 1344,
+    "input": 171
+  },
+  "max_count_by_role": {
+    "input": 13035,
+    "ff": 32,
+    "comb": 31,
+    "macro": 1
+  },
+  "over405_nonclock": 0,
+  "macros": 84,
+  "macro_masters": {
+    "ot_sram_1r1w_64x16_m1": 84
+  },
+  "scope": "Actual preGPL stage source graph after exact BUF/TIE filtering and all new birth ownership; conservative assigned whole-cell boxes versus actual unchanged fixed macro pin centers and placed port bounding boxes; no placed standard-cell timing/clock/PG qualification"
+}
+OVER32 0
+STAGE_BOX_BOUND 122376 402.56000000000006 over405 0
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-540239-1792486086): exit 0

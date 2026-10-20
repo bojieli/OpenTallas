@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: ot-epyc9       admits    16 GB (avail 169, growth 158, headroom 0, waiters 0/0 GB) load 50/128 running 32 disk 150 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-stagefix-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-543388-1792486207 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+HWIN_MISSING_NEG_PASS kind=ff removed=rst_n__ot_rl0$_DFF_P_ rejected=HWIN_NATIVE missing mapped cell rst_n__ot_rl0$_DFF_P_ no_group_mutation
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+HWIN_MISSING_NEG_PASS kind=comb removed=_49287_ rejected=HWIN_NATIVE missing mapped cell _49287_ no_group_mutation
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-543388-1792486207): exit 0

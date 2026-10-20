@@ -1,0 +1,15 @@
+{
+ "source_commit": "cf87adad8",
+ "source_netlist_sha256": "4ea21c9bb75a199a0ade71fb740fb740fced289a3c7c83d4ac02a474d89099c2",
+ "native_synth_odb_sha256": "7c11664de0992d8213929e16c0ca553cf0dc4dfd350e4748a70a79330f9ebd64",
+ "preGPL_failed_odb_sha256": "efd0a60e4777da1f2e476c91573d4dd9777b8a7b84ee318ba946fb86facebd91",
+ "removed_names": 3013,
+ "buffer_removed": 3011,
+ "tie_original_removed": 2,
+ "new_buf": 329,
+ "new_tie": 8797,
+ "new_tap": 1946,
+ "all_std_area_with_taps_um2": 9207.882359992882,
+ "functional_std_area_um2": 9151.13699999279,
+ "scope": "Infrastructure-only pre-GPL importer failure; no placement/timing/PG qualification. Exact removed master+name whitelist, no functional/FF waiver."
+}

@@ -1,0 +1,449 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_ff.lib
+read_db /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/1_synth.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/1_synth.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/1_synth.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/1_synth.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+
+==========================================================================
+Floorplan check_setup
+--------------------------------------------------------------------------
+number instances in verilog is 59664
+[INFO IFP-0001] Added 1424 rows of 10320 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 561.600 388.800 ) um
+[INFO IFP-0101] Core BBox: (  2.160  2.160 ) ( 559.440 386.640 ) um
+[INFO IFP-0102] Core area:                       214263.014 um^2
+[INFO IFP-0103] Total instances area:             41027.930 um^2
+[INFO IFP-0104] Effective utilization:                0.191
+[INFO IFP-0105] Number of instances:                  59664
+source /OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/fastroute.tcl
+set_dont_use "*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*"
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIELOx1_ASAP7_75t_R/L
+[INFO RSZ-0042] Inserted 248 tie TIELOx1_ASAP7_75t_R instances.
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIEHIx1_ASAP7_75t_R/H
+[INFO RSZ-0042] Inserted 8549 tie TIEHIx1_ASAP7_75t_R instances.
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -setup -skip_last_gasp -sequence unbuffer,sizeup,swap,vt_swap -verbose
+[WARNING EST-0027] no estimated parasitics. Using wire load models.
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 2.10s
+Default units for flow
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+   Layer   | Unit Resistance | Unit Capacitance 
+           |       (kohm/um) |          (fF/um)
+------------------------------------------------
+        M1 |        7.04e-02 |         1.00e-10
+        M2 |        2.97e-02 |         1.75e-01
+        M3 |        3.13e-02 |         1.56e-01
+        M4 |        1.80e-02 |         1.78e-01
+        M5 |        1.90e-02 |         1.64e-01
+        M6 |        1.19e-02 |         1.87e-01
+        M7 |        1.25e-02 |         1.63e-01
+        M8 |        8.45e-03 |         1.04e-01
+        M9 |        8.90e-03 |         9.28e-02
+       Pad |        0.00e+00 |         0.00e+00
+------------------------------------------------
+
+   Layer   | Via Resistance 
+           |         (kohm) 
+----------------------------
+        V1 |       1.72e-02 
+        V2 |       1.72e-02 
+        V3 |       1.72e-02 
+        V4 |       1.18e-02 
+        V5 |       1.18e-02 
+        V6 |       8.20e-03 
+        V7 |       8.20e-03 
+        V8 |       6.30e-03 
+        V9 |       6.30e-03 
+----------------------------
+Report metrics stage 2, floorplan final...
+
+==========================================================================
+floorplan final report_design_area
+--------------------------------------------------------------------------
+Design area 41413 um^2 19% utilization.
+source /work/io_constraints.tcl
+[INFO PPL-0070] Pin f_ks[0] placed at (238.58um, 0.02um) instead of (238.59um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[1] placed at (238.96um, 0.04um) instead of (238.97um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[2] placed at (239.34um, 0.02um) instead of (239.34um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[3] placed at (239.72um, 0.04um) instead of (239.72um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[4] placed at (240.09um, 0.02um) instead of (240.10um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[5] placed at (240.49um, 0.04um) instead of (240.47um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[6] placed at (240.85um, 0.02um) instead of (240.85um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[7] placed at (241.21um, 0.04um) instead of (241.23um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[8] placed at (241.60um, 0.02um) instead of (241.61um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[9] placed at (241.98um, 0.04um) instead of (241.99um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[10] placed at (242.36um, 0.02um) instead of (242.36um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[11] placed at (242.75um, 0.04um) instead of (242.74um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[12] placed at (243.12um, 0.02um) instead of (243.12um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[13] placed at (243.52um, 0.04um) instead of (243.49um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[14] placed at (243.87um, 0.02um) instead of (243.87um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[15] placed at (244.24um, 0.04um) instead of (244.25um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[16] placed at (244.63um, 0.02um) instead of (244.63um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[17] placed at (245.00um, 0.04um) instead of (245.00um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[18] placed at (245.38um, 0.02um) instead of (245.38um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[19] placed at (245.77um, 0.04um) instead of (245.76um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[20] placed at (246.14um, 0.02um) instead of (246.14um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[21] placed at (246.49um, 0.04um) instead of (246.51um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[22] placed at (246.90um, 0.02um) instead of (246.89um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[23] placed at (247.26um, 0.04um) instead of (247.27um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[24] placed at (247.65um, 0.02um) instead of (247.65um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[25] placed at (248.03um, 0.04um) instead of (248.02um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[26] placed at (248.41um, 0.02um) instead of (248.40um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[27] placed at (248.80um, 0.04um) instead of (248.78um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[28] placed at (249.16um, 0.02um) instead of (249.16um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[29] placed at (249.52um, 0.04um) instead of (249.53um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[30] placed at (249.92um, 0.02um) instead of (249.91um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[31] placed at (250.28um, 0.04um) instead of (250.29um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[32] placed at (250.68um, 0.02um) instead of (250.66um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[33] placed at (251.05um, 0.04um) instead of (251.04um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[34] placed at (251.43um, 0.02um) instead of (251.42um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[35] placed at (251.82um, 0.04um) instead of (251.80um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[36] placed at (252.19um, 0.02um) instead of (252.17um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[37] placed at (252.54um, 0.04um) instead of (252.55um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[38] placed at (252.94um, 0.02um) instead of (252.93um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[39] placed at (253.31um, 0.04um) instead of (253.31um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[40] placed at (253.70um, 0.02um) instead of (253.68um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[41] placed at (254.08um, 0.04um) instead of (254.06um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[42] placed at (254.42um, 0.02um) instead of (254.44um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[43] placed at (254.80um, 0.04um) instead of (254.81um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[44] placed at (255.18um, 0.02um) instead of (255.19um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[45] placed at (255.56um, 0.04um) instead of (255.57um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[46] placed at (255.93um, 0.02um) instead of (255.95um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[47] placed at (256.33um, 0.04um) instead of (256.32um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[48] placed at (256.69um, 0.02um) instead of (256.70um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[49] placed at (257.10um, 0.04um) instead of (257.08um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[50] placed at (257.44um, 0.02um) instead of (257.46um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[51] placed at (257.82um, 0.04um) instead of (257.83um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_ks[52] placed at (258.20um, 0.02um) instead of (258.21um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[0] placed at (259.03um, 0.02um) instead of (259.03um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[1] placed at (259.50um, 0.04um) instead of (259.49um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[2] placed at (259.96um, 0.02um) instead of (259.95um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[3] placed at (260.41um, 0.04um) instead of (260.42um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[4] placed at (260.87um, 0.02um) instead of (260.88um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[5] placed at (261.32um, 0.04um) instead of (261.34um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[6] placed at (261.80um, 0.02um) instead of (261.80um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[7] placed at (262.28um, 0.04um) instead of (262.26um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[8] placed at (262.74um, 0.02um) instead of (262.72um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[9] placed at (263.20um, 0.04um) instead of (263.19um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[10] placed at (263.64um, 0.02um) instead of (263.65um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[11] placed at (264.11um, 0.04um) instead of (264.11um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[12] placed at (264.57um, 0.02um) instead of (264.57um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[13] placed at (265.02um, 0.04um) instead of (265.03um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[14] placed at (265.51um, 0.02um) instead of (265.49um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[15] placed at (265.93um, 0.04um) instead of (265.95um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[16] placed at (266.41um, 0.02um) instead of (266.42um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[17] placed at (266.89um, 0.04um) instead of (266.88um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[18] placed at (267.35um, 0.02um) instead of (267.34um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[19] placed at (267.80um, 0.04um) instead of (267.80um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[20] placed at (268.25um, 0.02um) instead of (268.26um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[21] placed at (268.72um, 0.04um) instead of (268.72um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[22] placed at (269.18um, 0.02um) instead of (269.19um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[23] placed at (269.63um, 0.04um) instead of (269.65um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[24] placed at (270.12um, 0.02um) instead of (270.11um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mc[25] placed at (270.59um, 0.04um) instead of (270.57um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[0] placed at (276.24um, 0.02um) instead of (276.23um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[1] placed at (276.68um, 0.04um) instead of (276.69um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[2] placed at (277.14um, 0.02um) instead of (277.15um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[3] placed at (277.60um, 0.04um) instead of (277.62um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[4] placed at (278.07um, 0.02um) instead of (278.08um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[5] placed at (278.56um, 0.04um) instead of (278.54um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[6] placed at (279.01um, 0.02um) instead of (279.00um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[7] placed at (279.47um, 0.04um) instead of (279.46um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[8] placed at (279.91um, 0.02um) instead of (279.92um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[9] placed at (280.38um, 0.04um) instead of (280.38um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[10] placed at (280.85um, 0.02um) instead of (280.85um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[11] placed at (281.29um, 0.04um) instead of (281.31um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[12] placed at (281.78um, 0.02um) instead of (281.77um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[13] placed at (282.25um, 0.04um) instead of (282.23um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[14] placed at (282.68um, 0.02um) instead of (282.69um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[15] placed at (283.16um, 0.04um) instead of (283.15um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[16] placed at (283.62um, 0.02um) instead of (283.62um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[17] placed at (284.08um, 0.04um) instead of (284.08um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[18] placed at (284.55um, 0.02um) instead of (284.54um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[19] placed at (284.99um, 0.04um) instead of (285.00um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[20] placed at (285.45um, 0.02um) instead of (285.46um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[21] placed at (285.90um, 0.04um) instead of (285.92um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[22] placed at (286.39um, 0.02um) instead of (286.38um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[23] placed at (286.86um, 0.04um) instead of (286.85um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[24] placed at (287.32um, 0.02um) instead of (287.31um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin f_mw[25] placed at (287.77um, 0.04um) instead of (287.77um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[0] placed at (288.66um, 0.02um) instead of (288.67um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[1] placed at (289.21um, 0.04um) instead of (289.22um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[2] placed at (289.77um, 0.02um) instead of (289.76um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[3] placed at (290.32um, 0.04um) instead of (290.30um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[4] placed at (290.85um, 0.02um) instead of (290.85um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[5] placed at (291.37um, 0.04um) instead of (291.39um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[6] placed at (291.93um, 0.02um) instead of (291.93um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[7] placed at (292.48um, 0.04um) instead of (292.48um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[8] placed at (293.01um, 0.02um) instead of (293.02um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[9] placed at (293.58um, 0.04um) instead of (293.57um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[10] placed at (294.09um, 0.02um) instead of (294.11um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[11] placed at (294.64um, 0.04um) instead of (294.65um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[12] placed at (295.21um, 0.02um) instead of (295.20um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[13] placed at (295.74um, 0.04um) instead of (295.74um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[14] placed at (296.29um, 0.02um) instead of (296.28um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[15] placed at (296.84um, 0.04um) instead of (296.83um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[16] placed at (297.37um, 0.02um) instead of (297.37um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[17] placed at (297.90um, 0.04um) instead of (297.92um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[18] placed at (298.45um, 0.02um) instead of (298.46um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[19] placed at (299.00um, 0.04um) instead of (299.00um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[20] placed at (299.56um, 0.02um) instead of (299.55um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[21] placed at (300.11um, 0.04um) instead of (300.09um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[22] placed at (300.64um, 0.02um) instead of (300.63um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[23] placed at (301.16um, 0.04um) instead of (301.18um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[24] placed at (301.73um, 0.02um) instead of (301.72um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[25] placed at (302.27um, 0.04um) instead of (302.27um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[26] placed at (302.81um, 0.02um) instead of (302.81um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[27] placed at (303.37um, 0.04um) instead of (303.35um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[28] placed at (303.88um, 0.02um) instead of (303.90um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[29] placed at (304.43um, 0.04um) instead of (304.44um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[30] placed at (305.00um, 0.02um) instead of (304.98um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[31] placed at (305.53um, 0.04um) instead of (305.53um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[32] placed at (306.08um, 0.02um) instead of (306.07um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[33] placed at (306.64um, 0.04um) instead of (306.62um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[34] placed at (307.16um, 0.02um) instead of (307.16um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[35] placed at (307.69um, 0.04um) instead of (307.70um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[36] placed at (308.24um, 0.02um) instead of (308.25um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[37] placed at (308.80um, 0.04um) instead of (308.79um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[38] placed at (309.32um, 0.02um) instead of (309.33um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[39] placed at (309.90um, 0.04um) instead of (309.88um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[40] placed at (310.44um, 0.02um) instead of (310.42um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[41] placed at (310.96um, 0.04um) instead of (310.97um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[42] placed at (311.52um, 0.02um) instead of (311.51um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[43] placed at (312.06um, 0.04um) instead of (312.05um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[44] placed at (312.60um, 0.02um) instead of (312.60um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[45] placed at (313.16um, 0.04um) instead of (313.14um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[46] placed at (313.68um, 0.02um) instead of (313.68um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[47] placed at (314.22um, 0.04um) instead of (314.23um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[48] placed at (314.76um, 0.02um) instead of (314.77um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[49] placed at (315.32um, 0.04um) instead of (315.32um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[50] placed at (315.87um, 0.02um) instead of (315.86um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[51] placed at (316.38um, 0.04um) instead of (316.40um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[52] placed at (316.95um, 0.02um) instead of (316.95um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[53] placed at (317.48um, 0.04um) instead of (317.49um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[54] placed at (318.03um, 0.02um) instead of (318.03um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[55] placed at (318.59um, 0.04um) instead of (318.58um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[56] placed at (319.11um, 0.02um) instead of (319.12um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[57] placed at (319.64um, 0.04um) instead of (319.67um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[58] placed at (320.19um, 0.02um) instead of (320.21um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[59] placed at (320.75um, 0.04um) instead of (320.75um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[60] placed at (321.31um, 0.02um) instead of (321.30um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[61] placed at (321.85um, 0.04um) instead of (321.84um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[62] placed at (322.39um, 0.02um) instead of (322.38um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rt[63] placed at (322.91um, 0.04um) instead of (322.93um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin ck placed at (272.20um, 0.02um) instead of (272.20um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin rst_n placed at (274.62um, 0.02um) instead of (274.60um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[0] placed at (238.62um, 388.78um) instead of (238.62um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[1] placed at (239.05um, 388.76um) instead of (239.06um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[2] placed at (239.52um, 388.78um) instead of (239.50um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[3] placed at (239.96um, 388.76um) instead of (239.94um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[4] placed at (240.38um, 388.78um) instead of (240.38um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[5] placed at (240.83um, 388.76um) instead of (240.83um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[6] placed at (241.28um, 388.78um) instead of (241.27um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[7] placed at (241.69um, 388.76um) instead of (241.71um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[8] placed at (242.15um, 388.78um) instead of (242.15um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[9] placed at (242.60um, 388.76um) instead of (242.59um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[10] placed at (243.04um, 388.78um) instead of (243.03um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[11] placed at (243.47um, 388.76um) instead of (243.47um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[12] placed at (243.91um, 388.78um) instead of (243.91um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[13] placed at (244.38um, 388.76um) instead of (244.36um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[14] placed at (244.81um, 388.78um) instead of (244.80um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[15] placed at (245.24um, 388.76um) instead of (245.24um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[16] placed at (245.67um, 388.78um) instead of (245.68um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[17] placed at (246.11um, 388.76um) instead of (246.12um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[18] placed at (246.57um, 388.78um) instead of (246.56um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[19] placed at (247.02um, 388.76um) instead of (247.00um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[20] placed at (247.44um, 388.78um) instead of (247.44um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[21] placed at (247.88um, 388.76um) instead of (247.88um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[22] placed at (248.34um, 388.78um) instead of (248.33um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[23] placed at (248.75um, 388.76um) instead of (248.77um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[24] placed at (249.20um, 388.78um) instead of (249.21um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[25] placed at (249.66um, 388.76um) instead of (249.65um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[26] placed at (250.10um, 388.78um) instead of (250.09um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[27] placed at (250.52um, 388.76um) instead of (250.53um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[28] placed at (250.97um, 388.78um) instead of (250.97um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[29] placed at (251.44um, 388.76um) instead of (251.41um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[30] placed at (251.87um, 388.78um) instead of (251.86um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[31] placed at (252.30um, 388.76um) instead of (252.30um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[32] placed at (252.73um, 388.78um) instead of (252.74um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[33] placed at (253.16um, 388.76um) instead of (253.18um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[34] placed at (253.63um, 388.78um) instead of (253.62um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[35] placed at (254.08um, 388.76um) instead of (254.06um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[36] placed at (254.49um, 388.78um) instead of (254.50um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[37] placed at (254.94um, 388.76um) instead of (254.94um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[38] placed at (255.39um, 388.78um) instead of (255.38um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[39] placed at (255.80um, 388.76um) instead of (255.83um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[40] placed at (256.26um, 388.78um) instead of (256.27um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[41] placed at (256.72um, 388.76um) instead of (256.71um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[42] placed at (257.16um, 388.78um) instead of (257.15um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[43] placed at (257.58um, 388.76um) instead of (257.59um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[44] placed at (258.02um, 388.78um) instead of (258.03um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[45] placed at (258.49um, 388.76um) instead of (258.47um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[46] placed at (258.92um, 388.78um) instead of (258.92um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[47] placed at (259.36um, 388.76um) instead of (259.36um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[48] placed at (259.79um, 388.78um) instead of (259.80um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[49] placed at (260.22um, 388.76um) instead of (260.24um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[50] placed at (260.69um, 388.78um) instead of (260.68um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[51] placed at (261.13um, 388.76um) instead of (261.12um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[52] placed at (261.55um, 388.78um) instead of (261.56um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[53] placed at (262.00um, 388.76um) instead of (262.00um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[54] placed at (262.45um, 388.78um) instead of (262.44um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[55] placed at (262.91um, 388.76um) instead of (262.88um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[56] placed at (263.31um, 388.78um) instead of (263.33um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[57] placed at (263.77um, 388.76um) instead of (263.77um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[58] placed at (264.21um, 388.78um) instead of (264.21um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[59] placed at (264.64um, 388.76um) instead of (264.65um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[60] placed at (265.08um, 388.78um) instead of (265.09um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[61] placed at (265.55um, 388.76um) instead of (265.53um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[62] placed at (265.98um, 388.78um) instead of (265.97um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[63] placed at (266.41um, 388.76um) instead of (266.42um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[64] placed at (266.84um, 388.78um) instead of (266.86um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[65] placed at (267.28um, 388.76um) instead of (267.30um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[66] placed at (267.74um, 388.78um) instead of (267.74um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[67] placed at (268.19um, 388.76um) instead of (268.18um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[68] placed at (268.61um, 388.78um) instead of (268.62um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[69] placed at (269.05um, 388.76um) instead of (269.06um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[70] placed at (269.50um, 388.78um) instead of (269.50um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[71] placed at (269.96um, 388.76um) instead of (269.94um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[72] placed at (270.37um, 388.78um) instead of (270.38um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[73] placed at (270.83um, 388.76um) instead of (270.83um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[74] placed at (271.27um, 388.78um) instead of (271.27um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[75] placed at (271.69um, 388.76um) instead of (271.71um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[76] placed at (272.13um, 388.78um) instead of (272.15um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[77] placed at (272.60um, 388.76um) instead of (272.59um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[78] placed at (273.03um, 388.78um) instead of (273.03um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[79] placed at (273.47um, 388.76um) instead of (273.47um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[80] placed at (273.93um, 388.78um) instead of (273.92um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[81] placed at (274.38um, 388.76um) instead of (274.36um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[82] placed at (274.80um, 388.78um) instead of (274.80um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[83] placed at (275.24um, 388.76um) instead of (275.24um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[84] placed at (275.70um, 388.78um) instead of (275.68um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[85] placed at (276.11um, 388.76um) instead of (276.12um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[86] placed at (276.56um, 388.78um) instead of (276.56um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[87] placed at (277.02um, 388.76um) instead of (277.00um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[88] placed at (277.46um, 388.78um) instead of (277.44um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[89] placed at (277.88um, 388.76um) instead of (277.88um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[90] placed at (278.32um, 388.78um) instead of (278.33um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[91] placed at (278.75um, 388.76um) instead of (278.77um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[92] placed at (279.23um, 388.78um) instead of (279.21um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[93] placed at (279.66um, 388.76um) instead of (279.65um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[94] placed at (280.09um, 388.78um) instead of (280.09um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[95] placed at (280.52um, 388.76um) instead of (280.53um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[96] placed at (280.99um, 388.78um) instead of (280.97um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[97] placed at (281.44um, 388.76um) instead of (281.42um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[98] placed at (281.85um, 388.78um) instead of (281.86um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[99] placed at (282.30um, 388.76um) instead of (282.30um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[100] placed at (282.75um, 388.78um) instead of (282.74um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[101] placed at (283.16um, 388.76um) instead of (283.18um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[102] placed at (283.62um, 388.78um) instead of (283.62um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[103] placed at (284.08um, 388.76um) instead of (284.06um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[104] placed at (284.52um, 388.78um) instead of (284.50um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[105] placed at (284.94um, 388.76um) instead of (284.94um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[106] placed at (285.38um, 388.78um) instead of (285.38um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[107] placed at (285.80um, 388.76um) instead of (285.83um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[108] placed at (286.28um, 388.78um) instead of (286.27um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[109] placed at (286.72um, 388.76um) instead of (286.71um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[110] placed at (287.14um, 388.78um) instead of (287.15um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[111] placed at (287.58um, 388.76um) instead of (287.59um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[112] placed at (288.05um, 388.78um) instead of (288.03um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[113] placed at (288.49um, 388.76um) instead of (288.47um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[114] placed at (288.91um, 388.78um) instead of (288.92um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[115] placed at (289.36um, 388.76um) instead of (289.36um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[116] placed at (289.81um, 388.78um) instead of (289.80um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[117] placed at (290.22um, 388.76um) instead of (290.24um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[118] placed at (290.67um, 388.78um) instead of (290.68um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[119] placed at (291.13um, 388.76um) instead of (291.12um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[120] placed at (291.57um, 388.78um) instead of (291.56um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[121] placed at (292.00um, 388.76um) instead of (292.00um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[122] placed at (292.44um, 388.78um) instead of (292.44um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[123] placed at (292.91um, 388.76um) instead of (292.88um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[124] placed at (293.34um, 388.78um) instead of (293.33um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[125] placed at (293.77um, 388.76um) instead of (293.77um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[126] placed at (294.20um, 388.78um) instead of (294.21um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[127] placed at (294.64um, 388.76um) instead of (294.65um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[128] placed at (295.10um, 388.78um) instead of (295.09um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[129] placed at (295.55um, 388.76um) instead of (295.53um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[130] placed at (295.96um, 388.78um) instead of (295.97um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[131] placed at (296.41um, 388.76um) instead of (296.42um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[132] placed at (296.87um, 388.78um) instead of (296.86um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[133] placed at (297.28um, 388.76um) instead of (297.30um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[134] placed at (297.73um, 388.78um) instead of (297.74um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_c[135] placed at (298.19um, 388.76um) instead of (298.18um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[0] placed at (299.24um, 388.78um) instead of (299.24um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[1] placed at (299.72um, 388.76um) instead of (299.72um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[2] placed at (300.18um, 388.78um) instead of (300.19um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[3] placed at (300.68um, 388.76um) instead of (300.67um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[4] placed at (301.15um, 388.78um) instead of (301.15um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[5] placed at (301.64um, 388.76um) instead of (301.62um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[6] placed at (302.08um, 388.78um) instead of (302.10um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[7] placed at (302.60um, 388.76um) instead of (302.58um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[8] placed at (303.06um, 388.78um) instead of (303.06um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[9] placed at (303.52um, 388.76um) instead of (303.53um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[10] placed at (304.03um, 388.78um) instead of (304.01um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[11] placed at (304.48um, 388.76um) instead of (304.49um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[12] placed at (304.96um, 388.78um) instead of (304.97um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[13] placed at (305.44um, 388.76um) instead of (305.44um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[14] placed at (305.94um, 388.78um) instead of (305.92um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[15] placed at (306.40um, 388.76um) instead of (306.40um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[16] placed at (306.87um, 388.78um) instead of (306.88um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[17] placed at (307.36um, 388.76um) instead of (307.35um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[18] placed at (307.85um, 388.78um) instead of (307.83um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[19] placed at (308.32um, 388.76um) instead of (308.31um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[20] placed at (308.78um, 388.78um) instead of (308.78um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[21] placed at (309.28um, 388.76um) instead of (309.26um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[22] placed at (309.75um, 388.78um) instead of (309.74um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[23] placed at (310.24um, 388.76um) instead of (310.22um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[24] placed at (310.69um, 388.78um) instead of (310.69um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[25] placed at (311.15um, 388.76um) instead of (311.17um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[26] placed at (311.66um, 388.78um) instead of (311.65um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[27] placed at (312.11um, 388.76um) instead of (312.12um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[28] placed at (312.60um, 388.78um) instead of (312.60um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[29] placed at (313.07um, 388.76um) instead of (313.08um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[30] placed at (313.57um, 388.78um) instead of (313.56um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[31] placed at (314.03um, 388.76um) instead of (314.03um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[32] placed at (314.50um, 388.78um) instead of (314.51um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[33] placed at (314.99um, 388.76um) instead of (314.99um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[34] placed at (315.48um, 388.78um) instead of (315.47um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[35] placed at (315.95um, 388.76um) instead of (315.94um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[36] placed at (316.41um, 388.78um) instead of (316.42um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[37] placed at (316.91um, 388.76um) instead of (316.90um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[38] placed at (317.38um, 388.78um) instead of (317.38um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[39] placed at (317.87um, 388.76um) instead of (317.85um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[40] placed at (318.32um, 388.78um) instead of (318.33um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[41] placed at (318.83um, 388.76um) instead of (318.81um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[42] placed at (319.29um, 388.78um) instead of (319.28um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin mu_rc[43] placed at (319.74um, 388.76um) instead of (319.76um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin t_wf[0] placed at (321.09um, 388.78um) instead of (321.10um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin t_wf[1] placed at (322.52um, 388.76um) instead of (322.50um, 388.80um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+write_db /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/2_1_floorplan.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/2_1_floorplan.sdc
+Elapsed time: 0:49.70[h:]min:sec. CPU time: user 55.55 sys 4.06 (119%). Peak memory: 601608KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_1_floorplan             .odb           49            587 42b72bde0747508a496a
+2_1_floorplan             .sdc                             6f3f01aeef4b00fe810b

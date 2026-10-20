@@ -29,7 +29,7 @@
  "reset_ports": [
   "rst_n"
  ],
- "std_area_um2": 8964.76086,
+ "std_area_um2": 9151.137,
  "pins": {
   "S": [
    "f_ks",
@@ -928,7 +928,7 @@
  },
  "fill_reason": {
   "lattice_channel_bound": {
-   "why": "Codex S81 coordinator approved 10-20 original561.6x388.8outline/native250x39.96global-region plan (supersedes +43.2height). Same84R0 SRAM lattice positions and10.8halos; one fullwidth39.96band163.89..203.85, nativepostlinkstd8964.76086um2 (fullmappedconservative9100.42776) gives fullband40.26%actual/40.87%conservative; exact disjoint sourcebound global5730.71um2/9990um2=57.36%conservative/56.06%actual (exact ratio in proofJSON), periphery37..38%. ALL122693 nonclock native endpoint-box bounds<=402.56um under exactmanifest/fences+registered inputS/outputNcentre84.8um. No extra edge/area or ruleexception; nativepostGPL/DP/birth/TTFFclock/PG and parent nativepin contract still owed.",
+   "why": "Codex S81 coordinator approved 10-20 original561.6x388.8outline/native250x39.96global-region plan (supersedes +43.2height). Same84R0 SRAM lattice positions and10.8halos; one fullwidth39.96band163.89..203.85, nativepostlinkstd8964.76086um2 (fullmappedconservative9100.42776) gives fullband40.26%actual/40.87%conservative; exact disjoint sourcebound global5730.71um2/9990um2=57.36%conservative/56.06%actual (exact ratio in proofJSON), periphery37..38%. ALL122693 nonclock native endpoint-box bounds<=402.56um under exactmanifest/fences+registered inputS/outputNcentre84.8um. No extra edge/area or ruleexception; nativepostGPL/DP/birth/TTFFclock/PG and parent nativepin contract still owed. Actualpostunbuffer/retie+portBUFstage9151.137um2/22268.9088legalrows=41.0938%, GLOBAL5668.80606/9990=56.7448%; all122376actualstagepairs<=402.56um afterexact3013BUF/TIE removals and9126birthassignments. OriginalmappedFF13040vs11905(+1135), including176newcontrol/pointerstate and959restored keptphysicalcopies; no unpriced FF claim.",
    "lattice_um": 43.2,
    "min_channel_um": 22.41,
    "std_band_util": 0.40591800634722447,

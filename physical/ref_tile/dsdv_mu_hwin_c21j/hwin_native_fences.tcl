@@ -57,8 +57,24 @@ while {[gets $ot_hj_mf line]>=0} {
  dict set ::ot_hj_macro_owner $key $group
 }
 close $ot_hj_mf
+# Exact cf87adad8 preGPL native-stage removals, backed by SOURCE+ODB hashes.
+# No wildcard matching or missing functional/FF acceptance is permitted.
+set ::ot_hj_removed [dict create]
+set ot_hj_rf [open /src/physical/ref_tile/dsdv_mu_hwin_c21j/native_flow_removed_cells.tsv r]
+while {[gets $ot_hj_rf line]>=0} {
+ lassign [split $line "\t"] key master
+ if {$master ni {BUFx2_ASAP7_75t_R BUFx3_ASAP7_75t_R BUFx6f_ASAP7_75t_R TIELOx1_ASAP7_75t_R TIEHIx1_ASAP7_75t_R}} {error "HWIN_NATIVE invalid removed master $master"}
+ if {[dict exists $::ot_hj_removed $key]} {error "HWIN_NATIVE duplicate removed identity $key"}
+ dict set ::ot_hj_removed $key $master
+}
+close $ot_hj_rf
 proc ot_hj_fences_install {} {
  if {[info exists ::ot_hj_installed]} {return}
+ if {![info exists ::env(RESULTS_DIR)]} {error "HWIN_NATIVE missing source RESULTS_DIR"}
+ set source_netlist [file join $::env(RESULTS_DIR) 1_2_yosys.v]
+ if {![file isfile $source_netlist]} {error "HWIN_NATIVE missing source netlist $source_netlist"}
+ set source_hash [lindex [exec sha256sum $source_netlist] 0]
+ if {$source_hash ne "4ea21c9bb75a199a0ade71fb740fb740fced289a3c7c83d4ac02a474d89099c2"} {error "HWIN_NATIVE source netlist hash mismatch $source_hash"}
  set b [ord::get_db_block]; set native [dict create]
  foreach i [$b getInsts] {
   if {[[$i getMaster] isBlock]} {continue}
@@ -66,13 +82,13 @@ proc ot_hj_fences_install {} {
   if {[dict exists $native $key]} {error "HWIN_NATIVE ambiguous escaped native name $key"}
   dict set native $key [$i getName]
  }
- set groups [dict create];set matched [dict create]
+ set groups [dict create];set matched [dict create];set removed_count 0
  set inherited [expr {[$b findGroup ot_hj_GLOBAL] ne "NULL"}]
  set f [open /src/physical/ref_tile/dsdv_mu_hwin_c21j/native_cell_manifest.tsv r]
  while {[gets $f line]>=0} {
   lassign [split $line "\t"] group key
   if {![dict exists $native $key]} {
-   if {$inherited} {continue}
+   if {[dict exists $::ot_hj_removed $key]} {incr removed_count;continue}
    error "HWIN_NATIVE missing mapped cell $key"
   }
   set name [dict get $native $key]
@@ -90,7 +106,7 @@ proc ot_hj_fences_install {} {
   } else {ot_native_cell_fence ot_hj_$group [dict get $::ot_hj_boxes $group] $names}
  }
  set ::ot_hj_installed 1
- puts "HWIN_NATIVE_MANIFEST cells=[dict size $matched] inherited=$inherited"
+ puts "HWIN_NATIVE_MANIFEST cells=[dict size $matched] inherited=$inherited exact_flow_removed=$removed_count"
 }
 proc ot_hj_assign_births {seed} {
  set b [ord::get_db_block];set births [dict create]

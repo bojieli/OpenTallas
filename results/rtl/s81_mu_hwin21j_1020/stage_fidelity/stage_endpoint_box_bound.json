@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.native_stage_box_bound.v1",
+ "odb_sha256": "fad442ecceeb21922c99ea50766f2c1a2ad414ef359c481ab51c60d0614a2a3a",
+ "checked_endpoint_pairs": 122376,
+ "worst": {
+  "driver": {
+   "pin": "_53089_/Y",
+   "master": "OR4x1_ASAP7_75t_R",
+   "role": "comb",
+   "signal": "SIGNAL",
+   "xy": [
+    0.043,
+    0.135
+   ],
+   "box": [
+    155.8,
+    163.89,
+    405.8,
+    203.85
+   ],
+   "net": "_19158_"
+  },
+  "sink": {
+   "pin": "u_ot_pr_core.g_event_broadcast\\[0\\].g_boot_local.u_gap/_3_/B",
+   "master": "NAND2x1_ASAP7_75t_R",
+   "role": "comb",
+   "signal": "SIGNAL",
+   "xy": [
+    0.243,
+    0.153
+   ],
+   "box": [
+    43.2,
+    163.89,
+    61.96666666666667,
+    203.85
+   ],
+   "net": "_19158_"
+  },
+  "reach_um": 402.56000000000006
+ },
+ "over405": [],
+ "scope": "Actual preGPL stage source graph after exact BUF/TIE filtering and all new birth ownership; conservative assigned whole-cell boxes versus actual unchanged fixed macro pin centers and placed port bounding boxes; no placed standard-cell timing/clock/PG qualification"
+}
