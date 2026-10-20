@@ -123,17 +123,26 @@ module tb_hbm_hc_eng4_static;
         .gathered_mix_v(gm_v), .gathered_mix_row(gm_row), .gathered_mix_pos(gm_pos), .gathered_mix_data(gm_data),
         .result_v(n_result_v), .result_position(n_result_position), .result(n_result),
         .program_active(n_pa), .program_done(n_pd), .fault(n_fault));
-    integer nat_edges = 0, nat_bad = 0;
+    integer nat_edges = 0, nat_bad = 0, nat_bad_q = 0, nat_cmp = 0;
     always @(posedge clk) if (rst_n) begin
         nat_edges = nat_edges + 1;
-        if ({n_cf, n_pa, n_pd, n_fault, n_qd_v, n_qd_ss, n_qd_nv, n_qd_wa, n_qd_xa, n_qi_v, n_qi_kind, n_qi_slot, n_qi_lo,
-             n_qi_w, n_qi_cnt, n_qi_word, n_result_v, n_result_position, n_result} !==
-            {configured, pa, pd, fault, qd_v, qd_ss, qd_nv, qd_wa, qd_xa, qi_v, qi_kind, qi_slot, qi_lo,
-             qi_w, qi_cnt, qi_word, result_v, result_position, result}) begin
+        // control pins every edge; data pins on their valid edges (an unreset data flop powers up differently in the
+        // cell models -- DFFHQN state 0 = Q 1 -- and is never read before its valid edge)
+        if ({n_cf, n_pa, n_pd, n_fault, n_qd_v, n_qi_v, n_result_v} !== {configured, pa, pd, fault, qd_v, qi_v, result_v})
             nat_bad = nat_bad + 1;
-            if (nat_bad < 6) $display("NATIVE_MISMATCH edge %0d rv %b/%b f %b/%b qd_v %b/%b qi_v %b/%b", nat_edges,
-                n_result_v, result_v, n_fault, fault, n_qd_v, qd_v, n_qi_v, qi_v);
+        for (integer q = 0; q < 4; q = q + 1) begin
+            if (qd_v[q] && ({n_qd_ss[q], n_qd_nv[q*7 +: 7], n_qd_wa[q*10 +: 10], n_qd_xa[q*10 +: 10]} !==
+                            {qd_ss[q], qd_nv[q*7 +: 7], qd_wa[q*10 +: 10], qd_xa[q*10 +: 10]})) nat_bad = nat_bad + 1;
+            if (qi_v[q] && ({n_qi_kind[q], n_qi_slot[q*2 +: 2], n_qi_lo[q*5 +: 5], n_qi_w[q*5 +: 5], n_qi_cnt[q*12 +: 12],
+                             n_qi_word[q*10 +: 10]} !== {qi_kind[q], qi_slot[q*2 +: 2], qi_lo[q*5 +: 5], qi_w[q*5 +: 5],
+                             qi_cnt[q*12 +: 12], qi_word[q*10 +: 10]})) nat_bad = nat_bad + 1;
+            if (result_v[q] && ({n_result_position[q*3 +: 3], n_result[q*768 +: 768]} !==
+                                {result_position[q*3 +: 3], result[q*768 +: 768]})) nat_bad = nat_bad + 1;
         end
+        if (nat_bad != nat_bad_q && nat_bad < 6) $display("NATIVE_MISMATCH edge %0d rv %b/%b f %b/%b qd_v %b/%b qi_v %b/%b",
+            nat_edges, n_result_v, result_v, n_fault, fault, n_qd_v, qd_v, n_qi_v, qi_v);
+        nat_bad_q = nat_bad;
+        nat_cmp = nat_cmp + (|qd_v) + (|qi_v) + (|result_v);
     end
 `endif
     genvar gqi;
@@ -259,7 +268,7 @@ module tb_hbm_hc_eng4_static;
             mode, npos, mixseen, mixbad, outseen, outbad, tb0, last_mix_t, first_out_t, last_out_t, last_out_t - tb0);
         if (mode == 1) $finish;
 `ifdef HC_NATIVE
-        if (nat_bad == 0 && nat_edges > 100) $display("HC_NATIVE_EQ PASS edges=%0d", nat_edges);
+        if (nat_bad == 0 && nat_edges > 100 && nat_cmp > 50) $display("HC_NATIVE_EQ PASS edges=%0d data_edges=%0d", nat_edges, nat_cmp);
         else begin $display("HC_NATIVE_EQ FAIL mismatched_edges=%0d of %0d", nat_bad, nat_edges); $fatal(1, "HC_NATIVE_EQ FAIL"); end
 `endif
         if (mixbad || outbad || outseen != nemit || (mode == 0 && mixseen != 24 * npos)) $fatal(1, "HC_ENG FAIL");
