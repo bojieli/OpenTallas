@@ -124,5 +124,15 @@
     "fill": 0.4880052083333333,
     "pins": 359,
     "source_clock_edges": "same datastream update+gsum; gsel query capture+1, busy output+1, reset startup+3"
+  },
+  "bank_replica_identity": {
+    "hardened_master": "ot_s81ph_native_sel_hist_bank BANK0 W16 CB11 NB32 HPIPE1",
+    "replicas_per_quarter": 16,
+    "normalization": "bank b XORs its constant index into digit[7:5] and gsel[3:1]; identical BANK0 hardware counts original bins32*b..32*b+31. gsum concatenates in unchanged group order; gbin ORs the8 bank-registered masked groups.",
+    "extra_gsum_edges": 2,
+    "extra_group_query_edges": 3,
+    "extra_busy_edges": 3,
+    "reset_startup_edges_extra": 3,
+    "composition_status": "new soft/wires shell, not bound into releasequarter; multicast/reach regions and compiler price still owed beyond these explicit shell edges"
   }
 }
