@@ -195,6 +195,23 @@ proc ot_pg_strict_enabled {} {
 }
 # Call prepare once AFTER the final insertion/master/rule/region change in each
 # batch; discard mapping after that protection loop. Never cache across batches.
+# STANDARD mode (OT_PG_STRICT unset): bind PG at every protection site BEFORE
+# setDoNotTouch, with the design's own global_connect rules. OpenROAD
+# global_connect skips dont_touch instances (dbGlobalConnect.cpp:163), so cells
+# protected before the final global_connect stayed unbound (S81 STA.PG). This
+# runs exactly the connection the final global_connect would have made, earlier;
+# it adds no strict-mode stage/RC/coverage refusals. No rules yet (pre-PDN) ->
+# no-op. Strict mode keeps its own source-owned per-instance binder.
+proc ot_pg_standard_bind {where} {
+  if {[ot_pg_strict_enabled]} {return 0}
+  set block [ord::get_db_block]
+  if {$block eq "NULL" || $block eq ""} {return 0}
+  set rules [llength [$block getGlobalConnects]]
+  if {!$rules} {puts "OT_PG_STANDARD_BIND $where rules=0 skipped"; return 0}
+  global_connect
+  puts "OT_PG_STANDARD_BIND $where rules=$rules"
+  return $rules
+}
 proc ot_pg_bind_instance_before_protect {mapping inst} {
   if {![ot_pg_strict_enabled]} {return 0}
   return [ot_pg_bind_before_protect $mapping $inst]

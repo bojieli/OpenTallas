@@ -4,7 +4,7 @@ set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
 if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
 source $ot_pg_helper
 ot_pg_install_final_write_guard
-ot_pg_install_rc_observers 1
+ot_pg_install_rc_observers
 ot_pg_install_unsupported_birth_guards
 
 # [cg-hc] 2026-10-10: keep every clock-gate cell and the flop that drives its ENA as ONE instance (OT_CTS_FIX_HOOKS,
@@ -15,21 +15,25 @@ ot_pg_install_unsupported_birth_guards
 # change.
 proc ot_icg_dont_touch {} {
   set blk [ord::get_db_block]
-  ot_pg_require_cts_source_context
-  set targets {}
-  foreach inst [$blk getInsts] {
-    if {![string match "ICG*" [[$inst getMaster] getName]]} continue
-    lappend targets $inst
-    set enable [$inst findITerm ENA]
-    if {$enable eq "NULL" || $enable eq ""} continue
-    set net [$enable getNet]
-    if {$net eq "NULL" || $net eq ""} continue
-    set driver [$net getFirstOutput]
-    if {$driver eq "NULL" || $driver eq ""} continue
-    set source [$driver getInst]
-    if {[[$source getMaster] isSequential]} {lappend targets $source}
+  if {[ot_pg_strict_enabled]} {
+    ot_pg_require_cts_source_context
+    set targets {}
+    foreach inst [$blk getInsts] {
+      if {![string match "ICG*" [[$inst getMaster] getName]]} continue
+      lappend targets $inst
+      set enable [$inst findITerm ENA]
+      if {$enable eq "NULL" || $enable eq ""} continue
+      set net [$enable getNet]
+      if {$net eq "NULL" || $net eq ""} continue
+      set driver [$net getFirstOutput]
+      if {$driver eq "NULL" || $driver eq ""} continue
+      set source [$driver getInst]
+      if {[[$source getMaster] isSequential]} {lappend targets $source}
+    }
+    ot_pg_bind_batch_before_protect $blk [lsort -unique $targets]
+  } else {
+    ot_pg_standard_bind icg_dont_touch
   }
-  ot_pg_bind_batch_before_protect $blk [lsort -unique $targets]
   set ng 0; set nf 0
   foreach i [$blk getInsts] {
     if {![string match "ICG*" [[$i getMaster] getName]]} continue
