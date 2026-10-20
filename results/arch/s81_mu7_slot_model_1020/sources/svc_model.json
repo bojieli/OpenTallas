@@ -1,0 +1,1805 @@
+{
+  "status": "MODEL_ONLY_NOT_A_DIE_PLAN_OR_CLOSURE",
+  "sources": {
+    "bind_table_p4l3_mu.json": {
+      "sha256": "3d70c6e1d20f20e70fa4011160e48cc1d5c703a032834e2af6f64199a6f75ad7",
+      "bytes": 126769
+    },
+    "dsdv_svc_rs.sv": {
+      "sha256": "dccf60a6e5d58fd71cd322c6131663f3d58abbeb6e59cc7b9afbe42588b7f8da",
+      "bytes": 36042
+    },
+    "dv_plan.py": {
+      "sha256": "d643fb5351de26640cfa2026110db977068bb0599bf5dbb91e9b3996e39a6698",
+      "bytes": 104062
+    },
+    "dv_plan_placefix.py": {
+      "sha256": "3e455232d8afb8d8cd18e00f21ed38be755ea068e18c595c5cfd1e3c328ac108",
+      "bytes": 109380
+    },
+    "dv_rvcase.py": {
+      "sha256": "e6f399e3391aab03f407a0afb53d37f14593eba32278342db50e466e267963b1",
+      "bytes": 60818
+    },
+    "p4l_plan.json": {
+      "sha256": "a92f7ab89fd50423d6f3b8d34885bba752d7dc86f1f16635712ce31ff1e419d5",
+      "bytes": 505453
+    },
+    "svc_rs_lp_kit.py": {
+      "sha256": "6edc4dcf659ec68ac6a496d7ae675f0d5741d6e6d93876f778f04eebd7820871",
+      "bytes": 19085
+    }
+  },
+  "source_refs": {
+    "main_plan_and_generators": "dd875958b0119c9739332101b4e19334f643fa66",
+    "historical_landed_kit": "c8cb29cf3",
+    "prior_placefix": "6e3559855"
+  },
+  "aggregate_face_limit_pins_per_um": 6.0,
+  "active_lane_rows": [
+    {
+      "instance": "rsv_00",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "S": {
+          "active_lane_bits": 1244,
+          "pins_per_um": 0.9936308581488116,
+          "lanes": [
+            {
+              "link": "hrq_00",
+              "bits": 682
+            },
+            {
+              "link": "hrd_00",
+              "bits": 562
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 4545,
+          "pins_per_um": 3.630267082223753,
+          "lanes": [
+            {
+              "link": "dn_01_00",
+              "bits": 805
+            },
+            {
+              "link": "up_00_01",
+              "bits": 16
+            },
+            {
+              "link": "pr_00_01",
+              "bits": 514
+            },
+            {
+              "link": "sg_00_01",
+              "bits": 2133
+            },
+            {
+              "link": "ss_01_00",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_01",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "E": {
+          "active_lane_bits": 5789,
+          "pins_per_um": 4.327124319799078,
+          "lanes": [
+            {
+              "link": "hrq_01",
+              "bits": 682
+            },
+            {
+              "link": "hrd_01",
+              "bits": 562
+            },
+            {
+              "link": "dn_03_01",
+              "bits": 805
+            },
+            {
+              "link": "up_01_03",
+              "bits": 16
+            },
+            {
+              "link": "pr_01_03",
+              "bits": 514
+            },
+            {
+              "link": "sg_01_03",
+              "bits": 2133
+            },
+            {
+              "link": "ss_03_01",
+              "bits": 1077
+            }
+          ]
+        },
+        "S": {
+          "active_lane_bits": 4545,
+          "pins_per_um": 3.630267082223753,
+          "lanes": [
+            {
+              "link": "dn_01_00",
+              "bits": 805
+            },
+            {
+              "link": "up_00_01",
+              "bits": 16
+            },
+            {
+              "link": "pr_00_01",
+              "bits": 514
+            },
+            {
+              "link": "sg_00_01",
+              "bits": 2133
+            },
+            {
+              "link": "ss_01_00",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_02",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "S": {
+          "active_lane_bits": 1244,
+          "pins_per_um": 0.9936308581488116,
+          "lanes": [
+            {
+              "link": "hrq_02",
+              "bits": 682
+            },
+            {
+              "link": "hrd_02",
+              "bits": 562
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 6.194218090791025,
+          "lanes": [
+            {
+              "link": "dn_03_02",
+              "bits": 805
+            },
+            {
+              "link": "up_02_03",
+              "bits": 16
+            },
+            {
+              "link": "pr_02_03",
+              "bits": 514
+            },
+            {
+              "link": "sg_02_03",
+              "bits": 2133
+            },
+            {
+              "link": "ss_03_02",
+              "bits": 1077
+            },
+            {
+              "link": "sg_03_02",
+              "bits": 2133
+            },
+            {
+              "link": "ss_02_03",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_03",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "E": {
+          "active_lane_bits": 5789,
+          "pins_per_um": 4.327124319799078,
+          "lanes": [
+            {
+              "link": "hrq_03",
+              "bits": 682
+            },
+            {
+              "link": "hrd_03",
+              "bits": 562
+            },
+            {
+              "link": "dn_05_03",
+              "bits": 805
+            },
+            {
+              "link": "up_03_05",
+              "bits": 16
+            },
+            {
+              "link": "pr_03_05",
+              "bits": 514
+            },
+            {
+              "link": "sg_03_05",
+              "bits": 2133
+            },
+            {
+              "link": "ss_05_03",
+              "bits": 1077
+            }
+          ]
+        },
+        "W": {
+          "active_lane_bits": 4545,
+          "pins_per_um": 3.397267236739819,
+          "lanes": [
+            {
+              "link": "dn_03_01",
+              "bits": 805
+            },
+            {
+              "link": "up_01_03",
+              "bits": 16
+            },
+            {
+              "link": "pr_01_03",
+              "bits": 514
+            },
+            {
+              "link": "sg_01_03",
+              "bits": 2133
+            },
+            {
+              "link": "ss_03_01",
+              "bits": 1077
+            }
+          ]
+        },
+        "S": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 6.194218090791025,
+          "lanes": [
+            {
+              "link": "dn_03_02",
+              "bits": 805
+            },
+            {
+              "link": "up_02_03",
+              "bits": 16
+            },
+            {
+              "link": "pr_02_03",
+              "bits": 514
+            },
+            {
+              "link": "sg_02_03",
+              "bits": 2133
+            },
+            {
+              "link": "ss_03_02",
+              "bits": 1077
+            },
+            {
+              "link": "sg_03_02",
+              "bits": 2133
+            },
+            {
+              "link": "ss_02_03",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_04",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "S": {
+          "active_lane_bits": 1244,
+          "pins_per_um": 0.9936308581488116,
+          "lanes": [
+            {
+              "link": "hrq_04",
+              "bits": 682
+            },
+            {
+              "link": "hrd_04",
+              "bits": 562
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 6.194218090791025,
+          "lanes": [
+            {
+              "link": "dn_05_04",
+              "bits": 805
+            },
+            {
+              "link": "up_04_05",
+              "bits": 16
+            },
+            {
+              "link": "pr_04_05",
+              "bits": 514
+            },
+            {
+              "link": "sg_04_05",
+              "bits": 2133
+            },
+            {
+              "link": "ss_05_04",
+              "bits": 1077
+            },
+            {
+              "link": "sg_05_04",
+              "bits": 2133
+            },
+            {
+              "link": "ss_04_05",
+              "bits": 1077
+            }
+          ]
+        },
+        "E": {
+          "active_lane_bits": 6420,
+          "pins_per_um": 4.798780123183639,
+          "lanes": [
+            {
+              "link": "sg_04_06",
+              "bits": 2133
+            },
+            {
+              "link": "ss_06_04",
+              "bits": 1077
+            },
+            {
+              "link": "sg_06_04",
+              "bits": 2133
+            },
+            {
+              "link": "ss_04_06",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_05",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "E": {
+          "active_lane_bits": 5789,
+          "pins_per_um": 4.327124319799078,
+          "lanes": [
+            {
+              "link": "hrq_05",
+              "bits": 682
+            },
+            {
+              "link": "hrd_05",
+              "bits": 562
+            },
+            {
+              "link": "dn_05_07",
+              "bits": 805
+            },
+            {
+              "link": "up_07_05",
+              "bits": 16
+            },
+            {
+              "link": "pr_07_05",
+              "bits": 514
+            },
+            {
+              "link": "sg_05_07",
+              "bits": 2133
+            },
+            {
+              "link": "ss_07_05",
+              "bits": 1077
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 1942,
+          "pins_per_um": 1.5511504232516014,
+          "lanes": [
+            {
+              "link": "q_W_l0",
+              "bits": 276
+            },
+            {
+              "link": "q_W_l1",
+              "bits": 276
+            },
+            {
+              "link": "pv_W",
+              "bits": 562
+            },
+            {
+              "link": "jw_W_l0",
+              "bits": 276
+            },
+            {
+              "link": "jw_W_l1",
+              "bits": 276
+            },
+            {
+              "link": "jd_W",
+              "bits": 276
+            }
+          ]
+        },
+        "W": {
+          "active_lane_bits": 4545,
+          "pins_per_um": 3.397267236739819,
+          "lanes": [
+            {
+              "link": "dn_05_03",
+              "bits": 805
+            },
+            {
+              "link": "up_03_05",
+              "bits": 16
+            },
+            {
+              "link": "pr_03_05",
+              "bits": 514
+            },
+            {
+              "link": "sg_03_05",
+              "bits": 2133
+            },
+            {
+              "link": "ss_05_03",
+              "bits": 1077
+            }
+          ]
+        },
+        "S": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 6.194218090791025,
+          "lanes": [
+            {
+              "link": "dn_05_04",
+              "bits": 805
+            },
+            {
+              "link": "up_04_05",
+              "bits": 16
+            },
+            {
+              "link": "pr_04_05",
+              "bits": 514
+            },
+            {
+              "link": "sg_04_05",
+              "bits": 2133
+            },
+            {
+              "link": "ss_05_04",
+              "bits": 1077
+            },
+            {
+              "link": "sg_05_04",
+              "bits": 2133
+            },
+            {
+              "link": "ss_04_05",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_06",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "S": {
+          "active_lane_bits": 1244,
+          "pins_per_um": 0.9936308581488116,
+          "lanes": [
+            {
+              "link": "hrq_06",
+              "bits": 682
+            },
+            {
+              "link": "hrd_06",
+              "bits": 562
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 6.194218090791025,
+          "lanes": [
+            {
+              "link": "dn_07_06",
+              "bits": 805
+            },
+            {
+              "link": "up_06_07",
+              "bits": 16
+            },
+            {
+              "link": "pr_06_07",
+              "bits": 514
+            },
+            {
+              "link": "sg_06_07",
+              "bits": 2133
+            },
+            {
+              "link": "ss_07_06",
+              "bits": 1077
+            },
+            {
+              "link": "sg_07_06",
+              "bits": 2133
+            },
+            {
+              "link": "ss_06_07",
+              "bits": 1077
+            }
+          ]
+        },
+        "W": {
+          "active_lane_bits": 6420,
+          "pins_per_um": 4.798780123183639,
+          "lanes": [
+            {
+              "link": "sg_04_06",
+              "bits": 2133
+            },
+            {
+              "link": "ss_06_04",
+              "bits": 1077
+            },
+            {
+              "link": "sg_06_04",
+              "bits": 2133
+            },
+            {
+              "link": "ss_04_06",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_07",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "E": {
+          "active_lane_bits": 4454,
+          "pins_per_um": 3.329247144651079,
+          "lanes": [
+            {
+              "link": "hrq_07",
+              "bits": 682
+            },
+            {
+              "link": "hrd_07",
+              "bits": 562
+            },
+            {
+              "link": "sg_07_09",
+              "bits": 2133
+            },
+            {
+              "link": "ss_09_07",
+              "bits": 1077
+            }
+          ]
+        },
+        "W": {
+          "active_lane_bits": 4545,
+          "pins_per_um": 3.397267236739819,
+          "lanes": [
+            {
+              "link": "dn_05_07",
+              "bits": 805
+            },
+            {
+              "link": "up_07_05",
+              "bits": 16
+            },
+            {
+              "link": "pr_07_05",
+              "bits": 514
+            },
+            {
+              "link": "sg_05_07",
+              "bits": 2133
+            },
+            {
+              "link": "ss_07_05",
+              "bits": 1077
+            }
+          ]
+        },
+        "S": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 6.194218090791025,
+          "lanes": [
+            {
+              "link": "dn_07_06",
+              "bits": 805
+            },
+            {
+              "link": "up_06_07",
+              "bits": 16
+            },
+            {
+              "link": "pr_06_07",
+              "bits": 514
+            },
+            {
+              "link": "sg_06_07",
+              "bits": 2133
+            },
+            {
+              "link": "ss_07_06",
+              "bits": 1077
+            },
+            {
+              "link": "sg_07_06",
+              "bits": 2133
+            },
+            {
+              "link": "ss_06_07",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_08",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "S": {
+          "active_lane_bits": 1244,
+          "pins_per_um": 0.9936308581488116,
+          "lanes": [
+            {
+              "link": "hrq_08",
+              "bits": 682
+            },
+            {
+              "link": "hrd_08",
+              "bits": 562
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 4545,
+          "pins_per_um": 3.630267082223753,
+          "lanes": [
+            {
+              "link": "dn_09_08",
+              "bits": 805
+            },
+            {
+              "link": "up_08_09",
+              "bits": 16
+            },
+            {
+              "link": "pr_08_09",
+              "bits": 514
+            },
+            {
+              "link": "sg_09_08",
+              "bits": 2133
+            },
+            {
+              "link": "ss_08_09",
+              "bits": 1077
+            }
+          ]
+        },
+        "E": {
+          "active_lane_bits": 3210,
+          "pins_per_um": 2.3993900615918196,
+          "lanes": [
+            {
+              "link": "sg_08_10",
+              "bits": 2133
+            },
+            {
+              "link": "ss_10_08",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_09",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "E": {
+          "active_lane_bits": 5789,
+          "pins_per_um": 4.327124319799078,
+          "lanes": [
+            {
+              "link": "hrq_09",
+              "bits": 682
+            },
+            {
+              "link": "hrd_09",
+              "bits": 562
+            },
+            {
+              "link": "dn_11_09",
+              "bits": 805
+            },
+            {
+              "link": "up_09_11",
+              "bits": 16
+            },
+            {
+              "link": "pr_09_11",
+              "bits": 514
+            },
+            {
+              "link": "sg_11_09",
+              "bits": 2133
+            },
+            {
+              "link": "ss_09_11",
+              "bits": 1077
+            }
+          ]
+        },
+        "S": {
+          "active_lane_bits": 4545,
+          "pins_per_um": 3.630267082223753,
+          "lanes": [
+            {
+              "link": "dn_09_08",
+              "bits": 805
+            },
+            {
+              "link": "up_08_09",
+              "bits": 16
+            },
+            {
+              "link": "pr_08_09",
+              "bits": 514
+            },
+            {
+              "link": "sg_09_08",
+              "bits": 2133
+            },
+            {
+              "link": "ss_08_09",
+              "bits": 1077
+            }
+          ]
+        },
+        "W": {
+          "active_lane_bits": 3210,
+          "pins_per_um": 2.3993900615918196,
+          "lanes": [
+            {
+              "link": "sg_07_09",
+              "bits": 2133
+            },
+            {
+              "link": "ss_09_07",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_10",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "S": {
+          "active_lane_bits": 1244,
+          "pins_per_um": 0.9936308581488116,
+          "lanes": [
+            {
+              "link": "hrq_10",
+              "bits": 682
+            },
+            {
+              "link": "hrd_10",
+              "bits": 562
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 4545,
+          "pins_per_um": 3.630267082223753,
+          "lanes": [
+            {
+              "link": "dn_11_10",
+              "bits": 805
+            },
+            {
+              "link": "up_10_11",
+              "bits": 16
+            },
+            {
+              "link": "pr_10_11",
+              "bits": 514
+            },
+            {
+              "link": "sg_10_11",
+              "bits": 2133
+            },
+            {
+              "link": "ss_11_10",
+              "bits": 1077
+            }
+          ]
+        },
+        "W": {
+          "active_lane_bits": 3210,
+          "pins_per_um": 2.3993900615918196,
+          "lanes": [
+            {
+              "link": "sg_08_10",
+              "bits": 2133
+            },
+            {
+              "link": "ss_10_08",
+              "bits": 1077
+            }
+          ]
+        },
+        "E": {
+          "active_lane_bits": 6420,
+          "pins_per_um": 4.798780123183639,
+          "lanes": [
+            {
+              "link": "sg_10_12",
+              "bits": 2133
+            },
+            {
+              "link": "ss_12_10",
+              "bits": 1077
+            },
+            {
+              "link": "sg_12_10",
+              "bits": 2133
+            },
+            {
+              "link": "ss_10_12",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_11",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "W": {
+          "active_lane_bits": 5789,
+          "pins_per_um": 4.327124319799078,
+          "lanes": [
+            {
+              "link": "hrq_11",
+              "bits": 682
+            },
+            {
+              "link": "hrd_11",
+              "bits": 562
+            },
+            {
+              "link": "dn_11_09",
+              "bits": 805
+            },
+            {
+              "link": "up_09_11",
+              "bits": 16
+            },
+            {
+              "link": "pr_09_11",
+              "bits": 514
+            },
+            {
+              "link": "sg_11_09",
+              "bits": 2133
+            },
+            {
+              "link": "ss_09_11",
+              "bits": 1077
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 1942,
+          "pins_per_um": 1.5511504232516014,
+          "lanes": [
+            {
+              "link": "q_E_l0",
+              "bits": 276
+            },
+            {
+              "link": "q_E_l1",
+              "bits": 276
+            },
+            {
+              "link": "pv_E",
+              "bits": 562
+            },
+            {
+              "link": "jw_E_l0",
+              "bits": 276
+            },
+            {
+              "link": "jw_E_l1",
+              "bits": 276
+            },
+            {
+              "link": "jd_E",
+              "bits": 276
+            }
+          ]
+        },
+        "E": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 5.796657298331638,
+          "lanes": [
+            {
+              "link": "dn_11_13",
+              "bits": 805
+            },
+            {
+              "link": "up_13_11",
+              "bits": 16
+            },
+            {
+              "link": "pr_13_11",
+              "bits": 514
+            },
+            {
+              "link": "sg_11_13",
+              "bits": 2133
+            },
+            {
+              "link": "ss_13_11",
+              "bits": 1077
+            },
+            {
+              "link": "sg_13_11",
+              "bits": 2133
+            },
+            {
+              "link": "ss_11_13",
+              "bits": 1077
+            }
+          ]
+        },
+        "S": {
+          "active_lane_bits": 4545,
+          "pins_per_um": 3.630267082223753,
+          "lanes": [
+            {
+              "link": "dn_11_10",
+              "bits": 805
+            },
+            {
+              "link": "up_10_11",
+              "bits": 16
+            },
+            {
+              "link": "pr_10_11",
+              "bits": 514
+            },
+            {
+              "link": "sg_10_11",
+              "bits": 2133
+            },
+            {
+              "link": "ss_11_10",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_12",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "S": {
+          "active_lane_bits": 1244,
+          "pins_per_um": 0.9936308581488116,
+          "lanes": [
+            {
+              "link": "hrq_12",
+              "bits": 682
+            },
+            {
+              "link": "hrd_12",
+              "bits": 562
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 1335,
+          "pins_per_um": 1.0663160736564818,
+          "lanes": [
+            {
+              "link": "dn_13_12",
+              "bits": 805
+            },
+            {
+              "link": "up_12_13",
+              "bits": 16
+            },
+            {
+              "link": "pr_12_13",
+              "bits": 514
+            }
+          ]
+        },
+        "W": {
+          "active_lane_bits": 6420,
+          "pins_per_um": 4.798780123183639,
+          "lanes": [
+            {
+              "link": "sg_10_12",
+              "bits": 2133
+            },
+            {
+              "link": "ss_12_10",
+              "bits": 1077
+            },
+            {
+              "link": "sg_12_10",
+              "bits": 2133
+            },
+            {
+              "link": "ss_10_12",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_13",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "W": {
+          "active_lane_bits": 8999,
+          "pins_per_um": 6.726514381390898,
+          "lanes": [
+            {
+              "link": "hrq_13",
+              "bits": 682
+            },
+            {
+              "link": "hrd_13",
+              "bits": 562
+            },
+            {
+              "link": "dn_11_13",
+              "bits": 805
+            },
+            {
+              "link": "up_13_11",
+              "bits": 16
+            },
+            {
+              "link": "pr_13_11",
+              "bits": 514
+            },
+            {
+              "link": "sg_11_13",
+              "bits": 2133
+            },
+            {
+              "link": "ss_13_11",
+              "bits": 1077
+            },
+            {
+              "link": "sg_13_11",
+              "bits": 2133
+            },
+            {
+              "link": "ss_11_13",
+              "bits": 1077
+            }
+          ]
+        },
+        "E": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 5.796657298331638,
+          "lanes": [
+            {
+              "link": "dn_13_15",
+              "bits": 805
+            },
+            {
+              "link": "up_15_13",
+              "bits": 16
+            },
+            {
+              "link": "pr_15_13",
+              "bits": 514
+            },
+            {
+              "link": "sg_13_15",
+              "bits": 2133
+            },
+            {
+              "link": "ss_15_13",
+              "bits": 1077
+            },
+            {
+              "link": "sg_15_13",
+              "bits": 2133
+            },
+            {
+              "link": "ss_13_15",
+              "bits": 1077
+            }
+          ]
+        },
+        "S": {
+          "active_lane_bits": 1335,
+          "pins_per_um": 1.0663160736564818,
+          "lanes": [
+            {
+              "link": "dn_13_12",
+              "bits": 805
+            },
+            {
+              "link": "up_12_13",
+              "bits": 16
+            },
+            {
+              "link": "pr_12_13",
+              "bits": 514
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_14",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "S": {
+          "active_lane_bits": 1244,
+          "pins_per_um": 0.9936308581488116,
+          "lanes": [
+            {
+              "link": "hrq_14",
+              "bits": 682
+            },
+            {
+              "link": "hrd_14",
+              "bits": 562
+            }
+          ]
+        },
+        "N": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 6.194218090791025,
+          "lanes": [
+            {
+              "link": "dn_15_14",
+              "bits": 805
+            },
+            {
+              "link": "up_14_15",
+              "bits": 16
+            },
+            {
+              "link": "pr_14_15",
+              "bits": 514
+            },
+            {
+              "link": "sg_14_15",
+              "bits": 2133
+            },
+            {
+              "link": "ss_15_14",
+              "bits": 1077
+            },
+            {
+              "link": "sg_15_14",
+              "bits": 2133
+            },
+            {
+              "link": "ss_14_15",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    },
+    {
+      "instance": "rsv_15",
+      "slot_um": [
+        1251.9739999999997,
+        1337.8400000000001
+      ],
+      "faces": {
+        "W": {
+          "active_lane_bits": 8999,
+          "pins_per_um": 6.726514381390898,
+          "lanes": [
+            {
+              "link": "hrq_15",
+              "bits": 682
+            },
+            {
+              "link": "hrd_15",
+              "bits": 562
+            },
+            {
+              "link": "dn_13_15",
+              "bits": 805
+            },
+            {
+              "link": "up_15_13",
+              "bits": 16
+            },
+            {
+              "link": "pr_15_13",
+              "bits": 514
+            },
+            {
+              "link": "sg_13_15",
+              "bits": 2133
+            },
+            {
+              "link": "ss_15_13",
+              "bits": 1077
+            },
+            {
+              "link": "sg_15_13",
+              "bits": 2133
+            },
+            {
+              "link": "ss_13_15",
+              "bits": 1077
+            }
+          ]
+        },
+        "S": {
+          "active_lane_bits": 7755,
+          "pins_per_um": 6.194218090791025,
+          "lanes": [
+            {
+              "link": "dn_15_14",
+              "bits": 805
+            },
+            {
+              "link": "up_14_15",
+              "bits": 16
+            },
+            {
+              "link": "pr_14_15",
+              "bits": 514
+            },
+            {
+              "link": "sg_14_15",
+              "bits": 2133
+            },
+            {
+              "link": "ss_15_14",
+              "bits": 1077
+            },
+            {
+              "link": "sg_15_14",
+              "bits": 2133
+            },
+            {
+              "link": "ss_14_15",
+              "bits": 1077
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "active_lane_lower_bound": {
+    "max_NS_bits": 7755,
+    "max_EW_bits": 8999,
+    "lattice_um": 43.2,
+    "minimum_uniform_slot_um": [
+      1296.0,
+      1512.0
+    ],
+    "max_density_at_minimum": 5.983796296296297,
+    "additional_total_8column_width_um_preserving_gaps": 352.20800000000236,
+    "additional_total_2row_height_um_preserving_gap": 348.3199999999997,
+    "additional_16slot_area_mm2": 4.553777661440003,
+    "limitation": "Counts plan lane endpoints only; excludes clock/reset, role-active side ports, pin rectangles and PG."
+  },
+  "archived_full_port_kit": {
+    "slot_um": [
+      1728.0,
+      2073.6
+    ],
+    "inventory": {
+      "nonentry": {
+        "face_bits": {
+          "N": 9646,
+          "E": 9090,
+          "S": 10340,
+          "W": 9090
+        },
+        "pins_per_um_at_archived_kit": {
+          "N": 5.582175925925926,
+          "E": 4.383680555555555,
+          "S": 5.983796296296297,
+          "W": 4.383680555555555
+        },
+        "pins_per_um_at_active_lane_minimum": {
+          "N": 7.442901234567901,
+          "E": 6.011904761904762,
+          "S": 7.978395061728395,
+          "W": 6.011904761904762
+        }
+      },
+      "entry": {
+        "face_bits": {
+          "N": 10208,
+          "E": 9604,
+          "S": 10340,
+          "W": 9382
+        },
+        "pins_per_um_at_archived_kit": {
+          "N": 5.907407407407407,
+          "E": 4.6315586419753085,
+          "S": 5.983796296296297,
+          "W": 4.524498456790123
+        },
+        "pins_per_um_at_active_lane_minimum": {
+          "N": 7.8765432098765435,
+          "E": 6.351851851851852,
+          "S": 7.978395061728395,
+          "W": 6.205026455026455
+        }
+      }
+    },
+    "warning": "Historical landed wrapper ports differ from main dsdv_svc_rs. No current production ABI equivalence or full-source adoption is claimed."
+  },
+  "current_production_ABI": {
+    "define": "RS_OBS absent; main existing SM target internalization retained",
+    "actual_saved_caller": {
+      "table": "bind_table_p4l3_mu.json",
+      "defines": [
+        "DSFD_PQ_STATIC_X2"
+      ],
+      "widths_equal_source_declarations": true,
+      "entry_callers": {
+        "rsv_05": "dsdv_svc_rs_entry",
+        "rsv_11": "dsdv_svc_rs_entry"
+      },
+      "source_parameters": "MUT=0,DIE_ID=0,ST=0,SRAM_MACRO=0,SMT=1 defaults; table sets no parameter override",
+      "view": null,
+      "admission_gap": "Table has no hardened svc view; model main source is pinned but runtime RTL-ref resolution and native SRAM configuration remain owed."
+    },
+    "inventory": {
+      "nonentry": {
+        "ports": {
+          "ck": {
+            "direction": "input",
+            "bits": 1
+          },
+          "rst": {
+            "direction": "input",
+            "bits": 1
+          },
+          "sid": {
+            "direction": "input",
+            "bits": 4
+          },
+          "dn_i": {
+            "direction": "input",
+            "bits": 3220
+          },
+          "dn_o": {
+            "direction": "output",
+            "bits": 3220
+          },
+          "up_i": {
+            "direction": "input",
+            "bits": 64
+          },
+          "up_o": {
+            "direction": "output",
+            "bits": 64
+          },
+          "ri": {
+            "direction": "input",
+            "bits": 2056
+          },
+          "ro": {
+            "direction": "output",
+            "bits": 2056
+          },
+          "gi_v": {
+            "direction": "input",
+            "bits": 4
+          },
+          "gi_d": {
+            "direction": "input",
+            "bits": 8528
+          },
+          "go_v": {
+            "direction": "output",
+            "bits": 4
+          },
+          "go_d": {
+            "direction": "output",
+            "bits": 8528
+          },
+          "si_v": {
+            "direction": "input",
+            "bits": 4
+          },
+          "si_d": {
+            "direction": "input",
+            "bits": 4304
+          },
+          "so_v": {
+            "direction": "output",
+            "bits": 4
+          },
+          "so_d": {
+            "direction": "output",
+            "bits": 4304
+          },
+          "rq": {
+            "direction": "output",
+            "bits": 682
+          },
+          "rk": {
+            "direction": "input",
+            "bits": 2
+          },
+          "wd": {
+            "direction": "input",
+            "bits": 2
+          },
+          "rv": {
+            "direction": "input",
+            "bits": 2
+          },
+          "r_data": {
+            "direction": "input",
+            "bits": 512
+          },
+          "r_tag": {
+            "direction": "input",
+            "bits": 34
+          },
+          "r_beat": {
+            "direction": "input",
+            "bits": 8
+          },
+          "hs": {
+            "direction": "input",
+            "bits": 2
+          }
+        },
+        "total_bits": 37610,
+        "face_bits": {
+          "N": 9090,
+          "E": 9090,
+          "S": 10340,
+          "W": 9090
+        },
+        "min_slot_um": [
+          1728.0,
+          1555.2
+        ],
+        "candidate_literal_grid": {
+          "pins": 37610,
+          "unique_face_layer_tracks": 37610,
+          "all_source_bits_exactly_once": true,
+          "outline_um": [
+            1728.0,
+            1641.6
+          ],
+          "pin_layers": {
+            "NS": [
+              "M3",
+              "M5"
+            ],
+            "EW": [
+              "M4",
+              "M6"
+            ]
+          },
+          "scope": "track snapping and pin uniqueness only; PG spacing/route capacity/parent correspondence still owed"
+        }
+      },
+      "entry": {
+        "ports": {
+          "ck": {
+            "direction": "input",
+            "bits": 1
+          },
+          "rst": {
+            "direction": "input",
+            "bits": 1
+          },
+          "sid": {
+            "direction": "input",
+            "bits": 4
+          },
+          "j": {
+            "direction": "input",
+            "bits": 33
+          },
+          "jd": {
+            "direction": "output",
+            "bits": 2
+          },
+          "q": {
+            "direction": "input",
+            "bits": 515
+          },
+          "hw": {
+            "direction": "input",
+            "bits": 292
+          },
+          "hc": {
+            "direction": "output",
+            "bits": 9
+          },
+          "fault": {
+            "direction": "output",
+            "bits": 1
+          },
+          "st_rg": {
+            "direction": "output",
+            "bits": 2
+          },
+          "dn_i": {
+            "direction": "input",
+            "bits": 3220
+          },
+          "dn_o": {
+            "direction": "output",
+            "bits": 3220
+          },
+          "up_i": {
+            "direction": "input",
+            "bits": 64
+          },
+          "up_o": {
+            "direction": "output",
+            "bits": 64
+          },
+          "ri": {
+            "direction": "input",
+            "bits": 2056
+          },
+          "ro": {
+            "direction": "output",
+            "bits": 2056
+          },
+          "gi_v": {
+            "direction": "input",
+            "bits": 4
+          },
+          "gi_d": {
+            "direction": "input",
+            "bits": 8528
+          },
+          "go_v": {
+            "direction": "output",
+            "bits": 4
+          },
+          "go_d": {
+            "direction": "output",
+            "bits": 8528
+          },
+          "si_v": {
+            "direction": "input",
+            "bits": 4
+          },
+          "si_d": {
+            "direction": "input",
+            "bits": 4304
+          },
+          "so_v": {
+            "direction": "output",
+            "bits": 4
+          },
+          "so_d": {
+            "direction": "output",
+            "bits": 4304
+          },
+          "rq": {
+            "direction": "output",
+            "bits": 682
+          },
+          "rk": {
+            "direction": "input",
+            "bits": 2
+          },
+          "wd": {
+            "direction": "input",
+            "bits": 2
+          },
+          "rv": {
+            "direction": "input",
+            "bits": 2
+          },
+          "r_data": {
+            "direction": "input",
+            "bits": 512
+          },
+          "r_tag": {
+            "direction": "input",
+            "bits": 34
+          },
+          "r_beat": {
+            "direction": "input",
+            "bits": 8
+          },
+          "hs": {
+            "direction": "input",
+            "bits": 2
+          },
+          "pv_v": {
+            "direction": "output",
+            "bits": 1
+          },
+          "pv_d": {
+            "direction": "output",
+            "bits": 513
+          },
+          "pv_x": {
+            "direction": "output",
+            "bits": 48
+          }
+        },
+        "total_bits": 39026,
+        "face_bits": {
+          "N": 9652,
+          "E": 9652,
+          "S": 10340,
+          "W": 9382
+        },
+        "min_slot_um": [
+          1728.0,
+          1641.6
+        ],
+        "candidate_literal_grid": {
+          "pins": 39026,
+          "unique_face_layer_tracks": 39026,
+          "all_source_bits_exactly_once": true,
+          "outline_um": [
+            1728.0,
+            1641.6
+          ],
+          "pin_layers": {
+            "NS": [
+              "M3",
+              "M5"
+            ],
+            "EW": [
+              "M4",
+              "M6"
+            ]
+          },
+          "scope": "track snapping and pin uniqueness only; PG spacing/route capacity/parent correspondence still owed"
+        }
+      }
+    },
+    "uniform_full_ABI_pin_lower_bound_um": [
+      1728.0,
+      1641.6
+    ],
+    "additional_16slot_area_mm2": 18.587902461440002,
+    "additional_8column_width_preserving_gaps_um": 3808.2080000000024,
+    "additional_2row_height_preserving_gap_um": 607.5199999999995,
+    "packing_comparator_1728x2073p6_area_delta_16slots_mm2": 30.53183846144,
+    "limitation": "Source ports exactly enumerated; candidate face assignment only. No track/PG/macro packing/reach/STA/CTS qualification."
+  },
+  "saved_plan_overlap_evidence": {
+    "bit_mm": 32.2,
+    "est_on_body_repeaters": 201,
+    "top": {
+      "mu_0S": 21.8,
+      "mu_7S": 10.4
+    },
+    "relay_overlaps": 74,
+    "relay_overlap_pairs": {
+      "mu_0N|rt_0N": 30,
+      "jw_E_l0|jw_E_l1": 11,
+      "hf_7N_l1|hf_7N_l2": 9,
+      "jw_W_l0|jw_W_l1": 6,
+      "hrd_05|hrq_05": 3,
+      "hrd_03|hrq_03": 3,
+      "hrd_15|hrq_15": 3,
+      "jd_W|jw_E_l0": 2,
+      "hrd_01|mu_0S": 2,
+      "hrd_01|hrq_01": 2
+    },
+    "rule": "MU-DIE-S81/PATH: hop band = max(bits x 0.096 + 3, relay across) um, station = relay body; 160-um repeater pitch"
+  },
+  "structural_obligations": [
+    "Retain every active source bit. Two physical pin layers do not halve aggregate face density.",
+    "Select the exact production svc/entry/owner module and derive every port, role, direction and pin from that source before choosing a final slot.",
+    "Repack all sixteen slots and gaps jointly with CTRL height/array +86.4 and TOPK quarter 518.4x648; do not add old +70 blindly.",
+    "Re-run exact lane-band/body/relay collision and Manhattan405 checks after placement; the saved74 overlaps are not fixed by this sizing lower bound.",
+    "Actual two-layer pin grid must retain bit order, legal tracks, spacing and register landing; mapped source must qualify native32/storage/reset/clock.",
+    "Recompute station counts, per-lane ages and compiler price before full protocol/token verification; no cycle delta has been measured here.",
+    "Require full source identity, strict bind, actual die physical GRT/TT/FF/SS/clock/reach and parent/hardened child qualification before adoption."
+  ]
+}

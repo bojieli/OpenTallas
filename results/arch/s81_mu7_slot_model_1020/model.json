@@ -1,0 +1,562 @@
+{
+  "status": "MODEL_ONLY_REFUSED_NOT_A_SELECTED_FULL_MAP",
+  "source_mu6": "1b7b9d5d772008559e1b2467bc12de0fc067e2bd",
+  "baseline": {
+    "frames": 122,
+    "rom_slots": 1130,
+    "die_um": [
+      31968.5,
+      25000.0
+    ],
+    "frame_top_um": 24705.84,
+    "selector": {
+      "name": "bk_sel",
+      "master": "dsfd_bk_selector",
+      "kind": "unit",
+      "group": "void",
+      "x": 17709.788,
+      "y": 10122.32,
+      "w": 680.0,
+      "h": 2882.3529411764707,
+      "reg": false
+    },
+    "seqhost": {
+      "name": "seqhost",
+      "master": "dsdv_seq_host_mux",
+      "kind": "unit",
+      "group": "void",
+      "x": 17709.788,
+      "y": 13503.891764705882,
+      "w": 680.0,
+      "h": 3170.5882352941176,
+      "reg": false
+    },
+    "selector_host_gap_um": 499.2188235294125
+  },
+  "topk": {
+    "quarter_old_um": [
+      324,
+      540
+    ],
+    "historical_hk1_area_delta_mm2": 0.6438528,
+    "fixed680_parent_height_growth_um": 946.8423529411765,
+    "fixed680_growth_hits_seqhost_um": 447.623529411764,
+    "options": [
+      {
+        "quarter_um": [
+          518.4,
+          648
+        ],
+        "quarter_status": "HISTORICAL_FAIL13_SRAM_ORIGINS",
+        "quarter4_delta_mm2": 0.6438528,
+        "preserved_baseline_nonquarter_area_mm2": 1.26016,
+        "parent_box": {
+          "name": "bk_sel",
+          "x": 17596.188000000002,
+          "y": 10122.32,
+          "w": 907.2,
+          "h": 3067.2000000000003
+        },
+        "parent_reserved_delta_mm2": 0.8225638400000003,
+        "gap_to_seqhost_um": 314.371764705882,
+        "column_side_channels_um": 46.39999999999998,
+        "quarter_1x4_stack_height_um": 2721.6,
+        "quarter_gap_um": 43.2,
+        "minimum_selector_seqhost_gap_um": 100,
+        "selector_seqhost_gap_pass": true,
+        "remaining_parent_height_um": 475.2000000000003,
+        "clock_pin_model": "CURRENT_HISTORICAL_ONLY N ck bbox[201.960,647.962,201.978,648]; nofutureleafclockphase",
+        "data_control_edges": "QUARTER+0 versusHQ3; correctedsource/parentloopageUNKNOWN",
+        "reset_boot_edges": "QUARTER+0 versusHQ3; actualparentnoadditionalstageadmitted, existingstaticstrap31bits/core+2rungregions unchangedSOURCEONLY",
+        "status": "REFUSED_PARENT_CLOCK_REACH_CREDIT_AND_PLACEMENT_UNPROVEN"
+      },
+      {
+        "quarter_um": [
+          648,
+          648
+        ],
+        "quarter_status": "CORRECTED_GEOMETRY_ONLY_COLLECTOR19937f7db_NO_KIT_NO_GATE",
+        "quarter4_delta_mm2": 0.979776,
+        "preserved_baseline_nonquarter_area_mm2": 1.26016,
+        "parent_box": {
+          "name": "bk_sel",
+          "x": 17596.188000000002,
+          "y": 10122.32,
+          "w": 907.2,
+          "h": 3283.2000000000003
+        },
+        "parent_reserved_delta_mm2": 1.0185190400000006,
+        "gap_to_seqhost_um": 98.37176470588201,
+        "column_side_channels_um": 46.39999999999998,
+        "quarter_1x4_stack_height_um": 2721.6,
+        "quarter_gap_um": 43.2,
+        "minimum_selector_seqhost_gap_um": 100,
+        "selector_seqhost_gap_pass": false,
+        "remaining_parent_height_um": 691.2000000000003,
+        "clock_pin_model": "CURRENT_HISTORICAL_ONLY N ck bbox[201.960,647.962,201.978,648]; nofutureleafclockphase",
+        "data_control_edges": "QUARTER+0 versusHQ3; correctedsource/parentloopageUNKNOWN",
+        "reset_boot_edges": "QUARTER+0 versusHQ3; actualparentnoadditionalstageadmitted, existingstaticstrap31bits/core+2rungregions unchangedSOURCEONLY",
+        "status": "REFUSED_PARENT_CLOCK_REACH_CREDIT_AND_PLACEMENT_UNPROVEN"
+      }
+    ],
+    "hard_credit_obligation": "sourceparentquarter+u_c+u_g stronglyconnectedONEclockregion, SLAT4/creditdepth; extra landing requiresrescheduleproof, noautomaticrelaystages",
+    "parent_trunk": {
+      "bits_per_quarter": 1286,
+      "four_quarter_trunk_bits": 5144,
+      "total_sidewidth_um": 92.79999999999995,
+      "M5_available55": 1063,
+      "M7_available55": 797,
+      "two_layers_total": 1860,
+      "count_pass": false,
+      "assumption": "allfourreturn/commandbundles routedtosinglecontrolabove1x4stack, noPG/via allowance; countfailure evenbeforephysicalproof"
+    }
+  },
+  "svc": {
+    "source": "b2405769f exactcurrentABI",
+    "new_slot_um": [
+      1728,
+      1641.6
+    ],
+    "actual_mu6_old_slot_um": [
+      1251.9739999999997,
+      1344.04
+    ],
+    "area_delta_vs_actual_mu6_mm2": 18.463706640640005,
+    "width_growth_preserving_actual_gaps_um": 3808.208000000004,
+    "x_gaps_um": [
+      110.00000000000045,
+      110.00000000000045,
+      110.00000000000045,
+      110.00000000000045,
+      219.99999999999864,
+      109.99999999999864,
+      109.99999999999864
+    ],
+    "row_gap_um": 40.0,
+    "nonidx_collisions": [
+      {
+        "new": "rsv_00",
+        "existing": "f_2L00",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_01",
+        "existing": "f_2L00",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_01",
+        "existing": "f_2L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_03",
+        "existing": "f_2R01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_03",
+        "existing": "f_3L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_05",
+        "existing": "f_3L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_07",
+        "existing": "f_3R01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_09",
+        "existing": "f_4L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_11",
+        "existing": "f_4R01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_13",
+        "existing": "f_4R01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_13",
+        "existing": "f_5L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_14",
+        "existing": "f_5R00",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_15",
+        "existing": "f_5R00",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_15",
+        "existing": "f_5R01",
+        "kind": "frame"
+      }
+    ],
+    "with_idx3_service_start_um": 2820.8,
+    "with_idx3_collisions": [
+      {
+        "new": "rsv_00",
+        "existing": "f_2L00",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_01",
+        "existing": "f_2L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_01",
+        "existing": "s_2S",
+        "kind": "slice"
+      },
+      {
+        "new": "rsv_03",
+        "existing": "f_2R01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_03",
+        "existing": "f_3L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_03",
+        "existing": "s_2S",
+        "kind": "slice"
+      },
+      {
+        "new": "rsv_05",
+        "existing": "f_3L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_05",
+        "existing": "s_3S",
+        "kind": "slice"
+      },
+      {
+        "new": "rsv_07",
+        "existing": "f_3R01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_07",
+        "existing": "s_3S",
+        "kind": "slice"
+      },
+      {
+        "new": "rsv_09",
+        "existing": "f_4L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_09",
+        "existing": "s_4S",
+        "kind": "slice"
+      },
+      {
+        "new": "rsv_11",
+        "existing": "f_4R01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_11",
+        "existing": "s_4S",
+        "kind": "slice"
+      },
+      {
+        "new": "rsv_13",
+        "existing": "f_4R01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_13",
+        "existing": "f_5L01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_13",
+        "existing": "s_5S",
+        "kind": "slice"
+      },
+      {
+        "new": "rsv_14",
+        "existing": "f_5R00",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_15",
+        "existing": "f_5R01",
+        "kind": "frame"
+      },
+      {
+        "new": "rsv_15",
+        "existing": "s_5S",
+        "kind": "slice"
+      }
+    ],
+    "new_boxes": [
+      {
+        "name": "rsv_00",
+        "kind": "svc",
+        "x": 8632.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_01",
+        "kind": "svc",
+        "x": 8632.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_02",
+        "kind": "svc",
+        "x": 10470.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_03",
+        "kind": "svc",
+        "x": 10470.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_04",
+        "kind": "svc",
+        "x": 12308.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_05",
+        "kind": "svc",
+        "x": 12308.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_06",
+        "kind": "svc",
+        "x": 14146.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_07",
+        "kind": "svc",
+        "x": 14146.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_08",
+        "kind": "svc",
+        "x": 15984.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_09",
+        "kind": "svc",
+        "x": 15984.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_10",
+        "kind": "svc",
+        "x": 17932.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_11",
+        "kind": "svc",
+        "x": 17932.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_12",
+        "kind": "svc",
+        "x": 19770.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_13",
+        "kind": "svc",
+        "x": 19770.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_14",
+        "kind": "svc",
+        "x": 21608.255999999998,
+        "y": 2820.8,
+        "w": 1728,
+        "h": 1641.6
+      },
+      {
+        "name": "rsv_15",
+        "kind": "svc",
+        "x": 21608.255999999998,
+        "y": 4502.4,
+        "w": 1728,
+        "h": 1641.6
+      }
+    ],
+    "reader_boxes": [
+      {
+        "name": "irg_00",
+        "kind": "idx",
+        "x": 11747.1,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_01",
+        "kind": "idx",
+        "x": 12809.6,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_02",
+        "kind": "idx",
+        "x": 13872.1,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_03",
+        "kind": "idx",
+        "x": 14934.6,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_04",
+        "kind": "idx",
+        "x": 15997.1,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_05",
+        "kind": "idx",
+        "x": 17059.6,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_06",
+        "kind": "idx",
+        "x": 18122.1,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "irg_07",
+        "kind": "idx",
+        "x": 19184.6,
+        "y": 1564,
+        "w": 1036.8,
+        "h": 1036.8
+      },
+      {
+        "name": "iqf",
+        "kind": "idx",
+        "x": 11435.05,
+        "y": 1564,
+        "w": 259.2,
+        "h": 432
+      }
+    ]
+  },
+  "resource_scenario": {
+    "array_shift_um": 864,
+    "dropped_frame_names": [
+      "f_0L13",
+      "f_0R13",
+      "f_1L13",
+      "f_1R13",
+      "f_2L00",
+      "f_2L01",
+      "f_2L13",
+      "f_2R01",
+      "f_2R13",
+      "f_3L01",
+      "f_3L13",
+      "f_3R01",
+      "f_3R13",
+      "f_4L01",
+      "f_4L13",
+      "f_4R01",
+      "f_4R13",
+      "f_5L01",
+      "f_5L13",
+      "f_5R00",
+      "f_5R01",
+      "f_5R13",
+      "f_6L13",
+      "f_6R13",
+      "f_7L13",
+      "f_7R13"
+    ],
+    "dropped_rom_slots": 242,
+    "remaining_frames": 96,
+    "remaining_ROM_slots": 888,
+    "density_multiplier_if_sameweights": 1.2725225225225225,
+    "residual_nonframe_collisions": [],
+    "highest_remaining_body_um": 23548.48,
+    "status": "NOT_ADOPTED: idx3geometryonly/fullROMownermapnotyetcomposed; sourcechain/ages/reset/clock/pinplan/native/diecornersallowed"
+  },
+  "missing_inputs": [
+    "collectorcorrectedALL32SRAMliteralgridquartersourceandnativepinperbitcontract/orientation",
+    "actualparentu_c+u_g geometry/perbitlanding/bootproducers source+nativeclockboth-edgeproof",
+    "feedbackloopSLAT4/sourcecredit reschedule ifanynewlanding; productionthroughput/causaltests",
+    "selectedidx3productionpairedreaderimmutablepass/ref andactualnewSRAMslotfit",
+    "joint16svc physicalpackingandexactcollisions/74oldrelayoverlapfix withalllanesrederived",
+    "selectedfullROM/cfgownermap andnewdiecount plusperlaneedges incompiler; no965/3kqualification"
+  ]
+}
