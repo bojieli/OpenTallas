@@ -130,25 +130,272 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "count": 6
+   "count": 1,
+   "inst": "feed.rows.g_on.g_cache[0].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "feed.rows.g_on.g_cache[1].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "feed.rows.g_on.g_cache[2].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "feed.rows.g_on.g_cache[3].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "feed.rows.g_on.g_cache[4].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "issuer.u_desc"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
-   "count": 8
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[0].u_bank.g_four.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[1].u_bank.g_four.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[2].u_bank.g_four.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[3].u_bank.g_four.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[4].u_bank.g_four.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[5].u_bank.g_four.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[6].u_bank.g_four.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[7].u_bank.g_four.u_payload"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "count": 1
+   "count": 1,
+   "inst": "feed.programme_leaf.u_program"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
-   "count": 8
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.g_m8x285.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.g_m8x285.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.g_m8x285.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.g_m8x285.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.g_m8x285.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.g_m8x285.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.g_m8x285.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.g_m8x285.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1",
-   "count": 1
+   "count": 1,
+   "inst": "feed.producer.u_descriptor.g_m4x97.u_mem"
   }
  ],
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w2c_4x97_m1",
+  "ot_sram_1r1w2c_8x285_m1",
+  "ot_sram_1r1w_1024x256_m2_r2c2",
+  "ot_sram_1r1w_128x256_m1_r2c2",
+  "ot_sram_1r1w_256x256_m2_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "feed.rows.g_on.g_cache[0].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.rows.g_on.g_cache[1].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.rows.g_on.g_cache[2].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.rows.g_on.g_cache[3].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.rows.g_on.g_cache[4].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "issuer.u_desc": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[0].u_bank.g_four.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_bank_clk[0]"
+  },
+  "feed.producer.ordinal_bank[1].u_bank.g_four.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_bank_clk[0]"
+  },
+  "feed.producer.ordinal_bank[2].u_bank.g_four.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_bank_clk[0]"
+  },
+  "feed.producer.ordinal_bank[3].u_bank.g_four.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_bank_clk[0]"
+  },
+  "feed.producer.ordinal_bank[4].u_bank.g_four.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_bank_clk[1]"
+  },
+  "feed.producer.ordinal_bank[5].u_bank.g_four.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_bank_clk[1]"
+  },
+  "feed.producer.ordinal_bank[6].u_bank.g_four.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_bank_clk[1]"
+  },
+  "feed.producer.ordinal_bank[7].u_bank.g_four.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_bank_clk[1]"
+  },
+  "feed.programme_leaf.u_program": {
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+   "master": "ot_sram_1r1w2c_8x285_m1",
+   "clock_pins": {
+    "wclk": "hbm_fifo_clk[0]",
+    "rclk": "stream_bank_clk[0]"
+   }
+  },
+  "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+   "master": "ot_sram_1r1w2c_8x285_m1",
+   "clock_pins": {
+    "wclk": "hbm_fifo_clk[0]",
+    "rclk": "stream_bank_clk[0]"
+   }
+  },
+  "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+   "master": "ot_sram_1r1w2c_8x285_m1",
+   "clock_pins": {
+    "wclk": "hbm_fifo_clk[0]",
+    "rclk": "stream_bank_clk[0]"
+   }
+  },
+  "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+   "master": "ot_sram_1r1w2c_8x285_m1",
+   "clock_pins": {
+    "wclk": "hbm_fifo_clk[0]",
+    "rclk": "stream_bank_clk[0]"
+   }
+  },
+  "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+   "master": "ot_sram_1r1w2c_8x285_m1",
+   "clock_pins": {
+    "wclk": "hbm_fifo_clk[1]",
+    "rclk": "stream_bank_clk[1]"
+   }
+  },
+  "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+   "master": "ot_sram_1r1w2c_8x285_m1",
+   "clock_pins": {
+    "wclk": "hbm_fifo_clk[1]",
+    "rclk": "stream_bank_clk[1]"
+   }
+  },
+  "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+   "master": "ot_sram_1r1w2c_8x285_m1",
+   "clock_pins": {
+    "wclk": "hbm_fifo_clk[1]",
+    "rclk": "stream_bank_clk[1]"
+   }
+  },
+  "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.g_m8x285.u_mem": {
+   "master": "ot_sram_1r1w2c_8x285_m1",
+   "clock_pins": {
+    "wclk": "hbm_fifo_clk[1]",
+    "rclk": "stream_bank_clk[1]"
+   }
+  },
+  "feed.producer.u_descriptor.g_m4x97.u_mem": {
+   "master": "ot_sram_1r1w2c_4x97_m1",
+   "clock_pins": {
+    "wclk": "stream_clk",
+    "rclk": "hbm_clk"
+   }
+  }
+ },
  "reviewed_gray_fifo_extensions": {
   "die_constant_inputs": [
    "id_stack",

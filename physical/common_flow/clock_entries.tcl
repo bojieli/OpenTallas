@@ -19,12 +19,32 @@ proc ot_ce_raw_memory_sink {inst pin source} {
   if {![info exists ::ot_ce_raw_memory_bindings] || ![dict exists $::ot_ce_raw_memory_bindings $name]} {return 0}
   set b [dict get $::ot_ce_raw_memory_bindings $name]
   set leaf [lindex [split [get_full_name $pin] /] end]
+  # L2H-PGVM 10-19: multi-clock form {master M pins {wclk root rclk root}} (dual-clock raw memory): each Liberty
+  # clock pin is a sink of exactly its bound root, seen once per pin
+  if {[dict exists $b pins]} {
+    if {$master ne [dict get $b master] || ![dict exists [dict get $b pins] $leaf]
+        || $source ne [dict get [dict get $b pins] $leaf]} {
+      error "OT_HYBRID: raw memory $name/$leaf actual master/pin/source differs from its exact source binding"
+    }
+    if {[dict exists $::ot_ce_raw_memory_seen "$name/$leaf"]} {error "OT_HYBRID: duplicate raw memory clock sink $name/$leaf"}
+    dict set ::ot_ce_raw_memory_seen "$name/$leaf" 1
+    return 1
+  }
   if {$master ne [dict get $b master] || $leaf ne [dict get $b clock_pin] || $source ne [dict get $b root]} {
     error "OT_HYBRID: raw memory $name actual master/pin/source differs from its exact source binding"
   }
   if {[dict exists $::ot_ce_raw_memory_seen $name]} {error "OT_HYBRID: duplicate raw memory clock sink $name"}
   dict set ::ot_ce_raw_memory_seen $name 1
   return 1
+}
+proc ot_ce_raw_memory_expected {} {
+  set keys {}
+  dict for {name b} $::ot_ce_raw_memory_bindings {
+    if {[dict exists $b pins]} {
+      foreach leaf [dict keys [dict get $b pins]] { lappend keys "$name/$leaf" }
+    } else { lappend keys $name }
+  }
+  return $keys
 }
 # TW-HBM-COLLP 10-19: a landed hard child's clock pin may carry only timing checks (a capture domain with no clk->Q arc
 # in the ETM, e.g. the COLL writer's clk_rgx_data* landing captures).  OpenSTA does not list it in all_registers
@@ -122,7 +142,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
       }
     }
     if {[info exists ::ot_ce_raw_memory_bindings]
-        && [lsort [dict keys $::ot_ce_raw_memory_bindings]] ne [lsort [dict keys $::ot_ce_raw_memory_seen]]} {
+        && [lsort [ot_ce_raw_memory_expected]] ne [lsort [dict keys $::ot_ce_raw_memory_seen]]} {
       error "OT_HYBRID: declared raw-memory clock sinks were not all reached from their granted source roots"
     }
     if {$ot_ce_unused_hits} { puts "OT_LANDED UNUSED_PINS $ot_ce_unused_hits unloaded hard-child input pins on region roots (routed-netlist proven; not sinks)" }

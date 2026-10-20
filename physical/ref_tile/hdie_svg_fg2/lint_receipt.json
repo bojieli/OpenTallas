@@ -128,23 +128,123 @@
      "kind": "tile",
      "macros": [
       {
-       "count": 6,
+       "count": 1,
+       "inst": "feed.rows.g_on.g_cache[0].u_payload",
        "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
       },
       {
-       "count": 8,
+       "count": 1,
+       "inst": "feed.rows.g_on.g_cache[1].u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.rows.g_on.g_cache[2].u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.rows.g_on.g_cache[3].u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.rows.g_on.g_cache[4].u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "issuer.u_desc",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[0].u_bank.g_four.u_payload",
        "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
       },
       {
        "count": 1,
+       "inst": "feed.producer.ordinal_bank[1].u_bank.g_four.u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[2].u_bank.g_four.u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[3].u_bank.g_four.u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[4].u_bank.g_four.u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[5].u_bank.g_four.u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[6].u_bank.g_four.u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[7].u_bank.g_four.u_payload",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+      },
+      {
+       "count": 1,
+       "inst": "feed.programme_leaf.u_program",
        "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
       },
       {
-       "count": 8,
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.g_m8x285.u_mem",
        "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1"
       },
       {
        "count": 1,
+       "inst": "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.g_m8x285.u_mem",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.g_m8x285.u_mem",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.g_m8x285.u_mem",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.g_m8x285.u_mem",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.g_m8x285.u_mem",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.g_m8x285.u_mem",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.g_m8x285.u_mem",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_8x285_m1"
+      },
+      {
+       "count": 1,
+       "inst": "feed.producer.u_descriptor.g_m4x97.u_mem",
        "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_4x97_m1"
       }
      ],
@@ -197,9 +297,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-19T18:53:59-0700",
+   "created": "2026-10-19T21:33:06-0700",
    "host": "ot-epyc9",
-   "key": "f8919551bb2521c3c80505d253e4c9e20d83623e937ff580b7a1dd0576fbac50",
+   "key": "118d1775a6dbe5b7595bb4e865c3c4f0da664dc3a73f47dec0dde3568830c97d",
    "record": {
     "counts": {
      "consumer": 0,
@@ -3765,7 +3865,7 @@
      "id_stack"
     ]
    },
-   "seconds": 151
+   "seconds": 114
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
