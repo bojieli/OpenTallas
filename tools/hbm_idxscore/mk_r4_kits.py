@@ -103,7 +103,7 @@ def qw(row, w, suffix, pd):
     src = ["rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_wo2.sv", "rtl/hbm_accel/index/ot_hbm_idx_score_leaf_c1.sv",
            "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_l.sv", "rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
            "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv"] + COMMON_SRC
-    s = base(f"hidx_score_qw4{suffix}", "ot_hbm_idx_score_qw_r4", "IDX quarter scorer W glue tile r4 (wires-only quarter wo2, x4 per die)",
+    s = base(f"hidx_score_qw4c{suffix}", "ot_hbm_idx_score_qw_r4", "IDX quarter scorer W glue tile r4 (wires-only quarter wo2, x4 per die)",
              src, w, 2 * row, pd, 32, qs_benches(),
              "L2H-IDXSCORE 2026-10-19 successor of hidx_score_qw_1018 (r3 FAIL GPL-0305 at 4% util, reset_landing 4, one root "
              "over 1.12 mm, row-1 outputs one ~560 um hop from the row-0 input capture): A pin capture -> B mid stage per row -> "
@@ -131,7 +131,7 @@ def qw(row, w, suffix, pd):
     for n, a, z in (("keep_bitmap", 0, 52.511), ("beat_index", 52.511, 57.511), ("nkeys", 57.511, 62.511),
                     ("first_ord", 62.511, 67.511), ("rank", 67.511, 72.511), ("half", 72.511, 73.591), ("keep_en", 73.591, 74.671)):
         pr[n] = r(b + a, b + z)
-    pr["clk_w0"] = r(b + 80, b + 81.08); pr["rst_n"] = r(b + 84, b + 85.08); pr["clk_w1"] = r(row + 50, row + 51.08)
+    pr["clk_w0"] = r(b + 80, b + 81.08); pr["rst_n"] = r(b + 84, b + 85.08); pr["clk_w1"] = r(row + b + 80, row + b + 81.08)  # rev c: mirror of clk_w0 (row 1 upper gap); rev b at row + 50 gave clk_w1 spread 88-287 ps
     for e in (0, 1):
         for n, _ in ORDER:
             pr[f"o_{n}{e}"] = r(T[n][0] + e * row, T[n][1] + e * row)
