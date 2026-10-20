@@ -33,6 +33,14 @@ if [ "$WHICH" = all ] || [ "$WHICH" = eq ]; then
     if grep -q '^LPF_EQ FAIL' "$OUT/$1.log" 2>/dev/null; then echo "EQ_MUTANT $1 REJECTED"; else echo "EQ_MUTANT $1 SURVIVED"; rc=1; fi
   done
 fi
+if [ "$WHICH" = ptmut ]; then
+  # HBM-COLLFJ 10-19: fj-leaf mutant (job bench, expect fail): OT_PT_MUT_LATE_SPC = the ROWS-128 programme target sets
+  # issuer_start_pc only at launch (pre-e0cf553cf) -> the v7 issuer is never primed -> the parent EQ MUST FAIL.
+  # Exit 1 when REJECTED (the job expects fail + fail_regex), 0 when the mutant SURVIVED.
+  eq m_latespc +define+OT_PT_MUT_LATE_SPC
+  if grep -q '^LPF_EQ FAIL' "$OUT/m_latespc.log" 2>/dev/null; then echo "EQ_MUTANT m_latespc REJECTED"; rc=1; else echo "EQ_MUTANT m_latespc SURVIVED"; rc=0; fi
+  echo "COLL_LP_ARS_PTMUT_EXIT $rc"; exit $rc
+fi
 if [ "$WHICH" = all ] || [ "$WHICH" = rs ]; then
   RSRC="$p/ot_hgi_coll_reduce_static.sv $p/ot_hgi_coll_safe_leaves.sv $p/ot_hgi_coll_pring_static.sv $p/ot_hfd_coll_q_hard_v5.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv"
   rs() { local n=$1; shift
