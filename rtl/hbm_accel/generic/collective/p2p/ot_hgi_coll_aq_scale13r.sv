@@ -107,6 +107,27 @@ module ot_hgi_coll_aq_mul13r (
 `endif
             .q(s1_ac[g]));
     end endgenerate
+`ifdef OT_GQ_S2TOP
+    // S2TOP (L2H-GQ4 k4 10-19, SAFE item 4): the product's top bit is decided from the operand alone. product =
+    // A * B with A = s1_a (24 b) and B the coefficient significand (0xAAAAAB for 1/6, 0x924925 for 1/448), so
+    // product[47] = (A >= ceil(2^47 / B)) = A >= 0xC00000 (1/6) | A >= 0xE00000 (1/448) = A[23] & A[22] & (inv6 | A[21])
+    // (exact for every 24-bit A; tb_aq_scale13r_eq checks it against the closed pipe).  The bit is registered at
+    // stage 2 in 11 kept copies (one per 8-bit decision chunk), so stage 3 no longer waits for the 48-bit carry
+    // chain before the decision mux (k3 gate: s2_pp0 -> s3_floor_q 768 ps / 21 levels, PC TT -51.4 ps).
+    // Same 5 edges, same registers' meaning, no added cycle.
+    wire [2:0] s1_hi3; wire s1_inv6t;
+    wire [23:0] s1_an = a_raw << a_shift;
+    ot_hgi_coll_scale_top_in_ff u_top_in(.clk(clk), .d({b == 32'h3e2aaaab, s1_an[23:21]}), .q({s1_inv6t, s1_hi3}));
+`ifdef OT_GQ_MUT_S2TOP_K
+    wire s2_top_d = s1_hi3[2] & s1_hi3[1] & s1_hi3[0];              // mutant: the 1/448 threshold for both coefficients
+`else
+    wire s2_top_d = s1_hi3[2] & s1_hi3[1] & (s1_inv6t | s1_hi3[0]);
+`endif
+    wire [10:0] s2_topc;
+    generate for(genvar g=0;g<11;g=g+1)begin:g_s2_top_copy
+        ot_hgi_coll_aq_top_ff u_ff(.clk(clk), .d(s2_top_d), .q(s2_topc[g]));
+    end endgenerate
+`endif
 `else
     wire[23:0]s1_ac[0:5];
     assign s1_ac[0]=s1_a;assign s1_ac[1]=s1_a;assign s1_ac[2]=s1_a;
@@ -155,8 +176,13 @@ module ot_hgi_coll_aq_mul13r (
     wire[86:0]s3_dec;
     generate for(genvar g=0;g<11;g=g+1)begin:g_dec_control
         localparam integer W=(g==10)?7:8;
+`ifdef OT_GQ_S2TOP
+        (* keep="true" *)ot_hgi_coll_aq_dec_sel #(.W(W),.G(g)) u_dec(.top(s2_topc[g]),
+            .d47(s2_d47[8*g+:W]),.d46(s2_d46[8*g+:W]),.q(s3_dec[8*g+:W]));
+`else
         (* keep="true" *)ot_hgi_coll_aq_dec_chunk #(.W(W),.G(g)) u_dec(.hi(byte_sum[5][7:0]),.carry(bc[5]),
             .d47(s2_d47[8*g+:W]),.d46(s2_d46[8*g+:W]),.q(s3_dec[8*g+:W]));
+`endif
     end endgenerate
 `else
     wire [86:0] s3_dec = s3_top ? s2_d47 : s2_d46;
@@ -260,6 +286,31 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_scale_data_ff(input wire clk,input wire[23:0]d,output wire[23:0]q);
     (* keep="true",dont_touch="true" *)reg[23:0]r;
+    always @(posedge clk)r<=d;
+    assign q=r;
+endmodule
+
+// S2TOP: stage-3 decision select from a registered top-bit copy (one copy per chunk, <= 8 select loads)
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_aq_dec_sel #(parameter integer W=8,G=0)(input wire top,input wire[W-1:0]d47,d46,output wire[W-1:0]q);
+`ifdef OT_GQ_MUT_SCALE_CTL
+    wire select_top=(G==6)?!top:top;
+`else
+    wire select_top=top;
+`endif
+    assign q=select_top?d47:d46;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_aq_top_ff(input wire clk,input wire d,output wire q);
+    (* keep="true",dont_touch="true" *)reg r;
+    always @(posedge clk)r<=d;
+    assign q=r;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_scale_top_in_ff(input wire clk,input wire[3:0]d,output wire[3:0]q);
+    (* keep="true",dont_touch="true" *)reg[3:0]r;
     always @(posedge clk)r<=d;
     assign q=r;
 endmodule

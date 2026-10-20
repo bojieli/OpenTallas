@@ -22,6 +22,7 @@ MEM=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x2
 LIB+=("$MEM")
 DEFS=(-DOT_COLLQ_SRAM)
 [[ ${OT_GQ_FAN32:-0} == 1 ]] && DEFS+=(-DOT_GQ_FAN32)
+[[ ${OT_GQ_S2TOP:-0} == 1 ]] && DEFS+=(-DOT_GQ_S2TOP)   # k4 (L2H-GQ4): stage-2 registered product top bit
 FL=("${DEFS[@]}" --binary --timing -O2 -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-MULTITOP -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN)
 build(){ "$V" "${FL[@]}" -GMUT=$2 -GKQMUT=$3 -GVEC="\"$OUT/vec\"" --top-module tb_hgi_coll_gq --Mdir "$OUT/$1" "$P/tb_hgi_coll_gq.sv" "${LIB[@]}" > "$OUT/$1.build.log" 2>&1 || { tail -40 "$OUT/$1.build.log"; exit 2; }; }
 mut(){ case $1 in m[1-7]) echo "${1#m} 0";; kq1) echo "0 1";; *) echo "unknown mutant $1" >&2; exit 2;; esac; }
