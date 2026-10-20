@@ -1,0 +1,47 @@
+## ar: price 899140.3 T 1438802.6 gap 539662
+| attn.wo_a | 40 | 2,222 | 4,862 | 88,880 | 88,880 | 194,480 | +105,600 | +19.6 % | S+H | 12 BF16 phases/frame run SERIALLY (8x354+4x348); pipelined at the BF floor P231 = 11x231+354 |
+| attn.wq_b | 40 | 1,144 | 3,556 | 45,754 | 142,160 | 142,240 | +96,486 | +17.9 % | S+H | 15 epochs at P224 serial calendar; P126 pipelined calendar measured 1,987 bit-exact (WQBP) |
+| ffn.experts_gu | 40 | 2,364 | 3,706 | 94,572 | 94,572 | 148,240 | +53,668 | +9.9 % | H/M | already back-to-back at min period P145 (23x145+345); p4l puts 6 experts x w1/w3 = 24 phases on one frame in EVERY layer |
+| attn.wo_b | 40 | 549 | 1,464 | 21,956 | 21,956 | 58,560 | +36,604 | +6.8 % | S+H | 4 FP8 phases/frame serial (4x316); old DAG had 1 phase |
+| attn.idx.topk_local | 8 | 1,473 | 5,993 | 11,784 | 47,945 | 47,945 | +36,161 | +6.7 % | H | p4l index reader HBM-bound 8,702 cyc / 43,691 keys (record D 3,724) + serial select; L2/L8/L14 span 14.2k |
+| ffn.down | 40 | 2,205 | 3,086 | 88,191 | 88,191 | 123,440 | +35,249 | +6.5 % | H/M | already back-to-back at P130 (20x130+289); 21 phases/frame on p4l |
+| attn.idx.topk_final | 8 | 178 | 3,382 | 1,424 | 27,059 | 27,059 | +25,635 | +4.8 % | H | release rung-ingress-bound final 6.5k vs price 178 (INDEXED13 1,033 / TAIL_FINAL 276 not in release) |
+| ffn.router | 40 | 977 | 1,445 | 39,088 | 39,088 | 57,800 | +18,712 | +3.5 % | H | 5 BF phases at P231 floor: at <=230 return words alias the next segment index (RTL tag width) |
+| attn.window_load | 32 | 178 | 532 | 5,699 | 5,699 | 17,024 | +11,325 | +2.1 % | S | HBM-latency-bound 532 vs 178; issued serially, not prefetched (W_SLACK 560 assumes latency<=56) |
+| attn.idx.score | 8 | 2,285 | 3,657 | 18,282 | 29,253 | 29,253 | +10,971 | +2.0 % | H | re-index scorer L24..36, 5,829 each, HBM-bound reader |
+| attn.scores | 40 | 53 | 289 | 2,104 | 11,560 | 11,560 | +9,456 | +1.8 % | H | svc GO->last fold score 289 vs 52.6 at 1M context |
+| attn.exp | 40 | 287 | 122 | 11,481 | 11,481 | 4,896 | -6,585 | -1.2 % | G |  |
+| attn.max | 40 | 220 | 58 | 8,795 | 8,795 | 2,336 | -6,459 | -1.2 % | G |  |
+| attn.idx.q_field | 8 | 0 | 783 | 0 | 0 | 6,264 | +6,264 | +1.2 % | M | indexer wq_b rows: field projection missing from the price (new DAG node) |
+| attn.sink | 40 | 196 | 43 | 7,840 | 7,840 | 1,730 | -6,110 | -1.1 % | G |  |
+| ffn.norm.scale | 40 | 306 | 438 | 12,240 | 17,520 | 17,520 | +5,280 | +1.0 % | D | 16-slice neighbour exchange (247) replaces the star hub reduction |
+| attn.q_quant | 40 | 288 | 418 | 11,520 | 16,720 | 16,720 | +5,200 | +1.0 % | D | same 16-slice exchange |
+| attn.a_proj | 40 | 966 | 870 | 38,658 | 38,658 | 34,804 | -3,855 | -0.7 % | G |  |
+| attn.quant | 40 | 324 | 418 | 12,960 | 16,720 | 16,720 | +3,760 | +0.7 % | D | same 16-slice exchange |
+| other on-die ops | | | | 71,042 | | 60,311 | -10,730 | -2.0 % |
+xdie price 236597.7200000002 xdie now 330628.0 d 94030.2799999998 17.423911212623114
+extra 70273.87999999999 67608.9 -2664.979999999996 solved 21663.5
+## mtp: price 1300312.5 T 1883938.8 gap 583626
+| attn.wo_a | 43 | 2,497 | 4,955 | 107,390 | 107,390 | 213,068 | +105,678 | +18.1 % | S+H | 12 BF16 phases/frame run SERIALLY (8x354+4x348); pipelined at the BF floor P231 = 11x231+354 |
+| attn.wq_b | 43 | 1,126 | 3,371 | 48,406 | 144,812 | 144,970 | +96,564 | +16.5 % | S+H | 15 epochs at P224 serial calendar; P126 pipelined calendar measured 1,987 bit-exact (WQBP) |
+| wave.busy | 5 | 32,309 | 47,090 | 161,546 | 161,546 | 235,450 | +73,904 | +12.7 % | ? |  |
+| ffn.experts_gu | 40 | 2,364 | 3,706 | 94,572 | 94,572 | 148,240 | +53,668 | +9.2 % | H/M | already back-to-back at min period P145 (23x145+345); p4l puts 6 experts x w1/w3 = 24 phases on one frame in EVERY layer |
+| attn.wo_b | 43 | 574 | 1,427 | 24,695 | 24,695 | 61,377 | +36,682 | +6.3 % | S+H | 4 FP8 phases/frame serial (4x316); old DAG had 1 phase |
+| attn.idx.topk_local | 8 | 1,473 | 5,993 | 11,784 | 47,945 | 47,945 | +36,161 | +6.2 % | H | p4l index reader HBM-bound 8,702 cyc / 43,691 keys (record D 3,724) + serial select; L2/L8/L14 span 14.2k |
+| ffn.down | 40 | 2,205 | 3,086 | 88,191 | 88,191 | 123,440 | +35,249 | +6.0 % | H/M | already back-to-back at P130 (20x130+289); 21 phases/frame on p4l |
+| attn.idx.topk_final | 8 | 178 | 3,382 | 1,424 | 27,059 | 27,059 | +25,635 | +4.4 % | H | release rung-ingress-bound final 6.5k vs price 178 (INDEXED13 1,033 / TAIL_FINAL 276 not in release) |
+| ffn.router | 43 | 1,022 | 1,459 | 43,945 | 43,945 | 62,735 | +18,790 | +3.2 % | H | 5 BF phases at P231 floor: at <=230 return words alias the next segment index (RTL tag width) |
+| attn.window_load | 32 | 178 | 532 | 5,699 | 5,699 | 17,024 | +11,325 | +1.9 % | S | HBM-latency-bound 532 vs 178; issued serially, not prefetched (W_SLACK 560 assumes latency<=56) |
+| attn.idx.score | 8 | 2,285 | 3,657 | 18,282 | 29,253 | 29,253 | +10,971 | +1.9 % | H | re-index scorer L24..36, 5,829 each, HBM-bound reader |
+| attn.scores | 40 | 53 | 289 | 2,104 | 11,560 | 11,560 | +9,456 | +1.6 % | H | svc GO->last fold score 289 vs 52.6 at 1M context |
+| attn.exp | 40 | 287 | 122 | 11,481 | 11,481 | 4,896 | -6,585 | -1.1 % | G |  |
+| attn.max | 40 | 220 | 58 | 8,795 | 8,795 | 2,336 | -6,459 | -1.1 % | G |  |
+| attn.idx.q_field | 8 | 0 | 783 | 0 | 0 | 6,264 | +6,264 | +1.1 % | M | indexer wq_b rows: field projection missing from the price (new DAG node) |
+| attn.sink | 40 | 196 | 43 | 7,840 | 7,840 | 1,730 | -6,110 | -1.0 % | G |  |
+| ffn.norm.scale | 43 | 290 | 413 | 12,468 | 17,748 | 17,748 | +5,280 | +0.9 % | D | 16-slice neighbour exchange (247) replaces the star hub reduction |
+| attn.q_quant | 43 | 291 | 412 | 12,520 | 17,720 | 17,720 | +5,200 | +0.9 % | D | same 16-slice exchange |
+| attn.a_proj | 43 | 986 | 898 | 42,406 | 42,406 | 38,629 | -3,777 | -0.6 % | G |  |
+| attn.quant | 43 | 380 | 468 | 16,360 | 20,120 | 20,120 | +3,760 | +0.6 % | D | same 16-slice exchange |
+| other on-die ops | | | | 186,791 | | 176,065 | -10,726 | -1.8 % |
+xdie price 270819.26999999996 xdie now 356178.6000000007 d 85359.33000000071 14.625682564339664
+extra 122796.43 120131.4 -2665.029999999999 solved 0.0
