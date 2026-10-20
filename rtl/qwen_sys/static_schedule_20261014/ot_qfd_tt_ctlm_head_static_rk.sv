@@ -16,6 +16,10 @@ module qfd_tt_ctlm_head_static_rk #(
     // f3e3d6b6f: feb TT +95.26 after fbb post-CTS -537 on st -> load -> hq_fill -> 1,024-b hq enable).
     // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word).
     parameter integer DENSE_IMAGE=1,
+    // SEGCAL (QLB-C4b 10-18, opt-in, 0 = as built): the fixed-issue calendar honours the programme base -- a start at
+    // base 0 runs the image's ME8 calendar as built, a start at the image's CALB base runs the segment-G calendar (the
+    // LM-head programme, PW984..993); see ot_qwen_fixed_issue_seg_pw.  0 extra edges.
+    parameter integer SEGCAL = 0,
     parameter integer SREG = 0,   // h8: registered calendar 'scheduled' (exact, 0 edges)
     parameter integer DPRE = 0,   // h9: controller decode adds per FIFO head word (exact, 0 edges)
     parameter integer DSEL = 0,   // h14: the DPRE adds' DYN operand registered per head word (exact, 0 edges)
@@ -298,9 +302,9 @@ module qfd_tt_ctlm_head_static_rk #(
       else if(q_pw_v && q_pw_addr==1017) schedule_stage<=q_pw_data[17:12];
     // ck_sched and clk are independently entered, compiler phase-matched roots.
     // Candidate is sampled at the real decoder issue phase; there is no wait.
-    ot_qwen_fixed_issue_pw #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG),.SLATE(SLATE)) u_fixed_issue (
+    ot_qwen_fixed_issue_pw #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1),.SREG(SREG),.SLATE(SLATE),.SEG(SEGCAL)) u_fixed_issue (
       .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),
-      .start(q_h_start && q_prog_base==0),.stage(schedule_stage),
+      .start(q_h_start && (q_prog_base==0 || SEGCAL!=0)),.stage(schedule_stage),.start_base(q_prog_base),
       .candidate_v(candidate_v),.candidate_pc(q_prog_base+candidate_pc),.candidate_unit(candidate_unit),
       .available(candidate_available),.end_ok(candidate_end_ok),.cp_available(!cp_active_q),
       .issue_v(fixed_issue),.end_v(fixed_end),.cp_cmd(cp_cmd),.cp_v(cp_v),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
