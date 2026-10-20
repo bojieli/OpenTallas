@@ -1,0 +1,19 @@
+lint_receipt: cdc_synchronizers hbm_su_pg_stream_b_safe3_1019: no matching receipt; running the lint on the fleet (ot-run, 48 GB)
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-pgsafe3-batch-1020/tools/ref_tile/pre_route_gate.py", line 2703, in <module>
+    sys.exit(main())
+  File "/home/ubuntu/wt/codex-pgsafe3-batch-1020/tools/ref_tile/pre_route_gate.py", line 2489, in main
+    spec = check_kit(g, kd, job, a.commit)
+  File "/home/ubuntu/wt/codex-pgsafe3-batch-1020/tools/ref_tile/pre_route_gate.py", line 816, in check_kit
+    fresh = RT.gen(str(kd / "spec.json"), spec.get("std_area_um2"), write=False)
+  File "/home/ubuntu/wt/codex-pgsafe3-batch-1020/tools/ref_tile/ref_tile.py", line 2525, in gen
+    files = {"kit.env": gen_env(s, kd, W, H, lc, blocks), "pdn.tcl": gen_pdn(s, lc),
+  File "/home/ubuntu/wt/codex-pgsafe3-batch-1020/tools/ref_tile/ref_tile.py", line 2128, in gen_env
+    extra += cdc_fsm_guard.orfs_vars(s, ROOT)
+  File "/home/ubuntu/wt/codex-pgsafe3-batch-1020/tools/ref_tile/cdc_fsm_guard.py", line 81, in orfs_vars
+    bases.update(wire_bases(register_names(lint_receipt.record(key, lint, error, spec, root, yosys()))))
+  File "/home/ubuntu/wt/codex-pgsafe3-batch-1020/tools/ref_tile/lint_receipt.py", line 161, in record
+    rec, prov = remote(policy, spec, root, key, error)
+  File "/home/ubuntu/wt/codex-pgsafe3-batch-1020/tools/ref_tile/lint_receipt.py", line 228, in remote
+    raise error(out.get('error', f'{policy} lint failed on {host}'))
+cdc_sync_constraints.CdcError: cdc_synchronizers unexpected unmapped cell $paramod\ot_pgs3_rst_cell\ID=s32'00000000000000000100101000111000
