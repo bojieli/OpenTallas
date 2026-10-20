@@ -42,8 +42,7 @@ tail -2 $O/build_bU.txt
 [ $ok = 1 ] || { echo "NO_RUNS (golden step failed)"; touch $O/DONE_u_g2_FAILED; exit 2; }
 CHECK_WIN=3
 source tools/xdie_s81_2/gate_result.sh
-python3 tools/xdie_s81_2/gen_golden.py --out "$O/su_mu" --gap 100 --dl-model fluid --fluid-guard 2 --reserve-mu-tag || exit $?
-# SU has no MU controls, but runs through the MU endpoint tag format.
-( $X run "$O" bU u_su "$O/su_mu" > "$O/u_su.txt" 2>&1; rc=$?; echo "EXIT $rc" >> "$O/u_su.txt"; python3 tools/xdie_s81_2/mu_check.py "$O/su_mu" "$O/u_su/run.log" --win 3 --json "$O/u_su.chk.json" > "$O/u_su.chk.txt" 2>&1; crc=$?; gzip -kf "$O/u_su/run.log"; [ "$rc" = 0 ] && [ "$crc" = 0 ] ) & pids+=("$!"); r u_ar46r bU ar46r; r u_ar46d bU ar46d; r u_ar46d_err bU ar46d +ERRP=7; r u_mtp10r bU mtp10r; r u_mtp10d bU mtp10d
+SU_GUARD=2; prepare_mu_su || exit $?
+r u_su bU "$O/su_mu"; r u_ar46r bU ar46r; r u_ar46d bU ar46d; r u_ar46d_err bU ar46d +ERRP=7; r u_mtp10r bU mtp10r; r u_mtp10d bU mtp10d
 finish_jobs u_g2 || exit $?
 for n in u_su u_ar46r u_ar46d u_ar46d_err u_mtp10r u_mtp10d; do echo "== $n"; tail -3 $O/$n.txt; tail -4 $O/$n.chk.txt; done

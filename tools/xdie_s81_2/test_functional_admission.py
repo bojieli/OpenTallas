@@ -60,7 +60,7 @@ class Admission(unittest.TestCase):
         self.assertTrue(json.loads((self.r/'mu/golden.json').read_text())['payload_contract']['reserved'])
     def gate(self,build=0,run=0,check=0):
         dest=self.r/'tools/xdie_s81_2';dest.mkdir(parents=True)
-        for f in ['gate_mu.sh','gate_result.sh']:shutil.copy2(Q/f,dest/f)
+        for f in ['gate_mu.sh','gate_result.sh','gen_golden.py']:shutil.copy2(Q/f,dest/f)
         (dest/'xdie2.sh').write_text(f'''#!/bin/bash
 if [ "$1" = build ]; then exit {build}; fi
 mkdir -p "$2/$4"; echo RUN >> calls; echo 'PASS xdie_s81: fake' > "$2/$4/run.log"; echo BENCH_PASS; exit {run}
@@ -74,6 +74,28 @@ mkdir -p "$2/$4"; echo RUN >> calls; echo 'PASS xdie_s81: fake' > "$2/$4/run.log
         self.assertNotEqual(self.gate(run=1).returncode,0);self.assertTrue((self.r/'out/DONE_u_FAILED').exists());self.assertFalse((self.r/'out/DONE_u').exists())
     def test_gate_check_fail_not_hidden_by_gzip(self):
         self.assertNotEqual(self.gate(check=1).returncode,0);self.assertFalse((self.r/'out/DONE_u').exists())
+    def test_mutant_missing_nominal_refused_before_build(self):
+        self.gate()
+        p=subprocess.run(['bash','tools/xdie_s81_2/gate_mu.sh','mutants','x'],cwd=self.r,capture_output=True,text=True)
+        self.assertNotEqual(p.returncode,0); self.assertIn('REFUSED_NO_PINNED_NOMINAL',p.stdout)
+    def test_mutant_failed_nominal_refused(self):
+        self.gate(run=1)
+        nominal=self.r/'out_a/bA';(nominal/'obj').mkdir(parents=True)
+        exe=nominal/'obj/Vtb_xdie_s81_2';exe.write_text('fake');exe.chmod(0o755)
+        (nominal/'sources.sha256').write_text('abc source.sv\n');(nominal/'build_cmd.txt').write_text('-GMU=2\n')
+        p=subprocess.run(['bash','tools/xdie_s81_2/gate_mu.sh','mutants','x'],cwd=self.r,capture_output=True,text=True)
+        self.assertNotEqual(p.returncode,0);self.assertTrue((self.r/'mutants/DONE_x_nominal_FAILED').exists());self.assertFalse((self.r/'mutants/build_bS.txt').exists())
+    def test_source_or_build_mismatch_cannot_qualify_mutant(self):
+        self.gate()
+        for name,sha,args in [('nom','abc','mu -GMU=2 source.sv'),('mut','bad','mu -GMU=2 +define+OT_S81_LAND_MUT_SEL source.sv')]:
+            d=self.r/'out'/name;d.mkdir();(d/'sources.sha256').write_text(sha);(d/'build_cmd.txt').write_text(args)
+        cmd='O=out; X=true; GD=goldens; source tools/xdie_s81_2/gate_result.sh; require_same_sources nom mut'
+        p=subprocess.run(['bash','-c',cmd],cwd=self.r,capture_output=True,text=True)
+        self.assertNotEqual(p.returncode,0);self.assertIn('REFUSED_BASELINE_SOURCE_MISMATCH',p.stdout)
+        (self.r/'out/mut/sources.sha256').write_text('abc')
+        p=subprocess.run(['bash','-c',cmd],cwd=self.r,capture_output=True,text=True);self.assertEqual(p.returncode,0,p.stderr)
+        (self.r/'out/mut/build_cmd.txt').write_text('mu -GMU=1 +define+OT_S81_LAND_MUT_SEL source.sv')
+        p=subprocess.run(['bash','-c',cmd],cwd=self.r,capture_output=True,text=True);self.assertNotEqual(p.returncode,0);self.assertIn('REFUSED_BASELINE_BUILD_ARGS_MISMATCH',p.stderr)
     def test_gate_all_pass(self):
         p=self.gate();self.assertEqual(p.returncode,0,p.stderr);self.assertTrue((self.r/'out/DONE_u').exists());self.assertEqual(len((self.r/'calls').read_text().splitlines()),6)
 

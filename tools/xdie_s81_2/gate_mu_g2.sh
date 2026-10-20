@@ -7,7 +7,10 @@ set -u; O=$1; mkdir -p $O
 X="bash tools/xdie_s81_2/xdie2.sh"; GD=goldens_g2
 CHECK_WIN=3
 source tools/xdie_s81_2/gate_result.sh
+SU_GUARD=2; prepare_mu_su || exit $?
 for b in bA bC bL; do src=out_a; [ $b = bC ] && src=out_c; [ $b = bL ] && src=out_x; ln -sfn ../$src/$b $O/$b; done
-r a_su bA su; r a_a23r bA a23r; r a_a46d bA a46d; r a_a46d_err bA a46d +ERRP=7
-r c_g1 bC g1; r c_g1_err bC g1 +ERRP=7; r_reject "^WIN_FAIL" x_landsel bL su
+r a_su bA "$O/su_mu"; r a_a23r bA a23r; r a_a46d bA a46d; r a_a46d_err bA a46d +ERRP=7
+r c_g1 bC g1; r c_g1_err bC g1 +ERRP=7; finish_jobs g2_nominal || exit $?; pids=()
+require_same_sources bA bL || exit 3
+r_reject "^WIN_FAIL" x_landsel bL "$O/su_mu"
 finish_jobs g2
