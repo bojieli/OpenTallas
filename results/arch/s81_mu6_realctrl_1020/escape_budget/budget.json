@@ -1,0 +1,434 @@
+{
+  "status": "MODEL_ONLY_NOT_A_ROUTE",
+  "source_hashes": {
+    "failure.json": "06f40c7d20f1ead7d6cd5eb0d0c93a8524baf51e85b3f8652ca98d166abe430b",
+    "all_bits.json": "db4574e2093f73b3397d12dd0160e101cf1d85eee8eed07a394ff9db6f35d759",
+    "native_tech.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "native_track_layers.json": "a36baff1b0d62acbf71791c0503ee578923e7051a2e8285414773b3b787744c0",
+    "plan_realctrl.json": "70576fc786f4de03800c9fadc55baa0b5caa3ad9c87851d32526cd9ecb3d1dd0"
+  },
+  "frozen_hotspot": {
+    "report_items": 16,
+    "bbox_union_um": [
+      15964.8,
+      1248.0,
+      16003.2,
+      1305.6
+    ],
+    "horizontal_items": 10,
+    "vertical_items": 6,
+    "capacity120_usage142_overflow22_items": 14,
+    "capacity190_usage212_overflow22_items": 2,
+    "report_layer_labels": "-; no per-item layer attribution inferred",
+    "primary_names": [
+      [
+        "a_phy_hbm_k_wdata",
+        986
+      ],
+      [
+        "a_phy_hbm_k_wstrb",
+        128
+      ],
+      [
+        "a_phy_hbm_k_addr",
+        120
+      ],
+      [
+        "a_phy_hbm_k_tag",
+        68
+      ],
+      [
+        "a_phy_hbm_kr_tag",
+        17
+      ],
+      [
+        "a_phy_hbm_k_len",
+        16
+      ],
+      [
+        "a_phy_hbm_kr_rdy",
+        4
+      ],
+      [
+        "a_phy_hbm_k_we",
+        4
+      ],
+      [
+        "a_phy_hbm_kr_beat",
+        4
+      ],
+      [
+        "a_phy_hbm_k_v",
+        4
+      ]
+    ]
+  },
+  "per_pair": [
+    {
+      "pair": 0,
+      "bits": 1244,
+      "peak_crossing": 476,
+      "cut_x_um": 11854.46,
+      "primary_bundles": {
+        "k_wdata": 164,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 256
+      },
+      "max_direct_um": 147.9929999999997
+    },
+    {
+      "pair": 1,
+      "bits": 1244,
+      "peak_crossing": 476,
+      "cut_x_um": 12385.436,
+      "primary_bundles": {
+        "k_wdata": 165,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 255
+      },
+      "max_direct_um": 148.07500000000005
+    },
+    {
+      "pair": 2,
+      "bits": 1244,
+      "peak_crossing": 476,
+      "cut_x_um": 12916.412,
+      "primary_bundles": {
+        "k_wdata": 166,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 254
+      },
+      "max_direct_um": 148.15700000000038
+    },
+    {
+      "pair": 3,
+      "bits": 1244,
+      "peak_crossing": 477,
+      "cut_x_um": 13447.964,
+      "primary_bundles": {
+        "k_wdata": 165,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 256
+      },
+      "max_direct_um": 148.2389999999989
+    },
+    {
+      "pair": 4,
+      "bits": 1244,
+      "peak_crossing": 477,
+      "cut_x_um": 13978.939999999999,
+      "primary_bundles": {
+        "k_wdata": 166,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 255
+      },
+      "max_direct_um": 148.32099999999923
+    },
+    {
+      "pair": 5,
+      "bits": 1244,
+      "peak_crossing": 477,
+      "cut_x_um": 14509.916,
+      "primary_bundles": {
+        "k_wdata": 167,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 254
+      },
+      "max_direct_um": 148.40299999999957
+    },
+    {
+      "pair": 6,
+      "bits": 1244,
+      "peak_crossing": 478,
+      "cut_x_um": 15041.467999999999,
+      "primary_bundles": {
+        "k_wdata": 166,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 256
+      },
+      "max_direct_um": 148.4849999999999
+    },
+    {
+      "pair": 7,
+      "bits": 1244,
+      "peak_crossing": 478,
+      "cut_x_um": 15572.635999999999,
+      "primary_bundles": {
+        "k_wdata": 166,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 256
+      },
+      "max_direct_um": 148.56700000000023
+    },
+    {
+      "pair": 8,
+      "bits": 1244,
+      "peak_crossing": 478,
+      "cut_x_um": 16103.612,
+      "primary_bundles": {
+        "k_wdata": 167,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 255
+      },
+      "max_direct_um": 148.64899999999875
+    },
+    {
+      "pair": 9,
+      "bits": 1244,
+      "peak_crossing": 478,
+      "cut_x_um": 16634.78,
+      "primary_bundles": {
+        "k_wdata": 167,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 255
+      },
+      "max_direct_um": 148.73099999999909
+    },
+    {
+      "pair": 10,
+      "bits": 1244,
+      "peak_crossing": 479,
+      "cut_x_um": 17166.14,
+      "primary_bundles": {
+        "k_wdata": 167,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 256
+      },
+      "max_direct_um": 148.81300000000124
+    },
+    {
+      "pair": 11,
+      "bits": 1244,
+      "peak_crossing": 479,
+      "cut_x_um": 17697.307999999997,
+      "primary_bundles": {
+        "k_wdata": 167,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 256
+      },
+      "max_direct_um": 148.8950000000034
+    },
+    {
+      "pair": 12,
+      "bits": 1244,
+      "peak_crossing": 479,
+      "cut_x_um": 18228.284,
+      "primary_bundles": {
+        "k_wdata": 168,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 255
+      },
+      "max_direct_um": 148.9770000000019
+    },
+    {
+      "pair": 13,
+      "bits": 1244,
+      "peak_crossing": 479,
+      "cut_x_um": 18759.26,
+      "primary_bundles": {
+        "k_wdata": 169,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 254
+      },
+      "max_direct_um": 149.05900000000042
+    },
+    {
+      "pair": 14,
+      "bits": 1244,
+      "peak_crossing": 480,
+      "cut_x_um": 19290.811999999998,
+      "primary_bundles": {
+        "k_wdata": 168,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 256
+      },
+      "max_direct_um": 149.14100000000258
+    },
+    {
+      "pair": 15,
+      "bits": 1244,
+      "peak_crossing": 480,
+      "cut_x_um": 19821.788,
+      "primary_bundles": {
+        "k_wdata": 169,
+        "k_wstrb": 32,
+        "k_wr_done": 1,
+        "kr_v": 1,
+        "kr_rdy": 1,
+        "kr_tag": 17,
+        "kr_beat": 4,
+        "kr_data": 255
+      },
+      "max_direct_um": 149.2230000000011
+    }
+  ],
+  "capacity": [
+    {
+      "horizontal_layer": "M6",
+      "native_pitch_um": 0.064,
+      "used_spacing_um": 0.064,
+      "band_height_um": 86.4,
+      "raw_tracks": 1350,
+      "target_use": 0.55,
+      "available_at_target": 742,
+      "required": 480,
+      "use": 0.35555555555555557,
+      "capacity_pass": true,
+      "height_required_at_target_um": 55.854545454545445
+    },
+    {
+      "horizontal_layer": "M6",
+      "native_pitch_um": 0.064,
+      "used_spacing_um": 0.128,
+      "band_height_um": 86.4,
+      "raw_tracks": 675,
+      "target_use": 0.55,
+      "available_at_target": 371,
+      "required": 480,
+      "use": 0.7111111111111111,
+      "capacity_pass": false,
+      "height_required_at_target_um": 111.70909090909089
+    }
+  ],
+  "area": {
+    "old_controller_body_mm2": 2.125,
+    "new_actual_body_mm2": 2.0155391999999996,
+    "body_delta_mm2": -0.10946080000000051,
+    "old_pitch_reservation_mm2": 2.125,
+    "new_pitch_reservation_mm2": 2.754,
+    "reservation_delta_mm2": 0.629,
+    "escape_band_over_phy_mm2": 0.7344,
+    "array_northshift_um": 86.4,
+    "die_um": [
+      31968.5,
+      25000.0
+    ],
+    "die_outline_delta_mm2": 0,
+    "frame_top_um": 24705.84,
+    "north_clearance_um": 294.15999999999985
+  },
+  "latency": {
+    "added_registered_edges": "UNCHANGED_SOURCE_GRAPH_0_ONLY; physical successor latency NOT QUALIFIED",
+    "scope": "model only, unchanged RTL/register graph; no timing margin or physical latency claim",
+    "max_direct_endpoint_um": 149.2230000000011,
+    "max_one_band_detour_um": {
+      "value": 322.0230000000011,
+      "status": "unobstructed86.4model U-bound ONLY, no absolute405 routed claim"
+    }
+  },
+  "obligations": [
+    "actual native M6 PG/obstruction/via/clock occupancy must leave at least480 usable tracks per peak cut",
+    "86.4band with alternating0.128spacing at55percent target FAILS: need111.709um; lattice envelope129.6um",
+    "fullnative0.064spacing at55percent target is feasible on track-count model only; prove electrical/spacing/PG before route",
+    "actualCTRL closedview ages/clk binding + allhalfcycle nativefamily admission required",
+    "band is above PHY body, not free placement rows; no inserted register/buffer sites assumed",
+    "if additional register landing needed, price both request/response ages+calendar and obtain sourceproof before physical launch"
+  ],
+  "grown_alternating_option": {
+    "envelope_um": 129.6,
+    "raw_M6_tracks": 1012,
+    "available_M6_at_55percent": 556,
+    "required": 480,
+    "array_shift_if_envelope_tied_um": 129.6,
+    "frame_top_if_shift129_6_um": 24749.04,
+    "north_guard_if_shift129_6_um": 250.95999999999987,
+    "PHY_overlay_area_mm2": 1.1016,
+    "full_envelope_U_detour_upper_um": 408.4230000000011,
+    "full_envelope_U_upper_over405": true,
+    "added_registered_edges": "NOT QUALIFIED: unchanged graph is0, physical buffering/landing not designed"
+  },
+  "vertical_M7_crossing_budget": {
+    "direction": "VERTICAL",
+    "pitch_um": 0.064,
+    "per_pair_bits": 1244,
+    "two_leg_crossings": 2488,
+    "pair_width_um": 531.25,
+    "native_tracks": 8300,
+    "native_available55": 4565,
+    "alternating_tracks": 4150,
+    "alternating_available55": 2282,
+    "native_count_pass": true,
+    "alternating_count_pass": false,
+    "scope": "Count upper-demand for allbelowface U paths; actualorientation/PG/stub endpoint access/trackassignment unproven. M5 companion layer must be explicitly budgeted if needed."
+  },
+  "actual_CTRL_pin_layers": {
+    "M3": 9952,
+    "M5": 9952
+  },
+  "via_access_obligation": "M3 CTRL face pins require M3-M4-M5-M6-M7 stack to M7; M5 CTRL face needs M5-M6-M7. PHY OBS M1-M4 permits no presumed low-layer crossing throughbody. Nativecut spacing/density/PG and individualpin escape remain open."
+}
