@@ -1,0 +1,119 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: RTL is flop-first at every pin (QW-N59-4 split children: every input lands in a p_* pin register, every output is a flop or a 2-slot AND-OR of slot flops as in the r1 block; the split edge contract is benched with these edges); OT_PIN_REGS would add a second edge and break it",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "rtl",
+   "message": "runtime_partselect: 3 runtime-indexed part-select(s), 640 bits (3 >= 64 b; e.g. ot_qfd_su_kv_static_posted: bytes_n[8*idx+:8] (512 b write), ot_qfd_su_kv_static_posted: seen[64*selected+:64] (64 b), ot_qfd_su_kv_static_posted: seen[64*selected+:64] (64 b)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory",
+   "fix": "decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc7 for 40 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_n59_svc_b_20261019-220259.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_n59_svc_b_20261019-220259.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qfd_n59_svc_b-20261019-220259",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc7 in 736 s (gate total 3983 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 4471, 'pin_rectangles': 4471, 'pin_track_checked': 4471, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 1e9f20ca20f97e2ebae4baa940933f557c551421a0dc56eccab78385735f20c6",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 13486 um2 + macros 0 in core 108820: util 12%",
+   "fix": "set \"std_area_um2\": 13486 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qfd_native59_svc cells 89,081 flops 18,019 depth 583.5 ps util 0.1304 reach 120.5 um (3.3 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck: 18,019 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. dr_o[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "28 input->register endpoint(s) > 3 levels (worst qb_beat[0]->u_ot_pr_core.g_slot[1].u_service.fault$_DFF_PN0_/D 9 lv, qb_beat[0]->u_ot_pr_core.g_slot[0].u_service.fault$_DFF_PN0_/D 8 lv, qb_bad->u_ot_pr_core.dv_fault$_DFFE_PN0P_/D 6 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 13.0% outside 45%-65% (std 14190 + macro 0 um2 in 108820 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:ck: 18,019 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,019 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=137 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck: 18,019 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 18,019 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-n59s3/physical/ref_tile/qfd_n59_svc_b/gate_layout/floorplan.png",
+   "fix": ""
+  }
+ ]
+}
