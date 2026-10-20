@@ -6,5 +6,13 @@
   "delta_readselector_vs_r6": 2352,
   "change_reducer": "Registeredonehot3bit wordselector2x16b groups per SRAM A/B atsame stageC; 32FF replace6binarylowaddress FF, expected+26FF, no SRAM or externalport/latencychange.",
   "scope": "Original shared reducer/FP32adder unchanged; new ownnamed reducer r32, opt-in qcore_r9 only. Existing pretree/library/reset/sectorwriteoffenders remain.",
-  "validation": "Directr5 alloutputeveryedgebench+MUT256. ExactproductionPRETREE1 ORFS native census before any gate. Realarea/dieprice still owed."
+  "validation": "Directr5 alloutputeveryedgebench+MUT256. ExactproductionPRETREE1 ORFS native census before any gate. Realarea/dieprice still owed.",
+  "reset_copy_contract": {
+    "same_two_landing_stages": true,
+    "first_copies": 2,
+    "last_copies": 64,
+    "max": 32,
+    "why": "Existing canonicalizer copies/repoints equivalent sameedge flops, no resetprotocol change.64final gives~4coarse cells/copy so sectorport6native-reset-sinks stays<=32; first2 split64Dloads32each. Exactnative decides; TSV alone is insufficient.",
+    "extra_ff": 64
+  }
 }
