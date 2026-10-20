@@ -16,7 +16,7 @@
   "what": "Qwen release die is TP-8 (4 q heads, 1 KV head a die); census carried TP-4 nq 8 rows on the per-q-head SU records",
   "bench": "prod_compile qw8_* on the bound static SU ot_hbm_su_static_top (mr10, Verilator 5.050, ot-epyc5 hbm-collfuse/suvop/vec_tp8): softmax.max 4x8192 11265.3, bf16_p 380.0, pv_normalize 136.0, round_q 82.7, row_scale_qkv 90.7 stream cycles, all SU_TOP PASS; exp_sum 4 rows = affine law 11351.2 (store image > 500 rows; the PRETREE lane owns the direct 4-row model-order exp_sum)",
   "golden_order": "max (exact) and the elementwise records are order-free -> golden order holds; only exp_sum depends on order (pre-tree model-order csum8 = PRETREE lane, Codex phased4 b31f6dc05 4-row PASS 1422 serial, not adopted here)",
-  "witness": "MUT_DATA FAIL qw8_bf16_p (sim_mr10_MUT_DATA.log); MUT_RED / MUT_RF are NOT hooked in tb_toksim_su_top (PASS = insensitive, not witnesses); MUT_DATA for max/pv/round/row_scale running -> pending_results",
+  "witness": "MUT_DATA FAIL only for qw8_bf16_p (sim_mr10_MUT_DATA.log). MUT_DATA is INSENSITIVE (SU_TOP PASS) on qw8_softmax_max / pv_normalize / round_q / row_scale_qkv (logs *_MUT_DATA_INSENSITIVE.log); MUT_RED / MUT_RF are not hooked in tb_toksim_su_top. -> those 4 TP8 shapes have no causal witness: the TP8 row is PROVISIONAL until the SU bench gains a sensitive per-record mutant (owner: SU bench / PRETREE lane).",
   "census": "Qwen 3,223,896.4 -> 2,418,166.8 cycles (372.2 -> 496.2 tok/s); 38 SU.VOP records (rope, no qw8 shape) by measured ratio; DS unchanged"
  },
  "3_L1_fuse": {
@@ -31,5 +31,22 @@
   "verdict": "REJECTED: not a calendar/compiler slack and not an RTL idle slot. The 1-in-5 empty beat is the hfd_ep_static gearbox: a group = 5 SerDes data beats x 510 gearbox bits = 2550 bits carrying 4 slots of S = 613 bits (512 data + metadata); a 5th slot needs 3065 bits. The 0.8 frame/beat IS the link payload rate (96% bit efficiency). Only a different link format (numerics change or wider beat) could raise it; best integer repack (9 slots / 11 beats) = +2.3% of TX serialisation (~1-2 edges/step) -> not worth an RTL change (owner 'only significant gains').",
   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv header lines 15-23 (GEN2e4 11bf17f45 = main)"
  },
- "rows": {"base": [1109.7, 372.2], "fuse": [1109.7, 373.6], "tp8": [1109.7, 496.2], "tp8_fuse": [1109.7, 498.6]}
+ "rows": {
+  "base": [
+   1109.7,
+   372.2
+  ],
+  "fuse": [
+   1109.7,
+   373.6
+  ],
+  "tp8": [
+   1109.7,
+   496.2
+  ],
+  "tp8_fuse": [
+   1109.7,
+   498.6
+  ]
+ }
 }
