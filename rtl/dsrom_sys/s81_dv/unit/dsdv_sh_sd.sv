@@ -74,7 +74,13 @@ module dsdv_sh_sd #(
     wire [545:0] mem_q;
 `ifdef OT_S81_SH_RSZ
     // S81-SHLK s10: one right-sized 16x289 dual-clock master (both clocks ck), rows 8..15 unused, address zero-extended
-    ot_sram_1r1w2c_16x289_m1 u_mem(.wclk(ck),.rclk(ck),.r_ce_in(rn&&have_next),.r_addr_in({1'b0,read_next}),.rd_out(mem_q[288:0]),
+`ifdef OT_S81_SH_P192
+    // Same synchronous dual-clock contract; source-pinned p192 contact master.
+    ot_sram_1r1w2c_16x289_m1_p192 u_mem(
+`else
+    ot_sram_1r1w2c_16x289_m1 u_mem(
+`endif
+.wclk(ck),.rclk(ck),.r_ce_in(rn&&have_next),.r_addr_in({1'b0,read_next}),.rd_out(mem_q[288:0]),
       .w_ce_in(rn&&iv),.w_addr_in({1'b0,wp}),.wd_in({iwe,ia,id}),.w_mask_in({289{1'b1}}));
     assign mem_q[545:289] = 257'd0;
 `elsif OT_S81_SH_BANK64
