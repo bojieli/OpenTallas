@@ -54,7 +54,6 @@ module ot_hnx_hc_qcen #(
 
     // HUB-SAFE2 2026-10-20: relay named u_rst_relay (recognised by physical/common_flow/ot_rst_copies.py, which re-points
     // the reset loads over the kept identical copies, <= 32 each); REGIONS 16 = the 9 regions + 7 balancing copies.
-    wire [15:0] rn;
     localparam integer NRR = (FAN32 != 0) ? 32 : 16;   // FAN32: 32 copies (census safe2: copies c1/c2 37 loads)
     wire [NRR-1:0] rn_all;
     ot_rst_relay #(.REGIONS(NRR)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rn_all));
