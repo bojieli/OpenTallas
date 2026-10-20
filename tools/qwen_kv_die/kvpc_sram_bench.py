@@ -205,7 +205,7 @@ def build_run(out, top, files, defines, threads, tag, plus=()):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--unit', required=True, choices=('front', 'return', 'cdc', 'tq', 'sched', 'ctrl', 'path', 'tile'))
+    ap.add_argument('--unit', required=True, choices=('front', 'return', 'cdc', 'tq', 'sched', 'ctrl', 'path', 'tile', 'port', 'chain', 'esm', 'rhop', 'rhead'))
     ap.add_argument('--tile', default='pc', choices=('pc', 'pc_h'))
     ap.add_argument('--mut', type=int, default=0)
     ap.add_argument('--edges', type=int, default=0)
@@ -234,6 +234,39 @@ def main():
         (out / 'tb.sv').write_text(tb)
         defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 5: ['OT_KVPC_LAND_MUT']}.get(a.mut, [])
         return build_run(out, 'tb_kvpc_sched', [str(out / 'tb.sv')] + base, defs, a.threads, 'SCHED', plus)
+    if a.unit in ('port', 'chain', 'esm', 'rhop', 'rhead'):
+        # KV-PC5-C native32 rewrites: original vs clone, random lockstep, every output every edge; mutant 6 =
+        # OT_KVPC5_TAP_MUT (one wrong slice in the port wq / chain wes tap / strap hold select / retained capture)
+        E = 'rtl/qwen_sys/static_embedding_20261014/'
+        ref_f, ref_m, dut_m, clk, rst = {
+            'port': ('rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv', 'qkd_ctrl_pc_port_child_nc', 'qkd_kvpc_s_port_child',
+                     {'hclk': 512}, {'hrst': 'hclk'}),
+            'chain': (E + 'qkd_kv_pc_chain_station_b.sv', 'qkd_kv_pc_chain_station_b', 'qkd_kvpc_s_chain',
+                      {'ck': 417}, {'rst_n': 'ck'}),
+            'esm': (E + 'qkd_static_kv_pc_es_merge_b.sv', 'qkd_static_kv_pc_es_merge_b', 'qkd_kvpc_s_esm',
+                    {'ck': 417}, {'rst_n': 'ck'}),
+            'rhop': (E + 'qkd_embedding_static_return_hop.sv', 'qkd_embedding_static_return_hop', 'qkd_kvpc_s_rhop',
+                     {'ck': 417}, {'rst_n': 'ck'}),
+            'rhead': (E + 'qkd_embedding_static_return_head.sv', 'qkd_embedding_static_return_head', 'qkd_kvpc_s_rhead',
+                      {'ck': 417}, {'rst_n': 'ck'}),
+        }[a.unit]
+        ref, dut = module(ref_f, ref_m), module(CLONES, dut_m)
+        P = ports(ref)
+        extra_dut = [p for p in ports(dut) if p not in P]
+        if [p for p in P if p not in ports(dut)] or [p for p in extra_dut if p != ('erk', 'input', 20)]:
+            raise SystemExit(f'kvpc_sram_bench: {a.unit} REF / DUT ports differ: {extra_dut}')
+        hdr = strip_comments(ref)
+        hdr = hdr[hdr.index('module'):]
+        hdr = re.sub(r'\boutput(\s+)reg\b', r'output\1wire', hdr[:hdr.index(');') + 2]).replace(f'module {ref_m}', 'module dut_wrap', 1)
+        wrap = hdr + f'\n  {dut_m} u (.*' + (', .erk({20{er[0]}})' if extra_dut else '') + ');\nendmodule\n'
+        (out / 'wrap.sv').write_text('`timescale 1ns/1ps\n' + wrap)
+        tb = lockstep_tb(f'tb_kvpc_{a.unit}', P, ref_m, 'dut_wrap', clk, rst, a.edges or 20000, a.mut,
+                         tag=a.unit.upper(), strap={'pc': "5'd9", 'cfg_stack': "2'd2"},
+                         ref_delay={'emb_boot_ready': 'ck'} if a.unit == 'esm' else None)   # KV-PC3 ebr_q landing
+        (out / 'tb.sv').write_text(tb)
+        defs = {6: ['OT_KVPC5_TAP_MUT'], 5: ['OT_KVPC_LAND_MUT']}.get(a.mut, [])
+        files = [str(out / 'tb.sv'), str(out / 'wrap.sv'), ref_f] + [f for f in base if f != ref_f]
+        return build_run(out, f'tb_kvpc_{a.unit}', files, defs, a.threads, a.unit.upper(), plus)
     if a.unit in ('ctrl', 'path'):
         if a.unit == 'ctrl':
             ref = module('rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv', 'qkd_ctrl_pc_host_static_nc')
@@ -252,13 +285,18 @@ def main():
             xin.update(return_ck='ck', front_hbm_data='{4{pll_hbm}}', return_hbm_data='{4{pll_hbm}}', cal_rst_n='hrst')
             rst = {'rsi': 'ck', 'hrst': 'pll_hbm'}
         P = ports(ref)
-        if P != ports(dut):
-            raise SystemExit(f'kvpc_sram_bench: {a.unit} REF / DUT ports differ')
+        # KV-PC5-C: the DUT carries 20 kept copies of er[0] (erk) up to the embedding merge; checked == {20{er[0]}}
+        if P != [p for p in ports(dut) if p[0] != 'erk'] or ('erk', 'output', 20) not in ports(dut):
+            raise SystemExit(f'kvpc_sram_bench: {a.unit} REF / DUT ports differ (DUT = REF + output [19:0] erk)')
+        erk = '\n'.join([
+            '  always @(negedge ck) if (rsi && hrst) begin chk = chk + 1;',
+            '    if (u_dut.erk !== {20{u_dut.er[0]}}) begin bad = bad + 1;',
+            '      if (bad < 8) $display("MISMATCH t=%0d erk %h er0 %b", t, u_dut.erk, u_dut.er[0]); end end'])
         tag = a.unit.upper()
         tb = lockstep_tb(f'tb_kvpc_{a.unit}', P, ri, di, clk, rst, a.edges or 20000, a.mut, extra_in=xin, tag=tag,
                          qual={'er': (0, 258, 1), 'native_commit_identity': ('r__native_commit_valid[0]', 60, 0),
                                'native_commit_address': ('r__native_commit_valid[0]', 28, 0)},
-                         ref_delay={'fi': 'pll_hbm', 'ki': 'pll_hbm'})
+                         ref_delay={'fi': 'pll_hbm', 'ki': 'pll_hbm'}, extra=erk)
         (out / 'tb.sv').write_text(tb)
         defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_CDC_UP_MUT'], 3: ['OT_KVPC_FRONT_MUT4'],
                 5: ['OT_KVPC_LAND_MUT']}.get(a.mut, [])
