@@ -1,0 +1,305 @@
+{
+ "name": "qfd_sys_face_bc3",
+ "top": "qfd_sys_face_control_safe",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/generated/qfd_sys_face_control_safe_bc3_1019.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 172.8,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "R0",
+   "inst": "*m13639"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    129.6,
+    86.4
+   ],
+   "orient": "R0",
+   "inst": "*m13373"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    216,
+    86.4
+   ],
+   "orient": "R0",
+   "inst": "*m13372"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13379"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    86.4,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13378"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13377"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13376"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13375"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13374"
+  }
+ ],
+ "pins": {
+  "N": [
+   "fwd_epoch",
+   "d2d_fault",
+   "d2d_epoch_abort",
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "prog_rx_v",
+   "prog_witness_slot",
+   "prog_auth_slot",
+   "prog_context_slot",
+   "prog_tx_observed_v",
+   "prog_tx_record",
+   "ck",
+   "rst_n",
+   "rx_payload",
+   "emb_rx_v",
+   "emb_rx_slot",
+   "status_epoch16",
+   "vm_drained",
+   "collective_drained",
+   "collective_busy",
+   "crom_fault",
+   "execution_active",
+   "admit_ready",
+   "result_v",
+   "result_done",
+   "result_fault",
+   "result_cause",
+   "result_tag",
+   "result_gen",
+   "result_token",
+   "result_value",
+   "result_cycles",
+   "cal_start_rx",
+   "cal_seg_rx",
+   "cal_user_tx",
+   "cal_user_rx"
+  ],
+  "W": [
+   "tt_pw",
+   "tt_program_obs",
+   "tt_control_stores_ready",
+   "tt_kok",
+   "tt_kwd",
+   "tt_fab",
+   "tt_layer_context_v",
+   "tt_command_stage",
+   "tt_native_tok",
+   "tt_native_pos",
+   "native_fault",
+   "q_slot",
+   "q_slot_beat",
+   "kv_word_slot",
+   "kv_word_index",
+   "visibility_slot",
+   "complete_slot",
+   "host_epoch_valid",
+   "host_fused_capability",
+   "host_epoch",
+   "host_tag",
+   "host_generation",
+   "ctx_x",
+   "init_u0"
+  ],
+  "S": [
+   "emb_word_v",
+   "emb_word_data",
+   "emb_word_token",
+   "emb_word_index",
+   "emb_word_scale",
+   "emb_word_epoch",
+   "emb_expected_slot",
+   "emb_expected_token",
+   "emb_expected_word",
+   "emb_expected_scale",
+   "emb_expected_epoch",
+   "emb_fill_begin",
+   "emb_fill_token",
+   "emb_fill_epoch",
+   "emb_core_epoch",
+   "emb_prov_fault",
+   "io_cmd_free",
+   "io_fault",
+   "io_shared_fault",
+   "fault"
+  ],
+  "E": [
+   "seq_cfg_image_ready",
+   "seq_dc",
+   "seq_program_obs",
+   "seq_descriptor_obs",
+   "seq_dh"
+  ]
+ },
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "sink_clustering": false
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "QW-SYSFACE3 successor of bc2l (TERMINAL FAIL TT -57.924 ps, 833.5 ps/28 native levels rx_payload[142]->context fault): SAFE3 source (rtl/qwen_split/qfd_sys_face_safe3.sv, qfd_sys_face/record_port SAFE3=1): balanced 16-predicate bad-receive + 6-cause sticky fault in the context RX, bit-field bad_write in both program receipts, balanced cal_fault/face_fault reductions, registered cold_last flag for cold_t_go; zero added edges, two-state identical (leaf equiv_induct proofs + original-source miters); generic depth 25->19 levels (limit 20). X counterexamples a1e934503 fixed in source (no case-equality / no procedural if on X in the context RX). Kept copies emitted as one keep_hierarchy module per KIND (no per-ID paramods): roundtrip synth 10304 s -> 6.5 s. Same 9-macro lattice/pin plan as bc2l.",
+ "slot_change_request": "New scoped nine-macro diagnostic component302.4x172.8; proposed grow from276.48x172.8. Final die grant and production-source slot binding owed.",
+ "job": {
+  "owner": "Claude:QW-SYSFACE3",
+  "branch": "claude/qw-sysface3-1019",
+  "tag": "bc3",
+  "cycles_added": 2,
+  "purpose": "Scoped diagnostic generated SAFE3 control-safe nine-macro FACE component; two generic pin landing edges, no production origin or full-token qualification.",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/arch/sysface_control_safe_1019",
+   "results/arch/sysface_sram_players_1019",
+   "results/rtl/sysface_control_safe_1019",
+   "results/rtl/sysface_safe3_1019",
+   "rtl/qwen_split",
+   "rtl/qwen_sys",
+   "rtl/test/qwen_split",
+   "tools/qwen_split"
+  ],
+  "benches": [
+   {
+    "name": "safe3_source_native_matrix",
+    "cmd": "bash tools/qwen_split/sysface_control_safe/run_safe3_all.sh",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "yosys",
+     "verilator"
+    ],
+    "pass_regex": "^SAFE3_MATRIX_PASS",
+    "pass_witness": "results/rtl/sysface_safe3_1019/matrix.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_sys_face_bc3/views",
+  "record_to": "results/rtl/ref_tile/qfd_sys_face_bc3"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: explicit generated wrapper (ot_explicit_pin_regs=1) captures every input once (+24 same-edge private copies) and every output once; SAFE3 receipt physical_wrapper=true, check_physical_wrapper PASS"
+ },
+ "hold_budget": "die",
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL lands rst_n in 2 registered synchronous stages (ot_explicit_reset_stages=2, wrapper reset2)"
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20"
+ },
+ "clock": "spine",
+ "safe_design_checklist": {
+  "1_pins": "PASS (explicit RTL wrapper): every input +1 and output +1 registered, rst_n landed in 2 stages; flow pin regs/reset landing OFF to avoid double wrapping",
+  "2_reach": "PASS: same 302.4x172.8 geometry as bc2l whose final native census measured max 333.5 um, 0 over 405 (re-measured by the gate)",
+  "3_fanout": "fixed: useful producer copies (abstract max 12, 413 copies) as kept per-KIND module instances (opt_merge never merges user instances; check_emitted proves every instance); bc2l native: one comb root 39 -> gate census must show <=32",
+  "4_depth": "fixed: generic depth 25 -> 19 levels (depth_census limit 20), bc2l 28-native-level context cone balanced; no comb in->out (wrapper regs)",
+  "5_storage": "PASS: 3x 4096x72 ROM + 6x 64x16 SRAM macros, no runtime-indexed flop arrays",
+  "6_floorplan": "macros on 43.2 lattice, >=20 um channels, aspect 1.75; fill ~28% = macro-lattice + channel bound (fill_reason); no full-width band claim",
+  "7_clock": "local spine, macro own leaves, single clock, centre/pin fed; io_hold_margin 0.03; --cts gate measures TT/FF pin-flop spread (bc2l spine 42.0/37.7 ps)",
+  "8_schedule": "static; zero added edges vs bc2l (cold_last is an exact next-state flag; balanced trees only); inherited input1/output1/reset2 priced as before",
+  "x_semantics": "fixed in source: the four a1e934503 receive_slot/rx_v X/Z counterexamples (source fault 1 vs native X) cannot occur: context RX uses only &,|,^,!=,?: dataflow"
+ },
+ "keep_pin_regs": true,
+ "fill_reason": {
+  "pin_bound": "gate pin_demand shows every face's pin span at 99% of the edge (2788 signal pins: N 1328/S 652/W 419/E 389); the outline is also the minimum for the nine-macro set on the 43.2 lattice with >=20 um channels: 3 ROM 38.0x62.9 need 86.4 pitch (x 43.2..254.0) and 6 SRAM 18.4x20.8 at 43.2 pitch need x 43.2..277.6 + 22.2 edge channel = 299.8 um, ROM row y 86.4..149.3 + channel = 171.5 um -> 302.4x172.8; no smaller legal arrangement exists (2-row ROM layouts are >=56k um2). Lattice/band exception (measured_band_fill) needs ROOT approval: not claimed."
+ }
+}

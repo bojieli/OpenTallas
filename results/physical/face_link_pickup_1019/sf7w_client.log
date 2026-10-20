@@ -1,0 +1,30 @@
+GATE WARN fill: fill 25% = (macros/children 10580 + std 6085) / outline 67185 um2 (pin-bound: pin-bound: 3,668 functional ports (548-bit native/program/RX payloads, 583-bit FDI flits, 524-bit x3) at the 0.192 um legal pin pitch (5.2/um, rule <= 6/um) need 704 um of face; qfd_d2d_static_sf7w 388.8 x 172.8 gives fill 24.8% (macros 10580 + synth std 6085 um2); per face N 1674 pins over 321.216/388.8 um (83%), S 1170 pins over 224.448/388.8 um (58%), W 758 pins over 145.344/172.8 um (84%), E 66 pins over 12.48/172.8 um (7%). A 35-40% outline (<= 47.6k um2, perimeter <= ~870 um) would need >= 81% of the whole perimeter and every face >= 90% full, and the 2 x 2 lattice macros need >= 186 um height.)
+GATE INFO pin_regs: pin registers opted out: RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qfd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_d2d_static_sf7w_20261019-164802.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_d2d_static_sf7w_20261019-164802.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_d2d_static_sf7w-20261019-164802
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 97 s (gate total 1937 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 3668, 'pin_rectangles': 3668, 'pin_track_checked': 3668, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 a1c9a3ffa4097e25f4a263188990d14d04b57ac97bf968e09b00c8ccb0cb5493
+GATE INFO util: synthesized std area 6085 um2 + macros 10580 in core 64777: util 14% (std-cell density 14.0% of placeable 43381 um2; total fill 25.7%)
+GATE INFO keep_modules: keep ot_d2d_kff: ot_d2d_kff survives synthesis (256 instances)
+GATE INFO keep_modules: keep ot_d2d_kffr: ot_d2d_kffr survives synthesis (144 instances)
+GATE INFO keep_modules: keep ot_d2d_kand_s7: ot_d2d_kand_s7 survives synthesis (316 instances)
+GATE INFO keep_modules: keep ot_d2d_kandn_s7: ot_d2d_kandn_s7 survives synthesis (15 instances)
+GATE INFO keep_modules: keep ot_d2d_kor_s7: ot_d2d_kor_s7 survives synthesis (5 instances)
+GATE INFO keep_modules: keep ot_d2d_status_and_s7: ot_d2d_status_and_s7 survives synthesis (16 instances)
+GATE INFO keep_modules: keep ot_d2d_useful_and_s7: ot_d2d_useful_and_s7 survives synthesis (8 instances)
+GATE INFO textbook: PASS qfd_d2d_static_ovl_sf7 cells 39,263 flops 11,764 depth 463.4 ps util 0.2582 reach 0.0 um (1.2 s)
+GATE INFO cts_calibration: ss insertion all 363.6..473.3 ps (spread 109.7), boundary mean 420.5; tt insertion all 269.2..371.6 ps (spread 102.4), boundary mean 323.7; ff insertion all 213.9..308.9 ps (spread 95.0), boundary mean 264.9; macro_clk flag True
+GATE INFO density: effective global-placement target density 0.600 vs spec PD 0.60
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_d2d_static_sf7w/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      587 paths, worst slack 161.6 ps (e.g. u_core.u_end.u_link.u_ctl.rx_v$_DFF_PN0_/D)
+GATE INFO path_classes: macro->reg      9 paths, worst slack 252.0 ps (e.g. u_core.u_end.u_link.g_bank[0].u_store.dout[24]$_DFF_P_/D)
+GATE INFO path_classes: in->reg         4 paths, worst slack 461.0 ps (e.g. u_core.u_reset_regions.s0$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 1.6158113735897928e-10 hold WNS 3.574290863284091e-11
+GATE WARN clock_rule: root port:ck: 11,768 sinks on the largest root; measured TT insertion 371.6 ps, FF insertion 308.9 ps, TT pin-flop spread 66.3 ps, FF pin-flop spread 62.1 ps; WARN: insertion 371.6 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-d2d3-1019/physical/ref_tile/qfd_d2d_static_sf7w/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-d2d3-1019/physical/ref_tile/qfd_d2d_static_sf7w/gate_layout/density.png
+GATE WARN fill: fill 25% = (hard macros 10579.8 + synthesized std cells 6146.1) / outline 67184.6 um2; pin demand per face: S 1250 pins over 224.4/388.8 um (58%), N 1674 pins over 321.2/388.8 um (83%), W 790 pins over 145.3/172.8 um (84%), E 98 pins over 12.5/172.8 um (7%) (pin-bound: pin-bound: 3,668 functional ports (548-bit native/program/RX payloads, 583-bit FDI flits, 524-bit x3) at the 0.192 um legal pin pitch (5.2/um, rule <= 6/um) need 704 um of face; qfd_d2d_static_sf7w 388.8 x 172.8 gives fill 24.8% (macros 10580 + synth std 6085 um2); per face N 1674 pins over 321.216/388.8 um (83%), S 1170 pins over 224.448/388.8 um (58%), W 758 pins over 145.344/172.8 um (84%), E 66 pins over 12.48/172.8 um (7%). A 35-40% outline (<= 47.6k um2, perimeter <= ~870 um) would need >= 81% of the whole perimeter and every face >= 90% full, and the 2 x 2 lattice macros need >= 186 um height.)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 30.83% used; GRT 919 s
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: qfd_d2d_static_sf7w/gate_result.json written (exact staged source binding; commit it with the kit)

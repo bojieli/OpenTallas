@@ -1,0 +1,25 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: RTL registers every pin: explicit generated wrapper (ot_explicit_pin_regs=1) captures every input once (+24 same-edge private copies) and every output once; SAFE3 receipt physical_wrapper=true, check_physical_wrapper PASS
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO pin_fit: pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)
+GATE INFO remote: ot-run selected ot-epyc8 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_sys_face_bc3_20261019-164349.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_sys_face_bc3_20261019-164349.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qfd_sys_face_bc3-20261019-164349
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc8 in 49 s (gate total 1416 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2788, 'pin_rectangles': 2788, 'pin_track_checked': 2788, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 a051851148d952ca999f4492db4ccf049516b83a7b28d59ed2ff799e51e788c7
+GATE INFO util: synthesized std area 5251 um2 + macros 9465 in core 50221: util 15% (std-cell density 15.5% of placeable 33899 um2; total fill 29.3%)
+GATE INFO textbook: WARN qfd_sys_face_control_safe cells 37,591 flops 6,838 depth 705.1 ps util 0.2945 reach 0.0 um (1.0 s)
+GATE WARN textbook.logic_depth: reg->reg stage boundary_101460.Q$_DFF_P_ -> core.f2356.Q$_DFF_PN0_/D: ~705 ps estimated (23 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE INFO cts_calibration: ss insertion all 517.1..576.9 ps (spread 59.8), boundary mean 542.3; tt insertion all 390.8..444.3 ps (spread 53.5), boundary mean 407.7; ff insertion all 311.0..363.1 ps (spread 52.1), boundary mean 326.2; macro_clk flag True
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 0 (coarse) leaves 871 sinks 6846 cells 1742 leaf arrival 303.3..373.7 ps (spread 70.4) pad 60.0 / 14.0 ps
+GATE INFO clock_spine: OT_SPINE iter 1 (fine) leaves 871 sinks 6846 cells 2823 leaf arrival 345.6..375.3 ps (spread 29.7) pad 60.0 / 20.4 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_sys_face_bc3/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      600 paths, worst slack 59.8 ps (e.g. core/f2034/Q$_DFFE_PN0P_/D)
+GATE INFO path_classes: setup WNS 5.975531180979488e-11 hold WNS 3.176314766761834e-11
+GATE WARN clock_rule: root port:ck: 6,847 sinks on the largest root; measured TT insertion 444.3 ps, FF insertion 363.1 ps, TT pin-flop spread 48.3 ps, FF pin-flop spread 44.5 ps; WARN: insertion 444.3 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-sysface3-1019/physical/ref_tile/qfd_sys_face_bc3/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-sysface3-1019/physical/ref_tile/qfd_sys_face_bc3/gate_layout/density.png
+GATE WARN fill: fill 28% = (hard macros 9465.0 + synthesized std cells 5323.5) / outline 52254.7 um2; pin demand per face: S 700 pins over 300.0/302.4 um (99%), N 1328 pins over 300.2/302.4 um (99%), W 451 pins over 170.4/172.8 um (99%), E 421 pins over 170.4/172.8 um (99%) (pin-bound: gate pin_demand shows every face's pin span at 99% of the edge (2788 signal pins: N 1328/S 652/W 419/E 389); the outline is also the minimum for the nine-macro set on the 43.2 lattice with >=20 um channels: 3 ROM 38.0x62.9 need 86.4 pitch (x 43.2..254.0) and 6 SRAM 18.4x20.8 at 43.2 pitch need x 43.2..277.6 + 22.2 edge channel = 299.8 um, ROM row y 86.4..149.3 + channel = 171.5 um -> 302.4x172.8; no smaller legal arrangement exists (2-row ROM layouts are >=56k um2). Lattice/band exception (measured_band_fill) needs ROOT approval: not claimed.)
+GATE FAIL trial_route: trial global route produced no congestion table (GATE_GRT_RC=1)  -> FIX: read the remote grt.log
+PRE_ROUTE_GATE: FAIL (1 fail, 4 warn)
+GATE: qfd_sys_face_bc3/gate_result.json written (exact staged source binding; commit it with the kit)

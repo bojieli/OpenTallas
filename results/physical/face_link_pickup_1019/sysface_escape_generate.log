@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/sysface-escape-p192-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/sysface-escape-p192-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/sysface-escape-p192-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/sysface-escape-p192-1019
+ot-run: ot-epyc8       admits  1167 GB (avail 899, growth 82, headroom 0, waiters 0/0 GB) load 30/128 running 12 disk 32 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/sysface-escape-p192-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/sysface-escape-p192-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-335854-1792457024 after 0 s
+ot_sram_1r1w_64x16_m1_escape_p192 outline 25.704 20.79 apron 3.672 added area 152.68176 metal RC price 1.0881671756246223
+ot_rom_4096x72_m8_escape_p192 outline 47.736 62.91 apron 4.86 added area 611.4852 metal RC price 1.4852585658396094
+SYSFACE 6 SRAM + 3 ROM macro area delta um2: 2750.546159999999
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-335854-1792457024): exit 0

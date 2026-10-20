@@ -1,0 +1,5764 @@
+{
+  "odb": "routes/gate/work/orfs/results/asap7/opentallas_qfd_sys_face_control_safe_asap7_ref_gate/base/4_1_cts.odb",
+  "odb_sha256": "7933b99c3741da1be61334f5ed051ff9a91617471f0ab331caa0f4de0a5298ae",
+  "scope": "read-only actual ODB; all drivers; BUF/INV-transparent terminal pins; genuine all-clock terminal cones separate; no PG mutation",
+  "instances": 52844,
+  "masters": {
+    "TIELOx1_ASAP7_75t_R": 1209,
+    "DFFHQNx1_ASAP7_75t_R": 4045,
+    "INVx3_ASAP7_75t_R": 4547,
+    "DFFHQNx2_ASAP7_75t_R": 68,
+    "INVx4_ASAP7_75t_R": 26,
+    "TIEHIx1_ASAP7_75t_R": 3199,
+    "BUFx3_ASAP7_75t_R": 1841,
+    "BUFx24_ASAP7_75t_R": 651,
+    "BUFx2_ASAP7_75t_R": 4244,
+    "CKINVDCx16_ASAP7_75t_R": 5,
+    "CKINVDCx12_ASAP7_75t_R": 11,
+    "CKINVDCx8_ASAP7_75t_R": 16,
+    "CKINVDCx11_ASAP7_75t_R": 4,
+    "INVx6_ASAP7_75t_R": 26,
+    "CKINVDCx6p67_ASAP7_75t_R": 8,
+    "CKINVDCx10_ASAP7_75t_R": 9,
+    "INVx5_ASAP7_75t_R": 87,
+    "INVx8_ASAP7_75t_R": 46,
+    "BUFx8_ASAP7_75t_R": 11,
+    "INVx2_ASAP7_75t_R": 678,
+    "CKINVDCx5p33_ASAP7_75t_R": 34,
+    "CKINVDCx9p33_ASAP7_75t_R": 6,
+    "BUFx4f_ASAP7_75t_R": 13,
+    "INVx11_ASAP7_75t_R": 12,
+    "INVx13_ASAP7_75t_R": 2,
+    "CKINVDCx14_ASAP7_75t_R": 6,
+    "CKINVDCx20_ASAP7_75t_R": 2,
+    "BUFx6f_ASAP7_75t_R": 2164,
+    "BUFx10_ASAP7_75t_R": 82,
+    "BUFx16f_ASAP7_75t_R": 77,
+    "BUFx12f_ASAP7_75t_R": 6,
+    "INVx1_ASAP7_75t_R": 4671,
+    "AND2x4_ASAP7_75t_R": 4129,
+    "DFFASRHQNx1_ASAP7_75t_R": 2724,
+    "NOR2x1_ASAP7_75t_R": 2554,
+    "AO21x2_ASAP7_75t_R": 4306,
+    "TAPCELL_ASAP7_75t_R": 5990,
+    "OR2x6_ASAP7_75t_R": 3882,
+    "XOR2x2_ASAP7_75t_R": 1,
+    "XOR2x1_ASAP7_75t_R": 1439,
+    "ot_rom_4096x72_m8": 3,
+    "ot_sram_1r1w_64x16_m1": 6,
+    "BUFx12_ASAP7_75t_R": 3,
+    "BUFx5_ASAP7_75t_R": 1
+  },
+  "role_masters": {
+    "transparent": [
+      "BUFx10_ASAP7_75t_R",
+      "BUFx12_ASAP7_75t_R",
+      "BUFx12f_ASAP7_75t_R",
+      "BUFx16f_ASAP7_75t_R",
+      "BUFx24_ASAP7_75t_R",
+      "BUFx2_ASAP7_75t_R",
+      "BUFx3_ASAP7_75t_R",
+      "BUFx5_ASAP7_75t_R",
+      "BUFx6f_ASAP7_75t_R",
+      "INVx1_ASAP7_75t_R",
+      "INVx2_ASAP7_75t_R",
+      "INVx3_ASAP7_75t_R",
+      "INVx4_ASAP7_75t_R"
+    ],
+    "open_output_inverter": [
+      "INVx11_ASAP7_75t_R",
+      "INVx13_ASAP7_75t_R",
+      "INVx2_ASAP7_75t_R",
+      "INVx3_ASAP7_75t_R",
+      "INVx4_ASAP7_75t_R",
+      "INVx5_ASAP7_75t_R",
+      "INVx6_ASAP7_75t_R",
+      "INVx8_ASAP7_75t_R"
+    ]
+  },
+  "unbound_pg_pin_count": 18922,
+  "unbound_pg_examples": [
+    "core/place14388/VDD",
+    "core/place14388/VSS",
+    "core/place14386/VDD",
+    "core/place14386/VSS",
+    "core/place14384/VDD",
+    "core/place14384/VSS",
+    "core/place14381/VDD",
+    "core/place14381/VSS",
+    "core/place14177/VDD",
+    "core/place14177/VSS",
+    "core/place14382/VDD",
+    "core/place14382/VSS",
+    "clkbuf_6_39_0_ck_regs/VDD",
+    "clkbuf_6_39_0_ck_regs/VSS",
+    "clkbuf_6_40_0_ck_regs/VDD",
+    "clkbuf_6_40_0_ck_regs/VSS",
+    "clkbuf_6_41_0_ck_regs/VDD",
+    "clkbuf_6_41_0_ck_regs/VSS",
+    "clkbuf_6_42_0_ck_regs/VDD",
+    "clkbuf_6_42_0_ck_regs/VSS"
+  ],
+  "driver_count": 47261,
+  "max_nonclock_fanout": 7290,
+  "over32": [
+    {
+      "driver": "wire15050/Y",
+      "net": "net15049",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7290,
+      "clock_terminal_pins": 6846,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A",
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 336.375
+    },
+    {
+      "driver": "TOP/ck",
+      "net": "ck",
+      "master": "TOP_INPUT",
+      "terminal_pins": 7290,
+      "clock_terminal_pins": 6846,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A",
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 456.004
+    },
+    {
+      "driver": "clkbuf_regs_0_core_clk/Y",
+      "net": "ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7280,
+      "clock_terminal_pins": 6837,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 235.91699999999997
+    },
+    {
+      "driver": "clkbuf_0_ck_regs/Y",
+      "net": "clknet_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7280,
+      "clock_terminal_pins": 6837,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 236.295
+    },
+    {
+      "driver": "clkbuf_1_0_0_ck_regs/Y",
+      "net": "clknet_1_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 3777,
+      "clock_terminal_pins": 3554,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 197.685
+    },
+    {
+      "driver": "clkbuf_1_1_0_ck_regs/Y",
+      "net": "clknet_1_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 3503,
+      "clock_terminal_pins": 3283,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 196.029
+    },
+    {
+      "driver": "clkbuf_2_1_0_ck_regs/Y",
+      "net": "clknet_2_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 2097,
+      "clock_terminal_pins": 1985,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A",
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A",
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 157.293
+    },
+    {
+      "driver": "clkbuf_2_3_0_ck_regs/Y",
+      "net": "clknet_2_3_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 2077,
+      "clock_terminal_pins": 1969,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A",
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A",
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 155.367
+    },
+    {
+      "driver": "clkbuf_2_0_0_ck_regs/Y",
+      "net": "clknet_2_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1680,
+      "clock_terminal_pins": 1569,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 182.13299999999998
+    },
+    {
+      "driver": "clkbuf_2_2_0_ck_regs/Y",
+      "net": "clknet_2_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1426,
+      "clock_terminal_pins": 1314,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 191.493
+    },
+    {
+      "driver": "clkbuf_3_3_0_ck_regs/Y",
+      "net": "clknet_3_3_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1247,
+      "clock_terminal_pins": 1191,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload187/A",
+        "clkload186/A",
+        "clkload195/A",
+        "clkload194/A",
+        "clkload193/A",
+        "clkload192/A",
+        "clkload191/A",
+        "clkload190/A"
+      ],
+      "max_pin_l1_um": 81.063
+    },
+    {
+      "driver": "clkbuf_3_6_0_ck_regs/Y",
+      "net": "clknet_3_6_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1157,
+      "clock_terminal_pins": 1102,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A",
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A",
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 103.45500000000001
+    },
+    {
+      "driver": "clkbuf_3_7_0_ck_regs/Y",
+      "net": "clknet_3_7_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 920,
+      "clock_terminal_pins": 867,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload415/A",
+        "clkload413/A",
+        "clkload412/A",
+        "clkload410/A",
+        "clkload393/A",
+        "clkload400/A",
+        "clkload398/A",
+        "clkload408/A"
+      ],
+      "max_pin_l1_um": 121.40100000000001
+    },
+    {
+      "driver": "clkbuf_3_0_0_ck_regs/Y",
+      "net": "clknet_3_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 891,
+      "clock_terminal_pins": 836,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 141.52499999999998
+    },
+    {
+      "driver": "clkbuf_3_2_0_ck_regs/Y",
+      "net": "clknet_3_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 850,
+      "clock_terminal_pins": 794,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A",
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A",
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 116.79299999999999
+    },
+    {
+      "driver": "clkbuf_3_4_0_ck_regs/Y",
+      "net": "clknet_3_4_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 844,
+      "clock_terminal_pins": 788,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 133.42499999999998
+    },
+    {
+      "driver": "clkbuf_3_1_0_ck_regs/Y",
+      "net": "clknet_3_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 789,
+      "clock_terminal_pins": 733,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload61/A",
+        "clkload58/A",
+        "clkload82/A",
+        "clkload81/A",
+        "clkload80/A",
+        "clkload79/A",
+        "clkload77/A",
+        "clkload75/A"
+      ],
+      "max_pin_l1_um": 130.90499999999997
+    },
+    {
+      "driver": "clkbuf_4_6_0_ck_regs/Y",
+      "net": "clknet_4_6_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 690,
+      "clock_terminal_pins": 662,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload187/A",
+        "clkload186/A",
+        "clkload195/A",
+        "clkload194/A",
+        "clkload193/A",
+        "clkload192/A",
+        "clkload191/A",
+        "clkload190/A"
+      ],
+      "max_pin_l1_um": 73.47799999999998
+    },
+    {
+      "driver": "clkbuf_4_12_0_ck_regs/Y",
+      "net": "clknet_4_12_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 595,
+      "clock_terminal_pins": 567,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A",
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A",
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 53.789000000000016
+    },
+    {
+      "driver": "clkbuf_3_5_0_ck_regs/Y",
+      "net": "clknet_3_5_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 582,
+      "clock_terminal_pins": 526,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload285/A",
+        "clkload293/A",
+        "clkload290/A",
+        "clkload289/A",
+        "clkload288/A",
+        "clkload300/A",
+        "clkload295/A",
+        "clkload306/A"
+      ],
+      "max_pin_l1_um": 150.34499999999997
+    },
+    {
+      "driver": "clkbuf_4_13_0_ck_regs/Y",
+      "net": "clknet_4_13_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 562,
+      "clock_terminal_pins": 535,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload378/A",
+        "clkload384/A",
+        "clkload383/A",
+        "clkload382/A",
+        "clkload377/A",
+        "clkload376/A",
+        "clkload375/A",
+        "clkload372/A"
+      ],
+      "max_pin_l1_um": 65.22300000000001
+    },
+    {
+      "driver": "clkbuf_4_7_0_ck_regs/Y",
+      "net": "clknet_4_7_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 557,
+      "clock_terminal_pins": 529,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload221/A",
+        "clkload217/A",
+        "clkload214/A",
+        "clkload212/A",
+        "clkload209/A",
+        "clkload207/A",
+        "clkload197/A",
+        "clkload196/A"
+      ],
+      "max_pin_l1_um": 47.673000000000016
+    },
+    {
+      "driver": "clkbuf_4_15_0_ck_regs/Y",
+      "net": "clknet_4_15_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 548,
+      "clock_terminal_pins": 520,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload441/A",
+        "clkload440/A",
+        "clkload437/A",
+        "clkload430/A",
+        "clkload432/A",
+        "clkload419/A",
+        "clkload428/A",
+        "clkload424/A"
+      ],
+      "max_pin_l1_um": 77.715
+    },
+    {
+      "driver": "clkbuf_4_0_0_ck_regs/Y",
+      "net": "clknet_4_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 528,
+      "clock_terminal_pins": 501,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 109.233
+    },
+    {
+      "driver": "clkbuf_4_5_0_ck_regs/Y",
+      "net": "clknet_4_5_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 504,
+      "clock_terminal_pins": 476,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload165/A",
+        "clkload162/A",
+        "clkload156/A",
+        "clkload157/A",
+        "clkload147/A",
+        "clkload150/A",
+        "clkload151/A",
+        "clkload152/A"
+      ],
+      "max_pin_l1_um": 78.993
+    },
+    {
+      "driver": "clkbuf_4_8_0_ck_regs/Y",
+      "net": "clknet_4_8_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 480,
+      "clock_terminal_pins": 452,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 97.24499999999998
+    },
+    {
+      "driver": "clkbuf_4_3_0_ck_regs/Y",
+      "net": "clknet_4_3_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 464,
+      "clock_terminal_pins": 436,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload110/A",
+        "clkload107/A",
+        "clkload106/A",
+        "clkload104/A",
+        "clkload101/A",
+        "clkload95/A",
+        "clkload86/A",
+        "clkload88/A"
+      ],
+      "max_pin_l1_um": 70.096
+    },
+    {
+      "driver": "clkbuf_4_14_0_ck_regs/Y",
+      "net": "clknet_4_14_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 372,
+      "clock_terminal_pins": 347,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload415/A",
+        "clkload413/A",
+        "clkload412/A",
+        "clkload410/A",
+        "clkload393/A",
+        "clkload400/A",
+        "clkload398/A",
+        "clkload408/A"
+      ],
+      "max_pin_l1_um": 102.50099999999998
+    },
+    {
+      "driver": "clkbuf_4_9_0_ck_regs/Y",
+      "net": "clknet_4_9_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 364,
+      "clock_terminal_pins": 336,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload276/A",
+        "clkload275/A",
+        "clkload274/A",
+        "clkload270/A",
+        "clkload269/A",
+        "clkload266/A",
+        "clkload261/A",
+        "clkload257/A"
+      ],
+      "max_pin_l1_um": 86.25400000000002
+    },
+    {
+      "driver": "clkbuf_4_1_0_ck_regs/Y",
+      "net": "clknet_4_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 363,
+      "clock_terminal_pins": 335,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload30/A",
+        "clkload28/A",
+        "clkload34/A",
+        "clkload29/A",
+        "clkload45/A",
+        "clkload43/A",
+        "clkload47/A",
+        "clkload55/A"
+      ],
+      "max_pin_l1_um": 121.70700000000001
+    },
+    {
+      "driver": "clkbuf_4_4_0_ck_regs/Y",
+      "net": "clknet_4_4_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 346,
+      "clock_terminal_pins": 318,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A",
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A",
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 101.673
+    },
+    {
+      "driver": "clkbuf_4_10_0_ck_regs/Y",
+      "net": "clknet_4_10_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 343,
+      "clock_terminal_pins": 315,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload285/A",
+        "clkload293/A",
+        "clkload290/A",
+        "clkload289/A",
+        "clkload288/A",
+        "clkload300/A",
+        "clkload295/A",
+        "clkload306/A"
+      ],
+      "max_pin_l1_um": 112.923
+    },
+    {
+      "driver": "clkbuf_4_2_0_ck_regs/Y",
+      "net": "clknet_4_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 325,
+      "clock_terminal_pins": 297,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload61/A",
+        "clkload58/A",
+        "clkload82/A",
+        "clkload81/A",
+        "clkload80/A",
+        "clkload79/A",
+        "clkload77/A",
+        "clkload75/A"
+      ],
+      "max_pin_l1_um": 93.05099999999999
+    },
+    {
+      "driver": "clkbuf_4_11_0_ck_regs/Y",
+      "net": "clknet_4_11_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 239,
+      "clock_terminal_pins": 211,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload314/A",
+        "clkload313/A",
+        "clkload312/A",
+        "clkload311/A",
+        "clkload310/A",
+        "clkload309/A",
+        "clkload308/A",
+        "clkload319/A"
+      ],
+      "max_pin_l1_um": 105.63300000000004
+    },
+    {
+      "driver": "clkbuf_6_25_0_ck_regs/Y",
+      "net": "clknet_6_25_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 211,
+      "clock_terminal_pins": 204,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload181/A",
+        "clkload180/A",
+        "clkload179/A",
+        "clkload178/A",
+        "clkload177/A",
+        "clkload175/A"
+      ],
+      "max_pin_l1_um": 29.446000000000012
+    },
+    {
+      "driver": "clkbuf_6_61_0_ck_regs/Y",
+      "net": "clknet_6_61_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 194,
+      "clock_terminal_pins": 187,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload428/A",
+        "clkload424/A"
+      ],
+      "max_pin_l1_um": 21.15900000000005
+    },
+    {
+      "driver": "clkbuf_6_1_0_ck_regs/Y",
+      "net": "clknet_6_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 184,
+      "clock_terminal_pins": 177,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload10/A",
+        "clkload7/A",
+        "clkload12/A",
+        "clkload11/A",
+        "clkload9/A",
+        "clkload8/A"
+      ],
+      "max_pin_l1_um": 63.17100000000001
+    },
+    {
+      "driver": "clkbuf_6_26_0_ck_regs/Y",
+      "net": "clknet_6_26_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 180,
+      "clock_terminal_pins": 173,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload187/A",
+        "clkload186/A"
+      ],
+      "max_pin_l1_um": 29.036
+    },
+    {
+      "driver": "clkbuf_6_53_0_ck_regs/Y",
+      "net": "clknet_6_53_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 170,
+      "clock_terminal_pins": 163,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload377/A",
+        "clkload376/A",
+        "clkload375/A",
+        "clkload372/A"
+      ],
+      "max_pin_l1_um": 25.605000000000018
+    },
+    {
+      "driver": "clkbuf_6_48_0_ck_regs/Y",
+      "net": "clknet_6_48_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 168,
+      "clock_terminal_pins": 161,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A"
+      ],
+      "max_pin_l1_um": 22.090999999999994
+    },
+    {
+      "driver": "clkbuf_6_51_0_ck_regs/Y",
+      "net": "clknet_6_51_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 166,
+      "clock_terminal_pins": 159,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload358/A",
+        "clkload361/A",
+        "clkload357/A"
+      ],
+      "max_pin_l1_um": 27.16599999999997
+    },
+    {
+      "driver": "clkbuf_6_31_0_ck_regs/Y",
+      "net": "clknet_6_31_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 162,
+      "clock_terminal_pins": 155,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload221/A",
+        "clkload217/A"
+      ],
+      "max_pin_l1_um": 19.430999999999997
+    },
+    {
+      "driver": "clkbuf_6_35_0_ck_regs/Y",
+      "net": "clknet_6_35_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 156,
+      "clock_terminal_pins": 149,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A"
+      ],
+      "max_pin_l1_um": 56.114999999999995
+    },
+    {
+      "driver": "clkbuf_6_21_0_ck_regs/Y",
+      "net": "clknet_6_21_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 156,
+      "clock_terminal_pins": 149,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload147/A",
+        "clkload150/A",
+        "clkload151/A",
+        "clkload152/A",
+        "clkload153/A"
+      ],
+      "max_pin_l1_um": 43.89299999999999
+    },
+    {
+      "driver": "clkbuf_6_12_0_ck_regs/Y",
+      "net": "clknet_6_12_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 156,
+      "clock_terminal_pins": 149,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload86/A",
+        "clkload88/A",
+        "clkload90/A",
+        "clkload89/A",
+        "clkload87/A",
+        "clkload85/A"
+      ],
+      "max_pin_l1_um": 30.82499999999999
+    },
+    {
+      "driver": "clkbuf_6_27_0_ck_regs/Y",
+      "net": "clknet_6_27_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 154,
+      "clock_terminal_pins": 147,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload195/A",
+        "clkload194/A",
+        "clkload193/A",
+        "clkload192/A",
+        "clkload191/A",
+        "clkload190/A"
+      ],
+      "max_pin_l1_um": 36.919
+    },
+    {
+      "driver": "clkbuf_6_29_0_ck_regs/Y",
+      "net": "clknet_6_29_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 149,
+      "clock_terminal_pins": 142,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload209/A",
+        "clkload207/A"
+      ],
+      "max_pin_l1_um": 16.62300000000002
+    },
+    {
+      "driver": "clkbuf_6_55_0_ck_regs/Y",
+      "net": "clknet_6_55_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 149,
+      "clock_terminal_pins": 143,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload388/A"
+      ],
+      "max_pin_l1_um": 21.434999999999974
+    },
+    {
+      "driver": "clkbuf_6_50_0_ck_regs/Y",
+      "net": "clknet_6_50_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 148,
+      "clock_terminal_pins": 141,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload354/A",
+        "clkload351/A"
+      ],
+      "max_pin_l1_um": 25.222999999999985
+    },
+    {
+      "driver": "clkbuf_6_24_0_ck_regs/Y",
+      "net": "clknet_6_24_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 145,
+      "clock_terminal_pins": 138,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload169/A"
+      ],
+      "max_pin_l1_um": 32.22199999999998
+    },
+    {
+      "driver": "clkbuf_6_23_0_ck_regs/Y",
+      "net": "clknet_6_23_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 143,
+      "clock_terminal_pins": 136,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload165/A",
+        "clkload162/A"
+      ],
+      "max_pin_l1_um": 26.199000000000026
+    },
+    {
+      "driver": "clkbuf_6_60_0_ck_regs/Y",
+      "net": "clknet_6_60_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 132,
+      "clock_terminal_pins": 125,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload419/A"
+      ],
+      "max_pin_l1_um": 32.553
+    },
+    {
+      "driver": "clkbuf_6_2_0_ck_regs/Y",
+      "net": "clknet_6_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 131,
+      "clock_terminal_pins": 124,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 49.419
+    },
+    {
+      "driver": "clkbuf_6_30_0_ck_regs/Y",
+      "net": "clknet_6_30_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 130,
+      "clock_terminal_pins": 123,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload214/A",
+        "clkload212/A"
+      ],
+      "max_pin_l1_um": 31.843999999999994
+    },
+    {
+      "driver": "clkbuf_6_33_0_ck_regs/Y",
+      "net": "clknet_6_33_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 128,
+      "clock_terminal_pins": 121,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A",
+        "clkload234/A",
+        "clkload231/A"
+      ],
+      "max_pin_l1_um": 61.835
+    },
+    {
+      "driver": "clkbuf_6_5_0_ck_regs/Y",
+      "net": "clknet_6_5_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 128,
+      "clock_terminal_pins": 121,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload36/A",
+        "clkload37/A",
+        "clkload35/A"
+      ],
+      "max_pin_l1_um": 75.267
+    },
+    {
+      "driver": "clkbuf_6_39_0_ck_regs/Y",
+      "net": "clknet_6_39_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 127,
+      "clock_terminal_pins": 120,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload276/A",
+        "clkload275/A",
+        "clkload274/A"
+      ],
+      "max_pin_l1_um": 45.483999999999995
+    },
+    {
+      "driver": "clkbuf_6_0_0_ck_regs/Y",
+      "net": "clknet_6_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 125,
+      "clock_terminal_pins": 119,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A"
+      ],
+      "max_pin_l1_um": 62.739000000000004
+    },
+    {
+      "driver": "clkbuf_6_52_0_ck_regs/Y",
+      "net": "clknet_6_52_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 123,
+      "clock_terminal_pins": 116,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload368/A",
+        "clkload367/A",
+        "clkload370/A"
+      ],
+      "max_pin_l1_um": 29.533999999999992
+    },
+    {
+      "driver": "clkbuf_6_43_0_ck_regs/Y",
+      "net": "clknet_6_43_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 120,
+      "clock_terminal_pins": 113,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload306/A",
+        "clkload305/A",
+        "clkload304/A",
+        "clkload303/A"
+      ],
+      "max_pin_l1_um": 71.99099999999996
+    },
+    {
+      "driver": "clkbuf_6_54_0_ck_regs/Y",
+      "net": "clknet_6_54_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 120,
+      "clock_terminal_pins": 113,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload378/A",
+        "clkload384/A",
+        "clkload383/A",
+        "clkload382/A"
+      ],
+      "max_pin_l1_um": 40.66699999999997
+    },
+    {
+      "driver": "clkbuf_6_28_0_ck_regs/Y",
+      "net": "clknet_6_28_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 116,
+      "clock_terminal_pins": 109,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload197/A",
+        "clkload196/A"
+      ],
+      "max_pin_l1_um": 35.636000000000024
+    },
+    {
+      "driver": "clkbuf_6_13_0_ck_regs/Y",
+      "net": "clknet_6_13_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 116,
+      "clock_terminal_pins": 109,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload95/A"
+      ],
+      "max_pin_l1_um": 24.12100000000001
+    },
+    {
+      "driver": "clkbuf_6_57_0_ck_regs/Y",
+      "net": "clknet_6_57_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 115,
+      "clock_terminal_pins": 109,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload400/A",
+        "clkload398/A"
+      ],
+      "max_pin_l1_um": 25.964999999999975
+    },
+    {
+      "driver": "clkbuf_6_49_0_ck_regs/Y",
+      "net": "clknet_6_49_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 113,
+      "clock_terminal_pins": 106,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A"
+      ],
+      "max_pin_l1_um": 21.583
+    },
+    {
+      "driver": "clkbuf_6_15_0_ck_regs/Y",
+      "net": "clknet_6_15_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 113,
+      "clock_terminal_pins": 106,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload110/A",
+        "clkload107/A",
+        "clkload106/A"
+      ],
+      "max_pin_l1_um": 29.479
+    },
+    {
+      "driver": "clkbuf_6_62_0_ck_regs/Y",
+      "net": "clknet_6_62_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 112,
+      "clock_terminal_pins": 105,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload430/A",
+        "clkload432/A"
+      ],
+      "max_pin_l1_um": 25.161
+    },
+    {
+      "driver": "clkbuf_6_63_0_ck_regs/Y",
+      "net": "clknet_6_63_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 110,
+      "clock_terminal_pins": 103,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload441/A",
+        "clkload440/A",
+        "clkload437/A"
+      ],
+      "max_pin_l1_um": 38.835000000000036
+    },
+    {
+      "driver": "clkbuf_6_34_0_ck_regs/Y",
+      "net": "clknet_6_34_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 107,
+      "clock_terminal_pins": 100,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload243/A",
+        "clkload242/A"
+      ],
+      "max_pin_l1_um": 91.863
+    },
+    {
+      "driver": "clkbuf_6_20_0_ck_regs/Y",
+      "net": "clknet_6_20_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 107,
+      "clock_terminal_pins": 100,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload145/A",
+        "clkload143/A",
+        "clkload142/A"
+      ],
+      "max_pin_l1_um": 37.62900000000001
+    },
+    {
+      "driver": "clkbuf_6_16_0_ck_regs/Y",
+      "net": "clknet_6_16_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 107,
+      "clock_terminal_pins": 100,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload112/A",
+        "clkload117/A",
+        "clkload116/A"
+      ],
+      "max_pin_l1_um": 61.010999999999996
+    },
+    {
+      "driver": "clkbuf_6_56_0_ck_regs/Y",
+      "net": "clknet_6_56_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 105,
+      "clock_terminal_pins": 100,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload393/A"
+      ],
+      "max_pin_l1_um": 38.295000000000044
+    },
+    {
+      "driver": "clkbuf_6_11_0_ck_regs/Y",
+      "net": "clknet_6_11_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 101,
+      "clock_terminal_pins": 94,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload82/A",
+        "clkload81/A",
+        "clkload80/A",
+        "clkload79/A",
+        "clkload77/A"
+      ],
+      "max_pin_l1_um": 52.968999999999994
+    },
+    {
+      "driver": "clkbuf_6_22_0_ck_regs/Y",
+      "net": "clknet_6_22_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 98,
+      "clock_terminal_pins": 91,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload156/A",
+        "clkload157/A"
+      ],
+      "max_pin_l1_um": 39.30800000000001
+    },
+    {
+      "driver": "clkbuf_6_18_0_ck_regs/Y",
+      "net": "clknet_6_18_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 93,
+      "clock_terminal_pins": 86,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 64.70899999999999
+    },
+    {
+      "driver": "clkbuf_6_32_0_ck_regs/Y",
+      "net": "clknet_6_32_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 89,
+      "clock_terminal_pins": 82,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload230/A"
+      ],
+      "max_pin_l1_um": 95.08499999999998
+    },
+    {
+      "driver": "clkbuf_6_58_0_ck_regs/Y",
+      "net": "clknet_6_58_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 89,
+      "clock_terminal_pins": 82,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload408/A",
+        "clkload407/A",
+        "clkload406/A",
+        "clkload403/A"
+      ],
+      "max_pin_l1_um": 62.216999999999985
+    },
+    {
+      "driver": "clkbuf_6_38_0_ck_regs/Y",
+      "net": "clknet_6_38_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 88,
+      "clock_terminal_pins": 81,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload270/A",
+        "clkload269/A",
+        "clkload266/A"
+      ],
+      "max_pin_l1_um": 38.0
+    },
+    {
+      "driver": "clkbuf_6_4_0_ck_regs/Y",
+      "net": "clknet_6_4_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 88,
+      "clock_terminal_pins": 81,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload30/A",
+        "clkload28/A",
+        "clkload34/A",
+        "clkload29/A"
+      ],
+      "max_pin_l1_um": 52.964999999999996
+    },
+    {
+      "driver": "clkbuf_6_6_0_ck_regs/Y",
+      "net": "clknet_6_6_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 87,
+      "clock_terminal_pins": 80,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload45/A",
+        "clkload43/A",
+        "clkload47/A"
+      ],
+      "max_pin_l1_um": 62.091
+    },
+    {
+      "driver": "clkbuf_6_42_0_ck_regs/Y",
+      "net": "clknet_6_42_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 83,
+      "clock_terminal_pins": 76,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload300/A",
+        "clkload295/A"
+      ],
+      "max_pin_l1_um": 56.22299999999998
+    },
+    {
+      "driver": "clkbuf_6_46_0_ck_regs/Y",
+      "net": "clknet_6_46_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 82,
+      "clock_terminal_pins": 75,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload326/A"
+      ],
+      "max_pin_l1_um": 64.917
+    },
+    {
+      "driver": "clkbuf_6_17_0_ck_regs/Y",
+      "net": "clknet_6_17_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 82,
+      "clock_terminal_pins": 75,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A"
+      ],
+      "max_pin_l1_um": 39.303
+    },
+    {
+      "driver": "clkbuf_6_10_0_ck_regs/Y",
+      "net": "clknet_6_10_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 81,
+      "clock_terminal_pins": 74,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload75/A",
+        "clkload71/A"
+      ],
+      "max_pin_l1_um": 52.60499999999998
+    },
+    {
+      "driver": "clkbuf_6_40_0_ck_regs/Y",
+      "net": "clknet_6_40_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 80,
+      "clock_terminal_pins": 73,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload285/A"
+      ],
+      "max_pin_l1_um": 55.556999999999974
+    },
+    {
+      "driver": "clkbuf_6_14_0_ck_regs/Y",
+      "net": "clknet_6_14_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 79,
+      "clock_terminal_pins": 72,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload104/A",
+        "clkload101/A"
+      ],
+      "max_pin_l1_um": 42.980000000000004
+    },
+    {
+      "driver": "clkbuf_6_36_0_ck_regs/Y",
+      "net": "clknet_6_36_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 78,
+      "clock_terminal_pins": 71,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload257/A",
+        "clkload258/A"
+      ],
+      "max_pin_l1_um": 42.28699999999999
+    },
+    {
+      "driver": "clkbuf_6_9_0_ck_regs/Y",
+      "net": "clknet_6_9_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 76,
+      "clock_terminal_pins": 69,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload69/A"
+      ],
+      "max_pin_l1_um": 23.750999999999998
+    },
+    {
+      "driver": "clkbuf_6_37_0_ck_regs/Y",
+      "net": "clknet_6_37_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 71,
+      "clock_terminal_pins": 64,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload261/A"
+      ],
+      "max_pin_l1_um": 34.34
+    },
+    {
+      "driver": "clkbuf_6_8_0_ck_regs/Y",
+      "net": "clknet_6_8_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 67,
+      "clock_terminal_pins": 60,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload61/A",
+        "clkload58/A"
+      ],
+      "max_pin_l1_um": 51.723
+    },
+    {
+      "driver": "clkbuf_6_19_0_ck_regs/Y",
+      "net": "clknet_6_19_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 64,
+      "clock_terminal_pins": 57,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A"
+      ],
+      "max_pin_l1_um": 35.90100000000001
+    },
+    {
+      "driver": "clkbuf_6_59_0_ck_regs/Y",
+      "net": "clknet_6_59_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 63,
+      "clock_terminal_pins": 56,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload415/A",
+        "clkload413/A",
+        "clkload412/A",
+        "clkload410/A"
+      ],
+      "max_pin_l1_um": 60.741000000000014
+    },
+    {
+      "driver": "clkbuf_6_41_0_ck_regs/Y",
+      "net": "clknet_6_41_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 60,
+      "clock_terminal_pins": 53,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload293/A",
+        "clkload290/A",
+        "clkload289/A",
+        "clkload288/A"
+      ],
+      "max_pin_l1_um": 47.94300000000002
+    },
+    {
+      "driver": "clkbuf_6_7_0_ck_regs/Y",
+      "net": "clknet_6_7_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 60,
+      "clock_terminal_pins": 53,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload55/A"
+      ],
+      "max_pin_l1_um": 63.76500000000001
+    },
+    {
+      "driver": "clkbuf_6_45_0_ck_regs/Y",
+      "net": "clknet_6_45_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 58,
+      "clock_terminal_pins": 51,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload319/A"
+      ],
+      "max_pin_l1_um": 53.361
+    },
+    {
+      "driver": "clkbuf_6_47_0_ck_regs/Y",
+      "net": "clknet_6_47_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 58,
+      "clock_terminal_pins": 51,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload335/A"
+      ],
+      "max_pin_l1_um": 57.356999999999985
+    },
+    {
+      "driver": "clkbuf_6_44_0_ck_regs/Y",
+      "net": "clknet_6_44_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 41,
+      "clock_terminal_pins": 34,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload314/A",
+        "clkload313/A",
+        "clkload312/A",
+        "clkload311/A",
+        "clkload310/A",
+        "clkload309/A",
+        "clkload308/A"
+      ],
+      "max_pin_l1_um": 57.60900000000004
+    },
+    {
+      "driver": "clkbuf_9_206__f_ck_regs/Y",
+      "net": "clknet_9_206__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 35,
+      "clock_terminal_pins": 34,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload181/A"
+      ],
+      "max_pin_l1_um": 8.144999999999996
+    }
+  ],
+  "mixed_clock_data": [
+    {
+      "driver": "wire15050/Y",
+      "net": "net15049",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7290,
+      "clock_terminal_pins": 6846,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A",
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 336.375
+    },
+    {
+      "driver": "TOP/ck",
+      "net": "ck",
+      "master": "TOP_INPUT",
+      "terminal_pins": 7290,
+      "clock_terminal_pins": 6846,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A",
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 456.004
+    },
+    {
+      "driver": "clkbuf_regs_0_core_clk/Y",
+      "net": "ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7280,
+      "clock_terminal_pins": 6837,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 235.91699999999997
+    },
+    {
+      "driver": "clkbuf_0_ck_regs/Y",
+      "net": "clknet_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7280,
+      "clock_terminal_pins": 6837,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 236.295
+    },
+    {
+      "driver": "clkbuf_1_0_0_ck_regs/Y",
+      "net": "clknet_1_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 3777,
+      "clock_terminal_pins": 3554,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 197.685
+    },
+    {
+      "driver": "clkbuf_1_1_0_ck_regs/Y",
+      "net": "clknet_1_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 3503,
+      "clock_terminal_pins": 3283,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 196.029
+    },
+    {
+      "driver": "clkbuf_2_1_0_ck_regs/Y",
+      "net": "clknet_2_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 2097,
+      "clock_terminal_pins": 1985,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A",
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A",
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 157.293
+    },
+    {
+      "driver": "clkbuf_2_3_0_ck_regs/Y",
+      "net": "clknet_2_3_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 2077,
+      "clock_terminal_pins": 1969,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A",
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A",
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 155.367
+    },
+    {
+      "driver": "clkbuf_2_0_0_ck_regs/Y",
+      "net": "clknet_2_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1680,
+      "clock_terminal_pins": 1569,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 182.13299999999998
+    },
+    {
+      "driver": "clkbuf_2_2_0_ck_regs/Y",
+      "net": "clknet_2_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1426,
+      "clock_terminal_pins": 1314,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 191.493
+    },
+    {
+      "driver": "clkbuf_3_3_0_ck_regs/Y",
+      "net": "clknet_3_3_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1247,
+      "clock_terminal_pins": 1191,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload187/A",
+        "clkload186/A",
+        "clkload195/A",
+        "clkload194/A",
+        "clkload193/A",
+        "clkload192/A",
+        "clkload191/A",
+        "clkload190/A"
+      ],
+      "max_pin_l1_um": 81.063
+    },
+    {
+      "driver": "clkbuf_3_6_0_ck_regs/Y",
+      "net": "clknet_3_6_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1157,
+      "clock_terminal_pins": 1102,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A",
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A",
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 103.45500000000001
+    },
+    {
+      "driver": "clkbuf_3_7_0_ck_regs/Y",
+      "net": "clknet_3_7_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 920,
+      "clock_terminal_pins": 867,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload415/A",
+        "clkload413/A",
+        "clkload412/A",
+        "clkload410/A",
+        "clkload393/A",
+        "clkload400/A",
+        "clkload398/A",
+        "clkload408/A"
+      ],
+      "max_pin_l1_um": 121.40100000000001
+    },
+    {
+      "driver": "clkbuf_3_0_0_ck_regs/Y",
+      "net": "clknet_3_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 891,
+      "clock_terminal_pins": 836,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 141.52499999999998
+    },
+    {
+      "driver": "clkbuf_3_2_0_ck_regs/Y",
+      "net": "clknet_3_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 850,
+      "clock_terminal_pins": 794,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A",
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A",
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 116.79299999999999
+    },
+    {
+      "driver": "clkbuf_3_4_0_ck_regs/Y",
+      "net": "clknet_3_4_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 844,
+      "clock_terminal_pins": 788,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 133.42499999999998
+    },
+    {
+      "driver": "clkbuf_3_1_0_ck_regs/Y",
+      "net": "clknet_3_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 789,
+      "clock_terminal_pins": 733,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload61/A",
+        "clkload58/A",
+        "clkload82/A",
+        "clkload81/A",
+        "clkload80/A",
+        "clkload79/A",
+        "clkload77/A",
+        "clkload75/A"
+      ],
+      "max_pin_l1_um": 130.90499999999997
+    },
+    {
+      "driver": "clkbuf_4_6_0_ck_regs/Y",
+      "net": "clknet_4_6_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 690,
+      "clock_terminal_pins": 662,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload187/A",
+        "clkload186/A",
+        "clkload195/A",
+        "clkload194/A",
+        "clkload193/A",
+        "clkload192/A",
+        "clkload191/A",
+        "clkload190/A"
+      ],
+      "max_pin_l1_um": 73.47799999999998
+    },
+    {
+      "driver": "clkbuf_4_12_0_ck_regs/Y",
+      "net": "clknet_4_12_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 595,
+      "clock_terminal_pins": 567,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A",
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A",
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 53.789000000000016
+    },
+    {
+      "driver": "clkbuf_3_5_0_ck_regs/Y",
+      "net": "clknet_3_5_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 582,
+      "clock_terminal_pins": 526,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload285/A",
+        "clkload293/A",
+        "clkload290/A",
+        "clkload289/A",
+        "clkload288/A",
+        "clkload300/A",
+        "clkload295/A",
+        "clkload306/A"
+      ],
+      "max_pin_l1_um": 150.34499999999997
+    },
+    {
+      "driver": "clkbuf_4_13_0_ck_regs/Y",
+      "net": "clknet_4_13_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 562,
+      "clock_terminal_pins": 535,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload378/A",
+        "clkload384/A",
+        "clkload383/A",
+        "clkload382/A",
+        "clkload377/A",
+        "clkload376/A",
+        "clkload375/A",
+        "clkload372/A"
+      ],
+      "max_pin_l1_um": 65.22300000000001
+    },
+    {
+      "driver": "clkbuf_4_7_0_ck_regs/Y",
+      "net": "clknet_4_7_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 557,
+      "clock_terminal_pins": 529,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload221/A",
+        "clkload217/A",
+        "clkload214/A",
+        "clkload212/A",
+        "clkload209/A",
+        "clkload207/A",
+        "clkload197/A",
+        "clkload196/A"
+      ],
+      "max_pin_l1_um": 47.673000000000016
+    },
+    {
+      "driver": "clkbuf_4_15_0_ck_regs/Y",
+      "net": "clknet_4_15_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 548,
+      "clock_terminal_pins": 520,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload441/A",
+        "clkload440/A",
+        "clkload437/A",
+        "clkload430/A",
+        "clkload432/A",
+        "clkload419/A",
+        "clkload428/A",
+        "clkload424/A"
+      ],
+      "max_pin_l1_um": 77.715
+    },
+    {
+      "driver": "clkbuf_4_0_0_ck_regs/Y",
+      "net": "clknet_4_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 528,
+      "clock_terminal_pins": 501,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 109.233
+    },
+    {
+      "driver": "clkbuf_4_5_0_ck_regs/Y",
+      "net": "clknet_4_5_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 504,
+      "clock_terminal_pins": 476,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload165/A",
+        "clkload162/A",
+        "clkload156/A",
+        "clkload157/A",
+        "clkload147/A",
+        "clkload150/A",
+        "clkload151/A",
+        "clkload152/A"
+      ],
+      "max_pin_l1_um": 78.993
+    },
+    {
+      "driver": "clkbuf_4_8_0_ck_regs/Y",
+      "net": "clknet_4_8_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 480,
+      "clock_terminal_pins": 452,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 97.24499999999998
+    },
+    {
+      "driver": "clkbuf_4_3_0_ck_regs/Y",
+      "net": "clknet_4_3_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 464,
+      "clock_terminal_pins": 436,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload110/A",
+        "clkload107/A",
+        "clkload106/A",
+        "clkload104/A",
+        "clkload101/A",
+        "clkload95/A",
+        "clkload86/A",
+        "clkload88/A"
+      ],
+      "max_pin_l1_um": 70.096
+    },
+    {
+      "driver": "clkbuf_4_14_0_ck_regs/Y",
+      "net": "clknet_4_14_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 372,
+      "clock_terminal_pins": 347,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload415/A",
+        "clkload413/A",
+        "clkload412/A",
+        "clkload410/A",
+        "clkload393/A",
+        "clkload400/A",
+        "clkload398/A",
+        "clkload408/A"
+      ],
+      "max_pin_l1_um": 102.50099999999998
+    },
+    {
+      "driver": "clkbuf_4_9_0_ck_regs/Y",
+      "net": "clknet_4_9_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 364,
+      "clock_terminal_pins": 336,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload276/A",
+        "clkload275/A",
+        "clkload274/A",
+        "clkload270/A",
+        "clkload269/A",
+        "clkload266/A",
+        "clkload261/A",
+        "clkload257/A"
+      ],
+      "max_pin_l1_um": 86.25400000000002
+    },
+    {
+      "driver": "clkbuf_4_1_0_ck_regs/Y",
+      "net": "clknet_4_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 363,
+      "clock_terminal_pins": 335,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload30/A",
+        "clkload28/A",
+        "clkload34/A",
+        "clkload29/A",
+        "clkload45/A",
+        "clkload43/A",
+        "clkload47/A",
+        "clkload55/A"
+      ],
+      "max_pin_l1_um": 121.70700000000001
+    },
+    {
+      "driver": "clkbuf_4_4_0_ck_regs/Y",
+      "net": "clknet_4_4_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 346,
+      "clock_terminal_pins": 318,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A",
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A",
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 101.673
+    },
+    {
+      "driver": "clkbuf_4_10_0_ck_regs/Y",
+      "net": "clknet_4_10_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 343,
+      "clock_terminal_pins": 315,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload285/A",
+        "clkload293/A",
+        "clkload290/A",
+        "clkload289/A",
+        "clkload288/A",
+        "clkload300/A",
+        "clkload295/A",
+        "clkload306/A"
+      ],
+      "max_pin_l1_um": 112.923
+    },
+    {
+      "driver": "clkbuf_4_2_0_ck_regs/Y",
+      "net": "clknet_4_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 325,
+      "clock_terminal_pins": 297,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload61/A",
+        "clkload58/A",
+        "clkload82/A",
+        "clkload81/A",
+        "clkload80/A",
+        "clkload79/A",
+        "clkload77/A",
+        "clkload75/A"
+      ],
+      "max_pin_l1_um": 93.05099999999999
+    },
+    {
+      "driver": "clkbuf_4_11_0_ck_regs/Y",
+      "net": "clknet_4_11_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 239,
+      "clock_terminal_pins": 211,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload314/A",
+        "clkload313/A",
+        "clkload312/A",
+        "clkload311/A",
+        "clkload310/A",
+        "clkload309/A",
+        "clkload308/A",
+        "clkload319/A"
+      ],
+      "max_pin_l1_um": 105.63300000000004
+    },
+    {
+      "driver": "clkbuf_6_25_0_ck_regs/Y",
+      "net": "clknet_6_25_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 211,
+      "clock_terminal_pins": 204,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload181/A",
+        "clkload180/A",
+        "clkload179/A",
+        "clkload178/A",
+        "clkload177/A",
+        "clkload175/A"
+      ],
+      "max_pin_l1_um": 29.446000000000012
+    },
+    {
+      "driver": "clkbuf_6_61_0_ck_regs/Y",
+      "net": "clknet_6_61_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 194,
+      "clock_terminal_pins": 187,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload428/A",
+        "clkload424/A"
+      ],
+      "max_pin_l1_um": 21.15900000000005
+    },
+    {
+      "driver": "clkbuf_6_1_0_ck_regs/Y",
+      "net": "clknet_6_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 184,
+      "clock_terminal_pins": 177,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload10/A",
+        "clkload7/A",
+        "clkload12/A",
+        "clkload11/A",
+        "clkload9/A",
+        "clkload8/A"
+      ],
+      "max_pin_l1_um": 63.17100000000001
+    },
+    {
+      "driver": "clkbuf_6_26_0_ck_regs/Y",
+      "net": "clknet_6_26_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 180,
+      "clock_terminal_pins": 173,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload187/A",
+        "clkload186/A"
+      ],
+      "max_pin_l1_um": 29.036
+    },
+    {
+      "driver": "clkbuf_6_53_0_ck_regs/Y",
+      "net": "clknet_6_53_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 170,
+      "clock_terminal_pins": 163,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload377/A",
+        "clkload376/A",
+        "clkload375/A",
+        "clkload372/A"
+      ],
+      "max_pin_l1_um": 25.605000000000018
+    },
+    {
+      "driver": "clkbuf_6_48_0_ck_regs/Y",
+      "net": "clknet_6_48_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 168,
+      "clock_terminal_pins": 161,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A"
+      ],
+      "max_pin_l1_um": 22.090999999999994
+    },
+    {
+      "driver": "clkbuf_6_51_0_ck_regs/Y",
+      "net": "clknet_6_51_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 166,
+      "clock_terminal_pins": 159,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload358/A",
+        "clkload361/A",
+        "clkload357/A"
+      ],
+      "max_pin_l1_um": 27.16599999999997
+    },
+    {
+      "driver": "clkbuf_6_31_0_ck_regs/Y",
+      "net": "clknet_6_31_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 162,
+      "clock_terminal_pins": 155,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload221/A",
+        "clkload217/A"
+      ],
+      "max_pin_l1_um": 19.430999999999997
+    },
+    {
+      "driver": "clkbuf_6_35_0_ck_regs/Y",
+      "net": "clknet_6_35_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 156,
+      "clock_terminal_pins": 149,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A"
+      ],
+      "max_pin_l1_um": 56.114999999999995
+    },
+    {
+      "driver": "clkbuf_6_21_0_ck_regs/Y",
+      "net": "clknet_6_21_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 156,
+      "clock_terminal_pins": 149,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload147/A",
+        "clkload150/A",
+        "clkload151/A",
+        "clkload152/A",
+        "clkload153/A"
+      ],
+      "max_pin_l1_um": 43.89299999999999
+    },
+    {
+      "driver": "clkbuf_6_12_0_ck_regs/Y",
+      "net": "clknet_6_12_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 156,
+      "clock_terminal_pins": 149,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload86/A",
+        "clkload88/A",
+        "clkload90/A",
+        "clkload89/A",
+        "clkload87/A",
+        "clkload85/A"
+      ],
+      "max_pin_l1_um": 30.82499999999999
+    },
+    {
+      "driver": "clkbuf_6_27_0_ck_regs/Y",
+      "net": "clknet_6_27_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 154,
+      "clock_terminal_pins": 147,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload195/A",
+        "clkload194/A",
+        "clkload193/A",
+        "clkload192/A",
+        "clkload191/A",
+        "clkload190/A"
+      ],
+      "max_pin_l1_um": 36.919
+    },
+    {
+      "driver": "clkbuf_6_29_0_ck_regs/Y",
+      "net": "clknet_6_29_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 149,
+      "clock_terminal_pins": 142,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload209/A",
+        "clkload207/A"
+      ],
+      "max_pin_l1_um": 16.62300000000002
+    },
+    {
+      "driver": "clkbuf_6_55_0_ck_regs/Y",
+      "net": "clknet_6_55_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 149,
+      "clock_terminal_pins": 143,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload388/A"
+      ],
+      "max_pin_l1_um": 21.434999999999974
+    },
+    {
+      "driver": "clkbuf_6_50_0_ck_regs/Y",
+      "net": "clknet_6_50_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 148,
+      "clock_terminal_pins": 141,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload354/A",
+        "clkload351/A"
+      ],
+      "max_pin_l1_um": 25.222999999999985
+    },
+    {
+      "driver": "clkbuf_6_24_0_ck_regs/Y",
+      "net": "clknet_6_24_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 145,
+      "clock_terminal_pins": 138,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload169/A"
+      ],
+      "max_pin_l1_um": 32.22199999999998
+    },
+    {
+      "driver": "clkbuf_6_23_0_ck_regs/Y",
+      "net": "clknet_6_23_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 143,
+      "clock_terminal_pins": 136,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload165/A",
+        "clkload162/A"
+      ],
+      "max_pin_l1_um": 26.199000000000026
+    },
+    {
+      "driver": "clkbuf_6_60_0_ck_regs/Y",
+      "net": "clknet_6_60_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 132,
+      "clock_terminal_pins": 125,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload419/A"
+      ],
+      "max_pin_l1_um": 32.553
+    },
+    {
+      "driver": "clkbuf_6_2_0_ck_regs/Y",
+      "net": "clknet_6_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 131,
+      "clock_terminal_pins": 124,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 49.419
+    },
+    {
+      "driver": "clkbuf_6_30_0_ck_regs/Y",
+      "net": "clknet_6_30_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 130,
+      "clock_terminal_pins": 123,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload214/A",
+        "clkload212/A"
+      ],
+      "max_pin_l1_um": 31.843999999999994
+    },
+    {
+      "driver": "clkbuf_6_33_0_ck_regs/Y",
+      "net": "clknet_6_33_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 128,
+      "clock_terminal_pins": 121,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A",
+        "clkload234/A",
+        "clkload231/A"
+      ],
+      "max_pin_l1_um": 61.835
+    },
+    {
+      "driver": "clkbuf_6_5_0_ck_regs/Y",
+      "net": "clknet_6_5_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 128,
+      "clock_terminal_pins": 121,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload36/A",
+        "clkload37/A",
+        "clkload35/A"
+      ],
+      "max_pin_l1_um": 75.267
+    },
+    {
+      "driver": "clkbuf_6_39_0_ck_regs/Y",
+      "net": "clknet_6_39_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 127,
+      "clock_terminal_pins": 120,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload276/A",
+        "clkload275/A",
+        "clkload274/A"
+      ],
+      "max_pin_l1_um": 45.483999999999995
+    },
+    {
+      "driver": "clkbuf_6_0_0_ck_regs/Y",
+      "net": "clknet_6_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 125,
+      "clock_terminal_pins": 119,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A"
+      ],
+      "max_pin_l1_um": 62.739000000000004
+    },
+    {
+      "driver": "clkbuf_6_52_0_ck_regs/Y",
+      "net": "clknet_6_52_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 123,
+      "clock_terminal_pins": 116,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload368/A",
+        "clkload367/A",
+        "clkload370/A"
+      ],
+      "max_pin_l1_um": 29.533999999999992
+    },
+    {
+      "driver": "clkbuf_6_43_0_ck_regs/Y",
+      "net": "clknet_6_43_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 120,
+      "clock_terminal_pins": 113,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload306/A",
+        "clkload305/A",
+        "clkload304/A",
+        "clkload303/A"
+      ],
+      "max_pin_l1_um": 71.99099999999996
+    },
+    {
+      "driver": "clkbuf_6_54_0_ck_regs/Y",
+      "net": "clknet_6_54_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 120,
+      "clock_terminal_pins": 113,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload378/A",
+        "clkload384/A",
+        "clkload383/A",
+        "clkload382/A"
+      ],
+      "max_pin_l1_um": 40.66699999999997
+    },
+    {
+      "driver": "clkbuf_6_28_0_ck_regs/Y",
+      "net": "clknet_6_28_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 116,
+      "clock_terminal_pins": 109,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload197/A",
+        "clkload196/A"
+      ],
+      "max_pin_l1_um": 35.636000000000024
+    },
+    {
+      "driver": "clkbuf_6_13_0_ck_regs/Y",
+      "net": "clknet_6_13_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 116,
+      "clock_terminal_pins": 109,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload95/A"
+      ],
+      "max_pin_l1_um": 24.12100000000001
+    },
+    {
+      "driver": "clkbuf_6_57_0_ck_regs/Y",
+      "net": "clknet_6_57_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 115,
+      "clock_terminal_pins": 109,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload400/A",
+        "clkload398/A"
+      ],
+      "max_pin_l1_um": 25.964999999999975
+    },
+    {
+      "driver": "clkbuf_6_49_0_ck_regs/Y",
+      "net": "clknet_6_49_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 113,
+      "clock_terminal_pins": 106,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A"
+      ],
+      "max_pin_l1_um": 21.583
+    },
+    {
+      "driver": "clkbuf_6_15_0_ck_regs/Y",
+      "net": "clknet_6_15_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 113,
+      "clock_terminal_pins": 106,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload110/A",
+        "clkload107/A",
+        "clkload106/A"
+      ],
+      "max_pin_l1_um": 29.479
+    },
+    {
+      "driver": "clkbuf_6_62_0_ck_regs/Y",
+      "net": "clknet_6_62_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 112,
+      "clock_terminal_pins": 105,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload430/A",
+        "clkload432/A"
+      ],
+      "max_pin_l1_um": 25.161
+    },
+    {
+      "driver": "clkbuf_6_63_0_ck_regs/Y",
+      "net": "clknet_6_63_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 110,
+      "clock_terminal_pins": 103,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload441/A",
+        "clkload440/A",
+        "clkload437/A"
+      ],
+      "max_pin_l1_um": 38.835000000000036
+    },
+    {
+      "driver": "clkbuf_6_34_0_ck_regs/Y",
+      "net": "clknet_6_34_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 107,
+      "clock_terminal_pins": 100,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload243/A",
+        "clkload242/A"
+      ],
+      "max_pin_l1_um": 91.863
+    },
+    {
+      "driver": "clkbuf_6_20_0_ck_regs/Y",
+      "net": "clknet_6_20_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 107,
+      "clock_terminal_pins": 100,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload145/A",
+        "clkload143/A",
+        "clkload142/A"
+      ],
+      "max_pin_l1_um": 37.62900000000001
+    },
+    {
+      "driver": "clkbuf_6_16_0_ck_regs/Y",
+      "net": "clknet_6_16_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 107,
+      "clock_terminal_pins": 100,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload112/A",
+        "clkload117/A",
+        "clkload116/A"
+      ],
+      "max_pin_l1_um": 61.010999999999996
+    },
+    {
+      "driver": "clkbuf_6_56_0_ck_regs/Y",
+      "net": "clknet_6_56_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 105,
+      "clock_terminal_pins": 100,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload393/A"
+      ],
+      "max_pin_l1_um": 38.295000000000044
+    },
+    {
+      "driver": "clkbuf_6_11_0_ck_regs/Y",
+      "net": "clknet_6_11_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 101,
+      "clock_terminal_pins": 94,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload82/A",
+        "clkload81/A",
+        "clkload80/A",
+        "clkload79/A",
+        "clkload77/A"
+      ],
+      "max_pin_l1_um": 52.968999999999994
+    },
+    {
+      "driver": "clkbuf_6_22_0_ck_regs/Y",
+      "net": "clknet_6_22_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 98,
+      "clock_terminal_pins": 91,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload156/A",
+        "clkload157/A"
+      ],
+      "max_pin_l1_um": 39.30800000000001
+    },
+    {
+      "driver": "clkbuf_6_18_0_ck_regs/Y",
+      "net": "clknet_6_18_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 93,
+      "clock_terminal_pins": 86,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 64.70899999999999
+    },
+    {
+      "driver": "clkbuf_6_32_0_ck_regs/Y",
+      "net": "clknet_6_32_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 89,
+      "clock_terminal_pins": 82,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload230/A"
+      ],
+      "max_pin_l1_um": 95.08499999999998
+    },
+    {
+      "driver": "clkbuf_6_58_0_ck_regs/Y",
+      "net": "clknet_6_58_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 89,
+      "clock_terminal_pins": 82,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload408/A",
+        "clkload407/A",
+        "clkload406/A",
+        "clkload403/A"
+      ],
+      "max_pin_l1_um": 62.216999999999985
+    },
+    {
+      "driver": "clkbuf_6_38_0_ck_regs/Y",
+      "net": "clknet_6_38_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 88,
+      "clock_terminal_pins": 81,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload270/A",
+        "clkload269/A",
+        "clkload266/A"
+      ],
+      "max_pin_l1_um": 38.0
+    },
+    {
+      "driver": "clkbuf_6_4_0_ck_regs/Y",
+      "net": "clknet_6_4_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 88,
+      "clock_terminal_pins": 81,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload30/A",
+        "clkload28/A",
+        "clkload34/A",
+        "clkload29/A"
+      ],
+      "max_pin_l1_um": 52.964999999999996
+    },
+    {
+      "driver": "clkbuf_6_6_0_ck_regs/Y",
+      "net": "clknet_6_6_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 87,
+      "clock_terminal_pins": 80,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload45/A",
+        "clkload43/A",
+        "clkload47/A"
+      ],
+      "max_pin_l1_um": 62.091
+    },
+    {
+      "driver": "clkbuf_6_42_0_ck_regs/Y",
+      "net": "clknet_6_42_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 83,
+      "clock_terminal_pins": 76,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload300/A",
+        "clkload295/A"
+      ],
+      "max_pin_l1_um": 56.22299999999998
+    },
+    {
+      "driver": "clkbuf_6_46_0_ck_regs/Y",
+      "net": "clknet_6_46_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 82,
+      "clock_terminal_pins": 75,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload326/A"
+      ],
+      "max_pin_l1_um": 64.917
+    },
+    {
+      "driver": "clkbuf_6_17_0_ck_regs/Y",
+      "net": "clknet_6_17_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 82,
+      "clock_terminal_pins": 75,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A"
+      ],
+      "max_pin_l1_um": 39.303
+    },
+    {
+      "driver": "clkbuf_6_10_0_ck_regs/Y",
+      "net": "clknet_6_10_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 81,
+      "clock_terminal_pins": 74,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload75/A",
+        "clkload71/A"
+      ],
+      "max_pin_l1_um": 52.60499999999998
+    },
+    {
+      "driver": "clkbuf_6_40_0_ck_regs/Y",
+      "net": "clknet_6_40_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 80,
+      "clock_terminal_pins": 73,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload285/A"
+      ],
+      "max_pin_l1_um": 55.556999999999974
+    },
+    {
+      "driver": "clkbuf_6_14_0_ck_regs/Y",
+      "net": "clknet_6_14_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 79,
+      "clock_terminal_pins": 72,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload104/A",
+        "clkload101/A"
+      ],
+      "max_pin_l1_um": 42.980000000000004
+    },
+    {
+      "driver": "clkbuf_6_36_0_ck_regs/Y",
+      "net": "clknet_6_36_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 78,
+      "clock_terminal_pins": 71,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload257/A",
+        "clkload258/A"
+      ],
+      "max_pin_l1_um": 42.28699999999999
+    },
+    {
+      "driver": "clkbuf_6_9_0_ck_regs/Y",
+      "net": "clknet_6_9_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 76,
+      "clock_terminal_pins": 69,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload69/A"
+      ],
+      "max_pin_l1_um": 23.750999999999998
+    },
+    {
+      "driver": "clkbuf_6_37_0_ck_regs/Y",
+      "net": "clknet_6_37_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 71,
+      "clock_terminal_pins": 64,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload261/A"
+      ],
+      "max_pin_l1_um": 34.34
+    },
+    {
+      "driver": "clkbuf_6_8_0_ck_regs/Y",
+      "net": "clknet_6_8_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 67,
+      "clock_terminal_pins": 60,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload61/A",
+        "clkload58/A"
+      ],
+      "max_pin_l1_um": 51.723
+    },
+    {
+      "driver": "clkbuf_6_19_0_ck_regs/Y",
+      "net": "clknet_6_19_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 64,
+      "clock_terminal_pins": 57,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A"
+      ],
+      "max_pin_l1_um": 35.90100000000001
+    },
+    {
+      "driver": "clkbuf_6_59_0_ck_regs/Y",
+      "net": "clknet_6_59_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 63,
+      "clock_terminal_pins": 56,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload415/A",
+        "clkload413/A",
+        "clkload412/A",
+        "clkload410/A"
+      ],
+      "max_pin_l1_um": 60.741000000000014
+    },
+    {
+      "driver": "clkbuf_6_41_0_ck_regs/Y",
+      "net": "clknet_6_41_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 60,
+      "clock_terminal_pins": 53,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload293/A",
+        "clkload290/A",
+        "clkload289/A",
+        "clkload288/A"
+      ],
+      "max_pin_l1_um": 47.94300000000002
+    },
+    {
+      "driver": "clkbuf_6_7_0_ck_regs/Y",
+      "net": "clknet_6_7_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 60,
+      "clock_terminal_pins": 53,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload55/A"
+      ],
+      "max_pin_l1_um": 63.76500000000001
+    },
+    {
+      "driver": "clkbuf_6_45_0_ck_regs/Y",
+      "net": "clknet_6_45_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 58,
+      "clock_terminal_pins": 51,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload319/A"
+      ],
+      "max_pin_l1_um": 53.361
+    },
+    {
+      "driver": "clkbuf_6_47_0_ck_regs/Y",
+      "net": "clknet_6_47_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 58,
+      "clock_terminal_pins": 51,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload335/A"
+      ],
+      "max_pin_l1_um": 57.356999999999985
+    },
+    {
+      "driver": "clkbuf_6_44_0_ck_regs/Y",
+      "net": "clknet_6_44_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 41,
+      "clock_terminal_pins": 34,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload314/A",
+        "clkload313/A",
+        "clkload312/A",
+        "clkload311/A",
+        "clkload310/A",
+        "clkload309/A",
+        "clkload308/A"
+      ],
+      "max_pin_l1_um": 57.60900000000004
+    },
+    {
+      "driver": "clkbuf_9_206__f_ck_regs/Y",
+      "net": "clknet_9_206__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 35,
+      "clock_terminal_pins": 34,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload181/A"
+      ],
+      "max_pin_l1_um": 8.144999999999996
+    },
+    {
+      "driver": "clkbuf_9_205__f_ck_regs/Y",
+      "net": "clknet_9_205__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 30,
+      "clock_terminal_pins": 29,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload180/A"
+      ],
+      "max_pin_l1_um": 11.917999999999992
+    },
+    {
+      "driver": "clkbuf_9_489__f_ck_regs/Y",
+      "net": "clknet_9_489__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 27,
+      "clock_terminal_pins": 26,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload424/A"
+      ],
+      "max_pin_l1_um": 6.956999999999994
+    },
+    {
+      "driver": "clkbuf_9_429__f_ck_regs/Y",
+      "net": "clknet_9_429__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 26,
+      "clock_terminal_pins": 25,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload375/A"
+      ],
+      "max_pin_l1_um": 5.13900000000001
+    },
+    {
+      "driver": "clkbuf_9_11__f_ck_regs/Y",
+      "net": "clknet_9_11__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 26,
+      "clock_terminal_pins": 25,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 42.975
+    },
+    {
+      "driver": "clkbuf_9_13__f_ck_regs/Y",
+      "net": "clknet_9_13__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 26,
+      "clock_terminal_pins": 25,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload12/A"
+      ],
+      "max_pin_l1_um": 38.655
+    },
+    {
+      "driver": "clkbuf_9_408__f_ck_regs/Y",
+      "net": "clknet_9_408__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 25,
+      "clock_terminal_pins": 24,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload357/A"
+      ],
+      "max_pin_l1_um": 6.680000000000007
+    },
+    {
+      "driver": "clkbuf_9_219__f_ck_regs/Y",
+      "net": "clknet_9_219__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 25,
+      "clock_terminal_pins": 24,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload191/A"
+      ],
+      "max_pin_l1_um": 6.038999999999973
+    },
+    {
+      "driver": "clkbuf_9_410__f_ck_regs/Y",
+      "net": "clknet_9_410__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 24,
+      "clock_terminal_pins": 23,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 8.25800000000001
+    },
+    {
+      "driver": "clkbuf_9_213__f_ck_regs/Y",
+      "net": "clknet_9_213__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 24,
+      "clock_terminal_pins": 23,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload186/A"
+      ],
+      "max_pin_l1_um": 7.4350000000000165
+    },
+    {
+      "driver": "clkbuf_9_388__f_ck_regs/Y",
+      "net": "clknet_9_388__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 23,
+      "clock_terminal_pins": 22,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload340/A"
+      ],
+      "max_pin_l1_um": 7.27300000000001
+    },
+    {
+      "driver": "clkbuf_9_203__f_ck_regs/Y",
+      "net": "clknet_9_203__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 23,
+      "clock_terminal_pins": 22,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload178/A"
+      ],
+      "max_pin_l1_um": 7.435000000000031
+    },
+    {
+      "driver": "clkbuf_9_443__f_ck_regs/Y",
+      "net": "clknet_9_443__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 22,
+      "clock_terminal_pins": 21,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload388/A"
+      ],
+      "max_pin_l1_um": 7.551000000000016
+    },
+    {
+      "driver": "clkbuf_9_389__f_ck_regs/Y",
+      "net": "clknet_9_389__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 22,
+      "clock_terminal_pins": 21,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A"
+      ],
+      "max_pin_l1_um": 7.218999999999994
+    },
+    {
+      "driver": "clkbuf_9_385__f_ck_regs/Y",
+      "net": "clknet_9_385__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 22,
+      "clock_terminal_pins": 21,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload337/A"
+      ],
+      "max_pin_l1_um": 7.328000000000017
+    },
+    {
+      "driver": "clkbuf_9_103__f_ck_regs/Y",
+      "net": "clknet_9_103__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 22,
+      "clock_terminal_pins": 21,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload90/A"
+      ],
+      "max_pin_l1_um": 7.090000000000003
+    },
+    {
+      "driver": "clkbuf_9_239__f_ck_regs/Y",
+      "net": "clknet_9_239__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 22,
+      "clock_terminal_pins": 21,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload209/A"
+      ],
+      "max_pin_l1_um": 6.849000000000004
+    },
+    {
+      "driver": "clkbuf_9_200__f_ck_regs/Y",
+      "net": "clknet_9_200__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 22,
+      "clock_terminal_pins": 21,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload175/A"
+      ],
+      "max_pin_l1_um": 7.893000000000001
+    },
+    {
+      "driver": "clkbuf_9_193__f_ck_regs/Y",
+      "net": "clknet_9_193__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 22,
+      "clock_terminal_pins": 21,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload169/A"
+      ],
+      "max_pin_l1_um": 9.076999999999998
+    },
+    {
+      "driver": "clkbuf_9_347__f_ck_regs/Y",
+      "net": "clknet_9_347__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 21,
+      "clock_terminal_pins": 20,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload303/A"
+      ],
+      "max_pin_l1_um": 51.68700000000001
+    },
+    {
+      "driver": "clkbuf_9_405__f_ck_regs/Y",
+      "net": "clknet_9_405__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 21,
+      "clock_terminal_pins": 20,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload354/A"
+      ],
+      "max_pin_l1_um": 9.616000000000014
+    },
+    {
+      "driver": "clkbuf_9_99__f_ck_regs/Y",
+      "net": "clknet_9_99__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 21,
+      "clock_terminal_pins": 20,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload86/A"
+      ],
+      "max_pin_l1_um": 3.9369999999999976
+    },
+    {
+      "driver": "clkbuf_9_204__f_ck_regs/Y",
+      "net": "clknet_9_204__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 21,
+      "clock_terminal_pins": 20,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload179/A"
+      ],
+      "max_pin_l1_um": 10.945999999999984
+    },
+    {
+      "driver": "clkbuf_9_22__f_ck_regs/Y",
+      "net": "clknet_9_22__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 21,
+      "clock_terminal_pins": 20,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload20/A"
+      ],
+      "max_pin_l1_um": 15.219000000000005
+    },
+    {
+      "driver": "clkbuf_9_484__f_ck_regs/Y",
+      "net": "clknet_9_484__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 20,
+      "clock_terminal_pins": 19,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload419/A"
+      ],
+      "max_pin_l1_um": 7.010999999999996
+    },
+    {
+      "driver": "clkbuf_9_401__f_ck_regs/Y",
+      "net": "clknet_9_401__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 20,
+      "clock_terminal_pins": 19,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload351/A"
+      ],
+      "max_pin_l1_um": 5.782000000000011
+    },
+    {
+      "driver": "clkbuf_9_243__f_ck_regs/Y",
+      "net": "clknet_9_243__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 20,
+      "clock_terminal_pins": 19,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload212/A"
+      ],
+      "max_pin_l1_um": 6.430999999999983
+    },
+    {
+      "driver": "clkbuf_9_173__f_ck_regs/Y",
+      "net": "clknet_9_173__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 20,
+      "clock_terminal_pins": 19,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload151/A"
+      ],
+      "max_pin_l1_um": 9.873000000000001
+    },
+    {
+      "driver": "clkbuf_9_264__f_ck_regs/Y",
+      "net": "clknet_9_264__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 19,
+      "clock_terminal_pins": 18,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload231/A"
+      ],
+      "max_pin_l1_um": 51.845000000000006
+    },
+    {
+      "driver": "clkbuf_9_12__f_ck_regs/Y",
+      "net": "clknet_9_12__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 19,
+      "clock_terminal_pins": 18,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload11/A"
+      ],
+      "max_pin_l1_um": 39.735
+    },
+    {
+      "driver": "clkbuf_9_420__f_ck_regs/Y",
+      "net": "clknet_9_420__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 18,
+      "clock_terminal_pins": 17,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload368/A"
+      ],
+      "max_pin_l1_um": 10.027000000000015
+    },
+    {
+      "driver": "clkbuf_9_413__f_ck_regs/Y",
+      "net": "clknet_9_413__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 18,
+      "clock_terminal_pins": 17,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload361/A"
+      ],
+      "max_pin_l1_um": 9.055000000000007
+    },
+    {
+      "driver": "clkbuf_9_498__f_ck_regs/Y",
+      "net": "clknet_9_498__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 18,
+      "clock_terminal_pins": 17,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload432/A"
+      ],
+      "max_pin_l1_um": 4.257000000000005
+    },
+    {
+      "driver": "clkbuf_9_223__f_ck_regs/Y",
+      "net": "clknet_9_223__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 18,
+      "clock_terminal_pins": 17,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload195/A"
+      ],
+      "max_pin_l1_um": 6.841999999999999
+    },
+    {
+      "driver": "clkbuf_9_221__f_ck_regs/Y",
+      "net": "clknet_9_221__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 18,
+      "clock_terminal_pins": 17,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload193/A"
+      ],
+      "max_pin_l1_um": 6.875
+    },
+    {
+      "driver": "clkbuf_9_271__f_ck_regs/Y",
+      "net": "clknet_9_271__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 18,
+      "clock_terminal_pins": 17,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload237/A"
+      ],
+      "max_pin_l1_um": 38.16199999999999
+    },
+    {
+      "driver": "clkbuf_9_10__f_ck_regs/Y",
+      "net": "clknet_9_10__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 18,
+      "clock_terminal_pins": 17,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload9/A"
+      ],
+      "max_pin_l1_um": 41.355000000000004
+    },
+    {
+      "driver": "clkbuf_9_9__f_ck_regs/Y",
+      "net": "clknet_9_9__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 18,
+      "clock_terminal_pins": 17,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload8/A"
+      ],
+      "max_pin_l1_um": 41.571
+    },
+    {
+      "driver": "clkbuf_9_433__f_ck_regs/Y",
+      "net": "clknet_9_433__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload378/A"
+      ],
+      "max_pin_l1_um": 9.075999999999993
+    },
+    {
+      "driver": "clkbuf_9_431__f_ck_regs/Y",
+      "net": "clknet_9_431__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload377/A"
+      ],
+      "max_pin_l1_um": 7.712999999999994
+    },
+    {
+      "driver": "clkbuf_9_419__f_ck_regs/Y",
+      "net": "clknet_9_419__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload367/A"
+      ],
+      "max_pin_l1_um": 5.944000000000017
+    },
+    {
+      "driver": "clkbuf_9_425__f_ck_regs/Y",
+      "net": "clknet_9_425__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload372/A"
+      ],
+      "max_pin_l1_um": 2.5289999999999964
+    },
+    {
+      "driver": "clkbuf_9_423__f_ck_regs/Y",
+      "net": "clknet_9_423__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload370/A"
+      ],
+      "max_pin_l1_um": 8.192000000000007
+    },
+    {
+      "driver": "clkbuf_9_172__f_ck_regs/Y",
+      "net": "clknet_9_172__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload150/A"
+      ],
+      "max_pin_l1_um": 7.011000000000006
+    },
+    {
+      "driver": "clkbuf_9_248__f_ck_regs/Y",
+      "net": "clknet_9_248__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload217/A"
+      ],
+      "max_pin_l1_um": 7.4069999999999965
+    },
+    {
+      "driver": "clkbuf_9_98__f_ck_regs/Y",
+      "net": "clknet_9_98__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload85/A"
+      ],
+      "max_pin_l1_um": 13.396
+    },
+    {
+      "driver": "clkbuf_9_3__f_ck_regs/Y",
+      "net": "clknet_9_3__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A"
+      ],
+      "max_pin_l1_um": 22.941000000000003
+    },
+    {
+      "driver": "clkbuf_9_281__f_ck_regs/Y",
+      "net": "clknet_9_281__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload246/A"
+      ],
+      "max_pin_l1_um": 7.280999999999999
+    },
+    {
+      "driver": "clkbuf_9_108__f_ck_regs/Y",
+      "net": "clknet_9_108__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 17,
+      "clock_terminal_pins": 16,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload95/A"
+      ],
+      "max_pin_l1_um": 7.144999999999982
+    },
+    {
+      "driver": "clkbuf_9_494__f_ck_regs/Y",
+      "net": "clknet_9_494__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload428/A"
+      ],
+      "max_pin_l1_um": 5.768999999999977
+    },
+    {
+      "driver": "clkbuf_9_507__f_ck_regs/Y",
+      "net": "clknet_9_507__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload440/A"
+      ],
+      "max_pin_l1_um": 23.444999999999993
+    },
+    {
+      "driver": "clkbuf_9_398__f_ck_regs/Y",
+      "net": "clknet_9_398__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload348/A"
+      ],
+      "max_pin_l1_um": 5.706999999999994
+    },
+    {
+      "driver": "clkbuf_9_397__f_ck_regs/Y",
+      "net": "clknet_9_397__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload347/A"
+      ],
+      "max_pin_l1_um": 8.265999999999991
+    },
+    {
+      "driver": "clkbuf_9_168__f_ck_regs/Y",
+      "net": "clknet_9_168__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload147/A"
+      ],
+      "max_pin_l1_um": 8.523
+    },
+    {
+      "driver": "clkbuf_9_217__f_ck_regs/Y",
+      "net": "clknet_9_217__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload190/A"
+      ],
+      "max_pin_l1_um": 9.001000000000019
+    },
+    {
+      "driver": "clkbuf_9_202__f_ck_regs/Y",
+      "net": "clknet_9_202__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload177/A"
+      ],
+      "max_pin_l1_um": 7.1229999999999905
+    },
+    {
+      "driver": "clkbuf_9_189__f_ck_regs/Y",
+      "net": "clknet_9_189__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload165/A"
+      ],
+      "max_pin_l1_um": 6.579000000000022
+    },
+    {
+      "driver": "clkbuf_9_185__f_ck_regs/Y",
+      "net": "clknet_9_185__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload162/A"
+      ],
+      "max_pin_l1_um": 7.334999999999994
+    },
+    {
+      "driver": "clkbuf_9_126__f_ck_regs/Y",
+      "net": "clknet_9_126__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload110/A"
+      ],
+      "max_pin_l1_um": 6.572000000000017
+    },
+    {
+      "driver": "clkbuf_9_102__f_ck_regs/Y",
+      "net": "clknet_9_102__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload89/A"
+      ],
+      "max_pin_l1_um": 6.326999999999984
+    },
+    {
+      "driver": "clkbuf_9_100__f_ck_regs/Y",
+      "net": "clknet_9_100__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload87/A"
+      ],
+      "max_pin_l1_um": 7.280999999999992
+    },
+    {
+      "driver": "clkbuf_9_278__f_ck_regs/Y",
+      "net": "clknet_9_278__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload243/A"
+      ],
+      "max_pin_l1_um": 26.44399999999999
+    },
+    {
+      "driver": "clkbuf_9_277__f_ck_regs/Y",
+      "net": "clknet_9_277__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload242/A"
+      ],
+      "max_pin_l1_um": 63.94499999999999
+    },
+    {
+      "driver": "clkbuf_9_268__f_ck_regs/Y",
+      "net": "clknet_9_268__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 35.468999999999994
+    },
+    {
+      "driver": "clkbuf_9_133__f_ck_regs/Y",
+      "net": "clknet_9_133__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload117/A"
+      ],
+      "max_pin_l1_um": 31.904999999999994
+    },
+    {
+      "driver": "clkbuf_9_121__f_ck_regs/Y",
+      "net": "clknet_9_121__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 16,
+      "clock_terminal_pins": 15,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload106/A"
+      ],
+      "max_pin_l1_um": 8.839000000000013
+    },
+    {
+      "driver": "clkbuf_9_460__f_ck_regs/Y",
+      "net": "clknet_9_460__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload400/A"
+      ],
+      "max_pin_l1_um": 7.838999999999999
+    },
+    {
+      "driver": "clkbuf_9_439__f_ck_regs/Y",
+      "net": "clknet_9_439__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload384/A"
+      ],
+      "max_pin_l1_um": 6.326999999999998
+    },
+    {
+      "driver": "clkbuf_9_384__f_ck_regs/Y",
+      "net": "clknet_9_384__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload336/A"
+      ],
+      "max_pin_l1_um": 7.3489999999999895
+    },
+    {
+      "driver": "clkbuf_9_214__f_ck_regs/Y",
+      "net": "clknet_9_214__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload187/A"
+      ],
+      "max_pin_l1_um": 6.2690000000000055
+    },
+    {
+      "driver": "clkbuf_9_174__f_ck_regs/Y",
+      "net": "clknet_9_174__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload152/A"
+      ],
+      "max_pin_l1_um": 4.580999999999996
+    },
+    {
+      "driver": "clkbuf_9_88__f_ck_regs/Y",
+      "net": "clknet_9_88__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload77/A"
+      ],
+      "max_pin_l1_um": 6.794999999999995
+    },
+    {
+      "driver": "clkbuf_9_283__f_ck_regs/Y",
+      "net": "clknet_9_283__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A"
+      ],
+      "max_pin_l1_um": 7.434999999999988
+    },
+    {
+      "driver": "clkbuf_9_280__f_ck_regs/Y",
+      "net": "clknet_9_280__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload245/A"
+      ],
+      "max_pin_l1_um": 4.593999999999987
+    },
+    {
+      "driver": "clkbuf_9_269__f_ck_regs/Y",
+      "net": "clknet_9_269__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload236/A"
+      ],
+      "max_pin_l1_um": 39.30299999999999
+    },
+    {
+      "driver": "clkbuf_9_122__f_ck_regs/Y",
+      "net": "clknet_9_122__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 15,
+      "clock_terminal_pins": 14,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload107/A"
+      ],
+      "max_pin_l1_um": 7.522999999999996
+    },
+    {
+      "driver": "clkbuf_9_496__f_ck_regs/Y",
+      "net": "clknet_9_496__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 14,
+      "clock_terminal_pins": 13,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload430/A"
+      ],
+      "max_pin_l1_um": 4.959000000000003
+    },
+    {
+      "driver": "clkbuf_9_438__f_ck_regs/Y",
+      "net": "clknet_9_438__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 14,
+      "clock_terminal_pins": 13,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload383/A"
+      ],
+      "max_pin_l1_um": 6.0029999999999575
+    },
+    {
+      "driver": "clkbuf_9_315__f_ck_regs/Y",
+      "net": "clknet_9_315__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 14,
+      "clock_terminal_pins": 13,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload276/A"
+      ],
+      "max_pin_l1_um": 9.75800000000001
+    },
+    {
+      "driver": "clkbuf_9_313__f_ck_regs/Y",
+      "net": "clknet_9_313__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 14,
+      "clock_terminal_pins": 13,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload274/A"
+      ],
+      "max_pin_l1_um": 8.947000000000003
+    },
+    {
+      "driver": "clkbuf_9_252__f_ck_regs/Y",
+      "net": "clknet_9_252__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 14,
+      "clock_terminal_pins": 13,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload221/A"
+      ],
+      "max_pin_l1_um": 7.407000000000011
+    },
+    {
+      "driver": "clkbuf_9_17__f_ck_regs/Y",
+      "net": "clknet_9_17__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 14,
+      "clock_terminal_pins": 13,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload15/A"
+      ],
+      "max_pin_l1_um": 11.871
+    },
+    {
+      "driver": "clkbuf_9_309__f_ck_regs/Y",
+      "net": "clknet_9_309__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 14,
+      "clock_terminal_pins": 13,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload270/A"
+      ],
+      "max_pin_l1_um": 7.888999999999996
+    },
+    {
+      "driver": "clkbuf_9_470__f_ck_regs/Y",
+      "net": "clknet_9_470__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload408/A"
+      ],
+      "max_pin_l1_um": 34.73099999999998
+    },
+    {
+      "driver": "clkbuf_9_469__f_ck_regs/Y",
+      "net": "clknet_9_469__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload407/A"
+      ],
+      "max_pin_l1_um": 33.82100000000004
+    },
+    {
+      "driver": "clkbuf_9_342__f_ck_regs/Y",
+      "net": "clknet_9_342__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload300/A"
+      ],
+      "max_pin_l1_um": 29.114999999999995
+    },
+    {
+      "driver": "clkbuf_9_314__f_ck_regs/Y",
+      "net": "clknet_9_314__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload275/A"
+      ],
+      "max_pin_l1_um": 3.201999999999998
+    },
+    {
+      "driver": "clkbuf_9_163__f_ck_regs/Y",
+      "net": "clknet_9_163__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload143/A"
+      ],
+      "max_pin_l1_um": 19.107000000000006
+    },
+    {
+      "driver": "clkbuf_9_162__f_ck_regs/Y",
+      "net": "clknet_9_162__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload142/A"
+      ],
+      "max_pin_l1_um": 21.698999999999998
+    },
+    {
+      "driver": "clkbuf_9_224__f_ck_regs/Y",
+      "net": "clknet_9_224__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload196/A"
+      ],
+      "max_pin_l1_um": 4.681999999999988
+    },
+    {
+      "driver": "clkbuf_9_222__f_ck_regs/Y",
+      "net": "clknet_9_222__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload194/A"
+      ],
+      "max_pin_l1_um": 4.694000000000003
+    },
+    {
+      "driver": "clkbuf_9_220__f_ck_regs/Y",
+      "net": "clknet_9_220__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload192/A"
+      ],
+      "max_pin_l1_um": 8.319999999999993
+    },
+    {
+      "driver": "clkbuf_9_35__f_ck_regs/Y",
+      "net": "clknet_9_35__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload30/A"
+      ],
+      "max_pin_l1_um": 19.539
+    },
+    {
+      "driver": "clkbuf_9_8__f_ck_regs/Y",
+      "net": "clknet_9_8__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload7/A"
+      ],
+      "max_pin_l1_um": 38.547
+    },
+    {
+      "driver": "clkbuf_9_2__f_ck_regs/Y",
+      "net": "clknet_9_2__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload3/A"
+      ],
+      "max_pin_l1_um": 36.765
+    },
+    {
+      "driver": "clkbuf_9_42__f_ck_regs/Y",
+      "net": "clknet_9_42__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload37/A"
+      ],
+      "max_pin_l1_um": 46.592999999999996
+    },
+    {
+      "driver": "clkbuf_9_40__f_ck_regs/Y",
+      "net": "clknet_9_40__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload35/A"
+      ],
+      "max_pin_l1_um": 48.266999999999996
+    },
+    {
+      "driver": "clkbuf_9_33__f_ck_regs/Y",
+      "net": "clknet_9_33__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload29/A"
+      ],
+      "max_pin_l1_um": 24.993000000000002
+    },
+    {
+      "driver": "clkbuf_9_1__f_ck_regs/Y",
+      "net": "clknet_9_1__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 13,
+      "clock_terminal_pins": 12,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload2/A"
+      ],
+      "max_pin_l1_um": 37.521
+    },
+    {
+      "driver": "clkbuf_9_430__f_ck_regs/Y",
+      "net": "clknet_9_430__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload376/A"
+      ],
+      "max_pin_l1_um": 2.9069999999999823
+    },
+    {
+      "driver": "clkbuf_9_451__f_ck_regs/Y",
+      "net": "clknet_9_451__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload393/A"
+      ],
+      "max_pin_l1_um": 5.498999999999995
+    },
+    {
+      "driver": "clkbuf_9_508__f_ck_regs/Y",
+      "net": "clknet_9_508__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload441/A"
+      ],
+      "max_pin_l1_um": 18.42300000000003
+    },
+    {
+      "driver": "clkbuf_9_350__f_ck_regs/Y",
+      "net": "clknet_9_350__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload306/A"
+      ],
+      "max_pin_l1_um": 44.991
+    },
+    {
+      "driver": "clkbuf_9_294__f_ck_regs/Y",
+      "net": "clknet_9_294__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload257/A"
+      ],
+      "max_pin_l1_um": 7.780000000000001
+    },
+    {
+      "driver": "clkbuf_9_142__f_ck_regs/Y",
+      "net": "clknet_9_142__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A"
+      ],
+      "max_pin_l1_um": 7.298999999999985
+    },
+    {
+      "driver": "clkbuf_9_49__f_ck_regs/Y",
+      "net": "clknet_9_49__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload43/A"
+      ],
+      "max_pin_l1_um": 17.559000000000005
+    },
+    {
+      "driver": "clkbuf_9_295__f_ck_regs/Y",
+      "net": "clknet_9_295__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload258/A"
+      ],
+      "max_pin_l1_um": 9.445000000000007
+    },
+    {
+      "driver": "clkbuf_9_263__f_ck_regs/Y",
+      "net": "clknet_9_263__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload230/A"
+      ],
+      "max_pin_l1_um": 75.339
+    },
+    {
+      "driver": "clkbuf_9_132__f_ck_regs/Y",
+      "net": "clknet_9_132__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload116/A"
+      ],
+      "max_pin_l1_um": 34.06500000000001
+    },
+    {
+      "driver": "clkbuf_9_119__f_ck_regs/Y",
+      "net": "clknet_9_119__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload104/A"
+      ],
+      "max_pin_l1_um": 5.060000000000002
+    },
+    {
+      "driver": "clkbuf_9_115__f_ck_regs/Y",
+      "net": "clknet_9_115__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload101/A"
+      ],
+      "max_pin_l1_um": 6.8629999999999995
+    },
+    {
+      "driver": "clkbuf_9_78__f_ck_regs/Y",
+      "net": "clknet_9_78__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload69/A"
+      ],
+      "max_pin_l1_um": 4.423999999999992
+    },
+    {
+      "driver": "clkbuf_9_53__f_ck_regs/Y",
+      "net": "clknet_9_53__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 12,
+      "clock_terminal_pins": 11,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload47/A"
+      ],
+      "max_pin_l1_um": 9.386999999999986
+    },
+    {
+      "driver": "clkbuf_9_458__f_ck_regs/Y",
+      "net": "clknet_9_458__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload398/A"
+      ],
+      "max_pin_l1_um": 9.980999999999995
+    },
+    {
+      "driver": "clkbuf_9_349__f_ck_regs/Y",
+      "net": "clknet_9_349__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload305/A"
+      ],
+      "max_pin_l1_um": 44.991
+    },
+    {
+      "driver": "clkbuf_9_101__f_ck_regs/Y",
+      "net": "clknet_9_101__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload88/A"
+      ],
+      "max_pin_l1_um": 5.545000000000016
+    },
+    {
+      "driver": "clkbuf_9_165__f_ck_regs/Y",
+      "net": "clknet_9_165__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload145/A"
+      ],
+      "max_pin_l1_um": 14.840999999999994
+    },
+    {
+      "driver": "clkbuf_9_179__f_ck_regs/Y",
+      "net": "clknet_9_179__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload156/A"
+      ],
+      "max_pin_l1_um": 5.498999999999995
+    },
+    {
+      "driver": "clkbuf_9_85__f_ck_regs/Y",
+      "net": "clknet_9_85__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload75/A"
+      ],
+      "max_pin_l1_um": 33.745
+    },
+    {
+      "driver": "clkbuf_9_175__f_ck_regs/Y",
+      "net": "clknet_9_175__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload153/A"
+      ],
+      "max_pin_l1_um": 6.416999999999987
+    },
+    {
+      "driver": "clkbuf_9_94__f_ck_regs/Y",
+      "net": "clknet_9_94__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload82/A"
+      ],
+      "max_pin_l1_um": 6.138999999999996
+    },
+    {
+      "driver": "clkbuf_9_307__f_ck_regs/Y",
+      "net": "clknet_9_307__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload269/A"
+      ],
+      "max_pin_l1_um": 16.84299999999999
+    },
+    {
+      "driver": "clkbuf_9_81__f_ck_regs/Y",
+      "net": "clknet_9_81__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 11,
+      "clock_terminal_pins": 10,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload71/A"
+      ],
+      "max_pin_l1_um": 13.329000000000004
+    },
+    {
+      "driver": "delaybuf_5_core_clk/Y",
+      "net": "delaynet_5_core_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A"
+      ],
+      "max_pin_l1_um": 146.969
+    },
+    {
+      "driver": "delaybuf_4_core_clk/Y",
+      "net": "delaynet_4_core_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A"
+      ],
+      "max_pin_l1_um": 165.329
+    },
+    {
+      "driver": "delaybuf_3_core_clk/Y",
+      "net": "delaynet_3_core_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A"
+      ],
+      "max_pin_l1_um": 183.203
+    },
+    {
+      "driver": "delaybuf_2_core_clk/Y",
+      "net": "delaynet_2_core_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A"
+      ],
+      "max_pin_l1_um": 202.21099999999998
+    },
+    {
+      "driver": "delaybuf_1_core_clk/Y",
+      "net": "delaynet_1_core_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A"
+      ],
+      "max_pin_l1_um": 220.193
+    },
+    {
+      "driver": "delaybuf_0_core_clk/Y",
+      "net": "delaynet_0_core_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A"
+      ],
+      "max_pin_l1_um": 239.093
+    },
+    {
+      "driver": "clkbuf_9_326__f_ck_regs/Y",
+      "net": "clknet_9_326__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload285/A"
+      ],
+      "max_pin_l1_um": 11.331000000000003
+    },
+    {
+      "driver": "clkbuf_0_ck/Y",
+      "net": "clknet_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A"
+      ],
+      "max_pin_l1_um": 130.921
+    },
+    {
+      "driver": "clkbuf_9_245__f_ck_regs/Y",
+      "net": "clknet_9_245__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload214/A"
+      ],
+      "max_pin_l1_um": 8.050000000000011
+    },
+    {
+      "driver": "clkbuf_9_237__f_ck_regs/Y",
+      "net": "clknet_9_237__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload207/A"
+      ],
+      "max_pin_l1_um": 5.408999999999992
+    },
+    {
+      "driver": "clkbuf_9_180__f_ck_regs/Y",
+      "net": "clknet_9_180__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload157/A"
+      ],
+      "max_pin_l1_um": 14.198000000000008
+    },
+    {
+      "driver": "clkbuf_9_92__f_ck_regs/Y",
+      "net": "clknet_9_92__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload80/A"
+      ],
+      "max_pin_l1_um": 5.761000000000003
+    },
+    {
+      "driver": "clkbuf_9_91__f_ck_regs/Y",
+      "net": "clknet_9_91__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload79/A"
+      ],
+      "max_pin_l1_um": 6.408999999999992
+    },
+    {
+      "driver": "clkbuf_9_16__f_ck_regs/Y",
+      "net": "clknet_9_16__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 10,
+      "clock_terminal_pins": 9,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 10.953000000000003
+    },
+    {
+      "driver": "clkbuf_9_479__f_ck_regs/Y",
+      "net": "clknet_9_479__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload415/A"
+      ],
+      "max_pin_l1_um": 16.209000000000003
+    },
+    {
+      "driver": "clkbuf_9_476__f_ck_regs/Y",
+      "net": "clknet_9_476__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload413/A"
+      ],
+      "max_pin_l1_um": 12.69900000000004
+    },
+    {
+      "driver": "clkbuf_9_473__f_ck_regs/Y",
+      "net": "clknet_9_473__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload410/A"
+      ],
+      "max_pin_l1_um": 22.311000000000007
+    },
+    {
+      "driver": "clkbuf_9_468__f_ck_regs/Y",
+      "net": "clknet_9_468__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload406/A"
+      ],
+      "max_pin_l1_um": 27.603000000000023
+    },
+    {
+      "driver": "clkbuf_9_465__f_ck_regs/Y",
+      "net": "clknet_9_465__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload403/A"
+      ],
+      "max_pin_l1_um": 31.499000000000024
+    },
+    {
+      "driver": "clkbuf_9_437__f_ck_regs/Y",
+      "net": "clknet_9_437__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload382/A"
+      ],
+      "max_pin_l1_um": 12.836000000000013
+    },
+    {
+      "driver": "clkbuf_9_372__f_ck_regs/Y",
+      "net": "clknet_9_372__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload326/A"
+      ],
+      "max_pin_l1_um": 36.72900000000001
+    },
+    {
+      "driver": "clkbuf_9_364__f_ck_regs/Y",
+      "net": "clknet_9_364__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload319/A"
+      ],
+      "max_pin_l1_um": 52.06499999999999
+    },
+    {
+      "driver": "clkbuf_9_348__f_ck_regs/Y",
+      "net": "clknet_9_348__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload304/A"
+      ],
+      "max_pin_l1_um": 44.23499999999997
+    },
+    {
+      "driver": "clkbuf_9_337__f_ck_regs/Y",
+      "net": "clknet_9_337__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload295/A"
+      ],
+      "max_pin_l1_um": 33.21900000000002
+    },
+    {
+      "driver": "clkbuf_9_334__f_ck_regs/Y",
+      "net": "clknet_9_334__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload293/A"
+      ],
+      "max_pin_l1_um": 22.77899999999999
+    },
+    {
+      "driver": "clkbuf_9_330__f_ck_regs/Y",
+      "net": "clknet_9_330__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload289/A"
+      ],
+      "max_pin_l1_um": 22.671000000000003
+    },
+    {
+      "driver": "clkbuf_9_395__f_ck_regs/Y",
+      "net": "clknet_9_395__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload345/A"
+      ],
+      "max_pin_l1_um": 7.510999999999996
+    },
+    {
+      "driver": "clkbuf_9_382__f_ck_regs/Y",
+      "net": "clknet_9_382__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload335/A"
+      ],
+      "max_pin_l1_um": 26.090999999999966
+    },
+    {
+      "driver": "clkbuf_9_225__f_ck_regs/Y",
+      "net": "clknet_9_225__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload197/A"
+      ],
+      "max_pin_l1_um": 6.193999999999988
+    },
+    {
+      "driver": "clkbuf_9_144__f_ck_regs/Y",
+      "net": "clknet_9_144__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload126/A"
+      ],
+      "max_pin_l1_um": 6.309000000000012
+    },
+    {
+      "driver": "clkbuf_9_146__f_ck_regs/Y",
+      "net": "clknet_9_146__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload128/A"
+      ],
+      "max_pin_l1_um": 8.116
+    },
+    {
+      "driver": "clkbuf_9_148__f_ck_regs/Y",
+      "net": "clknet_9_148__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 52.12699999999998
+    },
+    {
+      "driver": "clkbuf_9_70__f_ck_regs/Y",
+      "net": "clknet_9_70__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload61/A"
+      ],
+      "max_pin_l1_um": 15.813000000000004
+    },
+    {
+      "driver": "clkbuf_9_67__f_ck_regs/Y",
+      "net": "clknet_9_67__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload58/A"
+      ],
+      "max_pin_l1_um": 12.698999999999996
+    },
+    {
+      "driver": "clkbuf_9_41__f_ck_regs/Y",
+      "net": "clknet_9_41__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload36/A"
+      ],
+      "max_pin_l1_um": 20.079
+    },
+    {
+      "driver": "clkbuf_9_32__f_ck_regs/Y",
+      "net": "clknet_9_32__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload28/A"
+      ],
+      "max_pin_l1_um": 25.695
+    },
+    {
+      "driver": "clkbuf_9_0__f_ck_regs/Y",
+      "net": "clknet_9_0__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 9,
+      "clock_terminal_pins": 8,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload1/A"
+      ],
+      "max_pin_l1_um": 35.739
+    },
+    {
+      "driver": "clkbuf_9_504__f_ck_regs/Y",
+      "net": "clknet_9_504__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 8,
+      "clock_terminal_pins": 7,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload437/A"
+      ],
+      "max_pin_l1_um": 20.15100000000001
+    },
+    {
+      "driver": "clkbuf_9_128__f_ck_regs/Y",
+      "net": "clknet_9_128__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 8,
+      "clock_terminal_pins": 7,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload112/A"
+      ],
+      "max_pin_l1_um": 32.06700000000001
+    },
+    {
+      "driver": "clkbuf_9_93__f_ck_regs/Y",
+      "net": "clknet_9_93__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 8,
+      "clock_terminal_pins": 7,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload81/A"
+      ],
+      "max_pin_l1_um": 18.431000000000004
+    },
+    {
+      "driver": "clkbuf_9_51__f_ck_regs/Y",
+      "net": "clknet_9_51__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 8,
+      "clock_terminal_pins": 7,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload45/A"
+      ],
+      "max_pin_l1_um": 16.478999999999992
+    },
+    {
+      "driver": "clkbuf_9_267__f_ck_regs/Y",
+      "net": "clknet_9_267__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 8,
+      "clock_terminal_pins": 7,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload234/A"
+      ],
+      "max_pin_l1_um": 51.66899999999999
+    },
+    {
+      "driver": "clkbuf_9_139__f_ck_regs/Y",
+      "net": "clknet_9_139__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 8,
+      "clock_terminal_pins": 7,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload122/A"
+      ],
+      "max_pin_l1_um": 14.427000000000021
+    },
+    {
+      "driver": "clkbuf_9_39__f_ck_regs/Y",
+      "net": "clknet_9_39__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 8,
+      "clock_terminal_pins": 7,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload34/A"
+      ],
+      "max_pin_l1_um": 7.650999999999996
+    },
+    {
+      "driver": "clkbuf_9_159__f_ck_regs/Y",
+      "net": "clknet_9_159__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7,
+      "clock_terminal_pins": 6,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload139/A"
+      ],
+      "max_pin_l1_um": 23.324000000000012
+    },
+    {
+      "driver": "clkbuf_9_156__f_ck_regs/Y",
+      "net": "clknet_9_156__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7,
+      "clock_terminal_pins": 6,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload136/A"
+      ],
+      "max_pin_l1_um": 22.08199999999998
+    },
+    {
+      "driver": "clkbuf_9_152__f_ck_regs/Y",
+      "net": "clknet_9_152__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7,
+      "clock_terminal_pins": 6,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload133/A"
+      ],
+      "max_pin_l1_um": 21.10499999999999
+    },
+    {
+      "driver": "clkbuf_9_304__f_ck_regs/Y",
+      "net": "clknet_9_304__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7,
+      "clock_terminal_pins": 6,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload266/A"
+      ],
+      "max_pin_l1_um": 28.151000000000003
+    },
+    {
+      "driver": "clkbuf_9_63__f_ck_regs/Y",
+      "net": "clknet_9_63__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7,
+      "clock_terminal_pins": 6,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload55/A"
+      ],
+      "max_pin_l1_um": 12.996999999999993
+    },
+    {
+      "driver": "clkbuf_9_475__f_ck_regs/Y",
+      "net": "clknet_9_475__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 6,
+      "clock_terminal_pins": 5,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload412/A"
+      ],
+      "max_pin_l1_um": 13.706999999999994
+    },
+    {
+      "driver": "clkbuf_9_355__f_ck_regs/Y",
+      "net": "clknet_9_355__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 6,
+      "clock_terminal_pins": 5,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload311/A"
+      ],
+      "max_pin_l1_um": 42.75900000000003
+    },
+    {
+      "driver": "clkbuf_9_354__f_ck_regs/Y",
+      "net": "clknet_9_354__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 6,
+      "clock_terminal_pins": 5,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload310/A"
+      ],
+      "max_pin_l1_um": 58.36499999999999
+    },
+    {
+      "driver": "clkbuf_9_331__f_ck_regs/Y",
+      "net": "clknet_9_331__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 6,
+      "clock_terminal_pins": 5,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload290/A"
+      ],
+      "max_pin_l1_um": 17.162999999999972
+    },
+    {
+      "driver": "clkbuf_9_329__f_ck_regs/Y",
+      "net": "clknet_9_329__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 6,
+      "clock_terminal_pins": 5,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload288/A"
+      ],
+      "max_pin_l1_um": 23.697
+    },
+    {
+      "driver": "clkbuf_9_298__f_ck_regs/Y",
+      "net": "clknet_9_298__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 6,
+      "clock_terminal_pins": 5,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload261/A"
+      ],
+      "max_pin_l1_um": 8.116
+    },
+    {
+      "driver": "clkbuf_9_359__f_ck_regs/Y",
+      "net": "clknet_9_359__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 5,
+      "clock_terminal_pins": 4,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload314/A"
+      ],
+      "max_pin_l1_um": 44.288999999999994
+    },
+    {
+      "driver": "clkbuf_9_356__f_ck_regs/Y",
+      "net": "clknet_9_356__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 5,
+      "clock_terminal_pins": 4,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload312/A"
+      ],
+      "max_pin_l1_um": 37.809
+    },
+    {
+      "driver": "clkbuf_9_353__f_ck_regs/Y",
+      "net": "clknet_9_353__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 5,
+      "clock_terminal_pins": 4,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload309/A"
+      ],
+      "max_pin_l1_um": 41.571
+    },
+    {
+      "driver": "clkbuf_9_352__f_ck_regs/Y",
+      "net": "clknet_9_352__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 5,
+      "clock_terminal_pins": 4,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload308/A"
+      ],
+      "max_pin_l1_um": 39.950999999999986
+    },
+    {
+      "driver": "clkbuf_1_1_0_ck/Y",
+      "net": "clknet_1_1_0_ck",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 5,
+      "clock_terminal_pins": 4,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A"
+      ],
+      "max_pin_l1_um": 94.31900000000002
+    },
+    {
+      "driver": "clkbuf_9_358__f_ck_regs/Y",
+      "net": "clknet_9_358__leaf_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 4,
+      "clock_terminal_pins": 3,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload313/A"
+      ],
+      "max_pin_l1_um": 44.23499999999997
+    }
+  ],
+  "top20": [
+    {
+      "driver": "wire15050/Y",
+      "net": "net15049",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7290,
+      "clock_terminal_pins": 6846,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A",
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 336.375
+    },
+    {
+      "driver": "TOP/ck",
+      "net": "ck",
+      "master": "TOP_INPUT",
+      "terminal_pins": 7290,
+      "clock_terminal_pins": 6846,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A",
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 456.004
+    },
+    {
+      "driver": "clkbuf_regs_0_core_clk/Y",
+      "net": "ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7280,
+      "clock_terminal_pins": 6837,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 235.91699999999997
+    },
+    {
+      "driver": "clkbuf_0_ck_regs/Y",
+      "net": "clknet_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 7280,
+      "clock_terminal_pins": 6837,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 236.295
+    },
+    {
+      "driver": "clkbuf_1_0_0_ck_regs/Y",
+      "net": "clknet_1_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 3777,
+      "clock_terminal_pins": 3554,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 197.685
+    },
+    {
+      "driver": "clkbuf_1_1_0_ck_regs/Y",
+      "net": "clknet_1_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 3503,
+      "clock_terminal_pins": 3283,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 196.029
+    },
+    {
+      "driver": "clkbuf_2_1_0_ck_regs/Y",
+      "net": "clknet_2_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 2097,
+      "clock_terminal_pins": 1985,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A",
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A",
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 157.293
+    },
+    {
+      "driver": "clkbuf_2_3_0_ck_regs/Y",
+      "net": "clknet_2_3_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 2077,
+      "clock_terminal_pins": 1969,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A",
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A",
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 155.367
+    },
+    {
+      "driver": "clkbuf_2_0_0_ck_regs/Y",
+      "net": "clknet_2_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1680,
+      "clock_terminal_pins": 1569,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 182.13299999999998
+    },
+    {
+      "driver": "clkbuf_2_2_0_ck_regs/Y",
+      "net": "clknet_2_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1426,
+      "clock_terminal_pins": 1314,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 191.493
+    },
+    {
+      "driver": "clkbuf_3_3_0_ck_regs/Y",
+      "net": "clknet_3_3_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1247,
+      "clock_terminal_pins": 1191,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload187/A",
+        "clkload186/A",
+        "clkload195/A",
+        "clkload194/A",
+        "clkload193/A",
+        "clkload192/A",
+        "clkload191/A",
+        "clkload190/A"
+      ],
+      "max_pin_l1_um": 81.063
+    },
+    {
+      "driver": "clkbuf_3_6_0_ck_regs/Y",
+      "net": "clknet_3_6_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 1157,
+      "clock_terminal_pins": 1102,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A",
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A",
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 103.45500000000001
+    },
+    {
+      "driver": "clkbuf_3_7_0_ck_regs/Y",
+      "net": "clknet_3_7_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 920,
+      "clock_terminal_pins": 867,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload415/A",
+        "clkload413/A",
+        "clkload412/A",
+        "clkload410/A",
+        "clkload393/A",
+        "clkload400/A",
+        "clkload398/A",
+        "clkload408/A"
+      ],
+      "max_pin_l1_um": 121.40100000000001
+    },
+    {
+      "driver": "clkbuf_3_0_0_ck_regs/Y",
+      "net": "clknet_3_0_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 891,
+      "clock_terminal_pins": 836,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A",
+        "clkload10/A"
+      ],
+      "max_pin_l1_um": 141.52499999999998
+    },
+    {
+      "driver": "clkbuf_3_2_0_ck_regs/Y",
+      "net": "clknet_3_2_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 850,
+      "clock_terminal_pins": 794,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload125/A",
+        "clkload122/A",
+        "clkload139/A",
+        "clkload136/A",
+        "clkload133/A",
+        "clkload126/A",
+        "clkload128/A",
+        "clkload130/A"
+      ],
+      "max_pin_l1_um": 116.79299999999999
+    },
+    {
+      "driver": "clkbuf_3_4_0_ck_regs/Y",
+      "net": "clknet_3_4_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 844,
+      "clock_terminal_pins": 788,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload248/A",
+        "clkload246/A",
+        "clkload245/A",
+        "clkload243/A",
+        "clkload242/A",
+        "clkload237/A",
+        "clkload236/A",
+        "clkload235/A"
+      ],
+      "max_pin_l1_um": 133.42499999999998
+    },
+    {
+      "driver": "clkbuf_3_1_0_ck_regs/Y",
+      "net": "clknet_3_1_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 789,
+      "clock_terminal_pins": 733,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload61/A",
+        "clkload58/A",
+        "clkload82/A",
+        "clkload81/A",
+        "clkload80/A",
+        "clkload79/A",
+        "clkload77/A",
+        "clkload75/A"
+      ],
+      "max_pin_l1_um": 130.90499999999997
+    },
+    {
+      "driver": "clkbuf_4_6_0_ck_regs/Y",
+      "net": "clknet_4_6_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 690,
+      "clock_terminal_pins": 662,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload187/A",
+        "clkload186/A",
+        "clkload195/A",
+        "clkload194/A",
+        "clkload193/A",
+        "clkload192/A",
+        "clkload191/A",
+        "clkload190/A"
+      ],
+      "max_pin_l1_um": 73.47799999999998
+    },
+    {
+      "driver": "clkbuf_4_12_0_ck_regs/Y",
+      "net": "clknet_4_12_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 595,
+      "clock_terminal_pins": 567,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload341/A",
+        "clkload340/A",
+        "clkload337/A",
+        "clkload336/A",
+        "clkload348/A",
+        "clkload347/A",
+        "clkload345/A",
+        "clkload358/A"
+      ],
+      "max_pin_l1_um": 53.789000000000016
+    },
+    {
+      "driver": "clkbuf_3_5_0_ck_regs/Y",
+      "net": "clknet_3_5_0_ck_regs",
+      "master": "BUFx24_ASAP7_75t_R",
+      "terminal_pins": 582,
+      "clock_terminal_pins": 526,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload285/A",
+        "clkload293/A",
+        "clkload290/A",
+        "clkload289/A",
+        "clkload288/A",
+        "clkload300/A",
+        "clkload295/A",
+        "clkload306/A"
+      ],
+      "max_pin_l1_um": 150.34499999999997
+    }
+  ],
+  "clock_driver_count": 338,
+  "clock_max_terminal_pins": 88,
+  "max_pin_l1_um": 456.004,
+  "far405": [
+    {
+      "driver": "TOP/ck",
+      "net": "ck",
+      "master": "TOP_INPUT",
+      "terminal_pins": 7290,
+      "clock_terminal_pins": 6846,
+      "mixed_clock_data": true,
+      "nonclock_terminal_examples": [
+        "clkload0/A",
+        "clkload4/A",
+        "clkload3/A",
+        "clkload2/A",
+        "clkload1/A",
+        "clkload15/A",
+        "clkload20/A",
+        "clkload14/A"
+      ],
+      "max_pin_l1_um": 456.004
+    }
+  ]
+}
