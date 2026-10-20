@@ -1,0 +1,6 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4096362-1792460379 after 0 s
+SLCAP rows 1280 written_ok 1280 bad_writes 0 missing 0 arrivals 7446/7446 arr_mismatch 0 fault 0 fcause 0000
+SLCAP_LATENCY last_lane_arrival_to_leaf_write edges min 44 max 85 mean 61.44
+PASS cap_p1 MUT=0 slcap_vec_p1
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4096362-1792460379): exit 0

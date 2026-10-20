@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_s81sl_capc2",
+ "enable": false,
+ "reason": "RTL g_pin.rst_l0/rst_l1 are two registered reset stages at the S face; rst_n has only two flop reset sinks"
+}

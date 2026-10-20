@@ -1,0 +1,167 @@
+{
+ "name": "s81sl_capc2-s81capc2-COMMIT",
+ "block": "ot_s81sl_capc2",
+ "ref_tile": true,
+ "owner": "Claude:LEAD2-S81/CAPC2",
+ "purpose": "S81.STA.PAR.1 release CAPC cluster: closed rt/tr + new ED24/LD16 calendar leaves, PINPIPE 1 faces; bench vs closed 3-child RTL",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81-capc2-cal-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/ref_tile/s81sl_cap_ed/views",
+   "physical/ref_tile/s81sl_cap_ld/views",
+   "results/rtl/s81_slice_1017/cap",
+   "results/rtl/s81_slice_1017/cap_caprt1019",
+   "results/rtl/s81_slice_1017/capc2_1019",
+   "results/rtl/s81_slice_1017/capc_nativep1_1019",
+   "results/uarch/s81_capc_nativep1_1019",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/dsrom_sys/s81_static_net",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/proto",
+   "tools/s81",
+   "tools/s81_slice"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_capc2 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_HARD_CHILDREN --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_p1.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_capc2.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "cap_gold_base",
+    "cmd": "bash tools/s81_slice/cap_p1_gold_bench.sh {RUN}/gold_base {RUN}/slcap_vec_gbase 24 16",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "pass_regex": "^PASS cap_p1_gold DE=24 DL=16 slcap_vec_gbase$"
+   },
+   {
+    "name": "cap_gold_m23",
+    "cmd": "bash tools/s81_slice/cap_p1_gold_bench.sh {RUN}/gold_m23 {RUN}/slcap_vec_gm23 23 16 raw",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "^CAP_GOLD_MUTANT_DETECTED DE=23 DL=16 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc2_1019/gold_m23.out"
+   },
+   {
+    "name": "cap_gold_m15",
+    "cmd": "bash tools/s81_slice/cap_p1_gold_bench.sh {RUN}/gold_m15 {RUN}/slcap_vec_gm15 24 15 raw",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "^CAP_GOLD_MUTANT_DETECTED DE=24 DL=15 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc2_1019/gold_m15.out"
+   },
+   {
+    "name": "cap_cal_base",
+    "cmd": "bash tools/s81_slice/cap_p1_cal_bench.sh {RUN}/cal_base {RUN}/slcap_vec_cal 24 16",
+    "expect": "pass",
+    "pass_regex": "^PASS cap_p1_cal DE=24 DL=16 slcap_vec_cal$",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cap_p1_exact",
+    "cmd": "bash tools/s81_slice/cap_p1_bench.sh {RUN}/cap_p1_exact {RUN}/slcap_vec 0",
+    "expect": "pass",
+    "pass_regex": "^PASS cap_p1 MUT=0 slcap_vec$",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cap_p1_mut1",
+    "cmd": "bash tools/s81_slice/cap_p1_bench.sh {RUN}/cap_p1_m1 {RUN}/slcap_vec 1 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_P1_MUTANT_DETECTED MUT=1 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc_nativep1_1019/mut1.out",
+    "threads": 4,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cap_p1_mut2",
+    "cmd": "bash tools/s81_slice/cap_p1_bench.sh {RUN}/cap_p1_m2 {RUN}/slcap_vec 2 raw",
+    "expect": "fail",
+    "fail_regex": "^CAP_P1_MUTANT_DETECTED MUT=2 ",
+    "fail_witness": "results/rtl/s81_slice_1017/capc_nativep1_1019/mut2.out",
+    "threads": 4,
+    "peak_ram_gb": 16
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sl_capc2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_capc2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_capc2 --out {RUN}/record/views/ot_s81sl_capc2 --macro-view physical/ref_tile/s81sl_cap_ed/views/ot_s81sl_cap_ed --macro-view physical/ref_tile/s81sl_cap_ld/views/ot_s81sl_cap_ld --macro-view physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt --macro-view physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_capc2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/s81sl_cap_ed/views/ot_s81sl_cap_ed",
+   "physical/ref_tile/s81sl_cap_ld/views/ot_s81sl_cap_ld",
+   "physical/ref_tile/s81sl_cap_rt/views/ot_s81sl_cap_rt",
+   "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_capc2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_capc2/s81sl_capc2-s81capc2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "LEAD2-S81/CAPC2 10-19 S81.STA.PAR.1: the CAPC cluster gains the two TOK.DS.BENCH.1 calendar leaves as hard children -- u_ed ot_s81sl_cap_ed (D 24, E tree word -> n6) and u_ld3 ot_s81sl_cap_ld (D 16, W lane 3 -> u_tw) -- in a non-parameterised top ot_s81sl_capc2 = ot_s81sl_cap_p1 #(PINPIPE 1, EDLY 24, WL3DLY 16) (hard views carry no parameters). Same closed rt/tr child views and PINPIPE 1 face registers as CLOSED 267b (s81sl_capc_p1_die_slew); trees moved up 86.4 so the rt-to-tree seam (142.56) holds ED under u_te and LD under u_tw on the 43.2 lattice with >= 20 um channels (56.16 below, 38.88 above); outline 329.184 x 411.48 (closed-children stack + 20 um core channels; fill 38 %)."
+}

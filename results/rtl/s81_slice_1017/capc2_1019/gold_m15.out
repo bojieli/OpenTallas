@@ -1,0 +1,18 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2353921-1792460839 after 0 s
+ARR_MISMATCH edge 141 lane 3
+ARR_MISMATCH edge 157 lane 3
+ARR_MISMATCH edge 160 lane 3
+ARR_MISMATCH edge 175 lane 3
+ARR_MISMATCH edge 179 lane 3
+ARR_MISMATCH edge 191 lane 3
+ARR_MISMATCH edge 194 lane 3
+ARR_MISMATCH edge 204 lane 3
+WRITE_MISMATCH edge 340 leaf 2 port 0 addr 19 data bf699724
+WRITE_MISMATCH edge 357 leaf 2 port 0 addr 59 data 3f33b653
+WRITE_MISMATCH edge 423 leaf 4 port 0 addr 51 data bf8e76b2
+WRITE_MISMATCH edge 1264 leaf 2 port 0 addr 33 data bf64875c
+WRITE_MISMATCH edge 1639 leaf 3 port 0 addr 41 data beaa470c
+WRITE_MISMATCH edge 1658 leaf 3 port 0 addr 40 data 3f454628
+CAP_GOLD_MUTANT_DETECTED DE=24 DL=15 slcap_vec_gm15
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2353921-1792460839): exit 1

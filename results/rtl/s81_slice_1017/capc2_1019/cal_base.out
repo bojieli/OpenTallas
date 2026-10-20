@@ -1,0 +1,5 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4096368-1792460379 after 1 s
+SLCAP_CAL DE 24 DL 16 writes dut 166 ref 166 expected_rows 1280 mismatches 0 fault dut 1 ref 1 fcause dut 043a ref 043a
+PASS cap_p1_cal DE=24 DL=16 slcap_vec_base
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4096368-1792460379): exit 0
