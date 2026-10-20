@@ -96,6 +96,11 @@ def apply_cts_fix_hooks(config, case):
         for sib in ("link_budget_consistent.sdc",):   # sourced by link_budget_hook.tcl from its own directory
             if source.name == "link_budget_hook.tcl" and (source.parent / sib).is_file():
                 shutil.copy2(source.parent / sib, hooks_dir / sib)
+        # INFRA-PG 2026-10-19: a hook that sources native_pg_binding.tcl from its own directory gets the binding that
+        # sits beside its source (the overlay ships both together), never the /src fallback of an older pinned commit.
+        _pgb = source.parent / "native_pg_binding.tcl"
+        if source.name != _pgb.name and _pgb.is_file() and "native_pg_binding.tcl" in source.read_text(errors="replace"):
+            shutil.copy2(_pgb, hooks_dir / _pgb.name)
         body.append(f"source /work/hooks/{name}")
         record.append({"path": fix, "name": name, "sha256": _h.sha256(source.read_bytes()).hexdigest()})
     (hooks_dir / "pre_cts_ot_cts_fix.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
@@ -106,8 +111,41 @@ def apply_cts_fix_hooks(config, case):
 '''
 CFG_ANCHOR = '    (case / "config.mk").write_text("\\n".join(config) + "\\n", encoding="utf-8")\n'
 FN_ANCHOR = "\ndef io_constraints_tcl("
-COMMON = ["cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl", "link_budget_consistent.sdc",
+# INFRA-PG 2026-10-19: native_pg_binding.tcl travels WITH the hooks that source it (clk_net_protect.tcl).  Shipping
+# main's clk_net_protect.tcl over an older pinned src left that src's native_pg_binding.tcl (no
+# ot_pg_install_unsupported_birth_guards): ot_qkh_ktree_lkp-lkp1-52f03a544 and other standard-mode routes died in CTS
+# with 'cts.tcl, 6 invalid command name'.  PG_BINDING is shipped first and pg_dependency_gaps() refuses (exit 2,
+# before any placement) an overlaid src whose shipped hooks call an ot_pg_* command the effective binding lacks.
+PG_BINDING = "native_pg_binding.tcl"
+COMMON = [PG_BINDING, "cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl", "link_budget_consistent.sdc",
           "nbr_clk_measured_ttb.sdc"]
+_PG_CALL_RE = re.compile(r"(?:^|[\[{;\s])(ot_pg_\w+)")
+_PROC_RE = re.compile(r"(?m)^\s*proc\s+(?:::)?(\w+)")
+_SET_RE = re.compile(r"\bset\s+(?:::)?(ot_pg_\w+)")
+
+
+def _code(text):
+    return "\n".join(ln for ln in text.splitlines() if not ln.lstrip().startswith("#"))
+
+
+def pg_dependency_gaps(d, names=None):
+    """[(hook, [missing ot_pg_* commands])] for each hook in d (default: the shipped COMMON .tcl files) that sources
+    native_pg_binding.tcl but calls a command d/native_pg_binding.tcl does not define (all of them when it is absent)."""
+    binding = Path(d) / PG_BINDING
+    defined = set(_PROC_RE.findall(_code(binding.read_text(errors="replace")))) if binding.is_file() else set()
+    gaps = []
+    for n in (COMMON if names is None else names):
+        f = Path(d) / n
+        if n == PG_BINDING or not n.endswith(".tcl") or not f.is_file():
+            continue
+        t = _code(f.read_text(errors="replace"))
+        if PG_BINDING not in t:
+            continue
+        used = set(_PG_CALL_RE.findall(t)) - set(_PROC_RE.findall(t)) - set(_SET_RE.findall(t))
+        missing = sorted(used - defined) if binding.is_file() else ["<no " + PG_BINDING + ">"]
+        if missing:
+            gaps.append((n, missing))
+    return gaps
 
 
 def ensure_corner(s):
@@ -336,9 +374,16 @@ def main():
     for n in COMMON:
         a = OVL / "physical/common_flow" / n
         b = d / n
+        if n == PG_BINDING and not a.is_file():
+            out.append(f"overlay snapshot has no common_flow/{n}")       # judged by pg_dependency_gaps below
+            continue
         if not b.is_file() or b.read_bytes() != a.read_bytes():
             shutil.copy2(a, b)
             out.append(f"shipped common_flow/{n}")
+    gaps = pg_dependency_gaps(d)
+    if gaps:
+        ok = False
+        out.append("OT_PG_HELPER_DEPENDENCY missing: " + "; ".join(f"{h} calls {' '.join(m)}" for h, m in gaps))
     h1 = subprocess.run([sys.executable, str(HERE / "h1_patch.py"), str(src)], capture_output=True, text=True)
     out.append(h1.stdout.strip() or h1.stderr.strip()[-200:])
     digest = hashlib.sha256(f.read_bytes()).hexdigest()[:12] if f.is_file() else "-"

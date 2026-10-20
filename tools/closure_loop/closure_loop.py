@@ -3489,8 +3489,12 @@ FH_FILES = (("orfs_hold_mm.py", "tools"), ("orfs_hold_mm.tcl", "tools"), ("h1_pa
 # h1_patch.py.  Every main-vs-snapshot difference is an additive flow fix already on main, so the same refresh applies.
 TTB_DIRS = ("/srv/opentallas-scratch/claude/ttbatch/26f14af32", "/home/ubuntu/closure-loop-local/ttbatch/26f14af32")
 TTB_FILES = (("tt_overlay.py", "tools/closure_loop"), ("h1_patch.py", "tools/closure_loop"),
-             *((n, "physical/common_flow") for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
+             *((n, "physical/common_flow") for n in ("native_pg_binding.tcl", "cg_pushdown.tcl", "clk_net_protect.tcl",
+                                                    "link_budget_hook.tcl",
                                                     "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
+# INFRA-PG 2026-10-19: native_pg_binding.tcl is refreshed with (and before) the hooks that source it; the snapshot used
+# to carry main's clk_net_protect.tcl without any binding, so tt_overlay shipped it over pinned srcs whose binding lacked
+# ot_pg_install_unsupported_birth_guards (standard-mode CTS crash, ot_qkh_ktree_lkp-lkp1-52f03a544).
 SNAPSHOT_REFRESH = ((FH_DIRS, FH_FILES), (TTB_DIRS, TTB_FILES))
 
 
