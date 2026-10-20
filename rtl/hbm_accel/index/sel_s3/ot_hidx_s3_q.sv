@@ -193,10 +193,10 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  end
  reg [7:0] s1_addr;
  (* keep *) reg [LW-1:0] rawr;             // kept: else opt_merge folds it into the identical rawh bits
- wire [16:0] rawh[0:15],rawc[0:15];    // kept histogram-path / compare-path copies of each lane's valid + key
+ wire [16:0] rawh[0:15],rawc[0:15];    // kept histogram-path copy (valid + key) / compare-path copy (valid + ORDER key)
  for(genvar l=0;l<16;l=l+1)begin:grh
   (* keep *) reg [16:0] q,c;
-  always @(posedge clk)begin q<=raw[l*EW+:17];c<=raw[l*EW+:17];end
+  always @(posedge clk)begin q<=raw[l*EW+:17];c<={orderkey(raw[l*EW+1+:16]),raw[l*EW]};end   // c: order key at the macro side
   assign rawh[l]=q;assign rawc[l]=c;
  end
  always @(posedge clk)begin
@@ -211,7 +211,7 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  reg [15:0] c_gt,c_eq;reg [15:0] c_ky;reg [1:0] c_loc[0:15];reg [2:0] c_gtot[0:3];reg [4:0] c_ecnt;
  always @*begin
   for(integer l=0;l<W;l=l+1)begin
-   c_ky=orderkey(rawc[l][16:1]);
+   c_ky=rawc[l][16:1];                  // already the order key
    c_gt[l]=rawc[l][0]&&(c_ky>thq[l/4]);
    c_eq[l]=rawc[l][0]&&(c_ky==thq[l/4]);
    if(DMUT==1)begin c_gt[l]=rawc[l][0]&&(c_ky>=thq[l/4]);c_eq[l]=0;end
