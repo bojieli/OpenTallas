@@ -20,6 +20,17 @@ qkd_host_record_port_mu #(.MU(1),.MUT(MUT==1?1:MUT==2?3:0)) host (
  .authorized_footer_valid(1'b0),.authorized_footer(64'd0),.witness_slot(1'b0),.rx_v(1'b0),.rx_record(548'd0),
  .commit_v(),.installed_valid(),.installed_fusedcap(),.commit_epoch(),.commit_digest(),
  .tx_v(txv),.tx_observed_v(txo),.tx_record(txr),.fault(txfault));
+reg prev_sk=0;
+always @(posedge ck)if(!rst_n)prev_sk<=0;else prev_sk<=(sk==3);
+wire refv,refo,reffault;wire[547:0]refr;
+qkd_host_record_port_mu #(.MU(0)) su_ref (
+ .ck(ck),.rst_n(rst_n),.send_kind((sk==3&&prev_sk)?2'd3:2'd0),.request_v(rq&&tag[44:43]==0),.request_tag(tag),.request_gen(gen),
+ .request_token(tag[36:19]),.request_position({5'd0,tag[18:6]}),.token_epoch_valid(tev&&ep[1:0]==0),.token_epoch(ep),
+ .begin_v(1'b0),.begin_epoch(16'd0),.expected_pw(11'd0),.expected_dw(4'd0),.auth_v(1'b0),.auth_epoch(16'd0),
+ .auth_digest(64'd0),.program_ready(1'b1),.program_epoch(16'h0a51),.program_digest(64'h0123456789abcdef),
+ .authorized_footer_valid(1'b0),.authorized_footer(64'd0),.witness_slot(1'b0),.rx_v(1'b0),.rx_record(548'd0),
+ .commit_v(),.installed_valid(),.installed_fusedcap(),.commit_epoch(),.commit_digest(),
+ .tx_v(refv),.tx_observed_v(refo),.tx_record(refr),.fault(reffault));
 qfd_d2d_static #(.PR(1),.TXDP(D2D_TXDP_C)) u_c (
  .ck(ck),
  .por_n(rst_n),
@@ -180,9 +191,15 @@ qfd_host_native_context_rx face(.ck(ck),.rst_n(rst_n),.receive_slot(cslot),.rx_v
 wire[128:0]cx;wire[1:0]cu;wire mf;
 qfd_mu_ctx_rx #(.NU(4)) mu(.ck(ck),.rst_n(rst_n),.context_slot(cslot),.rx_v(cv),.rx_hdr(crx[547:517]),
  .rx_beat(crx[516:512]),.rx_tag(crx[58:0]),.ctx_x(cx),.ctx_user(cu),.mu_fault(mf));
-reg[58:0]expected[0:3];reg[1:0]eg[0:3];integer n=0,nload=0,errs=0,cyc=0,run=0;
+reg[58:0]expected[0:3];reg[1:0]eg[0:3];integer n=0,nload=0,nref=0,errs=0,cyc=0,run=0;
 always @(posedge ck)cyc<=cyc+1;
 always @(negedge ck)if(rst_n)begin
+ if(sk==3)$display("MUCTX_SLOT cycle=%0d run=%0d",cyc,run);
+ if(txo)$display("MUCTX_HOST_TX cycle=%0d run=%0d owner=%h gen=%h",cyc,run,txr[58:0],txr[60:59]);
+ if(refo)begin
+  $display("MUCTX_SU_REF cycle=%0d run=%0d identical=%0d",cyc,run,(txo&&txr===refr));
+  if(!txo||txr!==refr||reffault)errs=errs+1;nref=nref+1;
+ end
  if(cv&&cslot)begin
   $display("MUCTX_WIRE cycle=%0d run=%0d n=%0d user=%0d owner=%h gen=%h",cyc,run,n,crx[44:43],crx[58:0],crx[60:59]);
   if(n>=6)errs=errs+1;
@@ -224,7 +241,7 @@ initial begin
  if(FULL)begin
   if(cf||kf||cab||kab)$display("MUCTX_FULL_STREAM_DIAGNOSTIC_NATIVE_FAULT expected unsupported later producer scope");
   else $display("MUCTX_FULL_STREAM_DIAGNOSTIC_NO_NATIVE_FAULT_YET");
- end else if(errs==0&&n==6&&nload==3)$display("MUCTX_REAL_LINK_PASS four distinct contexts; three filler loads; user0 restored; component only");
+ end else if(errs==0&&n==6&&nload==3&&nref==3)$display("MUCTX_REAL_LINK_PASS four distinct contexts; three filler loads; user0 restored; component only");
  else $display("MUCTX_REAL_LINK_FAIL errors=%0d n=%0d loads=%0d",errs,n,nload);
  $finish;
 end
