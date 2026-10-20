@@ -86,9 +86,9 @@
    },
    {
     "name": "smwire_soen_mut",
-    "cmd": "bash tools/s81_dv/sm_target/run_e2e.sh {RUN}/smwire_soen OT_S81SL_XR_MUT_SOEN",
+    "cmd": "bash tools/s81_dv/sm_target/run_e2e.sh {RUN}/smwire_soen OT_S81SL_XR_MUT_SOEN; head -3 {RUN}/smwire_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log; grep -q '^SMWIRE PASS' {RUN}/smwire_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log",
     "expect": "fail",
-    "fail_regex": "E2E rtlmut_OT_S81SL_XR_MUT_SOEN expect=fail smwire=PASS",
+    "fail_regex": "^SMWIRE MISMATCH gather data",
     "fail_witness": "results/rtl/root4_s81post_1019/witness/e2e_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log",
     "threads": 16,
     "peak_ram_gb": 24
