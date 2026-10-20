@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hd4g/gen2e4/tail_r5
+ot-run: ot-epyc6       admits  1000 GB (avail 793, growth 93, headroom 0, waiters 0/0 GB) load 83/128 running 36 disk 4289 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hd4g/gen2e4/tail_r5
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/hd4g/gen2e4/tail_r5
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hd4g/gen2e4/tail_r5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hd4g/gen2e4/tail_r5
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2823486-1792494914 after 0 s
+EXACT_TAIL_MODEL {"data_positions": 6691285, "instances": 43944, "straps_remastered": 3099, "tail_widths": 1033, "variants": 60, "buses": 2309}
+EXACT_TAIL_MAP_PASS {"buses": 2309, "real_edge_bits": 9960132, "map_sha256": "5984deaf059877b8df7d9bce6485e7d95c9e9b6c1013742fb1665d8e4921201b", "clock_reset_epoch_edges_unchanged": true}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2823486-1792494914): exit 0
