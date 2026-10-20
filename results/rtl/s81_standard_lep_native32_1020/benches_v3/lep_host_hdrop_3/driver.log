@@ -1,0 +1,4 @@
+MISMATCH A->H THOST 50 got 1e101fb44a7b9af453f1 exp 1e111fb44a7b9af453f1
+LEPH_STATS H->A ring 233/233 host 84/84 ks 83/83 | A->H frames 592/592 (ring 489 thost 51 tkd 52) | mismatches 1 f_lf 0101 bad 0 fault 0
+FAIL lep_host: mismatches 1
+BENCH_FAIL lep_host MUT=hdrop seed 3

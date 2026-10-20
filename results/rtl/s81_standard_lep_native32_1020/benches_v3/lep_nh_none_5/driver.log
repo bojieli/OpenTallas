@@ -1,0 +1,3 @@
+LEPNH_STATS H->A ring 400/400 | A->H ring 459/459 host-plane frames 0 | mismatches 0 fault ring 0 HOST 1 KS 1
+PASS lep_nh: H->A 400 + A->H 459 ring beats bit-exact in order, no host-plane frame sent; HOST and KS frames into the HOST_EN 0 endpoint flagged (fault), not delivered
+BENCH_PASS lep_nh MUT=none seed 5
