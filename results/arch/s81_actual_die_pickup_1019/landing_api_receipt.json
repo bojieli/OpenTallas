@@ -1,0 +1,163 @@
+{
+  "collected_utc": "2026-10-20T00:36:22.514266+00:00",
+  "api": "http://localhost:8765/api/elements",
+  "raw_response_sha256": "f97f40be86e1c23674caa5b814b359615acf16b1ad896ec3fa681da28818b39f",
+  "receipt_commit": "5d5191712",
+  "receipt_path": "results/arch/s81_land_case_1019/native_case_straps_main.json",
+  "rows": [
+    {
+      "element": "dsfd_dvland_70",
+      "latest": {
+        "t": 1792432066.0,
+        "job": "s81dv_land_70-po2-df5c2d585",
+        "status": "CLOSED",
+        "text": "snapshot trim (closed, 0 MB): src/bench_src snapshots cut to receipt-referenced paths"
+      },
+      "die_bindable": {
+        "ok": true,
+        "native": "PASS",
+        "tt": 78.27,
+        "ff": 29.27,
+        "why": "",
+        "watch": "",
+        "view": "physical/ref_tile/s81dv_land_70/views/dsfd_dvland_70",
+        "rule": "bind: native PASS; watch: TT<+25 or FF<+10 ps"
+      }
+    },
+    {
+      "element": "dsfd_dvland_276",
+      "latest": {
+        "t": 1792432065.0,
+        "job": "s81dv_land_276-po2-df5c2d585",
+        "status": "CLOSED",
+        "text": "snapshot trim (closed, 0 MB): src/bench_src snapshots cut to receipt-referenced paths"
+      },
+      "die_bindable": {
+        "ok": true,
+        "native": "PASS",
+        "tt": 68.96,
+        "ff": 27.14,
+        "why": "",
+        "watch": "",
+        "view": "physical/ref_tile/s81dv_land_276/views/dsfd_dvland_276",
+        "rule": "bind: native PASS; watch: TT<+25 or FF<+10 ps"
+      }
+    },
+    {
+      "element": "dsfd_dvland_276l",
+      "latest": {
+        "t": 1792432066.0,
+        "job": "s81dv_land_276l-po2-df5c2d585",
+        "status": "CLOSED",
+        "text": "snapshot trim (closed, 0 MB): src/bench_src snapshots cut to receipt-referenced paths"
+      },
+      "die_bindable": {
+        "ok": true,
+        "native": "PASS",
+        "tt": 64.17,
+        "ff": 20.88,
+        "why": "",
+        "watch": "",
+        "view": "physical/ref_tile/s81dv_land_276l/views/dsfd_dvland_276l",
+        "rule": "bind: native PASS; watch: TT<+25 or FF<+10 ps"
+      }
+    },
+    {
+      "element": "dsfd_dvland_562",
+      "latest": {
+        "t": 1792435663.0,
+        "job": "s81dv_land_562-po2-df5c2d585",
+        "status": "CLOSED",
+        "text": "snapshot trim (closed, 0 MB): src/bench_src snapshots cut to receipt-referenced paths"
+      },
+      "die_bindable": {
+        "ok": true,
+        "native": "PASS",
+        "tt": 64.57,
+        "ff": 24.3,
+        "why": "",
+        "watch": "",
+        "view": "physical/ref_tile/s81dv_land_562/views/dsfd_dvland_562",
+        "rule": "bind: native PASS; watch: TT<+25 or FF<+10 ps"
+      }
+    },
+    {
+      "element": "dsfd_dvland_682",
+      "latest": {
+        "t": 1792399678.0,
+        "job": "s81dv_land_682-l1-1da4d6aae",
+        "status": "CLOSED",
+        "text": "snapshot trim (closed, 0 MB): src/bench_src snapshots cut to receipt-referenced paths"
+      },
+      "die_bindable": {
+        "ok": true,
+        "native": "PASS",
+        "tt": 67.2,
+        "ff": 25.72,
+        "why": "",
+        "watch": "",
+        "view": "physical/ref_tile/s81dv_land_682/views/dsfd_dvland_682",
+        "rule": "bind: native PASS; watch: TT<+25 or FF<+10 ps"
+      }
+    },
+    {
+      "element": "dsfd_dvland_pvrd",
+      "latest": {
+        "t": 1792399680.0,
+        "job": "s81dv_land_pvrd-p3-b15a4ddad",
+        "status": "CLOSED",
+        "text": "snapshot trim (closed, 0 MB): src/bench_src snapshots cut to receipt-referenced paths"
+      },
+      "die_bindable": {
+        "ok": true,
+        "native": "PASS",
+        "tt": 65.55,
+        "ff": 24.61,
+        "why": "",
+        "watch": "",
+        "view": "physical/ref_tile/s81dv_land_pvrd/views/dsfd_dvland_pvrd",
+        "rule": "bind: native PASS; watch: TT<+25 or FF<+10 ps"
+      }
+    },
+    {
+      "element": "dsfd_cfifo_crs4",
+      "latest": {
+        "t": 1792399676.0,
+        "job": "s81coll_cfifo_crs4-c4a-f11bb1950",
+        "status": "CLOSED",
+        "text": "snapshot trim (closed, 0 MB): src/bench_src snapshots cut to receipt-referenced paths"
+      },
+      "die_bindable": {
+        "ok": true,
+        "native": "PASS",
+        "tt": 40.3,
+        "ff": 11.34,
+        "why": "",
+        "watch": "",
+        "view": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4",
+        "rule": "bind: native PASS; watch: TT<+25 or FF<+10 ps"
+      }
+    },
+    {
+      "element": "dsfd_dvland_512",
+      "latest": {
+        "t": 1792435663.0,
+        "job": "s81dv_land_512-po2-df5c2d585",
+        "status": "CLOSED",
+        "text": "snapshot trim (closed, 0 MB): src/bench_src snapshots cut to receipt-referenced paths"
+      },
+      "die_bindable": {
+        "ok": true,
+        "native": "PASS",
+        "tt": 69.55,
+        "ff": 26.68,
+        "why": "",
+        "watch": "",
+        "view": "physical/ref_tile/s81dv_land_512/views/dsfd_dvland_512",
+        "rule": "bind: native PASS; watch: TT<+25 or FF<+10 ps"
+      }
+    }
+  ],
+  "result": "8/8 CURRENT_API_DIE_BINDABLE_PASS",
+  "scope": "Current case-pin native receipts only; no new route, throughput, general PG-flow or full die qualification."
+}

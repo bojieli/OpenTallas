@@ -1,0 +1,50 @@
+Tue Oct 20 00:36:33 UTC 2026
+/srv/opentallas-scratch/claude/s81-diechain/mu4/steps.log
+567b49d82845eb19128cfbddf72750547f60fc73cd7cff2c0be75fc5addb910a  /srv/opentallas-scratch/claude/s81-diechain/mu4/steps.log
+BIND_RC 0
+CASE_RC 0
+MAINCHK_RC 0
+/srv/opentallas-scratch/claude/s81-diechain/mu4/case_mu4/out/run.log
+a0ac01981e3c149f5f2bbd20fd708a9bdd429c467ab3c834ea8cd6287001656e  /srv/opentallas-scratch/claude/s81-diechain/mu4/case_mu4/out/run.log
+OT_CLUSTER_SNAP_LEGAL std_cells=4354 moved=4354 still_on_macro=0
+OT_CLUSTER_LEGAL place
+OT_DIE_REP spread placed=4058 unplaced=0 util=0.30/0.60 hard=24 on_obstacle=643 bin_um=8.64 bins=3618 full=0 max_ring=6 mean_disp_um=7.58 max_disp_um=61.04 s=6
+OT_TIES placed=4058 noload=0 unplaced=0
+OT_SPECIAL_TOP_NETS 9052
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz line 34, library asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 already exists.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib line 35, library asap7sc7p5t_SEQ_RVT_TT_nldm_220123 already exists.
+OT_DIE_REP pre instances=13067 masters=209
+/srv/opentallas-scratch/claude/s81-diechain/mu3c/case_mu3/out/run.log
+e94c92d77bb7e6d561f5ec1c85067461062e8599a44b10ff162135a305d09c93  /srv/opentallas-scratch/claude/s81-diechain/mu3c/case_mu3/out/run.log
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+/srv/opentallas-scratch/claude/mu-die-s81/case_mu2/out/run.log
+e0288e3670af23c1fda2b9dbe99abad2694ad7651e30f959986bb38d3a365470  /srv/opentallas-scratch/claude/mu-die-s81/case_mu2/out/run.log
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+ 599975       0  3788 bash -c date -u; for p in /srv/opentallas-scratch/claude/s81-diechain/mu4/steps.log /srv/opentallas-scratch/claude/s81-diechain/mu4/case_mu4/out/run.log /srv/opentallas-scratch/claude/s81-diechain/mu3c/case_mu3/out/run.log /srv/opentallas-scratch/claude/mu-die-s81/case_mu2/out/run.log; do echo "$p"; sha256sum "$p"; tail -8 "$p"; done; ps -eo pid,etimes,rss,args | grep -E "openroad.*run.tcl|Vtb.*c3x|verilator.*bind" | head -14
+ 599986       0  2516 grep -E openroad.*run.tcl|Vtb.*c3x|verilator.*bind
+1575171    2914 16212 /usr/bin/docker run --memory-swap=96g --rm --name dvrv-1575168 --cpus=16 --memory=96g -v /srv/opentallas-scratch/claude/s81-diechain/mu4/case_mu4:/work -w /work openroad/orfs:asap7lock bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc
+1575220    2914  2724 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc
+1575247    2914  1008 /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl
+1575248    2914 4899152 openroad -threads 16 -no_init -exit /work/run.tcl
+2329160   38747 17304 /usr/bin/docker run --memory-swap=96g --rm --name dvrv-2329157 --cpus=16 --memory=96g -v /srv/opentallas-scratch/claude/mu-die-s81/case_mu2:/work -w /work openroad/orfs:asap7lock bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc
+2329215   38747  2772 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc
+2329248   38747  1100 /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl
+2329250   38747 48034560 openroad -threads 16 -no_init -exit /work/run.tcl
+3654740   20861 17116 /usr/bin/docker run --memory-swap=96g --rm --name dvrv-3654737 --cpus=16 --memory=96g -v /srv/opentallas-scratch/claude/s81-diechain/mu3c/case_mu3:/work -w /work openroad/orfs:asap7lock bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc
+3654791   20861  2764 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=$?; chmod -R a+rwX /work/out; exit $rc
+3654922   20861  1132 /usr/bin/time -v openroad -threads 16 -no_init -exit /work/run.tcl
+3654923   20861 48011224 openroad -threads 16 -no_init -exit /work/run.tcl
