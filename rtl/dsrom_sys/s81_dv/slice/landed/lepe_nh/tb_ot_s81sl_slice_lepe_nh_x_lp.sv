@@ -55,85 +55,27 @@ module tb_ot_s81sl_slice_lepe_nh_x_lp;
     ot_s81sl_slice_lepe_nh_x_rsref u_flat (.clk(clk), .rst_n(rst_f), .sid(fi_sid), .ri_w(fi_ri_w), .vi(fi_vi), .bi(fi_bi), .rt(fi_rt), .ch_b(fi_ch_b), .rx0(fi_rx0), .rx1(fi_rx1), .ro_w(fo_ro_w), .vo(fo_vo), .bo(fo_bo), .xc(fo_xc), .ck_line(fo_ck_line), .ck_v(fo_ck_v), .ck_xc(fo_ck_xc), .ck_rt(fo_ck_rt), .tx0(fo_tx0), .tx1(fo_tx1), .tf(fo_tf), .fault(fo_fault));
     ot_s81sl_slice_lepe_nh_x_lp #(.MUT(MUT)) u_lp (.ck_S(clk), .ck_K(clk), .rst_n(rst), .sid(li_sid), .ri_w(li_ri_w), .vi(li_vi), .bi(li_bi), .rt(li_rt), .ch_b(li_ch_b), .rx0(li_rx0), .rx1(li_rx1), .ro_w(lo_ro_w), .vo(lo_vo), .bo(lo_bo), .xc(lo_xc), .ck_line(lo_ck_line), .ck_v(lo_ck_v), .ck_xc(lo_ck_xc), .ck_rt(lo_ck_rt), .tx0(lo_tx0), .tx1(lo_tx1), .tf(lo_tf), .fault(lo_fault));
     function [31:0] rnd; input integer k; rnd = $urandom; endfunction
-    integer cyc, nc, bad;
-    initial begin
-        nc = 0; bad = 0;
-        fi_sid = 4'd14;
-        fi_ri_w = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-        fi_vi = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-        fi_bi = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-        fi_rt = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-        fi_ch_b = 1'b1;
-        fi_rx0 = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-        fi_rx1 = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-        for (cyc = 0; cyc < 3000; cyc = cyc + 1) begin
-            @(negedge clk);
-            if (cyc == 16) rst = 1;
-            fi_ri_w = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            fi_vi = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            fi_bi = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            fi_rt = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            fi_rx0 = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            fi_rx1 = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
-            if (cyc > 31) begin
-                nc = nc + 1; if (lo_ro_w !== fo_ro_w) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ro_w cycle=%0d flat=%h landed=%h", cyc, fo_ro_w, lo_ro_w); end
-                nc = nc + 1; if (lo_vo !== fo_vo) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=vo cycle=%0d flat=%h landed=%h", cyc, fo_vo, lo_vo); end
-                nc = nc + 1; if (lo_bo !== fo_bo) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=bo cycle=%0d flat=%h landed=%h", cyc, fo_bo, lo_bo); end
-                nc = nc + 1; if (lo_xc !== fo_xc) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=xc cycle=%0d flat=%h landed=%h", cyc, fo_xc, lo_xc); end
-                nc = nc + 1; if (lo_ck_line !== fo_ck_line) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ck_line cycle=%0d flat=%h landed=%h", cyc, fo_ck_line, lo_ck_line); end
-                nc = nc + 1; if (lo_ck_v !== fo_ck_v) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ck_v cycle=%0d flat=%h landed=%h", cyc, fo_ck_v, lo_ck_v); end
-                nc = nc + 1; if (lo_ck_xc !== fo_ck_xc) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ck_xc cycle=%0d flat=%h landed=%h", cyc, fo_ck_xc, lo_ck_xc); end
-                nc = nc + 1; if (lo_ck_rt !== fo_ck_rt) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ck_rt cycle=%0d flat=%h landed=%h", cyc, fo_ck_rt, lo_ck_rt); end
-                nc = nc + 1; if (lo_tx0 !== fo_tx0) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=tx0 cycle=%0d flat=%h landed=%h", cyc, fo_tx0, lo_tx0); end
-                nc = nc + 1; if (lo_tx1 !== fo_tx1) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=tx1 cycle=%0d flat=%h landed=%h", cyc, fo_tx1, lo_tx1); end
-                nc = nc + 1; if (lo_tf !== fo_tf) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=tf cycle=%0d flat=%h landed=%h", cyc, fo_tf, lo_tf); end
-                nc = nc + 1; if (lo_fault !== fo_fault) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=fault cycle=%0d flat=%h landed=%h", cyc, fo_fault, lo_fault); end
-            end
+    integer cyc = 0, nc = 0, bad = 0;
+    always @(negedge clk) begin
+        cyc <= cyc + 1;
+        if (cyc > 31) begin
+            nc = nc + 1; if (lo_ro_w !== fo_ro_w) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ro_w cycle=%0d flat=%h landed=%h", cyc, fo_ro_w, lo_ro_w); end
+            nc = nc + 1; if (lo_vo !== fo_vo) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=vo cycle=%0d flat=%h landed=%h", cyc, fo_vo, lo_vo); end
+            nc = nc + 1; if (lo_bo !== fo_bo) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=bo cycle=%0d flat=%h landed=%h", cyc, fo_bo, lo_bo); end
+            nc = nc + 1; if (lo_xc !== fo_xc) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=xc cycle=%0d flat=%h landed=%h", cyc, fo_xc, lo_xc); end
+            nc = nc + 1; if (lo_ck_line !== fo_ck_line) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ck_line cycle=%0d flat=%h landed=%h", cyc, fo_ck_line, lo_ck_line); end
+            nc = nc + 1; if (lo_ck_v !== fo_ck_v) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ck_v cycle=%0d flat=%h landed=%h", cyc, fo_ck_v, lo_ck_v); end
+            nc = nc + 1; if (lo_ck_xc !== fo_ck_xc) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ck_xc cycle=%0d flat=%h landed=%h", cyc, fo_ck_xc, lo_ck_xc); end
+            nc = nc + 1; if (lo_ck_rt !== fo_ck_rt) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ck_rt cycle=%0d flat=%h landed=%h", cyc, fo_ck_rt, lo_ck_rt); end
+            nc = nc + 1; if (lo_tx0 !== fo_tx0) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=tx0 cycle=%0d flat=%h landed=%h", cyc, fo_tx0, lo_tx0); end
+            nc = nc + 1; if (lo_tx1 !== fo_tx1) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=tx1 cycle=%0d flat=%h landed=%h", cyc, fo_tx1, lo_tx1); end
+            nc = nc + 1; if (lo_tf !== fo_tf) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=tf cycle=%0d flat=%h landed=%h", cyc, fo_tf, lo_tf); end
+            nc = nc + 1; if (lo_fault !== fo_fault) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=fault cycle=%0d flat=%h landed=%h", cyc, fo_fault, lo_fault); end
         end
-        if (bad == 0 && nc > 0) $display("LP_LOCKSTEP PASS MUT=%0d compared=%0d cycles=3000 warm=31", MUT, nc);
-        else $display("LP_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d", MUT, bad, nc);
-        $finish;
     end
+    task lp_finish; input [8*48-1:0] what; begin
+        if (bad == 0 && nc > 0) $display("LP_LOCKSTEP PASS MUT=%0d compared=%0d cycles=%0d warm=31 stimulus=%0s", MUT, nc, cyc, what);
+        else $display("LP_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d stimulus=%0s", MUT, bad, nc, what);
+        $finish; end endtask
+    `include "rtl/dsrom_sys/s81_dv/slice/landed/lepe_nh/tb_lepe_nh_loopback.vh"
 endmodule
-// GENERATED by tools/landed_parent/lp.py (reschedule): ot_s81sl_slice_lepe_nh_x with +3 edges on each of the 3 landed nets (the compiler re-schedule) -- the lockstep reference of ot_s81sl_slice_lepe_nh_x_lp
-module ot_s81sl_slice_lepe_nh_x_rsref (
-    input wire clk,
-    input wire rst_n,
-    input wire [3:0] sid,
-    input wire [1103:0] ri_w,
-    output wire [1103:0] ro_w,
-    input wire [275:0] vi,
-    output wire [275:0] vo,
-    input wire [1103:0] bi,
-    output wire [512:0] bo,
-    output wire [4*1104-1:0] xc,
-    input wire [8*70-1:0] rt,
-    output wire [15:0] ck_line,
-    output wire [1:0] ck_v,
-    output wire [15:0] ck_xc,
-    output wire [7:0] ck_rt,
-    input wire ch_b,
-    output wire [511:0] tx0,
-    output wire [511:0] tx1,
-    input wire [513:0] rx0,
-    input wire [513:0] rx1,
-    output wire [1:0] tf,
-    output wire fault
-);
-    wire [1103:0] lro, lri; wire sf;
-    wire l0v, l0r, l1v, l1r, i0v, i0r, i1v, i1r; wire [552:0] l0d, l1d, i0d, i1d; wire [2:0] f0, f1; wire [1:0] rxv;
-    wire [514:0] lrx0, lrx1;
-    wire tf0, tf1;
-    assign lrx0 = {rx0[512], rx0[513], rx0[511:0], rxv[0]};
-    assign lrx1 = {rx1[512], rx1[513], rx1[511:0], rxv[1]};
-    assign tf = {tf1, tf0};
-    wire lprs_g;  ot_pl_pad #(.W(1), .N(4)) u_lprs_g (.ck(clk), .d(rst_n), .q(lprs_g));
-    wire [1103:0] lri__rq_S, lri__rs_S;  ot_pl_pad #(.W(((1103) - (0) + 1)), .N(3)) u_lprs_0 (.ck(clk), .d(lri), .q(lri__rq_S));  assign lri__rs_S = lprs_g ? lri__rq_S : {(((1103) - (0) + 1)){1'b0}};
-    wire [1103:0] lro__rq_K, lro__rs_K;  ot_pl_pad #(.W(((1103) - (0) + 1)), .N(3)) u_lprs_1 (.ck(clk), .d(lro), .q(lro__rq_K));  assign lro__rs_K = lprs_g ? lro__rq_K : {(((1103) - (0) + 1)){1'b0}};
-    wire  sf__rq_K, sf__rs_K;  ot_pl_pad #(.W(1), .N(3)) u_lprs_2 (.ck(clk), .d(sf), .q(sf__rq_K));  assign sf__rs_K = lprs_g ? sf__rq_K : {(1){1'b0}};
-    ot_s81sl_slice u_sl (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_w), .ri_e(lri__rs_S), .ro_e(lro), .ro_w(ro_w), .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(sf));
-    dsfd_coll_lane_e u_ln0 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx(lrx0), .tx(tx0), .tf(tf0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));
-    dsfd_coll_lane_e u_ln1 (.ck(clk), .rs(rst_n), .chb(ch_b), .rx(lrx1), .tx(tx1), .tf(tf1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));
-    ot_s81sl_lep_nh u_lep (.clk(clk), .rst_n(rst_n), .ro(lro__rs_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__rs_K), .l0_f(f0), .l1_f(f1), .fault(fault));
-endmodule
-

@@ -93,13 +93,110 @@
    "S": 0,
    "K": 3
   },
+  "same_depth_forest": {
+   "regional_stages": 3,
+   "root_D_loads": 2,
+   "regions": {
+    "S": {
+     "leaves": 94,
+     "terms": [
+      "1",
+      "(((((1103) - (0) + 1))+24-1)/24)",
+      "(((((1103) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 46,
+       "first_expr": "1",
+       "chunks_expr": "(((((1103) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "1",
+       "role": "w",
+       "first_leaf": 47,
+       "chunks": 46,
+       "first_expr": "1+(((((1103) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((1103) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "2",
+       "role": "w",
+       "first_leaf": 93,
+       "chunks": 1,
+       "first_expr": "1+(((((1103) - (0) + 1))+24-1)/24)+(((((1103) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      }
+     ],
+     "branches": 3,
+     "FFs": 98,
+     "scalar_child_pad_port_uses": 1
+    },
+    "K": {
+     "leaves": 94,
+     "terms": [
+      "1",
+      "(((((1103) - (0) + 1))+24-1)/24)",
+      "(((((1103) - (0) + 1))+24-1)/24)",
+      "(((1)+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 46,
+       "first_expr": "1",
+       "chunks_expr": "(((((1103) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "1",
+       "role": "r",
+       "first_leaf": 47,
+       "chunks": 46,
+       "first_expr": "1+(((((1103) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((1103) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "2",
+       "role": "r",
+       "first_leaf": 93,
+       "chunks": 1,
+       "first_expr": "1+(((((1103) - (0) + 1))+24-1)/24)+(((((1103) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((1)+24-1)/24)"
+      }
+     ],
+     "branches": 3,
+     "FFs": 98,
+     "scalar_child_pad_port_uses": 3
+    }
+   },
+   "incremental_FFs": 190,
+   "required_rtl_sources": [
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+   ],
+   "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified."
+  },
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 11084,
+  "landing": 12998,
   "pads": 0,
-  "reset": 7
+  "reset": 197,
+  "out_regs": 2
  },
+ "out_regs": [
+  {
+   "port": "fault",
+   "stages": 2,
+   "region": "K",
+   "inst": "u_lpo_fault"
+  }
+ ],
  "communicating_region_pairs": {
   "landed": [
    "K-S"
@@ -178,6 +275,19 @@
   "max_added_edges": 0
  },
  "warnings": [],
+ "landing_implementation": {
+  "chunk_bits": 24,
+  "direct_quarter_period_timing": false,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
  "die_obligations": [
   "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
   "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
