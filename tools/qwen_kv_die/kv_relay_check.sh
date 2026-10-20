@@ -47,7 +47,7 @@ import re, sys
 v = open(sys.argv[1]).read(); t = open(sys.argv[2]).read()
 m = re.search(r"QKD_D2D_TXDP\s*=\s*\{8'd(\d+),\s*8'd(\d+),\s*8'd(\d+),\s*8'd(\d+)\}", t)
 comp = [int(x) for x in m.groups()][::-1] if m else None          # {p3,p2,p1,p0} -> [p0..p3]
-b = re.findall(r"\bqkd_d2d_static\s*#\(([^;]*?)\)\s*[A-Za-z_]\w*\s*\(", v, re.S)
+b = re.findall(r"\bqkd_d2d_static(?:_sfm)?\s*#\(([^;]*?)\)\s*[A-Za-z_]\w*\s*\(", v, re.S)   # KV-BIND4: + the sfm master
 got = []
 for prm in b:
     mm = re.search(r"\.TXDP\(\s*(?:32'h([0-9a-fA-F_]+)|(\d+))\s*\)", prm)

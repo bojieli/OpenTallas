@@ -773,9 +773,14 @@ if RST_PIN_REG:
 # KV-HEALTH 10-19 (OT_KV_RST_HOLD=273, kvsys_prep binds the qkd_rst_region_pr_h273 view only when it audits PASS, else it
 # exports 128): the health retirement reset contract (263 edges) needs HOLD 273; wrapper of _pr, same ports and straps
 RST_HOLD = int(__import__('os').environ.get('OT_KV_RST_HOLD', '128'))
+# KV-BIND4 10-19: OT_KV_RST_HOLD_CELL (kvsys_prep exports the cell whose view audited PASS) selects the native-pin
+# successor qkd_rst_region_pr_h273b (dedicated output launch flop, same ports / straps / calendar) over h273.
+RST_HOLD_CELL = __import__('os').environ.get('OT_KV_RST_HOLD_CELL', 'qkd_rst_region_pr_h273')
+if RST_HOLD_CELL not in ('qkd_rst_region_pr_h273', 'qkd_rst_region_pr_h273b'):
+    raise SystemExit('OT_KV_RST_HOLD_CELL: unknown HOLD273 reset root ' + RST_HOLD_CELL)
 if RST_PIN_REG and RST_HOLD == 273:
-    SPLIT_BINDINGS['qkd_rst_region'] = dict(SPLIT_BINDINGS['qkd_rst_region'], module='qkd_rst_region_pr_h273',
-        file='rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273.sv')
+    SPLIT_BINDINGS['qkd_rst_region'] = dict(SPLIT_BINDINGS['qkd_rst_region'], module=RST_HOLD_CELL,
+        file=f'rtl/qwen_sys/split_20261014/{RST_HOLD_CELL}.sv')
 SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
     ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
 # v1.4.4 PV16 wide pairs (die-placed children via kv_expand) behind their wires-only KV-die face qkd_pvw_die (one die word
@@ -869,6 +874,27 @@ SLICE_GAP = 21.6
 # subsystem (kv_static_boot_join.HOST_DIE_JOINS) when kv_die --split instantiates it (item 10); until then they are open.
 HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv'
 HOST_RT_MODULE = 'qkd_host_root_admission'
+# KV-BIND4-GUARD 10-19 (OT_KV_MU=1, OT_KV_HOST_MU default 1 under MU): the frame binds the MU 1 release HOST root
+# qkd_host_root_admission_mu (tools/qwen_kv_die/mu_peer/gen_host_root_mu.py; same ports + parameters, MU default 1):
+# the RTL of the CLOSED guard core qkd_hr_core_guard-mu1s-d222ef261 (u_rank.u_native = endpoint_cancel_mu, guard
+# marker FIFO on one ot_sram_1r1w_128x64_m1_p192) + the MU 1 peer core (tp8_coordinator_mu POST_UID_SLOT 1,
+# ctrl_token_service_packet_collected_mu).  0 added edges (same 4-edge FIFO prefetch; private POST decode).  The guard
+# VIEW has no die instance until the host cluster parent (qkd_hr_cluster) replaces the qkd_host_rt frame.
+HOST_RT_MU = (os.environ.get('OT_KV_MU', '0') == '1'
+              and os.environ.get('OT_KV_HOST_MU', '1') == '1')
+if HOST_RT_MU:
+    HOST_RT_FILE = 'rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv'
+    HOST_RT_MODULE = 'qkd_host_root_admission_mu'
+# KV-BIND5-OBS 10-19 (OT_KV_HOST_OBS=1, needs the MU root): the HOST root with its observation window
+# qkd_host_root_admission_obs (tools/qwen_kv_die/mu_peer/gen_host_root_obs.py from the unchanged MU root): the 43 bind-v2
+# OUTPUT_OPEN observation outputs (hc, marker, issued/landed, participant_*, program_auth_*, admission certificates, host
+# fault / abort levels) are read by qkd_host_obs_csr = the HOST's CSR window 0x1800-0x19FF on the existing AXI4-Lite
+# register path (live snapshot + sticky fault vector, fixed 3-edge reads, off every token path, 0 calendar / STATUS
+# edges).  The frame's pin groups are unchanged (none of the 43 had a frame group); no hard child changes ports.
+HOST_RT_OBS = HOST_RT_MU and os.environ.get('OT_KV_HOST_OBS', '0') == '1'
+if HOST_RT_OBS:
+    HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obs.sv'
+    HOST_RT_MODULE = 'qkd_host_root_admission_obs'
 HOST_RT_PT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'     # qkd_host_ingest_chain_pt (child of the admission root)
 HOST_RT_RENAMED = dict(host_drained_local='host_interface_idle')          # die port -> admission RTL port
 SLICE_DIE_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv'
@@ -972,8 +998,37 @@ def _ks_ntx():
     return _ks.d2d_ntx_k()
 
 
+# KV-BIND4 10-19: the KV-SRAM-D2D successor master qkd_d2d_static_sfm (ot_qwen_d2d_sfm.sv: right-sized 64x137 slot store,
+# registered RX CRC, 5-b recovery counter, first-epoch guard, 0 added cycles vs qkd_d2d_static by lockstep miter) is the
+# d2ds RTL whenever the selected view kit OT_KV_D2DS_KIT (with OT_KV_D2DS_VIEW != 0) was hardened from it (spec.json top):
+# the CLOSED qkd_d2d_static_r7w_sfm2-sfm2-1c6c02ed7 view.  Same 81 ports as qkd_d2d_static + OUTPUT rx_zero17[16:0]
+# (registered OR17 of rx_payload on the q_rx_payload edge, for the private Z17 attention receiver; declared a DUP face by
+# kv_open_tail_roles z17_dup until that receiver is hardened).  The kit's hardened params are bound exactly.
+D2DS_SFM_FILE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'
+D2DS_SFM_PARAMS = ('SAFE_RC', 'SRAMV', 'FEG')
+
+
+def d2ds_kit():
+    """(module, file, extra params) of the d2ds RTL selected by OT_KV_D2DS_KIT; qkd_d2d_static unless the kit's top is sfm"""
+    kit = os.environ.get('OT_KV_D2DS_KIT', '')
+    if os.environ.get('OT_KV_D2DS_VIEW', '0') in ('0', '', 'off') or not kit:
+        return 'qkd_d2d_static', D2DS_FILE, {}
+    sp = ROOT / 'physical/ref_tile' / kit / 'spec.json'
+    if not sp.is_file():
+        return 'qkd_d2d_static', D2DS_FILE, {}
+    spec = json.loads(sp.read_text())
+    if spec.get('top') != 'qkd_d2d_static_sfm':
+        return 'qkd_d2d_static', D2DS_FILE, {}
+    pr = spec.get('params', {})
+    miss = [k for k in D2DS_SFM_PARAMS if k not in pr]
+    if miss:
+        raise SystemExit(f'kv_die: d2ds kit {kit} (sfm) lacks hardened params {miss}')
+    return 'qkd_d2d_static_sfm', D2DS_SFM_FILE, {k: int(pr[k]) for k in D2DS_SFM_PARAMS}
+
+
 def d2ds_binding():
-    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k()),
+    mod, fil, extra = d2ds_kit()
+    return dict(module=mod, file=fil, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k(), **extra),
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
@@ -1119,7 +1174,7 @@ for _p in ('token_epoch_valid', 'program_ready', 'program_epoch', 'program_diges
 _hb['auth_lp'] = ['token_epoch_valid', 'program_ready', 'program_epoch', 'program_digest']
 BINDINGS['qkd_d2ds']['ports']['srx'] = list(SEQST_RX)
 RTL.update(qkd_seq_st=SEQST_FILE, qkd_lprg=LPRG_FILE)
-RTL.update(qkd_d2ds=D2DS_FILE)
+RTL.update(qkd_d2ds=d2ds_kit()[1])
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
 BINDINGS.update(qkd_hslice_dn=slice_die_binding())

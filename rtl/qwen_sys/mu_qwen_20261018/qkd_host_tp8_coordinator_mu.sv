@@ -5,7 +5,9 @@
 //   MU 1: the same coordinator with qkd_host_peer_coordinator_codec_mu #(MU 1) and qkd_host_coordinator_services_mu
 //         #(MU 1) (lifecycle_mu: allocator_mu + cohort_mu + terminal/POST queues; post_collector_mu).  The codec's
 //         terminal identity is the lifecycle's accepted terminal (acknowledged_*), not the latest grant.
-module qkd_host_tp8_coordinator_mu #(parameter integer MU=1)(
+//   POST_UID_SLOT (KV-BIND4-GUARD 10-19, default 0 = unchanged): passed to qkd_host_coordinator_services_mu (KV-HOST2
+//         f5cdb27df); 1 = the real-observer POST decode (checked slot UID, raw positions), used by the KV die HOST root.
+module qkd_host_tp8_coordinator_mu #(parameter integer MU=1,parameter integer POST_UID_SLOT=0)(
  input wire ck_codec,ck_lifecycle,ck_post,por_n,
  input wire[7:0]peer_rx_valid,input wire[4095:0]peer_rx_data,output wire[7:0]peer_rx_ready,
  output wire[7:0]peer_tx_valid,output wire[4095:0]peer_tx_data,input wire[7:0]peer_tx_ready,
@@ -67,7 +69,7 @@ end else begin:g_mu
  .terminal_accepted(terminal_accepted),.terminal_tag(acknowledged_tag),.terminal_gen(acknowledged_gen),.post_retired(post_retired),.terminal_released(terminal_released),.result_transport_idle(result_transport_idle),.link_reset_request(link_reset_request),.retraining_request(retraining_request),
  .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.certificate_valid(certificate_valid),.certificate(certificate),.certificate_prefix(certificate_prefix),.fault(codec_fault));
- qkd_host_coordinator_services_mu #(.MU(1)) u_lifecycle(
+ qkd_host_coordinator_services_mu #(.MU(1),.POST_UID_SLOT(POST_UID_SLOT)) u_lifecycle(
  .clk(ck_lifecycle),.ck_post(ck_post),.por_n(por_n),.warm_ready(warm_ready),
  .request_valid(token_request_valid&&request_admission),.request_ready(local_request_ready),.request_token(token_request_token),.request_position(token_request_position),.request_generation(token_request_gen),
  .grant_valid(token_grant_valid),.grant_ready(token_grant_ready),.grant_epoch(token_grant_epoch),.grant_token(token_grant_token),.grant_position(token_grant_position),.grant_generation(token_grant_gen),.grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),

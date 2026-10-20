@@ -32,12 +32,17 @@ if [ "${OT_KV_RST_PIN_REG:-1}" = 1 ]; then   # default ON (KV-KITS/NATIVE 10-18,
   # held >= 263 edges after a re-assert (source clear + plane depth + skew); qkd_rst_region_pr_h273 (9-bit hold) binds
   # when its CLOSED view audits PASS.  Absent view: HOLD128 _pr stays bound and RUN/RST_HOLD_DIAGNOSTIC marks the run.
   if [ "${OT_KV_RST_HOLD:-273}" = 273 ]; then
-    HPV=physical/ref_tile/qkd_rst_region_pr_h273/views/qkd_rst_region_pr_h273
-    if python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$HPV" --cell qkd_rst_region_pr_h273 > "$O/rst_hold_view_audit.json" 2>/dev/null; then
-      RPV=$HPV; echo "OT_KV_RST_HOLD=273: qkd_rst_region -> $HPV"
+    # KV-BIND4 10-19: the native-pin successor qkd_rst_region_pr_h273b (dedicated b launch flop; h273's pin b launched
+    # 223.8 > 220 ps) binds first when its CLOSED view audits PASS; h273 stays the fallback.
+    HPV=physical/ref_tile/qkd_rst_region_pr_h273b/views/qkd_rst_region_pr_h273b
+    HPV2=physical/ref_tile/qkd_rst_region_pr_h273/views/qkd_rst_region_pr_h273
+    if python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$HPV" --cell qkd_rst_region_pr_h273b > "$O/rst_hold_view_audit.json" 2>/dev/null; then
+      RPV=$HPV; export OT_KV_RST_HOLD_CELL=qkd_rst_region_pr_h273b; echo "OT_KV_RST_HOLD=273: qkd_rst_region -> $HPV"
+    elif python3 tools/qwen_kv_die/check_rst_pin_view.py --view "$HPV2" --cell qkd_rst_region_pr_h273 > "$O/rst_hold_view_audit.json" 2>/dev/null; then
+      RPV=$HPV2; export OT_KV_RST_HOLD_CELL=qkd_rst_region_pr_h273; echo "OT_KV_RST_HOLD=273: qkd_rst_region -> $HPV2"
     else
       export OT_KV_RST_HOLD=128
-      echo "qkd_rst_region_pr_h273 view absent / not native PASS: HOLD128 bound, health reset contract (263) UNPROVEN" > "$O/RST_HOLD_DIAGNOSTIC"
+      echo "qkd_rst_region_pr_h273b / _h273 views absent / not native PASS: HOLD128 bound, health reset contract (263) UNPROVEN" > "$O/RST_HOLD_DIAGNOSTIC"
       cat "$O/RST_HOLD_DIAGNOSTIC"
     fi
   fi

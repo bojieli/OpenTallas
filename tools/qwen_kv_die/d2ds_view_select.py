@@ -11,6 +11,9 @@ what the view was hardened at (r7v: {NTX 3, TXDP 50529304}).
                   the kit view is absent: frame (prints nothing, exit 0) -- r7v is in review / not routed yet
     mode 1     -> as auto, but an absent view FAILS (exit 2)
 A view counts as present only with the closure-record files (LEF + TT/FF libs + insertion.json).
+KV-BIND4 10-19: the view directory is views/<spec.json top>: qkd_d2d_static (r7t/r7v) or the KV-SRAM-D2D successor
+qkd_d2d_static_sfm (r7w_sfm / r7w_sfm2, +OUTPUT rx_zero17[16:0]); kv_die.d2ds_kit binds the matching RTL module with the
+kit's hardened SAFE_RC / SRAMV / FEG.  GEN9 (kvs14r) default kit: qkd_d2d_static_r7w_sfm2 (CLOSED sfm2-1c6c02ed7).
 
     python3 tools/qwen_kv_die/d2ds_view_select.py --mode auto [--kit qkd_d2d_static_r7v] [--json OUT]
 """
@@ -25,6 +28,7 @@ sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 
 DEFAULT_KIT = 'qkd_d2d_static_r7v'
 TOP = 'qkd_d2d_static'
+TOPS = ('qkd_d2d_static', 'qkd_d2d_static_sfm')
 
 
 def select(mode, kit=DEFAULT_KIT, root=ROOT, die_txdp=None, die_ntx=None):
@@ -37,15 +41,22 @@ def select(mode, kit=DEFAULT_KIT, root=ROOT, die_txdp=None, die_ntx=None):
         die_txdp, die_ntx = K.d2d_txdp_k(), K._ks_ntx()
     rec.update(die_txdp=f'0x{die_txdp:08x}', die_ntx=die_ntx)
     kd = Path(root) / 'physical/ref_tile' / kit
-    vd = kd / 'views' / TOP
-    need = [vd / f'{TOP}.lef', vd / f'{TOP}_tt.lib', vd / f'{TOP}_ff.lib', vd / 'insertion.json']
+    sp = kd / 'spec.json'
+    spec = json.loads(sp.read_text()) if sp.exists() else {}
+    top = spec.get('top', TOP)
+    if top not in TOPS:
+        rec.update(decision='FAIL', why=f'{kit} top {top} is not a KV d2ds master {TOPS}')
+        return 3, rec
+    rec.update(top=top)
+    vd = kd / 'views' / top
+    need = [vd / f'{top}.lef', vd / f'{top}_tt.lib', vd / f'{top}_ff.lib', vd / 'insertion.json']
     missing = [str(p.relative_to(root)) for p in need if not p.exists()]
     if missing:
         rec.update(decision='FRAME', why=f'no CLOSED view of {kit} on the branch (missing {missing[0]}): frame kept')
         return (2 if mode == '1' else 0), rec
-    sp = kd / 'spec.json'
-    params = json.loads(sp.read_text()).get('params', {}) if sp.exists() else {}
+    params = spec.get('params', {})
     v_txdp, v_ntx = params.get('TXDP'), params.get('NTX')
+    rec.update(view_params=params)
     rec.update(view=str(vd.relative_to(root)), view_txdp=None if v_txdp is None else f'0x{int(v_txdp):08x}', view_ntx=v_ntx)
     if v_txdp is None or int(v_txdp) != die_txdp or v_ntx is None or int(v_ntx) != die_ntx:
         rec.update(decision='FAIL', why=f'{kit} view hardened at TXDP {rec["view_txdp"]} NTX {v_ntx} != die TXDP '
