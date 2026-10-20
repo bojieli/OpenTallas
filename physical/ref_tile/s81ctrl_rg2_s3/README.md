@@ -36,3 +36,13 @@ y 0-43.2, 143.9-172.8, 273.5-324 plus the three channels.
 7 Clock: PASS (confirm at CTS) -- clk / ckh roots beside their register masses, Gray CDC, explicit ck_o_fwd master
   (b91a2773d); spread target <= 80 ps TT+FF; io_hold_margin 0.03.
 8 Schedule: PASS -- static, cycle-identical to np (same FIFO RTL; only the master changes); cycles_added 0.
+
+## Gate 1 (44fab881b, agidock128 ref_gate/s81ctrl_rg2_s3-20261019-163603): FAIL 2 -> fixed in spec
+- clock_rule: core_clk 1,390 sinks, TT/FF insertion 458.6/383.4 ps, pin-flop spread 99.7/92.8 ps > 80 (np had 42.8): the
+  H-tree leaves string across the 531 um N face and the macro clock pins share high-slew (~330 ps) leaf nets.
+  Fix: route.cts_sink {size 20, diameter 40 um, -sink_clustering_levels 2 -distance_between_buffers 40} (qkd_astk_ep precedent).
+- fill 28% < 35%: pin-bound (N 1246 / S 1321 pins over 98% of the 531 um faces) -> fill_reason.pin_bound recorded.
+- Otherwise: textbook depth 375 ps PASS, 0 x-clock violations, GRT setup repair converged positive; PNGs viewed
+  (results/rtl/s81_ctrl_rg2_s3_1019/gate1_fail/{floorplan,density}.png): 4 macros in two per-PC columns on the lattice,
+  std mass at N/S faces and macro W/E channels, full-width rows.
+- Benches (5.050): exact PASS (crossing latency 6.95/5.26 cks = np, cycle-identical), MUT_PACK FAIL errors=5910 (witness committed).

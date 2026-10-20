@@ -43,7 +43,8 @@
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
-    ]
+    ],
+    "pass_witness": "results/rtl/s81_ctrl_rg2_s3_1019/witness/rg2_exact.log"
    },
    {
     "name": "rg2_mut_rd",
@@ -54,7 +55,8 @@
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_ctrl_rg2_s3_1019/witness/rg2_mut_rd.log"
    },
    {
     "name": "rg2_mut_pack",
@@ -65,7 +67,8 @@
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_ctrl_rg2_s3_1019/witness/rg2_mut_pack.log"
    },
    {
     "name": "rg2_mut_krdy",
@@ -76,7 +79,8 @@
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_ctrl_rg2_s3_1019/witness/rg2_mut_krdy.log"
    }
   ],
   "calibrate": {

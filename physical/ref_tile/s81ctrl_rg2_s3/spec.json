@@ -105,7 +105,12 @@
   "pin_v": "M3 M5",
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 20,
+   "diameter_um": 40,
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 40"
+  }
  },
  "structural_change": "LEAD2-S81/LINK-CTRL 10-19 SAFE successor of s81ctrl_rg2_np (route NEEDS_HUMAN on generated-clock export, fixed b91a2773d; its four stock 16x546 masters had 825 contacts per 81 um W/E face = 10.19/um > 6). Four wide-pitch dual-clock 16x340 masters (same compiler, pin pitch 0.192 um = 5.12/um, 114.48x100.71) replace them; one macro column per PC under that PC's W/E pin half (PC0 x86.4, PC1 x345.6; response FIFO bottom row, request FIFO top row), outline 531.25x324 (PHY PC pitch width). RTL/schedule identical (same Gray CDC FIFO, same read/write edges); inhold/outhold off as np.",
  "job": {
@@ -123,7 +128,8 @@
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
-    ]
+    ],
+    "pass_witness": "results/rtl/s81_ctrl_rg2_s3_1019/witness/rg2_exact.log"
    },
    {
     "name": "rg2_mut_rd",
@@ -134,7 +140,8 @@
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_ctrl_rg2_s3_1019/witness/rg2_mut_rd.log"
    },
    {
     "name": "rg2_mut_pack",
@@ -145,7 +152,8 @@
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_ctrl_rg2_s3_1019/witness/rg2_mut_pack.log"
    },
    {
     "name": "rg2_mut_krdy",
@@ -156,7 +164,8 @@
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/rtl/s81_ctrl_rg2_s3_1019/witness/rg2_mut_krdy.log"
    }
   ],
   "views_to": "physical/ref_tile/s81ctrl_rg2_s3/views",
@@ -204,5 +213,8 @@
    531.25,
    324.0
   ]
+ },
+ "fill_reason": {
+  "pin_bound": "PHY-face slot: N 1246 pins over 522/531 um (98%) and S 1321 pins over 522/531 um (98%) (gate1 measured); width = PHY PC pitch 531.25, height = two 100.71 um wide-pitch SRAM rows; total fill 28% (macros 46117 + std 1197 um2)"
  }
 }
