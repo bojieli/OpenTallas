@@ -1,0 +1,8 @@
+textbook_lint: REFUSE qfd_native59_qbank cells 55,786 flops 9,236 depth 406.7 ps util None reach None um (2.0 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":1,"flops":1,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=9244 root=port:ck rule=PASS: 9,244 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: REFUSE high_fanout: net u_ot_pr_core.qe_rep[2][14]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 41 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: REFUSE high_fanout: net u_ot_pr_core.qe_rep[2][13]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 40 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: REFUSE high_fanout: net u_ot_pr_core.qe_rep[4][5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 35 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: REFUSE high_fanout: net u_ot_pr_core.qe_rep[4][4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 33 loads (0 flops, e.g. None) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+TEXTBOOK_LINT: high_fanout: net u_ot_pr_core.qe_rep[2][14]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 41 loads > 32; net u_ot_pr_core.qe_rep[2][13]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 40 loads > 32

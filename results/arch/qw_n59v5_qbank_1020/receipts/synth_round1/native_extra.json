@@ -1,0 +1,53 @@
+{
+  "schema": "codex.n59.native_mapped_census.v1",
+  "netlist_sha256": "8f879d3ae4ac10858e0d33466952116d12e78382bbbc8df498476109a1cbcc54",
+  "top": "qfd_native59_qbank",
+  "flops": 9236,
+  "macros": 8,
+  "drivers_over32": [
+    {
+      "net": "u_ot_pr_core.qe_rep[2][14]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 41,
+      "flops": 0,
+      "example": null,
+      "upstream_source_examples": [
+        "DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qe_rep[2][14]$_DFF_P_/QN"
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.qe_rep[2][13]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 40,
+      "flops": 0,
+      "example": null,
+      "upstream_source_examples": [
+        "DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qe_rep[2][13]$_DFF_P_/QN"
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.qe_rep[4][5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 35,
+      "flops": 0,
+      "example": null,
+      "upstream_source_examples": [
+        "DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qe_rep[4][5]$_DFF_P_/QN"
+      ]
+    },
+    {
+      "net": "u_ot_pr_core.qe_rep[4][4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flops": 0,
+      "example": null,
+      "upstream_source_examples": [
+        "DFFHQNx1_ASAP7_75t_R u_ot_pr_core.qe_rep[4][4]$_DFF_P_/QN"
+      ]
+    }
+  ],
+  "tied_output_bits": [],
+  "flop_families_over2048": [],
+  "limitations": [
+    "No physical reach from synthesis-only netlist",
+    "Tied output bits require functional field classification; no blanket waiver",
+    "Storage family grouping is diagnostic; RTL inventory also required",
+    "Pins: use strict textbook boundary levels and inspect actual cones; no full independent pin-clearance claim"
+  ]
+}
