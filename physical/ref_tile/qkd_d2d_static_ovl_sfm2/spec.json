@@ -358,5 +358,8 @@
   "source": "KV-SRAM-D2D lane (LEAD2-KV brief 10-19): Codex HOLD 12:48 macro face 10.2 pins/um > 6; sf/sfb gates reg-reg -16.1/-23.4/-95.5/-100.7 ps",
   "cell": "qkd_d2d_static_ovl_sfm",
   "fix": "PARALLEL FALLBACK of qkd_d2d_static_ovl_sfm (taller p288 pin face, s1 2x2 lattice slots). KV-SRAM-D2D successor of qkd_d2d_static_ovl_sf: right-sized slot store d2d_sram_1r1w_64x137_m1_r2c2_p288 x4 (64x137 = the stored width; W/E 229 pins at 0.288 um = 3.49/um, was 64x512 at 10.2/um), registered RX CRC, 5-b recovery counter, first-epoch guard (FEG 1), Z17 sideband rx_zero17; same outline / pin faces (S re-spread +17 pins)."
+ },
+ "fill_reason": {
+  "pin_bound": "pin-bound perimeter: 5,072 functional pins on full faces (gate pin demand S 2,308-2,312 pins over 470.8/475.2 um, N 1,170 over 470.8, W 1,251 over 276.3/280.8, E 333-339 over 276.3: 98-99% of every edge; S 4.9 pins/um, W 4.5/um, at the 4-5 M5-track pitch of the reviewed sf plan); the outline cannot shrink without exceeding the pin pitch. Right-sizing the slot store (64x512 -> 64x137, KV-SRAM-D2D) removed ~37k um2 of macro, so fill fell 45% -> 12-16% at the same pin-limited outline (KV-D2D-COLLECT 10-19)."
  }
 }

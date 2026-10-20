@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_d2d_static_r7w_sfm",
+ "reviewer": "coordinator claude (KV-D2D-COLLECT sub-lane of LEAD2-KV; gate PNGs floorplan/density personally viewed)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T18:40:18-07:00",
+ "gate_commit": "c2df6a4d7",
+ "geometry_sha256": "72025541e46b723aeb65069598a678f5e3b191ba3bb5c84453fecec693569907",
+ "geometry": {
+  "schema": "opentallas.ref_tile.review_geometry.v1",
+  "sha256": "72025541e46b723aeb65069598a678f5e3b191ba3bb5c84453fecec693569907",
+  "components": {
+   "outline": "8dc559b89cb02306b658db481f7467da7aac199e499edb4dea1bb8fecc3f18a0",
+   "macros": "e90264af29e77cb94b20f413563e782a65643f9f34a8bcbf219c019c4a4e3500",
+   "pins": "ffe1a65ca9a01659395d6201f2e4048c072e7b4c9098a545c90ecdcfc7b6c61a",
+   "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+  }
+ },
+ "checklist": {
+  "lattice": "PASS: 4 x p192 57.912x45.672 at (86.4,86.4)(345.6,86.4)(86.4,172.8)(345.6,172.8), two columns on the 43.2 lattice; macro W/E pin faces 5.23 pins/um (<= 6), halos 20/5.4 um",
+  "std_cell_band": "PASS: one full-width std-cell band, no islands; density moderate, peaks ~0.6 at the SE E-face clock corner and N PHY face; fill 12% WAIVED pin-bound (spec fill_reason: perimeter 98-99% full on all four faces)",
+  "pin_spread": "PASS: 5,0xx pins on full faces: S 2,308-2,312 over 470.8 um = 4.9/um, N 1,170 = 2.5/um, W 1,251 over 276.3 = 4.5/um, E 333-339; all <= 6/um",
+  "clock_entry": "PASS: E-face centre root beside the register mass; TT/FF pin-flop spread 72.7/66.2 ps (<= 80); insertion 545.1/452.4 ps (guidance, boundary matched by parent landing); 12.0k sinks",
+  "shape": "PASS: 475.2 x 280.8 (= reviewed sf outline), aspect 1.69; trial GRT overflow 0 (M2 27.24%)"
+ },
+ "timing": "TT placement RC reg->reg +87.5 ps, hold +34.7 ps; textbook PASS depth 350.1 ps, reach 102.5 um",
+ "notes": "17:01 CTS gate (0d832f6ba, results at c2df6a4d7) FAILed only 'fill' (pin-bound outline, macros right-sized 64x512->64x137); fill_reason.pin_bound recorded in spec.json (no geometry change) and the kit re-gated on that commit."
+}

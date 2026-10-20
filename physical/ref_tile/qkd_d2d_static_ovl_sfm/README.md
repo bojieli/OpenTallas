@@ -25,3 +25,12 @@ Slot store: 4 x `d2d_sram_1r1w_64x137_m1_r2c2_p192` (57.912 x 45.672, W/E 229 pi
    TT / FF pin-flop spread <= 80 ps.
 8. Schedule: PASS. 0 added cycles (lockstep miter vs the as-built end, every output every edge); the guard only acts on
    an illegal boot (fail-stop); Z17 on the existing q_rx_payload edge; static calendars, no credits / backpressure.
+
+## Gate facts (KV-D2D-COLLECT 10-19 18:45, CTS gate 0d832f6ba -> c2df6a4d7): FAIL, ABANDONED (pair winner = qkd_d2d_static_ovl_sfm2)
+
+Clock rule FAIL: TT/FF pin-flop spread 103.5/93.3 ps (> 80); insertion 572.6/476.5 ps; the late tail is on boundary pin flops
+(TT boundary mean 483.0, max 560.8 ps). Fill 12% FAIL (pin-bound, as the siblings). Timing reg->reg +85.7 ps, hold +34.5 ps, GRT
+overflow 0 (M2 27.55%). Structural cause: the two-column p192 geometry puts the 4 macros in the middle of the band (x 86.4 / 345.6,
+y 86.4 / 172.8), which splits the E-face root's flop clusters around the macros; the same netlist in the p288 s1 corner
+slots (ovl_sfm2) measures 45.8/43.6 ps. Redesign if ever needed: p192 macros moved into the corner lattice slots (s1 geometry). Not pursued:
+ovl_sfm2 covers the OVL end.

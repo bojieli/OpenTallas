@@ -27,3 +27,18 @@ Slot store: 4 x `d2d_sram_1r1w_64x137_m1_r2c2_p288` (57.912 x 67.512, W/E 229 pi
    TT / FF pin-flop spread <= 80 ps.
 8. Schedule: PASS. 0 added cycles (lockstep miter vs the as-built end, every output every edge); the guard only acts on
    an illegal boot (fail-stop); Z17 on the existing q_rx_payload edge; static calendars, no credits / backpressure.
+
+## Gate facts (KV-D2D-COLLECT 10-19 18:45, CTS gate 0d832f6ba -> c2df6a4d7, PNGs floorplan.png / density.png personally inspected)
+
+1. Pins: PASS (unchanged; reset_landing max 2 sinks on por_n / rst_n).
+2. Reach: PASS, textbook reach 102.5 um max (<= 405).
+3. Fanout: PASS, textbook PASS (census max 32).
+4. Depth: PASS, textbook depth 350.1 ps; TT placement RC reg->reg +102.5 ps, reg->out +217.4; hold +34.8 ps.
+5. Storage: PASS (right-sized 64x137 SRAMs, as above).
+6. Floorplan: PASS. 4 x p288 57.912x67.512 at (43.2,43.2)(259.2,43.2)(43.2,172.8)(259.2,172.8), s1 2x2 slots on the 43.2 lattice; macro pin faces 3.49/um; full-width std-cell band, no islands; top-level
+   faces S 4.9/um, W 4.5/um, N 2.5/um (<= 6). Fill 16% (< 35%) was the gate's only FAIL: the outline is pin-bound (every face
+   98-99% occupied) and right-sizing removed ~37k um2 of macro, so spec.json now records fill_reason.pin_bound (no geometry change).
+7. Clock: PASS. E-face centre root; TT/FF pin-flop spread 45.8/43.6 ps (<= 80); insertion 508.6/414.1 ps
+   (guidance); io_hold_margin 0.030; trial GRT overflow 0 (M2 25.81%).
+8. Schedule: PASS (0 added cycles).
+Verdict: APPROVED (gate_layout/REVIEW.json); re-gated with fill_reason, then submit_exact.

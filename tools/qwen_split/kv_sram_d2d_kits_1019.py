@@ -31,6 +31,11 @@ KITS = [('qkd_d2d_static_r7w_sfm', 'qkd_d2d_static_r7w_sf', 'qkd_d2d_static_sfm'
         ('qkd_d2d_static_ovl_sfm2', 'qkd_d2d_static_ovl_sf', 'qkd_d2d_static_ovl_sfm', 2, 1)]
 TXDP_GREP = "grep -q \"QKD_D2D_TXDP = 32'h03030416\" {RUN}/bench/%s/cal/txdp.svh"
 H = 280.8
+FILL_REASON = ("pin-bound perimeter: 5,072 functional pins on full faces (gate pin demand S 2,308-2,312 pins over 470.8/475.2 um, "
+   "N 1,170 over 470.8, W 1,251 over 276.3/280.8, E 333-339 over 276.3: 98-99% of every edge; S 4.9 pins/um, W 4.5/um, "
+   "at the 4-5 M5-track pitch of the reviewed sf plan); the outline cannot shrink without exceeding the pin pitch. "
+   "Right-sizing the slot store (64x512 -> 64x137, KV-SRAM-D2D) removed ~37k um2 of macro, so fill fell 45% -> 12-16% at "
+   "the same pin-limited outline (KV-D2D-COLLECT 10-19).")
 PIN_RE = re.compile(r'^place_pin -pin_name \{(\S+)\} -layer (\S+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{(\S+) (\S+)\}$')
 
 
@@ -153,6 +158,8 @@ def main():
                                          "sf/sfb gates reg-reg -16.1/-23.4/-95.5/-100.7 ps",
                                "cell": top, "fix": d['structural_change']}
         d.pop('safe_checklist', None)
+        # KV-D2D-COLLECT 10-19: the 17:01 CTS gates FAILed only 'fill' (12-16%): the outline is set by the full pin faces
+        d['fill_reason'] = {'pin_bound': FILL_REASON}
         j = d['job']
         j['owner'], j['branch'], j['tag'] = 'Claude:KV-SRAM-D2D 10-19', 'claude/kv-sram-d2d-1019', kit.split('_')[-1]
         j['purpose'] = (f"KV-die static D2D link end {top} (TXDP_K 0x03030416, NTX3, SAFE_RC1, SRAMV {sramv}, FEG 1): {what}. "

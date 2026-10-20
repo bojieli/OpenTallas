@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_d2d_static_ovl_sfm2",
+ "reviewer": "coordinator claude (KV-D2D-COLLECT sub-lane of LEAD2-KV; gate PNGs floorplan/density personally viewed)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T18:40:18-07:00",
+ "gate_commit": "c2df6a4d7",
+ "geometry_sha256": "f4f5ff189d7018a001b3bbd939267ee593d8229dea61879a122e1a1ea6e27755",
+ "geometry": {
+  "schema": "opentallas.ref_tile.review_geometry.v1",
+  "sha256": "f4f5ff189d7018a001b3bbd939267ee593d8229dea61879a122e1a1ea6e27755",
+  "components": {
+   "outline": "8dc559b89cb02306b658db481f7467da7aac199e499edb4dea1bb8fecc3f18a0",
+   "macros": "611e30761e2ce747ab9a07f05aa401eb50314ae71b426065a2a9d22b9e432192",
+   "pins": "55a54e786c75fdd30a1e65a7c13bc62625a8c2a1258f9d055475c1202dcbbe9f",
+   "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+  }
+ },
+ "checklist": {
+  "lattice": "PASS: 4 x p288 57.912x67.512 at (43.2,43.2)(259.2,43.2)(43.2,172.8)(259.2,172.8), s1 2x2 slots on the 43.2 lattice; macro W/E pin faces 3.49 pins/um (<= 6), halos 20/5.4 um",
+  "std_cell_band": "PASS: one full-width std-cell band, no islands; density moderate, peaks ~0.6 at the SE E-face clock corner and N PHY face; fill 16% WAIVED pin-bound (spec fill_reason: perimeter 98-99% full on all four faces)",
+  "pin_spread": "PASS: 5,0xx pins on full faces: S 2,308-2,312 over 470.8 um = 4.9/um, N 1,170 = 2.5/um, W 1,251 over 276.3 = 4.5/um, E 333-339; all <= 6/um",
+  "clock_entry": "PASS: E-face centre root beside the register mass; TT/FF pin-flop spread 45.8/43.6 ps (<= 80); insertion 508.6/414.1 ps (guidance, boundary matched by parent landing); 12.0k sinks",
+  "shape": "PASS: 475.2 x 280.8 (= reviewed sf outline), aspect 1.69; trial GRT overflow 0 (M2 25.81%)"
+ },
+ "timing": "TT placement RC reg->reg +102.5 ps, reg->out +217.4, hold +34.8 ps; textbook PASS depth 350.1 ps, reach 102.5 um",
+ "notes": "17:01 CTS gate (0d832f6ba, results at c2df6a4d7) FAILed only 'fill' (pin-bound outline, macros right-sized 64x512->64x137); fill_reason.pin_bound recorded in spec.json (no geometry change) and the kit re-gated on that commit."
+}
