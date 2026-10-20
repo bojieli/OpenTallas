@@ -1,0 +1,12 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: Pin stages are RTL, not flow: the strap inputs pc__pc / pc__cfg_stack (the 6-11 level input cones of SAFE-AUDIT-KV) land in KEPT pin registers (qkd_static_kv_pc_path_fan_nc_b pc_sr/st_sr + chain station spc/sst, 0 schedule cycles: constant die straps); every chain / boot / HBM word (i_next/i_prev/i_
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['pc__fi', 'x__est__0_1', 'pc__fo', 'pc__completion_v', 'pc__completion_we', 'pc__hcompletion_v']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list  -> FIX: use the actual RTL and mapped pin names
+GATE INFO oflop: N face 6.0 pins/um (o_next): recipe-2 hold stages take 2.01 um behind the face, the pin flops need gap 2.6 um and 12 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc8 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qkd_kvs_pc_sr3_20261019-163401.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qkd_kvs_pc_sr3_20261019-163401.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_pc_sr3-20261019-163401
+GATE FAIL textbook_execution: missing unique actual textbook verdict or failed lint execution; RC=[]  -> FIX: inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: macro_place.tcl, 6 ref_tile place: no unplaced instance of ot_sram_1r1w2c_32x64_m1 matching '*u_ecdc.down.u_mem.g_b?0?.u_m'; Error: macro_place.tcl, 6 ref_tile place: no unplaced instance of ot_sram_1r1w2c_32x64_m1 matching '*u_ecdc.down.u_mem.g_b?0?.u_m'  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+GATE WARN layout_images: the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log
+PRE_ROUTE_GATE: FAIL (2 fail, 3 warn)

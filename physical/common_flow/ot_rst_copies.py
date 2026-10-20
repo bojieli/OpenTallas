@@ -23,6 +23,14 @@ OT_RST_COPIES_MAX is set) on the FLATTENED coarse netlist and re-points the load
     keep attribute), so opt_merge cannot fold them back; the gate's textbook_lint high_fanout check on 1_2_yosys.v is the
     independent post-synthesis witness (<= max loads per copy).
 
+  * KV-PC SAFE 2026-10-19 (opt-in, every existing family unchanged): a STRIDED family (* ot_rst_split = W *) with an
+    integer value W >= 2 is N kept copies of a W-bit register laid out copy-major (copy k = bits [k*W +: W]); it is W
+    families, one per bit position i (bits i, i+W, ...), each proven and split as above;
+  * --wide (OT_RST_COPIES_WIDE=1, opt-in): the prep also maps the memories and the coarse non-register cells that read a
+    family bit on a 1-bit port into gate-level cells (memory_collect + memory_map of those memories, techmap of those
+    cells; the flow maps them the same way later), so a register copy that selects a wide mux / memory read word is
+    split per gate (a 288-bit $mux on one select bit is otherwise one indivisible load).  Function unchanged.
+
   python3 ot_rst_copies.py --json in.json --max 256 --ys out.ys --tsv out.tsv [--re REGEX] [--top NAME]
 exit 0 always when the JSON parses (groups over --max are reported as OVER lines and in the table: the gate judges them);
 exit 2 on unusable input.
@@ -71,6 +79,19 @@ def flop_width(cell):
         return 1
 
 
+def split_stride(nn):
+    """the stride W of a (* ot_rst_split = W *) family (W >= 2), else 1 (a plain marker / regexp family)"""
+    v = (nn.get("attributes") or {}).get("ot_rst_split")
+    if v is None:
+        return 1
+    s = str(v).strip()
+    try:
+        w = int(s, 2) if s and set(s) <= {"0", "1"} and len(s) >= 8 else int(s)
+    except ValueError:
+        return 1
+    return w if w >= 2 else 1
+
+
 def analyse(nl, max_loads, rx, top=None):
     tname, m = top_module(nl, top)
     cells = m.get("cells") or {}
@@ -99,6 +120,14 @@ def analyse(nl, max_loads, rx, top=None):
         if key in seen or len(set(bits)) != len(bits):
             continue
         seen.add(key)
+        w = split_stride(nn) if marked else 1
+        if w > 1:
+            if len(bits) % w or len(bits) // w < 2:
+                fams.append((wn, bits))          # malformed stride: proven (and refused) as one family
+                continue
+            for i in range(w):
+                fams.append((f"{wn}__s{i}", bits[i::w]))
+            continue
         fams.append((wn, bits))
     out = []
     for wn, bits in fams:
@@ -212,7 +241,10 @@ def split_family(wn, bits, cells, drv, loads, max_loads, m):
     return rec
 
 
-def prep(nl, rx, top=None):
+COARSE_RE = re.compile(r"^\$(?!_)(?!mem)(?!(adff|adffe|dff|dffe|sdff|sdffe|sdffce|aldff|aldffe|dffsr|dffsre|dlatch|adlatch|dlatchsr)$)")
+
+
+def prep(nl, rx, top=None, wide=False):
     """yosys commands that map every MULTI-BIT register reset (or otherwise loaded on a 1-bit port) by a copy family to
     per-bit flops, so the split can place single flops (a 64-bit $adff on one ARST bit is one indivisible load).
     Patterns: the cell names with glob characters replaced by '?' (a wider match only maps more flops per bit:
@@ -235,13 +267,36 @@ def prep(nl, rx, top=None):
             if not SAFE_NAME.match(cn):
                 continue
             pats.append(re.sub(r"[\[\]*?\\]", "?", cn))
+    fwires, mems = [], set()
+    if wide:
+        for wn, nn in sorted((m.get("netnames") or {}).items(), key=lambda x: natural(x[0])):
+            bits = nn.get("bits") or []
+            if (len(bits) >= 2 and all(isinstance(b, int) for b in bits) and set(bits) <= fam and SAFE_NAME.match(wn)
+                    and "[" not in wn and "]" not in wn):
+                fwires.append(wn)
+        for cn, c in cells.items():
+            if not c["type"].startswith("$mem"):
+                continue
+            dirs = c.get("port_directions") or {}
+            if any(dirs.get(pn) == "input" and any(isinstance(b, int) and b in fam for b in pb)
+                   for pn, pb in (c.get("connections") or {}).items()):
+                mems.add(str((c.get("parameters") or {}).get("MEMID", cn)))
     lines = [f"cd {yname(tname)}"]
     if pats:
         lines.append("select -set ot_rc_tm " + " ".join(pats))
         lines.append("techmap @ot_rc_tm")
         lines.append("select -clear")
+    if mems:
+        lines.append("memory_collect")
+        lines.append("memory_map")      # flop arrays only (the flow maps every remaining memory to flops the same way)
+    if fwires:
+        # every coarse (non-register, non-memory) cell that reads a family wire -> gate-level cells (one load per gate)
+        sel = " ".join(f"w:{w}" for w in fwires) + " %u" * (len(fwires) - 1)
+        lines.append(f"select -set ot_rc_wm {sel} %co1 t:$* %i t:$_* %d t:$*dff* %d t:$*dlatch* %d t:$mem* %d")
+        lines.append("techmap @ot_rc_wm")
+        lines.append("select -clear")
     lines.append("cd ..")
-    return len(pats), "\n".join(lines) + "\n"
+    return len(pats) + len(fwires) + len(mems), "\n".join(lines) + "\n"
 
 
 def main(argv=None):
@@ -253,6 +308,7 @@ def main(argv=None):
     ap.add_argument("--ys", required=True)
     ap.add_argument("--tsv")
     ap.add_argument("--prep", action="store_true", help="only write the per-bit techmap script (--ys)")
+    ap.add_argument("--wide", action="store_true", help="prep also maps family-read memories / coarse cells (opt-in)")
     a = ap.parse_args(argv)
     try:
         nl = json.load(open(a.json))
@@ -260,7 +316,7 @@ def main(argv=None):
         print(f"OT_RST_COPIES ERROR {ex}")
         return 2
     if a.prep:
-        n, ys = prep(nl, a.re, a.top)
+        n, ys = prep(nl, a.re, a.top, wide=a.wide)
         open(a.ys, "w").write(ys)
         print(f"OT_RST_COPIES: {n} multi-bit registers on relay copies mapped to per-bit flops")
         return 0
