@@ -669,8 +669,17 @@ endmodule
 //   so the root crossing is flop -> wire -> flop and the whole compare cone p_bg -> gt is inside one regional tree.
 //   Function = the PRE = 0 tile with clr / conv / ins_v / ins_b (and tid / tau_*) delayed one edge: 4 edges a chain hop
 //   instead of 3; tkm_static's calendar takes TLAT = 4 for this shape (SETTLE = 4 NT + 8, up-chain capture tap +1).
+// CREP (L2H-IDX e86s 2026-10-19, SAFE-DESIGN item 3; mapped census of the e86 gate: q_conv_g[1..7] each drove 2,064
+//   loads, q_conv_g[0] 1,378 -- one control flop per row group steering all 8 x 86 X bits through a 3-level priority mux):
+//   1 = the X / up_out / ovf_b update controls are SAME-EDGE KEPT COPIES, one per 29-bit slice of a position, holding the
+//   registered ONE-HOT select {hold, ins, shift, clr} (decoded once per row group from that group's own kept copy of the
+//   pin-stage p_clr / p_conv / p_v, clk root, D = the same i_* as p_*): X slice <= sh ? shift : in ? ins : hd ? X : 0.
+//   Same edges, same function as CREP 0 (cycle-identity bench tb_hgi_coll_tkm_tile_rg_crep.sv); each select copy drives
+//   one AND-OR leg per bit of its slice (<= 29 loads), each group decode feeds 24 copies.  q_*_g keep only gt / ovf_v.
+//   CMUT (bench only, CREP 1): 1 = position 13 slice 1 takes hold where it should shift (must FAIL the lockstep).
 module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT = 64, parameter integer TW = 6,
-                                 parameter integer LW = 7, parameter integer PRE = 0) (
+                                 parameter integer LW = 7, parameter integer PRE = 0,
+                                 parameter integer CREP = 0, parameter integer CMUT = 0) (
     input  wire              clk, clk_r0, clk_r1, clk_r2, clk_r3,
     input  wire [TW-1:0]     tid,
     input  wire              clr, conv,
@@ -779,6 +788,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             for (integer j = 0; j < 4; j = j + 1)
                 gt[gp][j] <= q_clr_g[gp / GP] ? p_bg[gp / GP][EW*j + EW - 1] : gn[gp][j];
     end
+    if (CREP == 0) begin : g_upd
     for (gp = 0; gp < PT; gp = gp + 1) begin : g_xr
         always @(posedge ckr[rg(gp / GP)]) begin
             if (q_clr_g[gp / GP]) X[gp] <= {EW{1'b0}};
@@ -797,6 +807,57 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             for (integer s_ = 0; s_ < 4; s_ = s_ + 1) ovf_b[EW*s_ +: EW] <= ins[PT + s_];
             ovf_v <= ins[PT][EW-1] | ins[PT + 1][EW-1] | ins[PT + 2][EW-1] | ins[PT + 3][EW-1];
         end else ovf_v <= 1'b0;
+    end
+    end else begin : g_crep
+    // ---- CREP 1: per-group kept copies of the pin-stage controls, decoded once, registered as per-slice one-hot copies
+    localparam integer XS = 29;                         // bits per control slice
+    localparam integer NXS = (EW + XS - 1) / XS;        // slices per position
+    localparam integer NUS = (4 * EW + XS - 1) / XS;    // slices of up_out / ovf_b
+    (* keep *) reg pc_clr [0:NGR-1];
+    (* keep *) reg pc_conv [0:NGR-1];
+    (* keep *) reg pc_v [0:NGR-1];
+    wire [3:0] dsel [0:NGR-1];                          // {hold, ins, shift, clr} of the NEXT edge, one-hot
+    for (gg = 0; gg < NGR; gg = gg + 1) begin : g_pc
+        always @(posedge clk) begin pc_clr[gg] <= i_clr; pc_conv[gg] <= i_conv; pc_v[gg] <= i_v; end
+        assign dsel[gg] = {!pc_clr[gg] && !pc_conv[gg] && !pc_v[gg], !pc_clr[gg] && !pc_conv[gg] && pc_v[gg],
+                           !pc_clr[gg] && pc_conv[gg], pc_clr[gg]};
+    end
+    for (gp = 0; gp < PT; gp = gp + 1) begin : g_xr
+        wire [EW-1:0] xa = (gp < PT - 4) ? X[(gp < PT - 4) ? gp + 4 : 0] : up_in[EW*((gp >= PT - 4) ? gp - (PT - 4) : 0) +: EW];
+        wire [EW-1:0] xn;
+        always @(posedge ckr[rg(gp / GP)]) X[gp] <= xn;
+        for (gj = 0; gj < NXS; gj = gj + 1) begin : g_s
+            localparam integer LO = gj * XS;
+            localparam integer W = (EW - LO < XS) ? EW - LO : XS;
+            (* keep *) reg [3:0] m;                     // {hold, ins, shift, clr}
+            always @(posedge ckr[rg(gp / GP)])
+                m <= (CMUT == 1 && gp == 13 && gj == 1) ? {dsel[gp / GP][1] | dsel[gp / GP][3], dsel[gp / GP][2], 1'b0, dsel[gp / GP][0]}
+                                                         : dsel[gp / GP];
+            assign xn[LO +: W] = ({W{m[1]}} & xa[LO +: W]) | ({W{m[2]}} & ins[gp][LO +: W]) | ({W{m[3]}} & X[gp][LO +: W]);
+        end
+    end
+    wire [4*EW-1:0] ua, ub, un, on;
+    always @(posedge ckr[rg(0)]) up_out <= un;
+    always @(posedge ckr[rg(NGR - 1)]) ovf_b <= on;
+    wire [4*EW-1:0] oi;
+    for (gk = 0; gk < 4; gk = gk + 1) begin : g_ua
+        assign ua[EW*gk +: EW] = X[4 + gk]; assign ub[EW*gk +: EW] = ins[gk]; assign oi[EW*gk +: EW] = ins[PT + gk];
+    end
+    for (gj = 0; gj < NUS; gj = gj + 1) begin : g_us
+        localparam integer LO = gj * XS;
+        localparam integer W = (4 * EW - LO < XS) ? 4 * EW - LO : XS;
+        (* keep *) reg [3:0] mu;                        // up_out: group 0 select
+        (* keep *) reg mo;                              // ovf_b: last group's "ins" select (clr / conv / idle hold ovf_b)
+        always @(posedge ckr[rg(0)]) mu <= dsel[0];
+        always @(posedge ckr[rg(NGR - 1)]) mo <= dsel[NGR - 1][2];
+        assign un[LO +: W] = ({W{mu[1]}} & ua[LO +: W]) | ({W{mu[2]}} & ub[LO +: W]) | ({W{mu[3]}} & up_out[LO +: W]);
+        assign on[LO +: W] = mo ? oi[LO +: W] : ovf_b[LO +: W];
+    end
+    always @(posedge ckr[rg(NGR - 1)]) begin : ovo
+        if (q_clr_g[NGR - 1] || q_conv_g[NGR - 1]) ovf_v <= 1'b0;
+        else if (q_v_g[NGR - 1]) ovf_v <= ins[PT][EW-1] | ins[PT + 1][EW-1] | ins[PT + 2][EW-1] | ins[PT + 3][EW-1];
+        else ovf_v <= 1'b0;
+    end
     end
     always @(posedge clk) begin : cor
         busy <= p_v || q_v || ovf_v;
