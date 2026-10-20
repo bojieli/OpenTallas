@@ -1313,7 +1313,10 @@ class Parent:
         L.append(f"    {top_lp} #({(pv + ', ') if pv else ''}.MUT(MUT)) u_lp (" + ", ".join(lc) + ");")
         L.append("    function [31:0] rnd; input integer k; rnd = $urandom; endfunction")
         if S.get("tb_stimulus"):
-            return self.tb_scripted(L, outs, t, warm, sticky, W)
+            # L2H-IDXSEL s3 10-20: a scripted bench of a RESCHEDULE parent needs the <top>_rsref reference module too
+            # (it was emitted only on the random-stimulus path: MODMISSING ot_hidx_s3_flat_rsref)
+            txt = self.tb_scripted(L, outs, t, warm, sticky, W)
+            return txt + ((self.rsref(P) + "\n") if P.get("resched") else "")
         L.append("    integer cyc, nc, bad;")
         L.append("    initial begin")
         L.append("        nc = 0; bad = 0;")
