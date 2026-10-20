@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hidx_sel_s3d_a",
- "verdict": "PASS",
- "generated": "2026-10-20T02:58:08-0700",
- "host": "ot-epyc5",
+ "verdict": "FAIL",
+ "generated": "2026-10-20T04:09:42-0700",
+ "host": "ot-epyc7",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "da849b068835101810d10b50287b959e2a1f77b2",
+  "start_commit": "3e1881e31e53a58c1a5d0c024502b630c0c0ddd7",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,8 +25,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "c25a5ea51208f2759d371a3130680ebd7ef810e701168af4a3fc7cab8a615ee8",
-  "manifest_sha256": "0ad78f095e52391b84e810b127bdd01452cae13f282110d1e9c1bae153f045c1",
+  "archive_sha256": "5a2914f1d781844103a85ed020e676ea0e860a48c5f9408b671d7f30b2183aba",
+  "manifest_sha256": "d4d8f618863d4647545162861a03f823586b2d9fa83a5c959ebfe6df4b1c5bec",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17141,6 +17141,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "physical/ref_tile/hidx_sel_s3d_a/README.md",
+    "kind": "file",
+    "sha256": "7fc99b6536f45efdb9abaab86dcf7bd652f6d622ed107b67df731b5499d831af",
+    "git_blob": "4093c2e28e2632c879a28f29f282edf29dfef545",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "physical/ref_tile/hidx_sel_s3d_a/clock.sdc",
     "kind": "file",
     "sha256": "516b1dcfeec29526dc222771e5cb266d6241288cf89ab90077e215e6e93aadde",
@@ -17159,8 +17167,8 @@
    {
     "path": "physical/ref_tile/hidx_sel_s3d_a/job.json",
     "kind": "file",
-    "sha256": "a1f6f36956f678f691611e9ed67f187cb66763678868226bf72f29c9e3051386",
-    "git_blob": "759d2cc4f041b46750a126579bd4c56d0320b24f",
+    "sha256": "cc7a4d316b3759923b94e3a1271b64d666bf12be5eb3b0edd5eb15bf15833bee",
+    "git_blob": "8483538117563fc8ab5e59bf9f51a4ab7dd59ba3",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17305,102 +17313,6 @@
     "kind": "file",
     "sha256": "6c8d60d1f1d6a9b91a8a6a39015fe94811a14fb5f59f7bba17b0934678c68b71",
     "git_blob": "c6d03ec73c205c77b8c219a5dbc0d0d998ed7142",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/ot_fwd_link_stage.sv",
-    "kind": "file",
-    "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
-    "git_blob": "b5268604562a28f049651ab0bbe177765cf6aa79",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/ot_link_credit.sv",
-    "kind": "file",
-    "sha256": "6e5e8c9aea879aff955f58a93b3e8dc4346ee462fb2feece12ed29c8545a18e7",
-    "git_blob": "ac6d7eec2349422847e2f7a81b29c7f45ed5db07",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/ot_meso_fifo.sv",
-    "kind": "file",
-    "sha256": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85",
-    "git_blob": "4ee0d3089ec9f96269358414d5a6c8c3959e69ef",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/ot_prefix.sv",
-    "kind": "file",
-    "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
-    "git_blob": "d4209a25b92ff34723ac469acf7915f77cae8992",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/ot_ratio_cdc_fifo.sv",
-    "kind": "file",
-    "sha256": "056f400898f3c1d669b9ba7a17083e63a39da980d0d4647a5ec96b11ba03300f",
-    "git_blob": "522cd853ac65919267ae4be8e880ec2296e0b764",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/ot_sc_pfifo.sv",
-    "kind": "file",
-    "sha256": "099c0199654933daf4920f20ffea3fba41fdb7a7ea8fec0ed7a90c0c2482712c",
-    "git_blob": "f577ba36b3c6d20d60be84d5c0a1e8fad97494c5",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/ot_secded.sv",
-    "kind": "file",
-    "sha256": "215493c0a7238ac48d26d888403c03c1a3d7bb1c822178e9df3863e21237b35e",
-    "git_blob": "466d55d1f00ede5667ff9eff38334c701a7f0aa5",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/ot_secded_cols.svh",
-    "kind": "file",
-    "sha256": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
-    "git_blob": "447f5dac8b23a62bc31187cc13662cfb5f23502a",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/ot_secded_dec_dp.sv",
-    "kind": "file",
-    "sha256": "ca99060a11aaa3f9fe3b39e06fb8ac316e9abc3341eb167844db7f058f5e6048",
-    "git_blob": "6a652a56352bcdec9bd66251d679282df7f2c8b3",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/test/ratio_cdc_fifo_eq/gold_ot_ratio_cdc_fifo_6fe9f807d.sv",
-    "kind": "file",
-    "sha256": "d51213c4874132b97e3e660b4e1611e92886f539c50caef63644f866b3b9d88b",
-    "git_blob": "33787359617ccc55234e6bffb1b61bd1fd33c46d",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/test/ratio_cdc_fifo_eq/run_eq.sh",
-    "kind": "file",
-    "sha256": "9928563242e6b7cfa8142228ba3a81293eccacaf8aacdb597ac3c3d999af0f9e",
-    "git_blob": "0658c8ce5c78154f8a6481c8b62c6b3ca92d2d3f",
-    "source": "working_tree",
-    "matches_provenance_commit": true
-   },
-   {
-    "path": "rtl/common/test/ratio_cdc_fifo_eq/tb_eq.sv",
-    "kind": "file",
-    "sha256": "8e525450a3973f8532924b13a68786e4fe002153cc17743bb5de8303a5b83a32",
-    "git_blob": "bd5559ee27d5566bcc3c5332ef33d8ecb95de07c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17935,8 +17847,8 @@
    {
     "path": "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv",
     "kind": "file",
-    "sha256": "a84de21804940b9bc5c66fe9f3d32bdd6b27f94d506c625105a3d264d5fc9bc3",
-    "git_blob": "cdc306691426b02b217c65fea4ac45a38336c63a",
+    "sha256": "998c7ed71087f5378bad9090aee290e7fba9e9a18287ba39bedf74e01216f90e",
+    "git_blob": "ae21da129bdecb04fc9a4ab3630d950826074d6d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -109119,8 +109031,8 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 121703089,
-   "unpacked_bytes": 691777536,
+   "archive_bytes": 121672559,
+   "unpacked_bytes": 691609600,
    "pick_gb": 22,
    "runtime_gb": 22
   },
@@ -109534,7 +109446,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 400,
+   "count": 401,
    "paths": [
     "physical/common_flow/anchor_row_packing.tcl",
     "physical/common_flow/clock_family.tcl",
@@ -109556,6 +109468,7 @@
     "physical/qwen_die_masters/pre_cts_skew.tcl",
     "physical/qwen_die_masters/pre_ref_skew.tcl",
     "physical/qwen_die_masters/repair_budget.tcl",
+    "physical/ref_tile/hidx_sel_s3d_a/README.md",
     "physical/ref_tile/hidx_sel_s3d_a/clock.sdc",
     "physical/ref_tile/hidx_sel_s3d_a/floorplan.json",
     "physical/ref_tile/hidx_sel_s3d_a/kit.env",
@@ -109958,6 +109871,7 @@
     "physical/qwen_die_masters/pre_cts_skew.tcl": "e845548e8349af78b8865a971e034e8666ee720501ebe83d9c2a9bf54528f8f6",
     "physical/qwen_die_masters/pre_ref_skew.tcl": "bf072d5f81136a555216d51947e242ef665f1e25fd5d8eb862de22eedc18d1dc",
     "physical/qwen_die_masters/repair_budget.tcl": "e4337df071032ad4326542391a7745a487b9f97975e65f1ff8cd51a5306c2692",
+    "physical/ref_tile/hidx_sel_s3d_a/README.md": "7fc99b6536f45efdb9abaab86dcf7bd652f6d622ed107b67df731b5499d831af",
     "physical/ref_tile/hidx_sel_s3d_a/clock.sdc": "516b1dcfeec29526dc222771e5cb266d6241288cf89ab90077e215e6e93aadde",
     "physical/ref_tile/hidx_sel_s3d_a/floorplan.json": "a8675148d202377d501b344172f3fc7966805bc4c5064a0b1d40dc0f114ce834",
     "physical/ref_tile/hidx_sel_s3d_a/kit.env": "d7b46324c61fead7abfe593a065f037f2fe0fb79aae570be9b99b305250b82ca",
@@ -110009,7 +109923,7 @@
     "rtl/hbm_accel/index/sel_s3/ot_hbm_idx_selector_s3.sv": "912065d21b78aecc48f81244432cd10e91e422a116a94fc6a2513d70a6b535ec",
     "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv": "9f9ca973102d2dc88532cabbb4eedf3013e33d8e096a55076614c6cc5d0d1fc5",
     "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_flat.sv": "adbe3e8e60dda80a69acd72b249757bafe6f1de98898f60bbd216aef9f78e9a4",
-    "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv": "a84de21804940b9bc5c66fe9f3d32bdd6b27f94d506c625105a3d264d5fc9bc3",
+    "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv": "998c7ed71087f5378bad9090aee290e7fba9e9a18287ba39bedf74e01216f90e",
     "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
     "rtl/lib/ot_cdc_mailbox.sv": "f3fecaea6089477d6349144d76406e5dbd90740e127067301c352c3ebdbe2e76",
     "rtl/lib/ot_crc16_ccitt.sv": "bc70fe269d5736df24a90e738a41ceb6dd833e161b7f7121161090cf43071f3c",
@@ -110339,23 +110253,29 @@
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa",
     "tools/w19_payload_loader.py": "ea11be4101495c66a04cc7a4cbb1b88090c66f96eaba5ae9787c838e64ea26ca"
    },
-   "digest": "b1bd7e69c7b3a6a7c9e44ab1d8679898581ab5da1f2bbdb18f56fb3156e250bb"
+   "digest": "b478aee259a8015a5646a550cd1a6df78e68c417a79e84d201a7f2ec5ecd1a53"
   },
-  "captured": "2026-10-20T02:55:41-0700",
+  "captured": "2026-10-20T04:02:05-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hidx_sel_s3d_a/signoff.sdc"
   },
-  "remote_script_sha256": "35e22735249b1d5c2a1287e36ed4eb1a90ea42ac54005ef8f7f9882eb9878b12",
+  "remote_script_sha256": "4f47e55842e3fcda2283117de98586de4f9bae4e6f6789e317287855ffc1973b",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc5",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3d_a-20261020-025513",
+  "remote_host": "ot-epyc7",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3d_a-20261020-040139",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
    "GATE_TOOL_CTS_MACRO_CLUSTER="
-  ]
+  ],
+  "recovery": {
+   "kind": "full_original_snapshot_verified",
+   "log_sha256": "fb6aeebc73a84091f6e4959ed714f2c03ff3845110bca937cc86afaa0a4be663",
+   "staged_root": "/srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3d_a-20261020-040139/src",
+   "qualification": "original_source_only_not_current_HEAD"
+  }
  },
  "clock": {
   "max_root_sinks": 466,
@@ -110420,58 +110340,14 @@
   "text": "466 sinks on the largest root; measured TT insertion 102.8 ps, FF insertion 77.7 ps, TT pin-flop spread 5.4 ps, FF pin-flop spread 4.9 ps (spread <= 80 ps)",
   "other_roots": []
  },
- "items": [],
- "trial_route": {
-  "schema": "opentallas.ref_tile.trial_route.v1",
-  "overflow": 0,
-  "kind": "tile",
-  "skip_incremental_repair": true,
-  "rc": "0",
-  "grt_s": 9,
-  "layers": [
-   {
-    "layer": "M1",
-    "capacity": 0,
-    "usage": 0,
-    "pct": 0.0,
-    "overflow": 0
-   },
-   {
-    "layer": "M2",
-    "capacity": 24187,
-    "usage": 6722,
-    "pct": 27.79,
-    "overflow": 0
-   },
-   {
-    "layer": "M3",
-    "capacity": 29190,
-    "usage": 6740,
-    "pct": 23.09,
-    "overflow": 0
-   },
-   {
-    "layer": "M4",
-    "capacity": 22392,
-    "usage": 1470,
-    "pct": 6.56,
-    "overflow": 0
-   },
-   {
-    "layer": "M5",
-    "capacity": 21629,
-    "usage": 721,
-    "pct": 3.33,
-    "overflow": 0
-   }
-  ],
-  "worst_layer_usage": [
-   "M2",
-   27.79
-  ],
-  "hotspot": null,
-  "congestion_png": null
- },
+ "items": [
+  {
+   "severity": "FAIL",
+   "check": "source_binding",
+   "message": "gate-executed daemon overlay changed: tools/ref_tile/native_census.py, tools/ref_tile/native_census.tcl, tools/ref_tile/ref_route.sh [blob unknown]",
+   "fix": "regenerate a fresh gate for the changed route source/tools"
+  }
+ ],
  "reset_landing": {
   "max_sinks": 2,
   "ports": [

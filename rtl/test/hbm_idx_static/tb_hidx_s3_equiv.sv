@@ -8,11 +8,12 @@ module tb_hidx_s3_equiv;
  parameter integer DMUT=0;        // quadrant mutant on the new design (1, 3, 5)
  parameter integer CMUT=0;        // ctl mutant on the new design (6)
  parameter integer CYC=200000;
+ parameter integer FAST_COUNT=0;
  reg clk=0;always #1 clk=~clk;
  reg rst_n=0;
  reg [13:0] cw;reg [15:0] thr;reg [13:0] ties;reg [591:0] in_line;
  wire [24:0] ret_n,ret_r;wire qf_n,qf_r,sv_n,sv_r;wire [591:0] sl_n,sl_r;
- ot_hidx_s3_q #(.DMUT(DMUT)) u_n(.clk(clk),.rst_n(rst_n),.cw(cw),.thr(thr),.ties(ties),.in_line(in_line),
+ ot_hidx_s3_q #(.DMUT(DMUT),.FAST_COUNT(FAST_COUNT)) u_n(.clk(clk),.rst_n(rst_n),.cw(cw),.thr(thr),.ties(ties),.in_line(in_line),
   .ret(ret_n),.qfault_o(qf_n),.selected_v_o(sv_n),.selected_line_o(sl_n));
  ot_hidx_s3_q_ref #(.DMUT(0)) u_r(.clk(clk),.rst_n(rst_n),.cw(cw),.thr(thr),.ties(ties),.in_line(in_line),
   .ret(ret_r),.qfault_o(qf_r),.selected_v_o(sv_r),.selected_line_o(sl_r));
@@ -25,6 +26,10 @@ module tb_hidx_s3_equiv;
  ot_hidx_s3_ctl_ref #(.DMUT(0)) c_r(.clk(clk),.rst_n(rst_n),.op(op),.pass(pass),.addr(addr),.k(k),.cw(ccw_r),.thr(cthr_r),
   .ties_0(ct_r[0]),.ties_1(ct_r[1]),.ties_2(ct_r[2]),.ties_3(ct_r[3]),.ret_0(rq[0]),.ret_1(rq[1]),.ret_2(rq[2]),.ret_3(rq[3]),
   .qf_0(qf[0]),.qf_1(qf[1]),.qf_2(qf[2]),.qf_3(qf[3]),.fault(cf_r));
+ // Exact recurrence observation catches arithmetic mutations even before a sticky
+ // schedule fault reaches the public port. Both state words retain the same reset.
+ always @(negedge clk) if(FAST_COUNT&&rst_n&&u_n.selected!==u_r.selected)
+  $fatal(1,"S3_FAST_COUNT_MISMATCH new=%h ref=%h",u_n.selected,u_r.selected);
  function automatic [3:0] rop(input integer r);
   integer x;x=r%100;
   if(x<18)rop=0;else if(x<38)rop=2;else if(x<48)rop=4;else if(x<78)rop=6;else if(x<83)rop=1;else if(x<88)rop=3;

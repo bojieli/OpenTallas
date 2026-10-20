@@ -54,7 +54,19 @@ module ot_hidx_s3_pri(input wire [15:0] v,output wire [15:0] oh,output wire any)
  end
  assign any=|v;
 endmodule
-module ot_hidx_s3_q #(parameter integer DMUT=0)(
+// Opt-in exact counter recurrence: the high nine bits consume a parallel carry prefix.
+// No pipeline edge, reset, schedule, or rounding change. Keep hierarchy prevents ABC
+// recombining the prefix with the upstream dense-pack count into one long adder.
+module ot_hidx_s3_acc14 #(parameter integer MUT=0)(input wire [13:0] a,input wire [4:0] b,output wire [13:0] y);
+ wire [5:0] lo={1'b0,a[4:0]}+{1'b0,b};
+ wire carry=lo[5]^(MUT!=0);
+ assign y[4:0]=lo[4:0];
+ for(genvar i=5;i<14;i=i+1)begin:g_hi
+  if(i==5)assign y[i]=a[i]^carry;
+  else assign y[i]=a[i]^(carry&&(&a[i-1:5]));
+ end
+endmodule
+module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0)(
  input wire clk,
  input wire rst_n,
  input wire [13:0] cw,                 // {addr[7:0], pass[1:0], op[3:0]} from the ctl tile (landed)
@@ -435,6 +447,13 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  end
  // ---------------- control registers (reset) ----------------
  reg [5:0] wp;reg [13:0] selected;reg [7:0] hz;reg qfault;reg [10:0] rtag;
+ wire [13:0] selected_next;
+ generate if(FAST_COUNT)begin:g_fast_count
+  ot_hidx_s3_acc14 #(.MUT(DMUT==7)) u_sum(.a(selected),.b(c_cnt[0]),.y(selected_next));
+ end else begin:g_original_count
+  assign selected_next=selected+14'(c_cnt[0]);
+ end endgenerate
+
  wire wr_pk=s4v_f[4]&&nf_q[4]>=16;     // pack write (master replica)
  wire wr_fl=op7f[4]&&fr_q[4]!=0;       // op7 flush of a partial line
  always @(posedge clk or negedge rr[0])begin
@@ -469,7 +488,7 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  always @(posedge clk)if(wr_pk||wr_fl)wa_r<=wp;
  always @(posedge clk or negedge rr[5])begin
   if(!rr[5])selected<=0;
-  else if(s3v_b)selected<=selected+14'(c_cnt[0]);
+  else if(s3v_b)selected<=selected_next;
   else if(op1s)selected<=0;
  end
  always @(posedge clk or negedge rr[4])begin
