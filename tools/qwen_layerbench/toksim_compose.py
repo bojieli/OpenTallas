@@ -48,7 +48,18 @@ def stage_grade(name, g):
     return g['dv']
 
 
+def set_dv_ages(ages):
+    """inputs dv.ages = {slice, vec, stn} repo-relative paths of the DV family ages MEASURED on the release slice RTL
+    (TOKSIM-QW/STG gen3 calibrations); they replace the committed qlb_c4/qlb_c4b ages for every lowering."""
+    if not ages:
+        return
+    L.D.load_ages.__defaults__ = (ages['slice'],)
+    L.V.load_ages.__defaults__ = (ages['vec'],)
+    L.M.STN_AGES = ages['stn']
+
+
 def compose(inp):
+    set_dv_ages(inp['dv'].get('ages'))
     tm = {k: dict(v, far=inp['tile']['far']) for k, v in inp['tile']['ops'].items()}
     q8 = inp['allreduce'].get('qtp8')
     att = inp['attention']['round_trip_plan_cycles']

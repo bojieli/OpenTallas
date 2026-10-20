@@ -8,8 +8,14 @@
   "source": "results/arch/token_path_1018/qwen_rom.json price_of_record (10-13 6,835-cycle production layer)"
  },
  "dv": {
-  "grade": "DIAG",
-  "source": "DV family ages vec_ages/stn_ages/slice_ages (qlb_c4b/qlb_c4 benches, Verilator 5.050); realstg real-L0/L1 P8191 stages 14/14 bit-exact (claude/qw-realstg-1019 2cdba303d). 7 of 22 build sources differ from qw-gen3 -> TOKSIM-QW/STG re-runs on gen3"
+  "grade": "REL",
+  "ages": {
+   "slice": "results/token_pass/measured_qwen_1019/stg/rel/slice_ages.json",
+   "vec": "results/token_pass/measured_qwen_1019/stg/rel/vec_ages.json",
+   "stn": "results/token_pass/measured_qwen_1019/stg/rel/stn_ages.json"
+  },
+  "source": "TOKSIM-QW/STG claude/toksim-qw-stg-1019 21bd29268 results/token_pass/measured_qwen_1019/stg/record.json: gen3 221cf90b7 (31 build sources identical), tb_qfd_dv2 N12, Verilator 5.050, ages re-derived by the slice/vec/mat calibrations at the RELEASE slice kit params (SU_LT 1, MU_NU 4); 16/16 stages PASS (resid/qk/silu/qkv/gu/od L0+L1, lm, emb) on real P8191 operands, 8/8 mutants FAIL. Base params (MU_NU 1, SU_LT 0) reproduce the committed qlb ages exactly; rel adds +21 edges per vector family (SiLU +67, d2d rs +46).",
+  "replaces": "DIAG: qlb_c4/qlb_c4b ages on pre-gen3 slice RTL"
  },
  "tile": {
   "grade": "REL",
@@ -45,7 +51,7 @@
  },
  "attn_return": {
   "grade": "DIAG",
-  "source": "QW-ATTNRET measured 98-edge attention-return family (claude/qw-attnret-1019 1ef2c2df6, qlb slice RTL)"
+  "source": "QW-ATTNRET measured 98-edge attention-return span (claude/qw-attnret-1019 1ef2c2df6, pre-gen3 slice RTL). The attn family has NO gen3 bench (dv_lower_vec_bench modes = resid/qk/silu only); its compiled span is re-lowered on the REL gen3 ages (composition gap line), measured span stays DIAG until an attn bench runs on gen3"
  },
  "allreduce": {
   "grade": "REL",
@@ -65,7 +71,7 @@
  "head": {
   "grade": "PRICED",
   "cycles": 3101,
-  "source": "token_path_compiled head.lm_head 3,101 (ctlm head plan); STG lm/amax bench on gen3 pending"
+  "source": "token_path_compiled head.lm_head 3,101 (ctlm head plan); function REL: STG lm (AMAX gather 26/26) + emb (4096/4096) PASS on gen3, amax_local / emb_late mutants FAIL; the benches give no head span -> cycles stay PRICED"
  },
  "embed_fetch": {
   "grade": "PRICED",
