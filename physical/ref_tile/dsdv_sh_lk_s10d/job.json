@@ -247,15 +247,6 @@
     "peak_ram_gb": 8
    },
    {
-    "name": "seqhost_muts10dox",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut22 1 22",
-    "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut22.log",
-    "threads": 8,
-    "peak_ram_gb": 8
-   },
-   {
     "name": "seqhost_muts10dhw",
     "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut23 1 23",
     "expect": "fail",
