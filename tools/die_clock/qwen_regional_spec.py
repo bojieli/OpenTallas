@@ -38,6 +38,12 @@ def main():
                     '(GAP root pairs + land_owed src/dst roots) to --neighbour-budget at TT and FF (measured trim, '
                     'targets only rise): region insertion matched along every unlanded crossing')
     ap.add_argument('--neighbour-budget', type=float, default=60.0)
+    ap.add_argument('--feed', help='QW-DIECLK4: the clock FEED root (qfd_ckbump pll_ck -> qfd_clkrx pll_fwd, rN: 2735 um '
+                    'unrepeated, skipped by die_repeaters as a clock net): built as its own buffered safe tree "feed" '
+                    '(one sink: the clk_rx entry), so the reach check covers it')
+    ap.add_argument('--spine-geometric', action='store_true', help='QW-DIECLK4: spine merge points placed on the wire '
+                    "where the region trees' model insertions meet (balance \"geometric\"), NEVER a pad: no global "
+                    'balance target, only geometry; residual phase is absorbed by the landings (L5 window)')
     ap.add_argument('--balance-spine', action='store_true', help='QW-DIECLK3: the spine merge compensates each region '
                     "tree's model insertion (spine.balance true, pads allowed) so region entries meet at their flops")
     a = ap.parse_args()
@@ -54,7 +60,12 @@ def main():
     if a.safe_tree:
         sp['safe_tree'] = True
     if not a.ideal:
-        sp['spine'] = dict(source=src, period=a.period, balance=bool(a.balance_spine))
+        sp['spine'] = dict(source=src, period=a.period,
+                           balance='geometric' if a.spine_geometric and not a.balance_spine else bool(a.balance_spine))
+    if a.feed:
+        if any(t['root'] == a.feed for t in sp['trees']):
+            raise SystemExit(f'feed root {a.feed} already a tree root')
+        sp['trees'].append(dict(name='feed', root=a.feed, period=a.period, domain='feed', select='all'))
     lp = json.load(open(a.pairs))
     owed = lp.get('land_owed', [])
     nb = set()
@@ -85,7 +96,8 @@ def main():
     print('QCLK_REGIONAL_SPEC', 'ideal entries' if a.ideal else f'forwarded spine {src} balance=false', 'trees',
           len(sp['trees']), 'stream', len(stream), 'land_owed links', len(owed), 'bits', sum(o['bits'] for o in owed),
           'bus classes', len(by), 'grid_center', bool(a.grid_center), 'safe_tree', bool(a.safe_tree),
-          'neighbour_pairs', len(nb), 'balance_spine', bool(a.balance_spine))
+          'neighbour_pairs', len(nb), 'balance_spine', bool(a.balance_spine), 'spine_geometric', bool(a.spine_geometric),
+          'feed', a.feed or 'none')
 
 
 if __name__ == '__main__':

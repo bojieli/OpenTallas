@@ -234,7 +234,13 @@ fi
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
 if [ -s $C/fwd_lanes.json ] && [ "${OT_FWD_LAND_DUMP:-1}" = 1 ]; then
   LG=(); for c in tt ff; do [ -s $R/sta_${DIE}_$c/grt_$c.log ] && LG+=($R/sta_${DIE}_$c/grt_$c.log); done
-  [ ${#LG[@]} -gt 0 ] && say "LAND PLAN: $(python3 $SRC/tools/qwen_split/fwd_land_plan.py plan --lanes $C/fwd_lanes.json --logs "${LG[@]}" --out $R/land_plan.json 2>&1 | tail -1)"
+  [ ${#LG[@]} -gt 0 ] && say "LAND PLAN: $(python3 $SRC/tools/qwen_split/fwd_land_plan.py plan --lanes $C/fwd_lanes.json --logs "${LG[@]}" --out $R/land_plan.json ${OT_LAND_D_AUTO:+--D-auto $OT_LAND_D_AUTO --hold-margin ${OT_LAND_HOLD_MARGIN:-25}} 2>&1 | tail -1)"
+  # QW-DIECLK4 10-20: the regional clock verdict with the STA L5 window (per-lane D) as the binding drift check
+  V_=${OT_DIE_CLOCK_VARIANT:-spine}
+  [ -s $R/land_plan.json ] && [ -s $R/dieclk/$V_/landed_pairs.json ] && [ -s $R/dieclk/$V_/die_clock_check.json ] && \
+    say "REGIONAL VERDICT (STA window): $(python3 $SRC/tools/die_clock/regional_verdict.py $R/dieclk/$V_/die_clock_check.json \
+      $R/dieclk/$V_/landed_pairs.json $R/dieclk/$V_/tt/manifest.json --land-plan $R/land_plan.json \
+      --out $R/regional_verdict_sta.json 2>&1 | tail -1 | cut -c1-900)"
 fi
 # DIE-FLOW 2026-10-17 (FLOW-HOLD D1-D3, OT_HOLD_BUDGET=die: die_sta_libs.py U 25 + sta_tcl.py FF hold dump): per-link
 # classifier -- launch-min from the bound ETMs, delta <= 80, ASSUMED single-flop masters = hold DIAGNOSTIC links
