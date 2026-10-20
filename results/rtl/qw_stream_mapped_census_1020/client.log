@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       admits   965 GB (avail 789, growth 113, headroom 0, waiters 0/0 GB) load 66/128 running 30 disk 64 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-stream-mapped-census-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-stream-mapped-census-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-stream-mapped-census-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-stream-mapped-census-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-stream-mapped-census-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2672443-1792486861 after 0 s
+qfd_dv_stream_t2_1019-s2-49ac29c7e 1 FAIL max 69 violations 211 role_errors 0
+qfd_dv_stream_t2c_1019-c2-49ac29c7e 1 FAIL max 69 violations 211 role_errors 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2672443-1792486861): exit 0
