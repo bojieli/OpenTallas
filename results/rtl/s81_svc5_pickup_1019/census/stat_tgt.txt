@@ -1,0 +1,69 @@
+
+60. Printing statistics.
+
+=== dsdv_sm_so_target ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     4977        - wires
+     8857        - wire bits
+       48        - public wires
+     3886        - public wire bits
+       30        - ports
+     1777        - port bits
+     7099  994.429 cells
+       12     1.05   A2O1A1Ixp33_ASAP7_75t_R
+        6    0.787   A2O1A1O1Ixp25_ASAP7_75t_R
+        9    0.787   AND2x2_ASAP7_75t_R
+        4     0.35   AND3x1_ASAP7_75t_R
+        1    0.102   AND4x1_ASAP7_75t_R
+       44    3.849   AO21x1_ASAP7_75t_R
+        1    0.146   AO221x1_ASAP7_75t_R
+        4    0.525   AO22x1_ASAP7_75t_R
+        1    0.146   AO33x2_ASAP7_75t_R
+       10    0.875   AOI211xp5_ASAP7_75t_R
+       86    6.269   AOI21xp33_ASAP7_75t_R
+       14    1.429   AOI221xp5_ASAP7_75t_R
+        2    0.292   AOI222xp33_ASAP7_75t_R
+       20     1.75   AOI22xp33_ASAP7_75t_R
+        1    0.102   AOI311xp33_ASAP7_75t_R
+        1    0.117   AOI33xp33_ASAP7_75t_R
+       95   36.013   DFFASRHQNx1_ASAP7_75t_R
+     2353  686.135   DFFHQNx1_ASAP7_75t_R
+     2243   98.109   INVx1_ASAP7_75t_R
+        3    0.306   MAJIxp5_ASAP7_75t_R
+      860   50.155   NAND2xp33_ASAP7_75t_R
+       26    1.895   NAND3xp33_ASAP7_75t_R
+       18    1.575   NAND4xp25_ASAP7_75t_R
+        7    0.714   NAND5xp2_ASAP7_75t_R
+       97    5.657   NOR2xp33_ASAP7_75t_R
+       24     1.75   NOR3xp33_ASAP7_75t_R
+       16      1.4   NOR4xp25_ASAP7_75t_R
+        5     0.51   NOR5xp2_ASAP7_75t_R
+       20     1.75   O2A1O1Ixp33_ASAP7_75t_R
+        2    0.233   OA211x2_ASAP7_75t_R
+       12    1.225   OA21x2_ASAP7_75t_R
+        2     0.35   OA222x2_ASAP7_75t_R
+        1    0.146   OA22x2_ASAP7_75t_R
+        9    0.787   OAI211xp5_ASAP7_75t_R
+      858   62.548   OAI21xp33_ASAP7_75t_R
+       22    2.245   OAI221xp5_ASAP7_75t_R
+        8    1.166   OAI222xp33_ASAP7_75t_R
+       68    5.949   OAI22xp33_ASAP7_75t_R
+        1    0.102   OAI311xp33_ASAP7_75t_R
+       15    1.312   OAI31xp33_ASAP7_75t_R
+        2    0.204   OAI32xp33_ASAP7_75t_R
+        9    0.787   OR2x2_ASAP7_75t_R
+       10    0.875   OR3x1_ASAP7_75t_R
+        5     0.51   OR4x1_ASAP7_75t_R
+        7    0.816   OR5x1_ASAP7_75t_R
+       55    7.217   XNOR2xp5_ASAP7_75t_R
+       26    3.412   XOR2xp5_ASAP7_75t_R
+        4        -   ot_sram_1r1w_32x64_m1
+
+   Area for cell type \ot_sram_1r1w_32x64_m1 is unknown!
+
+   Chip area for module '\dsdv_sm_so_target': 994.428900
+     of which used for sequential elements: 722.147400 (72.62%)
+

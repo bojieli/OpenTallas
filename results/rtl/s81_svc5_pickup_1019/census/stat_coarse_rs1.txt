@@ -1,0 +1,109 @@
+
+56. Printing statistics.
+
+=== dsdv_svc_rs ===
+
+        +----------Local Count, excluding submodules.
+        | 
+   432330 wires
+  7240806 wire bits
+   155577 public wires
+  5546209 public wire bits
+       25 ports
+    37610 port bits
+   689969 cells
+     1146   $adff
+      105   $adffe
+    13080   $alu
+   382202   $and
+        5   $bmux
+     5247   $dff
+      109   $dffe
+     1834   $eq
+     1757   $logic_and
+     2690   $logic_not
+     1915   $logic_or
+      188   $macc_v2
+       57   $mem_v2
+    22816   $mux
+       35   $ne
+    12302   $not
+   203353   $or
+      146   $pmux
+     9700   $reduce_and
+      519   $reduce_bool
+     2970   $reduce_or
+     9994   $scopeinfo
+     1740   $sdff
+        1   $sdffce
+       13   $shift
+       28   $shiftx
+     1285   $shl
+      692   $shr
+    14035   $xor
+        1   dsdv_svc_att
+        4   ot_sram_1r1w_32x64_m1
+
+=== ot_dvrly_ckinv ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        2 wires
+        2 wire bits
+        2 public wires
+        2 public wire bits
+        2 ports
+        2 port bits
+        1 cells
+        1   $not
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+   689969 dsdv_svc_rs
+
+        +----------Count including submodules.
+        | 
+   432330 wires
+  7240806 wire bits
+   155577 public wires
+  5546209 public wire bits
+       25 ports
+    37610 port bits
+        - memories
+        - memory bits
+        - processes
+   689969 cells
+     1146   $adff
+      105   $adffe
+    13080   $alu
+   382202   $and
+        5   $bmux
+     5247   $dff
+      109   $dffe
+     1834   $eq
+     1757   $logic_and
+     2690   $logic_not
+     1915   $logic_or
+      188   $macc_v2
+       57   $mem_v2
+    22816   $mux
+       35   $ne
+    12302   $not
+   203353   $or
+      146   $pmux
+     9700   $reduce_and
+      519   $reduce_bool
+     2970   $reduce_or
+     9994   $scopeinfo
+     1740   $sdff
+        1   $sdffce
+       13   $shift
+       28   $shiftx
+     1285   $shl
+      692   $shr
+    14035   $xor
+        1   dsdv_svc_att
+        4   ot_sram_1r1w_32x64_m1
+

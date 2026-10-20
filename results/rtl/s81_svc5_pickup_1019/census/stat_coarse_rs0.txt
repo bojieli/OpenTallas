@@ -1,0 +1,107 @@
+
+56. Printing statistics.
+
+=== ot_dvrly_ckinv ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        2 wires
+        2 wire bits
+        2 public wires
+        2 public wire bits
+        2 ports
+        2 port bits
+        1 cells
+        1   $not
+
+=== dsdv_svc_rs ===
+
+        +----------Local Count, excluding submodules.
+        | 
+   431397 wires
+  7214155 wire bits
+   155155 public wires
+  5524156 public wire bits
+       25 ports
+    37610 port bits
+   689328 cells
+     1112   $adff
+       66   $adffe
+    13031   $alu
+   382201   $and
+        4   $bmux
+     5176   $dff
+       85   $dffe
+     1820   $eq
+     1693   $logic_and
+     2671   $logic_not
+     1894   $logic_or
+      185   $macc_v2
+       57   $mem_v2
+    22708   $mux
+       21   $ne
+    12251   $not
+   203328   $or
+      146   $pmux
+     9673   $reduce_and
+      495   $reduce_bool
+     2946   $reduce_or
+     9991   $scopeinfo
+     1738   $sdff
+        1   $sdffce
+       12   $shift
+       26   $shiftx
+     1285   $shl
+      692   $shr
+    14019   $xor
+        1   dsdv_svc_att
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+   689328 dsdv_svc_rs
+
+        +----------Count including submodules.
+        | 
+   431397 wires
+  7214155 wire bits
+   155155 public wires
+  5524156 public wire bits
+       25 ports
+    37610 port bits
+        - memories
+        - memory bits
+        - processes
+   689328 cells
+     1112   $adff
+       66   $adffe
+    13031   $alu
+   382201   $and
+        4   $bmux
+     5176   $dff
+       85   $dffe
+     1820   $eq
+     1693   $logic_and
+     2671   $logic_not
+     1894   $logic_or
+      185   $macc_v2
+       57   $mem_v2
+    22708   $mux
+       21   $ne
+    12251   $not
+   203328   $or
+      146   $pmux
+     9673   $reduce_and
+      495   $reduce_bool
+     2946   $reduce_or
+     9991   $scopeinfo
+     1738   $sdff
+        1   $sdffce
+       12   $shift
+       26   $shiftx
+     1285   $shl
+      692   $shr
+    14019   $xor
+        1   dsdv_svc_att
+

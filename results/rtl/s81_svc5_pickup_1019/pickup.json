@@ -1,0 +1,21 @@
+{
+  "source_commit": "b7e677e12",
+  "source_branch": "claude/s81-svc5-sm-1019",
+  "census": {
+    "rs0_std_um2": 237100.207859,
+    "rs1_std_um2": 240948.861299,
+    "std_delta_um2": 3848.65344,
+    "rs1_macros": {
+      "ot_sram_1r1w_32x64_m1": 4
+    },
+    "blackbox": "dsdv_svc_att",
+    "scope": "TT synthesis census, not physical closure"
+  },
+  "sm_fg3_regression": {
+    "verdict": "FAIL",
+    "cases": 8,
+    "observation": "all numerical counters zero; jd_fault=1 root_fault=1 slice_faults=ffff; timings match SVC4 reported fg3 values",
+    "status": "requires fault-path diagnosis before adoption"
+  },
+  "remaining_jobs": "prod/lp/pin + lpm1/lpm2 active simulations at inspection, verdict files initially empty; hgrp/ns both in CTS; ep8 censuses active; preserve all"
+}

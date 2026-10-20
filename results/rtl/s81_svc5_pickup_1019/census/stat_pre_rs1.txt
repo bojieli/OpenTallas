@@ -1,0 +1,2172 @@
+
+54. Printing statistics.
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      630 wires
+     1190 wire bits
+       17 public wires
+      419 public wire bits
+        5 ports
+       83 port bits
+      282 processes
+      331 cells
+      219   $and
+      109   $or
+        3   $xor
+
+=== $paramod\ot_hdc_fp32_add_f12\CUTS=7'1101010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      233 wires
+     3548 wire bits
+      136 public wires
+     2293 public wire bits
+        8 ports
+      102 port bits
+        3 processes
+       76 cells
+        1   $add
+        2   $and
+       11   $eq
+        3   $ge
+        1   $le
+        3   $logic_and
+        4   $logic_not
+        5   $logic_or
+        1   $lt
+       18   $mux
+        2   $ne
+        7   $not
+        4   $or
+        5   $reduce_or
+        4   $shl
+        2   $shr
+        2   $sub
+        1   $xor
+       18 submodules
+        1   $paramod$219a85dfd7b2cc8445dbe1648d44d88c8a6603ff\ot_hdc_f12_cut
+        1   $paramod$2252407fdad0777b81e39193bdbd2aec19e75d0e\ot_hdc_f12_cut
+        1   $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+        1   $paramod$776258f73bd7f1567db1a870e2e7d6677ab3fbef\ot_hdc_f12_cut
+        1   $paramod$8ff5a5dd3460007ddc1f9d1d4a143ba9fdbcef6e\ot_hdc_f12_cut
+        1   $paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut
+        1   $paramod$c47d6f882a23aa46f585ea9f6ed90dc7cf2db1e8\ot_hdc_f12_cut
+        1   $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+        1   $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+        1   $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+        1   $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+        3   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+        1   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+        2   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+        1   ot_hdc_lzc32
+
+=== $paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+      105 wire bits
+        9 public wires
+      103 public wire bits
+        7 ports
+      100 port bits
+        2 cells
+        1   $logic_and
+        1   $ne
+        1 submodules
+        1   ot_hdc_fp32_add_f12_l4
+
+=== $paramod\ot_hdc_qmul_lat\LAT=s32'00000000000000000000000000000101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+      105 wire bits
+        9 public wires
+      103 public wire bits
+        7 ports
+      100 port bits
+        2 cells
+        1   $logic_and
+        1   $ne
+        1 submodules
+        1   ot_hdc_fp32_mul_f12_l5
+
+=== $paramod$fc76eecef5bfa99166dfca27b8245ced911975fe\ot_s81_su_smr ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      621 wires
+    15284 wire bits
+      287 public wires
+     8018 public wire bits
+       15 ports
+      652 port bits
+       84 processes
+      176 cells
+        1   $add
+       32   $logic_and
+       33   $logic_not
+       12   $logic_or
+        1   $mul
+       57   $mux
+       37   $not
+        3   $shiftx
+       47 submodules
+       15   $paramod$158916d3135cae63a2d061d79d9fa5a887270a1e\ot_hdc_kge
+        6   $paramod$8bd7dfbe12c4f38c9c500f3fcdeed8879fccbeb7\ot_hdc_delay
+        7   $paramod$ae9da944e6bc15fb076792b79e5977fc3d98a2be\ot_dsrom_su_softmax_add
+       19   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000100
+
+=== $paramod$fc76eecef5bfa99166dfca27b8245ced911975fe\ot_s81_su_smc ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       70 wires
+     2954 wire bits
+       54 public wires
+     2334 public wire bits
+        8 ports
+      550 port bits
+        5 processes
+        8 cells
+        2   $eq
+        1   $logic_and
+        3   $logic_not
+        2   $mux
+       33 submodules
+        2   $paramod$4a006920415146e5eba39a4873e34e18b61d9f00\ot_hdc_delay
+        2   $paramod$6c1159fdb1b927cbc5882af059e6a5d53bb3bc62\ot_hdc_delay
+        2   $paramod$81293afaf18e5bd1771b29c1534e3fd67591d744\ot_hdc_delay
+        2   $paramod$8bd7dfbe12c4f38c9c500f3fcdeed8879fccbeb7\ot_hdc_delay
+        2   $paramod$8e979e287e01872aee51f931f8c54fd3c8c9b58b\ot_hdc_delay
+       15   $paramod$ae9da944e6bc15fb076792b79e5977fc3d98a2be\ot_dsrom_su_softmax_add
+        2   $paramod$e0ab5449d823ccc2334dbd83384827b5b32aad73\ot_hdc_delay
+        2   $paramod$edd2b3207824ad52cacd3925425482f53295820b\ot_hdc_delay
+        2   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000100
+        2   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000011100
+
+=== $paramod$6539e0de391f7a65cc23bde289777c8de2cf2e01\ot_s81_su_smd ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      146 wires
+     2064 wire bits
+       61 public wires
+     1107 public wire bits
+       13 ports
+      207 port bits
+        2 memories
+      256 memory bits
+       15 processes
+       44 cells
+        3   $add
+        4   $and
+        5   $eq
+        2   $ge
+        7   $logic_and
+        7   $logic_not
+        1   $lt
+        2   $memrd
+        4   $mux
+        1   $not
+        4   $or
+        4   $reduce_or
+       17 submodules
+        1   $paramod$2610482c93b9c6886100139d3ec563d2271d51f0\ot_hdc_delay
+        1   $paramod$6966bcf3f9a092bd845bf4bd0122f2243ee0aca4\ot_hdc_delay
+        2   $paramod$ae9da944e6bc15fb076792b79e5977fc3d98a2be\ot_dsrom_su_softmax_add
+        1   $paramod$b3953e74221225be598314ca54efea3673a572d2\ot_hdc_delay
+        1   $paramod$b8c1ab8f5a49672a66e0047c1e1f8a16b7a1f513\ot_hdc_delay
+        4   $paramod$e97de43d1d7c8e8543df96e181d509f9cbecf7c7\ot_hdc_kinc
+        2   $paramod\ot_dsrom_su_fdiv_f12\NR=s32'00000000000000000000000000000000
+        4   $paramod\ot_dsrom_su_softmax_mul\LM=s32'00000000000000000000000000000101
+        1   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000101100
+
+=== $paramod$f05440f12c231b1e7299f2120b20df52cb61f978\ot_s81_su_sml ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      154 wires
+     2407 wire bits
+       67 public wires
+     1213 public wire bits
+       17 ports
+      209 port bits
+        1 memories
+     1280 memory bits
+       16 processes
+       38 cells
+        6   $add
+        8   $eq
+        5   $logic_and
+        7   $logic_not
+        2   $logic_or
+        1   $memrd
+        7   $mux
+        2   $not
+       10 submodules
+        1   $paramod$158916d3135cae63a2d061d79d9fa5a887270a1e\ot_hdc_kge
+        1   $paramod$690a3487a2d98f70ea47164cd8fbaaa7c44695eb\ot_hdc_v41x_exp
+        1   $paramod$ae9da944e6bc15fb076792b79e5977fc3d98a2be\ot_dsrom_su_softmax_add
+        1   $paramod\ot_dsrom_su_softmax_mul\LM=s32'00000000000000000000000000000101
+        2   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000101
+        4   $paramod\ot_hdc_vline\D=s32'00000000000000000000000001001011
+
+=== $paramod$b99699e07e8a316d70de95fddb8ec5868b9325ae\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       27 wire bits
+        5 public wires
+       18 public wire bits
+        4 ports
+       10 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$0d0c5201dfcecd36024b0895ac09824071886a22\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      842 wire bits
+        5 public wires
+      562 public wire bits
+        4 ports
+      282 port bits
+        1 processes
+
+=== $paramod$abedcaf42fa8c9b378a30dad271dbdd7ecb33c6e\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      770 wire bits
+        5 public wires
+      514 public wire bits
+        4 ports
+      258 port bits
+        1 processes
+
+=== $paramod$0c48b4621a8d17698151ab5b38b8ecb7662f1257\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+     1026 wire bits
+        5 public wires
+      770 public wire bits
+        4 ports
+      514 port bits
+        1 processes
+
+=== $paramod$08a5f0aa6df3273bbf0ef532ba0e3a4271e17f34\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      514 wire bits
+        5 public wires
+      386 public wire bits
+        4 ports
+      258 port bits
+        1 processes
+
+=== $paramod$6d37af9b83b9fc4b1b57e8c892cc7b9455bd805f\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      386 wire bits
+        5 public wires
+      258 public wire bits
+        4 ports
+      130 port bits
+        1 processes
+
+=== $paramod$247e635a72efe516af573bda7394c64ef380e974\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+        9 wire bits
+        5 public wires
+        6 public wire bits
+        4 ports
+        4 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$00c6709c407f13efb9fffc620742693c49278361\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+       20 wire bits
+        5 public wires
+       14 public wire bits
+        4 ports
+        8 port bits
+        1 processes
+
+=== $paramod$a5d42b1fc0bb61c4aaa9b9cdb4ea4bc173e6ebb2\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       19 wire bits
+        5 public wires
+       14 public wire bits
+        4 ports
+       10 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$82db6f97e7215e6707e8089bf5930c48d80f4d0a\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+     4098 wire bits
+        5 public wires
+     3074 public wire bits
+        4 ports
+     2050 port bits
+        1 processes
+
+=== $paramod$004193434a66b5c5752130a33d7eb48f9c0971f2\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       15 wire bits
+        5 public wires
+       10 public wire bits
+        4 ports
+        6 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$7119b3748a1b5a1704afe72aecca2fa6222a2f54\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      194 wire bits
+        5 public wires
+      130 public wire bits
+        4 ports
+       66 port bits
+        1 processes
+
+=== $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       11 wire bits
+        5 public wires
+        8 public wire bits
+        4 ports
+        6 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      258 wire bits
+        5 public wires
+      194 public wire bits
+        4 ports
+      130 port bits
+        1 processes
+
+=== $paramod$8de78af6131ecb245f46105ac5f47885f86304b5\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+        7 wire bits
+        5 public wires
+        5 public wire bits
+        4 ports
+        4 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_hdc_vline\D=s32'00000000000000000000000000101100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+      137 wire bits
+        5 public wires
+       92 public wire bits
+        4 ports
+       48 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$b8c1ab8f5a49672a66e0047c1e1f8a16b7a1f513\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      478 wire bits
+        5 public wires
+      247 public wire bits
+        4 ports
+       16 port bits
+        1 processes
+
+=== $paramod$2610482c93b9c6886100139d3ec563d2271d51f0\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+       30 wire bits
+        5 public wires
+       23 public wire bits
+        4 ports
+       16 port bits
+        1 processes
+
+=== $paramod$6966bcf3f9a092bd845bf4bd0122f2243ee0aca4\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      142 wire bits
+        5 public wires
+       79 public wire bits
+        4 ports
+       16 port bits
+        1 processes
+
+=== $paramod$b3953e74221225be598314ca54efea3673a572d2\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      642 wire bits
+        5 public wires
+      354 public wire bits
+        4 ports
+       66 port bits
+        1 processes
+
+=== $paramod\ot_dsrom_su_fdiv_f12\NR=s32'00000000000000000000000000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      814 wires
+    11609 wire bits
+      412 public wires
+     6413 public wire bits
+        8 ports
+      101 port bits
+       37 processes
+      100 cells
+        1   $add
+        1   $and
+        6   $eq
+        2   $gt
+        2   $logic_and
+        1   $logic_not
+        9   $logic_or
+        1   $lt
+       29   $mux
+        2   $ne
+       27   $not
+        3   $reduce_or
+        3   $shl
+        1   $shr
+       11   $sub
+        1   $xor
+       29 submodules
+       27   $paramod$02e80e375dc11ee1b7ddd8db28bb3eebbb0f64f1\ot_hdc_kadd
+        1   $paramod$27c3de73fc68039b52bede8c3c078d4a1d38ea9d\ot_hdc_kinc
+        1   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000100001
+
+=== $paramod$e97de43d1d7c8e8543df96e181d509f9cbecf7c7\ot_hdc_kinc ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       34 wire bits
+        4 public wires
+       34 public wire bits
+        3 ports
+       33 port bits
+        1 submodules
+        1   $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000010000
+
+=== $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       20 wire bits
+        5 public wires
+       14 public wire bits
+        4 ports
+        9 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dsrom_su_softmax_mul\LM=s32'00000000000000000000000000000101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+      100 wire bits
+        7 public wires
+      100 public wire bits
+        7 ports
+      100 port bits
+        1 submodules
+        1   $paramod\ot_hdc_qmul_lat\LAT=s32'00000000000000000000000000000101
+
+=== $paramod\ot_hdc_vline\D=s32'00000000000000000000000001000111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+      218 wire bits
+        5 public wires
+      146 public wire bits
+        4 ports
+       75 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_hdc_vline\D=s32'00000000000000000000000001001011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+      230 wire bits
+        5 public wires
+      154 public wire bits
+        4 ports
+       79 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== dsfd_su_t_smd ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       13 wires
+      207 wire bits
+       13 public wires
+      207 public wire bits
+       13 ports
+      207 port bits
+        1 submodules
+        1   $paramod$6539e0de391f7a65cc23bde289777c8de2cf2e01\ot_s81_su_smd
+
+=== dsfd_su_t_smr ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       15 wires
+      652 wire bits
+       15 public wires
+      652 public wire bits
+       15 ports
+      652 port bits
+        1 submodules
+        1   $paramod$fc76eecef5bfa99166dfca27b8245ced911975fe\ot_s81_su_smr
+
+=== dsfd_su_t_smc ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+      550 wire bits
+        8 public wires
+      550 public wire bits
+        8 ports
+      550 port bits
+        1 submodules
+        1   $paramod$fc76eecef5bfa99166dfca27b8245ced911975fe\ot_s81_su_smc
+
+=== dsfd_su_t_sml ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       17 wires
+      209 wire bits
+       17 public wires
+      209 public wire bits
+       17 ports
+      209 port bits
+        1 submodules
+        1   $paramod$f05440f12c231b1e7299f2120b20df52cb61f978\ot_s81_su_sml
+
+=== $paramod$158916d3135cae63a2d061d79d9fa5a887270a1e\ot_hdc_kge ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+      129 wire bits
+        4 public wires
+       97 public wire bits
+        3 ports
+       65 port bits
+        1 cells
+        1   $not
+        1 submodules
+        1   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000100000
+
+=== $paramod\ot_hdc_vline\D=s32'00000000000000000000000000011100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       89 wire bits
+        5 public wires
+       60 public wire bits
+        4 ports
+       32 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+       17 wire bits
+        5 public wires
+       12 public wire bits
+        4 ports
+        8 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$e0ab5449d823ccc2334dbd83384827b5b32aad73\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       66 wire bits
+        4 public wires
+       66 public wire bits
+        4 ports
+       66 port bits
+
+=== $paramod$8bd7dfbe12c4f38c9c500f3fcdeed8879fccbeb7\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      322 wire bits
+        5 public wires
+      194 public wire bits
+        4 ports
+       66 port bits
+        1 processes
+
+=== $paramod$edd2b3207824ad52cacd3925425482f53295820b\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      578 wire bits
+        5 public wires
+      322 public wire bits
+        4 ports
+       66 port bits
+        1 processes
+
+=== ot_s81_su_sms ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       36 wires
+     2529 wire bits
+       36 public wires
+     2529 public wire bits
+       19 ports
+     1091 port bits
+        2 submodules
+        1   $paramod$de220acca18f1db8eb14cf5268f0d6f24a2b6a99\dsfd_su_t_smh
+        1   $paramod\ot_s81_su_smq\MUT=s32'00000000000000000000000000000000
+
+=== ot_dvrly_ckinv ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+        3 wire bits
+        2 public wires
+        2 public wire bits
+        2 ports
+        2 port bits
+        1 cells
+        1   $not
+
+=== dsfd_dvrly_276_SN ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      556 wire bits
+        6 public wires
+      556 public wire bits
+        5 ports
+      555 port bits
+        3 submodules
+        1   $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        2   ot_dvrly_ckinv
+
+=== dsfd_dvrly_276_NS ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      556 wire bits
+        6 public wires
+      556 public wire bits
+        5 ports
+      555 port bits
+        3 submodules
+        1   $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        2   ot_dvrly_ckinv
+
+=== dsfd_dvrly_276_WE ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      556 wire bits
+        6 public wires
+      556 public wire bits
+        5 ports
+      555 port bits
+        3 submodules
+        1   $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        2   ot_dvrly_ckinv
+
+=== dsfd_dvrly_276_EW ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      556 wire bits
+        6 public wires
+      556 public wire bits
+        5 ports
+      555 port bits
+        3 submodules
+        1   $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        2   ot_dvrly_ckinv
+
+=== $paramod$4a006920415146e5eba39a4873e34e18b61d9f00\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      834 wire bits
+        5 public wires
+      450 public wire bits
+        4 ports
+       66 port bits
+        1 processes
+
+=== dsfd_svc_pc ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       29 wires
+     1872 wire bits
+       18 public wires
+     1247 public wire bits
+       16 ports
+     1244 port bits
+        3 processes
+        2 cells
+        2   $logic_not
+
+=== $paramod$8e979e287e01872aee51f931f8c54fd3c8c9b58b\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+     1090 wire bits
+        5 public wires
+      578 public wire bits
+        4 ports
+       66 port bits
+        1 processes
+
+=== $paramod$6c1159fdb1b927cbc5882af059e6a5d53bb3bc62\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+     1346 wire bits
+        5 public wires
+      706 public wire bits
+        4 ports
+       66 port bits
+        1 processes
+
+=== $paramod$81293afaf18e5bd1771b29c1534e3fd67591d744\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+     1602 wire bits
+        5 public wires
+      834 public wire bits
+        4 ports
+       66 port bits
+        1 processes
+
+=== $paramod$ae9da944e6bc15fb076792b79e5977fc3d98a2be\ot_dsrom_su_softmax_add ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+      100 wire bits
+        7 public wires
+      100 public wire bits
+        7 ports
+      100 port bits
+        1 submodules
+        1   $paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat
+
+=== $paramod\dsfd_su_t_smhr\SRL=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       40 wires
+     2305 wire bits
+       37 public wires
+     2302 public wire bits
+       15 ports
+     1101 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+       11 submodules
+        1   $paramod$004193434a66b5c5752130a33d7eb48f9c0971f2\ot_hdc_delay
+        1   $paramod$00c6709c407f13efb9fffc620742693c49278361\ot_hdc_delay
+        1   $paramod$247e635a72efe516af573bda7394c64ef380e974\ot_hdc_delay
+        1   $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay
+        1   $paramod$7119b3748a1b5a1704afe72aecca2fa6222a2f54\ot_hdc_delay
+        1   $paramod$82db6f97e7215e6707e8089bf5930c48d80f4d0a\ot_hdc_delay
+        1   $paramod$8de78af6131ecb245f46105ac5f47885f86304b5\ot_hdc_delay
+        1   $paramod$a5d42b1fc0bb61c4aaa9b9cdb4ea4bc173e6ebb2\ot_hdc_delay
+        1   $paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\ot_hdc_delay
+        1   dsfd_su_t_smc
+        1   dsfd_su_t_smr
+
+=== $paramod$de220acca18f1db8eb14cf5268f0d6f24a2b6a99\dsfd_su_t_smhq ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       64 wires
+     1495 wire bits
+       58 public wires
+     1488 public wire bits
+       28 ports
+      798 port bits
+        2 processes
+        3 cells
+        1   $eq
+        1   $logic_and
+        1   $logic_not
+       18 submodules
+        1   $paramod$08a5f0aa6df3273bbf0ef532ba0e3a4271e17f34\ot_hdc_delay
+        1   $paramod$0c48b4621a8d17698151ab5b38b8ecb7662f1257\ot_hdc_delay
+        1   $paramod$0d0c5201dfcecd36024b0895ac09824071886a22\ot_hdc_delay
+        1   $paramod$247e635a72efe516af573bda7394c64ef380e974\ot_hdc_delay
+        2   $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay
+        1   $paramod$6d37af9b83b9fc4b1b57e8c892cc7b9455bd805f\ot_hdc_delay
+        1   $paramod$8de78af6131ecb245f46105ac5f47885f86304b5\ot_hdc_delay
+        1   $paramod$a5d42b1fc0bb61c4aaa9b9cdb4ea4bc173e6ebb2\ot_hdc_delay
+        1   $paramod$abedcaf42fa8c9b378a30dad271dbdd7ecb33c6e\ot_hdc_delay
+        1   $paramod$b99699e07e8a316d70de95fddb8ec5868b9325ae\ot_hdc_delay
+        1   $paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\ot_hdc_delay
+        2   dsfd_su_t_smd
+        4   dsfd_su_t_sml
+
+=== $paramod\ot_s81_su_smq\MUT=s32'00000000000000000000000000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      205 wires
+    13734 wire bits
+       82 public wires
+     8059 public wire bits
+       36 ports
+     2529 port bits
+        9 processes
+       67 cells
+        8   $add
+       15   $eq
+        1   $ge
+       14   $logic_and
+        7   $logic_not
+        4   $logic_or
+        5   $mul
+        3   $mux
+        2   $ne
+        1   $reduce_or
+        3   $shiftx
+        4   $sub
+
+=== ot_hdc_fp32_add_f12_l5x ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+      102 wire bits
+        8 public wires
+      102 public wire bits
+        8 ports
+      102 port bits
+        1 submodules
+        1   $paramod\ot_hdc_fp32_add_f12\CUTS=7'1101010
+
+=== $paramod$de220acca18f1db8eb14cf5268f0d6f24a2b6a99\dsfd_su_t_smh ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       35 wires
+     2562 wire bits
+       35 public wires
+     2562 public wire bits
+       19 ports
+     1440 port bits
+        5 submodules
+        4   $paramod$de220acca18f1db8eb14cf5268f0d6f24a2b6a99\dsfd_su_t_smhq
+        1   $paramod\dsfd_su_t_smhr\SRL=s32'00000000000000000000000000000010
+
+=== $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+     1111 wire bits
+        7 public wires
+      832 public wire bits
+        4 ports
+      554 port bits
+        2 processes
+        2 cells
+        2   $logic_not
+
+=== $paramod\ot_hdc_fp32_mul_f12\CUTS=8'01101010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      534 wires
+    12809 wire bits
+      185 public wires
+     6412 public wire bits
+        8 ports
+      102 port bits
+        8 processes
+      313 cells
+        9   $add
+       20   $and
+       55   $eq
+        5   $gt
+        4   $logic_and
+        3   $logic_not
+        4   $logic_or
+       50   $lt
+       24   $mux
+        1   $neg
+       12   $or
+        4   $reduce_or
+        8   $shl
+        1   $shr
+      100   $sub
+       13   $xor
+       14 submodules
+        1   $paramod$0599939dcdb16c1245958738992a94bb0fba277e\ot_hdc_f12_cut
+        1   $paramod$25ede51e938695f79bc8a66e96cc5cd0eb3509d5\ot_hdc_f12_cut
+        1   $paramod$4126d84c293acecf9e7fc3ffeb009a8add3d5161\ot_hdc_f12_cut
+        1   $paramod$839fea84eb49dc60873cd742c30fe7886ded8241\ot_hdc_f12_cut
+        1   $paramod$935caba5ae3f95a3d7f0117906cae3b8ca139256\ot_hdc_f12_cut
+        1   $paramod$9f569bad0297d2ac24a4fdfdd704c4cd18ff06c1\ot_hdc_f12_cut
+        1   $paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut
+        1   $paramod$e118b34f151cce3c52d5d8b54ed5dc034323bc5c\ot_hdc_f12_cut
+        1   $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+        1   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001100
+        1   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000110000
+        2   ot_hdc_lzc32
+        1   ot_hdc_mul24_rows
+
+=== $paramod\ot_hdc_fp32_add_f12\CUTS=6'101010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      233 wires
+     3548 wire bits
+      136 public wires
+     2293 public wire bits
+        8 ports
+      102 port bits
+        3 processes
+       76 cells
+        1   $add
+        2   $and
+       11   $eq
+        3   $ge
+        1   $le
+        3   $logic_and
+        4   $logic_not
+        5   $logic_or
+        1   $lt
+       18   $mux
+        2   $ne
+        7   $not
+        4   $or
+        5   $reduce_or
+        4   $shl
+        2   $shr
+        2   $sub
+        1   $xor
+       18 submodules
+        2   $paramod$219a85dfd7b2cc8445dbe1648d44d88c8a6603ff\ot_hdc_f12_cut
+        1   $paramod$2252407fdad0777b81e39193bdbd2aec19e75d0e\ot_hdc_f12_cut
+        1   $paramod$2f67968d3bd86192de6d372bff0774f877271041\ot_hdc_f12_cut
+        1   $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+        1   $paramod$776258f73bd7f1567db1a870e2e7d6677ab3fbef\ot_hdc_f12_cut
+        1   $paramod$c47d6f882a23aa46f585ea9f6ed90dc7cf2db1e8\ot_hdc_f12_cut
+        1   $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+        1   $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+        1   $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+        1   $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+        3   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+        1   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+        2   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+        1   ot_hdc_lzc32
+
+=== ot_hdc_fp32_mul_f12_l5 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+      102 wire bits
+        8 public wires
+      102 public wire bits
+        8 ports
+      102 port bits
+        1 submodules
+        1   $paramod\ot_hdc_fp32_mul_f12\CUTS=8'01101010
+
+=== $paramod$e118b34f151cce3c52d5d8b54ed5dc034323bc5c\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      156 wire bits
+        4 public wires
+      156 public wire bits
+        4 ports
+      156 port bits
+
+=== ot_hdc_fp32_add_f12_l4 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+      102 wire bits
+        8 public wires
+      102 public wire bits
+        8 ports
+      102 port bits
+        1 submodules
+        1   $paramod\ot_hdc_fp32_add_f12\CUTS=6'101010
+
+=== $paramod$25ede51e938695f79bc8a66e96cc5cd0eb3509d5\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      311 wire bits
+        6 public wires
+      233 public wire bits
+        4 ports
+      156 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      236 wires
+      457 wire bits
+       15 public wires
+      168 public wire bits
+        5 ports
+       38 port bits
+      106 processes
+      115 cells
+       75   $and
+       37   $or
+        3   $xor
+
+=== $paramod$4126d84c293acecf9e7fc3ffeb009a8add3d5161\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      804 wire bits
+        4 public wires
+      804 public wire bits
+        4 ports
+      804 port bits
+
+=== $paramod$0599939dcdb16c1245958738992a94bb0fba277e\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      839 wire bits
+        6 public wires
+      629 public wire bits
+        4 ports
+      420 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$935caba5ae3f95a3d7f0117906cae3b8ca139256\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      460 wire bits
+        4 public wires
+      460 public wire bits
+        4 ports
+      460 port bits
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000110000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1306 wires
+     2403 wire bits
+       19 public wires
+      832 public wire bits
+        5 ports
+      146 port bits
+      590 processes
+      697 cells
+      463   $and
+      231   $or
+        3   $xor
+
+=== $paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      727 wire bits
+        6 public wires
+      545 public wire bits
+        4 ports
+      364 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$839fea84eb49dc60873cd742c30fe7886ded8241\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      199 wire bits
+        6 public wires
+      149 public wire bits
+        4 ports
+      100 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$9f569bad0297d2ac24a4fdfdd704c4cd18ff06c1\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      100 wire bits
+        4 public wires
+      100 public wire bits
+        4 ports
+      100 port bits
+
+=== $paramod$2f67968d3bd86192de6d372bff0774f877271041\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      364 wire bits
+        4 public wires
+      364 public wire bits
+        4 ports
+      364 port bits
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      530 wires
+     1006 wire bits
+       17 public wires
+      359 public wire bits
+        5 ports
+       71 port bits
+      242 processes
+      271 cells
+      179   $and
+       89   $or
+        3   $xor
+
+=== $paramod$776258f73bd7f1567db1a870e2e7d6677ab3fbef\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      242 wire bits
+        4 public wires
+      242 public wire bits
+        4 ports
+      242 port bits
+
+=== $paramod$219a85dfd7b2cc8445dbe1648d44d88c8a6603ff\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       14 wire bits
+        4 public wires
+       14 public wire bits
+        4 ports
+       14 port bits
+
+=== $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      395 wire bits
+        6 public wires
+      296 public wire bits
+        4 ports
+      198 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      655 wires
+     1236 wire bits
+       17 public wires
+      434 public wire bits
+        5 ports
+       86 port bits
+      292 processes
+      346 cells
+      229   $and
+      114   $or
+        3   $xor
+
+=== $paramod$2252407fdad0777b81e39193bdbd2aec19e75d0e\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      206 wire bits
+        4 public wires
+      206 public wire bits
+        4 ports
+      206 port bits
+
+=== $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      435 wire bits
+        6 public wires
+      326 public wire bits
+        4 ports
+      218 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      156 wires
+      301 wire bits
+       15 public wires
+      116 public wire bits
+        5 ports
+       26 port bits
+       74 processes
+       67 cells
+       43   $and
+       21   $or
+        3   $xor
+
+=== ot_hdc_mul24_rows ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      342 wires
+    21504 wire bits
+       86 public wires
+     8256 public wire bits
+        3 ports
+      432 port bits
+       16 processes
+      176 cells
+       72   $and
+       32   $or
+       40   $shl
+       32   $xor
+
+=== ot_hdc_lzc32 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      108 wires
+     1281 wire bits
+        8 public wires
+      486 public wire bits
+        2 ports
+       38 port bits
+        1 processes
+       94 cells
+       32   $mux
+       62   $or
+
+=== $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       68 wires
+      137 wire bits
+        9 public wires
+       63 public wire bits
+        4 ports
+       18 port bits
+       37 processes
+       22 cells
+       21   $and
+        1   $xor
+
+=== $paramod$c47d6f882a23aa46f585ea9f6ed90dc7cf2db1e8\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      148 wire bits
+        4 public wires
+      148 public wire bits
+        4 ports
+      148 port bits
+
+=== $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      231 wires
+      468 wire bits
+       10 public wires
+      200 public wire bits
+        4 ports
+       50 port bits
+      126 processes
+       95 cells
+       94   $and
+        1   $xor
+
+=== $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      287 wire bits
+        6 public wires
+      215 public wire bits
+        4 ports
+      144 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\dsdv_sm_so_target\HEAD=s32'11111111111111111111111111111111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      307 wires
+     8982 wire bits
+       77 public wires
+     4241 public wire bits
+       30 ports
+     1777 port bits
+       11 processes
+      141 cells
+        8   $add
+        1   $and
+       20   $eq
+        1   $ge
+        2   $gt
+        2   $le
+       39   $logic_and
+       17   $logic_not
+       16   $logic_or
+        2   $lt
+        1   $mul
+        2   $mux
+       13   $ne
+        2   $neg
+        1   $not
+        2   $or
+        3   $reduce_or
+        2   $shift
+        3   $shiftx
+        4   ot_sram_1r1w_32x64_m1
+
+=== $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000010000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      151 wires
+      308 wire bits
+       10 public wires
+      136 public wire bits
+        4 ports
+       34 port bits
+       86 processes
+       55 cells
+       54   $and
+        1   $xor
+
+=== $paramod$dfd68498fb48dd13dd3e17c5a4d57fc95082d0da\dsdv_svc_rs_c ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      604 wires
+   140678 wire bits
+      204 public wires
+    80134 public wire bits
+       40 ports
+    39581 port bits
+       57 processes
+      210 cells
+       25   $add
+        9   $and
+        7   $eq
+        1   $ge
+        1   $gt
+       38   $logic_and
+       33   $logic_not
+        7   $logic_or
+       16   $mul
+        6   $mux
+        5   $ne
+       16   $neg
+        8   $not
+       18   $or
+        2   $reduce_or
+       16   $shift
+        1   $sub
+        1   dsdv_svc_att
+        8 submodules
+        1   $paramod\dsdv_sm_so_target\HEAD=s32'11111111111111111111111111111111
+        1   $paramod\dsdv_svc_rs_up\UW=s32'00000000000000000000000000010000
+        1   $paramod\dsdv_svc_sx\MUT=s32'00000000000000000000000000000000
+        1   dsdv_sm_gw
+        1   dsdv_svc_sot
+        2   dsfd_svc_pc
+        1   ot_s81_su_sms
+
+=== $paramod\dsdv_sx_rly_out\F=s32'00000000000000000000000000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      554 wire bits
+        4 public wires
+      554 public wire bits
+        4 ports
+      554 port bits
+        1 submodules
+        1   dsfd_dvrly_276_SN
+
+=== $paramod\dsdv_sx_rly_in\F=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      554 wire bits
+        4 public wires
+      554 public wire bits
+        4 ports
+      554 port bits
+        1 submodules
+        1   dsfd_dvrly_276_EW
+
+=== dsdv_svc_rs ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       37 wires
+    38741 wire bits
+       37 public wires
+    38741 public wire bits
+       25 ports
+    37610 port bits
+        1 submodules
+        1   $paramod$dfd68498fb48dd13dd3e17c5a4d57fc95082d0da\dsdv_svc_rs_c
+
+=== $paramod\dsdv_sx_rly_out\F=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      554 wire bits
+        4 public wires
+      554 public wire bits
+        4 ports
+      554 port bits
+        1 submodules
+        1   dsfd_dvrly_276_WE
+
+=== $paramod\dsdv_sx_rly_in\F=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      554 wire bits
+        4 public wires
+      554 public wire bits
+        4 ports
+      554 port bits
+        1 submodules
+        1   dsfd_dvrly_276_SN
+
+=== $paramod\dsdv_sx_rly_out\F=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      554 wire bits
+        4 public wires
+      554 public wire bits
+        4 ports
+      554 port bits
+        1 submodules
+        1   dsfd_dvrly_276_NS
+
+=== $paramod\dsdv_sx_rly_in\F=s32'00000000000000000000000000000011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      554 wire bits
+        4 public wires
+      554 public wire bits
+        4 ports
+      554 port bits
+        1 submodules
+        1   dsfd_dvrly_276_WE
+
+=== $paramod\dsdv_sx_rly_out\F=s32'00000000000000000000000000000011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      554 wire bits
+        4 public wires
+      554 public wire bits
+        4 ports
+      554 port bits
+        1 submodules
+        1   dsfd_dvrly_276_EW
+
+=== $paramod$49b414b4e23a0d8c2b0800d2d1eba5a0d51b8d1f\dsdv_svc_sx_hrow ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      630 wires
+    60443 wire bits
+      255 public wires
+    33539 public wire bits
+       24 ports
+     3851 port bits
+       53 processes
+      108 cells
+        1   $add
+        2   $and
+       50   $eq
+        7   $logic_and
+       16   $logic_not
+       11   $logic_or
+        1   $mul
+        3   $mux
+        4   $ne
+        2   $not
+        2   $or
+        2   $reduce_or
+        1   $shiftx
+        1   $shl
+        1   $shr
+        4   $sub
+       10 submodules
+        8   $paramod$18738b396cd6e4b34d06f14d142455223756f772\ot_hdc_v41x_qaddf
+        1   $paramod$bf206ea6c2117917c114bb81fcce737ed02d236c\ot_hdc_v41x_dly
+        1   $paramod\ot_hdc_v41x_vdly\D=s32'00000000000000000000000000000101
+
+=== $paramod\dsdv_sx_rly_in\F=s32'00000000000000000000000000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      554 wire bits
+        4 public wires
+      554 public wire bits
+        4 ports
+      554 port bits
+        1 submodules
+        1   dsfd_dvrly_276_NS
+
+=== $paramod$bf206ea6c2117917c114bb81fcce737ed02d236c\ot_hdc_v41x_dly ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       15 wires
+      221 wire bits
+        9 public wires
+      124 public wire bits
+        3 ports
+       27 port bits
+        1 processes
+
+=== $paramod\ot_hdc_v41x_vdly\D=s32'00000000000000000000000000000101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       10 wires
+      112 wire bits
+        6 public wires
+       42 public wire bits
+        4 ports
+        4 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== dsdv_sm_gw ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       31 wires
+     4218 wire bits
+       14 public wires
+     2120 public wire bits
+       11 ports
+     1574 port bits
+        3 processes
+       11 cells
+        2   $eq
+        1   $logic_and
+        1   $logic_not
+        1   $logic_or
+        4   $mux
+        2   $ne
+
+=== dsdv_svc_sot ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      105 wires
+     1331 wire bits
+       37 public wires
+      877 public wire bits
+       18 ports
+      671 port bits
+        4 processes
+       46 cells
+        2   $add
+        9   $eq
+       17   $logic_and
+        6   $logic_not
+        3   $logic_or
+        1   $mul
+        5   $ne
+        1   $reduce_or
+        1   $shiftx
+        1   $sub
+
+=== $paramod\ot_hdc_vline\D=s32'00000000000000000000000000100001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+      104 wire bits
+        5 public wires
+       70 public wire bits
+        4 ports
+       37 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$18738b396cd6e4b34d06f14d142455223756f772\ot_hdc_v41x_qaddf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+      105 wire bits
+        9 public wires
+      103 public wire bits
+        7 ports
+      100 port bits
+        2 cells
+        1   $logic_and
+        1   $ne
+        1 submodules
+        1   ot_hdc_fp32_add_f12_l5x
+
+=== $paramod$690a3487a2d98f70ea47164cd8fbaaa7c44695eb\ot_hdc_v41x_exp ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      177 wires
+     3883 wire bits
+       53 public wires
+     1283 public wire bits
+        7 ports
+       69 port bits
+       23 processes
+       24 cells
+        1   $add
+        1   $and
+        2   $gt
+        3   $logic_and
+        1   $logic_not
+        1   $logic_or
+        1   $lt
+        2   $mux
+        1   $neg
+        3   $not
+        2   $reduce_or
+        1   $shiftx
+        1   $shl
+        1   $shr
+        3   $sub
+       25 submodules
+        1   $paramod$0564c059ba4ae9d57f7886ff7b156aec91c4368f\ot_hdc_delay
+        1   $paramod$158916d3135cae63a2d061d79d9fa5a887270a1e\ot_hdc_kadd
+        1   $paramod$5530a0a2ec03ad5ec59faafc16b32360ce9a12d9\ot_hdc_delay
+        1   $paramod$8bd7dfbe12c4f38c9c500f3fcdeed8879fccbeb7\ot_hdc_delay
+        8   $paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat
+        5   $paramod$b3953e74221225be598314ca54efea3673a572d2\ot_hdc_delay
+        7   $paramod\ot_hdc_qmul_lat\LAT=s32'00000000000000000000000000000101
+        1   $paramod\ot_hdc_vline\D=s32'00000000000000000000000001000111
+
+=== $paramod\dsdv_svc_sx\MUT=s32'00000000000000000000000000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1806 wires
+   648085 wire bits
+      695 public wires
+   290542 public wire bits
+       20 ports
+    30106 port bits
+      424 processes
+       15 cells
+        4   $or
+       10   $reduce_and
+        1   $reduce_or
+      152 submodules
+        8   $paramod$49b414b4e23a0d8c2b0800d2d1eba5a0d51b8d1f\dsdv_svc_sx_hrow
+       12   $paramod\dsdv_sx_rly_in\F=s32'00000000000000000000000000000000
+       12   $paramod\dsdv_sx_rly_in\F=s32'00000000000000000000000000000001
+       12   $paramod\dsdv_sx_rly_in\F=s32'00000000000000000000000000000010
+       12   $paramod\dsdv_sx_rly_in\F=s32'00000000000000000000000000000011
+       24   $paramod\dsdv_sx_rly_out\F=s32'00000000000000000000000000000000
+       24   $paramod\dsdv_sx_rly_out\F=s32'00000000000000000000000000000001
+       24   $paramod\dsdv_sx_rly_out\F=s32'00000000000000000000000000000010
+       24   $paramod\dsdv_sx_rly_out\F=s32'00000000000000000000000000000011
+
+=== $paramod$27c3de73fc68039b52bede8c3c078d4a1d38ea9d\ot_hdc_kinc ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       64 wire bits
+        4 public wires
+       64 public wire bits
+        3 ports
+       63 port bits
+        1 submodules
+        1   $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011111
+
+=== $paramod$02e80e375dc11ee1b7ddd8db28bb3eebbb0f64f1\ot_hdc_kadd ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       83 wire bits
+        5 public wires
+       83 public wire bits
+        5 ports
+       83 port bits
+        1 submodules
+        1   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011011
+
+=== $paramod$8ff5a5dd3460007ddc1f9d1d4a143ba9fdbcef6e\ot_hdc_f12_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       27 wire bits
+        6 public wires
+       20 public wire bits
+        4 ports
+       14 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\dsdv_svc_rs_up\UW=s32'00000000000000000000000000010000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      139 wires
+     1166 wire bits
+       32 public wires
+      481 public wire bits
+       12 ports
+      161 port bits
+       13 processes
+       41 cells
+        8   $add
+        8   $and
+        4   $eq
+        9   $logic_not
+        4   $mux
+        8   $or
+
+=== $paramod$0564c059ba4ae9d57f7886ff7b156aec91c4368f\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+      514 wire bits
+        5 public wires
+      290 public wire bits
+        4 ports
+       66 port bits
+        1 processes
+
+=== $paramod$5530a0a2ec03ad5ec59faafc16b32360ce9a12d9\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+     1154 wire bits
+        5 public wires
+      587 public wire bits
+        4 ports
+       20 port bits
+        1 processes
+
+=== $paramod$158916d3135cae63a2d061d79d9fa5a887270a1e\ot_hdc_kadd ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       98 wire bits
+        5 public wires
+       98 public wire bits
+        5 ports
+       98 port bits
+        1 submodules
+        1   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000100000
+
+=== $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000100000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      826 wires
+     1555 wire bits
+       19 public wires
+      560 public wire bits
+        5 ports
+       98 port bits
+      398 processes
+      409 cells
+      271   $and
+      135   $or
+        3   $xor
+
+=== $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      301 wires
+      608 wire bits
+       10 public wires
+      256 public wire bits
+        4 ports
+       64 port bits
+      161 processes
+      130 cells
+      129   $and
+        1   $xor
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+   784102 dsdv_svc_rs
+      210 $paramod$dfd68498fb48dd13dd3e17c5a4d57fc95082d0da\dsdv_svc_rs_c
+      141   $paramod\dsdv_sm_so_target\HEAD=s32'11111111111111111111111111111111
+       41   $paramod\dsdv_svc_rs_up\UW=s32'00000000000000000000000000010000
+       15   $paramod\dsdv_svc_sx\MUT=s32'00000000000000000000000000000000
+      108     $paramod$49b414b4e23a0d8c2b0800d2d1eba5a0d51b8d1f\dsdv_svc_sx_hrow
+        2       $paramod$18738b396cd6e4b34d06f14d142455223756f772\ot_hdc_v41x_qaddf
+       76           $paramod\ot_hdc_fp32_add_f12\CUTS=7'1101010
+        1             $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+        1             $paramod$8ff5a5dd3460007ddc1f9d1d4a143ba9fdbcef6e\ot_hdc_f12_cut
+        1             $paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut
+        1             $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+        1             $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+       22             $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+       95             $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+       67             $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+      271             $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+      346             $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+       94             ot_hdc_lzc32
+        1       $paramod\ot_hdc_v41x_vdly\D=s32'00000000000000000000000000000101
+        2         $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        1         ot_dvrly_ckinv
+        2         $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        1         ot_dvrly_ckinv
+        2         $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        1         ot_dvrly_ckinv
+        2         $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        1         ot_dvrly_ckinv
+        2         $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        1         ot_dvrly_ckinv
+        2         $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        1         ot_dvrly_ckinv
+        2         $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        1         ot_dvrly_ckinv
+        2         $paramod$b2234fc2f6b484bad84f7890ea3e5120ee388369\ot_s81_rly
+        1         ot_dvrly_ckinv
+       11   dsdv_sm_gw
+       46   dsdv_svc_sot
+        2   dsfd_svc_pc
+        3       $paramod$de220acca18f1db8eb14cf5268f0d6f24a2b6a99\dsfd_su_t_smhq
+        1         $paramod$247e635a72efe516af573bda7394c64ef380e974\ot_hdc_delay
+        1         $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay
+        1         $paramod$8de78af6131ecb245f46105ac5f47885f86304b5\ot_hdc_delay
+        1         $paramod$a5d42b1fc0bb61c4aaa9b9cdb4ea4bc173e6ebb2\ot_hdc_delay
+        1         $paramod$b99699e07e8a316d70de95fddb8ec5868b9325ae\ot_hdc_delay
+       44           $paramod$6539e0de391f7a65cc23bde289777c8de2cf2e01\ot_s81_su_smd
+        2               $paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat
+       76                   $paramod\ot_hdc_fp32_add_f12\CUTS=6'101010
+        1                     $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+        1                     $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+        1                     $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+       22                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+       95                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+       67                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+      271                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+      346                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+       94                     ot_hdc_lzc32
+       55               $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000010000
+      100             $paramod\ot_dsrom_su_fdiv_f12\NR=s32'00000000000000000000000000000000
+      331                 $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011011
+      130                 $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011111
+        1               $paramod\ot_hdc_vline\D=s32'00000000000000000000000000100001
+        2               $paramod\ot_hdc_qmul_lat\LAT=s32'00000000000000000000000000000101
+      313                   $paramod\ot_hdc_fp32_mul_f12\CUTS=8'01101010
+        1                     $paramod$0599939dcdb16c1245958738992a94bb0fba277e\ot_hdc_f12_cut
+        1                     $paramod$25ede51e938695f79bc8a66e96cc5cd0eb3509d5\ot_hdc_f12_cut
+        1                     $paramod$839fea84eb49dc60873cd742c30fe7886ded8241\ot_hdc_f12_cut
+        1                     $paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut
+       95                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+      115                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001100
+      697                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000110000
+       94                     ot_hdc_lzc32
+      176                     ot_hdc_mul24_rows
+        1             $paramod\ot_hdc_vline\D=s32'00000000000000000000000000101100
+       38           $paramod$f05440f12c231b1e7299f2120b20df52cb61f978\ot_s81_su_sml
+        1             $paramod$158916d3135cae63a2d061d79d9fa5a887270a1e\ot_hdc_kge
+      409               $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000100000
+       24             $paramod$690a3487a2d98f70ea47164cd8fbaaa7c44695eb\ot_hdc_v41x_exp
+      409                 $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000100000
+        2               $paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat
+       76                   $paramod\ot_hdc_fp32_add_f12\CUTS=6'101010
+        1                     $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+        1                     $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+        1                     $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+       22                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+       95                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+       67                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+      271                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+      346                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+       94                     ot_hdc_lzc32
+        2               $paramod\ot_hdc_qmul_lat\LAT=s32'00000000000000000000000000000101
+      313                   $paramod\ot_hdc_fp32_mul_f12\CUTS=8'01101010
+        1                     $paramod$0599939dcdb16c1245958738992a94bb0fba277e\ot_hdc_f12_cut
+        1                     $paramod$25ede51e938695f79bc8a66e96cc5cd0eb3509d5\ot_hdc_f12_cut
+        1                     $paramod$839fea84eb49dc60873cd742c30fe7886ded8241\ot_hdc_f12_cut
+        1                     $paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut
+       95                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+      115                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001100
+      697                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000110000
+       94                     ot_hdc_lzc32
+      176                     ot_hdc_mul24_rows
+        1               $paramod\ot_hdc_vline\D=s32'00000000000000000000000001000111
+        2               $paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat
+       76                   $paramod\ot_hdc_fp32_add_f12\CUTS=6'101010
+        1                     $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+        1                     $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+        1                     $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+       22                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+       95                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+       67                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+      271                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+      346                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+       94                     ot_hdc_lzc32
+        2               $paramod\ot_hdc_qmul_lat\LAT=s32'00000000000000000000000000000101
+      313                   $paramod\ot_hdc_fp32_mul_f12\CUTS=8'01101010
+        1                     $paramod$0599939dcdb16c1245958738992a94bb0fba277e\ot_hdc_f12_cut
+        1                     $paramod$25ede51e938695f79bc8a66e96cc5cd0eb3509d5\ot_hdc_f12_cut
+        1                     $paramod$839fea84eb49dc60873cd742c30fe7886ded8241\ot_hdc_f12_cut
+        1                     $paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut
+       95                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+      115                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001100
+      697                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000110000
+       94                     ot_hdc_lzc32
+      176                     ot_hdc_mul24_rows
+        1             $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000101
+        1             $paramod\ot_hdc_vline\D=s32'00000000000000000000000001001011
+        1       $paramod\dsfd_su_t_smhr\SRL=s32'00000000000000000000000000000010
+        1         $paramod$004193434a66b5c5752130a33d7eb48f9c0971f2\ot_hdc_delay
+        1         $paramod$247e635a72efe516af573bda7394c64ef380e974\ot_hdc_delay
+        1         $paramod$55510c4854d189dea93de2c667c69be7b0dcbfe7\ot_hdc_delay
+        1         $paramod$8de78af6131ecb245f46105ac5f47885f86304b5\ot_hdc_delay
+        1         $paramod$a5d42b1fc0bb61c4aaa9b9cdb4ea4bc173e6ebb2\ot_hdc_delay
+        8           $paramod$fc76eecef5bfa99166dfca27b8245ced911975fe\ot_s81_su_smc
+        2               $paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat
+       76                   $paramod\ot_hdc_fp32_add_f12\CUTS=6'101010
+        1                     $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+        1                     $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+        1                     $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+       22                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+       95                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+       67                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+      271                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+      346                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+       94                     ot_hdc_lzc32
+        1             $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000100
+        1             $paramod\ot_hdc_vline\D=s32'00000000000000000000000000011100
+      176           $paramod$fc76eecef5bfa99166dfca27b8245ced911975fe\ot_s81_su_smr
+        1             $paramod$158916d3135cae63a2d061d79d9fa5a887270a1e\ot_hdc_kge
+      409               $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000100000
+        2               $paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat
+       76                   $paramod\ot_hdc_fp32_add_f12\CUTS=6'101010
+        1                     $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+        1                     $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+        1                     $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+       22                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+       95                     $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+       67                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+      271                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+      346                     $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+       94                     ot_hdc_lzc32
+        1             $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000100
+       67     $paramod\ot_s81_su_smq\MUT=s32'00000000000000000000000000000000
+
+        +----------Count including submodules.
+        | 
+  1572684 wires
+ 1.29E+07 wire bits
+   171007 public wires
+  6381700 public wire bits
+    47999 ports
+  1667848 port bits
+       32 memories
+    22528 memory bits
+   586523 processes
+   784102 cells
+     1898   $add
+   444293   $and
+    12233   $eq
+      757   $ge
+      867   $gt
+      248   $le
+     2202   $logic_and
+     3900   $logic_not
+     2193   $logic_or
+     8288   $lt
+       32   $memrd
+       32   $mul
+    27122   $mux
+      989   $ne
+      194   $neg
+     2623   $not
+   232989   $or
+       10   $reduce_and
+     2006   $reduce_or
+       18   $shift
+       34   $shiftx
+     8736   $shl
+      692   $shr
+    16754   $sub
+    14987   $xor
+        1   dsdv_svc_att
+        4   ot_sram_1r1w_32x64_m1
+        1 submodules
+        1   $paramod$dfd68498fb48dd13dd3e17c5a4d57fc95082d0da\dsdv_svc_rs_c
+
