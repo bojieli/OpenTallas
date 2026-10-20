@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   989 GB (avail 805, growth 113, headroom 0, waiters 0/0 GB) load 57/128 running 42 disk 411 GB 
+ot-run: ot-epyc5       admits   913 GB (avail 748, growth 109, headroom 0, waiters 0/0 GB) load 79/128 running 27 disk 562 GB 
+ot-run: ot-epyc6       admits  1141 GB (avail 912, growth 113, headroom 0, waiters 0/0 GB) load 75/128 running 35 disk 559 GB 
+ot-run: ot-epyc7       admits   610 GB (avail 528, growth 101, headroom 0, waiters 0/0 GB) load 80/96 running 21 disk 502 GB 
+ot-run: ot-epyc8       admits  1179 GB (avail 899, growth 74, headroom 0, waiters 0/0 GB) load 33/128 running 12 disk 565 GB 
+ot-run: ot-pve1        admits    65 GB (avail 65, growth 19, headroom 0, waiters 0/0 GB) load 30/28 running 10 disk 1199 GB 
+ot-run: ot-agidock128  admits    85 GB (avail 72, growth 13, headroom 0, waiters 0/0 GB) load 21/64 running 9 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: request 32G is charged 19G (class 'run_campaign.sh:core' measured peak 11.0G, n=1+0 proved); the cap stays 32G
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-332509-1792457007 after 0 s
+
+gzip: stdin: unexpected end of file
+tar: Child returned status 1
+tar: Error is not recoverable: exiting now
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-332509-1792457007): exit 2

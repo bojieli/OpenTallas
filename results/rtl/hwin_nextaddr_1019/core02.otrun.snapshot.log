@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits   978 GB (avail 798, growth 113, headroom 0, waiters 0/0 GB) load 59/128 running 42 disk 411 GB 
+ot-run: ot-epyc5       admits   912 GB (avail 747, growth 108, headroom 0, waiters 0/0 GB) load 83/128 running 27 disk 562 GB 
+ot-run: ot-epyc6       admits  1138 GB (avail 910, growth 113, headroom 0, waiters 0/0 GB) load 71/128 running 35 disk 559 GB 
+ot-run: ot-epyc7       admits   609 GB (avail 527, growth 101, headroom 0, waiters 0/0 GB) load 79/96 running 22 disk 502 GB 
+ot-run: ot-epyc8       admits  1168 GB (avail 899, growth 82, headroom 0, waiters 0/0 GB) load 30/128 running 12 disk 565 GB 
+ot-run: ot-pve1        admits    65 GB (avail 65, growth 19, headroom 0, waiters 0/0 GB) load 30/28 running 10 disk 1199 GB 
+ot-run: ot-agidock128  admits    85 GB (avail 72, growth 13, headroom 0, waiters 0/0 GB) load 21/64 running 9 disk 46 GB 
+ot-run: -> ot-epyc8
+ot-heavy: request 32G is charged 19G (class 'run_campaign.sh:core' measured peak 11.0G, n=1+0 proved); the cap stays 32G
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-335677-1792457024 after 0 s
+SOURCE_ROOT /srv/opentallas-scratch/claude/hwin-nextaddr-1019

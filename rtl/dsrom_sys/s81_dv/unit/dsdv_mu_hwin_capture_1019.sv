@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Private exact selected-anchor HWIN source; namespace projection only.
 module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0, parameter integer REGISTERED_SUCCESSOR = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -141,9 +141,27 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     dsdv_mu_hwin_capture_1019_mem #(.W(24),.AW(SI)) u_gap(.ck(ck),.rst_n(rr[MEM_RBASE +: 3]),
         .we(mc_q[25] && !mc_q[24] && !armed && table_empty && gn != SJ'(NSLOT)),
         .wa(gn[SI-1:0]),.wd(mc_q[23:0]-24'd1),.ra(gxb),.q(ng));
-    wire retire_wrap=(|(rp&lm)) || rp[NSLOT-1];
+    // c22: retain the already-priced address edge. Precompute the physical
+    // successor independently of same-edge advance; a binary shadow of the
+    // registered calendar limit replaces decode/onehot/reduce in address wrap.
+    wire [SI-1:0] retire_successor, retire_limit;
+    generate if(REGISTERED_SUCCESSOR!=0) begin:g_retire_successor
+    (* keep *) reg [SI-1:0] successor_r, limit_r;
+    assign retire_successor=successor_r; assign retire_limit=limit_r;
+    always @(posedge ck or negedge rr[RPTR_BASE+6*SLOT_RG])
+        if(!rr[RPTR_BASE+6*SLOT_RG]) successor_r<=SI'(1);
+        else if(radv) successor_r<=retire_wrap ? SI'(1) :
+            ((rpb==SI'(NSLOT-2)) ? SI'(0) : rpb+SI'(2));
+    always @(posedge ck or negedge rr[RPTR_BASE+4*SLOT_RG])
+        if(!rr[RPTR_BASE+4*SLOT_RG]) limit_r<=SI'(NSLOT-1);
+        else limit_r<=lw;
+    end else begin:g_no_retire_successor
+        assign retire_successor=SI'(0); assign retire_limit=SI'(0);
+    end endgenerate
+    wire retire_wrap=(REGISTERED_SUCCESSOR!=0) ?
+        ((rpb==retire_limit) || (rpb==SI'(NSLOT-1))) : ((|(rp&lm)) || rp[NSLOT-1]);
     wire [SI-1:0] rpb_next=!rr[RPTR_BASE+6*SLOT_RG] ? SI'(0) :
-        !radv ? rpb : retire_wrap ? SI'(0) : rpb+1'b1;
+        !radv ? rpb : retire_wrap ? SI'(0) : (REGISTERED_SUCCESSOR!=0) ? retire_successor : rpb+1'b1;
     generate if(EARLY_HEAD_CAPTURE==0) begin:g_retire_legacy
     dsdv_mu_hwin_capture_1019_mem #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
         .we(rec_q),.wa(ssqb),.wd(tsq),.ra(rpb),.q(h_rts));
@@ -372,6 +390,20 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     generate for(se=0;se<NEV;se=se+1) begin:g_event_mem
         wire [NSLOT-1:0] pe_r;
         reg [SI-1:0] pb_r; reg fresh_r;
+        wire [SI-1:0] successor, limit;
+        if(REGISTERED_SUCCESSOR!=0) begin:g_successor
+        (* keep *) reg [SI-1:0] successor_r, limit_r;
+        assign successor=successor_r; assign limit=limit_r;
+        always @(posedge ck or negedge rr[se+1])
+            if(!rr[se+1]) successor_r<=SI'(1);
+            else if(adv[se]) successor_r<=event_wrap ? SI'(1) :
+                ((pb_r==SI'(NSLOT-2)) ? SI'(0) : pb_r+SI'(2));
+        always @(posedge ck or negedge rr[RLM_BASE+se*SLOT_RG])
+            if(!rr[RLM_BASE+se*SLOT_RG]) limit_r<=SI'(NSLOT-1);
+            else limit_r<=lw_event[se];
+        end else begin:g_no_successor
+            assign successor=SI'(0); assign limit=SI'(0);
+        end
         assign pe[se]=pe_r; assign pbi[se]=pb_r; assign h_fr[se]=fresh_r;
         if(COMPACT_PTR!=0) begin:g_binary_head
             // pb_r was the exact same-edge shadow of the original one-hot pe_r.
@@ -390,7 +422,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             end
             always @(posedge ck or negedge rr[COPY_RBASE+7*se+6])
                 if(!rr[COPY_RBASE+7*se+6]) upper_pointer_r<=SI'(0);
-                else if(adv[se]) upper_pointer_r<=((|(pe_r&lm_event[se])) || pe_r[NSLOT-1])?SI'(0):upper_pointer_r+1'b1;
+                else if(adv[se]) upper_pointer_r<=event_wrap?SI'(0):upper_pointer_r+1'b1;
         end else begin:g_onehot_head
             reg [NSLOT-1:0] pointer_r;
             assign pe_r=pointer_r;
@@ -401,7 +433,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         always @(posedge ck or negedge rr[se+1])
             if(!rr[se+1]) begin pb_r<=SI'(0); fresh_r<=1'b0; end
             else begin
-                if(adv[se]) pb_r<=((|(pe_r&lm_event[se])) || pe_r[NSLOT-1])?SI'(0):pb_r+1'b1;
+                if(adv[se]) pb_r<=pb_next;
                 fresh_r<=!adv[se] && !(|(pe_r&rec_slot));
             end
         for(rce=0;rce<NC_REC;rce=rce+1) begin:g_record_copy
@@ -411,9 +443,10 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         end
         wire [62:0] head;
         wire [31:0] due_at_start=ts_event[se]+{11'd0,eD[se]};
-        wire event_wrap=(|(pe_r&lm_event[se])) || pe_r[NSLOT-1];
+        wire event_wrap=(REGISTERED_SUCCESSOR!=0) ?
+            ((pb_r==limit) || (pb_r==SI'(NSLOT-1))) : ((|(pe_r&lm_event[se])) || pe_r[NSLOT-1]);
         wire [SI-1:0] pb_next=!rr[se+1] ? SI'(0) : !adv[se] ? pb_r :
-            event_wrap ? SI'(0) : pb_r+1'b1;
+            event_wrap ? SI'(0) : (REGISTERED_SUCCESSOR!=0) ? successor : pb_r+1'b1;
         if(EARLY_HEAD_CAPTURE==0) begin:g_legacy
         dsdv_mu_hwin_capture_1019_mem #(.W(63),.AW(SI)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
             .wa(ssqb),.wd({due_at_start,spq,suq}),.ra(pbi[se]),.q(head));
@@ -617,7 +650,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             if(armed && ph==cg) slb<=((|(sl&lm)) || sl[NSLOT-1])?SI'(0):slb+1'b1;
             if((armed && ph==cg) || (st && !armed && !hcfg_bad))
                 gxb<=(MUT==5 || {1'b0,gxb}+1'b1>=gn)?SI'(0):gxb+1'b1;
-            if(radv) rpb<=((|(rp&lm)) || rp[NSLOT-1])?SI'(0):rpb+1'b1;
+            if(radv) rpb<=rpb_next;
         end
     wire [23:0] phase_increment=ph+24'd1;
     wire [2:0] phase_set,phase_clear,phase_step;
