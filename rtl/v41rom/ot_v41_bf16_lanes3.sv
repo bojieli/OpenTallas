@@ -240,7 +240,9 @@ module ot_v41_bf16_lanes3 #(
             assign ov_k = vk;
 `ifdef OT_BF_QUEUE32
             wire rst_wk;
-            ot_v41_rst_copy u_rw (.clk(clk), .rst_pin(rst_pv[4]), .rst_n(rst_wk));
+            // rst_pv are the caller's same-edge copies of one reset (module contract).
+            // Bank0 has28 loads in the pinned census; bank4 reached33 with this leaf.
+            ot_v41_rst_copy u_rw (.clk(clk), .rst_pin(rst_pv[0]), .rst_n(rst_wk));
             (* keep *) reg [4:0] wvk;
             always @(posedge clk or negedge rst_wk) if (!rst_wk) wvk <= 0; else wvk <= {5{vp[LATT-2]}};
             assign ov_wk = wvk;
