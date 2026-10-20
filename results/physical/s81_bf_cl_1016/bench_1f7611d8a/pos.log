@@ -1,8 +1,0 @@
-ot-run: ot-agidock128  admits    25 GB (avail 52, growth 34, headroom 0, waiters 0/0 GB) load 33/64 running 11 disk 308 GB 
-ot-run: -> ot-agidock128
-ot-heavy: waiting for memory on vm-xry57mhfyn: need 0.7 x 16 = 11 GB, admissible 14 GB: available 52 GB, growth charged 42 GB (x0.5), young 19 GB, floor 6 GB
-ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3089040-1792254175 after 121 s
-positive ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350', 'PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418', 'TXN LAG ns min=8.330 max=18.326 mean=11.823 n=456']
-PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs
-ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3089040-1792254175): exit 0
-RC pos 0

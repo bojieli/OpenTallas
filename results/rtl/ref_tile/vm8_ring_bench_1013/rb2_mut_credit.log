@@ -1,8 +1,0 @@
-VM_RING_SRC tile=rb2 sha256=3be9a80a490795a2e73c7b54214daf2eaaaae2b8ba8652d0436ba594f99d253f mut=CREDIT
-ring_mut: CREDIT applied to physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rb2.sv -> ../out/rb2_mut_credit/vm_cp_rb2_mut_CREDIT.sv
-VM_RING tile=rb2 WA=2048 WB=1078 WF=201 cycles=1207232 beatsA=20000(main 19497 stn 503) beatsB=20000(main 10059 stn 9941) exact_err=1351 order_err=0 data_err=0 addr_err=0 credit_err=1199989 toggled=3327/3327 stallA=16089/34743 fullA=1199/8 zeroA=2058/67 stallB=8289/8399 fullB=637/630 zeroB=1044/1040 cfg=0
-VM_RING_RUN FAIL tile=rb2: exact credit leak_or_deadlock cov_beats_A
-VM_RING tile=rb2 WA=2048 WB=1078 WF=201 cycles=1207232 beatsA=20000(main 19318 stn 682) beatsB=20000(main 9979 stn 10021) exact_err=1470 order_err=0 data_err=0 addr_err=0 credit_err=1199951 toggled=3327/3327 stallA=16095/34494 fullA=1192/7 zeroA=2059/55 stallB=8324/8397 fullB=632/598 zeroB=1067/1026 cfg=0
-VM_RING_RUN FAIL tile=rb2: exact credit leak_or_deadlock cov_beats_A
-VM_RING_BENCH FAIL tile=rb2 mut=CREDIT beats=0/1
-rc=1

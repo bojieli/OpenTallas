@@ -1,4 +1,0 @@
-FAIL load f 4 m 1 n 4096: done 0 fault 1
-[476000] %Fatal: tb_hgi_dma_front_qwen_native6.sv:50: Assertion failed in tb_hgi_dma_front_qwen_native6: FATAL native transport queue000000ff router00 lease0
-%Error: rtl/hbm_accel/generic/peers/tb_hgi_dma_front_qwen_native6.sv:50: Verilog $stop
-Aborting...

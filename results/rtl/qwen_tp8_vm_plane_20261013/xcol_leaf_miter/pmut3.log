@@ -1,9 +1,0 @@
-xcol mismatch cyc 19
-xcol mismatch cyc 20
-xcol mismatch cyc 21
-FAIL qfd_vm_xcol PMUT=3 LMUT=0 errors=2787 of 3983
-[40006000] %Fatal: tb_qfd_vm_xcol.sv:54: Assertion failed in tb_qfd_vm_xcol: FAIL
-%Error: rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xcol.sv:54: Verilog $stop
-Aborting...
-Command exited with non-zero status 1
-maxrss_kb=4208 wall=0.11

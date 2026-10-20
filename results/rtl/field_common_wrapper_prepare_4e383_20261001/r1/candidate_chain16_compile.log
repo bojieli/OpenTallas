@@ -1,7 +1,0 @@
-Running as unit: run-u50419.service
-%Error: Invalid option: --binary
-RESOURCE {"memory.max": "4294967296", "memory.swap.max": "0", "memory.peak": "16805888", "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0", "returncode": 1, "cpus": [0, 1], "elapsed_seconds": 0.035}
-Finished with result: exit-code
-Main processes terminated with: code=exited/status=1
-Service runtime: 61ms
-CPU time consumed: 52ms

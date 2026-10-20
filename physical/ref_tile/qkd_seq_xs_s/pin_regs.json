@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_seq_xs_s",
- "enable": false,
- "reason": "x_v / x_d / qpop land in pin flops (xv / xd / qp) and q_w / q_e are the registered copies, as qkd_seq_xs_tp8; a recipe-3 pin register would add an edge to the compiled Q push/pop."
-}

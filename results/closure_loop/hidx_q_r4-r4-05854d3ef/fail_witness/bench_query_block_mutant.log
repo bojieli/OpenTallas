@@ -1,7 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hidx_q_r4-r4-05854d3ef bench bench_query_block_mutant host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/hidx_q_r4-r4-05854d3ef log cl/bench_query_block_mutant.a1b1.log captured 2026-10-18T04:54:33-07:00
-# fail_regex 'exact32head static query gate'
-MISMATCH head8
-IDX_QUERY_STATIC MUT1 checked32 errors1 fault0
-FATAL: rtl/test/hbm_idx_static/tb_query_static.sv:32: exact32head static query gate
-       Time: 1870000  Scope: tb_query_static

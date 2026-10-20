@@ -1,9 +1,0 @@
-EVENT request t=345000 addr=0 cookie=0
-EVENT reply t=423000 cookie=0
-EVENT request t=477000 addr=64 cookie=64
-EVENT reply t=555000 cookie=64
-EVENT request t=789000 addr=1 cookie=0
-EVENT reply t=915000 cookie=0
-EVENT request t=963000 addr=65 cookie=64
-EVENT reply t=1083000 cookie=64
-PASS ACTUAL_SPINE_RELATED_NATIVE cases=5 macros=256 R=128 VRD=64 reads=4 BF16=256 aligned_and_unaligned=1

@@ -1,5 +1,0 @@
-%Error: original_publish.sv:48:68: syntax error, unexpected ',', expecting '}'
-   48 |  localparam MUT=0;wire c_xc=pattern[0];wire[115:0]cmd_q={3{pattern},20'd0};reg[49:0]cc_o;
-      |                                                                    ^
-        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
-%Error: Exiting due to 1 error(s)

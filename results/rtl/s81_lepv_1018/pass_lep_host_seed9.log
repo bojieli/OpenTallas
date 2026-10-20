@@ -1,6 +1,0 @@
-LEPH_STATS H->A ring 219/219 host 101/101 ks 80/80 | A->H frames 588/588 (ring 482 thost 54 tkd 52) | mismatches 0 f_lf 0101 bad 0 fault 0
-PASS lep_host: H->A 219 ring + 101 HOST + 80 KS, A->H 588 frames (54 THOST incl. 1 merge, 52 TKD) bit-exact in order; f_lf live
-- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lep_host.sv:158: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 11us; walltime 0.166 s; speed 66.625 us/s
-- Verilator: cpu 0.166 s on 1 threads; allocated 10 MB

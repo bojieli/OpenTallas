@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job s81coll_cfifo_crs4-c4a-f11bb1950 bench bench_read_slot_late_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/s81coll_cfifo_crs4-c4a-f11bb1950 log cl/bench_read_slot_late_mutant.a1b1.log captured 2026-10-18T07:19:01-07:00
-# fail_regex 'CRS4_BENCH FAIL mut_sel'
-mut_sel FAIL sweep 1/20 slip-fault 8/8 {"aligned_dL_80": {"K": 3, "G": 4, "E": 1, "offsets": [-2]}, "halfT": {"K": 3, "G": 4, "E": 1, "offsets": [-2]}, "lanes03_far_900": {"K": 4, "G": 4, "E": 2, "offsets": [-5, 0]}, "spread_16hop": {"K": 4, "G": 2, "E": 4, "offsets": [0]}} off-E [-7, -4, -3, -2]
-CRS4_BENCH FAIL mut_sel sweep 1/20 slip-fault 8/8 off-E [-7, -4, -3, -2] /srv/opentallas-scratch2/claude/closure-loop/s81coll_cfifo_crs4-c4a-f11bb1950/bench_mut_sel/crs4_mut_sel.json

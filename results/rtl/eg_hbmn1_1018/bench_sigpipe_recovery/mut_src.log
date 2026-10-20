@@ -1,9 +1,0 @@
-RING_AG_N LOCK PASS seed=1 edges=6000 fault_edges=5999 v1_first_fault=0
-RING_AG_N RR PASS rr_publishes=596 edges=6000
-RING_AG_N RR HZ PASS native_fault_edge=53
-RING_AG data q0 d0 cyc6 src0/2 tag0/0
-RING_AG data q1 d0 cyc6 src1/0 tag0/0
-RING_AG data q2 d0 cyc6 src2/3 tag0/0
-RING_AG data q3 d0 cyc6 src3/1 tag0/0
-RING_AG data q0 d1 cyc7 src0/1 tag1/1
-RING_AG_N MUTANT src FAILED

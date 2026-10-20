@@ -1,9 +1,0 @@
-MISMATCH t=23100000 busy 0/1 done 1/0 fault 1/1 uop_v 1/1 it 0/0 pc 10/8 uop_eq 0
-MISMATCH t=23110000 busy 0/1 done 0/0 fault 1/1 uop_v 0/1 it 0/1 pc 10/3 uop_eq 0
-MISMATCH t=23120000 busy 0/0 done 0/1 fault 1/1 uop_v 0/1 it 0/0 pc 10/10 uop_eq 1
-MISMATCH t=34080000 busy 0/1 done 1/0 fault 1/1 uop_v 1/1 it 0/0 pc 10/8 uop_eq 0
-MISMATCH t=34090000 busy 0/1 done 0/0 fault 1/1 uop_v 0/1 it 0/1 pc 10/3 uop_eq 0
-ISSUER_V6_MITER FAIL mismatches86651 checks481122
-[4820216000] %Fatal: tb_hgi_coll_static_issuer_v6_miter.sv:75: Assertion failed in tb_hgi_coll_static_issuer_v6_miter: miter mismatch
-%Error: /srv/opentallas-scratch/claude/tw2-collar-1019/src_c938e12bb/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_issuer_v6_miter.sv:75: Verilog $stop
-Aborting...

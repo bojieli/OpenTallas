@@ -1,8 +1,0 @@
-L3 {"edges_dropped": 1048, "remastered": 23, "edges_added": 2408, "instances_added": 80, "instances_dropped": 18, "kshare_vm_moved": 80} exposed 50 bits 1492 unlisted 0
-{"R1_cross_quadrant_edges": [], "edges_new": 1088, "edges_removed": 1012, "instances_new_or_renamed": 60, "instances_removed": 24, "bank_edges_per_quadrant": {"SW": 16, "SE": 16, "NW": 16, "NE": 16}}
-{"instances": [1520, 1540], "edges": [10634, 11111], "host": [71, 77, 109, 117], "deferred": 0, "cross_quadrant": 0, "undriven_ports": 18}
-{"before": {"instances": 1540, "edges": 11111, "edge_bits": 1122961}, "after": {"instances": 1161, "edges": 11051, "edge_bits": 1107957}, "stree": {"leaves": 4, "root": 1, "stations": 168}, "prog_busy": 3}
-LAYER OK l3_vm_hc_coll.py
-LAYER OK l1_host_xload_stack.py
-LAYER OK l2_su_sfu.py
-PRE_RELAY instances 1161 edges 11051

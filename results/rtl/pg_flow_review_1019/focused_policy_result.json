@@ -1,9 +1,0 @@
-{
-  "status": "PASS",
-  "tests_passed": 37,
-  "command": "python3 -m pytest -q -p no:cacheprovider tools/ref_tile/tests/test_rule_commit_classes.py tools/ref_tile/test_pg_job_policy.py",
-  "fleet_unit": "oth-ubuntu-1991975-1792445826",
-  "host": "ot-epyc8",
-  "source_tip": "4a1f5a30f",
-  "note": "Executed pending source bytes committed unchanged at4a; terminal ot-run stdout37passed in2.95s,exit0."
-}

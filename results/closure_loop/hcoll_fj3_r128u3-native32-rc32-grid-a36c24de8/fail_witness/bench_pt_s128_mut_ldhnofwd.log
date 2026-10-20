@@ -1,0 +1,15 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hcoll_fj3_r128u3-native32-rc32-grid-a36c24de8 bench bench_pt_s128_mut_ldhnofwd host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hcoll_fj3_r128u3-native32-rc32-grid-a36c24de8 log cl/bench_pt_s128_mut_ldhnofwd.a1b1.log captured 2026-10-20T04:50:40-07:00
+# fail_regex 'PT_S128_MUTANT ldhnofwd REJECTED'
+Verilator 5.050 2026-07-01 rev v5.050
+PT_S128_MISMATCH cyc 96291 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 0
+PT_S128_MISMATCH cyc 96292 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 0
+PT_S128_MISMATCH cyc 96293 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96294 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96295 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96296 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96297 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_MISMATCH cyc 96298 ref cfg 0000000000 st 0 spc 0 conf 0 ib 0 f 1 | dut cfg 0000000000 st 0 spc 0 conf 0 ib 1 f 1
+PT_S128_COVER episodes 3000 cycles 956173 faults 2668 configured 300 starts 387 fwd_frames 8
+PT_S128_MITER FAIL mismatches 2221
+PT_S128_MUTANT ldhnofwd REJECTED

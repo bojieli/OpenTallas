@@ -1,7 +1,0 @@
-MISMATCH lane 0 got 000000003a440000 want 3ee76fed3f645a6e at 1855
-MISMATCH lane 5 got 0000000000000000 want 3e6f0b6abf78ed4a at 1855
-MISMATCH lane 8 got 000000003a560000 want bf46c2233f215774 at 1855
-MISMATCH lane 9 got 000000003a610000 want 3f71a9a9bea8f079 at 1855
-MISMATCH lane 11 got 000000003a2e0000 want 3cd4f7cfbf7fe9da at 1855
-FAIL cbuf_native_l0 checks=76444 bad=154 fault=1 code=1 waits=328
-rtl/test/redesign_qwen/tb_qfd_cbuf_reqepoch_native_l0.sv:159: $finish called at 2825175 (1ps)

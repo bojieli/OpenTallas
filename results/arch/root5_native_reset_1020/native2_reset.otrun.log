@@ -1,9 +1,0 @@
-ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
-ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
-ot-run: ot-epyc7       admits   885 GB (avail 721, growth 101, headroom 0, waiters 0/0 GB) load 57/96 running 21 disk 5488 GB 
-ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
-ot-run: -> ot-epyc7
-ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3281430-1792495780 after 0 s
-ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3281430-1792495780): exit 1

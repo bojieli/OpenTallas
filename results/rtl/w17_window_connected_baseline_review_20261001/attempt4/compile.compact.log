@@ -1,9 +1,0 @@
-Original: /tmp/window-connected-baseline-attempt4/compile.log
-Original SHA256: a98553b1e09b2ca0a8ed04ea5a3c2c490d394503e0c355a8c9aabec4f28595c7
-Compact selected diagnostic/report lines; omitted compiler command chatter.
-%Error: /tmp/opentallas-window-connected-baseline-20261001/rtl/test/w17_window_connected_baseline/tb.sv:126:254: Can't find definition of 'u_prefetch' in dotted scope/variable: 'win.u_prefetch'
-  126 |     if(c%20000==0) $display("PROGRESS cycle=%0d started=%0d primed=%0d staged=%0d reads=%0d replies=%0d beats=%0d src_busy=%0d pfstate=%0d rows=%0d refill=%0d req=%0h ready=%0h backend_req=%0h",mem.cyc,started,primed,staged,reads,replies,beats,busy,win.u_prefetch.state,rows_refilled,refill_cycles,wv,wrdy,hv);
-      |                                                                                                                                                                                                                                                              ^~~~~~~~~~
-        ... Known scopes under 'win': u_schedule, u_window
-        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
-%Error: Exiting due to 1 error(s)

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "dsdv_mu_land",
- "enable": false,
- "reason": "Source-registered: wv / wd / rc land in pin flops (wvq / wdq / rcq), rv / rd / fault leave flops; recipe pin_regs would add an unpriced stage."
-}

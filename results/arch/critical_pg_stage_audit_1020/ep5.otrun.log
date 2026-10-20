@@ -1,9 +1,0 @@
-ot-run: ot-epyc5       admits  1009 GB (avail 820, growth 113, headroom 0, waiters 0/0 GB) load 50/128 running 32 disk 174 GB 
-ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-critical-pg-1020
-ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-critical-pg-1020
-ot-run: ot-epyc9       admits   806 GB (avail 665, growth 101, headroom 0, waiters 0/0 GB) load 81/128 running 39 disk 213 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-critical-pg-1020
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-critical-pg-1020
-ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1350400-1792481777 after 0 s
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1350400-1792481777): exit 0

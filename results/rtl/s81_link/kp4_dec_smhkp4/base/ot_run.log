@@ -1,8 +1,0 @@
-ot-run: ot-epyc5       admits   670 GB (avail 732, growth 263, headroom 0, waiters 0/0 GB) load 146/128 running 36 disk 1958 GB 
-ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2321225-1792373955 after 0 s
-Verilator 5.050 2026-07-01 rev v5.050
-TB_S81_KP4_EQ cycles=1476 ref_beats=1395 rtl_mismatch=0 hw_mismatch=0 SEAMMUT=0
-TB_S81_KP4 frames_out=140 exact=122 beyond_t_flagged=17 bad=0 miscorrected=0 nerr_bad=0 parity_checked=16 parity_bad=0 lock=1 relocks=1 n_corr=855 n_unc=17 EMUT=0 DMUT=0 PASS
-TB_S81_KP4_EQ PASS
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2321225-1792373955): exit 0

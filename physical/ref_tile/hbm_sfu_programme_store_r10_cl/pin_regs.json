@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_sfu_programme_store_r10",
- "enable": false,
- "reason": "the r10 head registers every host input at the pin (p_* pin flops, 2-flop reset sync) and every output is a leaf output register or a head status register; a kit flop stage would add an edge to the priced r7c schedule (D=4)"
-}

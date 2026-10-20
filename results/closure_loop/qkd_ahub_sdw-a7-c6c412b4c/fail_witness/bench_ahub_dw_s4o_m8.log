@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_ahub_sdw-a7-c6c412b4c bench bench_ahub_dw_s4o_m8 host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/qkd_ahub_sdw-a7-c6c412b4c log cl/bench_ahub_dw_s4o_m8.a1b1.log captured 2026-10-19T07:48:08-07:00
-# fail_regex '^AHUB_DW FAIL mut=8 errors='
-Verilator 5.050 2026-07-01 rev v5.050
-AHUB_DW FAIL mut=8 first error cycle 588 pass 0: die hub fault hf
-AHUB_DW FAIL mut=8 errors=23554

@@ -1,6 +1,0 @@
-{"source15":"a3dd28a6a (c4938f903 XS metadata lookahead + a3dd28a6a literal fix)","immutable_price_DMA147":15674.320143998484,
- "shared_threeproducer":{"phase61":{"cycles":17022,"ratio":1.085980115},"phase487":{"cycles":17023,"ratio":1.086043914},"verdict":"PASS <= 1.10 (was source12 shared 17242 = 1.100016 FAIL)"},
- "private_native":{"phase61":17022,"phase487":17023,"source12":17169},
- "mutants":{"M1_BF16":"609364 errors FATAL","M6_queue":"overrun FATAL","mirror_M8":"25600 errors FATAL"},
- "mirror_phase61":"PASS 5 formats 20480 words","quant_price_in_same_vehicle":"192/168 = 1.1429 FAIL (quant owner, unchanged)",
- "runner":"rtl/test/hbm_accel/generic/native_contention/run.py --front15"}

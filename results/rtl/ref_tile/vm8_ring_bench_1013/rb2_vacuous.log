@@ -1,7 +1,0 @@
-VM_RING_SRC tile=rb2 sha256=3be9a80a490795a2e73c7b54214daf2eaaaae2b8ba8652d0436ba594f99d253f mut=none
-VM_RING tile=rb2 WA=2048 WB=1078 WF=201 cycles=9418 beatsA=1000(main 501 stn 499) beatsB=1000(main 501 stn 499) exact_err=0 order_err=0 data_err=0 addr_err=0 credit_err=0 toggled=3327/3327 stallA=454/377 fullA=32/22 zeroA=57/34 stallB=408/427 fullB=36/32 zeroB=52/45 cfg=0
-VM_RING_RUN FAIL tile=rb2: cov_beats_A
-VM_RING tile=rb2 WA=2048 WB=1078 WF=201 cycles=9439 beatsA=1000(main 459 stn 541) beatsB=1000(main 502 stn 498) exact_err=0 order_err=0 data_err=0 addr_err=0 credit_err=0 toggled=3327/3327 stallA=436/425 fullA=33/28 zeroA=63/63 stallB=401/460 fullB=27/33 zeroB=48/47 cfg=0
-VM_RING_RUN FAIL tile=rb2: cov_beats_A
-VM_RING_BENCH FAIL tile=rb2 mut=none beats=0/1
-rc=1
