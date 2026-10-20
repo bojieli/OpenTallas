@@ -47,12 +47,13 @@ module ot_hdc_fp32_add_lat_ncr #(
     reg         x_v;
     reg         x_byp, x_nf, x_sub, x_as, x_bs;
     (* keep="true", dont_touch="true" *) reg [6:0] x_swap;
-    // R9c (gate-flow census: the exponent-difference MSB drove 34 one-hot capture compares): the A1 -> A2 cut keeps the
-    // differences BINARY in two kept copies each; the one-hot (j < 14 from copy 0, j >= 14 and >= 28 from copy 1) is
-    // decoded in A2 from the registers (same values / ages as the old one-hot registers)
-    (* keep="true",dont_touch="true" *) reg [7:0] x_dab_c0,x_dab_c1,x_dba_c0,x_dba_c1;
+    // R9d (gate-flow census: the exponent-difference MSB generate drove 34 one-hot capture compares): the A1 -> A2 cut
+    // holds a 2-level one-hot (hi = d[7:5] == 0 && d[4:2] == k, k < 7; lo = d[1:0] == m), 11 compares per difference
+    // instead of 28; A2 forms oh[j] = hi[j / 4] & lo[j % 4] (one AND level; same values / ages as the old registers)
+    (* keep="true",dont_touch="true" *) reg [6:0] x_dab_hi,x_dba_hi;
+    (* keep="true",dont_touch="true" *) reg [3:0] x_dab_lo,x_dba_lo;
     wire [27:0] x_dab_oh,x_dba_oh;
-    wire x_dab_big=(x_dab_c1>=8'd28), x_dba_big=(x_dba_c1>=8'd28);
+    (* keep="true",dont_touch="true" *) reg x_dab_big,x_dba_big;
     reg [31:0] x_code_a,x_code_b;
     // R8: two kept copies per 8-bit bypass bank (one per 4-bit half) -> each copy feeds 4 bits x 4 ring slots (R7 census: 33 loads)
     (* keep="true",dont_touch="true" *) reg [7:0] x_az_dist,x_bz_dist,x_nf_dist;
@@ -65,13 +66,15 @@ module ot_hdc_fp32_add_lat_ncr #(
         x_swap <= {7{!cmp_c}}; x_byp <= bypass; x_nf <= nonfinite; x_code_a<=a;x_code_b<=b;
         x_az_dist<={8{a_zero}};x_bz_dist<={8{b_zero}};x_nf_dist<={8{nonfinite}};
         x_sub <= a[31] ^ b[31]; x_as <= a[31]; x_bs <= b[31];
-        x_aexp <= a_exp; x_bexp <= b_exp; x_aman <= a_man; x_bman <= b_man; x_dab_c0<=dab;x_dab_c1<=dab;x_dba_c0<=dba;x_dba_c1<=dba;
+        x_aexp <= a_exp; x_bexp <= b_exp; x_aman <= a_man; x_bman <= b_man; x_dab_big<=(dab>=28);x_dba_big<=(dba>=28);
     end
     // ---- A2 ----------------------------------------------------------------------------------------
     genvar j;
     generate for(j=0;j<28;j=j+1)begin:jam_capture
-      if(j<14)begin:lo assign x_dab_oh[j]=(x_dab_c0==j);assign x_dba_oh[j]=(x_dba_c0==j);end
-      else begin:hi assign x_dab_oh[j]=(x_dab_c1==j);assign x_dba_oh[j]=(x_dba_c1==j);end
+      assign x_dab_oh[j]=x_dab_hi[j/4]&x_dab_lo[j%4];
+      assign x_dba_oh[j]=x_dba_hi[j/4]&x_dba_lo[j%4];
+      if(j<7)begin:hi always @(posedge clk)begin x_dab_hi[j]<=(dab[7:2]==j);x_dba_hi[j]<=(dba[7:2]==j);end end
+      if(j<4)begin:lo always @(posedge clk)begin x_dab_lo[j]<=(dab[1:0]==j);x_dba_lo[j]<=(dba[1:0]==j);end end
     end endgenerate
     function automatic [27:0] jam28oh;
       input [23:0] man;input [27:0] oh;input big;
