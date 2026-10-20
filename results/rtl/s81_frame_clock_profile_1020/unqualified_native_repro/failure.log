@@ -1,0 +1,140 @@
+test_real_propagated_clock_tags_both_edges_and_corners (test_frame_clock_profile_native.Native.test_real_propagated_clock_tags_both_edges_and_corners) ... FAIL
+
+======================================================================
+FAIL: test_real_propagated_clock_tags_both_edges_and_corners (test_frame_clock_profile_native.Native.test_real_propagated_clock_tags_both_edges_and_corners)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-s81-clock-profile-1020/test_frame_clock_profile_native.py", line 77, in test_real_propagated_clock_tags_both_edges_and_corners
+    self.assertEqual(rc,0,out); self.assertIn(f'OT_FRAME_CLOCK COVERAGE {c} PASS 8/8',out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /w/hard.lef, created 3 library cells
+Cell relay
+Library hard_tt
+File /w/hard.lib
+ CK input 1.00
+ D input 1.00
+ CKO output function=CK
+
+Timing arcs
+ CK -> D
+  setup
+ CK -> D
+  hold
+ CK -> CKO
+  combinational
+[WARNING STA-1062] generated clock out0 source pin xok[0] missing paths from master clock ot_frame_xk0.
+[WARNING STA-1062] generated clock out1 source pin xok[1] missing paths from master clock ot_frame_xk1.
+[WARNING STA-1062] generated clock out2 source pin xok[2] missing paths from master clock ot_frame_xk2.
+[WARNING STA-1062] generated clock out3 source pin xok[3] missing paths from master clock ot_frame_xk3.
+Startpoint: d[0] (input port clocked by ot_frame_xk0)
+Endpoint: s0/D (internal pin)
+Path Group: unconstrained
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ input external delay
+   0.00    0.00 ^ d[0] (in)
+   0.00    0.00 ^ s0/D (sink)
+           0.00   data arrival time
+---------------------------------------------------------
+(Path is unconstrained)
+
+
+Startpoint: xk[0] (clock source 'ot_frame_xk0')
+Endpoint: u_cf/C0 (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00  416.67 v xk[0] (in)
+   0.00  416.67 v u_cf/C0 (cf)
+         416.67   data arrival time
+---------------------------------------------------------
+(Path is unconstrained)
+
+
+TAG u_cf/C0 rise min 56 default ^min ot_frame_xk0 ^ (clock prop) clk_src xk[0] crpr_pin null
+TAG u_cf/C0 rise max 60 default ^max ot_frame_xk0 ^ (clock prop) clk_src xk[0] crpr_pin null
+TAG u_cf/C0 fall min 59 default vmin ot_frame_xk0 v (clock prop) clk_src xk[0] crpr_pin null
+TAG u_cf/C0 fall max 63 default vmax ot_frame_xk0 v (clock prop) clk_src xk[0] crpr_pin null
+TAG u_xo0/CK rise min 56 default ^min ot_frame_xk0 ^ (clock prop) clk_src xk[0] crpr_pin null
+TAG u_xo0/CK rise max 60 default ^max ot_frame_xk0 ^ (clock prop) clk_src xk[0] crpr_pin null
+TAG u_xo0/CK fall min 59 default vmin ot_frame_xk0 v (clock prop) clk_src xk[0] crpr_pin null
+TAG u_xo0/CK fall max 63 default vmax ot_frame_xk0 v (clock prop) clk_src xk[0] crpr_pin null
+Error: run.tcl, 20 OT_FRAME_CLOCK: missing/ambiguous actual min rise clock tag on u_xo0/CKO
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.646s
+
+FAILED (failures=1)
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /w/hard.lef, created 3 library cells
+Cell relay
+Library hard_tt
+File /w/hard.lib
+ CK input 1.00
+ D input 1.00
+ CKO output function=CK
+
+Timing arcs
+ CK -> D
+  setup
+ CK -> D
+  hold
+ CK -> CKO
+  combinational
+[WARNING STA-1062] generated clock out0 source pin xok[0] missing paths from master clock ot_frame_xk0.
+[WARNING STA-1062] generated clock out1 source pin xok[1] missing paths from master clock ot_frame_xk1.
+[WARNING STA-1062] generated clock out2 source pin xok[2] missing paths from master clock ot_frame_xk2.
+[WARNING STA-1062] generated clock out3 source pin xok[3] missing paths from master clock ot_frame_xk3.
+Startpoint: d[0] (input port clocked by ot_frame_xk0)
+Endpoint: s0/D (internal pin)
+Path Group: unconstrained
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ input external delay
+   0.00    0.00 ^ d[0] (in)
+   0.00    0.00 ^ s0/D (sink)
+           0.00   data arrival time
+---------------------------------------------------------
+(Path is unconstrained)
+
+
+Startpoint: xk[0] (clock source 'ot_frame_xk0')
+Endpoint: u_cf/C0 (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00  416.67 v xk[0] (in)
+   0.00  416.67 v u_cf/C0 (cf)
+         416.67   data arrival time
+---------------------------------------------------------
+(Path is unconstrained)
+
+
+TAG u_cf/C0 rise min 56 default ^min ot_frame_xk0 ^ (clock prop) clk_src xk[0] crpr_pin null
+TAG u_cf/C0 rise max 60 default ^max ot_frame_xk0 ^ (clock prop) clk_src xk[0] crpr_pin null
+TAG u_cf/C0 fall min 59 default vmin ot_frame_xk0 v (clock prop) clk_src xk[0] crpr_pin null
+TAG u_cf/C0 fall max 63 default vmax ot_frame_xk0 v (clock prop) clk_src xk[0] crpr_pin null
+TAG u_xo0/CK rise min 56 default ^min ot_frame_xk0 ^ (clock prop) clk_src xk[0] crpr_pin null
+TAG u_xo0/CK rise max 60 default ^max ot_frame_xk0 ^ (clock prop) clk_src xk[0] crpr_pin null
+TAG u_xo0/CK fall min 59 default vmin ot_frame_xk0 v (clock prop) clk_src xk[0] crpr_pin null
+TAG u_xo0/CK fall max 63 default vmax ot_frame_xk0 v (clock prop) clk_src xk[0] crpr_pin null
+Error: run.tcl, 20 OT_FRAME_CLOCK: missing/ambiguous actual min rise clock tag on u_xo0/CKO
+

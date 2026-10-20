@@ -1,0 +1,58 @@
+library(hard_tt) { time_unit : "1ps"; capacitive_load_unit(1,ff); nom_voltage : 0.7; nom_temperature : 25; nom_process : 1; cell(cf) { area : 100; pin("C0") { direction : input; clock : true; capacitance : 1; }
+pin("C1") { direction : input; clock : true; capacitance : 1; }
+pin("C2") { direction : input; clock : true; capacitance : 1; }
+pin("C3") { direction : input; clock : true; capacitance : 1; }
+pin(D0) { direction : input; capacitance : 1; timing() { related_pin : "C0"; timing_type : setup_rising; rise_constraint(scalar) { values("20"); }
+ fall_constraint(scalar) { values("20"); }
+ }
+timing() { related_pin : "C0"; timing_type : hold_rising; rise_constraint(scalar) { values("10"); }
+ fall_constraint(scalar) { values("10"); }
+ }
+}
+pin(D1) { direction : input; capacitance : 1; timing() { related_pin : "C1"; timing_type : setup_rising; rise_constraint(scalar) { values("20"); }
+ fall_constraint(scalar) { values("20"); }
+ }
+timing() { related_pin : "C1"; timing_type : hold_rising; rise_constraint(scalar) { values("10"); }
+ fall_constraint(scalar) { values("10"); }
+ }
+}
+pin(D2) { direction : input; capacitance : 1; timing() { related_pin : "C2"; timing_type : setup_rising; rise_constraint(scalar) { values("20"); }
+ fall_constraint(scalar) { values("20"); }
+ }
+timing() { related_pin : "C2"; timing_type : hold_rising; rise_constraint(scalar) { values("10"); }
+ fall_constraint(scalar) { values("10"); }
+ }
+}
+pin(D3) { direction : input; capacitance : 1; timing() { related_pin : "C3"; timing_type : setup_rising; rise_constraint(scalar) { values("20"); }
+ fall_constraint(scalar) { values("20"); }
+ }
+timing() { related_pin : "C3"; timing_type : hold_rising; rise_constraint(scalar) { values("10"); }
+ fall_constraint(scalar) { values("10"); }
+ }
+}
+}
+cell(relay) { area : 100; pin("CK") { direction : input; clock : true; capacitance : 1; }
+pin(D) { direction : input; capacitance : 1; timing() { related_pin : "CK"; timing_type : setup_rising; rise_constraint(scalar) { values("20"); }
+ fall_constraint(scalar) { values("20"); }
+ }
+timing() { related_pin : "CK"; timing_type : hold_rising; rise_constraint(scalar) { values("10"); }
+ fall_constraint(scalar) { values("10"); }
+ }
+}
+ pin(CKO) { direction : output; clock : true; function : "CK"; timing() { related_pin : "CK"; timing_type : combinational; timing_sense : positive_unate; cell_rise(scalar) { values("11"); }
+ cell_fall(scalar) { values("13"); }
+ rise_transition(scalar) { values("3"); }
+ fall_transition(scalar) { values("4"); }
+ }
+ }
+ }
+cell(sink) { area : 10; pin("CK") { direction : input; clock : true; capacitance : 1; }
+pin(D) { direction : input; capacitance : 1; timing() { related_pin : "CK"; timing_type : setup_rising; rise_constraint(scalar) { values("20"); }
+ fall_constraint(scalar) { values("20"); }
+ }
+timing() { related_pin : "CK"; timing_type : hold_rising; rise_constraint(scalar) { values("10"); }
+ fall_constraint(scalar) { values("10"); }
+ }
+}
+ }
+ }
