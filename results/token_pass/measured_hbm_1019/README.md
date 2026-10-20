@@ -12,7 +12,9 @@ gets its measured start->retire cycles, and the SAME static schedule is re-run
 |---|---:|---:|
 | price of record (H9b 45.03 B/edge/SM) | 1,206.3 | 407.0 |
 | price, successor 98 B/edge (HBM-ROTLAYOUT) | 1,421.9 | 795.0 |
-| **MEASURED release**: successor PC + rotated layout, multi-block attention, Qwen 1 KV head/die | **1,162.5** | **1,002.9** |
+| **MEASURED release (TOKEN-LEAD 10-20, combined)**: the row below + **SU.VOP measured** (HBM-SUFIX, as-built SU, no pre-tree) | **1,109.7** | **372.2** |
+| measured, SU.VOP still model: successor PC + rotated layout, multi-block attention, Qwen 1 KV head/die, **Qwen SM.MATVEC measured on packed INT8** (HBM-QINT8, 10-20) | 1,162.5 | 776.3 |
+| same, but Qwen SM.MATVEC from the BF16w affine law (superseded) | 1,162.5 | 1,002.9 |
 | measured, same but serial attention calendar | 1,129.2 | 966.5 |
 | measured, successor at the old 96-edge cadence, serial attention | 1,105.9 | 885.7 |
 | measured, BOUND H9b controller (GEN2e3 die as built) | 998.9 | 537.4 |
@@ -37,7 +39,15 @@ ATT.PV 61k vs 189k, ATT.QK 45k vs 96k, SFU.GLU 17k vs 4k (3.8x).
 
 1. **SM.MATVEC with the successor controller and rotated layout.** The bench is `tb_toksim_smhbm.sv`: the die composition with `TOKSIM_PC=safe`, i.e. 4 x `ot_hbm_svc_pc_ctrl_leaf_cfg_safe`, and `SMB_BSCALE 1`. It sustains a static block cadence of 80/64+8 = 88 edges per 64-line block, which is 98.9 B/edge/SM and matches HBM-ROTLAYOUT's >=98. Every DS and Qwen shape PASSes at p80. The MC3 structure gives identical cycles. The same controller with the as-built layout FAILs at p96 (`a_qkv_p96`). The bound H9b needs p180-p220.
 2. **DS SM.MATVEC is 2.5x its price** even at 98.9 B/edge. The cause is per-op overhead, not bandwidth: 1,095 small records per token, each paying a serial x-store load before its first GO plus the GO lead. OP_GAP 256 -> 16 changes almost nothing. This is the x-load term that HBM-VMEARLY-XL attacks (measured 1421 -> 441 edges on layer 5). It is not folded in here: the change is compiler-only and the composition does not yet carry it.
-3. **Qwen packed-INT8 stream is rejected by the bound svg S1 feed** (`q_*` runs FAIL at every pace). This is a die-integrity defect. Qwen was therefore measured BF16-widened at TP-8 rows/SM (R = m_TP4/32; HBM-RATE-DROP 2a), and INT8 = BF16w span - blocks/2 x per-block cadence + 256. That rule is an affine law (fixed 108 + 88/block, residual <=14), and the LM head uses the same law.
+3. **Qwen packed INT8 (HBM-QINT8, 10-20).** The bound die rejected every packed-INT8 calendar because the svg feed's S1 consumer copy
+   (`ot_hbm_svc_sm_feed_programmed_rel_id`) checked the compiler's command fields against the RAW packet, while the SM consumes the
+   two BF16 halves its INT8 converter emits 2/3 edges later. Fix on `claude/hbm-qint8-1019`: the copy models the converter from a
+   PREL programme-word mark (bit 118). Measured directly on the fix (successor p80, rotated, TP-8 rows, bit-exact, mutants FAIL):
+   qkv48 3,646 / o128 2,544 / gu192 13,438 / down128 6,910 cycles (span + 256), LM head 81,166 (affine 126 + 136/block).
+   INT8 is **SM-bound at 136 edges per 64-packed-line block** (2 edges a packed line: the SM front issues 64 codes/edge), not HBM-bound
+   (8,704 B/136 = 64 B/edge/SM). The earlier law (BF16w span - blocks/2 x 88) assumed HBM-bound INT8 and was 1.5x optimistic:
+   Qwen SM.MATVEC 687k -> 1,037k cycles/token, Qwen 1,002.9 -> **776.3 tok/s**. `units_variants/smhbm_int8.json`, `measured_rel_int8.json`.
+
 4. **Qwen TP-8 holds 1 KV head per die.** The kv1 attention records are dropped (`drop_tags`).
 5. **Attention.** The multi-block calendar (HBM-ATTN-MB/MB2, current SM master, compiler only) gives DS QK 726 / PV 773 and Qwen QK 1245 / PV 1689.
    - The SU merge measured 100 edges on `tb_su_static_arithmetic` (PASS). The ring all-gather 82 + top levels 109 stay model.
@@ -51,6 +61,15 @@ ATT.PV 61k vs 189k, ATT.QK 45k vs 96k, SFU.GLU 17k vs 4k (3.8x).
 - DMA.LOAD needs a chain bench. DMA.FENCE and COLL.ROW_GATHER are unmeasured.
 - SU.VOP compiler fix (item 7).
 - VMEARLY x-load/COLL early issue: re-measure SM.MATVEC with a double-buffered x-store once the compiler rule lands.
+
+## TOKEN-LEAD combined row (10-20)
+
+`combined_1020/`: `measured_rel_i8_su.json` = `measured_rel_int8.json` (HBM-QINT8) with SU.VOP from `units/su.json` (HBM-SUFIX);
+census `--measured --bw 98 --bridge 1` on ot-epyc6 (`rel98_i8_su.json`), row info_banklat_all: **DS 1,109.7 / Qwen 372.2 tok/s**.
+Grades (`cycles_rel98_i8_su.json`, units = coll/idxdma/su + att_mb + smhbm_int8), share of used unit cycles:
+DS measured-on-bound 31.3% + measured-not-bound 58.7% = 90.0% measured, model 10.0%;
+Qwen 57.8% + 41.0% = 98.8% measured, model 1.2% (the Qwen crit attribution is still broken, see HBM-SUFIX coll note).
+Qwen is SU-reduction bound as built (softmax ~1.6M of 3.22M cycles): the pre-tree bind (HBM-PRETREE2) is the lever.
 
 ## Files
 

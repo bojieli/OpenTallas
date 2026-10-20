@@ -101,31 +101,15 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=T.cost, wires=True):
     s = _ORIG_SCHED(recs, pos, mode, token, cf, wires)
     if CUR["job"] is None or mode != "S2":
         return s
-    # map executed index -> logged cost (schedule calls cost_fn once per executed record, in ex order)
+    # critical path: walk back from the last retire through the term that actually BOUND each dispatch / start /
+    # retire (timing.schedule "bind": wait-bit producer, unit / pipelined issue, stream producer start / tail,
+    # in-order retire, CP dispatch, fetch / decode).  Every token cycle is attributed exactly once: to the record
+    # that was executing on the path, or to a named gap (dispatch wire, retire wire, cp issue, fetch / decode).
+    # The 10-19 walk followed region deps only and stopped at the first STREAM consumer (Qwen: ARGMAX.LOCAL rides
+    # the LM-head stream, so its start precedes every dep's end) -> Qwen ALL_REDUCE / SM / norm all showed 0.
     ex = s["ex"]
-    crit = set()
-    try:
-        n = len(ex)
-        if n:
-            import numpy as np
-            i = int(np.argmax(s["end"]))
-            seen = set()
-            while i is not None and i not in seen:
-                seen.add(i)
-                crit.add(i)
-                k = ex[i][0]
-                u = recs[k].unit
-                cands = [(s["end"][j], j) for j in s["deps"][i]]
-                for j in range(i - 1, -1, -1):
-                    if recs[ex[j][0]].unit == u:
-                        cands.append((s["end"][j], j))
-                        break
-                cands = [c for c in cands if c[0] <= s["start"][i] + 1e-6]
-                if not cands:
-                    break
-                i = max(cands)[1]
-    except Exception as e:                                 # pragma: no cover
-        print("critical path failed", e, file=sys.stderr)
+    crit, gaps = crit_walk(s)
+    agg = CUR["agg"]
     agg = CUR["agg"]
     for i, (k, L, *_) in enumerate(ex):
         r, L2, c, mc, kind = log[i]
@@ -148,9 +132,9 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=T.cost, wires=True):
             a["ratio_used"] = a.get("ratio_used", 0.0) + mc
             a["ratio_model"] = a.get("ratio_model", 0.0) + c
         a["busy"] += s["end"][i] - s["start"][i]
-        if i in crit:
+        if crit.get(i, 0.0) > 1e-9:
             a["crit_n"] += 1
-            a["crit_cycles"] += s["end"][i] - s["start"][i]
+            a["crit_cycles"] += crit[i]
         sk = json.dumps(shape_of(r, L), sort_keys=True)
         sh = a["shapes"].setdefault(sk, dict(n=0, model_cost=round(c, 1), bytes_B=bytes_B(r, L)))
         sh["n"] += 1
@@ -159,11 +143,115 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=T.cost, wires=True):
     CUR["segments"] += 1
     CUR["total"] += s["total_cycles"]
     # time not covered by any critical record = dispatch / fetch bound gaps
-    CUR["crit_rec_cycles"] += sum(s["end"][i] - s["start"][i] for i in crit)
+    CUR["crit_rec_cycles"] += sum(crit.values())
+    for k, v in gaps.items():
+        CUR["crit_gaps"][k] = CUR["crit_gaps"].get(k, 0.0) + v
     return s
 
 
+def crit_walk(s):
+    """-> ({executed index: critical cycles}, {gap name: cycles}); sum of both == s["total_cycles"]"""
+    st, en, dp, bind = s["start"], s["end"], s["disp"], s.get("bind")
+    n = len(s["ex"])
+    crit, gaps = defaultdict(float), defaultdict(float)
+    if not n or not bind or bind[0] is None:
+        return crit, gaps
+    import numpy as np
+    i = int(np.argmax(en))
+    pt, t = "end", en[i]
+    if s["total_cycles"] > t:
+        gaps["tail"] += s["total_cycles"] - t
+    for _ in range(20 * n + 10):
+        if pt == "end":
+            kind, j = bind[i][2]
+            if kind in ("stream_tail", "inorder"):
+                crit[i] += t - en[j]
+                i, pt, t = j, "end", en[j]
+            else:
+                crit[i] += t - st[i]
+                pt, t = "start", st[i]
+        elif pt == "start":
+            kind, j = bind[i][1]
+            if kind == "disp":
+                gaps["dispatch_wire"] += t - dp[i]
+                pt, t = "disp", dp[i]
+            elif kind in ("unit", "fence") and j is not None:
+                gaps["unit_serial" if kind == "unit" else "fence"] += t - en[j]
+                i, pt, t = j, "end", en[j]
+            elif kind == "pipe":
+                crit[i] += t - st[j]
+                i, pt, t = j, "start", st[j]
+            elif kind == "stream_start":
+                i, pt, t = j, "start", st[j]
+            else:
+                gaps["unbound"] += t
+                return crit, gaps
+        else:
+            kind, j = bind[i][0]
+            if j is None:
+                gaps["fetch_decode"] += t
+                return crit, gaps
+            if kind == "wait":
+                gaps["retire_wire"] += t - en[j]
+                i, pt, t = j, "end", en[j]
+            elif kind == "queue":
+                gaps["queue"] += t - st[j]
+                i, pt, t = j, "start", st[j]
+            else:                                         # cp issue / fetch-decode: previous dispatch
+                gaps["cp_dispatch" if kind == "cp" else "fetch_decode"] += t - dp[j]
+                i, pt, t = j, "disp", dp[j]
+        if t < -1e-6:
+            break
+    gaps["unbound"] += max(0.0, t)
+    return crit, gaps
+
+
 T.schedule = schedule
+
+
+# HBM-COLLFUSE (10-20): the census schedules the Qwen TP-4 programme (qwen_compiler.Geometry default tp=4: nq = 8 q heads,
+# nk = 2 KV heads a die) while the release die is TP-8 (Geometry(tp=8): nq = 4, nk = 1).  TOKSIM-HBM already drops the
+# kv1 attention records and measures SM rows at TP-8; the per-q-head SU records below still carried 8 rows.  With
+# --measured they take the TP-8 programme's n / m (same tag, same occurrence), keeping the TP-4 VM base so every region
+# dependence of the TP-4 schedule is kept.  --qwen-tp4-rows restores the 10-19 behaviour.
+QWEN_TP8_TAGS = ("softmax.max", "softmax.exp_sum", "softmax.bf16_p", "pv_normalize", "rope", "round_q", "row_scale_qkv")
+TP8_LOG = {}
+
+
+def _tp8_rows_patch():
+    import dataclasses
+    from hgi_sim import qwen_compiler as QC
+    orig = QC.program
+    if getattr(orig, "_tp8_rows", False):
+        return
+
+    def program(g, params, n_layers, *a, **k):
+        recs = orig(g, params, n_layers, *a, **k)
+        if getattr(g, "tp", 4) != 4:
+            return recs
+        cfg = dict(hidden_size=g.H, num_attention_heads=g.NH, num_key_value_heads=g.KV, head_dim=g.HD,
+                   intermediate_size=g.FF, vocab_size=g.V, num_hidden_layers=g.L)
+        r8 = orig(QC.Geometry(cfg, g.ctx, tp=8), params, n_layers, *a, **k)
+        by = defaultdict(list)
+        for r in r8:
+            if r.tag in QWEN_TP8_TAGS:
+                by[r.tag].append(r)
+        seen = defaultdict(int)
+        out = []
+        for r in recs:
+            if r.tag in QWEN_TP8_TAGS:
+                j = seen[r.tag]
+                seen[r.tag] += 1
+                t8 = by[r.tag][j]
+                assert (t8.unit, t8.op, sorted(t8.desc)) == (r.unit, r.op, sorted(r.desc)), r.tag
+                nd = {key: dataclasses.replace(d, n=t8.desc[key].n, m=t8.desc[key].m) for key, d in r.desc.items()}
+                if any((nd[key].n, nd[key].m) != (d.n, d.m) for key, d in r.desc.items()):
+                    TP8_LOG[r.tag] = TP8_LOG.get(r.tag, 0) + 1
+                r = dataclasses.replace(r, desc=nd)
+            out.append(r)
+        return out
+    program._tp8_rows = True
+    QC.program = program
 
 
 def main():
@@ -171,6 +259,8 @@ def main():
     out = Path(argv[argv.index("--out") + 1])
     if "--measured" in argv:
         MEAS.update(json.loads(Path(argv[argv.index("--measured") + 1]).read_text())["designs"])
+        if "--qwen-tp4-rows" not in argv:
+            _tp8_rows_patch()
     global OUTDIR
     OUTDIR = out.parent / (out.stem + "_jobs")
     OUTDIR.mkdir(parents=True, exist_ok=True)
@@ -194,17 +284,19 @@ INNER = {}
 def _job(j):
         inner = INNER["f"]
         name = j[1]
-        CUR.update(job=name, agg={}, segments=0, total=0.0, crit_rec_cycles=0.0)
+        CUR.update(job=name, agg={}, segments=0, total=0.0, crit_rec_cycles=0.0, crit_gaps={})
         DESIGN["d"] = "qwen" if name.endswith("|qwen") else "ds_ar"
         EXTRAP.clear()
+        TP8_LOG.clear()
         res = inner(j)
         agg = {k: dict(v, units=sorted(v["units"]), model_sum=round(v["model_sum"], 1), used_sum=round(v["used_sum"], 1),
                        busy=round(v["busy"], 1), crit_cycles=round(v["crit_cycles"], 1),
                        shapes=dict(sorted(v["shapes"].items(), key=lambda kv: -kv[1]["n"])[:40]))
                for k, v in CUR["agg"].items()}
         doc = dict(job=name, schedule_total=round(CUR["total"], 1), segments=CUR["segments"],
-                   crit_rec_cycles=round(CUR["crit_rec_cycles"], 1), result=res[1].get("cycles", res[1].get("tok_s")),
-                   extrapolated_records=dict(EXTRAP), classes=agg)
+                   crit_rec_cycles=round(CUR["crit_rec_cycles"], 1),
+                   crit_gaps={k: round(v, 1) for k, v in sorted(CUR["crit_gaps"].items(), key=lambda kv: -kv[1])}, result=res[1].get("cycles", res[1].get("tok_s")),
+                   extrapolated_records=dict(EXTRAP), qwen_tp8_rows_remapped=dict(TP8_LOG), classes=agg)
         (OUTDIR / (name.replace("|", "__") + ".json")).write_text(json.dumps(doc, indent=1, default=str) + "\n")
         CUR["job"] = None
         return res

@@ -113,6 +113,13 @@ RECS = {
  # HBM-PRETREE2: 2/3-row exp_sum points (the 8-row record needs 1,024 store rows on 32 SFU lanes/quarter > 512)
  'qw_softmax_exp_sum_r2': ('qwen', 8192, 2, dict(A='vm', B='rf'), dict(cp_m1=3, cm_m1=3, cp_imm1=IMM_SCALE, cm_imm1=IMM_SCALE, ca_ad=3, ci_sfu=1, cs_sfu=1), 'sum', True),
  'qw_softmax_exp_sum_r3': ('qwen', 8192, 3, dict(A='vm', B='rf'), dict(cp_m1=3, cm_m1=3, cp_imm1=IMM_SCALE, cm_imm1=IMM_SCALE, ca_ad=3, ci_sfu=1, cs_sfu=1), 'sum', True),
+ # HBM-COLLFUSE: Qwen TP-8 die shapes (Geometry(tp=8): nq = 4 q heads, nk = 1 KV head a die); the census TP-4 programme
+ # carried nq = 8.  exp_sum at 4 rows needs 2 x 256 store rows (> 500): affine law from the measured 1-row record.
+ 'qw8_softmax_max': ('qwen', 8192, 4, dict(A='vm'), dict(cp_m1=3, cm_m1=3, cp_imm1=IMM_SCALE, cm_imm1=IMM_SCALE), 'max', False),
+ 'qw8_bf16_p': ('qwen', 8192, 4, dict(A='vm'), dict(co_rnd=1), None, True),
+ 'qw8_pv_normalize': ('qwen', 128, 4, dict(A='vm', B='rf'), dict(cp_m1=4, cm_m1=4), None, True),
+ 'qw8_round_q': ('qwen', 512, 1, dict(A='vm'), dict(co_rnd=1), None, True),
+ 'qw8_row_scale_qkv': ('qwen', 768, 1, dict(A='vm', B='vm'), dict(cp_m1=1, cm_m1=1), None, True),
 }
 ROW_OF = dict(A=0, B=1, C=2, D=3, O=4)
 
