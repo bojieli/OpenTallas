@@ -58,3 +58,7 @@ kv_oneway relay plan, <= 405 um a hop (PASS by construction; stage counts come f
 already sliced per 32 b (+2 slices) (PASS).  4 depth: the read mux is unchanged (64-word padded) (PASS).  5 storage: +41
 flops (PASS).  6/7 floorplan / clock: same core clock, regional relay stations (host cluster owner, KV-HOST).
 8 schedule: static, off the token schedule; observation lag priced above (PASS).
+
+## CODEX sticky coverage completion
+
+The updated actual OBSX-shape path bench now injects one-edge fault pulses, removes them before capture, and checks every sticky fault bit in the window against an independent accumulated vector. Fleet Verilator 5.050: positive PASS (46 words, 12 captures); all six mutants m1 through m6 FAIL, including m3 (12 sticky errors). Exact witnesses and source hashes are in `sticky/`. The earlier m3 PASS remains historical evidence of the prior coverage gap. Production source is unchanged from d8221c4bf; this completion changes the bench only. No native census or physical qualification is claimed.

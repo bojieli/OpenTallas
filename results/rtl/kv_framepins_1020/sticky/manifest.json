@@ -1,0 +1,61 @@
+{
+  "source_base": "3332a9408",
+  "source_changes": [
+    "d8221c4bf",
+    "fc93e83d3"
+  ],
+  "sha256": {
+    "rtl/test/qwen_host/tb_kv_obsx_path.sv": "196b1bdef5268f7fb0b8b4fb89eb4b4c5515a157d4d3fe48f50a93e1be07e1e3",
+    "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_obs_csr.sv": "b2ed5f42b13dfc1453fe54a3d867abf2bee3d51630a3d77b1e5a2f9ed56a2b54",
+    "rtl/qwen_sys/kv_host_obs_20261019/host_obs_map_x.json": "6944089caf3614fe829658cd218325c921075afce208c76984dd37281855071c",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+    "tools/qwen_kv_die/obsx_path_bench.sh": "d583eaea122c66f88a75c894a5e824b2e5a99880a8728023cd86436f76d1349a"
+  },
+  "run": "ot-epyc6:/srv/opentallas-scratch/claude/codex-framepins-sticky-1020",
+  "verilator": "5.050",
+  "positive": {
+    "mut": 0,
+    "verdict": "PASS",
+    "captures": 12,
+    "words": 46
+  },
+  "negative": [
+    {
+      "mut": 1,
+      "verdict": "FAIL",
+      "regex": "TB_KV_OBSX_PATH FAIL",
+      "witness": "bench_m1.log"
+    },
+    {
+      "mut": 2,
+      "verdict": "FAIL",
+      "regex": "TB_KV_OBSX_PATH FAIL",
+      "witness": "bench_m2.log"
+    },
+    {
+      "mut": 3,
+      "verdict": "FAIL",
+      "regex": "TB_KV_OBSX_PATH FAIL",
+      "witness": "bench_m3.log"
+    },
+    {
+      "mut": 4,
+      "verdict": "FAIL",
+      "regex": "TB_KV_OBSX_PATH FAIL",
+      "witness": "bench_m4.log"
+    },
+    {
+      "mut": 5,
+      "verdict": "FAIL",
+      "regex": "TB_KV_OBSX_PATH FAIL",
+      "witness": "bench_m5.log"
+    },
+    {
+      "mut": 6,
+      "verdict": "FAIL",
+      "regex": "TB_KV_OBSX_PATH FAIL",
+      "witness": "bench_m6.log"
+    }
+  ],
+  "qualification": "Source integration and behavioral/targeted-bind proof only; fresh gen9d6x bind, native census and physical closure still required."
+}
