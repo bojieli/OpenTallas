@@ -158,7 +158,7 @@ REV0=$W/results/arch/hbm_unread_gen2e3_1019/l21/review_l21_candidate.json
 strict_manifest $A/net/pre_relay.json $A/pb0 S1 || { echo "S1_STRICT_FAIL (release gate): fix before the physical chain"; exit 11; }
 # ---------------- S2 / S3 relay-free case ----------------
 step S2 synth_a
-synth_round $A/net/pre_relay.json $A/vplan_a a $AE2/vplan_a || exit $?
+synth_round $A/net/pre_relay.json $A/vplan_a a $AE3/vplan_a || exit $?
 step S3 gen2e_case_a
 views_up $A/vplan_a $A/net/pre_relay.json || exit 17
 gen case_a diag "" || { echo S3_GEN_A_FAIL; exit 13; }
