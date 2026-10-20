@@ -1,0 +1,14 @@
+{
+  "main_base": "940af34287955689574cb1231ae8d7049a925235",
+  "all_tools_tree": "e27c9affc13224435f3183d74833144e53cd7566",
+  "all_common_flow_tree": "dbfb02111774f40771bb77391e386df03f1c8f87",
+  "six_conflicting_helpers_sha256": {
+    "tools/closure_loop/closed_stands.py": "bd2f67e48409c11b59bc096835751b7dd73ae277a014f6c1d4dc58a11ff07b65",
+    "tools/closure_loop/test_closed_stands.py": "6f0eadedb11629be86c0381e3eefec10801ce7f60a6986c2e396a9105f88f52b",
+    "tools/landed_parent/lp.py": "8d4b44889eb089222be1cd7fe65aab070546e8de6be0fb6cee74c0ae44727050",
+    "tools/ref_tile/pre_route_gate.py": "8072141f13e93d0f3e9bc841d95ebabac1272ff19f865b6b2e2bf87a68c7e010",
+    "tools/ref_tile/test_cdc_batch_constraints.py": "39a43095cfaec4951ae46219503f3b70bb8f7d4f2132e099a2c1f3629553a317",
+    "tools/textbook_lint.py": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b"
+  },
+  "projection_rule": "entire tools and common_flow trees must remain identical, plus all changed paths restricted to explicit packet allowlist"
+}

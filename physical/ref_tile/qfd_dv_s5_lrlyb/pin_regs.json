@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_lrly",
+ "enable": false,
+ "reason": "the RTL is pure relay registers: every input lands in its first relay / IREG flop, every output is a relay / OREG flop Q (qfd_dv_su8_entries LTD relays + qfd_dv_su_lane IREG/OREG); flow pin registers would add unpriced edges to the RD 2 round trip"
+}

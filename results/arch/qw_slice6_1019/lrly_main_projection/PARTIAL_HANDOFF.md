@@ -1,0 +1,11 @@
+# STOP handback: partial LRLY main projection
+
+New CLAUDE IS BACK stop arrived while building this packet. This branch is PARTIAL, not merge-ready and not a parent binding. Base main940af3428; all main tools/common_flow helper paths remain byte-identical. main_helper_baseline.json pins both full helper tree IDs and SHA256 for all six stale/conflicting helpers. No stale helper changes were projected.
+
+Staged exact original LRLY synthesis source file plus both complete kits, authoritative CLOSED records f070c4c62/49b545a29, and cdc080771 final native PG/fanout audits. Existing main ot_hdc_delay source is byte-identical to the qualified source. Original whole leaves file is preserved for exact source identity; its other definitions remain unbound. The archived44-file original benchmark source snapshot is for reproducibility, not default parent integration.
+
+Existing final native pin audit results (remote ep6 codex-qw-lrly-final-1020, pin2_* logs): main FAIL h_rst_n launch223.5ps>220; fallback PASS launch188.3/capture174.6ps, no combinational pins, TT54.0/FF51.5ps spreads. Thus main remains native-boundary HOLD despite CLOSED; fallback is the local candidate subject actual parent compensation/origin/first-use. Native final reach PASS main158.112um/fallback127.924um, all non-PG endpoint pairs including clocks/reset, zero missing/unplaced/fallback points. These are endpoint Manhattan bounds, not routed wire lengths. Final main raw TT metrics also have29slew violations; fallback0slew/cap/fanout violations. Existing native PG and fanout bothPASS.
+
+REMAINING: collect these already-completed pin/reach receipts into this projection, finish complete source/view pin-set/provenance checks, validate explicit packet allowlist and helper-tree equality after final commit, then request ROOT intake. No further jobs were launched after STOP.
+
+S4 regate terminal3f0f4b600 remains refused locally: gate daemon overlays include native_census.py/native_census.tcl/ref_route.sh but its route_overlay_plan50files omits all three, yielding [blob unknown] despite valid actual b5 hashes. Source frozen; no s4 route, no blind regate. Infrastructure owner needs to fix the overlay plan/dependency contract before further action.

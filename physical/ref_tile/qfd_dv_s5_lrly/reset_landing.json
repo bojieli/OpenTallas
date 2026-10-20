@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_dv_s5_lrly",
+ "enable": false,
+ "reason": "the RTL lands rst_n in 2 registered stages (qfd_dv_s5_rst2) then the su8 lane reset register rl and the su_lane rsr (h_rst_n to the lane group)"
+}

@@ -1,0 +1,104 @@
+{
+  "schema": "qw.lrly.final_native.v1",
+  "scope": "Read-only final6_final ODB PG audit and6_final.v transitive fanout; no repair/global_connect",
+  "leaves": [
+    {
+      "job": "qfd_dv_s5_lrly-lrly-65d148118",
+      "final_odb_sha256": "5bada01cef8b3deb1812d45fe410eeaf8c49562da7e272e983f95f3a4609ff51",
+      "native_pg": {
+        "status": "PASS",
+        "instances": 86153,
+        "checked": 172306,
+        "failures": 0
+      },
+      "native_fanout": {
+        "top": "qfd_dv_s5_lrly",
+        "mapped_sha256": "b43abb555eb70bbfe5f1e9e86c4f70fe02df5c9b6d5bbd4e87fec465b26ed36f",
+        "all_nonclock_drivers_over32": 0,
+        "flop_drivers_over32": 0,
+        "max_loads": 0,
+        "violations": [],
+        "verdict": "PASS"
+      },
+      "SS_setup_ps": 178.48,
+      "FF_hold_ps": 20.52,
+      "raw_TT_physical_acceptance": {
+        "checks": [
+          {
+            "antenna_violating_nets": 0.0,
+            "antenna_violating_pins": 0.0,
+            "drc_errors": 0.0,
+            "hold_violations": 808.0,
+            "hold_wns_ns": -0.0287093,
+            "max_cap_violations": 0.0,
+            "max_fanout_violations": 0.0,
+            "max_slew_violations": 29.0,
+            "met": false,
+            "physically_clean": false,
+            "scope": "post-route, extracted parasitics",
+            "setup_violations": 0.0,
+            "setup_wns_ns": 0.127335,
+            "signal_integrity_clean": false,
+            "stage": "place_and_route",
+            "timing_met": false
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: place_and_route",
+        "status": "not_met"
+      },
+      "final_clock_reach_and_signal_integrity": "OWED_no_bind",
+      "closure_status": "WAITING_MUTANT_BENCH_NO_CLOSED_CLAIM"
+    },
+    {
+      "job": "qfd_dv_s5_lrlyb-lrlyb-08a51c59b",
+      "final_odb_sha256": "3c806817d47ca6c0f2c9a8bedbf0c63f2fe5f16c8766eeff2d65dae55b5e771a",
+      "native_pg": {
+        "status": "PASS",
+        "instances": 64478,
+        "checked": 128956,
+        "failures": 0
+      },
+      "native_fanout": {
+        "top": "qfd_dv_s5_lrly",
+        "mapped_sha256": "6a8077cabe4e1dcdc4bdc7af9335e58371bf81213ab02dfa78f607de4da0a9ef",
+        "all_nonclock_drivers_over32": 0,
+        "flop_drivers_over32": 0,
+        "max_loads": 0,
+        "violations": [],
+        "verdict": "PASS"
+      },
+      "SS_setup_ps": 241.9,
+      "FF_hold_ps": 19.23,
+      "raw_TT_physical_acceptance": {
+        "checks": [
+          {
+            "antenna_violating_nets": 0.0,
+            "antenna_violating_pins": 0.0,
+            "drc_errors": 0.0,
+            "hold_violations": 667.0,
+            "hold_wns_ns": -0.0315644,
+            "max_cap_violations": 0.0,
+            "max_fanout_violations": 0.0,
+            "max_slew_violations": 0.0,
+            "met": false,
+            "physically_clean": true,
+            "scope": "post-route, extracted parasitics",
+            "setup_violations": 0.0,
+            "setup_wns_ns": 0.167515,
+            "signal_integrity_clean": true,
+            "stage": "place_and_route",
+            "timing_met": false
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: place_and_route",
+        "status": "not_met"
+      },
+      "final_clock_reach_and_signal_integrity": "OWED_no_bind",
+      "closure_status": "WAITING_MUTANT_BENCH_NO_CLOSED_CLAIM"
+    }
+  ]
+}
