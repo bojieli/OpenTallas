@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.coordinator_review_packet.v1",
+  "kit": "s81dvbk_hist32_b0r3",
+  "gate_source": "6361cb93b7bc9711309771c845fed36aeae74d43",
+  "verdict": "PASS",
+  "actual_pngs_personally_viewed": [
+    "physical/ref_tile/s81dvbk_hist32_b0r3/gate_layout/floorplan.png",
+    "physical/ref_tile/s81dvbk_hist32_b0r3/gate_layout/density.png"
+  ],
+  "checklist": [
+    {
+      "item": 1,
+      "status": "PASS",
+      "evidence": "Every input/output register capture in bank source; rawreset2 actual gate PASS, face2 + sync2 + regional1 release,5startupedges priced."
+    },
+    {
+      "item": 2,
+      "status": "PASS_GRT_FINAL_OWED",
+      "evidence": "Actual GRT ODB bbox reach87.75999999999999um, zero>405; allBUF/INV transparent. 64.8x54 leaf no obstacles."
+    },
+    {
+      "item": 3,
+      "status": "PASS",
+      "evidence": "Mandatory main042 mapped pre-floorplan census max25 PASS; actual GRT all-driver max25, zero>32 inclreset, unknown0,11263nativecells."
+    },
+    {
+      "item": 4,
+      "status": "PASS",
+      "evidence": "Actual canonical logicdepth376.7ps. CTS placement-RC reg-reg setup+249.56ps hold+49.46ps diagnostic only; finalroute signoff owed."
+    },
+    {
+      "item": 5,
+      "status": "PASS",
+      "evidence": "Actual separately hardened32 fixedparallel arithmetic counters*11=352bits; all32 constantupdates perbeat. Eachstate bank<2kb; no runtime-indexedgenericflopmemory. Same BANK0 masterx16 perquarter is planned, not adopted."
+    },
+    {
+      "item": 6,
+      "status": "PASS",
+      "evidence": "No macros, no lattice placement required; one contiguous full standard-cell area, actualdensityPNG viewed locallyfullsmallbins but no trapped island. Outline64.8x54 aspect1.2; sourcearea1540.26036/core3004.6464=51.26%. Actual359pinrectangles allontrack/inoutline; fullfaces<=6pins/um. GRT0overflow,M2max34.45%."
+    },
+    {
+      "item": 7,
+      "status": "PASS",
+      "evidence": "Single genuine core_clk root; full native root TTspread7.2/FF7.4ps, insertion109.8/88.4ps. S clock lies by register mass. Hold0.03ns, no child profile means involved."
+    },
+    {
+      "item": 8,
+      "status": "PASS_LEAF_ONLY",
+      "evidence": "Static bank update arithmetic unchanged. Groupselectcapture+1edge/busy+1 and5resetstartupedges. Soft8bank composition already goldenPASS1159 with explicit GS+2/query+3/busy+3/reset10. Parentphysicalcollect/multicast/wholequarterschedule notqualified."
+    }
+  ],
+  "behavior": {
+    "gold": "immutable original full256-bin histogram fixture",
+    "leaf_checks": 1159,
+    "composition_checks": 1159,
+    "mutants_fail_cycles": [
+      45,
+      606,
+      47,
+      608
+    ],
+    "tool": "Verilator5.050"
+  },
+  "canonical_sizing": "See canonical_area_reconciliation.json. Actualproduction12323cells/1627FF,std1540.26036; pilotlowerboundnotusedforR3density. R2core66% notsubmitted.",
+  "PG": {
+    "actual_GRT_iterms": 22526,
+    "actual_GRT_unbound": 350,
+    "status": "Ordinary postrepair unprotected births; finalglobalconnect/nativePG0 required before adoption, no finalPGclaim."
+  },
+  "adoption_limits": [
+    "This is one exact32-bin BANK0 histogram master, not a complete TOPKquarter.",
+    "Native per-bank reach/clock/fanout not evidence for original controller/packer; originalquarter1778over32 remainsblocked.",
+    "Actual finalrouteTT/FF/SS/DRC and nativePG/reach/audit owed."
+  ],
+  "request": "Coordinator actual PNG+checklist review and specific leaf REVIEW/submit authorization; no REVIEW written by lane."
+}
