@@ -21,7 +21,7 @@ FAN = 'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv'
 PATH = 'rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv'
 CTRL = 'rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv'
 CORE = 'rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv'
-NHGO = 96      # u_ctl strap-release (hgo) copies: 1994 async-reset loads -> <= 32 each
+NHGO = 128      # u_ctl strap-release (hgo) copies: 1994 async-reset loads -> <= 32 each
 NHR = 16       # sched hclk reset capture (hr_q) copies: 414 loads -> <= 32 each
 
 TQ_DECL = '''    reg  [33:0] tq [0:TQD-1];'''
@@ -189,9 +189,9 @@ EV_BLOCK = f'''    // KV-PC5: registered row-command event copies (exact: c_v <=
       if (!rst_n) ev_qv <= {{{NEV * 6}{{1'b0}}}};
       else ev_qv <= {{{{{NEV - NEV // 2}{{ev_d[11:6]}}}}, {{{NEV // 2}{{ev_d[5:0]}}}}}};
     // KV-PC5: ref_c == LEAD as registered copies (ref_c <= ref_n at every non-reset edge): 0 blk/rb, 1 ready_blk_next
-    (* keep *) reg [1:0] lead_qv;
+    (* keep *) reg [2:0] lead_qv;
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) lead_qv <= {{2{{RW'(RPH + PERIOD) == RW'(LEAD)}}}}; else lead_qv <= {{2{{ref_n == RW'(LEAD)}}}};
+      if (!rst_n) lead_qv <= {{3{{RW'(RPH + PERIOD) == RW'(LEAD)}}}}; else lead_qv <= {{3{{ref_n == RW'(LEAD)}}}};
     wire [16:0] desc_acc_c;
     wire [31:0] open_nx;
     assign open_nx[15:0] = (row_gnt && {ev(14, "act")}) ? (open[15:0] | c_oh[15:0]) : (row_gnt && {ev(14, "pre")}) ? (open[15:0] & ~c_oh[15:0]) :
@@ -498,6 +498,12 @@ RDOH_NEW = '''        // KV-PC5: rd_oh lo / hi and rd_bgoh each from their own d
         if (desc_acc_c[5]) rd_bgoh <= 4'b1 << first_sector[1:0]; else if (rd_ok_c[8]) rd_bgoh <= 4'b1 << j_p1[1:0];'''
 
 TIM_PC5 = [
+    # KV-PC5: c_oh = onehot(c_bank) registered from r_bank (every consumer qualifies c_oh by c_op in {ACT, PRE, REFPB},
+    # where the old r_oh was exactly onehot(r_bank): blk = 1 << rb, sb_oh / wab_oh one-hot of sb / wab, act_oh / pre_oh
+    # the lowest-first one-hots of act_sel / pre_sel); removes the 32-bit priority mux of r_oh (74 / 81-load selects)
+    ('''c_bank <= r_bank; c_oh <= r_oh; c_w <= W && r_w;''', '''c_bank <= r_bank; c_oh <= 32'b1 << r_bank; c_w <= W && r_w;'''),
+    ('''    always @* s_pblk = ((S && slot_next && r_v && r_sp) ? r_oh : 32'b0)''',
+     '''    always @* s_pblk = ((S && slot_next && r_v && r_sp) ? sb_oh : 32'b0)'''),
     ('''    wire s_hit = sq_ne && so_v && so_b == sb && so_row == srw && |(sb_oh & open);
     wire [31:0] shold = s_hit ? sb_oh : 32'b0;''',
      '''    // KV-PC5: s_hit as two kept leaf copies (1 = the 32-bit shold mask)
@@ -529,7 +535,8 @@ TIM_PC5 = [
     wire [31:0] ready_blk_next = (row_fire && c_op == REFPB) ? 32'b0 :''',
      f'''    wire [31:0] ready_stale_next = {{{half(16, 17, 2)}, {half(0, 16, 1)}}};
     wire [31:0] ready_blk_next = (row_gnt && {ev(18, "rfp")}) ? 32'b0 :'''),
-    ('''      (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;''', '''      (REF_MODE && lead_qv[1]) ? (32'b1 << bsel) : blk;'''),
+    ('''      (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;''', '''      !REF_MODE ? blk : (({{16{lead_qv[2]}}, {16{lead_qv[1]}}} & (32'b1 << bsel)) |
+                          ({{16{!lead_qv[2]}}, {16{!lead_qv[1]}}} & blk));'''),
     ('''          if (REF_MODE && ref_c == RW'(LEAD)) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end''',
      '''          if (REF_MODE && lead_qv[0]) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end'''),
     ('''      wire wr_e = (W && wr_ok && hb_oh[b] && !(AQ && hr)) || (s_go && swe && sb_oh[b]);
@@ -843,10 +850,10 @@ def clone(path, name, new, subs, fams=()):
 # generator reproduces the committed output again).  Exact-once substitutions on the rendered text, after the copy
 # families are expanded (the streaming master + identical-D restructure reads the expanded streaming__qv names).
 POST = [
-    ("    (* keep, ot_rst_split *) reg [95:0] hgo_qv;",
-     "    // (KV-PC2: 64 -> 72: gate 164813 measured 2178 loads = 35 / copy at 64; KV-PC5: 72 -> 96 for the static-queue\n"
+    ("    (* keep, ot_rst_split *) reg [127:0] hgo_qv;",
+     "    // (KV-PC2: 64 -> 72: gate 164813 measured 2178 loads = 35 / copy at 64; KV-PC5: 72 -> 128 for the static-queue\n"
      "    // lookahead / freeze registers)\n"
-     "    (* keep, ot_rst_split *) reg [95:0] hgo_qv;"),
+     "    (* keep, ot_rst_split *) reg [127:0] hgo_qv;"),
     ("// KV-PC SAFE: 56 kept copies of rv_q\n",
      "// KV-PC SAFE: 56 kept copies of rv_q (KV-PC2: 27 -> 56, 1576 loads = 59 / copy at 27)\n"),
     ("// KV-PC SAFE: 10 kept copies of streaming\n",
