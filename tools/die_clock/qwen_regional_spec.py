@@ -46,6 +46,9 @@ def main():
                     'balance target, only geometry; residual phase is absorbed by the landings (L5 window)')
     ap.add_argument('--spine-topology', choices=('dme', 'spt'), default='dme', help='QW-DIECLK6: spt = shortest-path-tree '
                     'forwarded spine (bounded depth: every entry at its geodesic delay; rN DME zig-zag 547 levels)')
+    ap.add_argument('--dissolve-receiver', action='store_true', help='QW-GEN5: the spine source is the core feed bump '
+                    '(--source ckb_core/pll_ck[0]); build.py disconnects the qfd_clkrx input it fed and fails unless every '
+                    'receiver output ends without loads (all are spine members)')
     ap.add_argument('--balance-spine', action='store_true', help='QW-DIECLK3: the spine merge compensates each region '
                     "tree's model insertion (spine.balance true, pads allowed) so region entries meet at their flops")
     a = ap.parse_args()
@@ -68,7 +71,13 @@ def main():
             if sp['spine']['balance']:
                 raise SystemExit('--spine-topology spt needs a forwarded spine (no --balance-spine / --spine-geometric)')
             sp['spine']['topology'] = 'spt'
+        if a.dissolve_receiver:
+            if not a.source:
+                raise SystemExit('--dissolve-receiver needs --source (the core feed bump pin)')
+            sp['spine']['dissolve_receiver'] = True
     if a.feed:
+        if a.feed == src:
+            raise SystemExit(f'feed root {a.feed} is the spine source')
         if any(t['root'] == a.feed for t in sp['trees']):
             raise SystemExit(f'feed root {a.feed} already a tree root')
         sp['trees'].append(dict(name='feed', root=a.feed, period=a.period, domain='feed', select='all'))
@@ -103,7 +112,7 @@ def main():
           len(sp['trees']), 'stream', len(stream), 'land_owed links', len(owed), 'bits', sum(o['bits'] for o in owed),
           'bus classes', len(by), 'grid_center', bool(a.grid_center), 'safe_tree', bool(a.safe_tree),
           'neighbour_pairs', len(nb), 'balance_spine', bool(a.balance_spine), 'spine_geometric', bool(a.spine_geometric), 'spine_topology', a.spine_topology,
-          'feed', a.feed or 'none')
+          'feed', a.feed or 'none', 'dissolve_receiver', bool(a.dissolve_receiver))
 
 
 if __name__ == '__main__':

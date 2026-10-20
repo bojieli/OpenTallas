@@ -26,6 +26,17 @@ if [ "$MODE" = prep ]; then
     || { say "clk_rx port completion FAIL (clkrx_ports.log)"; exit 1; }
   say "$(grep -h 'QCLK_CLKRX' $D/clkrx_ports.log | tr '\n' ' ' | cut -c1-600)"
   ROOTS=$(grep -o 'qfd_clkrx clk_rx (.*' $D/die.v | grep -o '\.pll_[a-z0-9_]*' | tr -d . | grep -v pll_fwd | sed 's#^#clk_rx/#' | paste -sd,)
+  # QW-GEN5 g5: clock roots outside the receiver: the real coll_blk divider output (qfd_ckdiv6 ck_o) and the UCIe
+  # PHY FDI clock output (io_ucie lclk)
+  XR=$(python3 - $D/die.v <<'PY'
+import re, sys
+v = open(sys.argv[1]).read()
+r = [f'{i}/ck_o' for i in re.findall(r'^\s*qfd_ckdiv6\s+(\S+)\s*\(', v, re.M)]
+r += [f'{i}/lclk' for i in re.findall(r'^\s*ot_qfd_ucie_x64_phy\s+(\S+)\s*\([^;]*\.lclk\(', v, re.M)]
+print(','.join(r))
+PY
+)
+  [ -n "$XR" ] && { ROOTS="$ROOTS,$XR"; say "extra clock roots (g5): $XR"; }
   $DK "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -no_init -exit /work/$TL/die_clock_geom_dump.py --odb /work/floorplan_ck.odb --out /work/geom --pairs --roots $ROOTS > /work/geom.log 2>&1" \
     || { say "geom dump FAIL"; exit 1; }
   say "geom: $(grep -c ROOT_MISSING $D/geom.log) roots missing, $(wc -l < $D/geom/clknets.tsv) entry pins, $(grep GEOM_DUMP_PAIRS $D/geom.log)"
@@ -95,13 +106,16 @@ bp = rx and re.search(r'qfd_ckbump\s+(\S+)\s*\(\s*\.pll_ck\(' + rx.group(1) + r'
 print(f'{bp.group(1)}/pll_ck[0]' if bp else '')
 PY
 )
+  # QW-GEN5 g5: DC_FEED_ROOT overrides the detected feed (core feed mode: the spine source is the centre bump that feeds
+  # clk_rx; the feed tree is the corner link bump ckb_rom/pll_ck[0] -> its static-link hop-0 stations)
+  [ -n "${DC_FEED_ROOT:-}" ] && FEED=$DC_FEED_ROOT
   say "feed root: ${FEED:-none}"
   python3 $D/$TL/die_clock/qwen_regional_spec.py --spec $D/spec.json --pairs $D/landed_pairs_pre.json --out-spec $D/spec_$3.json \
     --out-families $D/families_$3.json --out-owed $D/land_owed_$3.json ${DC_SPINE_SOURCE:+--source $DC_SPINE_SOURCE} \
     $([ "${DC_REGIONAL_IDEAL:-0}" = 1 ] && echo --ideal) $([ "${DC_GRID_CENTER:-0}" = 1 ] && echo --grid-center) \
     $([ "${DC_SAFE_TREE:-1}" = 1 ] && echo --safe-tree) $([ "${DC_NEIGHBOUR_TRIM:-0}" = 1 ] && echo --neighbours) \
     $([ "${DC_SPINE_BALANCE:-0}" = 1 ] && echo --balance-spine) $([ "${DC_SPINE_GEOM:-0}" = 1 ] && echo --spine-geometric) --spine-topology ${DC_SPINE_TOPO:-dme} \
-    $([ "${DC_FEED:-1}" = 1 ] && [ -n "$FEED" ] && echo --feed $FEED) \
+    $([ "${DC_FEED:-1}" = 1 ] && [ -n "$FEED" ] && echo --feed $FEED) $([ "${DC_DISSOLVE_RX:-0}" = 1 ] && echo --dissolve-receiver) \
     | tee -a $D/STATUS.log || exit 1
   # QW-DIECLK3 10-19: the per-region families stay (intra judged per region); neighbour pairs are trimmed in the build
   # and judged by the landed/unlanded verdict downstream

@@ -1123,6 +1123,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                     # Q-DIEPLAN3 2026-10-17: DIAGNOSTIC dv2r8f2 die case on the q3h model (tools/qwen_split/dv_case.py)
                     from qwen_split.dv_case import apply_dv
                     apply_dv(v, m)
+                    # QW-GEN5 g5 (opt-in): real coll_blk /6 divider, UCIe PHY FDI clock, centre core feed bump
+                    from qwen_split.g5_clocking import apply as apply_g5_clocking
+                    apply_g5_clocking(v, m)
                     if getattr(v, '_write_netlist_pre_b2', None) is not None:
                         v.write_netlist = v._write_netlist_pre_b2   # the b2 trial writer needs the retired b2 buses
             _late_pin_grant(v)

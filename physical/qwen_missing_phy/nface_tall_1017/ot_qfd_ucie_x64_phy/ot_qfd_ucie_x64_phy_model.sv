@@ -2,7 +2,8 @@
 // SIMULATION MODEL of the ot_qfd_ucie_x64_phy hard macro (tools/qwen_missing/link_phy_gen.py): the far end is a second macro;
 // a flit launched on tx_* appears on the FAR macro's rx_* 4 FDI cycles later (link_* ports carry it between the
 // pair).  tx_up rises UP cycles after reset.  Not synthesised.
-module ot_qfd_ucie_x64_phy_model #(parameter integer LAT = 4, parameter integer UP = 16, parameter integer FW = 1043) (
+module ot_qfd_ucie_x64_phy_model #(parameter integer LAT = 4, parameter integer UP = 16, parameter integer FW = 1043, parameter real LCLK_HALF_NS = 0.5) (
+    output reg  lclk,                                       // QW-GEN5: PHY FDI clock output (own 1.0 GHz)
     input  wire clk, input wire rst_n,
     output reg  tx_up,
     input  wire tx_v, input wire [FW-1:0] tx_flit,
@@ -10,6 +11,8 @@ module ot_qfd_ucie_x64_phy_model #(parameter integer LAT = 4, parameter integer 
     output wire link_v, output wire [FW-1:0] link_flit,      // to the far macro
     input  wire far_v,  input  wire [FW-1:0] far_flit
 );
+    initial lclk = 1'b0;
+    always #(LCLK_HALF_NS) lclk = ~lclk;                   // free-running PHY clock (cycle model only)
     reg [LAT*(FW+1)-1:0] pipe;
     integer n;
     always @(posedge clk or negedge rst_n)

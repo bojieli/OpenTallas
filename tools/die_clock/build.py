@@ -497,10 +497,20 @@ def build(a):
             src_net.setSigType('CLOCK')
             src_it.connect(src_net)
         mrb = {rb for _, rb in members}
+        dissolved = []
         for x in [x for x in src_net.getITerms() if x.getIoType() == 'INPUT']:
             if x.getInst().getName() not in mrb:
+                # QW-GEN5 10-20 (g5, spine.dissolve_receiver): the spine starts at the core feed bump; the forwarded-
+                # clock receiver it fed (qfd_clkrx pll_fwd, an identity of the forwarded clock) is dissolved: its
+                # input is disconnected and every output must end up without loads (checked below)
+                if sp_.get('dissolve_receiver') and x.getInst().getMaster().getName() == 'qfd_clkrx':
+                    dissolved.append(f'{x.getInst().getName()}/{x.getMTerm().getName()}')
+                    x.disconnect()
+                    continue
                 raise ValueError(f'spine source {src} also drives non-member {x.getInst().getName()}/{x.getMTerm().getName()}')
             x.disconnect()
+        if sp_.get('dissolve_receiver') and not dissolved:
+            raise ValueError(f'spine dissolve_receiver: source {src} feeds no qfd_clkrx input')
         rmodel = {t['name']: rec['trees'][t['name']]['model'].get('model_insertion_ps', 0.0) for t, _ in members}
         # QW-DIECLK 10-19: spine "balance": false = FORWARDED regional spine (landed-regions standard): the member regions
         # are mesochronous (every cross-region crossing LANDED), so the spine neither compensates region insertion nor
@@ -563,11 +573,22 @@ def build(a):
             while sb.parent.get(x_) not in (None, src):
                 x_ = sb.parent[x_]; d_ += 1
             lv[c_] = d_ + 1      # + the spine source buffer
+        if dissolved:
+            live = []
+            for rx in {d_.split('/')[0] for d_ in dissolved}:
+                for it_ in blk.findInst(rx).getITerms():
+                    n_ = it_.getNet()
+                    if it_.getIoType() == 'OUTPUT' and n_ and [y for y in n_.getITerms() if y.getIoType() == 'INPUT']:
+                        live.append(f'{rx}/{it_.getMTerm().getName()}')
+            if live:
+                raise ValueError(f'spine dissolve_receiver: receiver outputs still drive loads (not spine members): '
+                                 f'{len(live)} {live[:10]}')
         rec['spine'] = dict(source=src, period=float(sp_.get('period', 833.333333)),
                             balance=bal if bal == 'geometric' else bool(bal), topology=topo,
                             members=[t['name'] for t, _ in members],
                             cells=len(sb.bufs) + 1, levels=max(lv.values(), default=0), model=smodel,
-                            generator_pins_without_loads=orphan)
+                            generator_pins_without_loads=orphan,
+                            dissolved_receiver=dict(inputs_disconnected=dissolved, outputs_with_loads=0) if dissolved else None)
         log('SPINE', src, 'members', len(members), 'cells', len(sb.bufs) + 1, 'levels', rec['spine']['levels'],
             'model', json.dumps(smodel), 'generator pins left without loads', len(orphan), ' '.join(orphan[:20]))
     log('instantiated', len(rec['cells']), 'cells')

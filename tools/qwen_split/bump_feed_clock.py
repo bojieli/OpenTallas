@@ -24,6 +24,18 @@ def source_clock(model, bid, eps):
     if len(feeds) != 1:
         raise ValueError(f'bump feed clock {bid}: absent or duplicate pll_fwd')
     _, cls, width, pins = feeds[0]
+    core = model.get('g5_clocking', {}).get('core_feed')
+    if core:
+        # QW-GEN5 g5: the die core clock enters at the centre bump (pll_core -> clk_rx.pll_fwd); the corner bump's
+        # pll_fwd net then carries ONLY the static link's bump hop-0 stations (source-synchronous with its bumps)
+        cores = [b for b in model['buses'] if b[0] == 'pll_core']
+        if len(cores) != 1 or cores[0][3] != [(core['inst'], 'pll_ck'), ('clk_rx', 'pll_fwd')] or \
+                by.get(core['inst']) is None or by[core['inst']].master != 'qfd_ckbump':
+            raise ValueError(f'bump feed clock {bid}: core feed pll_core lacks actual centre bump -> receiver topology')
+        if cls != 'clock_trunk' or width != 1 or pins[0] != ('ckb_rom', 'pll_ck') or \
+                pins.count(('ckb_rom', 'pll_ck')) != 1 or ('clk_rx', 'pll_fwd') in pins:
+            raise ValueError(f'bump feed clock {bid}: pll_fwd lacks actual scalar link-bump topology (core feed mode)')
+        return 'pll_fwd'
     if cls != 'clock_trunk' or width != 1 or pins[0] != ('ckb_rom', 'pll_ck') or \
             pins.count(('ckb_rom', 'pll_ck')) != 1 or pins.count(('clk_rx', 'pll_fwd')) != 1:
         raise ValueError(f'bump feed clock {bid}: pll_fwd lacks actual scalar bump/receiver topology')
