@@ -1,10 +1,10 @@
-if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {
-  set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
-  if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
-  source $ot_pg_helper
-  ot_pg_install_final_write_guard
-  ot_pg_install_rc_observers
-}
+# PG binding before protection is required in standard mode too (ROOT4 10-19):
+# the helper is always sourced; its guards/observers stay strict-only.
+set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
+if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
+source $ot_pg_helper
+ot_pg_install_final_write_guard
+ot_pg_install_rc_observers
 # landed_raw_tap.tcl (HF-4d 2026-10-19, coordinator option A for qfd_tt_ctlm_dv / h16c): post-CTS delay tap for the RAW
 # SRAM clock pins of a hard child in a LANDED cluster (tools/ref_tile clock_entry_constraints.landed_raw_pins).
 #
@@ -180,6 +180,8 @@ proc ot_lrt_tap_batched {} {
         foreach o $made {if {[$o getObjectType] eq "dbInst"} {lappend pg_instances $o}}
         set pg_mapping [ot_pg_prepare_targets [ord::get_db_block] $pg_instances]
         foreach o $pg_instances {ot_pg_bind_before_protect $pg_mapping $o}
+      } else {
+        ot_pg_standard_bind landed_raw_tap
       }
       foreach o $made { $o setDoNotTouch 1 }
       puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f" $corner $iname $mterm $n $d $want [expr {$d - $want}]]
@@ -285,6 +287,8 @@ proc ot_lrt_tap {} {
         foreach o $made {if {[$o getObjectType] eq "dbInst"} {lappend pg_instances $o}}
         set pg_mapping [ot_pg_prepare_targets [ord::get_db_block] $pg_instances]
         foreach o $pg_instances {ot_pg_bind_before_protect $pg_mapping $o}
+      } else {
+        ot_pg_standard_bind landed_raw_tap
       }
       foreach o $made { $o setDoNotTouch 1 }
       puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f" $corner $iname [[$it getMTerm] getName] $n $d $want [expr {$d - $want}]]

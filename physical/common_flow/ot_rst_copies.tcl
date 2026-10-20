@@ -7,6 +7,7 @@
 # synthesis) and physical/common_flow/ot_rst_copies.py re-points the loads of each copy family over its copies, after
 # proving the copies are identical registers.  The table goes to $RESULTS_DIR/ot_rst_copies.tsv.
 #   OT_RST_COPIES_MAX  loads a copy (256)          OT_RST_COPIES_RE  family wire names (default in ot_rst_copies.py)
+#   OT_RST_COPIES_SDFF 1 = fold synchronous resets into $sdff SRST ports first (sync-reset designs; see below)
 if {[info exists ::env(SYNTH_HIERARCHICAL)] && $::env(SYNTH_HIERARCHICAL) eq "1"} {
   error "OT_RST_COPIES: needs flat synthesis (SYNTH_HIERARCHICAL=1 would lose its keep_hierarchy choice to the early flatten)"
 }
@@ -27,6 +28,18 @@ yosys opt_clean
 # register that HOLDS its value (D = mux(Q_own, next, en) after proc) become identical $dffe cells (D = next, EN = en);
 # otherwise every copy's D differs by its own Q and the identity proof refuses the family.  synth runs opt_dff anyway.
 if {$ot_rs_wide ne {}} { yosys opt_dff }
+# OT_RST_COPIES_SDFF=1 (LH-K9R 2026-10-19, synchronous-reset designs, OT_SFU_SYNC_RST): after `proc` a synchronous reset is
+# a $mux in front of a $dff, so a copy bit's coarse load is one select (or one $logic_not shared by a whole process) that
+# maps to one AND gate PER FLOP BIT later: the split would balance the wrong unit.  opt_dff (the same fold synth runs next)
+# turns each such register into an $sdff whose SRST port IS the copy bit (polarity in SRST_POLARITY; measured on the
+# ORFS yosys: 3 $sdff SRST = rb[0], mapped 17 AND/NAND loads for 17 flop bits); the --prep step below then maps the
+# multi-bit $sdff to per-bit cells, so one coarse load = one mapped load.  Function unchanged (synth does this fold).
+if {[info exists ::env(OT_RST_COPIES_SDFF)] && $::env(OT_RST_COPIES_SDFF) eq "1"} {
+  yosys opt_expr
+  yosys opt_clean
+  yosys opt_dff -nodffe
+  yosys opt_clean
+}
 # multi-bit coarse registers on a relay copy would be one indivisible load (a 64-bit $adff = 64 flops on one ARST bit):
 # ot_rst_copies.py --prep lists them and they are mapped to per-bit flops first (as ot_keep_regs does for kept
 # registers).  Function unchanged; only the grouping granularity changes.
