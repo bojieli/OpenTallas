@@ -1,0 +1,40 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc7       admits   833 GB (avail 677, growth 93, headroom 0, waiters 0/0 GB) load 44/96 running 22 disk 5572 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3112144-1792494762 after 0 s
+
+-- Running command `read_verilog gzprobe.v.gz; hierarchy -check -top gzprobe; stat' --
+Found gzip magic in file `gzprobe.v.gz', decompressing using zlib.
+
+1. Executing Verilog-2005 frontend: gzprobe.v.gz
+Parsing Verilog input from `gzprobe.v.gz' to AST representation.
+Generating RTLIL representation for module `\gzprobe'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \gzprobe
+
+2.2. Analyzing design hierarchy..
+Top module:  \gzprobe
+Removed 0 unused modules.
+
+3. Printing statistics.
+
+=== gzprobe ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        2 wires
+        2 wire bits
+        2 public wires
+        2 public wire bits
+        2 ports
+        2 port bits
+
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3112144-1792494762): exit 0

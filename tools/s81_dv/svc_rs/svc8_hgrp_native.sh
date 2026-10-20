@@ -49,7 +49,14 @@ YS
   local args=(); for f in "$O"/lib/*.lib; do args+=(--liberty "$f"); done
   python3 tools/ref_tile/native_census.py --netlist "$O/mapped.v" --top "$3" --out "$O/census.json" "${args[@]}" > "$O/census.log" 2>&1 || true
   test -s "$O/census.json" || { cat "$O/census.log"; echo "SVC8_NATIVE census infrastructure FAIL"; return 1; }
-  echo "SVC8_NATIVE stage=$(basename $O) $(tail -2 $O/census.log | tr '\n' ' ')"; grep -A40 'Number of cells' "$O/stat.txt" | grep -E 'cells|DFF|sram|Chip area' | head -12
+  python3 - "$O/census.json" "$(basename "$O")" <<'PY_CHECK'
+import json,sys
+r=json.load(open(sys.argv[1]))
+assert not r.get('role_errors'),r.get('role_errors')
+if sys.argv[2] == 'retained':
+    assert r['status']=='PASS', 'retained native census failed'
+PY_CHECK
+  echo "SVC8_NATIVE stage=$(basename $O) $(tail -2 $O/census.log | tr '\n' ' ')"; { grep -E 'cells|DFF|sram|Chip area' "$O/stat.txt" | head -12; } || true
 }
 sha256sum $(for f in $RTL $BB; do echo ${f#/src/}; done) tools/s81_dv/svc_rs/svc7_bound_graph.py physical/common_flow/ot_keep_regs.tcl > "$OUT/source_identity.sha256"
 for s in $STAGES; do case $s in
