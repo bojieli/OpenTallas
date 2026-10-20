@@ -1,0 +1,48 @@
+RX_MODEL input1365 born1162 boundary1364 shift1 user0 pos0
+KU c1365 user 0 pos 0
+RX_MODEL input1618 born1415 boundary1617 shift1 user1 pos0
+KU c1618 user 1 pos 0
+RX_MODEL input1874 born1671 boundary1873 shift1 user2 pos0
+KU c1874 user 2 pos 0
+RX_MODEL input2133 born1930 boundary2132 shift1 user3 pos0
+KU c2133 user 3 pos 0
+RX_MODEL input2386 born2183 boundary2385 shift1 user4 pos0
+KU c2386 user 4 pos 0
+RX_MODEL input2642 born2439 boundary2641 shift1 user0 pos1
+KU c2642 user 0 pos 1
+RX_MODEL input2895 born2692 boundary2894 shift1 user1 pos1
+KU c2895 user 1 pos 1
+RX_MODEL input3151 born2948 boundary3150 shift1 user2 pos1
+KU c3151 user 2 pos 1
+RX_MODEL input3410 born3207 boundary3409 shift1 user3 pos1
+KU c3410 user 3 pos 1
+RX_MODEL input3663 born3460 boundary3662 shift1 user4 pos1
+KU c3663 user 4 pos 1
+RX_MODEL input3919 born3716 boundary3918 shift1 user0 pos2
+KU c3919 user 0 pos 2
+RX_MODEL input4172 born3969 boundary4171 shift1 user1 pos2
+KU c4172 user 1 pos 2
+RX_MODEL input4428 born4225 boundary4427 shift1 user2 pos2
+KU c4428 user 2 pos 2
+RX_MODEL input4687 born4484 boundary4686 shift1 user3 pos2
+KU c4687 user 3 pos 2
+RX_MODEL input4940 born4737 boundary4939 shift1 user4 pos2
+KU c4940 user 4 pos 2
+RX_MODEL input5196 born4993 boundary5195 shift1 user0 pos3
+KU c5196 user 0 pos 3
+RX_MODEL input5449 born5246 boundary5448 shift1 user1 pos3
+KU c5449 user 1 pos 3
+RX_MODEL input5705 born5502 boundary5704 shift1 user2 pos3
+KU c5705 user 2 pos 3
+RX_MODEL input5964 born5761 boundary5963 shift1 user3 pos3
+KU c5964 user 3 pos 3
+RX_MODEL input6217 born6014 boundary6216 shift1 user4 pos3
+KU c6217 user 4 pos 3
+MUWIN starts 20 fires 260 expected 260 K 2 t_mf 0100 hslot 0000 hwin 01
+RX_MODEL first_fault1368 expected1368
+MUWIN RX_EXPIRED PASS
+- /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:398: Verilog $finish
+EARLY_MITER edges 6316
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.469 s; speed 13.454 us/s
+- Verilator: cpu 0.469 s on 1 threads; allocated 8 MB

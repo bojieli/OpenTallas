@@ -1,0 +1,31 @@
+{
+  "kind": "FUNCTIONAL_ONLY",
+  "cases": [
+    {
+      "case": 16,
+      "exit": 0,
+      "application_pass": true,
+      "log_sha256": "684bc23e502f81f8ab985ab8a0770ae47a8527a0c2de37173542920ca62acca9"
+    },
+    {
+      "case": 17,
+      "exit": 0,
+      "application_pass": true,
+      "log_sha256": "3c23878781f667279fe17ce7c810cf2795897863e6ef6d83ab10e911672021db"
+    },
+    {
+      "case": 18,
+      "exit": 0,
+      "application_pass": true,
+      "log_sha256": "88f5681c22acf2cfa620f40687e69f047c3137ec50cc8314c3a17c148321a9fb"
+    },
+    {
+      "case": 19,
+      "exit": 0,
+      "application_pass": true,
+      "log_sha256": "357275ae8851ee01ec07ab3e9ffcd743ff2662dbf70af7c68af431f92f44030a"
+    }
+  ],
+  "production_H": null,
+  "remaining": "NO_NATIVE, health failure, cancellation, duplicate client errors and nine causal categories pending"
+}

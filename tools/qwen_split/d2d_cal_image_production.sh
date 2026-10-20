@@ -9,14 +9,16 @@
 # TXDP from the D2D_TXDP_C / D2D_TXDP_K lines of the image.  Run from the repository root.
 set -eu
 OUT=$1
-STAGES=${D2D_DIE_STAGES:-2,2,2,2,2,2/11,11,9,9,9,11,11}   # HKV-DIE 10-19: dv2f14bq seam (SC_TX 2) + kvs14p
+STAGES=${D2D_DIE_STAGES:-2,2,2,3,2,2/11,11,9,9,9,9,9}   # CODEX 10-19: approved coherent MU pair seam (SU uses the same physical stages)
 TP=results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz
 # HKV-DIE 10-19: KV attention codec edges read from the instantiated qkd_kvs_attn (.LAND(1) -> 2), never assumed
 KV_CODEC=${D2D_KV_CODEC:-$(python3 -c "import sys; sys.path[:0]=['tools/qwen_layerbench','tools','tools/qwen_split']; import layer_compile as C; print(C.kv_codec_edges(open('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read()))")}
+MU_ARGS=()
+[ "${D2D_MU:-0}" = 1 ] && MU_ARGS+=(--mu)
 mkdir -p "$OUT"
 gunzip -c "$TP" > "$OUT/token_path_compiled.json"
 python3 tools/qwen_split/d2d_link_calendar.py --out "$OUT/program" --txl 6 --phy 5 --profile program --die-stages "$STAGES" --kv-codec "$KV_CODEC" \
-  --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg \
+  "${MU_ARGS[@]}" --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg \
   --token-path "$OUT/token_path_compiled.json" > "$OUT/program.log"
 python3 tools/qwen_split/d2d_cal_seq_image.py "$OUT/program" "$OUT/d2d_cal_image.svh"
 echo "image: $OUT/d2d_cal_image.svh (die stages $STAGES, kv codec $KV_CODEC)"

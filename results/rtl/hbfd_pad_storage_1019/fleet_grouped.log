@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       admits  1010 GB (avail 803, growth 96, headroom 0, waiters 0/0 GB) load 69/128 running 30 disk 412 GB 
+ot-run: ot-epyc5       admits   785 GB (avail 663, growth 113, headroom 0, waiters 0/0 GB) load 59/128 running 15 disk 564 GB 
+ot-run: ot-epyc6       admits   794 GB (avail 669, growth 113, headroom 0, waiters 0/0 GB) load 44/128 running 22 disk 563 GB 
+ot-run: ot-epyc7       admits   874 GB (avail 699, growth 87, headroom 0, waiters 0/0 GB) load 50/96 running 20 disk 502 GB 
+ot-run: ot-epyc8       admits  1071 GB (avail 863, growth 113, headroom 0, waiters 0/0 GB) load 50/128 running 26 disk 565 GB 
+ot-run: ot-pve1        admits   116 GB (avail 94, growth 13, headroom 0, waiters 0/0 GB) load 47/28 running 6 disk 1197 GB 
+ot-run: ot-agidock128  admits    93 GB (avail 78, growth 13, headroom 0, waiters 0/0 GB) load 13/64 running 8 disk 46 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1063901-1792424483 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PAD_STORAGE_PASS shapes=72 edges=7000 mutants=4 reset_epochs=14
+- tb.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 1.227 s; speed 4.760 us/s
+- Verilator: cpu 1.227 s on 1 threads; allocated 8 MB
+SYNTH_COMPLETE W=17 N=115
+SYNTH_COMPLETE W=1 N=3
+SYNTH_COMPLETE W=34 N=73
+SYNTH_COMPLETE W=274 N=14
+SYNTH_COMPLETE W=136 N=28
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1063901-1792424483): exit 0

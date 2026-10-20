@@ -1,0 +1,179 @@
+`timescale 1ns/1ps
+module pad_case #(parameter W=17,N=3,ID=0)(input ck,rs,input [31:0] seqno,output reg[3:0] caught);
+ reg[W-1:0] din; wire[W-1:0] gold,actual; wire[W-1:0] bad[1:4];
+ integer b; integer assert_mutant=0;
+ integer assert_w=0, assert_n=0;
+ initial begin if($value$plusargs("ASSERT_MUTANT=%d",assert_mutant)) begin end
+   if($value$plusargs("ASSERT_W=%d",assert_w)) begin end if($value$plusargs("ASSERT_N=%d",assert_n)) begin end end
+ if(W*N>2048 && N>=3) begin:g_poison
+   for(genvar bank=0;bank<(W+255)/256;bank=bank+1) begin:g_bank
+     initial for(integer row=0;row<130;row=row+1)
+       dut.g_ring.g_core.g_macro.g_bank[bank].u_sram.arr[row]='1;
+   end
+ end
+ always @* for(integer k=0;k<W;k=k+1) din[k]=((seqno*32'h9e3779b9)>>(k%31))^((seqno+ID*79)>>((k+7)%29));
+ hbfd_pad #(.W(W),.N(N)) refpad(ck,rs,din,gold);
+ hbfd_pad #(.W(W),.N(N),.SAFE_STORAGE(1)) dut(ck,rs,din,actual);
+ for(genvar m=1;m<=4;m=m+1) begin:g_mut
+ hbfd_pad #(.W(W),.N(N),.SAFE_STORAGE(1),.TEST_MUTANT(m)) mutant(ck,rs,din,bad[m]);
+ end
+ always @(negedge rs) begin #0.02; if(actual!==gold) $fatal(1,"ASYNC_RESET_FAIL W=%0d N=%0d",W,N); end
+ initial caught=0;
+ always @(negedge ck) begin
+   if(assert_mutant>=1 && assert_mutant<=4 && N>=3 && rs && (assert_w==0 || (assert_w==W && assert_n==N)) && bad[assert_mutant]!==gold) $fatal(1,"PAD_MUTANT_WITNESS mutant=%0d W=%0d N=%0d seq=%0d",assert_mutant,W,N,seqno);
+   if(actual!==gold) $fatal(1,"PAD_DIFFERENTIAL_FAIL W=%0d N=%0d seq=%0d got=%h expected=%h",W,N,seqno,actual,gold);
+   if(rs && N>=3) for(integer m=1;m<=4;m=m+1) if(bad[m]!==gold) caught[m-1]=1;
+ end
+endmodule
+module tb_hbfd_pad_storage;
+ reg ck=0,rs=0; reg[31:0] seqno=0; integer cycle;
+ always #0.4165 ck=~ck;
+wire[3:0] caught0; pad_case #(.W(1),.N(1),.ID(0)) c0(ck,rs,seqno,caught0);
+wire[3:0] caught1; pad_case #(.W(1),.N(2),.ID(1)) c1(ck,rs,seqno,caught1);
+wire[3:0] caught2; pad_case #(.W(1),.N(3),.ID(2)) c2(ck,rs,seqno,caught2);
+wire[3:0] caught3; pad_case #(.W(1),.N(4),.ID(3)) c3(ck,rs,seqno,caught3);
+wire[3:0] caught4; pad_case #(.W(1),.N(5),.ID(4)) c4(ck,rs,seqno,caught4);
+wire[3:0] caught5; pad_case #(.W(1),.N(115),.ID(5)) c5(ck,rs,seqno,caught5);
+wire[3:0] caught6; pad_case #(.W(17),.N(0),.ID(6)) c6(ck,rs,seqno,caught6);
+wire[3:0] caught7; pad_case #(.W(17),.N(1),.ID(7)) c7(ck,rs,seqno,caught7);
+wire[3:0] caught8; pad_case #(.W(17),.N(2),.ID(8)) c8(ck,rs,seqno,caught8);
+wire[3:0] caught9; pad_case #(.W(17),.N(3),.ID(9)) c9(ck,rs,seqno,caught9);
+wire[3:0] caught10; pad_case #(.W(17),.N(4),.ID(10)) c10(ck,rs,seqno,caught10);
+wire[3:0] caught11; pad_case #(.W(17),.N(5),.ID(11)) c11(ck,rs,seqno,caught11);
+wire[3:0] caught12; pad_case #(.W(17),.N(6),.ID(12)) c12(ck,rs,seqno,caught12);
+wire[3:0] caught13; pad_case #(.W(17),.N(7),.ID(13)) c13(ck,rs,seqno,caught13);
+wire[3:0] caught14; pad_case #(.W(17),.N(8),.ID(14)) c14(ck,rs,seqno,caught14);
+wire[3:0] caught15; pad_case #(.W(17),.N(10),.ID(15)) c15(ck,rs,seqno,caught15);
+wire[3:0] caught16; pad_case #(.W(17),.N(14),.ID(16)) c16(ck,rs,seqno,caught16);
+wire[3:0] caught17; pad_case #(.W(17),.N(16),.ID(17)) c17(ck,rs,seqno,caught17);
+wire[3:0] caught18; pad_case #(.W(17),.N(17),.ID(18)) c18(ck,rs,seqno,caught18);
+wire[3:0] caught19; pad_case #(.W(17),.N(19),.ID(19)) c19(ck,rs,seqno,caught19);
+wire[3:0] caught20; pad_case #(.W(17),.N(20),.ID(20)) c20(ck,rs,seqno,caught20);
+wire[3:0] caught21; pad_case #(.W(17),.N(21),.ID(21)) c21(ck,rs,seqno,caught21);
+wire[3:0] caught22; pad_case #(.W(17),.N(22),.ID(22)) c22(ck,rs,seqno,caught22);
+wire[3:0] caught23; pad_case #(.W(17),.N(23),.ID(23)) c23(ck,rs,seqno,caught23);
+wire[3:0] caught24; pad_case #(.W(17),.N(24),.ID(24)) c24(ck,rs,seqno,caught24);
+wire[3:0] caught25; pad_case #(.W(17),.N(25),.ID(25)) c25(ck,rs,seqno,caught25);
+wire[3:0] caught26; pad_case #(.W(17),.N(26),.ID(26)) c26(ck,rs,seqno,caught26);
+wire[3:0] caught27; pad_case #(.W(17),.N(27),.ID(27)) c27(ck,rs,seqno,caught27);
+wire[3:0] caught28; pad_case #(.W(17),.N(28),.ID(28)) c28(ck,rs,seqno,caught28);
+wire[3:0] caught29; pad_case #(.W(17),.N(29),.ID(29)) c29(ck,rs,seqno,caught29);
+wire[3:0] caught30; pad_case #(.W(17),.N(30),.ID(30)) c30(ck,rs,seqno,caught30);
+wire[3:0] caught31; pad_case #(.W(17),.N(31),.ID(31)) c31(ck,rs,seqno,caught31);
+wire[3:0] caught32; pad_case #(.W(17),.N(32),.ID(32)) c32(ck,rs,seqno,caught32);
+wire[3:0] caught33; pad_case #(.W(17),.N(33),.ID(33)) c33(ck,rs,seqno,caught33);
+wire[3:0] caught34; pad_case #(.W(17),.N(35),.ID(34)) c34(ck,rs,seqno,caught34);
+wire[3:0] caught35; pad_case #(.W(17),.N(36),.ID(35)) c35(ck,rs,seqno,caught35);
+wire[3:0] caught36; pad_case #(.W(17),.N(37),.ID(36)) c36(ck,rs,seqno,caught36);
+wire[3:0] caught37; pad_case #(.W(17),.N(38),.ID(37)) c37(ck,rs,seqno,caught37);
+wire[3:0] caught38; pad_case #(.W(17),.N(39),.ID(38)) c38(ck,rs,seqno,caught38);
+wire[3:0] caught39; pad_case #(.W(17),.N(40),.ID(39)) c39(ck,rs,seqno,caught39);
+wire[3:0] caught40; pad_case #(.W(17),.N(41),.ID(40)) c40(ck,rs,seqno,caught40);
+wire[3:0] caught41; pad_case #(.W(17),.N(42),.ID(41)) c41(ck,rs,seqno,caught41);
+wire[3:0] caught42; pad_case #(.W(17),.N(43),.ID(42)) c42(ck,rs,seqno,caught42);
+wire[3:0] caught43; pad_case #(.W(17),.N(44),.ID(43)) c43(ck,rs,seqno,caught43);
+wire[3:0] caught44; pad_case #(.W(17),.N(45),.ID(44)) c44(ck,rs,seqno,caught44);
+wire[3:0] caught45; pad_case #(.W(17),.N(46),.ID(45)) c45(ck,rs,seqno,caught45);
+wire[3:0] caught46; pad_case #(.W(17),.N(47),.ID(46)) c46(ck,rs,seqno,caught46);
+wire[3:0] caught47; pad_case #(.W(17),.N(78),.ID(47)) c47(ck,rs,seqno,caught47);
+wire[3:0] caught48; pad_case #(.W(17),.N(79),.ID(48)) c48(ck,rs,seqno,caught48);
+wire[3:0] caught49; pad_case #(.W(17),.N(84),.ID(49)) c49(ck,rs,seqno,caught49);
+wire[3:0] caught50; pad_case #(.W(17),.N(85),.ID(50)) c50(ck,rs,seqno,caught50);
+wire[3:0] caught51; pad_case #(.W(17),.N(86),.ID(51)) c51(ck,rs,seqno,caught51);
+wire[3:0] caught52; pad_case #(.W(17),.N(97),.ID(52)) c52(ck,rs,seqno,caught52);
+wire[3:0] caught53; pad_case #(.W(17),.N(99),.ID(53)) c53(ck,rs,seqno,caught53);
+wire[3:0] caught54; pad_case #(.W(17),.N(112),.ID(54)) c54(ck,rs,seqno,caught54);
+wire[3:0] caught55; pad_case #(.W(17),.N(113),.ID(55)) c55(ck,rs,seqno,caught55);
+wire[3:0] caught56; pad_case #(.W(17),.N(114),.ID(56)) c56(ck,rs,seqno,caught56);
+wire[3:0] caught57; pad_case #(.W(17),.N(115),.ID(57)) c57(ck,rs,seqno,caught57);
+wire[3:0] caught58; pad_case #(.W(34),.N(2),.ID(58)) c58(ck,rs,seqno,caught58);
+wire[3:0] caught59; pad_case #(.W(34),.N(3),.ID(59)) c59(ck,rs,seqno,caught59);
+wire[3:0] caught60; pad_case #(.W(34),.N(4),.ID(60)) c60(ck,rs,seqno,caught60);
+wire[3:0] caught61; pad_case #(.W(34),.N(5),.ID(61)) c61(ck,rs,seqno,caught61);
+wire[3:0] caught62; pad_case #(.W(34),.N(6),.ID(62)) c62(ck,rs,seqno,caught62);
+wire[3:0] caught63; pad_case #(.W(34),.N(8),.ID(63)) c63(ck,rs,seqno,caught63);
+wire[3:0] caught64; pad_case #(.W(34),.N(61),.ID(64)) c64(ck,rs,seqno,caught64);
+wire[3:0] caught65; pad_case #(.W(34),.N(62),.ID(65)) c65(ck,rs,seqno,caught65);
+wire[3:0] caught66; pad_case #(.W(34),.N(73),.ID(66)) c66(ck,rs,seqno,caught66);
+wire[3:0] caught67; pad_case #(.W(136),.N(28),.ID(67)) c67(ck,rs,seqno,caught67);
+wire[3:0] caught68; pad_case #(.W(256),.N(9),.ID(68)) c68(ck,rs,seqno,caught68);
+wire[3:0] caught69; pad_case #(.W(274),.N(3),.ID(69)) c69(ck,rs,seqno,caught69);
+wire[3:0] caught70; pad_case #(.W(274),.N(8),.ID(70)) c70(ck,rs,seqno,caught70);
+wire[3:0] caught71; pad_case #(.W(274),.N(14),.ID(71)) c71(ck,rs,seqno,caught71);
+initial begin
+ #0.1; rs=1; #0.1; rs=0; #0.1;
+ for(cycle=0;cycle<7000;cycle=cycle+1) begin
+  @(negedge ck); #0.05; seqno=seqno+1;
+  if(cycle==0 || cycle==2 || cycle==130 || cycle==133 || cycle==400 || cycle==511 || cycle==512 || cycle==900 || cycle==1024 || cycle==1200 || cycle==1360 || cycle==1800 || cycle==3000 || cycle==5000) begin
+   rs=0; #0.1; rs=1;
+  end
+ end
+ @(negedge ck); #0.1;
+if(caught2!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=1 N=3 caught=%h",caught2);
+if(caught3!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=1 N=4 caught=%h",caught3);
+if(caught4!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=1 N=5 caught=%h",caught4);
+if(caught5!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=1 N=115 caught=%h",caught5);
+if(caught9!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=3 caught=%h",caught9);
+if(caught10!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=4 caught=%h",caught10);
+if(caught11!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=5 caught=%h",caught11);
+if(caught12!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=6 caught=%h",caught12);
+if(caught13!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=7 caught=%h",caught13);
+if(caught14!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=8 caught=%h",caught14);
+if(caught15!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=10 caught=%h",caught15);
+if(caught16!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=14 caught=%h",caught16);
+if(caught17!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=16 caught=%h",caught17);
+if(caught18!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=17 caught=%h",caught18);
+if(caught19!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=19 caught=%h",caught19);
+if(caught20!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=20 caught=%h",caught20);
+if(caught21!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=21 caught=%h",caught21);
+if(caught22!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=22 caught=%h",caught22);
+if(caught23!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=23 caught=%h",caught23);
+if(caught24!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=24 caught=%h",caught24);
+if(caught25!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=25 caught=%h",caught25);
+if(caught26!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=26 caught=%h",caught26);
+if(caught27!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=27 caught=%h",caught27);
+if(caught28!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=28 caught=%h",caught28);
+if(caught29!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=29 caught=%h",caught29);
+if(caught30!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=30 caught=%h",caught30);
+if(caught31!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=31 caught=%h",caught31);
+if(caught32!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=32 caught=%h",caught32);
+if(caught33!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=33 caught=%h",caught33);
+if(caught34!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=35 caught=%h",caught34);
+if(caught35!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=36 caught=%h",caught35);
+if(caught36!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=37 caught=%h",caught36);
+if(caught37!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=38 caught=%h",caught37);
+if(caught38!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=39 caught=%h",caught38);
+if(caught39!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=40 caught=%h",caught39);
+if(caught40!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=41 caught=%h",caught40);
+if(caught41!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=42 caught=%h",caught41);
+if(caught42!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=43 caught=%h",caught42);
+if(caught43!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=44 caught=%h",caught43);
+if(caught44!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=45 caught=%h",caught44);
+if(caught45!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=46 caught=%h",caught45);
+if(caught46!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=47 caught=%h",caught46);
+if(caught47!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=78 caught=%h",caught47);
+if(caught48!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=79 caught=%h",caught48);
+if(caught49!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=84 caught=%h",caught49);
+if(caught50!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=85 caught=%h",caught50);
+if(caught51!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=86 caught=%h",caught51);
+if(caught52!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=97 caught=%h",caught52);
+if(caught53!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=99 caught=%h",caught53);
+if(caught54!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=112 caught=%h",caught54);
+if(caught55!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=113 caught=%h",caught55);
+if(caught56!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=114 caught=%h",caught56);
+if(caught57!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=17 N=115 caught=%h",caught57);
+if(caught59!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=34 N=3 caught=%h",caught59);
+if(caught60!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=34 N=4 caught=%h",caught60);
+if(caught61!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=34 N=5 caught=%h",caught61);
+if(caught62!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=34 N=6 caught=%h",caught62);
+if(caught63!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=34 N=8 caught=%h",caught63);
+if(caught64!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=34 N=61 caught=%h",caught64);
+if(caught65!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=34 N=62 caught=%h",caught65);
+if(caught66!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=34 N=73 caught=%h",caught66);
+if(caught67!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=136 N=28 caught=%h",caught67);
+if(caught68!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=256 N=9 caught=%h",caught68);
+if(caught69!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=274 N=3 caught=%h",caught69);
+if(caught70!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=274 N=8 caught=%h",caught70);
+if(caught71!==4'hf) $fatal(1,"MUTANT_NOT_DETECTED W=274 N=14 caught=%h",caught71);
+$display("PAD_STORAGE_PASS shapes=72 edges=7000 mutants=4 reset_epochs=14"); $finish; end
+endmodule

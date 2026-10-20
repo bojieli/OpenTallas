@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits  1150 GB (avail 868, growth 63, headroom 0, waiters 0/0 GB) load 41/128 running 21 disk 2109 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch2/claude/closure-loop/s81sl_cap_tr-s81sl_cap_tr-0ecc0c258
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch2/claude/closure-loop/s81sl_cap_tr-s81sl_cap_tr-0ecc0c258
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/closure-loop/s81sl_cap_tr-s81sl_cap_tr-0ecc0c258
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch2/claude/closure-loop/s81sl_cap_tr-s81sl_cap_tr-0ecc0c258
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/closure-loop/s81sl_cap_tr-s81sl_cap_tr-0ecc0c258
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/closure-loop/s81sl_cap_tr-s81sl_cap_tr-0ecc0c258
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3667069-1792442330 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{"counts": {"GROUND": 75602, "PASS": 150546, "POWER": 75602, "UNBOUND": 658}, "final_odb_sha256": "bf7fa57ad65ec1759e593b00b4629c9c211bf6498273a5b637b75bef6d6d1b36", "instance_count": 75602, "verdict": "PG_HOLD"}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3667069-1792442330): exit 0

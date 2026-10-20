@@ -16,7 +16,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 28.08,
+  "w": 21.6,
   "h": 34.56,
   "exact": true
  },
@@ -82,7 +82,7 @@
   "owner": "Claude:KV-DCAL",
   "branch": "claude/kv-dcal-1019",
   "tag": "k22w",
-  "purpose": "KV link calendar sequencer for the MU release die on the coherent codec2 K22 image (5ae543bfa): boot target 11 cfg merged with the runtime SEG1/SEG2 base writes (bc2 function), rebuilt structurally safe (bc4 = bc3safe structure): RTL 2-stage reset landing with kept copies (every reset source <= 23 loads), per-use kept selector/control copies (functional max 28), sticky fault (sequencer|COL|RUN|STALE|EARLY) on the E face for the parent fault lane. Static, no credits; zero added runtime cycles. PARALLEL fallback geometry (lower utilisation, different pin pitch).",
+  "purpose": "KV link calendar sequencer for the MU release die on the coherent codec2 K22 image (5ae543bfa): boot target 11 cfg merged with the runtime SEG1/SEG2 base writes (bc2 function), rebuilt structurally safe (bc4 = bc3safe structure): RTL 2-stage reset landing with kept copies (every reset source <= 23 loads), per-use kept selector/control copies (functional max 28), sticky fault (sequencer|COL|RUN|STALE|EARLY) on the E face for the parent fault lane. Static, no credits; zero added runtime cycles. PARALLEL fallback geometry (bc2 die slot 21.6x34.56, ~51% util).",
   "extra_paths": [
    "rtl/qwen_sys/d2d_static_20261015",
    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
@@ -222,18 +222,18 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "New safe successor of bc2 (whose native audit found source reset 206/45 loads, an unread fault and E-face pins 2.8 um inside the 21.6 um outline). bc4 = bc3safe structure on the K22 image: 351 FF, source-only synthesis 259 um2 (bc2 same-flow 214 vs daemon 265 => expect ~321 um2). Outline 28.08 x 34.56: core 23.76 x 30.24 = 718.5 um2 -> ~45% util at the expected daemon area, aspect 1.23. Pins regenerated on the real faces (full-face, centred), clock centre of S.",
+ "structural_change": "New safe successor of bc2 (whose native audit found source reset 206/45 loads, an unread fault and E-face pins 2.8 um inside the 21.6 um outline). bc4 = bc3safe structure on the K22 image: 351 FF, source-only synthesis 259 um2 (bc2 same-flow 214 vs daemon 265 => measured gate 264 um2). Outline 21.6 x 34.56: core 17.28 x 30.24 = 522.5 um2 -> ~51% util at the expected daemon area, aspect 1.60. Pins regenerated on the real faces (full-face, centred), clock centre of S.",
  "reset_landing": {
   "enable": false,
   "reason": "The RTL owns the 2-stage landing at the face: rst_n -> land0 (1 load) -> 4 kept land1 copies (synchronous assert and release, as the frozen generated landing), then rel0 -> 19 kept rel1 release copies; every reset source drives <= 23 loads (bc3safe census c494be2d7: raw reset 1, outer Q max 23, inner Q max 16). A flow landing would add 2 more release edges to the scheduled constant."
  },
  "safe_design_checklist": {
   "1_pins": "PASS: RTL captures every input once (51 capture flops; bcfg we x4 copies), every output is a tile register; rst_n lands in 2 RTL registered stages at the face (land0 -> 4 kept land1), then 19 kept release copies",
-  "2_reach": "PASS: 28.08 x 34.56 um tile, every wire << 405 um",
+  "2_reach": "PASS: 21.6 x 34.56 um tile, every wire << 405 um",
   "3_fanout": "PASS: source census c494be2d7 on this exact structure: functional max 28, zero functional sources > 32; reset raw 1 / outer max 23 / inner max 16; the TIEHI 347 constant is replicated by ORFS repair_tie_fanout (checked on the gate netlist); clock 351 sinks go to CTS",
   "4_depth": "PASS: per stage a 2:1 merge, 32-bit equality, 6-bit decode; per-use kept selector copies (li_mux x5, ip_img x4) split the image byte muxes; bc2 gate depth 397 ps vs 770 ps",
   "5_storage": "PASS: compile-time image constants and boot words; no runtime-indexed flop arrays, no delay lines",
-  "6_floorplan": "PASS: no macros, one full std-cell band, aspect 1.23; outline sized from synthesis (expected ~45% util); W/E pins full-face <= 2.08/um on the real faces",
+  "6_floorplan": "PASS: no macros, one full std-cell band, aspect 1.60; outline sized from synthesis (expected ~51% util); W/E pins full-face <= 2.08/um on the real faces",
   "7_clock": "PASS: single S centre clock entry, 351 sinks, local tree; TT/FF pin-flop spread checked at the --cts gate (<= 80); io_hold_margin 0.03",
   "8_schedule": "PASS: static; cycle-identical to the frozen bc2 wrapper on all 53 public bits (600k-edge miter), so zero added runtime cycles and the KV compiler/die schedule is unchanged"
  }

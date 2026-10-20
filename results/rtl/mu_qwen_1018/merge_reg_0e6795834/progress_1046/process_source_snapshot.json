@@ -1,0 +1,183 @@
+{
+  "time": "2026-10-19T10:47:37.930647-07:00",
+  "terminal": false,
+  "jobs": {
+    "amix_FACES1": {
+      "root": [
+        "1045697",
+        "1045688",
+        "04:25:02",
+        "00:00:00",
+        "0.0",
+        "3472",
+        "/usr/bin/bash -lc export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator OT_VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; cd /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src && mkdir -p /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/amix_FACES1 && { bash results/rtl/mu_qwen_1018/amix/run_group.sh FACES1 /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/amix_w/FACES1; } > /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/amix_FACES1.out 2>&1; rc=$?; echo \"# exit $rc\" >> /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/amix_FACES1.out; exit $rc"
+      ],
+      "leaves": [
+        [
+          "1045730",
+          "1045716",
+          "04:25:01",
+          "00:01:24",
+          "0.5",
+          "502116",
+          "python3 -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/ot_nba_guard/verilator_guarded.py --binary --timing -O2 -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-assign 0 --x-initial 0 --top-module tb_qfd_dv2_faces -GMUT=0 -GMU_NU=1 -Mdir /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/amix_w/FACES1/FACES_mut0_nu1 -o sim rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_su8_entries.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/test/full_sm_service/sram_models.sv rtl/test/hbm_rf_visibility/scale_sram_model.sv rtl/qwen_dv/qfd_dv_heads.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv rtl/lib/ot_rst_pipe.sv rtl/qwen_dv/qfd_dv_slice2.sv rtl/qwen_dv/qfd_dv_redstn2.sv rtl/qwen_dv/qfd_dv_scalar2.sv rtl/qwen_dv/mu/qfd_dv_amax_mu.sv rtl/qwen_dv/qfd_dv_slice2_faces.sv rtl/test/qwen_dv/tb_qfd_dv2_faces.sv"
+        ]
+      ],
+      "output_bytes": 0,
+      "output_tail": ""
+    },
+    "sl_FACES_mut11_nu4": {
+      "root": [
+        "1066495",
+        "1066486",
+        "03:17:52",
+        "00:00:00",
+        "0.0",
+        "3568",
+        "/usr/bin/bash -lc export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator OT_VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; cd /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src && mkdir -p /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/sl_FACES_mut11_nu4 && { rm -rf /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/slice_w/FACES_mut11_nu4; bash results/rtl/mu_qwen_1018/adopt_slice/run_group.sh FONE /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/slice_w 11 4; } > /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/sl_FACES_mut11_nu4.out 2>&1; rc=$?; echo \"# exit $rc\" >> /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/sl_FACES_mut11_nu4.out; exit $rc"
+      ],
+      "leaves": [
+        [
+          "1071346",
+          "1071343",
+          "03:03:09",
+          "02:18:56",
+          "75.8",
+          "1306860",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_3.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.fast Vtb_qfd_dv2_faces_vm_classes_3.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_3.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Os -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccr7ymC9.s"
+        ],
+        [
+          "1071350",
+          "1071345",
+          "03:03:09",
+          "02:18:25",
+          "75.5",
+          "1728772",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_4.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.fast Vtb_qfd_dv2_faces_vm_classes_4.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_4.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Os -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccCe5FgC.s"
+        ],
+        [
+          "1071352",
+          "1071348",
+          "03:03:09",
+          "02:18:55",
+          "75.8",
+          "1487972",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_5.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.fast Vtb_qfd_dv2_faces_vm_classes_5.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_5.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Os -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccxfZ63X.s"
+        ],
+        [
+          "1099249",
+          "1099248",
+          "01:36:42",
+          "01:24:48",
+          "87.7",
+          "1097412",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_Slow_2.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.slow Vtb_qfd_dv2_faces_vm_classes_Slow_2.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_Slow_2.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccoLeVCu.s"
+        ],
+        [
+          "1099670",
+          "1099669",
+          "01:35:19",
+          "01:24:01",
+          "88.1",
+          "835228",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_Slow_3.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.slow Vtb_qfd_dv2_faces_vm_classes_Slow_3.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_Slow_3.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccJbHoey.s"
+        ],
+        [
+          "1109200",
+          "1109199",
+          "01:10:12",
+          "01:03:47",
+          "90.8",
+          "795488",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_Slow_4.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.slow Vtb_qfd_dv2_faces_vm_classes_Slow_4.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_Slow_4.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccvlVpja.s"
+        ],
+        [
+          "1112028",
+          "1112027",
+          "01:02:24",
+          "00:58:01",
+          "92.9",
+          "737944",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_Slow_5.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.slow Vtb_qfd_dv2_faces_vm_classes_Slow_5.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_Slow_5.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/cc6PBwMy.s"
+        ]
+      ],
+      "output_bytes": 0,
+      "output_tail": ""
+    },
+    "sl_FACES_mut12_nu4": {
+      "root": [
+        "1066547",
+        "1066538",
+        "03:17:50",
+        "00:00:00",
+        "0.0",
+        "3624",
+        "/usr/bin/bash -lc export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator OT_VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; cd /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src && mkdir -p /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/sl_FACES_mut12_nu4 && { rm -rf /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/slice_w/FACES_mut12_nu4; bash results/rtl/mu_qwen_1018/adopt_slice/run_group.sh FONE /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/slice_w 12 4; } > /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/sl_FACES_mut12_nu4.out 2>&1; rc=$?; echo \"# exit $rc\" >> /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/sl_FACES_mut12_nu4.out; exit $rc"
+      ],
+      "leaves": [
+        [
+          "1071211",
+          "1071208",
+          "03:03:37",
+          "02:17:37",
+          "74.9",
+          "1729444",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_4.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.fast Vtb_qfd_dv2_faces_vm_classes_4.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_4.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Os -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccolQfuQ.s"
+        ],
+        [
+          "1071213",
+          "1071210",
+          "03:03:37",
+          "02:19:55",
+          "76.2",
+          "1488372",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_5.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.fast Vtb_qfd_dv2_faces_vm_classes_5.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_5.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Os -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/cc53OtGW.s"
+        ],
+        [
+          "1099008",
+          "1099007",
+          "01:37:08",
+          "01:25:23",
+          "87.9",
+          "836212",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_Slow_3.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.slow Vtb_qfd_dv2_faces_vm_classes_Slow_3.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_Slow_3.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/cce6wBZ3.s"
+        ],
+        [
+          "1108893",
+          "1108892",
+          "01:11:18",
+          "01:04:55",
+          "91.0",
+          "795488",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_Slow_4.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.slow Vtb_qfd_dv2_faces_vm_classes_Slow_4.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_Slow_4.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccQkDUd9.s"
+        ],
+        [
+          "1112073",
+          "1112072",
+          "01:02:14",
+          "00:57:47",
+          "92.8",
+          "737940",
+          "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_qfd_dv2_faces_vm_classes_Slow_5.d -D_GNU_SOURCE -D VERILATOR=1 -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VM_TRACE_SAIF=0 -D VM_VPI=0 -D VL_TIME_CONTEXT -include Vtb_qfd_dv2_faces__pch.h.slow Vtb_qfd_dv2_faces_vm_classes_Slow_5.cpp -quiet -dumpbase Vtb_qfd_dv2_faces_vm_classes_Slow_5.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccgYTwpT.s"
+        ],
+        [
+          "1135077",
+          "1071206",
+          "00:00",
+          "00:00:00",
+          "0.0",
+          "5152",
+          "as -I . -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd --64 -o Vtb_qfd_dv2_faces_vm_classes_3.o /tmp/cc0EL8v2.s"
+        ]
+      ],
+      "output_bytes": 0,
+      "output_tail": ""
+    }
+  },
+  "source_hashes": {
+    "results/rtl/mu_qwen_1018/amix/run_group.sh": "f91aa521b1d590702600e4741d4e241f97956a59f7c6c2bfe2fe05b4ad4f43e6",
+    "results/rtl/mu_qwen_1018/adopt_slice/run_group.sh": "7354151bbb9c8b3f7acd2eb5e4cc57c30d0ceb84a66b4ca6ba8e3cf120202347",
+    "rtl/test/qwen_dv/tb_qfd_dv2_faces.sv": "53190147ab96c315b66b47c48429ab60256736ffee520e693c6994a97d091a3d",
+    "rtl/qwen_dv/qfd_dv_slice2_faces.sv": "19bf5dca5f88e53323a5d662e85bacdb9ac0efefdb2d48df137e5c0dbe9ad359"
+  }
+}

@@ -1,0 +1,1156 @@
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_certificate_attempt_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:106:17: ... Location of port declaration
+  106 |     output wire native_certificate_attempt_v,event_certified_v,
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'event_certified_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:106:46: ... Location of port declaration
+  106 |     output wire native_certificate_attempt_v,event_certified_v,
+      |                                              ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'cq_dma_retired_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:107:17: ... Location of port declaration
+  107 |     output wire cq_dma_retired_v,
+      |                 ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_cq_prospective_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:111:17: ... Location of port declaration
+  111 |     output wire native_cq_prospective_v, native_cq_prospective_native_valid,
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_cq_prospective_native_valid'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:111:42: ... Location of port declaration
+  111 |     output wire native_cq_prospective_v, native_cq_prospective_native_valid,
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_cq_prospective_key'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:112:24: ... Location of port declaration
+  112 |     output wire [86:0] native_cq_prospective_key,
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'issue_fire_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:123:17: ... Location of port declaration
+  123 |     output wire issue_fire_v,
+      |                 ^~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'issue_token'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:124:24: ... Location of port declaration
+  124 |     output wire [17:0] issue_token, issue_pos,
+      |                        ^~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'issue_pos'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:124:37: ... Location of port declaration
+  124 |     output wire [17:0] issue_token, issue_pos,
+      |                                     ^~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'issue_client'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:125:24: ... Location of port declaration
+  125 |     output wire [15:0] issue_client,
+      |                        ^~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'issue_slot'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:126:23: ... Location of port declaration
+  126 |     output wire [7:0] issue_slot,
+      |                       ^~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'issue_descgen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:127:23: ... Location of port declaration
+  127 |     output wire [1:0] issue_descgen,
+      |                       ^~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'event_insert_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:128:17: ... Location of port declaration
+  128 |     output wire event_insert_v, event_native_valid,
+      |                 ^~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'event_native_valid'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:128:33: ... Location of port declaration
+  128 |     output wire event_insert_v, event_native_valid,
+      |                                 ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'event_native_tag'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:129:24: ... Location of port declaration
+  129 |     output wire [58:0] event_native_tag,
+      |                        ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'event_native_gen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:130:23: ... Location of port declaration
+  130 |     output wire [1:0] event_native_gen, event_descgen,
+      |                       ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'event_descgen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:130:41: ... Location of port declaration
+  130 |     output wire [1:0] event_native_gen, event_descgen,
+      |                                         ^~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'cq_offer_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:131:17: ... Location of port declaration
+  131 |     output wire cq_offer_v, cq_native_valid,
+      |                 ^~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'cq_native_valid'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:131:29: ... Location of port declaration
+  131 |     output wire cq_offer_v, cq_native_valid,
+      |                             ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'cq_native_tag'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:132:24: ... Location of port declaration
+  132 |     output wire [58:0] cq_native_tag,
+      |                        ^~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'cq_native_gen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:133:23: ... Location of port declaration
+  133 |     output wire [1:0] cq_native_gen, cq_descgen,
+      |                       ^~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'cq_descgen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:133:38: ... Location of port declaration
+  133 |     output wire [1:0] cq_native_gen, cq_descgen,
+      |                                      ^~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'raw_done_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:134:17: ... Location of port declaration
+  134 |     output wire raw_done_v, raw_done_native_valid, raw_done_report_needed, native_certificate_v,
+      |                 ^~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'raw_done_native_valid'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:134:29: ... Location of port declaration
+  134 |     output wire raw_done_v, raw_done_native_valid, raw_done_report_needed, native_certificate_v,
+      |                             ^~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'raw_done_report_needed'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:134:52: ... Location of port declaration
+  134 |     output wire raw_done_v, raw_done_native_valid, raw_done_report_needed, native_certificate_v,
+      |                                                    ^~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_certificate_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:134:76: ... Location of port declaration
+  134 |     output wire raw_done_v, raw_done_native_valid, raw_done_report_needed, native_certificate_v,
+      |                                                                            ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'raw_done_tag'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:135:24: ... Location of port declaration
+  135 |     output wire [58:0] raw_done_tag,
+      |                        ^~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'raw_done_gen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:136:23: ... Location of port declaration
+  136 |     output wire [1:0] raw_done_gen, raw_done_descgen,
+      |                       ^~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'raw_done_descgen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:136:37: ... Location of port declaration
+  136 |     output wire [1:0] raw_done_gen, raw_done_descgen,
+      |                                     ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'raw_done_client'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:137:24: ... Location of port declaration
+  137 |     output wire [15:0] raw_done_client,
+      |                        ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'raw_done_slot'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:138:23: ... Location of port declaration
+  138 |     output wire [7:0] raw_done_slot,
+      |                       ^~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'raw_done_pos'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:139:24: ... Location of port declaration
+  139 |     output wire [17:0] raw_done_pos,
+      |                        ^~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_certificate_tag'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:140:24: ... Location of port declaration
+  140 |     output wire [58:0] native_certificate_tag,
+      |                        ^~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_certificate_gen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:141:23: ... Location of port declaration
+  141 |     output wire [1:0] native_certificate_gen, native_certificate_descgen,
+      |                       ^~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_certificate_descgen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:141:47: ... Location of port declaration
+  141 |     output wire [1:0] native_certificate_gen, native_certificate_descgen,
+      |                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_certificate_client'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:142:24: ... Location of port declaration
+  142 |     output wire [15:0] native_certificate_client,
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'native_certificate_slot'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:143:23: ... Location of port declaration
+  143 |     output wire [7:0] native_certificate_slot,
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'event_client'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:144:24: ... Location of port declaration
+  144 |     output wire [15:0] event_client, cq_offer_client, report_drained_client,
+      |                        ^~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'cq_offer_client'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:144:38: ... Location of port declaration
+  144 |     output wire [15:0] event_client, cq_offer_client, report_drained_client,
+      |                                      ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'report_drained_client'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:144:55: ... Location of port declaration
+  144 |     output wire [15:0] event_client, cq_offer_client, report_drained_client,
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'event_slot'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:145:23: ... Location of port declaration
+  145 |     output wire [7:0] event_slot, cq_offer_slot, report_drained_slot,
+      |                       ^~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'cq_offer_slot'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:145:35: ... Location of port declaration
+  145 |     output wire [7:0] event_slot, cq_offer_slot, report_drained_slot,
+      |                                   ^~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'report_drained_slot'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:145:50: ... Location of port declaration
+  145 |     output wire [7:0] event_slot, cq_offer_slot, report_drained_slot,
+      |                                                  ^~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'report_drained_v'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:146:17: ... Location of port declaration
+  146 |     output wire report_drained_v, report_drained_cq, report_drained_native_valid,
+      |                 ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'report_drained_cq'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:146:35: ... Location of port declaration
+  146 |     output wire report_drained_v, report_drained_cq, report_drained_native_valid,
+      |                                   ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'report_drained_native_valid'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:146:54: ... Location of port declaration
+  146 |     output wire report_drained_v, report_drained_cq, report_drained_native_valid,
+      |                                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'report_drained_tag'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:147:24: ... Location of port declaration
+  147 |     output wire [58:0] report_drained_tag,
+      |                        ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'report_drained_gen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:148:23: ... Location of port declaration
+  148 |     output wire [1:0] report_drained_gen, report_drained_descgen,
+      |                       ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'report_drained_descgen'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:148:43: ... Location of port declaration
+  148 |     output wire [1:0] report_drained_gen, report_drained_descgen,
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'step_retire_native_valid'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:238:13: ... Location of port declaration
+  238 |  output reg step_retire_native_valid,cq_native_valid_observed,
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: scheduler_compare.sv:30:88: Instance has missing pin: 'cq_native_valid_observed'
+   30 |     .NSLOT(1),.ENG_CTX(1),.MODE(0),.MU_OUT(0),.NW(18),.PLB(13),.CTX_MAX(8192),.FMT(1)) dut (
+      |                                                                                        ^~~
+                     scheduler_candidate.sv:238:38: ... Location of port declaration
+  238 |  output reg step_retire_native_valid,cq_native_valid_observed,
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:199:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  199 |     wire retained_reset_n = ENABLE_RETAINED_COMMIT ? raw_por_n : rst_n;
+      |                                                    ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:200:40: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  200 |     initial if (ENABLE_RETAINED_COMMIT &&
+      |                                        ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:278:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  278 |     wire          ev_full = ev_n == EQD;
+      |                                  ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:284:54: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  284 |     wire [EVW-1:0] ev_head = (ENABLE_RETAINED_COMMIT && d_st >= D_CQ1 && d_st <= D_CQ0_B) ? cq_saved : evq[ev_r];
+      |                                                      ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:328:46: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pending_age' generates 4 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  328 |     wire cut_now = pending_v && (pending_age + 1'b1 == HEALTH_CUTOFF_EDGES);
+      |                                              ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:329:51: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pending_age' generates 4 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  329 |     wire deadline_bad = pending_v && (pending_age + 1'b1 == STEP_RESPONSE_DEADLINE_EDGES) && !raw_including_now;
+      |                                                   ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:335:25: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  335 |     wire admission_ok = !ENABLE_RETAINED_COMMIT || (armed_q && !bad_next && !poison_q && !pending_v);
+      |                         ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:337:10: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  337 |         (!ENABLE_RETAINED_COMMIT || (ev_n + pending_v < EQD - 2));
+      |          ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:337:43: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  337 |         (!ENABLE_RETAINED_COMMIT || (ev_n + pending_v < EQD - 2));
+      |                                           ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:338:43: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  338 |     wire certify = ENABLE_RETAINED_COMMIT && cut_now && !bad_next;
+      |                                           ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:346:50: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  346 |     wire failure_insert = ENABLE_RETAINED_COMMIT && failure_pending_q && !report_once_q &&
+      |                                                  ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:351:44: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  351 |     assign rc_bad = ENABLE_RETAINED_COMMIT && bad_q;
+      |                                            ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:352:46: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  352 |     assign rc_armed = ENABLE_RETAINED_COMMIT && armed_q;
+      |                                              ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:354:47: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  354 |     assign rc_poison = ENABLE_RETAINED_COMMIT && poison_q;
+      |                                               ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:355:56: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  355 |     assign rc_failure_pending = ENABLE_RETAINED_COMMIT && failure_pending_q;
+      |                                                        ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:356:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  356 |     assign rc_report_once = ENABLE_RETAINED_COMMIT && report_once_q;
+      |                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:360:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  360 |     assign rc_word0_offer = ENABLE_RETAINED_COMMIT && d_st == D_CQ1_B && m_bvalid;
+      |                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:412:49: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  412 |                 rmux = {(ENABLE_RETAINED_COMMIT ? cm_pos : sl_pos[si]), 13'd0, (MU_OUT != 0) ? sl_inf[si] : (inflight && (eng_slot == si)), (ENABLE_RETAINED_COMMIT ? cm_state : sl_st[si])};
+      |                                                 ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:412:132: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'eng_slot' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  412 |                 rmux = {(ENABLE_RETAINED_COMMIT ? cm_pos : sl_pos[si]), 13'd0, (MU_OUT != 0) ? sl_inf[si] : (inflight && (eng_slot == si)), (ENABLE_RETAINED_COMMIT ? cm_state : sl_st[si])};
+      |                                                                                                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:412:165: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  412 |                 rmux = {(ENABLE_RETAINED_COMMIT ? cm_pos : sl_pos[si]), 13'd0, (MU_OUT != 0) ? sl_inf[si] : (inflight && (eng_slot == si)), (ENABLE_RETAINED_COMMIT ? cm_state : sl_st[si])};
+      |                                                                                                                                                                     ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:412:22: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 34 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  412 |                 rmux = {(ENABLE_RETAINED_COMMIT ? cm_pos : sl_pos[si]), 13'd0, (MU_OUT != 0) ? sl_inf[si] : (inflight && (eng_slot == si)), (ENABLE_RETAINED_COMMIT ? cm_state : sl_st[si])};
+      |                      ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:411:32: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  411 |             if (s_araddr[11:2] == 10'h040 + 2 * si)
+      |                                ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:411:43: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h40' generates 10 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  411 |             if (s_araddr[11:2] == 10'h040 + 2 * si)
+      |                                           ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:414:61: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  414 |                 rmux = {sl_tag[si], (ENABLE_RETAINED_COMMIT ? cm_ngen : sl_ngen[si])};
+      |                                                             ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:414:22: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 34 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  414 |                 rmux = {sl_tag[si], (ENABLE_RETAINED_COMMIT ? cm_ngen : sl_ngen[si])};
+      |                      ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:413:32: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  413 |             if (s_araddr[11:2] == 10'h041 + 2 * si)
+      |                                ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:413:43: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h41' generates 10 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  413 |             if (s_araddr[11:2] == 10'h041 + 2 * si)
+      |                                           ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:431:44: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  431 |             cand = (ENABLE_RETAINED_COMMIT && NSLOT == 1) ? {SB{1'b0}} : rr + k[SB-1:0];
+      |                                            ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:458:43: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'batch_n' generates 8 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  458 |         b_ok = (batch_n != 0) && (batch_n <= NSLOT);
+      |                                           ^~
+%Warning-SELRANGE: scheduler_baseline.sv:477:64: Selection index out of range: 65:48 outside 63:0
+                                               : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  477 |     wire [NW-1:0] q_max  = (FMT != 0) ? NW'(dsc0[63:48]) : dsc0[48 +: NW];
+      |                                                                ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:480:35: Operator ADD expects 20 bits on the LHS, but LHS's VARREF 'q_plen' generates 18 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  480 |     wire [NW+1:0] q_span = q_plen + q_max;
+      |                                   ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:480:35: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'q_max' generates 18 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  480 |     wire [NW+1:0] q_span = q_plen + q_max;
+      |                                   ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:487:135: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  487 |     wire [63:0] cq_w0 = (FMT != 0) ? {eh_tok32[15:0], eh_pos32[15:0], eh_tag, eh_slot8, eh_st, 1'b0, eh_kind, (ENABLE_RETAINED_COMMIT ? cq_saved_phase : cq_phase)}
+      |                                                                                                                                       ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:488:123: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  488 |                                    : 64'({eh_tok, eh_pos, eh_tag, eh_slot8, eh_st, 1'b0, eh_kind, (ENABLE_RETAINED_COMMIT ? cq_saved_phase : cq_phase)});
+      |                                                                                                                           ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:529:13: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  529 |             if (ENABLE_RETAINED_COMMIT) begin
+      |             ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:601:17: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  601 |                 if (ENABLE_RETAINED_COMMIT) begin
+      |                 ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:609:55: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  609 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                       ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:609:55: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  609 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                       ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:609:80: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  609 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                                                ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:609:80: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  609 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                                                ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:619:25: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  619 |                         if (ENABLE_RETAINED_COMMIT) begin cq_saved_owner_record <= event_owner_record[ev_r]; cq_saved <= evq[ev_r]; cq_saved_lineage <= event_lineage[ev_r]; cq_saved_addr <= cq_entry; cq_saved_phase <= cq_phase; end
+      |                         ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:624:87: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  624 |                     end else if (admission_ok && enable && sq_head != sq_tail && ev_n < EQD - 1) begin
+      |                                                                                       ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:618:50: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  618 |                     if (ev_n != 0 && cq_room && (!ENABLE_RETAINED_COMMIT || !report_once_q)) begin
+      |                                                  ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:629:38: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  629 |                 D_SQ_R: if (m_rvalid && ENABLE_RETAINED_COMMIT && bad_next) begin d_st <= D_IDLE; end else if (m_rvalid) begin
+      |                                      ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:650:89: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'q_span' generates 20 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  650 |                     else if (q_plen == 0 || q_max == 0 || q_plen > (1 << PLB) || q_span > CTX_MAX + 1)
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:648:37: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'q_slot' generates 8 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  648 |                     else if (q_slot >= NSLOT || sl_st[q_s] != SL_FREE || (MODE == 1 && b_st != B_IDLE))
+      |                                     ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:658:25: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  658 |                         if (ENABLE_RETAINED_COMMIT) begin
+      |                         ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:655:68: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  655 |                     if (err_st != ST_OK || (ENABLE_RETAINED_COMMIT && (bad_next || poison_q))) begin
+      |                                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:681:25: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  681 |                         if (ENABLE_RETAINED_COMMIT) cm_state <= SL_RUN;
+      |                         ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:685:55: Operator ADD expects 66 bits on the LHS, but LHS's VARREF 'dsc1' generates 64 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  685 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                                       ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:685:55: Operator ADD expects 66 bits on the RHS, but RHS's EXTEND generates 64 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  685 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                                       ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:685:89: Operator ADD expects 66 bits on the LHS, but LHS's VARREF 'dsc1' generates 64 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  685 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                                                                         ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:685:34: Operator ASSIGNDLY expects 64 bits on the Assign RHS, but Assign RHS's COND generates 66 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  685 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                  ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:673:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  673 |                 D_PR_W: if (ENABLE_RETAINED_COMMIT && !admission_ok) begin d_st <= D_IDLE; end else begin
+      |                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:695:75: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  695 |                     m_awvalid <= 1'b1; m_awaddr <= ENABLE_RETAINED_COMMIT ? cq_saved_addr : cq_entry;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:697:56: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  697 |                     m_wdata <= (ENABLE_RETAINED_COMMIT && !word0_cut_ok) ?
+      |                                                        ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:700:21: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  700 |                     if (ENABLE_RETAINED_COMMIT) begin
+      |                     ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:724:21: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  724 |                     if (ENABLE_RETAINED_COMMIT) response_confirmed_q <= offered_success_q && m_bresp == 0;
+      |                     ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:731:72: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  731 |                         if (sl_st[eh_slot] == SL_DRAIN && MODE == 0 && !ENABLE_RETAINED_COMMIT) sl_st[eh_slot] <= SL_FREE;
+      |                                                                        ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:728:26: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  728 |                     if ((!ENABLE_RETAINED_COMMIT && eh_kind != EV_TOKEN) ||
+      |                          ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:729:49: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  729 |                         (ENABLE_RETAINED_COMMIT && offered_success_q && offered_kind_q != EV_TOKEN && m_bresp == 0)) begin
+      |                                                 ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:733:26: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  733 |                     if ((!ENABLE_RETAINED_COMMIT && eh_kind != EV_ERROR) ||
+      |                          ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:734:49: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  734 |                         (ENABLE_RETAINED_COMMIT && offered_success_q && m_bresp == 0)) c_tokens <= c_tokens + 1'b1;
+      |                                                 ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:767:55: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 24 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  767 |                             kv_base <= (ENG_CTX == 1) ? {AW{1'b0}} : pick * KVW;
+      |                                                       ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:767:37: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  767 |                             kv_base <= (ENG_CTX == 1) ? {AW{1'b0}} : pick * KVW;
+      |                                     ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:765:88: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  765 |                         if (admission_ok && pick_v && enable && ((MU_OUT != 0) ? (ev_n + mq_n < EQD - 2) : (ev_n < EQD - 2))) begin
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:765:88: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'mq_n' generates 2 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  765 |                         if (admission_ok && pick_v && enable && ((MU_OUT != 0) ? (ev_n + mq_n < EQD - 2) : (ev_n < EQD - 2))) begin
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:765:114: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  765 |                         if (admission_ok && pick_v && enable && ((MU_OUT != 0) ? (ev_n + mq_n < EQD - 2) : (ev_n < EQD - 2))) begin
+      |                                                                                                                  ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:775:39: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'PB_READ_PIPE' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  775 |                         pb_wait_edges <= PB_READ_PIPE;
+      |                                       ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:776:47: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PB_READ_PIPE' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  776 |                         i_st <= (PB_READ_PIPE && sl_pos[eng_slot] < sl_plen[eng_slot]) ? I_PB_WAIT : I_WAIT;
+      |                                               ^~
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:818:48: Operator COND expects 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  818 |                     mq_n <= mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
+      |                                                ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:818:48: Operator COND expects 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  818 |                     mq_n <= mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
+      |                                                ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:818:76: Operator COND expects 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  818 |                     mq_n <= mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
+      |                                                                            ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:818:76: Operator COND expects 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  818 |                     mq_n <= mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
+      |                                                                            ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:819:53: Operator COND expects 32 or 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  819 |                     inflight <= (mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+      |                                                     ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:819:53: Operator COND expects 32 or 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  819 |                     inflight <= (mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+      |                                                     ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:819:81: Operator COND expects 32 or 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  819 |                     inflight <= (mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: scheduler_baseline.sv:819:81: Operator COND expects 32 or 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  819 |                     inflight <= (mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+      |                                                                                 ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:863:13: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  863 |         if (!ENABLE_RETAINED_COMMIT && MODE == 0 && (MU_OUT != 0 || i_st == I_RUN) && step_done && (d_gen || eng_fault)) begin
+      |             ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:875:36: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  875 |         if (ENABLE_RETAINED_COMMIT && certify && cert_generated) begin
+      |                                    ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:883:81: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  883 |         dp_v = (d_st == D_ERR) && ((err_st != ST_OK) || (ENABLE_RETAINED_COMMIT && (bad_next || poison_q)));
+      |                                                                                 ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:884:53: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  884 |         dp_d = ev(EV_ERROR, (ENABLE_RETAINED_COMMIT && err_st == ST_OK && (bad_next || poison_q)) ? ST_FAULT : err_st, q_slot, q_tag, {NW{1'b0}}, {NW{1'b0}}, 32'd0, {NW{1'b0}});
+      |                                                     ^~
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:903:203: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  903 |    cq_commit_v<=ev_pop&&m_bresp==0;host_observer_fault<=sticky_dma||sticky_fault||ev_ovf;cq_client_tag<=eh_tag;cq_slot<=eh_slot8;cq_pos<=18'(eh_pos);cq_token<=18'(eh_tok);cq_kind<=ENABLE_RETAINED_COMMIT?offered_kind_q:eh_kind;cq_status<=ENABLE_RETAINED_COMMIT?offered_status_q:eh_st;
+      |                                                                                                                                                                                                           ^
+%Warning-WIDTHTRUNC: scheduler_baseline.sv:903:260: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.refdut'
+  903 |    cq_commit_v<=ev_pop&&m_bresp==0;host_observer_fault<=sticky_dma||sticky_fault||ev_ovf;cq_client_tag<=eh_tag;cq_slot<=eh_slot8;cq_pos<=18'(eh_pos);cq_token<=18'(eh_tok);cq_kind<=ENABLE_RETAINED_COMMIT?offered_kind_q:eh_kind;cq_status<=ENABLE_RETAINED_COMMIT?offered_status_q:eh_st;
+      |                                                                                                                                                                                                                                                                    ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:245:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  245 |     wire retained_reset_n = ENABLE_RETAINED_COMMIT ? raw_por_n : rst_n;
+      |                                                    ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:246:40: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  246 |     initial if (ENABLE_RETAINED_COMMIT &&
+      |                                        ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:252:42: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  252 |     initial if (ENABLE_NATIVE_OWNER_JOIN && (!ENABLE_RETAINED_COMMIT || EVQ != 4))
+      |                                          ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:252:46: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  252 |     initial if (ENABLE_NATIVE_OWNER_JOIN && (!ENABLE_RETAINED_COMMIT || EVQ != 4))
+      |                                              ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:326:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  326 |     wire          ev_full = ev_n == EQD;
+      |                                  ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:332:54: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  332 |     wire [EVW-1:0] ev_head = (ENABLE_RETAINED_COMMIT && d_st >= D_CQ1 && d_st <= D_CQ0_B) ? cq_saved : evq[ev_r];
+      |                                                      ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:381:46: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pending_age' generates 4 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  381 |     wire cut_now = pending_v && (pending_age + 1'b1 == HEALTH_CUTOFF_EDGES);
+      |                                              ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:382:51: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pending_age' generates 4 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  382 |     wire deadline_bad = pending_v && (pending_age + 1'b1 == STEP_RESPONSE_DEADLINE_EDGES) && !raw_including_now;
+      |                                                   ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:395:63: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  395 |     wire identity_bad = cut_now && ((ENABLE_NATIVE_OWNER_JOIN ? native_identity_bad :
+      |                                                               ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:399:35: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  399 |         (ENABLE_NATIVE_OWNER_JOIN && native_join_fault) ||
+      |                                   ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:402:25: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  402 |     wire admission_ok = !ENABLE_RETAINED_COMMIT || (armed_q && !bad_next && !poison_q && !pending_v);
+      |                         ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:404:10: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  404 |         (!ENABLE_NATIVE_OWNER_JOIN || native_issue_ready) &&
+      |          ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:405:10: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  405 |         (!ENABLE_RETAINED_COMMIT || (ev_n + pending_v < EQD - 2));
+      |          ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:405:43: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  405 |         (!ENABLE_RETAINED_COMMIT || (ev_n + pending_v < EQD - 2));
+      |                                           ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:406:43: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  406 |     wire certify = ENABLE_RETAINED_COMMIT && cut_now && !bad_next;
+      |                                           ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:414:50: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  414 |     wire failure_insert = ENABLE_RETAINED_COMMIT && failure_pending_q && !report_once_q &&
+      |                                                  ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:421:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  421 |         (ENABLE_NATIVE_OWNER_JOIN ?
+      |                                   ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:425:44: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  425 |     assign rc_bad = ENABLE_RETAINED_COMMIT && bad_q;
+      |                                            ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:426:46: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  426 |     assign rc_armed = ENABLE_RETAINED_COMMIT && armed_q;
+      |                                              ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:428:47: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  428 |     assign rc_poison = ENABLE_RETAINED_COMMIT && poison_q;
+      |                                               ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:429:56: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  429 |     assign rc_failure_pending = ENABLE_RETAINED_COMMIT && failure_pending_q;
+      |                                                        ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:430:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  430 |     assign rc_report_once = ENABLE_RETAINED_COMMIT && report_once_q;
+      |                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:434:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  434 |     assign rc_word0_offer = ENABLE_RETAINED_COMMIT && d_st == D_CQ1_B && m_bvalid;
+      |                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:437:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  437 |     assign issue_fire_v = ENABLE_NATIVE_OWNER_JOIN && issue_fire;
+      |                                                    ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:439:63: Operator ASSIGNW expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'eng_slot' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  439 |     assign issue_client = sl_tag[eng_slot]; assign issue_slot = eng_slot;
+      |                                                               ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:441:54: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  441 |     assign event_insert_v = ENABLE_NATIVE_OWNER_JOIN && (ep_v || (dp_v && dp_ok));
+      |                                                      ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:456:63: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  456 |     assign native_cq_prospective_v = ENABLE_NATIVE_OWNER_JOIN && rc_word0_offer;
+      |                                                               ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:460:50: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  460 |     assign cq_offer_v = ENABLE_NATIVE_OWNER_JOIN && rc_word0_offer;
+      |                                                  ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:466:50: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  466 |     assign raw_done_v = ENABLE_NATIVE_OWNER_JOIN && step_done;
+      |                                                  ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:471:67: Operator ASSIGNW expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'd_slot' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  471 |     assign raw_done_client = sl_tag[d_slot]; assign raw_done_slot = d_slot;
+      |                                                                   ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:477:60: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  477 |     assign native_certificate_v = ENABLE_NATIVE_OWNER_JOIN && certify;
+      |                                                            ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:478:57: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  478 |     assign report_drained_cq = ENABLE_NATIVE_OWNER_JOIN && d_st == D_CQ0_B;
+      |                                                         ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:479:56: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  479 |     assign report_drained_v = ENABLE_NATIVE_OWNER_JOIN &&
+      |                                                        ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:536:49: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  536 |                 rmux = {(ENABLE_RETAINED_COMMIT ? cm_pos : sl_pos[si]), 13'd0, (MU_OUT != 0) ? sl_inf[si] : (inflight && (eng_slot == si)), (ENABLE_RETAINED_COMMIT ? cm_state : sl_st[si])};
+      |                                                 ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:536:132: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'eng_slot' generates 1 bits.
+                                                    : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  536 |                 rmux = {(ENABLE_RETAINED_COMMIT ? cm_pos : sl_pos[si]), 13'd0, (MU_OUT != 0) ? sl_inf[si] : (inflight && (eng_slot == si)), (ENABLE_RETAINED_COMMIT ? cm_state : sl_st[si])};
+      |                                                                                                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:536:165: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  536 |                 rmux = {(ENABLE_RETAINED_COMMIT ? cm_pos : sl_pos[si]), 13'd0, (MU_OUT != 0) ? sl_inf[si] : (inflight && (eng_slot == si)), (ENABLE_RETAINED_COMMIT ? cm_state : sl_st[si])};
+      |                                                                                                                                                                     ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:536:22: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 34 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  536 |                 rmux = {(ENABLE_RETAINED_COMMIT ? cm_pos : sl_pos[si]), 13'd0, (MU_OUT != 0) ? sl_inf[si] : (inflight && (eng_slot == si)), (ENABLE_RETAINED_COMMIT ? cm_state : sl_st[si])};
+      |                      ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:535:32: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  535 |             if (s_araddr[11:2] == 10'h040 + 2 * si)
+      |                                ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:535:43: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h40' generates 10 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  535 |             if (s_araddr[11:2] == 10'h040 + 2 * si)
+      |                                           ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:538:61: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  538 |                 rmux = {sl_tag[si], (ENABLE_RETAINED_COMMIT ? cm_ngen : sl_ngen[si])};
+      |                                                             ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:538:22: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 34 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  538 |                 rmux = {sl_tag[si], (ENABLE_RETAINED_COMMIT ? cm_ngen : sl_ngen[si])};
+      |                      ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:537:32: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  537 |             if (s_araddr[11:2] == 10'h041 + 2 * si)
+      |                                ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:537:43: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h41' generates 10 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  537 |             if (s_araddr[11:2] == 10'h041 + 2 * si)
+      |                                           ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:555:44: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  555 |             cand = (ENABLE_RETAINED_COMMIT && NSLOT == 1) ? {SB{1'b0}} : rr + k[SB-1:0];
+      |                                            ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:582:43: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'batch_n' generates 8 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  582 |         b_ok = (batch_n != 0) && (batch_n <= NSLOT);
+      |                                           ^~
+%Warning-SELRANGE: scheduler_candidate.sv:601:64: Selection index out of range: 65:48 outside 63:0
+                                                : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  601 |     wire [NW-1:0] q_max  = (FMT != 0) ? NW'(dsc0[63:48]) : dsc0[48 +: NW];
+      |                                                                ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:604:35: Operator ADD expects 20 bits on the LHS, but LHS's VARREF 'q_plen' generates 18 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  604 |     wire [NW+1:0] q_span = q_plen + q_max;
+      |                                   ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:604:35: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'q_max' generates 18 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  604 |     wire [NW+1:0] q_span = q_plen + q_max;
+      |                                   ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:611:135: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  611 |     wire [63:0] cq_w0 = (FMT != 0) ? {eh_tok32[15:0], eh_pos32[15:0], eh_tag, eh_slot8, eh_st, 1'b0, eh_kind, (ENABLE_RETAINED_COMMIT ? cq_saved_phase : cq_phase)}
+      |                                                                                                                                       ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:612:123: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  612 |                                    : 64'({eh_tok, eh_pos, eh_tag, eh_slot8, eh_st, 1'b0, eh_kind, (ENABLE_RETAINED_COMMIT ? cq_saved_phase : cq_phase)});
+      |                                                                                                                           ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:676:66: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  676 |                     pending_identity <= ENABLE_NATIVE_OWNER_JOIN ? 80'd0 : {owner_tag,owner_gen,1'b0,eng_pos};
+      |                                                                  ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:680:46: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  680 |                 if (ENABLE_NATIVE_OWNER_JOIN && pending_v && !pending_native_valid && bound_matches_owner)
+      |                                              ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:654:13: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  654 |             if (ENABLE_RETAINED_COMMIT) begin
+      |             ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:731:69: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  731 |                     event_lineage[ev_w] <= ENABLE_NATIVE_OWNER_JOIN ?
+      |                                                                     ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:734:21: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  734 |                     if (ENABLE_NATIVE_OWNER_JOIN) begin
+      |                     ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:730:17: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  730 |                 if (ENABLE_RETAINED_COMMIT) begin
+      |                 ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:744:55: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  744 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                       ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:744:55: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  744 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                       ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:744:80: Operator COND expects 5 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  744 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                                                ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:744:80: Operator COND expects 5 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  744 |             ev_n <= ev_n + ((ep_v || (dp_v && dp_ok)) ? 1'b1 : 1'b0) - (ev_pop ? 1'b1 : 1'b0);
+      |                                                                                ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:754:59: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  754 |                         if (ENABLE_RETAINED_COMMIT) begin if (ENABLE_NATIVE_OWNER_JOIN) begin cq_saved_native_valid <= event_native_valid_q[ev_r]; cq_saved_desc_gen <= event_desc_gen[ev_r]; end cq_saved_owner_record <= event_owner_record[ev_r]; cq_saved <= evq[ev_r]; cq_saved_lineage <= event_lineage[ev_r]; cq_saved_addr <= cq_entry; cq_saved_phase <= cq_phase; end
+      |                                                           ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:754:25: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  754 |                         if (ENABLE_RETAINED_COMMIT) begin if (ENABLE_NATIVE_OWNER_JOIN) begin cq_saved_native_valid <= event_native_valid_q[ev_r]; cq_saved_desc_gen <= event_desc_gen[ev_r]; end cq_saved_owner_record <= event_owner_record[ev_r]; cq_saved <= evq[ev_r]; cq_saved_lineage <= event_lineage[ev_r]; cq_saved_addr <= cq_entry; cq_saved_phase <= cq_phase; end
+      |                         ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:759:87: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  759 |                     end else if (admission_ok && enable && sq_head != sq_tail && ev_n < EQD - 1) begin
+      |                                                                                       ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:753:50: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  753 |                     if (ev_n != 0 && cq_room && (!ENABLE_RETAINED_COMMIT || !report_once_q)) begin
+      |                                                  ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:764:38: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  764 |                 D_SQ_R: if (m_rvalid && ENABLE_RETAINED_COMMIT && bad_next) begin d_st <= D_IDLE; end else if (m_rvalid) begin
+      |                                      ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:785:89: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'q_span' generates 20 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  785 |                     else if (q_plen == 0 || q_max == 0 || q_plen > (1 << PLB) || q_span > CTX_MAX + 1)
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:783:37: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'q_slot' generates 8 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  783 |                     else if (q_slot >= NSLOT || sl_st[q_s] != SL_FREE || (MODE == 1 && b_st != B_IDLE))
+      |                                     ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:794:29: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  794 |                             if (ENABLE_NATIVE_OWNER_JOIN) begin
+      |                             ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:793:25: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  793 |                         if (ENABLE_RETAINED_COMMIT) begin
+      |                         ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:790:68: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  790 |                     if (err_st != ST_OK || (ENABLE_RETAINED_COMMIT && (bad_next || poison_q))) begin
+      |                                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:824:25: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  824 |                         if (ENABLE_RETAINED_COMMIT) cm_state <= SL_RUN;
+      |                         ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:828:55: Operator ADD expects 66 bits on the LHS, but LHS's VARREF 'dsc1' generates 64 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  828 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                                       ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:828:55: Operator ADD expects 66 bits on the RHS, but RHS's EXTEND generates 64 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  828 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                                       ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:828:89: Operator ADD expects 66 bits on the LHS, but LHS's VARREF 'dsc1' generates 64 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  828 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                                                                         ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:828:34: Operator ASSIGNDLY expects 64 bits on the Assign RHS, but Assign RHS's COND generates 66 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  828 |                         m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+      |                                  ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:816:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  816 |                 D_PR_W: if (ENABLE_RETAINED_COMMIT && !admission_ok) begin d_st <= D_IDLE; end else begin
+      |                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:838:75: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  838 |                     m_awvalid <= 1'b1; m_awaddr <= ENABLE_RETAINED_COMMIT ? cq_saved_addr : cq_entry;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:840:56: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  840 |                     m_wdata <= (ENABLE_RETAINED_COMMIT && !word0_cut_ok) ?
+      |                                                        ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:853:58: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  853 |                             if (ENABLE_NATIVE_OWNER_JOIN ? saved_descriptor_matches :
+      |                                                          ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:843:21: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  843 |                     if (ENABLE_RETAINED_COMMIT) begin
+      |                     ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:868:21: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  868 |                     if (ENABLE_RETAINED_COMMIT) response_confirmed_q <= offered_success_q && m_bresp == 0;
+      |                     ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:875:72: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  875 |                         if (sl_st[eh_slot] == SL_DRAIN && MODE == 0 && !ENABLE_RETAINED_COMMIT) sl_st[eh_slot] <= SL_FREE;
+      |                                                                        ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:872:26: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  872 |                     if ((!ENABLE_RETAINED_COMMIT && eh_kind != EV_TOKEN) ||
+      |                          ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:873:49: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  873 |                         (ENABLE_RETAINED_COMMIT && offered_success_q && offered_kind_q != EV_TOKEN && m_bresp == 0)) begin
+      |                                                 ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:877:26: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  877 |                     if ((!ENABLE_RETAINED_COMMIT && eh_kind != EV_ERROR) ||
+      |                          ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:878:49: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  878 |                         (ENABLE_RETAINED_COMMIT && offered_success_q && m_bresp == 0)) c_tokens <= c_tokens + 1'b1;
+      |                                                 ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:911:55: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 24 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  911 |                             kv_base <= (ENG_CTX == 1) ? {AW{1'b0}} : pick * KVW;
+      |                                                       ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:911:37: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  911 |                             kv_base <= (ENG_CTX == 1) ? {AW{1'b0}} : pick * KVW;
+      |                                     ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:909:88: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  909 |                         if (admission_ok && pick_v && enable && ((MU_OUT != 0) ? (ev_n + mq_n < EQD - 2) : (ev_n < EQD - 2))) begin
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:909:88: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'mq_n' generates 2 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  909 |                         if (admission_ok && pick_v && enable && ((MU_OUT != 0) ? (ev_n + mq_n < EQD - 2) : (ev_n < EQD - 2))) begin
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:909:114: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'ev_n' generates 5 bits.
+                                                    : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  909 |                         if (admission_ok && pick_v && enable && ((MU_OUT != 0) ? (ev_n + mq_n < EQD - 2) : (ev_n < EQD - 2))) begin
+      |                                                                                                                  ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:919:39: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's VARREF 'PB_READ_PIPE' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  919 |                         pb_wait_edges <= PB_READ_PIPE;
+      |                                       ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:920:47: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PB_READ_PIPE' generates 32 bits.
+                                                  : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  920 |                         i_st <= (PB_READ_PIPE && sl_pos[eng_slot] < sl_plen[eng_slot]) ? I_PB_WAIT : I_WAIT;
+      |                                               ^~
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:962:48: Operator COND expects 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  962 |                     mq_n <= mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
+      |                                                ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:962:48: Operator COND expects 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  962 |                     mq_n <= mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
+      |                                                ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:962:76: Operator COND expects 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  962 |                     mq_n <= mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
+      |                                                                            ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:962:76: Operator COND expects 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  962 |                     mq_n <= mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0);
+      |                                                                            ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:963:53: Operator COND expects 32 or 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  963 |                     inflight <= (mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+      |                                                     ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:963:53: Operator COND expects 32 or 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  963 |                     inflight <= (mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+      |                                                     ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:963:81: Operator COND expects 32 or 2 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  963 |                     inflight <= (mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: scheduler_candidate.sv:963:81: Operator COND expects 32 or 2 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+  963 |                     inflight <= (mq_n + (issue_fire ? 1'b1 : 1'b0) - (step_done ? 1'b1 : 1'b0)) != 0;
+      |                                                                                 ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1007:13: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1007 |         if (!ENABLE_RETAINED_COMMIT && MODE == 0 && (MU_OUT != 0 || i_st == I_RUN) && step_done && (d_gen || eng_fault)) begin
+      |             ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1019:36: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1019 |         if (ENABLE_RETAINED_COMMIT && certify && cert_generated) begin
+      |                                    ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1027:81: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1027 |         dp_v = (d_st == D_ERR) && ((err_st != ST_OK) || (ENABLE_RETAINED_COMMIT && (bad_next || poison_q)));
+      |                                                                                 ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1028:53: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1028 |         dp_d = ev(EV_ERROR, (ENABLE_RETAINED_COMMIT && err_st == ST_OK && (bad_next || poison_q)) ? ST_FAULT : err_st, q_slot, q_tag, {NW{1'b0}}, {NW{1'b0}}, 32'd0, {NW{1'b0}});
+      |                                                     ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1042:63: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1042 |  assign native_certificate_attempt_v=ENABLE_NATIVE_OWNER_JOIN && cut_now;
+      |                                                               ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1043:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1043 |  assign event_certified_v=ENABLE_NATIVE_OWNER_JOIN && ep_v && certify && cert_generated;
+      |                                                    ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1044:51: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1044 |  assign cq_dma_retired_v=ENABLE_NATIVE_OWNER_JOIN && ev_pop && m_bresp==0;
+      |                                                   ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1051:55: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1051 |    cq_native_valid_observed<=ENABLE_NATIVE_OWNER_JOIN && cq_saved_native_valid;
+      |                                                       ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1052:55: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE_NATIVE_OWNER_JOIN' generates 32 bits.
+                                                   : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1052 |    step_retire_native_valid<=ENABLE_NATIVE_OWNER_JOIN && pending_native_valid;
+      |                                                       ^~
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1053:203: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                    : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1053 |    cq_commit_v<=ev_pop&&m_bresp==0;host_observer_fault<=sticky_dma||sticky_fault||ev_ovf;cq_client_tag<=eh_tag;cq_slot<=eh_slot8;cq_pos<=18'(eh_pos);cq_token<=18'(eh_tok);cq_kind<=ENABLE_RETAINED_COMMIT?offered_kind_q:eh_kind;cq_status<=ENABLE_RETAINED_COMMIT?offered_status_q:eh_st;
+      |                                                                                                                                                                                                           ^
+%Warning-WIDTHTRUNC: scheduler_candidate.sv:1053:260: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE_RETAINED_COMMIT' generates 32 bits.
+                                                    : ... note: In instance 'scheduler_descriptor_baseline.dut'
+ 1053 |    cq_commit_v<=ev_pop&&m_bresp==0;host_observer_fault<=sticky_dma||sticky_fault||ev_ovf;cq_client_tag<=eh_tag;cq_slot<=eh_slot8;cq_pos<=18'(eh_pos);cq_token<=18'(eh_tok);cq_kind<=ENABLE_RETAINED_COMMIT?offered_kind_q:eh_kind;cq_status<=ENABLE_RETAINED_COMMIT?offered_status_q:eh_st;
+      |                                                                                                                                                                                                                                                                    ^
+%Warning-WIDTHEXPAND: scheduler_compare.sv:31:310: Operator SHIFTR expects 59 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline'
+%Warning-WIDTHEXPAND: scheduler_compare.sv:31:864: Operator SHIFTR expects 59 bits on the LHS, but LHS's CONST '32'h13579bdf' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline'
+%Warning-WIDTHEXPAND: scheduler_compare.sv:161:40: Operator ASSIGNDLY expects 32 bits on the Assign RHS, but Assign RHS's VARXREF 'ev_n' generates 5 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline'
+  161 |     if(dut.ev_n>peak_events)peak_events<=dut.ev_n;  
+      |                                        ^~
+%Warning-WIDTHEXPAND: scheduler_compare.sv:161:16: Operator GT expects 32 bits on the LHS, but LHS's VARXREF 'ev_n' generates 5 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline'
+  161 |     if(dut.ev_n>peak_events)peak_events<=dut.ev_n;  
+      |                ^
+%Warning-WIDTHEXPAND: scheduler_compare.sv:189:57: Operator COND expects 59 bits on the Conditional True, but Conditional True's VARREF 'issues' generates 32 bits.
+                                                 : ... note: In instance 'scheduler_descriptor_baseline'
+  189 |       model_health_identity<={59'(16'h1234+((case_id==6)?issues:0)),2'((case_id==6)?issues+1:1),1'b0,eng_pos};
+      |                                                         ^
+make: Entering directory '/srv/opentallas-scratch/claude/kv-native-join-final-default-1019/a8ddbb4c1/obj_scheduler'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vscheduler_descriptor_baseline__pch.h -o Vscheduler_descriptor_baseline__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vscheduler_descriptor_baseline__pch.h -o Vscheduler_descriptor_baseline__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vscheduler_descriptor_baseline__pch.h.fast -c Vscheduler_descriptor_baseline.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vscheduler_descriptor_baseline__pch.h.fast -c Vscheduler_descriptor_baseline___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vscheduler_descriptor_baseline__pch.h.fast -c Vscheduler_descriptor_baseline___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vscheduler_descriptor_baseline__pch.h.fast -c Vscheduler_descriptor_baseline__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vscheduler_descriptor_baseline__pch.h.slow -c Vscheduler_descriptor_baseline___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vscheduler_descriptor_baseline__pch.h.slow -c Vscheduler_descriptor_baseline___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vscheduler_descriptor_baseline__pch.h.slow -c Vscheduler_descriptor_baseline__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vscheduler_descriptor_baseline__ALL.a    -pthread -lpthread -latomic   -o Vscheduler_descriptor_baseline
+rm Vscheduler_descriptor_baseline__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/kv-native-join-final-default-1019/a8ddbb4c1/obj_scheduler'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.282 MB sources in 4 modules, into 0.867 MB in 7 C++ files needing 0.002 MB
+- Verilator: Walltime 6.779 s (elab=0.025, cvt=0.084, bld=6.635); cpu 0.157 s on 2 threads; allocated 49.430 MB
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module scheduler_descriptor_baseline --Mdir obj_scheduler -j 2 scheduler_compare.sv scheduler_candidate.sv scheduler_baseline.sv"
+	User time (seconds): 11.59
+	System time (seconds): 1.71
+	Percent of CPU this job got: 192%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:06.93
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 317888
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 480729
+	Voluntary context switches: 184
+	Involuntary context switches: 44
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 336896
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

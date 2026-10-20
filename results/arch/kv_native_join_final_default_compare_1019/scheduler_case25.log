@@ -1,0 +1,11 @@
+ISSUE edge=62 pos=0 identity=00000000000246880000
+WORD0 edge=79 data=002b000012340025
+COMMIT edge=81 status=2 pos=0 token=43
+WORD0 edge=90 data=002b000112340077
+COMMIT edge=92 status=7 pos=1 token=43
+FINAL_DEFAULT_SCHED_PASS outputs=70 case=25 edges=115 issues=1 rawdone=1 commits=2 writes=6
+- scheduler_compare.sv:312: Verilog $finish
+DEFAULT_ELIGIBILITY_COVER edges=115 low=0 high=1
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.000 s; speed 8.498 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

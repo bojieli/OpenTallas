@@ -1,0 +1,16 @@
+Verilator 5.050 2026-07-01 rev v5.050
+OK   prog_m0: CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 DECODE=2: PASS 84/84  rom_go-issue [2] nat_go-issue [1] csr@1042
+OK   prog_m0_landed: LANDED_LOCKSTEP PASS LMUT=0 compared=18071 mismatches=0 active=1198
+OK   prog_m1: CTLM_PROG MUT=1 BMUT=0 HARD_HR=1 DECODE=2: FAIL 40/84  rom_go-issue [2] nat_go-issue [1] csr@1042
+OK   lp_audit: AUDIT PASS
+OK   lp_unland: AUDIT-UNLAND FAIL (expected)
+OK   lp_m0: MUT 0: LP_LOCKSTEP PASS
+OK   lp_m1: MUT 1: LP_LOCKSTEP FAIL
+OK   lp_m2: MUT 2: LP_LOCKSTEP FAIL
+INFO lp_m4 (waived, not observable): MUT 4: LP_LOCKSTEP PASS
+OK   eq_m0: LPF_EQ PASS DMUT=0 compared=3979
+OK   eq_m5: LPF_EQ FAIL DMUT=5 mismatches=1983 of 3979
+OK   eq_m6: LPF_EQ FAIL DMUT=6 mismatches=3979 of 3979
+OK   seq: MU_SEQ BENCHES: PASS
+MU_CTLM BENCHES: PASS
+# exit 0

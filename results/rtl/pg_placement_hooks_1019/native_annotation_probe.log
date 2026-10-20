@@ -1,0 +1,31 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-epyc7       admits   949 GB (avail 737, growth 73, headroom 0, waiters 0/0 GB) load 33/96 running 22 disk 6269 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/pg-placement-rc-1019
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-117291-1792445127 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+SCENE _f02ac6117b5c0000_p_Scene cmds=::sta::set_scene ::sta::find_mode_scenes_matching ::sta::parse_scene_or_null ::sta::parse_scenes_or_all ::sta::define_scene ::sta::cmd_scene ::sta::define_scenes_cmd ::sta::multi_scene ::sta::scenes ::sta::parse_scenes_or_default ::sta::get_scene_clocks ::sta::scene_property ::sta::define_scene_cmd ::sta::find_scenes_matching ::sta::parse_scene ::sta::filter_scenes ::sta::find_scene ::sta::worst_slack_scene ::sta::parse_scene_or_default ::sta::parse_scene_required ::sta::Vertex_slew_scenes_string ::sta::total_negative_slack_scene_cmd ::sta::set_cmd_scene ::sta::get_scenes ::sta::find_scenes
+GRT_ROUTES 0
+PIN_CENSUS annotated=0 unannotated=76756 errors=0
+GRT_ROUTES 0
+PIN_CENSUS annotated=0 unannotated=76756 errors=0
+GRT_ROUTES 0
+PIN_CENSUS annotated=5419 unannotated=71339 errors=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-117291-1792445127): exit 0
