@@ -1,0 +1,31 @@
+2026-10-20T08:33:32-07:00 start host=ot-epyc9 bundle=3fcf420a2 Verilator 5.050 2026-07-01 rev v5.050
+2026-10-20T08:34:21-07:00 build m9 rc=0 bin=ok
+2026-10-20T08:34:22-07:00 m9: COLLQ FAIL set=0 errors=600
+2026-10-20T08:34:22-07:00 done
+--- /srv/opentallas-scratch/claude/hnx-gq-s4/b_3fcf420a2/out/m9/m9.log (tail)
+COLLQ DATA row2 rr0 q0 seg2 word1 got f760ec6573e970e5dc736b6673716cf173db6f5ae2c2616a7469eaeb63ea68f6 exp 51ef6bec7059dde1eada62f9f771d74872ed66fe5a74686b6ee3e57062d75bf5
+COLLQ DATA row2 rr0 q0 seg2 word4 got 71695d71635367d3407c6ef8f0e8e0f474f37a6b72d26c68d8e06a54f4f5c8f6 exp eaec676868c6f7dbd9f9b56f62f9e36bf0de72486c5567f8627442576f686d6b
+COLLQ DATA row2 rr0 q0 seg2 word5 got f7f669e9ebfa576a6feee7e0f164de67435dabf575dc6ce361d44e74e36c785c exp 6ae8f179f664ee706473f5e6f059eb69f164f264d2e5eafbd067f2f56ce06f6c
+COLLQ DATA row2 rr0 q0 seg2 word8 got 0000000000000000000000000000000000000000000000000000000000000000 exp ee6ce1616f60e977d3e3f0e351efe0ede868eaea706def5ef2f9f26de66c7af5
+COLLQ DATA row2 rr0 q0 seg2 word12 got 00000000000000000000000000000000000000000000cb000000000000000000 exp 0000000000000000000000000000000000000000000000000000000000000000
+COLLQ DATA row2 rr0 q0 seg3 word0 got 6af0726adef2d96bf0de6f6e756564e65be4ed73687275ebe8d8f67866dee1ea exp f078e4dd6ad76f41ed72e373696d526969e262f06d59675fe661eb6fe1e477d4
+COLLQ DATA row2 rr0 q0 seg3 word1 got dec94f6671e5e564615fefed60f26f6266e3796379f65a53e0f761da5fefedf5 exp 6f70e568726af0f96cf367f358f76972edc665e7e972e669776fece560f46874
+COLLQ DATA row2 rr0 q0 seg3 word4 got ee6bf0e9ecf55bde67e82f5900e54b69e4e1e3ef63e3ee6aef6cf1f3e373dd70 exp 69e25cddf166f45de4e1eeef67e06be6eae5def8ee70f36960e64e527365d96e
+COLLQ DATA row2 rr0 q0 seg3 word5 got 72c7d27473e7e3d86e68eceff5e1f5eaef6ef163d47174e0d1f0dde96dde736b exp 58e87465e7e8e5f6e96a6dcc6b70716e76686f696df55eef7166f0e7ebe0f4f3
+COLLQ DATA row2 rr0 q0 seg3 word8 got f8f4ddeaf3f66fed68e2dac2f57569e5f1e4ec596c6663786feaf3ec5b656560 exp 736138df72f2e3f06173ed5052e7f6ecca6754f5704d46dc6af2d971d97361f1
+COLLQ DATA row2 rr0 q0 seg3 word9 got 65f3e772edf471c45e6d60eb6960e8f1d06a72ecea576edd71e568c750784b64 exp f6f0f566e8c36b7af06bd4eadcf573dbbb7262f55df25c6ceb5becea5ef4caf5
+COLLQ DATA row2 rr0 q0 seg3 word12 got ebf262686e78d1eb6d77726fdd6d6eeae4f1e9766bf16961e5ed69ead35fe761 exp 6f64f8706d66ede873d77476f075eeeb6df0cc60ee6376f0716e6372cf606771
+COLLQ DATA row2 rr0 q0 seg3 word13 got ee6158e17075daeeea6be9ed6bf86963e2f05aece95ae57277e05f746c5e5ff6 exp d0f76becea65ee717068f16a6b5a6ae2676de16bd265d2e964686e735dd26d67
+COLLQ_TRAIN row=0 qbg=0 R=2 F=72 K=36 N=1 rsA=0 rsO=0 span_compiled=93 span_observed=93
+COLLQ_TRAIN row=1 qbg=0 R=1 F=19 K=19 N=1 rsA=0 rsO=0 span_compiled=68 span_observed=68
+COLLQ_TRAIN row=2 qbg=1 R=2 F=19 K=10 N=1 rsA=0 rsO=0 span_compiled=54 span_observed=54
+COLLQ_TRAIN row=3 qbg=1 R=1 F=9 K=9 N=1 rsA=0 rsO=0 span_compiled=53 span_observed=53
+COLLQ_TRAIN row=4 qbg=1 R=2 F=50 K=25 N=1 rsA=0 rsO=0 span_compiled=77 span_observed=77
+COLLQ_TRAIN row=5 qbg=0 R=2 F=1 K=1 N=1 rsA=0 rsO=0 span_compiled=41 span_observed=41
+COLLQ FAIL set=0 errors=600
+- rtl/hbm_next/coll/tb/tb_hnx_coll_gq.sv:362: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.667 s; speed 3.063 us/s
+- Verilator: cpu 0.667 s on 1 threads; allocated 19 MB
+RUN_RC=0
+verilator: /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator Verilator 5.050 2026-07-01 rev v5.050
