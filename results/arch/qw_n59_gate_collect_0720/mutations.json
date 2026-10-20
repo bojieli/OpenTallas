@@ -1,0 +1,62 @@
+{
+  "bpub0_zero": {
+    "case": "local_dv",
+    "path": "rtl/qwen_split/qfd_native59_svc.sv",
+    "old": "assign svc_begin_pub[k]=nc_pub[22+13*gs+k]&&sel_nf[gs];",
+    "new": "assign svc_begin_pub[k]=(k==0)?1'b0:(nc_pub[22+13*gs+k]&&sel_nf[gs]);"
+  },
+  "qo0_zero": {
+    "case": "local_dv",
+    "path": "rtl/qwen_split/qfd_native59_svc.sv",
+    "old": "if(qo[0])q_frame_tag[14:0]<=q_epoch_tag[14:0];",
+    "new": "if(1'b0&&qo[0])q_frame_tag[14:0]<=q_epoch_tag[14:0];"
+  },
+  "cq0_zero": {
+    "case": "local_dv",
+    "path": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+    "old": "{16{word_slot_pub[1]}},{16{word_slot_pub[0]}}};",
+    "new": "{16{word_slot_pub[1]}},{15{word_slot_pub[0]}},1'b0};"
+  },
+  "ht0_zero": {
+    "case": "local_dv",
+    "path": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+    "old": "ht[seg][j]<=(wec[seg/4][j]&&(ixg[7:4]==4'(seg)))?(16'd1<<ixg[3:0]):16'd0;",
+    "new": "ht[seg][j]<=(j==0)?16'd0:((wec[seg/4][j]&&(ixg[7:4]==4'(seg)))?(16'd1<<ixg[3:0]):16'd0);"
+  },
+  "eba_zero": {
+    "case": "local_dv",
+    "path": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+    "old": "else if(ENABLE!=0&&eb_a&&!eb_busy)pos<=ep_q[12:0];",
+    "new": "else if(1'b0&&ENABLE!=0&&eb_a&&!eb_busy)pos<=ep_q[12:0];"
+  },
+  "ddc0_zero": {
+    "case": "local_dv",
+    "path": "rtl/qwen_split/qfd_native59_svc.sv",
+    "old": "dd_c[pk]<=bnd_dd_i[547:537];",
+    "new": "dd_c[pk]<=(pk==0)?11'd0:bnd_dd_i[547:537];"
+  },
+  "wac0_zero": {
+    "case": "local_dv",
+    "path": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+    "old": "wec[gq]<=kv_we[7:0];",
+    "new": "wec[gq]<=(gq==0)?8'd0:kv_we[7:0];"
+  },
+  "emc0_zero": {
+    "case": "local_dv",
+    "path": "rtl/qwen_split/qfd_native59_svc.sv",
+    "old": "for(ek=0;ek<6;ek=ek+1)em_c[ek]<=dr_hi_n[4:0];",
+    "new": "for(ek=0;ek<6;ek=ek+1)em_c[ek]<=(ek==1)?5'd0:dr_hi_n[4:0];"
+  },
+  "optag0_zero": {
+    "case": "local_dv",
+    "path": "rtl/qwen_split/qfd_native59_svc.sv",
+    "old": "if(rq_s[15])s_optag[gs][14:0]<=request_tag[14:0];",
+    "new": "if(1'b0&&rq_s[15])s_optag[gs][14:0]<=request_tag[14:0];"
+  },
+  "txvd_zero_local_mu": {
+    "path": "rtl/qwen_split/qfd_native59_record_endpoint.sv",
+    "old": "tx_valid_d<=tx_event;",
+    "new": "tx_valid_d<=1'b0;",
+    "case": "local_mu"
+  }
+}
