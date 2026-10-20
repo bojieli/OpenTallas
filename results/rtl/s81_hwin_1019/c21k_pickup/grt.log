@@ -1,0 +1,212 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_ff.lib
+read_db /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/4_cts.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/4_cts.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/4_cts.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_grt_ot_grt183.tcl
+QDM PINFLOP reference: 259 input pin flops (0 hard-child clock pins at +insertion), median arrival 379.883331 (range 357.625824 .. 401.184906)
+QDM reference pin u_ot_pr_core.g_rx_compare_copy[3].rt_r[8]$_DFF_PN0_/CLK clock arrival max 379.883331 min 297.036499 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 297.036499 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_PIN_KEEPOUT created 4: {M6 238968 388758 322608 388800} {M6 238872 0 322992 42} {M4 238536 388781 321174 388800} {M4 238500 0 322470 19}
+OT_GRT_TOP_SHADOW: 84 macros; GRT layers M2-M6 with M6 at zero capacity (detailed route stays <= M5)
+OT_SRAM_EDGE_GUARD hook invoked caller=pre_global_route_pre_grt.tcl
+OT_MACRO_EDGE_GUARD: created 168 on M5 (depth 1.2 um, pin stub 0.024 um free, outside 0.0 um)
+Took 20 seconds: source /work/hooks/pre_grt_ot_grt183.tcl
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       13
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   dsdv_mu_hwin_capture_1019
+Die area:                 ( 0 0 ) ( 561600 388800 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     84864
+Number of terminals:      355
+Number of snets:          2
+Number of nets:           83925
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 295.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 1548674.
+[INFO DRT-0033] V1 shape region query size = 2501459.
+[INFO DRT-0033] M2 shape region query size = 87619.
+[INFO DRT-0033] V2 shape region query size = 46488.
+[INFO DRT-0033] M3 shape region query size = 46750.
+[INFO DRT-0033] V3 shape region query size = 30992.
+[INFO DRT-0033] M4 shape region query size = 54178.
+[INFO DRT-0033] V4 shape region query size = 57704.
+[INFO DRT-0033] M5 shape region query size = 29611.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 2.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1753 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0081]   Complete 294 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0084]   Complete 42420 groups.
+#scanned instances     = 84864
+#unique  instances     = 295
+#stdCellGenAp          = 8017
+#stdCellValidPlanarAp  = 42
+#stdCellValidViaAp     = 6809
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 239903
+#instTermValidViaApCnt = 0
+#macroGenAp            = 63
+#macroValidPlanarAp    = 63
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:34:11, elapsed time = 00:05:23, memory = 1213.32 (MB), peak = 1270.37 (MB)
+Took 326 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M6
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 84
+[INFO GRT-0004] Blockages: 58183
+[INFO GRT-0019] Found 571 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 34
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    8234878       5967675          27.53%
+M3         Vertical      8985432       6709638          25.33%
+M4         Horizontal    6767950       5058164          25.26%
+M5         Vertical      6886864       5076120          26.29%
+M6         Horizontal    5977653             0          100.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0197] Via related to pin nodes: 515440
+[INFO GRT-0198] Via related Steiner nodes: 19703
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 746006
+[INFO GRT-0112] Final usage 3D: 4564536
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             5967675        548614            9.19%             0 /  0 /  0
+M3             6709638        834535           12.44%             0 /  0 /  0
+M4             5058164        538320           10.64%             0 /  0 /  0
+M5             5076120        405049            7.98%             0 /  0 /  0
+M6                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         22811597       2326518           10.20%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 1485689 um
+[INFO GRT-0014] Routed nets: 83654
+[INFO GRT-0303] Global routing runtime = 00:06:40
+Took 400 seconds: global_route -congestion_report_file /work/reports/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -allow_congestion -verbose -resistance_aware
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+estimate_parasitics -global_routing
+Took 10 seconds: estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     84349
+     1000 |     +0.0% |       0 |       0 |             0 |     83349
+     2000 |     +0.0% |       0 |       1 |             1 |     82349
+[ERROR GRT-0183] Net net33432: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages.
+OT_GRT183_RESUME_SAVED helper=repair_design_helper odb=/work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/5_1_grt.grt183_resume.odb hook_shapes_dropped=172: incremental GRT-0183 inside repair_design_helper; the runner re-runs 5_1_grt once in a fresh process from this resized design
+Error: global_route.tcl, 175 GRT-0183
+Elapsed time: 12:53.27[h:]min:sec. CPU time: user 2544.19 sys 7.00 (329%). Peak memory: 2581636KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/5_1_grt.odb] Error 2

@@ -1,0 +1,34 @@
+GATE WARN fill: fill 19% = (macros/children 32063 + std 9151) / outline 218350 um2 (lattice/channel-bound gate-rule exception (placement verification required): Outline 561.6x388.8, 84 R0 SRAMs on the 43.2 lattice with 10.8 halos (12x7, min channel 22.41), one full-width std band y163.89..203.85: identical to the codex-coordinator-approved c21j plan and the ROOT-ratified c21d lattice exception (macro pitch set by the 43.2 lattice + >=20 um channel, not by area: 84 x 43.2^2 = 156.8k um2 of the 218.4k outline). c21k only drops the inner GLOBAL/event fences; stage std 9151 um2 = 41.1% of the 22269 um2 legal band rows; the gate re-measures placed occupancy (40..60%).)
+GATE INFO pin_regs: pin registers opted out: Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf).
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc6 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsdv_mu_hwin_c21k_20261020-022307.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsdv_mu_hwin_c21k_20261020-022307.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/dsdv_mu_hwin_c21k-20261020-022307
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc6 in 271 s (gate total 4729 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 353, 'pin_rectangles': 353, 'pin_track_checked': 353, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 ba6f522a3eb48f7bf90e0a2b0faea3607590d1afc0b6b0ecbf75f18534ba2e93
+GATE INFO util: synthesized std area 9100 um2 + macros 32063 in core 214263: util 13% (std-cell density 12.6% of placeable 71975 um2; total fill 19.2%)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_boot_enable: dsdv_mu_hwin_capture_1019_boot_enable survives synthesis (150 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_retire_due: dsdv_mu_hwin_capture_1019_retire_due survives synthesis (4 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_retire_advance: dsdv_mu_hwin_capture_1019_retire_advance survives synthesis (6 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_slot_step: dsdv_mu_hwin_capture_1019_slot_step survives synthesis (9 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_record: dsdv_mu_hwin_capture_1019_record survives synthesis (6 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_decode24: dsdv_mu_hwin_capture_1019_decode24 survives synthesis (32 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_fire_flag: dsdv_mu_hwin_capture_1019_fire_flag survives synthesis (96 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_cfg_bad: dsdv_mu_hwin_capture_1019_cfg_bad survives synthesis (4 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_phase_action: dsdv_mu_hwin_capture_1019_phase_action survives synthesis (3 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_early_current_hit: $paramod\dsdv_mu_hwin_capture_1019_early_current_hit\AW=s32'00000000000000000000000000000110 survives synthesis (148 instances)
+GATE INFO keep_modules: keep dsdv_mu_hwin_capture_1019_cfg_accept: $paramod$e1297cc1018fccc57d77b8dbc3a3350b67031105\dsdv_mu_hwin_capture_1019_cfg_accept survives synthesis (9 instances)
+GATE INFO textbook: PASS dsdv_mu_hwin_capture_1019 cells 62,013 flops 13,040 depth 546.8 ps util 0.1933 reach 0.0 um (4.5 s)
+GATE INFO cts_calibration: ss insertion all 453.3..555.8 ps (spread 102.5), boundary mean 493.1; tt insertion all 348.5..454.6 ps (spread 106.1), boundary mean 380.9; ff insertion all 285.4..396.5 ps (spread 111.1), boundary mean 312.8; macro_clk flag True
+GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/dsdv_mu_hwin_c21k/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      597 paths, worst slack -79.9 ps (e.g. u_ot_pr_core.g_event_mem[15].g_record_copy[0].rec_r$_DFF_PN0_/D)
+GATE INFO path_classes: reg->out        3 paths, worst slack -54.9 ps (e.g. t_wf[1])
+GATE INFO path_classes: setup WNS -7.989553463261245e-11 hold WNS 4.3209602562654936e-11
+GATE WARN clock_rule: root port:ck: 13,124 sinks on the largest root; measured TT insertion 454.6 ps, FF insertion 396.5 ps, TT pin-flop spread 43.6 ps, FF pin-flop spread 42.4 ps; WARN: insertion 454.6 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-hwin22k-1020/physical/ref_tile/dsdv_mu_hwin_c21k/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-hwin22k-1020/physical/ref_tile/dsdv_mu_hwin_c21k/gate_layout/density.png
+GATE WARN fill: fill 19% = (hard macros 32063.2 + synthesized std cells 9349.5) / outline 218350.1 um2; pin demand per face: S 235 pins over 167.6/561.6 um (30%), N 182 pins over 83.9/561.6 um (15%), W 72 pins over 0.0/388.8 um (0%), E 72 pins over 0.0/388.8 um (0%) (pin-bound: measured lattice/channel band: 11063.902 um2, density 49.68%, outside approved 0.000 um2)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M3 12.44% used; GRT 775 s
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: dsdv_mu_hwin_c21k/gate_result.json written (exact staged source binding; commit it with the kit)
