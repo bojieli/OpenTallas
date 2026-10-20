@@ -1,0 +1,192 @@
+{
+  "original_sha256": "60af63eb9b12206adb29f5bea3bf84184d80f0794cbbdd5732069821d9028b91",
+  "repaired_sha256": "e81710be25a2e160826b2e812a40919263bc7ba13df4196504e4dbfb57cb88dc",
+  "original_cells": 12125,
+  "repaired_cells": 12128,
+  "added_same_master_constant_cells": 3,
+  "moved_constant_input_pins": [
+    "u_ot_pr_core.u_ld.g_wek.cp\\[33\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[34\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[35\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[36\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[37\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[38\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[39\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[3\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[40\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[41\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[42\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[43\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[44\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[45\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[46\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[47\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[48\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[49\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[4\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[50\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[51\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[52\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[53\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[54\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[55\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[56\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[57\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[58\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[59\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[5\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[60\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[61\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[62\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[63\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[64\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[65\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[66\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[6\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[7\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[8\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.g_wek.cp\\[9\\].ff/_5_/A",
+    "u_ot_pr_core.u_ld.rom_addr\\[5\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.rom_addr\\[6\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.rom_addr\\[7\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.rom_addr\\[8\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.rom_addr\\[9\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.slot\\[0\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.slot\\[1\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.slot\\[2\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.slot\\[3\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.slot\\[4\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.slot\\[5\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.slot\\[6\\]$_DFFE_PN0P_/SETN",
+    "u_ot_pr_core.u_ld.tw_we$_DFF_PN0_/SETN"
+  ],
+  "repairs": [
+    {
+      "original_net": "_06085_",
+      "copy": "ot_const_copy32_0",
+      "master": "TIEHIx1_ASAP7_75t_R",
+      "function": "1",
+      "moved_pins": [
+        "u_ot_pr_core.u_ld.rom_addr\\[5\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.rom_addr\\[6\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.rom_addr\\[7\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.rom_addr\\[8\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.rom_addr\\[9\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.slot\\[0\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.slot\\[1\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.slot\\[2\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.slot\\[3\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.slot\\[4\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.slot\\[5\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.slot\\[6\\]$_DFFE_PN0P_/SETN",
+        "u_ot_pr_core.u_ld.tw_we$_DFF_PN0_/SETN"
+      ]
+    },
+    {
+      "original_net": "_06086_",
+      "copy": "ot_const_copy32_1",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "function": "0",
+      "moved_pins": [
+        "u_ot_pr_core.u_ld.g_wek.cp\\[33\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[34\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[35\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[36\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[37\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[38\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[39\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[3\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[40\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[41\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[42\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[43\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[44\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[45\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[46\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[47\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[48\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[49\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[4\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[50\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[51\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[52\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[53\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[54\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[55\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[56\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[57\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[58\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[59\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[5\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[60\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[61\\].ff/_5_/A"
+      ]
+    },
+    {
+      "original_net": "_06086_",
+      "copy": "ot_const_copy32_2",
+      "master": "TIELOx1_ASAP7_75t_R",
+      "function": "0",
+      "moved_pins": [
+        "u_ot_pr_core.u_ld.g_wek.cp\\[62\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[63\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[64\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[65\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[66\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[6\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[7\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[8\\].ff/_5_/A",
+        "u_ot_pr_core.u_ld.g_wek.cp\\[9\\].ff/_5_/A"
+      ]
+    }
+  ],
+  "all_original_nonconstant_connectivity_identical": true,
+  "all_BTerms_identical": true,
+  "liberty_functions_verified": {
+    "lib_sources": [
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib",
+        "sha256": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d"
+      }
+    ],
+    "constant_output_functions": {
+      "TIEHIx1_ASAP7_75t_R": {
+        "pin": "H",
+        "function": "1"
+      },
+      "TIELOx1_ASAP7_75t_R": {
+        "pin": "L",
+        "function": "0"
+      }
+    }
+  },
+  "physical_scope": "mapped unplaced copy only; no placement, PG conductor or route proof"
+}
