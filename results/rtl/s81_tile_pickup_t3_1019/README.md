@@ -1,4 +1,4 @@
-# S81 tile result pickup, 2026-10-19 17:34–17:48 PT
+# S81 tile result pickup, 2026-10-19 17:34–17:40 PT
 
 Source-pinned existing jobs only; no source mutation, rerun, cancellation, submission or adoption in this packet. Actual final wrapper receipts are preserved beside their source specs, PNGs and bounded native log files. Viewed s10c floorplan personally: four fixed macros, original full-face pins, one mid-east clock entry.
 
@@ -14,3 +14,5 @@ SHLK grt.log explicitly reads native TT and FF cell/macro Liberty. The mode name
 LEP source wrapper temporarily replaces full physical core with a narrow64.8um row-band core while all20 fixed SRAM macros remain outside. Logs confirm this geometry contract during GPL, then restore physical core after failure. This is a concrete structural optimizer-geometry incompatibility; increasing inflation/tweaking density is not a closure. A genuine RX/TX hardened decomposition is assigned separately, preserving all failure evidence.
 
 Existing TOPK succ2/succ2c and XGR/XGR2 jobs remain progressing; no terminal local receipt at pickup. They are not re-launched. SHLK successor work is separate: real default-off source enable replication and truthful p192 dual-clock masters, then bounded hardened SD child. No SOURCE, timing, PG, route, token or release PASS follows these wrapper WARNs.
+
+Timing erratum: the initial packet header incorrectly projected the pickup endpoint as17:48; corrected to actual17:40. Frozen native receipts and their generation times are unchanged.
