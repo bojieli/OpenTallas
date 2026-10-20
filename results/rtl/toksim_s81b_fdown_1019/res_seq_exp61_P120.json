@@ -1,0 +1,71 @@
+{
+ "op": "ffn.down",
+ "frame": "u_f_0L00",
+ "per": 120,
+ "nph": 3,
+ "rows": 10,
+ "go0": 63,
+ "last_go": 303,
+ "first_ret": 341,
+ "last_ret": 599,
+ "words": 24,
+ "go0_to_last_ret": 536,
+ "fixture_rows": 10,
+ "errors": [
+  "FAULT edge 402 status 11 lx 0",
+  "FAULT edge 403 status 11 lx 0",
+  "FAULT edge 404 status 11 lx 0",
+  "FAULT edge 405 status 11 lx 0",
+  "UNASSIGNED_RET edge 596 1760445f03000088b",
+  "UNASSIGNED_RET edge 597 07313ed003000488b",
+  "UNASSIGNED_RET edge 598 178244fa03000008b",
+  "UNASSIGNED_RET edge 599 17ad7fd263000408b",
+  "PHASE_FAIL p49: ['COVERAGE row 0 segments [] of 5', 'COVERAGE row 1 segments [] of 5']"
+ ],
+ "phases": [
+  {
+   "i": 0,
+   "vec": "p47",
+   "phase": 47,
+   "mat": "exp61.w2",
+   "rows": 4,
+   "go": 63,
+   "shift": 0,
+   "words": 10,
+   "first_ret": 341,
+   "last_ret": 352,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 1,
+   "vec": "p48",
+   "phase": 48,
+   "mat": "exp61.w2",
+   "rows": 4,
+   "go": 183,
+   "shift": 120,
+   "words": 10,
+   "first_ret": 461,
+   "last_ret": 472,
+   "fixture_rows": 4,
+   "pass_": true
+  },
+  {
+   "i": 2,
+   "vec": "p49",
+   "phase": 49,
+   "mat": "exp61.w2",
+   "rows": 2,
+   "go": 303,
+   "shift": 240,
+   "words": 0,
+   "first_ret": null,
+   "last_ret": null,
+   "fixture_rows": 2,
+   "pass_": false
+  }
+ ],
+ "end": "END edges=2363 ret_words=24 xo_checked=2361 fault=4 spine_fault=0",
+ "pass": false
+}

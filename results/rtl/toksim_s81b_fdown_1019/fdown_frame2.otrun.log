@@ -1,0 +1,94 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fdown/fr/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fdown/fr/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fdown/fr/src
+ot-run: ot-epyc9       admits  1176 GB (avail 874, growth 46, headroom 0, waiters 0/0 GB) load 43/128 running 9 disk 625 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fdown/fr/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81b-fdown/fr/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1146295-1792470866 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+EXE_FROM /srv/opentallas-scratch/claude/toksim-s81b-fdown/fr/out/obj/Vtb_toksim_fgu_seq
+tail: cannot open '/srv/opentallas-scratch/claude/toksim-s81b-fdown/fr/out2/gen.log' for reading: No such file or directory
+BUILD_OK
+m_shift_p47 rc=1 XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 47 mutant=shift rows=4 fixture_rows=4 errors=1 END edges=1016 ret_words=10 xo_checked=1014 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+m_swap_p47 rc=1 XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 47 mutant=swap rows=4 fixture_rows=4 errors=5 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p44 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 44 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1029 ret_words=10 xo_checked=1027 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 343, "last_ret": 366, "words": 10}
+p45 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 45 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1029 ret_words=10 xo_checked=1027 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 343, "last_ret": 366, "words": 10}
+p46 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 46 mutant=None rows=2 fixture_rows=2 errors=0 END edges=1027 ret_words=6 xo_checked=1025 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 351, "last_ret": 364, "words": 6}
+p47 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 47 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p48 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 48 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p49 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 49 mutant=None rows=2 fixture_rows=2 errors=0 END edges=1015 ret_words=4 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 349, "last_ret": 352, "words": 4}
+p50 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 50 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p51 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 51 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p52 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 52 mutant=None rows=2 fixture_rows=2 errors=0 END edges=1015 ret_words=4 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 349, "last_ret": 352, "words": 4}
+p53 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 53 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p54 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 54 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p55 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 55 mutant=None rows=2 fixture_rows=2 errors=0 END edges=1015 ret_words=4 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 349, "last_ret": 352, "words": 4}
+p56 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 56 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p57 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 57 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p58 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 58 mutant=None rows=2 fixture_rows=2 errors=0 END edges=1015 ret_words=4 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 349, "last_ret": 352, "words": 4}
+p59 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 59 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p60 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 60 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p61 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 61 mutant=None rows=2 fixture_rows=2 errors=0 END edges=1015 ret_words=4 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 349, "last_ret": 352, "words": 4}
+p62 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 62 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p63 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 63 mutant=None rows=4 fixture_rows=4 errors=0 END edges=1015 ret_words=10 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 341, "last_ret": 352, "words": 10}
+p64 rc=0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 64 mutant=None rows=2 fixture_rows=2 errors=0 END edges=1015 ret_words=4 xo_checked=1013 fault=0 TOKSIM_FGU_SINGLE {"go": 63, "first_ret": 349, "last_ret": 352, "words": 4}
+REF_GO 63
+seq_exp61 TOKSIM_FGU_SEQ FAIL op ffn.down PER 80 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 10 ['FAULT edge 235 status 11 lx 0', 'FAULT edge 236 status 11 lx 0', 'FAULT edge 237 status 11 lx 0']
+seq_exp61 TOKSIM_FGU_SEQ FAIL op ffn.down PER 100 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp61 TOKSIM_FGU_SEQ FAIL op ffn.down PER 120 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp61 TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 612 span 549 errors 0 []
+seq_exp61 TOKSIM_FGU_SEQ PASS op ffn.down PER 140 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 632 span 569 errors 0 []
+seq_exp61 TOKSIM_FGU_SEQ PASS op ffn.down PER 150 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 652 span 589 errors 0 []
+seq_exp61 TOKSIM_FGU_SEQ PASS op ffn.down PER 160 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 672 span 609 errors 0 []
+seq_exp61 TOKSIM_FGU_SEQ PASS op ffn.down PER 170 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 692 span 629 errors 0 []
+seq_exp69 TOKSIM_FGU_SEQ FAIL op ffn.down PER 80 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 10 ['FAULT edge 235 status 11 lx 0', 'FAULT edge 236 status 11 lx 0', 'FAULT edge 237 status 11 lx 0']
+seq_exp69 TOKSIM_FGU_SEQ FAIL op ffn.down PER 100 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp69 TOKSIM_FGU_SEQ FAIL op ffn.down PER 120 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp69 TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 612 span 549 errors 0 []
+seq_exp69 TOKSIM_FGU_SEQ PASS op ffn.down PER 140 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 632 span 569 errors 0 []
+seq_exp69 TOKSIM_FGU_SEQ PASS op ffn.down PER 150 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 652 span 589 errors 0 []
+seq_exp69 TOKSIM_FGU_SEQ PASS op ffn.down PER 160 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 672 span 609 errors 0 []
+seq_exp69 TOKSIM_FGU_SEQ PASS op ffn.down PER 170 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 692 span 629 errors 0 []
+seq_exp112 TOKSIM_FGU_SEQ FAIL op ffn.down PER 80 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 10 ['FAULT edge 235 status 11 lx 0', 'FAULT edge 236 status 11 lx 0', 'FAULT edge 237 status 11 lx 0']
+seq_exp112 TOKSIM_FGU_SEQ FAIL op ffn.down PER 100 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp112 TOKSIM_FGU_SEQ FAIL op ffn.down PER 120 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp112 TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 612 span 549 errors 0 []
+seq_exp112 TOKSIM_FGU_SEQ PASS op ffn.down PER 140 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 632 span 569 errors 0 []
+seq_exp112 TOKSIM_FGU_SEQ PASS op ffn.down PER 150 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 652 span 589 errors 0 []
+seq_exp112 TOKSIM_FGU_SEQ PASS op ffn.down PER 160 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 672 span 609 errors 0 []
+seq_exp112 TOKSIM_FGU_SEQ PASS op ffn.down PER 170 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 692 span 629 errors 0 []
+seq_exp170 TOKSIM_FGU_SEQ FAIL op ffn.down PER 80 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 10 ['FAULT edge 235 status 11 lx 0', 'FAULT edge 236 status 11 lx 0', 'FAULT edge 237 status 11 lx 0']
+seq_exp170 TOKSIM_FGU_SEQ FAIL op ffn.down PER 100 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp170 TOKSIM_FGU_SEQ FAIL op ffn.down PER 120 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp170 TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 612 span 549 errors 0 []
+seq_exp170 TOKSIM_FGU_SEQ PASS op ffn.down PER 140 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 632 span 569 errors 0 []
+seq_exp170 TOKSIM_FGU_SEQ PASS op ffn.down PER 150 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 652 span 589 errors 0 []
+seq_exp170 TOKSIM_FGU_SEQ PASS op ffn.down PER 160 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 672 span 609 errors 0 []
+seq_exp170 TOKSIM_FGU_SEQ PASS op ffn.down PER 170 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 692 span 629 errors 0 []
+seq_exp299 TOKSIM_FGU_SEQ FAIL op ffn.down PER 80 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 10 ['FAULT edge 235 status 11 lx 0', 'FAULT edge 236 status 11 lx 0', 'FAULT edge 237 status 11 lx 0']
+seq_exp299 TOKSIM_FGU_SEQ FAIL op ffn.down PER 100 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp299 TOKSIM_FGU_SEQ FAIL op ffn.down PER 120 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp299 TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 612 span 549 errors 0 []
+seq_exp299 TOKSIM_FGU_SEQ PASS op ffn.down PER 140 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 632 span 569 errors 0 []
+seq_exp299 TOKSIM_FGU_SEQ PASS op ffn.down PER 150 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 652 span 589 errors 0 []
+seq_exp299 TOKSIM_FGU_SEQ PASS op ffn.down PER 160 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 672 span 609 errors 0 []
+seq_exp299 TOKSIM_FGU_SEQ PASS op ffn.down PER 170 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 692 span 629 errors 0 []
+seq_exp357 TOKSIM_FGU_SEQ FAIL op ffn.down PER 80 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 10 ['FAULT edge 235 status 11 lx 0', 'FAULT edge 236 status 11 lx 0', 'FAULT edge 237 status 11 lx 0']
+seq_exp357 TOKSIM_FGU_SEQ FAIL op ffn.down PER 100 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp357 TOKSIM_FGU_SEQ FAIL op ffn.down PER 120 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 599 span 536 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_exp357 TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 612 span 549 errors 0 []
+seq_exp357 TOKSIM_FGU_SEQ PASS op ffn.down PER 140 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 632 span 569 errors 0 []
+seq_exp357 TOKSIM_FGU_SEQ PASS op ffn.down PER 150 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 652 span 589 errors 0 []
+seq_exp357 TOKSIM_FGU_SEQ PASS op ffn.down PER 160 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 672 span 609 errors 0 []
+seq_exp357 TOKSIM_FGU_SEQ PASS op ffn.down PER 170 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 692 span 629 errors 0 []
+seq_shared TOKSIM_FGU_SEQ FAIL op ffn.down PER 80 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 611 span 548 errors 12 ['FAULT edge 235 status 11 lx 0', 'FAULT edge 236 status 11 lx 0', 'FAULT edge 237 status 11 lx 0']
+seq_shared TOKSIM_FGU_SEQ FAIL op ffn.down PER 100 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 611 span 548 errors 11 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_shared TOKSIM_FGU_SEQ FAIL op ffn.down PER 120 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 611 span 548 errors 9 ['FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0']
+seq_shared TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 624 span 561 errors 0 []
+seq_shared TOKSIM_FGU_SEQ PASS op ffn.down PER 140 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 644 span 581 errors 0 []
+seq_shared TOKSIM_FGU_SEQ PASS op ffn.down PER 150 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 664 span 601 errors 0 []
+seq_shared TOKSIM_FGU_SEQ PASS op ffn.down PER 160 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 684 span 621 errors 0 []
+seq_shared TOKSIM_FGU_SEQ PASS op ffn.down PER 170 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 704 span 641 errors 0 []
+TOKSIM_FDOWN_BENCH_DONE
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1146295-1792470866): exit 0
