@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-kv-grp6-cold-1020/certificate.py", line 105, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-kv-grp6-cold-1020/certificate.py", line 99, in main
+    result = check(a.original, a.mapped, a.parser, json.loads(a.record.read_text()))
+  File "/srv/opentallas-scratch/claude/codex-kv-grp6-cold-1020/certificate.py", line 67, in check
+    assert match, ('unexpected primitive', typ, name)
+           ^^^^^
+AssertionError: ('unexpected primitive', 'NOR2x1_ASAP7_75t_R', 'u_cell')

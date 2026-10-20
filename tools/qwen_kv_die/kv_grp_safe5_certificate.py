@@ -25,8 +25,10 @@ def check(original, mapped, parser, record):
     if original.suffix == '.gz':
         raw = gzip.decompress(raw)
     assert hashlib.sha256(raw).hexdigest() == record['source_sha256']
-    old, _ = m.flatten(m.parse_verilog(raw.decode()), None)
-    new, _ = m.flatten(m.parse_verilog(mapped.read_text()), record['top'])
+    old, _ = m.flatten(m.parse_verilog(re.sub(r'(?m)^`timescale[^\n]*\n', '', raw.decode())), None)
+    new_mods = m.parse_verilog(re.sub(r'(?m)^`timescale[^\n]*\n', '', mapped.read_text()))
+    assert record['top'] in new_mods, 'selected top absent from structural parser'
+    new, _ = m.flatten(new_mods, record['top'])
     oa, na = m.build(old, None), m.build(new, None)
     copies = {r['cell']: r['copies'] for r in record['copied_cells']}
 

@@ -1,0 +1,15 @@
+{
+ "top": "qkd_kvs_grp_s6c",
+ "mutant": 1,
+ "mutated_cell": "u39392_c1",
+ "rc": 1,
+ "expected": true,
+ "equalities": 230,
+ "sequential_instances": 957,
+ "state_init_attributes": {},
+ "source_sha256": "9d758c40b2057cd27c6d7f2ed5bf3047a7d12e66ba7ef829bd397cd501788ae7",
+ "mapped_sha256": "b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00",
+ "macro_contract": "independent shared anyseq output each instance/time; no storage assumptions",
+ "no_opt_merge": true,
+ "no_unknown_cells_allowed": true
+}
