@@ -1,0 +1,19 @@
+{
+  "status": "HAND_BACK_STOP_NO_FURTHER_WORK",
+  "time_PT": "2026-10-20 08:14",
+  "launched_before_stop": true,
+  "unit": "oth-ubuntu-303122-1792509269",
+  "session": 45174,
+  "host": "ot-agidock128",
+  "mem_GB": 16,
+  "threads": 2,
+  "remote": "/srv/opentallas-scratch/claude/codex-s81-native-reexport-review-1020/NATIVE_SINKS_MODEL_ONLY",
+  "source_script": "run_native_sinks.py",
+  "script_sha256": "c538aea73ab18be8abbcb9ffa8f16cb5a369953fc116f6c47d6950e4a9b4b1d8",
+  "observed_live_status": "276_SN SS/FF/TT and276_WE SS seen: only1 nativepin measured,277errors/coverageFAIL; likely exactpin lookup needsfutureclassification; no fix afterSTOP",
+  "meaning": "INCOMPLETE/FAILED sink coverage never used to qualify models",
+  "waiter3852152": "T ROOT HOLD",
+  "final_native_model_head": "c4045d687",
+  "selection_schema_head": "23036b415",
+  "preserve_fleet": true
+}
