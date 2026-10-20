@@ -25,7 +25,12 @@ def validate_native_forwarding(master, corner, lib, read):
     signoff artifacts must travel with the exporter receipt.
     """
     if not re.search(r'\bpin\s*\(\s*"?ck_o"?\s*\)', lib):
+        if master.startswith(('dsfd_dvrlyh_', 'dsfd_dvrly_')):
+            raise ValueError('relay source requires scalar forwarded clock output')
         return None
+    cells = re.findall(r'\bcell\s*\(\s*"?([^"()\s]+)"?\s*\)', lib)
+    if cells != [master]:
+        raise ValueError('native Liberty master identity mismatch')
     def artifact(name):
         value = read(name)
         if value is None:
