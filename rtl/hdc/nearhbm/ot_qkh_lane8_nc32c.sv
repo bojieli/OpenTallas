@@ -43,17 +43,22 @@ module ot_qkh_lane8_nc32c #(
     end
     // q rows of heads hid (q0) and 4 + hid (q1): beat 4 hid + t / 4, resp. 4 (4 + hid) + t / 4 (HD 128: 4 beats a row)
     reg [127:0] q0,q1;
-    (* keep="true",dont_touch="true" *) reg [7:0] gg,gk_d,gk_v,qvc;
-    (* keep="true",dont_touch="true" *) reg [5:0] qbc[0:7];
-    (* keep="true",dont_touch="true" *) reg [1:0] hdc[0:7],bsc[0:7];
+    (* keep="true",dont_touch="true" *) reg [7:0] gg,gk_d,gk_v;
+    (* keep="true",dont_touch="true" *) reg [15:0] qvc;
+    (* keep="true",dont_touch="true" *) reg [5:0] qbc[0:15];
+    (* keep="true",dont_touch="true" *) reg [1:0] hdc[0:15],bsc[0:15];
     genvar ci,d;
-    generate for(ci=0;ci<8;ci=ci+1)begin:qcap
-      always @(posedge clk)begin gg[ci]<=c_in[0];qbc[ci]<=q_beat_in;hdc[ci]<=hid;bsc[ci]<=bsel;end
-      always @(posedge clk or negedge r32[9])if(!r32[9])begin gk_d[ci]<=0;gk_v[ci]<=0;qvc[ci]<=0;end
-       else begin gk_d[ci]<=c_in[3];gk_v[ci]<=c_in[3];qvc[ci]<=q_valid_in;end
+    generate for(ci=0;ci<16;ci=ci+1)begin:qcap
+      always @(posedge clk)begin qbc[ci]<=q_beat_in;hdc[ci]<=hid;bsc[ci]<=bsel;end
+      always @(posedge clk or negedge r32[9])if(!r32[9])qvc[ci]<=0;else qvc[ci]<=q_valid_in;
+      if(ci<8)begin:gprod
+       always @(posedge clk)gg[ci]<=c_in[0];
+       always @(posedge clk or negedge r32[9])if(!r32[9])begin gk_d[ci]<=0;gk_v[ci]<=0;end
+        else begin gk_d[ci]<=c_in[3];gk_v[ci]<=c_in[3];end
+      end
       wire w0=qvc[ci] && (qbc[ci]=={2'b00,hdc[ci],bsc[ci]});
       wire w1=qvc[ci] && (qbc[ci]=={2'b01,hdc[ci],bsc[ci]});
-      always @(posedge clk)begin if(w0)q0[16*ci+:16]<=qd3[16*ci+:16];if(w1)q1[16*ci+:16]<=qd3[16*ci+:16];end
+      always @(posedge clk)begin if(w0)q0[8*ci+:8]<=qd3[8*ci+:8];if(w1)q1[8*ci+:8]<=qd3[8*ci+:8];end
     end endgenerate
     // ---- the control delay lines (one copy for 8 lanes) ----------------------------------------------------------------
     wire [168*12-1:0] ltc;
