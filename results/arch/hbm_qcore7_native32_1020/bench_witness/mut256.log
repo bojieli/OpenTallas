@@ -1,0 +1,10 @@
+RF WORD MISMATCH t=166000 class 2 00000000/244113f3
+RF WORD MISMATCH t=196000 class 0 00000000/35dc6680
+RF WORD MISMATCH t=216000 class 2 244113f3/00000000
+RF WORD MISMATCH t=246000 class 3 00000000/8b3a9df4
+RF WORD MISMATCH t=256000 class 0 35dc6680/00000000
+QCORE_RG FAIL errors=12305 checks=9104 scalars=312
+- rtl/test/hbm_qcore_physical_1016/tb_qcore_r7_lockstep.sv:67: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 91us; walltime 0.139 s; speed 655.756 us/s
+- Verilator: cpu 0.139 s on 1 threads; allocated 8 MB
