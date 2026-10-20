@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       admits   789 GB (avail 666, growth 113, headroom 0, waiters 0/0 GB) load 42/128 running 29 disk 15 GB disk 15 GB < 20
+ot-run: ot-epyc6       admits   609 GB (avail 540, growth 113, headroom 0, waiters 0/0 GB) load 155/128 running 61 disk 4384 GB 
+ot-run: ot-epyc7       admits   632 GB (avail 543, growth 101, headroom 0, waiters 0/0 GB) load 51/96 running 29 disk 5647 GB 
+ot-run: ot-epyc9       admits   665 GB (avail 685, growth 219, headroom 0, waiters 0/0 GB) load 83/128 running 49 disk 142 GB 
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2367112-1792490955 after 0 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2367112-1792490955): exit 0

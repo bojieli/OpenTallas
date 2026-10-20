@@ -1,0 +1,22 @@
+ot-run: ot-epyc5       admits   789 GB (avail 666, growth 113, headroom 0, waiters 0/0 GB) load 42/128 running 29 disk 15 GB disk 15 GB < 20
+ot-run: ot-epyc6       admits   609 GB (avail 540, growth 113, headroom 0, waiters 0/0 GB) load 155/128 running 61 disk 4384 GB 
+ot-run: ot-epyc7       admits   632 GB (avail 543, growth 101, headroom 0, waiters 0/0 GB) load 51/96 running 29 disk 5647 GB 
+ot-run: ot-epyc9       admits   665 GB (avail 685, growth 219, headroom 0, waiters 0/0 GB) load 83/128 running 49 disk 142 GB 
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2367185-1792490955 after 1 s
+WRITE_MISMATCH edge 352 leaf 0 port 0 addr 0 data 3f334718
+WRITE_MISMATCH edge 360 leaf 0 port 0 addr 0 data 3f334718
+WRITE_MISMATCH edge 364 leaf 0 port 0 addr 0 data 3f334718
+WRITE_MISMATCH edge 372 leaf 0 port 0 addr 0 data 3f334718
+WRITE_MISMATCH edge 376 leaf 0 port 0 addr 0 data 3f334718
+WRITE_MISMATCH edge 404 leaf 4 port 0 addr 50 data bf800e8e
+WRITE_MISMATCH edge 408 leaf 4 port 0 addr 50 data bf800e8e
+WRITE_MISMATCH edge 437 leaf 2 port 0 addr 56 data be5299af
+WRITE_MISMATCH edge 441 leaf 2 port 0 addr 56 data be5299af
+WRITE_MISMATCH edge 445 leaf 3 port 0 addr 16 data bf8b53cc
+MISSING row write edge 277 leaf 1 port 1 addr 53
+MISSING row write edge 279 leaf 2 port 1 addr 39
+MISSING row write edge 285 leaf 0 port 1 addr 36
+MISSING row write edge 304 leaf 0 port 1 addr 22
+CAP_C5B_MUTANT_DETECTED MUT=1 vec_m1
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2367185-1792490955): exit 1
