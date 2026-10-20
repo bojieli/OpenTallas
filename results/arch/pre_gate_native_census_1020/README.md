@@ -27,3 +27,5 @@ Current-source actual OpenROAD hook qualification also completed: 32 endpoints P
 
 Gate-Rule guard: PASS, eight helper-touching commits classified before this evidence-only commit.
 
+
+Report-only followup: indexed constant Liberty output bus pins now retain the actual indexed child pin and its function in the constant-output provenance (rather than the parent bus default). Nonzero ascending bus17:18 regression checks distinct0/1 sources; all existing native admission fixtures still pass. This changes diagnostic provenance only, not fanout counts/admission. Separate targeted native suite:14 tests PASS on fleet unitoth-ubuntu-514109-1792485605. Runtime sync receipt for042aa171b is included; this report-only followup was not part of that deployed snapshot.

@@ -124,6 +124,7 @@ def liberty_roles(paths):
 
 def census(g, roles):
     drivers, loads, ports, transparent = {}, {}, {}, {}
+    output_sources, constant_sources = {}, {}
     constants = {g.find(i) for name, i in g.net_id.items() if name in ("1'0", "1'1")}
     errors = []
     for name, (direction, net) in g.ports.items():
@@ -168,6 +169,9 @@ def census(g, roles):
                         errors.append(f'multiple drivers net {g.net_name[net]}')
                     drivers[net] = (ci, pn)
                     outs.append((net, p['function']))
+                    output_sources[net] = {'kind': 'liberty_function', 'instance': name, 'master': master,
+                                           'pin': f'{pn}[{idx}]' if len(nets) > 1 or order is not None else pn,
+                                           'function': p['function']}
                 else:
                     ins.append((pn, net))
                     if not p['clock']:
@@ -184,6 +188,7 @@ def census(g, roles):
             for dst, function in outs:
                 if function is not None and re.sub(r'[\s()]', '', function) in ('0', '1', "1'b0", "1'b1"):
                     constants.add(dst)
+                    constant_sources[dst] = output_sources[dst]
     for net in loads:
         if net not in drivers and net not in constants:
             errors.append(f'undriven dynamic net {g.net_name[net]}')
@@ -196,11 +201,7 @@ def census(g, roles):
         if x in const_reached:
             continue
         const_reached.add(x)
-        d = drivers.get(source)
-        provenance = ({'kind': 'liberty_function', 'instance': g.cells[d[0]][1],
-                       'master': g.cells[d[0]][0], 'pin': d[1],
-                       'function': roles[g.cells[d[0]][0]]['pins'][d[1]]['function']}
-                      if d and d[0] != 'port' else {'kind': 'literal', 'net': g.net_name[source]})
+        provenance = constant_sources.get(source, {'kind': 'literal', 'net': g.net_name[source]})
         for _, name, _ in ports.get(x, ()):
             output_bits.append({'port_bit': name, 'source': provenance, 'transparent_path': path})
         for ci, _, _ in loads.get(x, ()):
