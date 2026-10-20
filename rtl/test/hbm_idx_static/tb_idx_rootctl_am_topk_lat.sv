@@ -11,6 +11,9 @@
 // The DUT's engine runs RT_EXTRA 66 / ACK 49 (the counter width fix CW 8 in ot_hbm_idx_topk_static is exercised).
 // Mutants (DUT params != model): VM_RT_P 1 / CR_RT_P 1 (the am_pin master on the GEN2c lanes), VM_RT_P 64, CR_RT_P 35.
 module tb_idx_rootctl_am_topk_lat;
+`ifndef RSTL_P
+`define RSTL_P 0   // L2H-IDX g2d: 1 = rootctl_am RSTL (kit-landed reset, no in-RTL relay)
+`endif
 `ifndef VM_RT_M
 `define VM_RT_M 65
 `endif
@@ -45,7 +48,7 @@ module tb_idx_rootctl_am_topk_lat;
     ot_hbm_idx_rootctl_static #(.PIN_IN(1)) rc0(.clk_program(clk), .clk_program_mem(clk), .clk_sel(clk), .clk_topk(clk), .clk_pair({4{clk}}),
         .rst_n(rst_n), `RC_TK, .argmax_rr(), .vm_rq(q0), .vm_rr(rr0), .cq(cq0), .cq_seq(s0), .cr(cr0),
         .topk_busy(b0), .topk_done(d0), .topk_fault(f0), .share_fault(sf0));
-    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT), .VM_RT(`VM_RT_P), .CR_RT(`CR_RT_P), .SEL_LAT(30)) rc1(.clk(clk), .rst_n(rst_n), `RC_TK, .argmax_m(), .vm_rq(q1), .vm_rr(rr1),
+    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT), .VM_RT(`VM_RT_P), .CR_RT(`CR_RT_P), .SEL_LAT(30), .RSTL(`RSTL_P)) rc1(.clk(clk), .rst_n(rst_n), `RC_TK, .argmax_m(), .vm_rq(q1), .vm_rr(rr1),
         .cq(cq1), .cq_seq(s1), .cr(cr1), .topk_busy(b1), .topk_done(d1), .topk_fault(f1), .share_fault(sf1));
     // ---------------- VM + client models (same function for both sides)
     function automatic [255:0] sdat(input [15:0] q, input integer l);

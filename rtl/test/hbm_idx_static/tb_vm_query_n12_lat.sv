@@ -11,6 +11,9 @@
 // MUT 0 pass; 1 the reader at the old default (n12 VM_RT_EXTRA 4) on the same lanes; 2 bank 5's rr lane one stage short
 // (an unpadded lane); 3 reader VMRT-1; 4 (VIA_CTL) the share at the am_pin value VM_RT 1 on the same lanes.
 module tb_vm_query_n12_lat;
+`ifndef RSTL_P
+`define RSTL_P 0   // L2H-IDX g2d: 1 = rootctl_am RSTL (kit-landed reset, no in-RTL relay)
+`endif
 `ifndef VMRT
 `define VMRT 171
 `endif
@@ -48,7 +51,7 @@ module tb_vm_query_n12_lat;
   always @(posedge clk)begin oq[0]<=vm_rq;orr[0]<=irr;for(integer d=1;d<=MAXD;d=d+1)begin oq[d]<=oq[d-1];orr[d]<=orr[d-1];end end
   wire[135:0]ctl_irq=rst_n?((LOPQ==0)?vm_rq:oq[LOPQ-1]):136'd0;
   assign vm_rr=(LOPR==0)?irr:orr[LOPR-1];
-  ot_hbm_idx_rootctl_static_am #(.VM_RT(CTLP),.CR_RT(36),.SEL_LAT(30)) ctl(.clk(clk),.rst_n(rst_n),.program_we(1'b0),.program_addr(8'd0),
+  ot_hbm_idx_rootctl_static_am #(.VM_RT(CTLP),.CR_RT(36),.SEL_LAT(30),.RSTL(`RSTL_P)) ctl(.clk(clk),.rst_n(rst_n),.program_we(1'b0),.program_addr(8'd0),
    .program_data(256'd0),.start(1'b0),.length(12'd0),.sel_op(),.sel_pass(),.sel_addr(),.link_flush(),.link_emit(),.link_group(),
    .link_clear(),.selected_v(4'h0),.ingest_v(),.tree_ev(4'h0),.qfault(4'h0),.sf(1'b0),.lf(1'b0),.done(),.fault(),.topk_go(1'b0),
    .topk_k(4'd0),.topk_order(1'b0),.topk_n(20'd0),.topk_m(20'd0),.topk_a_mirror(1'b0),.topk_a_base(18'd0),.topk_a_str(18'd0),

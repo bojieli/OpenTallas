@@ -40,8 +40,15 @@
 // tile: TOPK RT_EXTRA 1+VM_RT, share owner tap own[7+VM_RT]; INDEX / ARGMAX responses leave VM_RT edges later (operand
 // reader VM_RT_EXTRA 4+VM_RT, argmax r2 VMX 5+VM_RT). CR_RT = fixed extra hub echo edges: TOPK ACK 13+CR_RT. Die master
 // for the faces banks with no relay on those lanes: ot_hbm_idx_rootctl_static_am_pin (VM_RT 1, CR_RT 1). Default 0 = r3.
+// RSTL (L2H-IDX g2d 2026-10-19, COORD 18:25 review of g2c: rst_c[1] / rst_c[2] each drove ~1,600-1,750 async clears):
+// 1 = NO in-RTL relay: rst_n is the hard tile's LANDED reset (kit reset_landing: 2 registered stages at the W face with a
+// balanced kept copy family, first stage F copies -> last stage N copies, physical/common_flow/ot_pin_regs.tcl +
+// ot_rst_copies.tcl reset_relay_split max_loads 32), and every reset flop of the three regions hangs off rst_n directly,
+// so the flow re-points them over the N regional copies (<= 32 loads each, cut by hierarchical name = by region). Release
+// is the landing's 2 edges after the die reset (was landing 2 + relay 3): transaction-level, no client counts from reset
+// (same rule as before). 0 (default) = the ot_rst_relay 3-region form, bit-identical to r3 / g2c / am_pin.
 module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter integer SEL_LAT = 4,
- parameter integer VM_RT = 0, parameter integer CR_RT = 0)(
+ parameter integer VM_RT = 0, parameter integer CR_RT = 0, parameter integer RSTL = 0)(
  input wire clk,input wire rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
@@ -65,7 +72,11 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
 );
  localparam [1:0] SID = 2'd0;
  wire [2:0] rst_c;
- ot_rst_relay #(.REGIONS(3),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));
+ generate if (RSTL != 0) begin : g_rstl
+  assign rst_c = {3{rst_n}};                 // landed + regionally copied by the kit (see RSTL above)
+ end else begin : g_relay
+  ot_rst_relay #(.REGIONS(3),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));
+ end endgenerate
  (* keep *) reg pw_r,st_r;(* keep *) reg[7:0]pa_r;(* keep *) reg[255:0]pd_r;(* keep *) reg[11:0]ln_r;
  (* keep *) reg[3:0]qf_r;
  always @(posedge clk)begin pw_r<=program_we;pa_r<=program_addr;pd_r<=program_data;st_r<=start;ln_r<=length;qf_r<=qfault;end

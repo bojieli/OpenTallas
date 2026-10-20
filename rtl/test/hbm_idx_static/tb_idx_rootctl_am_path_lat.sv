@@ -10,6 +10,9 @@
 // at ONE constant offset; TIES 0/1/2 as the source bench. Mutants: VMX_P 5 (the as-built r2 on GEN2c lanes),
 // VMX_P 76, ACK_P 51.
 module tb_idx_rootctl_am_path_lat;
+`ifndef RSTL_P
+`define RSTL_P 0   // L2H-IDX g2d: 1 = rootctl_am RSTL (kit-landed reset, no in-RTL relay)
+`endif
 `ifndef TIES
 `define TIES 0
 `endif
@@ -67,7 +70,7 @@ module tb_idx_rootctl_am_path_lat;
     always @(posedge clk) begin aq[0] <= rq1; ar[0] <= am_c; for (integer d = 1; d < 16; d = d + 1) begin aq[d] <= aq[d-1]; ar[d] <= ar[d-1]; end end
     assign rq1_l = (`LAQ == 0) ? rq1 : aq[`LAQ-1];
     assign am = (`LAR == 0) ? am_c : ar[`LAR-1];
-    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT), .VM_RT(`CTL_M), .CR_RT(36), .SEL_LAT(30)) rc1(.clk(clk), .rst_n(rst_n), `RC_IDLE, .argmax_rq(rq1_l), .argmax_m(am_c),
+    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT), .VM_RT(`CTL_M), .CR_RT(36), .SEL_LAT(30), .RSTL(`RSTL_P)) rc1(.clk(clk), .rst_n(rst_n), `RC_IDLE, .argmax_rq(rq1_l), .argmax_m(am_c),
         .vm_rq(rqs), .vm_rr(bank1), .share_fault(sf));
     ot_hbm_argmax_static_sw_vm_r2 #(.TP(192), .MUT(`MUT), .VMX(`VMX_P), .ACK(`ACK_P)) dut(.clk(clk), .rst_n(rst_n), .die_id(8'd3), .go(go), .mode(mode),
         .imm_a(imm_a), .a_mirror(a_mirror), .a_base(a_base), .n(n), .o_base(o_base), .o_is(o_is), .vm_rq(rq1),

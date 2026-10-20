@@ -37,6 +37,10 @@ n12() {  # $1 name, $2 VIA_CTL, $3 MUT
   mkdir -p "$out/$1.d"; [ -f "$out/$1.d/query.hex" ] || python3 tools/hbm_idx_static_query_vectors.py "$out/$1.d" > /dev/null
   sim "$1" IDX_VM_QUERY_N12_LAT $T/tb_vm_query_n12_lat.sv -DVIA_CTL=$2 -DMUT=$3 "${Q[@]}" "${IDX[@]}"
 }
+n12r() {  # n12 with the RSTL 1 root: $1 name, $2 VIA_CTL, $3 MUT
+  mkdir -p "$out/$1.d"; [ -f "$out/$1.d/query.hex" ] || python3 tools/hbm_idx_static_query_vectors.py "$out/$1.d" > /dev/null
+  sim "$1" IDX_VM_QUERY_N12_LAT $T/tb_vm_query_n12_lat.sv -DVIA_CTL=$2 -DMUT=$3 -DRSTL_P=1 "${Q[@]}" "${IDX[@]}"
+}
 topk() { mkdir -p "$out/$1.d"; local n=$1; shift; sim "$n" IDX_AM_TOPK_LAT $T/tb_idx_rootctl_am_topk_lat.sv "$@" "${IDX[@]}"; }
 am() { mkdir -p "$out/$1.d"; local n=$1; shift; sim "$n" IDX_AM_PATH_LAT $T/tb_idx_rootctl_am_path_lat.sv "$@" "${IDX[@]}" "${AM[@]}"; }
 run() {
@@ -47,11 +51,23 @@ run() {
     topk_cr35) topk topk_cr35 -DCR_RT_P=35;;
     am0) am am0 -DTIES=0;; am1) am am1 -DTIES=1;; am2) am am2 -DTIES=2;;
     am_vmx5) am am_vmx5 -DVMX_P=5;; am_vmx76) am am_vmx76 -DVMX_P=76;; am_ack51) am am_ack51 -DACK_P=51;;
+    # L2H-IDX g2d 10-19: the same cases on the RSTL 1 elaboration the hidx_rootctl_am_g2d_1019 kit ships
+    n12_ctl_rl) n12r n12_ctl_rl 1 0;; n12_ctl_m4_rl) n12r n12_ctl_m4_rl 1 4;;
+    topk_rl) topk topk_rl -DRSTL_P=1;; topk_pin_rl) topk topk_pin_rl -DRSTL_P=1 -DVM_RT_P=1 -DCR_RT_P=1;;
+    topk_vm64_rl) topk topk_vm64_rl -DRSTL_P=1 -DVM_RT_P=64;; topk_cr35_rl) topk topk_cr35_rl -DRSTL_P=1 -DCR_RT_P=35;;
+    am0_rl) am am0_rl -DRSTL_P=1 -DTIES=0;; am1_rl) am am1_rl -DRSTL_P=1 -DTIES=1;; am2_rl) am am2_rl -DRSTL_P=1 -DTIES=2;;
+    am_vmx76_rl) am am_vmx76_rl -DRSTL_P=1 -DVMX_P=76;; am_ack51_rl) am am_ack51_rl -DRSTL_P=1 -DACK_P=51;;
     reg_n12) bash $T/run_vm_query_n12.sh "$out/reg_n12" 0 | grep "^IDX_VM_QUERY_N12 "; return ${PIPESTATUS[0]};;
     reg_topk1) env VMX=1 bash $T/run_idx_rootctl_am.sh "$out/reg_topk1" topk 0; return $?;;
     *) echo "unknown case $1"; return 2;;
   esac
 }
+if [ "$case_" = g2d ]; then   # L2H-IDX g2d: RSTL 1 PASS cases + mutants -> BANKLAT_IDX_G2D_BENCH PASS|FAIL
+  rc=0
+  for c in n12_ctl_rl topk_rl am0_rl am1_rl am2_rl; do run $c || rc=1; done
+  for c in n12_ctl_m4_rl topk_pin_rl topk_vm64_rl topk_cr35_rl am_vmx76_rl am_ack51_rl; do run $c; [ $? -eq 1 ] || rc=1; done
+  [ $rc -eq 0 ] && echo "BANKLAT_IDX_G2D_BENCH PASS" || echo "BANKLAT_IDX_G2D_BENCH FAIL"; exit $rc
+fi
 if [ "$case_" != all ]; then run "$case_"; exit $?; fi
 rc=0
 for c in n12_dir n12_ctl topk am0 am1 am2 reg_n12 reg_topk1; do run $c || rc=1; done
