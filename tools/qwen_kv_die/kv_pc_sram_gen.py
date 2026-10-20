@@ -672,6 +672,105 @@ TIM_PC5 = [
     (SQ_BLOCK_OLD, SQ_BLOCK_NEW), (CASE_OLD, CASE_NEW), (DESC_OLD, DESC_NEW), (RD_OLD, RD_NEW),
 ]
 
+# KV-PC7 10-20 (SAFE item 4, textbook logic_depth REFUSE on gates *-20261020-054430: PC 895 ps / 26 levels, PC_H 942 ps,
+# sb -> so_b == sb / so_row == srw -> s_hit -> s_sw -> s_pre_ok -> s_pblk -> legal_rd -> rd_ok -> k_n + 1 <= last_n ->
+# k1v; 1097 endpoints > 520 ps, every one behind the column decision).  Exact restructures, no added edge:
+#   (1) TWIN == 0 in every PC instance: s_sw is constant 0; its kept leaves (a kept leaf hides the constant from
+#       synthesis) are not built;
+#   (2) the static-open-row match so_v && so_b == sb && so_row == srw is a REGISTERED lookahead (so_m_q), compared per
+#       candidate pair of the next-state muxes (so_* : static ACT -> c_bank / c_srow, PRE / PREALL clears; head: the
+#       sq-block head_stmt selects), so only the selects arrive late;
+#   (3) s_pblk's static-PRE term reads the row-priority branch directly (r_v && r_sp == no earlier branch && S && sprio
+#       && s_pre_ok), not through the 11-way priority mux;
+#   (4) rd_ok / wr_ok = {every legality term but s_go, the reservation} AND !s_go in the last kept gate, s_go from two
+#       new copies (s_go_c[18] / [19]); the schedule-fault check keeps the original legal_rd / legal_write;
+#   (5) k1v and the write-queue lookahead (wq_ws_qv / wq_ne_qv) computed for both values of the late select
+#       (desc_acc / rd_ok, wr_ok) and selected last.
+TIM_PC7 = [
+    ('''    for (genvar q = 0; q < 8; q = q + 1) begin : g_s_sw_c
+      ot_kvpc5_and2 u_l (.a(S && (TWIN != 0) && sq_ne && !swe && !sfl && !scm && !s_hit), .b(s_unav && s_av_a), .y(s_sw_c[q]));
+    end''',
+     '''    if (TWIN != 0) begin : g_tw     // KV-PC7 (1): no twin switch when TWIN == 0 (s_sw constant 0)
+      for (genvar q = 0; q < 8; q = q + 1) begin : g_s_sw_c
+        ot_kvpc5_and2 u_l (.a(S && (TWIN != 0) && sq_ne && !swe && !sfl && !scm && !s_hit), .b(s_unav && s_av_a), .y(s_sw_c[q]));
+      end
+    end else begin : g_ntw
+      assign s_sw_c = 8'b0;
+    end'''),
+    ('''      ot_kvpc5_and2 u_l (.a(sq_ne && so_v && so_b == sb && so_row == srw), .b(|(sb_oh & open)), .y(s_hit_c[q]));''',
+     '''      ot_kvpc5_and2 u_l (.a(sq_ne && so_m_q), .b(|(sb_oh & open)), .y(s_hit_c[q]));   // KV-PC7 (2)'''),
+    ('''    reg so_v; reg [4:0] so_b; reg [18:0] so_row;''',
+     '''    reg so_v; reg [4:0] so_b; reg [18:0] so_row;
+    reg so_m_q;            // KV-PC7 (2): == so_v && so_b == sb && so_row == srw (registered lookahead, below)'''),
+    ('''    wire swe_nx = s_go_c[10] ? (sq_hf_qv[5] ? sq_a1_we : s_we) : (sq_hf_qv[4] ? s_we : swe);''',
+     '''    wire swe_nx = s_go_c[10] ? (sq_hf_qv[5] ? sq_a1_we : s_we) : (sq_hf_qv[4] ? s_we : swe);
+    // KV-PC7 (2): so_m_q(t) == (so_v && so_b == sb && so_row == srw)(t).  Next state of each side exactly as the
+    // sq block assigns it: so_*: a static ACT fires -> (c_bank, c_srow) and so_v = 1, its PRE / PREALL clears so_v;
+    // head field k (sb: group 0, srw lo / hi: groups 1 / 2): s_go ? (n >= 2 ? entry rp+1 : pushed) : (n == 0 ? pushed :
+    // (s_sw ? twin : hold)).  The equalities run per candidate pair from registers / the pushed fields.
+    wire so_fa = S && row_fire && c_op == ACT && c_s;
+    wire so_vn = so_fa || (so_v && !(S && row_fire && (c_op == PREALL || (c_op == PRE && c_bank == so_b))));
+    function automatic so_pick(input g, input ge2, input eq0, input w, input e_a1, input e_sv, input e_tw, input e_h);
+      so_pick = g ? (ge2 ? e_a1 : e_sv) : (eq0 ? e_sv : (w ? e_tw : e_h));
+    endfunction
+    wire [4:0] so_bt = sb ^ 5'd2;
+    wire so_eb = so_fa ? so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], c_bank == sq_a1_bk, c_bank == s_bank, c_bank == so_bt, c_bank == sb)
+                       : so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], so_b == sq_a1_bk, so_b == s_bank, so_b == so_bt, so_b == sb);
+    wire so_el = so_fa ? so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], c_srow[9:0] == sq_a1_rl, c_srow[9:0] == s_row[9:0], c_srow[9:0] == srw_tw[9:0], c_srow[9:0] == srw[9:0])
+                       : so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], so_row[9:0] == sq_a1_rl, so_row[9:0] == s_row[9:0], so_row[9:0] == srw_tw[9:0], so_row[9:0] == srw[9:0]);
+    wire so_eh = so_fa ? so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], c_srow[18:10] == sq_a1_rh, c_srow[18:10] == s_row[18:10], c_srow[18:10] == srw_tw[18:10], c_srow[18:10] == srw[18:10])
+                       : so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], so_row[18:10] == sq_a1_rh, so_row[18:10] == s_row[18:10], so_row[18:10] == srw_tw[18:10], so_row[18:10] == srw[18:10]);
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) so_m_q <= 1'b0; else so_m_q <= so_vn && so_eb && so_el && so_eh;'''),
+    ('''    always @* s_pblk = ((S && slot_next && r_v && r_sp) ? sb_oh : 32'b0) | ((S && c_v && c_sp) ? c_oh : 32'b0);''',
+     '''    // KV-PC7 (3): r_v && r_sp == the static-PRE branch of the priority above taken (no earlier branch fires)
+    wire r_sp_x = !(REF_MODE && ref_due_n && ref_pend) && !(!REF_MODE && ref_due_n) && !preall_ok && !ep_rdy && !forced_pre &&
+                  S && sprio && s_pre_ok;
+    always @* s_pblk = ((S && slot_next && r_sp_x) ? sb_oh : 32'b0) | ((S && c_v && c_sp) ? c_oh : 32'b0);'''),
+    ('''    wire [17:0] s_go_c;   // KV-PC5: kept leaf copies of s_go (0 = s_go)''',
+     '''    wire [19:0] s_go_c;   // KV-PC5: kept leaf copies of s_go (0 = s_go; KV-PC7: 18 / 19 = the rd_ok / wr_ok last gates)'''),
+    ('''    for (genvar q = 0; q < 18; q = q + 1) begin : g_s_go_c''', '''    for (genvar q = 0; q < 20; q = q + 1) begin : g_s_go_c'''),
+    ('''    wire legal_rd = rd_ok0 && !s_go_c[0] && !(|(rd_oh & s_pblk));
+    for (genvar q = 0; q < 19; q = q + 1) begin : g_rd_ok_c
+      ot_kvpc5_and2 u_l (.a(legal_rd), .b(PROFILE == 1 || reserved_rd), .y(rd_ok_c[q]));''',
+     '''    wire legal_rd = rd_ok0 && !s_go_c[0] && !(|(rd_oh & s_pblk));          // (the schedule-fault check)
+    // KV-PC7 (4): rd_ok == legal_rd && reserved, with !s_go moved into the last kept gate
+    wire rd_x = rd_ok0 && !(|(rd_oh & s_pblk)) && (PROFILE == 1 || reserved_rd);
+    for (genvar q = 0; q < 19; q = q + 1) begin : g_rd_ok_c
+      ot_kvpc5_and2 u_l (.a(rd_x), .b(!s_go_c[18]), .y(rd_ok_c[q]));'''),
+    ('''    wire [13:0] wr_ok_c;   // KV-PC5: kept leaf copies of wr_ok (0 = wr_ok)''',
+     '''    wire [15:0] wr_ok_c;   // KV-PC5: kept leaf copies of wr_ok (0 = wr_ok; KV-PC7: 14 / 15 = wq_ws / wq_ne selects)'''),
+    ('''    wire legal_write = wr_ok0 && !s_go_c[0] && !(|(hb_oh & s_pblk));
+    for (genvar q = 0; q < 14; q = q + 1) begin : g_wr_ok_c
+      ot_kvpc5_and2 u_l (.a(legal_write), .b(PROFILE == 1 || reserved_write_col), .y(wr_ok_c[q]));''',
+     '''    wire legal_write = wr_ok0 && !s_go_c[0] && !(|(hb_oh & s_pblk));      // (the schedule-fault check)
+    // KV-PC7 (4): wr_ok == legal_write && reserved, with !s_go moved into the last kept gate
+    wire wr_x = wr_ok0 && !(|(hb_oh & s_pblk)) && (PROFILE == 1 || reserved_write_col);
+    for (genvar q = 0; q < 16; q = q + 1) begin : g_wr_ok_c
+      ot_kvpc5_and2 u_l (.a(wr_x), .b(!s_go_c[19]), .y(wr_ok_c[q]));'''),
+    ('''        koh <= koh_n; k1v <= (desc_acc ? context_accept : context_active) || ((k_n != 3'd7) && (k_n + 3'd1 <= last_n));''',
+     '''        koh <= koh_n; k1v <= desc_acc ? k1v_d : (rd_ok_c[2] ? k1v_r1 : k1v_r0);   // KV-PC7 (5)'''),
+    ('''    wire [7:0] koh_n = desc_acc ?''',
+     '''    // KV-PC7 (5): k1v_n == (desc_acc ? context_accept : context_active) || (k_n != 7 && k_n + 1 <= last_n) per case
+    function automatic k1f(input [2:0] kk, input [2:0] ll); k1f = (kk != 3'd7) && (kk + 3'd1 <= ll); endfunction
+    wire [2:0] k_r1 = context_active ? j_p1[9:7] : (v_consumer_order && j[2:0] == 3'd7) ? (k ^ 3'd1) : (j[6:0] == 7'h7f) ? k + 3'd1 : k;
+    wire k1v_d = context_accept || k1f(first_sector[9:7], context_accept ? (desc_vpass ? 3'd5 : 3'd1) : 3'((desc_n - 11'd1) >> 7));
+    wire k1v_r1 = context_active || k1f(k_r1, last);
+    wire k1v_r0 = context_active || k1f(k, last);
+    wire [7:0] koh_n = desc_acc ?'''),
+    ('''    wire [WQW:0] wq_n_nx = wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);''',
+     '''    // KV-PC7 (5): the two wr_ok cases of the write-queue lookahead, selected last (wq_n_nx == wq_n + push - wr_ok)
+    wire [WQW:0] wq_n_p = wq_n + (wr_v && wr_r ? 1'b1 : 1'b0);
+    wire [WQW:0] wq_n_m = wq_n_p - 1'b1;
+    wire [WQW:0] wq_n_nx = wr_ok ? wq_n_m : wq_n_p;'''),
+    ('''    wire [3:0] wq_wsoh_nx = (wq_n_nx != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp_nx + wq_n_nx[WQW-1:0])) : 4'b0;''',
+     '''    wire [3:0] wq_ws_p = (wq_n_p != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp + wq_n_p[WQW-1:0])) : 4'b0;
+    wire [3:0] wq_ws_m = (wq_n_m != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp1 + wq_n_m[WQW-1:0])) : 4'b0;
+    wire [3:0] wq_wsoh_nx = wr_ok_c[14] ? wq_ws_m : wq_ws_p;'''),
+    ('''wq_ne_qv <= {3{wq_n_nx != 1, wq_n_nx != 0}};''',
+     '''wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}};'''),
+]
+
 # KV-PC5-A: u_ctl (ot_qkd_static_ctrl_pc_emb) command FIFO native32 restructure
 def _hg(k, lhs, a1, cq):
     return (f'  {lhs} <= ctl_pop_c[{1 + k}] ? (ctl_hf_qv[{k * 10 + 9}] ? {a1} : (ctl_push_c[{1 + k}] ? {cq} : {lhs})) :\n'
@@ -1337,7 +1436,7 @@ CLONES = [
     (TIM, 'ot_qkd_static_kv_timing', 'ot_qkd_static_kv_timing_kvpc_s',
      [("    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;",
        "    localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;\n"
-       "    initial if (SQW != 2 || WQW != 2) $error(\"ot_qkd_static_kv_timing_kvpc_s: kept copy widths assume SQD 4, WQ 4\");")] + TIM_PC5,
+       "    initial if (SQW != 2 || WQW != 2) $error(\"ot_qkd_static_kv_timing_kvpc_s: kept copy widths assume SQD 4, WQ 4\");")] + TIM_PC5 + TIM_PC7,
      [('sq_rp', 2, 2), ('wq_rp', 2, 2), ('wq_rp1', 2, 2), ('context_active', 1, 5), ('streaming', 1, 10),
       ('wq_n', 3, 3), ('c_s', 1, 2), ('wq_v', 4, 2), ('bsel', 5, 2)]),
     ('REWRITE', 'qkd_kvpc_s_chain'),
@@ -1568,12 +1667,21 @@ def sr_tile():
         old = f'    ot_reset_sync #(.ASYNC_STAGES(2)) u_rland_{clk} (.clk({clk}), .async_rst_n({n}), .sync_rst_n({w}));\n'
         if t.count(old) != 2:
             raise SystemExit(f'kv_pc_sram_gen: rland {clk} site found {t.count(old)} times')
+        # KV-PC7 10-20 (gate textbook REFUSE reset_landing on *-20261020-054430: rst_n / hrst_n each reached 9 RESETN
+        # pins, s1 + the 8 s2 copies, > 2): the port clears only the two KEPT first-stage captures (s1 = data, s1r =
+        # the second stage's clear, both D = 1); the 8 second-stage copies clear from s1r and capture s1 -- release
+        # still at the 2nd rising edge (s1 / s1r at the 1st, s2 at the 2nd), assertion still asynchronous (through
+        # s1r), each first-stage capture <= 8 loads (ot_rst_relay_bounded32 pattern, 2 edges).
         t = t.replace(old,
-            f'    (* async_reg = "true" *) reg rland_{clk}_s1;\n'
+            f'    (* keep, async_reg = "true" *) reg rland_{clk}_s1;\n'
+            f'    (* keep, async_reg = "true" *) reg rland_{clk}_s1r;\n'
             f'    (* keep, ot_rst_split, async_reg = "true" *) reg [{k - 1}:0] rland_{clk}_s2__qv;\n'
             f'    always @(posedge {clk} or negedge {n})\n'
-            f"        if (!{n}) begin rland_{clk}_s1 <= 1'b0; rland_{clk}_s2__qv <= {k}'d0; end\n"
-            f"        else begin rland_{clk}_s1 <= 1'b1; rland_{clk}_s2__qv <= {{{k}{{rland_{clk}_s1}}}}; end\n"
+            f"        if (!{n}) begin rland_{clk}_s1 <= 1'b0; rland_{clk}_s1r <= 1'b0; end\n"
+            f"        else begin rland_{clk}_s1 <= 1'b1; rland_{clk}_s1r <= 1'b1; end\n"
+            f'    always @(posedge {clk} or negedge rland_{clk}_s1r)\n'
+            f"        if (!rland_{clk}_s1r) rland_{clk}_s2__qv <= {k}'d0;\n"
+            f"        else rland_{clk}_s2__qv <= {{{k}{{rland_{clk}_s1}}}};\n"
             f'    assign {w} = rland_{clk}_s2__qv[0];   // KV-PC5: {k} kept copies of the landed reset (ot_rst_copies)\n')
     return t.replace('// KVJ-G2 2026-10-17:', '// KV-PC 2026-10-19 OT_KV_PC_SRAM=1 (pc / pc_h: kv_static_die.pc_sram_text; kv_pc_sram_gen.py).\n'
                      '// KVJ-G2 2026-10-17:', 1)

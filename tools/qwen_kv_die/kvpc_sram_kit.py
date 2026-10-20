@@ -43,7 +43,17 @@ WIT_SR3 = 'results/rtl/qwen_kv_die/kvpc_sram_sr3_1019'   # KV-PC2 sr3+ receipts 
 UNITS = [('front', (1, 4, 5)), ('return', (1, 2)), ('cdc', (1, 2)), ('tq', (1,)), ('sched', (1,)), ('ctrl', (1, 2)),
          ('path', (2,))]
 FI_UNITS = ('sched', 'ctrl', 'path')     # KV-PC3 sr6+: mutant 5 = fault-chain input landing bypassed (OT_KVPC_FI_MUT)
-SR6 = ('sr6', 'sr6b', 'sr7', 'sr7b', 'sr8', 'sr8b')
+SR6 = ('sr6', 'sr6b', 'sr7', 'sr7b', 'sr8', 'sr8b', 'sr9', 'sr9b')
+SR9 = ('sr9', 'sr9b')
+# KV-PC7 sr9 (10-20): N-face pin order so every N <-> S feed-through is a straight vertical run.  Gate pc_sr8 054430
+# PRE-CTS full stage graph (Codex 29ec0814c, results/arch/kvpc_normal_copy_0720): 493 stage pairs > 405 um (max 488.3),
+# all boundary-to-boundary: i_prev -> u_embr.up_q (S, x 3-73) -> o_next (N, x 135-187) 277, i_next (N, x 95-134) ->
+# o_prev landing (S, x 203-257) 213, fi_q -> pc__fo, rv_q -> idle.  o_next moves above i_prev, i_next shifts right over
+# o_prev; per-group counts unchanged (<= 6 pins/um); the same model clears every pair (max 376.0 um).  pc_h (the chain
+# head) takes the same N order so its N face still meets the S face of the PC above it.
+N9 = {'o_next': [2.16, 52.16], 'o_grp_h': [52.4, 54.4], 'pc__fo': [54.64, 54.84], 'i_next': [55.08, 187.08],
+      'x__est__0_1': [187.32, 187.52], 'pc__ki': [187.76, 193.36], 'i_grp': [193.6, 199.2], 'i_grp_h': [199.44, 215.34],
+      'o_grp': [215.58, 264.98]}
 
 
 def boundary_tcl(tile):
@@ -180,6 +190,8 @@ def derive(tile, tag, variant):
     j['purpose'] = why
     old = tag in ('sr1', 'sr2', 'sr2b')
     wit = None if old else f"results/rtl/qwen_kv_die/kvpc_sram_{tag.rstrip('b').replace('sr7', 'sr6')}_1019"   # sr7 = sr6 RTL
+    if tag in SR9:
+        wit = 'results/rtl/qwen_kv_die/kvpc_sram_sr9_1020'                       # KV-PC7 receipts (Verilator 5.050)
     j['benches'] = benches(tile, hfx=not old, wit=wit, fi=tag in SR6)
     if tag in SR6:
         bt = f'physical/qkd_kvs_kits/qkd_kvs_{tile}_sr6_hck_boundary.tcl'
@@ -205,6 +217,17 @@ def derive(tile, tag, variant):
                 'failed route = structural redesign).  ' + s['purpose'])
         j['owner'] = 'Claude:KV-PC4' if variant in V_MOVE else j['owner']
         j['branch'] = 'claude/kv-pc3-1019' if variant in V_MOVE else j['branch']
+    if tag in SR9:
+        s['pin_ranges'].update(N9)
+        s['structural_change'] = s['purpose'] = j['purpose'] = (
+            f'KV-PC7 {tag} (SAFE successor of sr8 after gate *-20261020-054430: textbook REFUSE reset_landing 9 / 9 raw '
+            'RESETN loads + logic_depth 895 / 942 ps; PRE-CTS reach 493 pairs > 405 um): (1) rst_n / hrst_n clear only two '
+            'kept first-stage captures (the 8 second-stage copies clear from the second capture: 2 RESETN loads per port, '
+            'release still 2 edges); (2) scheduler column decision restructured exactly (registered static-row match, '
+            'no constant twin leaves, s_go in the last rd_ok / wr_ok gate, k1v / write-queue lookahead per case); '
+            '(3) N-face order o_next | o_grp_h | pc__fo | i_next | ... so N <-> S feed-throughs run straight.  ' + s['purpose'])
+        j['owner'] = 'Claude:KV-PC7'
+        j['branch'] = 'claude/kv-pc7-1020'
     j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {VIEW, WIT, WIT_SR3, 'rtl', 'tools/qwen_kv_die'} | ({wit} if wit else set()))
     j['views_to'] = f'physical/ref_tile/{kit}/views'
     j['record_to'] = f'results/rtl/ref_tile/{kit}'

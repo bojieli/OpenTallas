@@ -1968,7 +1968,7 @@ wire [9:0] head_first = head_first__qv[9:0];
  end
 endmodule
 
-// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 34 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2) ----
+// ---- ot_qkd_static_kv_timing_kvpc_s: clone of ot_qkd_static_kv_timing (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv) with 49 substitution(s); kept copy families sq_rp[2]x2(2), wq_rp[2]x2(2), wq_rp1[2]x2(2), context_active[1]x5(2), streaming[1]x10(3), wq_n[3]x3(2), c_s[1]x2(2), wq_v[4]x2(2), bsel[5]x2(2) ----
 module ot_qkd_static_kv_timing_kvpc_s #(
   parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
   parameter integer SQD = 4,                  // static queue entries (power of two)
@@ -2117,7 +2117,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     end
     always @(posedge clk or negedge rst_n) if (!rst_n) hold <= 0; else hold <= hold_n;
     wire wr_ok, wr_ok0, rd_ok0;
-    wire [13:0] wr_ok_c;   // KV-PC5: kept leaf copies of wr_ok (0 = wr_ok)
+    wire [15:0] wr_ok_c;   // KV-PC5: kept leaf copies of wr_ok (0 = wr_ok; KV-PC7: 14 / 15 = wq_ws / wq_ne selects)
     // ---- static-row queue (SROW) -------------------------------------------------------------
     localparam S = (SROW != 0);
     localparam integer SQW = (SQD > 1) ? $clog2(SQD) : 1;
@@ -2144,6 +2144,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     // sfl: switched to the twin once.  so_*: the newest static-opened bank and its row (cleared by its PRE).
     reg [4:0] sb, sc; reg [18:0] srw; reg swe, sfl, scm; reg [31:0] sb_oh;
     reg so_v; reg [4:0] so_b; reg [18:0] so_row;
+    reg so_m_q;            // KV-PC7 (2): == so_v && so_b == sb && so_row == srw (registered lookahead, below)
     reg [7:0] swait;
     reg c_sp;
     (* keep, ot_rst_split *) reg [1:0] c_s__qv;   // KV-PC SAFE: 2 kept copies of c_s
@@ -2153,12 +2154,12 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     // KV-PC5: s_hit as kept leaf copies (KV-PC6: 1 / 2 = the shold mask lo / hi; i4 pc_h 33 loads on one copy)
     wire [2:0] s_hit_c;
     for (genvar q = 0; q < 3; q = q + 1) begin : g_s_hit_c
-      ot_kvpc5_and2 u_l (.a(sq_ne && so_v && so_b == sb && so_row == srw), .b(|(sb_oh & open)), .y(s_hit_c[q]));
+      ot_kvpc5_and2 u_l (.a(sq_ne && so_m_q), .b(|(sb_oh & open)), .y(s_hit_c[q]));   // KV-PC7 (2)
     end
     wire s_hit = s_hit_c[0];
     wire [31:0] shold = {s_hit_c[2] ? sb_oh[31:16] : 16'b0, s_hit_c[1] ? sb_oh[15:0] : 16'b0};        // never precharge the bank the head is about to access
     wire s_go;                                        // the static head's column command issues this cycle
-    wire [17:0] s_go_c;   // KV-PC5: kept leaf copies of s_go (0 = s_go)
+    wire [19:0] s_go_c;   // KV-PC5: kept leaf copies of s_go (0 = s_go; KV-PC7: 18 / 19 = the rd_ok / wr_ok last gates)
     wire [7:0] s_sw_c;   // KV-PC5: kept leaf copies of s_sw (0 = s_sw)
     // ---- refresh windows -------------------------------------------------------------
     wire ref_due = (ref_c == 0);
@@ -2368,13 +2369,15 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire s_col_ok = s_hit && ccdl_z[sb[1:0]] && !(|(sb_oh & blk)) && !rd_block &&
                     (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0));
     wire legal_static = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
-    for (genvar q = 0; q < 18; q = q + 1) begin : g_s_go_c
+    for (genvar q = 0; q < 20; q = q + 1) begin : g_s_go_c
       ot_kvpc5_and2 u_l (.a(legal_static), .b(PROFILE == 1 || reserved_static_col), .y(s_go_c[q]));
     end
     assign s_go = s_go_c[0];
-    wire legal_rd = rd_ok0 && !s_go_c[0] && !(|(rd_oh & s_pblk));
+    wire legal_rd = rd_ok0 && !s_go_c[0] && !(|(rd_oh & s_pblk));          // (the schedule-fault check)
+    // KV-PC7 (4): rd_ok == legal_rd && reserved, with !s_go moved into the last kept gate
+    wire rd_x = rd_ok0 && !(|(rd_oh & s_pblk)) && (PROFILE == 1 || reserved_rd);
     for (genvar q = 0; q < 19; q = q + 1) begin : g_rd_ok_c
-      ot_kvpc5_and2 u_l (.a(legal_rd), .b(PROFILE == 1 || reserved_rd), .y(rd_ok_c[q]));
+      ot_kvpc5_and2 u_l (.a(rd_x), .b(!s_go_c[18]), .y(rd_ok_c[q]));
     end
     assign rd_ok = rd_ok_c[0];
     reg fault_schedule;
@@ -2382,9 +2385,11 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     always @(posedge clk or negedge rst_n)
       if (!rst_n) fault_schedule <= 0;
       else if (PROFILE == 0 && ((reserved_rd && !legal_rd) || (reserved_static_col && !legal_static) || (reserved_write_col && !legal_write) || (({1'b0,reserved_rd}+{1'b0,reserved_static_col}+{1'b0,reserved_write_col})>1))) fault_schedule <= 1;
-    wire legal_write = wr_ok0 && !s_go_c[0] && !(|(hb_oh & s_pblk));
-    for (genvar q = 0; q < 14; q = q + 1) begin : g_wr_ok_c
-      ot_kvpc5_and2 u_l (.a(legal_write), .b(PROFILE == 1 || reserved_write_col), .y(wr_ok_c[q]));
+    wire legal_write = wr_ok0 && !s_go_c[0] && !(|(hb_oh & s_pblk));      // (the schedule-fault check)
+    // KV-PC7 (4): wr_ok == legal_write && reserved, with !s_go moved into the last kept gate
+    wire wr_x = wr_ok0 && !(|(hb_oh & s_pblk)) && (PROFILE == 1 || reserved_write_col);
+    for (genvar q = 0; q < 16; q = q + 1) begin : g_wr_ok_c
+      ot_kvpc5_and2 u_l (.a(wr_x), .b(!s_go_c[19]), .y(wr_ok_c[q]));
     end
     assign wr_ok = wr_ok_c[0];
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
@@ -2445,6 +2450,12 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire v_set_flip=v_consumer_order && rd_ok_c[2] && j[2:0]==3'd7;
     wire [2:0] k_n = desc_acc ? first_sector[9:7] : context_active&&rd_ok_c[2] ? j_p1[9:7] : v_set_flip ? (k^3'd1) : k_step ? k+3'd1 : k;
     wire [2:0] last_n = desc_acc ? (context_accept ? (desc_vpass?3'd5:3'd1) : 3'((desc_n - 11'd1) >> 7)) : last;
+    // KV-PC7 (5): k1v_n == (desc_acc ? context_accept : context_active) || (k_n != 7 && k_n + 1 <= last_n) per case
+    function automatic k1f(input [2:0] kk, input [2:0] ll); k1f = (kk != 3'd7) && (kk + 3'd1 <= ll); endfunction
+    wire [2:0] k_r1 = context_active ? j_p1[9:7] : (v_consumer_order && j[2:0] == 3'd7) ? (k ^ 3'd1) : (j[6:0] == 7'h7f) ? k + 3'd1 : k;
+    wire k1v_d = context_accept || k1f(first_sector[9:7], context_accept ? (desc_vpass ? 3'd5 : 3'd1) : 3'((desc_n - 11'd1) >> 7));
+    wire k1v_r1 = context_active || k1f(k_r1, last);
+    wire k1v_r0 = context_active || k1f(k, last);
     wire [7:0] koh_n = desc_acc ? (8'b1 << first_sector[9:7]) : context_active&&rd_ok_c[2] ? (8'b1 << j_p1[9:7]) : v_set_flip ? {koh[6],koh[7],koh[4],koh[5],koh[2],koh[3],koh[0],koh[1]} : k_step ? {koh[6:0],koh[7]} : koh;
     // write ACT: closed target bank, not chosen (or about to be chosen) for refresh
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
@@ -2495,8 +2506,12 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire s_refsel = REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1));   // bsel is about to be taken
     wire s_unav = (|(sb_oh & ((aok_busy & ~open) | blk))) || (|(sb_oh & open) && !s_hit) || (s_refsel && sb == bsel);
     wire s_av_a = !(|(ab_oh & (open | blk | aok_busy))) && (|(ab_oh & aok_z)) && !(s_refsel && (sb ^ 5'd2) == bsel);
-    for (genvar q = 0; q < 8; q = q + 1) begin : g_s_sw_c
-      ot_kvpc5_and2 u_l (.a(S && (TWIN != 0) && sq_ne && !swe && !sfl && !scm && !s_hit), .b(s_unav && s_av_a), .y(s_sw_c[q]));
+    if (TWIN != 0) begin : g_tw     // KV-PC7 (1): no twin switch when TWIN == 0 (s_sw constant 0)
+      for (genvar q = 0; q < 8; q = q + 1) begin : g_s_sw_c
+        ot_kvpc5_and2 u_l (.a(S && (TWIN != 0) && sq_ne && !swe && !sfl && !scm && !s_hit), .b(s_unav && s_av_a), .y(s_sw_c[q]));
+      end
+    end else begin : g_ntw
+      assign s_sw_c = 8'b0;
     end
     wire s_sw = s_sw_c[0];
     wire s_act_ok = sq_ne && !s_sw && !(|(sb_oh & (open | blk))) && (|(sb_oh & aok_z)) && rrdl_z[sb[1:0]] &&
@@ -2518,7 +2533,10 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     end
     assign row_v = c_v; assign row_prio = c_prio; assign row_op = c_op; assign row_bank = c_bank;
     assign row_row = (S && c_s) ? c_srow : row;
-    always @* s_pblk = ((S && slot_next && r_v && r_sp) ? sb_oh : 32'b0) | ((S && c_v && c_sp) ? c_oh : 32'b0);
+    // KV-PC7 (3): r_v && r_sp == the static-PRE branch of the priority above taken (no earlier branch fires)
+    wire r_sp_x = !(REF_MODE && ref_due_n && ref_pend) && !(!REF_MODE && ref_due_n) && !preall_ok && !ep_rdy && !forced_pre &&
+                  S && sprio && s_pre_ok;
+    always @* s_pblk = ((S && slot_next && r_sp_x) ? sb_oh : 32'b0) | ((S && c_v && c_sp) ? c_oh : 32'b0);
     assign col_v = rd_ok_c[3] || (W && wr_ok_c[1]) || s_go_c[0]; assign col_we = (W && wr_ok_c[1] && !(AQ && hr)) || (s_go_c[0] && swe);
     assign col_aq = AQ && wr_ok_c[1] && hr; assign col_sr = s_go_c[0];
     assign col_bank = s_go_c[1] ? sb : (W && wr_ok_c[1]) ? hb : rd_bank; assign col_col = s_go_c[1] ? sc : (W && wr_ok_c[1]) ? hc : j[6:2];
@@ -2575,15 +2593,38 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire [31:0] sq_a1_o = {sq_a1_o3, sq_a1_o2, sq_a1_o1, sq_a1_o0};
     wire [18:0] srw_tw = 19'(srw + 19'(TWIN_ROFF));
     wire swe_nx = s_go_c[10] ? (sq_hf_qv[5] ? sq_a1_we : s_we) : (sq_hf_qv[4] ? s_we : swe);
+    // KV-PC7 (2): so_m_q(t) == (so_v && so_b == sb && so_row == srw)(t).  Next state of each side exactly as the
+    // sq block assigns it: so_*: a static ACT fires -> (c_bank, c_srow) and so_v = 1, its PRE / PREALL clears so_v;
+    // head field k (sb: group 0, srw lo / hi: groups 1 / 2): s_go ? (n >= 2 ? entry rp+1 : pushed) : (n == 0 ? pushed :
+    // (s_sw ? twin : hold)).  The equalities run per candidate pair from registers / the pushed fields.
+    wire so_fa = S && row_fire && c_op == ACT && c_s;
+    wire so_vn = so_fa || (so_v && !(S && row_fire && (c_op == PREALL || (c_op == PRE && c_bank == so_b))));
+    function automatic so_pick(input g, input ge2, input eq0, input w, input e_a1, input e_sv, input e_tw, input e_h);
+      so_pick = g ? (ge2 ? e_a1 : e_sv) : (eq0 ? e_sv : (w ? e_tw : e_h));
+    endfunction
+    wire [4:0] so_bt = sb ^ 5'd2;
+    wire so_eb = so_fa ? so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], c_bank == sq_a1_bk, c_bank == s_bank, c_bank == so_bt, c_bank == sb)
+                       : so_pick(s_go_c[10], sq_hf_qv[5], sq_hf_qv[4], s_sw_c[1], so_b == sq_a1_bk, so_b == s_bank, so_b == so_bt, so_b == sb);
+    wire so_el = so_fa ? so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], c_srow[9:0] == sq_a1_rl, c_srow[9:0] == s_row[9:0], c_srow[9:0] == srw_tw[9:0], c_srow[9:0] == srw[9:0])
+                       : so_pick(s_go_c[11], sq_hf_qv[11], sq_hf_qv[10], s_sw_c[2], so_row[9:0] == sq_a1_rl, so_row[9:0] == s_row[9:0], so_row[9:0] == srw_tw[9:0], so_row[9:0] == srw[9:0]);
+    wire so_eh = so_fa ? so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], c_srow[18:10] == sq_a1_rh, c_srow[18:10] == s_row[18:10], c_srow[18:10] == srw_tw[18:10], c_srow[18:10] == srw[18:10])
+                       : so_pick(s_go_c[12], sq_hf_qv[17], sq_hf_qv[16], s_sw_c[3], so_row[18:10] == sq_a1_rh, so_row[18:10] == s_row[18:10], so_row[18:10] == srw_tw[18:10], so_row[18:10] == srw[18:10]);
+    always @(posedge clk or negedge rst_n)
+      if (!rst_n) so_m_q <= 1'b0; else so_m_q <= so_vn && so_eb && so_el && so_eh;
     // ---- KV-PC5 write queue lookahead ---------------------------------------------------------------------------
-    wire [WQW:0] wq_n_nx = wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+    // KV-PC7 (5): the two wr_ok cases of the write-queue lookahead, selected last (wq_n_nx == wq_n + push - wr_ok)
+    wire [WQW:0] wq_n_p = wq_n + (wr_v && wr_r ? 1'b1 : 1'b0);
+    wire [WQW:0] wq_n_m = wq_n_p - 1'b1;
+    wire [WQW:0] wq_n_nx = wr_ok ? wq_n_m : wq_n_p;
     wire [WQW-1:0] wq_rp_nx = wr_ok_c[2] ? wq_rp1 : wq_rp;
     wire [3:0] wq_rpoh_nx = 4'b1 << wq_rp_nx;
-    wire [3:0] wq_wsoh_nx = (wq_n_nx != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp_nx + wq_n_nx[WQW-1:0])) : 4'b0;
+    wire [3:0] wq_ws_p = (wq_n_p != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp + wq_n_p[WQW-1:0])) : 4'b0;
+    wire [3:0] wq_ws_m = (wq_n_m != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp1 + wq_n_m[WQW-1:0])) : 4'b0;
+    wire [3:0] wq_wsoh_nx = wr_ok_c[14] ? wq_ws_m : wq_ws_p;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin wq_rpoh_qv <= {4{4'b0001}}; wq_ne_qv <= {3{2'b10}}; wq_ws_qv <= {3{4'b0001}}; end
       else begin
-        wq_rpoh_qv <= {4{wq_rpoh_nx}}; wq_ne_qv <= {3{wq_n_nx != 1, wq_n_nx != 0}}; wq_ws_qv <= {3{wq_wsoh_nx}};
+        wq_rpoh_qv <= {4{wq_rpoh_nx}}; wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}}; wq_ws_qv <= {3{wq_wsoh_nx}};
       end
     wire [31:0] wq_dec = 32'b1 << wr_bank;
     always @(posedge clk) if (W) for (integer e = 0; e < WQ; e = e + 1) begin
@@ -2666,7 +2707,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
         if (desc_acc_c[4]) rd_oh[31:16] <= rd_oh_d[31:16]; else if (rd_ok_c[7]) rd_oh[31:16] <= rd_oh_j[31:16];
         if (desc_acc_c[5]) rd_bgoh <= 4'b1 << first_sector[1:0]; else if (rd_ok_c[8]) rd_bgoh <= 4'b1 << j_p1[1:0];
 
-        koh <= koh_n; k1v <= (desc_acc ? context_accept : context_active) || ((k_n != 3'd7) && (k_n + 3'd1 <= last_n));
+        koh <= koh_n; k1v <= desc_acc ? k1v_d : (rd_ok_c[2] ? k1v_r1 : k1v_r0);   // KV-PC7 (5)
         if (rrds_c != 0) rrds_c <= rrds_c - 1'b1;
         if (noact_c != 0) noact_c <= noact_c - 1'b1;
 
