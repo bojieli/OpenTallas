@@ -1,0 +1,62 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+21. Printing statistics.
+
+=== qkd_kvpc_s_front_native32 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+     2217        -     2217        - wires
+     2832        -     2832        - wire bits
+      690        -      690        - public wires
+     1305        -     1305        - public wire bits
+       16        -       16        - ports
+      631        -      631        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+     2186 3.08E+03     2186 3.08E+03 cells
+      301   26.331      301   26.331   AND2x2_ASAP7_75t_R
+        8      0.7        8      0.7   AND3x1_ASAP7_75t_R
+        4    0.408        4    0.408   AND4x1_ASAP7_75t_R
+        3     0.35        3     0.35   AND4x2_ASAP7_75t_R
+        4    0.467        4    0.467   AND5x1_ASAP7_75t_R
+      300   26.244      300   26.244   AO21x1_ASAP7_75t_R
+        1    0.233        1    0.233   AO31x2_ASAP7_75t_R
+        1    0.117        1    0.117   AOI21x1_ASAP7_75t_R
+       43    3.135       43    3.135   BUFx2_ASAP7_75t_R
+        2    0.175        2    0.175   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+       84   31.843       84   31.843   DFFASRHQNx1_ASAP7_75t_R
+      597  174.085      597  174.085   DFFHQNx1_ASAP7_75t_R
+        3    0.612        3    0.612   FAx1_ASAP7_75t_R
+       23    3.018       23    3.018   HAxp5_ASAP7_75t_R
+      683   29.874      683   29.874   INVx1_ASAP7_75t_R
+       10    0.875       10    0.875   NAND2x1_ASAP7_75t_R
+        1     0.16        1     0.16   NAND3x1_ASAP7_75t_R
+       14    1.225       14    1.225   NOR2x1_ASAP7_75t_R
+        2    0.233        2    0.233   OA211x2_ASAP7_75t_R
+       13    1.327       13    1.327   OA21x2_ASAP7_75t_R
+        1    0.146        1    0.146   OA22x2_ASAP7_75t_R
+        3     0.35        3     0.35   OAI21x1_ASAP7_75t_R
+        1    0.146        1    0.146   OAI22x1_ASAP7_75t_R
+        2    0.175        2    0.175   OR2x2_ASAP7_75t_R
+        8      0.7        8      0.7   OR3x1_ASAP7_75t_R
+       17    1.735       17    1.735   OR4x1_ASAP7_75t_R
+        2    0.233        2    0.233   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+        6     1.05        6     1.05   XNOR2x1_ASAP7_75t_R
+       27     4.33       27     4.33   XNOR2x2_ASAP7_75t_R
+       14    2.245       14    2.245   XOR2x2_ASAP7_75t_R
+        5 2.77E+03        5 2.77E+03   ot_sram_1r1w2c_32x64_m1
+
+   Chip area for module '\qkd_kvpc_s_front_native32': 3080.703580
+     of which used for sequential elements: 205.927920 (6.68%)
+
