@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-eeecd476b
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-eeecd476b
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-eeecd476b
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-eeecd476b
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-eeecd476b
+ot-run: ot-agidock128  admits    92 GB (avail 77, growth 13, headroom 0, waiters 0/0 GB) load 14/64 running 11 disk 182 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2547274-1792494789 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 1 resets 30 selected_lines 29270 nonzero_hist_reads 59172 qfault_cycles 198896
+- rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:71: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 2.015 s; speed 198.512 us/s
+- Verilator: cpu 2.015 s on 1 threads; allocated 7 MB
+S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 2 resets 30 selected_lines 29270 nonzero_hist_reads 59172 qfault_cycles 198897
+- rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:71: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 2.027 s; speed 197.363 us/s
+- Verilator: cpu 2.026 s on 1 threads; allocated 7 MB
+S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 3 resets 30 selected_lines 29271 nonzero_hist_reads 59173 qfault_cycles 198898
+- rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:71: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 2.085 s; speed 191.845 us/s
+- Verilator: cpu 2.084 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2547274-1792494789): exit 0

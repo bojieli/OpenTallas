@@ -25,7 +25,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hidx_s3_q u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hidx_s3_q #(.FAST_COUNT(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -179,6 +179,25 @@
     "fail_regex": "S3_EQUIV FAIL",
     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/eq/vrun_c6_s1.log",
     "why": "ctl takes the op tags one edge early (new ctl only)"
+   },
+   {
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "name": "fast_count_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_s3_fast_equiv.sh {RUN}/fast_m0 m0",
+    "expect": "pass",
+    "pass_regex": "S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 3",
+    "pass_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/fast_count/m0.log"
+   },
+   {
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "name": "fast_count_bad_carry",
+    "cmd": "bash rtl/test/hbm_idx_static/run_s3_fast_equiv.sh {RUN}/fast_d7 d7",
+    "expect": "fail",
+    "fail_regex": "S3_FAST_COUNT_MISMATCH",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/fast_count/d7.log",
+    "why": "upper9bit recurrence receives inverted carry, checked on actual counter against original every edge"
    }
   ],
   "calibrate": {
