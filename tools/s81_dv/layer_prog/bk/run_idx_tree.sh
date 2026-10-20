@@ -4,7 +4,7 @@
 # (one build per tx_mut, one run per case dir; each dir gets run.log + verdict.txt).  Verilator = the closure daemon's
 # pinned 5.050 (VL overrides).  Every source the bench reads is listed here.
 # S81-L20 idxrd2 (10-19): TXS=1 builds the TX with SRAM_MACRO 1 (ot_sram_1r1w_1024x256 score store / IDX buffer);
-# XINIT=1 also leaves every macro array uninitialised and randomises it at start (+verilator+rand+reset+2): the tx must
+# XINIT=1 randomises only the TX macro arrays before the first clock: the tx must
 # write every score it reads in the current job (stale-memory / write-before-use proof).
 set -u -o pipefail
 OUT=$1; TXM=$2; shift 2
@@ -37,7 +37,7 @@ rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv
 tools/s81_dv/layer_prog/bk/tb_idx_tree.sv"
 TXS=${TXS:-0}; XINIT=${XINIT:-0}
 XF=""; RF=""
-[ "$XINIT" = 1 ] && { XF="-DOT_MEM_NO_INIT --x-initial unique --x-assign unique"; RF="+verilator+rand+reset+2 +verilator+seed+${SEED:-7}"; }
+[ "$XINIT" = 1 ] && { XF="-DTX_ARRAY_RANDOM"; RF="+verilator+seed+${SEED:-7}"; }
 B="$OUT/build_m${TXM}_s${TXS}_x${XINIT}"
 mkdir -p "$B"
 ( sha256sum $SRC tools/s81_dv/layer_prog/lower_bk.py; $VL --version ) > "$B/sources.sha256"

@@ -27,12 +27,45 @@ module tb_idx_tree;
     reg [V-1:0] a;
     reg [7:0] pt;
     string fn;
+`ifdef TX_ARRAY_RANDOM
+    // Randomize only the physical SRAM arrays. Global --x-initial randomized
+    // unrelated selector reset state and aborted before the first reset edge.
+    function automatic [515:0] random_sram_row;
+        reg [515:0] v;
+        begin
+            v = 0;
+            for (int j = 0; j < 17; j++) v = (v << 32) | 516'($urandom);
+            random_sram_row = v;
+        end
+    endfunction
+`endif
     genvar g;
     generate for (g = 0; g < ND; g = g + 1) begin : d
         dsdv_idx_vmux u_vm (.ck(clk), .rst(rst_n), .i_r({V{1'b0}}), .i_s(i_s[g]), .i_a(i_a[g]), .i_b(i_b[g]), .o(vi_s[g]), .fault(f_vm[g]));
         dsdv_bk_sel u_bk_sel (.clk(clk), .rst_n(rst_n), .tap_k(8'h11), .sink_k(8'h10), .ik(3'd4), .ek(3'd5), .uid(8'h5B),
             .eg_n(1'b0), .vi_s(vi_s[g]), .vo_n(vo_n[g]), .vi_n(vi_n[g]), .vo_s(vo_s[g]), .fault(f_sel[g]));
         dsdv_idx_tx #(.MUT(`TX_MUT), .SRAM_MACRO(`TX_SRAM)) u_tx (.ck(clk), .rst(rst_n), .vi(vi_s[g]), .vo(vo_s[g]), .lo(lo[g]), .st(tst[g]));
+`ifdef TX_ARRAY_RANDOM
+        if (`TX_SRAM) begin : g_array_random
+            for (genvar bank = 0; bank < 8; bank++) begin : g_score
+                initial begin
+                    #0.2;
+                    for (int row = 0; row < 514; row++)
+                        u_tx.u_sm.g_m.g_b[bank].u_mem.arr[row] = random_sram_row();
+                end
+            end
+            initial begin
+                #0.2;
+                for (int row = 0; row < 514; row++)
+                    u_tx.u_ib0.g_m.g_b[0].u_mem.arr[row] = random_sram_row();
+            end
+            initial begin
+                #0.2;
+                for (int row = 0; row < 514; row++)
+                    u_tx.u_ib1.g_m.g_b[0].u_mem.arr[row] = random_sram_row();
+            end
+        end
+`endif
     end endgenerate
     initial begin
         if (!$value$plusargs("STIM=%s", fn)) fn = "stim.txt";
