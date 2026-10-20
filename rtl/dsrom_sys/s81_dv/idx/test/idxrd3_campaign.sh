@@ -22,9 +22,9 @@ if [ ! -x "$D/obj/Vtb_dsdv_idx_rg3" ]; then
   "$VL" --version > "$D/build.log"
   sha256sum "${SRC[@]}" >> "$D/build.log"
   # shellcheck disable=SC2086
-  "$VL" --binary --timing -j 16 --top-module tb_dsdv_idx_rg3 -O2 -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
+  "$VL" --binary --timing -j ${VL_J:-8} --top-module tb_dsdv_idx_rg3 -O2 -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
     -Wno-TIMESCALEMOD -Wno-BLKSEQ -Wno-INITIALDLY $G --Mdir "$D/obj" "${SRC[@]}" >> "$D/build.log" 2>&1 \
-    || { "$VL" --binary --timing -j 16 --top-module tb_dsdv_idx_rg3 -O2 -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
+    || { "$VL" --binary --timing -j ${VL_J:-8} --top-module tb_dsdv_idx_rg3 -O2 -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
          -Wno-TIMESCALEMOD -Wno-BLKSEQ -Wno-INITIALDLY $G --Mdir "$D/obj" "${SRC[@]}" >> "$D/build.log" 2>&1; } \
     || { echo "$BN BUILD_FAILED"; grep -m5 -E '%Error' "$D/build.log"; echo "IDXRD_CAMPAIGN FAIL"; exit 2; }
 fi

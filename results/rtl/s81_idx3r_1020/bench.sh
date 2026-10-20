@@ -1,7 +1,7 @@
 #!/bin/bash
 # S81-IDX3R bench builds (run from $S/src on the fleet host): $1 = build name.  Verilator 5.050.
-S=/srv/opentallas-scratch/claude/s81-idx3r-1020; cd $S/src || exit 3
-C=rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh; O=$S/out; K=results/rtl/s81_idx3r_1020/run_ctrl3.sh
+S=/srv/opentallas-scratch/claude/s81-idx3r-1020; cd $S/${IDX3R_SRC:-src} || exit 3
+C=rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh; O=$S/${IDX3R_OUT:-out}; K=results/rtl/s81_idx3r_1020/run_ctrl3.sh
 case $1 in
 lint) VL=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
   for t in dsdv_idx_rg3 dsfd_ctrl_rg3; do echo "== $t"

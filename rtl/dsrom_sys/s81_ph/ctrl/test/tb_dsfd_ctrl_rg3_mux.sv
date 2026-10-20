@@ -7,13 +7,15 @@
 // Phases (cks cycles): 1 svc (random, both PCs) | gap | 2 reader window on C (sl = 1 on both lanes; the bench reader
 // issues random reads within its RFD budget, counting pops; PHY slow phase) | gap | 3 svc again.
 // Checks:
-//   (1) A == B: rd[561:0] and the whole PHY face bit-identical EVERY cycle (reader logic transparent when idle);
+//   (1) A == B: rd[561:0] and the whole PHY face bit-identical EVERY cycle (reader logic transparent when idle), B's
+//       reader lanes never valid / pop;
 //   (2) A vs C: every svc-visible rd bit identical every cycle: {fault, live}, and per PC {wd, rk, rv} and, when rv,
 //       {beat, tag, data} (reader responses never leak into rd; reader rk is filtered by the owner FIFO);
 //   (3) C reader lanes: every reader request returns exactly its len beats in order per PC with the PHY data, tag10 and
 //       beat; pops == requests; no lane word outside the window; C status fault 0.
 //   +SLOTHIT=1: one svc read inside C's reader window (schedule violation, applied to A and B too): C must raise its
-//       status fault (fail-closed) and its reader traffic stays complete -> PASS; (2) is skipped for this case.
+//       status fault (fail-closed), drop the word (no svc request at C's PHY inside the window) and its reader traffic
+//       stays complete -> PASS; (2) is skipped for this case.
 // MUT = dsfd_ctrl_rg3 MUT (1 demux on tag[16], 2 rk unfiltered, 3 reader moves ignore the PC budget, 4 slice priority
 // without fault): each must print TB_CTRL3 FAIL.  Prints TB_CTRL3 PASS / FAIL and a TB_CTRL3_STATS line.
 module tb_dsfd_ctrl_rg3_mux;
@@ -62,6 +64,7 @@ module tb_dsfd_ctrl_rg3_mux;
     function automatic [255:0] pdat(input [29:0] a, input integer pc);
         pdat = {8{mix(64'h5100_0000 + 64'(a) * 4 + pc)}};
     endfunction
+    integer errs = 0, e_ab = 0, e_ac = 0, e_rd = 0, n_rq = 0, n_beats = 0, n_pop = 0, n_svrq = 0, own [0:1];
     typedef struct packed { longint rdy_t; logic [29:0] a; logic [3:0] ln; logic [16:0] tg; logic we; } ent_t;
     genvar gi, gp;
     generate for (gi = 0; gi < 3; gi = gi + 1) begin : g_phy
@@ -73,6 +76,9 @@ module tb_dsfd_ctrl_rg3_mux;
             assign krd[gi][256 * gp +: 256] = rdat; assign kwd[gi][gp] = wdn;
             always @(posedge ckh) begin
                 wdn <= 1'b0;
+                if (gi == 2 && slow && kv[gi][gp] && krdy[gi][gp] && ktg[gi][17 * gp + 15 +: 2] != 2'b11) begin
+                    e_rd = e_rd + 1; $display("TB_CTRL3 svc request at C's PHY inside the reader window (pc %0d tag %h)", gp, ktg[gi][17 * gp +: 17]);
+                end
                 if (kv[gi][gp] && krdy[gi][gp])
                     q.push_back('{hcyc + LAT, kad[gi][30 * gp +: 30], kln[gi][4 * gp +: 4], ktg[gi][17 * gp +: 17], kwe[gi][gp]});
                 if (rv && krrdy[gi][gp]) rv <= 1'b0;
@@ -87,7 +93,6 @@ module tb_dsfd_ctrl_rg3_mux;
         end
     end endgenerate
     // ------------------------------------------------------------------ checks
-    integer errs = 0, e_ab = 0, e_ac = 0, e_rd = 0, n_rq = 0, n_beats = 0, n_pop = 0, n_svrq = 0, own [0:1];
     initial begin own[0] = 0; own[1] = 0; end
     typedef struct packed { logic [29:0] a; logic [3:0] ln; logic [9:0] t; } rq_t;
     rq_t rqq [0:1][$];
@@ -97,7 +102,7 @@ module tb_dsfd_ctrl_rg3_mux;
         integer p; reg [279:0] wa, wc; reg [271:0] l;
         // (1) A == B, whole face
         if (rd_a !== rd_b || kv[0] !== kv[1] || kad[0] !== kad[1] || kln[0] !== kln[1] || ktg[0] !== ktg[1] || kwe[0] !== kwe[1] ||
-            kwdat[0] !== kwdat[1] || kws[0] !== kws[1] || krrdy[0] !== krrdy[1] || rrd_b !== 544'd0) begin
+            kwdat[0] !== kwdat[1] || kws[0] !== kws[1] || krrdy[0] !== krrdy[1] || rrd_b[1:0] !== 2'd0 || rrd_b[273:272] !== 2'd0) begin
             e_ab = e_ab + 1; if (e_ab <= 4) $display("TB_CTRL3 A!=B cyc %0d", cyc - t0);
         end
         // (2) A vs C, svc-visible
@@ -142,7 +147,7 @@ module tb_dsfd_ctrl_rg3_mux;
         k = 0;
         while (cyc - t0 < P1B && k < NSV) begin
             @(negedge ck); rq = 0;
-            for (p = 0; p < 2; p = p + 1) if (mix(64'h5500_0000 + (cyc - t0) * 2 + p) % 6 == 0) begin
+            for (p = 0; p < 2; p = p + 1) if (mix(64'h5500_0000 + (cyc - t0) * 2 + p) % 8 == 0) begin
                 rq[341 * p +: 341] = svc_word(k, p); n_svrq = n_svrq + 1; k = k + 1; end
         end
         @(negedge ck); rq = 0;
@@ -154,7 +159,7 @@ module tb_dsfd_ctrl_rg3_mux;
         while (cyc - t0 < P2B - 600) begin
             @(negedge ck);
             rrq_c[0] = 0; rrq_c[46] = 0;
-            if (SLOTHIT != 0 && cyc - t0 == P2A + 300) begin rq[340:0] = svc_word(9999, 0); n_svrq = n_svrq + 1; end
+            if (SLOTHIT != 0 && cyc - t0 == P2A + 12) begin rq[340:0] = svc_word(9999, 0); n_svrq = n_svrq + 1; end
             else rq = 0;
             for (p = 0; p < 2; p = p + 1) if (k < NRQ && own[p] < RFD && mix(64'h5600_0000 + (cyc - t0) * 2 + p) % 3 == 0) begin : g_i
                 rq_t w;
@@ -172,7 +177,7 @@ module tb_dsfd_ctrl_rg3_mux;
         k = 10000;
         while (cyc - t0 < P3B && k < 10000 + NSV) begin
             @(negedge ck); rq = 0;
-            for (p = 0; p < 2; p = p + 1) if (mix(64'h5800_0000 + (cyc - t0) * 2 + p) % 6 == 0) begin
+            for (p = 0; p < 2; p = p + 1) if (mix(64'h5800_0000 + (cyc - t0) * 2 + p) % 8 == 0) begin
                 rq[341 * p +: 341] = svc_word(k, p); n_svrq = n_svrq + 1; k = k + 1; end
         end
         @(negedge ck); rq = 0;
@@ -182,6 +187,7 @@ module tb_dsfd_ctrl_rg3_mux;
         if (SLOTHIT != 0) begin
             if (rd_c[561] !== 1'b1) begin e_rd = e_rd + 1; $display("TB_CTRL3 slot hit NOT flagged (fail-open)"); end
         end else if (rd_c[561] !== 1'b0 || rd_a[561] !== 1'b0) begin e_rd = e_rd + 1; $display("TB_CTRL3 status fault a %b c %b", rd_a[561], rd_c[561]); end
+        $display("TB_CTRL3_FAULTS c: chain %b reader-face pc0 %b pc1 %b", u_c.co1, u_c.g_pc[0].f_, u_c.g_pc[1].f_);
         errs = e_ab + e_ac + e_rd;
         $display("TB_CTRL3_STATS mut %0d seed %0d slothit %0d svc_rq %0d rd_rq %0d rd_beats %0d pops %0d e_ab %0d e_ac %0d e_rd %0d",
                  MUT, SEED, SLOTHIT, n_svrq, n_rq, n_beats, n_pop, e_ab, e_ac, e_rd);

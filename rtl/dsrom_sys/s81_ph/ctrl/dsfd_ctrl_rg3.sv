@@ -61,11 +61,21 @@ module dsfd_ctrl_rg3 #(
     input  wire [7:0]     kr_beat,
     input  wire [511:0]   kr_data
 );
-    initial if (RFD < 2 || RFD > 31 || DQ > 15) $fatal(1, "dsfd_ctrl_rg3: RFD / DQ range");
+    initial if (RFD < 4 || RFD > 31 || RFD % 2 != 0 || DQ > 11 || DQ < 2) $fatal(1, "dsfd_ctrl_rg3: RFD / DQ range");
     localparam integer CW = 5;                       // landing FIFO count width (RFD <= 31)
-    // reader-face reset: 2-flop landing + relay leaves (control bits only)
-    wire [11:0] rr;
-    ot_rst_relay #(.REGIONS(12), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    localparam integer NWC = 4;                      // landing write-enable copies a entry (11 bits each)
+    localparam integer NRC = 4;                      // read-pointer copies (11 bits of the head word each)
+    localparam integer NMV = 2 * NRC + 2;            // move-decision copies: 2 a read-pointer copy (half each), counts, pop
+    localparam integer OQ = 12;                      // owner FIFO entries (>= DQ + the channel's pin / write stages)
+    // reader-face reset: the regional leaf lands in 2 flops (u_srs), then relay leaves (control bits only)
+    wire srst_n;
+    ot_s81ph_sync u_srs (.clk(clk), .rst_n(rst_n), .d(1'b1), .q(srst_n));
+    localparam integer RL = 11;                      // reset leaves a PC (<= ~25 control flops each)
+    wire [2*RL-1:0] rr;
+    wire [1:0] rt;                                   // 2-level forest: srst_n -> 2 PC roots -> RL leaves each
+    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rt (.clk(clk), .rst_n_in(srst_n), .rst_n(rt));
+    ot_rst_relay #(.REGIONS(RL), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr0 (.clk(clk), .rst_n_in(rt[0]), .rst_n(rr[RL-1:0]));
+    ot_rst_relay #(.REGIONS(RL), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr1 (.clk(clk), .rst_n_in(rt[1]), .rst_n(rr[2*RL-1:RL]));
 
     wire [1:0] co0, co1;
     wire [1:0] s_ovf;
@@ -74,90 +84,105 @@ module dsfd_ctrl_rg3 #(
     generate for (p = 0; p < 2; p = p + 1) begin : g_pc
         // ------------------------------------------------------------ reader lane pin + landing FIFO write
         reg         lv, lsl;
+        reg         lvw;                             // write stage valid
         reg  [43:0] ld;                              // {tag10, len 4, addr 30}
-        (* keep = "true" *) reg [2:0] lvk;           // lane valid copies (write enables / pointer / count)
-        always @(posedge clk or negedge rr[6 * p])
-            if (!rr[6 * p]) begin lv <= 1'b0; lsl <= 1'b0; lvk <= 3'd0; end
-            else begin lv <= rrq[46 * p]; lsl <= rrq[46 * p + 1]; lvk <= {3{rrq[46 * p]}}; end
+        (* keep = "true" *) reg [NWC+1:0] lvk;       // lane valid copies: NWC write-enable groups, 2 pointer halves
+        always @(posedge clk or negedge rr[RL * p])
+            if (!rr[RL * p]) begin lv <= 1'b0; lsl <= 1'b0; lvk <= '0; lvw <= 1'b0; end
+            else begin lv <= rrq[46 * p]; lsl <= rrq[46 * p + 1]; lvk <= {(NWC+2){rrq[46 * p]}}; lvw <= lvk[NWC]; end
         always @(posedge clk) ld <= rrq[46 * p + 2 +: 44];
         reg  [43:0] wd;                              // write stage data
-        reg         lvw;                             // write stage valid
-        (* keep = "true" *) reg [RFD-1:0] wea, web;  // entry write enables (entry halves)
+        (* keep = "true" *) reg [NWC*RFD-1:0] wec;   // entry write enables: wec[RFD c + e], copy c = bits 11 c +: 11
         reg  [RFD-1:0] wp;                           // write pointer (one-hot)
-        reg  [RFD-1:0][43:0] ent;
+        reg  [44*RFD-1:0] ent;                       // entry e = ent[44 e +: 44]
         always @(posedge clk) wd <= ld;
-        always @(posedge clk or negedge rr[6 * p + 1])
-            if (!rr[6 * p + 1]) begin lvw <= 1'b0; wea <= '0; web <= '0; wp <= RFD'(1); end
-            else begin
-                lvw <= lvk[2];
-                wea <= {RFD{lvk[0]}} & wp; web <= {RFD{lvk[1]}} & wp;
-                if (lvk[2]) wp <= {wp[RFD-2:0], wp[RFD-1]};
-            end
-        integer e;
-        always @(posedge clk) for (e = 0; e < RFD; e = e + 1) begin
-            if (wea[e]) ent[e][21:0]  <= wd[21:0];
-            if (web[e]) ent[e][43:22] <= wd[43:22];
-        end
+        integer e, c;
+        // write enables carry no reset (lvk is reset: they settle to 0 one edge into the reset; a stray power-on write
+        // lands in an entry that is not counted)
+        always @(posedge clk) for (c = 0; c < NWC; c = c + 1) wec[RFD * c +: RFD] <= {RFD{lvk[c]}} & wp;
+        always @(posedge clk or negedge rr[RL * p + 1])
+            if (!rr[RL * p + 1]) wp <= RFD'(1);
+            else for (e = 0; e < RFD; e = e + 1) if (lvk[NWC + (e >= RFD / 2 ? 1 : 0)]) wp[e] <= wp[(e + RFD - 1) % RFD];
+        always @(posedge clk) for (e = 0; e < RFD; e = e + 1) for (c = 0; c < NWC; c = c + 1)
+            if (wec[RFD * c + e]) ent[44 * e + 11 * c +: 11] <= wd[11 * c +: 11];
         // ------------------------------------------------------------ move decision (reader slot, FIFO not empty, room)
-        (* keep = "true" *) reg [2:0] wnk, nek, rmk;    // window / not-empty / room copies [group]
+        (* keep = "true" *) reg [NMV-1:0] wnk, nek, rmk;  // window / not-empty / room copies [group]
         (* keep = "true" *) reg [21:0] selk;            // input-select copies (16 bits each): registered sl
-        wire [2:0] mv;                               // move decision copies: 0 pointers, 1 counts / owner, 2 lane pop
-        assign mv[0] = wnk[0] & nek[0] & rmk[0];
-        assign mv[1] = wnk[1] & nek[1] & rmk[1];
-        assign mv[2] = wnk[2] & nek[2] & rmk[2];
-        (* keep = "true" *) reg [RFD-1:0] rpa, rpb;  // read pointer copies (entry halves)
+        (* keep = "true" *) reg [1:0]  sln;             // registered sl for the control terms
+        wire [NMV-1:0] mv = wnk & nek & rmk;         // move decision copies
+        (* keep = "true" *) reg [NRC*RFD-1:0] rpc;   // read pointer copies rpc[RFD c + x], copy c reads bits 11 c +: 11
         reg  [43:0] hw;                              // head word (read every edge)
         reg  [CW-1:0] cnt;                           // landed, not moved
-        reg  [3:0]  n;                               // requests in the PC channel (decisions - rk)
+        reg  [3:0]  n;                               // requests in the PC channel (decisions + slice words - rk)
         (* keep = "true" *) reg [1:0] dk;            // a move presented to the PC this edge (registered decision)
         reg [43:0] hw_n;
         always @* begin : g_hw
-            integer x;
+            integer x, y;
             hw_n = '0;
-            for (x = 0; x < RFD; x = x + 1) begin
-                hw_n[21:0]  = hw_n[21:0]  | ({22{rpa[x]}} & ent[x][21:0]);
-                hw_n[43:22] = hw_n[43:22] | ({22{rpb[x]}} & ent[x][43:22]);
-            end
+            for (x = 0; x < RFD; x = x + 1) for (y = 0; y < NRC; y = y + 1)
+                hw_n[11 * y +: 11] = hw_n[11 * y +: 11] | ({11{rpc[RFD * y + x]}} & ent[44 * x + 11 * y +: 11]);
         end
         always @(posedge clk) hw <= hw_n;
-        // the slice word's valid at the pin (rg2 path) and the word that enters the PC channel this edge
+        // the slice word's valid at the pin: one load into the channel mux; the accounting uses registered terms
         wire        sv = rq[341 * p];
-        wire        sl_now = selk[0];
         wire        sp = (MUT == 4) && sv;           // MUT 4: slice word priority in a reader slot
-        wire        enter_s = sv && (!sl_now || sp); // slice word enters
         wire        rk_w;
-        reg  [15:0] own, owp, orp;                   // owner FIFO: 1 = reader, one-hot pointers
+        reg         ent_q;                           // a slice word entered the channel last edge (counted one late)
+        reg         hit_q;                           // a slice word arrived in a reader slot last edge
+        (* keep = "true" *) reg [2:0] psh;           // owner push copies (pointer, entries, count), one edge late
+        reg         psh_v;                           // owner bit of that push (1 = reader)
+        (* keep = "true" *) reg [1:0] rkq;           // rk one edge late (owner pops)
+        reg  [OQ-1:0] own, owp, orp;                 // owner FIFO: 1 = reader, one-hot pointers
         reg  [4:0]  own_n;
-        wire        own_h = |(own & orp);
-        wire        push = sl_now ? (dk[0] || sp) : sv;
-        wire        push_r = sl_now && dk[1] && !sp;
-        always @(posedge clk or negedge rr[6 * p + 2])
-            if (!rr[6 * p + 2]) begin
-                wnk <= 3'd0; nek <= 3'd0; rmk <= 3'b111; selk <= '0; dk <= 2'd0; cnt <= '0; n <= 4'd0;
-            end else begin : g_mv
-                reg [CW-1:0] c_; reg [4:0] n_;
-                wnk <= {3{rrq[46 * p + 1]}}; selk <= {22{lsl}};   // wnk = sl at the pin = selk one edge later
-                dk <= {2{mv[1]}};
-                c_ = cnt + (lvw ? CW'(1) : CW'(0)) - (mv[1] ? CW'(1) : CW'(0));
-                cnt <= c_;
-                nek <= {3{c_ != '0}};
-                n_ = 5'(n) + (mv[1] ? 5'd1 : 5'd0) + (enter_s ? 5'd1 : 5'd0) - (rk_w ? 5'd1 : 5'd0);
-                n <= 4'(n_);
-                rmk <= (MUT == 3) ? 3'b111 : {3{n_ < 5'(DQ)}};
-            end
-        always @(posedge clk or negedge rr[6 * p + 3])
-            if (!rr[6 * p + 3]) begin rpa <= RFD'(1); rpb <= RFD'(1); end
-            else if (mv[0]) begin rpa <= {rpa[RFD-2:0], rpa[RFD-1]}; rpb <= {rpb[RFD-2:0], rpb[RFD-1]}; end
-        // owner FIFO (in order with the channel's rk)
-        always @(posedge clk or negedge rr[6 * p + 4])
-            if (!rr[6 * p + 4]) begin owp <= 16'd1; orp <= 16'd1; own_n <= 5'd0; end
+        reg         own_hr;                          // owner of the request the channel's rk returns this edge
+        // selk carries no reset (lsl is reset: 0 one edge into the reset, while the channel is held in reset too)
+        always @(posedge clk) selk <= {22{lsl}};
+        wire [CW-1:0] c_n = cnt + (lvw ? CW'(1) : CW'(0)) - (mv[2 * NRC] ? CW'(1) : CW'(0));
+        // the slice word of last edge is counted now: one entry of margin (DQ - 1) covers it
+        wire [4:0]    n_n = 5'(n) + (mv[2 * NRC] ? 5'd1 : 5'd0) + (ent_q ? 5'd1 : 5'd0) - (rk_w ? 5'd1 : 5'd0);
+        always @(posedge clk or negedge rr[RL * p + 2])
+            if (!rr[RL * p + 2]) begin wnk <= '0; nek <= '0; end
+            else begin wnk <= {NMV{rrq[46 * p + 1]}}; nek <= {NMV{c_n != '0}}; end   // wnk = sl at the pin = selk one edge later
+        always @(posedge clk or negedge rr[RL * p + 3])
+            if (!rr[RL * p + 3]) begin rmk <= '1; sln <= 2'd0; dk <= 2'd0; cnt <= '0; n <= 4'd0; end
             else begin
-                if (push) owp <= {owp[14:0], owp[15]};
-                if (rk_w) orp <= {orp[14:0], orp[15]};
-                own_n <= own_n + (push ? 5'd1 : 5'd0) - (rk_w ? 5'd1 : 5'd0);
+                sln <= {2{lsl}}; dk <= {2{mv[2 * NRC]}}; cnt <= c_n; n <= 4'(n_n);
+                rmk <= (MUT == 3) ? '1 : {NMV{n_n < 5'(DQ - 1)}};
+            end
+        always @(posedge clk or negedge rr[RL * p + 4])
+            if (!rr[RL * p + 4]) begin ent_q <= 1'b0; hit_q <= 1'b0; psh <= 3'd0; psh_v <= 1'b0; end
+            else begin
+                ent_q <= sv && (!sln[0] || sp);
+                hit_q <= sv && sln[0];
+                psh <= {3{sln[0] ? (dk[0] || sp) : sv}};
+                psh_v <= sln[0] && dk[1] && !sp;
+            end
+        genvar gy;
+        for (gy = 0; gy < NRC; gy = gy + 1) begin : g_rp            // one reset leaf a read-pointer copy
+            integer x2;
+            always @(posedge clk or negedge rr[RL * p + 5 + gy])
+                if (!rr[RL * p + 5 + gy]) rpc[RFD * gy +: RFD] <= RFD'(1);
+                else for (x2 = 0; x2 < RFD; x2 = x2 + 1)
+                    if (mv[2 * gy + (x2 >= RFD / 2 ? 1 : 0)]) rpc[RFD * gy + x2] <= rpc[RFD * gy + (x2 + RFD - 1) % RFD];
+        end
+        // owner FIFO (in order with the channel's rk; push and pop one edge late, the rk owner precomputed)
+        wire [OQ-1:0] orp1 = rkq[0] ? {orp[OQ-2:0], orp[OQ-1]} : orp;    // head after the pending pop
+        wire [OQ-1:0] orp2 = {orp1[OQ-2:0], orp1[OQ-1]};
+        always @(posedge clk or negedge rr[RL * p + 9])
+            if (!rr[RL * p + 9]) begin owp <= OQ'(1); rkq <= 2'd0; own_hr <= 1'b0; end
+            else begin
+                if (psh[0]) owp <= {owp[OQ-2:0], owp[OQ-1]};
+                rkq <= {2{rk_w}};
+                own_hr <= rk_w ? |(own & orp2) : |(own & orp1);
+            end
+        always @(posedge clk or negedge rr[RL * p + 10])
+            if (!rr[RL * p + 10]) begin orp <= OQ'(1); own_n <= 5'd0; end
+            else begin
+                if (rkq[0]) orp <= {orp[OQ-2:0], orp[OQ-1]};
+                own_n <= own_n + (psh[2] ? 5'd1 : 5'd0) - (rkq[1] ? 5'd1 : 5'd0);
             end
         integer o;
-        always @(posedge clk) for (o = 0; o < 16; o = o + 1) if (push && owp[o]) own[o] <= push_r;
+        always @(posedge clk) for (o = 0; o < OQ; o = o + 1) if (psh[1] && owp[o]) own[o] <= psh_v;
         // ------------------------------------------------------------ the PC channel input: slice word or reader move
         wire [340:0] rdw = {256'd0, 32'd0, 2'b11, hw[43:34], 5'd0, hw[33:30], hw[29:0], 1'b0, dk[0]};
         wire [340:0] rq_pc;
@@ -186,26 +211,24 @@ module dsfd_ctrl_rg3 #(
             .kr_beat(kr_beat[p*4 +: 4]), .kr_data(kr_data[p*256 +: 256]));
         // ------------------------------------------------------------ return demux
         wire rtr = (MUT == 1) ? rtag[16] : (rtag[16] & rtag[15]);   // reader-tag range
-        assign rd[p*280 +: 280] = {wd_w, (MUT == 2) ? rk_w : (rk_w && !own_h), rv_w && !rtr, rbeat, rtag, rdat};
-        always @(posedge clk or negedge rr[6 * p + 5])
-            if (!rr[6 * p + 5]) begin rrd[272 * p] <= 1'b0; rrd[272 * p + 1] <= 1'b0; end
-            else begin rrd[272 * p] <= rv_w && rtr; rrd[272 * p + 1] <= mv[2]; end
+        assign rd[p*280 +: 280] = {wd_w, (MUT == 2) ? rk_w : (rk_w && !own_hr), rv_w && !rtr, rbeat, rtag, rdat};
+        always @(posedge clk or negedge rr[RL * p + 4])
+            if (!rr[RL * p + 4]) begin rrd[272 * p] <= 1'b0; rrd[272 * p + 1] <= 1'b0; end
+            else begin rrd[272 * p] <= rv_w && rtr; rrd[272 * p + 1] <= mv[2 * NRC + 1]; end
         always @(posedge clk) rrd[272 * p + 2 +: 270] <= {rdat, rtag[14:5], rbeat};
         // ------------------------------------------------------------ reader-face faults (sticky)
         reg f_;
-        always @(posedge clk or negedge rr[6 * p + 5])
-            if (!rr[6 * p + 5]) f_ <= 1'b0;
-            else if ((sv && sl_now && MUT != 4)                     // slice word in a reader slot (MUT 4: no check)
-                     || (lvw && cnt == CW'(RFD) && !mv[1])          // landing FIFO overflow
-                     || own_n > 5'd16                               // owner FIFO overflow
+        always @(posedge clk or negedge rr[RL * p + 4])
+            if (!rr[RL * p + 4]) f_ <= 1'b0;
+            else if ((hit_q && MUT != 4)                            // slice word in a reader slot (MUT 4: no check)
+                     || (lvw && cnt == CW'(RFD) && !mv[2 * NRC])    // landing FIFO overflow
+                     || own_n > 5'(OQ)                              // owner FIFO overflow
                      || (lv && !lsl)) f_ <= 1'b1;                   // reader request outside its window
         assign rflt[p] = f_;
         if (p == 0) begin : g_c0 assign co0 = co; end
         else        begin : g_c1 assign co1 = co; end
     end endgenerate
     // regional status register: rg2's chain + the reader-face faults
-    wire srst_n;
-    ot_s81ph_sync u_srs (.clk(clk), .rst_n(rst_n), .d(1'b1), .q(srst_n));
     reg [1:0] st;
     always @(posedge clk or negedge srst_n)
         if (!srst_n) st <= 2'b00;
