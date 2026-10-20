@@ -1,0 +1,568 @@
+{
+  "status": "MODEL_ONLY_NO_RTL_NO_GATE",
+  "source": {
+    "head_commit": "abc18b45125eb414cfd775ed2ee1e954e069f55b",
+    "head_path": "results/rtl/qw_head_safe32_1020/bound_r3/native32_param.v",
+    "head_sha256": "b790c4dcf3eeb00a6183e4670b1a56c10608dc43a31a835b20dd4a4803f8ff02",
+    "parent_commit": "77ee6b343",
+    "parent_path": "rtl/qwen_dv/lp7_np/qfd_tt_ctlm_dv_np_lp.sv",
+    "parent_sha256": "bd9f4a8119bf9698662b59f4bebfc9c4eaa01004cb63fd1901709df35aeb3df4",
+    "parent_floorplan_sha256": "6988be21b9ac2db5f84d6d3af9efcd39d725e65a25277c5ca1053ebaadcc4c64",
+    "old_head_LEF_sha256": "7f4ced565455b0641f3e2ed6bc1a49b44b13e7af09a32482351b5366e917c151"
+  },
+  "clock_contract": {
+    "existing_head_ports": {
+      "ck_head": "n_1145",
+      "ck_pm0": "n_1146",
+      "ck_pm1": "n_1147"
+    },
+    "actual_parent_child_clock_connections": {
+      "ck_head": "n_3140",
+      "ck_pm0": "n_3140",
+      "ck_pm1": "n_3140"
+    },
+    "actual_parent_feed_equation": "n_3140 = ck_hr",
+    "declared_relationship": {
+      "kind": "same_pll_fixed_phase",
+      "ratio": [
+        1,
+        1
+      ],
+      "phase_ps": 0
+    },
+    "proposed_head_port": "one scalar ck_head; wrapper binds all3 existing body clocks to that physical root",
+    "data_edges_added": 0,
+    "arithmetic_MACs_per_cycle": 0,
+    "native_standard_clock_sinks": 8068,
+    "real_SRAM_clock_pins": 8,
+    "complete_root_sink_count": 8076,
+    "required_complete_TT_FF_envelope_ps": 80,
+    "no_gate_mode_relabel": "New one-input leaf-owned mixed standard+SRAM physical tree, all macros separate real leaves; original multiple_cts_roots contract retired. Source alias identity is valid only under actual samePLL1:1 phase0 parent feed."
+  },
+  "memory": {
+    "instances": [
+      {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "instance": "u_34889",
+        "clock_wire": "n_1146"
+      },
+      {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "instance": "u_34890",
+        "clock_wire": "n_1147"
+      },
+      {
+        "master": "ot_sram_1r1w_32x128_m1",
+        "instance": "u_34891",
+        "clock_wire": "n_1146"
+      },
+      {
+        "master": "ot_sram_1r1w_32x128_m1",
+        "instance": "u_34892",
+        "clock_wire": "n_1146"
+      },
+      {
+        "master": "ot_sram_1r1w_32x128_m1",
+        "instance": "u_34893",
+        "clock_wire": "n_1146"
+      },
+      {
+        "master": "ot_sram_1r1w_32x128_m1",
+        "instance": "u_34894",
+        "clock_wire": "n_1146"
+      },
+      {
+        "master": "ot_sram_1r1w_32x128_m1",
+        "instance": "u_34895",
+        "clock_wire": "n_1147"
+      },
+      {
+        "master": "ot_sram_1r1w_32x128_m1",
+        "instance": "u_34896",
+        "clock_wire": "n_1147"
+      }
+    ],
+    "retained_instances": 8,
+    "SRAM_bits": 90112,
+    "max_physical_read_capacity_bits_per_cycle": 1792,
+    "max_physical_write_capacity_bits_per_cycle": 1792,
+    "capacity_is_not_measured_sustained_traffic": true,
+    "program_ingress_payload_bits_per_cycle": 64,
+    "no_new_storage": true
+  },
+  "boundary": {
+    "ports": [
+      {
+        "direction": "input",
+        "port": "rom_ret_i",
+        "bits": 95
+      },
+      {
+        "direction": "input",
+        "port": "cp_active",
+        "bits": 1
+      },
+      {
+        "direction": "output",
+        "port": "cp",
+        "bits": 56
+      },
+      {
+        "direction": "output",
+        "port": "me_image_ready",
+        "bits": 1
+      },
+      {
+        "direction": "output",
+        "port": "program_obs",
+        "bits": 76
+      },
+      {
+        "direction": "output",
+        "port": "layer_context_v",
+        "bits": 1
+      },
+      {
+        "direction": "output",
+        "port": "native_tok",
+        "bits": 18
+      },
+      {
+        "direction": "output",
+        "port": "native_pos",
+        "bits": 18
+      },
+      {
+        "direction": "output",
+        "port": "rom_cmd",
+        "bits": 380
+      },
+      {
+        "direction": "output",
+        "port": "command_stage",
+        "bits": 6
+      },
+      {
+        "direction": "output",
+        "port": "native_cmd",
+        "bits": 380
+      },
+      {
+        "direction": "output",
+        "port": "me_observe",
+        "bits": 16
+      },
+      {
+        "direction": "input",
+        "port": "native_ret",
+        "bits": 95
+      },
+      {
+        "direction": "input",
+        "port": "ck_head",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "ck_pm0",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "ck_pm1",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "rst_n",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "h_start",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "stage_start",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "stage",
+        "bits": 6
+      },
+      {
+        "direction": "input",
+        "port": "token",
+        "bits": 18
+      },
+      {
+        "direction": "input",
+        "port": "pos",
+        "bits": 18
+      },
+      {
+        "direction": "input",
+        "port": "prog_base",
+        "bits": 12
+      },
+      {
+        "direction": "input",
+        "port": "pw_v",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "pw_addr",
+        "bits": 10
+      },
+      {
+        "direction": "input",
+        "port": "pw_data",
+        "bits": 64
+      },
+      {
+        "direction": "input",
+        "port": "x_oacc",
+        "bits": 24
+      },
+      {
+        "direction": "input",
+        "port": "x_oidle",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "x_oprog",
+        "bits": 16
+      },
+      {
+        "direction": "input",
+        "port": "x_orows",
+        "bits": 16
+      },
+      {
+        "direction": "input",
+        "port": "kv_ok",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "kv_write_drained",
+        "bits": 1
+      },
+      {
+        "direction": "input",
+        "port": "me_mem_ok",
+        "bits": 1
+      },
+      {
+        "direction": "output",
+        "port": "m_fin_o",
+        "bits": 1
+      },
+      {
+        "direction": "output",
+        "port": "m_fidx_o",
+        "bits": 18
+      },
+      {
+        "direction": "output",
+        "port": "m_fval_o",
+        "bits": 32
+      },
+      {
+        "direction": "output",
+        "port": "kvd_v",
+        "bits": 1
+      },
+      {
+        "direction": "output",
+        "port": "kvd_wbase",
+        "bits": 24
+      },
+      {
+        "direction": "output",
+        "port": "kvd_ts",
+        "bits": 24
+      },
+      {
+        "direction": "output",
+        "port": "kvd_ks",
+        "bits": 24
+      },
+      {
+        "direction": "output",
+        "port": "kvd_js",
+        "bits": 24
+      },
+      {
+        "direction": "output",
+        "port": "kvd_wcs",
+        "bits": 24
+      },
+      {
+        "direction": "output",
+        "port": "kvd_split",
+        "bits": 4
+      },
+      {
+        "direction": "output",
+        "port": "kvd_jsh",
+        "bits": 3
+      },
+      {
+        "direction": "output",
+        "port": "kvd_tiles",
+        "bits": 18
+      },
+      {
+        "direction": "output",
+        "port": "kvd_k",
+        "bits": 18
+      },
+      {
+        "direction": "output",
+        "port": "kvd_nout",
+        "bits": 18
+      },
+      {
+        "direction": "output",
+        "port": "kvd_kindk",
+        "bits": 1
+      },
+      {
+        "direction": "output",
+        "port": "kvd_pos",
+        "bits": 18
+      },
+      {
+        "direction": "output",
+        "port": "me_clk_en",
+        "bits": 1
+      },
+      {
+        "direction": "output",
+        "port": "c_fault",
+        "bits": 1
+      }
+    ],
+    "input_bits_excluding_clocks": 383,
+    "output_bits": 1206,
+    "clock_pins_delta": -2,
+    "data_pin_or_datapath_stage_delta": 0,
+    "sustained_throughput": "Original static head protocol, no arithmetic/event schedule stage added by clock aliases. Production sustained traffic still requires exact-source bench receipt; SRAM capacity figures are upper bounds only."
+  },
+  "reset_model": {
+    "raw_contacts_original": [
+      {
+        "instance": "u_0",
+        "D": "1'b1",
+        "Q": "n_1593"
+      },
+      {
+        "instance": "u_1",
+        "D": "n_1593",
+        "Q": "n_1594"
+      },
+      {
+        "instance": "u_36184",
+        "D": "n_1593",
+        "Q": "n_50001"
+      },
+      {
+        "instance": "u_36203",
+        "D": "n_1593",
+        "Q": "n_50020"
+      },
+      {
+        "instance": "u_36211",
+        "D": "n_1593",
+        "Q": "n_50028"
+      }
+    ],
+    "preferred_structure": "retain original stage1; add one raw-reset second-sync FF; replace four existing stage2 producers by four equal-depth regional release FFs D1 async-reset from second-sync Q",
+    "old_FF_count": 5,
+    "new_FF_count": 6,
+    "FF_delta": 1,
+    "raw_async_contacts_new": 2,
+    "second_sync_to_regional_async_contacts": 4,
+    "steady_state_or_token_edges_delta": 0,
+    "boot_release_edges_delta": 1,
+    "assertion": "Asynchronous assertion retained through reset forest; no synchronous-only weakening. Delta-cycle and physical assertion/recovery/removal qualification still owed.",
+    "finite_chain_property_checks": 196608,
+    "finite_trace_cycles": 12,
+    "finite_trace_count": 4096,
+    "proof_scope": "Reset-chain transition model after legitimate assertion only; NOT arbitrary cold/full public-interface/native timing proof.",
+    "same_age_cascade_rejected": "Not adopted: do not assume stage1Q async deassert satisfies stage2 removal or cold-state requirements."
+  },
+  "head_geometry": {
+    "old_closed_body_um": [
+      259.2,
+      222.48
+    ],
+    "proposed_body_um": [
+      345.6,
+      302.4
+    ],
+    "macro_placements_unchanged": [
+      {
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+        "count": 1,
+        "at": [
+          129.6,
+          43.2
+        ],
+        "orient": "MY",
+        "inst": "*u_34889",
+        "at_exact": true
+      },
+      {
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+        "count": 1,
+        "at": [
+          129.6,
+          172.8
+        ],
+        "orient": "MY",
+        "inst": "*u_34890",
+        "at_exact": true
+      },
+      {
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+        "count": 1,
+        "at": [
+          43.2,
+          43.2
+        ],
+        "orient": "MY",
+        "inst": "*u_34891",
+        "at_exact": true
+      },
+      {
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+        "count": 1,
+        "at": [
+          43.2,
+          86.4
+        ],
+        "orient": "MY",
+        "inst": "*u_34892",
+        "at_exact": true
+      },
+      {
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+        "count": 1,
+        "at": [
+          43.2,
+          129.6
+        ],
+        "orient": "MY",
+        "inst": "*u_34893",
+        "at_exact": true
+      },
+      {
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+        "count": 1,
+        "at": [
+          43.2,
+          172.8
+        ],
+        "orient": "MY",
+        "inst": "*u_34894",
+        "at_exact": true
+      },
+      {
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+        "count": 1,
+        "at": [
+          43.2,
+          216.0
+        ],
+        "orient": "MY",
+        "inst": "*u_34895",
+        "at_exact": true
+      },
+      {
+        "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+        "count": 1,
+        "at": [
+          43.2,
+          259.2
+        ],
+        "orient": "MY",
+        "inst": "*u_34896",
+        "at_exact": true
+      }
+    ],
+    "old_body_area_um2": 57666.81599999999,
+    "new_body_area_um2": 104509.44,
+    "delta_area_um2": 46842.62400000001,
+    "measured_base_standard_area_um2": 8820,
+    "measured_macro_area_um2": 33051,
+    "new_clock_area": "Model formula only: 2033 coarse leaf/internal buffers plus at most2034 fine pads; charge actual pinned cell areas before RTL/gate. No measured clock-area claim.",
+    "clock_leaf_budget": 1017,
+    "clock_coarse_buffer_budget": 2033,
+    "clock_fine_pad_budget": 2034,
+    "source_fanout_limit": 32,
+    "channels_um_min": 20
+  },
+  "parent_fit": {
+    "old_outline_um": [
+      777.6,
+      561.6
+    ],
+    "existing_head_anchor_um": [
+      475.2,
+      43.2
+    ],
+    "new_head_upper_corner_um": [
+      820.8,
+      345.6
+    ],
+    "collision": "Current OPROM row at y302.4 intersects expanded head; original parent width777.6 does not fit it.",
+    "conservative_new_outline_um": [
+      864,
+      561.6
+    ],
+    "parent_area_delta_um2": 48522.23999999999,
+    "parent_width_delta_um": 86.4,
+    "OPROM_row_y_old_um": 302.4,
+    "OPROM_row_y_proposed_um": 388.8,
+    "OPROM_shift_um": 86.4,
+    "east_channel_um": 43.2,
+    "left_shift_rejected": "Moving head to x432 leaves1.512um to cal macros ending430.488; violates20um channel.",
+    "not_adopted": true,
+    "data_reach_and_changed_pin_windows": "Must recompute actual parent first/final stages and all >405 endpoints. Bigger parent is not a reach waiver."
+  },
+  "parent_clock_readiness": {
+    "selected_parent_actual_clocks": [
+      "ck_core",
+      "ck_hr"
+    ],
+    "head_clocks_currently_same_net": true,
+    "ck_hr_also_feeds": "u_go/u_thru plus u_hr",
+    "not_ready": "Selected safe7/7c gates both GPLFAIL preCTS; no measured or adopted root envelope. Its multipleCTS roots reaching hard-child/memory pins need actual admissible delivery profile, not placeholder names.",
+    "head_entry_choice": "One own-entry hard-child clock using source-bound entry_pins/profile/actual abstract insertion, or a genuinely child-aware mixed tree. Neither has been adopted or proven for this selected parent.",
+    "prior_entry_helper_ref": "9caa37d16 defaultOFF; proof/API support is not source binding or physical qualification.",
+    "nominal_insertion": "Measure the new leaf; rebind parent/die reference and neighbor windows. Old h16c means cannot be reused as proof."
+  },
+  "required_before_RTL": [
+    "ROOT/coordinator accepts head single-root and parent slot model",
+    "Exact source reset/cold/async observer contract",
+    "Price clock cell areas and new parent pin/track displacement"
+  ],
+  "required_before_gate": [
+    "Exact old/new source lockstep from defined reset/boot epoch, no post-epoch masks; priced boot+1",
+    "Causal clock disconnect and reset-reassert/startup witnesses",
+    "Mapped dynamic<=32 with2 raw contacts and actual FF/clock/reset function proof",
+    "Real SRAM inventory, native staged endpoint reach<=405 and parent-fit/channel model",
+    "Explicit parent head entry and phase/root-compensation contract, no generic multiCTS-to-hard-memory shortcut"
+  ],
+  "required_final": [
+    "Actual complete capture+8SRAM TT/FF clock envelope<=80",
+    "Actual asynchronous recovery/removal and parent neighbor composition",
+    "TTsetup>=0 FFhold>=0 DRC0; SS sensitivity retained"
+  ]
+}
