@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.topk5.canonical_area_reconciliation.v1",
+  "pilot_source": "532cd3bab",
+  "pilot_cell_count": 9476,
+  "pilot_std_area_um2": 1367.98308,
+  "pilot_seq_area_um2": 510.56244,
+  "gate_source": "96ff551cd",
+  "gate_cell_count": 12323,
+  "gate_std_area_um2": 1540.26036,
+  "gate_seq_area_um2": 510.56244,
+  "gate_sequential_count": 1627,
+  "difference_um2": 172.27728,
+  "cause": "Distinct actual ABC recipe: pilot default abc -D833 without abc.constr; production ORFS abc_speed.script -D770 with abc.constr driving/loading and dont_use globs, plus INSBUF. Production has2270 BUFx2(area165.483um2)+other buffers; pilot haszeroBUFs. Sequential count/area identical413ASR+1214DFF. Therefore not extra storage; combinational mapping/buffering differ. Prior1366.10226 area was preface2, +1.88082um2 toface2 due actual2resetFF+mappedcomb.",
+  "production_rule": "Use exact production12323cell native census, allBUF/INV collapsed; never reuse pilot inventory as actualgate proof.",
+  "r2_outline_um": [
+    64.8,
+    43.2
+  ],
+  "r2_core_density_reported_pct": 66,
+  "r3_outline_um": [
+    64.8,
+    54
+  ],
+  "r3_core_area_um2": 3004.6463999999996,
+  "r3_predicted_core_density": 0.5126261645962733,
+  "replicas": 16,
+  "quarter_canonical_bank_std_area_um2": 24644.16576,
+  "replica_geometry": "before any composed quarter gate, use actual R3 abstracts/clock/ports and parent-cut area, never pilot lowerbound"
+}
