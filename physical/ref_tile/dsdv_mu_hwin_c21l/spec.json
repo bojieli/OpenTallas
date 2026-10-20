@@ -56,7 +56,7 @@
   "threads": 8,
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 10.8,
+  "macro_halo_um": 8.64,
   "io_hold_margin_ns": 0.03,
   "synth_keep_modules": [
    "dsdv_mu_hwin_capture_1019_boot_enable",
@@ -928,10 +928,10 @@
  },
  "fill_reason": {
   "lattice_channel_bound": {
-   "why": "Candidate only, preflight not gate-approved: same84 SRAM43.2lattice and>=22.41um channels; one full-width band y159.84..206.28; three W/C/E regions replace13 narrow fences, with real consumer-local reset ownership. Complete current CTS graph567221 conservative endpoint-box pairs<=404.124um. Includes measured actual CTS std11063.90178um2 and macrohalo10.8 legal-area cuts: band44.766%, centre59.144%, west52.606%, east53.673%. Source-only37.027% lower occupancy reflects actual measured clock/repair birth budget; mandatory final post-CTS gate40..60 unchanged. Exact native generated-row capacity, complete original mapped/source graph405 proof and dynamic-birth fixture remain required before first new gate.",
+   "why": "PLANNING/PREFLIGHT candidate: same84 SRAM origins on43.2lattice and>=22.41um physical macro channels, macro placement halo8.64um (was10.8), one entire full-width legal band y159.84..206.28. Three coarse W/C/E regions with consumer-local reset ownership, central selector/config, event7 locality. Complete original source and retainedCTS567221 conservative endpoint pairs<=404.124um. True source9151.137 distinct from retainedCTS birth-inclusive planning11063.90178; final actual placed40..60 remains mandatory. Halo8.64 puts southhalo edge159.03 belowband159.84 and northhalo207.36 aboveband206.28, eliminating rowholes; exact native proof required before gate. ROOT planning-budget tool review pending; production hook guarded.",
    "lattice_um": 43.2,
    "min_channel_um": 22.41,
-   "std_band_util": 0.44766211241682863,
+   "std_band_util": 0.42750642239048137,
    "approved_by": "codex coordinator",
    "std_band_y_um": [
     159.84,
