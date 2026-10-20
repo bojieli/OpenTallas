@@ -59,7 +59,7 @@ module ot_host_die_cdc_sram #(
     wire [2:0] wr_reg_n;
     ot_host_reset_bank #(.N(3)) u_wrs (.clk(wclk),.async_rst_n(wrst_n),.sync_rst_n(wr_reg_n));
     assign wr_n=wr_reg_n[0];
-    ot_reset_sync u_rrs (.clk(rclk), .async_rst_n(rrst_n), .sync_rst_n(rr_n));
+    ot_host_reset_bank #(.N(1)) u_rrs (.clk(rclk), .async_rst_n(rrst_n), .sync_rst_n(rr_n));
     // ---- write face ------------------------------------------------------------------------------------------------
     reg         iv_q;
     reg [W-1:0] id_q;

@@ -55,7 +55,7 @@ module ot_host_async_fifo_sram #(
     wire fifo_async_rst_n = wr_rst_n && rd_rst_n;
     wire wr_domain_rst_n;
     wire rd_domain_rst_n;
-    ot_reset_sync wr_reset_conditioner (
+    ot_host_reset_bank #(.N(1)) wr_reset_conditioner (
         .clk(wr_clk), .async_rst_n(fifo_async_rst_n),
         .sync_rst_n(wr_domain_rst_n));
     wire[1:0]rd_reg_n;
