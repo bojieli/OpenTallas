@@ -204,6 +204,33 @@ def placement(die, sl, fx=None):
     return g, out
 
 
+def aproj_capture_contract(die, sl, fx, flags):
+    """Prospective one-phase native CAP descriptor, tied to the exact producer map.
+
+    Flags are the actual element GO epoch, never inferred from source row IDs.
+    This describes capture addresses only; FIN schedule, downstream gather and
+    current physical CAP parent remain unadmitted.
+    """
+    assert aproj_topology_enabled() and aproj_rank_tags_enabled()
+    assert type(flags) is int and 0 <= flags < 4
+    sid, frames = placement(die, sl, fx)
+    rows = [r for p in frames for r in p['rows']]
+    assert rows and rows == list(range(rows[0], rows[0] + len(rows)))
+    assert len(rows) < 2048
+    cfg = dict(obase=0, ops=0, np=0, fmt=2, rbase=(flags << 14) + rows[0], rcnt=len(rows),
+               rsplit=0, lo32=0, hi32=0)
+    word = (2 << 27) | (cfg['rbase'] << 29) | (cfg['rcnt'] << 45)
+    out = a_proj_rows(fx)
+    return dict(scope='PROSPECTIVE_CAPTURE_ADDRESS_CONTRACT_ONLY', admitted=False,
+                slice=sl, slice_index=sid, die_sha=die.die_sha, cfg=cfg, cfg_d=f'{word:040x}', flags=flags,
+                frames=frames, rows=[dict(rank_row=r, tensor=out[r][0], tensor_row=out[r][1],
+                                         golden_output_index=out[r][2]) for r in rows],
+                producer_added_phases=0, producer_added_edges=0, source_to_cap_ages=None,
+                requires=['actual frame-to-CAP arrival calendar and FIN lifetime',
+                          'registered cfg path for current source CAP candidate',
+                          'actual capture-to-consumer gather addresses and ages'])
+
+
 def base_master(m):
     return re.sub(r'(_MX)?_l4$', '', m)
 
