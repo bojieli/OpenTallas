@@ -16,7 +16,7 @@
   516.24
  ],
  "why": "spec outline",
- "std_area_um2": null,
+ "std_area_um2": 2931.761156,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -118,8 +118,8 @@
   [
    "WARN",
    "fill",
-   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
-   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+   "fill 47% = (macros/children 114050 + std 2932) / outline 246344 um2 < 50%",
+   ""
   ]
  ],
  "referenced": [

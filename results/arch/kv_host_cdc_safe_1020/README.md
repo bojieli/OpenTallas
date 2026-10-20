@@ -21,3 +21,5 @@ SAFE checklist:
 8 PASS leaf steady schedule: zero edges changed in member miter; parent wire-hop/calendar consequences unmeasured until repack.
 
 V5.050 exact-cycle miter passes3431/3431 full-width transfers over asynchronous clocks and reset flush. Wrong macro read address and removed same-row bypass both fail with committed witnesses. The full-width saturation leg passes: 1,408 frames / 1,761 read edges = 0.7995 frames/edge against the 0.5 frame/edge production peer service budget, with the same cycle-by-cycle legacy miter (4,185 total transfers).
+
+Measured wrapped synthesis area116,982.02138um2 includes114,050.260224um2 of macro area; standard cells2,931.761156um2. Candidate total fill is approximately48.3% of the core. Both clocks and W/E data faces are ranged into the central band; no placement measurement is implied.

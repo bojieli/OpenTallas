@@ -256,5 +256,24 @@
       "ot_sram_1r1w2c_32x546_m1_p192_mir"
     ],
     "why": "Exact source/model/view fingerprints and actual Liberty per-pin read/write-clock role proof; Gray publication/synchronizer proof unchanged."
+  },
+  "std_area_um2": 2931.761156,
+  "pin_ranges": {
+    "ck_core": [
+      242,
+      260
+    ],
+    "ck_phy_fam": [
+      260,
+      278
+    ],
+    "u_rank__u_phy__pad_d": [
+      204,
+      302
+    ],
+    "u_rank__physical_tx_d": [
+      204,
+      302
+    ]
   }
 }
