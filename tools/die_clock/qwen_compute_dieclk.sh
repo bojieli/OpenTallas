@@ -100,7 +100,7 @@ PY
     --out-families $D/families_$3.json --out-owed $D/land_owed_$3.json ${DC_SPINE_SOURCE:+--source $DC_SPINE_SOURCE} \
     $([ "${DC_REGIONAL_IDEAL:-0}" = 1 ] && echo --ideal) $([ "${DC_GRID_CENTER:-0}" = 1 ] && echo --grid-center) \
     $([ "${DC_SAFE_TREE:-1}" = 1 ] && echo --safe-tree) $([ "${DC_NEIGHBOUR_TRIM:-0}" = 1 ] && echo --neighbours) \
-    $([ "${DC_SPINE_BALANCE:-0}" = 1 ] && echo --balance-spine) $([ "${DC_SPINE_GEOM:-0}" = 1 ] && echo --spine-geometric) \
+    $([ "${DC_SPINE_BALANCE:-0}" = 1 ] && echo --balance-spine) $([ "${DC_SPINE_GEOM:-0}" = 1 ] && echo --spine-geometric) --spine-topology ${DC_SPINE_TOPO:-dme} \
     $([ "${DC_FEED:-1}" = 1 ] && [ -n "$FEED" ] && echo --feed $FEED) \
     | tee -a $D/STATUS.log || exit 1
   # QW-DIECLK3 10-19: the per-region families stay (intra judged per region); neighbour pairs are trimmed in the build

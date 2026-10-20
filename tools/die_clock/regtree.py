@@ -19,6 +19,7 @@ Method here:
 Refs: ('port', name) | ('buf', name) | ('pin', 'inst/pin').
 """
 from collections import defaultdict
+import heapq
 import math
 import os
 import sys
@@ -70,8 +71,10 @@ def cluster(sinks, leaf_um=LEAF_UM, leaf_max=LEAF_MAX):
 
 
 class Builder:
-    def __init__(self, grid, prefix, r_of=None, pads=True):
+    def __init__(self, grid, prefix, r_of=None, pads=True, topo='dme'):
         self.g, self.prefix = grid, prefix
+        # topo 'spt' (QW-DIECLK6 10-20, forwarded spine only): see build_spt
+        self.topo = topo
         # pads=False (QW-DIECLK 10-19 forwarded regional spine): geometric merge only, never a pad buffer; the
         # regions it feeds are mesochronous (every crossing landed), so no arrival is balanced across them
         self.pads = pads
@@ -223,8 +226,186 @@ class Builder:
         B = self.subtree([leaves[i] for i in order[h:]])
         return self.merge(A, B)
 
+    # ---------------------------------------------------------------- QW-DIECLK6 10-20: shortest-path-tree spine
+    # Why (rN/rF2 diagnosis, 31.7 x 24.3 mm die, 1055 regional entries): the zero-skew DME merge places every parent ON
+    # the routed A->B path where the child delays meet, so with 48 hard CB16 columns the merges wander to the die edges
+    # (10-14 mm parent->child edges); every entry is delivered at the delay of the WORST one (median depth 380 = max
+    # 547, median root->entry wire 74.6 mm, 2.2 m of spine wire, 22.5 ns model).  A forwarded spine feeds mesochronous
+    # regions (every crossing landed; neighbour trim on the listed pairs only), so zero skew buys nothing.
+    # SPT: one obstacle-aware Dijkstra from the spine top (nearest free cell to the entry bbox centre) gives every entry
+    # its GEODESIC path; the union of those paths is the tree (shared prefixes follow the channels).  Each entry's
+    # insertion ~ its own geodesic distance (bounded: depth <= geodesic/SPAN-ish + branch buffers), no snaking, no pads.
+    # Blocked cells cost SPT_BLOCK_COST per step and a run over blocks is <= SAFE_RUNS[-1] (safe) / MAX_RUN.
+    SPT_BLOCK_COST = 3
+    SPT_STUB_UM = 100.0      # a branch within this wire of its driver hangs off the driver's net (no new buffer)
+    SPT_STUB_MAX = 4         # at most this many branches per driver net; more -> a branch buffer
+
+    def _spt_dijkstra(self, top, targets, max_run):
+        g = self.g
+        nx, ny = g.nx, g.ny
+        R = int(max_run // GRID)
+        K = R + 1
+        ti = top[1] * nx + top[0]
+        s0 = ti * K
+        dist = {s0: 0}
+        prev = {}
+        labels = {ti: [(0, 0)]}
+        order = []
+        need = {c[1] * nx + c[0] for c in targets}
+        pq = [(0, s0)]
+        blk = g.blk
+        while pq and need:
+            d, s = heapq.heappop(pq)
+            if dist.get(s) != d:
+                continue
+            order.append(s)
+            ci, run = divmod(s, K)
+            if run == 0:
+                need.discard(ci)
+            i, j = ci % nx, ci // nx
+            for ni, nj in ((i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)):
+                if not (0 <= ni < nx and 0 <= nj < ny):
+                    continue
+                nc = nj * nx + ni
+                if blk[nc]:
+                    nr = run + 1
+                    if nr > R:
+                        continue
+                    nd = d + self.SPT_BLOCK_COST
+                else:
+                    nr = 0
+                    nd = d + 1
+                old = labels.get(nc, ())
+                if any(lr <= nr and lg <= nd for lr, lg in old):
+                    continue
+                labels[nc] = [(lr, lg) for lr, lg in old if not (nr <= lr and nd <= lg)] + [(nr, nd)]
+                ns = nc * K + nr
+                dist[ns] = nd
+                prev[ns] = s
+                heapq.heappush(pq, (nd, ns))
+        return K, dist, prev, need
+
+    def build_spt(self, leaves):
+        """SPT spine: returns the top subtree record dict(buf, cell, d, n)."""
+        g = self.g
+        L = [self.leaf(pts) for pts in leaves]
+        cells = [r['cell'] for r in L]
+        xs = [g.xy(c)[0] for c in cells]; ys = [g.xy(c)[1] for c in cells]
+        top = g.nearest_free((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2)
+        runs = SAFE_RUNS if self.safe else (MAX_RUN,)
+        for i, mr in enumerate(runs):
+            K, dist, prev, need = self._spt_dijkstra(top, cells, mr)
+            if not need:
+                break
+        self.run_escalations += i
+        nx = g.nx
+        for ci in need:
+            self.violations.append(dict(kind='no_route_within_safe_run', b=list(g.xy((ci % nx, ci // nx))),
+                                        max_run_um=runs[-1]))
+        s_top = (top[1] * nx + top[0]) * K
+        leaf_at = defaultdict(list)            # state -> [leaf record]
+        for r, c in zip(L, cells):
+            s = (c[1] * nx + c[0]) * K
+            if s in dist:
+                leaf_at[s].append(r)
+        kids = defaultdict(list)
+        cnt = defaultdict(int)
+        for s in leaf_at:
+            x = s
+            cnt[x] += len(leaf_at[s])
+            while x != s_top:
+                p = prev[x]
+                if x not in kids[p]:
+                    kids[p].append(x)
+                cnt[p] += len(leaf_at[s])
+                x = p
+
+        def cell_of(s):
+            ci = s // K
+            return (ci % nx, ci // nx)
+
+        mtop = self.newbuf('B', top)
+        work = [(s_top, ('buf', mtop), 0)]
+        while work:
+            s, drv, off = work.pop()      # off = wire steps already run from drv to this path's first cell
+            # main path: always continue into the child with the most entries; other children are branches
+            path, branch = [s], {}
+            x = s
+            while True:
+                lv = leaf_at.get(x)
+                ks = sorted(kids.get(x, ()), key=lambda c: -cnt[c])
+                if lv:
+                    branch.setdefault(len(path) - 1, []).extend(('leaf', r) for r in lv)
+                if not ks:
+                    break
+                branch.setdefault(len(path) - 1, []).extend(('sub', c) for c in ks[1:])
+                x = ks[0]
+                path.append(x)
+            since, last_free, nside = -off, None, (1 if off else 0)
+            for k in range(len(path)):
+                c = cell_of(path[k])
+                fr = g.free(c) and path[k] % K == 0
+                if k > 0 or off:
+                    if fr and (k - since) * GRID >= SPAN:
+                        drv = self._rep(drv, c); since, last_free, nside = k, None, 0
+                    elif (k + 1 - since) * GRID > SEG_MAX and last_free is not None and k + 1 < len(path):
+                        drv = self._rep(drv, cell_of(path[last_free])); since, last_free, nside = last_free, None, 0
+                    if fr and since != k:
+                        last_free = k
+                for kind, obj in branch.get(k, ()):
+                    if nside >= self.SPT_STUB_MAX or ((k - since) * GRID > self.SPT_STUB_UM and k > since):
+                        if fr:
+                            drv = self._rep(drv, c, 'B'); since, last_free, nside = k, None, 0
+                    nside += 1
+                    if kind == 'leaf':
+                        if (k - since) * GRID > SEG_MAX + 1e-6:
+                            self.violations.append(dict(kind='unbuffered_clock_segment', um=(k - since) * GRID,
+                                                        b=list(g.xy(c))))
+                        self.nets.append([f'n_{obj["buf"]}_i', drv, [('buf', obj['buf'])]])
+                        self.parent[obj['buf']] = drv[1]
+                    else:
+                        work.append((obj, drv, k - since + 1))
+        # model insertion: stage_ps over the buffer chain to every leaf buffer (+ its own leaf model)
+        pos = {b[0]: (b[2], b[3]) for b in self.bufs}
+        dmax, memo = 0.0, {mtop: 0.0}
+
+        def arr(b):
+            st = []
+            while b not in memo:
+                st.append(b); b = self.parent[b]
+            t = memo[b]
+            for x in reversed(st):
+                p = self.parent[x]
+                t += stage_ps(max(10.0, abs(pos[x][0] - pos[p][0]) + abs(pos[x][1] - pos[p][1])))
+                memo[x] = t
+            return t
+        for r in L:
+            if r['buf'] in self.parent:
+                dmax = max(dmax, arr(r['buf']) + r['d'])
+        return dict(buf=mtop, cell=top, d=dmax, n=len(L))
+
+    def _rep(self, drv, c, tag='R'):
+        b = self.newbuf(tag, c)
+        self.nets.append([f'n_{b}', drv, [('buf', b)]])
+        self.parent[b] = drv[1]
+        return ('buf', b)
+
+    def depth_from(self, top):
+        names = {b[0] for b in self.bufs}
+        kids = defaultdict(list)
+        for ch, p in self.parent.items():
+            if ch in names:
+                kids[p].append(ch)
+        best, st = 0, [(top, 1)]
+        while st:
+            n, d = st.pop()
+            best = max(best, d)
+            st += [(c, d + 1) for c in kids.get(n, [])]
+        return best
+
     def build(self, root_pin, root_xy, leaves):
-        top = self.subtree(leaves)
+        top = self.build_spt(leaves) if self.topo == 'spt' else self.subtree(leaves)
+        ntop = len(self.bufs)
         rc = self.g.nearest_free(*root_xy)
         path = self.route(rc, top['cell'])
         drv, d = self.chain(('pin', root_pin), path, 'T') if len(path) > 1 else (('pin', root_pin), 0.0)
@@ -239,7 +420,9 @@ class Builder:
                 by[d_] = [n, d_, list(loads)]
         self.nets = list(by.values())
         r = dict(top=top['buf'], model_insertion_ps=round(d + top['d'], 1), leaves=len(leaves), buffers=len(self.bufs),
-                 pads=sum(1 for b in self.bufs if b[1] == PAD))
+                 pads=sum(1 for b in self.bufs if b[1] == PAD), topology=self.topo,
+                 trunk_buffers=len(self.bufs) - ntop, trunk_model_ps=round(d, 1), tree_model_ps=round(top['d'], 1),
+                 tree_depth=self.depth_from(top['buf']))
         if self.safe:
             r.update(safe=True, violations=len(self.violations), run_escalations=self.run_escalations)
         return r

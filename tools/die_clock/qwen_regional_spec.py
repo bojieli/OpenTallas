@@ -44,6 +44,8 @@ def main():
     ap.add_argument('--spine-geometric', action='store_true', help='QW-DIECLK4: spine merge points placed on the wire '
                     "where the region trees' model insertions meet (balance \"geometric\"), NEVER a pad: no global "
                     'balance target, only geometry; residual phase is absorbed by the landings (L5 window)')
+    ap.add_argument('--spine-topology', choices=('dme', 'spt'), default='dme', help='QW-DIECLK6: spt = shortest-path-tree '
+                    'forwarded spine (bounded depth: every entry at its geodesic delay; rN DME zig-zag 547 levels)')
     ap.add_argument('--balance-spine', action='store_true', help='QW-DIECLK3: the spine merge compensates each region '
                     "tree's model insertion (spine.balance true, pads allowed) so region entries meet at their flops")
     a = ap.parse_args()
@@ -62,6 +64,10 @@ def main():
     if not a.ideal:
         sp['spine'] = dict(source=src, period=a.period,
                            balance='geometric' if a.spine_geometric and not a.balance_spine else bool(a.balance_spine))
+        if a.spine_topology == 'spt':
+            if sp['spine']['balance']:
+                raise SystemExit('--spine-topology spt needs a forwarded spine (no --balance-spine / --spine-geometric)')
+            sp['spine']['topology'] = 'spt'
     if a.feed:
         if any(t['root'] == a.feed for t in sp['trees']):
             raise SystemExit(f'feed root {a.feed} already a tree root')
@@ -96,7 +102,7 @@ def main():
     print('QCLK_REGIONAL_SPEC', 'ideal entries' if a.ideal else f'forwarded spine {src} balance=false', 'trees',
           len(sp['trees']), 'stream', len(stream), 'land_owed links', len(owed), 'bits', sum(o['bits'] for o in owed),
           'bus classes', len(by), 'grid_center', bool(a.grid_center), 'safe_tree', bool(a.safe_tree),
-          'neighbour_pairs', len(nb), 'balance_spine', bool(a.balance_spine), 'spine_geometric', bool(a.spine_geometric),
+          'neighbour_pairs', len(nb), 'balance_spine', bool(a.balance_spine), 'spine_geometric', bool(a.spine_geometric), 'spine_topology', a.spine_topology,
           'feed', a.feed or 'none')
 
 
