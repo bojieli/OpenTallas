@@ -1,0 +1,27 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_qwen_tile_lsl_fp1': 'M6', 'ot_qwen_tile_romleaf': 'M5'}
+GATE WARN children: ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE WARN children: ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))  -> FIX: export the child's clock insertion (ref_tile export)
+GATE INFO remote: ot-run selected ot-epyc7 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_tile_nl_romleaf_rc5b_20261019-221504.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_tile_nl_romleaf_rc5b_20261019-221504.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_romleaf_rc5b-20261019-221504
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 190 s (gate total 919 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1076, 'pin_rectangles': 1076, 'pin_track_checked': 1076, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 4ea3816092b4c496b05f452fdc337fa7a2f442014512e871d4ba772103f51df5
+GATE INFO util: synthesized std area 9156 um2 + macros 302443 in core 737183: util 2% (std-cell density 2.4% of placeable 381329 um2; total fill 42.3%)
+GATE INFO textbook: PASS qfd_tile_nl_rp2_romleaf_rr cells 67,922 flops 16,788 depth 471.8 ps util 0.4186 reach 0.0 um (3.5 s)
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE WARN cross_clock: multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)  -> FIX: fix the signoff SDC read and re-gate with --cts
+GATE INFO clock_rule: root port:ck: 4,811 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-cluster3-a0-1019/physical/ref_tile/qfd_tile_nl_romleaf_rc5b/gate_layout/floorplan.png
+GATE WARN fill: fill 41% = (hard macros 302442.9 + synthesized std cells 6142.8) / outline 744629.8 um2; pin demand per face: S 0 pins over 0.0/820.8 um (0%), N 0 pins over 0.0/820.8 um (0%), W 607 pins over 775.7/907.2 um (86%), E 621 pins over 691.2/907.2 um (76%) (< 50%)
+PRE_ROUTE_GATE: FAIL (1 fail, 12 warn)
+GATE: qfd_tile_nl_romleaf_rc5b/gate_result.json written (exact staged source binding; commit it with the kit)
+GATE_RC=1

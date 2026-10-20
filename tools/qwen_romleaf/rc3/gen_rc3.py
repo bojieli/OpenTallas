@@ -63,6 +63,13 @@ HUB = {  # (x0, y0, x1, y1)
     ("rc6", False): (395.0, 406.0, 439.0, 494.0),
     ("rc6b", True): (391.0, 326.0, 443.0, 426.0),
     ("rc6b", False): (391.0, 400.0, 443.0, 500.0),
+    # rc7 (after rc6: every root PASS but ck_fa4: NK 241.8 / NL 282.2 ps): the kit reset landing ran on ck_fa4, so its
+    # last-stage copies (placed at their loads beside the hub, 370 um from the E pins) joined the 287 compact E-face pin
+    # flops on one tree.  The landing moves to ck (the hub root, whose loads it serves); ck_fa4 keeps only tap/tile_id/go.
+    ("rc7", True): (395.0, 338.0, 439.0, 426.0),
+    ("rc7", False): (395.0, 406.0, 439.0, 494.0),
+    ("rc7b", True): (391.0, 326.0, 443.0, 426.0),
+    ("rc7b", False): (391.0, 400.0, 443.0, 500.0),
 }
 LO = "([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])"
 
@@ -85,11 +92,11 @@ def boxes(rev, nk):
 def regions_tcl(kit, rev, nk):
     b = boxes(rev, nk)
     fmt = lambda r: "{%.3f %.3f %.3f %.3f}" % r
-    rung = "[01]" if rev in ("rc6", "rc6b") else "1"
+    rung = "[01]" if rev.rstrip("b") in ("rc6", "rc7") else "1"
     tx = [f"  [dict create name tx{g} type EXCLUSIVE regex {{g_sl\\[{g}\\]\\.g_hd\\.(g_tx\\.g_r\\[{rung}\\]\\.u_tx/|g_lrr\\.rq|g_outland\\.q)}} "
           f"boxes {{{fmt(b[f'tx{g}'])}}} min 1 max 100000] \\" for g in range(8)]
     lines = [
-        *([] if rev in ("rc6", "rc6b") else ["  [dict create name land_tx type FREE regex {g_hd\\.g_tx\\.g_r\\[0\\]\\.u_tx/} boxes {} min 1 max 100000] \\"]),
+        *([] if rev.rstrip("b") in ("rc6", "rc7") else ["  [dict create name land_tx type FREE regex {g_hd\\.g_tx\\.g_r\\[0\\]\\.u_tx/} boxes {} min 1 max 100000] \\"]),
         "  [dict create name land_rq type FREE regex {g_rom_pipe\\.rq_(ce|ad)_[sn]\\[1\\]\\[} boxes {} min 1 max 100000] \\",
         "  [dict create name land_fault type FREE regex {u_me\\.fault_q\\[} boxes {} min 0 max 100] \\",
         *tx,
@@ -114,12 +121,16 @@ def regions_tcl(kit, rev, nk):
 def make(nk, rev):
     kit, s, ptcl, _ = g1.spec(nk, False, rev, 7)
     s["io_tcl"] = f"tools/qwen_romleaf/rc3/{kit}_pins.tcl"
+    if rev.rstrip("b") == "rc7":
+        s["reset_landing"]["clock"] = "ck"
     s["pin_hook_before_flops"] = [f"tools/qwen_romleaf/rc3/{kit}_regions.tcl"]
     hubtxt = {"rc3": "hub column 395-439", "rc3b": "compact hub box", "rc4": "square-ish 70x140 hub box (ck H-tree spread)",
               "rc4b": "80x110 hub box (ck H-tree spread)", "rc5": "44x88 hub box, 21 um lanes (ck spread + lanes)",
               "rc5b": "52x100 hub box, 17 um lanes (ck spread + lanes)",
               "rc6": "44x88 hub box + TX rung 0 inside its tx fence (ck_tx spread)",
-              "rc6b": "52x100 hub box + TX rung 0 inside its tx fence (ck_tx spread)"}[rev] + (" under the node" if nk else "") + \
+              "rc6b": "52x100 hub box + TX rung 0 inside its tx fence (ck_tx spread)",
+              "rc7": "rc6 + kit reset landing on ck instead of ck_fa4 (ck_fa4 spread)",
+              "rc7b": "rc6b + kit reset landing on ck instead of ck_fa4 (ck_fa4 spread)"}[rev] + (" under the node" if nk else "") + \
              ("" if rev in ("rc3", "rc3b") else "; u_g.u_tile.n_va/fault_q pin-side flops FREE (rc3 NK DPL-0008 n_va)")
     s["structural_change"] = (f"QW-A0-RC3 {rev} (10-19, after rc1/rc2 DPL-0033): fences are pin-side sub-lanes with a "
         f"free lane in every corridor for the non-member comb/repair cells ({hubtxt}); REGROOT 7 RTL, 820.8 x 907.2 "

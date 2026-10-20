@@ -1,0 +1,89 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_qwen_tile_node': 'M5', 'ot_qwen_tile_lsl_fp1': 'M6', 'ot_qwen_tile_romleaf': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl_fp1: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc9 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_tile_nk_romleaf_rc5_20261019-221636.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_tile_nk_romleaf_rc5_20261019-221636.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_rc5-20261019-221636",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "remote_incomplete",
+   "message": "remote gate has no verified terminal completion (ot-run exit 141); original job may still run at ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_rc5-20261019-221636; script /tmp/ref_gate_qfd_tile_nk_romleaf_rc5_20261019-221636.sh; log /tmp/ref_gate_qfd_tile_nk_romleaf_rc5_20261019-221636.log",
+   "fix": "inspect the original live handle and collect its terminal output; do not submit a duplicate"
+  }
+ ]
+}

@@ -12,3 +12,8 @@ rc4/rc4b NL (ot-epyc7, @a26ea0ec8): DPL-0033 with only 2 / 1 buffers (BUFx3 plac
 rc4 NK (ot-epyc7): DPL PASS; CTS ck PASS spread 76.7 ps (2586 sinks, hub 70x140, insertion 434.5); ck_rn/rs/rsw/rnw 6.8-9.0, ck_dw/de
  40.2/35.6 PASS; ck_tx0 FAIL 84.2 ps (845 sinks: 455 fenced + 389 FREE rung-0 landings spread x 233-441) -> rc6: rung 0 inside the tx fence.
 rc4b NK: DPL-0033 (85 stuck -> 5 off-row + 2 overlaps; 3.5 um lanes).
+rc5 NL (hub 44x88 / 52x100): DPL PASS; ck 19.7 / 25.9 ps PASS; ck_tx0 FAIL 105.3 / 83.4 (FREE rung 0). rc5b NK: ck 49.3, ck_tx0 83.4 FAIL.
+ rc5 NK: remote_incomplete (ot-run exit 141 before CTS; transient, superseded by rc6 NK).
+rc6/rc6b (rung 0 in the tx fence): NK + NL DPL PASS; ck 21.3/25.0 (NL); tx0..7 12-21 ps; rs/rn/rsw/rnw/dw/de/fa0..3 PASS;
+ ck_fa4 FAIL NK 241.8/209.1, NL 282.2/198.8 ps: the reset landing (rl1 + 7 copies) on ck_fa4 sits beside the hub (x 384-442),
+ 370 um from the 287 E-face tap/tile_id pin flops -> rc7: reset landing on ck.
