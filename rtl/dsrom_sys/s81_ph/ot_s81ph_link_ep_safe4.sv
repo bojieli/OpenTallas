@@ -356,7 +356,13 @@ module ot_s81ph_link_ep_safe4 #(
     wire [IW-1:0]   snd_i_l = launch ? idx_add(snd_i, 1) : snd_i;
     wire [SEQW-1:0] snd_off = snd_l - una_skip;
     wire            retry_exh = rewind && !progress && (retry >= MR_W);
+`ifdef OT_COLL_NATIVE32
+    wire ack_gt_interval;
+    ot_s81ph_skip_interval #(.W(SEQW)) u_ack_interval (.a(snd),.b(una_skip),.limit(d_ack),.inc(launch),.gt(ack_gt_interval));
+    wire ack_skip=ack_ok && ack_gt_interval;
+`else
     wire            ack_skip  = ack_ok && (d_ack > snd_off);
+`endif
     wire [IW-1:0]   snd_i_nx  = (rewind_sender || ack_skip) ? una_i_n : snd_i_l;
 
     generate if(OLDREAD!=0) begin:g_rb_safe
@@ -623,7 +629,14 @@ module ot_s81ph_link_ep_safe4 #(
     wire            lnch_0 = replaying && pace_ok;
     wire [SEQW-1:0] sndl_0 = lnch_0 ? snd + 1'b1 : snd, sndl_1 = snd + 1'b1;
     wire [IW-1:0]   sndil_0 = lnch_0 ? idx_add(snd_i, 1) : snd_i, sndil_1 = idx_add(snd_i, 1);
+`ifdef OT_COLL_NATIVE32
+    wire skip_gt_interval0, skip_gt_interval1;
+    ot_s81ph_skip_interval #(.W(SEQW)) u_skip_interval0 (.a(snd),.b(una_skip),.limit(d_ack),.inc(lnch_0),.gt(skip_gt_interval0));
+    ot_s81ph_skip_interval #(.W(SEQW)) u_skip_interval1 (.a(snd),.b(una_skip),.limit(d_ack),.inc(1'b1),.gt(skip_gt_interval1));
+    wire skip_0=ack_ok && skip_gt_interval0, skip_1=ack_ok && skip_gt_interval1;
+`else
     wire            skip_0 = ack_ok && (d_ack > (sndl_0 - una_skip)), skip_1 = ack_ok && (d_ack > (sndl_1 - una_skip));
+`endif
     wire [SEQW-1:0] sndnx_0 = rewind_sender_state ? una_n : (skip_0 ? rr_ack : sndl_0);
     wire [SEQW-1:0] sndnx_1 = rewind_sender_state ? una_n : (skip_1 ? rr_ack : sndl_1);
     wire [IW-1:0]   sndinx_0 = (rewind_sender || skip_0) ? una_i_n : sndil_0;
@@ -801,4 +814,19 @@ endmodule
 `else
  assign y = (ack_ok && nak) || ((occ != 0) && !progress && at_lim);
 `endif
+endmodule
+
+// Native32 v7: the modulo difference test is circular interval membership.
+// All endpoint arithmetic depends only on b/limit, independently of sender a
+// and the late launch decision; compare both sender cases in parallel.
+// No input-range premise, no extra register/edge.
+(* keep_hierarchy = 1 *) module ot_s81ph_skip_interval #(parameter integer W=10) (
+ input wire [W-1:0] a,b,limit, input wire inc, output wire gt);
+ wire [W:0] endpoint={1'b0,b}+{1'b0,limit};
+ wire [W-1:0] a1=a+1'b1;
+ wire ge0=a>=b, lt0=a<endpoint[W-1:0];
+ wire ge1=a1>=b, lt1=a1<endpoint[W-1:0];
+ wire gt0=endpoint[W]?(ge0 || lt0):(ge0 && lt0);
+ wire gt1=endpoint[W]?(ge1 || lt1):(ge1 && lt1);
+ assign gt=inc?gt1:gt0;
 endmodule
