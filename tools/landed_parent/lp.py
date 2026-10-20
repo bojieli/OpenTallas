@@ -668,6 +668,14 @@ class Parent:
         edges = edges_all
         # strict landings first (MUT 1 / 2 act on landing 0: it must be schedule-bearing), loose ones last; renumber
         lst = sorted(lands.values(), key=lambda L: (bool(L.get("loose")), int(L["name"])))
+        # QW-CTLM5 10-19 (opt-in mut_landing_net; absent = unchanged order): the bench mutants 1 / 2 act on landing 0, so a
+        # spec whose first discovered landing is quiet in the bench (CTLM pw after the F16 port) names a schedule-bearing net
+        want0 = self.S.get("mut_landing_net")
+        if want0:
+            hit = [L for L in lst if L["net"] == want0 and not L.get("loose")]
+            if not hit:
+                raise SystemExit(f"mut_landing_net {want0}: no strict landing on that net")
+            lst = hit[:1] + [L for L in lst if L is not hit[0]]
         for j, L in enumerate(lst):
             L["name"] = str(j)
         if self.S.get("share_rings"):

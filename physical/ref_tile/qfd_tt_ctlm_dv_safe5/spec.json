@@ -1,0 +1,697 @@
+{
+ "name": "qfd_tt_ctlm_dv_safe5",
+ "top": "qfd_tt_ctlm_dv_lpf_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_dv/lp/qfd_tt_ctlm_dv_lpf_lp.sv",
+  "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v",
+  "rtl/qwen_dv/qfd_dv_hr_pack.sv",
+  "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+  "rtl/qwen_dv/qfd_mu_context_guard.sv"
+ ],
+ "params": {
+  "XPF_TRANSPORT_EDGES": 20,
+  "STAGE_ME": 1,
+  "LAST_STAGE": 37,
+  "MUT": 0,
+  "NU": 4,
+  "OPSEG": 1,
+  "CTX_SRC": 1,
+  "FCTX": 1,
+  "OPSEG_EXPANDED": 1,
+  "INIT_U0": 1,
+  "INIT_FIRST": 52,
+  "INIT_CNT": 3,
+  "OPSEG_VIAMAP": "\\\"results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg.viamap.hex\\\"",
+  "OPSEG_VIAMAP1": "\\\"results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg_b1.viamap.hex\\\"",
+  "OPSEG_VIAMAP2": "\\\"results/rtl/mu_qwen_1018/admission/F16_P2/qfd_tt_ctlm_opseg_b2.viamap.hex\\\"",
+  "OPSEG_PINREG": 1
+ },
+ "clock_port": "ck_core",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 777.6,
+  "h": 561.6,
+  "exact": true
+ },
+ "slot_change_request": "QW-CTLM5 safe5: outline unchanged 777.6x561.6; pins: program_obs[75:0] + command_stage[5:0] N -> E (M4 y56.08-71.82, beside u_hr's E-face outputs), f16_st[16:0] / table_req[8:0] E (y72.2-77.2), f16_auth[82:0] / f16_obs[37:0] N (x504-530), pw[74:0] N x717 -> x205 (core input beside ck_core). Die GEN must re-slot these and bind f16_* (lanes/QW-GEN2.md).",
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_tt_head_static_h16c/views/ot_qfd_tt_ctlm_static_hr",
+   "count": 1,
+   "inst": "u_hr",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_m[0].u_pm.u_p192",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_m[1].u_pm.u_p192",
+   "at": [
+    43.2,
+    197.136
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.u_rom",
+   "at": [
+    475.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[0].u_fifo.u_p192",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[1].u_fifo.u_p192",
+   "at": [
+    259.2,
+    197.136
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[2].u_fifo.u_p192",
+   "at": [
+    43.2,
+    351.072
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[3].u_fifo.u_p192",
+   "at": [
+    259.2,
+    351.072
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom1",
+   "at": [
+    561.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+   "at": [
+    648.0,
+    302.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "E": [
+   "ck_hr",
+   "native_cmd",
+   "emb_start",
+   "emb_token",
+   "native_ret",
+   "program_obs",
+   "command_stage",
+   "f16_st",
+   "table_req"
+  ],
+  "N": [
+   "ck_core",
+   "rst_n",
+   "layer_context_v",
+   "native_pos",
+   "native_tok",
+   "cal_descriptor_obs",
+   "cal_image_ready",
+   "cal_program_obs",
+   "control_stores_ready",
+   "dc",
+   "cf",
+   "dh_user",
+   "dh",
+   "fab",
+   "kok",
+   "kwd",
+   "pw",
+   "ctx_x",
+   "mu_fault",
+   "init_u0",
+   "f16_auth",
+   "f16_obs"
+  ],
+  "S": [
+   "tl",
+   "ag5",
+   "cmd",
+   "hr",
+   "ss5"
+  ]
+ },
+ "pin_ranges": {
+  "ck_core": [
+   194.4,
+   194.65
+  ],
+  "emb_start": [
+   410.413,
+   410.663
+  ],
+  "emb_token": [
+   411.163,
+   414.163
+  ],
+  "ck_hr": [
+   263.887,
+   264.137
+  ],
+  "rst_n": [
+   420.271,
+   420.521
+  ],
+  "tl": [
+   43.2,
+   410.4
+  ],
+  "native_cmd": [
+   501.755,
+   656.86
+  ],
+  "ag5": [
+   655.767,
+   657.433
+  ],
+  "cmd": [
+   657.933,
+   677.267
+  ],
+  "dh_user": [
+   662.0,
+   662.5
+  ],
+  "layer_context_v": [
+   667.017,
+   667.267
+  ],
+  "native_pos": [
+   667.767,
+   670.767
+  ],
+  "native_tok": [
+   671.267,
+   674.267
+  ],
+  "cal_descriptor_obs": [
+   674.767,
+   686.267
+  ],
+  "hr": [
+   677.767,
+   753.267
+  ],
+  "cal_image_ready": [
+   686.767,
+   687.017
+  ],
+  "cal_program_obs": [
+   687.517,
+   700.183
+  ],
+  "control_stores_ready": [
+   700.683,
+   700.933
+  ],
+  "dc": [
+   701.433,
+   710.767
+  ],
+  "cf": [
+   711.267,
+   711.517
+  ],
+  "dh": [
+   712.017,
+   743.183
+  ],
+  "fab": [
+   743.683,
+   743.933
+  ],
+  "kok": [
+   744.433,
+   744.683
+  ],
+  "kwd": [
+   745.183,
+   745.433
+  ],
+  "ss5": [
+   753.767,
+   771.6
+  ]
+ },
+ "pg_layer": "M7",
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3"
+  },
+  "pin_h": "M4",
+  "pin_v": "M3"
+ },
+ "job": {
+  "owner": "QW-CTLM5",
+  "branch": "claude/qw-ctlm5-1019",
+  "tag": "safe5",
+  "purpose": "QW-CTLM5 10-19 safe5: safe4 + (a) program_obs / command_stage N -> E beside u_hr's E-face outputs (safe4 wire_reach 612 um, 85 stages), (b) D4 / K2 landings with the L5 multicycle (safe4 hr->core cross_clock -158.1 ps), (c) F16WTN / PRIVATE_CALR ports (f16_auth / f16_obs N, f16_st / table_req E; params 0), (d) pw from core (N x205 beside ck_core), (e) gate tools: ck_insertion measures past arc-less raw child clock pins.",
+  "extra_paths": [
+   "rtl/test/qwen_dv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/qfd_tt_head_static_h16c",
+   "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf",
+   "results/closure_loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/ref_tile/qfd_tt_head_static_h16c/qfd_tt_head_static_h16c-h16c-ae6b0c59a",
+   "results/rtl/mu_qwen_1018/b1/rom",
+   "results/rtl/mu_qwen_1018/admission/F16_P2",
+   "results/rtl/mu_qwen_1018/admission/gi_init",
+   "tools/qwen_static_schedule/mu_admission.py",
+   "tools/qwen_static_schedule/mu_opcal.py",
+   "rtl/qwen_dv/qfd_tt_ctlm_dv_lpf_parts.sv",
+   "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
+   "rtl/qwen_dv/qfd_mu_context_guard.sv",
+   "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+   "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+   "rtl/qwen_split/qfd_sys_face_accepted_mu_ctx.sv",
+   "rtl/test/mu_qwen_seq/gi_init_fixture.py",
+   "rtl/test/mu_qwen_seq/tb_mu_gi_init.sv",
+   "rtl/test/mu_qwen_seq/run_mu_gi_init.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "rtl/lib/sram_p192_1019",
+   "rtl/test/mu_qwen_seq/mu_seq_bench.py",
+   "rtl/test/mu_qwen_seq/tb_mu_cmd_cal.sv",
+   "rtl/qwen_dv/qfd_dv_cmd_cal.sv",
+   "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness"
+  ],
+  "benches": [
+   {
+    "name": "ctlm_abi_m0",
+    "cmd": "CTLM_ONLY=abi0 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_ABI_PASS MUT=0"
+   },
+   {
+    "name": "ctlm_abi_m4",
+    "cmd": "CTLM_ONLY=abi4 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=4",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m4.log"
+   },
+   {
+    "name": "ctlm_abi_m5",
+    "cmd": "CTLM_ONLY=abi5 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=5",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m5.log"
+   },
+   {
+    "name": "ctlm_abi_m6",
+    "cmd": "CTLM_ONLY=abi6 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=6",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m6.log"
+   },
+   {
+    "name": "ctlm_abi_m7",
+    "cmd": "CTLM_ONLY=abi7 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=7",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m7.log"
+   },
+   {
+    "name": "ctlm_abi_m8",
+    "cmd": "CTLM_ONLY=abi8 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_abi_m8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_ABI_FAIL MUT=8",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv/bench_witness/ctlm_abi_m8.log"
+   },
+   {
+    "name": "ctlm_cal_m0",
+    "cmd": "CTLM_ONLY=cal0 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CTLM_CAL MUT=0 NSL=0: PASS"
+   },
+   {
+    "name": "ctlm_cal_m1",
+    "cmd": "CTLM_ONLY=cal1 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_CAL MUT=1 NSL=0: FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness/ctlm4_v5050/tt_cal1.log"
+   },
+   {
+    "name": "ctlm_cal_m2",
+    "cmd": "CTLM_ONLY=cal2 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_CAL MUT=2 NSL=0: FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness/ctlm4_v5050/tt_cal2.log"
+   },
+   {
+    "name": "ctlm_cal_m3",
+    "cmd": "CTLM_ONLY=cal3 bash rtl/test/qwen_dv/run_tt_ctlm_dv.sh {RUN}/bench/ctlm_cal_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CTLM_CAL MUT=3 NSL=0: FAIL",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness/ctlm4_v5050/tt_cal3.log"
+   },
+   {
+    "name": "mu_seq_m0",
+    "cmd": "python3 rtl/test/mu_qwen_seq/mu_seq_bench.py --work {RUN}/bench/mu_seq_m0 --mut 0 --jobs 8",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "MU_SEQ_PASS mut 0"
+   },
+   {
+    "name": "mu_seq_m34",
+    "cmd": "python3 rtl/test/mu_qwen_seq/mu_seq_bench.py --work {RUN}/bench/mu_seq_m34 --mut 34 --jobs 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "MU_SEQ_FAIL mut 34",
+    "fail_witness": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/bench_witness/ctlm4_v5050/museq_m34.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/views",
+  "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv_safe5",
+  "benched_by": "QW-CTLM4 (Verilator 5.050, fleet ep8/ep6): FIREDQ calendar = mu_seq_bench MUT0 PASS (lockstep vs unmodified qfd_dv_cmd_cal, compiled NU4 timeline), MUT34 FAIL 26,836 mismatches, MUT1 FAIL 168; tile ctlm_abi_m0 PASS, ctlm_cal_m0 PASS 62/62, cal_m1/m2/m3 FAIL 2/2/60 of 62 (re-witnessed on the new RTL: bench_witness/ctlm4_v5050). lp landing RTL unchanged -> QW-CTLM3 lp_v5050 witnesses (MUT0 PASS; MUT1/2/4/5 FAIL) reused. GI/cal/guard/leaf and acceptedreceiver/context RTL match source-receipt hashes after1650f9344 merge; original exact mu_opcal compiler receipt source preserved in bench_witness/source_receipt/mu_opcal.py (active compiler differs). NativeGI9,140,490edgesPASS/negativesFAIL; absolute epoch and fullsystem remain unbound."
+ },
+ "params_source": "Q-H16C 10-18: XPF_TRANSPORT_EDGES and STAGE_ME are GEN-assigned (tools/qwen_split/die_params.py -> die.v.params.json masters.qfd_tt_ctlm_dv); values = dv2f14bi ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/chain/case_r22k/die.v.params.json (XPF 20 = 1 hr pin reg + fwd hr lane E 18 + 1 landing; STAGE_ME 1). Re-take them from the GEN sidecar of the die this cluster is hardened for; never hand-set (the old 15 = QLB-PROG zero-delay dv2f14bn estimate). HARD_HR 1 && STAGE_ME 1 legal from h16c h17 (stage_start/stage ports).",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_core",
+  "ck_hr"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_core"
+   ],
+   "inputs": [
+    "rst_n",
+    "pw"
+   ],
+   "outputs": [
+    "tl"
+   ]
+  },
+  "hr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hr"
+   ],
+   "inputs": [
+    "dh",
+    "dh_user",
+    "kok",
+    "kwd",
+    "fab",
+    "native_ret",
+    "ss5",
+    "ag5",
+    "ctx_x",
+    "mu_fault",
+    "init_u0",
+    "f16_auth",
+    "f16_obs"
+   ],
+   "outputs": [
+    "program_obs",
+    "control_stores_ready",
+    "layer_context_v",
+    "native_tok",
+    "native_pos",
+    "command_stage",
+    "cal_program_obs",
+    "cal_descriptor_obs",
+    "cal_image_ready",
+    "dc",
+    "native_cmd",
+    "hr",
+    "cmd",
+    "emb_start",
+    "emb_token",
+    "cf",
+    "f16_st",
+    "table_req"
+   ]
+  }
+ },
+ "landed_record": "results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json",
+ "landed_note": "QW-CTLM5 10-19: record die_obligations: two clock ports ck_core / ck_hr (regional, related); D 4 / E = K = 2 landings with the LANDING-CONTRACT L5 multicycle (-setup 2 -hold 3 ring -> read); every hr output +6 edges vs the flat qfd_tt_ctlm_dv, tl +3, inputs kok / kwd / native_ret +6, pw +3 (core input), all other inputs +0 (u_gi t=3, u_hr/u_go/u_thru t=6) -> GEN re-derives XPF_TRANSPORT_EDGES and lane ages of cmd / hr / dc / native_cmd from the record compiler block (= the MU-DQ-CTLMCLK offsets before QW-CTLM3, pw +3 instead of +6).",
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "hf4c_note": "HF-4c 10-18 (first gen on the CLOSED h16c view qfd_tt_head_static_h16c-h16c-ae6b0c59a): (1) h16c MY is impossible on the asap7 tracks (no MY x origin puts its 245 M5 S-face pins on track; M3 also off except x%0.036 shifts) -> R0 at (475.2,43.2): S face (rom_cmd/rom_ret/ck_head/ck_pm0) stays S, E face (1,088 pins: landing reads + outputs) faces a 41-um E channel next to the N/S output pins x 655-771; (2) upper calendar SRAM 120.984 -> 121.008 (120.984 = 1,585 pins off track; 121.008 = the h16c stack pitch).",
+ "hard_define": "SYNTHESIS",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: lp.py regional reset runs (rst_n -> u_lpr_root 1 flop on ck_core -> u_lpr_core / u_lpr_hr 2 flops per region -> u_lprc_* per child; port net has one sink, reset depth 3 (landing rq at depth 3 = RB, landing_reset_lead) proven by the landed lockstep bench)"
+ },
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+  "ot_rom_4096x72_m8"
+ ],
+ "soft_root_macro_bindings": {
+  "u_gi.u_cal.g_m[0].u_pm.u_p192": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_m[1].u_pm.u_p192": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.g_op.u_leaf.g_op.u_rom": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_fifo[0].u_fifo.u_p192": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_fifo[1].u_fifo.u_p192": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_fifo[2].u_fifo.u_p192": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.u_cal.g_fifo[3].u_fifo.u_p192": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.g_op.u_leaf.g_op.g_banked.u_rom1": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  },
+  "u_gi.g_op.u_leaf.g_op.g_banked.u_rom2": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core"
+  }
+ },
+ "raw_memory_note": "Six 64x512 SRAMs (p192 successor masters via the kit shim) plus three 4096x72 OPROMs; all nine exact named ck_core sinks; h16c contract unchanged.",
+ "fill_reason": {
+  "pin_bound": "safe4: synthesis std 9983.71 um2 + hard 223021.2 / outline 436700.2 = 53.4% total fill (40-60% band); footprint set by the two SRAM 3-stacks (461.7 um) + 43.2 S band + 56.6 N band."
+ },
+ "mu_note": "MU-DQ-CTLMKIT 10-19: (1) leaf ROM u_gi.g_op.u_leaf.g_op.u_rom (38.0 x 62.9) at (43.2, 259.2) R0 on the 43.2 lattice, core region, above the calendar SRAM stack (43.2..198.8; 60.4 um channel, pins on its W face like the SRAMs, facing the calendar glue strip), raw-memory sink of ck_core like the SRAMs; (2) tl[1087:0] (one TLOAD table word, else 0) on the S face x 432.0-655.3 (4.9 pins/um) left of cmd (the die's W5 st_wi beside cmd_wi), landed core->hr like cmd; (3) dh_user[1:0] on the N face x 662.0 (gap between native_cmd and command_stage); die GEN ties it 0 (OPSEG mode). Die obligation: re-place tl / dh_user pins with the die top-down pin assignment.",
+ "landed_raw_detach": true,
+ "clock_note_ctlmclk": "safe2: every movable std cell is owned by core or hr (exclusive cones by clock root, mixed cones by destination root); abutting regions x2.16-453.6 / 453.6-775.44, y43.2-388.8; pin bands are top-level free area.",
+ "pin_hook_after_flops": [
+  "physical/ref_tile/qfd_tt_ctlm_dv_safe5/lp_reset_copies.tcl",
+  "physical/common_flow/same_edge_reset_copies.tcl",
+  "physical/ref_tile/qfd_tt_ctlm_dv_safe5/lp_cone_regions.tcl"
+ ],
+ "views_to": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/views",
+ "record_to": "results/rtl/ref_tile/qfd_tt_ctlm_dv_safe5",
+ "structural_recut_status": "Diagnostic only, adoption=false. Canonical mask0 bootDW SHA5cd6fb2fc743bd6c5b2773233077254c03b5a278d8ce679b3e7de7c7e6c80928; PINREG1 explicit; absolute INIT/global programme/head joins unbound.",
+ "io_tcl": "physical/ref_tile/qfd_tt_ctlm_dv_safe5/assigned_pins.tcl",
+ "reserved_rom_slots": {
+  "status": "Instantiated three-ROM expanded F16 component candidate; absolute INIT prefix adoption remains unbound.",
+  "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+  "size_um": [
+   38.016,
+   62.91
+  ],
+  "origins_um": [
+   [
+    475.2,
+    302.4
+   ],
+   [
+    561.6,
+    302.4
+   ],
+   [
+    648.0,
+    302.4
+   ]
+  ],
+  "horizontal_gap_um": 48.384,
+  "child_gap_um": 36.72,
+  "north_band_um": 196.29
+ },
+ "post_stage_audits": [
+  "physical/common_flow/audit_same_edge_reset_copies.tcl"
+ ],
+ "std_area_um2": 9983.71
+}

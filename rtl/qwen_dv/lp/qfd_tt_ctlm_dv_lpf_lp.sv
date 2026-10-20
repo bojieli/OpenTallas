@@ -99,21 +99,21 @@ module qfd_tt_ctlm_dv_lpf_lp #(
     wire lpr_hr_l;  ot_pl_pad #(.W(1), .N(1)) u_lpr_hr_l (.ck(ck_hr), .d(lpr_root), .q(lpr_hr_l));   // 2 hop(s) from core; landing rq release = RB (landing_reset_lead)
     wire lpr_hr;  ot_pl_pad #(.W(1), .N(1)) u_lpr_hr (.ck(ck_hr), .d(lpr_hr_l), .q(lpr_hr));
     wire lpr_hr_lw = (MUT == 5) ? lpr_hr : lpr_hr_l;
-    // ---- LANDING 0: f16_auth hr -> core, 83 b (u_gi.f16_auth)
-    wire [4*((82) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((((82) - (0) + 1))+24-1)/24)-1:0] lpl_0_vld;  wire [82:0] f16_auth__l_core, lpl_0_o;
-    ot_pl_land_chunk_w #(.W(((82) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_hr), .rsi(lpr_hr_lw), .i(f16_auth), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
-    ot_pl_land_chunk_r #(.W(((82) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_core), .rsi(lpr_core_lw), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
-    assign f16_auth__l_core = (MUT == 1) ? f16_auth : lpl_0_o;
-    // ---- LANDING 1: f16_obs hr -> core, 38 b (u_gi.f16_obs)
-    wire [4*((37) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*(((((37) - (0) + 1))+24-1)/24)-1:0] lpl_1_vld;  wire [37:0] f16_obs__l_core, lpl_1_o;
-    ot_pl_land_chunk_w #(.W(((37) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_hr), .rsi(lpr_hr_lw), .i(f16_obs), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
-    ot_pl_land_chunk_r #(.W(((37) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_core), .rsi(lpr_core_lw), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
-    assign f16_obs__l_core = lpl_1_o;
-    // ---- LANDING 2: dh hr -> core, 187 b (u_gi.dh)
-    wire [4*((186) - (0) + 1)-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*(((((186) - (0) + 1))+24-1)/24)-1:0] lpl_2_vld;  wire [186:0] dh__l_core, lpl_2_o;
-    ot_pl_land_chunk_w #(.W(((186) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_2_w (.ck(ck_hr), .rsi(lpr_hr_lw), .i(dh), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
-    ot_pl_land_chunk_r #(.W(((186) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_2_r (.ck(ck_core), .rsi(lpr_core_lw), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
-    assign dh__l_core = lpl_2_o;
+    // ---- LANDING 0: dh hr -> core, 187 b (u_gi.dh)
+    wire [4*((186) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((((186) - (0) + 1))+24-1)/24)-1:0] lpl_0_vld;  wire [186:0] dh__l_core, lpl_0_o;
+    ot_pl_land_chunk_w #(.W(((186) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_hr), .rsi(lpr_hr_lw), .i(dh), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
+    ot_pl_land_chunk_r #(.W(((186) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_core), .rsi(lpr_core_lw), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+    assign dh__l_core = (MUT == 1) ? dh : lpl_0_o;
+    // ---- LANDING 1: f16_auth hr -> core, 83 b (u_gi.f16_auth)
+    wire [4*((82) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*(((((82) - (0) + 1))+24-1)/24)-1:0] lpl_1_vld;  wire [82:0] f16_auth__l_core, lpl_1_o;
+    ot_pl_land_chunk_w #(.W(((82) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_hr), .rsi(lpr_hr_lw), .i(f16_auth), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
+    ot_pl_land_chunk_r #(.W(((82) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_core), .rsi(lpr_core_lw), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
+    assign f16_auth__l_core = lpl_1_o;
+    // ---- LANDING 2: f16_obs hr -> core, 38 b (u_gi.f16_obs)
+    wire [4*((37) - (0) + 1)-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*(((((37) - (0) + 1))+24-1)/24)-1:0] lpl_2_vld;  wire [37:0] f16_obs__l_core, lpl_2_o;
+    ot_pl_land_chunk_w #(.W(((37) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_2_w (.ck(ck_hr), .rsi(lpr_hr_lw), .i(f16_obs), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
+    ot_pl_land_chunk_r #(.W(((37) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_2_r (.ck(ck_core), .rsi(lpr_core_lw), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
+    assign f16_obs__l_core = lpl_2_o;
     // ---- LANDING 3: dh_user hr -> core, 2 b (u_gi.dh_user)
     wire [4*((1) - (0) + 1)-1:0] lpl_3_bank;  wire [11:0] lpl_3_epo;  wire [4*(((((1) - (0) + 1))+24-1)/24)-1:0] lpl_3_vld;  wire [1:0] dh_user__l_core, lpl_3_o;
     ot_pl_land_chunk_w #(.W(((1) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_3_w (.ck(ck_hr), .rsi(lpr_hr_lw), .i(dh_user), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));

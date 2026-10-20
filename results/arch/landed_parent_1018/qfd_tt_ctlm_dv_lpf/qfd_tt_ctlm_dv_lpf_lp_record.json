@@ -28,6 +28,23 @@
  "landings": [
   {
    "name": "0",
+   "net": "dh",
+   "src_region": "hr",
+   "dst_region": "core",
+   "src_nodes": [
+    "port:dh"
+   ],
+   "width": 187,
+   "readers": [
+    "u_gi.dh"
+   ],
+   "ring": "u_lpl_0_w (ck_hr)",
+   "read": "u_lpl_0_r (ck_core)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
    "net": "f16_auth",
    "src_region": "hr",
    "dst_region": "core",
@@ -38,13 +55,13 @@
    "readers": [
     "u_gi.f16_auth"
    ],
-   "ring": "u_lpl_0_w (ck_hr)",
-   "read": "u_lpl_0_r (ck_core)",
+   "ring": "u_lpl_1_w (ck_hr)",
+   "read": "u_lpl_1_r (ck_core)",
    "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
   },
   {
-   "name": "1",
+   "name": "2",
    "net": "f16_obs",
    "src_region": "hr",
    "dst_region": "core",
@@ -54,23 +71,6 @@
    "width": 38,
    "readers": [
     "u_gi.f16_obs"
-   ],
-   "ring": "u_lpl_1_w (ck_hr)",
-   "read": "u_lpl_1_r (ck_core)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
-  },
-  {
-   "name": "2",
-   "net": "dh",
-   "src_region": "hr",
-   "dst_region": "core",
-   "src_nodes": [
-    "port:dh"
-   ],
-   "width": 187,
-   "readers": [
-    "u_gi.dh"
    ],
    "ring": "u_lpl_2_w (ck_hr)",
    "read": "u_lpl_2_r (ck_core)",
