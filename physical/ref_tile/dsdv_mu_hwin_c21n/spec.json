@@ -1,0 +1,1006 @@
+{
+ "name": "dsdv_mu_hwin_c21n",
+ "top": "dsdv_mu_hwin_capture_1019",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv"
+ ],
+ "params": {
+  "NSLOT": 47,
+  "NEV": 16,
+  "NEP": 4,
+  "NRT": 2,
+  "MUT": 0,
+  "HEAD_STAGE": 1,
+  "COMPACT_PTR": 1,
+  "CHECK_STAGE": 1,
+  "LIVE_COUNT": 1,
+  "RAW_SELECT": 1,
+  "LOCAL_BOOT": 1,
+  "EARLY_HEAD_CAPTURE": 1,
+  "CFG_RELAY": 1,
+  "DUE_COPIES": 2,
+  "SAFE_NATIVE": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 9151.137,
+ "pins": {
+  "S": [
+   "f_ks",
+   "f_mc",
+   "f_mw",
+   "mu_rt",
+   "ck",
+   "rst_n"
+  ],
+  "N": [
+   "mu_c",
+   "mu_rc",
+   "t_wf"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 8.64,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "dsdv_mu_hwin_capture_1019_boot_enable",
+   "dsdv_mu_hwin_capture_1019_retire_due",
+   "dsdv_mu_hwin_capture_1019_retire_advance",
+   "dsdv_mu_hwin_capture_1019_slot_step",
+   "dsdv_mu_hwin_capture_1019_record",
+   "dsdv_mu_hwin_capture_1019_decode24",
+   "dsdv_mu_hwin_capture_1019_fire_flag",
+   "dsdv_mu_hwin_capture_1019_cfg_bad",
+   "dsdv_mu_hwin_capture_1019_phase_action",
+   "dsdv_mu_hwin_capture_1019_early_current_hit",
+   "dsdv_mu_hwin_capture_1019_cfg_accept"
+  ],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "tag": "c21n"
+ },
+ "structural_change": "REVIEW MODEL ONLY: retain full physical core rows, constrain actual functional cells and all runtime births to unchanged full-width band; no new RTL/edges/area waiver. Native post-buffer PG+ownership before placement. Prior trimmed-row failure preserved.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf)."
+ },
+ "job": {
+  "owner": "Codex:S81-HWIN22L",
+  "branch": "codex/s81-hwin22l-1020",
+  "tag": "c21l",
+  "purpose": "HWIN22l structural successor: three broad West/Centre/East kept-cell regions, consumer-local reset forests and fixed central selector/config region; widen one full-width row band to46.44um using measured CTS birth inventory. Same native-safe RTL, ports, parameters, 84 SRAM positions, clock/domain and zero extra edges.",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "rtl/dsrom_sys/s81_ph",
+   "tools/hwin_private_package_1019",
+   "results/rtl/s81_mu_hwin21cb_1019",
+   "results/rtl/s81_mu_hwin21g_1019",
+   "results/rtl/s81_mu_hwin21j_1020"
+  ],
+  "benches": [
+   {
+    "name": "c21j_ns47",
+    "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21n/run_c21j_bench.sh {RUN}/ns47 ns47",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^MUWIN PASS$",
+    "min_count_regex": "^MUWIN starts (\\d+) fires \\d+ expected \\d+ K \\d+ t_mf 0000 hslot 0000 hwin 00$"
+   },
+   {
+    "name": "c21j_ns2",
+    "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21n/run_c21j_bench.sh {RUN}/ns2 ns2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^MUWIN PASS$"
+   },
+   {
+    "name": "c21j_mut_norelay",
+    "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21n/run_c21j_bench.sh {RUN}/norelay norelay",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "EARLY_MITER|CBREF_MITER",
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/r2_norelay.log"
+   },
+   {
+    "name": "c21j_mut_east_copy",
+    "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21n/run_c21j_bench.sh {RUN}/eastcopy eastcopy",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "EARLY_MITER|CBREF_MITER",
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/r2_eastcopy.log"
+   },
+   {
+    "name": "c21j_mut_early_mech2",
+    "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21n/run_c21j_bench.sh {RUN}/mut2 mut2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "EARLY_MITER|CBREF_MITER",
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/r2_mut2.log"
+   },
+   {
+    "name": "c21j_mut_due_domain",
+    "cmd": "bash physical/ref_tile/dsdv_mu_hwin_c21n/run_c21j_bench.sh {RUN}/eastdue eastdue",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "event boot count differs",
+    "fail_witness": "results/rtl/s81_mu_hwin21j_1020/r2_eastdue.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_mu_hwin_c21n/views",
+  "record_to": "results/rtl/ref_tile/dsdv_mu_hwin_c21n"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": false,
+ "keep_pin_regs": true,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    43.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    86.4,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    86.4,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    86.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    86.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    86.4,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    86.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    86.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    129.6,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    129.6,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    129.6,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    129.6,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    172.8,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    172.8,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    172.8,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    216.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    216.0,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    216.0,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    216.0,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    216.0,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    216.0,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    259.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    259.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    259.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_gap.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_gap.g_bank?1?.u_m",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_retire.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_retire.g_bank?1?.u_m",
+   "at": [
+    302.4,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    302.4,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    302.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    345.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    345.6,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    345.6,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    388.8,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    388.8,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    388.8,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    388.8,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    388.8,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    388.8,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    388.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    432.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    432.0,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    432.0,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    432.0,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    432.0,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    432.0,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    432.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    475.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    475.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    475.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    518.4,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    518.4,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    518.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    518.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    518.4,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    518.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    518.4,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "outline": {
+  "w": 561.6,
+  "h": 388.8
+ },
+ "fill_reason": {
+  "lattice_channel_bound": {
+   "why": "PLANNING/PREFLIGHT candidate: same84 SRAM origins on43.2lattice and>=22.41um physical macro channels, macro placement halo8.64um (was10.8), one entire full-width legal occupancy band in retained full-core rows y159.84..206.28. Three coarse W/C/E regions with consumer-local reset ownership, central selector/config, event7 locality. Complete original source and retainedCTS567221 conservative endpoint pairs<=404.124um. True source9151.137 distinct from retainedCTS birth-inclusive planning11063.90178; final actual placed40..60 remains mandatory. Halo8.64 puts southhalo edge159.03 belowband159.84 and northhalo207.36 aboveband206.28, eliminating rowholes; exact native proof required before gate. ROOT planning-budget tool review pending; production hook guarded.",
+   "lattice_um": 43.2,
+   "min_channel_um": 22.41,
+   "std_band_util": 0.42750642239048137,
+   "approved_by": "codex coordinator",
+   "std_band_y_um": [
+    159.84,
+    206.28
+   ]
+  }
+ },
+ "pin_ranges": {
+  "f_ks": [
+   238.4,
+   258.4
+  ],
+  "f_mc": [
+   258.8,
+   270.8
+  ],
+  "ck": [
+   271.2,
+   273.2
+  ],
+  "rst_n": [
+   273.6,
+   275.6
+  ],
+  "f_mw": [
+   276.0,
+   288.0
+  ],
+  "mu_rt": [
+   288.4,
+   323.2
+  ],
+  "mu_c": [
+   238.4,
+   298.4
+  ],
+  "mu_rc": [
+   299.0,
+   320.0
+  ],
+  "t_wf": [
+   320.4,
+   323.2
+  ]
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/ref_tile/dsdv_mu_hwin_c21n/hwin_native_fences.tcl",
+  "PRE_GLOBAL_PLACE_SKIP_IO_TCL": "physical/ref_tile/dsdv_mu_hwin_c21n/hwin_native_fences.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/ref_tile/dsdv_mu_hwin_c21n/hwin_native_fences.tcl"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "note": "Native-safe RTL successor to historical unqualified HWIN; geometry-only relative to c21k failed reach/GRT. No closed HWIN view."
+ },
+ "measured_area_basis": {
+  "stage": "actual prior c21k CTS plus repair births, source RTL byte-identical",
+  "post_link_source_um2": 8964.76086,
+  "post_unbuffer_preGPL_source_um2": 9151.137,
+  "retained_CTS_area_um2": 11063.90178,
+  "receipt": "results/arch/s81_hwin22l_1020/coarse_plan_w46_legal.json",
+  "scope": "planning budget includes actual observed clock/repair cells; not claimed as synthesis-only area"
+ },
+ "planning_std_area_um2": 11063.90178,
+ "planning_birth_budget": {
+  "path": "results/arch/s81_hwin_birthbudget_1020/proof/receipt.json",
+  "sha256": "3799dd402d3f47293551fa12c03d55a52c0cf0ea3ba8d036ba4618b65a877158",
+  "approved_by": "ROOT",
+  "why": "ROOT authorized narrowly source-bound HWIN22l actual measured CTS birth population for PLANNING ONLY; new actual placed40..60 proof remains mandatory (10-20 takeover)."
+ },
+ "owner": "Codex:S81-source-model-successor"
+}
