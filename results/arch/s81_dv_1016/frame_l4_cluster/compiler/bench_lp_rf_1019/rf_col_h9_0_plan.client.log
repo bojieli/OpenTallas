@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits  1076 GB (avail 866, growth 113, headroom 0, waiters 0/0 GB) load 86/128 running 69 disk 158 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_b850173cf
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_b850173cf
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_b850173cf
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_b850173cf
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-frame4/src_b850173cf
+ot-run: -> ot-epyc5
+ot-heavy: request 64G is charged 20G (class 'frame_bench.sh:col_h#' measured peak 11.8G, n=21+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1167253-1792479547 after 1 s
+  [plan] FRAME_BENCH PASS col_h9 rows=6 words=14 complete_at_root=0 partials=14 END edges=3063 ret_words=14 xo_checked=3061 fault=0
+FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0
+PASS frame col_h9
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1167253-1792479547): exit 0
