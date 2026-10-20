@@ -1,0 +1,21 @@
+{
+  "source": "d98271674",
+  "status": "study_only_no_128_code_RTL",
+  "packed_line_bytes": 136,
+  "codes_per_packed_line": 128,
+  "native_codes_per_issue": 64,
+  "packed_lines_per_block": 64,
+  "native_issue_slots_per_block": 128,
+  "current_measured_edges_per_block": 136,
+  "scope": "Source contract and prior measured baseline; no new throughput measurement or adopted speedup",
+  "required_proof": [
+    "preserve lower-half then upper-half order of each packed line",
+    "preserve original (row,group,wave,slot) identity for both 64-code subslots",
+    "preserve golden product conversion, reduction tree, FP32 rounding, scale application",
+    "prove downstream accepts two native issue slots per edge or explicitly price serialization",
+    "bit-exact production qkv48/o128/gu192/down128 and non-INT8 regression",
+    "causal half-swap/tag-reuse/drop/sign/reduction-reorder mutants fail",
+    "mapped native <=32 incl reset before new physical gate",
+    "actual clock/boundary/storage/reach checklist; no estimated rate adoption"
+  ]
+}
