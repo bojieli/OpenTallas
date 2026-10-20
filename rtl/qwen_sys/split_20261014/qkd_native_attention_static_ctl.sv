@@ -20,7 +20,9 @@
 // MUT (bench, LAND=1): 4 = the TX launch flop drops the fault gate; 5 / 6 = codec MUT 3 / 4 (qkd_native_attention_record_ld).
 module qkd_native_attention_static_ctl #(
  parameter integer MUT=0,
- parameter integer LAND=0
+ parameter integer LAND=0,
+ // Compiler-reserved STATUS at compiled_end-1; RESULT and done ages are unchanged.
+ parameter integer RETIRE_STATIC=0
 )(
  input wire ck,rst_n,
  input wire load,run,
@@ -68,7 +70,8 @@ module qkd_native_attention_static_ctl #(
   else begin
    age<=age_nx;
    if(load)begin
-    if(busy||loading||loaded||compiled_rx_cmd<2||compiled_tx_first<=compiled_rx_cmd+34||compiled_end!=compiled_tx_first+34)
+    if(busy||loading||loaded||compiled_rx_cmd<2||compiled_tx_first<=compiled_rx_cmd+34||((RETIRE_STATIC==0)?(compiled_end!=compiled_tx_first+34):
+     ({1'b0,compiled_end} < {1'b0,compiled_tx_first}+17'd34)))
      local_fault<=1;
     cal<=compiled_calendar;rx_cmd<=compiled_rx_cmd;tx_first<=compiled_tx_first;last<=compiled_end;
     loading<=1;
@@ -92,7 +95,7 @@ module qkd_native_attention_static_ctl #(
  wire [3:0] rx_kind_expected=(age==rx_cmd)?4'd1:4'd2;
  wire [4:0] rb=age-rx_cmd-1;
  wire tx_expected=result_reserved||status_slot;
- wire status_slot=busy&&age==tx_first+33;
+ wire status_slot=busy&&age==((RETIRE_STATIC!=0)?last-16'd1:tx_first+16'd33);
  assign result_reserved=busy&&age>=tx_first&&age<tx_first+32;
  wire rx_valid;wire [3:0] rx_kind;wire [4:0] rx_beat;wire [511:0] rx_data;wire record_fault;wire codec_tx_valid;
  // STATUS (age TX_FIRST+33): the namespace word {q_ready, done, fault, busy, ready} (QXF-LINK F2; was 512'd0, which the
