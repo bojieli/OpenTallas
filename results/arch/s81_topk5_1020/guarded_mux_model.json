@@ -56,36 +56,21 @@
       240
     ],
     "candidate_outline_um": [
-      30.24,
-      30.24
+      32.4,
+      32.4
     ],
     "fill_estimate": [
-      0.40108506944444433,
-      0.6
+      0.1524,
+      0.2286
     ],
     "pin_face_budget": {
-      "W": "a148 over25.92um=5.71/um",
-      "E": "y148 over25.92um=5.71/um",
-      "N": "b148 over25.92um=5.71/um",
-      "S": "sel2+clock+reset over25.92um"
+      "W": "a148 =>4.57/um",
+      "E": "y148 =>4.57/um",
+      "N": "b148 =>4.57/um",
+      "S": "s2,clk,reset =>0.124/um"
     },
     "reach_geometric_upper_um": 64.8,
-    "floorplan_admission": "No gate until canonical ORFS inventory measured. Pilot269.46756um2 overcore671.8464um2=40.1%; production<=403.10784um2 remains<=60. All directreach geometric60.48um.",
-    "measured_pilot": {
-      "positive_checks": 1397,
-      "mutants_fail_cycles": [
-        8,
-        9
-      ],
-      "mapped_cells": 1392,
-      "sequential_cells": 770,
-      "all_driver_max": 28,
-      "over32": 0,
-      "unknown_masters": 0,
-      "std_area_um2": 269.46756,
-      "seq_area_um2": 227.1564,
-      "production_inventory": false
-    }
+    "floorplan_admission": "Pin-limited leaf needs specific actual synthesized area/PNG exception before any physical gate; no gate authorization inferred"
   },
   "whole_slice_integration_obligations": [
     "Use four exact-width masters per592bit word; last bit control captured on identical edge.",
