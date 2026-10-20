@@ -17,6 +17,7 @@
 // emit by the same 2 edges (TAILC 1: HC_MIX + 2 over the SAFE 1 root).  No ready, busy or response signal moves an event.
 // MUT (bench): 1 = inner p3 row-max operand off by one group (ot_hgi_hc_tail_os_static MUT 1).
 module ot_hbm_hc_tail_child_static #(
+    parameter integer LOCAL_RESET_CLEAR = 0,
     parameter integer SDIV = 7,
     parameter integer CAP  = 289,
     parameter integer MUT_PRE = 0,
@@ -33,7 +34,11 @@ module ot_hbm_hc_tail_child_static #(
 );
     // ---------------------------------------------------------------- regional reset (2-stage landing + kept roots)
     wire [2:0] rn;
-    ot_rst_relay #(.REGIONS(3)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    generate if (LOCAL_RESET_CLEAR) begin : g_local_reset
+        ot_hbm_hc_tail_reset_local u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    end else begin : g_legacy_reset
+        ot_rst_relay #(.REGIONS(3)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
+    end endgenerate
     wire rst_pin = rn[0], rst_ctl = rn[1], rst_core = rn[2];
     // ---------------------------------------------------------------- pin flops + second (fanout) stage
     reg launch_p, launch_s; reg [1631:0] d_p, d_s;
@@ -80,5 +85,23 @@ module ot_hbm_hc_tail_child_static #(
             end
         end
     end
+endmodule
+// Local opt-in reset topology: same 3-edge release as ot_rst_relay(3,2,1).
+// sync_q[0] drops asynchronously when the port asserts; regional reset therefore
+// asserts through a registered asynchronous-clear cascade, with no clock needed.
+// Regional roots sample sync_q[1], so moving their clear source adds no edge.
+module ot_hbm_hc_tail_reset_local (
+    input wire clk, rst_n_in,
+    output wire [2:0] rst_n
+);
+    (* async_reg = "true", keep = "true", dont_touch = "true" *) reg [1:0] sync_q;
+    (* keep = "true", dont_touch = "true" *) reg [2:0] region_q;
+    always @(posedge clk or negedge rst_n_in)
+        if (!rst_n_in) sync_q <= 2'b00;
+        else sync_q <= {sync_q[0], 1'b1};
+    always @(posedge clk or negedge sync_q[0])
+        if (!sync_q[0]) region_q <= 3'b000;
+        else region_q <= {3{sync_q[1]}};
+    assign rst_n = region_q;
 endmodule
 `default_nettype wire
