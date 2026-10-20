@@ -1,0 +1,90 @@
+{
+ "top": "ot_hidx_s3_flat",
+ "why": "L2H-IDXSEL s3 (LEAD3-HBM route B, 10-19/20): the HBM IDX selector as a landed cluster. s1a/s1b (one 42,772-sink root) and s2a/s2b (five roots inside one leaf, ~7k unlanded inter-root reg->reg crossings) stall in CTS hold repair. Regions: ctl (u_ctl: control-word pin flops, reset landing, choose pipeline, fault) + q0..q3 (four instances of ONE hardened quadrant tile ot_hidx_s3_q: 16 lanes, histogram, pack, 3 SRAMs). Only control crosses (cw 14 b + thr 16 b out, ties 14 b per quadrant out, ret 25 b + qf 1 b per quadrant back); the 2 x 2,368-bit line faces are per-quadrant ports on the quadrant's own clock. ctl <-> quadrant is a loop: reschedule mode, every landed net +3 edges, handed to the IDX compiler (sel_in 7, sel_choose_rt 8).",
+ "sources": [
+  "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_flat.sv"
+ ],
+ "child_sources": [
+  "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv",
+  "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
+ ],
+ "out_dir": "rtl/hbm_accel/index/sel_s3/lp",
+ "record_dir": "results/rtl/hbm_idx_static/selector_s3",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "D": 4,
+ "E": 2,
+ "reschedule": true,
+ "share_rings": true,
+ "landing_reset_lead": true,
+ "regions": [
+  {
+   "name": "ctl",
+   "insts": [
+    "u_ctl"
+   ],
+   "centre": [
+    300.0,
+    225.0
+   ]
+  },
+  {
+   "name": "q0",
+   "insts": [
+    "u_q0"
+   ],
+   "centre": [
+    140.4,
+    334.8
+   ]
+  },
+  {
+   "name": "q1",
+   "insts": [
+    "u_q1"
+   ],
+   "centre": [
+    140.4,
+    115.2
+   ]
+  },
+  {
+   "name": "q2",
+   "insts": [
+    "u_q2"
+   ],
+   "centre": [
+    459.6,
+    334.8
+   ]
+  },
+  {
+   "name": "q3",
+   "insts": [
+    "u_q3"
+   ],
+   "centre": [
+    459.6,
+    115.2
+   ]
+  }
+ ],
+ "bench": {
+  "cycles": 1200,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ },
+ "mut_child": "u_ctl",
+ "tb_stimulus": "rtl/hbm_accel/index/sel_s3/lp/tb_hidx_s3_stim.svh",
+ "mut4_stages": 100
+}

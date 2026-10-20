@@ -20,6 +20,42 @@ qc,qu=B.qdq_codes(q)
 kc,ku=B.qdq_codes(rng.standard_normal((n,128)).astype(np.float32))
 exp,bad=C.golden(C.values(qc,qu),w,C.values(kc,ku),np.ones(n,dtype=bool),qu,ku)
 assert not bad.any()
+import os
+if os.environ.get('IDX_VEC_CRAFT')=='1':
+ # L2H-IDXSEL s3 (opt-in; unset = the legacy bytes): re-pick the n keys from a 3n pool of the same distribution so the
+ # selector's two schedule margins are observable (scores are per-key, independent of the key's slot):
+ #  T (the 512th score) is unique with pass-2 bin 0 (orderkey low 6 bits 0: found on the LAST op5 of pass 2, its tie
+ #  budget 1 decided there) and sits in quadrant 0 line 0 (the first compaction line reads the fresh budget: an op6
+ #  block one edge early takes the reset budget 0 and drops T); line 170 of quadrants 0..2 holds keys of T's pass-0 bin
+ #  with pass-1 bin 31 (the first op5 of pass 1: a drain one edge short misses them and shifts the rank).
+ ok=lambda x:(~x)&0xffff if x&0x8000 else x^0x8000          # orderkey of bf16 bits
+ pc,pu=B.qdq_codes(np.random.default_rng(2026102001).standard_normal((3*n,128)).astype(np.float32))
+ pe,pb=C.golden(C.values(qc,qu),w,C.values(pc,pu),np.ones(3*n,dtype=bool),qu,pu)
+ assert not pb.any()
+ K=np.array([ok(int(x)) for x in pe],dtype=np.int64)
+ order=np.argsort(-K,kind='stable')
+ pick=None
+ for r in range(600,2600):
+  t=int(K[order[r]])
+  if t&63 or ((t>>6)&31)==31 or int((K==t).sum())!=1:continue
+  hi=np.where((K>t)&((K>>11)==(t>>11))&(((K>>6)&31)==31))[0]
+  if len(hi)>=3:pick=(order[r],t,hi[:6]);break
+ assert pick is not None,'no craftable threshold in the pool'
+ iT,t,hi=pick
+ above=[int(i) for i in order if K[i]>t and int(i) not in set(int(x) for x in hi)][:511-len(hi)]
+ below=[int(i) for i in order if K[i]<t][:n-512]
+ assert len(above)==511-len(hi) and len(below)==n-512
+ slot=[None]*n
+ slot[5]=int(iT)
+ l170=[s_*2736+170*16+l for s_ in range(3) for l in range(2)][:len(hi)]
+ for j,i in zip(l170,hi):slot[j]=int(i)
+ rest=above+below
+ np.random.default_rng(2026102002).shuffle(rest)
+ it=iter(rest)
+ for j in range(n):
+  if slot[j] is None:slot[j]=next(it)
+ kc,ku,exp=pc[slot],pu[slot],pe[slot]
+ assert sorted(ok(int(x)) for x in exp)[-512]==t
 keys=[B.key_word(kc[i],ku[i]) for i in range(n)]
 lines=[]
 for a in range(171):

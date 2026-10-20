@@ -34,6 +34,15 @@ control bit broadcast to 4 quadrants + 12 SRAMs): the selector core takes every 
 a per-consumer kept one-hot copy (P2), uniformly, so sel_in = 1 (pin) + 2; the shell adds an output relay before the pin
 flop (q0/q1 -> E/S faces up to ~500 um), sel_out = 2. Every selector-relative field edge is unchanged; the selected
 stream, link fields and TX move +3 edges and the frame grows +3 edges.
+
+LANDED SELECTOR CLUSTER (L2H-IDXSEL s3, LEAD3-HBM route B 10-19/20; table 'registered_s3', die master
+ot_hbm_idx_selector_s3): ctl tile + 4 x ONE quadrant tile, every ctl <-> quadrant net LANDED (+3 edges, lp.py reschedule
+mode). The op word crosses ctl pin flop -> ctl output flop -> landing (+3) -> quadrant pin copies -> P2: sel_in = 7. The
+line faces are per-quadrant ports on the quadrant's own clock: in_line pin flop -> relay = sel_in_line 2 (the scorer
+stream is no longer timed by sel_in), selected stream core reg -> pin flop = sel_out 1. The choose loop (quadrant
+histogram read -> landing -> ctl sums / threshold / ties -> landing -> quadrant compare) returns the threshold to the
+quadrant 12 edges and the ties 13 edges after the deciding op5 (flat core 3 / 4): sel_choose_rt = 8 more idle edges
+after every op5 run (op5 -> next op3/op4/op6). op4 -> op5 drain is quadrant-internal: unchanged.
 """
 import argparse, json
 from pathlib import Path
@@ -41,6 +50,8 @@ from pathlib import Path
 PIN_TABLES = {
     'registered': dict(vmq_in=1, vmq_out=1, vm_rt=2, q_in=1, q_out=1, sel_in=3, sel_out=2, link_in=1, link_out=1,
                        link_core_out=5, sel_core_out=2, sel_scan_drain=2),
+    'registered_s3': dict(vmq_in=1, vmq_out=1, vm_rt=2, q_in=1, q_out=1, sel_in=7, sel_in_line=2, sel_out=1, link_in=1,
+                          link_out=1, link_core_out=5, sel_core_out=2, sel_scan_drain=2, sel_choose_rt=8),
     'none': dict(vmq_in=0, vmq_out=0, vm_rt=0, q_in=0, q_out=0, sel_in=0, sel_out=0, link_in=0, link_out=0,
                  link_core_out=0, sel_core_out=0, sel_scan_drain=0),
 }
@@ -57,7 +68,7 @@ def shifts(pin, chain=0):
     core['vmq'] = pin['vmq_in']                                   # slot -> vm_query core
     core['q'] = core['vmq'] + pin['vm_rt'] + pin['vmq_out'] + pin['q_in']   # operand block -> query core
     core['s'] = core['q'] + pin['q_out']                          # ql_* -> scorer (no pin regs)
-    core['sel'] = core['s'] + chain + pin['sel_in']               # score (+ IDX-SCORE cluster seam chain) -> selector core
+    core['sel'] = core['s'] + chain + pin.get('sel_in_line', pin['sel_in'])   # score (+ seam chain) -> selector core (line face)
     core['link'] = core['sel'] + pin['sel_core_out'] + pin['sel_out'] + pin['link_in']  # selected -> link core
     own_in = dict(vmq=pin['vmq_in'], q=pin['q_in'], s=0, sel=pin['sel_in'], link=pin['link_in'])
     cal = {t: core[t] - own_in[t] for t in core}
@@ -107,7 +118,7 @@ def compile_program(pins='registered', gap=100, score_chain=0, link_pipe=None):
     wait(2)
     for b in range(31, -1, -1):
         emit('sel', op=5, addr=b)
-    wait(1)
+    wait(1 + pin.get('sel_choose_rt', 0))
     for ps in (1, 2):
         emit('sel', op=3, ps=ps)
         for a in range(171):
@@ -117,7 +128,7 @@ def compile_program(pins='registered', gap=100, score_chain=0, link_pipe=None):
         wait(2 + pin['sel_scan_drain'], selector_pass=ps)
         for b in range(63 if ps == 2 else 31, -1, -1):
             emit('sel', op=5, ps=ps, addr=b)
-        wait(1)
+        wait(1 + pin.get('sel_choose_rt', 0))
     for a in range(171):
         emit('sel', op=6, ps=2, addr=a)
     wait(3)

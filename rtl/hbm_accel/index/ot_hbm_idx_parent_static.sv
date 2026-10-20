@@ -52,10 +52,17 @@ module ot_hbm_idx_parent_static #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:
    assign sel_in[q*592+l*37+:37]={score[290+l*20+:20],score[34+l*16+:16],score[18+l]};
   end
  end
+`ifdef OT_IDX_SEL_S3
+ // L2H-IDXSEL s3: the landed selector cluster (die port list = ot_hbm_idx_selector_static_sel: selected-only face).
+ // Calendar table registered_s3: the op word reaches the quadrant core 7 edges after the port, the score line 2.
+ ot_hbm_idx_selector_s3 selector(.clk_ctl(clk_sel),.clk_q(clk_sel_q),.clk_mem(clk_sel_mem),.rst_n(rst_n),.op(sel_op),.pass(sel_pass),
+ .addr(sel_addr),.k(10'd512),.in_line(sel_in),.selected_v(selected_v),.selected_line(selected_line),.fault(sf));
+`else
  wire[3:0]unused_ov;wire[2367:0]unused_ol;wire[15:0]threshold;wire[55:0]selected_count;
  ot_hbm_idx_selector_static selector(.clk_ctl(clk_sel),.clk_q(clk_sel_q),.clk_mem(clk_sel_mem),.rst_n(rst_n),.op(sel_op),.pass(sel_pass),
  .addr(sel_addr),.k(10'd512),.in_line(sel_in),.out_v(unused_ov),.out_line(unused_ol),.selected_v(selected_v),.selected_line(selected_line),
  .threshold_observe(threshold),.selected_observe(selected_count),.fault(sf));
+`endif
  wire[9:0]total;
 // idx_link = the pipelined successor ot_hbm_idx_topk_link_static_p (HBM-IDXPIPE 10-18: outputs +5 edges, inputs unchanged;
 // calendar --link-pipe 5 = the registered default). OT_IDX_HIST_LINK keeps the historical single-edge link (--link-pipe 0).
@@ -67,10 +74,19 @@ module ot_hbm_idx_parent_static #(parameter integer N_Q=4,TP=96,RANK_W=(TP<=1?1:
  ot_hbm_idx_topk_link_static_p link(.clk(clk_link),
 `endif.clk_mem(clk_link_mem),.rst_n(rst_n),.clear(frame_start),.ingest_v(&selected_v),
  .selected_line(selected_line),.flush(link_flush),.emit_v(link_emit),.emit_group(link_group),.rank(8'(rank)),.gbase(gbase),.tx_v(tx_v),.tx(tx),.fault(lf),.selected_count(total));
+`ifdef OT_IDX_SEL_S3
+ reg[4:0]op2_dl;
+ always @(posedge clk_sel or negedge rst_n)if(!rst_n)op2_dl<=0;else op2_dl<={op2_dl[3:0],sel_op==2};
+`endif
  reg calendar_fault;
  always @(posedge clk_sel or negedge rst_n)begin
   if(!rst_n)calendar_fault<=0;
+`ifdef OT_IDX_SEL_S3
+  // s3: op2 leads its score line by sel_in - sel_in_line = 5 edges at the selector ports
+  else if(op2_dl[4]&&score_observe[0]!=1'b1)calendar_fault<=1;
+`else
   else if(sel_op==2&&score_observe[0]!=1'b1)calendar_fault<=1;
+`endif
  end
  assign fault=vf|qf|(|scf)|sf|lf|calendar_fault;
 endmodule

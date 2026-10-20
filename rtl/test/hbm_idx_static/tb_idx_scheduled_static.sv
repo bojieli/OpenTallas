@@ -46,7 +46,7 @@ module tb_idx_scheduled_static;
  always @(negedge clk)begin
   if(dut.parent.link.ingest_r)begin ingests++;if(firstingest<0)firstingest=cycle;lastingest=cycle;end
   if(dut.parent.link.flush_r&&flushedge<0)begin flushedge=cycle;
-   $display("DIAG link-core flush edge%0d total%0d ingests%0d first%0d last%0d selected_observe%h",cycle-tstart,dut.parent.link.c_count,ingests,firstingest-tstart,lastingest-tstart,dut.parent.selector.c_obs);end
+   $display("DIAG link-core flush edge%0d total%0d ingests%0d first%0d last%0d selected_observe%h",cycle-tstart,dut.parent.link.c_count,ingests,firstingest-tstart,lastingest-tstart,`ifdef OT_IDX_SEL_S3 56'd0 `else dut.parent.selector.c_obs `endif);end
  end
  always @* begin
   key_lines=0;
