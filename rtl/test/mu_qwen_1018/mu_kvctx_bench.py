@@ -29,6 +29,9 @@ token-run start of both calendars 3 edges before the old pair edge (K TX context
 40 edges later.  The link = LINK_CAL = 16 edges (production image: K TX slot 2 -> C pin arrival 18).  Extra check:
   K6 no sequencer / calendar fault; the KV TX and C RX calendars each play 2 context events per pair.
 --cmut 1 (CAL only): the face sequencer carries the MU 0 C RX image (a qfd_sys_face kit without the MU image): must FAIL.
+QW-KVCTX 10-19: the ctlm runs CTX_SRC 1 FCTX 1 (die_params) with the leaf on its ctx_x port (was a force on c_ctx,
+FCTX 0, no LCV / CTXU log): the shared checks C8 (MU-DQ-D2DUSER user carrier) and C10 (MU-DQ-BOOTCTX filler native
+contexts, 108 in `red`) now see the harness; tb_mu_kvctx.sv header.
 """
 import argparse, json, os, subprocess, sys
 from pathlib import Path
@@ -86,7 +89,15 @@ _orig_events_for = B.events_for
 def events_for(pb, face, res, users, ctx=True):
     if users == {0}:
         return _orig_events_for(pb, face, res, users, ctx=False)
-    return _orig_events_for(pb, face, res, users, ctx=False) + kv_events()   # NO image context: the KV die sends it
+    # NO image filler context: the KV die sends it.  The OPSEG image still carries its DW5 / DW6 context record (the ctlm
+    # checks it on the seal edge, ~1035, AFTER the KV loads at 218 / 418 / 618; a plain-0 record is a bad tag -> op_fault):
+    # the record with tag CTX_TAG and an EMPTY mask = a valid record that loads no filler (QW-KVCTX 10-19; the old harness
+    # forced c_ctx / c_ctxld and so never saw the seal check).
+    dw5, dw6 = O.ctx_words({}, set())
+    rec = {O.CTX_DW[0]: dw5, O.CTX_DW[1]: dw6}
+    ev = [(c, k, (v >> 64 << 64) | rec[v >> 64]) if k == 1 and (v >> 64) in rec else (c, k, v)
+          for c, k, v in _orig_events_for(pb, face, res, users, ctx=False)]
+    return ev + kv_events()
 
 
 B.events_for = events_for
