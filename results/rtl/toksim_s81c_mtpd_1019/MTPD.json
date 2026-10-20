@@ -1,0 +1,160 @@
+{
+ "cls": "MTPD",
+ "written": "10-19 23:20 PT",
+ "agent_branch": "claude/toksim-s81c-mtpd-1019@336dc4a32",
+ "ops": [
+  {
+   "op": "draft.head",
+   "dag_cls": "head",
+   "n_crit": 5,
+   "old_cycles_per_instance": 8387.0,
+   "cycles": 8416,
+   "tail_priced": 34,
+   "grade": "measured-newest-element-RTL",
+   "definition": "per drafted token: bundle go -> registered token return of one 128-row group (all 252.5 groups of a rank run in lockstep); includes in-bundle row argmax + 1 capture edge; +34 die wire priced (as zz_curation / head.lm_head)",
+   "shape": "DeepSeek-V4.1 head.weight K 5120 (draft head = V.mv(head.weight, xn), dv_layer_fixtures.py), 128-row actual-ROM group rows 21888..22015 rank 0, golden draft inputs draft.head0..4.norm.scale",
+   "bit_exact": true,
+   "golden": "MTP layer fixture (hdc_golden_v41 chunk8, released DeepSeek-V4.1-Flash dba1be0a, 1M ctx; draft_logits_equal_model_draft): every returned logit word (128 a draft) == golden draft.head{i} logits, token == first-max of those rows; 5 drafts x 3 owners bad=0; mutant head_d=0 FAIL bad=387",
+   "rtl": {
+    "module": "ot_dsrom_head_bundle (IOREG=1 SAFE=1) + ot_dsrom_head_elem + ot_rom_argmax_rows + ot_s81_bundle_token_return + 10 x ot_rom_4096x274_m8",
+    "source": "codex/s81-token-integrate-1019@98a2f06da",
+    "blob": "ot_dsrom_head_bundle.sv sha256 83a8947a, head_elem f8b1999d, argmax_rows e0092764 (receipt source_hashes)",
+    "in_release_source": false
+   },
+   "bench": "rtl/dsrom_sys/s81_native_head_connect/test/tb_s81_bundle_token_return.sv@98a2f06da + tools/s81_dv/layer_prog/qf_producer/toksim_mtpd_draft_head.py@claude/toksim-s81c-mtpd-1019@336dc4a32",
+   "evidence": "results/rtl/toksim_s81c_mtpd_1019/draft_head_run/mtpd_draft_head.json (pass true, ages [8416]); MTPD_draft_head.otrun.log 'MTPD_DRAFT_HEAD PASS [8416]'",
+   "job": "ot-epyc5 oth-ubuntu-604012-1792476740 (Verilator 5.050)",
+   "edges_owed": "none (no INBOX head edge)",
+   "note": "Old 8387 = head stage OCCUPANCY; 8416 is go->return latency (serial draft chain -> latency is the right term). Not on a die (G9: no head netlist in the p4l bind). Golden check of the HEAD-input run also verified: logits.hex == HEAD fixture rows 21888..22015 128/128, xa/xb == head.norm.scale 5120/5120."
+  },
+  {
+   "op": "draft.markov",
+   "dag_cls": "head",
+   "n_crit": 5,
+   "old_cycles_per_instance": 65.5,
+   "cycles": 6,
+   "grade": "measured-newest-element-RTL",
+   "definition": "fused add(head_k, markov_k) + argmax extra cycles vs head-only (last beat -> rank-0 result), Markov logits stream in lockstep with the head logits",
+   "shape": "129,280 lanes per draft step, draft0..4 (fused_head_tp4 FH=1)",
+   "bit_exact": true,
+   "golden": "MTP fixture draft.markov{i}.logits (hdc_golden_v41 chunk8, released checkpoint): 129,280 fused lanes, 0 bit mismatches each; argmax == golden draft tokens 108193/8674/71/95391/12184; mutants mut_lg / fh0_draft0 FAIL",
+   "rtl": {
+    "module": "ot_dsrom_s81_head_amax_fh + ot_rom_argmax_rows (fused_head_tp4 FH=1)",
+    "source": "claude/tok-s81-headb-1018@641239174",
+    "blob": "head_amax_fh 6f7af25f, argmax_rows e0092764 (= live head bench)",
+    "in_release_source": false
+   },
+   "bench": "rtl/dsrom_sys/integration/tb_dsrom_s81_fused_head_tp4.sv@641239174 via tools/s81_dv/head_tp4_interim.py",
+   "evidence": "results/rtl/s81_layer_tput_1018/head_interim/head_interim.json@641239174 draft0..4 pass, measured_cycles.draft_fused_added 6",
+   "job": "none (collected)",
+   "edges_owed": "none",
+   "note": "The Markov ROW matvec (ot_dsrom_markov_row K 256, first result 178/step) is NOT in the 6: it stays in mc.markov.floor (old, kept). Its input d_(i-1) is ready one full head sweep (8416) before the fuse, so it can run under head sweep i -- a schedule call for the parent; not folded here."
+  },
+  {
+   "op": "draft.fixed",
+   "dag_cls": "head",
+   "n_crit": 1,
+   "old_cycles_per_instance": 195.0,
+   "cycles": 0,
+   "grade": "measured-newest-element-RTL",
+   "definition": "lm_head element A/B SAFE +39/sweep x 5: inside the measured 8416 (bench bundle built SAFE=1)",
+   "shape": "as draft.head",
+   "bit_exact": true,
+   "golden": "as draft.head",
+   "rtl": {
+    "module": "ot_dsrom_head_bundle (IOREG=1 SAFE=1) + ot_dsrom_head_elem + ot_rom_argmax_rows + ot_s81_bundle_token_return + 10 x ot_rom_4096x274_m8",
+    "source": "codex/s81-token-integrate-1019@98a2f06da",
+    "blob": "ot_dsrom_head_bundle.sv sha256 83a8947a, head_elem f8b1999d, argmax_rows e0092764 (receipt source_hashes)",
+    "in_release_source": false
+   },
+   "bench": "as draft.head",
+   "evidence": "results/rtl/s81_live_head_return_1019/model_before_build.json@98a2f06da source 'ot_dsrom_head_bundle IOREG=1 SAFE=1 CUT=511 SPLIT9=1'",
+   "job": "none",
+   "edges_owed": "none",
+   "note": "0-cycle merged op (covered by draft.head 8416)."
+  },
+  {
+   "op": "head.argmax_merge",
+   "dag_cls": "coll",
+   "n_crit": 1,
+   "xdie_part": "argmax_merge: current S81 die RTL (G8R2 p4m: rstop + lep + lane legs) + lane tiles (HF-3) + PHY digital (KP4) co-sim, tb_xdie_s81_2 G8R2 0e6b9b710 + HF-3 lane ed9d570ad + MU lep main (stage SOURCES.txt), Verilator 5.050",
+   "old_cycles_per_instance": 119.0,
+   "cycles": 111,
+   "grade": "measured-release-RTL",
+   "definition": "TP4 all_gather 32 B, 1 beat a peer: issue -> landing at every peer (E_meas worst rep) minus the 453 modelled PHY a crossing; same split as the base record (119 + 453 PHY + 134 leg)",
+   "shape": "c_g1_mu0 TP4 calendar, 12 streams, 2 reps (E 563, 564)",
+   "bit_exact": true,
+   "golden": "gen_golden.py (--gap 100 --dl-model fluid) TP4 calendar stimulus: 12,096/12,096 beats landed bit-exact, in order, by compiled deadline, 0 faults (transport payload golden, as LEG)",
+   "rtl": {
+    "module": "rstop + lep (MU) + lane legs + HF-3 lane tiles + PHY digital",
+    "source": "claude/xdie-s81-mu-1019@eb0d31c63 (stage DIE = MU die ceaed19c4 = release MU die base)",
+    "blob": null,
+    "in_release_source": true
+   },
+   "bench": "tools/xdie_s81_2/gate_mu.sh c_g1 (tb_xdie_s81_2)",
+   "evidence": "results/rtl/xdie_s81_mu_1019/gate/record_c_g1.json@eb0d31c63 collectives.argmax_merge E [563,564] E_meas 564; c_g1.chk.txt WIN_PASS INV_PASS",
+   "job": "S81-TOK4 / LEAD2-S81 XDIE (collected, not mine)",
+   "edges_owed": "XDIE guard 2 (+1 edge a crossing) for dense MU (gate README: guard 1 is 1 edge short under 23/46-user traffic, a_a46d argmax x2 late by 1); single-user c_g1 PASS at guard 1",
+   "note": "COMPOSER: toksim_s81_compose.xdie_part() scales only 'priced' parts, so this measured-current-RTL part (119) is NOT replaced by a ratio; parent must add a per-part replacement (119 -> 111). On-die leg 134 -> 140 is LEG.json (already folded); PHY 453 stays modelled. Total 704 vs 706. The post-gather 4-way compare (HEADB chain 2 cycles a rank, final 6 after rank-0) is not a separate DAG node (old head.argmax 21.6 -> 10 covers the rank-0 part)."
+  }
+ ],
+ "decomposition_not_folded": [
+  {
+   "op": "wave.busy",
+   "n_crit": 5,
+   "old_cycles_per_instance": 32309.2,
+   "grade_kept": "measured-old-RTL",
+   "hardware": "old r8: slowest wavefront stage (L19.ffn.hc_pre .. L20.substage_hop0) busy 26.8149 us x (1+46/11271) per verify position. p4l-MU: the per-position occupancy of the slowest S81-BALANCE stage on the layer-class dies (calendar_mtp_q4 stage_model: S029 'L19, L20.ffn' occ 38,900 / span 37,999, step 191,318 = 6 positions incl. idx, 2 copies; MTP slot 124,524) -- MODELLED (s81_balance compute.py group_occ), and the release die has no WFC: positions are issued by dsdv_seq_host_mux + ot_dsdv_fixed_issue on the static calendar (HEADMU mu.mtp.slot: issue = shift + 360, interference 0).",
+   "release_records": "none at this definition: field/SU records measure per-op start->retire of ONE position; no release run measures a stage's back-to-back 6-position occupancy. by_old impossible (no record with old 32309.2).",
+   "owed": "stage-occupancy vehicle: FIELD/FGU frame benches of S029 (L19 + L20.ffn frames) fed 6 positions back to back, II measured on release 19bf4121e with golden rows (not launched: > 90 min build/run; parent to schedule)"
+  },
+  {
+   "op": "draft.head / draft.markov / draft.fixed",
+   "hardware": "head bundle (ot_dsrom_head_bundle) on the head dies -- no head netlist in the p4l bind (G9); same RTL as head.lm_head",
+   "release_records": "newest-element golden runs above (folded with bit_exact true)"
+  },
+  {
+   "op": "mtp.* draft blocks (D0/D1/D2: attn.wo_a/wo_b/a_proj/wq_b/experts_gu.r0/down.r0/exp.r*/normalize.r* ...)",
+   "old_cycles_per_instance": {
+    "D0": 37341.1,
+    "D1": 33871.1,
+    "D2": 33870.8
+   },
+   "hardware": "DSpark mtp.0..2 blocks, 5 block rows ([5, ...] stacked), mtp.* weights; stated placement DP1-EP5 on 64 S81 layer-class dies, NOT bound (no mtp weights on any die of the release bind; TOK.DS.LAYER.6)",
+   "release_records": "none at the same shape: HCL draft_map.json 0/192 draft nodes match a layer old price (5-row blocks, different K/rows); FGU/FDOWN/FWOA/FSMALL/FIELD by_old keys are 1-row layer classes -> no by_old (would be re-pricing)",
+   "owed": "draft-block vehicle on a p4l layer-class frame with mtp.* weights and 5 rows (FIELD generalisation) once the DSpark placement is bound"
+  },
+  {
+   "op": "mc.p2.selected_path",
+   "old_cycles_per_instance": 15357.0,
+   "hardware": "MD-2 P2 PRIMARY_SHARED1 9-SRAM transport + 3-SRAM A-prefix + publisher of the draft blocks; not in the release die.v (0 instances)",
+   "release_records": "none; kept measured-old-RTL"
+  },
+  {
+   "op": "mc.wfc_kit.ar_pass / mc.wfc_kit.intervals",
+   "old_cycles_per_instance": [
+    13560.0,
+    1077.8
+   ],
+   "hardware": "ot_rom_pkg_ctrl_wfc SOURCE/STG + dsfd_wfc_lnk/vmx on every stage hop; the release die.v has 0 WFC instances (die = 16 slices + dsdv_seq_host_mux + gunit + bk_sel/col + svc_rs + serdes): stage hand-off is the static calendar issuer + lep landing",
+   "release_records": "no WFC on the release die; the release analog is measured with 0 added latency (HEADMU mu.lep 0, mu.ar/mtp slot KS-shift 360 constant) but that is a different element -> NOT folded; LEAD call whether the WFC charge still applies to p4l-MU"
+  },
+  {
+   "op": "mc.markov.floor",
+   "old_cycles_per_instance": 562.5,
+   "hardware": "ot_dsrom_markov_row K 256 (Markov row matvec), not on the release die",
+   "release_records": "none; see draft.markov note (fuse 6 measured; row may hide under the head sweep)"
+  },
+  {
+   "op": "mc.mtp_seq.* / mc.wfc_tok.edges / mc.mtp_commit",
+   "old_cycles_per_instance": [
+    48.0,
+    22.4,
+    3.0,
+    1.0
+   ],
+   "hardware": "dsfd_mtp_seq / dsfd_wfc_tok / ot_mtp_commit; none in the release die.v",
+   "release_records": "none; kept"
+  }
+ ]
+}
