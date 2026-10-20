@@ -401,5 +401,9 @@
  ],
  "reset_relay_split": {
   "max_loads": 32
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "note": "structural successor of dsdv_sh_lk 65df312e3 / s10 / s10b (COORD review 10-19)"
  }
 }
