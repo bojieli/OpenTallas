@@ -206,15 +206,17 @@ class JointModeTest(unittest.TestCase):
         self.assertFalse(plain['proven'])                         # e: arbitrary m3 in the induction state
         self.assertEqual(plain['state']['gold_only'], 4)
         os.remove(fx.audits / 'plain.audit.json')
-        short = self.run_audit(fx, 'short', ['--observe-zero-regex', r'^m[0-3]$', '--reset-base', '3'])
-        self.assertFalse(short['proven'])                         # 3 edges do not flush the 4-deep metadata chain
-        self.assertFalse(short['base']['proven'])
+        # the metadata registers have no routed flop (tied 0): the one power-up state gives them 0, so even a short
+        # reset base holds; the base stays causal for real netlist differences (preset test below, ktree native mutant)
+        short = self.run_audit(fx, 'short', ['--observe-zero-regex', r'^m[0-3]$', '--reset-base', '2'])
+        self.assertTrue(short['base']['proven'])
+        self.assertEqual(short['base']['paired_initial'], 8)
         os.remove(fx.audits / 'short.audit.json')
         r = self.run_audit(fx, 'joint', ['--observe-zero-regex', r'^m[0-3]$', '--reset-base', '4'])
         self.assertTrue(r['proven'], r)
         self.assertEqual(r['observe_zero']['signals'], ['m0', 'm1', 'm2', 'm3'])
         self.assertTrue(r['base']['proven'])
-        self.assertEqual(r['base']['paired_initial'], 4)
+        self.assertEqual(r['base']['paired_initial'], 8)
         A.main(['receipt', '--root', str(fx.root), '--audits', str(fx.audits), '--out', str(fx.root / 'rc')])
         rec = json.loads((fx.root / 'rc/receipts/t.json').read_text())
         self.assertEqual(rec['evidence']['observe_zero']['signals'], ['m0', 'm1', 'm2', 'm3'])

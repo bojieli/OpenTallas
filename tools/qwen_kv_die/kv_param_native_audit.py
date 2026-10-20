@@ -405,7 +405,11 @@ def audit(a):
         res['error'] = (work / 'equiv.out').read_text()[-1500:]
     if a.reset_base and res['proven']:
         res['proven'] = False
-        res['base'] = reset_base(a, work, prelude, states, pair, [s_ for s_, _w, _n in mstate])
+        # observe-zero metadata registers have no routed flop: the netlist implements them as the constant 0, so the ONE
+        # power-up state gives the RTL's unreset (X) register that value at step 1 (the gate side of S__proof_meta is
+        # 1'0).  Range predicates (--observe-ge) are NOT paired: they would restrict real routed power-up states.
+        res['base'] = reset_base(a, work, prelude, states, pair, [s_ for s_, _w, _n in mstate]
+                                 + [f'S__proof_meta_{i:03d}' for i in range(len(obs))])
         res['proven'] = res['base']['proven']
         res['equiv']['method'] += (f'; reset base: {a.reset_base} {a.reset_port}={a.reset_active} edges, paired initial '
                                    f'state, steps {a.reset_base + 1}..{a.reset_base + 4} (miter, sat -verify)')
