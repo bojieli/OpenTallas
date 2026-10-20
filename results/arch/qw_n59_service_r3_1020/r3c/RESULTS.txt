@@ -1,0 +1,12 @@
+R3c f03c8a431 (QW-CB16A0 10-20) on R3b 6265b549a: kept same-edge publications of the received Q valid + front slot (16 copies
+each -> 76 per-slot q hold enables), 24 kernel_request_v copies (tx_data 24-bit segments + tag halves), 25 vm_write_v copies
+(VM merge per field/segment + dr_o attention select per 24-bit segment); q_data = ungated qrow under LOCAL32+RECV.
+Exact by construction (every copy has the original's D/reset/enable).
+Verilator 5.050 six legs (ep9, remote /srv/opentallas-scratch/claude/qw-cb16a0-n59r3c-1020): default_rnd, local_rnd,
+local_reset8, local_mu (2458-edge lockstep, 14 ops / 4 users), local_dv (360-edge lockstep, 33 tx / 32 ar bit-exact),
+component: all PASS.
+Causal mutants (local_dv, fail regex 'N59(DV|MU)_FAIL' in out/wrapper.log), all REJECTED:
+ qvpub_zero   (Q-valid copy 0 held 0: data bytes 0-3 + tag byte 0 never captured)  239/360 edges differ
+ kreqpub_zero (request copy 0 held 0: tx_data segment 0 = Q data on the CMD beat)      4/360 edges differ
+ vmwpub_zero  (VM-write copy 0 held 0: dr_o / VM data segment 0 dropped)              32/360 edges differ
+Receipts receipts/<leg>/{DONE,wrapper.log,bench.log,mutant_source.sha256}. Strict mapped native census: synth_recv (pending).
