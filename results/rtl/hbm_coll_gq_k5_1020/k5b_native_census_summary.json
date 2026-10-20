@@ -1,0 +1,106 @@
+{
+ "schema": "opentallas.pre_gate_native_census.v1",
+ "top": "ot_hgi_coll_gq_issue",
+ "status": "FAIL",
+ "limit": 32,
+ "roots_examined": 117759,
+ "max_dynamic_loads": 108,
+ "violations": [
+  {
+   "driver": "_085575_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_044009_",
+   "loads": 70
+  },
+  {
+   "driver": "_112155_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_063410_",
+   "loads": 108
+  },
+  {
+   "driver": "_112170_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_063425_",
+   "loads": 62
+  },
+  {
+   "driver": "_112191_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_063446_",
+   "loads": 100
+  },
+  {
+   "driver": "_112213_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_063465_",
+   "loads": 106
+  },
+  {
+   "driver": "_112228_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_063480_",
+   "loads": 80
+  },
+  {
+   "driver": "_129154_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_077195_",
+   "loads": 34
+  },
+  {
+   "driver": "_144024_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_035025_",
+   "loads": 39
+  },
+  {
+   "driver": "_145598_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_035233_",
+   "loads": 38
+  },
+  {
+   "driver": "_145600_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_035235_",
+   "loads": 34
+  },
+  {
+   "driver": "_145882_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_035459_",
+   "loads": 62
+  },
+  {
+   "driver": "_146213_/Y",
+   "driver_role": "combinational_or_macro",
+   "net": "_035730_",
+   "loads": 62
+  },
+  {
+   "driver": "u_ot_pr_core.g_ring.u_vmring.filled[6]$_DFFE_PN0P_/QN",
+   "driver_role": "sequential",
+   "net": "_002001_",
+   "loads": 34
+  },
+  {
+   "driver": "u_ot_pr_core.qa[6][0]$_DFFE_PP_/QN",
+   "driver_role": "sequential",
+   "net": "_003278_",
+   "loads": 35
+  },
+  {
+   "driver": "u_ot_pr_core.rg_fslc[0]$_DFF_PN0_/QN",
+   "driver_role": "sequential",
+   "net": "_019064_",
+   "loads": 55
+  },
+  {
+   "driver": "u_ot_pr_core.rg_fslc[1]$_DFF_PN0_/QN",
+   "driver_role": "sequential",
+   "net": "_019065_",
+   "loads": 52
+  }
+ ]
+}
