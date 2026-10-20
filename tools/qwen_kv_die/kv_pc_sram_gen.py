@@ -148,7 +148,7 @@ PORT_Y1 = [
 #   * child lookahead copies (registered one edge early from the child's own inputs, reset 0 = f(reset state)):
 #     rvk[22:0] = r_v (kv_d 20 x <=15-bit slices, kr copies a/b/c + kv_v/v1/k fault), wsk[24:0] = wr_static,
 #     wvk[24:0] = w_v (24 x 12-bit wq write / st1_wd / s2_wd slices + master), rik[4:0] = rd_issue, csk[4:0] = col_sr;
-#   * per-slice pointer copies wrv / wwv / kwv / kra..krc advance on their own enable copy (identical values by induction:
+#   * per-slice pointer copies wwv / kwv / krq / rsel advance on their own enable copy (identical values by induction:
 #     same reset, same enable value every edge);
 #   * c1 / y1 capture every edge: they are read only under v1, the edge after r_v (exact; em_d unchanged);
 #   * the SECDED correction reads four syndrome copies per lane, each for 16 data positions;
@@ -245,12 +245,14 @@ PORT_BODY = r'''
     localparam integer NK = 20, KW = 15;              // kv_d slices (19 x 15 + 3)
     initial if (WA != 2 || RA != 6) $error("ot_qfd_emb_pcport_nkw_kvpc_s: copy layout assumes WQD 4, RQD 64");
     reg [RQD-1:0] kq;
-    // pointer copies: kwv (4 kq write decode quarters, copy 0 = master), kra / krb / krc, wrv / wwv per slice + master
+    // pointer copies: kwv (4 kq write decode quarters, copy 0 = master), krq (4 read quarters) / krc, wrv / wwv per slice + master
     (* keep *) reg [4*(RA+1)-1:0] kwv;          // copy e = kwv[e*(RA+1) +: RA+1]
-    (* keep *) reg [RA:0] kra, krb, krc;
-    (* keep *) reg [(NS+1)*(WA+1)-1:0] wrv, wwv; // copy g = [g*(WA+1) +: WA+1]
+    (* keep *) reg [RA:0] krc;
+    (* keep *) reg [4*(RA+1)-1:0] krq;            // kq read quarter copies (quarter e = krq[e*(RA+1) +: RA+1])
+    (* keep *) reg [(NS+1)*(WA+1)-1:0] wwv;      // copy g = [g*(WA+1) +: WA+1]
+    (* keep *) reg [WA:0] wrm;                    // wr master (w_empty / w_full); slices read rsel
     wire [RA:0] kw = kwv[0 +: RA+1], kr = krc;
-    wire [WA:0] ww = wwv[NS*(WA+1) +: WA+1], wr = wrv[NS*(WA+1) +: WA+1];
+    wire [WA:0] ww = wwv[NS*(WA+1) +: WA+1], wr = wrm;
     wire r_v = rvk[22];
     wire w_v = wvk[NS];
     wire rd_issue = rik[4];
@@ -260,12 +262,12 @@ PORT_BODY = r'''
     wire k_full = (kw[RA-1:0] == kr[RA-1:0]) && (kw[RA] != kr[RA]);
     wire w_empty = ww == wr;
     wire w_full = (ww[WA-1:0] == wr[WA-1:0]) && (ww[WA] != wr[WA]);
-    // cls = kq[kr]: four 16:1 muxes (kra: quarters 0/1, krb: 2/3), then 4:1 on krc[5:4]
+    // cls = kq[kr]: four 16:1 muxes (one krq copy each), then 4:1 on krc[5:4]
     wire [3:0] clsq;
-    assign clsq[0] = kq[{2'd0, kra[3:0]}]; assign clsq[1] = kq[{2'd1, kra[3:0]}];
-    assign clsq[2] = kq[{2'd2, krb[3:0]}]; assign clsq[3] = kq[{2'd3, krb[3:0]}];
+    assign clsq[0] = kq[{2'd0, krq[0*(RA+1) +: 4]}]; assign clsq[1] = kq[{2'd1, krq[1*(RA+1) +: 4]}];
+    assign clsq[2] = kq[{2'd2, krq[2*(RA+1) +: 4]}]; assign clsq[3] = kq[{2'd3, krq[3*(RA+1) +: 4]}];
     wire cls = clsq[krc[5:4]];
-    (* keep *) reg kv_v_q; assign kv_v = kv_v_q;
+    (* keep, ot_rst_split *) reg [3:0] kv_v__qv; assign kv_v = kv_v__qv[0];   // 44 loads in u_ctrl (census c1)
     (* keep *) reg [NS-1:0] wc1_kvk, wc1_stk;     // KVW 2 timing: wd two edges after every WR column
     (* keep, ot_rst_split *) reg [21:0] v1__qv;  // v1 enables em_d (258 b): 22 kept copies (unchanged)
     wire v1 = v1__qv[0];
@@ -276,17 +278,18 @@ PORT_BODY = r'''
     genvar g, e;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            kra <= 0; krb <= 0; krc <= 0; kv_v_q <= 1'b0; em_v <= 1'b0; v1__qv <= 22'd0; fault <= 1'b0;
+            krq <= 0; krc <= 0; wrm <= 0; kv_v__qv <= 4'd0; em_v <= 1'b0; v1__qv <= 22'd0; fault <= 1'b0;
         end else begin
             if (rd_issue && k_full) fault <= 1'b1;
-            if (rvk[20]) kra <= kra + 1'b1;
-            if (rvk[21]) krb <= krb + 1'b1;
+            if (rvk[20]) begin krq[0 +: RA+1] <= krq[0 +: RA+1] + 1'b1; krq[RA+1 +: RA+1] <= krq[RA+1 +: RA+1] + 1'b1; end
+            if (rvk[21]) begin krq[2*(RA+1) +: RA+1] <= krq[2*(RA+1) +: RA+1] + 1'b1;
+                               krq[3*(RA+1) +: RA+1] <= krq[3*(RA+1) +: RA+1] + 1'b1; end
             if (r_v) begin krc <= krc + 1'b1; if (k_empty) fault <= 1'b1; end
-            kv_v_q <= r_v && !cls;
+            kv_v__qv <= {4{r_v && !cls}};
             v1__qv <= {22{r_v && cls}};
             em_v <= v1;
             if (w_v && w_full) fault <= 1'b1;
-            if (wr_static && w_empty) fault <= 1'b1;
+            if (wr_static) begin wrm <= wrm + 1'b1; if (w_empty) fault <= 1'b1; end
             if (wc1_kvk[0]) fault <= 1'b1;
         end
     for (e = 0; e < 4; e = e + 1) begin : g_kw
@@ -298,15 +301,16 @@ PORT_BODY = r'''
     end
     for (g = 0; g <= NS; g = g + 1) begin : g_wp
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin wrv[g*(WA+1) +: WA+1] <= 0; wwv[g*(WA+1) +: WA+1] <= 0; end
-            else begin
-                if (wsk[g]) wrv[g*(WA+1) +: WA+1] <= wrv[g*(WA+1) +: WA+1] + 1'b1;
-                if (wvk[g]) wwv[g*(WA+1) +: WA+1] <= wwv[g*(WA+1) +: WA+1] + 1'b1;
-            end
+            if (!rst_n) wwv[g*(WA+1) +: WA+1] <= 0;
+            else if (wvk[g]) wwv[g*(WA+1) +: WA+1] <= wwv[g*(WA+1) +: WA+1] + 1'b1;
     end
     wire [287:0] wenc = enc256(w_d);
     for (g = 0; g < NS; g = g + 1) begin : g_ws
         reg [SW-1:0] wq0, wq1, wq2, wq3;
+        // read select one-hot of wr[1:0] (census c1: the binary wr copy bit 0 drove 51 mux pins), rotates with wr
+        (* keep *) reg [3:0] rsel;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) rsel <= 4'b0001; else if (wsk[g]) rsel <= {rsel[2:0], rsel[3]};
         always @(posedge clk) begin
             if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd0) wq0 <= wenc[g*SW +: SW];
             if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd1) wq1 <= wenc[g*SW +: SW];
@@ -316,8 +320,8 @@ PORT_BODY = r'''
 `else
             if (wvk[g] && wwv[g*(WA+1) +: WA] == 2'd3) wq3 <= wenc[g*SW +: SW];
 `endif
-            if (wsk[g]) st1_wd[g*SW +: SW] <= (wrv[g*(WA+1) +: WA] == 2'd0) ? wq0 : (wrv[g*(WA+1) +: WA] == 2'd1) ? wq1 :
-                                              (wrv[g*(WA+1) +: WA] == 2'd2) ? wq2 : wq3;
+            if (wsk[g]) st1_wd[g*SW +: SW] <= ({SW{rsel[0]}} & wq0) | ({SW{rsel[1]}} & wq1) |
+                                              ({SW{rsel[2]}} & wq2) | ({SW{rsel[3]}} & wq3);
             if (wc1_kvk[g]) s2_wd[g*SW +: SW] <= {SW{1'b0}}; else if (wc1_stk[g]) s2_wd[g*SW +: SW] <= st1_wd[g*SW +: SW];
         end
         always @(posedge clk or negedge rst_n)
@@ -378,8 +382,11 @@ CHAIN_TXT = r'''module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     output reg           transfer_slot,
     output reg           fault
 );
-    (* keep, ot_rst_split *) reg [2:0] emb_scale__qv;   // KV-PC5-C: 3 kept copies of emb_scale (45 loads)
+    // KV-PC5-C: emb_scale (45 loads) = 3 kept copies with an identical D (master emb_scale_m holds the state)
+    (* keep, ot_rst_split *) reg [2:0] emb_scale__qv;
     assign emb_scale = emb_scale__qv[0];
+    (* keep *) reg emb_scale_m;
+    wire emb_scale_nx;
     (* keep, ot_rst_split *) reg [3:0] emb_issue_v__qv;   // KV-PC SAFE: 4 kept copies of emb_issue_v
     function emb_issue_v__f; input v; emb_issue_v__f = v; endfunction
     assign emb_issue_v = emb_issue_v__qv[0:0];
@@ -443,10 +450,15 @@ CHAIN_TXT = r'''module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     (* keep *) reg [HN-1:0] hv0k, hv1k;            // c[F_V] / c[F_V+1] copies (wes / ctx taps)
     (* keep *) reg [XN-1:0] xe0k, xe1k;            // ev0 / ev1 copies (expected taps)
     (* keep *) reg [BN-1:0] btk;                   // bt copies (boot tap)
-    (* keep *) reg [4:0] hpc0k, hpc1k, xpc0k, xpc1k, bpc0k;   // PC-id field copies, one per tap group
+    // PC-id field copies (5 per wes/boot group, 3 per expected group) x strap copies spck (5): slice g compares
+    // field copy g%N with strap copy g/N, so every slice match is its own gate (census c1: one shared match gate
+    // was absorbed into every enabled bit, 297 / 303 loads) while each field bit drives <= 11 flops.
+    (* keep *) reg [24:0] hpc0k, hpc1k, bpc0k;
+    (* keep *) reg [14:0] xpc0k, xpc1k;
+    (* keep *) reg [24:0] spck;
     always @(posedge ck) begin
-        hpc0k <= di[F_PC0 +: 5]; hpc1k <= di[F_PC1 +: 5]; xpc0k <= di[F_EPC0 +: 5]; xpc1k <= di[F_EPC1 +: 5];
-        bpc0k <= di[F_PC0 +: 5];
+        hpc0k <= {5{di[F_PC0 +: 5]}}; hpc1k <= {5{di[F_PC1 +: 5]}}; bpc0k <= {5{di[F_PC0 +: 5]}};
+        xpc0k <= {3{di[F_EPC0 +: 5]}}; xpc1k <= {3{di[F_EPC1 +: 5]}}; spck <= {5{pc}};
     end
     always @(posedge ck or negedge rs_q)
         if (!rs_q) begin hv0k <= 0; hv1k <= 0; xe0k <= 0; xe1k <= 0; btk <= 0; end
@@ -454,8 +466,6 @@ CHAIN_TXT = r'''module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
             hv0k <= {HN{di[F_V]}}; hv1k <= {HN{di[F_V + 1]}}; xe0k <= {XN{di[F_EV]}}; xe1k <= {XN{di[F_EV + 1]}};
             btk <= {BN{di[F_BT]}};
         end
-    wire hm0 = (hpc0k & pm) == (spc & pm), hm1 = (hpc1k & pm) == (spc & pm);
-    wire xm0 = xpc0k == spc, xm1 = xpc1k == spc;
     // wes / ctx tap: {ctx_a 61, wes_d[287:1] 287} = 348 b, data A (h0) / B (h1) differ only in the 256 data bits
     reg [347:0] hq;
     wire [347:0] hdA = {c[F_CTX +: 61], c[F_SV], c[F_SV], c[F_AD +: 29], c[F_D0 +: 256]};
@@ -469,7 +479,9 @@ CHAIN_TXT = r'''module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     genvar gs;
     for (gs = 0; gs < HN; gs = gs + 1) begin : g_ht
         localparam integer LO = gs * SL, WD = (348 - LO < SL) ? 348 - LO : SL;
-        wire g0 = hv0k[gs] && hm0, g1 = hv1k[gs] && hm1;
+        wire [4:0] sp = spck[(gs / 5) * 5 +: 5];
+        wire g0 = hv0k[gs] && ((hpc0k[(gs % 5) * 5 +: 5] & pm) == (sp & pm));
+        wire g1 = hv1k[gs] && ((hpc1k[(gs % 5) * 5 +: 5] & pm) == (sp & pm));
 `ifdef OT_KVPC5_TAP_MUT
         always @(posedge ck) if (g0 | g1) hq[LO +: WD] <= (g0 && gs != 5) ? hdA[LO +: WD] : hdB[LO +: WD];   // bench mutant
 `else
@@ -478,7 +490,8 @@ CHAIN_TXT = r'''module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     end
     for (gs = 0; gs < XN; gs = gs + 1) begin : g_xt
         localparam integer LO = gs * SL, WD = (97 - LO < SL) ? 97 - LO : SL;
-        wire g0 = xe0k[gs] && xm0, g1 = xe1k[gs] && xm1;
+        wire [4:0] sp = spck[(gs / 3) * 5 +: 5];
+        wire g0 = xe0k[gs] && (xpc0k[(gs % 3) * 5 +: 5] == sp), g1 = xe1k[gs] && (xpc1k[(gs % 3) * 5 +: 5] == sp);
         always @(posedge ck) if (g0 | g1) xq[LO +: WD] <= g0 ? xdA[LO +: WD] : xdB[LO +: WD];
     end
     always @(posedge ck or negedge rs_q)
@@ -510,10 +523,11 @@ CHAIN_TXT = r'''module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     wire [4:0] bpm = (MUT == 6) ? 5'h0f : 5'h1f;
     wire bh = bt && ((c[F_PC0 +: 5] & bpm) == (spc & bpm));
     // KV-PC5-C: boot tap in BN <= 16-bit slices, slice g on its own bt copy (bh itself stays for land_es[0] / fault)
-    wire bm = (bpc0k & bpm) == (spc & bpm);
     wire [286:0] bdat = {1'b1, 1'b1, c[F_AD +: 29], c[F_D0 +: 256]};
     for (gs = 0; gs < BN; gs = gs + 1) begin : g_bt
         localparam integer LO = gs * SL, WD = (287 - LO < SL) ? 287 - LO : SL;
+        wire [4:0] sp = spck[(gs / 5) * 5 +: 5];
+        wire bm = (bpc0k[(gs % 5) * 5 +: 5] & bpm) == (sp & bpm);
         always @(posedge ck) if (btk[gs] && bm) land_es[1 + LO +: WD] <= bdat[LO +: WD];
     end
     always @(posedge ck or negedge rs_q) if (!rs_q) land_es[0] <= 1'b0; else land_es[0] <= bh;
@@ -536,13 +550,14 @@ CHAIN_TXT = r'''module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
     wire home = tok[8:4] == spc && (MUT == 4 || tok[10:9] == sst);
     wire [15:0] trn = (MUT == 3 && spc == 5'd5) ? r[3] + 16'd1 : r[3];
     integer k;
+    assign emb_scale_nx = (act && cnt == r[0]) ? 1'b0 : (act && home && cnt == r[4]) ? 1'b1 : emb_scale_m;
     always @(posedge ck) if (ss) begin tok <= c[F_TOK +: 18]; ep <= c[F_EP +: 16]; end
     always @(posedge ck or negedge rs_q)
         if (!rs_q) begin
             for (k = 0; k < 8; k = k + 1) r[k] <= 16'hffff;
             cnt <= 16'd0; last <= 16'd0; act <= 1'b0; fault <= 1'b0;
             emb_issue_v__qv <= {4{emb_issue_v__f(1'b0)}}; emb_return_slot <= 1'b0; capture_slot <= 1'b0; transfer_slot <= 1'b0;
-            emb_token <= 18'd0; emb_epoch <= 16'd0; emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale__qv <= 3'd0;
+            emb_token <= 18'd0; emb_epoch <= 16'd0; emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale__qv <= 3'd0; emb_scale_m <= 1'b0;
         end else begin
             if (cv && c[F_CPC +: 5] == spc) begin
                 r[c[F_CRG +: 3]] <= c[F_CVL +: 16];
@@ -561,8 +576,9 @@ CHAIN_TXT = r'''module qkd_kvpc_s_chain #(parameter integer MUT = 0) (
             emb_return_slot <= act && (cnt == r[1] || (home && cnt == r[5]));
             capture_slot    <= act && (cnt == r[2] || (home && cnt == r[6]));
             transfer_slot   <= act && (cnt == trn  || (home && cnt == r[7]));
-            if (act && cnt == r[0]) begin emb_word_index <= {sst, spc[4:1]}; emb_half <= spc[0]; emb_scale__qv <= 3'd0; end
-            else if (act && home && cnt == r[4]) begin emb_word_index <= 6'd0; emb_half <= 1'b0; emb_scale__qv <= 3'b111; end
+            if (act && cnt == r[0]) begin emb_word_index <= {sst, spc[4:1]}; emb_half <= spc[0]; end
+            else if (act && home && cnt == r[4]) begin emb_word_index <= 6'd0; emb_half <= 1'b0; end
+            emb_scale_m <= emb_scale_nx; emb_scale__qv <= {3{emb_scale_nx}};
             if ((h0 && h1) || (x0 && x1) || bfault || (bh && (h0 || h1))) fault <= 1'b1;
         end
 endmodule
