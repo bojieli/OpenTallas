@@ -58,7 +58,7 @@
     "expect": "pass",
     "pass_regex": "^TKM_RG_CREP MUT0 cycles4000 .*errors0 PASS$",
     "threads": 8,
-    "peak_ram_gb": 32,
+    "peak_ram_gb": 96,
     "timeout_s": 14400,
     "needs": [
      "verilator"
@@ -71,7 +71,7 @@
     "expect": "fail",
     "fail_regex": "^TKM_RG_CREP MUT1 cycles4000 .*errors[1-9][0-9]* FAIL$",
     "threads": 8,
-    "peak_ram_gb": 32,
+    "peak_ram_gb": 96,
     "timeout_s": 14400,
     "needs": [
      "verilator"
