@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.svc8_snapshot_pickup.v1",
+  "snapshot": "/tmp/ref_gate_s81svc_attn_hgrp8_20261020-043206.source_snapshot.json",
+  "remote_host": "ot-epyc9",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81svc_attn_hgrp8-20261020-043206",
+  "identity": "exact_content_snapshot",
+  "archive_sha256": "eaf103e7cfc27f4c1d0417f4c32e7de01613c96f6c166579a8b9df29e430d60d",
+  "manifest_sha256": "2485b70d97fd03b6016eb218b92fe58d3011db2f645e323223aab118a02ed18e",
+  "start_commit": "deedbdf41b11a8162a18b62a56a9db98f998e4cd",
+  "commit": null,
+  "selected_files": [
+    {
+      "path": "rtl/hdc/v41x/svc8_hgrp8_bounded.v",
+      "kind": "file",
+      "sha256": "6cc7756384633bed7fc0c70e636ca605e2e19e274df720c92d2244bcc6062e43",
+      "git_blob": "8cbf1276ea390e031763c6e9bd127d3a782f2e62",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "tools/ref_tile/native_census.py",
+      "kind": "file",
+      "sha256": "a83ebec367621669b737b2921421eada914ae57801e56fd875dc8fe7b2e19bda",
+      "git_blob": "fe77e1db890ff3be4e961c0509e3a63faea8a920",
+      "source": "daemon_overlay",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "tools/textbook_lint.py",
+      "kind": "file",
+      "sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+      "git_blob": "af4af4329aec67da97b0f5a79553a44d34c616e5",
+      "source": "daemon_overlay",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "tools/w18/corner_sta_ref.py",
+      "kind": "file",
+      "sha256": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa",
+      "git_blob": "3dc94a10cef727b1c3edac96a2e754df808da082",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    }
+  ]
+}
