@@ -28,5 +28,5 @@
  "why_equal": "HB = 0 (C1): bb is tied 0 so b_so / f_bw / so_go are constant 0, sos_c is not generated, the SO / B-wide logic and the 513-b bo are dead; ci_r / ci_dir / fault reduce to the closed XR7 logic",
  "evidence": "results/rtl/root4_s81post_1019/equiv/xr1_foreg1 (equiv.ys, equiv_status.txt, sources.sha256, stats, yosys version)",
  "verdict": "CLOSURE STANDS for ot_s81sl_xr1 (FOREG 1) at main 0408184bd: logic identical to the routed source; physical/ref_tile/s81sl_xr1f/views remain valid",
- "branch_note": "claude/root4-s81post-1019 changes ot_s81sl_xr.sv again only inside generate HB != 0 (g_soc); the branch-vs-gold proof runs on ot-epyc5 src/out/eq_xr1_foreg1 (pending_results)"
+ "branch_note": "claude/root4-s81post-1019 @207ade2a7 (xr3 SO-enable fix, changes only inside generate HB != 0) vs the same closed gold: EQUIV_PROVEN FOREG 1 and 0, synth stat identical (results/rtl/root4_s81post_1019/equiv_branch): the closure also stands after this branch merges"
 }
