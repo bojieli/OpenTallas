@@ -1,0 +1,2652 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "qfd_dv_s5_vm8fh",
+ "top": "qfd_dv_s5_vm8lh",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "r_io": {
+   "clock_port": "ck_r_io",
+   "children": [
+    "u_oa",
+    "u_ob",
+    "u_obs",
+    "u_oc",
+    "u_och",
+    "u_ocl",
+    "u_ofa",
+    "u_ofb",
+    "u_ofbt",
+    "u_ofc",
+    "u_ofch",
+    "u_ofcl",
+    "u_opg"
+   ]
+  },
+  "r_cl": {
+   "clock_port": "ck_r_cl",
+   "children": [
+    "u_cl"
+   ]
+  },
+  "r_ch": {
+   "clock_port": "ck_r_ch",
+   "children": [
+    "u_ch"
+   ]
+  },
+  "r_bt": {
+   "clock_port": "ck_r_bt",
+   "children": [
+    "u_bt"
+   ]
+  },
+  "r_pg": {
+   "clock_port": "ck_r_pg",
+   "children": [
+    "u_pg"
+   ]
+  },
+  "r_va": {
+   "clock_port": "ck_r_va",
+   "children": [
+    "u_va"
+   ]
+  },
+  "r_vb": {
+   "clock_port": "ck_r_vb",
+   "children": [
+    "u_vb"
+   ]
+  },
+  "r_vc": {
+   "clock_port": "ck_r_vc",
+   "children": [
+    "u_vc"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "a_re",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:a_re"
+   ],
+   "width": 8,
+   "readers": [
+    "u_va.re"
+   ],
+   "ring_of": "0",
+   "ring": "u_lpl_0_w (ck_r_io)",
+   "read": "u_lpl_0_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "a_addr",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:a_addr"
+   ],
+   "width": 192,
+   "readers": [
+    "u_va.addr"
+   ],
+   "ring_of": "1",
+   "ring": "u_lpl_1_w (ck_r_io)",
+   "read": "u_lpl_1_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "vm_we",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:vm_we"
+   ],
+   "width": 8,
+   "readers": [
+    "u_va.vm_we"
+   ],
+   "ring_of": "2",
+   "ring": "u_lpl_2_w (ck_r_io)",
+   "read": "u_lpl_2_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  },
+  {
+   "name": "3",
+   "net": "vm_waddr",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:vm_waddr"
+   ],
+   "width": 192,
+   "readers": [
+    "u_va.vm_waddr"
+   ],
+   "ring_of": "3",
+   "ring": "u_lpl_3_w (ck_r_io)",
+   "read": "u_lpl_3_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+  },
+  {
+   "name": "4",
+   "net": "vm_wdata",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:vm_wdata"
+   ],
+   "width": 256,
+   "readers": [
+    "u_va.vm_wdata"
+   ],
+   "ring_of": "4",
+   "ring": "u_lpl_4_w (ck_r_io)",
+   "read": "u_lpl_4_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+  },
+  {
+   "name": "5",
+   "net": "w16_we",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:w16_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_va.w16_we"
+   ],
+   "ring_of": "5",
+   "ring": "u_lpl_5_w (ck_r_io)",
+   "read": "u_lpl_5_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+  },
+  {
+   "name": "6",
+   "net": "w16_addr",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:w16_addr"
+   ],
+   "width": 24,
+   "readers": [
+    "u_va.w16_addr"
+   ],
+   "ring_of": "6",
+   "ring": "u_lpl_6_w (ck_r_io)",
+   "read": "u_lpl_6_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+  },
+  {
+   "name": "7",
+   "net": "w16_data",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:w16_data"
+   ],
+   "width": 512,
+   "readers": [
+    "u_va.w16_data"
+   ],
+   "ring_of": "7",
+   "ring": "u_lpl_7_w (ck_r_io)",
+   "read": "u_lpl_7_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+  },
+  {
+   "name": "8",
+   "net": "w1_we",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:w1_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_va.w1_we"
+   ],
+   "ring_of": "8",
+   "ring": "u_lpl_8_w (ck_r_io)",
+   "read": "u_lpl_8_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+  },
+  {
+   "name": "9",
+   "net": "w1_addr",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:w1_addr"
+   ],
+   "width": 24,
+   "readers": [
+    "u_va.w1_addr"
+   ],
+   "ring_of": "9",
+   "ring": "u_lpl_9_w (ck_r_io)",
+   "read": "u_lpl_9_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+  },
+  {
+   "name": "10",
+   "net": "w1_data",
+   "src_region": "r_io",
+   "dst_region": "r_va",
+   "src_nodes": [
+    "port:w1_data"
+   ],
+   "width": 32,
+   "readers": [
+    "u_va.w1_data"
+   ],
+   "ring_of": "10",
+   "ring": "u_lpl_10_w (ck_r_io)",
+   "read": "u_lpl_10_r (ck_r_va)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_10_r.*"
+  },
+  {
+   "name": "11",
+   "net": "b_re",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:b_re"
+   ],
+   "width": 8,
+   "readers": [
+    "u_vb.re"
+   ],
+   "ring_of": "11",
+   "ring": "u_lpl_11_w (ck_r_io)",
+   "read": "u_lpl_11_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
+  },
+  {
+   "name": "12",
+   "net": "b_addr",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:b_addr"
+   ],
+   "width": 192,
+   "readers": [
+    "u_vb.addr"
+   ],
+   "ring_of": "12",
+   "ring": "u_lpl_12_w (ck_r_io)",
+   "read": "u_lpl_12_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
+  },
+  {
+   "name": "13",
+   "net": "vm_we",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:vm_we"
+   ],
+   "width": 8,
+   "readers": [
+    "u_vb.vm_we"
+   ],
+   "ring_of": "2",
+   "ring": "u_lpl_2_w (ck_r_io)",
+   "read": "u_lpl_13_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_13_r.*"
+  },
+  {
+   "name": "14",
+   "net": "vm_waddr",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:vm_waddr"
+   ],
+   "width": 192,
+   "readers": [
+    "u_vb.vm_waddr"
+   ],
+   "ring_of": "3",
+   "ring": "u_lpl_3_w (ck_r_io)",
+   "read": "u_lpl_14_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_14_r.*"
+  },
+  {
+   "name": "15",
+   "net": "vm_wdata",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:vm_wdata"
+   ],
+   "width": 256,
+   "readers": [
+    "u_vb.vm_wdata"
+   ],
+   "ring_of": "4",
+   "ring": "u_lpl_4_w (ck_r_io)",
+   "read": "u_lpl_15_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_15_r.*"
+  },
+  {
+   "name": "16",
+   "net": "w16_we",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:w16_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_vb.w16_we"
+   ],
+   "ring_of": "5",
+   "ring": "u_lpl_5_w (ck_r_io)",
+   "read": "u_lpl_16_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_16_r.*"
+  },
+  {
+   "name": "17",
+   "net": "w16_addr",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:w16_addr"
+   ],
+   "width": 24,
+   "readers": [
+    "u_vb.w16_addr"
+   ],
+   "ring_of": "6",
+   "ring": "u_lpl_6_w (ck_r_io)",
+   "read": "u_lpl_17_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_17_r.*"
+  },
+  {
+   "name": "18",
+   "net": "w16_data",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:w16_data"
+   ],
+   "width": 512,
+   "readers": [
+    "u_vb.w16_data"
+   ],
+   "ring_of": "7",
+   "ring": "u_lpl_7_w (ck_r_io)",
+   "read": "u_lpl_18_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_18_r.*"
+  },
+  {
+   "name": "19",
+   "net": "w1_we",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:w1_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_vb.w1_we"
+   ],
+   "ring_of": "8",
+   "ring": "u_lpl_8_w (ck_r_io)",
+   "read": "u_lpl_19_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_19_r.*"
+  },
+  {
+   "name": "20",
+   "net": "w1_addr",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:w1_addr"
+   ],
+   "width": 24,
+   "readers": [
+    "u_vb.w1_addr"
+   ],
+   "ring_of": "9",
+   "ring": "u_lpl_9_w (ck_r_io)",
+   "read": "u_lpl_20_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_20_r.*"
+  },
+  {
+   "name": "21",
+   "net": "w1_data",
+   "src_region": "r_io",
+   "dst_region": "r_vb",
+   "src_nodes": [
+    "port:w1_data"
+   ],
+   "width": 32,
+   "readers": [
+    "u_vb.w1_data"
+   ],
+   "ring_of": "10",
+   "ring": "u_lpl_10_w (ck_r_io)",
+   "read": "u_lpl_21_r (ck_r_vb)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_21_r.*"
+  },
+  {
+   "name": "22",
+   "net": "c_re",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:c_re"
+   ],
+   "width": 8,
+   "readers": [
+    "u_vc.re"
+   ],
+   "ring_of": "22",
+   "ring": "u_lpl_22_w (ck_r_io)",
+   "read": "u_lpl_22_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_22_w.* -to u_lpl_22_r.*"
+  },
+  {
+   "name": "23",
+   "net": "c_addr",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:c_addr"
+   ],
+   "width": 192,
+   "readers": [
+    "u_vc.addr"
+   ],
+   "ring_of": "23",
+   "ring": "u_lpl_23_w (ck_r_io)",
+   "read": "u_lpl_23_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_23_w.* -to u_lpl_23_r.*"
+  },
+  {
+   "name": "24",
+   "net": "vm_we",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:vm_we"
+   ],
+   "width": 8,
+   "readers": [
+    "u_vc.vm_we"
+   ],
+   "ring_of": "2",
+   "ring": "u_lpl_2_w (ck_r_io)",
+   "read": "u_lpl_24_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_24_r.*"
+  },
+  {
+   "name": "25",
+   "net": "vm_waddr",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:vm_waddr"
+   ],
+   "width": 192,
+   "readers": [
+    "u_vc.vm_waddr"
+   ],
+   "ring_of": "3",
+   "ring": "u_lpl_3_w (ck_r_io)",
+   "read": "u_lpl_25_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_25_r.*"
+  },
+  {
+   "name": "26",
+   "net": "vm_wdata",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:vm_wdata"
+   ],
+   "width": 256,
+   "readers": [
+    "u_vc.vm_wdata"
+   ],
+   "ring_of": "4",
+   "ring": "u_lpl_4_w (ck_r_io)",
+   "read": "u_lpl_26_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_26_r.*"
+  },
+  {
+   "name": "27",
+   "net": "w16_we",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:w16_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_vc.w16_we"
+   ],
+   "ring_of": "5",
+   "ring": "u_lpl_5_w (ck_r_io)",
+   "read": "u_lpl_27_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_27_r.*"
+  },
+  {
+   "name": "28",
+   "net": "w16_addr",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:w16_addr"
+   ],
+   "width": 24,
+   "readers": [
+    "u_vc.w16_addr"
+   ],
+   "ring_of": "6",
+   "ring": "u_lpl_6_w (ck_r_io)",
+   "read": "u_lpl_28_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_28_r.*"
+  },
+  {
+   "name": "29",
+   "net": "w16_data",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:w16_data"
+   ],
+   "width": 512,
+   "readers": [
+    "u_vc.w16_data"
+   ],
+   "ring_of": "7",
+   "ring": "u_lpl_7_w (ck_r_io)",
+   "read": "u_lpl_29_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_29_r.*"
+  },
+  {
+   "name": "30",
+   "net": "w1_we",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:w1_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_vc.w1_we"
+   ],
+   "ring_of": "8",
+   "ring": "u_lpl_8_w (ck_r_io)",
+   "read": "u_lpl_30_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_30_r.*"
+  },
+  {
+   "name": "31",
+   "net": "w1_addr",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:w1_addr"
+   ],
+   "width": 24,
+   "readers": [
+    "u_vc.w1_addr"
+   ],
+   "ring_of": "9",
+   "ring": "u_lpl_9_w (ck_r_io)",
+   "read": "u_lpl_31_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_31_r.*"
+  },
+  {
+   "name": "32",
+   "net": "w1_data",
+   "src_region": "r_io",
+   "dst_region": "r_vc",
+   "src_nodes": [
+    "port:w1_data"
+   ],
+   "width": 32,
+   "readers": [
+    "u_vc.w1_data"
+   ],
+   "ring_of": "10",
+   "ring": "u_lpl_10_w (ck_r_io)",
+   "read": "u_lpl_32_r (ck_r_vc)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_32_r.*"
+  },
+  {
+   "name": "33",
+   "net": "cr_re",
+   "src_region": "r_io",
+   "dst_region": "r_cl",
+   "src_nodes": [
+    "port:cr_re"
+   ],
+   "width": 8,
+   "readers": [
+    "u_cl.cr_re"
+   ],
+   "ring_of": "33",
+   "ring": "u_lpl_33_w (ck_r_io)",
+   "read": "u_lpl_33_r (ck_r_cl)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_33_w.* -to u_lpl_33_r.*"
+  },
+  {
+   "name": "34",
+   "net": "cr_addr",
+   "src_region": "r_io",
+   "dst_region": "r_cl",
+   "src_nodes": [
+    "port:cr_addr"
+   ],
+   "width": 192,
+   "readers": [
+    "u_cl.cr_addr"
+   ],
+   "ring_of": "34",
+   "ring": "u_lpl_34_w (ck_r_io)",
+   "read": "u_lpl_34_r (ck_r_cl)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_34_w.* -to u_lpl_34_r.*"
+  },
+  {
+   "name": "35",
+   "net": "tw_we",
+   "src_region": "r_io",
+   "dst_region": "r_cl",
+   "src_nodes": [
+    "port:tw_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_cl.tw_we"
+   ],
+   "ring_of": "35",
+   "ring": "u_lpl_35_w (ck_r_io)",
+   "read": "u_lpl_35_r (ck_r_cl)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_35_w.* -to u_lpl_35_r.*"
+  },
+  {
+   "name": "36",
+   "net": "tw_kind",
+   "src_region": "r_io",
+   "dst_region": "r_cl",
+   "src_nodes": [
+    "port:tw_kind"
+   ],
+   "width": 2,
+   "readers": [
+    "u_cl.tw_kind"
+   ],
+   "ring_of": "36",
+   "ring": "u_lpl_36_w (ck_r_io)",
+   "read": "u_lpl_36_r (ck_r_cl)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_36_w.* -to u_lpl_36_r.*"
+  },
+  {
+   "name": "37",
+   "net": "tw_addr",
+   "src_region": "r_io",
+   "dst_region": "r_cl",
+   "src_nodes": [
+    "port:tw_addr"
+   ],
+   "width": 24,
+   "readers": [
+    "u_cl.tw_addr"
+   ],
+   "ring_of": "37",
+   "ring": "u_lpl_37_w (ck_r_io)",
+   "read": "u_lpl_37_r (ck_r_cl)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_37_w.* -to u_lpl_37_r.*"
+  },
+  {
+   "name": "38",
+   "net": "dlo",
+   "src_region": "r_io",
+   "dst_region": "r_cl",
+   "src_nodes": [
+    "port:tw_data"
+   ],
+   "width": 512,
+   "readers": [
+    "u_cl.tw_d"
+   ],
+   "ring_of": "38",
+   "ring": "u_lpl_38_w (ck_r_io)",
+   "read": "u_lpl_38_r (ck_r_cl)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_38_w.* -to u_lpl_38_r.*"
+  },
+  {
+   "name": "39",
+   "net": "cr_re",
+   "src_region": "r_io",
+   "dst_region": "r_ch",
+   "src_nodes": [
+    "port:cr_re"
+   ],
+   "width": 8,
+   "readers": [
+    "u_ch.cr_re"
+   ],
+   "ring_of": "33",
+   "ring": "u_lpl_33_w (ck_r_io)",
+   "read": "u_lpl_39_r (ck_r_ch)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_33_w.* -to u_lpl_39_r.*"
+  },
+  {
+   "name": "40",
+   "net": "cr_addr",
+   "src_region": "r_io",
+   "dst_region": "r_ch",
+   "src_nodes": [
+    "port:cr_addr"
+   ],
+   "width": 192,
+   "readers": [
+    "u_ch.cr_addr"
+   ],
+   "ring_of": "34",
+   "ring": "u_lpl_34_w (ck_r_io)",
+   "read": "u_lpl_40_r (ck_r_ch)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_34_w.* -to u_lpl_40_r.*"
+  },
+  {
+   "name": "41",
+   "net": "tw_we",
+   "src_region": "r_io",
+   "dst_region": "r_ch",
+   "src_nodes": [
+    "port:tw_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_ch.tw_we"
+   ],
+   "ring_of": "35",
+   "ring": "u_lpl_35_w (ck_r_io)",
+   "read": "u_lpl_41_r (ck_r_ch)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_35_w.* -to u_lpl_41_r.*"
+  },
+  {
+   "name": "42",
+   "net": "tw_kind",
+   "src_region": "r_io",
+   "dst_region": "r_ch",
+   "src_nodes": [
+    "port:tw_kind"
+   ],
+   "width": 2,
+   "readers": [
+    "u_ch.tw_kind"
+   ],
+   "ring_of": "36",
+   "ring": "u_lpl_36_w (ck_r_io)",
+   "read": "u_lpl_42_r (ck_r_ch)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_36_w.* -to u_lpl_42_r.*"
+  },
+  {
+   "name": "43",
+   "net": "tw_addr",
+   "src_region": "r_io",
+   "dst_region": "r_ch",
+   "src_nodes": [
+    "port:tw_addr"
+   ],
+   "width": 24,
+   "readers": [
+    "u_ch.tw_addr"
+   ],
+   "ring_of": "37",
+   "ring": "u_lpl_37_w (ck_r_io)",
+   "read": "u_lpl_43_r (ck_r_ch)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_37_w.* -to u_lpl_43_r.*"
+  },
+  {
+   "name": "44",
+   "net": "dhi",
+   "src_region": "r_io",
+   "dst_region": "r_ch",
+   "src_nodes": [
+    "port:tw_data"
+   ],
+   "width": 512,
+   "readers": [
+    "u_ch.tw_d"
+   ],
+   "ring_of": "44",
+   "ring": "u_lpl_44_w (ck_r_io)",
+   "read": "u_lpl_44_r (ck_r_ch)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_44_w.* -to u_lpl_44_r.*"
+  },
+  {
+   "name": "45",
+   "net": "bs_re",
+   "src_region": "r_io",
+   "dst_region": "r_bt",
+   "src_nodes": [
+    "port:bs_re"
+   ],
+   "width": 1,
+   "readers": [
+    "u_bt.bs_re"
+   ],
+   "ring_of": "45",
+   "ring": "u_lpl_45_w (ck_r_io)",
+   "read": "u_lpl_45_r (ck_r_bt)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_45_w.* -to u_lpl_45_r.*"
+  },
+  {
+   "name": "46",
+   "net": "bs_addr",
+   "src_region": "r_io",
+   "dst_region": "r_bt",
+   "src_nodes": [
+    "port:bs_addr"
+   ],
+   "width": 24,
+   "readers": [
+    "u_bt.bs_addr"
+   ],
+   "ring_of": "46",
+   "ring": "u_lpl_46_w (ck_r_io)",
+   "read": "u_lpl_46_r (ck_r_bt)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_46_w.* -to u_lpl_46_r.*"
+  },
+  {
+   "name": "47",
+   "net": "tw_we",
+   "src_region": "r_io",
+   "dst_region": "r_bt",
+   "src_nodes": [
+    "port:tw_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_bt.tw_we"
+   ],
+   "ring_of": "35",
+   "ring": "u_lpl_35_w (ck_r_io)",
+   "read": "u_lpl_47_r (ck_r_bt)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_35_w.* -to u_lpl_47_r.*"
+  },
+  {
+   "name": "48",
+   "net": "tw_kind",
+   "src_region": "r_io",
+   "dst_region": "r_bt",
+   "src_nodes": [
+    "port:tw_kind"
+   ],
+   "width": 2,
+   "readers": [
+    "u_bt.tw_kind"
+   ],
+   "ring_of": "36",
+   "ring": "u_lpl_36_w (ck_r_io)",
+   "read": "u_lpl_48_r (ck_r_bt)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_36_w.* -to u_lpl_48_r.*"
+  },
+  {
+   "name": "49",
+   "net": "tw_a_bt",
+   "src_region": "r_io",
+   "dst_region": "r_bt",
+   "src_nodes": [
+    "port:tw_addr"
+   ],
+   "width": 7,
+   "readers": [
+    "u_bt.tw_addr"
+   ],
+   "ring_of": "49",
+   "ring": "u_lpl_49_w (ck_r_io)",
+   "read": "u_lpl_49_r (ck_r_bt)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_49_w.* -to u_lpl_49_r.*"
+  },
+  {
+   "name": "50",
+   "net": "tw_data",
+   "src_region": "r_io",
+   "dst_region": "r_bt",
+   "src_nodes": [
+    "port:tw_data"
+   ],
+   "width": 1024,
+   "readers": [
+    "u_bt.tw_data"
+   ],
+   "ring_of": "50",
+   "ring": "u_lpl_50_w (ck_r_io)",
+   "read": "u_lpl_50_r (ck_r_bt)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_50_w.* -to u_lpl_50_r.*"
+  },
+  {
+   "name": "51",
+   "net": "p_re",
+   "src_region": "r_io",
+   "dst_region": "r_pg",
+   "src_nodes": [
+    "port:p_re"
+   ],
+   "width": 1,
+   "readers": [
+    "u_pg.p_re"
+   ],
+   "ring_of": "51",
+   "ring": "u_lpl_51_w (ck_r_io)",
+   "read": "u_lpl_51_r (ck_r_pg)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_51_w.* -to u_lpl_51_r.*"
+  },
+  {
+   "name": "52",
+   "net": "p_idx",
+   "src_region": "r_io",
+   "dst_region": "r_pg",
+   "src_nodes": [
+    "port:p_idx"
+   ],
+   "width": 9,
+   "readers": [
+    "u_pg.p_idx"
+   ],
+   "ring_of": "52",
+   "ring": "u_lpl_52_w (ck_r_io)",
+   "read": "u_lpl_52_r (ck_r_pg)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_52_w.* -to u_lpl_52_r.*"
+  },
+  {
+   "name": "53",
+   "net": "tw_we",
+   "src_region": "r_io",
+   "dst_region": "r_pg",
+   "src_nodes": [
+    "port:tw_we"
+   ],
+   "width": 1,
+   "readers": [
+    "u_pg.tw_we"
+   ],
+   "ring_of": "35",
+   "ring": "u_lpl_35_w (ck_r_io)",
+   "read": "u_lpl_53_r (ck_r_pg)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_35_w.* -to u_lpl_53_r.*"
+  },
+  {
+   "name": "54",
+   "net": "tw_kind",
+   "src_region": "r_io",
+   "dst_region": "r_pg",
+   "src_nodes": [
+    "port:tw_kind"
+   ],
+   "width": 2,
+   "readers": [
+    "u_pg.tw_kind"
+   ],
+   "ring_of": "36",
+   "ring": "u_lpl_36_w (ck_r_io)",
+   "read": "u_lpl_54_r (ck_r_pg)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_36_w.* -to u_lpl_54_r.*"
+  },
+  {
+   "name": "55",
+   "net": "tw_a_pg",
+   "src_region": "r_io",
+   "dst_region": "r_pg",
+   "src_nodes": [
+    "port:tw_addr"
+   ],
+   "width": 8,
+   "readers": [
+    "u_pg.tw_addr"
+   ],
+   "ring_of": "55",
+   "ring": "u_lpl_55_w (ck_r_io)",
+   "read": "u_lpl_55_r (ck_r_pg)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_55_w.* -to u_lpl_55_r.*"
+  },
+  {
+   "name": "56",
+   "net": "tw_d0",
+   "src_region": "r_io",
+   "dst_region": "r_pg",
+   "src_nodes": [
+    "port:tw_data"
+   ],
+   "width": 457,
+   "readers": [
+    "u_pg.tw_d0"
+   ],
+   "ring_of": "56",
+   "ring": "u_lpl_56_w (ck_r_io)",
+   "read": "u_lpl_56_r (ck_r_pg)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_56_w.* -to u_lpl_56_r.*"
+  },
+  {
+   "name": "57",
+   "net": "tw_d1",
+   "src_region": "r_io",
+   "dst_region": "r_pg",
+   "src_nodes": [
+    "port:tw_data"
+   ],
+   "width": 457,
+   "readers": [
+    "u_pg.tw_d1"
+   ],
+   "ring_of": "57",
+   "ring": "u_lpl_57_w (ck_r_io)",
+   "read": "u_lpl_57_r (ck_r_pg)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_57_w.* -to u_lpl_57_r.*"
+  },
+  {
+   "name": "58",
+   "net": "qa",
+   "src_region": "r_va",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_va"
+   ],
+   "width": 256,
+   "readers": [
+    "u_oa.d"
+   ],
+   "ring_of": "58",
+   "ring": "u_lpl_58_w (ck_r_va)",
+   "read": "u_lpl_58_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_58_w.* -to u_lpl_58_r.*"
+  },
+  {
+   "name": "59",
+   "net": "qb",
+   "src_region": "r_vb",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_vb"
+   ],
+   "width": 256,
+   "readers": [
+    "u_ob.d"
+   ],
+   "ring_of": "59",
+   "ring": "u_lpl_59_w (ck_r_vb)",
+   "read": "u_lpl_59_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_59_w.* -to u_lpl_59_r.*"
+  },
+  {
+   "name": "60",
+   "net": "qc",
+   "src_region": "r_vc",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_vc"
+   ],
+   "width": 256,
+   "readers": [
+    "u_oc.d"
+   ],
+   "ring_of": "60",
+   "ring": "u_lpl_60_w (ck_r_vc)",
+   "read": "u_lpl_60_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_60_w.* -to u_lpl_60_r.*"
+  },
+  {
+   "name": "61",
+   "net": "qlo",
+   "src_region": "r_cl",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_cl"
+   ],
+   "width": 256,
+   "readers": [
+    "u_ocl.d"
+   ],
+   "ring_of": "61",
+   "ring": "u_lpl_61_w (ck_r_cl)",
+   "read": "u_lpl_61_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_61_w.* -to u_lpl_61_r.*"
+  },
+  {
+   "name": "62",
+   "net": "qhi",
+   "src_region": "r_ch",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_ch"
+   ],
+   "width": 256,
+   "readers": [
+    "u_och.d"
+   ],
+   "ring_of": "62",
+   "ring": "u_lpl_62_w (ck_r_ch)",
+   "read": "u_lpl_62_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_62_w.* -to u_lpl_62_r.*"
+  },
+  {
+   "name": "63",
+   "net": "qbs",
+   "src_region": "r_bt",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_bt"
+   ],
+   "width": 256,
+   "readers": [
+    "u_obs.d"
+   ],
+   "ring_of": "63",
+   "ring": "u_lpl_63_w (ck_r_bt)",
+   "read": "u_lpl_63_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_63_w.* -to u_lpl_63_r.*"
+  },
+  {
+   "name": "64",
+   "net": "qpg",
+   "src_region": "r_pg",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_pg"
+   ],
+   "width": 457,
+   "readers": [
+    "u_opg.d"
+   ],
+   "ring_of": "64",
+   "ring": "u_lpl_64_w (ck_r_pg)",
+   "read": "u_lpl_64_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_64_w.* -to u_lpl_64_r.*"
+  },
+  {
+   "name": "65",
+   "net": "fa",
+   "src_region": "r_va",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_va"
+   ],
+   "width": 1,
+   "readers": [
+    "u_ofa.d"
+   ],
+   "ring_of": "65",
+   "ring": "u_lpl_65_w (ck_r_va)",
+   "read": "u_lpl_65_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_65_w.* -to u_lpl_65_r.*"
+  },
+  {
+   "name": "66",
+   "net": "fb",
+   "src_region": "r_vb",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_vb"
+   ],
+   "width": 1,
+   "readers": [
+    "u_ofb.d"
+   ],
+   "ring_of": "66",
+   "ring": "u_lpl_66_w (ck_r_vb)",
+   "read": "u_lpl_66_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_66_w.* -to u_lpl_66_r.*"
+  },
+  {
+   "name": "67",
+   "net": "fc",
+   "src_region": "r_vc",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_vc"
+   ],
+   "width": 1,
+   "readers": [
+    "u_ofc.d"
+   ],
+   "ring_of": "67",
+   "ring": "u_lpl_67_w (ck_r_vc)",
+   "read": "u_lpl_67_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_67_w.* -to u_lpl_67_r.*"
+  },
+  {
+   "name": "68",
+   "net": "fcl",
+   "src_region": "r_cl",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_cl"
+   ],
+   "width": 1,
+   "readers": [
+    "u_ofcl.d"
+   ],
+   "ring_of": "68",
+   "ring": "u_lpl_68_w (ck_r_cl)",
+   "read": "u_lpl_68_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_68_w.* -to u_lpl_68_r.*"
+  },
+  {
+   "name": "69",
+   "net": "fch",
+   "src_region": "r_ch",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_ch"
+   ],
+   "width": 1,
+   "readers": [
+    "u_ofch.d"
+   ],
+   "ring_of": "69",
+   "ring": "u_lpl_69_w (ck_r_ch)",
+   "read": "u_lpl_69_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_69_w.* -to u_lpl_69_r.*"
+  },
+  {
+   "name": "70",
+   "net": "fbt",
+   "src_region": "r_bt",
+   "dst_region": "r_io",
+   "src_nodes": [
+    "u_bt"
+   ],
+   "width": 1,
+   "readers": [
+    "u_ofbt.d"
+   ],
+   "ring_of": "70",
+   "ring": "u_lpl_70_w (ck_r_bt)",
+   "read": "u_lpl_70_r (ck_r_io)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_70_w.* -to u_lpl_70_r.*"
+  }
+ ],
+ "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
+ "reset": {
+  "port": "rst_n",
+  "root_region": "r_io",
+  "depth": 4,
+  "hops": {
+   "r_io": 0,
+   "r_cl": 2,
+   "r_ch": 3,
+   "r_bt": 1,
+   "r_pg": 2,
+   "r_va": 3,
+   "r_vb": 2,
+   "r_vc": 3
+  },
+  "same_depth_forest": {
+   "regional_stages": 3,
+   "root_D_loads": 8,
+   "regions": {
+    "r_io": {
+     "leaves": 598,
+     "terms": [
+      "1",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((8*32-1) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((511) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((31) - (0) + 1))+12-1)/12)",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((1) - (0) + 1))+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((511) - (0) + 1))+12-1)/12)",
+      "(((((511) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((6) - (0) + 1))+12-1)/12)",
+      "(((((1023) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((8) - (0) + 1))+12-1)/12)",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((456) - (0) + 1))+12-1)/12)",
+      "(((((456) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((((456) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((1)+12-1)/12)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 1,
+       "first_expr": "1",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "1",
+       "role": "w",
+       "first_leaf": 2,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "2",
+       "role": "w",
+       "first_leaf": 18,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "3",
+       "role": "w",
+       "first_leaf": 19,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "4",
+       "role": "w",
+       "first_leaf": 35,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*32-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "5",
+       "role": "w",
+       "first_leaf": 57,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "6",
+       "role": "w",
+       "first_leaf": 58,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "7",
+       "role": "w",
+       "first_leaf": 60,
+       "chunks": 43,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((511) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "8",
+       "role": "w",
+       "first_leaf": 103,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "9",
+       "role": "w",
+       "first_leaf": 104,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "10",
+       "role": "w",
+       "first_leaf": 106,
+       "chunks": 3,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((31) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "11",
+       "role": "w",
+       "first_leaf": 109,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "12",
+       "role": "w",
+       "first_leaf": 110,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "22",
+       "role": "w",
+       "first_leaf": 126,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "23",
+       "role": "w",
+       "first_leaf": 127,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "33",
+       "role": "w",
+       "first_leaf": 143,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "34",
+       "role": "w",
+       "first_leaf": 144,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "35",
+       "role": "w",
+       "first_leaf": 160,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "36",
+       "role": "w",
+       "first_leaf": 161,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "37",
+       "role": "w",
+       "first_leaf": 162,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "38",
+       "role": "w",
+       "first_leaf": 164,
+       "chunks": 43,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((511) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "44",
+       "role": "w",
+       "first_leaf": 207,
+       "chunks": 43,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((511) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "45",
+       "role": "w",
+       "first_leaf": 250,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "46",
+       "role": "w",
+       "first_leaf": 251,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "49",
+       "role": "w",
+       "first_leaf": 253,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((6) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "50",
+       "role": "w",
+       "first_leaf": 254,
+       "chunks": 86,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((1023) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "51",
+       "role": "w",
+       "first_leaf": 340,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "52",
+       "role": "w",
+       "first_leaf": 341,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((8) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "55",
+       "role": "w",
+       "first_leaf": 342,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "56",
+       "role": "w",
+       "first_leaf": 343,
+       "chunks": 39,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((456) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "57",
+       "role": "w",
+       "first_leaf": 382,
+       "chunks": 39,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((456) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "58",
+       "role": "r",
+       "first_leaf": 421,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "59",
+       "role": "r",
+       "first_leaf": 443,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "60",
+       "role": "r",
+       "first_leaf": 465,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "61",
+       "role": "r",
+       "first_leaf": 487,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "62",
+       "role": "r",
+       "first_leaf": 509,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "63",
+       "role": "r",
+       "first_leaf": 531,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "64",
+       "role": "r",
+       "first_leaf": 553,
+       "chunks": 39,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((456) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "65",
+       "role": "r",
+       "first_leaf": 592,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "66",
+       "role": "r",
+       "first_leaf": 593,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "67",
+       "role": "r",
+       "first_leaf": 594,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "68",
+       "role": "r",
+       "first_leaf": 595,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "69",
+       "role": "r",
+       "first_leaf": 596,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "70",
+       "role": "r",
+       "first_leaf": 597,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      }
+     ],
+     "branches": 19,
+     "FFs": 618,
+     "scalar_child_pad_port_uses": 0
+    },
+    "r_cl": {
+     "leaves": 88,
+     "terms": [
+      "1",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((1) - (0) + 1))+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((511) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)"
+     ],
+     "bindings": [
+      {
+       "landing": "33",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 1,
+       "first_expr": "1",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "34",
+       "role": "r",
+       "first_leaf": 2,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "35",
+       "role": "r",
+       "first_leaf": 18,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "36",
+       "role": "r",
+       "first_leaf": 19,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "37",
+       "role": "r",
+       "first_leaf": 20,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "38",
+       "role": "r",
+       "first_leaf": 22,
+       "chunks": 43,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((511) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "61",
+       "role": "w",
+       "first_leaf": 65,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "68",
+       "role": "w",
+       "first_leaf": 87,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      }
+     ],
+     "branches": 3,
+     "FFs": 92,
+     "scalar_child_pad_port_uses": 1
+    },
+    "r_ch": {
+     "leaves": 88,
+     "terms": [
+      "1",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((1) - (0) + 1))+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((511) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)"
+     ],
+     "bindings": [
+      {
+       "landing": "39",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 1,
+       "first_expr": "1",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "40",
+       "role": "r",
+       "first_leaf": 2,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "41",
+       "role": "r",
+       "first_leaf": 18,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "42",
+       "role": "r",
+       "first_leaf": 19,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "43",
+       "role": "r",
+       "first_leaf": 20,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "44",
+       "role": "r",
+       "first_leaf": 22,
+       "chunks": 43,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((511) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "62",
+       "role": "w",
+       "first_leaf": 65,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "69",
+       "role": "w",
+       "first_leaf": 87,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      }
+     ],
+     "branches": 3,
+     "FFs": 92,
+     "scalar_child_pad_port_uses": 1
+    },
+    "r_bt": {
+     "leaves": 116,
+     "terms": [
+      "1",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((1) - (0) + 1))+12-1)/12)",
+      "(((((6) - (0) + 1))+12-1)/12)",
+      "(((((1023) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)"
+     ],
+     "bindings": [
+      {
+       "landing": "45",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 1,
+       "first_expr": "1",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "46",
+       "role": "r",
+       "first_leaf": 2,
+       "chunks": 2,
+       "first_expr": "1+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "47",
+       "role": "r",
+       "first_leaf": 4,
+       "chunks": 1,
+       "first_expr": "1+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "48",
+       "role": "r",
+       "first_leaf": 5,
+       "chunks": 1,
+       "first_expr": "1+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "49",
+       "role": "r",
+       "first_leaf": 6,
+       "chunks": 1,
+       "first_expr": "1+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((6) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "50",
+       "role": "r",
+       "first_leaf": 7,
+       "chunks": 86,
+       "first_expr": "1+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((1023) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "63",
+       "role": "w",
+       "first_leaf": 93,
+       "chunks": 22,
+       "first_expr": "1+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "70",
+       "role": "w",
+       "first_leaf": 115,
+       "chunks": 1,
+       "first_expr": "1+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((6) - (0) + 1))+12-1)/12)+(((((1023) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      }
+     ],
+     "branches": 4,
+     "FFs": 121,
+     "scalar_child_pad_port_uses": 1
+    },
+    "r_pg": {
+     "leaves": 123,
+     "terms": [
+      "1",
+      "(((1)+12-1)/12)",
+      "(((((8) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((1) - (0) + 1))+12-1)/12)",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((456) - (0) + 1))+12-1)/12)",
+      "(((((456) - (0) + 1))+12-1)/12)",
+      "(((((456) - (0) + 1))+12-1)/12)"
+     ],
+     "bindings": [
+      {
+       "landing": "51",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 1,
+       "first_expr": "1",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "52",
+       "role": "r",
+       "first_leaf": 2,
+       "chunks": 1,
+       "first_expr": "1+(((1)+12-1)/12)",
+       "chunks_expr": "(((((8) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "53",
+       "role": "r",
+       "first_leaf": 3,
+       "chunks": 1,
+       "first_expr": "1+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "54",
+       "role": "r",
+       "first_leaf": 4,
+       "chunks": 1,
+       "first_expr": "1+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "55",
+       "role": "r",
+       "first_leaf": 5,
+       "chunks": 1,
+       "first_expr": "1+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "56",
+       "role": "r",
+       "first_leaf": 6,
+       "chunks": 39,
+       "first_expr": "1+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((456) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "57",
+       "role": "r",
+       "first_leaf": 45,
+       "chunks": 39,
+       "first_expr": "1+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((456) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "64",
+       "role": "w",
+       "first_leaf": 84,
+       "chunks": 39,
+       "first_expr": "1+(((1)+12-1)/12)+(((((8) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)+(((((456) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((456) - (0) + 1))+12-1)/12)"
+      }
+     ],
+     "branches": 4,
+     "FFs": 128,
+     "scalar_child_pad_port_uses": 0
+    },
+    "r_va": {
+     "leaves": 132,
+     "terms": [
+      "1",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((8*32-1) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((511) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((31) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 1,
+       "first_expr": "1",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "1",
+       "role": "r",
+       "first_leaf": 2,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "2",
+       "role": "r",
+       "first_leaf": 18,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "3",
+       "role": "r",
+       "first_leaf": 19,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "4",
+       "role": "r",
+       "first_leaf": 35,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*32-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "5",
+       "role": "r",
+       "first_leaf": 57,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "6",
+       "role": "r",
+       "first_leaf": 58,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "7",
+       "role": "r",
+       "first_leaf": 60,
+       "chunks": 43,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((511) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "8",
+       "role": "r",
+       "first_leaf": 103,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "9",
+       "role": "r",
+       "first_leaf": 104,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "10",
+       "role": "r",
+       "first_leaf": 106,
+       "chunks": 3,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((31) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "58",
+       "role": "w",
+       "first_leaf": 109,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "65",
+       "role": "w",
+       "first_leaf": 131,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      }
+     ],
+     "branches": 5,
+     "FFs": 138,
+     "scalar_child_pad_port_uses": 1
+    },
+    "r_vb": {
+     "leaves": 132,
+     "terms": [
+      "1",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((8*32-1) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((511) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((31) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)"
+     ],
+     "bindings": [
+      {
+       "landing": "11",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 1,
+       "first_expr": "1",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "12",
+       "role": "r",
+       "first_leaf": 2,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "13",
+       "role": "r",
+       "first_leaf": 18,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "14",
+       "role": "r",
+       "first_leaf": 19,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "15",
+       "role": "r",
+       "first_leaf": 35,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*32-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "16",
+       "role": "r",
+       "first_leaf": 57,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "17",
+       "role": "r",
+       "first_leaf": 58,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "18",
+       "role": "r",
+       "first_leaf": 60,
+       "chunks": 43,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((511) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "19",
+       "role": "r",
+       "first_leaf": 103,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "20",
+       "role": "r",
+       "first_leaf": 104,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "21",
+       "role": "r",
+       "first_leaf": 106,
+       "chunks": 3,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((31) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "59",
+       "role": "w",
+       "first_leaf": 109,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "66",
+       "role": "w",
+       "first_leaf": 131,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      }
+     ],
+     "branches": 5,
+     "FFs": 138,
+     "scalar_child_pad_port_uses": 1
+    },
+    "r_vc": {
+     "leaves": 132,
+     "terms": [
+      "1",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((7) - (0) + 1))+12-1)/12)",
+      "(((((8*24-1) - (0) + 1))+12-1)/12)",
+      "(((((8*32-1) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((511) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)",
+      "(((((23) - (0) + 1))+12-1)/12)",
+      "(((((31) - (0) + 1))+12-1)/12)",
+      "(((((255) - (0) + 1))+12-1)/12)",
+      "(((1)+12-1)/12)"
+     ],
+     "bindings": [
+      {
+       "landing": "22",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 1,
+       "first_expr": "1",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "23",
+       "role": "r",
+       "first_leaf": 2,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "24",
+       "role": "r",
+       "first_leaf": 18,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((7) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "25",
+       "role": "r",
+       "first_leaf": 19,
+       "chunks": 16,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*24-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "26",
+       "role": "r",
+       "first_leaf": 35,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((8*32-1) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "27",
+       "role": "r",
+       "first_leaf": 57,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "28",
+       "role": "r",
+       "first_leaf": 58,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "29",
+       "role": "r",
+       "first_leaf": 60,
+       "chunks": 43,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((511) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "30",
+       "role": "r",
+       "first_leaf": 103,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      },
+      {
+       "landing": "31",
+       "role": "r",
+       "first_leaf": 104,
+       "chunks": 2,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)",
+       "chunks_expr": "(((((23) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "32",
+       "role": "r",
+       "first_leaf": 106,
+       "chunks": 3,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((31) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "60",
+       "role": "w",
+       "first_leaf": 109,
+       "chunks": 22,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((((255) - (0) + 1))+12-1)/12)"
+      },
+      {
+       "landing": "67",
+       "role": "w",
+       "first_leaf": 131,
+       "chunks": 1,
+       "first_expr": "1+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((7) - (0) + 1))+12-1)/12)+(((((8*24-1) - (0) + 1))+12-1)/12)+(((((8*32-1) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((511) - (0) + 1))+12-1)/12)+(((1)+12-1)/12)+(((((23) - (0) + 1))+12-1)/12)+(((((31) - (0) + 1))+12-1)/12)+(((((255) - (0) + 1))+12-1)/12)",
+       "chunks_expr": "(((1)+12-1)/12)"
+      }
+     ],
+     "branches": 5,
+     "FFs": 138,
+     "scalar_child_pad_port_uses": 1
+    }
+   },
+   "incremental_FFs": 1441,
+   "required_rtl_sources": [
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+   ],
+   "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified."
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 51173,
+  "pads": 0,
+  "reset": 1484
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "r_bt-r_io",
+   "r_ch-r_io",
+   "r_cl-r_io",
+   "r_io-r_pg",
+   "r_io-r_va",
+   "r_io-r_vb",
+   "r_io-r_vc"
+  ],
+  "reset_hops": [
+   "r_bt-r_io",
+   "r_ch-r_io",
+   "r_cl-r_io",
+   "r_io-r_pg",
+   "r_io-r_va",
+   "r_io-r_vb",
+   "r_io-r_vc"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_va": 3,
+   "u_vb": 3,
+   "u_vc": 3,
+   "u_cl": 3,
+   "u_ch": 3,
+   "u_bt": 3,
+   "u_pg": 3,
+   "u_oa": 6,
+   "u_ob": 6,
+   "u_oc": 6,
+   "u_ocl": 6,
+   "u_och": 6,
+   "u_obs": 6,
+   "u_opg": 6,
+   "u_ofa": 6,
+   "u_ofb": 6,
+   "u_ofc": 6,
+   "u_ofcl": 6,
+   "u_ofch": 6,
+   "u_ofbt": 6
+  },
+  "input_port_offset_edges": {
+   "a_re": 0,
+   "b_re": 0,
+   "c_re": 0,
+   "a_addr": 0,
+   "b_addr": 0,
+   "c_addr": 0,
+   "cr_re": 0,
+   "cr_addr": 0,
+   "bs_re": 0,
+   "bs_addr": 0,
+   "p_re": 0,
+   "p_idx": 0,
+   "vm_we": 0,
+   "vm_waddr": 0,
+   "vm_wdata": 0,
+   "w16_we": 0,
+   "w16_addr": 0,
+   "w16_data": 0,
+   "w1_we": 0,
+   "w1_addr": 0,
+   "w1_data": 0,
+   "tw_we": 0,
+   "tw_kind": 0,
+   "tw_addr": 0,
+   "tw_data": 0
+  },
+  "output_port_offset_edges": {
+   "a_q": 6,
+   "b_q": 6,
+   "c_q": 6,
+   "cr_q": 6,
+   "bs_q": 6,
+   "p_q": 6,
+   "f_va": 6,
+   "f_vb": 6,
+   "f_vc": 6,
+   "f_crl": 6,
+   "f_crh": 6,
+   "f_bt": 6
+  },
+  "reset_release_added_edges": 4,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
+  "max_added_edges": 6
+ },
+ "mutant_waivers": {
+  "4": "MUT 4 lengthens the u_va reset run by one edge: no VM8 leaf keeps state that survives its reset under this stimulus (enables idle until cyc 40, the leaves' SRAM write paths are not reset-gated, so the flat and landed copies see identical idle words while either is in reset); measured: bench_lp4 MUT 4 PASS (invisible), an idle window of 21 / 24 cycles makes MUT 0 itself diverge (5 / 181 of 65,582 compares, flat writes during the leaf-internal 2-stage reset landing). Reset alignment is carried by the region audit + the recorded reset depth 4 / t(child) 3"
+ },
+ "warnings": [
+  "child u_pg runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_oa runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_ob runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_oc runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_ocl runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_och runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_obs runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_opg runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_ofa runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_ofb runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_ofc runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_ofcl runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_ofch runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_ofbt runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)"
+ ],
+ "landing_implementation": {
+  "chunk_bits": 12,
+  "direct_quarter_period_timing": false,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['r_bt-r_io', 'r_ch-r_io', 'r_cl-r_io', 'r_io-r_pg', 'r_io-r_va', 'r_io-r_vb', 'r_io-r_vc']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 71,
+  "reset_hops": 7,
+  "fails": []
+ }
+}
