@@ -1427,6 +1427,6 @@ endmodule
  input wire cut,input wire [4:0] ring_code,replay_code,input wire [7:0] ring_data,replay_data,
  output wire [7:0] q);
  wire [4:0] code=cut?ring_code:replay_code;
- wire tagged=code[0] && (code[3:1]==3'd1 || code[3:1]==3'd2) && code[4];
- assign q=tagged?(cut?ring_data:replay_data):8'd0;
+ wire has_tag=code[0] && (code[3:1]==3'd1 || code[3:1]==3'd2) && code[4];
+ assign q=has_tag?(cut?ring_data:replay_data):8'd0;
 endmodule
