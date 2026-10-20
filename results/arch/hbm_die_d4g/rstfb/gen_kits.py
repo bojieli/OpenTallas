@@ -34,7 +34,7 @@ CHECKLIST = [
     ('4 depth', 'PASS: rfi -> async clear; flop -> AND -> rfo; no combinational data in->out path'),
     ('5 storage', 'PASS: 3 flops; no delay line >= 3 (the 3-edge age is 2 landing + 1 carrier flop, not a shift chain)'),
     ('6 floorplan', 'PASS: same outline as the closed station kit (+3 flops on a >= 21.6 x 21.6 um strip: util rise < 1%); '
-                    'rfi on the i face, rfo on the o face'),
+                    'rfi on the i face, rfo on the o face (1136 _rrfc: both on the ck/rs face, the o face is pin-full)'),
     ('7 clock', 'PASS: the station clock ck (planner hosts only on stations of the forest domain); hold_margin / '
                 'io_hold_margin 0.03; pin-flop spread judged by the gate --cts'),
     ('8 schedule', 'PASS: static; data stage unchanged (0 data cycles); reset release age 3 edges per hosted stage, charged '
@@ -67,6 +67,10 @@ def make(stem, rr):
         base_kit = b['name']
     s['outline'] = dict(s['outline'], exact=True)   # the placed station footprint, never re-sized
     fi, fo = flow_faces(pins)
+    if rr and w == 1136:
+        # the 114.48 um o face holds o + rso = 1137 pins (96 % of its M4 slots): rfi / rfo go on the clock face beside
+        # ck / rs (<= 114.5 um from the i/o face middles; die_case re-checks the real LEF pins)
+        fi = fo = next(f for f, ps in pins.items() if 'ck' in ps)
     pins[fi] = pins[fi] + ['rfi']
     pins[fo] = pins[fo] + ['rfo']
     s.update(name=name, top=top, sources=list(SOURCES), pins=pins, reset_ports=['rs', 'rfi'])

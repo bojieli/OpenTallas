@@ -24,16 +24,16 @@
  "pins": {
   "S": [
    "ck",
-   "rs"
+   "rs",
+   "rfi",
+   "rfo"
   ],
   "E": [
    "o",
-   "rso",
-   "rfo"
+   "rso"
   ],
   "W": [
-   "i",
-   "rfi"
+   "i"
   ]
  },
  "outhold": true,
