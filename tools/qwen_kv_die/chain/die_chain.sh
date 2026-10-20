@@ -126,8 +126,9 @@ mkdir -p $G; cp $H/grt.tcl $G/; place $C/floorplan_pdn.odb $G/floorplan_pdn.odb 
 if [ "${OT_DIE_CLOCK_PHYS:-0}" = 1 ]; then
   say "DIE CLOCK PHYS start (chain_dieclk.sh ${OT_DIE_CLOCK_VARIANT:-spine}: on case_${DIE}/floorplan_pdn.odb, before GRT)"
   bash $SRC/tools/qwen_split/chain_dieclk.sh $R $SRC > $R/dieclk.log 2>&1 || { say "DIE CLOCK PHYS FAIL ($R/dieclk.log, $R/dieclk/STATUS.log): $(tail -1 $R/dieclk.log | cut -c1-300)"; exit 1; }
-  ln -f $R/dieclk/${OT_DIE_CLOCK_VARIANT:-spine}/tt/clock.odb $G/floorplan_pdn.odb
-  say "DIE CLOCK PHYS: $(grep -h -E 'CHECK TT\+FF|QCLK_SPINE_NEIGHBOUR|QCLK_SPINE_MANIFEST|DIECLK_STA_LAT' $R/dieclk/STATUS.log | tr '\n' ' ' | cut -c1-900)"
+  # QW-GEN2 10-19: dv2f18dh2 died here (ORD-0007: ln of the root-owned docker output -> Permission denied): copy, never link
+  rm -f $G/floorplan_pdn.odb; cp $R/dieclk/${OT_DIE_CLOCK_VARIANT:-spine}/tt/clock.odb $G/floorplan_pdn.odb || { say "DIE CLOCK PHYS: clock.odb copy FAIL"; exit 1; }
+  say "DIE CLOCK PHYS: $(grep -h -E 'CHECK TT\+FF|QCLK_SPINE_NEIGHBOUR|QCLK_SPINE_MANIFEST|QCLK_REGIONAL|DIECLK_STA_LAT' $R/dieclk/STATUS.log | tr '\n' ' ' | cut -c1-900)"
 fi
 # DIE-FLOW 10-17 (owner 0cl): OT_DIE_REPAIR=1 = shared die-net repeater step before GRT (tools/die_repeaters); the
 # element / ETM / PHY TT libs of this run are what the resizer sees (a master with signal pins and no liberty FAILS it)

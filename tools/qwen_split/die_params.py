@@ -45,6 +45,7 @@ HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one reg
 D2D_MASTER = 'qfd_d2d_static'
 DHOBS_MASTER = 'qfd_sys_face_mu_dhobs'           # MU-DQ-DHUSER: the die's tt_ctlm.dh_user observer (dv_case.DHOBS)
 DHOBS_LISTS = ('NS', 'USER_SEQ', 'STG_SEQ', 'RES_SEQ')
+CTXRX_MASTER = 'qfd_mu_ctx_rx_die'               # MU-DQ-BOOTCTX: filler runtime context leaf (dv_case.CTXRX) -> tt_ctlm.ctx_x
 IMAGE = ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
 TRAP_BODY = re.compile(r'\$error|\$fatal|\w*NOT_COMPILED\w*|\w+__set_\w+')
 GEN_IF = re.compile(r'generate\s+if\s*\(', re.S)
@@ -134,6 +135,22 @@ def gen_params(insts, hr_rows, image=IMAGE):
             out[DHOBS_MASTER] = dict(NU=nu, _source='MU-DQ-DHUSER (COORD 0kg): tt_ctlm.dh_user observer, OPSEG 0; NS / '
                                      'USER_SEQ / STG_SEQ / RES_SEQ = RTL defaults = mu_opcal.dhobs_lists(compile_frame(16))')
             rec['dhobs'] = dict(nu=nu)
+        if CTXRX_MASTER in masters and TT_MASTER in masters:
+            # MU-DQ-BOOTCTX (COORD 0kg (1)): the leaf drives tt_ctlm.ctx_x; the ctlm takes it with CTX_SRC 1
+            out[CTXRX_MASTER] = dict(NU=nu, _source='MU-DQ-BOOTCTX (COORD 0kg (1)): filler initial context from the KV host '
+                                     'plane, MU-KV-CTX kind-12 MU slot')
+            out[TT_MASTER].update(CTX_SRC=1)
+            out[TT_MASTER]['_source'] += '; MU-DQ-BOOTCTX: CTX_SRC 1 (ctx_x from qfd_mu_ctx_rx_die)'
+            rec['ctxrx'] = dict(nu=nu)
+        # MU-DQ-BOOTCTX: fillers' native59 contexts (tt_ctlm FCTX 1: base-0x10 filler LOCAL SEG starts raise the head
+        # layer context) and the face's HOST-context check limited to user 0 (qfd_sys_face MU_HEAD 1; MU-DQ-SYSFACE re-close)
+        if TT_MASTER in masters:
+            out[TT_MASTER].update(FCTX=1)
+            out[TT_MASTER]['_source'] += '; MU-DQ-BOOTCTX: FCTX 1 (filler native contexts)'
+        if 'qfd_sys_face' in masters:
+            out.setdefault('qfd_sys_face', {}).update(MU_HEAD=1)
+            out['qfd_sys_face']['_source'] = 'MU-DQ-BOOTCTX: MU_HEAD 1 (filler head contexts not checked by the HOST RX)'
+        rec['fctx'] = 1
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
         out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")
@@ -197,6 +214,10 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
         mods = {m_.name: m_ for m_ in DPB.parse_modules(Path(path).read_text(errors='replace'), path)}
         if mst not in mods:
             continue
+        if mst == CTXRX_MASTER and (prm.get(mst, {}).get('NU') != prm.get(TT_MASTER, {}).get('NU') or
+                                    prm.get(TT_MASTER, {}).get('CTX_SRC') != 1):
+            fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} / {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")} / '
+                         f'CTX_SRC {prm.get(TT_MASTER, {}).get("CTX_SRC")}: the ctx leaf needs the same NU and CTX_SRC 1')
         if mst == DHOBS_MASTER:
             fails += dhobs_check(mods[mst])
             if prm.get(mst, {}).get('NU') != prm.get(TT_MASTER, {}).get('NU'):

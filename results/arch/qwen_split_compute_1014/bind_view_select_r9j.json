@@ -1,0 +1,7 @@
+{
+ "schema": "qwen.compute.bind_view_select.v1",
+ "note": "QW-GEN2 10-19 variant B (dv2f19g2j): qfd_d2d_static -> the NEWEST closed view, r9j (closure-loop qfd_d2d_static_r9j-r9j-7f431abe6, record 3f089f09c; the daemon wrote it into the r6 view dir; native_pin_audit 9cba02d14 spread TT 54.6 / FF 49.9). Default bind_view_select.json keeps r5 (= dv2f18dh2 binding, so the compiled_L1 relay schedule matches) for variant A.",
+ "views": {
+  "qfd_d2d_static": "physical/ref_tile/qfd_d2d_static_r6/views/qfd_d2d_static"
+ }
+}

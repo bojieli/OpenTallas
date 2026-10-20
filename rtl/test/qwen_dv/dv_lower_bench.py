@@ -64,6 +64,12 @@ def build(work):
         cmd = ['verilator', '--cc', '--exe', '--build', '-O2', '-j', '16', '-Wno-fatal', '-Wno-lint', '-Wno-style',
                '-Wno-TIMESCALEMOD', '--x-assign', '0', '--x-initial', '0', '--top-module', 'tb_qfd_dv2', '--prefix', 'Vtb',
                '-GMUT=0', f'-GN={N}', '-Mdir', str(obj), str(HERE / 'main2.cpp')] + [str(ROOT / s) for s in B2.SRCS2]
+        # TOKSIM-QW/STG 10-19: DV_LOWER_VFLAGS (e.g. '-GMU_NU=4 -GSU_LT=1', the release slice kit parameters) adds
+        # Verilator -G flags; -GSU_LT=1 also adds dv_bench2.XSRCS (hard SU lane tile sources). Unset = original build.
+        import os
+        xv = os.environ.get('DV_LOWER_VFLAGS', '').split()
+        if xv:
+            cmd += xv + ([str(ROOT / s) for s in B2.XSRCS] if '-GSU_LT=1' in xv else [])
         r = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         (work / 'build.log').write_text(r.stdout)
         if r.returncode:
