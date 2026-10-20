@@ -1,0 +1,4 @@
+Actual TOPK ACC32 K8 mapped+placed3_place.odb census.
+Job gate s81dvbk_sq_succ4k8-20261019-230343, source b6bba788c; ot-run ep6 unit oth-ubuntu-1402352-1792482319 exit0, readonly input.
+OVER32=1778 drivers, sequential444; max effective1184 (logic decode), reset regional leaf169, hc/hf.v1=129, packer g_frc r0/qfc2=114; FAR405174 worst624.744um. Each count traces transparent buffers to actual data/reset sinks using pinned Liberty roles.
+PG34622 unbound is placement-stage observation, not finalPG verdict. Clock gates K8/K16 still in hold repair, preserved. No adoption/submit permitted on clock-only pass; binding native <=32/reset/405 rule fails. Same sourceRTL inK16, so finer kept control/reset replication is prerequisite before a new gate; whole quarter hierarchy/landed partition may be needed for reach. No source redesign performed in this packet.
