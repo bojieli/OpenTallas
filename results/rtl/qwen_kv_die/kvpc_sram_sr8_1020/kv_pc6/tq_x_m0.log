@@ -1,0 +1,7 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+KVPC_TQ PASS edges=20000 checks=19997 bypassed=4078 errors=0 mut=0
+- rtl/test/qwen_static_kv/kvpc_sram/tb_kvpc_tq.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.009 s; speed 2.352 ms/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB
+
