@@ -332,7 +332,12 @@ module ot_qwen_w12_matvec_part #(
     //: line that meets the leaves' results is XTX cycles longer (same order, same arithmetic)
     // REGROOT5 adds a real output landing per hard LSL on its existing
     // ck_tx entry. The complete tile data/valid path advances one edge.
-    localparam integer XTD = (HIER > 0 && HIER_HARD != 0) ? XTX + ((REGROOT >= 5) ? 1 : 0) : 0;
+    //: REGROOT 9 (QW-CB16A0-2 10-20, A0 rc10): the rung-0 crossing (hub ck / ck_dw / ck_de -> ck_tx[g]) and the leaf
+    //: result + fault return (ck_tx[g] -> ck) are LANDED crossings (ot_qw_lw ring on the source root, ot_qw_lr read on the
+    //: destination root, K = L9K): + L9K edges each, so the leaves' results are 2 * L9K edges later (priced in XTD).
+    localparam integer L9  = (REGROOT >= 9 && HIER > 0 && HIER_HARD != 0 && XTX >= 2 && LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) ? 1 : 0;
+    localparam integer L9K = 2;
+    localparam integer XTD = (HIER > 0 && HIER_HARD != 0) ? XTX + ((REGROOT >= 5) ? 1 : 0) + ((L9 != 0) ? 2 * L9K : 0) : 0;
     localparam integer XDD = ((PART == 2) ? XD : 0) + XTD;
     localparam integer LV0 = (PART == 2) ? TCUT : 0;   // tree levels LV0+1..LG live here
     localparam integer PRUNE = (SMIN > 0);
@@ -1495,6 +1500,24 @@ end endgenerate
         localparam integer NS = W / HIER;
         wire [NS-1:0] stf;
         wire [W*32-1:0] top;
+        //: REGROOT 9: ONE ring of the hub-root (ck) half of the rung-0 word, shared by every leaf's read (the control
+        //: fields, the round / mask selects and the raw x are the same word for all leaves):
+        //: {s2_v, s2_first, split tag, sel (4 G), s2_x (G words)}.
+        localparam integer L9C  = 1 + 1 + 4 + 4 * G + G * 32;
+        localparam integer L9CC = (L9C + 23) / 24;
+        wire [4*L9C-1:0]  l2c_bank;
+        wire [4*L9CC-1:0] l2c_vld;
+        if (L9 != 0) begin : g_l2c
+            wire [4*G-1:0] sel;
+            for (gl = 0; gl < G; gl = gl + 1) begin : g_s
+                assign sel[4*gl +: 4] = {round_local[2*gl+1], round_local[2*gl], s2_gm[gl], s2_gm[gl]};
+            end
+            ot_qw_lw #(.W(L9C)) u_qlw2c (.ck(clk), .rsi(rst_n), .i({s2_v, s2_first, s2_tag[TW-6 -: 4], sel, s2_x[G*32-1:0]}),
+                .bank(l2c_bank), .vld(l2c_vld));
+        end else begin : g_nl2c
+            assign l2c_bank = {4*L9C{1'b0}};
+            assign l2c_vld  = {4*L9CC{1'b0}};
+        end
         for (g = 0; g < NS; g = g + 1) begin : g_sl
             wire [G*HIER*32-1:0] w_in;
             wire [G*HIER-1:0] lf;
@@ -1542,7 +1565,46 @@ end endgenerate
                 end else begin : g_cooked
                     assign tx_d0 = tx_d;
                 end
-                if (XTX > 0) begin : g_tx
+                if (L9 != 0) begin : g_tx9
+                    //: REGROOT 9: rung 0 = LANDED crossing.  Rings on the source roots (the shared hub ring g_l2c; the
+                    //: leaf's west / east weight lanes on ck_dw / ck_de beside s2_w), reads on ck_tx[g] beside the leaf.
+                    //: r0q after edge n = the raw rung-0 word of edge n - L9K (plain rung 0: edge n).  Rung 1.. unchanged.
+                    localparam integer HWB = G * HIER * 16;                 // one weight half (west lanes = groups < G/2)
+                    wire [XW*(XTX+1)-1:0] tc;
+                    wire [XW0-1:0] r0q;
+                    wire [L9C-1:0] co;
+                    wire [HWB-1:0] ow, oe;
+                    wire [4*HWB-1:0] bw, be;
+                    wire [4*((HWB+23)/24)-1:0] vw, ve;
+                    ot_qw_lr #(.W(L9C), .K(L9K)) u_qlr2c (.ck(ck_tx[g]), .rsi(rst_n), .bank(l2c_bank), .vld(l2c_vld), .o(co));
+                    ot_qw_lw #(.W(HWB)) u_qlw2w (.ck(ck_reg[2]), .rsi(rst_n), .i(w_in[0 +: HWB]), .bank(bw), .vld(vw));
+                    ot_qw_lw #(.W(HWB)) u_qlw2e (.ck(ck_reg[3]), .rsi(rst_n), .i(w_in[HWB +: HWB]), .bank(be), .vld(ve));
+                    ot_qw_lr #(.W(HWB), .K(L9K)) u_qlr2w (.ck(ck_tx[g]), .rsi(rst_n), .bank(bw), .vld(vw), .o(ow));
+                    ot_qw_lr #(.W(HWB), .K(L9K)) u_qlr2e (.ck(ck_tx[g]), .rsi(rst_n), .bank(be), .vld(ve), .o(oe));
+                    assign r0q = {co[L9C-1 -: 6], oe, ow, co[L9C-7:0]};
+                    genvar rr;
+                    for (rr = 1; rr < XTX; rr = rr + 1) begin : g_r
+                        wire [XW-1:0] qo;
+                        ot_qwen_tx_ff #(.W(XW)) u_tx (.clk(ck_tx[g]), .rst_n(rst_l), .d(tc[XW*rr +: XW]), .q(qo));
+                        assign tc[XW*(rr+1) +: XW] = qo;
+                    end
+                    if (1) begin : g_lx
+                        wire [G*32-1:0] xr = r0q[G*32-1:0];
+                        wire [4*G-1:0]  sr = r0q[G*32 +: 4*G];
+                        wire [G*32-1:0] xm;
+                        for (gl = 0; gl < G; gl = gl + 1) begin : g_x
+                            wire [31:0] x = xr[32*gl +: 32];
+                            wire        cy = x[15] & (x[16] | (|x[14:0]));
+                            wire [15:0] hi;
+                            ot_qwen_w12_kadd #(.W(16)) u_r (.a(x[31:16]), .b({15'd0, cy}), .s(hi));
+                            assign xm[32*gl +: 16]    = !sr[4*gl]   ? 16'd0 : sr[4*gl+2] ? 16'd0 : x[15:0];
+                            assign xm[32*gl+16 +: 16] = !sr[4*gl+1] ? 16'd0 : sr[4*gl+3] ? hi : x[31:16];
+                        end
+                        assign tc[XW*1 +: XW] = {r0q[XW0-1 -: (XW - G*32)], xm};
+                    end
+                    assign tc[XW-1:0] = tx_d;
+                    assign tx_q = tc[XW*XTX +: XW];
+                end else if (XTX > 0) begin : g_tx
                     wire [XW*(XTX+1)-1:0] tc;
                     wire [XW0-1:0] r0q;
                     genvar rr;
@@ -1591,7 +1653,9 @@ end endgenerate
                     .w_d(tx_q[G*32 +: G*HIER*32]), .x_d(tx_q[G*32-1:0]), .t_out(leaf_out), .lfault(lf_raw), .tfault(stf_raw));
                 wire [G*HIER-1:0] lf_raw;
                 wire              stf_raw;
-                if (REGROOT >= 8) begin : g_fl
+                if (L9 != 0) begin : g_fl9
+                    //: REGROOT 9: the fault pins return with the result word through the landed crossing in g_out9
+                end else if (REGROOT >= 8) begin : g_fl
                     //: REGROOT 8 (rc7 gates: leaf fault pins -> fault_q setup FAIL -33..-300 ps through the OR): the
                     //: leaf's fault pins land in kept clk registers first (register -> wire -> register crossing), the
                     //: OR follows on clk.  Faults are observed one edge later (a status, not a scheduled data edge).
@@ -1604,7 +1668,20 @@ end endgenerate
                     assign stf[g] = stf_raw;
                 end
                 wire [HIER*32-1:0] leaf_out;
-                if (REGROOT >= 5) begin : g_outland
+                if (L9 != 0) begin : g_out9
+                    //: REGROOT 9: the leaf's result word and fault pins return through ONE landed crossing: ring on
+                    //: ck_tx[g] beside the leaf (the slots capture the child pins, replacing the outland register),
+                    //: read on the hub root ck.  Results (and the status-only faults) arrive L9K edges later (XTD).
+                    localparam integer RW9 = 1 + G * HIER + HIER * 32;
+                    wire [4*RW9-1:0] rb;
+                    wire [4*((RW9+23)/24)-1:0] rv;
+                    wire [RW9-1:0] ro;
+                    ot_qw_lw #(.W(RW9)) u_qlw3 (.ck(ck_tx[g]), .rsi(rst_n), .i({stf_raw, lf_raw, leaf_out}), .bank(rb), .vld(rv));
+                    ot_qw_lr #(.W(RW9), .K(L9K)) u_qlr3 (.ck(clk), .rsi(rst_n), .bank(rb), .vld(rv), .o(ro));
+                    assign lf = ro[HIER*32 +: G*HIER];
+                    assign stf[g] = ro[RW9-1];
+                    assign top[HIER*32*g +: HIER*32] = ro[HIER*32-1:0];
+                end else if (REGROOT >= 5) begin : g_outland
                     (* keep *) reg [HIER*32-1:0] q;
                     always @(posedge ((LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) ? ck_tx[g] : clk)) q <= leaf_out;
                     assign top[HIER*32*g +: HIER*32]=q;

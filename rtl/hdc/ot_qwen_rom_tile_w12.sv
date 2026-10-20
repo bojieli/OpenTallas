@@ -185,7 +185,12 @@ module ot_qwen_rom_tile_logic_w12 #(
     input  wire [TG*W*32-1:0] kv_q
 );
     localparam integer IBW = 3 * NW + 13 * AW + 13;
-    localparam integer RX = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0) + ((RQR != 0) ? 1 : 0)) : 0;   // extra memory cycles of the ROM pipeline
+    //: REGROOT 9 (QW-CB16A0-2 10-20, A0 rc10): the ROM group words cross from the group roots (ck_rsw/rnw, ck_rs/rn) to the
+    //: operand roots (ck_dw/de) through LANDED crossings (ot_qw_lw / ot_qw_lr, K = L1K): + L1K memory cycles (in RX, so x
+    //: and KV follow), and the x delay line becomes a ring (ot_qw_ring_delay: no flop -> flop shift chain).
+    localparam integer L1 = (REGROOT >= 9 && RPH == 3 && RQR != 0 && GLUE_HARD == 0 && LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) ? 1 : 0;
+    localparam integer L1K = 2;
+    localparam integer RX = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0) + ((RQR != 0) ? 1 : 0) + ((L1 != 0) ? L1K : 0)) : 0;   // extra memory cycles of the ROM pipeline
     localparam integer ME_EXTRA = MEM_EXTRA + RX;
     localparam integer SB = (CODE_BANKS + 1) / 2;                      // south group: banks [0, SB)
     generate if (ROM_PIPE != 0 && (MEM_EXTRA != 1 || ROM_ARELAY < 1)) begin : g_rp_bad
@@ -198,7 +203,8 @@ module ot_qwen_rom_tile_logic_w12 #(
     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
     wire [TG*32-1:0] xl_r  = IREG ? xl_q : xl;
     wire [TG*32-1:0] xl_i;
-    ot_hdc_delay #(.W(TG*32), .D(ME_EXTRA)) u_xm (.clk(clk), .rst_n(rst_n), .d(xl_r), .q(xl_i));
+    wire [TG*32-1:0] xl_i0;
+    ot_hdc_delay #(.W(TG*32), .D((REGROOT >= 9) ? 0 : ME_EXTRA)) u_xm (.clk(clk), .rst_n(rst_n), .d(xl_r), .q(xl_i0));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) go_q <= 1'b0;
         else go_q <= ib_go;
@@ -568,6 +574,22 @@ module ot_qwen_rom_tile_logic_w12 #(
                     ot_qwen_tile_rqr_half u_nw(.clk(ck_gn),.d(rwn[CODE_BANKS][511:0]),.q(gn_q[511:0]));
                     ot_qwen_tile_rqr_half u_se(.clk(ck_rqre[0]),.d(rw[CODE_BANKS][1023:512]),.q(gs_q[1023:512]));
                     ot_qwen_tile_rqr_half u_ne(.clk(ck_rqre[1]),.d(rwn[CODE_BANKS][1023:512]),.q(gn_q[1023:512]));
+                end else if (L1 != 0) begin : g_col_land
+                    // REGROOT 9: each group half's ring on its group root (the slots replace the gs / gn registers),
+                    // read on the half's operand root (west ck_reg[2] = ck_dw, east ck_reg[3] = ck_de).  The group OR
+                    // follows the reads.  gs_q / gn_q after edge n = the relay words of edge n - L1K (was edge n).
+                    localparam integer HB = 2 * PWB;
+                    localparam integer HC = (HB + 23) / 24;
+                    wire [4*HB-1:0] bsw, bse, bnw, bne;
+                    wire [4*HC-1:0] vsw, vse, vnw, vne;
+                    ot_qw_lw #(.W(HB)) u_qlw1sw (.ck(ck_reg[0]), .rsi(rst_n), .i(rw[CODE_BANKS][0 +: HB]),   .bank(bsw), .vld(vsw));
+                    ot_qw_lw #(.W(HB)) u_qlw1se (.ck(ck_gs),     .rsi(rst_n), .i(rw[CODE_BANKS][HB +: HB]),  .bank(bse), .vld(vse));
+                    ot_qw_lw #(.W(HB)) u_qlw1nw (.ck(ck_reg[1]), .rsi(rst_n), .i(rwn[CODE_BANKS][0 +: HB]),  .bank(bnw), .vld(vnw));
+                    ot_qw_lw #(.W(HB)) u_qlw1ne (.ck(ck_gn),     .rsi(rst_n), .i(rwn[CODE_BANKS][HB +: HB]), .bank(bne), .vld(vne));
+                    ot_qw_lr #(.W(HB), .K(L1K)) u_qlr1sw (.ck(ck_reg[2]), .rsi(rst_n), .bank(bsw), .vld(vsw), .o(gs_q[0 +: HB]));
+                    ot_qw_lr #(.W(HB), .K(L1K)) u_qlr1se (.ck(ck_reg[3]), .rsi(rst_n), .bank(bse), .vld(vse), .o(gs_q[HB +: HB]));
+                    ot_qw_lr #(.W(HB), .K(L1K)) u_qlr1nw (.ck(ck_reg[2]), .rsi(rst_n), .bank(bnw), .vld(vnw), .o(gn_q[0 +: HB]));
+                    ot_qw_lr #(.W(HB), .K(L1K)) u_qlr1ne (.ck(ck_reg[3]), .rsi(rst_n), .bank(bne), .vld(vne), .o(gn_q[HB +: HB]));
                 end else if (REGROOT != 0 && RPH == 3) begin : g_col_roots
                     // Q-ROMPARENT 10-16 (claude/romparent-c1r8, merged by Q-BIND 10-17): each ROM column's half of the
                     // group words on its own regional root (west column [PWB*2-1:0] on ck_reg[0]/[1]; east column keeps
@@ -775,6 +797,13 @@ module ot_qwen_rom_tile_logic_w12 #(
         assign go_cp[31:28] = {4{go_q}};
     end else begin : g_gocn
         assign go_cp = {32{go_i}};
+    end endgenerate
+    //: REGROOT 9: the x delay as a ring (safe-design item 5; u_xm above becomes a wire, D = 0).  At the end of the module so
+    //: no earlier genblk is renumbered; REGROOT < 9 keeps the u_xm delay line and its instance path unchanged.
+    generate if (REGROOT >= 9) begin : g_xm9
+        ot_qw_ring_delay #(.W(TG*32), .D(ME_EXTRA)) u_xr (.clk(clk), .rst_n(rst_n), .d(xl_r), .q(xl_i));
+    end else begin : g_xm8
+        assign xl_i = xl_i0;
     end endgenerate
 endmodule
 
