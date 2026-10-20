@@ -1809,7 +1809,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     reg [31:0] open, done, stale, refreshed;
     reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
     reg running; reg [31:0] blk;   // blk: one-hot of rb while a REFpb is pending
-    (* keep, ot_rst_split *) reg [6:0] streaming__qv;   // KV-PC SAFE: 7 kept copies of streaming
+    (* keep, ot_rst_split *) reg [9:0] streaming__qv;   // KV-PC SAFE: 10 kept copies of streaming (KV-PC2: 7 -> 10, 264 loads = 38 / copy at 7)
     function streaming__f; input v; streaming__f = v; endfunction
     wire streaming = streaming__qv[0:0]; reg [2:0] last; reg [10:0] nm1;   // registered at descriptor accept
     wire [2:0] k = j[9:7];
@@ -2204,8 +2204,8 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire streaming_nx = (desc_v && !streaming && !fault_r) ? (desc_n != 0) :
                         (rd_ok && (context_active ? ordinal+9'd1==context_count : j==nm1)) ? 1'b0 : streaming_m;
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) begin streaming_m <= 1'b0; streaming__qv <= {7{streaming__f(0)}}; end
-      else begin streaming_m <= streaming_nx; streaming__qv <= {7{streaming__f(streaming_nx)}}; end
+      if (!rst_n) begin streaming_m <= 1'b0; streaming__qv <= {10{streaming__f(0)}}; end
+      else begin streaming_m <= streaming_nx; streaming__qv <= {10{streaming__f(streaming_nx)}}; end
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
         v_consumer_order<=0;context_active__qv <= {5{context_active__f(0)}};context_v<=0;context_kb<=0;context_k0<=0;ordinal<=0;context_count<=0; last <= 0; nm1 <= 0;
