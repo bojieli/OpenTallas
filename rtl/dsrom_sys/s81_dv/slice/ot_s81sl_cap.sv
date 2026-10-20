@@ -90,14 +90,25 @@ module ot_s81sl_cap #(
     wire [279:0] rt_wd;                                        // W lanes after the optional lane-3 static delay
     generate if (WL3DLY != 0) begin : g_ld3
         assign rt_wd[209:0] = rt_w[209:0];
+`ifdef OT_HARD_CHILDREN
+        // hard view s81sl_cap_ld is built at D = 16 (a hard view carries no parameters: no override, no $paramod rename)
+        ot_s81sl_cap_ld u_ld3 (.clk(clk), .rst_n(rst_n), .i_w(rt_w[279:210]), .o_w(rt_wd[279:210]));
+`else
         ot_s81sl_cap_ld #(.D(WL3DLY)) u_ld3 (.clk(clk), .rst_n(rst_n), .i_w(rt_w[279:210]), .o_w(rt_wd[279:210]));
+`endif
     end else begin : g_nold3
         assign rt_wd = rt_w;
     end endgenerate
     wire ex_v, ex_e, ex_f; wire [31:0] ex_t, ex_d;            // E tree output before the static delay
     generate if (EDLY != 0) begin : g_ed
+`ifdef OT_HARD_CHILDREN
+        // hard view s81sl_cap_ed is built at D = 24 (kit params; no override on a hard view)
+        ot_s81sl_cap_ed u_ed (.clk(clk), .rst_n(rst_n), .i_v(ex_v), .i_t(ex_t), .i_d(ex_d), .i_e(ex_e),
+            .i_f(ex_f), .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .o_f(e_f));
+`else
         ot_s81sl_cap_ed #(.D(EDLY)) u_ed (.clk(clk), .rst_n(rst_n), .i_v(ex_v), .i_t(ex_t), .i_d(ex_d), .i_e(ex_e),
             .i_f(ex_f), .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .o_f(e_f));
+`endif
     end else begin : g_noed
         assign e_v = ex_v; assign e_t = ex_t; assign e_d = ex_d; assign e_e = ex_e; assign e_f = ex_f;
     end endgenerate
@@ -130,6 +141,9 @@ module ot_s81sl_cap #(
 `ifdef OT_HARD_CHILDREN
 `ifndef SYNTHESIS
     initial if (MUT != 0) $fatal(1, "ot_s81sl_cap: OT_HARD_CHILDREN build is MUT = 0 only");
+    // the hard leaves exist at exactly these delays (kits s81sl_cap_ed D = 24, s81sl_cap_ld D = 16)
+    initial if (!(EDLY == 0 || EDLY == 24) || !(WL3DLY == 0 || WL3DLY == 16))
+        $fatal(1, "ot_s81sl_cap: OT_HARD_CHILDREN build has hard delay leaves only for EDLY 24 / WL3DLY 16");
 `endif
 `endif
 `ifndef SYNTHESIS
