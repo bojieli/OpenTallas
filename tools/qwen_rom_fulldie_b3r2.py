@@ -4173,6 +4173,22 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
     _lc_bids = {r_['bid'] for r_ in (m.get('land_cross') or {}).get('rows', ())}
+    # QW-G5STA (opt-in with OT_SPLIT_FWD_LAND_EW_MASTERS): the dv_xgap_plan slice landing channels (x gaps >= 43 um
+    # between side-by-side listed masters, over their common height) are legal landing sites although they lie inside
+    # the tile-field rectangle (dv2f20g5l try 4: every candidate there was refused as 'field, no corridor, no row gap',
+    # so the 1- / 32-b slice landings fell back 600-680 um away)
+    _xch = []
+    if _ewm:
+        _sl = sorted((it for it in m['insts'] if str(it.master).startswith(_ewm)), key=lambda it: it.x)
+        for _p, _q in zip(_sl, _sl[1:]):
+            _g0, _g1 = _p.x + _p.w, _q.x
+            _y0, _y1 = max(_p.y, _q.y), min(_p.y + _p.h, _q.y + _q.h)
+            if _g1 - _g0 >= 43.0 and _y1 > _y0:
+                _xch.append((_g0, _y0, _g1, _y1))
+        m.setdefault('fwd_land_ew', {})['channels'] = [[round(z, 3) for z in c_] for c_ in _xch]
+
+    def _in_xchan(x0, y0, W_, H_):
+        return any(a_ - 1e-3 <= x0 and x0 + W_ <= c_ + 1e-3 and b_ - 1e-3 <= y0 and y0 + H_ <= d_ + 1e-3 for a_, b_, c_, d_ in _xch)
     pad_done = {}
     pad_hop_centre = {}
     if tpads:
@@ -4233,7 +4249,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                             sc_ = max(abs(cx_ - Q[0]) + abs(cy_ - Q[1]), abs(cx_ - x1) + abs(cy_ - y1))
                             if best_ is not None and sc_ >= best_[0]:
                                 continue
-                            if in_field(cx_, cy_) and corr_of(cx_) is None and not contains_frame(legal_row_gaps, y0, H_):
+                            if in_field(cx_, cy_) and corr_of(cx_) is None and not contains_frame(legal_row_gaps, y0, H_) \
+                                    and not _in_xchan(x0, y0, W_, H_):
                                 continue
                             if y0 >= g['y0'] and y0 + H_ <= die_top and free((x0, y0, x0 + W_, y0 + H_)):
                                 best_ = (sc_, (x0, y0))
