@@ -189,10 +189,10 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
  reg[547:0]f_dd;reg f_lcv;reg[5:0]f_stage;reg f_qs;reg[4:0]f_qb;
  always @(posedge ck)begin f_dd<=dd_i;f_lcv<=layer_context_v;f_stage<=command_stage;f_qs<=q_slot;f_qb<=q_slot_beat;end
  // v5: bounded face beat publications; each copy feeds eight destination captures.
- wire[19:0]qb_face_pub;wire[71:0]bp_element;wire[79:0]elem_hi_face_pub;
+ wire[19:0]qb_face_pub;wire[71:0]bp_element;wire[119:0]elem_hi_face_pub;
  generate if(QB_LOCAL32)begin:g_face_local
-  // Each raw high-address bit reaches only canonical face + two kept tier-0 copies.
-  for(genvar ahg=0;ahg<2;ahg=ahg+1)begin:g_hi_face
+  // Third kept publication owns canonical/override consumers; do not let an unkept face merge overload a seat publication.
+  for(genvar ahg=0;ahg<3;ahg=ahg+1)begin:g_hi_face
    (* keep = "true" *) reg[39:0]q;
    always @(posedge ck)begin
     for(integer aw=0;aw<8;aw=aw+1)q[5*aw+:5]<=dd_i[345+24*aw+4+:5];
@@ -240,7 +240,7 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
  generate for(gr=0;gr<16;gr=gr+1)begin:g_seg
   always @(posedge ck)begin
    for(integer lane=0;lane<8;lane=lane+1)
-    qe_rep[gr][9*lane+:9]<=f_dd[345+24*lane+:9]^9'(MUT==1);
+    qe_rep[gr][9*lane+:9]<=(QB_LOCAL32?{elem_hi_face_pub[80+5*lane+:5],f_dd[345+24*lane+:4]}:f_dd[345+24*lane+:9])^9'(MUT==1);
   end
   if(QB_LOCAL32)begin:g_ctrl
    // Seat decisions and same-edge override consume distinct address publications.
