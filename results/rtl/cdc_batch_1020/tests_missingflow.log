@@ -1,0 +1,48 @@
+ot-run: ot-epyc5       admits  1008 GB (avail 819, growth 113, headroom 0, waiters 0/0 GB) load 45/128 running 30 disk 174 GB 
+ot-run: ot-epyc6       admits   990 GB (avail 806, growth 113, headroom 0, waiters 0/0 GB) load 156/128 running 42 disk 4770 GB 
+ot-run: ot-epyc7       admits   670 GB (avail 570, growth 101, headroom 0, waiters 0/0 GB) load 55/96 running 32 disk 5762 GB 
+ot-run: ot-epyc9       admits   812 GB (avail 665, growth 97, headroom 0, waiters 0/0 GB) load 74/128 running 38 disk 213 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-cdc-batch-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-cdc-batch-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1359076-1792481864 after 1 s
+test_all_pairs_and_bounds_before_queries (test_cdc_batch_constraints.Batch.test_all_pairs_and_bounds_before_queries) ... ok
+test_missing_path_still_fails (test_cdc_batch_constraints.Batch.test_missing_path_still_fails) ... ok
+test_nonfinite_path_still_fails (test_cdc_batch_constraints.Batch.test_nonfinite_path_still_fails) ... ok
+test_only_existing_pre_mm_deferral_allowed (test_cdc_batch_constraints.Batch.test_only_existing_pre_mm_deferral_allowed) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.027s
+
+OK
+test_cdc_sync_constraints (unittest.loader._FailedTest.test_cdc_sync_constraints) ... ERROR
+
+======================================================================
+ERROR: test_cdc_sync_constraints (unittest.loader._FailedTest.test_cdc_sync_constraints)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_cdc_sync_constraints
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-cdc-batch-1020/tools/ref_tile/test_cdc_sync_constraints.py", line 14, in <module>
+    import clock_entry_constraints as C
+  File "/srv/opentallas-scratch/claude/codex-cdc-batch-1020/tools/ref_tile/clock_entry_constraints.py", line 1814, in <module>
+    "physical/common_flow/clock_family.tcl").read_text()
+                                             ~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/codex-cdc-batch-1020/physical/common_flow/clock_family.tcl'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1359076-1792481864): exit 1
