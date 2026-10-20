@@ -1,0 +1,93 @@
+{
+  "scope": "four terminal ST2 short/tail seed pairs only; prod and fg3 PASS required",
+  "comparisons": [
+    {
+      "case": "verdict_base_s2_pe1_short300_1.txt",
+      "prod": {
+        "go": "4264",
+        "first_score": "4406",
+        "last_score": "4512",
+        "end": "5444",
+        "verdict": "PASS"
+      },
+      "fg3": {
+        "go": "4264",
+        "first_score": "4394",
+        "last_score": "4500",
+        "end": "5444",
+        "verdict": "PASS"
+      },
+      "relative_to_go_delta": {
+        "first_score": 12,
+        "last_score": 12,
+        "end": 0
+      }
+    },
+    {
+      "case": "verdict_base_s2_pe1_short300_2.txt",
+      "prod": {
+        "go": "4214",
+        "first_score": "4356",
+        "last_score": "4462",
+        "end": "5394",
+        "verdict": "PASS"
+      },
+      "fg3": {
+        "go": "4214",
+        "first_score": "4344",
+        "last_score": "4450",
+        "end": "5394",
+        "verdict": "PASS"
+      },
+      "relative_to_go_delta": {
+        "first_score": 12,
+        "last_score": 12,
+        "end": 0
+      }
+    },
+    {
+      "case": "verdict_base_s2_pe1_tail46_1.txt",
+      "prod": {
+        "go": "1486",
+        "first_score": "1628",
+        "last_score": "1639",
+        "end": "1998",
+        "verdict": "PASS"
+      },
+      "fg3": {
+        "go": "1486",
+        "first_score": "1616",
+        "last_score": "1627",
+        "end": "1998",
+        "verdict": "PASS"
+      },
+      "relative_to_go_delta": {
+        "first_score": 12,
+        "last_score": 12,
+        "end": 0
+      }
+    },
+    {
+      "case": "verdict_base_s2_pe1_tail46_2.txt",
+      "prod": {
+        "go": "1490",
+        "first_score": "1632",
+        "last_score": "1643",
+        "end": "2002",
+        "verdict": "PASS"
+      },
+      "fg3": {
+        "go": "1490",
+        "first_score": "1620",
+        "last_score": "1631",
+        "end": "2002",
+        "verdict": "PASS"
+      },
+      "relative_to_go_delta": {
+        "first_score": 12,
+        "last_score": 12,
+        "end": 0
+      }
+    }
+  ]
+}
