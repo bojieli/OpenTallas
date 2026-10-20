@@ -80,8 +80,8 @@ def spec_c(kind, v):
     big = [m for m in s['macros'] if '128x256' in m['view']]
     assert len(big) == 4
     for q, m in enumerate(big):
-        m['inst'] = '*' + inst[f'u_slg.g_pc[{q}].u_pc.u_rows']
-    s['macros'] = big + ring_macros(lambda b, k: '*' + inst[f'u_slg.g_hop[{b}].g_ring.u_ring.g_m[{k}].u_m'])
+        m['inst'] = '*' + inst[f'u_slg.g_pc[{q}].u_pc.u_rows'].replace('.', '?')
+    s['macros'] = big + ring_macros(lambda b, k: '*' + inst[f'u_slg.g_hop[{b}].g_ring.u_ring.g_m[{k}].u_m'].replace('.', '?'))
     s['orfs_vars']['OT_SPINE_TREE_PAD'] = '0' if v == 'a' else '1'
     s['purpose'] = (f'KV-GRP6 10-20: s6 KV landing-group tile {top}: bounded-driver structural copy (kv_grp_safe5.py, '
                     f'max 32 loads) of the mapped s6 RTL ({S6.OUT}: response payload delay in 32 SRAM ring macros); '
