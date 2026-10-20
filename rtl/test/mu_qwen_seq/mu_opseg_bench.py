@@ -231,15 +231,27 @@ def events_for(pb, face, res, users, ctx=True):
     return ev
 
 
-def rt_records(starts, res):
-    """one runtime record per filler while it is idle: midway between its 2nd and 3rd results, moved off any edge
-    within 6 of one of its starts / results (the compiler rule: a request lands while the filler is idle)"""
+def rt_records(starts, res, loc=()):
+    """one runtime record per filler while it is idle: after its 2nd result, moved off any edge within 6 of one of its
+    starts / results (the compiler rule: a request lands while the filler is idle).
+    QW-CTLM5 10-19 (the ctlm fresh-context guard qfd_mu_context_guard, c22e7e793, is the RTL statement of the admission
+    rule): the loaded tok / pos must reach the filler's first bank consumer (a compiled EMB / SEG fire, loc) BEFORE that
+    filler's next result write overwrites it -- else the record is lost and the guard faults (C1, op_fault).  The old
+    placement (midway between results 2 and 3) landed after the in-flight token's last consumer: guard fault at 80546.
+    So the load edge is the first one after result 2 with a consumer of the same filler > 6 edges later and > 6 edges
+    before its next result."""
     recs = []
     for u in range(1, NU):
         busy = sorted([c for c, uu, *_ in starts if uu == u] + [c for c, uu, tok, val in res if uu == u])
         rs = sorted(c for c, uu, tok, val in res if uu == u)
-        c = (rs[1] + rs[2]) // 2
-        while any(abs(c + RT_LD - b) <= 6 for b in busy): c += 7
+        cons = sorted(t for t, uu, k, b in loc if uu == u and k in ('EMB', 'SEG'))
+        c = rs[1] + 7
+        while True:
+            ld = c + RT_LD
+            nres = min(r for r in rs if r > ld)
+            if not any(abs(ld - b) <= 6 for b in busy) and (not loc or any(ld + 6 < t < nres - 6 for t in cons)):
+                break
+            c += 7
         assert rs[1] < c < rs[2], (u, c, rs[:3])
         recs.append((c, u, 0x10000 + 0x101 * u, 4000 + 17 * u))
     return recs
@@ -479,7 +491,8 @@ def main():
                 check_case('red', cal, RED_FRAMES + 1, S0 + RED_FRAMES * cal['H'] + 2000, e1, e4, work, rd, m, fails, summ)
             elif case == 'd2d_ctx':
                 _pb, _L, _face, st_, res_ = model(cal, RED_FRAMES + 1, S0 + RED_FRAMES * cal['H'] + 2000)
-                RT['recs'] = rt_records(st_, res_)
+                _wc, _wl = expected_fires(list(st_), image_entries(_pb['pw']), 0, C_CAL)
+                RT['recs'] = rt_records(st_, res_, _wl)
                 summ['d2d_records'] = RT['recs']
                 check_case('d2d_ctx', cal, RED_FRAMES + 1, S0 + RED_FRAMES * cal['H'] + 2000, e1, e4, work, rd, m, fails, summ)
                 RT['recs'] = []
