@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parents[2]
 TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv'
 SOURCES = {
     TILES: 'df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97',
-    'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv': '90f9a4ec6dbb0ee2e1d644ac0878566c709ba5a1ec68601a4d250a50fa4f98fe',
+    'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv': '0b2f67cac099b0793473aec31e40a7e76eef2047b2e64ad8c75a8739036edfab',   # KV-BIND4: + KV-PC strap pin regs pc_sr / st_sr (0 cycles)
     'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv': 'f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a',
     'rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv': 'ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503',
     'rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv': '14d5d335fc805eb6a39850b05d827001dbca31091c3e9e5758b4ee5db7e0d7b8',
@@ -45,7 +45,10 @@ SOURCES = {
 # KV-BIND3 10-19: re-pinned (was a7063e6b..., 60ff34e3d).  Changes since: default-off OT_KV_GRP_PRIVATE0 / OT_KV_DCAL_FLT
 # branches, port `scalar` clock/reset classing (only set by GRP_PRIVATE0), ASTK rc1 face-land rst_release 3 -> 5 (startup
 # calendar only).  No PC / GRP chain-end text changed; GEN_ASSERT below still asserts the generator text.
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '52192834fa4a3e4ebcf1b08ecfea5a0c26e23d3ec683282d0524434c26dd8cff')
+# KV-BIND4 10-19: re-pinned (was 52192834...).  Changes: merge claude/kv-pc3-1019 (default-off OT_KV_PC_RLAND /
+# OT_KV_PC_SRAM text rewrites of the PC kit modules, pc__hfx export), PC_SR_EDGES / pc_chain_ages ledger, bindings()
+# pc__hfx group (PC_SRAM only).  The kc chain order / last-PC-ko note and the BOOT hes/ler skip are unchanged (GEN_ASSERT).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '06dc5f230cad7b6f682c8ba411cb919e76e4e16679e6cd291e212f27084de4c6')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -126,6 +129,34 @@ WHY = {
                'arrival in the end/slot link and kvn_rx (fault -> d2d fault); kvn_word_index = registered rx_beat[1:0], '
                'the consumer checks arrival edge (kvv != xk) and tag ordinal (ktag) itself',
 }
+
+# KV-BIND4 10-19: the sr6 PC die point (OT_KV_PC_SRAM=1, with OT_KV_DOMSPLIT=1 / OT_KV_PC_RLAND=1): the die tile file is
+# qkd_kvs_tiles_hroot_ff_k_mu_ba_ds_rl_sr.sv and the PC tiles' u_pc is the SRAM clone chain (qkd_kvpc_sram_clones_1019.sv).
+# Same roles, same chain ends; the source assertions move to the clone modules (u_esm = qkd_kvpc_s_esm, the kc tap in
+# qkd_kvpc_s_sched; the tap's own o_v <= i_v / o_d <= i_d copy is unchanged, its input is the landed ki_q: +1 hck a tile,
+# kv_static_die.PC_SR_EDGES -- the tail copy stays a registered copy of the chain input).
+if __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
+    _T0 = TILES
+    TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_ds_rl_sr.sv'
+    SOURCES.pop(_T0)
+    SOURCES[TILES] = 'b0e5cc4418116dcc4edf6890cf6f2b497b67abca0b18f5e09e670c6cb6b4ad68'
+    SOURCES['rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv'] = '4e0b4476a9b98aaac2172d8b91e1d9d4c0f3baf45d75c3d7747ea4c8b803281d'
+    for _r in ('rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv',
+               'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv'):
+        SOURCES.pop(_r)
+    for _k, _items in ASSERT.items():
+        ASSERT[_k] = [(TILES if r_ == _T0 else r_, m_, list(ss)) for r_, m_, ss in _items]
+    ASSERT['pc_dup'] = [(TILES, m, [x.replace('qkd_static_kv_pc_path_fan_nc_b', 'qkd_kvpc_s_fan_nc_b') for x in ss])
+                        for r_, m, ss in ASSERT['pc_dup'] if m in PC] + [
+        ('rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv', 'qkd_kvpc_s_emb_nc_b',
+         ['qkd_kvpc_s_esm u_esm', '.completion_we(completion_we), .hcv(hcompletion_v), .hcw(hcompletion_we)',
+          '.es(es_merged), .er(er)']),
+        ('rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv', 'qkd_kvpc_s_esm',
+         ["wire [260:0] er_e = (own && MUT != 4) ? 261'd0 : er;", 'her[258:1] <= er[258:1];',
+          'hcv <= sl && completion_v; hcw <= sl && completion_we;'])]
+    ASSERT['pc_ko_tail'] = [(TILES, m, ['assign pc__ko = w_pc__ko;', '.ko(w_pc__ko)', '.ki(pc__ki)']) for m in PC] + [
+        ('rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv', 'qkd_kvpc_s_sched', ['.o_v(ko[0]), .o_d(ko[32:1])', 'ki_q <= ki;', '.i_v(ki_q[0]), .i_d(ki_q[32:1])']),
+        ('rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv', 'ot_qkvd_kcmd_tap', ['o_v <= i_v;', 'o_d <= i_d;'])]
 
 
 def sha(p):

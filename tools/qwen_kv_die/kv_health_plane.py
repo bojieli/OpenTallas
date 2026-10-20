@@ -14,6 +14,9 @@ Sources (generic rules on the laned case_kv/die.v + elements.lef; every rule nam
   * every landing qkd_landsh_<W> / qkd_landsh0_<W> `fault` (sticky ring-epoch fault, cleared by its receiving rs);
   * kc_<st>.kf (qkd_ctrl_kc, NOT sticky -> an explicit sticky latch beside it) once the die KC master exposes `kf`;
   * dcal fault (`flt` / `fault`) unless already consumed (OT_KV_DCAL_FLT: dcal flt -> afr d[8], priced by the contract);
+  * KV-BIND4 10-19 (K.STA.RETIRE.PCF): every sr6 PC / PC_H tile's pc__hfx[2:0] ({embr, es_merge, chain}, one registered
+    sticky ck stage in the tile, cleared only by the tile reset) -- three sticky sources a tile; the plane connects the
+    port to its own net n_hp_pchfx_<inst> when the laned case left it open (never tied, never dropped);
   * every other OUTPUT pin named fault / flt / kf / pcf / hfault / *_fault of a die master that has no reader is
     reported as an UNADMITTED source (never silently dropped);
   * existing_ufh: the old kvs_attn.ufh net (AHUB hf) becomes one leaf; the final sticky sink drives kvs_attn.ufh.
@@ -71,6 +74,8 @@ LAND = re.compile(r'qkd_landsh0?_(1|36|296|528)$')
 FAMILY = re.compile(r'qkd_(rlysh0?|landsh0?)_(1|36|296|528)$')
 FAULT_PORT = re.compile(r'^(fault|flt|kf|pcf|hfault|\w+_fault)$')
 INST = re.compile(r'^(\s*)(\w+)\s+(\\?\S+)\s*\((.*)\);\s*$')
+PC_MASTERS = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
+PC_HFX = ('pc__hfx', 3)
 PLACE = re.compile(r'findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)')
 
 
@@ -227,6 +232,36 @@ def inventory(die):
                                         'flt; OT_KV_DCAL_FLT=1 routes it to afr d[8])'))
         else:
             add('dcal', port, 'ck', 'rst_n', True, owner='KV-DCAL2')
+    # KV-BIND4: PC fault export family (pc__hfx, sticky per bit)
+    pport, pw = PC_HFX
+    for i, (m, p, c) in sorted(die.cells.items()):
+        if m not in PC_MASTERS:
+            continue
+        pins = base_ports(die.macros.get(m, {}).get('pins', {}))
+        if pport not in pins:
+            if pport in c:
+                raise ValueError(f'{i}.{pport}: connected but the master {m} LEF has no such pin')
+            continue                     # pre-sr6 PC tile: no export (the census below never sees it either)
+        if pport in c:
+            bits = die.bits(c[pport])
+            if bits is None or len(bits) != pw or any(b[0] in ('CONST', 'Z') for b in bits):
+                raise ValueError(f'{i}.{pport}: not {pw} die signal bits')
+            bits = list(reversed(bits))   # die.bits is MSB first; index = port bit
+            connect = None
+        else:
+            net = f'n_hp_pchfx_{i}'
+            bits = [(net, b) for b in range(pw)]
+            connect = dict(inst=i, port=pport, net=net, width=pw)
+        for b in range(pw):
+            sid = f'{i}.{pport}[{b}]'
+            r = rd.get(bits[b], []) if connect is None else []
+            if r:
+                covered.append(dict(source=sid, readers=[f'{a}.{q}' for a, q in r]))
+                continue
+            sources.append(dict(id=sid, instance=i, master=m, port=pport, bit=b, signal=list(bits[b]),
+                                clock=die.scalar(c['ck']), reset=die.scalar(c['rst_n']), sticky=True,
+                                requires_sticky_latch=False, placement=die.places.get(i), pin_xy=die.point(i, pport),
+                                family='pc_hfx', **({'connect': connect} if connect else {})))
     # every other unread fault-like OUTPUT on any die master: reported, never dropped
     known = {s['id'] for s in sources} | {c['source'] for c in covered} | {b['source'] for b in blockers}
     for i, (m, p, c) in sorted(die.cells.items()):
@@ -443,6 +478,10 @@ def emit(die, inv, plan):
         sig[t['id']] = f'{last[0]}[{last[1]}]'
     # the sink drives kvs_attn.ufh; the old ufh net is the existing_ufh leaf
     sink_net = sig[plan['sink']]
+    connects = {}
+    for s_ in inv['sources']:
+        if s_.get('connect'):
+            connects[s_['connect']['inst']] = s_['connect']
     out_lines, seen = [], set()
     for ln in lines:
         m = INST.match(ln)
@@ -459,14 +498,22 @@ def emit(die, inv, plan):
                 raise ValueError('kvs_attn.ufh connection not found exactly once')
             ln = f'{ind}{mst} {nm_} ({body2});'
             seen.add('kvs_attn')
+        if m and m.group(3) in connects:
+            cn = connects[m.group(3)]
+            if not ln.rstrip().endswith(');') or f'.{cn["port"]}(' in ln:
+                raise ValueError(f'{m.group(3)}: cannot connect {cn["port"]}')
+            ln = ln.rstrip()[:-2] + f', .{cn["port"]}({cn["net"]}));'
+            seen.add(m.group(3))
         out_lines.append(ln)
-    if seen != set(edits) | {'kvs_attn'}:
+    if seen != set(edits) | {'kvs_attn'} | set(connects):
         raise ValueError(f'instances not rewritten: {sorted(set(edits) | {"kvs_attn"} - seen)}')
     # new cells + wires before endmodule
     clock, reset = {}, {}
     for s in inv['sources']:
         clock[s['id']], reset[s['id']] = s['clock'], s['reset']
     new, wires, place = [], [], []
+    for cn in connects.values():
+        wires.append(f'  wire [{cn["width"] - 1}:0] {cn["net"]};')
     for n in plan['nodes']:
         ck = n['clock']
         a, b = sig[n['a']], sig[n['b']]
@@ -566,6 +613,7 @@ def emit(die, inv, plan):
         (case / 'HEALTH_NETLIST_ONLY').write_text('kv_health_plane --netlist-only: masters without closed views: '
                                                   + ' '.join(missing_views) + '\n')
     return dict(cells=len(new), wires=len(wires), rewired_instances=len(edits), pad_bits_freed=removed,
+                connected_ports=sorted(f"{c['inst']}.{c['port']}" for c in connects.values()),
                 masters=sorted(views), missing_views=missing_views, sink_net=sink_net)
 
 

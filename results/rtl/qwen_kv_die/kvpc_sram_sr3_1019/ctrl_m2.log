@@ -1,0 +1,15 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=162  ck out er
+MISMATCH t=162 pll out er
+MISMATCH t=333  ck out er
+MISMATCH t=333 pll out er
+MISMATCH t=336  ck out er
+MISMATCH t=337 pll out er
+MISMATCH t=338  ck out er
+OUT er mismatches=8539
+KVPC_CTRL FAIL edges=20000 checks=580624 errors=8539 active_out=172341 mut=2
+- /srv/opentallas-scratch/claude/kv-pc2/out-96723d23b/w_ctrl_m2/tb.sv:154: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.300 s; speed 55.693 us/s
+- Verilator: cpu 0.300 s on 1 threads; allocated 7 MB
+
