@@ -55,7 +55,7 @@ module ot_hbm_svc_async_fifo_sram #(parameter integer WIDTH=32,DEPTH=8)(
    wr_online<=1;rd_online_w1<=rd_online;rd_online_w2<=rd_online_w1;
    rd_gray_w1<=rd_gray;rd_gray_w2<=rd_gray_w1;
    if(wr_valid&&!wr_ready)wr_overflow<=1;
-   if(wr_fire)begin wr_bin<=wr_next;wr_gray<=(wr_next>>1)^wr_next;end
+   wr_bin<=wr_next;wr_gray<=(wr_next>>1)^wr_next;   // every edge (no enable): Gray MSB == binary MSB share one D
   end
  end
  always @(posedge rd_clk or negedge rd_reset)begin
@@ -66,7 +66,7 @@ module ot_hbm_svc_async_fifo_sram #(parameter integer WIDTH=32,DEPTH=8)(
    rd_online<=1;wr_online_r1<=wr_online;wr_online_r2<=wr_online_r1;
    wr_gray_r1<=wr_gray;wr_gray_r2<=wr_gray_r1;
    if(rd_ready&&!rd_valid)rd_underflow<=1;
-   if(rd_fire)begin rd_bin<=rd_next;rd_gray<=(rd_next>>1)^rd_next;end
+   rd_bin<=rd_next;rd_gray<=(rd_next>>1)^rd_next;   // (synthesis may keep one copy: OT_GF launch alias)
    if(cap)begin f_bin<=f_next;f_gray<=(f_next>>1)^f_next;end
    bcnt<=bcnt+{1'b0,cap}-{1'b0,rd_fire};
   end

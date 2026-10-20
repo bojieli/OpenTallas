@@ -134,7 +134,7 @@ REVIEWED = {
     # after its write edge (the write pointer is updated on the macro write edge and crosses two reader flops).
     'ot_hbm_svc_async_fifo_sram': dict(
         path='rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv',
-        sha256=('3d3e7a5be43931bdb6cd70f10f167bc804037ff8dfb7cb74e0c2d613e61c99a7',),
+        sha256=('2b3ba9325d4a43f115fd7026e944c88b5bd8ebf1876a3c3081e1dc1768718458',),
         chains=(('wptr', 'wr_gray', ('wr_gray_r1', 'wr_gray_r2'), 'w2r'),
                 ('rptr', 'rd_gray', ('rd_gray_w1', 'rd_gray_w2'), 'r2w'),
                 ('wonl', 'wr_online', ('wr_online_r1', 'wr_online_r2'), 'w2r'),
@@ -1247,14 +1247,27 @@ def _lint(spec, root):
     # may keep either one (qkd_hr_cdc_host r2: ot_async_fifo rd_gray[MSB] folded into rd_bin[MSB], Gray MSB == binary
     # MSB).  Its names carry the launch role so the SDC binds whichever survives; a signature shared by two different
     # tagged roles aliases nothing.
+    # An enabled register reaches the lint netlist (dffunmap) as D = MUX(S, hold = its own Q, next); two such registers
+    # with the same enable and next value are the same register for ORFS (one $_DFFE_ each, opt_merge keeps one): the
+    # signature replaces its own-Q hold input by a marker (L2H-IDXSCORE/SVG 10-19: ot_hbm_svc_async_fifo rd_gray[MSB]
+    # folded into rd_bin[MSB] under rd_fire).
+    def alias_sig(q):
+        f = net.flops[q]
+        drv = net.driver.get(f['d'])
+        if drv and drv[0] == 'comb' and drv[2] == '$_MUX_':
+            pins = drv[3]
+            if pins.get('A') == q and pins.get('B') != q:
+                return (f.get('t'), ('hold_a', pins.get('S'), pins.get('B')), f['c'], f['r'])
+            if pins.get('B') == q and pins.get('A') != q:
+                return (f.get('t'), ('hold_b', pins.get('S'), pins.get('A')), f['c'], f['r'])
+        return (f.get('t'), f['d'], f['c'], f['r'])
     sig = {}
-    for p, f in net.flops.items():
-        sig.setdefault((f.get('t'), f['d'], f['c'], f['r']), []).append(p)
+    for p in net.flops:
+        sig.setdefault(alias_sig(p), []).append(p)
     for q, r in sorted(role.items(), key=lambda x: str(x[0])):
         if r[0] not in ('src', 'esrc', 'lsrc'):
             continue
-        f = net.flops[q]
-        group = sig[(f.get('t'), f['d'], f['c'], f['r'])]
+        group = sig[alias_sig(q)]
         if len({role[x] for x in group if x in role}) != 1:
             continue
         for p in group:
