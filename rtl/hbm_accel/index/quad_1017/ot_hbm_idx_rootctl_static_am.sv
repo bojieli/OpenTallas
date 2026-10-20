@@ -137,10 +137,10 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
  end
  wire[135:0]topk_rq;wire[2055:0]topk_rr;wire[337:0]tk_cq;wire[1:0]tk_cqs;wire tk_busy,tk_done,tk_fault;
  generate if (FAN32 != 0) begin : g_tk32
-  localparam integer NGO = 6;
+  localparam integer NGO = 12;
   wire [NGO-1:0] go_c;   // kept copies of the go pin register tk_go_r (same D, same reset)
   for (genvar c = 0; c < NGO; c = c + 1) begin : g_go
-   ot_hbm_idx_kreg #(.W(1),.RST(1)) u(.clk(clk),.rst_n(rst_c[1]),.d(topk_go),.q(go_c[c]));
+   ot_hbm_idx_kreg #(.W(1)) u(.clk(clk),.rst_n(rst_c[1]),.d(topk_go),.q(go_c[c]));   // reset-free: settles in reset
   end
   ot_hbm_idx_topk_static_f32 #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT),.NGO(NGO)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),
    .go(tk_go_r),.go_c(go_c),

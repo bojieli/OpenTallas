@@ -70,7 +70,7 @@ module ot_hbm_idx_vm_share_leaf_r #(parameter integer MUT = 0, parameter integer
             wire [5:0] o_pre = own[((MUT == 1) ? 6 : 7) + VM_RT - 1];
             for (genvar w = 0; w < 8; w = w + 1) begin : g_w
                 ot_hbm_idx_kreg #(.W(1)) uv (.clk(clk), .rst_n(rst_n), .d(vm_rr[257*b+256]), .q(vc[w]));
-                ot_hbm_idx_kreg #(.W(1), .RST(1)) uo (.clk(clk), .rst_n(rst_n), .d(o_pre[3*b+2]), .q(oc[w]));
+                ot_hbm_idx_kreg #(.W(1)) uo (.clk(clk), .rst_n(rst_n), .d(o_pre[3*b+2]), .q(oc[w]));
                 assign argmax_rr[257*b + 32*w +: 32] = (AMNOMASK != 0) ? rr_q[257*b + 32*w +: 32]
                                                                        : (rr_q[257*b + 32*w +: 32] & {32{vc[w] && oc[w]}});
             end
