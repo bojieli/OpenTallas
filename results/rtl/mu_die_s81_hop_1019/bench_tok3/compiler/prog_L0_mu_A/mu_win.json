@@ -1,0 +1,688 @@
+{
+ "schema": "opentallas.s81_dv.mu_win.v1",
+ "layer": "L0",
+ "group": "S000",
+ "copy": "A",
+ "mode": "ar",
+ "period": 980428,
+ "nw": 46,
+ "gaps": [
+  21312,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21312,
+  21316,
+  21312,
+  21316,
+  21312,
+  21316
+ ],
+ "RL": 10589,
+ "kit_age": 10582,
+ "layer_issue0": 3,
+ "NB": 80,
+ "LEAD_TX": 4,
+ "REPLAY_LAT": 6,
+ "cap_to_layer": 4,
+ "lanes": [
+  {
+   "ep": 0,
+   "name": "7n",
+   "inst": "u_s_7N",
+   "lane": "ht_7N",
+   "age": 59
+  },
+  {
+   "ep": 1,
+   "name": "7s",
+   "inst": "u_s_7S",
+   "lane": "mu_7S",
+   "age": 37
+  },
+  {
+   "ep": 2,
+   "name": "0n",
+   "inst": "u_s_0N",
+   "lane": "mu_0N",
+   "age": 35
+  },
+  {
+   "ep": 3,
+   "name": "0s",
+   "inst": "u_s_0S",
+   "lane": "mu_0S",
+   "age": 40
+  }
+ ],
+ "hops": [
+  {
+   "op": "substage_hop0",
+   "start": 8053.3,
+   "end": 9126.3
+  }
+ ],
+ "events": [
+  {
+   "i": 0,
+   "kind": "tx",
+   "k": 0,
+   "ep": 0,
+   "inst": "u_s_7N",
+   "port": "mu_c",
+   "lane": "ht_7N",
+   "age": 59,
+   "D": 8063,
+   "pin_layer": 8121,
+   "out_layer": 8063,
+   "hop": "substage_hop0",
+   "beats": 80,
+   "beat_first": 8125,
+   "beat_last": 8363,
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 8125,
+    "what": "first of the 80 lowered XB beats on the lep ro (lower_vpx hop)"
+   }
+  },
+  {
+   "i": 1,
+   "kind": "tx",
+   "k": 0,
+   "ep": 1,
+   "inst": "u_s_7S",
+   "port": "mu_c",
+   "lane": "mu_7S",
+   "age": 37,
+   "D": 8093,
+   "pin_layer": 8129,
+   "out_layer": 8093,
+   "hop": "substage_hop0",
+   "beats": 80,
+   "beat_first": 8133,
+   "beat_last": 8371,
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 8133,
+    "what": "first of the 80 lowered XB beats on the lep ro (lower_vpx hop)"
+   }
+  },
+  {
+   "i": 2,
+   "kind": "tx",
+   "k": 0,
+   "ep": 2,
+   "inst": "u_s_0N",
+   "port": "mu_c",
+   "lane": "mu_0N",
+   "age": 35,
+   "D": 8102,
+   "pin_layer": 8136,
+   "out_layer": 8102,
+   "hop": "substage_hop0",
+   "beats": 80,
+   "beat_first": 8140,
+   "beat_last": 8378,
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 8140,
+    "what": "first of the 80 lowered XB beats on the lep ro (lower_vpx hop)"
+   }
+  },
+  {
+   "i": 3,
+   "kind": "tx",
+   "k": 0,
+   "ep": 3,
+   "inst": "u_s_0S",
+   "port": "mu_c",
+   "lane": "mu_0S",
+   "age": 40,
+   "D": 8104,
+   "pin_layer": 8143,
+   "out_layer": 8104,
+   "hop": "substage_hop0",
+   "beats": 80,
+   "beat_first": 8147,
+   "beat_last": 8385,
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 8147,
+    "what": "first of the 80 lowered XB beats on the lep ro (lower_vpx hop)"
+   }
+  },
+  {
+   "i": 4,
+   "kind": "replay",
+   "k": 1,
+   "ep": 0,
+   "inst": "u_s_7N",
+   "port": "mu_rc",
+   "lane": "ht_7N",
+   "age": 59,
+   "D": 8983,
+   "pin_layer": 9041,
+   "out_layer": 8983,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 9047,
+    "what": "ceil(end) - NB: first h beat on ri (cut-through; receive side priced)"
+   }
+  },
+  {
+   "i": 5,
+   "kind": "replay",
+   "k": 1,
+   "ep": 1,
+   "inst": "u_s_7S",
+   "port": "mu_rc",
+   "lane": "mu_7S",
+   "age": 37,
+   "D": 9005,
+   "pin_layer": 9041,
+   "out_layer": 9005,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 9047,
+    "what": "ceil(end) - NB: first h beat on ri (cut-through; receive side priced)"
+   }
+  },
+  {
+   "i": 6,
+   "kind": "replay",
+   "k": 1,
+   "ep": 2,
+   "inst": "u_s_0N",
+   "port": "mu_rc",
+   "lane": "mu_0N",
+   "age": 35,
+   "D": 9007,
+   "pin_layer": 9041,
+   "out_layer": 9007,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 9047,
+    "what": "ceil(end) - NB: first h beat on ri (cut-through; receive side priced)"
+   }
+  },
+  {
+   "i": 7,
+   "kind": "replay",
+   "k": 1,
+   "ep": 3,
+   "inst": "u_s_0S",
+   "port": "mu_rc",
+   "lane": "mu_0S",
+   "age": 40,
+   "D": 9002,
+   "pin_layer": 9041,
+   "out_layer": 9002,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 9047,
+    "what": "ceil(end) - NB: first h beat on ri (cut-through; receive side priced)"
+   }
+  }
+ ],
+ "slots": [
+  {
+   "slot": 0,
+   "user": 0,
+   "kind": "latency",
+   "land": 0,
+   "ab": 0,
+   "start": 0
+  },
+  {
+   "slot": 1,
+   "user": 1,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 21312
+  },
+  {
+   "slot": 2,
+   "user": 2,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 42624
+  },
+  {
+   "slot": 3,
+   "user": 3,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 63940
+  },
+  {
+   "slot": 4,
+   "user": 4,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 85252
+  },
+  {
+   "slot": 5,
+   "user": 5,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 106568
+  },
+  {
+   "slot": 6,
+   "user": 6,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 127880
+  },
+  {
+   "slot": 7,
+   "user": 7,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 149192
+  },
+  {
+   "slot": 8,
+   "user": 8,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 170508
+  },
+  {
+   "slot": 9,
+   "user": 9,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 191820
+  },
+  {
+   "slot": 10,
+   "user": 10,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 213136
+  },
+  {
+   "slot": 11,
+   "user": 11,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 234448
+  },
+  {
+   "slot": 12,
+   "user": 12,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 255760
+  },
+  {
+   "slot": 13,
+   "user": 13,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 277076
+  },
+  {
+   "slot": 14,
+   "user": 14,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 298388
+  },
+  {
+   "slot": 15,
+   "user": 15,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 319704
+  },
+  {
+   "slot": 16,
+   "user": 16,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 341016
+  },
+  {
+   "slot": 17,
+   "user": 17,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 362332
+  },
+  {
+   "slot": 18,
+   "user": 18,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 383644
+  },
+  {
+   "slot": 19,
+   "user": 19,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 404956
+  },
+  {
+   "slot": 20,
+   "user": 20,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 426272
+  },
+  {
+   "slot": 21,
+   "user": 21,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 447584
+  },
+  {
+   "slot": 22,
+   "user": 22,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 468900
+  },
+  {
+   "slot": 23,
+   "user": 23,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 490212
+  },
+  {
+   "slot": 24,
+   "user": 24,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 511524
+  },
+  {
+   "slot": 25,
+   "user": 25,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 532840
+  },
+  {
+   "slot": 26,
+   "user": 26,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 554152
+  },
+  {
+   "slot": 27,
+   "user": 27,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 575468
+  },
+  {
+   "slot": 28,
+   "user": 28,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 596780
+  },
+  {
+   "slot": 29,
+   "user": 29,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 618092
+  },
+  {
+   "slot": 30,
+   "user": 30,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 639408
+  },
+  {
+   "slot": 31,
+   "user": 31,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 660720
+  },
+  {
+   "slot": 32,
+   "user": 32,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 682036
+  },
+  {
+   "slot": 33,
+   "user": 33,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 703348
+  },
+  {
+   "slot": 34,
+   "user": 34,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 724664
+  },
+  {
+   "slot": 35,
+   "user": 35,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 745976
+  },
+  {
+   "slot": 36,
+   "user": 36,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 767288
+  },
+  {
+   "slot": 37,
+   "user": 37,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 788604
+  },
+  {
+   "slot": 38,
+   "user": 38,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 809916
+  },
+  {
+   "slot": 39,
+   "user": 39,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 831232
+  },
+  {
+   "slot": 40,
+   "user": 40,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 852544
+  },
+  {
+   "slot": 41,
+   "user": 41,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 873856
+  },
+  {
+   "slot": 42,
+   "user": 42,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 895172
+  },
+  {
+   "slot": 43,
+   "user": 43,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 916484
+  },
+  {
+   "slot": 44,
+   "user": 44,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 937800
+  },
+  {
+   "slot": 45,
+   "user": 45,
+   "kind": "ar",
+   "land": 1,
+   "ab": 0,
+   "start": 959112
+  }
+ ],
+ "checks": [
+  {
+   "check": "nev",
+   "verdict": "PASS",
+   "why": "8 event rows (1 hops x 4 ends x 2), master NEV 8"
+  },
+  {
+   "check": "nslot",
+   "verdict": "PASS",
+   "why": "46 slots of copy A, master NSLOT 47"
+  },
+  {
+   "check": "gaps",
+   "verdict": "PASS",
+   "why": "gaps [21312, 21316] >= nw 46"
+  },
+  {
+   "check": "rl",
+   "verdict": "PASS",
+   "why": "RL 10589 (job-0 KIT age 10582 + 7) > nw 46"
+  },
+  {
+   "check": "d_range",
+   "verdict": "PASS",
+   "why": "every D in [nw + 2, RL - 2] = [48, 10587]"
+  },
+  {
+   "check": "port_edge",
+   "verdict": "PASS",
+   "why": "one command per end-slice port per edge over the period (364 commands)"
+  },
+  {
+   "check": "port_alone",
+   "verdict": "PASS",
+   "why": "362 scheduled outbound lep events of 46 users vs 4 TX windows"
+  },
+  {
+   "check": "hops",
+   "verdict": "PASS",
+   "why": "1 substage hop ops in the programme"
+  },
+  {
+   "check": "hop_beats",
+   "verdict": "PASS",
+   "why": "every TX window covers exactly NB 80 lowered XB beats, command >= 2 edges before the first"
+  }
+ ],
+ "verdict": "PASS",
+ "mu1_uniform": false,
+ "lowered": true,
+ "status": "TX LOWERED: window D anchored on the lowered XB hop beats (lower_vpx hop); replay D on the priced hop end (receive side elastic, off-die)"
+}
