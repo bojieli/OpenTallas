@@ -1,0 +1,111 @@
+ot-run: ot-epyc5       admits  1255 GB (avail 965, growth 87, headroom 0, waiters 0/0 GB) load 32/128 running 24 disk 58 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2699020-1792487445 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+HWIN_NATIVE_MANIFEST cells=56567 inherited=1 exact_flow_removed=3013
+NATIVE_FENCE_ADDED name=ot_hj_GLOBAL cells=4397
+NATIVE_FENCE_SEED name=ot_hj_GLOBAL new_cells=4397 max_move_um=0.0
+HWIN_BIRTH_ASSIGNED owner=GLOBAL cells=4397 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E3 cells=126
+NATIVE_FENCE_SEED name=ot_hj_E3 new_cells=126 max_move_um=66.3
+HWIN_BIRTH_ASSIGNED owner=E3 cells=126 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E5 cells=102
+NATIVE_FENCE_SEED name=ot_hj_E5 new_cells=102 max_move_um=32.336
+HWIN_BIRTH_ASSIGNED owner=E5 cells=102 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E4 cells=129
+NATIVE_FENCE_SEED name=ot_hj_E4 new_cells=129 max_move_um=53.467
+HWIN_BIRTH_ASSIGNED owner=E4 cells=129 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E2 cells=131
+NATIVE_FENCE_SEED name=ot_hj_E2 new_cells=131 max_move_um=86.866
+HWIN_BIRTH_ASSIGNED owner=E2 cells=131 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E1 cells=190
+NATIVE_FENCE_SEED name=ot_hj_E1 new_cells=190 max_move_um=104.527
+HWIN_BIRTH_ASSIGNED owner=E1 cells=190 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E15 cells=219
+NATIVE_FENCE_SEED name=ot_hj_E15 new_cells=219 max_move_um=132.055
+HWIN_BIRTH_ASSIGNED owner=E15 cells=219 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E14 cells=150
+NATIVE_FENCE_SEED name=ot_hj_E14 new_cells=150 max_move_um=106.928
+HWIN_BIRTH_ASSIGNED owner=E14 cells=150 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E0 cells=184
+NATIVE_FENCE_SEED name=ot_hj_E0 new_cells=184 max_move_um=125.914
+HWIN_BIRTH_ASSIGNED owner=E0 cells=184 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E11 cells=114
+NATIVE_FENCE_SEED name=ot_hj_E11 new_cells=114 max_move_um=36.553
+HWIN_BIRTH_ASSIGNED owner=E11 cells=114 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E13 cells=136
+NATIVE_FENCE_SEED name=ot_hj_E13 new_cells=136 max_move_um=85.678
+HWIN_BIRTH_ASSIGNED owner=E13 cells=136 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E10 cells=119
+NATIVE_FENCE_SEED name=ot_hj_E10 new_cells=119 max_move_um=59.67
+HWIN_BIRTH_ASSIGNED owner=E10 cells=119 seeded=1
+NATIVE_FENCE_ADDED name=ot_hj_E12 cells=114
+NATIVE_FENCE_SEED name=ot_hj_E12 new_cells=114 max_move_um=52.792
+HWIN_BIRTH_ASSIGNED owner=E12 cells=114 seeded=1
+[INFO DPL-0006] Core area: 214263.01 um^2
+[INFO DPL-0007] Movable instances area: 9800.71 um^2
+[INFO DPL-0008] Fixed instances area within core: 32119.91 um^2
+[INFO DPL-0009] Utilization: 19.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 73421 cells
+[INFO DPL-0393]   height 77 row(s): 84 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |     865882 |     35748 |    300933
+        1 |     762402 |     32008 |    280950
+        2 |     700155 |     30473 |    263062
+        3 |     671483 |     29483 |    248472
+        4 |     654940 |     28744 |    237204
+        5 |     644313 |     28161 |    229370
+        6 |     634951 |     27443 |    221535
+        7 |     629247 |     26857 |    216597
+        8 |     624092 |     26426 |    212102
+        9 |     619996 |     25978 |    208678
+       10 |     616354 |     25590 |    205545
+       20 |     596619 |     22865 |    188821
+       30 |     587377 |     21223 |    181232
+       40 |     583564 |     20372 |    178293
+       50 |     580927 |     19805 |    176229
+       60 |     579505 |     19535 |    175083
+       70 |     578710 |     19340 |    174487
+       80 |     578125 |     19245 |    173989
+       90 |     578059 |     19195 |    173969
+      100 |     577765 |     19139 |    173733
+      110 |     577474 |     19080 |    173495
+      120 |     577435 |     19063 |    173473
+      130 |     577421 |     19065 |    173465
+      140 |     577336 |     19048 |    173395
+      150 |     577300 |     19040 |    173369
+      160 |     577272 |     19036 |    173343
+      170 |     577276 |     19036 |    173351
+      180 |     577254 |     19030 |    173331
+      190 |     577246 |     19028 |    173327
+      200 |     577248 |     19028 |    173327
+      210 |     577250 |     19028 |    173327
+      220 |     577252 |     19028 |    173327
+      230 |     577244 |     19028 |    173327
+      240 |     577250 |     19028 |    173327
+      250 |     577246 |     19028 |    173327
+      260 |     577244 |     19028 |    173327
+      270 |     577244 |     19028 |    173327
+      280 |     577242 |     19028 |    173327
+      290 |     577244 |     19028 |    173327
+      300 |     577244 |     19028 |    173327
+      310 |     577248 |     19028 |    173327
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 577248 for 3 consecutive iterations.
+Using old diamond search for 19028 remaining illegal cells.

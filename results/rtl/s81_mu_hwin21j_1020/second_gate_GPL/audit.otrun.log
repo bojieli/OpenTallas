@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       admits  1089 GB (avail 860, growth 98, headroom 0, waiters 0/0 GB) load 50/128 running 28 disk 61 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hwin21j-gplbbox-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2683112-1792487071 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+SITE width=54 height=270 dbu=1000
+HWIN_GPL_BBOX_AUDIT outside=222 worst_dbu=72 dbu_per_um=1000
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2683112-1792487071): exit 0
