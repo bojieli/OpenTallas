@@ -199,11 +199,18 @@ module ot_hgi_coll_gq_issue #(
         srcq = s;
     endfunction
     // ------------------------------------------------------------------ F20 target + descriptor rows
+`ifdef OT_GQ_N32
+    wire[15:0]p_base_bank;
+`endif
     wire p_we, p_sv; wire [7:0] p_wa, p_sb; wire [255:0] p_wd; wire [8:0] p_sl; wire [15:0] p_lp;
 `ifdef OT_GQ_FAN32
     wire [12:0] p_bank_we; wire [103:0] p_bank_addr; wire [12:0] p_start_bank;
     ot_hgi_coll_gq_target16 #(.TARGET(8'hff), .PCW(8), .TGT_PIN(1), .CAP_CLK(0)) u_target(
-        .cfg_bank_we(p_bank_we), .cfg_bank_addr(p_bank_addr), .start_bank_v(p_start_bank),
+        .cfg_bank_we(p_bank_we), .cfg_bank_addr(p_bank_addr), .start_bank_v(p_start_bank)
+`ifdef OT_GQ_N32
+        ,.start_base_bank(p_base_bank)
+`endif
+,
 `else
     ot_static_program_target #(.TARGET(8'hff), .PCW(8), .TGT_PIN(1), .CAP_CLK(0)) u_target(
 `endif
@@ -317,15 +324,27 @@ module ot_hgi_coll_gq_issue #(
             .q(run_copy[g]));
     end endgenerate
     generate for(genvar c=0;c<4;c=c+1)begin:g_cur_state
+
+`ifdef OT_GQ_N32
+        wire[3:0]start_base=p_base_bank[4*c+:4];
+        wire wrap_local;
+        (* keep="true" *)ot_hgi_coll_gq_wrap_local u_wrap(.tl(tl),.per(per),.lps(lps),.q(wrap_local));
+`else
+        wire[3:0]start_base=p_sb[3:0];
+`endif
         wire[15:0]rot={cur_ohc[c][14:0],cur_ohc[c][15]};
         for(genvar h=0;h<2;h=h+1)begin:g_half
             localparam integer L=(h==0)?c:9+c;
             always @(posedge clk or negedge rn)
                 if(!rn)cur_ohc[c][8*h+:8]<=(h==0)?8'd1:8'd0;
-                else if(p_start_bank[L])cur_ohc[c][8*h+:8]<=(16'd1<<p_sb[3:0])>>(8*h);
+                else if(p_start_bank[L])cur_ohc[c][8*h+:8]<=(16'd1<<start_base)>>(8*h);
                 else if(run_copy[2*c+h])begin
                     if(fire_cur[c])cur_ohc[c][8*h+:8]<=rot[8*h+:8];
+                    `ifdef OT_GQ_N32
+                    if(wrap_local)cur_ohc[c][8*h+:8]<=b0_oh[8*h+:8];
+`else
                     if(tl==per-16'd1 && lps>16'd1)cur_ohc[c][8*h+:8]<=b0_oh[8*h+:8];
+`endif
                 end
         end
     end endgenerate
@@ -776,6 +795,9 @@ module ot_hgi_coll_gq_issue #(
     // & sfv & scd and the plain gate !qbg & ev & pr_v reached 100-108 loads as ONE net each) and the registered one-hot
     // selects qoh / pr_oh. Same priority (QBG r, w ascending, then plain), same edge.
     wire [1:0] rq_eq [0:7],rq_ep [0:7];
+    // Parallel three-edge reset relay: exact existing rn2 release edge; each kept leaf serves one17-bit bank.
+    wire[7:0]rq_reset_n;
+    (* keep="true" *)ot_hgi_coll_gq_request_reset u_request_reset(.clk(clk),.rst_n(rst_n),.q(rq_reset_n));
     wire[103:0]qa_flat;
     for(genvar q=0;q<8;q=q+1)begin:g_qa_pack assign qa_flat[q*13+:13]=qa[q];end
     generate for(genvar b=0;b<8;b=b+1)begin:g_rq_bank
@@ -786,7 +808,7 @@ module ot_hgi_coll_gq_issue #(
         .pq(qbg_pr14),.pv(ev_v[S_PR-1]),.prv(pr_v),.eq(rq_eq[b]),.ep(rq_ep[b]));
       for(genvar c=0;c<2;c=c+1)begin:g_chunk
         localparam integer LO=9*c,W=(c==0)?9:8;
-        ot_hgi_coll_gq_req_chunk #(.LO(LO),.W(W))u_req(.clk(clk),.rst_n(rn2),.eq(rq_eq[b]),.ep(rq_ep[b]),
+        ot_hgi_coll_gq_req_chunk #(.LO(LO),.W(W))u_req(.clk(clk),.rst_n(rq_reset_n[b]),.eq(rq_eq[b]),.ep(rq_ep[b]),
           .qsel(qsel),.psel(psel),.qa(qa_flat),.src_hi(g_src[15:13]),.pr({pr_s[1],pr_s[0]}),.q(vm_rq[b*17+LO+:W]));
       end
     end endgenerate
@@ -1531,4 +1553,33 @@ module ot_hgi_coll_gq_req_chunk #(parameter integer LO=0,W=9)(input wire clk,rst
   for(integer i=0;i<2;i=i+1)if(ap[i])n=pw[i][LO+:W];
  end
  always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<=n;
+endmodule
+
+// R6 kept comparator percalendar: no register/edge; prevents sharing a64-load wrapgate.
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_wrap_local(input wire[15:0]tl,per,lps,output wire q);
+`ifdef OT_GQ_MUT_WRAP_HIGH
+ assign q=(tl==per-16'd1)&&(lps>16'd2);
+`else
+ assign q=(tl==per-16'd1)&&(lps>16'd1);
+`endif
+endmodule
+// Same three release edges and immediate asynchronous assertion as ot_rst_relay(2+1).
+// Keptleaf_n family is intentionally source-assigned per17-bit requestbank; no coarse hierarchical load rebalancing.
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_request_reset(input wire clk,rst_n,output wire[7:0]q);
+ (* async_reg="true" *)reg[1:0]sync;
+ (* keep="true",dont_touch="true" *)reg[7:0]leaf_n;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin sync<=0;leaf_n<=0;end
+  else begin sync<={sync[0],1'b1};leaf_n<={8{sync[1]}};end
+`ifdef OT_GQ_MUT_REQ_RESET_RAW
+ assign q=8'hff;
+`elsif OT_GQ_MUT_REQ_RESET_LATE
+ (* keep="true" *)reg[7:0]late;
+ always @(posedge clk or negedge rst_n)if(!rst_n)late<=0;else late<=leaf_n;
+ assign q=late;
+`else
+ assign q=leaf_n;
+`endif
 endmodule

@@ -1,0 +1,95 @@
+diff --git a/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv b/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv
+index 430fe884b..1f55f1018 100644
+--- a/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv
++++ b/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv
+@@ -199,11 +199,18 @@ module ot_hgi_coll_gq_issue #(
+         srcq = s;
+     endfunction
+     // ------------------------------------------------------------------ F20 target + descriptor rows
++`ifdef OT_GQ_N32
++    wire[15:0]p_base_bank;
++`endif
+     wire p_we, p_sv; wire [7:0] p_wa, p_sb; wire [255:0] p_wd; wire [8:0] p_sl; wire [15:0] p_lp;
+ `ifdef OT_GQ_FAN32
+     wire [12:0] p_bank_we; wire [103:0] p_bank_addr; wire [12:0] p_start_bank;
+     ot_hgi_coll_gq_target16 #(.TARGET(8'hff), .PCW(8), .TGT_PIN(1), .CAP_CLK(0)) u_target(
+-        .cfg_bank_we(p_bank_we), .cfg_bank_addr(p_bank_addr), .start_bank_v(p_start_bank),
++        .cfg_bank_we(p_bank_we), .cfg_bank_addr(p_bank_addr), .start_bank_v(p_start_bank)
++`ifdef OT_GQ_N32
++        ,.start_base_bank(p_base_bank)
++`endif
++,
+ `else
+     ot_static_program_target #(.TARGET(8'hff), .PCW(8), .TGT_PIN(1), .CAP_CLK(0)) u_target(
+ `endif
+@@ -317,12 +324,18 @@ module ot_hgi_coll_gq_issue #(
+             .q(run_copy[g]));
+     end endgenerate
+     generate for(genvar c=0;c<4;c=c+1)begin:g_cur_state
++
++`ifdef OT_GQ_N32
++        wire[3:0]start_base=p_base_bank[4*c+:4];
++`else
++        wire[3:0]start_base=p_sb[3:0];
++`endif
+         wire[15:0]rot={cur_ohc[c][14:0],cur_ohc[c][15]};
+         for(genvar h=0;h<2;h=h+1)begin:g_half
+             localparam integer L=(h==0)?c:9+c;
+             always @(posedge clk or negedge rn)
+                 if(!rn)cur_ohc[c][8*h+:8]<=(h==0)?8'd1:8'd0;
+-                else if(p_start_bank[L])cur_ohc[c][8*h+:8]<=(16'd1<<p_sb[3:0])>>(8*h);
++                else if(p_start_bank[L])cur_ohc[c][8*h+:8]<=(16'd1<<start_base)>>(8*h);
+                 else if(run_copy[2*c+h])begin
+                     if(fire_cur[c])cur_ohc[c][8*h+:8]<=rot[8*h+:8];
+                     if(tl==per-16'd1 && lps>16'd1)cur_ohc[c][8*h+:8]<=b0_oh[8*h+:8];
+diff --git a/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv b/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv
+index 51191b21a..0ecbd95a7 100644
+--- a/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv
++++ b/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv
+@@ -40,6 +40,9 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer
+     output wire [12:0] cfg_bank_we,
+     output wire [103:0] cfg_bank_addr,
+     output wire [12:0] start_bank_v
++`ifdef OT_GQ_N32
++    ,output wire [15:0] start_base_bank
++`endif
+ );
+     localparam integer ROWS=16;
+ `ifdef OT_GQ_T16_MUT_LIMIT
+@@ -109,12 +112,23 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer
+ `ifdef OT_GQ_N32
+     // N32 (HBM-GQ7 10-20): the launch commit gate reached 34-38 loads (13 start-bank copies + the 29 start-field enables);
+     // four kept copies: [0] start-bank copies, [1] start base, [2] start limit, [3] start loops. Same edge, same function.
+-    wire[3:0]launch_c;
+-    generate for(genvar g=0;g<4;g=g+1)begin:g_launch_gate
++    wire[7:0]launch_c;
++    generate for(genvar g=0;g<8;g=g+1)begin:g_launch_gate
+         (* keep="true" *)ot_gq_t16_launch u_gate(.lv(lv),.armed(armed),.validated(validated),.scanning(scanning),
+             .commit(commit),.active(program_active),.fault(fault),.cv(cv),.dv(dv),.q(launch_c[g]));
+     end endgenerate
+     wire launch_emit=launch_c[0];
++    // Existing launch edge, independent kept4-bit base copies per calendar read consumer.
++    generate for(genvar g=0;g<4;g=g+1)begin:g_base_copy
++      (* keep="true" *)ot_gq_t16_base_copy u_copy(.clk(clk),.en(launch_c[4+g]),
++`ifdef OT_GQ_MUT_BASE_SHADOW
++        .d(stored_base[3:0]^((g==0)?4'd1:4'd0)),
++`else
++        .d(stored_base[3:0]),
++`endif
++        .q(start_base_bank[4*g+:4]));
++    end endgenerate
++
+     always @(posedge clk)if(launch_c[1])program_start_base<=stored_base;
+     always @(posedge clk)if(launch_c[2])program_start_limit<=stored_limit;
+     always @(posedge clk)if(launch_c[3])program_start_loops<=stored_loops;
+@@ -260,3 +274,10 @@ module ot_gq_t16_reset_bank #(parameter integer N=8)(input wire clk,rst_n,output
+     always @(posedge clk or negedge rst_n)if(!rst_n)begin m<=0;l<=0;end else begin m<=1;l<={N{m}};end
+     assign q=l;
+ endmodule
++
++(* keep_hierarchy="yes" *)
++module ot_gq_t16_base_copy(input wire clk,en,input wire[3:0]d,output wire[3:0]q);
++ (* keep="true",dont_touch="true" *)reg[3:0]r;
++ always @(posedge clk)if(en)r<=d;
++ assign q=r;
++endmodule

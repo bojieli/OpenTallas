@@ -40,6 +40,9 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
     output wire [12:0] cfg_bank_we,
     output wire [103:0] cfg_bank_addr,
     output wire [12:0] start_bank_v
+`ifdef OT_GQ_N32
+    ,output wire [15:0] start_base_bank
+`endif
 );
     localparam integer ROWS=16;
 `ifdef OT_GQ_T16_MUT_LIMIT
@@ -109,12 +112,23 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
 `ifdef OT_GQ_N32
     // N32 (HBM-GQ7 10-20): the launch commit gate reached 34-38 loads (13 start-bank copies + the 29 start-field enables);
     // four kept copies: [0] start-bank copies, [1] start base, [2] start limit, [3] start loops. Same edge, same function.
-    wire[3:0]launch_c;
-    generate for(genvar g=0;g<4;g=g+1)begin:g_launch_gate
+    wire[7:0]launch_c;
+    generate for(genvar g=0;g<8;g=g+1)begin:g_launch_gate
         (* keep="true" *)ot_gq_t16_launch u_gate(.lv(lv),.armed(armed),.validated(validated),.scanning(scanning),
             .commit(commit),.active(program_active),.fault(fault),.cv(cv),.dv(dv),.q(launch_c[g]));
     end endgenerate
     wire launch_emit=launch_c[0];
+    // Existing launch edge, independent kept4-bit base copies per calendar read consumer.
+    generate for(genvar g=0;g<4;g=g+1)begin:g_base_copy
+      (* keep="true" *)ot_gq_t16_base_copy u_copy(.clk(clk),.en(launch_c[4+g]),
+`ifdef OT_GQ_MUT_BASE_SHADOW
+        .d(stored_base[3:0]^((g==0)?4'd1:4'd0)),
+`else
+        .d(stored_base[3:0]),
+`endif
+        .q(start_base_bank[4*g+:4]));
+    end endgenerate
+
     always @(posedge clk)if(launch_c[1])program_start_base<=stored_base;
     always @(posedge clk)if(launch_c[2])program_start_limit<=stored_limit;
     always @(posedge clk)if(launch_c[3])program_start_loops<=stored_loops;
@@ -259,4 +273,11 @@ module ot_gq_t16_reset_bank #(parameter integer N=8)(input wire clk,rst_n,output
     (* keep="true",async_reg="true" *)reg[N-1:0]l;
     always @(posedge clk or negedge rst_n)if(!rst_n)begin m<=0;l<=0;end else begin m<=1;l<={N{m}};end
     assign q=l;
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_gq_t16_base_copy(input wire clk,en,input wire[3:0]d,output wire[3:0]q);
+ (* keep="true",dont_touch="true" *)reg[3:0]r;
+ always @(posedge clk)if(en)r<=d;
+ assign q=r;
 endmodule
