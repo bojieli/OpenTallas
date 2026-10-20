@@ -1,0 +1,88 @@
+{
+  "status": "ACTIVE_THIRD_TAKEOVER_UNTIL_NEXT_CLAUDE_IS_BACK",
+  "generated": "2026-10-20T07:54:35.550912-07:00",
+  "runtime": "ROOT6586b0856/PID3100647/all13SHA verified; strictDAG/typedplainreset published; ROOT ownsmain/deploy",
+  "receiving_wt": "kv-params5 read-only filehashes: HEAD1c272f;6compilerfiles equal3b17/6f5, no git/edit",
+  "routes": {
+    "ot_qkh_lane8_nc32c-g1-68c8bea30": {
+      "status": "READY",
+      "host": "ot-epyc7",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/ot_qkh_lane8_nc32c-g1-68c8bea30",
+      "stage_tag": "route.a1",
+      "stage_started": "2026-10-20T06:58:43-07:00",
+      "commit_full": "68c8bea3006981ddd4400e67d8a8acf50ccd0119",
+      "reason": null
+    },
+    "qkd_pv_join_s32_p216-p216-2c44ec2db": {
+      "status": "RUNNING",
+      "host": "ot-epyc7",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_pv_join_s32_p216-p216-2c44ec2db",
+      "stage_tag": "route.a1",
+      "stage_started": "2026-10-20T07:14:46-07:00",
+      "commit_full": "2c44ec2db3749c9d1d6df67de1f29362f9e078b7",
+      "reason": null
+    },
+    "ot_qkh_ktree_lk_nc32c-g1-1c272f08e": {
+      "status": "CLOSED",
+      "host": "ot-epyc7",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/ot_qkh_ktree_lk_nc32c-g1-1c272f08e",
+      "stage_tag": "collect.a1",
+      "stage_started": "2026-10-20T06:55:27-07:00",
+      "commit_full": "1c272f08e9054d1da34076197f82805a7f91b50d",
+      "reason": "CLOSED TT +272.92 / FF +19.70 ps DRC 0; SS sensitivity +21.68 ps | record claude/kv-params5-1020 37b97be32 (24 files) | AUTO-MERGED into main dd875958b"
+    }
+  },
+  "own_evidence": {
+    "bd8fa0525": "ATTNstartupcausal+PVslicecutstate/sourceauthority",
+    "9ac7d63ff": "P216oldCTS/GRTcomplete46086stageendpoint393.086/226464direct165.777/9414PGopen",
+    "8423c85ff": "ROOTreviewbootproducerfirstuse+realSRAMproofproposal"
+  },
+  "qkh_active": {
+    "ktree_v2": {
+      "session": 84595,
+      "unit": "oth-ubuntu-1798965-1792507422",
+      "host": "ot-epyc7",
+      "dir": "/srv/opentallas-scratch/claude/codex/kv-ectl-h15-1020/src/results/rtl/kv_ectl_h15_1020/ktree_audit_indexed_v2",
+      "source_ref": "920d96d963ee43da13babf3fcf2a9b1f835574e9",
+      "scope": "PRIVATEindexSigSpecadapter; nocanonicalreceipt/admission"
+    },
+    "ab_dependency": {
+      "session": 69839,
+      "unit": "1673917",
+      "yosys": 1673943,
+      "status": "LIVE_ACTUAL_SRAM_FRONTEND_NO_REUSE_CLAIM"
+    },
+    "h15_wrongstage": {
+      "session": 27016,
+      "status": "LIVE"
+    },
+    "h15_native": "FAILmax281/7/role0, no gate; fixed91/87/15 exactactualCsource, sourcepublicationcopyplanonly",
+    "pr0": "boundedterminal2b957d950;922/seed2phases,wrongage923/924,wrongstage922/922;no native/physicalenable"
+  },
+  "pvfin_active": {
+    "source": "f10fd68c3 R12; evidencec38836e97/4059d5e1b/88e0cc8ac",
+    "native": {
+      "session": 79343,
+      "unit": "1797872-1792507413",
+      "host": "ot-epyc7",
+      "status": "CENSUS_PENDING_AFTERABC",
+      "dir": "/srv/opentallas-scratch/claude/codex-pvfin-shipping-r12-1020"
+    },
+    "gold": "328cmd10496beats/cold1,29,53/occupiedreset/NEG1..3+MUT1..5PASS/detected; newage/datecontrolsdetect",
+    "oldfailures": "R10gate49/9, R11shipping34/1 preserved; no gate",
+    "boot": "RawdeassertbeforeE1; actualleafE5/startpinE6/acceptE7, unwrappedleafE3/startE4/acceptE5,legacydirectstartE1/acceptE2. Structuralfixadds0edges versusactualR10shipping."
+  },
+  "own_macro_lemma": {
+    "session": 14111,
+    "unit": "oth-ubuntu-1963950-1792507600",
+    "host": "ot-epyc7",
+    "dir": "/srv/opentallas-scratch/claude/codex-pvslice-macro-state-0720",
+    "client": "/home/ubuntu/scratch/codex-pvslice-macro-state-0720/client.log",
+    "status": "LIVE_YOSYS_ACTUAL_SOURCE_FRONTEND_PROC",
+    "scope": "PRIVATEexact32x128fullstateone-steptransitionlemma4096arr+128read arbitrarypairedpowerup/OT_MEM_NO_INIT; M1readstage/M2mask/M3writefirst controls, noleafreceipt/no1076cutcomparisonremoved",
+    "source_sha": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+    "lib_sha": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7",
+    "bb_sha": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb"
+  },
+  "attn_pvslice": "No parameter-onlyretry; ATTN1093/control1082NOTPROVEN;PVS2388/control3016NOTPROVEN, sourceproducerfirstuse unqualified/no masks/assumed80warmup. Memorymacrolemma cannotadoptleaf."
+}
