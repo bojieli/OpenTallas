@@ -32,6 +32,7 @@ module ot_s81_so_label_q #(
     input  wire                     clk,
     input  wire                     rst_n,
     input  wire                     go,          // go_e: one phase start per rising edge
+    input  wire [1:0]               go_c,        // S81-BF6: two same-edge copies of go (each drives half the chunks)
     input  wire [16*NB*NSEG-1:0]    s_row,       // live tables (flattened)
     input  wire [5*NSEG-1:0]        s_idx,
     input  wire [5*NSEG-1:0]        s_n,
@@ -59,14 +60,20 @@ module ot_s81_so_label_q #(
     reg  [PW-1:0]  wp, rp;
     reg            go_q;
     wire           start = go && !go_q;
+    // S81-BF6: per half of the chunks, kept copies of go_q / wp (loaded exactly as go_q / wp) and the start event from
+    // the half's own go copy, so the chunk enable copies (2 per chunk) load from <= 32-load nets
+    (* keep *) reg [1:0] go_qk;
+    (* keep *) reg [1:0] wpk;
+    wire [1:0] start_k = go_c & ~go_qk;
     wire           pop = q_v[rp] && q_c[rp] == '0;
     integer k;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            go_q <= 1'b0; q_v <= '0; wp <= '0; rp <= '0; fault <= 1'b0;
+            go_q <= 1'b0; q_v <= '0; wp <= '0; rp <= '0; fault <= 1'b0; go_qk <= '0; wpk <= '0;
             for (k = 0; k < NQ; k = k + 1) q_c[k] <= '0;
         end else begin
             go_q <= go;
+            go_qk <= go_c;
             for (k = 0; k < NQ; k = k + 1) if (q_v[k] && q_c[k] != '0) q_c[k] <= q_c[k] - 1'b1;
             if (pop) begin
                 q_v[rp] <= 1'b0;
@@ -77,6 +84,7 @@ module ot_s81_so_label_q #(
                 q_v[wp] <= 1'b1; q_c[wp] <= SW1;
                 wp <= (wp == PW'(NQ - 1)) ? '0 : wp + 1'b1;
             end
+            for (k = 0; k < 2; k = k + 1) if (start_k[k]) wpk[k] <= (wpk[k] == PW'(NQ - 1)) ? '0 : wpk[k] + 1'b1;
         end
     // ---- payload: per 16-bit chunk, kept enable / pop / pointer copies (fanout <= 32 each) ----
     genvar c;
@@ -88,7 +96,7 @@ module ot_s81_so_label_q #(
         (* keep *) reg          rs;      // read pointer copy at pop
         // no reset on the copies (reset fan-out stays on the ~24 control flops): they are registered functions of the
         // reset control, so one clocked edge in reset clears them (start = pop = 0 while reset holds)
-        always @(posedge clk) begin we <= {start && wp == 1'b1, start && wp == 1'b0}; pp <= pop; rs <= rp; end
+        always @(posedge clk) begin we <= {start_k[c % 2] && wpk[c % 2] == 1'b1, start_k[c % 2] && wpk[c % 2] == 1'b0}; pp <= pop; rs <= rp; end
         reg [W-1:0] qd0, qd1, od;          // two explicit entries (NQ = 2), no runtime-indexed array
         always @(posedge clk) begin
             if (we[0]) qd0 <= live[LO +: W];

@@ -75,6 +75,7 @@ rtl/v41rom/ot_v41_chain2u2.sv
 rtl/v41rom/ot_v41_bmul2_rne_prepare.sv
 rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv
 rtl/v41rom/ot_s81_so_label_q.sv
+rtl/v41rom/ot_bf6_n32.sv
 rtl/v41rom/ot_v41_bf_front_core_roots.sv
 rtl/s81/ot_s81_bf_seam_roots.sv
 rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv

@@ -204,7 +204,7 @@ def main():
         if a.level >= 3: muts.append(('mutant_u2', ['+define+W10_MUTANT_U2']))
     if a.no_default_mutants:
         muts = []
-    muts += [(m.split('=')[0], ['+define+' + m.split('=', 1)[1]]) for m in a.mutant]
+    muts += [(m.split('=')[0], ['+define+' + d for d in m.split('=', 1)[1].split(',')]) for m in a.mutant]
     if a.die_pair:
         assert a.variant == 'recut', '--die-pair is a recut shadow'
         if a.static_prog is not None:
@@ -224,7 +224,7 @@ def main():
             files[f_] = candify((ROOT / src_).read_text(), names)
             extra.append(f_)
         muts = [] if a.no_default_mutants else [('mutant_die_swap', ['+define+DSFD_BF_DIE_MUT_SWAP'])]
-        muts += [(m.split('=')[0], ['+define+' + m.split('=', 1)[1]]) for m in a.mutant]
+        muts += [(m.split('=')[0], ['+define+' + d for d in m.split('=', 1)[1].split(',')]) for m in a.mutant]
     if a.column_roots:
         for n in ['rtl/v41rom/ot_v41_bf_fp4_leaves.sv','rtl/v41rom/ot_v41_bf_segment_leaf.sv','rtl/v41rom/ot_v41_bf_reduce.sv','rtl/v41rom/ot_v41_bf_lane4.sv','rtl/v41rom/ot_v41_bf_col_roots.sv', 'rtl/v41rom/ot_v41_bf16_lanes3_roots.sv',
                   'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv'] + (['rtl/v41rom/ot_v41_bf_cl_leaves.sv','rtl/v41rom/ot_v41_bf_lane4_cl.sv','rtl/v41rom/ot_v41_bf_lane4r_cl.sv','rtl/v41rom/ot_v41_bf_lane16_cl.sv','rtl/v41rom/ot_v41_bf16_lanes3_cl.sv','rtl/v41rom/ot_v41_bf_col_cl.sv','rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv'] if a.column_cl else []):
@@ -250,6 +250,11 @@ def main():
             fn='x_'+Path(n).name
             files[fn]=candify((ROOT/n).read_text(),names)
             extra.append(fn)
+        # S81-RTAG / S81-BF6 opt-in blocks of the front (elaborated only under DSFD_BF_SOQ / DSFD_BF_N32)
+        for n in ['rtl/v41rom/ot_s81_so_label_q.sv','rtl/v41rom/ot_bf6_n32.sv']:
+            fn='x_'+Path(n).name
+            files[fn]=(ROOT/n).read_text()
+            extra.append(fn)
         fn='x_bf_die_pair_static.sv'
         files[fn],count=re.subn(r'(?<![\w$])(?:cand_)?dsfd_bf_front_static #\(', 'cand_dsfd_bf_front_roots #(',files[fn])
         assert count==1,count
@@ -273,7 +278,8 @@ def main():
     out['column_west_roots']=a.column_west_roots
     out['column_cl']=a.column_cl
     pos = ['+define+QP_CHECK', '+define+QT_CHECK'] if a.variant == 'recut' else []
-    positives = [('positive', pos)] + [(x.split('=')[0], pos + ['+define+' + x.split('=', 1)[1]])
+    # S81-BF6: a case's DEFINE may be a comma-separated list (e.g. n32=DSFD_BF_N32=1,DSFD_BF_SOQ=1)
+    positives = [('positive', pos)] + [(x.split('=')[0], pos + ['+define+' + d for d in x.split('=', 1)[1].split(',')])
                                       for x in a.positive_define]
     positive_names = {name for name, _ in positives}
     if len(positive_names) != len(positives) or positive_names & {name for name, _ in muts}:

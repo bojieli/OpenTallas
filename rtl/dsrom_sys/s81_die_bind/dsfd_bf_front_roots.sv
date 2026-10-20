@@ -10,6 +10,10 @@
 `ifndef DSFD_BF_SOQ_SWD
 `define DSFD_BF_SOQ_SWD 160
 `endif
+// S81-BF6 2026-10-20: native-census (<= 32 loads per driver) front; off unless DSFD_BF_N32 is defined to 1.
+`ifndef DSFD_BF_N32
+`define DSFD_BF_N32 0
+`endif
 module dsfd_bf_front_roots #(parameter INSTANCE = "") (
     output wire [775:0] c0,
     output wire [775:0] c1,
@@ -3315,7 +3319,7 @@ module dsfd_bf_front_roots #(parameter INSTANCE = "") (
     assign w_xb_d[1022] = xb[1066];
     assign w_xb_d[1023] = xb[1067];
     /* verilator lint_off PINCONNECTEMPTY */
-    ot_s81_bf_front_roots #(.PINREG(1), .HITFIX(1), .RECUT(2), .QZE(1), .TCG(1), .HCOL(1), .BXST(2), .FXST(2), .PINLAT(1), .STATIC_PROGRAM(1), .CPIN(1), .SOQ(`DSFD_BF_SOQ), .SOQ_SWD(`DSFD_BF_SOQ_SWD), .INSTANCE(INSTANCE)) u_view (
+    ot_s81_bf_front_roots #(.PINREG(1), .HITFIX(1), .RECUT(2), .QZE(1), .TCG(1), .HCOL(1), .BXST(2), .FXST(2), .PINLAT(1), .STATIC_PROGRAM(1), .CPIN(1), .SOQ(`DSFD_BF_SOQ), .SOQ_SWD(`DSFD_BF_SOQ_SWD), .N32(`DSFD_BF_N32), .INSTANCE(INSTANCE)) u_view (
         .busy(w_busy),
         .c0_a_ctr(w_c0_a_ctr),
         .c0_i1_bf(w_c0_i1_bf),

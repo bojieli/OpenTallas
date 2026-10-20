@@ -78,6 +78,7 @@ module ot_s81_bf_front_roots #(
     parameter integer STATIC_PROGRAM = 0,
     parameter integer SOQ = 0,          // S81-RTAG: go-aligned output label tables (ot_s81_so_label_q), default off
     parameter integer SOQ_SWD = 160,
+    parameter integer N32 = 0,          // S81-BF6: native census <= 32 loads (core N32, seam reset groups of 32)
     // PINLAT (BF-PINCLK 2026-10-09, default 0; requires PINREG): a lockup latch, transparent while clk is LOW, between each
     // pin-capture data register and the element.  Routed full-rate dbs miss FF hold on g_pin.r_* -> u_elem b_* (pin group
     // ungated, capture on the deeper ICG-gated eclk tree: 1,407 endpoints, -37 ps).  Through the latch the element sees
@@ -157,6 +158,18 @@ module ot_s81_bf_front_roots #(
       (.clk(io_w),.arst_n(rst_n),.d(1'b1),.q(west_rst));
     ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_east_reset
       (.clk(io_e),.arst_n(rst_n),.d(1'b1),.q(east_rst));
+    // N32 (S81-BF6): same-edge copies of the core and south reset synchronisers, each driving <= 32 async loads
+    wire [7:0] core_rst_k;
+    wire south_rst_p, south_rst_p2;
+    if (N32 != 0) begin : g_rstk
+        ot_bf6_kcopy #(.K(8), .AR(1), .RV(1'b0)) u_core_reset_k (.clk(clk), .arst_n(rst_n), .d(1'b1), .q(core_rst_k));
+        ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_south_reset_p (.clk(io_clk),.arst_n(rst_n),.d(1'b1),.q(south_rst_p));
+        ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_south_reset_p2 (.clk(io_clk),.arst_n(rst_n),.d(1'b1),.q(south_rst_p2));
+    end else begin : g_nrstk
+        assign core_rst_k = {8{core_rst}};
+        assign south_rst_p = south_rst;
+        assign south_rst_p2 = south_rst;
+    end
 `ifdef BF_FRONT_ROOT_STOP_N
     wire north_clk=1'b0;
 `else
@@ -171,9 +184,12 @@ module ot_s81_bf_front_roots #(
     wire pin_clk = (STATIC_PROGRAM != 0) ? io_clk : clk;
     (* keep = 1 *) reg [37:0] programme_pin_q;
     generate if (STATIC_PROGRAM != 0) begin : g_static_programme_pin
-        always @(posedge pin_clk or negedge south_rst)
-            if (!south_rst) programme_pin_q <= 38'd0;
-            else programme_pin_q <= f_prog;
+        always @(posedge pin_clk or negedge south_rst_p)
+            if (!south_rst_p) programme_pin_q[18:0] <= 19'd0;
+            else programme_pin_q[18:0] <= f_prog[18:0];
+        always @(posedge pin_clk or negedge south_rst_p2)
+            if (!south_rst_p2) programme_pin_q[37:19] <= 19'd0;
+            else programme_pin_q[37:19] <= f_prog[37:19];
     end endgenerate
     // Clock structure (2026-10-15, gate ec84ce526 hold repair 119k buffers): io_clk (pin/seam root, ~200-250 ps) and
     // ck (core root, gated subtrees ~260-310 ps) are two physical roots of ONE die clock (the die ties both to the
@@ -231,6 +247,7 @@ module ot_s81_bf_front_roots #(
     wire [4:0] cfg_a_i;
     wire [47:0] cfg_d_i;
     wire go_i;
+    wire go_n_i;
     wire go_bf_i;
     wire xs_v_i;
     wire [7:0] xs_p_i;
@@ -334,25 +351,28 @@ module ot_s81_bf_front_roots #(
         reg r_lc_cfg_v;
         reg [4:0] r_lc_cfg_a;
         reg [47:0] r_lc_cfg_d;
-        reg r_lc_go;
+        (* keep *) reg r_lc_go;          // kept: N32 adds a same-function copy (r_lc_go_n) that must stay a separate latch
         reg r_lc_go_bf;
+        (* keep *) reg r_lc_go_n;       // N32 (S81-BF6): a kept copy of the go lockup latch for the core's enable pools
         reg r_lc_xs_v;
         reg r_lc_xb_v;
         if (STATIC_PROGRAM != 0 && PINLAT != 0) begin : g_lat_ctl
             always_latch if (!pin_clk) begin
 `ifdef BF_CTL_LAT_MUTANT_GO
-                r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = 1'b0; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v;   // negative control: go lost
+                r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = 1'b0; r_lc_go_n = 1'b0; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v;   // negative control: go lost
 `else
                 r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = r_go; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v;
+                r_lc_go_n = (N32 != 0) ? r_go : 1'b0;
 `endif
             end
         end else begin : g_nolat_ctl
-            always @* begin r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = r_go; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v; end
+            always @* begin r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = r_go; r_lc_go_n = (N32 != 0) ? r_go : 1'b0; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v; end
         end
         assign cfg_v_i = r_lc_cfg_v;
         assign cfg_a_i = r_lc_cfg_a;
         assign cfg_d_i = r_lc_cfg_d;
         assign go_i = r_lc_go;
+        assign go_n_i = r_lc_go_n;
         assign go_bf_i = r_lc_go_bf;
         assign xs_v_i = r_lc_xs_v;
         assign xs_p_i = r_lxs_p;
@@ -375,6 +395,7 @@ module ot_s81_bf_front_roots #(
         assign cfg_a_i = cfg_a;
         assign cfg_d_i = cfg_d;
         assign go_i = go;
+        assign go_n_i = go;
         assign go_bf_i = go_bf;
         assign xs_v_i = xs_v;
         assign xs_p_i = xs_p;
@@ -406,11 +427,11 @@ module ot_s81_bf_front_roots #(
         ot_v41_bf_front_core_roots #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
-            .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM), .SOQ(SOQ), .SOQ_SWD(SOQ_SWD)) u_front (
+            .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM), .SOQ(SOQ), .SOQ_SWD(SOQ_SWD), .N32(N32)) u_front (
             .prog_issue_pin(programme_lat[0]), .prog_addr_pin(programme_lat[14:1]),
             .prog_operand_pin(programme_lat[29:15]), .prog_segment_pin(programme_lat[32:30]),
             .prog_half_pin(programme_lat[33]), .prog_chain_pin(programme_lat[37:34]),
-            .clk(eclk), .rst_n_pin(core_rst), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i),
+            .clk(eclk), .rst_n_pin(core_rst), .rst_n_pin_k(core_rst_k), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i), .go_pin_n(go_n_i),
             .go_bf_pin(go_bf_i), .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(xs_sv_i),
             .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i), .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i),
             .xb_pos_pin(xb_pos_i), .xb_v_pin(xb_v_i), .xb_b_pin(xb_b_i), .xb_sv_pin(xb_sv_i), .xb_u_pin(xb_u_i),
@@ -437,9 +458,9 @@ module ot_s81_bf_front_roots #(
         wire [255:0] c_i2x_q0_l, c_i2x_q1_l; wire [9:0] c_i2x_e0_l, c_i2x_e1_l; wire [5*NSEG-1:0] c_so_idx_l, c_so_n_l;
         wire [16*NB*NSEG-1:0] c_so_row_l;
         assign {c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l} = c_lk;
-        ot_s81_bf_seam_roots #(.W(CW), .PIPE(CPIN)) u_seam0 (.clk(io_w), .rst_n(west_rst),
+        ot_s81_bf_seam_roots #(.W(CW), .PIPE(CPIN), .RG(N32 != 0 ? 32 : 160)) u_seam0 (.clk(io_w), .rst_n(west_rst),
             .d({c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l[16*NSEG*0 +: 16*NSEG]}), .q({c0_issue, c0_a_ctr, c0_i1_v, c0_i1_bk, c0_i1_bf, c0_i1_t, c0_i2x_q0, c0_i2x_e0, c0_i2x_q1, c0_i2x_e1, c0_ze_d, c0_so_idx, c0_so_n, c0_so_row}));
-        ot_s81_bf_seam_roots #(.W(CW), .PIPE(CPIN)) u_seam1 (.clk(io_e), .rst_n(east_rst),
+        ot_s81_bf_seam_roots #(.W(CW), .PIPE(CPIN), .RG(N32 != 0 ? 32 : 160)) u_seam1 (.clk(io_e), .rst_n(east_rst),
             .d({c_issue_l, c_a_ctr_l, c_i1_v_l, c_i1_bk_l, c_i1_bf_l, c_i1_t_l, c_i2x_q0_l, c_i2x_e0_l, c_i2x_q1_l, c_i2x_e1_l, c_ze_d_l, c_so_idx_l, c_so_n_l, c_so_row_l[16*NSEG*1 +: 16*NSEG]}), .q({c1_issue, c1_a_ctr, c1_i1_v, c1_i1_bk, c1_i1_bf, c1_i1_t, c1_i2x_q0, c1_i2x_e0, c1_i2x_q1, c1_i2x_e1, c1_ze_d, c1_so_idx, c1_so_n, c1_so_row}));
         assign c_qy_bkf = c_qy_bkf_in;
         assign pv_e = '0; assign pval_e = '0; assign prow_e = '0; assign pseg_e = '0; assign pnseg_e = '0; assign perr_e = '0; assign ppos_e = '0;

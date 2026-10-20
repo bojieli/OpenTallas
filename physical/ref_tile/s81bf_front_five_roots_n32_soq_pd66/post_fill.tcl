@@ -1,0 +1,1 @@
+source /src/physical/ref_tile/s81bf_front_five_roots_n32_soq_pd66/clock_entry.sdc
