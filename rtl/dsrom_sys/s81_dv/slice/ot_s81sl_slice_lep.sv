@@ -112,6 +112,7 @@ module ot_s81sl_lep_core #(
     parameter integer NB = 80,         // ring beats per h message per endpoint (40,960 B / 4 end slices / 128 B)
     parameter integer RX_SRAM = 0,     // opt-in true SRAM RX, same show-ahead edge
     parameter integer TXRP = 1,        // 1: TX read pipeline register beside the SRAM column (S81-FIX3; +1 lo edge)
+    parameter integer NATIVE32 = 0,    // opt-in MU same-age bounded control replicas
     parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
 ) (
@@ -180,7 +181,9 @@ module ot_s81sl_lep_core #(
     localparam integer CTRL_RSTBASE=HOST_RSTBASE+NHOST_RST;
     localparam integer NCTRL_RST=(MU_EN!=0 && RX_SRAM!=0)?NL+8+PUSH_GROUPS+NL+((HOST_EN!=0)?17:0):0;
     localparam integer PAYLOAD_RSTBASE=CTRL_RSTBASE+NL+8+PUSH_GROUPS+NL;
-    localparam integer NRX_RST=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST+NCTRL_RST;
+    localparam integer NRX_RST_OLD=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST+NCTRL_RST;
+    localparam integer NATIVE32_RSTBASE=4+NRX_RST_OLD;
+    localparam integer NRX_RST=NRX_RST_OLD+((NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0 && HOST_EN!=0)?4:0);
     wire [3+NRX_RST:0] rr;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_reset_balanced
       ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
@@ -231,17 +234,31 @@ module ot_s81sl_lep_core #(
     // event while one is still pending is a sticky fault (the compiler's host slots respect the lane rate).
     wire h_event,k_event;
     wire [11:0] h_status_now,h_status_old; wire h_status_valid;
+    wire [47:0] host_now_regions,host_old_regions; wire [3:0] host_valid_regions;
     wire hp_go, kp_go, herr; wire [76:0] ph_d; wire [53:0] pk_d;
     generate if (HOST_EN != 0) begin : g_htx
     reg [76:0] thq; reg [53:0] tkq;
     always @(posedge clk) begin thq <= th_x; tkq <= tk_x; end
-    reg ph_v, pk_v, he; reg [76:0] pd; reg [53:0] kd; reg [11:0] st_l;
-    wire ev_h = thq[64] || thq[76:65] != st_l, ev_k = tkq[53];
+    reg ph_v, pk_v, he; reg [76:0] pd; reg [53:0] kd; wire [11:0] st_l;
+    wire ev_h = (NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0)?(host_valid_regions[0] || host_now_regions[11:0]!=host_old_regions[11:0]):(thq[64] || thq[76:65] != st_l), ev_k = tkq[53];
     wire status_reset=(MU_EN!=0 && RX_SRAM!=0)?rr[CTRL_RSTBASE+NL+2]:rn;
-    always @(posedge clk or negedge status_reset)
-        if(!status_reset) st_l<=0; else if(ev_h) st_l<=thq[76:65];
+    if(NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0) begin:g_native_status
+      for(genvar hs=0;hs<4;hs=hs+1) begin:g_region
+        (* keep=1 *) ot_s81sl_lep_status_region u_status(.clk(clk),.rn(rr[NATIVE32_RSTBASE+hs]),
+          .sample({th_x[76:65],th_x[64]}),.now_status(host_now_regions[12*hs+:12]),
+          .old_status(host_old_regions[12*hs+:12]),.valid(host_valid_regions[hs]));
+      end
+      assign st_l=host_old_regions[11:0];
+    end else begin:g_legacy_status
+      reg [11:0] history;
+      always @(posedge clk or negedge status_reset)
+        if(!status_reset) history<=0; else if(ev_h) history<=thq[76:65];
+      assign st_l=history;
+      assign host_now_regions={4{thq[76:65]}};assign host_old_regions={4{history}};
+      assign host_valid_regions={4{thq[64]}};
+    end
     assign h_event=ev_h;assign k_event=ev_k;
-    assign h_status_now=thq[76:65];assign h_status_old=st_l;assign h_status_valid=thq[64];
+    assign h_status_now=host_now_regions[11:0];assign h_status_old=st_l;assign h_status_valid=host_valid_regions[0];
     assign hp_go = !rov && ph_v; assign kp_go = !rov && !ph_v && pk_v;
     assign herr = he; assign ph_d = pd; assign pk_d = kd;
     always @(posedge clk or negedge rn)
@@ -265,7 +282,7 @@ module ot_s81sl_lep_core #(
       wire [55:0] old_key={2'd0,kd},new_key={2'd0,tkq},next_key;
       for(genvar hh=0;hh<10;hh=hh+1) begin:g_host
         localparam [7:0] KM=(hh<8)?8'hff:((hh==8)?8'h01:8'h00);
-        (* keep=1 *) ot_s81sl_lep_host_hold8 u_hold(.now_status(thq[76:65]),.old_status(st_l),.valid(thq[64]),
+        (* keep=1 *) ot_s81sl_lep_host_hold8 u_hold(.now_status(host_now_regions[(hh%4)*12+:12]),.old_status(host_old_regions[(hh%4)*12+:12]),.valid(host_valid_regions[hh%4]),
           .rn(rr[PAYLOAD_RSTBASE+hh]),.pending(ph_v),.send_now(hp_go),.old_valid(pd[64]),.keep_mask(KM),
           .old_data(old_host[8*hh+:8]),.new_data(new_host[8*hh+:8]),.next_data(next_host[8*hh+:8]));
       end
@@ -278,6 +295,7 @@ module ot_s81sl_lep_core #(
     end else begin : g_nhtx                            // HOST_EN 0: ring beats only (t_host / t_kd unread)
     assign h_event=1'b0;assign k_event=1'b0;
     assign h_status_now=0;assign h_status_old=0;assign h_status_valid=0;
+    assign host_now_regions=0;assign host_old_regions=0;assign host_valid_regions=0;
     assign hp_go = 1'b0; assign kp_go = 1'b0; assign herr = 1'b0; assign ph_d = 77'd0; assign pk_d = 54'd0;
     end endgenerate
     wire push = rov || hp_go || kp_go;
@@ -324,7 +342,7 @@ module ot_s81sl_lep_core #(
       localparam integer HG=(FRAME_NS+7)/8;
       wire [HG-1:0] host_event;
       for(genvar hg=0;hg<HG;hg=hg+1) begin:g_host_event
-        (* keep=1 *) ot_s81sl_lep_host_event u_event(.now_status(h_status_now),.old_status(h_status_old),.valid(h_status_valid),.event_o(host_event[hg]));
+        (* keep=1 *) ot_s81sl_lep_host_event u_event(.now_status(host_now_regions[(hg%4)*12+:12]),.old_status(host_old_regions[(hg%4)*12+:12]),.valid(host_valid_regions[hg%4]),.event_o(host_event[hg]));
       end
       for(fc=0;fc<FRAME_NS;fc=fc+1) begin:g_slice
         (* keep="true" *) reg rov_r,ph_r,pk_r,kevent_r;
@@ -529,7 +547,15 @@ module ot_s81sl_lep_core #(
         wire rx_state_reset=(MU_EN!=0 && RX_SRAM!=0)?rr[CTRL_RSTBASE+t]:rnx;
         reg [H:0] mem [0:DR-1];
         reg [AR-1:0] wp, rp; reg [AR:0] n; reg vq, nz, cr, f; reg [DR-1:0] we; reg [H:0] dq;
-        wire pop = relp[t / 2] && nz;
+        wire pop;
+        if(NATIVE32!=0 && MU_EN!=0 && RX_SRAM!=0) begin:g_native_pop
+`ifdef OT_S81SL_LEP_MUT_NOPAIR
+          wire pair_b=(t==0)?1'b1:rne[2*(t/2)+1];
+`else
+          wire pair_b=rne[2*(t/2)+1];
+`endif
+          (* keep=1 *) ot_s81sl_lep_pair_ready u_ready(.a(rne[2*(t/2)]),.b(pair_b),.q(pop));
+        end else begin:g_legacy_pop assign pop=relp[t/2] && nz;end
         wire full = n == (AR+1)'(DR);
         wire wr = vq && !full;
         wire [AR-1:0] wp_nx = wr ? ((wp == AR'(DR - 1)) ? '0 : wp + 1'b1) : wp;
@@ -778,7 +804,20 @@ module ot_s81sl_lep_core #(
     always @(posedge clk) begin
         rid <= nrid;
         mwd <= rb;
-        rtq <= tagd(db) ? {1'b1, db[TG + 2 +: 10], db[TG + 12 +: 21]} : 32'd0;
+
+    end
+    if(NATIVE32!=0 && RX_SRAM!=0) begin:g_native_return
+      wire [31:0] ring_tag={1'b1,rb[TG+2+:10],rb[TG+12+:21]};
+      wire [31:0] replay_tag={1'b1,mrd[TG+2+:10],mrd[TG+12+:21]};
+      for(genvar rt=0;rt<4;rt=rt+1) begin:g_byte
+        wire [7:0] next_tag;
+        (* keep=1 *) ot_s81sl_lep_return8 u_tag(.cut(rr_dlv),.ring_code({rb[TG],rb[3:0]}),
+          .replay_code({mrd[TG],mrd[3:0]}),.ring_data(ring_tag[rt*8+:8]),
+          .replay_data(replay_tag[rt*8+:8]),.q(next_tag));
+        always @(posedge clk) rtq[rt*8+:8]<=next_tag;
+      end
+    end else begin:g_legacy_return
+      always @(posedge clk) rtq<=tagd(db)?{1'b1,db[TG+2+:10],db[TG+12+:21]}:32'd0;
     end
     always @(posedge clk or negedge rnx)
         if (!rnx) begin riv <= 1'b0; mrv <= 1'b0; mcol <= 1'b0; mwv <= 1'b0; end
@@ -1061,7 +1100,7 @@ endmodule
 // carries no tied pad and no constant output.  Faces (kit): W lanes A, N landing (dsdv_mu_land), E ring + mu_c / mu_rt.
 module ot_s81sl_lep_mu_a #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1084,7 +1123,7 @@ module ot_s81sl_lep_mu_a #(
     input  wire            ml_f,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB), .IN_PIPE(IN_PIPE)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB), .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -1104,7 +1143,7 @@ endmodule
 // Faces (kit): W lanes A + l*_st, N landing (dsdv_mu_land) + host plane on the NW corner, E ring + mu_c / mu_rt.
 module ot_s81sl_lep_mu_h #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1134,7 +1173,7 @@ module ot_s81sl_lep_mu_h #(
     input  wire            ml_f,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(1), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB), .IN_PIPE(IN_PIPE)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(1), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB), .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -1368,4 +1407,26 @@ endmodule
 // LEPCAP 10-19: one face-stage copy of a valid bit (kept hierarchy: Yosys may not merge the copies back into one flop).
 (* keep_hierarchy="yes" *) module ot_s81sl_lep_vcopy(input wire clk, input wire d, output reg q);
  always @(posedge clk) q <= d;
+endmodule
+
+// Native32 MU control regions. Same capture edge and static protocol as the legacy core.
+(* keep_hierarchy=1 *) module ot_s81sl_lep_status_region(
+ input wire clk,rn,input wire [12:0] sample,
+ output wire [11:0] now_status,output reg [11:0] old_status,output wire valid);
+ (* keep=1 *) reg [12:0] snapshot;
+ always @(posedge clk) snapshot<=sample;
+ assign now_status=snapshot[12:1];assign valid=snapshot[0];
+ always @(posedge clk or negedge rn)
+   if(!rn) old_status<=0;
+   else if(valid || now_status!=old_status) old_status<=now_status;
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_lep_pair_ready(input wire a,b,output wire q);
+ assign q=a && b;
+endmodule
+(* keep_hierarchy=1 *) module ot_s81sl_lep_return8(
+ input wire cut,input wire [4:0] ring_code,replay_code,input wire [7:0] ring_data,replay_data,
+ output wire [7:0] q);
+ wire [4:0] code=cut?ring_code:replay_code;
+ wire tagged=code[0] && (code[3:1]==3'd1 || code[3:1]==3'd2) && code[4];
+ assign q=tagged?(cut?ring_data:replay_data):8'd0;
 endmodule
