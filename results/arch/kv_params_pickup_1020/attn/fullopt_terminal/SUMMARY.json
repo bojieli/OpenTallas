@@ -1,0 +1,34 @@
+{
+  "full_pos.audit.json": {
+    "proven": false,
+    "equiv": {
+      "cells": 9462,
+      "proven_cells": 8369,
+      "unproven_cells": 1093,
+      "rc": 1,
+      "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct -seq 8"
+    },
+    "parameters": {
+      "MUT": 0,
+      "RETIRE_STATIC": 1,
+      "STATUS_DELAY": 213
+    },
+    "private_unapproved_helper": true
+  },
+  "full_sd212.audit.json": {
+    "proven": false,
+    "equiv": {
+      "cells": 9462,
+      "proven_cells": 8380,
+      "unproven_cells": 1082,
+      "rc": 1,
+      "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct -seq 8"
+    },
+    "parameters": {
+      "MUT": 0,
+      "RETIRE_STATIC": 1,
+      "STATUS_DELAY": 212
+    },
+    "private_unapproved_helper": true
+  }
+}

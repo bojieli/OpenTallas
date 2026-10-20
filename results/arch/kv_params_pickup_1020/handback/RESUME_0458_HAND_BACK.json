@@ -1,0 +1,100 @@
+{
+  "stopped": "CLAUDE IS BACK 05:09 PT",
+  "no_new_work": true,
+  "P216": {
+    "packet_ref": "cbc4088d1",
+    "branch": "codex/kv-pvj-gate-packet-1020",
+    "source_ref": "a55e98668",
+    "gate": "WARN0FAIL7WARN",
+    "native32": "PASS",
+    "grt_overflow": 0,
+    "m2_pct": 39.9,
+    "actual4621pin_map": "all faces/layers legal; M4+0.024um snap retained, requested coordinate identity false",
+    "reach_audit": {
+      "status": "RUNNING_PRESERVED_UNQUALIFIED",
+      "session": 88960,
+      "unit": "oth-ubuntu-4129898-1792498174",
+      "host": "ot-epyc7",
+      "dir": "/srv/opentallas-scratch/claude/ref_gate/qkd_pv_join_s32_p216-20261020-042053",
+      "script": "reach_audit.py",
+      "outputs": [
+        "4_cts_audit.json",
+        "5_1_grt_audit.json"
+      ],
+      "log": "/home/ubuntu/scratch/codex-pvj-p216/reach_audit/client.log"
+    },
+    "open": [
+      "all-driver/terminal L1<=405 actual CTS/GRT",
+      "Lib-role registered boundary/PG stage evidence",
+      "parent relay405/static ages/adoption",
+      "clock guidance18561sinks/300.3ps",
+      "scoped pin-bound lowfill"
+    ]
+  },
+  "ATTN": {
+    "private_fullopt_terminal": {
+      "full_pos.audit.json": {
+        "proven": false,
+        "equiv": {
+          "cells": 9462,
+          "proven_cells": 8369,
+          "unproven_cells": 1093,
+          "rc": 1,
+          "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct -seq 8"
+        },
+        "parameters": {
+          "MUT": 0,
+          "RETIRE_STATIC": 1,
+          "STATUS_DELAY": 213
+        },
+        "private_unapproved_helper": true
+      },
+      "full_sd212.audit.json": {
+        "proven": false,
+        "equiv": {
+          "cells": 9462,
+          "proven_cells": 8380,
+          "unproven_cells": 1082,
+          "rc": 1,
+          "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct -seq 8"
+        },
+        "parameters": {
+          "MUT": 0,
+          "RETIRE_STATIC": 1,
+          "STATUS_DELAY": 212
+        },
+        "private_unapproved_helper": true
+      }
+    },
+    "receipt": false,
+    "base_cex_analysis": "Existing counterexample read-only decoded paired mismatches: step7=150,8=97,9=61,10=46,11..14=0. Earliest observed postreset mismatch step7 concentrated calendar/cal9/cap_q. No claim that settle11 is allowed or functional mismatch resolved. Original reset6 and all comparisons preserved; no further proof launched.",
+    "base_log_sha256": "25450dcd14cec0a7e985da437ad18c3fd81f980cf88c309f4247ea49ce220b01"
+  },
+  "pvslice": {
+    "status": "LIVE_PRESERVED",
+    "host": "ot-epyc6",
+    "dir": "/srv/opentallas-scratch/claude/kv-params4-audit-1020",
+    "python": [
+      2505600,
+      2505859
+    ],
+    "yosys": [
+      2600703,
+      2598052
+    ],
+    "json_absent": true,
+    "stale_rc": "03:09 before03:12 restart"
+  },
+  "PVFIN": {
+    "our_ref": "2d565a820",
+    "status": "UNRUN_PARKED",
+    "r8_failure_ref": "2c53d2cdb",
+    "r8_native": "FAILmax37/2violations37and34/role0",
+    "active_owner": "Claude KV-PARAMS5 branchclaude/kv-pvfin-s32-1020@731fc120d",
+    "r9_bench_pid": 3715690,
+    "r10_native_docker_pid": 3900865,
+    "r10_ref": "UNCONFIRMED sourceSHAae596c95...",
+    "no_remote_mutation_or_duplicate": true
+  },
+  "QKH": "Child handback follows; pr0 ECTL13PASS256 and14/15causalFAIL; full16lane lag0/cold existing97734 remains preserved, no kit/gate/enable. Old+2 remains distinct."
+}

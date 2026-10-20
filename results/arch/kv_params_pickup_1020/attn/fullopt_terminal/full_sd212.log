@@ -1,0 +1,3 @@
+/srv/opentallas-scratch2/claude/codex-kv-params-audit-1020/tool_fullopt/tools/qwen_kv_die/kv_param_native_audit.py:435: DeprecationWarning: 'count' is passed as positional argument
+  wt = re.sub(r'\bmodule\s+' + re.escape(spec['top']) + r'\b', 'module ot_kvp_wrap', wt, 1)
+qkd_kvs_attn_fl expect=fail: NOT PROVEN 8380/9462 state 6893/8001 -> OK
