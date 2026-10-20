@@ -30,27 +30,22 @@ module ot_hgi_coll_iter_mul_safephys(
  //   off32 = 32'(it_l*b + {16'(it_h*b),16'd0}) = low32(it*b) = 32'(sum_{i<4,j<2,i+j<4} it_i*b_j << 8(i+j))
  //   16'(it_l*a) = 16'(it_0*a_0 + (it_1*a_0 + it_0*a_1) << 8)
  //   it_l*k = it_0*k + it_1*k << 8 (24b);   it_h*k = it_2*k + it_3*k << 8 (24b)
- wire [31:0] it_a,it_v,it_b,it_c,it_d,it_k;reg [15:0] a,v,b,c,d;reg [7:0] k;
- (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_a(.clk(clk),.d(iteration),.q(it_a));
- (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_v(.clk(clk),.d(iteration),.q(it_v));
- (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_b(.clk(clk),.d(iteration),.q(it_b));
- (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_c(.clk(clk),.d(iteration),.q(it_c));
- (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_d(.clk(clk),.d(iteration),.q(it_d));
- (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_iter_landing_safephys u_it_k(.clk(clk),.d(iteration),.q(it_k));
- function automatic [7:0] by(input [31:0] x,input integer i);by=x[i*8+:8];endfunction
- reg [15:0] pa[0:2],pv[0:2];                 // 00,10,01
- reg [15:0] pb[0:6],pc[0:6],pd[0:6];         // (i,j): 00,10,20,30,01,11,21
- reg [15:0] pk[0:3];                         // it_0..3 * k
- always @(posedge clk)begin
-  a<=s_idx;v<=s_vm;b<=s_iaddr;c<=s_del;d<=s_rgx;k<=s_lk;
-  pa[0]<=by(it_a,0)*by(a,0);pa[1]<=by(it_a,1)*by(a,0);pa[2]<=by(it_a,0)*by(a,1);
-  pv[0]<=by(it_v,0)*by(v,0);pv[1]<=by(it_v,1)*by(v,0);pv[2]<=by(it_v,0)*by(v,1);
-  for(integer i=0;i<4;i=i+1)begin
-   pb[i]<=by(it_b,i)*by(b,0);pc[i]<=by(it_c,i)*by(c,0);pd[i]<=by(it_d,i)*by(d,0);pk[i]<=by(it_k,i)*k;
-  end
-  for(integer i=0;i<3;i=i+1)begin
-   pb[4+i]<=by(it_b,i)*by(b,1);pc[4+i]<=by(it_c,i)*by(c,1);pd[4+i]<=by(it_d,i)*by(d,1);
-  end
+ // Each native 8x8 product owns its capture FFs. Shared capture bits in the
+ // predecessor reached64 real gate inputs after BUF/INV collapse.
+ wire [15:0] pa[0:2],pv[0:2],pb[0:6],pc[0:6],pd[0:6],pk[0:3];
+ for(genvar n=0;n<3;n=n+1)begin:g_short
+  localparam integer IA=(n==1)?1:0;localparam integer IB=(n==2)?1:0;
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_mul8_capture_safephys ua(.clk(clk),.a(iteration[IA*8+:8]),.b(s_idx[IB*8+:8]),.p(pa[n]));
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_mul8_capture_safephys uv(.clk(clk),.a(iteration[IA*8+:8]),.b(s_vm[IB*8+:8]),.p(pv[n]));
+ end
+ for(genvar n=0;n<7;n=n+1)begin:g_wide
+  localparam integer IA=(n<4)?n:n-4;localparam integer IB=(n<4)?0:1;
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_mul8_capture_safephys ub(.clk(clk),.a(iteration[IA*8+:8]),.b(s_iaddr[IB*8+:8]),.p(pb[n]));
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_mul8_capture_safephys uc(.clk(clk),.a(iteration[IA*8+:8]),.b(s_del[IB*8+:8]),.p(pc[n]));
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_mul8_capture_safephys ud(.clk(clk),.a(iteration[IA*8+:8]),.b(s_rgx[IB*8+:8]),.p(pd[n]));
+ end
+ for(genvar n=0;n<4;n=n+1)begin:g_link
+  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_mul8_capture_safephys uk(.clk(clk),.a(iteration[n*8+:8]),.b(s_lk),.p(pk[n]));
  end
  function automatic [31:0] off(input [15:0] p0,p1,p2,p3,q0,q1,q2);
   off=32'({16'd0,p0}+{8'd0,p1,8'd0}+{p2,16'd0}+{p3[7:0],24'd0}+{8'd0,q0,8'd0}+{q1,16'd0}+{q2[7:0],24'd0});
@@ -66,6 +61,12 @@ module ot_hgi_coll_iter_mul_safephys(
  end
 endmodule
 
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_mul8_capture_safephys(input wire clk,input wire [7:0] a,b,output reg [15:0] p);
+ reg [7:0] aq,bq;
+ always @(posedge clk)begin aq<=a;bq<=b;p<=aq*bq;end
+endmodule
+
 module ot_hgi_coll_q_static_ctl_v5_safephys #(
  parameter integer NPT=3,SOLO=1,INJLAT=12,NS=NPT+8,ND=NPT+13,
  // HBM-BANKLAT-COLL 10-19: VM_RT = VM read edges beyond the fixed n+8 capture (d4g faces bank pin flop + die lanes +
@@ -78,14 +79,14 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
  input wire clk_control,
  // LH-SMATT 10-19 SAFE item 1/3: eight KEPT same-age reset copies (core u_rst*), each <=32 loads:
  // [0] protocol leaf, [1] cycles, [2]/[3] observed-input captures, [4] u_vm, [5] u_se, [6] u_sl, [7] u_inj
- input wire [7:0] rst_v,
+ input wire [8:0] rst_v,
  input wire [1535:0] inst,
  // registered iteration products from ot_hgi_coll_iter_mul_safephys (aligned with inst):
  input wire [15:0] m_idx,m_vm,
  input wire [31:0] m_iaddr_l,m_del_l,m_rgx_l,
  input wire [15:0] m_iaddr_h,m_del_h,m_rgx_h,
  input wire [23:0] m_lk_l,m_lk_h,
- input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,
+ input wire hgi_start,hgi_start_hi,hgi_busy,issue_done,tkm_done,tkm_busy,
  input wire [ND-1:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,
  input wire [7:0] vm_rv,                    // V6: VM read valid bits only (data -> ot_hgi_coll_vmasm)
@@ -285,8 +286,11 @@ module ot_hgi_coll_q_static_ctl_v5_safephys #(
  // LH-SMATT 10-19: plain captures / counter moved out of the protocol block so each reset copy drives <=32 flops.
  // Same edges, same reset values, same async-assert / sync-release age (all copies are the core's D1 flop).
  always @(posedge clk_control or negedge rst_v[1])
-  if(!rst_v[1])cycles<=0;
-  else if(hgi_start)cycles<=0;else if(hgi_busy)cycles<=cycles+1;
+  if(!rst_v[1])cycles[15:0]<=0;
+  else if(hgi_start)cycles[15:0]<=0;else if(hgi_busy)cycles[15:0]<=16'(cycles+1);
+ always @(posedge clk_control or negedge rst_v[8])
+  if(!rst_v[8])cycles[31:16]<=0;
+  else if(hgi_start_hi)cycles[31:16]<=0;else if(hgi_busy)cycles[31:16]<=(cycles+1)>>16;
  always @(posedge clk_control or negedge rst_v[2])
   if(!rst_v[2])begin dest_q<=0;rc_v_q<=0;rc_tag_q<=0;tkm_done_q<=0;tkm_busy_q<=0;issue_done_q<=0;inj_req_pin<=0;end
   else begin dest_q<=dest_v;rc_v_q<=rc_v;rc_tag_q<=rc_tag;tkm_done_q<=tkm_done;tkm_busy_q<=tkm_busy;issue_done_q<=issue_done;

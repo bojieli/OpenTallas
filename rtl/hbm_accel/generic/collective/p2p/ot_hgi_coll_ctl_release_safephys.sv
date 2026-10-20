@@ -18,20 +18,22 @@ module ot_hgi_coll_ctl_v5_core_safephys #(parameter integer NPT=3,SOLO=1,ND=NPT+
  // V6: inst / hgi_start / hgi_busy arrive at the issuer's d2 edge and are captured at the pin (= the d3 edge the
  // other children see); products from ot_hgi_coll_iter_mul_safephys land on the same edge.
  reg [1535:0] inst_q;reg hs_q,hb_q;
+ wire hs_hi;
  // V7: rst_n loads only the D1 reset flops (async assert, synchronous release one edge later).
  // LH-SMATT 10-19 (SAFE item 1/3; was ONE rst_l driving 155/164 loads): nine KEPT identical D1 copies, each in its own
  // keep_hierarchy instance so synthesis cannot merge them; u_rst8 resets hs_q/hb_q, rst_v[k] the leaf groups.
- wire [7:0] rst_v;wire rst_l;
- for(genvar r=0;r<8;r=r+1)begin:g_rst
+ wire [8:0] rst_v;wire rst_l;
+ for(genvar r=0;r<9;r=r+1)begin:g_rst
   (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_rst_copy_safephys u_rst(.clk(clk_control),.rst_n(rst_n),.q(rst_v[r]));
  end
  (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_rst_copy_safephys u_rst8(.clk(clk_control),.rst_n(rst_n),.q(rst_l));
+ (* keep_hierarchy="yes", dont_touch="yes" *) ot_hgi_coll_start_capture_safephys u_start_hi(.clk(clk_control),.rst_n(rst_l),.d(hgi_start),.q(hs_hi));
  always @(posedge clk_control) inst_q<=inst;
  always @(posedge clk_control or negedge rst_l) if(!rst_l)begin hs_q<=0;hb_q<=0;end else begin hs_q<=hgi_start;hb_q<=hgi_busy;end
  ot_hgi_coll_q_static_ctl_v5_safephys #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12),.VM_RT(VM_RT),.SAFE_DELAY(SAFE_DELAY)) u(.clk_control(clk_control),.rst_v(rst_v),
   .inst(inst_q),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
   .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h),
-  .hgi_start(hs_q),.hgi_busy(hb_q),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
+  .hgi_start(hs_q),.hgi_start_hi(hs_hi),.hgi_busy(hb_q),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rv(vm_rv),.vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),
   .inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),.delivery_obase_pin(delivery_obase_pin),
   .rgx_addr_pin(rgx_addr_pin),.inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),
@@ -66,5 +68,9 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_hgi_coll_rst_copy_safephys(input wire clk,rst_n,output reg q);
  always @(posedge clk or negedge rst_n) if(!rst_n)q<=1'b0;else q<=1'b1;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_start_capture_safephys(input wire clk,rst_n,d,output reg q);
+ always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<=d;
 endmodule
 `default_nettype wire
