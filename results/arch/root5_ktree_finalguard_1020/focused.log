@@ -1,0 +1,18 @@
+....................................................F............        [100%]
+=================================== FAILURES ===================================
+______ test_pinned_canonical_alternative_still_requires_full_exact_scope _______
+
+    def test_pinned_canonical_alternative_still_requires_full_exact_scope():
+        r = actual()
+        r['netlist']['sha256'] = 'changed raw image'
+        assert not N.ktree_scoped_admission(r)
+        r['netlist']['positive_buf_identity_sha256'] = N.KTREE_CANONICAL
+>       assert N.ktree_scoped_admission(r)
+E       AssertionError: assert False
+E        +  where False = <function ktree_scoped_admission at 0x7b0efa54d850>({'schema': 'opentallas.pre_gate_native_census.v1', 'top': 'ot_qkh_ktree_lk_nc32c', 'status': 'FAIL', 'limit': 32, ...})
+E        +    where <function ktree_scoped_admission at 0x7b0efa54d850> = N.ktree_scoped_admission
+
+tests/test_ktree_buffer_identity.py:75: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_ktree_buffer_identity.py::test_pinned_canonical_alternative_still_requires_full_exact_scope
+1 failed, 64 passed in 0.46s
