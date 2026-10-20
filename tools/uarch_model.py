@@ -17407,3 +17407,9 @@ QWEN_VM_RO6_PIN_E3_COMPOSITION_1016 = dict(
     parent_clock_ff_before=55382, parent_clock_ff_after=12198,
     unmapped_memory_bits=80, all_leaf_clocks=2571, additional_edges=0,
     SU_VL=20, row_RL=18, compiler_adopted=False, physical_qualified=False)
+
+
+def qwen_su8_control_model():
+    """Default-off source-pinned SU control/VM split inventory and interface cost."""
+    from qwen_dv.su8_model import model
+    return model()

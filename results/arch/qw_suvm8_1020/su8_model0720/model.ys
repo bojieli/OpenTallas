@@ -1,0 +1,13 @@
+read_verilog -sv -D SYNTHESIS qfd_dv_s5_suvm7.sv;
+blackbox qfd_dv_s5_vm7;
+hierarchy -check -top qfd_dv_s5_suvm7;
+synth -top qfd_dv_s5_suvm7 -flatten -noabc -nofsm -noshare;
+dffunmap;
+clean;
+write_json /work/control_generic.json;
+read_liberty -lib cells.lib;
+dfflibmap -liberty seq.lib;
+abc -liberty cells.lib;
+clean;
+stat -liberty cells.lib;
+write_verilog -noattr /work/control_mapped.v;
