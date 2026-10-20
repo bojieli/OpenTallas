@@ -1,0 +1,70 @@
+  10 x max  3224  u_view.g_hc.u_front.g_cen.g_c[].u_cen.q$_DFF_PN1_/QN
+        names=[] fo=[]
+   1 x max   533  u_view.g_hc.u_front.i1_uh$_DFFE_PP_/QN
+        names=[] fo=[('u_view.g_hc.u_front.i2x_q0[]$_DFFE_PP_.D', 256), ('u_view.g_hc.u_front.i2x_e0[]$_DFFE_PP_.D', 10), ('u_view.g_hc.u_front.i1_uh$_DFFE_PP_.D', 1)]
+   8 x max   532  comb<-DEEP/_,FF/u_view.g_hc.u_front.bm_r[]$_DFFE_PN0P_,FF/u_view.g_hc.u_front.f_wr[]$_DFFE_PN0P_
+        names=[] fo=[('u_view.g_hc.u_front.f_q0[][]$_DFFE_PP_.D', 256), ('u_view.g_hc.u_front.f_identity[][]$_DFFE_PP_.D', 14)]
+  24 x max   530  comb<-FF/u_view.g_hc.u_front.bm_r[]$_DFFE_PN0P_,FF/u_view.g_hc.u_front.f_wr[]$_DFFE_PN0P_,PORT/u_view.g_hc.u_front.cen[]
+        names=[] fo=[('u_view.g_hc.u_front.f_q0[][]$_DFFE_PP_.D', 256), ('u_view.g_hc.u_front.f_identity[][]$_DFFE_PP_.D', 14), ('u_view.g_hc.u_front.f_identity[][]$_SDFFE_PP1P_.D', 1)]
+  15 x max   369  comb<-FF/u_view.g_hc.u_front.f_wr[]$_DFFE_PN0P_,FF/u_view.g_hc.u_front.fw_v$_DFFE_PN0P_,PORT/u_view.g_hc.u_front.cen[]
+        names=[] fo=[('u_view.g_hc.u_front.f_q1[][]$_DFFE_PP_.D', 256), ('u_view.g_hc.u_front.f_q0[][]$_DFFE_PP_.D', 256), ('u_view.g_hc.u_front.f_identity[][]$_DFFE_PP_.D', 14)]
+   3 x max   288  comb<-DEEP/_,FF/u_view.g_hc.u_front.bm_r[]$_DFFE_PN0P_,FF/u_view.g_hc.u_front.bn_b[]$_SDFFCE_PP0P_
+        names=[] fo=[('u_view.g_hc.u_front.b_hi[][]$_DFFE_PP_.D', 72), ('u_view.g_hc.u_front.b_lo[][]$_DFFE_PP_.D', 64), ('u_view.g_hc.u_front.b_lo[][]$_SDFFCE_PP0P_.D', 8)]
+   1 x max   285  comb<-FF/u_view.g_hc.u_front.fw_v$_DFFE_PN0P_,PORT/u_view.g_hc.u_front.cen[]
+        names=[] fo=[('u_view.g_hc.u_front.f_q1[][]$_DFFE_PP_.D', 1287), ('u_view.g_hc.u_front.f_q0[][]$_DFFE_PP_.D', 768), ('u_view.g_hc.u_front.f_e0[][]$_DFFE_PP_.D', 51)]
+   1 x max   283  u_view.g_hc.u_front.bm_r[]$_DFFE_PN0P_/QN
+        names=[] fo=[('u_view.g_hc.u_front.f_q0[][]$_DFFE_PP_.D', 1536), ('u_view.g_hc.u_front.f_identity[][]$_DFFE_PP_.D', 84), ('u_view.g_hc.u_front.f_identity[][]$_SDFFE_PP1P_.D', 6)]
+   1 x max   278  comb<-FF/u_view.g_hc.u_front.f_wr[]$_DFFE_PN0P_
+        names=[] fo=[('u_view.g_hc.u_front.f_q1[][]$_DFFE_PP_.D', 256), ('u_view.g_hc.u_front.f_q0[][]$_DFFE_PP_.D', 256), ('u_view.g_hc.u_front.f_identity[][]$_DFFE_PP_.D', 14)]
+   1 x max   275  comb<-FF/u_view.g_hc.u_front.bm_r[]$_DFFE_PN0P_,PORT/u_view.g_hc.u_front.cen[]
+        names=[] fo=[('u_view.g_hc.u_front.f_identity[][]$_DFFE_PP_.D', 8), ('u_view.g_hc.u_front.f_identity[][]$_SDFFE_PP1P_.D', 2)]
+  36 x max   258  u_view.g_hc.u_front.g_frd.f_rdc[]$_DFFE_PN0P_/QN
+        names=[] fo=[('u_view.g_hc.u_front.i1_q1[]$_DFFE_PP_.D', 32), ('u_view.g_hc.u_front.g_frd.f_rdc[]$_DFFE_PN0P_.D', 2)]
+   1 x max   194  u_view.g_hc.u_front.g_ir.g_gok.u_gw.q$_DFF_PN0_/QN
+        names=[] fo=[]
+   1 x max   174  u_view.g_hc.u_front.g_qb.rst_q$_DFF_PN0_/QN
+        names=[] fo=[('u_view.g_hc.u_front.g_frd.f_rdc[]$_DFFE_PN0P_.RESETN', 51), ('u_view.g_hc.u_front.g_soq.u_soq.q_c[][]$_DFF_PN0_.RESETN', 18), ('u_view.g_hc.u_front.prog_operand_q[]$_DFF_PN0_.RESETN', 15)]
+   5 x max   160  u_view.g_hc.u_seam0.g_pin.rst_local[]$_DFF_PN0_/QN
+        names=[] fo=[('u_view.g_hc.u_seam0.g_pin.r[]$_SDFF_PN0_.D', 160)]
+   5 x max   160  u_view.g_hc.u_seam1.g_pin.rst_local[]$_DFF_PN0_/QN
+        names=[] fo=[('u_view.g_hc.u_seam1.g_pin.r[]$_SDFF_PN0_.D', 160)]
+   2 x max   138  comb<-PORT/u_view.g_hc.u_front.cen[],PORT/u_view.g_hc.u_front.go_ew
+        names=[] fo=[('u_view.g_hc.u_front.fF0[]$_DFFE_PP_.D', 36), ('u_view.g_hc.u_front.fF1[]$_DFFE_PP_.D', 35), ('u_view.g_hc.u_front.wA[]$_DFFE_PP_.D', 28)]
+   4 x max   123  comb<-FF/u_view.g_hc.u_front.g_qb.b_cfg_a[]$_DFF_P_,FF/u_view.g_hc.u_front.g_qb.b_cfg_v$_DFF_PN0_
+        names=[] fo=[('u_view.g_hc.u_front.s_row[][]$_DFFE_PP_.D', 72), ('u_view.g_hc.u_front.s_n[][]$_DFFE_PP_.D', 35), ('u_view.g_hc.u_front.s_idx[][]$_DFFE_PP_.D', 35)]
+   4 x max   119  comb<-FF/u_view.g_hc.u_front.plast[]$_DFFE_PP_,FF/u_view.g_hc.u_front.prog_issue_q$_DFF_PN0_,FF/u_view.g_hc.u_front.qlast[]$_DFFE_PP_
+        names=[] fo=[('u_view.g_hc.u_front.wA[]$_DFFE_PP_.D', 48), ('u_view.g_hc.u_front.wB[]$_DFFE_PP_.D', 47), ('u_view.g_hc.u_front.w_coh[]$_DFFE_PP_.D', 4)]
+   1 x max   107  u_view.g_hc.u_front.g_ir.r_go$_DFF_PN0_/QN
+        names=[] fo=[('u_view.g_hc.u_front.b_hi[][]$_DFFE_PP_.D', 72), ('u_view.g_hc.u_front.b_lo[][]$_DFFE_PP_.D', 64), ('u_view.g_hc.u_front.g_soq.u_soq.g_ch[].we[]$_DFF_P_.D', 42)]
+   3 x max    80  comb<-DEEP/_
+        names=[] fo=[('u_view.g_hc.u_front.nA[]$_DFFE_PP_.D', 40)]
+   1 x max    77  comb<-FF/u_view.g_hc.u_front.prog_issue_q$_DFF_PN0_,FF/u_view.g_hc.u_front.w_cl_r$_DFFE_PP_,FF/u_view.g_hc.u_front.w_h$_DFFE_PP_
+        names=[] fo=[('u_view.g_hc.u_front.g_frd.f_rdc[]$_DFFE_PN0P_.D', 51)]
+   1 x max    74  comb<-DEEP/_,FF/u_view.g_hc.u_front.g_ir.r_xs_b[]$_DFFE_PP_,FF/u_view.g_hc.u_front.g_ir.r_xs_pos[]$_DFFE_PP_
+        names=[] fo=[('u_view.g_hc.u_front.nA[]$_DFFE_PP_.D', 40)]
+   1 x max    72  u_view.g_hc.u_front.g_ir.g_gok.u_gm.q$_DFF_PN0_/QN
+        names=[] fo=[]
+   2 x max    58  _/QN
+        names=[] fo=[]
+  49 x max    51  comb<-FF/u_view.g_hc.u_front.g_frd.f_rdc[]$_DFFE_PN0P_
+        names=[] fo=[('u_view.g_hc.u_front.i1_q0[]$_DFFE_PP_.D', 32)]
+   6 x max    48  comb<-FF/u_view.g_hc.u_front.g_qb.b_cfg_a[]$_DFF_P_
+        names=[] fo=[('u_view.g_hc.u_front.s_row[][]$_DFFE_PP_.D', 136), ('u_view.g_hc.u_front.pbase[]$_DFFE_PP_.D', 14), ('u_view.g_hc.u_front.s_n[][]$_DFFE_PP_.D', 5)]
+   4 x max    47  u_view.g_hc.u_front.g_qt_hit.g_hc[].d_q[]$_SDFFCE_PP0P_/QN
+        names=[] fo=[('u_view.g_hc.u_front.g_qt_hit.g_hc[].d_q[]$_SDFFCE_PP0P_.D', 1)]
+   1 x max    44  u_view.u_south_reset.q$_DFF_PN0_/QN
+        names=[] fo=[]
+   1 x max    43  u_view.u_core_reset.q$_DFF_PN0_/QN
+        names=[] fo=[]
+   8 x max    39  u_view.g_hc.u_front.c_s0[][]$_DFFE_PP_/QN
+        names=[] fo=[('u_view.g_hc.u_front.w_s[]$_DFFE_PP_.D', 1), ('u_view.g_hc.u_front.c_s0[][]$_DFFE_PP_.D', 1)]
+   1 x max    38  u_view.g_hc.u_front.fam$_DFFE_PN0P_/QN
+        names=[] fo=[('u_view.g_hc.u_front.dk_r[][]$_SDFFCE_PN0P_.D', 20), ('u_view.g_hc.u_front.wQ2[]$_DFFE_PP_.D', 8), ('u_view.g_hc.u_front.nQ2[]$_DFFE_PP_.D', 8)]
+   1 x max    35  u_view.g_hc.u_front.g_ir.r_go_bf$_DFF_P_/QN
+        names=[] fo=[('u_view.g_hc.u_front.bn_tot[]$_DFFE_PP_.D', 7), ('u_view.g_hc.u_front.fF1[]$_DFFE_PP_.D', 4), ('u_view.g_hc.u_front.g_qt_hit.g_hc[].d_run$_DFFE_PN0P_.D', 3)]
+   1 x max    34  u_view.g_hc.u_front.g_ir.g_gok.u_gn.q$_DFF_PN0_/QN
+        names=[] fo=[]
+   1 x max    33  u_view.g_hc.u_front.g_ir.r_xb_u[]$_DFFE_PP_/QN
+        names=[] fo=[('u_view.g_hc.u_front.xbu_identity[]$_DFFE_PP_.D', 1), ('u_view.g_hc.u_front.g_ir.r_xb_u[]$_DFFE_PP_.D', 1)]
+   1 x max    33  u_view.g_hc.u_front.g_qt_hit.g_hc[].d_j[]$_SDFFCE_PP0P_/QN
+        names=[] fo=[('u_view.g_hc.u_front.g_qt_hit.g_hc[].d_j[]$_SDFFCE_PP0P_.D', 1)]
