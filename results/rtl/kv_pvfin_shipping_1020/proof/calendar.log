@@ -1,0 +1,5 @@
+PVFIN_CALENDAR PASS checked=201433 overflow triples65527..65535 + all16bit ties + random
+- rtl/test/qwen_split/tb_pvfin_calendar.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 201us; walltime 0.034 s; speed 6.002 ms/s
+- Verilator: cpu 0.034 s on 1 threads; allocated 7 MB
