@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       admits  1128 GB (avail 903, growth 113, headroom 0, waiters 0/0 GB) load 71/128 running 47 disk 590 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/l2h-gq4/src_bcf14141b
+ot-run: ot-epyc7       admits   633 GB (avail 544, growth 101, headroom 0, waiters 0/0 GB) load 112/96 running 58 disk 5846 GB 
+ot-run: ot-epyc9       admits  1029 GB (avail 835, growth 114, headroom 0, waiters 0/0 GB) load 44/128 running 33 disk 598 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-gq4/src_bcf14141b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-gq4/src_bcf14141b
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1573825-1792471780 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+[20000000] %Fatal: tb.sv:14: Assertion failed in tb: AQ_TREE13_NUMERIC_MISMATCH block1 fp41 e-22/-21
+AQ_CONTROL_MUTANT EC REJECTED
+[22500000] %Fatal: tb.sv:14: Assertion failed in tb: AQ_TREE13_NUMERIC_MISMATCH block4 fp40 e126/126
+AQ_CONTROL_MUTANT SHIFT REJECTED
+SCALE13R_EQ FAIL errors=2031616 checks=2097152
+AQ_CONTROL_MUTANT SCALE REJECTED
+SCALE13R_EQ FAIL errors=21 checks=2097152
+AQ_CONTROL_MUTANT SCALE_DATA REJECTED
+SCALE13R_EQ FAIL errors=129317 checks=2097152
+AQ_CONTROL_MUTANT S2TOP_K REJECTED
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1573825-1792471780): exit 0
