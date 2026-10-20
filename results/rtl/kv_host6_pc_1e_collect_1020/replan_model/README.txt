@@ -1,0 +1,7 @@
+MODEL ONLY, no placed/clock/timing/PG/route qualification.
+
+Actual immutable 1e placed graph failed 285 of 19707 terminal pairs >405um. This narrow followup uses exact LEF pin coordinates to plan existing IB rd_out[i] -> wq_data[i] -> AF wd_in[i] paths, all 546 bits in each of two channels. Existing RTL register hops are unchanged; no source latency added. Candidate places RX memories in the left column and TX memories in the right column, constrains planned wq register centers to the central band y216..419.04, and chooses each midpoint/clamped-y target independently. Macro origins remain lattice43.2.
+
+Old macro layout with targeted band placement has maximum modeled memory-register hop369.012um; same-domain column arrangement309.480um. These 1092 register targets are not a legal packing, inserted placement constraint, or all-driver proof. Actual input bypass/mux, reset, control, CDC, and other graph endpoints are excluded. Next structural candidate must bind all actual cells to legal rows, plan control and reset locations, then run full-driver405um, pin geometry, density/occupancy, native32, clock, PG, and timing checks. No gate approval is implied.
+
+Earlier coarse statement that AF write pins occupy one opposed face was incomplete: all rd_out pins are on W, but wd_in pins span both W/E. Exact coordinates and hashes are bound in model.json.gz. Reproduce with python3 model.py; no EDA tool or remote connection required.
