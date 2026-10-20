@@ -111,6 +111,8 @@ LIB_PORTS['ot_pl_land_vector_reset_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 LIB_PORTS['ot_pl_land_vector_reset_r'] = dict(LIB_PORTS['ot_pl_land_r'])
 LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
 LIB_PORTS['ot_pl_land_reset_forest_lead'] = dict(LIB_PORTS['ot_pl_pad'], scalar_q='out')
+LIB_PORTS['ot_pl_land_n32_chunk_w'] = dict(LIB_PORTS['ot_pl_land_w'])
+N32_RTL = 'rtl/common/landed_parent/ot_pl_land_n32.sv'
 
 
 
@@ -470,6 +472,11 @@ class Parent:
         self.direct_timing = bool(spec.get("landing_direct_timing", False))
         self.chunk_bits = int(spec.get("landing_chunk_bits", 0))
         self.reset_forest = spec.get("landing_reset_forest", False)
+        self.writer = spec.get('landing_writer', 'default')
+        if self.writer not in ('default', 'n32'):
+            raise SystemExit('landing_writer must be default or n32')
+        if self.writer == 'n32' and not self.chunk_bits:
+            raise SystemExit('landing_writer n32 requires explicit landing_chunk_bits')
         # QW-CTLM3 10-19: landing_reset_lead -- the ring / read rq (their own re-registering flop) released at the SAME
         # edge as a t = 0 child (regional run RB - 2 stages + rq), not one edge after it.  Without it a ring misses the
         # first word its source (child or input port) presents on the first post-reset edge: the flat reference accepts
@@ -880,7 +887,9 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                w(f"    {primitive}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
+                wprim = primitive if forest or self.writer == 'default' else 'ot_pl_land_n32_chunk'
+                writer_cp = cp + (', .NATIVE32(1)' if forest and self.writer == 'n32' else '')
+                w(f"    {wprim}_w #(.W({wt}), .D({D}){writer_cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
                 w(f"    wire {decl} {out}, lpl_{n}_o;")
@@ -1134,7 +1143,7 @@ class Parent:
             warnings=[f"child {i} runs t = {t[i]} edges late but has no reset pin on {self.rst}: its free-running state "
                       "is NOT re-aligned (check it in the bench)" for i in no_rst],
             **({} if not (self.chunk_bits or self.direct_timing) else dict(
-                landing_implementation=dict(chunk_bits=self.chunk_bits, direct_quarter_period_timing=self.direct_timing,
+                landing_implementation=dict(chunk_bits=self.chunk_bits, **({'writer':'n32'} if self.writer=='n32' else {}), direct_quarter_period_timing=self.direct_timing,
                                             **({"no_data_multicycle": True} if not self.mcp else {}),
                                             **({"reset_lead": True} if self.reset_lead else {}),
                                             compensated_phase_T=[-0.75, 0.75], sample_age_T=[1.25, 2.75],
@@ -1295,7 +1304,7 @@ class Parent:
         muts = [m for m in muts if m not in waived]
         up = "/".join([".."] * len(Path(rel_out).parts))
         srcs = " ".join(self.S["sources"] + self.S.get("child_sources", []) + [LIB_RTL] +
-                        (RESET_FOREST_RTL if self.reset_forest else []) +
+                        (RESET_FOREST_RTL if self.reset_forest else []) + ([N32_RTL] if self.writer == 'n32' else []) +
                         ([f"{rel_out}/{self.S['top']}_lagref.sv"] if P and P.get("lag") else []))
         defs = " ".join(f"-D{d}" for d in self.S.get("defines") or [])
         return f"""#!/usr/bin/env bash
@@ -1393,7 +1402,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_n32_chunk_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):

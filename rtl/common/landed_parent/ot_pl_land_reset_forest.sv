@@ -64,6 +64,7 @@ endmodule
 
 module ot_pl_land_vector_reset_w #(
     parameter integer W=1073,D=4,CHUNK_BITS=24,
+    parameter integer NATIVE32=0,
     parameter integer AW=(D<=2)?1:$clog2(D),
     parameter integer CHUNKS=(W+CHUNK_BITS-1)/CHUNK_BITS
 )(
@@ -78,8 +79,13 @@ module ot_pl_land_vector_reset_w #(
         localparam integer CW=(W-c*CHUNK_BITS<CHUNK_BITS)?W-c*CHUNK_BITS:CHUNK_BITS;
         wire [D*CW-1:0] cb;
         wire [D*(AW+1)-1:0] ce;
-        (* keep_hierarchy="yes" *) ot_pl_land_local_w #(.W(CW),.D(D)) u_local(
-            .ck(ck),.rsi(rsi[c]),.i(i[c*CHUNK_BITS+:CW]),.bank(cb),.epo(ce),.vld(vld[c*D+:D]));
+        if(NATIVE32) begin:g_native32
+            (* keep_hierarchy="yes" *) ot_pl_land_n32_local_w #(.W(CW),.D(D)) u_local(
+                .ck(ck),.rsi(rsi[c]),.i(i[c*CHUNK_BITS+:CW]),.bank(cb),.epo(ce),.vld(vld[c*D+:D]));
+        end else begin:g_legacy
+            (* keep_hierarchy="yes" *) ot_pl_land_local_w #(.W(CW),.D(D)) u_local(
+                .ck(ck),.rsi(rsi[c]),.i(i[c*CHUNK_BITS+:CW]),.bank(cb),.epo(ce),.vld(vld[c*D+:D]));
+        end
         for(genvar s=0;s<D;s=s+1) begin:g_slot
             assign bank[s*W+c*CHUNK_BITS+:CW]=cb[s*CW+:CW];
         end

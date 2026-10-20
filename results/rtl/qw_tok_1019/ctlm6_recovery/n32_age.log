@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/n32
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/n32
+ot-run: ot-epyc7       admits   843 GB (avail 680, growth 89, headroom 0, waiters 0/0 GB) load 43/96 running 22 disk 5572 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/n32
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/n32
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/n32
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3113072-1792494772 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+N32_VECTOR_RESET_RING_LOCKSTEP_PASS compares=9979
+- rtl/test/qwen_dv/tb_reset_forest_n32_ring.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 100us; walltime 0.145 s; speed 690.983 us/s
+- Verilator: cpu 0.145 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3113072-1792494772): exit 0

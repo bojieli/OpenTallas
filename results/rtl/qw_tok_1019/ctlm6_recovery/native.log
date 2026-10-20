@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/src
+ot-run: ot-epyc7       admits   805 GB (avail 665, growth 101, headroom 0, waiters 0/0 GB) load 53/96 running 26 disk 5586 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-ctlm6-recovery-1020/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3002779-1792494193 after 0 s
+merged 211 cells
+DEPTH2 PASS_FANOUT_ONLY max 32 over32 0
+DEPTH3 PASS_FANOUT_ONLY max 32 over32 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3002779-1792494193): exit 0

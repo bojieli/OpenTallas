@@ -1,0 +1,48 @@
+{
+  "top": "reset_forest_lead_coupon",
+  "sha256": "5020ce2c6ade881936e135d8f5303662631acc4e9104104bf29ac555bc875142",
+  "nonclock_drivers_over32": 0,
+  "flop_drivers_over32": 0,
+  "raw_ports_over32": 0,
+  "max_nonclock_loads": 32,
+  "rst_n_loads": 32,
+  "metrics": {
+    "clock_roots": [
+      {
+        "root": "port:ck",
+        "ff": 1056,
+        "icg": 0,
+        "macro_pins": 0,
+        "example": "g_consumer[1000].u_rq._2_"
+      }
+    ],
+    "hier_subblocks": 0,
+    "clock_max_root_sinks": 1056,
+    "clock_max_root": "port:ck",
+    "high_fanout_top": [],
+    "hf_max_port": 0,
+    "hf_max_reset": 0,
+    "hf_max_net": 0,
+    "reset_landing": [
+      {
+        "port": "rst_n",
+        "sinks": 32,
+        "flops": 32,
+        "macros": 0
+      }
+    ],
+    "in_to_out_bits": 0,
+    "in_to_reg_levels": 0,
+    "reg_to_out_levels": 0,
+    "icg_enable_from_port": 0,
+    "depth_ps": 11.7,
+    "depth_path": [
+      "u_forest.g_branch[31].u_ff._2_",
+      "g_consumer[1000].u_rq._2_/D"
+    ],
+    "depth_levels": 0
+  },
+  "violations": [],
+  "verdict": "PASS_FANOUT_ONLY",
+  "qualification": "Mapped fanout census only; reset landing/pins/reach/storage still require their own proof"
+}
