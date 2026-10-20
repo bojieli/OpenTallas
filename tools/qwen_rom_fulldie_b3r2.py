@@ -4399,6 +4399,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         fwd['src_basis'] = 'reset source without a clock: hop 0 on the source-side regional root'
                     fwd.update(E=None, E_sta=None, K=None, E_basis='reset lane: no ring; n-1 half-cycle hops + one STA-timed edge on the block root',
                                K_basis='n/a (no ring)', src_rst=None, dst_rst=None)
+                if _os_r.environ.get('OT_SPLIT_FWD_BUMP_FEED', '0') == '1':
+                    from qwen_split.bump_feed_clock import bind_source
+                    bind_source(m, fwd, eps)
                 fwd_rows.append(fwd)
             else:
                 fwd_skip.append(dict(bid=bid, cl=cl, bits=bits, n=len(pl['frames']), reason=why_))
@@ -4452,7 +4455,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 else:
                     if k == 0:
                         ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck'))
-                        _ckf[(nm, 'ck')] = fwd['src']    # DIE-QWEN-GEN16: hop 0 stays on the SENDER's root
+                        if not fwd.get('source_feed_contract'):
+                            _ckf[(nm, 'ck')] = fwd['src']    # regional source follows its sender
                     else:
                         fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
                     fwd['stations'].append(nm)
@@ -4462,7 +4466,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     # hop 0: the source block's own root at the hop-0 gate; the gate enable / lane epoch = the source's
                     # released reset (attached to the source's reset net after the plan: the reset tree reaches it)
                     ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck' if kind_ == 'rlyh0' else 'ck_s'))
-                    _ckf[(nm, 'ck' if kind_ == 'rlyh0' else 'ck_s')] = fwd['src']   # DIE-QWEN-GEN16: sender's root
+                    if not fwd.get('source_feed_contract'):
+                        _ckf[(nm, 'ck' if kind_ == 'rlyh0' else 'ck_s')] = fwd['src']
                     fwd_attach.append((nm, 'en', *fwd['src_rst']))
                 else:
                     fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
