@@ -125,7 +125,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     wire [2:0]  nb = bp + 3'd1;
     // PVMD r4 (HBM-SMATT5 2026-10-20, r3 native census: 8 decode roots of bp, 41..43 loads each): every remaining bp
     // reader takes its own kept same-edge barrel counter (FAN32 only; FAN32 0 = bp/nb exactly as before).
-    wire [2:0]  r_ent, r_sw, r_nt, nb_sr;
+    wire [2:0]  r_ent, r_ent_status, r_sw, r_nt, nb_sr;
     // PVMD r5 (HBM-SMATT5 2026-10-20, smh_pvm_ref_s6a in-flow ORFS census: timing-driven ABC builds binary-select
     // muxes whose select bits fan out 51..134 loads): the wide readers use KEPT ONE-HOT rings (rotate each edge,
     // ring == onehot(bp + offset), checked every edge) and AND-OR muxes, so no select bit drives more than ~16 loads.
@@ -283,11 +283,16 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     // r4 role counters (binary; readers measured <= 32 in the in-flow census) + r5 one-hot rings.
     // Reset groups: c_ent 10, c_sw/c_nt 12, c_sr 14 (<= 27); rings on slice groups 16..26 (18 + 8 = 26 each).
     generate if (FAN32 != 0) begin:g_bp_roles
-        (* keep *) reg [2:0] c_ent, c_sw, c_nt, c_sr;
+        (* keep *) reg [2:0] c_ent, c_ent_status, c_sw, c_nt, c_sr;
         always @(posedge clk or negedge rst_core_n[10]) if(!rst_core_n[10]) c_ent<=0; else c_ent<=c_ent+3'd1;
         always @(posedge clk or negedge rst_core_n[12]) if(!rst_core_n[12]) begin c_sw<=0; c_nt<=0; end
             else begin c_sw<=c_sw+3'd1; c_nt<=c_nt+3'd1; end
         always @(posedge clk or negedge rst_core_n[14]) if(!rst_core_n[14]) c_sr<=0; else c_sr<=c_sr+3'd1;
+        // Separate registered provenance for the status mux: in-flow ABC gave
+        // c_ent[1] 33 loads when entry decoders and status readers shared it.
+        // The reset cohort grows from24 to27; this copy adds no data edge.
+        always @(posedge clk or negedge rst_core_n[10]) if(!rst_core_n[10]) c_ent_status<=0; else c_ent_status<=c_ent_status+3'd1;
+        assign r_ent_status=c_ent_status;
         assign r_ent=c_ent; assign r_sw=c_sw; assign r_nt=c_nt; assign nb_sr=c_sr+3'd1;
         localparam [7:0] OH_Q = (MUT==5) ? 8'b0000_0001 : 8'b0000_0010;   // onehot(bp + 1) (MUT 5: bp)
         (* keep *) reg [7:0] r_qa, r_qb, r_tg0, r_tg1, r_nt0, r_nt1, r_frw, r_frr, r_sr;
@@ -309,7 +314,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
         assign oh_qa=r_qa; assign oh_qb=r_qb; assign oh_tg0=r_tg0; assign oh_tg1=r_tg1; assign oh_nt0=r_nt0; assign oh_nt1=r_nt1;
         assign oh_frw=r_frw; assign oh_frr=r_frr; assign oh_sr=r_sr;
 `ifndef SYNTHESIS
-        assign roles_reset_clear = {c_ent,c_sw,c_nt,c_sr}==12'd0 && {r_sg0,r_sg1,r_sg2,r_sg3,r_qa,r_qb}=={6{OH_Q}} &&
+        assign roles_reset_clear = {c_ent,c_ent_status,c_sw,c_nt,c_sr}==15'd0 && {r_sg0,r_sg1,r_sg2,r_sg3,r_qa,r_qb}=={6{OH_Q}} &&
             {r_tg0,r_tg1,r_nt0,r_nt1,r_frw,r_frr}=={6{8'd1}} && r_sr==8'd2 &&
             g_operand_provenance[4].g_local.count==0 && g_operand_provenance[5].g_local.count==0 &&
             g_operand_provenance[6].g_local.count==0 && g_operand_provenance[7].g_local.count==0 &&
@@ -319,12 +324,12 @@ module ot_hbm_sm_pv_merge_distributed_core #(
 `endif
 `ifndef SYNTHESIS
         wire [7:0] oh0 = 8'd1 << bp, ohq = 8'd1 << ((MUT==5) ? bp : nb);
-        always @(posedge clk) if (rst_n && ({c_ent,c_sw,c_nt,c_sr} !== {4{bp}} || {r_tg0,r_tg1,r_nt0,r_nt1,r_frw,r_frr} !== {6{oh0}} || r_sr !== (8'd1 << nb) ||
+        always @(posedge clk) if (rst_n && ({c_ent,c_ent_status,c_sw,c_nt,c_sr} !== {5{bp}} || {r_tg0,r_tg1,r_nt0,r_nt1,r_frw,r_frr} !== {6{oh0}} || r_sr !== (8'd1 << nb) ||
             {r_sg0,r_sg1,r_sg2,r_sg3,r_qa,r_qb} !== {6{ohq}} || fr_c !== bp))
             $fatal(1, "pv_merge PVMD r5 role counter / one-hot ring differs from bp");
 `endif
     end else begin:g_bp_original
-        assign r_ent=bp; assign r_sw=bp; assign r_nt=bp; assign nb_sr=nb;
+        assign r_ent=bp; assign r_ent_status=bp; assign r_sw=bp; assign r_nt=bp; assign nb_sr=nb;
         assign oh_qa=8'd0; assign oh_qb=8'd0; assign oh_tg0=8'd0; assign oh_tg1=8'd0; assign oh_nt0=8'd0; assign oh_nt1=8'd0;
         assign oh_frw=8'd0; assign oh_frr=8'd0; assign oh_sr=8'd0; assign oh_sg[0]=8'd0; assign oh_sg[1]=8'd0; assign oh_sg[2]=8'd0; assign oh_sg[3]=8'd0;
         assign roles_reset_clear=1'b1;
@@ -382,9 +387,9 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             pv_v <= 1'b0;
             if (|mf) m_fault <= 1'b1;
             if (ev) begin
-                if (e_busy[r_ent]) m_fault <= 1'b1;                       // chunk arrived while the entry still merges
+                if (e_busy[r_ent_status]) m_fault <= 1'b1;                       // chunk arrived while the entry still merges
                 if (ev_c >= (8'd1 << (LV - 1))) m_fault <= 1'b1;      // run longer than the stack
-            end else if (e_busy[r_ent] && e_fl[r_ent] && !(e_k[r_ent] < LV)) pv_v <= 1'b1;
+            end else if (e_busy[r_ent_status] && e_fl[r_ent_status] && !(e_k[r_ent_status] < LV)) pv_v <= 1'b1;
         end
     end
     generate for(genvar ei=0;ei<8;ei=ei+1) begin:g_entry_state

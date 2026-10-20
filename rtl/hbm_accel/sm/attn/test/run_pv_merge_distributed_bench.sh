@@ -40,6 +40,18 @@ Path(sys.argv[2]).write_text(s.replace(a,'always @(posedge clk) if(1\'b0) c_sr<=
 MUTANT
  CORE="$W/core_mut13.sv"
 fi
+if [ "$M" = 14 ]; then
+ # New kept status provenance must clear even when the clock is stopped.
+ python3 - "$CORE" "$W/core_mut14.sv" <<'MUTANT'
+import sys
+from pathlib import Path
+s=Path(sys.argv[1]).read_text()
+a='always @(posedge clk or negedge rst_core_n[10]) if(!rst_core_n[10]) c_ent_status<=0;'
+if s.count(a)!=1: raise SystemExit('MUT14 REFUSED: status provenance source shape differs')
+Path(sys.argv[2]).write_text(s.replace(a,"always @(posedge clk) if(!rst_core_n[10]) c_ent_status<=0;"))
+MUTANT
+ CORE="$W/core_mut14.sv"
+fi
 verilator --version
 verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSTIM="\"$W/stim.hex\"" \
   -GMUT=$M -GFAN32=$FAN -GSAFE=$S -GTIGHT=$TI -GPUBEARLY=$PE -GREASSERT=$RA -GXRAND=$XR $XF ${PVM_VFLAGS:-} --top-module tb_pv_merge_distributed --Mdir "$W/obj" -o tb \
