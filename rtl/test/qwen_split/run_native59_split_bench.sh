@@ -40,7 +40,7 @@ DV=("$R/rtl/test/qwen_split/tb_qfd_native59_dv_service.sv" "$R/rtl/qwen_split/qf
  "$R/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v")
 MU=("$R/rtl/test/qwen_split/tb_qfd_native59_dv_mu.sv")
 RND=("$R/rtl/test/qwen_split/tb_n59_split_random.sv")
-BDEFS=(-DN59_QB_ALIGN=${N59_QB_ALIGN:-0}); if [[ ${N59_RECV:-0} == 1 ]]; then BDEFS+=(-DN59_SVC_RECV -DN59_RECV_MUT=${N59_RECV_MUT:-0}); fi
+BDEFS=(-DN59_QB_LOCAL32=${N59_QB_LOCAL32:-0} -DN59_QB_LOCAL_MUT=${N59_QB_LOCAL_MUT:-0} -DN59_QB_ALIGN=${N59_QB_ALIGN:-0}); if [[ ${N59_RECV:-0} == 1 ]]; then BDEFS+=(-DN59_SVC_RECV -DN59_RECV_MUT=${N59_RECV_MUT:-0}); fi
 rc_all=0
 run() { # name expect(pass|fail) tb(dv|mu) -G...
   local n=$1 exp=$2 tb=$3; shift 3
