@@ -1,10 +1,10 @@
 import unittest
 import numpy as np
-from die_case_v16 import Occ,CELL
+from die_occupancy import Occ,CELL
 
 class WindowedOccupancy(unittest.TestCase):
  def compare(self,grid,args):
-  a=Occ((grid.shape[1]-1)*CELL,(grid.shape[0]-1)*CELL)
+  a=Occ((grid.shape[1]-1)*CELL+1e-6,(grid.shape[0]-1)*CELL+1e-6)
   b=Occ(a.W,a.H);a.g[:]=grid;b.g[:]=grid
   b.ii()  # Original complete summed-area image oracle; exact same candidate order.
   self.assertEqual(a.find(*args),b.find(*args))
