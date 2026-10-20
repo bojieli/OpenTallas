@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_s5_tap",
+ "enable": false,
+ "reason": "the RTL registers every input at its pin (ot_qfd_xhead g_pin / ib_pin / f_q / tid_q / fi_q / lqp; ot_qfd_xs_tap E1 pin registers) and drives every output from a flop; flow pin registers would add unpriced cycles"
+}

@@ -1,0 +1,167 @@
+{
+ "name": "qfd_dv_s5_xhead",
+ "top": "qfd_dv_s5_xhead",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 432.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "pins": {
+  "N": [
+   "cid",
+   "ck",
+   "rst_n",
+   "n_d"
+  ],
+  "W": [
+   "s_d",
+   "fault",
+   "l_rst_n",
+   "w0_v",
+   "w0_ep",
+   "w0_off",
+   "w0_m",
+   "w0_d",
+   "w0_ctl",
+   "c0_v",
+   "c0_ep",
+   "r0_v",
+   "r0_t",
+   "r0_ep",
+   "r0_p",
+   "q0",
+   "q0_v",
+   "q0_bad"
+  ],
+  "E": [
+   "a_ib",
+   "fault_i",
+   "w1_v",
+   "w1_ep",
+   "w1_off",
+   "w1_m",
+   "w1_d",
+   "w1_ctl",
+   "c1_v",
+   "c1_ep",
+   "r1_v",
+   "r1_t",
+   "r1_ep",
+   "r1_p",
+   "q1",
+   "q1_v",
+   "q1_bad"
+  ],
+  "S": [
+   "a_f"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input at its pin (ot_qfd_xhead g_pin / ib_pin / f_q / tid_q / fi_q / lqp; ot_qfd_xs_tap E1 pin registers) and drives every output from a flop; flow pin registers would add unpriced cycles"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in two registered stages (qfd_dv_s5_rst2) at the face"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 2,
+  "period_ps": 833.333,
+  "macro_halo_um": 5.4
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: every input lands in one pin flop (g_pin/ib_pin/f_q/tid_q/fi_q/lqp/lqvp/lqbp), every output is flop Q (lw/lc face regs, lr0, n_q/s_q, fault); rst_n 2-stage landing (qfd_dv_s5_rst2)",
+  "2_reach": "PASS: 216 x 432 tile, every hop < 405 um; the leaf buses leave W (chain 0) / E (chain 1) to leaves beside it",
+  "3_fanout": "checked by the gate textbook_lint high_fanout (fd rotate 6 levels of 2:1; tids constant after SETID)",
+  "4_depth": "inherited ot_qfd_xhead (closed in qfd_dv_heads_w130 at 0.77 ns); --cts path classes confirm",
+  "5_storage": "PASS: largest indexed arrays wb/wbp/wbm/wo/ro [2][16] (<= 608 b), first_abs [2][16][4] x 8 = 1,024 b: all < 2 kb",
+  "6_floorplan": "pin-bound: <= 6 pins/um on every face (W 4.8, E 4.5, S 5.5, N 2.4); aspect 2:1; no macros; full std-cell band",
+  "7_clock": "one centre-fed TritonCTS root (8.1k sinks); io_hold_margin 0.03",
+  "8_schedule": "0 added cycles (qfd_dv_heads w130 timing: FILL_LEAD 5, DX 14, LEAF_READ_PIN_PIPE 1); reset release +2 (= the slice synchroniser)"
+ },
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:QW-SLICE6-HEADS",
+  "branch": "claude/qw-slice6-heads-1019",
+  "tag": "xh",
+  "purpose": "QW-SLICE6 Q.STA.SLICE.2: slice2 column head leaf (ot_qfd_xhead w130 + tids + retag), one master x 4",
+  "extra_paths": [
+   "rtl/qwen_dv",
+   "rtl/qwen_sys/dvm_20261014",
+   "rtl/hdc",
+   "rtl/physical",
+   "rtl/lib",
+   "rtl/common",
+   "rtl/test",
+   "physical/asap7_memory_macros_v2",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "tools/hdc_golden.py",
+   "tools/hdc_program.py",
+   "results/arch/qw_slice6_1019"
+  ],
+  "benches": [
+   {
+    "name": "s5_eq",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/s5_eq eq 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "S5_EQ PASS"
+   },
+   {
+    "name": "s5_b2",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/s5_b2 b2 0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "bench2 \\(o\\) MUT=0: PASS"
+   },
+   {
+    "name": "s5_eq_mut_xh",
+    "cmd": "bash rtl/test/qwen_dv/s5/run_s5.sh {RUN}/s5_eq_mut_xh eq xh",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "S5_EQ FAIL",
+    "fail_witness": "results/arch/qw_slice6_1019/witness/xhead_xh.log"
+   }
+  ]
+ },
+ "macros": []
+}

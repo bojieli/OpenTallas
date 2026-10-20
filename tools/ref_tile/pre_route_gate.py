@@ -67,7 +67,8 @@ RELAUNCH_WAIT_S = int(os.environ.get("OT_GATE_RELAUNCH_WAIT_S", "900"))
 DAEMON_TREE = Path(os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
 # flow helpers the loop ships into every job snapshot (closure_loop.py ship_fpl / HELPERS); the remote gate does the same
 SHIP_HELPERS = ("tools/orfs_hold_mm.py", "tools/orfs_hold_mm.tcl", "tools/fp_margin_lint.py", "tools/fp_margin_lint.tcl",
-                "tools/textbook_lint.py", "physical/common_flow/macro_cts_cluster.tcl")
+                "tools/textbook_lint.py", "physical/common_flow/macro_cts_cluster.tcl",
+                "physical/common_flow/native_pg_binding.tcl")
 
 
 def ship_helpers(spec=None):
@@ -929,8 +930,11 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     return spec
 
 
-# GATE STEP CAP (ROOT 2026-10-15): seconds one capped gate step (CTS run, trial GRT) may take before it is a stall
-GATE_STEP_CAP_S = int(os.environ.get("OT_GATE_STEP_CAP_S", "14400"))
+# No automatic wall deadline for admitted CTS / trial-GRT work. An operator may
+# explicitly opt in to a positive wall cap; zero leaves the command uncapped.
+GATE_STEP_CAP_S = int(os.environ.get("OT_GATE_STEP_CAP_S", "0"))
+if GATE_STEP_CAP_S < 0:
+    raise ValueError("OT_GATE_STEP_CAP_S must be zero (uncapped) or positive")
 
 
 # --------------------------------------------------------------------------------------------- remote
@@ -955,13 +959,16 @@ for e in ${{PATH//:/ }}; do if [ -x "$e/docker" ] && ! [ "$e/docker" -ef "$0" ];
   exec "$e/docker" "$@"; fi; done; exit 127
 EOS
 chmod +x $R/bin/docker; export PATH=$R/bin:$PATH
-# GATE STEP CAP (ROOT 2026-10-15): a CTS / trial-GRT step that has not finished in {STEP_CAP} s is a stall (a 15 h
-# dsfd_vm_write_dispatch_b24 gate sat in the DPL negotiation legalizer at 150k illegal cells after repair_design tripled
-# the instance count); kill the named container and report GATE_STALL instead of holding a fleet slot for days
+# No default CTS / trial-GRT wall cap. Host capacity is admitted separately.
+# Preserve opt-in limits for operators; a wall timeout is not a measured stall.
 ot_capped() {{  # ot_capped NAME docker run --name NAME ...
-  local n=$1 t0=$(date +%s) rc; shift
+  local n=$1 rc; shift
+  if [ {STEP_CAP} -eq 0 ]; then "$@"; return $?; fi
   timeout -k 60 {STEP_CAP} "$@"; rc=$?
-  if [ $(( $(date +%s) - t0 )) -ge {STEP_CAP} ]; then docker kill "$n" >/dev/null 2>&1; echo "GATE_STALL $n exceeded {STEP_CAP} s"; fi
+  if [ "$rc" -eq 124 ]; then
+    docker kill "$n" >/dev/null 2>&1
+    echo "GATE_TIMEOUT $n exceeded explicit {STEP_CAP} s wall cap"
+  fi
   return $rc
 }}
 docker image inspect --format 'GATE_TOOL_IMAGE_ID={{{{.Id}}}} GATE_TOOL_IMAGE_DIGESTS={{{{json .RepoDigests}}}}' {IMG} 2>/dev/null
@@ -1656,10 +1663,12 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
             g.add("INFO", "textbook", line[len("textbook_lint: "):][:300])
             continue
         g.add("FAIL" if tag == "REFUSE" else "WARN", f"textbook.{chk}", msg[:500], TEXTBOOK_FIX.get(chk, ""))
-    for stall in re.findall(r"^GATE_STALL (.*)$", out, re.M):
-        g.add("FAIL", "gate_stall", f"{stall[:200]} (step cap; repair/legalizer blow-up or GRT stall)",
-              "read the remote cts.log / grt.log tail: the route would stall the same way; reduce density / fix the "
-              "floorplan or the repair_design fan-out cause before routing")
+    # Retain historical GATE_STALL receipts without inferring a structural cause
+    # from elapsed time alone. New opt-in caps emit GATE_TIMEOUT.
+    for stall in re.findall(r"^GATE_(?:STALL|TIMEOUT) (.*)$", out, re.M):
+        g.add("FAIL", "gate_stall", f"{stall[:200]} (wall cap; structural cause unknown)",
+              "preserve the capped run and inspect its logs and resource evidence; "
+              "elapsed time alone does not establish a route or legalizer stall")
     if cts and kv.get("GATE_CTS_RC") not in (None, "0"):
         g.add("FAIL", "cts_run", "placement / CTS of the kit failed: " + "; ".join(re.findall(r"^GATE_CTSERR (.*)$", out, re.M))[:500],
               "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing")
