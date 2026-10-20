@@ -1,0 +1,25 @@
+CB16_RESET_DIAG cid=450 RPL=300 QUIET=80
+CB16_RESET_EPOCH cyc=2316 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2317 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2318 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2319 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2320 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2321 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2322 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2323 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2324 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2325 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2326 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2327 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2328 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2329 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2330 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2331 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2332 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2333 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+FULL_LOCKSTEP_SUMMARY MF=8 MB=0 FAR=0 cycles=6000 ref_nonzero=6000 mism_full=0 mism_fullb=0
+FULL_LOCKSTEP_PASS FAR=0
+- tools/qwen_cluster/tb_full_lockstep.sv:562: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.549 s; speed 10.930 us/s
+- Verilator: cpu 0.549 s on 1 threads; allocated 9 MB

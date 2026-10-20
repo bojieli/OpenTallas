@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-epyc7       admits   644 GB (avail 552, growth 101, headroom 0, waiters 0/0 GB) load 71/96 running 40 disk 5750 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2246715-1792482814 after 0 s
+CB16_RESET_CALENDAR_PASS M=0 leaves=16 cycles=500
+- tools/qwen_cluster/tb_cb16_reset_calendar.sv:19: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 501ns; walltime 0.004 s; speed 111.761 us/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB
+[40000] %Fatal: tb_cb16_reset_calendar.sv:15: Assertion failed in tb_reset_calendar: CB16_RESET_CALENDAR_SLIP dut=full cycle=38 expected=ffff actual=ffbf
+%Error: tools/qwen_cluster/tb_cb16_reset_calendar.sv:15: Verilog $stop
+Aborting...
+CB16_RESET_CALENDAR_BENCH_PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2246715-1792482814): exit 0

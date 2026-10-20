@@ -1,0 +1,29 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-epyc7       admits   642 GB (avail 550, growth 101, headroom 0, waiters 0/0 GB) load 61/96 running 38 disk 5756 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2118077-1792482544 after 0 s
+CASE=F1 EXIT=1
+FULL_LOCKSTEP_MISMATCH dut=full cyc=106 bit=516
+FULL_LOCKSTEP_SUMMARY MF=1 MB=0 FAR=0 cycles=6000 ref_nonzero=6000 mism_full=5027 mism_fullb=0
+[6001000] %Fatal: tb_full_lockstep.sv:563: Assertion failed in tb: FULL_LOCKSTEP_FAIL
+QUALIFIED_MUTANT_F1=CAUGHT
+CASE=F6 EXIT=1
+FULL_LOCKSTEP_MISMATCH dut=full cyc=82 bit=517
+FULL_LOCKSTEP_SUMMARY MF=6 MB=0 FAR=0 cycles=6000 ref_nonzero=6000 mism_full=5157 mism_fullb=0
+[6001000] %Fatal: tb_full_lockstep.sv:563: Assertion failed in tb: FULL_LOCKSTEP_FAIL
+QUALIFIED_MUTANT_F6=CAUGHT
+CASE=F8 EXIT=0
+FULL_LOCKSTEP_SUMMARY MF=8 MB=0 FAR=0 cycles=6000 ref_nonzero=6000 mism_full=0 mism_fullb=0
+FULL_LOCKSTEP_PASS FAR=0
+QUALIFIED_MUTANT_F8=FAIL
+CASE=B3 EXIT=1
+FULL_LOCKSTEP_MISMATCH dut=fullb cyc=125 bit=1546
+FULL_LOCKSTEP_SUMMARY MF=0 MB=3 FAR=0 cycles=6000 ref_nonzero=6000 mism_full=0 mism_fullb=5065
+[6001000] %Fatal: tb_full_lockstep.sv:563: Assertion failed in tb: FULL_LOCKSTEP_FAIL
+QUALIFIED_MUTANT_B3=CAUGHT
+QUALIFIED_REPLAY_EXIT=1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2118077-1792482544): exit 1

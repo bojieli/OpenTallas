@@ -1,0 +1,24 @@
+CB16_RESET_DIAG cid=450 RPL=300 QUIET=80
+FULL_LOCKSTEP_MISMATCH dut=fullb cyc=125 bit=1546
+CB16_RESET_EPOCH cyc=2316 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2317 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2318 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2319 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2320 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2321 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2322 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2323 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2324 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2325 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2326 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2327 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2328 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2329 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2330 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2331 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2332 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2333 rst=1 trst_ref=1 trst_full=1 trst_b=1 ref_t=0000 full_t=0000
+FULL_LOCKSTEP_SUMMARY MF=0 MB=3 FAR=0 cycles=6000 ref_nonzero=6000 mism_full=0 mism_fullb=5065
+[6001000] %Fatal: tb_full_lockstep.sv:563: Assertion failed in tb: FULL_LOCKSTEP_FAIL
+%Error: tools/qwen_cluster/tb_full_lockstep.sv:563: Verilog $stop
+Aborting...

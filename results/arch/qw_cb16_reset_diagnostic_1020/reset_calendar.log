@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-epyc7       admits   652 GB (avail 557, growth 101, headroom 0, waiters 0/0 GB) load 63/96 running 39 disk 5750 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2238748-1792482756 after 0 s
+%Error-PINNOTFOUND: tools/qwen_cluster/tb_cb16_reset_calendar.sv:7:564: Pin not found: 'cid'
+                                                                      : ... Location of instance's module declaration
+   16 | module qfd_c_b16_dv_fabric #(parameter integer MUT = 0) (
+      |        ^~~~~~~~~~~~~~~~~~~
+                    ... For error description see https://verilator.org/warn/PINNOTFOUND?v=5.050
+%Error-PINNOTFOUND: tools/qwen_cluster/tb_cb16_reset_calendar.sv:8:567: Pin not found: 'cid'
+                                                                      : ... Location of instance's module declaration
+   19 | module qfd_c_b16_full_fabric #(parameter integer MUT = 0) (
+      |        ^~~~~~~~~~~~~~~~~~~~~
+%Error-PINNOTFOUND: tools/qwen_cluster/tb_cb16_reset_calendar.sv:9:569: Pin not found: 'cid'
+                                                                      : ... Location of instance's module declaration
+ 2488 | module qfd_c_b16_fullb_fabric #(parameter integer MUT = 0) (
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 3 error(s)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2238748-1792482756): exit 2

@@ -1,0 +1,79 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-epyc7       admits   648 GB (avail 554, growth 101, headroom 0, waiters 0/0 GB) load 53/96 running 32 disk 5761 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-cb16-reset-diagnostic-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1683959-1792481910 after 1 s
+4006f5bbb746c43ff6893a67929049e3c829cf4aab7644768eaf54ee2169fab1  tools/qwen_cluster/tb_a0_model_full.sv
+94469b77dd96768ece5c82ea654c739d62a8d4ccc6dc3a0878799c759b178cc8  rtl/physical/qcluster/qfd_q3h_stn.sv
+1adc9f32e59ecd5faedeb65ba2e308602cfbc2a7409439a2e31e0c1deafe11e5  rtl/physical/qcluster/qfd_c_stn.sv
+e26771cb20d99df1fafa03c016d3a330b05670b37a66d63a7dbe4039e38f14df  rtl/physical/qcluster/qfd_c_xstn_safe.sv
+04392bcb9a1fc4022f29faebbab8d6a8505957e3ef16f147d080e6ac665ececb  rtl/physical/qcluster/qfd_c_land.sv
+4f9e443f7925c7644f64d21651ff3d24b5c0b146974b12e1f16f45374d9b92a8  rtl/physical/qcluster/qfd_c_land_r1h.sv
+e458c1b20293f69edf6e9bd5a5a6f6b7146974fb786c9de099458d304d50dca2  rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv
+001d4a788516a9080ba0c404fabb3004ec1d6ae7d06efbdc132755452e5f86ee  rtl/physical/qcluster/qfd_c_b16_dv.sv
+001aa6ab128cd8c4490e625b0e09a0d662e42a54d6dc9ffea96b145f3d1a5ec5  rtl/physical/qcluster/qfd_c_b16_full.sv
+a17b86ea6228820b3bce17868271fb6de37d38f99e49f92a5c57007d2fe3fea7  rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv
+ee03b60c52e7b0d51be7484becee15c4aeaddbd2391058fb3967bd3b1e031803  rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv
+7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688  rtl/hdc/ot_hdc_delay.sv
+de63f20e253bc53bc48c2f4cea917a279feb9d444ceebcab7969347975e253e0  tools/qwen_cluster/tb_full_lockstep.sv
+b6a2a2eace27f85d843715e79d808d4ce9f810c8c335d27ba9444dbf448cdf8e  tools/qwen_cluster/bench_full_lockstep.sh
+Verilator 5.050 2026-07-01 rev v5.050
+== MUT0: MF=0 MB=0 (fabric instance lines set: 2 of 2)
+FULL_LOCKSTEP_MISMATCH dut=full cyc=2369 bit=912
+FULL_LOCKSTEP_MISMATCH dut=fullb cyc=2369 bit=912
+FULL_LOCKSTEP_SUMMARY MF=0 MB=0 FAR=0 cycles=6000 ref_nonzero=6000 mism_full=3258 mism_fullb=3258
+[6001000] %Fatal: tb_full_lockstep.sv:563: Assertion failed in tb: FULL_LOCKSTEP_FAIL
+%Error: tools/qwen_cluster/tb_full_lockstep.sv:563: Verilog $stop
+FULL_LOCKSTEP_BENCH MUT0 FAR=0 UNEXPECTED FAIL
+FULL_LOCKSTEP_MISMATCH dut=full cyc=2370 bit=657
+FULL_LOCKSTEP_MISMATCH dut=fullb cyc=2370 bit=657
+FULL_LOCKSTEP_SUMMARY MF=0 MB=0 FAR=1 cycles=6000 ref_nonzero=6000 mism_full=3261 mism_fullb=3261
+[6001000] %Fatal: tb_full_lockstep.sv:563: Assertion failed in tb: FULL_LOCKSTEP_FAIL
+%Error: tools/qwen_cluster/tb_full_lockstep.sv:563: Verilog $stop
+FULL_LOCKSTEP_BENCH MUT0 FAR=1 UNEXPECTED FAIL
+FULL_LOCKSTEP_BENCH_EXIT 1 CASES=MUT0
+BASELINE_EXIT=1
+CID_ZERO_FAR0_EXIT=1
+CB16_RESET_DIAG cid=0 RPL=300 QUIET=80
+CB16_RESET_EPOCH cyc=2297 rst=0 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2298 rst=0 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2299 rst=0 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2300 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2301 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2302 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2303 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2304 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2305 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2306 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2307 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2308 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2309 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2310 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+FULL_LOCKSTEP_MISMATCH dut=full cyc=2369 bit=912
+FULL_LOCKSTEP_MISMATCH dut=fullb cyc=2369 bit=912
+FULL_LOCKSTEP_SUMMARY MF=0 MB=0 FAR=0 cycles=6000 ref_nonzero=6000 mism_full=3258 mism_fullb=3258
+[6001000] %Fatal: tb_full_lockstep.sv:563: Assertion failed in tb: FULL_LOCKSTEP_FAIL
+CID_ZERO_FAR1_EXIT=1
+CB16_RESET_DIAG cid=0 RPL=300 QUIET=80
+CB16_RESET_EPOCH cyc=2297 rst=0 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2298 rst=0 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2299 rst=0 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2300 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2301 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2302 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2303 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2304 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2305 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2306 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2307 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2308 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2309 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+CB16_RESET_EPOCH cyc=2310 rst=1 trst_ref=0 trst_full=0 trst_b=0 ref_t=0000 full_t=0000
+FULL_LOCKSTEP_MISMATCH dut=full cyc=2370 bit=657
+FULL_LOCKSTEP_MISMATCH dut=fullb cyc=2370 bit=657
+FULL_LOCKSTEP_SUMMARY MF=0 MB=0 FAR=1 cycles=6000 ref_nonzero=6000 mism_full=3261 mism_fullb=3261
+[6001000] %Fatal: tb_full_lockstep.sv:563: Assertion failed in tb: FULL_LOCKSTEP_FAIL
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1683959-1792481910): exit 0
