@@ -1,0 +1,34 @@
+{
+  "m0_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE PASS",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r5/m0_s11.log",
+    "pass": false
+  },
+  "m0_s29": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE PASS",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r5/m0_s29.log",
+    "pass": false
+  },
+  "m1_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL top=qkd_kvs_pc_h",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r5/m1_s11.log",
+    "pass": true
+  },
+  "m2_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL top=qkd_kvs_pc_h",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r5/m2_s11.log",
+    "pass": false,
+    "qualification": "NOT_CAUSAL: same baseline failure with unaligned architectural SRAM rd_out state"
+  },
+  "m3_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL top=qkd_kvs_pc_h",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r5/m3_s11.log",
+    "pass": false,
+    "qualification": "NOT_CAUSAL: same baseline failure with unaligned architectural SRAM rd_out state"
+  }
+}

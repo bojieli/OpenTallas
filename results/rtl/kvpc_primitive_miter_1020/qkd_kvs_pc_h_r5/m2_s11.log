@@ -1,0 +1,4 @@
+KVPC_POWERUP retained_ff=25619 SRAMs=23 new_ff=80 independent_diffs=78
+[14178000] %Fatal: tb.sv:40: Assertion failed in tb.compare: KVPC_PRIMITIVE FAIL top=qkd_kvs_pc_h mut=2 t=4 out=pc__po ref=70ea6b747a32b06ca54e81b280e8f7f55a1771780000290311b4d3800cb40026293000b00000000000 dut=70c54c6001a7ff2ca54e81b280e8f7f55a1771780000290311b4d3800cb40026293000b00000000000 rst=1/1
+%Error: /srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r5/tb.sv:40: Verilog $stop
+Aborting...

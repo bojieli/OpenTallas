@@ -1,0 +1,41 @@
+{
+  "m0_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE PASS",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r7/m0_s11.log",
+    "pass": false
+  },
+  "m0_s29": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE PASS",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r7/m0_s29.log",
+    "pass": false
+  },
+  "m1_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL top=qkd_kvs_pc_h",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r7/m1_s11.log",
+    "pass": true
+  },
+  "m2_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL top=qkd_kvs_pc_h",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r7/m2_s11.log",
+    "pass": false,
+    "qualification": "NOT_CAUSAL: same pc__po baseline positive failure at t4"
+  },
+  "m3_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL top=qkd_kvs_pc_h",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r7/m3_s11.log",
+    "pass": false,
+    "qualification": "NOT_CAUSAL: same pc__po baseline positive failure at t4"
+  },
+  "m4_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL top=qkd_kvs_pc_h",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_h_r7/m4_s11.log",
+    "pass": false,
+    "qualification": "NOT_CAUSAL: same pc__po baseline positive failure at t4"
+  }
+}

@@ -2,7 +2,7 @@
 """Fleet-only actual mapped vs structural primitive copy lifecycle miter. Source inputs are immutable external paths."""
 import argparse,hashlib,json,re,subprocess,importlib.util,sys
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--inputs',type=Path,required=True);p.add_argument('--models',type=Path,required=True);p.add_argument('--macro',type=Path,required=True);p.add_argument('--parser',type=Path,required=True);p.add_argument('--top',choices=['qkd_kvs_pc','qkd_kvs_pc_h'],required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--edges',type=int,default=20000);p.add_argument('--threads',type=int,default=8);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--diag',action='store_true');p.add_argument('--inputs',type=Path,required=True);p.add_argument('--models',type=Path,required=True);p.add_argument('--macro',type=Path,required=True);p.add_argument('--parser',type=Path,required=True);p.add_argument('--top',choices=['qkd_kvs_pc','qkd_kvs_pc_h'],required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--edges',type=int,default=20000);p.add_argument('--threads',type=int,default=8);a=p.parse_args()
 a.out.mkdir(parents=True,exist_ok=True);o=a.out.resolve();src=a.inputs/a.top
 original=src/'original.v';candidate=src/(a.top+'_n32.sv');text=candidate.read_text()
 P=[(n,d,int(w)+1 if w else 1) for d,w,n in re.findall(r'^  (input|output) wire (?:\[(\d+):0\] )?(\w+);',text[:text.index("endmodule")],re.M)]
@@ -40,6 +40,7 @@ for bank in meta['macros']:
  ref='u_ref.'+chr(92)+bank['original']+' .arr[power_row]'
  dut='u_dut.'+bank['instance']+'.arr[power_row]'
  init.append('for(power_row=0;power_row<32;power_row++)begin power_word={$urandom,$urandom}; '+ref+'=power_word; '+dut+'=power_word; end')
+ init.append('power_word={$urandom,$urandom}; '+ref.removesuffix('.arr[power_row]')+'.rd_out=power_word; '+dut.removesuffix('.arr[power_row]')+'.rd_out=power_word;')
 spec=importlib.util.spec_from_file_location('miter_source_parser',a.parser)
 m=importlib.util.module_from_spec(spec);sys.modules[spec.name]=m;spec.loader.exec_module(m)
 assert hashlib.sha256(a.parser.read_bytes()).hexdigest()==meta['parser_sha256']
@@ -56,16 +57,46 @@ for row in meta['copied_cells']:
  if row['kind']!='ff':continue
  for k in range(1,row['copies']):
   ci=row['cell'];new_ff_copies+=1
-  init.append(f'independent_copy_diffs+=(u_dut.u{ci}_c{k}.u_cell.QN !== u_dut.u{ci}_c0.u_cell.QN);')
+  init.append(f'power_word={{$urandom,$urandom}};u_dut.u{ci}_c{k}.u_cell.QN=power_word[0]; independent_copy_diffs+=(u_dut.u{ci}_c{k}.u_cell.QN !== u_dut.u{ci}_c0.u_cell.QN);')
 init.append(f'$display("KVPC_POWERUP retained_ff={len(state_rows)} SRAMs={len(meta["macros"])} new_ff={new_ff_copies} independent_diffs=%0d",independent_copy_diffs);')
 init.append('if(independent_copy_diffs==0)$fatal(1,"KVPC_POWERUP FAIL no independent new-copy state observed");')
-(o/'state_bijection.json').write_text(json.dumps({'macros':meta['macros'],'retained_ff':state_rows,'new_copies':'independent Verilator unique initial state; never deposited'},indent=2)+'\n')
+(o/'state_bijection.json').write_text(json.dumps({'macros':meta['macros'],'macro_state':['arr[0:31] each64bits','registered rd_out64bits'],'retained_ff':state_rows,'new_copies':'independent per-new-copy $urandom draws before reset; never aliased to master'},indent=2)+'\n')
+if a.diag:
+ audit=['integer audit_prints=0; integer audit_f,audit_m,audit_q,audit_row;task state_audit(input integer phase);begin audit_f=0;audit_m=0;audit_q=0;']
+ for row in state_rows:
+  ref='u_ref.'+chr(92)+row['original']+' ';dut='u_dut.'+row['copy0']
+  audit.append(f'if({ref}.QN !== {dut}.QN)begin audit_f++;if(audit_prints<16)begin audit_prints++;$display("KVPC_ARCH_DIFF phase=%0d time=%0t ci={row["copy0"]} refQ/D/CLK=%b/%b/%b dutQ/D/CLK=%b/%b/%b",phase,$time,{ref}.QN,{ref}.D,{ref}.CLK,{dut}.QN,{dut}.D,{dut}.CLK);end end')
+ for bank in meta['macros']:
+  ref='u_ref.'+chr(92)+bank['original']+' ';dut='u_dut.'+bank['instance']
+  audit.append(f'for(audit_row=0;audit_row<32;audit_row++)if({ref}.arr[audit_row] !== {dut}.arr[audit_row])audit_m++;if({ref}.rd_out !== {dut}.rd_out)audit_q++;')
+ audit.append('$display("KVPC_STATE_AUDIT phase=%0d time=%0t t=%0d ff=%0d memwords=%0d readregs=%0d",phase,$time,t,audit_f,audit_m,audit_q);if(phase==0 && (audit_f||audit_m||audit_q))$fatal(1,"KVPC_STATE_RELATION FAIL initial architectural state differs");end endtask')
+ audit.append('always @(posedge ck or posedge hck)begin #0.002;if(t<8)state_audit(1);end')
+ L[-1:-1]=audit
+ init.append('state_audit(0);')
 init.append('end')
 L[-1:-1]=init
+trace=['always @(negedge ck or negedge hck) if(t<8)begin']
+for row in meta['copied_cells']:
+ if row['kind']!='ff':continue
+ ci=row['cell'];suffixes=['D','CLK','QN']+(['RESETN','SETN'] if row['type']=='DFFASRHQNx1_ASAP7_75t_R' else [])
+ exprs=[f'u_dut.u{ci}_c{k}.u_cell.{pin}' for k in [0,1] for pin in suffixes]
+ trace.append('$display("KVPC_COPY_STATE ci='+str(ci)+' time=%0t t=%0d rst=%b/%b c0/c1_'+','.join(suffixes)+'='+','.join(['%b']*len(exprs))+'",$time,t,rst_n,hrst_n,'+','.join(exprs)+');')
+trace.append('end');L[-1:-1]=trace
 (o/'tb.sv').write_text('\n'.join(L)+'\n')
 # Actual SRAM write-data bank permutation only inside the candidate primitive wrapper; runtime-controlled causal mutant.
 assert text.count('.wd_in(wd_in)')==1
 text=text.replace('.wd_in(wd_in)','.wd_in(tb.mut==3 ? {wd_in[55:0],wd_in[63:56]} : wd_in)')
+# A separate late enabled mutant swaps two entire 64-bit macro read banks.
+bus=[]
+for index,bank in enumerate(meta['macros'][:2]):
+ instance=bank['instance'].removesuffix('.u_cell')
+ pattern=r'(?m)^  \w+ '+re.escape(instance)+r' \([^\n]+\);$'
+ match=re.search(pattern,text);assert match,instance
+ line=match.group();rd=re.search(r'\.rd_out\(([^)]+)\)',line);assert rd
+ bus.append(rd.group(1));new=line[:rd.start(1)]+f'miter_bank{index}'+line[rd.end(1):]
+ text=text[:match.start()]+new+text[match.end():]
+insert='wire[63:0] miter_bank0,miter_bank1;\n'+''.join(f'assign {value}=(tb.mut==4 && tb.t>=200)?miter_bank{1-index}:miter_bank{index};\n' for index,value in enumerate(bus))
+text=text.replace('endmodule',insert+'endmodule',1)
 (o/'candidate_test.sv').write_text(text)
 files=[original,o/'candidate_test.sv',a.models/'comb_models.v',a.models/'canonical_ASR_normalized.v',a.models/'canonical_DFF_normalized.v',a.macro,o/'tb.sv']
 sha=lambda f:hashlib.sha256(f.read_bytes()).hexdigest()
@@ -76,7 +107,7 @@ cmd=[str(ver),'--binary','--timing','--x-initial','unique','--x-assign','unique'
 with (o/'build.log').open('w') as log:rc=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT).returncode
 if rc:raise SystemExit(rc)
 results={}
-for mut,seed in [(0,11),(0,29),(1,11),(2,11),(3,11)]:
+for mut,seed in ([(0,11)] if a.diag else [(0,11),(0,29),(1,11),(2,11),(3,11),(4,11)]):
  name=f'm{mut}_s{seed}';log=o/(name+'.log')
  with log.open('w')as f:run=subprocess.run([str(o/'obj/sim'),f'+mut={mut}',f'+seed={seed}',f'+verilator+seed+{seed}','+verilator+rand+reset+2'],stdout=f,stderr=subprocess.STDOUT)
  s=log.read_text();expected='KVPC_PRIMITIVE PASS' if mut==0 else 'KVPC_PRIMITIVE FAIL top='+a.top
