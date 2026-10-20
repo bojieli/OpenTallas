@@ -1408,6 +1408,35 @@ def on_track(b: dict, x: float, y: float) -> tuple[float, float, int]:
     return ox / 1000.0, oy / 1000.0, off
 
 
+def mirror_fix_hint(b: dict) -> str:
+    """fix text for a macro_grid FAIL.  An x-mirrored (MY / R180) view whose R0 frame is on track on BOTH vertical
+    layers M3 (x = 9 + 36k nm) and M5 (x = 12 + 48k nm) can never be placed on track: MY maps a pin centre c to
+    ox + W - c, so on-track needs ox + W == 2*9 (mod 36) and ox + W == 2*12 (mod 48); mod gcd(36, 48) = 12 that is
+    6 == 0, impossible for every origin and every width (QW-CB16FULL/MIRROR 10-19: the closed qfd_c_land_*_narrow
+    halves, 150 M5 pins left off after the best 18 nm shift).  The same holds for M4 / M6 under MX / R180 when a view
+    carries pins on both horizontal layers (12 + 48k vs 16 + 64k: 24 vs 32 mod 16)."""
+    o = b.get("orient", "R0")
+    tm = b.get("_tm")
+    if tm is None and b.get("view") and o != "R0":
+        try:
+            tm = track_macro(b["view"])
+        except (OSError, StopIteration, ValueError, KeyError):
+            tm = None
+    if tm is not None and o in ("MY", "R180", "MX"):
+        layers = set()
+        for p in tm["pins"]:
+            if p["use"] not in ("POWER", "GROUND"):
+                layers |= {lay for lay, _ in p["rects"]}
+        if o in ("MY", "R180") and {"M3", "M5"} <= layers:
+            return ("x-mirror is impossible for this view: its M3 (9+36k nm) and M5 (12+48k nm) pins need origin x == 18 "
+                    "mod 36 and == 24 mod 48 (no common solution, mod 12: 6 vs 0) -- place it R0 / MX, or reflect the "
+                    "flow in the parent instead of mirroring the child")
+        if o in ("MX", "R180") and {"M4", "M6"} <= layers:
+            return ("y-mirror is impossible for this view: its M4 (12+48k nm) and M6 (16+64k nm) pins need origin y == 24 "
+                    "mod 48 and == 32 mod 64 (no common solution mod 16) -- place it R0 / MY")
+    return "no origin fixes it: the view's LEF is off-lattice -- re-export the child on the track grid"
+
+
 def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
     """explicit 'at' wins; the rest go in rows away from the pin faces, >= CHANNEL_UM apart and from the core edge"""
     pin_faces = {f for f, v in s["pins"].items() if v}
@@ -1504,7 +1533,7 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
         if b.get("offtrack"):
             out.append(("FAIL", "macro_grid", f"{nm}: {b['offtrack']} signal pins off the asap7 tracks (M1-M9, each "
                         f"layer's own pitch / offset) at its origin",
-                        "no origin fixes it: the view's LEF is off-lattice -- re-export the child on the track grid"))
+                        mirror_fix_hint(b)))
         if b["kind"] == "child" and any(abs(v / CHILD_LATTICE_UM - round(v / CHILD_LATTICE_UM)) > 1e-6 for v in (b["x"], b["y"])):
             out.append(("WARN", "macro_grid", f"{nm}: origin ({b['x']}, {b['y']}) off the {CHILD_LATTICE_UM} um child "
                         "lattice (lcm of site, row, M1-M7 tracks, strap pitch)", "build the child on the common lattice"))
