@@ -6,10 +6,10 @@ _bb.v), host, remote}.  Finds each cell on whichever fleet host built it.
 
     v16_fetch.py --views VIEWS_DIR [--remote-root DIR] [--commit SHA]
 """
-import argparse, hashlib, json, re, shlex, subprocess
+import argparse, hashlib, json, os, re, shlex, subprocess
 from pathlib import Path
 
-HOSTS = ['ot-epyc4', 'ot-agidock128']   # ot-epyc1tb retired 10-16 (its reusable views were copied to ot-epyc4)
+HOSTS = os.environ.get('OT_FETCH_HOSTS', 'ot-epyc5,ot-epyc6,ot-epyc7,ot-epyc9,ot-agidock128').split(',')   # HNX-DIE 10-20: ot-epyc4 retired (was ['ot-epyc4', 'ot-agidock128'])
 REMOTE_PY = r'''
 import hashlib, json, re, sys, os, shlex, subprocess
 root, src, cell, wrap = sys.argv[1:5]

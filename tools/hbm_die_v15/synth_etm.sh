@@ -1,7 +1,7 @@
 #!/bin/bash
 # H-DIE r3 (2026-10-15): SYNTH-ESTIMATE timing view of one synthesized die master (tools/hbm_die_v15/synth_master.sh
 # output) -- write_timing_model of the mapped gate netlist at TT and FF (ASAP7 RVT NLDM + the mapped SRAM macro libs),
-# ideal clocks at 833.333 ps on every clock port (clk, clk_*, *_clk, pg_clk), no wire load.  This is an ESTIMATE
+# ideal clocks at 833.333 ps on every clock port (ck, ck_*, clk, clk_*, *_clk, pg_clk), no wire load.  This is an ESTIMATE
 # (pre-placement, no CTS, no wires) used only where no closed view exists; it is labelled synth_<corner>.lib and
 # view_inventory.py counts it as SYNTH, never as REAL.
 #   synth_etm.sh <src root> <synth out dir> <name>      -> <out>/<top>_synth_{tt,ff}.lib, <out>/etm.log
@@ -25,7 +25,7 @@ for c, C in (('tt', 'TT'), ('ff', 'FF')):
     for b in macro_libs:
         L.append(f'read_liberty /src/{b}_{c}.lib')
     L += [f'read_verilog /out/{name}.sta.v', f'link_design {top}',
-          'set ck [get_ports -quiet {clk clk_* *_clk *_clk_* pg_clk*}]', 'set n 0',
+          'set ck [get_ports -quiet {ck ck_* clk clk_* *_clk *_clk_* pg_clk*}]', 'set n 0',
           'foreach p $ck { create_clock -name ck_$n -period 833.333 $p; incr n }', 'puts "OT_ETM_CLOCKS $n"',
           'set_clock_uncertainty -setup 60 [all_clocks]', 'set_clock_uncertainty -hold 25 [all_clocks]',
           f'report_checks -path_delay {"max" if c == "tt" else "min"} -group_path_count 3 > /out/etm_worst_{c}.rpt',
