@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-v3-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-v3-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-v3-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-v3-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-idx-fast-v3-1020
+ot-run: ot-agidock128  admits    95 GB (avail 79, growth 13, headroom 0, waiters 0/0 GB) load 15/64 running 10 disk 181 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2620254-1792495699 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+[42000] %Fatal: tb_hidx_s3_equiv.sv:32: Assertion failed in tb_hidx_s3_equiv: S3_FAST_COUNT_MISMATCH new=0020 ref=0000
+%Error: rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:32: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2620254-1792495699): exit 1

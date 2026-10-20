@@ -1,0 +1,44 @@
+[
+  {
+    "variant": "v1",
+    "qualification": "REJECTED: source depth exceeds600ps; no layout",
+    "native_status": "PASS",
+    "native_max": 31,
+    "native_violations": 0,
+    "native_role_errors": [],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hidx_s3_q_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "35ac2f83966fe0d98d4a8a38a5a7277d89866e5aac7bd8eb421b35ac0ca3ec84"
+    },
+    "native_receipt_sha256": "934cd699398b0c629ef34e3124a990603bfc1cd2b4fba352d71869170cf7c82b",
+    "depth_ps": 748.5,
+    "depth_levels": 21,
+    "depth_path": [
+      "u_ot_pr_core.gsv[0].v[0]$_DFF_P_",
+      "u_ot_pr_core.selected[13]$_DFFE_PN0P_/D"
+    ],
+    "inputs_sha256": "2ec203231cdfcc023a5d64d6ea80809f951a7407cd21382dd4891f2fbc034d0d  native_src/rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv\ndf36dbfae7f7a1cab40f0f2dd97823b4d821f39ba881d63adc990487c9be48d2  native_work/config.mk\n",
+    "remote_raw": "/srv/opentallas-scratch/claude/codex-idx-fast-eeecd476b/native_work"
+  },
+  {
+    "variant": "v2",
+    "qualification": "REJECTED: source depth exceeds600ps; no layout",
+    "native_status": "PASS",
+    "native_max": 30,
+    "native_violations": 0,
+    "native_role_errors": [],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hidx_s3_q_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "adf021c2ca3b70fb70784d2626e348fa837fa5743884c0695d23f537ba3d72b6"
+    },
+    "native_receipt_sha256": "facaa312fd2c46a2755589ca4a51bae4ec527dc404253310b818de3f25a54fa4",
+    "depth_ps": 740.1,
+    "depth_levels": 21,
+    "depth_path": [
+      "u_ot_pr_core.gsv[4].v[0]$_DFF_P_",
+      "u_ot_pr_core.hz[3]$_DFF_PN0_/D"
+    ],
+    "inputs_sha256": "734b28ae81692525086363e50b2c400b61b072b7c6411648b55704f831264bd6  native_src/rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv\ndf36dbfae7f7a1cab40f0f2dd97823b4d821f39ba881d63adc990487c9be48d2  native_work/config.mk\n",
+    "remote_raw": "/srv/opentallas-scratch/claude/codex-idx-fast-v2-1020/native_work"
+  }
+]
