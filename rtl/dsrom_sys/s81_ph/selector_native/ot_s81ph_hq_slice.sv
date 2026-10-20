@@ -239,18 +239,18 @@ module ot_s81ph_hq_slice #(
     // kept copies: i1_s per packer plane + one for the coarse banks; i1_v per packer plane, for the banks and as the
     // fine-histogram input selects (HFS of each polarity)
     localparam integer HFS = 6;
-    wire [NP*W-1:0] i1_s_pl, i1_s_plg;
+    wire [NP*W-1:0] i1_s_pl, i1_s_plg, i1_s_plh;
     wire [W-1:0]    i1_s_hc;
     wire [NP-1:0]   i1_v_pl, i1_fl_pl;
     wire [HFS-1:0]  hf_s1, hf_s0;
     generate
         for (gg = 0; gg < NP; gg = gg + 1) begin : g_i1c
-            (* keep = "true" *) reg [W-1:0] s, sg;
+            (* keep = "true" *) reg [W-1:0] s, sg, sh;
             (* keep = "true" *) reg v, f;
-            always @(posedge clk) begin s <= i1_s_d; sg <= i1_s_d; end
+            always @(posedge clk) begin s <= i1_s_d; sg <= i1_s_d; sh <= i1_s_d; end
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) begin v <= 1'b0; f <= 1'b0; end else begin v <= i_ing; f <= i_ing && i0_last; end
-            assign i1_s_pl[W*gg +: W] = s; assign i1_s_plg[W*gg +: W] = sg; assign i1_v_pl[gg] = v; assign i1_fl_pl[gg] = f;
+            assign i1_s_pl[W*gg +: W] = s; assign i1_s_plg[W*gg +: W] = sg; assign i1_s_plh[W*gg +: W] = sh; assign i1_v_pl[gg] = v; assign i1_fl_pl[gg] = f;
         end
         for (gg = 0; gg < HFS; gg = gg + 1) begin : g_hfs
             (* keep = "true" *) reg a, b;
@@ -370,15 +370,15 @@ module ot_s81ph_hq_slice #(
         wire [KW:0] rr = rem_c[gl / 8];
         assign c3_sel_d[gl] = c2_gt[gl] || (c2_eq[gl] && (sw_all || ({{(KW-LW){1'b0}}, c2_pre[(LW+1)*gl +: LW+1]} < rr)));
     end endgenerate
-    wire [NP*W-1:0] c3_sel_pl, c3_sel_plg;
+    wire [NP*W-1:0] c3_sel_pl, c3_sel_plg, c3_sel_plh;
     wire [NP-1:0]   c3_v_pl, c3_fl_pl;
     generate for (gg = 0; gg < NP; gg = gg + 1) begin : g_c3c
-        (* keep = "true" *) reg [W-1:0] s, sg;
+        (* keep = "true" *) reg [W-1:0] s, sg, sh;
         (* keep = "true" *) reg v, f;
-        always @(posedge clk) begin s <= c3_sel_d; sg <= c3_sel_d; end
+        always @(posedge clk) begin s <= c3_sel_d; sg <= c3_sel_d; sh <= c3_sel_d; end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin v <= 1'b0; f <= 1'b0; end else begin v <= c2_v; f <= c2_fl; end
-        assign c3_sel_pl[W*gg +: W] = s; assign c3_sel_plg[W*gg +: W] = sg; assign c3_v_pl[gg] = v; assign c3_fl_pl[gg] = f;
+        assign c3_sel_pl[W*gg +: W] = s; assign c3_sel_plg[W*gg +: W] = sg; assign c3_sel_plh[W*gg +: W] = sh; assign c3_v_pl[gg] = v; assign c3_fl_pl[gg] = f;
     end endgenerate
 
     // -- histograms (H6) ------------------------------------------------------------------------------------------------
@@ -417,10 +417,10 @@ module ot_s81ph_hq_slice #(
     wire [W-1:0]    pi_lv, ps_lv;
     wire [W*EW-1:0] pi_line, ps_line;
     ot_s81ph_hq_pack #(.W(W), .PW(EW), .NP(NP)) u_pi (
-        .clk(clk), .rst_n(rst_n), .i_v(i1_v_pl), .i_fl(i1_fl_pl), .i_sel(i1_s_pl), .i_selg(i1_s_plg), .i_p(i1_p),
+        .clk(clk), .rst_n(rst_n), .i_v(i1_v_pl), .i_fl(i1_fl_pl), .i_sel(i1_s_pl), .i_selg(i1_s_plg), .i_selh(i1_s_plh), .i_p(i1_p),
         .o_v(pi_vp), .o_lv(pi_lv), .o_line(pi_line), .o_bv(pi_bv), .o_fl(pi_fl));
     ot_s81ph_hq_pack #(.W(W), .PW(EW), .NP(NP)) u_ps (
-        .clk(clk), .rst_n(rst_n), .i_v(c3_v_pl), .i_fl(c3_fl_pl), .i_sel(c3_sel_pl), .i_selg(c3_sel_plg), .i_p(c3_p),
+        .clk(clk), .rst_n(rst_n), .i_v(c3_v_pl), .i_fl(c3_fl_pl), .i_sel(c3_sel_pl), .i_selg(c3_sel_plg), .i_selh(c3_sel_plh), .i_p(c3_p),
         .o_v(ps_vp), .o_lv(ps_lv), .o_line(ps_line), .o_bv(ps_bv), .o_fl(ps_fl));
 
     // -- write-back queue and the write port (H5, H9) ------------------------------------------------------------------
@@ -483,6 +483,9 @@ module ot_s81ph_hq_slice #(
     wire gc_go     = (ph == P_ING) && r_ing && !r_stop && !seg_clr && (sw_st == SW_IDLE) &&
                      ((head != y_st) || (r_T != t_last));
     assign sw_start = (sw_st == SW_IDLE) && !seg_clr && (gc_go || (((ph == P_STOP) && (p2q || p3q))));
+    wire gc_go_b    = (ph_b == P_ING) && r_ing && !r_stop && !sc[NSC-4] && (sw_st_b == SW_IDLE) &&
+                      ((head != y_st) || (r_T != t_last));
+    wire sw_start_b = (sw_st_b == SW_IDLE) && !sc[NSC-4] && (gc_go_b || (((ph_b == P_STOP) && (p2q || p3q))));
     reg            o0_v;
     reg [OCW-1:0]  ocnt;
     wire [OCW-1:0] occ = ocnt + {{(OCW-1){1'b0}}, o0_v};
@@ -496,9 +499,12 @@ module ot_s81ph_hq_slice #(
             mem_re <= rd_issue || em_issue;
         end
     end
+    // second emit-issue copy (ph / a_end copies) for the read address and t1_last (same value as em_issue)
+    wire em_issue_b = (ph == P_EM) && e_go && (e_rd < a_end_f) &&
+                      ({{(8-OCW){1'b0}}, occ} + {5'd0, e_infl} < OD);
     always @(posedge clk) begin
-        mem_raddr <= em_issue ? e_rd[AW-1:0] : rd[AW-1:0];
-        t1_last <= em_issue && (e_rd + 1'b1 == a_end_f);
+        mem_raddr <= em_issue_b ? e_rd[AW-1:0] : rd[AW-1:0];
+        t1_last <= em_issue_b && (e_rd + 1'b1 == a_end_f);
     end
     wire [2:0] hf_cnt, hs_cnt;
     wire hs_quiet = (hs_cnt == 0) && !i0_v && !i1_v && !hc_busy && !hf_busy;
@@ -545,9 +551,9 @@ module ot_s81ph_hq_slice #(
         if (sw_start) begin
             n_sw_st = SW_RD; n_sw_seg = 2'd0; n_rd = 0; n_w = 0; n_ab = 1'b0;
             if (gc_go) begin
-                n_sw_k = K_GC; n_sw_rp = 1'b0; n_sw_all = 1'b1; n_t_last = r_T;
+                n_sw_k = K_GC; n_sw_rp = 1'b0; n_sw_all = 1'b1;
             end else begin
-                n_sw_k = p2q ? K_P2 : K_P3; n_sw_rp = r_rep; n_sw_all = p2q; n_sw_T = r_st; n_rem = r_rem;
+                n_sw_k = p2q ? K_P2 : K_P3; n_sw_rp = r_rep; n_sw_all = p2q; n_rem = r_rem;
                 n_ph = p2q ? P_P2 : P_P3;
                 if (p2q) begin n_p2h = 1'b0; end else begin n_dmode = 1'b1; n_dcnt = 0; n_pend_v = 1'b0; end
             end
@@ -611,6 +617,11 @@ module ot_s81ph_hq_slice #(
         n_s_hfin    = last_seen && hs_quiet;
         n_s_stopped = (ph == P_STOP) && (sw_st == SW_IDLE) && !sw_start && ing_fl_done && hs_quiet && !pi_v;
         n_s_ovf     = ovf || (pi_v && head[AW]);
+        // sw_T / t_last: the sweep-start loads, from the state-copy decode (same values as sw_start / gc_go)
+        if (sw_start_b) begin
+            if (gc_go_b) n_t_last = r_T;
+            else n_sw_T = r_st;
+        end
     end
     // register groups: {reset value} = {seg_clr value}; one seg_clr copy per <= 12 bits
     localparam integer STW = 3+3+2+2+2+1+1+1 + 9*12 + 16*2 + 1+1+1+1+1+1+1+1 + 5 + 3 + (KW+1) + 6 + 3+3+2 + 9;

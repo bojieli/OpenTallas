@@ -14,7 +14,7 @@ N=$W/results/asap7/s81_topk7_hq/base/1_2_yosys.v
 sed -n 's/.*Executing Liberty frontend: //p' $W/logs/asap7/*/base/1*log | sort -u > $W/census/actual_liberties.txt
 cp $C/native_census_main360c643.py $W/census/native_census.py; cp $C/textbook_lint_main360c643.py $W/census/textbook_lint.py
 sha256sum $N $W/census/native_census.py > $W/census/inputs.sha256
-docker run --rm -e PYTHONPATH=/w/census -v "$W:/w" openroad/orfs:asap7lock bash -lc 'set -eu; args=(); while IFS= read -r x; do args+=(--liberty "$x"); done < /w/census/actual_liberties.txt; x=; for a in "${args[@]}"; do x="$x $a"; done; python3 /w/census/native_census.py --netlist /w/results/asap7/s81_topk7_hq/base/1_2_yosys.v --top dsdv_bksel_q $x --out /w/census/native.json' > $W/census/native.log 2>&1 || echo NATIVE_RC=$?
+docker run --rm -e PYTHONPATH=/w/census -v "$R:/src:ro" -v "$W:/w" openroad/orfs:asap7lock bash -lc 'set -eu; args=(); while IFS= read -r x; do args+=(--liberty "$x"); done < /w/census/actual_liberties.txt; x=; for a in "${args[@]}"; do x="$x $a"; done; python3 /w/census/native_census.py --netlist /w/results/asap7/s81_topk7_hq/base/1_2_yosys.v --top dsdv_bksel_q $x --out /w/census/native.json' > $W/census/native.log 2>&1 || echo NATIVE_RC=$?
 python3 -c 'import json,sys;r=json.load(open(sys.argv[1]));print("CENSUS",r.get("status"),"max",r.get("max_dynamic_loads"),"viol",len(r.get("violations") or []),"roots",r.get("roots_examined"))' $W/census/native.json
 grep -E "Number of cells|DFF|Chip area" $W/reports/asap7/s81_topk7_hq/base/synth_stat.txt 2>/dev/null | head -8
 python3 $C/fanout_families.py $N > $W/census/families.txt 2>&1; grep FAM $W/census/families.txt | head -60

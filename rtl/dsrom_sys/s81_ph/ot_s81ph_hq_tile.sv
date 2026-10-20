@@ -45,8 +45,8 @@ module ot_s81ph_hq_in (
     reg  [UW-1:0] s0;
     always @(posedge clk) s0 <= u;
     // kept copy of {type, valid} for the position next state (cur_n): the case decode keeps s0's own bits
-    (* keep = "true" *) reg [4:0] s0c;
-    always @(posedge clk) s0c <= {lane[512:509], lane[0]};
+    (* keep = "true" *) reg [4:0] s0c, s0d;           // one per half of cur
+    always @(posedge clk) begin s0c <= {lane[512:509], lane[0]}; s0d <= {lane[512:509], lane[0]}; end
     // type-8 select copies: 13 lanes x {val lo 8, val hi 8, idx lo 10, idx hi 10} + {lv/last} = 53 copies over four
     // decodes (<= 14 each)
     wire [3:0] t = lane[512:509];
@@ -69,7 +69,11 @@ module ot_s81ph_hq_in (
     reg  [19:0]   cur;
     wire [20:0]   nxt = {1'b0, cur} + 21'd16;
     // position next state (the original update rule) and its kept copies (index adders, 4 lanes each)
-    wire [19:0]   cur_n = !s0c[0] ? cur : (s0c[4:1] == 4'd1 || s0c[4:1] == 4'd6) ? d[19:0] : (s0c[4:1] == 4'd2 && act) ? nxt[19:0] : cur;
+    wire [19:0]   cur_n;
+    assign cur_n[9:0]   = !s0c[0] ? cur[9:0] : (s0c[4:1] == 4'd1 || s0c[4:1] == 4'd6) ? d[9:0] :
+                          (s0c[4:1] == 4'd2 && act) ? nxt[9:0] : cur[9:0];
+    assign cur_n[19:10] = !s0d[0] ? cur[19:10] : (s0d[4:1] == 4'd1 || s0d[4:1] == 4'd6) ? d[19:10] :
+                          (s0d[4:1] == 4'd2 && act) ? nxt[19:10] : cur[19:10];
     wire [4*20-1:0] curc;
     generate for (fs = 0; fs < 4; fs = fs + 1) begin : g_cur
         (* keep = "true" *) reg [19:0] r;

@@ -30,6 +30,7 @@ module ot_s81ph_hq_pack #(
     input  wire [NP-1:0]   i_fl,
     input  wire [NP*W-1:0] i_sel,       // per-plane select copies (identical values): prefix
     input  wire [NP*W-1:0] i_selg,      // per-plane select copies (identical values): lane gating
+    input  wire [NP*W-1:0] i_selh,      // per-plane select copies (identical values): prefix of lanes >= W/2
     input  wire [W*PW-1:0] i_p,
     output wire [NP-1:0]   o_v,         // per-plane o_v: identical, DISTINCT flops (select sources downstream)
     output wire [W-1:0]    o_lv,
@@ -52,7 +53,7 @@ module ot_s81ph_hq_pack #(
             assign o_line[PW*l + LO +: PP] = ol[PP*l +: PP];
         end
         ot_s81ph_native_sel_pack #(.W(W), .PW(PP)) u_p (
-            .clk(clk), .rst_n(rst_n), .i_v(i_v[p]), .i_fl(i_fl[p]), .i_sel(i_sel[W*p +: W]), .i_p(ip), .i_selg(i_selg[W*p +: W]),
+            .clk(clk), .rst_n(rst_n), .i_v(i_v[p]), .i_fl(i_fl[p]), .i_sel(i_sel[W*p +: W]), .i_p(ip), .i_selg(i_selg[W*p +: W]), .i_selh(i_selh[W*p +: W]),
             .o_v(o_v[p]), .o_lv(lv), .o_line(ol), .o_bv(bv), .o_fl(fl));
         if (p == 0) begin : g_ctl
             assign o_lv = lv; assign o_bv = bv; assign o_fl = fl;
@@ -61,7 +62,7 @@ module ot_s81ph_hq_pack #(
 endmodule
 
 module ot_s81ph_hq_hist #(
-    parameter integer MUT = 0          // 1: every bank reads the wrong group (witness); 2: bank 3 never clears (witness)
+    parameter integer MUT = 0          // 1: every bank counts its neighbour's bins (witness); 2: bank 3 never clears (witness)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -86,9 +87,9 @@ module ot_s81ph_hq_hist #(
     generate for (b = 0; b < 8; b = b + 1) begin : g_bank
         wire [127:0] nd;
         for (l = 0; l < 16; l = l + 1) begin : g_d
-            assign nd[8*l +: 8] = i_dg[8*l +: 8] ^ (8'(b) << 5);
+            assign nd[8*l +: 8] = i_dg[8*l +: 8] ^ (8'((MUT == 1) ? (b ^ 1) : b) << 5);
         end
-        wire [3:0] ng = gsel_d[4*b +: 4] ^ (4'(b) << 1) ^ ((MUT == 1) ? 4'h1 : 4'h0);
+        wire [3:0] ng = gsel_d[4*b +: 4] ^ (4'(b) << 1);
         wire       nc = (MUT == 2 && b == 3) ? 1'b0 : clr[b];
 `ifdef OT_HARD_CHILDREN
         ot_s81ph_native_sel_hist_bank u_bank (

@@ -365,6 +365,7 @@ module ot_s81ph_native_sel_pack #(
     input  wire [W*PW-1:0] i_p,
 `ifdef OT_S81PH_SEL_HQ
     input  wire [W-1:0]    i_selg,      // S81-TOPK7 HQ: identical kept copy of i_sel for the lane gating (i_sel: prefix)
+    input  wire [W-1:0]    i_selh,      // S81-TOPK7 HQ: identical kept copy of i_sel for the prefix of lanes >= W/2
 `endif
     output reg             o_v,
     output reg  [W-1:0]    o_lv,
@@ -382,7 +383,15 @@ module ot_s81ph_native_sel_pack #(
 
     // stage 1: shift counts
     wire [W*(LW+1)-1:0] inc;
+`ifdef OT_S81PH_SEL_HQ
+    // two identical prefix networks on two select copies: lanes < W/2 from i_sel, lanes >= W/2 from i_selh (same values)
+    wire [W*(LW+1)-1:0] inc_l, inc_h;
+    ot_s81ph_native_sel_prefix #(.N(W), .OW(LW + 1)) u_pre (.x(i_sel), .y(inc_l));
+    ot_s81ph_native_sel_prefix #(.N(W), .OW(LW + 1)) u_preh (.x(i_selh), .y(inc_h));
+    assign inc = {inc_h[(LW+1)*W/2 +: (LW+1)*W/2], inc_l[0 +: (LW+1)*W/2]};
+`else
     ot_s81ph_native_sel_prefix #(.N(W), .OW(LW + 1)) u_pre (.x(i_sel), .y(inc));
+`endif
     wire [W*CE-1:0] e_d;
     genvar gl, gr;
     generate
