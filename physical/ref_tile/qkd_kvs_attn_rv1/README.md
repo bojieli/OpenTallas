@@ -44,4 +44,19 @@ one pin) FAIL; witnesses results/rtl/kv_attn_rv_1019/m*/verdict.log.
 7 Clock: S-centre clock pin feeding the local spine; TT/FF pin-flop spread measured by --cts (must be <= 80); io_hold_margin 0.03.
 8 Schedule: static; +1 K.rx_record priced (above).
 
-## Gate review (filled after the --cts gate)
+## Gate review (--cts --remote auto @15138d8e1, ot-epyc5; PNGs personally viewed 10-19 17:10)
+Verdict WARN (0 fail): util 6.3% (pin-limited), util_channel, clock insertion > 300 (guidance).  Synthesis 17,504 cells /
+6,463 FF / std 2,791 um2 (native safe_pr 34,576 cells).  Pin geometry PASS 3,284 pins on-track.  Reset balanced landing proof
+PASS (root 2 loads, first max 24, final max 30, 2 edges).  Textbook: in->reg 0 levels, reg->out 0, in->out 0, no net > 256,
+depth 503.4 ps / 13 levels, reach worst 84.6 um (0 > 500).  CTS: TT/FF pin-flop spread 34.0/33.1 ps (<= 80 PASS),
+insertion 407.4/330.9 ps.  TT placement RC: reg->reg worst +62.3 ps (was -569.32 placement-only / -15.15 bs1), reg->out
++286.7 ps, hold +46.2 ps.  Trial GRT overflow 0 (M2 15.56%).
+Floorplan PNG: 216 square, full-face pin groups (N d2d, E tx/i_ctl, S ck centre + rst/uf/fin, W outputs), vertical M5 PG,
+full-core rows.  Density PNG: logic hugs the W output face and the N RX face (landing / launch flops at their pins), sparse
+interior (pin-limited), a few local bins ~1.0 in the NW corner, no overflow.
+Checklist per item after the gate: 1 PASS (boundary 0/0/0, reset proof); 2 PASS (reach 84.6 um); 3 PASS for registers at
+<= 32 flops per kept copy (transparent census: copy families 34-58 terminal pins = enable mux pairs; root start_qk 72 pins,
+guard accept enable 71 pins (shared native59 guard), producer fault 57 -- all off the critical paths, worst slack +62.3 ps;
+TIEHI 778 SETN split by repair_tie_fanout) -- a tighter <= 16-flop-per-copy successor is gated in parallel (rv3 / rv4);
+4 PASS (13 levels / 503 ps); 5 PASS; 6 WAIVED util (pin-limited, reason above), shape/rows PASS; 7 PASS (spread 34.0/33.1);
+8 PASS (+1 K.rx_record priced, lanes/KV-GEN9.md).
