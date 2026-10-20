@@ -89,7 +89,8 @@ def input_files(spec, root):
         files.append('physical/common_flow/ot_keep_regs.tcl')
         for item in spec.get('macros', []):
             if Path(item['view']).name in dual:
-                view=Path(item['view']);files.append(str(view/(view.name+'.v')))
+                view=Path(item['view'])
+                files += [str(view/(view.name+suffix)) for suffix in ('.v','_bb.v')]
     return list(dict.fromkeys(files))
 
 

@@ -43,6 +43,27 @@ class HostSramTests(unittest.TestCase):
   with self.assertRaisesRegex(G.GrayFifoError,'exactly one Liberty clock'):
    G._macro_clock_pins(spec,ROOT)
 
+ def test_receipt_pins_blackbox_even_if_not_in_sources(self):
+  import lint_receipt as L
+  spec={'name':'receipt_bb','sources':[], 'macros':[{'view':str(VIEW.relative_to(ROOT))}],
+        'reviewed_gray_fifo_extensions':{'dual_clock_srams':[MASTER]}}
+  bb=str(VIEW.relative_to(ROOT)/(MASTER+'_bb.v'))
+  self.assertIn(bb,L.input_files(spec,ROOT))
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp)
+   for f in L.input_files(spec,ROOT):
+    dst=root/f;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(ROOT/f,dst)
+   (root/'physical/ref_tile/receipt_bb').mkdir(parents=True)
+   def comp():return {'inputs':{f:L._sha(root/f) for f in L.input_files(spec,root)}}
+   c=comp();key=L.key_of(c)
+   L.store(spec,root,'gray',key,c,{'proof':'exact'}, {})
+   self.assertEqual(L.lookup(spec,root,'gray',key),{'proof':'exact'})
+   (root/bb).write_text((root/bb).read_text()+'\n// changed blackbox\n')
+   changed=L.key_of(comp());self.assertNotEqual(changed,key)
+   self.assertIsNone(L.lookup(spec,root,'gray',changed))
+   (root/bb).unlink()
+   with self.assertRaises(FileNotFoundError):comp()
+
  def test_actual_top_proof_and_wrong_writer_clock(self):
   import ref_tile
   spec=ref_tile.load_spec(ROOT/'rtl/test/host_cdc_safe_1020/pc_sram1.json')
