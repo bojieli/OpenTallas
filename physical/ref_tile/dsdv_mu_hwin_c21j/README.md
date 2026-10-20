@@ -9,3 +9,5 @@ Pre-gate checklist:1 existing registered pins/two-stage reset unchanged, native 
 Exactness: production-unit ns47/ns2 frozen072dd6141+anchor1e057 miters on Verilator5.050; retained eastcopy/eastdue/EC_MUT2 mutants. New gn/lw copies will also be compared every active cycle to their source state in the bench. No submit or new REVIEW.
 
 Verilator5.050 results on exact source95959ffd7: ns47 PASS188 starts/2528fires,17545 cbref+anchor cycle miter edges; ns2 PASS. EC_MUT2 REJECTED CBREF_MITER QUALIFIED_HEAD; eastdue REJECTED event4 boot-count invariant (four due domains map copy1 to events4..7). Committed witness files results/rtl/s81_mu_hwin21j_1020. Native mapped census still running; NOT gate-ready.
+
+R1 real ORFS make synth (same original SYNTH_CANONICALIZE_TCL=ot_keep_regs.tcl) completed:48,944roots,10over32,max85. NOT PASS. R2 structurally separates cfg accept per<=12-bit consumer group, sends cfg_bad four different lw copies, and adds independent low-decode pointer per event. Adds16x6 pointer flops/16reset leaves: total176flops28new reset leaves, still+0edges. No layout gate before clean census.

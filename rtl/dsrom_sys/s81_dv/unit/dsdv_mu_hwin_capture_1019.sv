@@ -42,7 +42,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     // HWIN21g CFG_RELAY: 2 relay copies x {f_mw, f_mc}, one reset region each (26 sinks), so the copies stay distinct.
     localparam integer RNATIVE_BASE=RCFG_BASE+((CFG_RELAY!=0)?4:0);
     localparam integer NATIVE_LW=(NSLOT+11)/12, NATIVE_GN=(NEV+3)/4;
-    localparam integer RESET_REGIONS=RNATIVE_BASE+((SAFE_NATIVE!=0)?2*NATIVE_LW+NATIVE_GN:0);
+    localparam integer RESET_REGIONS=RNATIVE_BASE+((SAFE_NATIVE!=0)?2*NATIVE_LW+NATIVE_GN+NEV:0);
     wire [RESET_REGIONS-1:0] rr; dsdv_mu_hwin_capture_1019_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // HWIN21g CFG_RELAY=1 (opt-in, default 0 = HWIN21cb bytes-equivalent logic): the config word ports f_mw / f_mc
     // land in a relay register stage before ANY consumer, so every config consumer sees the port one edge later
@@ -110,6 +110,13 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     wire [3:0] id_we [0:NSLOT-1]; wire [NSLOT-1:0] rec_slot;
     wire [NC_REC-1:0] rec_event [0:NEV-1];
     // HWIN21j: reset-distinct same-edge state copies, <=12 pointer decodes/4 events per domain.
+    wire [4+NATIVE_LW:0] native_cfg;
+    generate for(genvar nc=0;nc<5+NATIVE_LW;nc=nc+1) begin:g_native_cfg
+      if(SAFE_NATIVE!=0) begin:g_safe
+        (* keep=1 *) dsdv_mu_hwin_capture_1019_cfg_accept #(.NSLOT(NSLOT),.SJ(SJ)) u_accept
+          (.valid(mc_q[25]),.kind(mc_q[24]),.armed(armed),.empty(table_empty),.count(gn),.accept(native_cfg[nc]));
+      end else begin:g_old assign native_cfg[nc]=mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT);end
+    end endgenerate
     wire [SI-1:0] native_lw[0:NATIVE_LW-1];
     wire [SJ-1:0] native_gn_ptr[0:NATIVE_LW-1],native_gn_event[0:NATIVE_GN-1];
     generate for(genvar ngc=0;ngc<NATIVE_LW;ngc=ngc+1) begin:g_native_pointer_state
@@ -118,7 +125,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         (* keep *) reg [SJ-1:0] gn_c;
         always @(posedge ck or negedge rr[RNATIVE_BASE+ngc])
           if(!rr[RNATIVE_BASE+ngc]) lw_c<=SI'(NSLOT-1);
-          else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) lw_c<=(gn_c==0)?SI'(NSLOT-1):gn_c[SI-1:0];
+          else if(mc_q[25] && idle && !mc_q[24] && gn_c!=SJ'(NSLOT)) lw_c<=(gn_c==0)?SI'(NSLOT-1):gn_c[SI-1:0];
         always @(posedge ck or negedge rr[RNATIVE_BASE+NATIVE_LW+ngc])
           if(!rr[RNATIVE_BASE+NATIVE_LW+ngc]) gn_c<=0;
           else if(mc_q[25] && idle && !mc_q[24] && gn_c!=SJ'(NSLOT)) gn_c<=gn_c+1'b1;
@@ -143,7 +150,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     wire [BAD_GROUPS-1:0] bad_group;
     generate for(genvar bg=0;bg<BAD_GROUPS;bg=bg+1) begin:g_config_check_region
         if(LOCAL_BOOT!=0) begin:g_local
-            (* keep=1 *) dsdv_mu_hwin_capture_1019_cfg_bad u_bad(.count(7'(gn)),.min_gap(cs),.return_gap(crl),.last_slot(6'(lw)),.bad(bad_group[bg]));
+            (* keep=1 *) dsdv_mu_hwin_capture_1019_cfg_bad u_bad(.count(7'(gn)),.min_gap(cs),.return_gap(crl),.last_slot(6'(native_lw[bg%NATIVE_LW])),.bad(bad_group[bg]));
         end else begin:g_direct assign bad_group[bg]=hcfg_bad;end
     end endgenerate
                      // hslot's own arming rule
@@ -200,7 +207,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
 
     wire [NSLOT-1:0] gxn = (MUT == 5 || |(gx & gm)) ? OH0 : {gx[NSLOT-2:0], 1'b0};   // MUT 5: gap table index stuck at 0
     dsdv_mu_hwin_capture_1019_mem #(.W(24),.AW(SI)) u_gap(.ck(ck),.rst_n(rr[MEM_RBASE +: 3]),
-        .we(mc_q[25] && !mc_q[24] && !armed && table_empty && gn != SJ'(NSLOT)),
+        .we(native_cfg[4]),
         .wa(gn[SI-1:0]),.wd(mc_q[23:0]-24'd1),.ra(gxb),.q(ng));
     wire retire_wrap=(|(rp&lm)) || rp[NSLOT-1];
     // HWIN21cb: SRAM read address after the next edge = inc(next pointer) under the NEXT limit (lm <= decode(lw)),
@@ -444,13 +451,21 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             // Decode its current state; the SRAM read and event edges stay fixed.
             localparam integer SPLIT=(NSLOT+1)/2;
             (* keep *) reg [SI-1:0] upper_pointer_r;
+            wire [SI-1:0] lower_pointer;
+            if(SAFE_NATIVE!=0) begin:g_native_lower
+              (* keep *) reg [SI-1:0] low_r;
+              always @(posedge ck or negedge rr[RNATIVE_BASE+2*NATIVE_LW+NATIVE_GN+se])
+                if(!rr[RNATIVE_BASE+2*NATIVE_LW+NATIVE_GN+se]) low_r<=0;
+                else if(adv[se]) low_r<=((|(pe_r&lm_event[se])) || pe_r[NSLOT-1])?SI'(0):low_r+1'b1;
+              assign lower_pointer=low_r;
+            end else begin:g_old_lower assign lower_pointer=pb_r;end
             if(NSLOT<=48) begin:g_bounded_decode
                 wire [23:0] lower_decode,upper_decode;
-                (* keep=1 *) dsdv_mu_hwin_capture_1019_decode24 u_lower(.address(6'(pb_r)),.onehot(lower_decode));
+                (* keep=1 *) dsdv_mu_hwin_capture_1019_decode24 u_lower(.address(6'(lower_pointer)),.onehot(lower_decode));
                 (* keep=1 *) dsdv_mu_hwin_capture_1019_decode24 u_upper(.address(6'(upper_pointer_r)-6'(SPLIT)),.onehot(upper_decode));
                 assign pe_r={upper_decode[NSLOT-SPLIT-1:0],lower_decode[SPLIT-1:0]};
             end else begin:g_full_decode
-                wire [NSLOT-1:0] lower_decode=OH0 << pb_r;
+                wire [NSLOT-1:0] lower_decode=OH0 << lower_pointer;
                 wire [NSLOT-1:0] upper_decode=OH0 << upper_pointer_r;
                 assign pe_r={upper_decode[NSLOT-1:SPLIT],lower_decode[SPLIT-1:0]};
             end
@@ -677,7 +692,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             if(!rr[RPTR_BASE+2*SLOT_RG+pb/24]) gx_r<=(pb==0); else if(step_gap) gx_r<=gxn[pb];
         always @(posedge ck or negedge rr[RPTR_BASE+3*SLOT_RG+pb/24])
             if(!rr[RPTR_BASE+3*SLOT_RG+pb/24]) gm_r<=0;
-            else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) gm_r<=(native_gn_ptr[pb/12][SI-1:0]==SI'(pb));
+            else if(native_cfg[5+pb/12]) gm_r<=(native_gn_ptr[pb/12][SI-1:0]==SI'(pb));
         always @(posedge ck or negedge rr[RPTR_BASE+4*SLOT_RG+pb/24])
             if(!rr[RPTR_BASE+4*SLOT_RG+pb/24]) lm_bit_r<=(pb==NSLOT-1); else lm_bit_r<=(native_lw[pb/12]==SI'(pb));
         always @(posedge ck or negedge rr[RPTR_BASE+5*SLOT_RG+pb/24])
@@ -710,9 +725,11 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             else if(phase_clear[pb/8]) bit_r<=0;
             else if(phase_step[pb/8]) bit_r<=phase_increment[pb];
     end endgenerate
-    always @(posedge ck or negedge rr[RCTRL_BASE+1])
-        if(!rr[RCTRL_BASE+1]) cs<=0;
-        else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT) && (gn==0 || mc_q[23:0]<cs)) cs<=mc_q[23:0];
+    generate for(genvar cb=0;cb<24;cb=cb+1) begin:g_native_cs
+      always @(posedge ck or negedge rr[RCTRL_BASE+1])
+        if(!rr[RCTRL_BASE+1]) cs[cb]<=0;
+        else if(native_cfg[1+cb/8] && (gn==0 || mc_q[23:0]<cs)) cs[cb]<=mc_q[cb];
+    end endgenerate
     wire [23:0] mc_minus_one=mc_q[23:0]-24'd1;
     generate for(genvar cfg_bit=0;cfg_bit<24;cfg_bit=cfg_bit+1) begin:g_config_words
         always @(posedge ck or negedge rr[RCTRL_BASE+2])
@@ -729,7 +746,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             rec_q<=1'b0; h_rfr<=1'b0; fq0<=1'b0; fq1<=1'b0;
         end else begin
             if(mc_q[25] && idle) begin
-                if(!mc_q[24] && gn!=SJ'(NSLOT)) begin
+                if(native_cfg[0]) begin
                     gn<=gn+1'b1;
                     lw<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
                 end
@@ -794,4 +811,10 @@ endmodule
 (* keep_hierarchy=1 *) module dsdv_mu_hwin_capture_1019_phase_action(input wire [23:0] phase,gap,input wire armed,start,bad,output wire set_one,clear,increment);
  assign set_one=start && !armed && !bad;
  assign clear=armed && phase==gap;assign increment=armed && phase!=gap;
+endmodule
+
+// Independent kept enable per bounded consumer group; no extra storage or edge.
+(* keep_hierarchy=1 *) module dsdv_mu_hwin_capture_1019_cfg_accept #(parameter integer NSLOT=47,parameter integer SJ=7)
+(input wire valid,kind,armed,empty,input wire [SJ-1:0] count,output wire accept);
+ assign accept=valid && !kind && !armed && empty && count!=SJ'(NSLOT);
 endmodule

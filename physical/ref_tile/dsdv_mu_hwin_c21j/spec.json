@@ -70,7 +70,7 @@
    "dsdv_mu_hwin_capture_1019_phase_action"
   ]
  },
- "structural_change": "HWIN21j native-safe domains: kept local write data/current-hit hierarchy, 12-pointer and 4-event gn/lw state copies, four due copies; +0 edges",
+ "structural_change": "HWIN21j native-safe domains: kept local write data/current-hit hierarchy, 12-pointer and 4-event gn/lw state copies, four due copies; +0 edges; r2 bounded cfg accept and per-event lower decoder pointer",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf)."
