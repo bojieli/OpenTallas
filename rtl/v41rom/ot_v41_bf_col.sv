@@ -221,6 +221,9 @@ module ot_v41_bf_col #(
     // QZ: this macro's reset synchroniser copy, select / enable copies and x slices (kept registers, see the header)
     wire              rst_m;            // lanes, b_issue control, capture, BF16 paths
     wire              rst_mc, rst_mp, rst_mt;   // chains; pair adder and its delays; segment tree and outputs
+    `ifdef OT_BF_FOREP32
+    wire [1:0] rst_m_cap;
+`endif
     wire              rst_ml, rst_mpv;          // q lanes (g_l3 u_l0 / u_l1); pair valid pipe (RSTPART copies, else = rst_m / rst_mp)
 `ifdef OT_BF_FOREP
     // FOREP: capture-select / enable copies per macro widened so each copy drives <= ~28 loads (was 74 / 138)
@@ -240,6 +243,12 @@ module ot_v41_bf_col #(
         // the chains (ot_v41_chain4_rp) and the segment tree (ot_v41_segtree5_rp) hold their own copies of b_rst_v[5]
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rs (.clk(clk), .arst_n(b_rst_v[5]), .d(1'b1), .q(rst_m));
         ot_v41_rst_copy u_rsl (.clk(clk), .rst_pin(b_rst_v[5]), .rst_n(rst_ml));
+`ifdef OT_BF_FOREP32
+        // Same release edge as rst_m; split the twenty two-bit capture enables.
+        for (genvar rc = 0; rc < 2; rc++) begin : g_cap_rst
+            ot_v41_rst_copy u_r (.clk(clk), .rst_pin(b_rst_v[5]), .rst_n(rst_m_cap[rc]));
+        end
+`endif
         assign rst_mc = 1'b1;   // unused: the chains take b_rst_v[5]
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_rsp (.clk(clk), .arst_n(b_rst_v[5]), .d(1'b1), .q(rst_mp));
         ot_v41_rst_copy u_rspv (.clk(clk), .rst_pin(b_rst_v[5]), .rst_n(rst_mpv));
@@ -275,7 +284,11 @@ module ot_v41_bf_col #(
 `endif
         end
         for (zk = 0; zk < ZNE; zk = zk + 1) begin : g_ne     // capture enables (= mi2x_v && !mi2x_bk, && mi2x_bk)
+`ifdef OT_BF_FOREP32
+            ot_v41_kreg #(.W(2), .AR(1), .RV(2'b00)) u_e (.clk(gclk_c), .arst_n(rst_m_cap[zk / ((ZNE+1)/2)]), .d({b_i1_v && b_i1_bk, b_i1_v && !b_i1_bk}),
+`else
             ot_v41_kreg #(.W(2), .AR(1), .RV(2'b00)) u_e (.clk(gclk_c), .arst_n(rst_m), .d({b_i1_v && b_i1_bk, b_i1_v && !b_i1_bk}),
+`endif
                                                           .q({mz_c1[zk], mz_c0[zk]}));
         end
     end else if (QPIPE != 0) begin : g_mi
