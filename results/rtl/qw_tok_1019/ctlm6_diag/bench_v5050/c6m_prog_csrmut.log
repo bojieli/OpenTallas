@@ -1,0 +1,12 @@
+# leg c6m/prog_csrmut 2026-10-20T02:42:50-07:00
+# cmd: python3 rtl/test/qwen_dv/tt_ctlm_prog_bench.py --img results/rtl/qwen_layer_tput_1018/ctlm_prog/image --hard 1 --landed 1 --work /srv/opentallas-scratch/claude/qw-ctlm6/c6m/out/prog_csr6
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-ctlm6/c6m/src
+ot-run: ot-epyc6       admits   792 GB (avail 668, growth 113, headroom 0, waiters 0/0 GB) load 79/128 running 51 disk 4559 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-ctlm6/c6m/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw-ctlm6/c6m/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-ctlm6/c6m/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-ctlm6/c6m/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3600723-1792489371 after 0 s
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3600723-1792489371): exit 0
+# ot-run rc=0 2026-10-20T02:43:06-07:00
