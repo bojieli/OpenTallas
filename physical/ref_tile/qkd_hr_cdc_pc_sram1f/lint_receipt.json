@@ -1,0 +1,1065 @@
+{
+ "lints": {
+  "reviewed_gray_fifos": {
+   "components": {
+    "inputs": {
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir.v": "cf42d815879bb3635e92071f05ceb31a1004f64ebe1aa10e2a02c69288608841",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v": "ae8045e620759351ff9b2f5fb469c32da7e5924a51d4a8b0040261a634ee0c3d",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ff.lib": "4b7aeff31a66cae303368232b2ba8fa99f0600902e0a53a2c00e356ad761f213",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ss.lib": "d28d59a0e127ac833916594e54a7483158c028bbf02e0462e323e80203b3da23",
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_tt.lib": "7c6833d7970e4921d3d6725af4e8dedede326fa837485bc7214a210622ba6e31",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v": "68ae182bc55607412d5dc4a5adf117adb3fd8acb863a28e3155af85691e10c8d",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ff.lib": "c7d9a011f636c683b0ca86eecadb47b08e7f8dc7b9f783a5365a2d78acf54bbd",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ss.lib": "9c16ad8526cc8557ef88083c51d10ea52636584b022f7db81af817e593e90541",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_tt.lib": "9f5c8c6ce503974505f03ca0cf9bdf65ee44caf9e985d3931d0ba0541c5013fa",
+     "physical/common_flow/ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b",
+     "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+     "rtl/physical/ot_host_async_fifo_sram.sv": "da2d391322e2cdb58f7d4b04028591f8bd754e7e6f63acf9631368b55a515d22",
+     "rtl/physical/ot_host_die_cdc_sram.sv": "a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d",
+     "rtl/physical/ot_qwen_async_fifo_w.sv": "6352f90f3f6caa5f69e56b256a191e250971ff0ce039499eea141e611921e76a",
+     "rtl/physical/ot_qwen_die_cdc_ch.sv": "67825778cf6b71b7c6cef6a30fba297d44ebd2426b1fe952a4beb444196f5a60",
+     "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc_sram.v": "d40fa9b7eb00878d5a2b39d75e2eaf517f630ecf3043d4979b00617835213061"
+    },
+    "policy": "reviewed_gray_fifos",
+    "spec": {
+     "children": [],
+     "clock": "multiple_cts_roots",
+     "clock_data_paths": "reviewed_gray_fifos",
+     "clock_entry_domains": {
+      "core": {
+       "inputs": [
+        "host_rst_n",
+        "u_rank__raw_rx_cr",
+        "u_rank__physical_tx_d",
+        "u_rank__physical_tx_v"
+       ],
+       "outputs": [
+        "u_rank__raw_rx_d",
+        "u_rank__raw_rx_v",
+        "u_rank__physical_tx_cr",
+        "service_faults_core"
+       ],
+       "ports": [
+        "ck_core"
+       ],
+       "ratio": [
+        1,
+        1
+       ]
+      },
+      "phy": {
+       "inputs": [
+        "u_rank__d_ccr",
+        "u_rank__u_phy__pad_d",
+        "u_rank__u_phy__pad_v"
+       ],
+       "outputs": [
+        "u_rank__d_cd",
+        "u_rank__d_cv",
+        "u_rank__u_phy__pad_cr",
+        "service_faults_phy"
+       ],
+       "ports": [
+        "ck_phy_fam"
+       ],
+       "ratio": [
+        1043000,
+        833333
+       ]
+      }
+     },
+     "clock_relationship": {
+      "kind": "independent_clock_families",
+      "periods_ps": {
+       "core": 833.333,
+       "phy": 1043.0
+      }
+     },
+     "kind": "tile",
+     "macros": [
+      {
+       "at": [
+        86.4,
+        43.2
+       ],
+       "count": 1,
+       "inst": "u_rank__u_phy__u_rx.g_ib_mem.g_32.u_ib",
+       "orient": "R0",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir"
+      },
+      {
+       "at": [
+        86.4,
+        345.6
+       ],
+       "count": 1,
+       "inst": "u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+       "orient": "R0",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir"
+      },
+      {
+       "at": [
+        302.4,
+        43.2
+       ],
+       "count": 1,
+       "inst": "u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m",
+       "orient": "MY",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir"
+      },
+      {
+       "at": [
+        302.4,
+        345.6
+       ],
+       "count": 1,
+       "inst": "u_rank__u_phy__u_tx.g_ib_mem.g_32.u_ib",
+       "orient": "MY",
+       "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir"
+      }
+     ],
+     "name": "qkd_hr_cdc_pc_sram1f",
+     "params": {},
+     "pin_regs": {
+      "clock": "ck_core",
+      "enable": true,
+      "exclude": "^(u_rank__d_ccr|u_rank__u_phy__pad_d|u_rank__u_phy__pad_v|service_faults_phy|u_rank__d_cd|u_rank__d_cv|u_rank__u_phy__pad_cr)$",
+      "reason": "multi-family CDC leaf (core/phy): the recipe-3 pin register is single-clock, so core-family pins are registered on ck_core and the phy-family pins (u_rank__d_ccr, u_rank__u_phy__pad_d, u_rank__u_phy__pad_v, service_faults_phy, u_rank__d_cd, u_rank__d_cv, u_rank__u_phy__pad_cr) are excluded: their faces are the RTL credit channels of that family",
+      "reset": "^(host_rst_n)$"
+     },
+     "reset_landing": {
+      "enable": true,
+      "stages": 2
+     },
+     "reviewed_gray_fifo_extensions": {
+      "dual_clock_srams": [
+       "ot_sram_1r1w2c_32x546_m1_p192_mir"
+      ],
+      "why": "Exact source/model/view fingerprints and actual Liberty per-pin read/write-clock role proof; Gray publication/synchronizer proof unchanged."
+     },
+     "sources": [
+      "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc_sram.v",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/lib/ot_async_fifo.sv",
+      "rtl/physical/ot_qwen_async_fifo_w.sv",
+      "rtl/physical/ot_qwen_die_cdc_ch.sv",
+      "rtl/physical/ot_host_async_fifo_sram.sv",
+      "rtl/physical/ot_host_die_cdc_sram.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v"
+     ],
+     "top": "qkd_hr_cdc_pc_sram"
+    },
+    "tool": {
+     "cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
+     "clock_entry_constraints.py": "d782579180eda6d032dc25cec1ceba9a56da00d0b28825468ce459a9e37d5464",
+     "gray_fifo_cdc_constraints.py": "375084ce607b0d9d429e2d3c56e996353305ef47b21ce3584f0948c54728fec3",
+     "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
+    },
+    "tool_data": {
+     "physical/common_flow/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78"
+    },
+    "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+   },
+   "created": "2026-10-20T03:09:11-0700",
+   "host": "ot-epyc5",
+   "key": "3b1218eee2bb72c1f951bbbcb16917aef0012f91505f1fe44c2fcb29b5c51f95",
+   "record": {
+    "counts": {
+     "consumer": 0,
+     "gated": 0,
+     "lsrc": 0,
+     "macro": 4,
+     "mem": 0,
+     "rst": 22,
+     "rstage": 0,
+     "src": 20,
+     "stage": 20,
+     "sync1": 20
+    },
+    "dual_clock_macros": {
+     "u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m": {
+      "clocks": {
+       "rclk": [
+        "ck_core",
+        "core"
+       ],
+       "wclk": [
+        "ck_phy_fam",
+        "phy"
+       ]
+      },
+      "input_clocks": {
+       "r_addr_in": "rclk",
+       "r_ce_in": "rclk",
+       "w_addr_in": "wclk",
+       "w_ce_in": "wclk",
+       "w_mask_in": "wclk",
+       "wd_in": "wclk"
+      },
+      "master": "ot_sram_1r1w2c_32x546_m1_p192_mir"
+     },
+     "u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m": {
+      "clocks": {
+       "rclk": [
+        "ck_phy_fam",
+        "phy"
+       ],
+       "wclk": [
+        "ck_core",
+        "core"
+       ]
+      },
+      "input_clocks": {
+       "r_addr_in": "rclk",
+       "r_ce_in": "rclk",
+       "w_addr_in": "wclk",
+       "w_ce_in": "wclk",
+       "w_mask_in": "wclk",
+       "wd_in": "wclk"
+      },
+      "master": "ot_sram_1r1w2c_32x546_m1_p192_mir"
+     }
+    },
+    "fifos": {
+     "f0": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_host_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "core",
+      "scope": "u_rank__u_phy__u_rx.g_afw.u_af",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 773.333,
+      "storage_read": false,
+      "writer": "phy"
+     },
+     "f1": {
+      "chains": {
+       "ronl": 1,
+       "rptr": 4,
+       "wonl": 1,
+       "wptr": 4
+      },
+      "module": "ot_host_async_fifo_sram",
+      "pointer_max_delay_ps": 773.333,
+      "reader": "phy",
+      "scope": "u_rank__u_phy__u_tx.g_afw.u_af",
+      "storage_bits": 0,
+      "storage_max_delay_ps": 983.0,
+      "storage_read": false,
+      "writer": "core"
+     }
+    },
+    "gated": {},
+    "launch_aliases": {
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_bin[3]": "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray[3]",
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_bin[3]": "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray[3]"
+    },
+    "levels": {},
+    "macros": {
+     "u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m": "core",
+     "u_rank__u_phy__u_rx.g_ib_mem.g_32.u_ib": "phy",
+     "u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m": "phy",
+     "u_rank__u_phy__u_tx.g_ib_mem.g_32.u_ib": "core"
+    },
+    "periods_ps": {
+     "core": 833.333,
+     "phy": 1043.0
+    },
+    "resets": [
+     {
+      "domain": "core",
+      "leaves": 2,
+      "scope": "u_rank__u_phy__u_rx.g_afw.u_af.rd_reset_conditioner",
+      "stages": 2
+     },
+     {
+      "domain": "phy",
+      "leaves": 1,
+      "scope": "u_rank__u_phy__u_rx.g_afw.u_af.wr_reset_conditioner",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "leaves": 1,
+      "scope": "u_rank__u_phy__u_rx.u_rrs",
+      "stages": 2
+     },
+     {
+      "domain": "phy",
+      "leaves": 3,
+      "scope": "u_rank__u_phy__u_rx.u_wrs",
+      "stages": 2
+     },
+     {
+      "domain": "phy",
+      "leaves": 2,
+      "scope": "u_rank__u_phy__u_tx.g_afw.u_af.rd_reset_conditioner",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "leaves": 1,
+      "scope": "u_rank__u_phy__u_tx.g_afw.u_af.wr_reset_conditioner",
+      "stages": 2
+     },
+     {
+      "domain": "phy",
+      "leaves": 1,
+      "scope": "u_rank__u_phy__u_tx.u_rrs",
+      "stages": 2
+     },
+     {
+      "domain": "core",
+      "leaves": 3,
+      "scope": "u_rank__u_phy__u_tx.u_wrs",
+      "stages": 2
+     }
+    ],
+    "roles": {
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_bin[3]": [
+      "src",
+      "f0",
+      "rptr",
+      3
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_domain_rst_n": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray[0]": [
+      "src",
+      "f0",
+      "rptr",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray[1]": [
+      "src",
+      "f0",
+      "rptr",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray[2]": [
+      "src",
+      "f0",
+      "rptr",
+      2
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray[3]": [
+      "src",
+      "f0",
+      "rptr",
+      3
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray_w1[0]": [
+      "sync1",
+      "f0",
+      "rptr",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray_w1[1]": [
+      "sync1",
+      "f0",
+      "rptr",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray_w1[2]": [
+      "sync1",
+      "f0",
+      "rptr",
+      2
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray_w1[3]": [
+      "sync1",
+      "f0",
+      "rptr",
+      3
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray_w2[0]": [
+      "stage",
+      "f0",
+      "rptr",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray_w2[1]": [
+      "stage",
+      "f0",
+      "rptr",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray_w2[2]": [
+      "stage",
+      "f0",
+      "rptr",
+      2
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_gray_w2[3]": [
+      "stage",
+      "f0",
+      "rptr",
+      3
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_online": [
+      "src",
+      "f0",
+      "ronl",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_online_w1": [
+      "sync1",
+      "f0",
+      "ronl",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_online_w2": [
+      "stage",
+      "f0",
+      "ronl",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_reg_n[0]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_reg_n[1]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_reset_conditioner.first": [
+      "rst",
+      "r0",
+      "pipe",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_reset_conditioner.last[0]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_reset_conditioner.last[1]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_reset_conditioner.sync_rst_n[0]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_reset_conditioner.sync_rst_n[1]": [
+      "rst",
+      "r0",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.rd_rst_n": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_domain_rst_n": [
+      "rst",
+      "r1",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_pub[0]": [
+      "src",
+      "f0",
+      "wptr",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_pub[1]": [
+      "src",
+      "f0",
+      "wptr",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_pub[2]": [
+      "src",
+      "f0",
+      "wptr",
+      2
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_pub[3]": [
+      "src",
+      "f0",
+      "wptr",
+      3
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_r1[0]": [
+      "sync1",
+      "f0",
+      "wptr",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_r1[1]": [
+      "sync1",
+      "f0",
+      "wptr",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_r1[2]": [
+      "sync1",
+      "f0",
+      "wptr",
+      2
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_r1[3]": [
+      "sync1",
+      "f0",
+      "wptr",
+      3
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_r2[0]": [
+      "stage",
+      "f0",
+      "wptr",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_r2[1]": [
+      "stage",
+      "f0",
+      "wptr",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_r2[2]": [
+      "stage",
+      "f0",
+      "wptr",
+      2
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_gray_r2[3]": [
+      "stage",
+      "f0",
+      "wptr",
+      3
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_online": [
+      "src",
+      "f0",
+      "wonl",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_online_r1": [
+      "sync1",
+      "f0",
+      "wonl",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_online_r2": [
+      "stage",
+      "f0",
+      "wonl",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_reset_conditioner.first": [
+      "rst",
+      "r1",
+      "pipe",
+      0
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_reset_conditioner.last": [
+      "rst",
+      "r1",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_reset_conditioner.sync_rst_n": [
+      "rst",
+      "r1",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.g_afw.u_af.wr_rst_n": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.rr_n": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.u_rrs.first": [
+      "rst",
+      "r2",
+      "pipe",
+      0
+     ],
+     "u_rank__u_phy__u_rx.u_rrs.last": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.u_rrs.sync_rst_n": [
+      "rst",
+      "r2",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.u_wrs.first": [
+      "rst",
+      "r3",
+      "pipe",
+      0
+     ],
+     "u_rank__u_phy__u_rx.u_wrs.last[0]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.u_wrs.last[1]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.u_wrs.last[2]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.u_wrs.sync_rst_n[0]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.u_wrs.sync_rst_n[1]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.u_wrs.sync_rst_n[2]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.wr_n": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.wr_reg_n[0]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.wr_reg_n[1]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_rx.wr_reg_n[2]": [
+      "rst",
+      "r3",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_bin[3]": [
+      "src",
+      "f1",
+      "rptr",
+      3
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_domain_rst_n": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray[0]": [
+      "src",
+      "f1",
+      "rptr",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray[1]": [
+      "src",
+      "f1",
+      "rptr",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray[2]": [
+      "src",
+      "f1",
+      "rptr",
+      2
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray[3]": [
+      "src",
+      "f1",
+      "rptr",
+      3
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray_w1[0]": [
+      "sync1",
+      "f1",
+      "rptr",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray_w1[1]": [
+      "sync1",
+      "f1",
+      "rptr",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray_w1[2]": [
+      "sync1",
+      "f1",
+      "rptr",
+      2
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray_w1[3]": [
+      "sync1",
+      "f1",
+      "rptr",
+      3
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray_w2[0]": [
+      "stage",
+      "f1",
+      "rptr",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray_w2[1]": [
+      "stage",
+      "f1",
+      "rptr",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray_w2[2]": [
+      "stage",
+      "f1",
+      "rptr",
+      2
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_gray_w2[3]": [
+      "stage",
+      "f1",
+      "rptr",
+      3
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_online": [
+      "src",
+      "f1",
+      "ronl",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_online_w1": [
+      "sync1",
+      "f1",
+      "ronl",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_online_w2": [
+      "stage",
+      "f1",
+      "ronl",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_reg_n[0]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_reg_n[1]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_reset_conditioner.first": [
+      "rst",
+      "r4",
+      "pipe",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_reset_conditioner.last[0]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_reset_conditioner.last[1]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_reset_conditioner.sync_rst_n[0]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_reset_conditioner.sync_rst_n[1]": [
+      "rst",
+      "r4",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.rd_rst_n": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_domain_rst_n": [
+      "rst",
+      "r5",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_pub[0]": [
+      "src",
+      "f1",
+      "wptr",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_pub[1]": [
+      "src",
+      "f1",
+      "wptr",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_pub[2]": [
+      "src",
+      "f1",
+      "wptr",
+      2
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_pub[3]": [
+      "src",
+      "f1",
+      "wptr",
+      3
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_r1[0]": [
+      "sync1",
+      "f1",
+      "wptr",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_r1[1]": [
+      "sync1",
+      "f1",
+      "wptr",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_r1[2]": [
+      "sync1",
+      "f1",
+      "wptr",
+      2
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_r1[3]": [
+      "sync1",
+      "f1",
+      "wptr",
+      3
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_r2[0]": [
+      "stage",
+      "f1",
+      "wptr",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_r2[1]": [
+      "stage",
+      "f1",
+      "wptr",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_r2[2]": [
+      "stage",
+      "f1",
+      "wptr",
+      2
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_gray_r2[3]": [
+      "stage",
+      "f1",
+      "wptr",
+      3
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_online": [
+      "src",
+      "f1",
+      "wonl",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_online_r1": [
+      "sync1",
+      "f1",
+      "wonl",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_online_r2": [
+      "stage",
+      "f1",
+      "wonl",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_reset_conditioner.first": [
+      "rst",
+      "r5",
+      "pipe",
+      0
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_reset_conditioner.last": [
+      "rst",
+      "r5",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_reset_conditioner.sync_rst_n": [
+      "rst",
+      "r5",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.g_afw.u_af.wr_rst_n": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.rr_n": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.u_rrs.first": [
+      "rst",
+      "r6",
+      "pipe",
+      0
+     ],
+     "u_rank__u_phy__u_tx.u_rrs.last": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.u_rrs.sync_rst_n": [
+      "rst",
+      "r6",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.u_wrs.first": [
+      "rst",
+      "r7",
+      "pipe",
+      0
+     ],
+     "u_rank__u_phy__u_tx.u_wrs.last[0]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.u_wrs.last[1]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.u_wrs.last[2]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.u_wrs.sync_rst_n[0]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.u_wrs.sync_rst_n[1]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.u_wrs.sync_rst_n[2]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.wr_n": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.wr_reg_n[0]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.wr_reg_n[1]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ],
+     "u_rank__u_phy__u_tx.wr_reg_n[2]": [
+      "rst",
+      "r7",
+      "pipe",
+      1
+     ]
+    },
+    "source_sha256": {
+     "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v": "ae8045e620759351ff9b2f5fb469c32da7e5924a51d4a8b0040261a634ee0c3d",
+     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v": "68ae182bc55607412d5dc4a5adf117adb3fd8acb863a28e3155af85691e10c8d",
+     "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+     "rtl/physical/ot_host_async_fifo_sram.sv": "da2d391322e2cdb58f7d4b04028591f8bd754e7e6f63acf9631368b55a515d22",
+     "rtl/physical/ot_host_die_cdc_sram.sv": "a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d",
+     "rtl/physical/ot_qwen_async_fifo_w.sv": "6352f90f3f6caa5f69e56b256a191e250971ff0ce039499eea141e611921e76a",
+     "rtl/physical/ot_qwen_die_cdc_ch.sv": "67825778cf6b71b7c6cef6a30fba297d44ebd2426b1fe952a4beb444196f5a60",
+     "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc_sram.v": "d40fa9b7eb00878d5a2b39d75e2eaf517f630ecf3043d4979b00617835213061"
+    },
+    "strap_crossings": [],
+    "straps": []
+   },
+   "seconds": 4
+  }
+ },
+ "schema": "opentallas.ref_tile.lint_receipt.v1"
+}
