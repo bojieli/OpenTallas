@@ -322,9 +322,10 @@ module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer
  localparam integer NVC=(SAFE==2)?5:4,NVR=6*NVC-((SAFE==2)?1:0);
  // 2-stage reset landing: rst_s0 (async assert from the port) -> 7 kept regional release copies (port drives 8 flops)
  (* keep="true",dont_touch="true" *) reg rst_s0;
- (* keep="true",dont_touch="true" *) reg[6:0]rst_l;
+ localparam integer NRL=(SAFE==2)?25:7;                  // SAFE 2: + 3 regions per slice (regions 2-4 unused)
+ (* keep="true",dont_touch="true" *) reg[NRL-1:0]rst_l;
  always @(posedge clk or negedge rst_n) if(!rst_n) rst_s0<=1'b0; else rst_s0<=1'b1;
- always @(posedge clk or negedge rst_n) if(!rst_n) rst_l<=7'd0; else rst_l<={7{rst_s0}};
+ always @(posedge clk or negedge rst_n) if(!rst_n) rst_l<={NRL{1'b0}}; else rst_l<={NRL{rst_s0}};
  // kept pin copies of every lane valid bit: slice s copy c at [(s*NVC+c)*64+j]. SAFE 1: 24 copies + line_r (unused);
  // SAFE 2: 5 copies per slice (4 slot copies + 1 count copy) = 30, slice 0 copy 0 is line_r itself (pin drives 29 + line_r)
  (* keep="true",dont_touch="true" *) reg[NVR*64-1:0]vrep;
@@ -486,7 +487,7 @@ module ot_hbm_idx_link_s_slice #(parameter integer BW=6,parameter integer MUT=0)
 endmodule
 
 module ot_hbm_idx_topk_link_static_s_core #(parameter integer MUT=0,parameter integer NS=6,parameter integer SV=1)(
- input wire clk,input wire[6:0]rst_n,
+ input wire clk,input wire[((SV==2)?7+3*NS:7)-1:0]rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,input wire[NS*((SV==2)?5:4)*64-1:0]lane_vc,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
  output reg[3:0]tx_v,output reg[2179:0]tx,
@@ -516,7 +517,7 @@ module ot_hbm_idx_topk_link_static_s_core #(parameter integer MUT=0,parameter in
    assign pay[j*BW+:BW]=rec[s*BW+:BW];
   end
   if(SV==2)begin:t
-  ot_hbm_idx_link_t_slice #(.BW(BW),.MUT(MUT)) u(.clk(clk),.rst_n(rst_n[2+s/2]),.ingest(ingest_v),.clr_t1(clr_d[1]),
+  ot_hbm_idx_link_t_slice #(.BW(BW),.MUT(MUT)) u(.clk(clk),.rst_n(rst_n[7+3*s+:3]),.ingest(ingest_v),.clr_t1(clr_d[1]),
    .vc(lane_vc[s*NVC*64+:NVC*64]),.pay(pay),.wd(wd_s[s*512*BW+:512*BW]),
    .o_s3_v(s3v[s]),.o_s4_v(s4v[s]),.o_total(tot[s*10+:10]),.o_s3_n(s3n[s*7+:7]),.o_s4_f0(f0s[s*7+:7]),.o_s4_nf(nfs[s*4+:4]));
   end else begin:s1
@@ -647,12 +648,14 @@ endmodule
 module ot_hbm_idx_link_ktot(input wire[9:0]t,input wire[6:0]n,input wire v,c,output wire[9:0]y);
  assign y=v?(t+{3'd0,n}):(c?10'd0:t);
 endmodule
-module ot_hbm_idx_link_kbsel(input wire[2:0]b0,input wire[2:0]nb,output wire[7:0]oh);
- wire[2:0]bn=b0+nb;
- assign oh=8'd1<<bn;
+module ot_hbm_idx_link_kbsel #(parameter integer Q=0)(input wire[5:0]t6,input wire[6:0]n,input wire v,output wire keep,output wire[7:0]oh);
+ // carry[Q] at S5: keep (no beat, or no flit completes and Q < fill), else take bank (b0+nf) mod 8 slot Q
+ wire[2:0]fill=t6[2:0],b0=t6[5:3];wire[6:0]nsum={4'd0,fill}+n;
+ assign keep=!v||(nsum[6:3]==4'd0&&3'(Q)<fill);
+ assign oh=keep?8'd0:(8'd1<<(b0+nsum[5:3]));
 endmodule
 module ot_hbm_idx_link_t_slice #(parameter integer BW=6,parameter integer MUT=0)(
- input wire clk,input wire rst_n,
+ input wire clk,input wire[2:0]rst_n,
  input wire ingest,input wire clr_t1,
  input wire[5*64-1:0]vc,input wire[64*BW-1:0]pay,
  output wire[8*8*BW-1:0]wd,
@@ -716,27 +719,36 @@ module ot_hbm_idx_link_t_slice #(parameter integer BW=6,parameter integer MUT=0)
  wire[6:0]ccnt={1'b0,s2_qc[0+:6]}+{1'b0,s2_q1};
  reg[64*BW-1:0]s3_c;
  (* keep="true",dont_touch="true" *) reg[6:0]s3_n;
- // ---------------- S4 (loop): total (recurrence + rotate selects), totb (S4/S5 control), both from their own leaves
- (* keep="true",dont_touch="true" *) reg[9:0]total,totb;
+ // ---------------- S4 (loop): every consumer group owns a kept total register with its OWN keep_hierarchy next-state
+ // leaf (ktot) and its own s3_v / s3_n copies: total_c[0..3] (rotate selects, 16 slot copies each; [0] = count/faults),
+ // totb (per-bank S5 old selects + s4_f0), totc0 / totc1 (carry selects q 0-3 / 4-6 + s4_nf). All evolve identically.
+ (* keep="true",dont_touch="true" *) reg[4*10-1:0]total_c;     // copy c at [c*10+:10]
+ (* keep="true",dont_touch="true" *) reg[9:0]totb,totc0,totc1;
+ (* keep="true",dont_touch="true" *) reg[8:0]s3_vc;             // 0-3 total_c, 4 totb, 5 totc0, 6 totc1, 7 kbsel q0-3, 8 kbsel q4-6
+ (* keep="true",dont_touch="true" *) reg[9*7-1:0]s3_nc;           // same index map as s3_vc
  (* keep="true",dont_touch="true" *) reg c3;
- wire[4*10-1:0]tnx;wire[9:0]tbnx;
+ wire[4*10-1:0]tnx;wire[9:0]tbnx,tc0nx,tc1nx;
  for(c=0;c<4;c=c+1)begin:tl
-  (* keep_hierarchy *) ot_hbm_idx_link_ktot u(.t(total),.n(s3_n),.v(s3_v),.c(c3),.y(tnx[c*10+:10]));
+  (* keep_hierarchy *) ot_hbm_idx_link_ktot u(.t(total_c[c*10+:10]),.n(s3_nc[c*7+:7]),.v(s3_vc[c]),.c(c3),.y(tnx[c*10+:10]));
  end
- (* keep_hierarchy *) ot_hbm_idx_link_ktot utb(.t(totb),.n(s3_n),.v(s3_v),.c(c3),.y(tbnx));
+ (* keep_hierarchy *) ot_hbm_idx_link_ktot utb(.t(totb),.n(s3_nc[4*7+:7]),.v(s3_vc[4]),.c(c3),.y(tbnx));
+ (* keep_hierarchy *) ot_hbm_idx_link_ktot utc0(.t(totc0),.n(s3_nc[5*7+:7]),.v(s3_vc[5]),.c(c3),.y(tc0nx));
+ (* keep_hierarchy *) ot_hbm_idx_link_ktot utc1(.t(totc1),.n(s3_nc[6*7+:7]),.v(s3_vc[6]),.c(c3),.y(tc1nx));
+ wire[9:0]total=total_c[0+:10];
  (* keep="true",dont_touch="true" *) reg[64*6-1:0]trep;        // slot copy c = total_nx[5:0] from leaf c/16
  wire[2:0]fill=totb[2:0];
  wire[6:0]f0=totb[9:3];
- wire[6:0]nsum={4'd0,fill}+s3_n;
+ wire[6:0]nsum1={4'd0,totc1[2:0]}+s3_nc[8*7+:7];
  wire[64*BW-1:0]rot;
  ot_hbm_idx_link_p_rot #(.N(64),.RW(BW),.SW(6),.NC(64)) rr(.x(s3_c),.s(trep),.y(rot));
  reg[64*BW-1:0]s4_r;reg[6:0]s4_f0;reg[3:0]s4_nf;
  (* keep="true",dont_touch="true" *) reg[8*3-1:0]s4_fillc,s4_f0c;
  (* keep="true",dont_touch="true" *) reg[6:0]s4_keep;
  (* keep="true",dont_touch="true" *) reg[7*8-1:0]s4_bsel;           // carry[q] takes bank b slot q (one-hot)
- wire[7*8-1:0]bsel_nx;
+ wire[7*8-1:0]bsel_nx;wire[6:0]keep_nx;
  for(q=0;q<7;q=q+1)begin:bs
-  (* keep_hierarchy *) ot_hbm_idx_link_kbsel u(.b0(f0[2:0]),.nb(nsum[5:3]),.oh(bsel_nx[q*8+:8]));
+  (* keep_hierarchy *) ot_hbm_idx_link_kbsel #(.Q(q)) u(.t6((q<4)?totc0[5:0]:totc1[5:0]),.n(s3_nc[((q<4)?7:8)*7+:7]),
+   .v(s3_vc[(q<4)?7:8]),.keep(keep_nx[q]),.oh(bsel_nx[q*8+:8]));
  end
  // ---------------- S5 write formation + compact carry
  reg[7*BW-1:0]carry;
@@ -761,9 +773,17 @@ module ot_hbm_idx_link_t_slice #(parameter integer BW=6,parameter integer MUT=0)
   assign carry_nx[q*BW+:BW]=v;
  end
  reg[8*8*BW-1:0]wd_r;
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin s1_v<=0;s2_v<=0;s3_v<=0;s4_v<=0;total<=0;totb<=0;c3<=0;end
-  else begin s1_v<=ingest;s2_v<=s1_v;s3_v<=s2_v;s4_v<=s3_v;total<=tnx[0+:10];totb<=tbnx;c3<=clr_t1;end
+ always @(posedge clk or negedge rst_n[0])begin
+  if(!rst_n[0])begin s1_v<=0;s2_v<=0;s3_v<=0;s3_vc<=0;s4_v<=0;totb<=0;c3<=0;end
+  else begin s1_v<=ingest;s2_v<=s1_v;s3_v<=s2_v;s3_vc<={9{s2_v}};s4_v<=s3_v;totb<=tbnx;c3<=clr_t1;end
+ end
+ always @(posedge clk or negedge rst_n[1])begin
+  if(!rst_n[1])begin total_c[0+:20]<=0;totc0<=0;end
+  else begin total_c[0+:20]<=tnx[0+:20];totc0<=tc0nx;end
+ end
+ always @(posedge clk or negedge rst_n[2])begin
+  if(!rst_n[2])begin total_c[20+:20]<=0;totc1<=0;end
+  else begin total_c[20+:20]<=tnx[20+:20];totc1<=tc1nx;end
  end
  integer pp,cc;
  always @(posedge clk)begin
@@ -774,14 +794,11 @@ module ot_hbm_idx_link_t_slice #(parameter integer BW=6,parameter integer MUT=0)
   s2_qm<=qm;
   for(cc=0;cc<64;cc=cc+1)s2_qc[cc*6+:6]<=q0[(cc/16)*6+:6];
   s2_q1<=q1;
-  s3_c<=cm;s3_n<=ccnt;
+  s3_c<=cm;s3_n<=ccnt;s3_nc<={9{ccnt}};
   for(cc=0;cc<64;cc=cc+1)trep[cc*6+:6]<=tnx[(cc/16)*10+:6];
-  s4_r<=rot;s4_f0<=f0;s4_nf<=nsum[6:3];
+  s4_r<=rot;s4_f0<=f0;s4_nf<=nsum1[6:3];
   s4_fillc<={8{fill}};s4_f0c<={8{f0[2:0]}};
-  for(pp=0;pp<7;pp=pp+1)begin
-   s4_keep[pp]<=!s3_v||(nsum[6:3]==4'd0&&3'(pp)<fill);
-   s4_bsel[pp*8+:8]<=(!s3_v||(nsum[6:3]==4'd0&&3'(pp)<fill))?8'd0:bsel_nx[pp*8+:8];
-  end
+  s4_keep<=keep_nx;s4_bsel<=bsel_nx;
   carry<=carry_nx;
   wd_r<=wd_c;
  end
