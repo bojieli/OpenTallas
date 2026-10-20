@@ -79,6 +79,17 @@ def emit(master, reset_forest=False):
         # r2 1,613 / r0 1,404) plus ~90-140 child reset pads from ONE flop.  The same-age kept-copy forest gives every
         # landing half and every child reset pad its own leaf, <= 32 loads per stage (3 levels above 1,024 leaves).
         spec.update(landing_chunk_bits=24, landing_reset_forest=True, landing_reset_forest_children=True)
+        # the forest re-uses the PRICED reset stages, which only exist once frame_kit set the measured region centres:
+        # keep the previous kit's centres / reach (frame_kit kit re-derives them from the floorplan anyway)
+        prev = ROOT / rec / f'{master}_spec.json'
+        if prev.is_file():
+            old = json.loads(prev.read_text())
+            cen = {g['name']: g.get('centre') for g in old.get('regions', [])}
+            for g in spec['regions']:
+                if cen.get(g['name']) is not None:
+                    g['centre'] = cen[g['name']]
+            if old.get('reach_um'):
+                spec['reach_um'] = old['reach_um']
     d = ROOT / rec
     d.mkdir(parents=True, exist_ok=True)
     sp = d / f'{master}_spec.json'

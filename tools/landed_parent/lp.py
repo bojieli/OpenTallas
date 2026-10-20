@@ -858,17 +858,21 @@ class Parent:
             count = math.ceil(land['width'] / self.chunk_bits)
             for role, region in roles:
                 row = regions[region]
+                # landing_reset_forest_children: literal leaf indices (the S81 frames' thousands of 1-b landings made
+                # every index a sum of ~3,000 terms: a 124 MB RTL); the width is the planned literal width
+                first = str(row['leaves']) if self.forest_children else '+'.join(row['terms'])
+                cexpr = str(count) if self.forest_children else count_expr
                 row['bindings'].append(dict(landing=n, role=role, first_leaf=row['leaves'],
-                    chunks=count, first_expr='+'.join(row['terms']), chunks_expr=count_expr))
+                    chunks=count, first_expr=first, chunks_expr=cexpr))
                 row['leaves'] += count
-                row['terms'].append(count_expr)
+                row['terms'].append(cexpr)
         if self.forest_children:
             kids = [ins['inst'] for ins in self.insts if any(
                 self.cports[ins['module']][pin] == 'in' and pin in (self.S.get('reset_pins') or []) and ex.strip() == self.rst
                 for pin, ex in ins['conns'].items())]
             for region, row in regions.items():
                 mine = [k for k in kids if self.region[k] == region]
-                row['child_first_expr'] = '+'.join(row['terms'])
+                row['child_first_expr'] = str(row['leaves'])
                 row['children'] = {k: j for j, k in enumerate(mine)}
                 row['leaves'] += len(mine)
                 row['terms'].append(str(len(mine)))
@@ -956,7 +960,8 @@ class Parent:
             w(f"    wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_{rr}), .d({self.rst}), .q(lpr_root));")
         if forest:
             for r in self.regions:
-                expression = '+'.join(forest['regions'][r]['terms'])
+                expression = (str(forest['regions'][r]['leaves']) if self.forest_children
+                              else '+'.join(forest['regions'][r]['terms']))
                 w(f'    localparam integer LPR_LEAVES_{r} = {expression};')
             if self.forest_children:
                 root_load_expr = str(forest['root_D_loads'])
