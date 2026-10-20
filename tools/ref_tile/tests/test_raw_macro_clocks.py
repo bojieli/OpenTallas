@@ -74,6 +74,26 @@ class Contract(unittest.TestCase):
         s['soft_root_macro_bindings']['u_rom']['root']='ck_other'
         with self.assertRaises(ValueError): R.contract(s,ROOT)
 
+    def test_dual_clock_multi_root_leaf_tile(self):
+        # KV-HOST6 10-20: a multiple_cts_roots LEAF tile binds a 1r1w2c dual-clock raw SRAM pin-by-pin to its roots
+        dm='ot_sram_1r1w2c_32x546_m1_p192_mir'; dv='physical/asap7_memory_macros/'+dm
+        def ds():
+            return dict(kind='tile', clock='multiple_cts_roots', clock_ports=['ck_core','ck_phy'], children=[],
+                        macros=[dict(view=dv, inst='u_m', count=1)], soft_root_macro_masters=[dm],
+                        soft_root_macro_bindings={'u_m': dict(master=dm, clock_pins={'wclk':'ck_phy','rclk':'ck_core'})})
+        bindings,paths=R.contract(ds(),ROOT)
+        self.assertEqual(bindings['u_m']['clock_pins'],{'rclk':'ck_core','wclk':'ck_phy'})
+        self.assertIn('{u_m} {master '+dm+' clock_pins {rclk ck_core wclk ck_phy}}', R.tcl(bindings)[0])
+        for case in ('one_pin','wrong_pin','bad_root','single_form','hybrid_tile','extra_key'):
+            s=ds(); b=s['soft_root_macro_bindings']['u_m']
+            if case=='one_pin': b['clock_pins'].pop('wclk')
+            if case=='wrong_pin': b['clock_pins']={'rclk':'ck_core','w_ce_in':'ck_phy'}
+            if case=='bad_root': b['clock_pins']['wclk']='ck_other'
+            if case=='single_form': s['soft_root_macro_bindings']['u_m']=dict(master=dm, clock_pin='wclk', root='ck_phy')
+            if case=='hybrid_tile': s['clock']='hybrid_entries'; s['clock_cts_roots']=['ck_core']
+            if case=='extra_key': b['root']='ck_core'
+            with self.subTest(case=case), self.assertRaises(ValueError): R.contract(s,ROOT)
+
     def test_gen_hooks_calls_contract_before_emitting(self):
         s=spec();s['soft_root_macro_bindings']['u_rom']['clock_pin']='ce_in'
         with self.assertRaises(RT.SpecError): RT.gen_hooks(s,'unused')
@@ -99,6 +119,28 @@ set ::ot_ce_raw_memory_bindings {u_rom {master ot_rom_4096x266_m8 clock_pin clk 
             'unlisted_hard': ('unset ::ot_ce_raw_memory_bindings;ot_ce_raw_memory_sink i u_rom/clk ck', '0'),
             'registered_hard': ('set ::ot_ce_counts {ot_rom_4096x266_m8 1};ot_ce_raw_memory_sink i u_rom/clk ck', '0'),
             'duplicate': ('ot_ce_raw_memory_sink i u_rom/clk ck;ot_ce_raw_memory_sink i u_rom/clk ck','ERROR')}
+        for case,(body,expected) in cases.items():
+            script=helper+base+'\nif {[catch {'+body+'} result]} {puts ERROR} else {puts $result}\n'
+            p=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,check=True)
+            with self.subTest(case=case): self.assertEqual(p.stdout.strip(),expected,p.stderr)
+
+    def test_dual_clock_tcl_per_pin_and_wrapped_core_name(self):
+        helper=(ROOT/'physical/common_flow/clock_entries.tcl').read_text()
+        helper=helper[:helper.index('if {[info procs clock_tree_synthesis]')]
+        base='''
+proc m {op} {if {$op eq "isBlock"} {return 1};return dm}
+proc i {op} {if {$op eq "getMaster"} {return m};return u_ot_pr_core.u_m}
+proc get_full_name {pin} {return $pin}
+set ::ot_ce_raw_memory_seen {}
+set ::ot_ce_raw_memory_bindings {u_m {master dm clock_pins {rclk ck_core wclk ck_phy}}}
+'''
+        cases={
+            'both': ('ot_ce_raw_memory_sink i u_ot_pr_core.u_m/rclk ck_core;ot_ce_raw_memory_sink i u_ot_pr_core.u_m/wclk ck_phy;ot_ce_raw_memory_expected', 'u_m/rclk u_m/wclk'),
+            'seen': ('ot_ce_raw_memory_sink i u_ot_pr_core.u_m/rclk ck_core;ot_ce_raw_memory_sink i u_ot_pr_core.u_m/wclk ck_phy;lsort [dict keys $::ot_ce_raw_memory_seen]', 'u_m/rclk u_m/wclk'),
+            'swapped_root': ('ot_ce_raw_memory_sink i u_ot_pr_core.u_m/wclk ck_core', 'ERROR'),
+            'data_pin': ('ot_ce_raw_memory_sink i u_ot_pr_core.u_m/w_ce_in ck_phy', 'ERROR'),
+            'duplicate': ('ot_ce_raw_memory_sink i u_ot_pr_core.u_m/rclk ck_core;ot_ce_raw_memory_sink i u_ot_pr_core.u_m/rclk ck_core', 'ERROR'),
+            'other_prefix': ('proc i {op} {if {$op eq "getMaster"} {return m};return u_x.u_m};ot_ce_raw_memory_sink i u_x.u_m/rclk ck_core', '0')}
         for case,(body,expected) in cases.items():
             script=helper+base+'\nif {[catch {'+body+'} result]} {puts ERROR} else {puts $result}\n'
             p=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,check=True)
