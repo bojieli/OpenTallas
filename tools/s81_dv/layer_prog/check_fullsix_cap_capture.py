@@ -53,7 +53,8 @@ duplicates = [list(k)+[v] for k,v in count.items() if v != 1]
 expected_commits = Counter((t+5,leaf,address,value) for t,leaf,address,value in observed)
 actual_commits = Counter(commits)
 source_lines = [line for line in log.splitlines() if 'MISMATCH' in line or 'FULLSIX_SOURCE_CHECK' in line or 'FULLSIX_PREPARATORY_TRACE_END' in line]
-component_pass = bool(observed) and not (bad_values or missing or extra or duplicates or faults or expected_commits != actual_commits)
+golden_ok = (selfcheck['contract_rows']==512 and not selfcheck['contract_mismatch'] and not selfcheck['shard_bf16_mismatch'])
+component_pass = golden_ok and bool(observed) and not (bad_values or missing or extra or duplicates or faults or expected_commits != actual_commits)
 result = dict(scope='CAP/CW/VP component only; consumer read/retirement/deadline proof OPEN',
               full_stage_qualified=False, component_capture_PASS=component_pass,
               golden_self_check=selfcheck, expected_rows=len(expected), cw_words=len(observed), vp_words=len(commits),

@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc9       admits   321 GB (avail 400, growth 175, headroom 0, waiters 0/0 GB) load 63/128 running 34 disk 158 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-524328-1792485728 after 0 s
+{
+  "scope": "CAP capture calibration only; no consumer runtime retirement/deadline qualification",
+  "full_stage_qualified": false,
+  "first_frame_return": 1773,
+  "last_frame_return": 3560,
+  "first_cw": 1829,
+  "last_cw": 3632,
+  "first_vp_capture": 1834,
+  "last_vp_capture": 3637,
+  "measured_frame_to_last_vp": 77,
+  "priced_tail": 195,
+  "priced_tail_slack_diagnostic": 118,
+  "priced_tail_is_consumer_deadline_proof": false,
+  "descriptor_commands": 15,
+  "added_hardware_edges": 0
+}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-524328-1792485728): exit 0
