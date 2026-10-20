@@ -31,7 +31,12 @@ reg ck=0;always #0.5 ck=~ck;
 reg bt_re=0,tw_we=0;reg [8:0]bt_word=0;reg[1:0]tw_kind=0;reg[23:0]tw_addr=0;reg[1023:0]tw_data=0;
 wire[255:0]a,b;
 qfd_dv_s5_btab_ref u_a(.ck(ck),.bt_re(bt_re),.bt_word(bt_word),.bt_q(a),.tw_we(tw_we),.tw_kind(tw_kind),.tw_addr(tw_addr),.tw_data(tw_data));
+`ifdef BTAB_S3
+qfd_dv_s5_btab_s3 u_b(.ck(ck),.bt_re(bt_re),.bt_word(bt_word),.bt_ql(b[127:0]),.bt_qh(b[255:128]),.tw_we(tw_we),.tw_kind(tw_kind),.tw_addr(tw_addr),.tw_data(tw_data));
+`else
 qfd_dv_s5_btab_safe u_b(.ck(ck),.bt_re(bt_re),.bt_word(bt_word),.bt_q(b),.tw_we(tw_we),.tw_kind(tw_kind),.tw_addr(tw_addr),.tw_data(tw_data));
+`endif
+
 integer c,j,nz=0;
 initial begin
 // Fill every row in all four banks, then random reads/writes with no same-address collisions.
