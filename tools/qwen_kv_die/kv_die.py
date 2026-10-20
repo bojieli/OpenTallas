@@ -1047,6 +1047,21 @@ def d2ds_kit():
     return spec['top'], D2DS_SFM_TOPS[spec['top']], {k: int(pr[k]) for k in D2DS_SFM_PARAMS}
 
 
+D2D_FIT = os.environ.get('OT_KV_D2D_FIT', '0') == '1'
+
+
+def d2d_fit_outline():
+    """KV-BIND10: (w, h) on the GX/GY lattice (+SHAVE) of the BOUND d2ds view (OT_KV_D2DS_KIT's views/<top>/<top>.lef)."""
+    kit = os.environ.get('OT_KV_D2DS_KIT', '')
+    top = json.loads((ROOT / 'physical/ref_tile' / kit / 'spec.json').read_text()).get('top') if kit else None
+    lef = ROOT / 'physical/ref_tile' / str(kit) / 'views' / str(top) / f'{top}.lef'
+    if not lef.is_file():
+        raise SystemExit(f'kv_die: OT_KV_D2D_FIT=1 needs the bound d2ds view LEF ({lef} missing)')
+    m = re.search(r'MACRO\s+' + re.escape(top) + r'\b.*?SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', lef.read_text(), re.S)
+    w, h = float(m.group(1)), float(m.group(2))
+    return up(w + SHAVE, GX), up(h + SHAVE, GY)
+
+
 def d2ds_binding():
     mod, fil, extra = d2ds_kit()
     return dict(module=mod, file=fil, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k(), **extra),
@@ -2048,7 +2063,14 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     uy = Hk - MARGIN - UCIE[2]
     add('ucie_rom', UCIE[0], xc - UCIE[1] / 2, uy, UCIE[1] - SHAVE, UCIE[2] - SHAVE, 'MX', 'phy_d2d', 'io')
     dw, dh = FRAMES['qkd_d2d']
-    add('d2d_kv', 'qkd_d2ds' if slice_w else 'qkd_d2d', xc - dw / 2, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
+    if slice_w and D2D_FIT:
+        # KV-BIND10 10-20 (dense-face hops, OT_KV_D2D_FIT=1): the 777.6 x 518.4 frame held the 475.2 x 280.8 bound d2ds
+        # view at its lower-left corner -> a 239-um gap to the UCIe PHY above and the FDI word 120-460 um off the PHY's
+        # flit pins (ucie rx_flit <-> d2d.fdi 699 um).  Frame = the bound view's outline, centred under the PHY and
+        # abutting it (one GY); the HOST root / sequencer / ctl column below follows (their y derive from this dh).
+        dw, dh = d2d_fit_outline()
+    dx = up(xc - dw / 2, GX) if (slice_w and D2D_FIT) else xc - dw / 2
+    add('d2d_kv', 'qkd_d2ds' if slice_w else 'qkd_d2d', dx, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
     sw, sh = FRAMES['qkd_seq']
     sy = up(uy - 2 * GY - dh - sh, GY)
     if split:
