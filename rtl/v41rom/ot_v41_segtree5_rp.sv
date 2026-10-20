@@ -105,6 +105,37 @@ module ot_v41_segtree5_rp #(
     // each stage; the decision stage reads and writes the held operands in the same cycle, so consecutive
     // events of one tree see each other's updates.
     wire use_q = !sv && qc != 0;
+`ifdef OT_BF_QUEUE32
+    // One head-read pointer/control set per byte or metadata decoder. Same edge/state
+    // as qr, sv and (qc!=0); prevents one qr+use_q decode driving the whole head mux.
+    localparam integer NQR = 6;
+    (* keep *) reg [QW-1:0] qr_k [0:NQR-1];
+    (* keep *) reg [NQR-1:0] sv_qk, qne_k;
+    wire [QW:0] qc_next = qc + (in_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
+    wire [NQR-1:0] use_qk;
+    wire [QW-1:0] qr_next_k [0:NQR-1];
+    wire [1:0] rst_qk;
+    for (genvar qg = 0; qg < 2; qg++) begin : g_qread_rst
+        ot_v41_rst_copy u_r (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_qk[qg]));
+    end
+    for (genvar qj = 0; qj < NQR; qj++) begin : g_qread
+        assign use_qk[qj] = !sv_qk[qj] && qne_k[qj];
+        assign qr_next_k[qj] = qr_k[qj] + (use_qk[qj] ? 1'b1 : 1'b0);
+        always @(posedge clk or negedge rst_qk[qj/3]) begin
+            if (!rst_qk[qj/3]) begin
+`ifdef OT_BF_QUEUE32_MUT_PTR
+                qr_k[qj] <= (qj == 0 ? 1 : 0);
+`else
+                qr_k[qj] <= 0;
+`endif
+                sv_qk[qj] <= 1'b0; qne_k[qj] <= 1'b0;
+            end else begin
+                qr_k[qj] <= qr_next_k[qj];
+                sv_qk[qj] <= sv_a; qne_k[qj] <= |qc_next;
+            end
+        end
+    end
+`endif
     reg [31:0] h_v;
     reg [PW-1:0] h_t;
     reg h_f, h_e;
@@ -402,6 +433,20 @@ module ot_v41_segtree5_rp #(
         if (in_v) begin qv[qw] <= in_val; qt[qw] <= in_tree; qf[qw] <= in_final; qe[qw] <= in_err; qp[qw] <= in_pos; end
         if (use_q) tpos[h_t] <= h_p;
         opos <= y_pos;
+`ifdef OT_BF_QUEUE32
+        for (int qb = 0; qb < 4; qb++)
+            h_v[8*qb +: 8] <= (qr_next_k[qb] == qw) ? in_val[8*qb +: 8] : qv[qr_next_k[qb]][8*qb +: 8];
+        if (qr_next_k[4] == qw) begin
+            h_t <= in_tree; h_f <= in_final; h_e <= in_err; h_p <= in_pos;
+        end else begin
+            h_t <= qt[qr_next_k[4]]; h_f <= qf[qr_next_k[4]];
+            h_e <= qe[qr_next_k[4]]; h_p <= qp[qr_next_k[4]];
+        end
+`ifdef OT_BF_FOREP
+        for (ti = 0; ti < NT; ti = ti + 1)
+            h_toh[ti] <= (qr_next_k[5] == qw) ? (in_tree == ti) : (qt[qr_next_k[5]] == ti);
+`endif
+`else
         if (qr + (use_q ? 1'b1 : 1'b0) == qw) begin      // the head-to-be is the node arriving now (if any)
             h_v <= in_val; h_t <= in_tree; h_f <= in_final; h_e <= in_err; h_p <= in_pos;
 `ifdef OT_BF_FOREP
@@ -415,6 +460,7 @@ module ot_v41_segtree5_rp #(
             for (ti = 0; ti < NT; ti = ti + 1) h_toh[ti] <= qt[qr + (use_q ? 1'b1 : 1'b0)] == ti;
 `endif
         end
+`endif
 `ifndef OT_BF_HELD_SRAM
         for (hi = 0; hi < NH; hi = hi + 1) if (s_hold[hi]) held[hi] <= y_dc[hi / GS];
 `elsif QP_CHECK
