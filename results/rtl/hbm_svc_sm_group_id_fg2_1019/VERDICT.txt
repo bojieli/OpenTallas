@@ -1,0 +1,5 @@
+L2H-IDXSCORE/SVG 2026-10-19, source e1c2c2ab1 (claude/l2h-svg-fg2-1019), Verilator 5.050 on ot-epyc8, images = fg1 images (images.sha256 identical).
+gate.log: run_sm_group_id_fg2.sh positive SVG_FG2_GATE PASS, REPORT_IDENTICAL lines=9 vs the parameterised flop-FIFO master (GOGAP 100).
+wit_<m>.log: ONLY=<m> expect-fail witnesses: msm1 msm4 mst skew earlygo fwaddr fpub all 'SVG_FG2_MUT <m> FAIL'.
+History: a first mutant fraddr (macro reads the current fetch slot) SURVIVED on 25c24d5a4 -- the bench traffic never presents two
+back-to-back published words to one response FIFO, so that defect is unobservable here (coverage gap: no burst); replaced by fwaddr.

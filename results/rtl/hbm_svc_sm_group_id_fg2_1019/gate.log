@@ -1,0 +1,19 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-svg/src_e1c2c2ab1
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/l2h-svg/src_e1c2c2ab1
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/l2h-svg/src_e1c2c2ab1
+ot-run: ot-epyc7       admits   594 GB (avail 516, growth 101, headroom 0, waiters 0/0 GB) load 70/96 running 23 disk 5968 GB 
+ot-run: ot-epyc8       admits  1077 GB (avail 867, growth 113, headroom 0, waiters 0/0 GB) load 38/128 running 27 disk 279 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-svg/src_e1c2c2ab1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-svg/src_e1c2c2ab1
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-173180-1792459005 after 0 s
+SVG_FG2 GOGAP=100
+SVG_FG2 REPORT_IDENTICAL lines=9
+SM_GROUPS_ISSUED PASS fixed_go=1 go0=400 gogap=100 stack=0 rows=64 epochs=8 lbanks=4 first_done_ps=391251.843000 last_done_ps=974584.943000 steady_epoch_ps=83333.300000 bytes_per_epoch_per_SM=8704 tb_issue=0
+SVG_FG2 MUTANT_REJECTED msm1: SM_STACK actualPC mapping
+SVG_FG2 MUTANT_REJECTED msm4: SM_STACK actualPC mapping
+SVG_FG2 MUTANT_REJECTED mst: SM_STACK DUT fault cycle173 maskff
+SVG_FG2 MUTANT_REJECTED skew: SM_STACK go skew sm3 cycle576
+SVG_FG2 MUTANT_REJECTED earlygo: SM_STACK DUT fault cycle348 maskf9
+SVG_FG2_GATE PASS stack=0 gogap=100
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-173180-1792459005): exit 0
