@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.s81_topk6_quarter_native_classification.v1",
+ "lane": "S81-TOPK6 2026-10-20",
+ "design": "dsdv_bksel_q OMERGE default-off build with -DOT_S81PH_SEL_OMERGE (source 4b6f1e3cd, canonical ORFS synth unit oth-ubuntu-3761607-1792487357 rc0)",
+ "netlist_sha256": "20672d2c0d8ff1d32b1681235958c3981038064dcc999b3a4ce8ebad5e66ff51",
+ "census_tool": "main 360c64320 tools/ref_tile/native_census.py a3af6dd8 + textbook_lint 4adb3e60, actual 7 Liberty (TT RVT + 2 SRAM tt)",
+ "census_unit": "oth-ubuntu-3851693-1792488379 ep7",
+ "status": "FAIL", "roots_examined": 207460, "violations": 741, "max_dynamic_loads": 10760,
+ "synth": {"dff": 44470, "async_reset_dff": 10936, "sram_macros": 16, "chip_area_um2": 102344.3},
+ "worst_families": [
+  ["u_q.u_q.rst_n (single reset flop -> 10760 async reset pins)", 10760, "reset: no regional ot_rst_relay tree; drop resets on datapath flops, 2-stage landing + leaves <=32"],
+  ["u_q.u_q.sq[839]", 595, "sequential select broadcast: kept copies / registered one-hot per 32"],
+  ["u_q.u_q.u_s.i0_rp", 593, "same"],
+  ["comb nets _150968_/_081140_/_095038_/_096877_/_099933_", "1184/608/593/593/283", "decoded broadcast after select regs: register the decode per 32-load leaf"],
+  ["u_q.u_q.u_s.u_hc.v1 / u_hf.v1", 129, "histograms: replace with hardened hist32 BANK0 leaves (R3 gate PASS max25)"],
+  ["u_pi/u_ps g_rst[].g_sl[].g_fwd.qfc[] (88 regs)", 114, "packer forward controls: FAN32 kept copies (paramod names checked)"],
+  ["u_pi/u_ps g_frc[].r[] (66)", 115, "same"],
+  ["u_pi/u_ps g_acl[].a[]/cof/cv (94)", 113, "same"],
+  ["u_q.u_q.cq[] (23)", 83, "same"],
+  ["u_s c3_sel/i1_s/r1_d/tsw/x_val/sw_T (~88)", 92, "same"],
+  ["u_in g_indexed_format f[] / cur[]", 42, "same"],
+  ["input port rst[0]", 65, "reset landing at face"]
+ ],
+ "verdict": "monolithic quarter (succ3/succ4/succ4k8/sq_reg/OMERGE family) is not native32-admissible; no gate. Successor = hierarchical quarter: hardened hist32 banks + reset relay tree + FAN32 kept copies on every family above, then synth + census before any gate."
+}
