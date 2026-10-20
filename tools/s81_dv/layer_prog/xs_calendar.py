@@ -208,6 +208,80 @@ def beats_of(w, fam):
     return [((16 * u + 8 * h + b) >> 1) for h in (0, 1) if sv >> h & 1]
 
 
+# ------------------------------------------------------------------------------------------------ phase pipeline
+# S81-RATEFIX (10-19): the field phases of one op as ONE calendar segment, phases overlapped the way an accelerator
+# streams weights (double-buffered configuration: phase i+1 is accepted and configured while phase i streams).
+# compile_phase gives every phase its own segment (prime / start / ... / retire + 30 / phase_end) and one tag, so
+# consecutive phases serialise on the whole segment: the measured fullsix minimum is 224 edges a phase for a 64-word
+# stream (TOKSIM-S81/FIELD sweep, 223 fails: GO on the live tag 0).  Here:
+#   * phase i launches at tg0 + i * period; its stream rows keep compile_phase's offsets from its launch (so every
+#     element / frame / return-plan edge of the phase moves by exactly i * period -- the plan stays valid);
+#   * tags alternate between 0 and 2 (tag[0] = 0 keeps the x-buffer parity spar = tag[0] ^ pos[0] = 0: the retained x);
+#     the q element's own op tag is the cfg7 sequencer's go count, independent of these;
+#   * cfg row = launch - cfg_lead, accept row = cfg row - acc_gap, retire = last stream row + ADDR_LEAD + retire_gap;
+#   * one phase_end, on the last row (the reader's END ends the segment).
+# Element constraints the period / cfg_lead must satisfy (measured on the fullsix P224 trace, Q_LIFETIME of all 54
+# q elements; element edge = calendar row + 1472 for both cfg and go):  walk = go + 1 .. go + 64/66;  the
+# configuration load (26 words) must start after the bank it writes (phase i-1's) drained: walk end + DRAIN (127);
+# swap needs the load finished and walking low; go >= swap + 22 (replay 17 + RT + QM5 stage).  Hence
+#   period >= 88 (replay) and 2 * period >= 195 + cfg_lead, cfg_lead >= 48   ->   period >= 122 at DRAIN 127.
+def compile_pipeline(P, S, phases, slc, period, cfg_lead=48, acc_gap=10, retire_gap=6, tags=(0, 2)):
+    from pq_calendar import action_word
+    rows = {}
+
+    def ev(t, **f):
+        r = rows.setdefault(t, {})
+        for k, v in f.items():
+            assert k not in r or r[k] == v, (t, k, r.get(k), v)
+            r[k] = v
+    per = []
+    tg0 = None
+    for n, ph in enumerate(phases):
+        c = compile_phase(P, S, ph, slc)
+        if tg0 is None:
+            tg0 = c['tg']
+        sh = tg0 + n * period - c['tg']                 # phase n's rows move by sh (its launch -> tg0 + n * period)
+        tag = tags[n % len(tags)]
+        assert tag & 1 == 0, 'x parity: tag[0] must be 0 for the retained x (spar = tag[0] ^ pos[0])'
+        tg = c['tg'] + sh
+        tc = tg - cfg_lead
+        ta = tc - acc_gap
+        assert ta >= 0, ('accept before the segment start', n, ta)
+        ev(ta, accept_tag=tag)
+        ev(tc, cfg=1, cfg_tag=tag)
+        ev(tg, launch=1, launch_tag=tag)
+        ts = [t + sh for t in c['ts']]
+        for i, t in enumerate(ts):
+            ev(t, stream_req=1, stream_tag=tag, stream_pos=0, stream_fam=c['fam'],
+               stream_lastpos=int(i == c['nb'] - 1), stream_lastop=int(i == c['nb'] - 1))
+            ev(t + ADDR_LEAD, stream_addr=c['sbase'] + i)
+        tr = max(ts) + ADDR_LEAD + retire_gap
+        ev(tr, retire_mask=1 << tag)
+        per.append(dict(phase=ph, tag=tag, accept=ta, cfg=tc, launch=tg, stream=[ts[0], ts[-1]], retire=tr,
+                        nb=c['nb'], stall_edges=c['stall_edges'], D=c['D'], shift=sh))
+    for n in range(2, len(per)):                         # tag reuse: retire of n-2 strictly before accept of n
+        assert per[n - 2]['retire'] < per[n]['accept'], ('tag reused while live', n, per[n - 2]['retire'], per[n]['accept'])
+    for n in range(1, len(per)):                         # streams never overlap (one stream word an edge)
+        assert per[n - 1]['stream'][1] + ADDR_LEAD < per[n]['stream'][0], ('stream overlap', n)
+    tend = max(rows) + 4
+    ev(tend, phase_end=1)
+    tt = sorted(rows)
+    assert len(tt) <= 4096 and tt[-1] < (1 << 24)
+    packed = [(t << 75) | action_word(rows[t], action_bits=75) for t in tt]
+    # is_d: offset load, ONE prime / start, one GO per phase captured with its accept row
+    iss = {T_OFFCFG: isd(off_we=1, off=OFF), TS - 20: isd(prime=1, base=0, length=len(tt)),
+           TS: isd(start=1, base=0, length=len(tt))}
+    for p in per:
+        assert TS + GO_LAT + p['accept'] not in iss
+        iss[TS + GO_LAT + p['accept']] = isd(go=1, ph=p['phase'], np=0)
+    its = sorted(iss)
+    for i in its:
+        assert len([j for j in its if j <= i < j + OFF + 2]) <= ND
+    ctl = lambda t: TS + GO_LAT + t + OFF + XS_LAG          # noqa: E731
+    return dict(rows=rows, packed=packed, iss=iss, phases=per, cal_rows=len(tt), period=period, cfg_lead=cfg_lead,
+                acc_gap=acc_gap, retire_gap=retire_gap, tags=list(tags), end_iter=ctl(tend) + 40)
+
+
 # ------------------------------------------------------------------------------------------------ tag remap
 def remap_tags(vec, out, meta):
     """rewrite the phase's row tags in the frame cfg ROM images: phase-local r -> the rank-local row (meta row_index

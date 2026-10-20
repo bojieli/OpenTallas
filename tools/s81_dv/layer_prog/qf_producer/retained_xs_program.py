@@ -23,7 +23,11 @@ def main():
  # TOK.DS.BENCH.1 CAP-ED (LEAD2-S81/TOK2 10-19): global 12-pair placement from the exact root packing (packD_<D>.json)
  p.add_argument('--placements',default=None);p.add_argument('--edly',type=int,default=0)
  # TOK2: per-frame static CAP delays {frame suffix: edges} (default: --edly on every R frame); the W tree holds L01 L02 L03 R01
- p.add_argument('--shifts',default=None);a=p.parse_args()
+ p.add_argument('--shifts',default=None)
+ # S81-RATEFIX 10-19: epoch calendar. --epoch-period P (serial segments, one tag: the old 1100 + 600 i bench calendar
+ # at P = 600); --pipeline-period P: ONE overlapped segment (xs_calendar.compile_pipeline), tags 0/2, --cfg-lead C.
+ p.add_argument('--epoch-period',type=int,default=600);p.add_argument('--pipeline-period',type=int,default=0)
+ p.add_argument('--cfg-lead',type=int,default=48);a=p.parse_args()
  glob=json.loads(Path(a.placements).read_text()) if a.placements else None
  if glob:assert glob['complete_search'] and glob['solution']
  SH=json.loads(a.shifts) if a.shifts else {f:(a.edly if f[0]=='R' else 0) for f in ['L01','L02','L03','R01','R02','R03']}
@@ -74,8 +78,17 @@ def main():
   phase.extend([1280<<1|len(w)<<14|len(stream)<<30|6<<46,0]);stream.extend(w)
  # All tags/positions remain0; odd epoch index is NOT a buffer parity change.
  cals=[];issuers={};epochrec=[]
- for i in range(15):
-  c=XC.compile_phase(phase,stream,i,6);base=len(cals);cals.extend(c['packed']);shift=1100+600*i
+ pipe=None
+ if a.pipeline_period:
+  pipe=XC.compile_pipeline(phase,stream,list(range(15)),6,a.pipeline_period,cfg_lead=a.cfg_lead)
+  cals=list(pipe['packed'])
+  for t,v in pipe['iss'].items():issuers[1100+t]=v
+  for p_ in pipe['phases']:
+   i=p_['phase'];epochrec.append(dict(epoch=i,calendar_base=0,calendar_rows=pipe['cal_rows'],is_d_shift=1100,
+    pipeline=p_,source_parity=0,tag=p_['tag'],position=0,stream_words=p_['nb'],data_reads=sum(bool(w&1) for w in common[i]),
+    reads_of_beats=sorted(set(g for w in common[i] for g in XC.beats_of(w,0))),return_and_native_dates=None))
+ for i in ([] if pipe else range(15)):
+  c=XC.compile_phase(phase,stream,i,6);base=len(cals);cals.extend(c['packed']);shift=1100+a.epoch_period*i
   for t,v in c['iss'].items():
    if t==XC.GW_IT:continue # actual single-owner retained window; never reload-valid by assumption
    if i and t==XC.T_OFFCFG:continue
@@ -112,6 +125,7 @@ def main():
    'END retains but no laterGW/overwrite','reset invalidates; reinstall raw path required','mode/slot/port lifetimes'],
   global_calendar=None if not glob else dict(placements=a.placements,edly=a.edly,shifts=SH,frame_order=ORDER,measured_frame_offsets=OFFS,
    root_edges_per_epoch={str(i):sorted(v) for i,v in absedges.items()},rule='union of all frames exit edges (+ per-frame static CAP delay) has no repeat'),
+  calendar_mode=(dict(mode='pipeline',period=pipe['period'],cfg_lead=pipe['cfg_lead'],acc_gap=pipe['acc_gap'],retire_gap=pipe['retire_gap'],tags=pipe['tags'],cal_rows=pipe['cal_rows']) if pipe else dict(mode='serial',epoch_period=a.epoch_period)),
   fixture_raw_sha256=hashlib.sha256((Path(a.fixture)/'ops/attn.q_norm.scale.bin').read_bytes()).hexdigest())
  (out/'contract.json').write_text(json.dumps(rec,indent=2)+'\n')
  print('RETAINED_XS_PROGRAM_MODEL_PASS frames6 epochs15 rows512 common_streams15 calendarrows',len(cals),'QB20_vs_reload300; ACTUAL_READS_UNPROVED')

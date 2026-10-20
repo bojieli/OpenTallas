@@ -1,0 +1,436 @@
+{
+ "summary": "SU ops on the p4l die run in the slice beat leaves (ot_s81sl_vp/vn/vq/vs/vsw, xfin ot_s81dv_norm) and the attention service dsdv_svc_rs; DAG op names unchanged (s81_layer_price_p4l.json lists the same ops), but the release benches measure them at LEAF scope (one 64-lane beat leaf, vp command pin -> last result), not at the DAG node scope (which adds the slice ring / norm-tree exchange / landing wire terms that dv_price prices). Leaf cycles are therefore a measured component; the wire terms stay priced. Release vs/vp/vq/vn blobs: vs f9ce6c98, vp 25621e2a (no NORMR), vq 0f0aa0f0, vn 4b8cd085, vsw 078fbeab; svc_rs 2906d36c / svc_att 44a0ee84.",
+ "ops": {
+  "ffn.quant2": {
+   "cycles": 191,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "vp SW command pin -> last vs result incl. vq act-quant (the last of the leaf's 8 SW commands; the 7 before it take 151 each without the quant tail)",
+   "shape": "DeepSeek-V4.1 L0 1M-token SU die-share case (su_cases_v2_ildr.pkl, VS_GOLD rows=658) in one beat leaf, BEAT 37",
+   "bit_exact": true,
+   "golden": "tools/s81_slice/vs_gold.py (dsrom_su_swiglu.golden_swiglu + hc_gate.g_quant, each asserted vs the hub executor check); SLVS err SW=0, xq=2 checked",
+   "rtl": {
+    "module": "ot_s81sl_vs op 8 SW + ot_s81sl_vsw + ot_s81sl_vq (in ot_s81sl_slice beat leaf)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vs f9ce6c98 / vsw 078fbeab / vq 0f0aa0f0",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/vs_bench.sh 0 L0 (tb_s81sl_vs)@19bf4121e",
+   "evidence": "ot-epyc7:/srv/opentallas-scratch/claude/toksim-s81-su/out_slice/vs_L0.txt: 'VSOP op=8 cmd=1737 cycles_cmd_to_last_result=191', 'PASS vs MUT=0 L0'",
+   "job": "ot-run oth-ubuntu-1852224 (job_slice.sh, 1st run; vs finished before the unit was terminated)",
+   "edges_owed": "none for vs; ring/landing terms priced",
+   "note": "Serial (one vs op at a time): the leaf's SW share = 7 x 151 + 191 = 1,248 cycles back-to-back (bench issued them 171 apart: 1,388). ffn.swiglu (3) and ffn.route_w (5.9) are fused into this SW op (w0/w1 from imm; leaf-row weight read OPEN per S81-SLICE-VP)."
+  },
+  "ffn.swiglu": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "fused into ffn.quant2 (SW op)",
+   "bit_exact": true,
+   "note": "covered by ffn.quant2 (vs op 8 SW computes swiglu + route weight + quant); keep 0 here or the old 3-cycle crossing term (priced)"
+  },
+  "ffn.route_w": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "fused into ffn.quant2 (SW imm w0/w1)",
+   "bit_exact": true,
+   "note": "covered by ffn.quant2"
+  },
+  "attn.z_quant": {
+   "cycles": 19,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "vp QB command pin -> last vq quantised sub-beat",
+   "shape": "L0 1M SU case, one beat leaf",
+   "bit_exact": true,
+   "golden": "vs_gold.py hc_gate.g_quant; SLVS QB=0",
+   "rtl": {
+    "module": "ot_s81sl_vs op 9 QB -> ot_s81sl_vq",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vs f9ce6c98 / vq 0f0aa0f0",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/vs_bench.sh 0 L0@19bf4121e",
+   "evidence": "out_slice/vs_L0.txt 'VSOP op=9 cmd=1953 cycles_cmd_to_last_result=19'",
+   "job": "oth-ubuntu-1852224"
+  },
+  "ffn.softplus_sqrt": {
+   "cycles": 145,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "vp RA command pin -> last sqrt(softplus) result row",
+   "shape": "L0 1M SU case (RA checked_pairs 1)",
+   "bit_exact": true,
+   "golden": "hdc_golden_v41 softplus/sqrt; SLVS RA=0",
+   "rtl": {
+    "module": "ot_s81sl_vs op 10 RA + closed hub RA lane pair dsfd_su_t_rxsf/_rxsb",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vs f9ce6c98",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/vs_bench.sh 0 L0@19bf4121e",
+   "evidence": "out_slice/vs_L0.txt 'VSOP op=10 cmd=1979 cycles_cmd_to_last_result=145'",
+   "job": "oth-ubuntu-1852224"
+  },
+  "ffn.bias": {
+   "cycles": 115,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "vp RB command pin -> last scores+bias row",
+   "shape": "L0 1M SU case (RB 48 pairs)",
+   "bit_exact": true,
+   "golden": "vs_gold.py hdc add; SLVS RB=0",
+   "rtl": {
+    "module": "ot_s81sl_vs op 11 RB",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vs f9ce6c98",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/vs_bench.sh 0 L0@19bf4121e",
+   "evidence": "out_slice/vs_L0.txt 'VSOP op=11 cmd=2142 cycles_cmd_to_last_result=115'",
+   "job": "oth-ubuntu-1852224"
+  },
+  "attn.q_rope": {
+   "cycles": 57,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "vp QR command pin -> last rotated q row",
+   "shape": "L0 1M SU case (QR 8 pairs)",
+   "bit_exact": true,
+   "golden": "hdc_golden_v41 rope_tail; SLVS QR=0",
+   "rtl": {
+    "module": "ot_s81sl_vs op 12 QR",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vs f9ce6c98",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/vs_bench.sh 0 L0@19bf4121e",
+   "evidence": "out_slice/vs_L0.txt 'VSOP op=12 cmd=2322 cycles_cmd_to_last_result=57'",
+   "job": "oth-ubuntu-1852224",
+   "note": "dv_price adds attn_q_path (slice -> PHY-side attention entry) on this node: priced wire term, not in this leaf number"
+  },
+  "ffn.moe_combine(vs MOE, not in SU list)": {
+   "dag_cls": "su",
+   "old": null,
+   "cycles": 75,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "vp MOE command pin -> last combined row (7 experts x 8 chunks, id order)",
+   "bit_exact": true,
+   "evidence": "out_slice/vs_L0.txt 'VSOP op=13 cmd=2404 cycles_cmd_to_last_result=75'",
+   "note": "extra: vs op 13; DAG op is in the field/coll class owner's list (ffn combine), reported for completeness"
+  },
+  "attn.hc_post": {
+   "cycles": 63,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "vp POST command pin -> last h half-row written (hw) in the beat leaf",
+   "shape": "L0 and L2 1M token real layer chain (leaf_gold beat 37, slice 7 leaf 2), 16 y beats",
+   "bit_exact": true,
+   "golden": "tools/s81_slice/leaf_gold.py (hc_gate / hdc_golden_v41 hc_post chain); SLBEAT err=0",
+   "rtl": {
+    "module": "ot_s81sl_vp op 2 POST + ot_s81sl_vn + ot_dsrom_su_hcpost_lane_pr",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / hcpost_lane_pr 58de2cee",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/beat_bench.sh base 37 L0|L2 (tb_s81sl_beat)@19bf4121e",
+   "evidence": "out_slice/beat_L0.txt + beat_L2.txt 'post_cmd_to_last_hw=63/63', 'PASS beat base B=37 L0/L2'",
+   "job": "ot-run job_slice.sh relaunch (beat finished)",
+   "edges_owed": "S81-SLICE-VP POST row order (5043d6876, not in release): +0 on POST",
+   "note": "HC master POST on p4l = this leaf op (all 16 x 5 leaves in parallel); old hub-era layer-bench POST 248 after all-reduce (s81_layer_tput_1013) superseded"
+  },
+  "ffn.hc_post": {
+   "cycles": 63,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "same vp POST op as attn.hc_post",
+   "bit_exact": true,
+   "evidence": "out_slice/beat_L0.txt / beat_L2.txt post_cmd_to_last_hw=63",
+   "rtl": {
+    "module": "ot_s81sl_vp op 2 POST",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/beat_bench.sh@19bf4121e"
+  },
+  "attn.quant": {
+   "cycles": 418,
+   "grade": "measured-release-RTL",
+   "scope": "leaf partial + 16-slice exchange + leaf finish (release benches composed serially, worst slice)",
+   "definition": "vp NORM go -> beat partial 112 (beat_bench) + last partial -> first rstd 234 + rstd spread 13 (xfin16) + rstd -> last XQ beat 59 (beat_bench)",
+   "shape": "L0/L2 1M token real chain, beat 37",
+   "bit_exact": true,
+   "golden": "leaf_gold.py / hbm_norm_engine_view_20261006 gold (DS1M hc_pre + RMSNorm)",
+   "rtl": {
+    "module": "ot_s81sl_vp/vn/vq + ot_s81dv_norm (xfin)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / vq 0f0aa0f0 / ot_s81dv_norm c3eef80d",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/beat_bench.sh base 37 L0|L2 + tools/s81_dv/norm16_bench.sh base xfin @19bf4121e",
+   "evidence": "out_slice/beat_L0.txt go_to_partial=112 rstd_to_xq=59 rstd_to_xb=79; xfin16 (tools/s81_dv/norm16_bench.sh base xfin@19bf4121e: one real G64 group, all 80 beats, + 16 real ot_s81dv_xfin leaves on the slice exchange ring, LS 9 / LE 29 bench ring stages; DS1M golden hc_pre+RMSNorm row): last_partial_to_first_rstd=234, rstd_spread=13, y_err 0, PASS (out_slice/xfin16.txt)",
+   "edges_owed": "NORMR (S81-SLICE-VP 5043d6876, not in release) +3; slice xg successor RELAY +1 on ro/vo (SLICE 16:39, not in release); die ring wire landing terms (dv_price) not in the bench ring stages LS 9/LE 29",
+   "note": "compose as-is; old hub price 324/306",
+   "leaf_cycles": 171,
+   "job": "job_slice.sh relaunch (ot-epyc7)"
+  },
+  "ffn.norm.scale": {
+   "cycles": 438,
+   "grade": "measured-release-RTL",
+   "scope": "leaf partial + 16-slice exchange + leaf finish (release benches composed serially, worst slice)",
+   "definition": "vp NORM go -> beat partial 112 (beat_bench) + last partial -> first rstd 234 + rstd spread 13 (xfin16) + rstd -> last y/xb beat 79 (beat_bench)",
+   "bit_exact": true,
+   "evidence": "out_slice/beat_L0.txt go_to_partial=112 rstd_to_xq=59 rstd_to_xb=79; xfin16 (tools/s81_dv/norm16_bench.sh base xfin@19bf4121e: one real G64 group, all 80 beats, + 16 real ot_s81dv_xfin leaves on the slice exchange ring, LS 9 / LE 29 bench ring stages; DS1M golden hc_pre+RMSNorm row): last_partial_to_first_rstd=234, rstd_spread=13, y_err 0, PASS (out_slice/xfin16.txt)",
+   "job": "job_slice.sh relaunch (ot-epyc7)",
+   "edges_owed": "NORMR (S81-SLICE-VP 5043d6876, not in release) +3; slice xg successor RELAY +1 on ro/vo (SLICE 16:39, not in release); die ring wire landing terms (dv_price) not in the bench ring stages LS 9/LE 29",
+   "note": "compose as-is; old hub price 324/306",
+   "leaf_cycles": 191,
+   "golden": "leaf_gold.py / hbm_norm_engine_view_20261006 gold (DS1M hc_pre + RMSNorm)",
+   "rtl": {
+    "module": "ot_s81sl_vp/vn/vq + ot_s81dv_norm (xfin)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / vq 0f0aa0f0 / ot_s81dv_norm c3eef80d",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/beat_bench.sh base 37 L0|L2 + tools/s81_dv/norm16_bench.sh base xfin @19bf4121e"
+  },
+  "attn.q_quant": {
+   "cycles": 418,
+   "grade": "measured-release-RTL",
+   "scope": "leaf partial + 16-slice exchange + leaf finish (release benches composed serially, worst slice)",
+   "definition": "vp NORM go -> beat partial 112 (beat_bench) + last partial -> first rstd 234 + rstd spread 13 (xfin16) + rstd -> last XQ beat 59 (beat_bench)",
+   "bit_exact": true,
+   "evidence": "out_slice/beat_L0.txt go_to_partial=112 rstd_to_xq=59 rstd_to_xb=79; xfin16 (tools/s81_dv/norm16_bench.sh base xfin@19bf4121e: one real G64 group, all 80 beats, + 16 real ot_s81dv_xfin leaves on the slice exchange ring, LS 9 / LE 29 bench ring stages; DS1M golden hc_pre+RMSNorm row): last_partial_to_first_rstd=234, rstd_spread=13, y_err 0, PASS (out_slice/xfin16.txt)",
+   "note": "q norm runs over 4 adjacent slices (norm_tree_q), so the 16-slice exchange 234 is an upper bound for attn.q_quant",
+   "leaf_cycles": 171,
+   "golden": "leaf_gold.py / hbm_norm_engine_view_20261006 gold (DS1M hc_pre + RMSNorm)",
+   "rtl": {
+    "module": "ot_s81sl_vp/vn/vq + ot_s81dv_norm (xfin)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vp 25621e2a / vn 4b8cd085 / vq 0f0aa0f0 / ot_s81dv_norm c3eef80d",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/beat_bench.sh base 37 L0|L2 + tools/s81_dv/norm16_bench.sh base xfin @19bf4121e",
+   "job": "job_slice.sh relaunch (ot-epyc7)",
+   "edges_owed": "NORMR (S81-SLICE-VP 5043d6876, not in release) +3; slice xg successor RELAY +1 on ro/vo (SLICE 16:39, not in release); die ring wire landing terms (dv_price) not in the bench ring stages LS 9/LE 29"
+  },
+  "attn.hc_pre": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "fused into vp NORM (hc_pre coefficients imm -> vn n_go)",
+   "bit_exact": true,
+   "note": "covered by attn.quant (NORM)"
+  },
+  "ffn.hc_pre": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "scope": "leaf",
+   "definition": "fused into vp NORM",
+   "bit_exact": true,
+   "note": "covered by ffn.norm.scale"
+  },
+  "attn.norm.sumsq": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused (vn partial)",
+   "note": "covered by attn.quant"
+  },
+  "attn.norm.rsqrt": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused (xfin rstd)",
+   "note": "covered by attn.quant"
+  },
+  "attn.norm.scale": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused (rstd -> y)",
+   "note": "covered by attn.quant"
+  },
+  "attn.q_norm.sumsq": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused",
+   "note": "covered by attn.q_quant"
+  },
+  "attn.q_norm.rsqrt": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused",
+   "note": "covered by attn.q_quant"
+  },
+  "attn.q_norm.scale": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused",
+   "note": "covered by attn.q_quant"
+  },
+  "ffn.norm.sumsq": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused",
+   "note": "covered by ffn.norm.scale"
+  },
+  "ffn.norm.rsqrt": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused",
+   "note": "covered by ffn.norm.scale"
+  },
+  "attn.kv_norm.sumsq": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused",
+   "note": "covered by attn.kv_rope_qdq"
+  },
+  "attn.kv_norm.rsqrt": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused",
+   "note": "covered by attn.kv_rope_qdq"
+  },
+  "attn.kv_norm.scale": {
+   "cycles": 0,
+   "grade": "measured-release-RTL",
+   "definition": "fused",
+   "note": "covered by attn.kv_rope_qdq"
+  },
+  "attn.kv_rope_qdq": {
+   "grade": "measured-old-RTL",
+   "note": "off the critical path (n_crit 0); no release-RTL kv RMSNorm->RoPE->QDQ bench found on the slice (kv family = vp NORM + vs QR + vq); keep old 283"
+  },
+  "attn.scores": {
+   "cycles": 289,
+   "grade": "measured-newest-element-RTL",
+   "scope": "attention service job (16 svc_rs slices + entries)",
+   "definition": "svc GO -> last fold score at the root (SVCRS go -> last_score)",
+   "shape": "full1m: T 640 (512 selected + 128 window), 16 heads, D 512, ST0 and ST2 (both 289), 2 seeds",
+   "bit_exact": true,
+   "golden": "dsfd_svc_c golden vectors (tools/v41_ckv_sel_attn_vectors.py: sc.hex, pv.hex); sc_errors 0, se_errors 0, pv_errors 0",
+   "rtl": {
+    "module": "dsdv_svc_rs x14 + dsdv_svc_rs_entry x2 (dsdv_svc_att + ot_hdc_v41x_attn_s, SVCQ_ENG_FG3 sim engine)",
+    "source": "claude/s81-svc2-attw-1019@809c78aa5 (LAND+ATT SRAM) == 5d9c4ecaa flop baseline cycle-identical",
+    "blob": "svc_rs 0617ab32 / svc_att d49a9357 (release: svc_rs 2906d36c / svc_att 44a0ee84)",
+    "in_release_source": false
+   },
+   "bench": "tools/s81_dv/svc_rs/rs_bench_pl.sh (tb_dsdv_svc_rs)@809c78aa5",
+   "evidence": "ot-epyc7:/srv/opentallas-scratch/claude/s81-svc2-1019/out_sram/verdict_base_s0_pe0_full1m_1.txt 'go=5016 first_score=5146 last_score=5305 end=6563 ... verdict=PASS'; same in main results/arch/s81_live_results_1338_1019/svc/baseline_job_base_s0.log (src 5d9c4ecaa)",
+   "job": "release-blob rerun RUNNING: job_svc.sh ST0/ST2 (scratch/toksim-s81/su_svc_s{0,2}.otrun.log, out ot-epyc7:/srv/opentallas-scratch/claude/toksim-s81-su/out_svc/verdict_*); release rerun did not finish within this agent (protect-lib builds), see pending_results TOKSIM-S81/SU",
+   "edges_owed": "SVC4: production engine (no FG3) TLAT 33 -> 45 = +12 per score beat (measured A/B job_{prod,fg3}_base_s{0,2} pending, LEAD2-S81/SVC4); attw landed parent TLX +6 on every engine result; ATT_PINREG +1 (GO +15/+9 via host-write loop). NOT folded in.",
+   "note": "tail46 (short ctx): 141. DAG node price was 52.6/instance on the old hub model"
+  },
+  "attn.pv": {
+   "cycles": 596,
+   "grade": "measured-newest-element-RTL",
+   "scope": "attention service job",
+   "definition": "compiled PV send (GO + ceil(5T/4) + 150) -> last P.V word at the owner entry (SVCRS_SCHED pv_sent -> pv_last)",
+   "shape": "full1m T 640, 160 P.V words, ST0/ST2",
+   "bit_exact": true,
+   "golden": "pv.hex, pv_errors 0 of 2048",
+   "rtl": {
+    "module": "dsdv_svc_rs / dsdv_svc_att P.V path",
+    "source": "claude/s81-svc2-attw-1019@809c78aa5",
+    "blob": "svc_att d49a9357",
+    "in_release_source": false
+   },
+   "bench": "rs_bench_pl.sh@809c78aa5",
+   "evidence": "ot-epyc7:/srv/opentallas-scratch/claude/s81-svc2-1019/out_sram/base_d0s0_pe0_*/run_full1m_s1_obj_m40000.log 'SVCRS_SCHED T=640 pvs=950 ... pv_sent=5966 ... pv_first=6403 pv_last=6562'",
+   "job": "release rerun job_svc.sh (pending); release rerun did not finish within this agent (protect-lib builds), see pending_results TOKSIM-S81/SU",
+   "edges_owed": "SVC4 prod engine P.V +12 tile +1 MFAN +2 merge levels (pending measured); attw TLX +6",
+   "note": "off the old critical path (n_crit 0) but on the p4l svc job: GO -> end = 1,547 (full1m, ST0 = ST2 = skew1m), tail46 GO -> end 512"
+  },
+  "attn.max": {
+   "grade": "measured-old-RTL",
+   "note": "p4l: softmax runs in the svc SM share (ot_s81_su_sms, hardened smhq/smhr) inside svc_rs; the svc bench checks the SE operand rows + e rows but FEEDS p and launches P.V at a compiled cycle, so max/exp/sink/den/normalize have no separate release measurement. The compiled allowance last_score -> PV send = 661 cycles at T 640 (950 - 289) covers all five; old per-op cycles kept."
+  },
+  "attn.exp": {
+   "grade": "measured-old-RTL",
+   "note": "see attn.max (svc SM share; compiled allowance 661 at T 640 for max+exp+sink+den+normalize)"
+  },
+  "attn.sink": {
+   "grade": "measured-old-RTL",
+   "note": "see attn.max"
+  },
+  "attn.den": {
+   "grade": "measured-old-RTL",
+   "note": "see attn.max"
+  },
+  "attn.normalize": {
+   "grade": "measured-old-RTL",
+   "note": "see attn.max"
+  },
+  "eng.gate": {
+   "cycles": 697,
+   "grade": "measured-release-RTL",
+   "definition": "slice ENG reduce command -> last gate (tb_s81sl_slice_eng)",
+   "rtl": {
+    "module": "ot_s81sl_slice (vs op 14 + ve + xr ENG + xfin ENG + eg)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vs f9ce6c98 / ve c04e1ba1",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/slice_eng_bench.sh 0 3@19bf4121e with SLICE_SRCS += cap_tr/cap_rt/ot_hdc_delay_rf (release bench list stale)",
+   "job": "ot-run job_eng.sh (2nd run, ot-epyc7)",
+   "note": "includes serial bench injection of the 15 other slices exchange flits (upper bound); leaf-only ENG reduce 159 (leaf_eng). eng.hh / eng.dot are inside this reduce in the slice-op form (ENG_SLICE_EST hh 138 dot 0)",
+   "bit_exact": true,
+   "golden": "tools/s81_slice/eng_slice_gold.py (Model.engram_layer statements, chunk8)",
+   "evidence": "ot-epyc7:/srv/opentallas-scratch/claude/toksim-s81-su/out_eng/slice_eng.txt 'SLICEENG vs_mut=0 sums=4 gates=4 half_rows=80 mismatches=0 fault=0 reduce_cmd_to_last_gate=697 add_cmd_to_last_write=82', 'PASS slice_eng VS_MUT=0 seed=3'",
+   "shape": "one real slice (5 beat leaves) of a V4.1 Engram layer, other 15 slices golden-injected"
+  },
+  "eng.add": {
+   "cycles": 82,
+   "grade": "measured-release-RTL",
+   "definition": "slice ENG add command -> last write",
+   "job": "job_eng.sh",
+   "note": "prior pre-replica run 1b93f1249: 81; ENG_SLICE_EST 55",
+   "bit_exact": true,
+   "evidence": "out_eng/slice_eng.txt add_cmd_to_last_write=82 (leaf_eng 73)",
+   "rtl": {
+    "module": "ot_s81sl_slice (vs op 14 + ve + xr ENG + xfin ENG + eg)",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "vs f9ce6c98 / ve c04e1ba1",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_slice/slice_eng_bench.sh 0 3@19bf4121e with SLICE_SRCS += cap_tr/cap_rt/ot_hdc_delay_rf (release bench list stale)"
+  },
+  "HC.NORM": {
+   "dag_cls": "su",
+   "n_crit": null,
+   "old": 713,
+   "grade": "measured-old-RTL",
+   "note": "hub-era HC master job (tb_s81_die_layer phier, s81_layer_tput_1013). On p4l it is the vp NORM leaf op + xfin exchange = attn.quant / ffn.norm.scale above; not an extra term"
+  },
+  "HC.POST": {
+   "dag_cls": "su",
+   "n_crit": null,
+   "old": 248,
+   "grade": "measured-old-RTL",
+   "note": "p4l = vp POST leaf op, measured 63 on release (attn.hc_post)"
+  },
+  "HC.H_LOAD": {
+   "dag_cls": "su",
+   "n_crit": null,
+   "old": 336,
+   "grade": "measured-old-RTL",
+   "note": "p4l = vp HLOAD (16 steps) per leaf; no release bench prints HLOAD cycles (slice_eng reads back via HLOAD only for checking)"
+  },
+  "HC.H_STORE": {
+   "dag_cls": "su",
+   "n_crit": null,
+   "old": 387,
+   "grade": "measured-old-RTL",
+   "note": "p4l = vp HSTORE (16 steps); no release cycle print"
+  },
+  "HC.COEF": {
+   "dag_cls": "su",
+   "n_crit": null,
+   "old": 17,
+   "grade": "measured-old-RTL",
+   "note": "p4l: coefficients come as gunit L5 CTL rows (NORMR a0 / POST a0 rows); NORMR not in release vp"
+  }
+ }
+}

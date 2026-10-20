@@ -1,0 +1,21 @@
+{
+ "cls": "RATEFIX",
+ "written": "2026-10-19 21:30 PT",
+ "agent_branch": "claude/s81-ratefix-1019",
+ "note": "wq_b phase pipelining with margin (period 130, cfg_lead 56)",
+ "ops": [
+  {
+   "op": "attn.wq_b",
+   "dag_cls": "field",
+   "grade": "measured-newest-element-RTL",
+   "cycles": null,
+   "by_old": {
+    "1039.9": 2043,
+    "1559.6": 2043
+   },
+   "tail_priced": 195,
+   "evidence": "results/rtl/s81_ratefix_1019/runs/p130c56 (PASS, span 2,044)",
+   "note": "4-edge period margin over the minimum"
+  }
+ ]
+}

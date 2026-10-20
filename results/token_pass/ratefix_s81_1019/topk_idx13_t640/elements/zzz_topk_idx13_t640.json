@@ -1,0 +1,22 @@
+{
+ "cls": "RATEFIX",
+ "written": "2026-10-19 21:30 PT",
+ "agent_branch": "claude/s81-ratefix-1019",
+ "note": "top-k final selector rate fix",
+ "ops": [
+  {
+   "op": "attn.idx.topk_final",
+   "dag_cls": "select",
+   "grade": "measured-newest-element-RTL",
+   "cycles": null,
+   "per_layer": {
+    "L2": 1033,
+    "L8": 1033,
+    "L14": 1033,
+    "L20": 1033
+   },
+   "evidence": "INDEXED13 successor quarter at the old TAIL_BUDGET 640 (IDX.json newest_INDEXED13_L20)",
+   "note": "same 4 x 512 -> 512 shape on every indexed layer; measured on the L20 fixture (data-independent schedule: compiled tail is the worst case). NOT on release die mu4c (legacy dsdv_bk_sel); successor quarter physical view not yet closed"
+  }
+ ]
+}

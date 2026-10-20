@@ -1,0 +1,22 @@
+{
+ "cls": "RATEFIX",
+ "written": "2026-10-19 21:30 PT",
+ "agent_branch": "claude/s81-ratefix-1019",
+ "note": "top-k final selector rate fix",
+ "ops": [
+  {
+   "op": "attn.idx.topk_final",
+   "dag_cls": "select",
+   "grade": "measured-newest-element-RTL",
+   "cycles": null,
+   "per_layer": {
+    "L2": 669,
+    "L8": 669,
+    "L14": 669,
+    "L20": 669
+   },
+   "evidence": "INDEXED13 successor quarter (INDEXED13+FIFO_SRAM+P192+SUCC+RST64+FAN32 defines, Verilator 5.050) with lower_bk TAIL_FINAL 276: claude/s81-ratefix-topk-1019 results/arch/s81_ratefix_topk_1019/run_t276 (4 positive PASS bit-exact incl. real L20, ties, all-in-one-quarter -inf/zeros; corrupt/early/identity FAIL); window moves 364 edges earlier -> 1,033 - 364",
+   "note": "same 4 x 512 -> 512 shape on every indexed layer; measured on the L20 fixture (data-independent schedule: compiled tail is the worst case). NOT on release die mu4c (legacy dsdv_bk_sel); successor quarter physical view not yet closed"
+  }
+ ]
+}

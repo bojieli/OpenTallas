@@ -1,0 +1,345 @@
+[
+ {
+  "scenario": "baseline_mu4c",
+  "overrides": [],
+  "ar_cycles": 1173912.7,
+  "ar_tok_s": 1022.2,
+  "ar_solved_tok_s": 1010.7,
+  "mtp_step_cycles": 1566172.4,
+  "mtp_tok_s": 3186.6,
+  "price_ar": {
+   "tok_s": 1334.6,
+   "cycles": 899140.3,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 1365.7,
+   "scan_stacks_correction_cycles": 20470.0
+  },
+  "price_mtp": {
+   "tok_s": 3838.2,
+   "cycles": 1300312.5,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 4045.4,
+   "scan_stacks_correction_cycles": 66615.0
+  },
+  "mu": {
+   "ar": {
+    "users": 46,
+    "calendar_period_cycles": 980428,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 1022.2,
+    "aggregate_tok_s": 47022.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 55780,
+    "pct_measured_per_user": 37.16
+   },
+   "mtp": {
+    "users": 10,
+    "calendar_period_cycles": 1303400,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 3186.6,
+    "aggregate_tok_s": 31866.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 36985,
+    "pct_measured_per_user": 30.99
+   }
+  }
+ },
+ {
+  "scenario": "wqb_pipe_p126",
+  "overrides": [
+   "wqb_pipe_p126.json"
+  ],
+  "ar_cycles": 1119032.7,
+  "ar_tok_s": 1072.4,
+  "ar_solved_tok_s": 1059.7,
+  "mtp_step_cycles": 1511292.4,
+  "mtp_tok_s": 3302.3,
+  "price_ar": {
+   "tok_s": 1334.6,
+   "cycles": 899140.3,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 1365.7,
+   "scan_stacks_correction_cycles": 20470.0
+  },
+  "price_mtp": {
+   "tok_s": 3838.2,
+   "cycles": 1300312.5,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 4045.4,
+   "scan_stacks_correction_cycles": 66615.0
+  },
+  "mu": {
+   "ar": {
+    "users": 46,
+    "calendar_period_cycles": 980428,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 1072.4,
+    "aggregate_tok_s": 49328.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 55780,
+    "pct_measured_per_user": 34.08
+   },
+   "mtp": {
+    "users": 10,
+    "calendar_period_cycles": 1303400,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 3302.3,
+    "aggregate_tok_s": 33023.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 36985,
+    "pct_measured_per_user": 28.48
+   }
+  }
+ },
+ {
+  "scenario": "wqb_pipe_p130",
+  "overrides": [
+   "wqb_pipe_p130.json"
+  ],
+  "ar_cycles": 1121272.7,
+  "ar_tok_s": 1070.2,
+  "ar_solved_tok_s": 1057.6,
+  "mtp_step_cycles": 1513532.4,
+  "mtp_tok_s": 3297.5,
+  "price_ar": {
+   "tok_s": 1334.6,
+   "cycles": 899140.3,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 1365.7,
+   "scan_stacks_correction_cycles": 20470.0
+  },
+  "price_mtp": {
+   "tok_s": 3838.2,
+   "cycles": 1300312.5,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 4045.4,
+   "scan_stacks_correction_cycles": 66615.0
+  },
+  "mu": {
+   "ar": {
+    "users": 46,
+    "calendar_period_cycles": 980428,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 1070.2,
+    "aggregate_tok_s": 49230.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 55780,
+    "pct_measured_per_user": 34.21
+   },
+   "mtp": {
+    "users": 10,
+    "calendar_period_cycles": 1303400,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 3297.5,
+    "aggregate_tok_s": 32975.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 36985,
+    "pct_measured_per_user": 28.59
+   }
+  }
+ },
+ {
+  "scenario": "topk_idx13_t640",
+  "overrides": [
+   "topk_idx13_t640.json"
+  ],
+  "ar_cycles": 1151697.7,
+  "ar_tok_s": 1041.9,
+  "ar_solved_tok_s": 1030.0,
+  "mtp_step_cycles": 1543957.4,
+  "mtp_tok_s": 3232.5,
+  "price_ar": {
+   "tok_s": 1334.6,
+   "cycles": 899140.3,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 1365.7,
+   "scan_stacks_correction_cycles": 20470.0
+  },
+  "price_mtp": {
+   "tok_s": 3838.2,
+   "cycles": 1300312.5,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 4045.4,
+   "scan_stacks_correction_cycles": 66615.0
+  },
+  "mu": {
+   "ar": {
+    "users": 46,
+    "calendar_period_cycles": 980428,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 1041.9,
+    "aggregate_tok_s": 47929.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 55780,
+    "pct_measured_per_user": 35.95
+   },
+   "mtp": {
+    "users": 10,
+    "calendar_period_cycles": 1303400,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 3232.5,
+    "aggregate_tok_s": 32325.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 36985,
+    "pct_measured_per_user": 29.99
+   }
+  }
+ },
+ {
+  "scenario": "topk_idx13_t276",
+  "overrides": [
+   "topk_idx13_t276.json"
+  ],
+  "ar_cycles": 1150241.7,
+  "ar_tok_s": 1043.3,
+  "ar_solved_tok_s": 1031.3,
+  "mtp_step_cycles": 1542501.4,
+  "mtp_tok_s": 3235.5,
+  "price_ar": {
+   "tok_s": 1334.6,
+   "cycles": 899140.3,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 1365.7,
+   "scan_stacks_correction_cycles": 20470.0
+  },
+  "price_mtp": {
+   "tok_s": 3838.2,
+   "cycles": 1300312.5,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 4045.4,
+   "scan_stacks_correction_cycles": 66615.0
+  },
+  "mu": {
+   "ar": {
+    "users": 46,
+    "calendar_period_cycles": 980428,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 1043.3,
+    "aggregate_tok_s": 47990.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 55780,
+    "pct_measured_per_user": 35.87
+   },
+   "mtp": {
+    "users": 10,
+    "calendar_period_cycles": 1303400,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 3235.5,
+    "aggregate_tok_s": 32355.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 36985,
+    "pct_measured_per_user": 29.93
+   }
+  }
+ },
+ {
+  "scenario": "both_p126_t276",
+  "overrides": [
+   "wqb_pipe_p126.json",
+   "topk_idx13_t276.json"
+  ],
+  "ar_cycles": 1095361.7,
+  "ar_tok_s": 1095.5,
+  "ar_solved_tok_s": 1082.3,
+  "mtp_step_cycles": 1487621.4,
+  "mtp_tok_s": 3354.9,
+  "price_ar": {
+   "tok_s": 1334.6,
+   "cycles": 899140.3,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 1365.7,
+   "scan_stacks_correction_cycles": 20470.0
+  },
+  "price_mtp": {
+   "tok_s": 3838.2,
+   "cycles": 1300312.5,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 4045.4,
+   "scan_stacks_correction_cycles": 66615.0
+  },
+  "mu": {
+   "ar": {
+    "users": 46,
+    "calendar_period_cycles": 980428,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 1095.5,
+    "aggregate_tok_s": 50394.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 55780,
+    "pct_measured_per_user": 32.66
+   },
+   "mtp": {
+    "users": 10,
+    "calendar_period_cycles": 1303400,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 3354.9,
+    "aggregate_tok_s": 33549.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 36985,
+    "pct_measured_per_user": 27.34
+   }
+  }
+ },
+ {
+  "scenario": "both_p130_t276",
+  "overrides": [
+   "wqb_pipe_p130.json",
+   "topk_idx13_t276.json"
+  ],
+  "ar_cycles": 1097601.7,
+  "ar_tok_s": 1093.3,
+  "ar_solved_tok_s": 1080.2,
+  "mtp_step_cycles": 1489861.4,
+  "mtp_tok_s": 3349.8,
+  "price_ar": {
+   "tok_s": 1334.6,
+   "cycles": 899140.3,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.ar + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 1365.7,
+   "scan_stacks_correction_cycles": 20470.0
+  },
+  "price_mtp": {
+   "tok_s": 3838.2,
+   "cycles": 1300312.5,
+   "source": "results/arch/s81_dv_1016/p4l/price_land.json dv_base.mtp + S81-SCAND option D 1-stack scan (ledger S81.SCAN_STACKS_P4L, not yet in dv_price) + S81-L20SPLIT k=6 (ledger S81.L20_SPLIT, not yet in dv_price)",
+   "uncorrected_tok_s": 4045.4,
+   "scan_stacks_correction_cycles": 66615.0
+  },
+  "mu": {
+   "ar": {
+    "users": 46,
+    "calendar_period_cycles": 980428,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_ar.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 1093.3,
+    "aggregate_tok_s": 50291.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 55780,
+    "pct_measured_per_user": 32.79
+   },
+   "mtp": {
+    "users": 10,
+    "calendar_period_cycles": 1303400,
+    "calendar_record": "results/arch/mu_s81_1018/calendar_mtp.json",
+    "calendar_grade": "slot issue measured on release seq_host/fixed_issue RTL (HEADMU run_mu_mtp.sh: every user at shift+360, 0 collisions, 0 interference); slot length itself from the stage model; cross-die MU co-sim u_ar46r/u_mtp10r not run",
+    "per_user_tok_s": 3349.8,
+    "aggregate_tok_s": 33498.0,
+    "bound": "per-user token",
+    "base_aggregate_tok_s": 36985,
+    "pct_measured_per_user": 27.45
+   }
+  }
+ }
+]

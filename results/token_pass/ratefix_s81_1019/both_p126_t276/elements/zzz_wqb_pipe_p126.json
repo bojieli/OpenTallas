@@ -1,0 +1,21 @@
+{
+ "cls": "RATEFIX",
+ "written": "2026-10-19 21:30 PT",
+ "agent_branch": "claude/s81-ratefix-1019",
+ "note": "wq_b phase pipelining, minimum passing period (124 fails: element faults)",
+ "ops": [
+  {
+   "op": "attn.wq_b",
+   "dag_cls": "field",
+   "grade": "measured-newest-element-RTL",
+   "cycles": null,
+   "by_old": {
+    "1039.9": 1987,
+    "1559.6": 1987
+   },
+   "tail_priced": 195,
+   "evidence": "results/rtl/s81_ratefix_1019/runs/p126c52 (fullsix sid6, 6 frames, 512 rows, 15 epochs; PIPELINED calendar xs_calendar.compile_pipeline period 126, cfg_lead 52; span 1,988 edges first capture->last return, PASS, words == P600 baseline tag-masked; serial s224 span 3,360 same harness)",
+   "note": "same exe/RTL blobs as TOKSIM-S81/FIELD fullsix (field/frame = release 19bf4121e); 1,987 = 3,359 * 1988/3360 convention (span-1); tail 195 priced as before"
+  }
+ ]
+}

@@ -1,0 +1,264 @@
+{
+ "cls": "CURATION",
+ "written": "2026-10-19 19:10 PT",
+ "agent_branch": "claude/toksim-s81-1019",
+ "note": "parent TOKSIM-S81 curation: maps the four class records onto DAG nodes (definitions, merged ops, per-layer shapes, priced tails); loaded last, wins per op key",
+ "ops": [
+  {
+   "op": "attn.wq_b",
+   "dag_cls": "field",
+   "grade": "measured-newest-element-RTL",
+   "cycles": null,
+   "by_old": {
+    "1039.9": 3359,
+    "1559.6": 3359
+   },
+   "tail_priced": 195,
+   "evidence": "FIELD.json attn.wq_b (fullsix vehicle, 15 epochs x 224 + 231 + 1)",
+   "note": "tail 195 = CAP EDLY 24 + VP hand-off 28 + die wire 143 (old), priced, not in the measured span"
+  },
+  {
+   "op": "eng.dot",
+   "dag_cls": "field",
+   "grade": "measured-release-RTL",
+   "cycles": 0,
+   "note": "inside eng.gate (SU.json: slice ENG reduce covers eng.hh / eng.dot)",
+   "old_cycles_per_instance": 269.6
+  },
+  {
+   "op": "attn.idx.score",
+   "dag_cls": "hbm",
+   "grade": "measured-newest-element-RTL",
+   "cycles": null,
+   "per_layer": {
+    "L2": 0,
+    "L8": 0,
+    "L14": 0,
+    "L24": 5829,
+    "L28": 5829,
+    "L32": 5829,
+    "L36": 5829
+   },
+   "note": "L2/L8/L14: the scan streams into bk_sel and is INSIDE the measured topk_local root span (0 here); L24..L36 re-index GATHER 5829 (dsdv_idx_rg, not bound on mu4c); L20 kept on the base split term"
+  },
+  {
+   "op": "attn.idx.topk_local",
+   "dag_cls": "select",
+   "grade": "measured-release-RTL",
+   "cycles": null,
+   "per_layer": {
+    "L2": 14231,
+    "L8": 14231,
+    "L14": 14242
+   },
+   "note": "root bk_sel span incl. scan (paced by the measured reader law) + k=3 rank-tree child merge; L8 = L2 shape; L20 on base split term; L24..L36 old (no fixture)"
+  },
+  {
+   "op": "attn.idx.topk_final",
+   "dag_cls": "select",
+   "grade": "measured-release-RTL",
+   "cycles": null,
+   "per_layer": {
+    "L2": 6554,
+    "L8": 6554,
+    "L14": 6541,
+    "L20": 6698
+   },
+   "note": "release dsdv_bk_sel, rung-ingress bound; INDEXED13 (not in release) 1033"
+  },
+  {
+   "op": "attn.scores",
+   "dag_cls": "hbm",
+   "grade": "measured-newest-element-RTL",
+   "cycles": 289,
+   "tail_priced": 0,
+   "note": "svc 809c78aa5 full1m GO->last fold score 289 (IDX release-blob GO->last root score 161 at bench ctx); conservative 1M figure used",
+   "old_cycles_per_instance": [
+    49.9,
+    103.9
+   ]
+  },
+  {
+   "op": "attn.pv",
+   "dag_cls": "hbm",
+   "grade": "measured-newest-element-RTL",
+   "cycles": 596,
+   "note": "off the DAG critical path; enters the solved composition only"
+  },
+  {
+   "op": "attn.hc_post",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 63,
+   "old_cycles_per_instance": 112.9,
+   "tail_priced": 56,
+   "note": "leaf 63 + old hub in/out stations 33+23 kept priced"
+  },
+  {
+   "op": "ffn.hc_post",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 63,
+   "old_cycles_per_instance": 112.9,
+   "tail_priced": 56,
+   "note": "as attn.hc_post"
+  },
+  {
+   "op": "ffn.quant2",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 191,
+   "old_cycles_per_instance": 191.0,
+   "tail_priced": 0,
+   "note": "old 190 already incl. 33 in/23 out stages; leaf 191; RISK: serial SW share 1,248 if the 8 vs ops serialise"
+  },
+  {
+   "op": "attn.z_quant",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 19,
+   "old_cycles_per_instance": 80.0,
+   "tail_priced": 4,
+   "note": "+1 hub-slab +3 die-tile stations priced"
+  },
+  {
+   "op": "ffn.softplus_sqrt",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 145,
+   "old_cycles_per_instance": 185.6,
+   "tail_priced": 4,
+   "note": "+2 in +2 out wire stages priced"
+  },
+  {
+   "op": "ffn.bias",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 115,
+   "old_cycles_per_instance": 117.6,
+   "tail_priced": 7,
+   "note": "+4 hub-slab +3 die-tile priced"
+  },
+  {
+   "op": "attn.q_rope",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 57,
+   "old_cycles_per_instance": 117.6,
+   "tail_priced": 7,
+   "note": "+4 hub-slab +3 die-tile priced; attn_q_path wire in dv_p4l"
+  },
+  {
+   "op": "attn.quant",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 418,
+   "old_cycles_per_instance": 324.0,
+   "tail_priced": 0,
+   "note": "112 leaf + 247 16-slice exchange + 59 finish (exchange replaces the hub stations)"
+  },
+  {
+   "op": "attn.q_quant",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 418,
+   "old_cycles_per_instance": 288.0,
+   "tail_priced": 0,
+   "note": "upper bound (q norm spans 4 slices)"
+  },
+  {
+   "op": "ffn.norm.scale",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 438,
+   "old_cycles_per_instance": 306.0,
+   "tail_priced": 0,
+   "note": "112 + 247 + 79"
+  },
+  {
+   "op": "eng.gate",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 697,
+   "tail_priced": 0,
+   "note": "upper bound (serial bench injection); covers eng.hh/eng.dot",
+   "old_cycles_per_instance": 494.7
+  },
+  {
+   "op": "eng.add",
+   "dag_cls": "su",
+   "grade": "measured-release-RTL",
+   "cycles": 82,
+   "tail_priced": 0,
+   "old_cycles_per_instance": 106.9
+  },
+  {
+   "op": "head.lm_head",
+   "dag_cls": "head",
+   "grade": "measured-newest-element-RTL",
+   "cycles": 8416,
+   "tail_priced": 34,
+   "note": "go->token return incl. argmax + capture edge; +34 die wire priced (old)",
+   "old_cycles_per_instance": 8429.0
+  },
+  {
+   "op": "head.argmax",
+   "dag_cls": "head",
+   "grade": "measured-newest-element-RTL",
+   "cycles": 10,
+   "old_cycles_per_instance": 21.6
+  },
+  {
+   "op": "draft.head",
+   "dag_cls": "head",
+   "grade": "measured-newest-element-RTL",
+   "cycles": 8416,
+   "tail_priced": 34,
+   "note": "MTP draft head = LM head element",
+   "old_cycles_per_instance": 8387.0
+  },
+  {
+   "op": "draft.markov",
+   "dag_cls": "head",
+   "grade": "measured-newest-element-RTL",
+   "cycles": 6,
+   "old_cycles_per_instance": 65.5
+  },
+  {
+   "op": "ffn.top6_order",
+   "dag_cls": "select",
+   "grade": "measured-release-RTL",
+   "cycles": 56,
+   "note": "covers top6 + top6_order (one dsdv_gunit_l1 pass)",
+   "old_cycles_per_instance": 44.0
+  },
+  {
+   "op": "ffn.top6",
+   "dag_cls": "select",
+   "grade": "measured-release-RTL",
+   "cycles": 0,
+   "old_cycles_per_instance": 8.9
+  },
+  {
+   "slot": "L2.scan_d_reader",
+   "op": "L2.scan_d_reader",
+   "grade": "measured-release-RTL",
+   "cycles": 0,
+   "note": "the measured topk_local root span already contains the p4l 1-stack reader"
+  },
+  {
+   "slot": "L8.scan_d_reader",
+   "op": "L8.scan_d_reader",
+   "grade": "measured-release-RTL",
+   "cycles": 0,
+   "note": "the measured topk_local root span already contains the p4l 1-stack reader"
+  },
+  {
+   "slot": "L14.scan_d_reader",
+   "op": "L14.scan_d_reader",
+   "grade": "measured-release-RTL",
+   "cycles": 0,
+   "note": "the measured topk_local root span already contains the p4l 1-stack reader"
+  }
+ ]
+}
