@@ -1,0 +1,12 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1292516-1792475778 after 0 s
+MISMATCH t=150340000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 0/1 pc 54/116 uop_eq 0
+LEAF_MISMATCH t=150350000 busy 1/1 fault 0/0 uop_v 1/1 pc 54/116 d1_eq 1
+MISMATCH t=150360000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 1/0 pc 54/54 uop_eq 1
+LEAF_MISMATCH t=150360000 busy 1/1 fault 0/0 uop_v 1/1 pc 47/47 d1_eq 0
+LEAF_MISMATCH t=150370000 busy 1/1 fault 0/0 uop_v 1/1 pc 54/54 d1_eq 1
+MISMATCH t=150380000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 2/1 pc 54/54 uop_eq 1
+MISMATCH t=150400000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 3/2 pc 54/54 uop_eq 1
+MISMATCH t=150420000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 4/3 pc 54/54 uop_eq 1
+ISSUER_V7R128_MUTANT_REJECTED reload
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1292516-1792475778): exit 1
