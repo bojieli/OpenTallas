@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // qfd_dv_stream_tile (rtl/qwen_dv/qfd_dv_stream_tile.sv) against the unchanged qfd_dv_stream reference:
-//   reference inputs = tile inputs delayed one edge (the tile's face registers);
+//   reference inputs = tile inputs delayed one edge (the tile's face registers); the SU own-write inputs xw_* three edges
+//   (face + the packer's P1 / P2 stages, QW-STREAM2 10-19);
 //   reference tap outputs (tw_*, xt_*) delayed one more edge (the tile's interior tap relay);
 //   relay outputs and fault compared on the same edge.
 // Every output bit is compared on every edge from 20 edges after each reset release, over 10,000 edges with two resets,
@@ -15,8 +16,11 @@ module tb_stream_tile #(parameter integer MUT = 0);
  // one-edge delayed reference inputs
  reg [3:0] sid_d = 0; reg cfg_d = 0; reg [1:0] dir_d = 0; reg [27:0] tag_d = 0;
  reg [1087:0] sw_d = 0, se_d = 0; reg [7:0] we_d = 0; reg [191:0] addr_d = 0; reg [255:0] data_d = 0;
+ reg [7:0] we_d1 = 0, we_d2 = 0; reg [191:0] addr_d1 = 0, addr_d2 = 0; reg [255:0] data_d1 = 0, data_d2 = 0;
  always @(posedge ck) begin
-  sid_d <= sid; cfg_d <= cfg; dir_d <= dir; tag_d <= tag; sw_d <= sw; se_d <= se; we_d <= we; addr_d <= addr; data_d <= data;
+  sid_d <= sid; cfg_d <= cfg; dir_d <= dir; tag_d <= tag; sw_d <= sw; se_d <= se;
+  we_d1 <= we; addr_d1 <= addr; data_d1 <= data; we_d2 <= we_d1; addr_d2 <= addr_d1; data_d2 <= data_d1;
+  we_d <= we_d2; addr_d <= addr_d2; data_d <= data_d2;
  end
  wire [1087:0] re, rw; wire rtw, rxv, rxb, rf; wire [1:0] rk; wire [23:0] ra, rxa; wire [1023:0] rd, rxd;
  qfd_dv_stream u_ref (.ck(ck), .rst_n(rst), .sid(sid_d), .cfg_v(cfg_d), .cfg_dir(dir_d), .cfg_tag(tag_d),

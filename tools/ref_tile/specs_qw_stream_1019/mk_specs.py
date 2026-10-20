@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""QW-CLUSTER3/STREAM 2026-10-19: ref_tile specs for qfd_dv_stream_tile (primary + parallel fallback outline)."""
+"""QW-CLUSTER3/STREAM 2026-10-19: ref_tile specs for qfd_dv_stream_tile (primary + parallel fallback outline).
+QW-STREAM2 2026-10-19 21:40: structural successor after route s1-2c97be786 NEEDS_RTL (TT -47.5 ps, packer cone):
+kits qfd_dv_stream_t2_1019 (same outline) + parallel compact fallback qfd_dv_stream_t2c_1019; the s1 kits are history."""
 import json, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
-WIT = "results/rtl/qw_stream_tile_1019/bench"
+WIT = "results/rtl/qw_stream2_1019/bench"
 MUTS = {2: "BF16 truncation instead of RNE", 21: "no highest-lane priority", 22: "no duplicate-address fault",
         31: "relay group 17 selects on the E valid copy", 32: "table-tap group 5 drops the SID match",
         33: "emit copy of relay group 9 stuck 0", 34: "write-any copy of xb group 3 stuck 0"}
@@ -48,8 +50,8 @@ def spec(name, w, h, tag, why_outline):
         "params": {"MUT": 0},
         "clock_port": "ck", "reset_ports": ["rst_n"],
         "recipe": 4,
-        "reset_landing": {"enable": True, "stages": 2, "copies": {"rst_n": 16},
-                          "why": "2 registered face stages, last stage 16 kept copies (~470 control reset loads, <=32 each); payload registers carry no reset"},
+        "reset_landing": {"enable": True, "stages": 2, "copies": {"rst_n": 20},
+                          "why": "2 registered face stages, last stage 20 kept copies (~545 control reset loads incl. the packer complete copies, <=28 each); payload registers carry no reset"},
         "reset_relay_split": {"max_loads": 32},
         "pin_regs": {"enable": False, "reason": (
             "The RTL registers every pin: every input bit is captured at its face in qfd_dv_stream_tile (sw/se payload, "
@@ -72,12 +74,14 @@ def spec(name, w, h, tag, why_outline):
                   "io_hold_margin_ns": 0.03, "pin_h": "M4", "pin_v": "M3 M5",
                   "pin_balance": {"h": "M4", "v": "M3 M5", "group_max": 1}},
         "structural_change": (
-            "QW-CLUSTER3/STREAM 10-19: Q-DV stream face (qfd_dv_stream / static packer 9587da800) as a safe hard tile: "
-            "face-registered inputs with kept per-32-bit select copies decoded at the face (closes the cfg2/SU-we/addr "
-            "copy demand of the 1195cd50b consumer inside the tile), interior tap relay (+1 edge on tw/xt), control-only "
-            "reset with 2-stage landing, static schedule, no backpressure."),
+            "QW-STREAM2 10-19: structural successor of qfd_dv_stream_t_1019 (route s1-2c97be786 TT -47.5 ps on the "
+            "packer cone wa_q -> decode -> priority -> OR8 -> &nm -> 1,024-bit eword enable, 17 levels + ~1,100-load "
+            "combinational enable): packer pipelined P1 (BF16 RNE + registered slot x lane one-hot select + slot hit + "
+            "partial faults, kept 2x lane copies <=32 loads) / P2 (state from the one-hot select, complete into 69 kept "
+            "copies) / P3 (eword on its own copy, emit copies); +2 edges on the SU own-write path xw_* (priced, static, "
+            "II unchanged); relay / taps / cfg timing unchanged."),
         "job": {
-            "owner": "Claude:LEAD2-QW/QW-CLUSTER3-STREAM", "branch": "claude/qw-cluster3-stream-1019", "tag": tag,
+            "owner": "Claude:LEAD3-QW/QW-STREAM2", "branch": "claude/qw-stream2-1019", "tag": tag,
             "purpose": "Qwen compute MU die Q-DV slice stream face (Q.SAFE.STREAM): relay + static x packer + table/x taps",
             "record_to": f"results/rtl/ref_tile/{name}", "views_to": f"physical/ref_tile/{name}/views",
             "auto_merge": False,
@@ -86,10 +90,11 @@ def spec(name, w, h, tag, why_outline):
             "benches": [bench(m) for m in [0] + sorted(MUTS)]},
     }
 
-S = [spec("qfd_dv_stream_t_1019", 302.4, 380.16, "s1",
+S = [spec("qfd_dv_stream_t2_1019", 302.4, 380.16, "s2",
           "302.4 x 380.16 (aspect 1.26): W/E 5.85 pins/um, S 5.0, N 3.8; relay W->E 302 um, every tap / packer hop <= ~345 um."),
-     spec("qfd_dv_stream_t_fb_1019", 345.6, 440.64, "f1",
-          "Fallback 345.6 x 440.64 (aspect 1.27): W/E 5.0 pins/um (pin-access relief), relay W->E 346 um.")]
+     spec("qfd_dv_stream_t2c_1019", 259.2, 380.16, "c2",
+          "Compact fallback 259.2 x 380.16 (aspect 1.47): W/E 5.85 pins/um, S 5.9, N 4.4; relay W->E 259 um, shorter "
+          "packer / tap wires (the larger s1 fallback 345.6 x 440.64 stretched the pin-flop ring to 147 ps spread).")]
 for s in S:
     (HERE / f"{s['name']}.json").write_text(json.dumps(s, indent=1) + "\n")
     print(HERE / f"{s['name']}.json")

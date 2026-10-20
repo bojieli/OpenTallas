@@ -1,0 +1,194 @@
+{
+ "name": "qfd_dv_stream_t2c_1019-c2-COMMIT",
+ "block": "qfd_dv_stream_tile",
+ "ref_tile": true,
+ "owner": "Claude:LEAD3-QW/QW-STREAM2",
+ "purpose": "Qwen compute MU die Q-DV slice stream face (Q.SAFE.STREAM): relay + static x packer + table/x taps",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/qw-stream2-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_dv/qfd_dv_stream.sv",
+   "rtl/test/qwen_dv/static_stream/tb_stream_tile.sv",
+   "rtl/test/qwen_dv/static_stream/run_tile.sh",
+   "results/rtl/qw_stream2_1019/bench"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_dv_stream_tile #(.MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/qfd_dv_stream_tile.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "stream_tile_m0",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m0 0",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "STREAM_TILE_EQ PASS edges10000",
+    "min_count_regex": "emits(\\d+)",
+    "pass_witness": "results/rtl/qw_stream2_1019/bench/m0.log"
+   },
+   {
+    "name": "stream_tile_m2",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m2 2",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m2.log",
+    "why": "BF16 truncation instead of RNE"
+   },
+   {
+    "name": "stream_tile_m21",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m21 21",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m21.log",
+    "why": "no highest-lane priority"
+   },
+   {
+    "name": "stream_tile_m22",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m22 22",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m22.log",
+    "why": "no duplicate-address fault"
+   },
+   {
+    "name": "stream_tile_m31",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m31 31",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m31.log",
+    "why": "relay group 17 selects on the E valid copy"
+   },
+   {
+    "name": "stream_tile_m32",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m32 32",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m32.log",
+    "why": "table-tap group 5 drops the SID match"
+   },
+   {
+    "name": "stream_tile_m33",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m33 33",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m33.log",
+    "why": "emit copy of relay group 9 stuck 0"
+   },
+   {
+    "name": "stream_tile_m34",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m34 34",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m34.log",
+    "why": "write-any copy of xb group 3 stuck 0"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_dv_stream_t2c_1019/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_dv_stream_t2c_1019/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_dv_stream_t2c_1019 --out {RUN}/record/views/qfd_dv_stream_tile  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_dv_stream_t2c_1019/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_dv_stream_t2c_1019/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_dv_stream_t2c_1019/qfd_dv_stream_t2c_1019-c2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "QW-STREAM2 10-19: structural successor of qfd_dv_stream_t_1019 (route s1-2c97be786 TT -47.5 ps on the packer cone wa_q -> decode -> priority -> OR8 -> &nm -> 1,024-bit eword enable, 17 levels + ~1,100-load combinational enable): packer pipelined P1 (BF16 RNE + registered slot x lane one-hot select + slot hit + partial faults, kept 2x lane copies <=32 loads) / P2 (state from the one-hot select, complete into 69 kept copies) / P3 (eword on its own copy, emit copies); +2 edges on the SU own-write path xw_* (priced, static, II unchanged); relay / taps / cfg timing unchanged."
+}
