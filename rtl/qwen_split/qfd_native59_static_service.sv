@@ -32,7 +32,9 @@ module qfd_native59_static_service #(
  input wire[12:0]begin_pub,input wire[6:0]request_pub,
  input wire[4:0]q_slot_beat_pub,result_slot_beat_pub,vm_commit_beat_pub,
  // R3g: third copies (== the matching beat): kernel_q_beat capture, vm_write beat / word, result_seen check mux.
- input wire[4:0]q_slot_beat_pub2,result_slot_beat_pub2,vm_commit_beat_pub2
+ input wire[4:0]q_slot_beat_pub2,result_slot_beat_pub2,vm_commit_beat_pub2,
+ // R3i: fourth copies for the upper 16 entries of the 32:1 check muxes (q_seen / result_seen / result_seen / committed).
+ input wire[4:0]q_slot_beat_pub3,result_slot_beat_pub3,vm_commit_beat_pub3,vm_commit_beat_pub4
 );
  // R3f: groups of <= 16 enable bits (a DFFE enable costs 2 mapped loads per bit).
  wire[12:0]bp=LOCAL32?begin_pub:{13{begin_slot}};
@@ -40,7 +42,13 @@ module qfd_native59_static_service #(
  wire[4:0]qsb_d=LOCAL32?q_slot_beat_pub:q_slot_beat,rsb_d=LOCAL32?result_slot_beat_pub:result_slot_beat,
           vcb_d=LOCAL32?vm_commit_beat_pub:vm_commit_beat,
           qsb2=LOCAL32?q_slot_beat_pub2:q_slot_beat,rsb2=LOCAL32?result_slot_beat_pub2:result_slot_beat,
-          vcb2=LOCAL32?vm_commit_beat_pub2:vm_commit_beat;
+          vcb2=LOCAL32?vm_commit_beat_pub2:vm_commit_beat,
+          qsb3=LOCAL32?q_slot_beat_pub3:q_slot_beat,rsb3=LOCAL32?result_slot_beat_pub3:result_slot_beat,
+          vcb3=LOCAL32?vm_commit_beat_pub3:vm_commit_beat,vcb4=LOCAL32?vm_commit_beat_pub4:vm_commit_beat;
+ // R3i: X[b] read as b[4] ? X[16 + b'[3:0]] : X[b[3:0]] with b' a second copy of b (== X[b]).
+ function automatic rd32(input [31:0] x,input [4:0] lo,input [4:0] hi);
+  rd32=lo[4]?x[{1'b1,hi[3:0]}]:x[{1'b0,lo[3:0]}];
+ endfunction
  // Result payload holds use independently registered same-edge publications.
  // Every bit is retained on the same inactive edges as the original service.
  wire[19:0]result_word=base+((LOCAL32!=0)?result_slot_beat_pub2:result_slot_beat);   // R3g: == base + result_slot_beat
@@ -151,7 +159,7 @@ module qfd_native59_static_service #(
    if(LOCAL32==0&&q_slot)begin kernel_q_beat<=q_slot_beat;kernel_q_tag<=q_tag;kernel_q_data<=q_data;end
    if(LOCAL32?q_slot_pub[75]:q_slot)begin
     q_count<=q_count+1'b1;
-    if(!active||!requested||q_tag!=tag||q_beat!=q_slot_beat||q_seen[q_slot_beat]||q_count!={1'b0,q_slot_beat})fault<=1;
+    if(!active||!requested||q_tag!=tag||q_beat!=q_slot_beat||rd32(q_seen,q_slot_beat,qsb3)||q_count!={1'b0,q_slot_beat})fault<=1;
    end
    if((LOCAL32?q_slot_pub[73]:q_slot)&&!qsb_d[4])q_seen[qsb_d]<=1;
    if((LOCAL32?q_slot_pub[74]:q_slot)&&qsb_d[4])q_seen[qsb_d]<=1;
@@ -160,11 +168,11 @@ module qfd_native59_static_service #(
     if(LOCAL32==0)begin vm_write_word<=base+result_slot_beat;vm_write_beat<=result_slot_beat;
     vm_write_tag<=result_tag;vm_write_data<=result_data;end
     result_count<=result_count+1'b1;
-    if(!active||!requested||result_tag!=tag||result_beat!=result_slot_beat||result_seen[result_slot_beat]||result_count!={1'b0,result_slot_beat})fault<=1;
+    if(!active||!requested||result_tag!=tag||result_beat!=result_slot_beat||rd32(result_seen,result_slot_beat,rsb3)||result_count!={1'b0,result_slot_beat})fault<=1;
     result_seen[rsb_d]<=1;
    end
    if(vm_commit_v)begin
-    if(!active||vm_commit_tag!=tag||!result_seen[vcb2]||committed[vm_commit_beat])fault<=1;
+    if(!active||vm_commit_tag!=tag||!rd32(result_seen,vcb2,vcb3)||rd32(committed,vm_commit_beat,vcb4))fault<=1;
     committed[vcb_d]<=1;commit_count<=commit_count+1'b1;
    end
    if(kernel_done)begin
