@@ -1,0 +1,41 @@
+{
+  "archive_sha256": "706df10d0d7117c7bc660d1153142dd9d9d1d61506510804116d0396a4cef1e9",
+  "manifest_sha256": "79ae148e43dc12d3a39fee2e31bdc42f960b90bdb2dafb402104370d4c116b1d",
+  "remote_script_sha256": "1d082110c7e35440a105f684ebdf312cdc41c1364d0aed3d2541a204a2535aee",
+  "start_commit": "f3e7a1331833cd160ffb0d8103c82c96ccceb5a9",
+  "daemon_start_commit": "85fcc1f96936d9da9298c648cc6a48c6deacf1a2",
+  "helpers": [
+    {
+      "path": "tools/orfs_allcorner_spef.py",
+      "kind": "file",
+      "sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+      "git_blob": "f81d47e5da0e9ea6d85504702069bfbdfb008f4b",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    {
+      "path": "tools/ref_tile/native_census.py",
+      "kind": "file",
+      "sha256": "a3af6dd8f665326b75804a8da115cd5d0f3c8d40265f9ad9a51068cadfcf2cd4",
+      "git_blob": "a5b26006e926b27b0a239d98a85487b21f458dd9",
+      "source": "daemon_overlay",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "tools/ref_tile/ref_route.sh",
+      "kind": "file",
+      "sha256": "dcfbb94f41e1d5306145d4916ca8fd55c00d68a924a90e5e7728813682a8da0f",
+      "git_blob": "a3b325786795884b2b278c0ce3c12bacd62d7832",
+      "source": "daemon_overlay",
+      "matches_provenance_commit": false
+    },
+    {
+      "path": "tools/textbook_lint.py",
+      "kind": "file",
+      "sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+      "git_blob": "af4af4329aec67da97b0f5a79553a44d34c616e5",
+      "source": "daemon_overlay",
+      "matches_provenance_commit": false
+    }
+  ]
+}

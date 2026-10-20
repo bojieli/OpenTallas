@@ -1,0 +1,39 @@
+test_actual_graph_normal_and_mutants (test_gray_fifo_cdc_constraints.ActualGraph.test_actual_graph_normal_and_mutants) ... ok
+test_actual_graph_events (test_gray_fifo_cdc_constraints.EventActualGraph.test_actual_graph_events) ... ok
+test_admitted (test_gray_fifo_cdc_constraints.EventLint.test_admitted) ... ok
+test_constant_chains_only_with_events (test_gray_fifo_cdc_constraints.EventLint.test_constant_chains_only_with_events) ... ok
+test_event_schema_refused (test_gray_fifo_cdc_constraints.EventLint.test_event_schema_refused) ... ok
+test_mutants_refused (test_gray_fifo_cdc_constraints.EventLint.test_mutants_refused) ... ok
+test_without_events_sdc_unchanged (test_gray_fifo_cdc_constraints.EventLint.test_without_events_sdc_unchanged) ... ok
+test_actual_graph_normal_and_mutants (test_gray_fifo_cdc_constraints.ExtActualGraph.test_actual_graph_normal_and_mutants) ... ok
+test_admitted_fifo_macro_level_strap (test_gray_fifo_cdc_constraints.ExtLint.test_admitted_fifo_macro_level_strap) ... ok
+test_macro_and_schema_refused (test_gray_fifo_cdc_constraints.ExtLint.test_macro_and_schema_refused) ... ok
+test_reviewed_fifo_source_pinned (test_gray_fifo_cdc_constraints.ExtLint.test_reviewed_fifo_source_pinned) ... ok
+test_structural_mutants_refused (test_gray_fifo_cdc_constraints.ExtLint.test_structural_mutants_refused) ... ok
+test_actual_kv_cdc_channel (test_gray_fifo_cdc_constraints.Lint.test_actual_kv_cdc_channel)
+The KV host-cluster channel ot_qwen_die_cdc_ch (phy -> core) at its real parameter shapes (W reduced). ... ok
+test_admitted_and_bounded_only (test_gray_fifo_cdc_constraints.Lint.test_admitted_and_bounded_only) ... ok
+test_existing_modes_unchanged (test_gray_fifo_cdc_constraints.Lint.test_existing_modes_unchanged) ... ok
+test_launch_aliases_carry_launch_roles_only (test_gray_fifo_cdc_constraints.Lint.test_launch_aliases_carry_launch_roles_only) ... ok
+test_reviewed_source_mutants_refused (test_gray_fifo_cdc_constraints.Lint.test_reviewed_source_mutants_refused) ... ok
+test_schema_refused (test_gray_fifo_cdc_constraints.Lint.test_schema_refused) ... ok
+test_structural_mutants_refused (test_gray_fifo_cdc_constraints.Lint.test_structural_mutants_refused) ... ok
+test_two_family_phy_leaf (test_gray_fifo_cdc_constraints.Lint.test_two_family_phy_leaf) ... ok
+test_broken_partner_refused (test_gray_fifo_cdc_constraints.MergedOnline.test_broken_partner_refused) ... ok
+test_merged_online_chain_admitted_once (test_gray_fifo_cdc_constraints.MergedOnline.test_merged_online_chain_admitted_once) ... ok
+test_real_missing_synchroniser_still_fails (test_gray_fifo_cdc_constraints.MergedOnline.test_real_missing_synchroniser_still_fails) ... ok
+test_wrapped_name_resolves_and_plain_name_unchanged (test_gray_fifo_cdc_constraints.PinRegWrapperNames.test_wrapped_name_resolves_and_plain_name_unchanged) ... ok
+test_actual_corner_roles (test_host_sram_gray_fifo.HostSramTests.test_actual_corner_roles) ... ok
+test_actual_source_and_model_fingerprints (test_host_sram_gray_fifo.HostSramTests.test_actual_source_and_model_fingerprints) ... ok
+test_actual_top_proof_and_wrong_writer_clock (test_host_sram_gray_fifo.HostSramTests.test_actual_top_proof_and_wrong_writer_clock) ... ok
+test_missing_clock (test_host_sram_gray_fifo.HostSramTests.test_missing_clock) ... ok
+test_no_implicit_dual_clock_admission (test_host_sram_gray_fifo.HostSramTests.test_no_implicit_dual_clock_admission) ... ok
+test_receipt_pins_blackbox_even_if_not_in_sources (test_host_sram_gray_fifo.HostSramTests.test_receipt_pins_blackbox_even_if_not_in_sources) ... ok
+test_wrong_bus_width (test_host_sram_gray_fifo.HostSramTests.test_wrong_bus_width) ... ok
+test_wrong_related_clock (test_host_sram_gray_fifo.HostSramTests.test_wrong_related_clock) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 19.165s
+
+OK
+LAUNCH_ALIASES ['u_ci.rd_bin[2]', 'u_ih.rd_bin[3]']
