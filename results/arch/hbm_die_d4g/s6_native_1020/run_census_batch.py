@@ -10,6 +10,9 @@ for row in rows:
  try:
   if receipt['local_identity_flags'] or receipt['current_source_mismatches']:raise ValueError('source/top/parameter wrapper correspondence refused')
   net=remote/(cell+'.netlist.v');ys=remote/(cell+'.ys');etm=remote/'etm_tt.tcl'
+  fj_path=remote/(cell+'.files.json');fj=json.loads(fj_path.read_text());receipt['actual_files_json_sha256']=sha(fj_path)
+  if fj.get('macros')!=m.get('actual_macro_declarations'):raise ValueError('actual mapped macro/master resolution differs from metadata')
+  if fj.get('unresolved') or fj.get('ambiguous'):raise ValueError('unresolved or ambiguous source master graph '+str({'unresolved':fj.get('unresolved'),'ambiguous':fj.get('ambiguous')}))
   receipt['mapped_sha256']=sha(net);receipt['synthesis_script_sha256_actual']=sha(ys);receipt['etm_tt_sha256_actual']=sha(etm)
   if receipt['synthesis_script_sha256_actual']!=m['synthesis_script_sha256']:raise ValueError('actual synthesis script differs from metadata')
   if receipt['etm_tt_sha256_actual']!=m['etm_script_sha256']['tt']:raise ValueError('actual TT library script differs from metadata')
