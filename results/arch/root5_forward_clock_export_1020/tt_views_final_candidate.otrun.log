@@ -1,0 +1,50 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-forward-clock-export-1020/suite/final35
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-forward-clock-export-1020/suite/final35
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-forward-clock-export-1020/suite/final35
+ot-run: ot-epyc9       admits   984 GB (avail 797, growth 109, headroom 0, waiters 0/0 GB) load 63/128 running 39 disk 133 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-forward-clock-export-1020/suite/final35
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-forward-clock-export-1020/suite/final35
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2872077-1792496576 after 1 s
+test_only_combinational_paths_from_clock_entries_are_clock_outputs (test_forwarded_clock.ClockOutputClassification.test_only_combinational_paths_from_clock_entries_are_clock_outputs) ... ok
+test_declaration_rejects_missing_ports_and_unsafe_names (test_forwarded_clock.DeclaredForwarding.test_declaration_rejects_missing_ports_and_unsafe_names) ... ok
+test_named_inverter_derives_polarity_and_opposite_phase (test_forwarded_clock.DeclaredForwarding.test_named_inverter_derives_polarity_and_opposite_phase) ... ok
+test_native_generated_clock_source_and_master_are_required (test_forwarded_clock.DeclaredForwarding.test_native_generated_clock_source_and_master_are_required) ... ok
+test_missing_provenance_and_impossible_arcs_fail (test_forwarded_clock.ForwardedClock.test_missing_provenance_and_impossible_arcs_fail) ... ok
+test_physical_provenance_survives_receipt (test_forwarded_clock.ForwardedClock.test_physical_provenance_survives_receipt) ... ok
+test_source_latency_does_not_enter_cell_transfer (test_forwarded_clock.ForwardedClock.test_source_latency_does_not_enter_cell_transfer) ... ok
+test_only_the_native_forwarding_pin_is_replaced (test_forwarded_clock.NativeModelMerge.test_only_the_native_forwarding_pin_is_replaced) ... ok
+test_blocked_pin_takes_exact_abstract (test_view_export.ExactAbstract.test_blocked_pin_takes_exact_abstract) ... ok
+test_clean_default_kept_without_extra_session (test_view_export.ExactAbstract.test_clean_default_kept_without_extra_session) ... ok
+test_exact_no_better_keeps_default (test_view_export.ExactAbstract.test_exact_no_better_keeps_default) ... ok
+test_band_carve_slivers_take_exact_abstract (test_view_export.ExactAbstractAfterFinalize.test_band_carve_slivers_take_exact_abstract) ... ok
+test_big_exact_abstract_patched_in_pin_windows_only (test_view_export.ExactAbstractAfterFinalize.test_big_exact_abstract_patched_in_pin_windows_only) ... ok
+test_tt_ff_match_the_routed_verdict (test_view_export.ReexportMatchesVerdict.test_tt_ff_match_the_routed_verdict) ... skipped 'set OT_VIEW_EXPORT_ORFS / OT_VIEW_EXPORT_NAME to a closed loop route on this host'
+test_discovery_and_replay_roots (test_view_export.Sequence.test_discovery_and_replay_roots) ... ok
+test_installed_eco_dir_is_the_verdict_dir (test_view_export.Sequence.test_installed_eco_dir_is_the_verdict_dir) ... ok
+test_job_replay_is_the_jobs_post_sdc_order (test_view_export.Sequence.test_job_replay_is_the_jobs_post_sdc_order) ... ok
+test_job_replay_keeps_original_extra_sdc_before_post_sdc (test_view_export.Sequence.test_job_replay_keeps_original_extra_sdc_before_post_sdc) ... ok
+test_job_replay_refuses_a_missing_post_sdc (test_view_export.Sequence.test_job_replay_refuses_a_missing_post_sdc) ... ok
+test_job_replay_refuses_missing_original_extra_sdc (test_view_export.Sequence.test_job_replay_refuses_missing_original_extra_sdc) ... ok
+test_job_replay_without_a_clean_ioref_uses_the_metrics (test_view_export.Sequence.test_job_replay_without_a_clean_ioref_uses_the_metrics) ... ok
+test_section_is_the_verdict_order (test_view_export.Sequence.test_section_is_the_verdict_order) ... ok
+test_stale_verdict_is_refused (test_view_export.Sequence.test_stale_verdict_is_refused) ... ok
+test_unclean_verdict_is_refused (test_view_export.Sequence.test_unclean_verdict_is_refused) ... ok
+test_untried_eco_dir_is_not_used (test_view_export.Sequence.test_untried_eco_dir_is_not_used) ... ok
+test_ws (test_view_export.Sequence.test_ws) ... ok
+test_all_actual_liberty_corners_keep_constraints (test_view_export_corner.CornerOwnership.test_all_actual_liberty_corners_keep_constraints) ... ok
+test_braced_selector (test_view_export_corner.CornerOwnership.test_braced_selector) ... ok
+test_legacy_sequence_gets_explicit_selector_before_constraints (test_view_export_corner.CornerOwnership.test_legacy_sequence_gets_explicit_selector_before_constraints) ... ok
+test_unknown_corner_refused (test_view_export_corner.CornerOwnership.test_unknown_corner_refused) ... ok
+test_unknown_selector_refused (test_view_export_corner.CornerOwnership.test_unknown_selector_refused) ... ok
+test_corner_retag (test_view_export_pfhc.PfHardChildExport.test_corner_retag) ... ok
+test_main_inserts_mv_line_when_missing (test_view_export_pfhc.PfHardChildExport.test_main_inserts_mv_line_when_missing) ... ok
+test_no_env_without_line (test_view_export_pfhc.PfHardChildExport.test_no_env_without_line) ... ok
+test_section_files_checks_the_etms (test_view_export_pfhc.PfHardChildExport.test_section_files_checks_the_etms) ... ok
+test_verdict_section_keeps_env_before_read_db (test_view_export_pfhc.PfHardChildExport.test_verdict_section_keeps_env_before_read_db) ... ok
+
+----------------------------------------------------------------------
+Ran 36 tests in 0.078s
+
+OK (skipped=1)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2872077-1792496576): exit 0
