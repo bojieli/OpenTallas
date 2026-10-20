@@ -1,0 +1,52 @@
+{
+  "hist32r3_place.odb": {
+    "db_units_per_um": 1000,
+    "outline_area_um2": 3499.2,
+    "core_bbox_area_um2": 3004.6464,
+    "row_rectangles": 184,
+    "sum_row_area_um2": 3004.6464000000046,
+    "actual_std_area_um2": 1420.8793200000928,
+    "std_over_outline": 0.4060583333333599,
+    "std_over_core": 0.4728940217391613,
+    "BTerms_by_native_sigtype": {
+      "SIGNAL": 359,
+      "POWER": 1,
+      "GROUND": 1
+    },
+    "BPin_rectangles_by_native_sigtype": {
+      "SIGNAL": 359,
+      "POWER": 12,
+      "GROUND": 12
+    },
+    "native_cell_master_types": {
+      "CORE": 9957,
+      "CORE_WELLTAP": 554,
+      "CORE_TIEHIGH": 412
+    }
+  },
+  "hist32r3_grt.odb": {
+    "db_units_per_um": 1000,
+    "outline_area_um2": 3499.2,
+    "core_bbox_area_um2": 3004.6464,
+    "row_rectangles": 184,
+    "sum_row_area_um2": 3004.6464000000046,
+    "actual_std_area_um2": 1486.518480000073,
+    "std_over_outline": 0.42481666666668755,
+    "std_over_core": 0.4947399068323224,
+    "BTerms_by_native_sigtype": {
+      "SIGNAL": 359,
+      "POWER": 1,
+      "GROUND": 1
+    },
+    "BPin_rectangles_by_native_sigtype": {
+      "SIGNAL": 359,
+      "POWER": 12,
+      "GROUND": 12
+    },
+    "native_cell_master_types": {
+      "CORE": 10297,
+      "CORE_WELLTAP": 554,
+      "CORE_TIEHIGH": 412
+    }
+  }
+}

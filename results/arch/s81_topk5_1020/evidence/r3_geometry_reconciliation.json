@@ -1,0 +1,87 @@
+{
+  "floorplan": {
+    "dump_sha256": "6bacc2e774b0df9e2c263dc8ff103b1c70a6f698bd4685827af9611aaaf71a52",
+    "stats": {
+      "fill": 0.401,
+      "std_area": 1402.5,
+      "block_area": 0.0,
+      "die_area": 3499.2
+    },
+    "pin_rectangles_total": 383,
+    "PG_rectangles": 24,
+    "signal_clock_rectangles": 359,
+    "native_rows": 184,
+    "std_cell_records": 10518,
+    "exact_std_cell_bbox_sum_um2": 1402.537680000057
+  },
+  "placed": {
+    "dump_sha256": "bfca9e75926b189fbee31a2a38019218a3676fbc1d10f5ec9de5af36959362eb",
+    "stats": {
+      "fill": 0.42,
+      "std_area": 1470.4,
+      "block_area": 0.0,
+      "die_area": 3499.2
+    },
+    "pin_rectangles_total": 383,
+    "PG_rectangles": 24,
+    "signal_clock_rectangles": 359,
+    "native_rows": 184,
+    "std_cell_records": 10709,
+    "exact_std_cell_bbox_sum_um2": 1470.3638400000411
+  },
+  "native_odb": {
+    "hist32r3_place.odb": {
+      "db_units_per_um": 1000,
+      "outline_area_um2": 3499.2,
+      "core_bbox_area_um2": 3004.6464,
+      "row_rectangles": 184,
+      "sum_row_area_um2": 3004.6464000000046,
+      "actual_std_area_um2": 1420.8793200000928,
+      "std_over_outline": 0.4060583333333599,
+      "std_over_core": 0.4728940217391613,
+      "BTerms_by_native_sigtype": {
+        "SIGNAL": 359,
+        "POWER": 1,
+        "GROUND": 1
+      },
+      "BPin_rectangles_by_native_sigtype": {
+        "SIGNAL": 359,
+        "POWER": 12,
+        "GROUND": 12
+      },
+      "native_cell_master_types": {
+        "CORE": 9957,
+        "CORE_WELLTAP": 554,
+        "CORE_TIEHIGH": 412
+      }
+    },
+    "hist32r3_grt.odb": {
+      "db_units_per_um": 1000,
+      "outline_area_um2": 3499.2,
+      "core_bbox_area_um2": 3004.6464,
+      "row_rectangles": 184,
+      "sum_row_area_um2": 3004.6464000000046,
+      "actual_std_area_um2": 1486.518480000073,
+      "std_over_outline": 0.42481666666668755,
+      "std_over_core": 0.4947399068323224,
+      "BTerms_by_native_sigtype": {
+        "SIGNAL": 359,
+        "POWER": 1,
+        "GROUND": 1
+      },
+      "BPin_rectangles_by_native_sigtype": {
+        "SIGNAL": 359,
+        "POWER": 12,
+        "GROUND": 12
+      },
+      "native_cell_master_types": {
+        "CORE": 10297,
+        "CORE_WELLTAP": 554,
+        "CORE_TIEHIGH": 412
+      }
+    }
+  },
+  "source_synth_area_um2": 1540.26036,
+  "source_density": 0.5126261645962733,
+  "explanation": "Source synthesized1540.26036/core3004.6464=51.26%. Actual floorplan-image dump functionalstd1402.53768/outline3499.2=40.08166%, headerrounds0.401. Later3_place functionalstd1404.72468; GRT functionalstd1470.36384. Native totalstandard includes554welltaps16.15464; renderer excludes TAPCELL/FILLER/DECAP. Source/physical standard areas differ due physical mappedbufferremoval andrepair. Header383rectangles (font may appear388)=359signal/clock+24PG (12VDD12VSS); nativeBTerms361=359SIGNAL inclclock+1POWER+1GROUND. Legal184row rectangles exactly3004.6464um2."
+}

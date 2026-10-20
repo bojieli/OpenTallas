@@ -36,12 +36,12 @@
     {
       "item": 6,
       "status": "PASS",
-      "evidence": "No macros, no lattice placement required; one contiguous full standard-cell area, actualdensityPNG viewed locallyfullsmallbins but no trapped island. Outline64.8x54 aspect1.2; sourcearea1540.26036/core3004.6464=51.26%. Actual359pinrectangles allontrack/inoutline; fullfaces<=6pins/um. GRT0overflow,M2max34.45%."
+      "evidence": "No macros, no lattice placement required; one contiguous full standard-cell area, actualdensityPNG viewed locallyfullsmallbins but no trapped island. Outline64.8x54 aspect1.2; sourcearea1540.26036/core3004.6464=51.26%. Actual359pinrectangles allontrack/inoutline; fullfaces<=6pins/um. GRT0overflow,M2max34.45%. HeaderFILL0.401 is actualearlyfloorplanfunctionalstd1402.53768/wholeoutline3499.2; source51.26% uses1540.26036/legalcore3004.6464. Actual383imagepinrectangles=359signal+24PG(12VDD12VSS), not388. Legal184rowsarea3004.6464; actualGRTfunctional1470.36384/core48.9363%."
     },
     {
       "item": 7,
       "status": "PASS",
-      "evidence": "Single genuine core_clk root; full native root TTspread7.2/FF7.4ps, insertion109.8/88.4ps. S clock lies by register mass. Hold0.03ns, no child profile means involved."
+      "evidence": "Single genuine core_clk root; full native ALL-sink rootTTspread9.5/FF9.4ps; boundary7.2/7.4ps. Insertion109.8/88.4ps. Sclockbesideregistermass. Hold0.03ns; no childmeans involved."
     },
     {
       "item": 8,
@@ -72,5 +72,6 @@
     "Native per-bank reach/clock/fanout not evidence for original controller/packer; originalquarter1778over32 remainsblocked.",
     "Actual finalrouteTT/FF/SS/DRC and nativePG/reach/audit owed."
   ],
-  "request": "Coordinator actual PNG+checklist review and specific leaf REVIEW/submit authorization; no REVIEW written by lane."
+  "request": "Coordinator actual PNG+checklist review and specific leaf REVIEW/submit authorization; no REVIEW written by lane.",
+  "geometry_reconciliation": "evidence/r3_geometry_reconciliation.json"
 }
