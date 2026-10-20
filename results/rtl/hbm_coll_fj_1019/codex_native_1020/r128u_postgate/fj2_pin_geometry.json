@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 461,
+  "pin_rectangles": 461,
+  "pin_track_checked": 461,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/ref_gate/hcoll_fj2_r128u-20261020-013704/routes/gate/work/orfs/gate_dump.json",
+ "dump_sha256": "d4076554e577805576e06f5491825365c6177f921ffdef89bb5d6e4900985fa3",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}
