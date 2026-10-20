@@ -256,7 +256,7 @@
     "name": "seqhost_muthregv",
     "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut7 1 7",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_regex": "^SEQHOST FAIL( |$)|Assertion failed.*hx_pop replica diverged",
     "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut7.log",
     "threads": 8,
     "peak_ram_gb": 8
