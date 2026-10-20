@@ -1,0 +1,314 @@
+{
+  "u_p.u_core.g_hard.u_rt": [
+    {
+      "inst": "clkbuf_sp_L4",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        172692,
+        163620
+      ],
+      "out_net": "clkbuf_sp_L4_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_N35",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        172314,
+        180900
+      ],
+      "out_net": "clkbuf_sp_N35_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N36",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        145152,
+        188730
+      ],
+      "out_net": "clkbuf_sp_N36_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N37",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        32940,
+        205200
+      ],
+      "out_net": "clkbuf_sp_N37_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N38",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        14094,
+        184950
+      ],
+      "out_net": "clkbuf_sp_N38_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N39",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        9450,
+        139860
+      ],
+      "out_net": "clkbuf_sp_N39_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N40",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        37044,
+        69390
+      ],
+      "out_net": "clkbuf_sp_N40_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N40_r1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        94500,
+        38880
+      ],
+      "out_net": "clkbuf_sp_N40_r1_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_N81",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        182304,
+        38880
+      ],
+      "out_net": "clkbuf_sp_N81_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N81_r1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        182304,
+        163350
+      ],
+      "out_net": "clkbuf_sp_N81_r1_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_N164",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        178200,
+        223830
+      ],
+      "out_net": "clkbuf_sp_N164_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N164_r1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        178200,
+        164160
+      ],
+      "out_net": "clkbuf_sp_N164_r1_net",
+      "input_count": 1,
+      "out_loads": 1
+    }
+  ],
+  "u_p.u_core.g_ld3.u_ld3": [
+    {
+      "inst": "clkbuf_sp_L1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        63720,
+        211950
+      ],
+      "out_net": "clkbuf_sp_L1_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_L1_p5",
+      "master": "BUFx2_ASAP7_75t_R",
+      "location_dbu": [
+        63720,
+        211410
+      ],
+      "out_net": "clkbuf_sp_L1_p5_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_L1_p4",
+      "master": "BUFx2_ASAP7_75t_R",
+      "location_dbu": [
+        63720,
+        212490
+      ],
+      "out_net": "clkbuf_sp_L1_p4_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_L1_p3",
+      "master": "BUFx2_ASAP7_75t_R",
+      "location_dbu": [
+        63396,
+        211950
+      ],
+      "out_net": "clkbuf_sp_L1_p3_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_L1_p2",
+      "master": "HB4xp67_ASAP7_75t_R",
+      "location_dbu": [
+        63720,
+        211680
+      ],
+      "out_net": "clkbuf_sp_L1_p2_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_L1_p1",
+      "master": "HB4xp67_ASAP7_75t_R",
+      "location_dbu": [
+        63720,
+        212220
+      ],
+      "out_net": "clkbuf_sp_L1_p1_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_N36",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        145152,
+        188730
+      ],
+      "out_net": "clkbuf_sp_N36_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N37",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        32940,
+        205200
+      ],
+      "out_net": "clkbuf_sp_N37_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N38",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        14094,
+        184950
+      ],
+      "out_net": "clkbuf_sp_N38_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N39",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        9450,
+        139860
+      ],
+      "out_net": "clkbuf_sp_N39_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N40",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        37044,
+        69390
+      ],
+      "out_net": "clkbuf_sp_N40_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N40_r1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        94500,
+        38880
+      ],
+      "out_net": "clkbuf_sp_N40_r1_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_N81",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        182304,
+        38880
+      ],
+      "out_net": "clkbuf_sp_N81_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N81_r1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        182304,
+        163350
+      ],
+      "out_net": "clkbuf_sp_N81_r1_net",
+      "input_count": 1,
+      "out_loads": 1
+    },
+    {
+      "inst": "clkbuf_sp_N164",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        178200,
+        223830
+      ],
+      "out_net": "clkbuf_sp_N164_net",
+      "input_count": 1,
+      "out_loads": 2
+    },
+    {
+      "inst": "clkbuf_sp_N164_r1",
+      "master": "BUFx24_ASAP7_75t_R",
+      "location_dbu": [
+        178200,
+        164160
+      ],
+      "out_net": "clkbuf_sp_N164_r1_net",
+      "input_count": 1,
+      "out_loads": 1
+    }
+  ]
+}
