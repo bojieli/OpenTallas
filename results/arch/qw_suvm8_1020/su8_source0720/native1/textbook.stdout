@@ -1,0 +1,4 @@
+textbook_lint: WARN qfd_dv_s5_su8 cells 27,175 flops 4,652 depth 470.1 ps util None reach None um (1.4 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":7,"flops":7,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=4652 root=port:ck rule=PASS: 4,652 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+textbook_lint: WARN reset_landing: reset port rst_n: 7 sinks (7 flops, 0 hard-child / macro pins, e.g. _30461_/RESETN) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile "reset_landing": {"enable": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth

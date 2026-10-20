@@ -1,0 +1,126 @@
+{
+  "schema": "opentallas.uarch.qwen_su8.v1",
+  "adopted": false,
+  "status": "MODEL_PERMITS_SOURCE_PROTOTYPE_ONLY",
+  "basis": {
+    "schema": "opentallas.qwen.su_control_inventory.v1",
+    "source": "rtl/qwen_dv/s5/qfd_dv_s5_suvm7.sv",
+    "source_sha256": "608178187e433430b9371f49cc19bc649e9ebc6d59a1d3595043dfce0d102edd",
+    "recipe": "model.ys",
+    "source_generic_sha256": "3bed69819f3b4a72f79f91be3460448b9396190842a762494d6d31357b01038e",
+    "source_mapped_log_sha256": "e2bee742c654095bb59d9c4c116821129a0f0aa896c115d481f60dd143ae9d48",
+    "source_generic_cell_counts": {
+      "$_DFF_P_": 2976,
+      "$_DFF_PN0_": 290,
+      "$_DFF_PN1_": 1,
+      "$_MUX_": 1185,
+      "$_NOT_": 153,
+      "$_XOR_": 2934,
+      "$_AND_": 4327,
+      "$_OR_": 2102
+    },
+    "actual_control_ff": 3267,
+    "actual_1bit_mux": 1185,
+    "omitted_module": [
+      {
+        "instance": "u_vm.",
+        "module": "qfd_dv_s5_vm7"
+      }
+    ],
+    "control_only_mapped_area_um2": 1850.17284,
+    "btab_payload_flops_removed": 256,
+    "dff_area_um2": 0.33534,
+    "scope": "Original SU control with exact VM7 interface blackboxed for inventory only; source VM/SRAMs omitted, all SU logic and original BTAB output delay included. Never a physical or functional vehicle.",
+    "remote": "ot-epyc7:/srv/opentallas-scratch/claude/codex-su8-model-0720",
+    "fleet_unit": "oth-ubuntu-1660311-1792506530"
+  },
+  "input_bits": {
+    "start": 1,
+    "program_word": 457,
+    "retire": 1,
+    "last": 1,
+    "lane_fault": 8,
+    "kv_write": 8,
+    "rd_v": 1,
+    "red_busy": 1,
+    "red_fault": 1,
+    "landed_vm_write": 8
+  },
+  "output_bits": {
+    "core_group_record": 244,
+    "group_valid": 3,
+    "lane_valid": 8,
+    "lane_addresses": 768,
+    "not_ready": 1,
+    "idle": 1,
+    "fault": 1,
+    "progress": 16,
+    "rows": 16
+  },
+  "MACs_per_cycle": 0,
+  "compute": "integer address/control generation; numerical SU datapath stays in lane leaves",
+  "SRAM_bits": 0,
+  "external_storage": "VM8b owns18 real SRAM macros; SU8 contains no dynamic tables",
+  "vector_beats_per_cycle": 1,
+  "boundary_bits_per_cycle": 1545,
+  "input_bytes_per_cycle": 60.875,
+  "output_bytes_per_cycle": 132.25,
+  "existing_onebit_muxes": 1185,
+  "new_boundary_muxes": 0,
+  "new_boundary_flops": 1545,
+  "extra_start_alignment_flops": 2,
+  "projected_ff": 4558,
+  "replica_plan": "four current-address copies and eight lane offsets retained; replace768 raw stride copies by768 precomputed offsets; no added cadence/edges",
+  "measured_baseline_area_um2": 1764.3257999999998,
+  "projected_min_area_um2": 2283.09678,
+  "projected_budget_area_um2": 3165.2596799999997,
+  "outline_candidate_um": [
+    129.60000000000002,
+    129.60000000000002
+  ],
+  "face_bit_counts": {
+    "N": 768,
+    "E": 247,
+    "S": 45,
+    "W": 487
+  },
+  "face_density_per_um": {
+    "N": 5.925925925925925,
+    "E": 1.905864197530864,
+    "S": 0.34722222222222215,
+    "W": 3.7577160493827155
+  },
+  "perimeter_pin_limit_per_um": 6,
+  "pin_bound_min_side_um": 128.0,
+  "projected_fill_budget": 0.1884513888888888,
+  "pin_bound_fill_exception_required": true,
+  "routing": {
+    "signal_layers": 4,
+    "pitch_um": 0.048,
+    "record_track_capacity_at25pct": 2700.0,
+    "max_face_demand": 768,
+    "passes": true,
+    "qualification": "projection only; actual reachable pin/layer/channel audit owed"
+  },
+  "latency": {
+    "observed_command_accept_before": 2,
+    "observed_command_accept_su8": 6,
+    "vm_read_answer_before": 2,
+    "vm_read_answer_vm8": 4,
+    "vm_write_read_min_before": 1,
+    "vm_write_read_min_vm8": 3,
+    "table_write_added": 2,
+    "slice_lane_roundtrip_added": 2,
+    "decomposition": "control inputs/state shifted3 edges plus registered outputs1; start pin1+two alignment stages, VM answer+2 then SU pin1",
+    "btab": "bypass SU to group/lane relay; no added SU word-stage on BTAB"
+  },
+  "critical_source": "precompute lane*stride before lane-address register, kept prefix current+offset; actual source depth/census mandatory",
+  "not_qualified": [
+    "source equivalence/causals",
+    "actual full source synthesis/depth/fanout",
+    "unified parent slot binding",
+    "native per-operation calendar emission GAP",
+    "actual VM8b closure",
+    "actual clocks/reach/PG/pins"
+  ]
+}

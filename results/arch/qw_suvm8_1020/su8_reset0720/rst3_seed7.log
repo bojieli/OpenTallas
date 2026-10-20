@@ -1,0 +1,11 @@
+RST3_EPOCH epoch=0 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=1 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=2 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=3 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=4 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_STATS checks=45 active=5 fault=5 bad=0
+SU8_RST3 PASS
+- rtl/test/qwen_dv/s5/su8/tb_su8_rst3.sv:45: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 341ns; walltime 0.002 s; speed 157.620 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 8 MB

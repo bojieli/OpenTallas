@@ -10,7 +10,7 @@ module qfd_dv_su7_control_projection(input wire ck,rst_n,
     input wire red_busy,
     input wire red_fault,
     input wire [7:0] lvm_we,
-    output wire [242:0] gb,
+    output wire [243:0] gb,
     output wire [2:0] gv,
     output wire [7:0] lv1,
     output wire [767:0] pd1,
@@ -187,7 +187,7 @@ module qfd_dv_su7_control_projection(input wire ck,rst_n,
         else inflight <= inflight + (emit_i ? 8'd1 : 8'd0) - (retire ? 8'd1 : 8'd0);
 
     // ---------------------------------------------------------------------------------------------- group relay (kept)
-    (* keep *) reg [242:0] gbr;
+    (* keep *) reg [243:0] gbr;
     (* keep *) reg [2:0]   gvr;
     always @(posedge ck or negedge rg) if (!rg) gvr <= 3'd0; else gvr <= {emit_c, acc_k[NFA + NCH + 2], vl_k[NVL-1]};
     always @(posedge ck) gbr <= {v, fin_th, rrow, asi, bsi, csi, dsi, asrc, bsrc, csrc, mc, md, redsq,

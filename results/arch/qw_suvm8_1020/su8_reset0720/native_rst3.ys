@@ -1,0 +1,12 @@
+read_liberty -lib cells.lib;
+read_verilog -sv -D SYNTHESIS rtl/qwen_dv/s5/qfd_dv_s5_su8.sv rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv;
+hierarchy -check -top qfd_dv_s5_su8_rst3;
+synth -top qfd_dv_s5_su8_rst3 -flatten -noabc -nofsm -noshare;
+dffunmap;
+clean;
+write_json su8_generic.json;
+dfflibmap -liberty seq.lib;
+abc -liberty cells.lib;
+clean;
+stat -liberty cells.lib;
+write_verilog -noattr su8_mapped.v;

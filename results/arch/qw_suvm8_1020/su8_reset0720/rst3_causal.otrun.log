@@ -1,0 +1,45 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-su8-rst3-causal-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-su8-rst3-causal-0720
+ot-run: ot-epyc7       admits   988 GB (avail 773, growth 82, headroom 0, waiters 0/0 GB) load 46/96 running 19 disk 5381 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-su8-rst3-causal-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-su8-rst3-causal-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-su8-rst3-causal-0720
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2140938-1792507745 after 1 s
+RST3_EPOCH epoch=0 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=1 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=2 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=3 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=4 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_STATS checks=45 active=5 fault=5 bad=0
+RST3_DROPASSERT_MUTANT held_clock_failures=4
+SU8_RST3 PASS
+- rtl/test/qwen_dv/s5/su8/tb_su8_rst3.sv:49: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 341ns; walltime 0.002 s; speed 154.967 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 8 MB
+RST3_EPOCH epoch=0 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=1 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=2 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=3 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=4 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_STATS checks=45 active=5 fault=5 bad=0
+RST3_DROPASSERT_MUTANT held_clock_failures=4
+SU8_RST3 PASS
+- rtl/test/qwen_dv/s5/su8/tb_su8_rst3.sv:49: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 341ns; walltime 0.002 s; speed 151.556 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 8 MB
+RST3_EPOCH epoch=0 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=1 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=2 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=3 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_EPOCH epoch=4 first_valid_edge=6 leaf_release_old=2 new=3 held_clock_async_clear=1
+RST3_STATS checks=45 active=5 fault=5 bad=0
+RST3_DROPASSERT_MUTANT held_clock_failures=4
+SU8_RST3 PASS
+- rtl/test/qwen_dv/s5/su8/tb_su8_rst3.sv:49: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 341ns; walltime 0.002 s; speed 142.466 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2140938-1792507745): exit 0

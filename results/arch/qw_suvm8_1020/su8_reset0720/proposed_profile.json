@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.qwen.su8_async_reset_profile_proposal.v1",
+  "admitted": false,
+  "top": "qfd_dv_s5_su8_rst3",
+  "params": {},
+  "defines": [],
+  "clock": "ck",
+  "reset_port": "rst_n",
+  "source_dependencies": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_su8.sv": "95a3f0a631488842c8687ddf6cde19f04e52d5225f0ac047c15d3ea3dca7d299",
+    "rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv": "7b51baff1779c4b6f5fdde16b6309d5c723a15ff149801a46c4ed0108189ad28"
+  },
+  "proposed_topology": {
+    "raw_async_reset_contacts": 2,
+    "first_two_cells": "asynchronous-assert/synchronous-release synchronizer rs0(D1)->rs1(Drs0), both raw reset",
+    "local_leaf_count": 6,
+    "local_leaf_connection": "R=rs1(Q2),D=1, clock=ck",
+    "expected_leaf_release_cycles": 3,
+    "original_leaf_release_cycles": 2,
+    "boot_release_added": 1,
+    "local_control_forest": "unchanged sixleaf->tenrc plus groupreset",
+    "held_clock_assertion": "both synchronizer FFs async-assert; Q2 clears local leaves/forest without clock; output pin FFs retain last sampled values until next clock as before"
+  },
+  "source_coupons": {
+    "active_reset_and_fault": 5,
+    "random_initial_state_seeds": [
+      7,
+      53,
+      311
+    ],
+    "release_leaf_checks_per_seed": 45,
+    "active_and_fault_epochs_per_seed": 5,
+    "first_valid_command_marker_edge": 6,
+    "boot_quiet_used_in_coupon": 8,
+    "scope": "RTL source only, no recovery/removal timing qualification"
+  },
+  "not_admitted_by_existing_plain_profile": true,
+  "root_obligations": [
+    "typed source family/profile review; no private registry addition",
+    "actual mapped raw contacts/clock/chain/polarity/topology verification",
+    "recovery/removal at actual corners and propagated clock/reset source",
+    "cold/arbitrary-state full source context, earliest admissible publication/first-valid",
+    "actual parent reset/boot schedule and physical phase envelope"
+  ],
+  "payload_width_correction": "gb[499:0] is500bits; core after256BTAB is244; output boundary1058bits; prior243prototype/projection proof did not cover v[17]."
+}

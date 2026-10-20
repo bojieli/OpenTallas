@@ -1,0 +1,6 @@
+SU8_RESET_STATS checks=1278 async=250 bad=0 bypass_mut=250
+SU8_RESET PASS
+- rtl/test/qwen_dv/s5/su8/tb_su8_reset.sv:19: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.001 s; speed 2.285 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

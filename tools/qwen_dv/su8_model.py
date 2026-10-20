@@ -13,7 +13,7 @@ def model(root=ROOT):
     if record['omitted_module']!=[dict(instance='u_vm.',module='qfd_dv_s5_vm7')]:
         raise ValueError('unowned omitted storage/control in inventory')
     inputs=dict(start=1,program_word=457,retire=1,last=1,lane_fault=8,kv_write=8,rd_v=1,red_busy=1,red_fault=1,landed_vm_write=8)
-    outputs=dict(core_group_record=243,group_valid=3,lane_valid=8,lane_addresses=768,not_ready=1,idle=1,fault=1,progress=16,rows=16)
+    outputs=dict(core_group_record=244,group_valid=3,lane_valid=8,lane_addresses=768,not_ready=1,idle=1,fault=1,progress=16,rows=16)
     boundaries=sum(inputs.values())+sum(outputs.values())
     ff=record['actual_control_ff']-record['btab_payload_flops_removed']+boundaries+2
     base_area=record['control_only_mapped_area_um2']-256*record['dff_area_um2']

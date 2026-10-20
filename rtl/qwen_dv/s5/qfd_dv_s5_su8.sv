@@ -24,7 +24,7 @@ module qfd_dv_s5_su8 #(parameter integer MUT=0)(input wire ck,rst_n,
     input wire red_busy,
     input wire red_fault,
     input wire [7:0] lvm_we,
-    output wire [242:0] gb,
+    output wire [243:0] gb,
     output wire [2:0] gv,
     output wire [7:0] lv1,
     output wire [767:0] pd1,
@@ -44,7 +44,7 @@ module qfd_dv_s5_su8 #(parameter integer MUT=0)(input wire ck,rst_n,
     wire c_red_busy;
     wire c_red_fault;
     wire [7:0] c_lvm_we;
-    wire [242:0] c_gb;
+    wire [243:0] c_gb;
     wire [2:0] c_gv;
     wire [7:0] c_lv1;
     wire [767:0] c_pd1;
@@ -59,7 +59,7 @@ assign aligned_start = MUT==2 ? start_d1 : start_d2;
 qfd_dv_su8_kff #(.W(1),.ID(9001)) u_start1 (.ck(ck),.d(c_start),.q(start_d1));
 qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
     localparam integer SW = 8, LS = 3, NW = 18, AW = 24, WR = 16;
-    // ---------------------------------------------------------------------------------------------- reset (0 edges)
+    // ---------------------------------------------------------------------------------------------- reset: ORIGINAL seven raw contacts; physical admission BLOCKED
     localparam integer NR2 = 6, NRC = 10;
     reg rs1;
     always @(posedge ck or negedge rst_n) if (!rst_n) rs1 <= 1'b0; else rs1 <= 1'b1;
@@ -230,7 +230,7 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
         else inflight <= inflight + (emit_i ? 8'd1 : 8'd0) - (retire ? 8'd1 : 8'd0);
 
     // ---------------------------------------------------------------------------------------------- group relay (kept)
-    (* keep *) reg [242:0] gbr;
+    (* keep *) reg [243:0] gbr;
     (* keep *) reg [2:0]   gvr;
     always @(posedge ck or negedge rg) if (!rg) gvr <= 3'd0; else gvr <= {emit_c, acc_k[NFA + NCH + 2], vl_k[NVL-1]};
     always @(posedge ck) gbr <= {v, fin_th, rrow, asi, bsi, csi, dsi, asrc, bsrc, csrc, mc, md, redsq,
@@ -302,7 +302,7 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
     qfd_dv_su8_kffr #(.W(1), .ID(800)) u_nq (.ck(ck), .rn(rst_k[0]), .d(nr_c), .q(c_su_nr));
 
 
-qfd_dv_su8_kff #(.W(1057),.ID(9010)) u_output_pins (.ck(ck),.d({c_gb,c_gv,c_lv1,c_pd1,c_su_nr,c_su_idle,c_su_fault,c_su_prog,c_su_rows}),.q({gb,gv,lv1,pd1,su_nr,su_idle,su_fault,su_prog,su_rows}));
+qfd_dv_su8_kff #(.W(1058),.ID(9010)) u_output_pins (.ck(ck),.d({c_gb,c_gv,c_lv1,c_pd1,c_su_nr,c_su_idle,c_su_fault,c_su_prog,c_su_rows}),.q({gb,gv,lv1,pd1,su_nr,su_idle,su_fault,su_prog,su_rows}));
 endmodule
 
 //24-bit carry-prefix address addition; modulo2^24, preserving the source widths.

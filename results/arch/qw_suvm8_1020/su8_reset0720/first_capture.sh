@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+yosys -Q -p 'read_verilog -sv -D SYNTHESIS rtl/qwen_dv/s5/qfd_dv_s5_suvm7.sv rtl/qwen_dv/s5/qfd_dv_s5_su8.sv rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv rtl/test/qwen_dv/s5/su8/su7_control_projection.sv rtl/test/qwen_dv/s5/su8/proof_first_capture.sv; hierarchy -top proof; setattr -mod -unset keep_hierarchy; prep -top proof -flatten; memory_map; async2sync; opt_clean; write_rtlil first_capture.il; sat -seq 34 -set-init-def -set-def-inputs -prove fail 0 -verify -show-ports' > first_capture_positive.log 2>&1
+# Causal input-independent wrong lane offset must be exposed after capture.
+yosys -Q -p 'read_verilog -sv -D SYNTHESIS rtl/qwen_dv/s5/qfd_dv_s5_suvm7.sv rtl/qwen_dv/s5/qfd_dv_s5_su8.sv rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv rtl/test/qwen_dv/s5/su8/su7_control_projection.sv rtl/test/qwen_dv/s5/su8/proof_first_capture.sv; chparam -set MUT 1 proof; hierarchy -top proof; setattr -mod -unset keep_hierarchy; prep -top proof -flatten; memory_map; async2sync; opt_clean; sat -seq 34 -set-init-def -set-def-inputs -prove fail 0 -show-ports -dump_vcd first_capture_negative.vcd' > first_capture_negative.log 2>&1
+grep -q 'SAT proof finished - model found: FAIL!' first_capture_negative.log

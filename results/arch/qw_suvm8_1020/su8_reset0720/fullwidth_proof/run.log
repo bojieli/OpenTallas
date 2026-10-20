@@ -1,0 +1,6 @@
+SU8_STATS n=11787 bad=0 stride_mut=11757 accept_mut=11759
+SU8_EQ PASS
+- rtl/test/qwen_dv/s5/su8/tb_su8.sv:111: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.235 s; speed 102.259 us/s
+- Verilator: cpu 0.235 s on 1 threads; allocated 8 MB

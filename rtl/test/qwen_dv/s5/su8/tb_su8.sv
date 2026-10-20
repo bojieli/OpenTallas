@@ -30,7 +30,7 @@ always @(posedge ck) begin d0_red_fault<=red_fault;d1_red_fault<=d0_red_fault;en
 reg [7:0] lvm_we;
 reg [7:0] d0_lvm_we, d1_lvm_we;
 always @(posedge ck) begin d0_lvm_we<=lvm_we;d1_lvm_we<=d0_lvm_we;end
-wire [242:0] ref_gb;
+wire [243:0] ref_gb;
 wire [2:0] ref_gv;
 wire [7:0] ref_lv1;
 wire [767:0] ref_pd1;
@@ -39,7 +39,7 @@ wire [0:0] ref_su_idle;
 wire [0:0] ref_su_fault;
 wire [15:0] ref_su_prog;
 wire [15:0] ref_su_rows;
-wire [242:0] good_gb;
+wire [243:0] good_gb;
 wire [2:0] good_gv;
 wire [7:0] good_lv1;
 wire [767:0] good_pd1;
@@ -48,7 +48,7 @@ wire [0:0] good_su_idle;
 wire [0:0] good_su_fault;
 wire [15:0] good_su_prog;
 wire [15:0] good_su_rows;
-wire [242:0] mut1_gb;
+wire [243:0] mut1_gb;
 wire [2:0] mut1_gv;
 wire [7:0] mut1_lv1;
 wire [767:0] mut1_pd1;
@@ -57,7 +57,7 @@ wire [0:0] mut1_su_idle;
 wire [0:0] mut1_su_fault;
 wire [15:0] mut1_su_prog;
 wire [15:0] mut1_su_rows;
-wire [242:0] mut2_gb;
+wire [243:0] mut2_gb;
 wire [2:0] mut2_gv;
 wire [7:0] mut2_lv1;
 wire [767:0] mut2_pd1;
@@ -70,11 +70,11 @@ qfd_dv_su7_control_projection u_ref(.ck(ck),.rst_n(rst_n),.start(start),.si(si),
 qfd_dv_s5_su8 #(.MUT(0)) u_good(.ck(ck),.rst_n(rst_n),.start(start),.si(d1_si),.l_retire(d1_l_retire),.l_last(d1_l_last),.l_fault(d1_l_fault),.kv_we(d1_kv_we),.rd_v(d1_rd_v),.red_busy(d1_red_busy),.red_fault(d1_red_fault),.lvm_we(d1_lvm_we),.gb(good_gb),.gv(good_gv),.lv1(good_lv1),.pd1(good_pd1),.su_nr(good_su_nr),.su_idle(good_su_idle),.su_fault(good_su_fault),.su_prog(good_su_prog),.su_rows(good_su_rows));
 qfd_dv_s5_su8 #(.MUT(1)) u_mut1(.ck(ck),.rst_n(rst_n),.start(start),.si(d1_si),.l_retire(d1_l_retire),.l_last(d1_l_last),.l_fault(d1_l_fault),.kv_we(d1_kv_we),.rd_v(d1_rd_v),.red_busy(d1_red_busy),.red_fault(d1_red_fault),.lvm_we(d1_lvm_we),.gb(mut1_gb),.gv(mut1_gv),.lv1(mut1_lv1),.pd1(mut1_pd1),.su_nr(mut1_su_nr),.su_idle(mut1_su_idle),.su_fault(mut1_su_fault),.su_prog(mut1_su_prog),.su_rows(mut1_su_rows));
 qfd_dv_s5_su8 #(.MUT(2)) u_mut2(.ck(ck),.rst_n(rst_n),.start(start),.si(d1_si),.l_retire(d1_l_retire),.l_last(d1_l_last),.l_fault(d1_l_fault),.kv_we(d1_kv_we),.rd_v(d1_rd_v),.red_busy(d1_red_busy),.red_fault(d1_red_fault),.lvm_we(d1_lvm_we),.gb(mut2_gb),.gv(mut2_gv),.lv1(mut2_lv1),.pd1(mut2_pd1),.su_nr(mut2_su_nr),.su_idle(mut2_su_idle),.su_fault(mut2_su_fault),.su_prog(mut2_su_prog),.su_rows(mut2_su_rows));
-wire [1056:0] ref_all={ref_gb,ref_gv,ref_lv1,ref_pd1,ref_su_nr,ref_su_idle,ref_su_fault,ref_su_prog,ref_su_rows};
-wire [1056:0] good_all={good_gb,good_gv,good_lv1,good_pd1,good_su_nr,good_su_idle,good_su_fault,good_su_prog,good_su_rows};
-wire [1056:0] mut1_all={mut1_gb,mut1_gv,mut1_lv1,mut1_pd1,mut1_su_nr,mut1_su_idle,mut1_su_fault,mut1_su_prog,mut1_su_rows};
-wire [1056:0] mut2_all={mut2_gb,mut2_gv,mut2_lv1,mut2_pd1,mut2_su_nr,mut2_su_idle,mut2_su_fault,mut2_su_prog,mut2_su_rows};
-reg [1056:0] q0,q1,q2,q3; always @(posedge ck)begin q0<=ref_all;q1<=q0;q2<=q1;q3<=q2;end
+wire [1057:0] ref_all={ref_gb,ref_gv,ref_lv1,ref_pd1,ref_su_nr,ref_su_idle,ref_su_fault,ref_su_prog,ref_su_rows};
+wire [1057:0] good_all={good_gb,good_gv,good_lv1,good_pd1,good_su_nr,good_su_idle,good_su_fault,good_su_prog,good_su_rows};
+wire [1057:0] mut1_all={mut1_gb,mut1_gv,mut1_lv1,mut1_pd1,mut1_su_nr,mut1_su_idle,mut1_su_fault,mut1_su_prog,mut1_su_rows};
+wire [1057:0] mut2_all={mut2_gb,mut2_gv,mut2_lv1,mut2_pd1,mut2_su_nr,mut2_su_idle,mut2_su_fault,mut2_su_prog,mut2_su_rows};
+reg [1057:0] q0,q1,q2,q3; always @(posedge ck)begin q0<=ref_all;q1<=q0;q2<=q1;q3<=q2;end
 initial begin
 start='0;
 si='0;
