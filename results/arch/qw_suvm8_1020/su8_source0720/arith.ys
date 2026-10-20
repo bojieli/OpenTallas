@@ -1,0 +1,4 @@
+read_verilog -sv -D SYNTHESIS rtl/qwen_dv/s5/qfd_dv_s5_su8.sv rtl/test/qwen_dv/s5/su8/tb_su8_arith.sv
+hierarchy -check -top proof
+prep -top proof -flatten
+sat -verify -prove mismatch 0 -show-inputs -show-outputs
