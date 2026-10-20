@@ -1,0 +1,6 @@
+violation type: Short
+	srcs: net:VSS net:net35836
+	bbox = (304.1170, 137.3280) - (305.1480, 137.3520) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.g_rsz2.u_mem1 net:net35836
+	bbox = (304.1170, 137.3280) - (305.3760, 137.3520) on Layer M4
