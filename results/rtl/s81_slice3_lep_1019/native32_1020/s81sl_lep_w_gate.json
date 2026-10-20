@@ -1,0 +1,137 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 23% = (macros/children 51776 + std 9200) / outline 268739 um2 (pin-bound: Pin-bound: W ~2,310 lane lo/li pins, E 2,208 ring ro/ri, N 703 host plane; 518.4 um faces give 4.46/um (<= 6/um); fill = (10 SRAM 51776 + std ~9.2k) / 268739 = 23%: the outline is set by the W/E pin faces and the 43.2-lattice macro columns with >= 20-um channels, not by std-cell area (SAFE item 6 util waived: pin/lattice-bound).)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered (RTL-BUILD-S81): ro lands in pin flops (rov/roq), ri / lo_v / lo_d / li_r / rxv / fault leave flops, li handshake + data land in hq / dq flops, sl_f / l*_f land in slq / lfq; recipe pin_regs would add an unpriced stage.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc6 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81sl_lep_w_20261019-231705.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81sl_lep_w_20261019-231705.log; host dir ot-epyc6:/srv/opentallas-scratch/claude/ref_gate/s81sl_lep_w-20261019-231705",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc6 in 234 s (gate total 3468 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 5147, 'pin_rectangles': 5147, 'pin_track_checked': 5147, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 50b9925d9f33b05ca9ca1136655c0796a6878328625363cbc1465869125669d6",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 9815 um2 + macros 51776 in core 264278: util 6% (std-cell density 6.0% of placeable 163803 um2; total fill 23.3%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_s81sl_lep cells 64,808 flops 19,370 depth 268.4 ps util 0.2334 reach 18.4 um (3.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 19,370 flops > 15,000 on one root (+0 ICGs, 10 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "reset u_ot_pr_core.u.u_rstr.rst_n[2]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 696 loads (696 flops, e.g. u_ot_pr_core.u.g_hrx.fh_v$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 19,380 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 19,380 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 779.6..882.5 ps (spread 102.9), boundary mean 824.4; tt insertion all 594.8..686.5 ps (spread 91.7), boundary mean 639.5; ff insertion all 482.3..566.5 ps (spread 84.2), boundary mean 525.9; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81sl_lep_w/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      600 paths, worst slack -28.8 ps (e.g. ot_prs_00566_ff/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -2.884903427258223e-11 hold WNS -5.65425484211346e-12",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 19,380 sinks on the largest root; measured TT insertion 686.5 ps, FF insertion 566.5 ps, TT pin-flop spread 75.8 ps, FF pin-flop spread 74.9 ps; WARN: 19,380 sinks on one clock root > 15,000 (guidance); insertion 686.5 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-slice3-lep/physical/ref_tile/s81sl_lep_w/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-slice3-lep/physical/ref_tile/s81sl_lep_w/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 23% = (hard macros 51776.3 + synthesized std cells 9904.6) / outline 268738.6 um2; pin demand per face: S 4 pins over 258.2/518.4 um (50%), N 703 pins over 515.7/518.4 um (100%), W 2328 pins over 516.2/518.4 um (100%), E 2304 pins over 516.1/518.4 um (100%) (pin-bound: Pin-bound: W ~2,310 lane lo/li pins, E 2,208 ring ro/ri, N 703 host plane; 518.4 um faces give 4.46/um (<= 6/um); fill = (10 SRAM 51776 + std ~9.2k) / 268739 = 23%: the outline is set by the W/E pin faces and the 43.2-lattice macro columns with >= 20-um channels, not by std-cell area (SAFE item 6 util waived: pin/lattice-bound).)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 30.86% used; GRT 1070 s",
+   "fix": ""
+  }
+ ]
+}
