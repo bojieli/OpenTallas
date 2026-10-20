@@ -21,13 +21,17 @@ def squares(n, rng):
     x = (rng.integers(-4096, 4097, n).astype(np.float32) * np.exp2(rng.integers(-14, 6, n)).astype(np.float32))
     return (x.astype(np.float32) * x.astype(np.float32)).astype(np.float32)      # FP32 RNE products (lane mul)
 
-def sum_rows(p, v, tag):
-    """one csum row: LOAD 0 into the padded chunks, sample-major ADD_EXT, pairwise ADD_TREE, EXPORT."""
+def sum_rows(p, v, tag, ldx=False):
+    """one csum row: LOAD 0 into the padded chunks, sample-major ADD_EXT, pairwise ADD_TREE, EXPORT.
+    ldx (HBM-SUFIX 10-19, compiler-only best on the as-built reducer): the chunk's first square is LOADed directly
+    (+0 + x0 == x0 exactly for a square: x*x is never -0), so 128 LOAD 0 commands per quarter disappear."""
     start = p.c; n = len(v); nc = (n+7)//8; npad = 1 << (nc-1).bit_length()
-    for k in range(npad): p.emit(0, d=k)
+    for k in range(npad):
+        if not (ldx and k < nc): p.emit(0, d=k)
     for off in range(8):
         for ch in range(nc):
             k = ch*8+off
+            if ldx and off == 0: p.emit(0, d=ch, x=R.bits(v[k]) if k < n else 0); continue
             p.emit(1, a=ch, d=ch, x=R.bits(v[k]) if k < n else 0)
     s = 1
     while s < npad:
@@ -40,10 +44,10 @@ def sum_rows(p, v, tag):
 def main():
     out, case = Path(sys.argv[1]), sys.argv[2]
     rng = np.random.default_rng(1019); p = R.Program()
-    if case == 'd4096':
+    if case in ('d4096', 'd4096_ldx'):
         v = squares(4096, rng)
         q = [v[j*1024:(j+1)*1024] for j in range(4)]     # quarter j = csum8 chunks [128 j, 128 j + 128) (contiguous words)
-        sum_rows(p, q[0], 1)
+        sum_rows(p, q[0], 1, ldx=case.endswith('_ldx'))
         roots = [R.bits(csum(x)) for x in q]
         assert roots[0] == p.outputs[-1][2]
         c0 = p.c
@@ -58,6 +62,25 @@ def main():
         for h in range(2): sum_rows(p, squares(128, rng), h+1)
     elif case == 'seg128_k1':
         sum_rows(p, squares(128, rng), 1)
+    elif case == 'tree32':
+        # HBM-SUFIX 10-19, interleaved VM layout (block b of a 4096 row in quarter b % 4): every quarter's pre-tree block
+        # subtree (aligned csum8 node of 128 words) is exported to the RF; reducer 0 joins the 32 block values in golden
+        # order: pairs (LOAD x_2i ... ADD_EXT x_2i+1, evens first so the RAW 10 distance is hidden), then the pairwise tree.
+        v = squares(4096, rng)
+        blk = [R.bits(csum(v[128*b:128*(b+1)])) for b in range(32)]
+        c0 = p.c
+        for i in range(16): p.emit(0, d=300+i, x=blk[2*i])
+        for i in range(16): p.emit(1, a=300+i, d=300+i, x=blk[2*i+1])
+        lv = [300+i for i in range(16)]
+        while len(lv) > 1:
+            nl = []
+            for i in range(0, len(lv), 2): p.emit(2, a=lv[i], b=lv[i+1], d=lv[i]); nl.append(lv[i])
+            lv = nl
+        p.export(lv[0], 3, R.bits(csum(v)))
+        p.rows.append(dict(n=32, tag=3, tree32=True, first_cmd=c0, export_cmd=p.commands[-1][0],
+                           scalar_cycle=p.commands[-1][0]+R.LAT, span=p.commands[-1][0]+R.LAT-c0+1))
+    elif case == 'seg128_k1_ldx':
+        sum_rows(p, squares(128, rng), 1, ldx=True)
     else:
         raise SystemExit('case')
     p.write(out)

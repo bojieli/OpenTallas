@@ -9,7 +9,7 @@ src=(rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
 sha256sum "${src[@]}" tools/hbm_static/su_reduce_tb.cpp tools/hbm_static/su_reduce_compile.py tools/hbm_static/toksim_su/sfu/rms_reduce_compile.py > "$OUT/sources.sha256"
 "$VL" --cc --exe --build -j 4 -Wno-fatal --top-module ot_hbm_su_reduce_static --Mdir "$OUT/obj" "${src[@]}" "$(pwd)/tools/hbm_static/su_reduce_tb.cpp" > "$OUT/build.log" 2>&1 || { tail -20 "$OUT/build.log"; exit 1; }
-for c in d4096 seg128_q2 seg128_k1; do
+for c in ${CASES:-d4096 seg128_q2 seg128_k1}; do
  python3 tools/hbm_static/toksim_su/sfu/rms_reduce_compile.py "$OUT/$c" $c > "$OUT/$c.compile.txt"
  set +e; "$OUT/obj/Vot_hbm_su_reduce_static" "$OUT/$c" > "$OUT/$c.log" 2>&1; echo "rc=$?" >> "$OUT/$c.log"; set -e
  # mutant witness: the 'phase' mutant of su_reduce_tb (scalar one cycle off) must FAIL
