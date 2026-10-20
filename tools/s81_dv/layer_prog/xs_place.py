@@ -421,6 +421,9 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     bfo = [o for o in ops if o in XB.BF_OPS]
     if bfo:
         phases += compile_bf(field, fx, bfo, g, j, LX.base_master(master), LX.land_e(lk), bf, len(qa))
+    if LX.aproj_topology_enabled():
+        phases[0]['row_index'] = list(p0['rows'])
+        phases[0]['ownership'] = 'physical-frame contiguous tensor rows; CAP/gather unadmitted'
     fill = [int(v) for v in field.fill]
     return dict(frame=frame, master=master, lk=lk, slice=sl, slice_index=g, frame_index=j, pairs=qa, q_pairs=q,
                 bf_pairs=bf, phases=phases, fill=fill, depth=field.depth, nphases=len(field.phases),

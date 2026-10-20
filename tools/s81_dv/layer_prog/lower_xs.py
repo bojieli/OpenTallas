@@ -296,7 +296,7 @@ def lower(die, op, ctx):
                            emission=plan['emission']))
     ok = all(f['phase'] is None or f['faults'] == 0 for f in frames)
     rec['files'] = {f'prog/xs/{op["id"]}.json': json.dumps(dict(
-        schema='opentallas.s81_dv.xs_lowering.v1', op=op, slice=sl, slice_index=g, nseg=NSEG, rows_per_slice=ROWS_PER_SLICE,
+        schema='opentallas.s81_dv.xs_lowering.v1', op=op, slice=sl, slice_index=g, nseg=NSEG, rows_per_slice=sum(len(p['rows']) for p in pl),
         frames=frames, images='per frame: python3 tools/s81_dv/layer_prog/lower_xs.py gen --frame <inst> --out DIR '
         '(element via-maps + il7 cfg banks named <inst>_*, xs pq_phase0 / pq_stream0..3)'), indent=1) + '\n'}
     if not ok:
