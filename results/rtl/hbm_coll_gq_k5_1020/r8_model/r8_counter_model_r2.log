@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: ot-epyc6       admits   758 GB (avail 644, growth 113, headroom 0, waiters 0/0 GB) load 37/128 running 28 disk 3901 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3203397-1792508902 after 0 s
+MODEL_COUNTER_CENSUS FAIL 59 10
+Traceback (most recent call last):
+  File "/audit/counter_full_model_r2.py", line 97, in <module>
+    missing=sorted(set(m for m,_,_ in g.cells)-set(areas));assert not missing,missing
+AssertionError: ['BUFx12f_ASAP7_75t_R', 'BUFx2_ASAP7_75t_R', 'BUFx3_ASAP7_75t_R', 'BUFx4_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'BUFx6f_ASAP7_75t_R', 'INVx11_ASAP7_75t_R', 'INVx1_ASAP7_75t_R', 'INVx2_ASAP7_75t_R', 'INVx3_ASAP7_75t_R', 'INVx4_ASAP7_75t_R', 'INVx5_ASAP7_75t_R']
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3203397-1792508902): exit 1

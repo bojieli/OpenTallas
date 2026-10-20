@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: ot-epyc6       admits   728 GB (avail 623, growth 113, headroom 0, waiters 0/0 GB) load 34/128 running 30 disk 3904 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex-gq7-native-r7
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3197155-1792508725 after 0 s
+Traceback (most recent call last):
+  File "/audit/counter_full_model.py", line 81, in <module>
+    if k=='cell' and N.attr(cb,'area') is not None:areas[m]=float(N.attr(cb,'area'))
+ValueError: could not convert string to float: '0.69984\n    clock_gating_integrated_cell : latch_posedge_precontrol'
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3197155-1792508725): exit 1
