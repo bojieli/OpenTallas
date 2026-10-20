@@ -11,7 +11,7 @@ module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX
  input wire [511:0] kernel_q_data,
  input wire tx_slot,input wire [3:0] tx_slot_kind,input wire [4:0] tx_slot_beat,
  output wire tx_valid,output wire [547:0] tx_payload,
- output wire tx_valid_pub,tx_valid_pub2,   // R3h/j: == tx_valid (LOCAL32 kept copies; else alias)
+ output wire tx_valid_pub,tx_valid_pub2,tx_valid_pub3,   // R3h/j/k: == tx_valid (LOCAL32 kept copies; else alias)
  input wire rx_event,input wire [547:0] rx_payload,
  input wire rx_slot,input wire [3:0] rx_slot_kind,input wire [4:0] rx_slot_beat,
  output wire result_v,output wire [4:0] result_beat,output wire [58:0] result_tag,
@@ -47,7 +47,7 @@ module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX
  end
  wire rv;wire[3:0]rk;wire[15:0]re;wire[5:0]rl;wire[4:0]rb;wire[511:0]rd;
  wire codec_fault;wire[3:0]fault_cause;reg local_fault;
- wire tx_valid_b,tx_valid_c;
+ wire tx_valid_b,tx_valid_c,tx_valid_d;
  generate if(LOCAL32)begin:g_codec32
   qkd_native_attention_record_n59 #(.KV_SIDE(0),.MUT(CODEC_MUT),.RX_FREE(RX_FREE),.TX_FREE(TX_FREE))u_codec(
   .ck(ck),.rst_n(rst_n),.tx_event(kernel_request_v||kernel_q_v),.tx_expected(tx_slot),
@@ -58,8 +58,8 @@ module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX
   .tx_data(tx_sel_data),.tx_valid(tx_valid),.tx_payload(tx_payload),
   .rx_event(rx_event),.rx_expected(rx_slot),.rx_payload(rx_payload),.rx_expected_kind(rx_slot_kind),
   .rx_expected_epoch(operation_tag[58:43]),.rx_expected_layer(operation_tag[42:37]-6'd1),.rx_expected_beat(rx_slot_beat),
-  .rx_valid(rv),.rx_kind(rk),.rx_epoch(re),.rx_layer(rl),.rx_beat(rb),.rx_data(rd),.fault(codec_fault),.fault_cause(fault_cause),.tx_valid_b(tx_valid_b),.tx_valid_c(tx_valid_c));
-  assign tx_valid_pub=tx_valid_b;assign tx_valid_pub2=tx_valid_c;
+  .rx_valid(rv),.rx_kind(rk),.rx_epoch(re),.rx_layer(rl),.rx_beat(rb),.rx_data(rd),.fault(codec_fault),.fault_cause(fault_cause),.tx_valid_b(tx_valid_b),.tx_valid_c(tx_valid_c),.tx_valid_d(tx_valid_d));
+  assign tx_valid_pub=tx_valid_b;assign tx_valid_pub2=tx_valid_c;assign tx_valid_pub3=tx_valid_d;
  end else begin:g_codec
   qkd_native_attention_record #(.KV_SIDE(0),.MUT(CODEC_MUT),.RX_FREE(RX_FREE),.TX_FREE(TX_FREE))u_codec(
   .ck(ck),.rst_n(rst_n),.tx_event(kernel_request_v||kernel_q_v),.tx_expected(tx_slot),
@@ -71,7 +71,7 @@ module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX
   .rx_event(rx_event),.rx_expected(rx_slot),.rx_payload(rx_payload),.rx_expected_kind(rx_slot_kind),
   .rx_expected_epoch(operation_tag[58:43]),.rx_expected_layer(operation_tag[42:37]-6'd1),.rx_expected_beat(rx_slot_beat),
   .rx_valid(rv),.rx_kind(rk),.rx_epoch(re),.rx_layer(rl),.rx_beat(rb),.rx_data(rd),.fault(codec_fault),.fault_cause(fault_cause));
-  assign tx_valid_pub=tx_valid;assign tx_valid_pub2=tx_valid;
+  assign tx_valid_pub=tx_valid;assign tx_valid_pub2=tx_valid;assign tx_valid_pub3=tx_valid;
  end endgenerate
  assign result_v=rv&&rk==3;
  assign result_beat=rb;
@@ -116,6 +116,7 @@ module qkd_native_attention_record_n59 #(
     output reg tx_valid,output reg [547:0] tx_payload,
     (* keep = "true" *) output reg tx_valid_b,   // R3h: kept copy of tx_valid (same statements)
     (* keep = "true" *) output reg tx_valid_c,   // R3j: second kept copy
+    (* keep = "true" *) output reg tx_valid_d,   // R3k: third kept copy
     input wire rx_event,rx_expected,
     input wire [547:0] rx_payload,
     input wire [3:0] rx_expected_kind,
@@ -157,17 +158,17 @@ module qkd_native_attention_record_n59 #(
     wire bad=tx_time_bad||rx_time_bad||tx_record_bad||rx_record_bad;
     always @(posedge ck or negedge rst_n)begin
         if(!rst_n)begin
-            tx_valid<=0;tx_valid_b<=0;tx_valid_c<=0;tx_payload<=0;rx_valid<=0;rx_kind<=0;rx_epoch<=0;rx_layer<=0;rx_beat<=0;rx_data<=0;
+            tx_valid<=0;tx_valid_b<=0;tx_valid_c<=0;tx_valid_d<=0;tx_payload<=0;rx_valid<=0;rx_kind<=0;rx_epoch<=0;rx_layer<=0;rx_beat<=0;rx_data<=0;
             fault<=0;fault_cause<=0;
         end else begin
             if(RX_FREE!=0)rx_data<=rx_payload[511:0];
             if(TX_FREE!=0)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
-            tx_valid<=0;tx_valid_b<=0;tx_valid_c<=0;rx_valid<=0;
+            tx_valid<=0;tx_valid_b<=0;tx_valid_c<=0;tx_valid_d<=0;rx_valid<=0;
             if(!fault)begin
                 if(bad)begin
                     fault<=1;fault_cause<={rx_record_bad,tx_record_bad,rx_time_bad,tx_time_bad};
                 end else begin
-                    tx_valid<=tx_event;tx_valid_b<=tx_event;tx_valid_c<=tx_event;
+                    tx_valid<=tx_event;tx_valid_b<=tx_event;tx_valid_c<=tx_event;tx_valid_d<=tx_event;
                     if(tx_event&&TX_FREE==0)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
                     rx_valid<=rx_event;
                     if(rx_event)begin

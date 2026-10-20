@@ -514,7 +514,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // ---------------------------------------------------------------- operation context slots (MU-D2D-OVL; NS = 1: as built)
  localparam integer NS=(MCTX!=0)?2:1;
  reg nf,fs,bs;                       // slot of the next begin, the front (latest begun) slot, the back (oldest active) slot
- wire[NS-1:0]s_active,s_completed,s_svc_fault,s_rec_fault,s_land_fault,s_commit_complete,s_tx_v,s_tx_vb,s_tx_vc;   // R3h/j: s_tx_vb, s_tx_vc == s_tx_v
+ wire[NS-1:0]s_active,s_completed,s_svc_fault,s_rec_fault,s_land_fault,s_commit_complete,s_tx_v,s_tx_vb,s_tx_vc,s_tx_vd;   // R3h/j/k: s_tx_vb/c/d == s_tx_v
  wire[NS-1:0]s_req_v,s_kq_v,s_vm_write_v;wire[58:0]s_vm_write_tag[0:NS-1];wire[19:0]s_vm_write_word[0:NS-1];
  wire[4:0]s_vm_write_beat[0:NS-1];wire[511:0]s_vm_write_data[0:NS-1];wire[24:0]s_vm_pub[0:NS-1];wire[547:0]s_tx_payload[0:NS-1];wire[94:0]s_ret[0:NS-1];
  reg[58:0]s_optag[0:NS-1];reg[NS-1:0]s_vis_seen;
@@ -598,7 +598,8 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    ntx_v=ntx_v|s_tx_v[si];   // NS 1: the codec register as built; R3h: each payload half under its own valid copy
    if(NS==1||s_tx_v[si])ntx_p[273:0]=ntx_p[273:0]|s_tx_payload[si][273:0];
    if(NS==1||s_tx_vb[si])ntx_p[410:274]=ntx_p[410:274]|s_tx_payload[si][410:274];
-   if(NS==1||s_tx_vc[si])ntx_p[547:411]=ntx_p[547:411]|s_tx_payload[si][547:411];
+   if(NS==1||s_tx_vc[si])ntx_p[511:411]=ntx_p[511:411]|s_tx_payload[si][511:411];
+   if(NS==1||s_tx_vd[si])ntx_p[547:512]=ntx_p[547:512]|s_tx_payload[si][547:512];
   end
  end
  assign vm_write_v=vmw_v;assign vm_write_word=vmw_word;assign vm_write_beat=vmw_beat;assign vm_write_tag=vmw_tag;assign vm_write_data=vmw_data;
@@ -668,7 +669,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT),.RX_FREE(1),.TX_FREE(MCTX!=0),.LOCAL32(LOCAL32))u_record(   // QW-N59-4: free rx (svc2) / tx (svc3, MCTX 1: payload merged under tx_v) capture, output-exact
   .ck(ck),.rst_n(rst_rec),.operation_tag(s_optag[gs]),.kernel_request_v(s_req_v[gs]),.kernel_request_pub(kreq_pub),.kernel_request_tag(req_tag),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
-  .tx_slot(p_ts&&f),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(s_tx_v[gs]),.tx_payload(s_tx_payload[gs]),.tx_valid_pub(s_tx_vb[gs]),.tx_valid_pub2(s_tx_vc[gs]),
+  .tx_slot(p_ts&&f),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(s_tx_v[gs]),.tx_payload(s_tx_payload[gs]),.tx_valid_pub(s_tx_vb[gs]),.tx_valid_pub2(s_tx_vc[gs]),.tx_valid_pub3(s_tx_vd[gs]),
   .rx_result_pub(rx_result_pub),.slot_back_pub(slot_back_pub),.rx_event(p_rv&&b),.rx_payload(p_rp),.rx_slot(p_rs&&b),.rx_slot_kind(p_rk),.rx_slot_beat(p_rb),
   .result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),.result_slot(result_slot),.result_slot_pub(result_slot_pub),.result_slot_beat(result_slot_beat),
   .kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),.fault(s_rec_fault[gs]));
