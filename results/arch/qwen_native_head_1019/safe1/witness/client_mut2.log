@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   962 GB (avail 787, growth 113, headroom 0, waiters 0/0 GB) load 127/128 running 53 disk 344 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: ot-epyc8       admits  1065 GB (avail 821, growth 75, headroom 0, waiters 0/0 GB) load 75/128 running 17 disk 0 GB disk 0 GB < 40
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-cluster3-head-1019/b1
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3995637-1792454971 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+mut_bank rc=1
+mut_slot rc=1
+mut_ron rc=1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3995637-1792454971): exit 0
