@@ -258,5 +258,34 @@
       },
       "defines_field": []
     }
-  ]
+  ],
+  "xl_dsA_6a_failure_source_dir": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-smxl-1019/src3",
+  "xl_dsA_6a_source_REV": "fff9933bfa8283771546da450ab82eaa5b017d7a",
+  "core_source_matches": [
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+      "remote_sha256": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+      "committed_sha256": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+      "matches": true
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_id.sv",
+      "remote_sha256": "570a470eebf66e6230032cd74142641ba2088f907a93c40ab363cde131d0edcb",
+      "committed_sha256": "570a470eebf66e6230032cd74142641ba2088f907a93c40ab363cde131d0edcb",
+      "matches": true
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_id.sv",
+      "remote_sha256": "f11a3701413de90d536e8456f6435b93e9ddda8a443037e380f45f3335ed9fe3",
+      "committed_sha256": "f11a3701413de90d536e8456f6435b93e9ddda8a443037e380f45f3335ed9fe3",
+      "matches": true
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+      "remote_sha256": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9",
+      "committed_sha256": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9",
+      "matches": true
+    }
+  ],
+  "old_src_REV_scope": "earlier src directory only, not the xl_dsA_6a failing executable"
 }
