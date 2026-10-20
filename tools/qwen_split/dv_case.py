@@ -259,6 +259,15 @@ def _ctxrx_buses(m, out, cx_crt, has):
     rx_payload) and ctx_x -> tt_ctlm.ctx_x (129 b).  Fail closed if a face RX net, a port or the clock / reset is missing:
     the MU die must never leave tt_ctlm.ctx_x undriven or tied."""
     n_ = CTXRX[0]
+    if (n_, 'rst_n') not in cx_crt:
+        # QW-GEN3 10-19 (first real GEN of BOOTCTX, dv2f19g3: 'clock / reset [clk_d2d]'): sys_face's reset is the
+        # rst_d2d bus (class spine_local: rs_bump.rso_d -> d2d_rom / ucie_kv / sys_face), not a 'reset' class bus; the
+        # leaf joins THAT net as one more sink (same reset as the face whose RX nets it reads).  Still fail closed below.
+        k = next((k for k, b in enumerate(out) if ('sys_face', 'rst_n') in [tuple(e) for e in b[3]]), None)
+        if k is not None:
+            b0, c0, n0, e0 = out[k]
+            out[k] = (b0, c0, n0, list(e0) + [(n_, 'rst_n')])
+            cx_crt[(n_, 'rst_n')] = b0
     js = {p: next((k for k, b in enumerate(out) if ('sys_face', p) in [tuple(e) for e in b[3]]), None) for p in CTXRX_IN}
     miss = [p for p in [('tt_ctlm', 'ctx_x'), (n_, 'ctx_x')] + [(n_, q) for q in CTXRX_IN] if not has(*p)]
     if None in js.values() or miss or len(cx_crt) != 2:
