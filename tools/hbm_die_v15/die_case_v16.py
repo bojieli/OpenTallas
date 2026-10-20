@@ -415,6 +415,14 @@ def main():
                     help='DIE-HBM-LEAD 10-19: run.tcl of the GEN the relay/landing layer was planned on: every unplaced '
                          'non-relay block keeps its R0 home there (placed BEFORE lane rows) when the spot is still free; '
                          'without it rows slide into the generated homes and big blocks find no free area (GEN2c case_a)')
+    ap.add_argument('--reserve-homes', type=Path, default=None,
+                    help='L2H-GEN2D-FP2 10-19 (LEAD3-HBM 23:22): JSON {"sites": [{name, x, y, w, h, kind, why}]} of RESERVED reset-stage '
+                         'homes (lower-left x/y, um). Marked in the placement grid AFTER grant slots / plan regions / prior homes and '
+                         'BEFORE lane rows, so lane relays and generated homes cannot fill them; a site that overlaps an already placed '
+                         'block slides to the nearest free spot within its "slide_um" (default 43.2), else it is reported lost. No '
+                         'instance is placed in a site: the manifest placement leaves it empty (a free home for reset_forest_layer) and '
+                         'lists it in manifest.reserved_reset_homes. A forest tile (hbfd_rrl*) whose planned home overlaps a site '
+                         'releases that site just before it is placed (spliced GEN).')
     ap.add_argument('--slot-map', default='',
                     help='inst=slot[,inst=slot..]: die-side contract slot retarget (H-DIE-R6; same as an H-NETLIST slot_override layer)')
     ap.add_argument('--replan-chains', default='',
@@ -686,6 +694,38 @@ def main():
             homes[n_] = dict(rule=f'prior home ({a.prior_place.parent.name})', target=[x_, y_], at=[r_[0], r_[1]], dist_um=0.0)
             prior_kept.append(n_)
         print('prior homes kept', len(prior_kept), 'lost', len(prior_lost), prior_lost[:20], flush=True)
+    # 2c L2H-GEN2D-FP2 10-19: RESERVED reset-stage homes (--reserve-homes) BEFORE lane rows.  Grid value 2 = reserved (put()
+    # marks 1), so a release (2 -> 0) never clears a placed block; halos of later blocks may overwrite reserved cells with 1.
+    res_sites, res_rep = [], dict(src=str(a.reserve_homes) if a.reserve_homes else None, kept=[], slid=[], lost=[], released=[])
+    if a.reserve_homes:
+        for st in json.loads(a.reserve_homes.read_text())['sites']:
+            x_, y_, w_, h_ = st['x'], st['y'], st['w'], st['h']
+            sl_ = float(st.get('slide_um', 43.2))
+            def _free(x0, y0):
+                ii = occ.ii(); i0, j0 = int(x0 / CELL), int(y0 / CELL)
+                i1 = min(int(math.ceil((x0 + w_) / CELL)), occ.nx); j1 = min(int(math.ceil((y0 + h_) / CELL)), occ.ny)
+                return x0 >= 0 and y0 >= 0 and x0 + w_ <= W and y0 + h_ <= H and ii[j1, i1] - ii[j0, i1] - ii[j1, i0] + ii[j0, i0] == 0
+            got_ = (x_, y_) if _free(x_, y_) else None
+            if got_ is None:
+                r_ = occ.find(x_ + w_ / 2, y_ + h_ / 2, w_, h_, 0.0, (x_ - sl_, y_ - sl_, x_ + w_ + sl_, y_ + h_ + sl_))
+                got_ = tuple(r_) if r_ is not None else None
+            if got_ is None:
+                res_rep['lost'].append(st['name']); continue
+            i0, j0 = max(0, int(got_[0] / CELL)), max(0, int(got_[1] / CELL))
+            i1, j1 = min(occ.nx, int(math.ceil((got_[0] + w_) / CELL))), min(occ.ny, int(math.ceil((got_[1] + h_) / CELL)))
+            blk_ = occ.g[j0:j1, i0:i1]; blk_[blk_ == 0] = 2; occ._ii = None
+            rec_ = dict(st, x=round(got_[0], 3), y=round(got_[1], 3), cells=(i0, j0, i1, j1), dx_um=round(got_[0] - x_, 3), dy_um=round(got_[1] - y_, 3))
+            res_sites.append(rec_)
+            (res_rep['kept'] if got_ == (x_, y_) else res_rep['slid']).append(st['name'])
+        print('reserved reset homes kept', len(res_rep['kept']), 'slid', len(res_rep['slid']), 'lost', len(res_rep['lost']), res_rep['lost'][:20], flush=True)
+
+    def release_reserved(x0, y0, x1, y1):
+        for rs in res_sites:
+            if rs.get('released'):
+                continue
+            if rs['x'] < x1 and rs['x'] + rs['w'] > x0 and rs['y'] < y1 and rs['y'] + rs['h'] > y0:
+                i0, j0, i1, j1 = rs['cells']; blk_ = occ.g[j0:j1, i0:i1]; blk_[blk_ == 2] = 0; occ._ii = None
+                rs['released'] = True; res_rep['released'].append(rs['name'])
     # 3a H-RELAY 10-17 (S81-DV lane model): LANE ROWS.  A relay station = one row of T lane tiles abutted ACROSS the
     # travel direction at a FIXED site (relay layer note 'lane row <id> <t>/<T> <flow>; site (x, y) um' = row centre).
     # The row is placed as a unit: exact site, else slid along the travel axis (the hop slack, <= LANE_SLIDE um), else
@@ -749,6 +789,8 @@ def main():
         m = re.search(r'home \(([\d.]+), ([\d.]+)\) um', I[n].get('note', ''))
         if m:
             w, h = size[cell_of[n]]
+            if res_sites and I[n]['master'].startswith('hbfd_rrl'):   # L2H-GEN2D-FP2: a forest tile takes its reserved home
+                release_reserved(float(m.group(1)) - HALO, float(m.group(2)) - HALO, float(m.group(1)) + w + HALO, float(m.group(2)) + h + HALO)
             put_near(n, float(m.group(1)) + w / 2, float(m.group(2)) + h / 2, 'planned relay home', halo=0.0)
     # connectivity (instance level, bits)
     adj = defaultdict(lambda: defaultdict(int))
@@ -1153,6 +1195,8 @@ def main():
                                                            max_wire_um=a.repeater_max_wire_um))
     manifest['pc_strip'] = strip
     manifest['prior_place'] = dict(src=str(a.prior_place) if a.prior_place else None, kept=len(prior_kept), lost=prior_lost)
+    manifest['reserved_reset_homes'] = dict(res_rep, sites=[{k: v for k, v in r.items() if k != 'cells'} for r in res_sites],
+                                            note='L2H-GEN2D-FP2: empty reserved areas = free reset-stage homes for reset_forest_layer')
     manifest['slot_map'] = slot_map; manifest['replanned_chain_relays'] = dict(regex=a.replan_chains, n=len(replanned))
     manifest['outline_override'] = a.outline_override
     manifest['d4b_homes'] = bool(a.d4b_homes)
