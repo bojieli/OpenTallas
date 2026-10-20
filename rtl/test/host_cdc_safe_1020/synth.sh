@@ -10,5 +10,5 @@ c='export DESIGN_NICKNAME = host_cdc_safe_census\nexport DESIGN_NAME = ot_host_d
 Path('synth/config.mk').write_text(c)
 Path('synth/constraint.sdc').write_text('create_clock -name wclk -period 833.333 [get_ports wclk]\ncreate_clock -name rclk -period 1043 [get_ports rclk]\n')
 PY2
-docker run --rm -v "$R:/src:ro" -v "$R/synth:/work" -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base synth' > "$R/synth.log" 2>&1
+docker run --rm -v "$R:/src:ro" -v "$R/synth:/work" -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base /work/results/asap7/host_cdc_safe_census/base/1_2_yosys.v' > "$R/synth.log" 2>&1
 python3 tools/textbook_lint.py check --netlist "$R/synth/results/asap7/host_cdc_safe_census/base/1_2_yosys.v" --out "$R/census.json" --mode warn
