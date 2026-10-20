@@ -137,6 +137,7 @@ create_clock -name fwd1 -period 833.333 -waveform {23 377} [get_ports {xk[1]}]
 set_clock_latency -source 17 [get_clocks {fwd0 fwd1}]
 ''')
             (w / 'entries.tcl').write_text(entries)
+            (w / 'pre_entries.tcl').write_text('set ::ot_ref_pre_cts 1\n' + CE.generate(s, w) + CE.landed_sdc(s, w))
             flow = r'''
 set_thread_count 2
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
@@ -169,9 +170,11 @@ detailed_placement
 set ::ot_ce_cts_roots {ck_ra ck_rb}
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_counts [dict create hard 1 fwd 2 fwd2 1]
+source /w/pre_entries.tcl
 source /src/physical/common_flow/clock_entries.tcl
 clock_tree_synthesis -sink_clustering_enable -buf_list BUFx4_ASAP7_75t_R -root_buf BUFx4_ASAP7_75t_R
 estimate_parasitics -placement
+set ::ot_ref_pre_cts 0
 set_propagated_clock [all_clocks]
 source /w/entries.tcl
 puts "LANDED_RESULT PASS"

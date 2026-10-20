@@ -74,12 +74,31 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
     set ::ot_ce_raw_memory_seen [dict create]
     set ot_ce_unused_hits 0
     set roots [expr {[info exists ::ot_ce_cts_roots] ? $::ot_ce_cts_roots : {}}]
+    set forwarded {};set forwarded_seen {}
+    if {[info exists ::ot_ce_fwd_bindings] && [dict size $::ot_ce_fwd_bindings]} {
+      if {![llength [info commands ot_ce_fwd_cts_prepare]]} {error "OT_FORWARDED: missing strict native preflight"}
+      set forwarded [ot_ce_fwd_cts_prepare]
+    }
     foreach clk [all_clocks] {
       foreach src [get_property $clk sources] {
         set pname [get_full_name $src]
         set bt [$block findBTerm $pname]
         if {$bt eq "NULL"} { puts "OT_ENTRIES ERROR: clock source $pname is not a top port"; incr bad; continue }
         set net [$bt getNet]
+        if {$pname in $forwarded} {
+          set binding [dict get $::ot_ce_fwd_bindings $pname]
+          if {[get_full_name $clk] ne [dict get $binding clock] || $pname in $forwarded_seen || $pname in $roots} {error "OT_FORWARDED: ambiguous/conflicting CTS source $pname"}
+          set endpoints [get_fanout -flat -endpoints_only -from $src];set actual_endpoints {}
+          foreach pin $endpoints {
+            ot_ce_fwd_cts_endpoint $pname $pin
+            lappend actual_endpoints [get_full_name $pin]
+          }
+          set expected_endpoints [concat [dict keys [dict get $binding pins]] [dict keys [dict get $binding outputs]]]
+          if {[lsort -unique $actual_endpoints] ne [lsort $expected_endpoints]} {error "OT_FORWARDED: complete sequential/SRAM/output endpoint census mismatch $pname"}
+          lappend forwarded_seen $pname;lappend cts_nets [$net getName]
+          puts "OT_FORWARDED CTS_SOURCE $pname clock=[get_full_name $clk] endpoints=[llength $actual_endpoints] native_complete"
+          continue
+        }
         if {$pname in $roots} {
           if {$pname in $cts_seen} { error "OT_HYBRID: duplicate CTS source $pname" }
           lappend cts_seen $pname
@@ -153,6 +172,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
     if {$ot_ce_unused_hits} { puts "OT_LANDED UNUSED_PINS $ot_ce_unused_hits unloaded hard-child input pins on region roots (routed-netlist proven; not sinks)" }
     if {$bad} { error "OT_ENTRIES: $bad clock entries are not port -> one hard-child clock pin" }
     if {[lsort $cts_seen] ne [lsort $roots]} { error "OT_HYBRID: declared CTS root coverage mismatch" }
+    if {[lsort $forwarded_seen] ne [lsort $forwarded]} {error "OT_FORWARDED: declared native source coverage mismatch"}
     if {[llength $cts_nets]} {
       if {[lsearch -exact $args -clk_nets] >= 0} { error "OT_HYBRID: caller cannot override declared CTS nets" }
       # TritonCTS splits -clk_nets on whitespace (TritonCTS::setClockNets); a Tcl list braces bus-bit names

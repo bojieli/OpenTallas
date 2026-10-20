@@ -4,6 +4,7 @@ An ETM already contains clock insertion in its launch/check arcs. Source latency
 compensates that reference once; it must never be added back to the ETM arcs.
 """
 import json
+import hashlib
 import math
 import re
 import sys
@@ -144,7 +145,7 @@ def forwarded_clock_ports(spec):
     pins = set()
     safe = lambda x: isinstance(x, str) and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_./:\[\]$-]*', x)
     for bit, row in bindings.items():
-        if not safe(bit) or re.sub(r'\[\d+\]$', '', bit) not in ports or not isinstance(row, dict) or set(row) != {'clock', 'root', 'pins'}:
+        if not safe(bit) or re.sub(r'\[\d+\]$', '', bit) not in ports or not isinstance(row, dict) or not {'clock', 'root', 'pins'} <= set(row) or set(row) - {'clock', 'root', 'pins', 'outputs'}:
             raise ValueError('invalid scalar forwarded input binding')
         if not safe(row['clock']) or not safe(row['root']) or not isinstance(row['pins'], dict) or not row['pins']:
             raise ValueError('forwarded bit needs existing clock/root and exact sink pin/master bindings')
@@ -152,15 +153,95 @@ def forwarded_clock_ports(spec):
             if not safe(pin) or '/' not in pin or not safe(master) or pin in pins:
                 raise ValueError('invalid or duplicate forwarded pin ownership')
             pins.add(pin)
+        outputs = row.get('outputs', {})
+        if not isinstance(outputs, dict) or any(not safe(port) or not safe(pin) or '/' not in pin for port, pin in outputs.items()):
+            raise ValueError('forwarded outputs require exact port -> native child output pin bindings')
     return list(ports)
 
 
-def forwarded_bindings_tcl(spec):
+def forwarded_bindings_tcl(spec, root):
     rows = []
     for bit, row in sorted(spec['forwarded_clock_bindings'].items()):
         pins = ' '.join('{' + p + '} {' + m + '}' for p, m in sorted(row['pins'].items()))
-        rows.append('{' + bit + '} {clock {' + row['clock'] + '} root {' + row['root'] + '} pins {' + pins + '}}')
-    return 'set ::ot_ce_fwd_bindings [dict create ' + ' '.join(rows) + ']\n'
+        outputs = ' '.join('{' + port + '} {' + pin + '}' for port, pin in sorted(row.get('outputs', {}).items()))
+        rows.append('{' + bit + '} {clock {' + row['clock'] + '} root {' + row['root'] + '} pins {' + pins + '} outputs {' + outputs + '}}')
+    return 'set ::ot_ce_fwd_bindings [dict create ' + ' '.join(rows) + ']\n' + forwarded_output_provenance(spec, root)
+
+
+def _fwd_pin_group(text, pin):
+    matches = list(re.finditer(r'\bpin\s*\(\s*"?' + re.escape(pin) + r'"?\s*\)\s*\{', text))
+    if len(matches) != 1:
+        raise ValueError('forwarded native output needs one scalar pin group')
+    depth, quoted, escaped = 0, False, False
+    for i in range(matches[0].end()-1, len(text)):
+        ch = text[i]
+        if escaped:
+            escaped = False
+        elif quoted and ch == "\\":
+            escaped = True
+        elif ch == '"':
+            quoted = not quoted
+        elif not quoted:
+            depth += (ch == '{') - (ch == '}')
+            if depth == 0:
+                return text[matches[0].start():i+1]
+    raise ValueError('unterminated native output pin group')
+
+
+def forwarded_output_provenance(spec, root):
+    """Exact native source35-style output proof; no clock-output name exemption."""
+    children = {ch['inst']: Path(root) / ch['view'] for ch in spec.get('children', []) if isinstance(ch.get('inst'), str)}
+    rows = {}
+    used_ports = set()
+    for bit, binding in spec['forwarded_clock_bindings'].items():
+        for port, full in binding.get('outputs', {}).items():
+            if port in used_ports or full in rows:
+                raise ValueError('duplicate forwarded clock-output ownership')
+            used_ports.add(port)
+            inst, output = full.rsplit('/', 1)
+            if inst not in children:
+                raise ValueError('clock output must belong to an actual bound hard child')
+            view = children[inst]; master = view.name
+            receipt = json.loads((view / 'forwarded_clock.json').read_text())
+            abstract = json.loads((view / 'abstract.json').read_text())
+            if receipt.get('schema') != 'opentallas.forwarded_clock.routed.v1' or abstract.get('name') != master:
+                raise ValueError('native output identity/schema mismatch')
+            roles = set()
+            for c in CORNERS:
+                fc = receipt['corners'][c]
+                if abstract.get('forwarded_clock', {}).get(c) != fc or not abstract['corners'][c]['done']:
+                    raise ValueError('native output receipt/corner mismatch')
+                def checked(name, digest):
+                    data = (view / name).read_bytes()
+                    if not re.fullmatch(r'[0-9a-f]{64}', digest or '') or hashlib.sha256(data).hexdigest() != digest:
+                        raise ValueError('native output source hash mismatch: ' + name)
+                    return data.decode()
+                lib = checked(f'{master}_{c}.lib', fc['exported_etm_sha256'])
+                if hashlib.sha256(lib.encode()).hexdigest() != abstract['files'][f'{master}_{c}.lib']:
+                    raise ValueError('native output final Liberty/abstract mismatch')
+                comb = checked(f'forwarded_{c}.lib.raw', fc['native_combinational_lib_sha256'])
+                raw = checked(f'sequential_{c}.lib.raw', fc['sequential_etm_before_merge_sha256'])
+                checked(f'export_{c}.tcl', fc['extraction_tcl_sha256'])
+                checked(f'forwarded_clock_signoff_{c}.sdc', fc['native_signoff_sdc_sha256'])
+                if fc['output_pin'] != output or f"{inst}/{fc['input_pin']}" not in binding['pins'] or binding['pins'][f"{inst}/{fc['input_pin']}"] != master:
+                    raise ValueError('native output is not from this bit-bound input/master')
+                sense = fc['timing_sense']
+                if sense not in ('positive_unate', 'negative_unate'):
+                    raise ValueError('invalid native output polarity')
+                group = _fwd_pin_group(lib, output)
+                if _fwd_pin_group(comb, output) != group or raw.replace(_fwd_pin_group(raw, output), '', 1) != lib.replace(group, '', 1):
+                    raise ValueError('native output changed raw combinational or nonforwarded ETM bytes')
+                if re.findall(r'related_pin\s*:\s*"([^"]+)"', group) != [fc['input_pin']] or re.findall(r'timing_type\s*:\s*(\w+)', group) != ['combinational'] or re.findall(r'timing_sense\s*:\s*(\w+)', group) != [sense]:
+                    raise ValueError('native output is not the recorded combinational forwarding arc')
+                for key in ('odb_sha256', 'spef_sha256'):
+                    if not re.fullmatch(r'[0-9a-f]{64}', fc.get(key, '')):
+                        raise ValueError('missing native output physical source identity')
+                roles.add((fc['input_pin'], int(sense == 'negative_unate')))
+            if len(roles) != 1:
+                raise ValueError('native clock-output polarity differs across corners')
+            input_pin, parity = roles.pop()
+            rows[full] = '{master {' + master + '} input {' + inst + '/' + input_pin + '} parity ' + str(parity) + ' port {' + port + '} bit {' + bit + '}}'
+    return 'set ::ot_ce_fwd_native_outputs [dict create ' + ' '.join('{' + full + '} ' + row for full, row in sorted(rows.items())) + ']\n'
 
 
 def landed_record(spec, root):
@@ -953,7 +1034,7 @@ def _generate(spec, root):
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
             + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '')
             + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '')
-            + ('set ::ot_ce_fwd_ports {' + ' '.join('{' + p + '}' for p in fwd) + '}\n' + forwarded_bindings_tcl(spec) if fwd else '')
+            + ('set ::ot_ce_fwd_ports {' + ' '.join('{' + p + '}' for p in fwd) + '}\n' + forwarded_bindings_tcl(spec, root) if fwd else '')
             + ('set ::ot_ce_landed_raw [dict create ' + ' '.join(
                 f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(raw.items())) + ']\n'
                if raw else '')
@@ -1904,8 +1985,14 @@ FORWARDED_PROCS = r"""
 proc ot_ce_fwd_trace {pin} {
   set block [ord::get_db_block]
   set it [$block findITerm [get_full_name $pin]]
-  if {$it in {"" NULL} || [$it getIoType] ne "INPUT"} {error "OT_FORWARDED: missing physical sink [get_full_name $pin]"}
-  set net [$it getNet]; set parity 0; set seen {}
+  if {$it in {"" NULL}} {error "OT_FORWARDED: missing physical sink [get_full_name $pin]"}
+  set parity 0
+  if {[$it getIoType] eq "OUTPUT" && [dict exists $::ot_ce_fwd_native_outputs [get_full_name $pin]]} {
+    set native [dict get $::ot_ce_fwd_native_outputs [get_full_name $pin]]
+    set parity [dict get $native parity];set it [$block findITerm [dict get $native input]]
+  }
+  if {$it in {"" NULL} || [$it getIoType] ne "INPUT"} {error "OT_FORWARDED: physical path does not start at a bound clock input/native output"}
+  set net [$it getNet]; set seen {}
   while {1} {
     if {$net in {"" NULL} || $net in $seen} {error "OT_FORWARDED: disconnected/cyclic physical path"}
     lappend seen $net
@@ -1917,7 +2004,16 @@ proc ot_ce_fwd_trace {pin} {
     }
     if {[llength $drivers] != 1} {error "OT_FORWARDED: physical path needs one driver"}
     set out [lindex $drivers 0]; set inst [$out getInst]; set master [[$inst getMaster] getName]
-    if {[dict exists $::ot_ce_counts $master]} {error "OT_FORWARDED: unsupported hard-child clock transit"}
+    if {[dict exists $::ot_ce_counts $master]} {
+      set full "[$inst getName]/[[$out getMTerm] getName]"
+      if {![info exists ::ot_ce_fwd_native_outputs] || ![dict exists $::ot_ce_fwd_native_outputs $full]} {error "OT_FORWARDED: unsupported/unproven hard-child clock transit"}
+      set native [dict get $::ot_ce_fwd_native_outputs $full]
+      if {[dict get $native master] ne $master} {error "OT_FORWARDED: native output actual master mismatch"}
+      set it [$block findITerm [dict get $native input]]
+      if {$it in {"" NULL}} {error "OT_FORWARDED: native input physical pin missing"}
+      set parity [expr {$parity ^ [dict get $native parity]}];set net [$it getNet]
+      continue
+    }
     set inputs {}; set outputs {}
     foreach p [$inst getITerms] {
       if {[$p getIoType] eq "INPUT"} {lappend inputs $p}
@@ -1971,6 +2067,7 @@ proc ot_ce_forwarded_visit {corner} {
   ot_cf_refresh
   set ::ot_ce_fwd_cells {}; set ::ot_ce_fwd_root_names {}; set ::ot_ce_fwd_inputs {}
   set judged [expr {!([info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts) || ([info exists ::ot_ce_require_wire] && $::ot_ce_require_wire)}]
+  if {[info exists ::ot_ce_fwd_cts_preflight] && $::ot_ce_fwd_cts_preflight} {set judged 0}
   set actual_bits {}
   foreach port $::ot_ce_fwd_ports {
     set found [get_ports -quiet $port -filter "direction == input"]
@@ -2062,6 +2159,34 @@ proc ot_ce_forwarded_visit {corner} {
     if {$judged && $corner in {tt ff} && $span > 80.0} {error "OT_FORWARDED: $bit/$edge child-flop span $span exceeds80ps"}
   }
   return $hits
+}
+proc ot_ce_fwd_cts_prepare {} {
+  set ::ot_ce_fwd_cts_preflight 1
+  try {ot_ce_forwarded_visit [ot_ce_corner]} finally {set ::ot_ce_fwd_cts_preflight 0}
+  return [dict keys $::ot_ce_fwd_bindings]
+}
+proc ot_ce_fwd_cts_endpoint {bit pin} {
+  set binding [dict get $::ot_ce_fwd_bindings $bit];set full [get_full_name $pin]
+  if {[sta::object_type $pin] eq "Port" || ([sta::object_type $pin] eq "Pin" && [$pin is_top_level_port])} {
+    if {![dict exists $binding outputs $full]} {error "OT_FORWARDED: unbound output/nonsequential endpoint $full"}
+    set block [ord::get_db_block];set bt [$block findBTerm $full]
+    if {$bt in {"" NULL} || [$bt getIoType] ne "OUTPUT"} {error "OT_FORWARDED: output endpoint is not an actual output"}
+    set drivers {};foreach it [[$bt getNet] getITerms] {if {[$it getIoType] eq "OUTPUT"} {lappend drivers $it}}
+    if {[llength $drivers] != 1} {error "OT_FORWARDED: ambiguous clock-output driver"}
+    set it [lindex $drivers 0];set actual "[[$it getInst] getName]/[[$it getMTerm] getName]"
+    if {$actual ne [dict get $binding outputs $full] || ![dict exists $::ot_ce_fwd_native_outputs $actual]} {error "OT_FORWARDED: output lacks matching actual native source"}
+    set pin [get_pins -quiet $actual]
+  } else {
+    if {![dict exists $binding pins $full]} {error "OT_FORWARDED: unbound true sequential/SRAM/data endpoint $full"}
+    if {[get_property [get_cells -of_objects $pin] ref_name] ne [dict get $binding pins $full]} {error "OT_FORWARDED: endpoint master mismatch"}
+    set key "[get_property [get_cells -of_objects $pin] ref_name]/[get_property $pin lib_pin_name]"
+    if {![dict exists $::ot_ce_refs $key]} {error "OT_FORWARDED: endpoint has no actual child clock role"}
+  }
+  lassign [ot_ce_fwd_trace $pin] actual_bit parity
+  if {$actual_bit ne $bit} {error "OT_FORWARDED: endpoint root bit mismatch"}
+  set owners [get_property $pin clocks]
+  if {[llength $owners] != 1 || [get_full_name [lindex $owners 0]] ne [dict get $binding clock]} {error "OT_FORWARDED: endpoint actual clock mismatch"}
+  return 1
 }
 proc ot_ce_fwd_domain {port} {
   regsub {\[[0-9]+\]$} $port {} base
