@@ -1,0 +1,368 @@
+{
+ "name": "hnx_rp3lp3h_s",
+ "top": "hnx_rp3lp3h_s",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_next/common/ot_pl_land.sv",
+  "rtl/hbm_next/sm/hnx_rp4_leafh.sv",
+  "rtl/hbm_next/sm/hnx_rp4l_children.sv",
+  "rtl/hbm_next/sm/hnx_xs4.sv",
+  "rtl/hbm_next/sm/hnx_xs3.sv",
+  "rtl/hbm_next/sm/hnx_rp4lp4_leaf.sv",
+  "rtl/hbm_next/common/hnx_pl_pad_sram.sv",
+  "rtl/hbm_next/sm/hnx_rp3lp3h.sv"
+ ],
+ "params": {},
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST"
+ ],
+ "clock_port": "ck_s",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 630.72,
+  "h": 1036.8
+ },
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/hnx_rp3lp3_xs3n/views/hnx_xs3",
+   "count": 1,
+   "at": [
+    43.2,
+    648.0
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_xs3.u_xs"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    43.2,
+    475.2
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_ln[0].u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    172.8,
+    475.2
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_ln[1].u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    302.4,
+    475.2
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_ln[2].u_bdc"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0",
+   "inst": "u_lf1.g_ln[0].u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    43.2,
+    302.4
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_ln[0].u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    172.8,
+    302.4
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_ln[0].u_tcc.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    388.8,
+    216.0
+   ],
+   "orient": "R0",
+   "inst": "u_lf1.g_ln[2].u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    388.8,
+    302.4
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_ln[2].u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    518.4,
+    302.4
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_ln[2].u_tcc.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_ln[1].u_tcc.u_h0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_ref_p45/views/ot_hbm_accel_smh_tcl",
+   "count": 1,
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "MX",
+   "inst": "u_lf1.g_ln[1].u_tcc.u_h1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "u_lf1.g_ln[1].u_tcc.u_tr"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_land_ref/views/ot_smh_tr_group_land",
+   "count": 1,
+   "at": [
+    43.2,
+    950.4
+   ],
+   "orient": "MX",
+   "inst": "u_land_s"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+   "count": 1,
+   "at": [
+    432.0,
+    475.2
+   ],
+   "orient": "MX",
+   "inst": "u_row1"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+   "count": 1,
+   "at": [
+    561.6,
+    475.2
+   ],
+   "orient": "MX",
+   "inst": "u_rowe1"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rin_s",
+   "bin"
+  ],
+  "E": [
+   "rout_s"
+  ],
+  "N": [
+   "sb_bank",
+   "sb_vld"
+  ],
+  "S": [
+   "gout",
+   "xss_a1",
+   "xss_g1",
+   "xss_a2",
+   "xss_g2",
+   "rst_n",
+   "ck_s"
+  ]
+ },
+ "io_tcl": "physical/hbm_next/sm4/hnx_rp3lp3h_s_pins.tcl",
+ "orfs_vars": {
+  "OT_IO_REF_CLASS": "1",
+  "POST_TAPCELL_TCL": "physical/hbm_next/sm4/hnx_rp3lp3h_s_stations.tcl"
+ },
+ "refglob": "*",
+ "io_flop_at_pins": {
+  "cols": 10,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "HNX-SM4P halves: actual RTL pin capture / launch registers (rin / bin pin flops in hnx_rp4l_pinrow / pinbeat -- the S half has its OWN bin pinbeat u_pbs --, rout / bout launched by the hard row_e / beat_e cells, gin / gout by the gather registers, xs_* / xss_* through the five-stage straps); seam: sb_bank / sb_vld are the ring flops of ot_pl_land_w (N, flop -> pin) and land on the AND-OR -> flop of ot_pl_land_r (S, pin -> 1 mux level -> flop).  ONE root per half."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_delay": true,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude HNX-SM4/SM4P",
+  "branch": "claude/hnx-sm4p-1020",
+  "tag": "hnx_rp3lp3h_s",
+  "purpose": "NEXT-release HBM die (OWNER 10-19 P3+(a), not a release gate): SM P = 3 tile hardened as two <= 2:1 halves (safe-design item 6); CRITICAL prefix hnx_rp3*: coordinator PNG review before any submit (report only).",
+  "structural_change": "HNX-SM4P 10-20: hnx_rp3lp3x (630.72 x 2203.2, 3.49:1) split into two hardened halves along its lp regions: hnx_rp3lp3h_n 630.72 x 1209.6 (ck_n: leaf 0, row 0, bin beat path, N gather, seam ring) above hnx_rp3lp3h_s 630.72 x 1036.8 (ck_s: leaf 1, row 1, land_s on its own bin capture, seam read, S gather); the n->s seam is the 150-b gather landing only (D 4, E = K = 2, +3, as the lp record); the 2,069-b bin_l landing (4 dual-clock SRAMs) and the rl1_s / st_s pads (7 SRAMs) are removed (die fans bin out to both halves); compiler offsets identical to the flat lp record.",
+  "extra_paths": [
+   "physical/common_flow/anchor_row_packing.tcl",
+   "tools/hbm_next",
+   "results/arch/hbm_next_1019/sm4",
+   "rtl/hbm_next"
+  ],
+  "benches": [
+   {
+    "name": "halves_lockstep",
+    "expect": "pass",
+    "pass_regex": "BENCH_EXIT 0",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "pass_witness": "results/arch/hbm_next_1019/sm4/p3/halves/bench/bench.log",
+    "cmd": "LP_ROOT=$PWD MUTS=0 bash rtl/hbm_next/sm/halves/hnx_rp3lp3x_halves_bench.sh {RUN}/hv0"
+   },
+   {
+    "name": "halves_mut1",
+    "expect": "fail",
+    "fail_regex": "HV_LOCKSTEP FAIL MUT=1",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "fail_witness": "results/arch/hbm_next_1019/sm4/p3/halves/bench/mut1.log",
+    "cmd": "LP_ROOT=$PWD MUTS=1 bash rtl/hbm_next/sm/halves/hnx_rp3lp3x_halves_bench.sh {RUN}/hv1; cat {RUN}/hv1/mut1.log; grep -q 'HV_LOCKSTEP PASS' {RUN}/hv1/mut1.log"
+   },
+   {
+    "name": "halves_mut2",
+    "expect": "fail",
+    "fail_regex": "HV_LOCKSTEP FAIL MUT=2",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "fail_witness": "results/arch/hbm_next_1019/sm4/p3/halves/bench/mut2.log",
+    "cmd": "LP_ROOT=$PWD MUTS=2 bash rtl/hbm_next/sm/halves/hnx_rp3lp3x_halves_bench.sh {RUN}/hv2; cat {RUN}/hv2/mut2.log; grep -q 'HV_LOCKSTEP PASS' {RUN}/hv2/mut2.log"
+   },
+   {
+    "name": "halves_mut3",
+    "expect": "fail",
+    "fail_regex": "HV_LOCKSTEP FAIL MUT=3",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "fail_witness": "results/arch/hbm_next_1019/sm4/p3/halves/bench/mut3.log",
+    "cmd": "LP_ROOT=$PWD MUTS=3 bash rtl/hbm_next/sm/halves/hnx_rp3lp3x_halves_bench.sh {RUN}/hv3; cat {RUN}/hv3/mut3.log; grep -q 'HV_LOCKSTEP PASS' {RUN}/hv3/mut3.log"
+   },
+   {
+    "name": "halves_mut4",
+    "expect": "fail",
+    "fail_regex": "HV_LOCKSTEP FAIL MUT=4",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "fail_witness": "results/arch/hbm_next_1019/sm4/p3/halves/bench/mut4.log",
+    "cmd": "LP_ROOT=$PWD MUTS=4 bash rtl/hbm_next/sm/halves/hnx_rp3lp3x_halves_bench.sh {RUN}/hv4; cat {RUN}/hv4/mut4.log; grep -q 'HV_LOCKSTEP PASS' {RUN}/hv4/mut4.log"
+   },
+   {
+    "name": "leaf_lanes_p3_xs3",
+    "expect": "pass",
+    "pass_regex": "BENCH PASS p3_m0_t0",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "cmd": "bash rtl/hbm_next/sm/tb/run_leaf_bench.sh {RUN}/leaf 3 0 0 -DHNX_XS4"
+   }
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "child_clock_ref": "boundary",
+ "hard_define": "SYNTHESIS",
+ "reset_landing": {
+  "enable": true,
+  "clock": "ck_s"
+ }
+}

@@ -1,0 +1,63 @@
+{
+ "hnx_rp3lp3h_n": {
+  "outline_um": [
+   630.72,
+   1209.6
+  ],
+  "area_mm2": 0.7629,
+  "aspect": 1.92,
+  "hard_um2": 354614,
+  "hard_fill": 0.465,
+  "children": 18,
+  "macros": 0,
+  "pins": 6506,
+  "peak_pins_per_um_10um": {
+   "W": 4.2,
+   "E": 4.2,
+   "S": 2.4,
+   "N": 5.3
+  },
+  "all_children_on_43p2": true,
+  "min_halo_um": 10.8
+ },
+ "hnx_rp3lp3h_s": {
+  "outline_um": [
+   630.72,
+   1036.8
+  ],
+  "area_mm2": 0.6539,
+  "aspect": 1.64,
+  "hard_um2": 335951,
+  "hard_fill": 0.514,
+  "children": 16,
+  "macros": 0,
+  "pins": 4537,
+  "peak_pins_per_um_10um": {
+   "W": 5.3,
+   "E": 4.2,
+   "N": 2.4,
+   "S": 5.3
+  },
+  "all_children_on_43p2": true,
+  "min_halo_um": 10.8
+ },
+ "slot": {
+  "outline_um": [
+   630.72,
+   2246.4
+  ],
+  "vs_flat_um": 43.2,
+  "die_cost_mm2": 8.257,
+  "why": "lattice-quantised minimum: leaf rows are already at their 43.2 minimum (S: rowB 43.2 .. xs1 top 937.44, land_s 950.4-993.6, 43.2 seam margin; N: beat_t / beat_e slabs 43.2-259.2 with land_n between, xs0 at 302.4, rowB top 1157.76, 51.84 top margin).  The flat tile saved this 43.2 um by putting land_n and land_s side by side in ONE shared band row -- impossible once the band belongs to two tiles.  die cost = 8 SM rows x 43.2 um x die width 23,891.84 um (safe_sm_pack README: 8.257 mm2 per 43.2)"
+ },
+ "reshape_alternative": {
+  "slot_at_2to1": [
+   864.0,
+   1641.6
+  ],
+  "area_mm2": 1.4183,
+  "die_width_um": 31356.8,
+  "reticle_width_um": 26000,
+  "verdict": "REJECTED: a <= 2:1 one-piece slot of the same area widens the 32-column SM array by 32 x 233.28 = 7,465 um -> die 31.36 mm wide > 26 mm reticle (and re-packs every SM column); the halves cost +8.26 mm2 (+1.08%)."
+ }
+}

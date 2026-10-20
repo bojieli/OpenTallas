@@ -1,0 +1,80 @@
+{
+ "lane": "HNX-SM4/SM4P 10-20",
+ "flat": "hnx_rp3lp3x_flat (rtl/hbm_next/sm/hnx_rp3lp3.sv)",
+ "halves": {
+  "hnx_rp3lp3h_n": {
+   "root": "ck_n",
+   "outline_um": [
+    630.72,
+    1209.6
+   ]
+  },
+  "hnx_rp3lp3h_s": {
+   "root": "ck_s",
+   "outline_um": [
+    630.72,
+    1036.8
+   ]
+  }
+ },
+ "composition": "hnx_rp3lp3x_halves (rtl/hbm_next/sm/hnx_rp3lp3h.sv): N above S abutted; bin fanned to both halves; one rst_n",
+ "seam": {
+  "crossing": "gather landing {gpm 100 b, g0m 50 b} N -> S",
+  "ring": "u_hn.u_sb_w (ot_pl_land_w W 150 D 4, ck_n)",
+  "read": "u_hs.u_sb_r (ot_pl_land_r W 150 D 4 K 2, ck_s)",
+  "pins": {
+   "sb_bank": 600,
+   "sb_vld": 4,
+   "sb_epo": "12, simulation only (absent under SYNTHESIS)"
+  },
+  "added_edges": 3,
+  "die_sdc": "set_multicycle_path -setup 2 / -hold 3 from u_hn.u_sb_w ring cells to u_hs.u_sb_r cells (LANDING-CONTRACT L5)"
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent (static calendar, no runtime flow control); IDENTICAL to the hnx_rp3lp3x_flat_lp record",
+  "child_offset_edges": {
+   "u_hn.*": 0,
+   "u_hs.u_gs": 3,
+   "u_hs.* (others)": 0
+  },
+  "input_port_offset_edges": {
+   "xs_a1": 0,
+   "xs_g1": 0,
+   "xs_a2": 0,
+   "xs_g2": 0,
+   "xss_a1": 0,
+   "xss_g1": 0,
+   "xss_a2": 0,
+   "xss_g2": 0,
+   "rin_n": 0,
+   "rin_s": 0,
+   "bin": 0,
+   "gin": 0
+  },
+  "output_port_offset_edges": {
+   "rout_n": 0,
+   "rout_s": 0,
+   "bout": 0,
+   "gout": 3
+  },
+  "reset_release_added_edges": 2,
+  "max_added_edges": 3
+ },
+ "removed_vs_flat_lp": {
+  "bin_l landing": "4 x ot_sram_1r1w2c_16x546_m1 + dual-clock control",
+  "rl1_s pad": "7 x ot_sram_1r1w_32x128_m1 + capture register",
+  "st_s pad": "26-b ring x 3"
+ },
+ "added_vs_flat_lp": {
+  "u_hs.u_pbs": "2,069-b bin pin capture (pinbeat) in the S half",
+  "u_hs.u_lpp_g1": "50-b x 3 addressed ring (g1 alignment)"
+ },
+ "die_obligations": [
+  "bin delivered to BOTH halves on the same edge (the W neighbour's bout landing reader fans out ~245 um to each half's W-face bin run: N y 11-507 local, S y 629-1026 local)",
+  "rst_n delivered to both halves on the same edge (equal reset-run depth); both kits insert the same 2-stage reset landing",
+  "ck_n -> N half, ck_s -> S half (the slot's two regional roots, unchanged from the flat lp tile)",
+  "seam N.sb_bank/sb_vld -> S.sb_bank/sb_vld abutted (same x), timed as a landed multicycle -setup 2 -hold 3",
+  "slot 630.72 x 2,246.4 (+43.2 um; +8.257 mm2 per die over 8 SM rows)"
+ ],
+ "bench": "rtl/hbm_next/sm/halves/hnx_rp3lp3x_halves_bench.sh (lockstep vs hnx_rp3lp3x_flat, MUT 1-4)"
+}
