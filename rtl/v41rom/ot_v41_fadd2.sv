@@ -197,6 +197,10 @@ module ot_v41_fadd_s0 (
     input  wire [31:0]  b,
     output wire [104:0] o0
 );
+`ifdef OT_BF_N32
+    // S81-BF6: the same bundle with kept per-instance operand class copies (ot_v41_n32_s0)
+    ot_v41_n32_s0 u_n32 (.valid_in(valid_in), .a(a), .b(b), .o0(o0));
+`else
     // ---------------- step 0: decode and compare ----------------
     wire [7:0]  a_field = a[30:23];
     wire [7:0]  b_field = b[30:23];
@@ -215,4 +219,5 @@ module ot_v41_fadd_s0 (
     assign o0 = {valid_in, a_exp0, b_exp0, a_man0, b_man0, a[31], b[31], nonf0, az0, bz0,
                         b_exp0 > a_exp0, b_exp0 == a_exp0, !age0,
                         nonf0 ? 32'd0 : (az0 ? (bz0 ? 32'd0 : b) : a)};
+`endif
 endmodule

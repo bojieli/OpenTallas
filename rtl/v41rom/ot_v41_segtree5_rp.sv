@@ -121,6 +121,31 @@ module ot_v41_segtree5_rp #(
     for (genvar qg = 0; qg < 3; qg++) begin : g_qread_rst
         ot_v41_rst_copy u_r (.clk(clk), .rst_pin(rst_pin), .rst_n(rst_qk[qg]));
     end
+`ifdef OT_BF_N32
+    // S81-BF6: each head-read bank holds its pointer as a rotating ONE-HOT token (same edge, same reset copy as the
+    // binary qr_k it replaces; QD = 2^QW so +1 mod QD is a rotate); the head-to-be one-hot qr_noh_k selects the words
+    // as an AND-OR, so no pointer bit drives a whole bank's 8:1 mux level (qr_k bit 0: 37..50 loads, native85)
+    (* keep *) reg [QD-1:0] qr_oh_k [0:NQR-1];
+    wire [QD-1:0] qr_noh_k [0:NQR-1];
+    initial if (QD != (1 << QW)) $fatal(1, "segtree5 N32 read tokens need QD = 2^QW");
+    for (genvar qj = 0; qj < NQR; qj++) begin : g_qread
+        assign use_qk[qj] = !sv_qk[qj] && qne_k[qj];
+        assign qr_noh_k[qj] = use_qk[qj] ? {qr_oh_k[qj][QD-2:0], qr_oh_k[qj][QD-1]} : qr_oh_k[qj];
+        always @(posedge clk or negedge rst_qk[qj/3]) begin
+            if (!rst_qk[qj/3]) begin
+`ifdef OT_BF_QUEUE32_MUT_PTR
+                qr_oh_k[qj] <= (qj == 0 ? 2 : 1);
+`else
+                qr_oh_k[qj] <= 1;
+`endif
+                sv_qk[qj] <= 1'b0; qne_k[qj] <= 1'b0;
+            end else begin
+                qr_oh_k[qj] <= qr_noh_k[qj];
+                sv_qk[qj] <= sv_a; qne_k[qj] <= |qc_next;
+            end
+        end
+    end
+`else
     for (genvar qj = 0; qj < NQR; qj++) begin : g_qread
         assign use_qk[qj] = !sv_qk[qj] && qne_k[qj];
         assign qr_next_k[qj] = qr_k[qj] + (use_qk[qj] ? 1'b1 : 1'b0);
@@ -138,6 +163,7 @@ module ot_v41_segtree5_rp #(
             end
         end
     end
+`endif
 `endif
 `ifdef OT_BF_QUEUE32
     // Each bank owns a rotating write token. No broad decoded address/enable
@@ -172,6 +198,29 @@ module ot_v41_segtree5_rp #(
     reg [PW-1:0] h_t;
     reg h_f, h_e;
     reg [2:0] h_p;
+`ifdef OT_BF_N32
+    // one-hot head reads (AND-OR over the words), one token per bank; bank 4 = tree, 5 = final/err/pos, 6 = tree one-hot
+    reg [6:0] n32_hit;
+    reg [7:0] n32_rv [0:3];
+    reg [PW-1:0] n32_rt4, n32_rt6;
+    reg n32_rf5, n32_re5;
+    reg [2:0] n32_rp5;
+    always @* begin
+        for (int qb = 0; qb < 7; qb++) n32_hit[qb] = |(qr_noh_k[qb] & qw_oh[qb < 4 ? qb : 4]);
+        for (int qb = 0; qb < 4; qb++) begin
+            n32_rv[qb] = 8'd0;
+            for (int wi = 0; wi < QD; wi++) n32_rv[qb] = n32_rv[qb] | ({8{qr_noh_k[qb][wi]}} & qv[wi][8*qb +: 8]);
+        end
+        n32_rt4 = '0; n32_rt6 = '0; n32_rf5 = 1'b0; n32_re5 = 1'b0; n32_rp5 = 3'd0;
+        for (int wi = 0; wi < QD; wi++) begin
+            n32_rt4 = n32_rt4 | ({PW{qr_noh_k[4][wi]}} & qt[wi]);
+            n32_rt6 = n32_rt6 | ({PW{qr_noh_k[6][wi]}} & qt[wi]);
+            n32_rf5 = n32_rf5 | (qr_noh_k[5][wi] & qf[wi]);
+            n32_re5 = n32_re5 | (qr_noh_k[5][wi] & qe[wi]);
+            n32_rp5 = n32_rp5 | ({3{qr_noh_k[5][wi]}} & qp[wi]);
+        end
+    end
+`endif
     wire        e_v = sv || qc != 0;
 `ifdef OT_BF_FOREP
     wire [PW-1:0] e_t = sv_l ? st[PW+LW+1 -: PW] : h_t;
@@ -224,6 +273,13 @@ module ot_v41_segtree5_rp #(
     reg [NT-1:0] x_toh;
     reg [2:0]    x_pos;
     always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= e_v;
+`ifdef OT_BF_N32
+    reg [2:0] n32_tpos;
+    always @* begin
+        n32_tpos = 3'd0;
+        for (int tt = 0; tt < NT; tt++) n32_tpos = n32_tpos | ({3{e_toh[tt]}} & tpos[tt]);
+    end
+`endif
 `ifdef OT_BF_FOREP
     (* keep *) reg [3*NH-1:0] x_ohd;     // 3 kept copies of x_oh, bytes 1-3 of the held read (x_oh: byte 0)
     reg xy_eq;                           // (e_t, e_l) == (x_t, x_l): next cycle's (x == y) of the forward
@@ -231,7 +287,11 @@ module ot_v41_segtree5_rp #(
         x_t <= e_t; x_l <= e_l; x_f <= e_f; x_e <= e_e; x_d <= e_d; x_add <= sv;
         x_oh <= e_oh; x_above <= e_above; x_ohd <= {3{e_oh}};
         x_toh <= e_toh;
+`ifdef OT_BF_N32
+        x_pos <= use_q ? h_p : n32_tpos;   // S81-BF6: tpos read by the event's registered tree one-hot (e_t bit 0: 51)
+`else
         x_pos <= use_q ? h_p : tpos[e_t];
+`endif
         xy_eq <= e_t == x_t && e_l == x_l;
     end
 `else
@@ -395,10 +455,38 @@ module ot_v41_segtree5_rp #(
     wire [PW-1:0] out_t = y_t;
     reg [31:0] add_a, add_b;
     reg        add_v;
+`ifdef OT_BF_N32
+    // S81-BF6: 4 kept same-edge copies of `pair` for the operand bytes (pair drove 65 loads).  pair = y_v && !top &&
+    // y_have, and y_have excludes `early`, so pair = y_v && y_have && y_l != LV: formed from the D sides of y_v / y_hv /
+    // y_l (x_v / r_hv / x_l) on the y edge.  The copies are not reset; y_v's reset holds x_v low, so they are 0 from the
+    // first edge inside reset, as pair is.
+    (* keep *) reg [3:0] pair_k;
+    always @(posedge clk) begin
+`ifdef OT_BF_N32_MUT_PAIR
+        // negative control: byte copy 1 ignores the held bit (a promote takes the held operand byte 1)
+        pair_k <= {{2{x_v && (|r_hv) && (x_l != LV[LW-1:0])}}, x_v && (x_l != LV[LW-1:0]), x_v && (|r_hv) && (x_l != LV[LW-1:0])};
+`else
+        pair_k <= {4{x_v && (|r_hv) && (x_l != LV[LW-1:0])}};
+`endif
+    end
+    always @(posedge clk)
+        for (int ab = 0; ab < 4; ab++) begin
+            add_a[8*ab +: 8] <= pair_k[ab] ? u_held[8*ab +: 8] : y_d[8*ab +: 8];
+            add_b[8*ab +: 8] <= pair_k[ab] ? y_d[8*ab +: 8] : 8'd0;
+        end
+`ifndef SYNTHESIS
+`ifndef OT_BF_N32_MUT_PAIR
+    always @(negedge clk) if (rst_n && pair_k != {4{pair}}) begin
+        $display("N32 FAIL segtree5 pair copy %m %t", $time); $fatal(1);
+    end
+`endif
+`endif
+`else
     always @(posedge clk) begin
         add_a <= pair ? u_held : y_d;
         add_b <= pair ? y_d : 32'd0;
     end
+`endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) add_v <= 1'b0; else add_v <= pair | promote;
     ot_v41_fadd_rp #(.CUT(CUT)) u_add (.clk(clk), .rst_pin(rst_pin), .valid_in(add_v), .a(add_a), .b(add_b),
@@ -467,7 +555,17 @@ module ot_v41_segtree5_rp #(
 `endif
         if (use_q) tpos[h_t] <= h_p;
         opos <= y_pos;
-`ifdef OT_BF_QUEUE32
+`ifdef OT_BF_N32
+        // head-to-be == qw  <=>  the read token meets the bank's write token (qw_oh[b] = onehot(qw), same edges)
+        for (int qb = 0; qb < 4; qb++)
+            h_v[8*qb +: 8] <= n32_hit[qb] ? in_val[8*qb +: 8] : n32_rv[qb];
+        h_t <= n32_hit[4] ? in_tree : n32_rt4;
+        h_f <= n32_hit[5] ? in_final : n32_rf5;
+        h_e <= n32_hit[5] ? in_err : n32_re5;
+        h_p <= n32_hit[5] ? in_pos : n32_rp5;
+        for (ti = 0; ti < NT; ti = ti + 1)
+            h_toh[ti] <= n32_hit[6] ? (in_tree == ti) : (n32_rt6 == ti);
+`elsif OT_BF_QUEUE32
         for (int qb = 0; qb < 4; qb++)
             h_v[8*qb +: 8] <= (qr_next_k[qb] == qw) ? in_val[8*qb +: 8] : qv[qr_next_k[qb]][8*qb +: 8];
         if (qr_next_k[4] == qw) begin

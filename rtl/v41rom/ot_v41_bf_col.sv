@@ -490,6 +490,9 @@ module ot_v41_bf_col #(
             .xq(i2_q1), .xe(i2_e1), .wq(w1q), .we(we1), .tag(mi2_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end
     wire c0_v, c1_v, c0_f, c1_f, c0_fault, c1_fault, t_fault, b_fault;
+`ifdef OT_BF_N32
+    wire [3:0] c0_vk;   // S81-BF6: kept ov copies of chain 0 (OT_BF_N32 requires OT_BF_RSTPART + QZ: ot_v41_chain4_rp)
+`endif
     wire [31:0] c0_s, c1_s;
     wire [TG:0] c0_t, c1_t;   // {position, tree, final}
     // chain inputs: the block-dot lanes (FP8/FP4) or, in a BF16_PAIR BF16 phase, multipliers 0 and 1
@@ -570,7 +573,11 @@ module ot_v41_bf_col #(
     ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_c), .rst_n(rst_mc), .v(ci0_v),
 `endif
         .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
-        .tag(ci_tag), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
+        .tag(ci_tag), .ov(c0_v),
+`ifdef OT_BF_N32
+        .ov_k(c0_vk),
+`endif
+        .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
 `ifdef OT_BF_RSTPART
     ot_v41_chain4_rp #(.PD(QX >= 10 ? 1 : 0), .ND(QND), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_c), .rst_pin(b_rst_v[5]), .v(ci1_v),
 `ifdef OT_BF_FOREP
@@ -580,7 +587,11 @@ module ot_v41_bf_col #(
     ot_v41_chain4 #(.PD(QX >= 10 ? 1 : 0), .ND(QZ_NS / 2), .NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c1 (.clk(gclk_c), .rst_n(rst_mc), .v(ci1_v),
 `endif
         .slot(ci1_slot), .first(ci1_first), .last(ci1_last), .term(ci1_y), .term_f(ci1_f),
-        .tag(ci1_tag), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
+        .tag(ci1_tag), .ov(c1_v),
+`ifdef OT_BF_N32
+        .ov_k(),
+`endif
+        .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
     end else if (FAST != 0) begin : g_ch2
     ot_v41_chain2 #(.NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c0 (.clk(gclk_c), .rst_n(rst_mc), .v(ci0_v),
         .slot(ci_slot), .first(ci_first), .last(ci_last), .term(ci0_y), .term_f(ci0_f),
@@ -619,7 +630,15 @@ module ot_v41_bf_col #(
     wire both = c0_v && c1_v;
     wire any = c0_v || c1_v;
     wire [TG:0] ct = c0_v ? c0_t : c1_t;
+`ifdef OT_BF_N32
+    // S81-BF6: the byte selects of `one` take the chain's kept ov copies (c0_v drove 73 loads)
+    wire [31:0] one;
+    for (genvar ob = 0; ob < 4; ob = ob + 1) begin : g_one
+        assign one[8*ob +: 8] = c0_vk[ob] ? c0_s[8*ob +: 8] : c1_s[8*ob +: 8];
+    end
+`else
     wire [31:0] one = c0_v ? c0_s : c1_s;
+`endif
     wire one_f = c0_v ? c0_f : c1_f;
     wire [31:0] pr_sum, pr_pass;
     wire [1:0] pr_err;

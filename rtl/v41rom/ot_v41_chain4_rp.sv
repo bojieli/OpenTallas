@@ -34,6 +34,9 @@ module ot_v41_chain4_rp #(
     input  wire                     term_f,
     input  wire [TW-1:0]            tag,
     output wire                     ov,
+`ifdef OT_BF_N32
+    output wire [3:0]               ov_k,      // S81-BF6: 4 kept copies of ov (ot_v41_n32_kand2), byte selects of the caller
+`endif
     output wire [31:0]              osum,
     output wire                     of,
     output wire [TW-1:0]            otag,
@@ -159,10 +162,21 @@ module ot_v41_chain4_rp #(
     always @(posedge clk) pl <= {pl[LAT-2:0], last_r};
     if (PD != 0) begin : g_pd
         wire [104:0] c5, c6, ca, cz;
+`ifdef OT_BF_N32
+        // S81-BF6: each candidate step 0 reads its own kept same-edge copy of term's exponent field (term_r[30:23]
+        // fed the four candidate bundles' field / class / compare logic: 34..40 loads per bit, native93)
+        (* keep *) reg [7:0] term_ek [0:3];
+        always @(posedge clk) for (int ke = 0; ke < 4; ke++) term_ek[ke] <= term[30:23];
+        ot_v41_fadd_s0 u_s5 (.valid_in(v_r), .a(sum),    .b({term_r[31], term_ek[0], term_r[22:0]}), .o0(c5));
+        ot_v41_fadd_s0 u_s6 (.valid_in(v_r), .a(sp_val), .b({term_r[31], term_ek[1], term_r[22:0]}), .o0(c6));
+        ot_v41_fadd_s0 u_sa (.valid_in(v_r), .a(acc_r),  .b({term_r[31], term_ek[2], term_r[22:0]}), .o0(ca));
+        ot_v41_fadd_s0 u_sz (.valid_in(v_r), .a(32'd0),  .b({term_r[31], term_ek[3], term_r[22:0]}), .o0(cz));
+`else
         ot_v41_fadd_s0 u_s5 (.valid_in(v_r), .a(sum),    .b(term_r), .o0(c5));
         ot_v41_fadd_s0 u_s6 (.valid_in(v_r), .a(sp_val), .b(term_r), .o0(c6));
         ot_v41_fadd_s0 u_sa (.valid_in(v_r), .a(acc_r),  .b(term_r), .o0(ca));
         ot_v41_fadd_s0 u_sz (.valid_in(v_r), .a(32'd0),  .b(term_r), .o0(cz));
+`endif
 `ifdef OT_BF_FOREP
         for (genvar g2 = 0; g2 < 2 * ND; g2 = g2 + 1) begin : g_ps
             localparam integer LO = (105 * g2) / (2 * ND), HI = (105 * (g2 + 1)) / (2 * ND);
@@ -218,6 +232,16 @@ module ot_v41_chain4_rp #(
         .wen(sv && !d_last),.wa(7'(ps[LAT-1])),.wd(sum));
 `endif
     assign ov = sv && d_last;
+`ifdef OT_BF_N32
+    for (genvar gk = 0; gk < 4; gk = gk + 1) begin : g_ovk
+`ifdef OT_BF_N32_MUT_OVK
+        // negative control: copy 2 ignores d_last (byte 2 of the pair pass value follows every chain-0 valid)
+        ot_v41_n32_kand2 u_k (.a(sv), .b(gk == 2 ? 1'b1 : d_last), .y(ov_k[gk]));
+`else
+        ot_v41_n32_kand2 u_k (.a(sv), .b(d_last), .y(ov_k[gk]));
+`endif
+    end
+`endif
     assign osum = sum;
     assign of = d_f;
     assign otag = dt[TW+2:3];

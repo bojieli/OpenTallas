@@ -31,6 +31,13 @@ module ot_v41_fadd_rp #(
     integer k;
 
     // ---------------- step 0: decode and compare ----------------
+`ifdef OT_BF_N32
+    // S81-BF6: the identical step 0 bundle with kept per-instance operand class copies (ot_v41_n32_s0)
+    localparam integer W0 = 1 + 8 + 8 + 24 + 24 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 32;
+    wire [W0-1:0] o0;
+    ot_v41_n32_s0 u_n32 (.valid_in(valid_in), .a(a), .b(b), .o0(o0));
+    wire n32_swap0 = o0[34] || (o0[33] && o0[32]);
+`else
     wire [7:0]  a_field = a[30:23];
     wire [7:0]  b_field = b[30:23];
     wire [7:0]  a_exp0 = (a_field == 8'd0) ? 8'd1 : a_field;
@@ -48,6 +55,7 @@ module ot_v41_fadd_rp #(
     wire [W0-1:0] o0 = {valid_in, a_exp0, b_exp0, a_man0, b_man0, a[31], b[31], nonf0, az0, bz0,
                         b_exp0 > a_exp0, b_exp0 == a_exp0, !age0,
                         nonf0 ? 32'd0 : (az0 ? (bz0 ? 32'd0 : b) : a)};
+`endif
     wire [W0-1:0] i1;
     ot_v41_cut #(.W(W0), .EN(CUT[0])) u_c0 (.clk(clk), .rst_n(rst_n), .d(o0), .q(i1));
 
@@ -60,7 +68,11 @@ module ot_v41_fadd_rp #(
     wire [10:0] swap_k;
     if (CUT[0]) begin : g_swap_k
         (* keep *) reg [10:0] r;
+`ifdef OT_BF_N32
+        always @(posedge clk) r <= {11{n32_swap0}};
+`else
         always @(posedge clk) r <= {11{(b_exp0 > a_exp0) || ((b_exp0 == a_exp0) && !age0)}};
+`endif
         assign swap_k = r;
     end else begin : g_swap_wire
         assign swap_k = {11{swap1}};

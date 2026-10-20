@@ -306,12 +306,53 @@ module ot_v41_bterm4_w10 #(
     // -- P5a: normalise, coarse (32 / 16 / 8) ----------------------------------------------------------
     reg [40:0] nma;
     reg [5:0]  lza;
+`ifdef OT_BF_N32
+    // S81-BF6: the three coarse steps' predicates {z32, z16, z8} formed by 3 kept ot_v41_n32_cnz copies; copy c steers
+    // bit range c of every step of an explicit left shifter by lza = {z32, z16, z8, 000} (ot_v41_forep_shl), so no
+    // predicate drives a full 41-bit step (the p4_m zero detects drove 35..52 loads, native85).  Same nma / lza.
+    wire [2:0]  cz [0:2];
+    wire [7:0]  coh [0:2];
+    wire [40:0] nma_n;
+    for (genvar cc = 0; cc < 3; cc = cc + 1) begin : g_cz
+        ot_v41_n32_cnz u_z (.m(p4_m), .z(cz[cc]), .oh(coh[cc]));
+    end
+    // bit i takes the one-hot of its slice copy (i / 14): nma[i] = m[i - 8k] for the k with oh[k]
+    for (genvar ib = 0; ib < 41; ib = ib + 1) begin : g_cn
+        localparam integer CC = ib / 14;
+        wire [7:0] t;
+        for (genvar k = 0; k < 8; k = k + 1) begin : g_k
+`ifdef OT_BF_N32_MUT_CN
+            if (ib >= 8 * k && !(CC == 1 && k == 1)) begin : g_t
+`else
+            if (ib >= 8 * k) begin : g_t
+`endif
+                assign t[k] = coh[CC][k] & p4_m[ib - 8 * k];
+            end else begin : g_z
+                assign t[k] = 1'b0;
+            end
+        end
+        assign nma_n[ib] = |t;
+    end
+    always @(*) begin
+        nma = nma_n; lza = {cz[0], 3'b000};
+    end
+`else
+        assign czk[6*cc +: 6] = {cz[cc], 3'b000};
+`endif
+    end
+    wire [40:0] nma_n;
+    ot_v41_forep_shl #(.W(41), .SW(6), .K(3)) u_cn (.shk(czk), .d(p4_m), .q(nma_n));
+    always @(*) begin
+        nma = nma_n; lza = {cz[0], 3'b000};
+    end
+`else
     always @(*) begin
         nma = p4_m; lza = 6'd0;
         if (nma[40:9]  == 32'd0) begin nma = nma << 32; lza = lza + 6'd32; end
         if (nma[40:25] == 16'd0) begin nma = nma << 16; lza = lza + 6'd16; end
         if (nma[40:33] == 8'd0)  begin nma = nma << 8;  lza = lza + 6'd8;  end
     end
+`endif
     reg               p5a_v, p5a_nan, p5a_s, p5a_z;
     reg signed [11:0] p5a_eb;
     reg [40:0]        p5a_nm;
@@ -411,18 +452,34 @@ module ot_v41_bterm4_w10 #(
         end
 `endif
     reg [22:0]        p6_f;
+`ifdef OT_BF_N32
+    (* keep *) reg [1:0] p6_zk;          // kept same-edge copies of p6_z (low / high result half)
+`endif
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p6_v <= 1'b0;
         else p6_v <= p5_v;
     end
     always @(posedge clk) begin
         p6_first <= p5_first; p6_last <= p5_last; p6_nan <= p5_nan; p6_s <= p5_s; p6_z <= p5_z;
+`ifdef OT_BF_N32
+        p6_zk <= {2{p5_z}};
+`endif
         p6_b <= p5_ebl + $signed({11'd0, mr[24]});
         p6_f <= mr[24] ? 23'd0 : mr[22:0];
     end
 
     // -- P7: scale by 2^(xe+we): exponent add done; subnormal right shift -------------------------
-`ifdef OT_BF_SUB5
+`ifdef OT_BF_N32
+    // S81-BF6: one explicit logarithmic right shifter; copy c of the registered shift (p6_rs5_k[c]) steers bits
+    // [5c, 5c+5) of EVERY stage (ot_v41_forep_shr), so a copy bit drives ~5 muxes (a per-copy behavioural >> still
+    // built the whole early-stage cone of its 5 output bits: p6_rs5_k 33..55 loads, native85).  Same sw.
+    wire [49:0] sw;
+    wire [49:0] rs5k;
+    for (genvar j = 0; j < 10; j = j + 1) begin : g_rs5k
+        assign rs5k[5*j +: 5] = p6_rs5_k[j];
+    end
+    ot_v41_forep_shr #(.W(50), .SW(5), .K(10)) u_sw (.shk(rs5k), .d({1'b1, p6_f, 26'd0}), .q(sw));
+`elsif OT_BF_SUB5
     wire [49:0] sw_k [0:9];
     for(genvar j=0;j<10;j++) begin : g_sub_shift
         assign sw_k[j] = {1'b1,p6_f,26'd0} >> p6_rs5_k[j];
@@ -463,9 +520,15 @@ module ot_v41_bterm4_w10 #(
         p7_first <= p6_first; p7_last <= p6_last; p7_nan <= p6_nan; p7_s <= p6_s;
         p7_sub <= !p6_z && (p6_b < 12'sd1);
         p7_ovf <= !p6_z && (p6_b > 12'sd254);
+`ifdef OT_BF_N32
+        // S81-BF6: the result word's halves each take their own kept copy of p6_z (p6_z drove 34 loads)
+        p7_n[15:0] <= p6_zk[0] ? 16'd0 : ((p6_b > 12'sd254) ? 16'd0 : p6_f[15:0]);
+        p7_n[31:16] <= p6_zk[1] ? 16'd0 : ((p6_b > 12'sd254) ? {p6_s, 8'hFF, 7'd0} : {p6_s, p6_b[7:0], p6_f[22:16]});
+`else
         if (p6_z)                  p7_n <= 32'd0;
         else if (p6_b > 12'sd254)  p7_n <= {p6_s, 8'hFF, 23'd0};
         else                       p7_n <= {p6_s, p6_b[7:0], p6_f};
+`endif
         p7_t <= sw[49:26];
         p7_g <= sw[25];
         p7_st <= (sw[24:0] != 25'd0);
