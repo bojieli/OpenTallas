@@ -184,11 +184,22 @@ module ot_coll_split_q_native32 #(
     // Folds: skew lines in SRAM rings, constant-zero package sources tied, adder data reset off, own leaf per fold
     // stage (ot_coll_fold_slice_safe3_native32 DLRING/NLIVE/ADRST/RSTSPLIT).
     wire rs, rs_g, rs_t0, rs_t1, rs_x;
+`ifdef OT_COLL_Q_RST_FACE2
+    // legacy r3 (gate q5/q5w FAIL reset_landing: rst_n reached 4 raw sinks = two face leaves)
     (* keep_hierarchy *) ot_coll_rst_leaf u_rs (.clk(clk), .arst_n(rst_n), .q(rs));
-    // QW-ORPHANS 10-20 (census r2: u_rs drove 34 leaf RESETN): the two fold slices (u_pf, u_xf) take their reset from a
-    // second identical face leaf u_rs2 (same rst_n, same release edge; port rst_n 4 sinks)
-    wire rs2;   // used only by the FAN32/ADD_FAN32 fold branches; legacy keeps rs
+    wire rs2;
     (* keep_hierarchy *) ot_coll_rst_leaf u_rs2 (.clk(clk), .arst_n(rst_n), .q(rs2));
+`else
+    // QW-ORPHANS2 10-20 r4: rst_n lands in ONE 2-flop face leaf u_rsf (port rst_n = 2 raw sinks); two identical registered
+    // relay copies split the leaf load (census r2: one leaf drove 34 RESETN): rs (relays, token landing, non-fold leaves)
+    // and rs2 (the FAN32/ADD_FAN32 fold slices' own leaves). Every reset consumer releases exactly ONE edge later than in
+    // r3, uniformly, so all relative release orders inside the Q leaf are unchanged (equal depth); the extra edge is a
+    // reset-release latency only (no data edge; static schedule unchanged).
+    wire rs_f, rs2;
+    (* keep_hierarchy *) ot_coll_rst_leaf u_rsf (.clk(clk), .arst_n(rst_n), .q(rs_f));
+    ot_csp_rep_reg_native32 #(.W(1), .ID(QI*256 + 208), .RST(1)) u_rs  (.clk(clk), .rst_n(rs_f), .d(1'b1), .q(rs));
+    ot_csp_rep_reg_native32 #(.W(1), .ID(QI*256 + 209), .RST(1)) u_rs2 (.clk(clk), .rst_n(rs_f), .d(1'b1), .q(rs2));
+`endif
     ot_csp_rep_reg_native32 #(.W(1), .ID(QI*256 + 200), .RST(1)) u_rsg (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_g));
     ot_csp_rep_reg_native32 #(.W(1), .ID(QI*256 + 201), .RST(1)) u_rst0 (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_t0));
     ot_csp_rep_reg_native32 #(.W(1), .ID(QI*256 + 202), .RST(1)) u_rst1 (.clk(clk), .rst_n(rs), .d(1'b1), .q(rs_t1));
