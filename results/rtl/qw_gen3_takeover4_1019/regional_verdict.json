@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.qwen_compute.regional_clock_verdict.v1",
+ "verdict": "FAIL",
+ "ok": {
+  "intra": true,
+  "landed": false,
+  "drift": false,
+  "spine": true
+ },
+ "intra": {
+  "classes": 897,
+  "over": 0,
+  "worst": []
+ },
+ "owed": {
+  "neighbour_bits": 50267,
+  "gap_bits": 0,
+  "no_root": 8,
+  "links": 182
+ },
+ "drift": {
+  "lanes": 421,
+  "measured": 421,
+  "max_abs": 725.1,
+  "over_half_T": 27,
+  "worst": [
+   [
+    "q3h_col_20_2",
+    4234.1,
+    3509.0,
+    -725.1
+   ],
+   [
+    "q3h_col_22_2",
+    4230.1,
+    3510.4,
+    -719.7
+   ],
+   [
+    "dv_rs_W0_2_a",
+    -4228.3,
+    -3509.1,
+    719.2
+   ],
+   [
+    "dv_rs_W0_2_b",
+    -4230.7,
+    -3515.4,
+    715.3
+   ],
+   [
+    "q3h_col_21_2",
+    4228.1,
+    3518.9,
+    -709.2
+   ],
+   [
+    "q3h_col_2_1",
+    4457.7,
+    3749.3,
+    -708.4
+   ],
+   [
+    "q3h_col_3_1",
+    4448.1,
+    3743.4,
+    -704.7
+   ],
+   [
+    "q3h_col_23_2",
+    4231.7,
+    3528.8,
+    -702.9
+   ]
+  ]
+ },
+ "spine": {
+  "present": true,
+  "balance": false,
+  "cells": 10993,
+  "levels": 323,
+  "pads": 0,
+  "model_insertion_ps": 17912.9
+ },
+ "budget_ps": 80.0,
+ "period_ps": 833.333
+}
