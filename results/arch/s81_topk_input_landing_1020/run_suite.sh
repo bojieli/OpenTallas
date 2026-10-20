@@ -13,7 +13,7 @@ for mode in default raw mut1 mut2; do
  flags=(); [ "$mode" != default ] && flags+=(-DOT_S81PH_HQ_INPUT_RAW)
  [ "$mode" = mut1 ] && flags+=(-DOT_S81PH_HQ_INPUT_RAW_MUT=1)
  [ "$mode" = mut2 ] && flags+=(-DOT_S81PH_HQ_INPUT_RAW_MUT=2)
- ( "$VL" --version > "$O/$mode/verilator.version"; sha256sum "$R/gold_hq_in.sv" "$R/dut_hq_in.sv" "$R/tb_input_landing.sv" > "$O/$mode/sources.sha256"; "$VL" --binary --timing -j4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style "${flags[@]}" --top-module tb_input_landing "$R/gold_hq_in.sv" "$R/dut_hq_in.sv" "$R/tb_input_landing.sv" -Mdir "$O/$mode/obj" > "$O/$mode/build.log" 2>&1 && "$O/$mode/obj/Vtb_input_landing" > "$O/$mode/run.log" 2>&1; echo $? > "$O/$mode/rc" ) &
+ ( "$VL" --version > "$O/$mode/verilator.version"; sha256sum "$R/gold_hq_in.sv" "$R/dut_hq_in.sv" "$R/tb_input_landing.sv" > "$O/$mode/sources.sha256"; "$VL" --binary --timing -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style "${flags[@]}" --top-module tb_input_landing "$R/gold_hq_in.sv" "$R/dut_hq_in.sv" "$R/tb_input_landing.sv" -Mdir "$O/$mode/obj" > "$O/$mode/build.log" 2>&1 && "$O/$mode/obj/Vtb_input_landing" > "$O/$mode/run.log" 2>&1; echo $? > "$O/$mode/rc" ) &
 done
 wait
 python3 - "$O" <<'PYC'

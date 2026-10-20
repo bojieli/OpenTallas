@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: ot-epyc7       admits   907 GB (avail 724, growth 89, headroom 0, waiters 0/0 GB) load 51/96 running 17 disk 5439 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3456127-1792496780 after 0 s
+INPUT_LANDING_SUITE FAIL {"default": {"rc": 1, "pass_seen": false, "fail_seen": false}, "raw": {"rc": 1, "pass_seen": false, "fail_seen": false}, "mut1": {"rc": 1, "pass_seen": false, "fail_seen": false}, "mut2": {"rc": 1, "pass_seen": false, "fail_seen": false}}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3456127-1792496780): exit 1

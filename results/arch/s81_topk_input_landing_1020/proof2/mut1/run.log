@@ -1,0 +1,4 @@
+IN_LAND FAIL MUT=1 cycle=8 type=8 golden=0bf10bca386dcaf2190d57194c84069a1e5a0d6f99a899c96b603236384d3d992b9f10000f0000e0000d0000c0000b0000a00009000080000700006000050000400003000020000100000999bfc0 dut=01d29bca386dcaf21220bde885ea7d6c5e5ddf10bdcaf571969a16f9996b6384db9f10000f0000e0000d5449cc7de4bf0b2f2cd7c35aeb9d1bca3862190d4c840e5a0da899c032363d992999bfc0
+[96000] %Fatal: tb_input_landing.sv:38: Assertion failed in tb_input_landing: INPUT_LANDING_LOCKSTEP_REJECT
+%Error: results/arch/s81_topk_input_landing_1020/tb_input_landing.sv:38: Verilog $stop
+Aborting...

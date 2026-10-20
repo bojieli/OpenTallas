@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: ot-epyc7       admits   858 GB (avail 701, growth 101, headroom 0, waiters 0/0 GB) load 77/96 running 40 disk 5432 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-topk-input-landing-1020/src
+ot-run: LOAD SPILL: ot-epyc7 would run at 4.97 x cores; moving to ot-epyc5
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-topk-input-landing-1020 (0.0 GB) ot-epyc7 -> ot-epyc5 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 35 changed entries in 6 s; running on ot-epyc5; written files go back to ot-epyc7 after the run
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3627882-1792496847 after 0 s
+INPUT_LANDING_SUITE PASS {"default": {"rc": 0, "pass_seen": true, "fail_seen": false}, "raw": {"rc": 0, "pass_seen": true, "fail_seen": false}, "mut1": {"rc": 1, "pass_seen": false, "fail_seen": true}, "mut2": {"rc": 1, "pass_seen": false, "fail_seen": true}}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3627882-1792496847): exit 0
+ot-run: SPILL: outputs copied back ot-epyc5 -> ot-epyc7; RAN on ot-epyc5: exit 0
