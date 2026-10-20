@@ -1,0 +1,26 @@
+{
+ "cell": "qkd_embedding_row_tx_ctx_native32",
+ "view": "physical/ref_tile/qkd_embedding_row_tx_ctx_n32c/views/qkd_embedding_row_tx_ctx_native32",
+ "lib_cell": "qkd_embedding_row_tx_ctx_native32",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean"
+ ],
+ "R_ps": 290.1,
+ "spread_ps": 36.0,
+ "outputs": 540,
+ "inputs": 591,
+ "launch_ps": 181.6,
+ "launch_pin": "row_open",
+ "capture_ps": 84.2,
+ "capture_pin": "fill_token[3]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 33.5,
+ "ff_launch_min_ps": 85.4,
+ "ff_hold_need_ps": -9.2,
+ "pass": true,
+ "fail_why": ""
+}

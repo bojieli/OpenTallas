@@ -1,0 +1,133 @@
+{
+  "auto_merge": "c0768b96a8f6c54fa061c73e8cd1e0e982bc9e05",
+  "pre_merge": "ba8416fa8b03b733ba1f9fecf1ebb411de63b2a9",
+  "rtl_callers": [
+    {
+      "path": "rtl/test/qwen_static_kv/tb_kvjc3_emb_player.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(MUT == 6 ? 1 : 0)",
+      "instance": "u_j",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds_rl.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ep.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_ds.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds_rl_sr.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv",
+      "module": "qkd_embedding_ctx_start",
+      "parameters": ".NATIVE32(NATIVE32)",
+      "instance": "u_ctx",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv",
+      "module": "qkd_embedding_static_join4_cal",
+      "parameters": ".MUT(0), .NATIVE32(NATIVE32), .PIPE_JOIN(PIPE_JOIN)",
+      "instance": "u_join",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+      "module": "qkd_embedding_static_join4",
+      "parameters": ".NATIVE32(NATIVE32), .PIPE_JOIN(PIPE_JOIN)",
+      "instance": "u_join4",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/test/tb_qkd_kvs_emb_ctx_lockstep.sv",
+      "module": "qkd_embedding_ctx_start",
+      "parameters": null,
+      "instance": "u_ref",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/test/tb_qkd_embedding_ctx_owner_chain.sv",
+      "module": "qkd_embedding_ctx_start",
+      "parameters": ".MUT(`MUT)",
+      "instance": "dneg",
+      "positional": false
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/test/tb_qkd_embedding_ctx_start.sv",
+      "module": "qkd_embedding_ctx_start",
+      "parameters": ".MUT(`MUT)",
+      "instance": "dneg",
+      "positional": false
+    }
+  ],
+  "positional_callers": []
+}
