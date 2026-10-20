@@ -1,0 +1,5 @@
+# case NEG_o_am5_W env DV2_AM_MUT=5 args o --vflags -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1 --work /srv/opentallas-scratch/claude/mu-dq-slicekc/r2/work/AM5_W host regular-crane 2026-10-19T04:44:05-07:00 commit 549e8e808256d8cc3d7d337799727f2be775fcdd Verilator 5.050 2026-07-01 rev v5.050
+    bench2 (o): ovl gap 4 MU_NU 4 FACE 1 AM_MUT 5
+bench2 (o) MUT=0: FAIL 1/2
+    ovl (slice-0 second STN 4 edges after the data): port fault slice0/slice1 [0, 0], want [1, 0]
+# exit 1

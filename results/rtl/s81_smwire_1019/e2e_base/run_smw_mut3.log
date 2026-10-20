@@ -1,0 +1,18 @@
+SMS stats MUT=0 jobs=24 se_rows=225 so_rows=384 checks=609
+SMS latency (cycles at the share's pins): SE first e row = last score row + 106, e rows back to back; SO o row k = P.V row k + 54
+SMS latency: o_den = last e row + 46 at lt = clog2(nv) = 0
+SMS latency: o_den = last e row + 51 at lt = clog2(nv) = 1
+SMS latency: o_den = last e row + 61 at lt = clog2(nv) = 3
+SMS latency: o_den = last e row + 66 at lt = clog2(nv) = 4
+SMS latency: o_den = last e row + 71 at lt = clog2(nv) = 5
+SMS latency: o_den = last e row + 76 at lt = clog2(nv) = 6
+TARGET stats mut=0 beats=192 retires=24 bad_retires=0 operator_elements=12288
+SMWIRE MISMATCH line-route gather counts 96 96 96 0
+SMWIRE MISMATCH faults sot 00 gw 00 land 1 xr 0 rstop 0000 target 00
+SMWIRE stats mut=3 route=1 gather s3=96 s4=96 s2=96 n3=0 lat(head0 beat -> port) s3=16 s4=18 s2=18 n3=-1 head1 +tree hop: s3=-1 checks=294912 faults sot 00 gw 00 land 1 xr 0 rstop 0000
+SMWIRE FAIL mut=3 route=1 errors=2
+SMS PASS MUT=0 checks=609
+- rtl/dsrom_sys/s81_dv/sm_target/test/tb_smwire_e2e.sv:464: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 38us; walltime 274.452 s; speed 137.296 ns/s
+- Verilator: cpu 274.357 s on 1 threads; allocated 44 MB

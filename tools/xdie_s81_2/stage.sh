@@ -6,7 +6,7 @@
 # Writes <stage>/SOURCES.txt (path, commit, blob) and copies the bench + tools from <worktree>.
 set -eu
 R=$1; S=$2; W=$3
-G8=${G8:-0e6b9b710}; HF3=${HF3:-ed9d570ad}; MU=${MU_COMMIT:-origin/main}
+G8=${G8:-${DIE:-0e6b9b710}}; HF3=${HF3:-${DIE:-ed9d570ad}}; MU=${MU_COMMIT:-${DIE:-origin/main}}
 mkdir -p $S; : > $S/SOURCES.txt
 put() { # put <commit> <path> [<dest path>]
   local c=$1 p=$2 d=${3:-$2}
@@ -33,7 +33,9 @@ put $G8 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv rtl/dsrom_sys/s81_ph/col
 put $HF3 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv
 put $MU rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.mu.sv
 for p in rtl/test/xdie_s81_2/xdie_s81_2.vlt rtl/test/xdie_s81_2/xdie_s81_2_ep.sv rtl/test/xdie_s81_2/tb_xdie_s81_2.sv \
-  tools/xdie_s81_2/xdie2.sh tools/xdie_s81_2/gate.sh tools/xdie_s81_2/gen_golden.py; do
+  tools/xdie_s81_2/xdie2.sh tools/xdie_s81_2/gate.sh tools/xdie_s81_2/gen_golden.py \
+  tools/xdie_s81_2/gate_mu.sh tools/xdie_s81_2/gate_mu_g2.sh tools/xdie_s81_2/gate_mu_u_g2.sh \
+  tools/xdie_s81_2/gate_result.sh tools/xdie_s81_2/mu_check.py tools/xdie_s81_2/record.py; do
   mkdir -p $S/$(dirname $p); cp $W/$p $S/$p
 done
 echo "STAGED $(wc -l < $S/SOURCES.txt) pinned files"

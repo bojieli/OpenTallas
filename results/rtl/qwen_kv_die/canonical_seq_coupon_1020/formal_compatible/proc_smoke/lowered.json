@@ -1,0 +1,818 @@
+{
+  "creator": "Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "modules": {
+    "coupon": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "/work/canonical_coupon_formal_v1/proc_smoke/coupon.v:1.1-1.188"
+      },
+      "ports": {
+        "CLK": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "D": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "RESETN": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "SETN": {
+          "direction": "input",
+          "bits": [ 5 ]
+        },
+        "A": {
+          "direction": "output",
+          "bits": [ 6 ]
+        },
+        "Q": {
+          "direction": "output",
+          "bits": [ 7 ]
+        }
+      },
+      "cells": {
+        "$auto$async2sync.cc:176:execute$26": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 5 ],
+            "Y": [ 8 ]
+          }
+        },
+        "$auto$async2sync.cc:186:execute$28": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 9 ],
+            "B": [ 8 ],
+            "Y": [ 10 ]
+          }
+        },
+        "$auto$async2sync.cc:191:execute$30": {
+          "hide_name": 1,
+          "type": "$or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 11 ],
+            "B": [ 9 ],
+            "Y": [ 12 ]
+          }
+        },
+        "$auto$async2sync.cc:192:execute$32": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 12 ],
+            "B": [ 5 ],
+            "Y": [ 13 ]
+          }
+        },
+        "$auto$async2sync.cc:193:execute$34": {
+          "hide_name": 1,
+          "type": "$bwmux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 13 ],
+            "B": [ "x" ],
+            "S": [ 10 ],
+            "Y": [ 14 ]
+          }
+        },
+        "$auto$async2sync.cc:195:execute$35": {
+          "hide_name": 1,
+          "type": "$or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 15 ],
+            "B": [ 9 ],
+            "Y": [ 16 ]
+          }
+        },
+        "$auto$async2sync.cc:196:execute$37": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 16 ],
+            "B": [ 5 ],
+            "Y": [ 17 ]
+          }
+        },
+        "$auto$async2sync.cc:197:execute$39": {
+          "hide_name": 1,
+          "type": "$bwmux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 17 ],
+            "B": [ "x" ],
+            "S": [ 10 ],
+            "Y": [ 6 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$41": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 15 ],
+            "Q": [ 18 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$43": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 14 ],
+            "Q": [ 19 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$51": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 7 ],
+            "Q": [ 20 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$53": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 21 ],
+            "Q": [ 22 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$48": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 18 ],
+            "B": [ 19 ],
+            "S": [ 23 ],
+            "Y": [ 15 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$58": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 20 ],
+            "B": [ 22 ],
+            "S": [ 24 ],
+            "Y": [ 7 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$45": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 25 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$55": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 26 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$46": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 25 ],
+            "B": [ "1", "0" ],
+            "Y": [ 23 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$56": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 26 ],
+            "B": [ "1", "0" ],
+            "Y": [ 24 ]
+          }
+        },
+        "$auto$proc_dff.cc:74:gen_dffsr_complex$11": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ "1" ],
+            "S": [ 27 ],
+            "Y": [ 28 ]
+          }
+        },
+        "$auto$proc_dff.cc:74:gen_dffsr_complex$17": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 28 ],
+            "S": [ 5 ],
+            "Y": [ 9 ]
+          }
+        },
+        "$flatten\\a.$and$/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:40$3": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:40.17-40.31"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 29 ],
+            "B": [ 5 ],
+            "Y": [ 27 ]
+          }
+        },
+        "$flatten\\a.$not$/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:40$2": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:40.17-40.24"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 4 ],
+            "Y": [ 29 ]
+          }
+        },
+        "$flatten\\a.$not$/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:42$5": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:42.63-42.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 11 ]
+          }
+        },
+        "$flatten\\q.$not$/work/canonical_coupon_formal_v1/canonical_DFF_normalized.v:35$7": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/canonical_DFF_normalized.v:35.83-35.85"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 21 ]
+          }
+        },
+        "a": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "/work/canonical_coupon_formal_v1/proc_smoke/coupon.v:1.76-1.129",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "q": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "/work/canonical_coupon_formal_v1/proc_smoke/coupon.v:1.152-1.177",
+            "module": "DFFHQNx1_ASAP7_75t_R",
+            "module_src": "/work/canonical_coupon_formal_v1/canonical_DFF_normalized.v:35.1-35.96"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        }
+      },
+      "netnames": {
+        "$auto$async2sync.cc:155:execute$24": {
+          "hide_name": 1,
+          "bits": [ 14 ],
+          "attributes": {
+          }
+        },
+        "$auto$async2sync.cc:156:execute$25": {
+          "hide_name": 1,
+          "bits": [ 15 ],
+          "attributes": {
+            "keep": "00000000000000000000000000000001"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$$auto$async2sync.cc:155:execute$24#sampled$42": {
+          "hide_name": 1,
+          "bits": [ 19 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$$auto$async2sync.cc:156:execute$25#sampled$40": {
+          "hide_name": 1,
+          "bits": [ 18 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$$flatten\\q.$not$/work/canonical_coupon_formal_v1/canonical_DFF_normalized.v:35$7_Y#sampled$52": {
+          "hide_name": 1,
+          "bits": [ 22 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\q.QN#sampled$50": {
+          "hide_name": 1,
+          "bits": [ 20 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\a.CLK#sampled$44": {
+          "hide_name": 1,
+          "bits": [ 25 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\q.CLK#sampled$54": {
+          "hide_name": 1,
+          "bits": [ 26 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$27": {
+          "hide_name": 1,
+          "bits": [ 8 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3311:And$29": {
+          "hide_name": 1,
+          "bits": [ 10 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3311:And$33": {
+          "hide_name": 1,
+          "bits": [ 13 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3311:And$38": {
+          "hide_name": 1,
+          "bits": [ 17 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3312:Or$31": {
+          "hide_name": 1,
+          "bits": [ 12 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3312:Or$36": {
+          "hide_name": 1,
+          "bits": [ 16 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$47": {
+          "hide_name": 1,
+          "bits": [ 23 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$57": {
+          "hide_name": 1,
+          "bits": [ 24 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$12": {
+          "hide_name": 1,
+          "bits": [ 28 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$18": {
+          "hide_name": 1,
+          "bits": [ 9 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\a.$0\\QN[0:0]": {
+          "hide_name": 1,
+          "bits": [ 11 ],
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:41.2-42.66"
+          }
+        },
+        "$flatten\\a.$not$/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:40$2_Y": {
+          "hide_name": 1,
+          "bits": [ 29 ],
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:40.17-40.24"
+          }
+        },
+        "$flatten\\q.$0\\QN[0:0]": {
+          "hide_name": 1,
+          "bits": [ 21 ],
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/canonical_DFF_normalized.v:35.57-35.86"
+          }
+        },
+        "A": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/proc_smoke/coupon.v:1.46-1.47"
+          }
+        },
+        "CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/proc_smoke/coupon.v:1.21-1.24"
+          }
+        },
+        "D": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/proc_smoke/coupon.v:1.25-1.26"
+          }
+        },
+        "Q": {
+          "hide_name": 0,
+          "bits": [ 7 ],
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/proc_smoke/coupon.v:1.48-1.49"
+          }
+        },
+        "RESETN": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/proc_smoke/coupon.v:1.27-1.33"
+          }
+        },
+        "SETN": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "/work/canonical_coupon_formal_v1/proc_smoke/coupon.v:1.34-1.38"
+          }
+        },
+        "a.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "a CLK",
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "a.D": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "a D",
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:38.42-38.43"
+          }
+        },
+        "a.QN": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "hdlname": "a QN",
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "a.RESETN": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "hdlname": "a RESETN",
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "a.SETN": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "hdlname": "a SETN",
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "a.asr_set": {
+          "hide_name": 0,
+          "bits": [ 27 ],
+          "attributes": {
+            "hdlname": "a asr_set",
+            "src": "/work/canonical_coupon_formal_v1/canonical_ASR_normalized.v:40.7-40.14"
+          }
+        },
+        "q.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "q CLK",
+            "src": "/work/canonical_coupon_formal_v1/canonical_DFF_normalized.v:35.35-35.38"
+          }
+        },
+        "q.D": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "q D",
+            "src": "/work/canonical_coupon_formal_v1/canonical_DFF_normalized.v:35.39-35.40"
+          }
+        },
+        "q.QN": {
+          "hide_name": 0,
+          "bits": [ 7 ],
+          "attributes": {
+            "hdlname": "q QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "/work/canonical_coupon_formal_v1/canonical_DFF_normalized.v:35.52-35.54"
+          }
+        }
+      }
+    }
+  }
+}

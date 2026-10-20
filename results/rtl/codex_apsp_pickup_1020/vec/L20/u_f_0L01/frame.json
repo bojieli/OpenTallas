@@ -1,0 +1,171 @@
+{
+ "layer": "L20",
+ "frame": "u_f_0L01",
+ "master": "col_h10_l4",
+ "lk": 1170,
+ "base": "col_h10",
+ "land_e": 2,
+ "slice": "u_s_0S",
+ "slice_index": 0,
+ "frame_index": 1,
+ "nphases": 6,
+ "field_ops": [
+  "attn.cmp_idx"
+ ],
+ "parts": [
+  [
+   "compressor.wkv",
+   128,
+   "attn.cmp.wkv",
+   0,
+   "bf16"
+  ],
+  [
+   "indexer.weights_proj",
+   32,
+   "attn.idx.weights",
+   0,
+   "bf16_scaled"
+  ]
+ ],
+ "node_rows_per_rank": 608,
+ "phases": [
+  {
+   "phase": 0,
+   "op": "attn.a_proj",
+   "rows": 4,
+   "fmt": "fp8",
+   "K": 5120,
+   "calendar": "measured_class",
+   "faults": 0,
+   "ret_words": 10
+  },
+  {
+   "phase": 1,
+   "op": "attn.cmp_idx",
+   "rows": 2,
+   "fmt": "bf16",
+   "K": 5120,
+   "seg": 0,
+   "nseg": 5,
+   "calendar": "measured_shape",
+   "faults": 0,
+   "ret_words": 2,
+   "src": [
+    [
+     "compressor.wkv",
+     1
+    ],
+    [
+     "indexer.weights_proj",
+     1
+    ]
+   ]
+  },
+  {
+   "phase": 2,
+   "op": "attn.cmp_idx",
+   "rows": 2,
+   "fmt": "bf16",
+   "K": 5120,
+   "seg": 1,
+   "nseg": 5,
+   "calendar": "measured_shape",
+   "faults": 0,
+   "ret_words": 2,
+   "src": [
+    [
+     "compressor.wkv",
+     1
+    ],
+    [
+     "indexer.weights_proj",
+     1
+    ]
+   ]
+  },
+  {
+   "phase": 3,
+   "op": "attn.cmp_idx",
+   "rows": 2,
+   "fmt": "bf16",
+   "K": 5120,
+   "seg": 2,
+   "nseg": 5,
+   "calendar": "measured_shape",
+   "faults": 0,
+   "ret_words": 2,
+   "src": [
+    [
+     "compressor.wkv",
+     1
+    ],
+    [
+     "indexer.weights_proj",
+     1
+    ]
+   ]
+  },
+  {
+   "phase": 4,
+   "op": "attn.cmp_idx",
+   "rows": 2,
+   "fmt": "bf16",
+   "K": 5120,
+   "seg": 3,
+   "nseg": 5,
+   "calendar": "measured_shape",
+   "faults": 0,
+   "ret_words": 2,
+   "src": [
+    [
+     "compressor.wkv",
+     1
+    ],
+    [
+     "indexer.weights_proj",
+     1
+    ]
+   ]
+  },
+  {
+   "phase": 5,
+   "op": "attn.cmp_idx",
+   "rows": 2,
+   "fmt": "bf16",
+   "K": 5120,
+   "seg": 4,
+   "nseg": 5,
+   "calendar": "measured_shape",
+   "faults": 0,
+   "ret_words": 2,
+   "src": [
+    [
+     "compressor.wkv",
+     1
+    ],
+    [
+     "indexer.weights_proj",
+     1
+    ]
+   ]
+  }
+ ],
+ "seqs": {
+  "seq_all": {
+   "dir": "/srv/opentallas-scratch/claude/toksim-s81d-apsp/vec/L20/u_f_0L01/seq_all",
+   "nph": 6,
+   "K": 5120,
+   "ops": 4,
+   "ph0": 0
+  },
+  "seq_bf": {
+   "dir": "/srv/opentallas-scratch/claude/toksim-s81d-apsp/vec/L20/u_f_0L01/seq_bf",
+   "nph": 5,
+   "K": 5120,
+   "ops": 2,
+   "ph0": 1
+  }
+ },
+ "fixture_meta_sha256": "6bcb512be3345af3094d7e5901b5f32e207eef47434c9a9edd6a57414c7b309e"
+}

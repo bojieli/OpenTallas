@@ -1,0 +1,30 @@
+ot-run: ot-epyc4       admits  1047 GB (avail 821, growth 89, headroom 0, waiters 0/0 GB) load 73/128 running 29 disk 306 GB 
+ot-run: ot-epyc5       admits   755 GB (avail 642, growth 113, headroom 0, waiters 0/0 GB) load 73/128 running 13 disk 1048 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: -> ot-epyc4
+ot-heavy: request 48G is charged 24G (class 'dv_bench#.py:a' measured peak 15.8G, n=11+0 proved); the cap stays 48G
+ot-heavy: admitted on regular-crane as oth-ubuntu-3845253-1792427379 after 0 s
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61] cycles
+bench2 (a) MUT=0: PASS 24/24
+bench2 (c) MUT=0: PASS 640/640
+bench2 (f) MUT=0: PASS 3/3
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         183
+  consumer norm / scale (683 rows)             86             86         134
+  QK sum of squares (128)                      16             16         104
+  QK norm (128)                                16             16          64
+  SiLU * up (128)                              16             16         190
+bench2 (g) MUT=0: PASS 5/5
+bench2 (k) MUT=0: PASS 512/512
+bench2 (q) MUT=0: PASS 512/512
+    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 1 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1680
+bench2 (m) MUT=0: PASS 8/8
+    bench2 (o): ovl gap 4 MU_NU 4 FACE 1 AM_MUT 0
+bench2 (o) MUT=0: PASS 2/2
+    bench2 (n): MU_NU 4 FACE 1 AM_MUT 0
+bench2 (n) MUT=0: PASS 2/2
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3845253-1792427379): exit 0

@@ -9,7 +9,7 @@
    8,
    3,
    1,
-   9
+   10
   ],
   "K": [
    24,
@@ -447,9 +447,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 0,
-   "arrive": 653,
-   "rx_out": 655,
-   "wr": 641
+   "arrive": 654,
+   "rx_out": 656,
+   "wr": 642
   },
   {
    "seg": 0,
@@ -459,9 +459,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 1,
-   "arrive": 654,
-   "rx_out": 656,
-   "wr": 642
+   "arrive": 655,
+   "rx_out": 657,
+   "wr": 643
   },
   {
    "seg": 0,
@@ -471,9 +471,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 2,
-   "arrive": 655,
-   "rx_out": 657,
-   "wr": 643
+   "arrive": 656,
+   "rx_out": 658,
+   "wr": 644
   },
   {
    "seg": 0,
@@ -483,9 +483,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 3,
-   "arrive": 656,
-   "rx_out": 658,
-   "wr": 644
+   "arrive": 657,
+   "rx_out": 659,
+   "wr": 645
   },
   {
    "seg": 0,
@@ -2115,9 +2115,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 0,
-   "arrive": 925,
-   "rx_out": 927,
-   "wr": 913
+   "arrive": 926,
+   "rx_out": 928,
+   "wr": 914
   },
   {
    "seg": 1,
@@ -2127,9 +2127,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 1,
-   "arrive": 926,
-   "rx_out": 928,
-   "wr": 914
+   "arrive": 927,
+   "rx_out": 929,
+   "wr": 915
   },
   {
    "seg": 1,
@@ -2139,9 +2139,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 2,
-   "arrive": 927,
-   "rx_out": 929,
-   "wr": 915
+   "arrive": 928,
+   "rx_out": 930,
+   "wr": 916
   },
   {
    "seg": 1,
@@ -2151,9 +2151,9 @@
    "rx_port": 3,
    "kind": 5,
    "beat": 3,
-   "arrive": 928,
-   "rx_out": 930,
-   "wr": 916
+   "arrive": 929,
+   "rx_out": 931,
+   "wr": 917
   },
   {
    "seg": 1,
@@ -2601,7 +2601,7 @@
   }
  ],
  "program": {
-  "source": "/home/ubuntu/scratch/hkv-die-1019/cL1.fz41/d2d/token_path_compiled.json",
+  "source": "/home/ubuntu/scratch/root4-qw/cL1/d2d/token_path_compiled.json",
   "layers": [
    {
     "id": "L0",
@@ -2808,7 +2808,8 @@
    "result_send": [
     2371,
     2404
-   ]
+   ],
+   "retirement_status_delay": 0
   },
   "token_run_L0": {
    "q_send": 871,
@@ -2816,7 +2817,8 @@
    "result_send": [
     2643,
     2676
-   ]
+   ],
+   "retirement_status_delay": 0
   },
   "emb_send": [
    192,
@@ -2844,6 +2846,11 @@
    "first_token_ofs": 1176
   },
   "token_period": 249600,
+  "retirement": {
+   "status_delay": 0,
+   "token_added_edges": 0,
+   "qualification": "UNQUALIFIED: requires full source deadline/path/reset proof"
+  },
   "result_handoff": {
    "source": "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
    "op": "qkv",
@@ -3075,9 +3082,9 @@
     8,
     3,
     1,
-    9
+    10
    ],
-   "word": "32'h09010308"
+   "word": "32'h0a010308"
   },
   "K": {
    "ports": [

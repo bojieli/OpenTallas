@@ -6,7 +6,9 @@
 1. the producer law (d2d_link_calendar.producer_txd + the PR pin flops) on the die seam stages reproduces the
    LAYERBENCH-QWEN compiled_L1 program's TXD (compute [6,3,1,9], KV [24,4,3,3] with the landed attention codec 2,
    HKV-DIE 10-19; [23,...] at the as-built codec 1); run_r3's [8,3,1,9] is the same law at
-   SC_TX = 2 (no dv2f14bn bundle has that age: tx_v + tx_payload are direct);
+   SC_TX = 2 (no dv2f14bn bundle has that age: tx_v + tx_payload are direct).  ROOT4-QWMERGE 10-19: compiled_L1 is
+   compiled on the MU release compute seam (dv2f18dh2, record_bundles.seam_stages, CS_X3S 3 -> C [8,3,1,10]) + kvs14p;
+   the production image is the MU pair seam 2,2,2,3,2,2/11,11,9,9,9,9,9 (C [8,3,1,10], K [22,4,3,3] at codec 2);
 2. the generated masters carry TXDP as a parameter with no production default (d2d_pinreg_gen.py) and no hard-wired
    PR vector;
 3. the committed die-sequencer image equals the compiler's production compile and carries D2D_TXDP_C / D2D_TXDP_K.
@@ -19,6 +21,8 @@ sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
 import d2d_link_calendar as L   # noqa: E402
 
 DIE = '2,2,2,2,2,2/11,11,9,9,9,11,11'   # dv2f14bq (SC_TX 2) + kvs14p
+L1_DIE = '2,2,2,3,2,2/11,11,9,9,9,11,11'   # compiled_L1: dv2f18dh2 (MU release compute seam) + kvs14p
+PROD = '2,2,2,3,2,2/11,11,9,9,9,9,9'       # d2d_cal_image_production.sh default (MU pair seam)
 PROG = ROOT / 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/program/calendar.json'
 DIES = ROOT / 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
 IMG = ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
@@ -32,7 +36,12 @@ def test_producer_law_matches_compiler():
     assert pr(L.producer_txd(L.parse_stages(DIE), kv_codec=1))['K'] == [23, 4, 3, 3]
     got = pr(L.producer_txd(L.parse_stages(DIE), kv_codec=2))
     assert got == {'C': [8, 3, 1, 9], 'K': [24, 4, 3, 3]}, got
-    assert got == json.loads(PROG.read_text())['txd']
+    l1 = pr(L.producer_txd(L.parse_stages(L1_DIE), kv_codec=2))
+    assert l1 == {'C': [8, 3, 1, 10], 'K': [24, 4, 3, 3]}, l1
+    assert l1 == json.loads(PROG.read_text())['txd']
+    prod = pr(L.producer_txd(L.parse_stages(PROD), kv_codec=2))
+    assert prod == {'C': [8, 3, 1, 10], 'K': [22, 4, 3, 3]}, prod
+    assert L.txdp_word(prod['C']) == 0x0a010308 and L.txdp_word(prod['K']) == 0x03030416
     bn = pr(L.producer_txd(L.parse_stages('2,2,2,2,0,2/11,11,9,9,9,11,11'), kv_codec=2))
     assert bn['C'] == [6, 3, 1, 9]                      # the dv2f14bn-era seam (SC_TX 0)
     assert L.txdp_word(got['C']) == 0x09010308 and L.txdp_word(got['K']) == 0x03030418
@@ -54,9 +63,9 @@ def test_committed_image_is_the_compilers():
         subprocess.run(['bash', 'tools/qwen_split/d2d_cal_image_production.sh', d], cwd=ROOT, check=True,
                        stdout=subprocess.DEVNULL)
         assert Path(d, 'd2d_cal_image.svh').read_text() == IMG.read_text()
-        assert "QFD_D2D_TXDP = 32'h09010308" in Path(d, 'program', 'txdp.svh').read_text()
+        assert "QFD_D2D_TXDP = 32'h0a010308" in Path(d, 'program', 'txdp.svh').read_text()
     t = IMG.read_text()
-    assert "localparam [31:0] D2D_TXDP_C = 32'h09010308;" in t and "localparam [31:0] D2D_TXDP_K = 32'h03030418;" in t
+    assert "localparam [31:0] D2D_TXDP_C = 32'h0a010308;" in t and "localparam [31:0] D2D_TXDP_K = 32'h03030416;" in t
 
 
 if __name__ == '__main__':

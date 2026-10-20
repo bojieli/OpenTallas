@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-attn-safe-control-1019/tools/qwen_kv_die/attn_safe_control_1019/check_emitted.py", line 8, in <module>
+    origins=cert['origins'];assert origins[:len(g.cells)]==list(range(len(g.cells)));assert len(m.insts)==len(origins)
+                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,13 @@
+BAD link cfg write 64 8000000008, sequencer a000000008
+BAD link cfg write 65 400000000a, sequencer 600000000a
+BAD table entry 0
+BAD seg1 x/x vs 8/10
+BAD seg1 run differs at +3
+BAD seg1 run differs at +4
+BAD seg1 run differs at +5
+BAD seg1 run differs at +6
+BAD calendar fault A 11 B 00
+BAD no calendar events played
+FAIL kv_link_cfg_boot scn0 mut6 errors8003
+FATAL: rtl/test/qwen_static_kv/tb_kv_link_cfg_boot.sv:108: 
+       Time: 131910000  Scope: tb_kv_link_cfg_boot

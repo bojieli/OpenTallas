@@ -1,0 +1,45 @@
+ROOT4-QWPOST item (2): closed-view RTL vs main 0408184bd RTL, yosys 0.68 sequential equivalence (equiv_make + equiv_simple -seq 5 + equiv_induct -seq 5 + equiv_status -assert), on the fleet (ot-epyc9). Script run.sh, logs/ (.ys + .log.gz), results.txt.
+
+ot_qfd_xs_leaf  (closed view qfd_xs_leaf_w130-w3p-099253177 @ 099253177; kit params NCH=4 READ_PIN_PIPE=1 FILL_PIPE=1):
+  VERDICT PASS -- 26575/26575 $equiv proven (OT_DV_HEADS_HARD undefined).
+  OT_DV_HEADS_HARD defined: the ONLY diff is the `ifndef/`endif pair around the module; with it defined the module is absent by design
+  (heads-cluster build binds the hard leaf LEF/LIB), so the RTL text that hardens is byte-identical. The closed view stands.
+
+qfd_sys_face  (closed view qfd_sys_face-rs3-5aa256c9f @ 5aa256c9f; kit params none = defaults, so MU=0 MU_HEAD=0 MUT=0):
+  sys_face_default             FAIL -- 13544/13570 proven; 26 unproven, ALL in the d2d calendar config path: cfg_data[19..27] and
+                               u_cseq.cfg_data / u_cseq.u_seq.nxt. Cause: rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh (the
+                               compiled D2D pair image, baked into the tile as localparams) differs: D2D_CAL_C_RX_IMG / K_TX_IMG /
+                               K_RX_IMG / D2D_CAL_START regenerated (token_cycles_through_L35 246329 -> 246359; HKV-DIE 53a256de6/
+                               7495ad559, 5eb099100, 219049242, 6c8b3c908), + D2D_TXDP_C/K localparams added.
+  sys_face_main_sv_closed_img  PASS -- 13570/13570: main's .sv files (MU / MU_HEAD params, qfd_sys_face_record_port MU_HEAD,
+                               qfd_host_native_context_rx MU_HEAD, ot_qwen_d2d_static_end NT<4 bad_port) with the CLOSED image .svh
+                               are equivalent at defaults. So the MU edits are default-equivalent; the image change is not.
+  sys_face_mu1_neg             FAIL as expected (MU=1 MU_HEAD=1 vs closed: 28 unproven) -- the proof is not vacuous.
+  => qfd_sys_face closed view does NOT stand for main's image: hand to MU-DQ-SYSFACE re-close (re-harden with the current
+     d2d_cal_image.svh; the MU params are proven inert at 0).
+Method note: the blackbox config ROM ot_rom_4096x72_m8 is cut (its rd_out = free input on both sides, its ce/addr compared).
+
+sha256 (gold = closed commit, gate = main 0408184bd):
+9e1517f87fd7fa4d41f3dc5b306131b47ec5a510ad90e109cc7e9e3fa83be074  sf_gold/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
+74c6f34f8a47e628068ace011dbeb72977fc4b4f9db517df90d1244df4bcca2f  sf_gold/rtl/qwen_split/qfd_sys_face_record_port.sv
+8449ff1f6235a92db8a718705fde39d40d8075ce304b47ac2ba98c1433af1a2c  sf_gold/rtl/qwen_split/qfd_sys_face.sv
+c5592a70fd70235272ef5d1c1f07cf9396722b43ec8cde80f64fd58c8e1d5282  sf_gold/rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv
+a8535ae36c7fc4dc8da44835d91525cca1b5f09fd733804a7c9fdc61b07eef6d  sf_gold/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh
+2e2c0f603b87cc1304afddf0fa1b3573c1bac91a64615abf8fa0a3aa52123016  sf_gold/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv
+5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688  sf_gold/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv
+3a39c812033ae8d759a3f5d95902018ac6f5eadf67aed62c26e908414f90de26  sf_gold/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
+26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291  sf_gold/rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv
+9e1517f87fd7fa4d41f3dc5b306131b47ec5a510ad90e109cc7e9e3fa83be074  sf_gate/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
+4ba016e7205508b8fe2919493c0828b792c858711c8cc1b4e28b1f91469aa3d2  sf_gate/rtl/qwen_split/qfd_sys_face_record_port.sv
+abd82550c7c63db655b7fea263c4d9ab179079b5a9cbf46ba1a0a1d306f48df6  sf_gate/rtl/qwen_split/qfd_sys_face.sv
+a1b8c49fe64f11100fe3fc6fbc4f9f4a7695c157ea26671d221dd4c95843bdeb  sf_gate/rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv
+e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae  sf_gate/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh
+f9d7818c68fbb98300587bd0f5781de895aa432ab8cdede414188d5e30bfbff1  sf_gate/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh
+2e2c0f603b87cc1304afddf0fa1b3573c1bac91a64615abf8fa0a3aa52123016  sf_gate/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv
+5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688  sf_gate/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv
+713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a  sf_gate/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
+26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291  sf_gate/rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv
+7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688  xl_gold/rtl/hdc/ot_hdc_delay.sv
+ee03b60c52e7b0d51be7484becee15c4aeaddbd2391058fb3967bd3b1e031803  xl_gold/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv
+7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688  xl_gate/rtl/hdc/ot_hdc_delay.sv
+130030210c83ba14c47e745c6ba5e547676b7309f8589e45bc2e98255feabb77  xl_gate/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv

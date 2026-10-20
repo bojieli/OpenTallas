@@ -16,7 +16,7 @@ P=O.P
 ROOT=O.ROOT
 SOURCES={
  'rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv':'a095738e457696598f1aaf50d507bc3c50314f760b35765a224433d2ebde628f',
- 'tools/qwen_kv_die/head_st_rtl.py':'acfe66bc661401c27cb93443633c5cb4a9012eb2face4f400ff7c8fe1d4b1994',
+ 'tools/qwen_kv_die/head_st_rtl.py':'3decd3d53a28d51a293e18382fc7e65316adaa86357d25da1347006acb033b50',
 }
 PARENTS={'qkd_rhead':'ot_qkh_head_native_r4_s','qkd_rhead_ft':'ot_qkh_head_native_r4_ft_s'}
 # KV-GEN9 10-19: the expanded parameter ledger (main 00170ccbe) records EVERY expanded leaf's evaluated parameters, so a

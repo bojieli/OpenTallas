@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.s81_bkg_clk.spread_analysis.v1",
+ "view": "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g",
+ "job": "s81dvbk_g2-g2lv-b3ca6169e",
+ "method": "ck_insertion boundary-register replay with per-flop location + clock leaf net (raw source, routed SPEF; and 4_1_cts.odb placement-estimated) on ot-epyc7; scripts /home/ubuntu/scratch/s81-bkg-clk/{bnd_dump,path_dump}.py",
+ "tt_routed": {
+  "boundary_min": 239.3,
+  "boundary_max": 329.3,
+  "spread": 90.0,
+  "earliest": "u_vin.lanes[1208..1245] NW corner (x 4-7, y 111-121) leaf_92/95/91",
+  "latest": "u_vs.vo_s[0..20] + rs[0..1] S face beside clk pin (x 110-120, y 2-5) leaf_267/268"
+ },
+ "tt_cts_estimate": {
+  "boundary_min": 252.3,
+  "boundary_max": 324.0,
+  "spread": 71.7,
+  "note": "same as the gate (geometry 2); routed RC added +15 ps on S leaves, -20 ps NW"
+ },
+ "tt_pre_eco_routed": {
+  "boundary_min": 239.3,
+  "boundary_max": 329.3,
+  "note": "identical: post-route hold ECO is not the cause; no hold buffers on clock branches"
+ },
+ "tree": {
+  "reg_root": "clkbuf_regs_0_core_clk / clkbuf_0_clk[0]_regs at (107.5,129.9) = top edge of the abutted SRAM stack (x 60.5-155.3, y 45.4-127.5); clk pin S face x 102-107",
+  "worst_branch": "clkbuf_1_1_0 -> clkbuf_2_2_0 (158.7,103.1) -> clkbuf_3_4_0 (172.2,76.4) -> clkbuf_5_16_0 (158.7,51.8) -> 50-um leaf net (49.9 fF, slew 144 ps, wire 45.4 ps) -> clkbuf_leaf_267 at the S face",
+  "macro_tree": "SRAM clk pins on a separate 3-buffer tree + 7 delay buffers along the S approach (247 ps TT)"
+ },
+ "cause": "geometry 2 (5029dfd06) abutted the SRAMs into one centred stack: obstruction-aware H-tree root moved above the stack, the S-band pin flops beside the clock pin got the longest return branch",
+ "fix": "clock_split_km.tcl K 12 regional local roots (pin-flop ring -> 12 arcs, balanced top tree); kit g2km, same RTL/outline/macros/pins"
+}

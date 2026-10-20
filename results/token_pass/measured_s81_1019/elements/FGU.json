@@ -1,0 +1,63 @@
+{
+ "cls": "FGU",
+ "written": "2026-10-19 21:45 PT",
+ "agent_branch": "claude/toksim-s81b-fgu-1019@4cd48a7ab",
+ "ops": [
+  {
+   "op": "ffn.experts_gu",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": [
+    1238.9,
+    1239.8,
+    1852.8,
+    1856.9,
+    1857.9,
+    2470.7
+   ],
+   "cycles": 3680,
+   "grade": "measured-release-RTL",
+   "definition": "spine go of the op's first phase -> last return word at the frame root (RET), all of the op's phases of the frame back to back at the minimum passing uniform go period; die wire / hub return NOT included (as FIELD wq_b)",
+   "shape": "frame u_f_0L00 (slice u_s_0S, L0 rank 0): 6 activated experts (61,69,112,170,299,357) x w1/w3 = 24 phases (4+1 rows), 60 rows, K 5120, FP4 ROM images from xs_place.compile_frame (82-phase L0 field, measured_class calendars, 0 faults)",
+   "bit_exact": true,
+   "golden": "per phase, unchanged xs_place check: golden segment-tree node values bit-exact (hdc_golden_v41 on the L0 rank-0 fixture of the released checkpoint), each row's segments covered once, cycle-exact compiled calendar, fixture BF16 tie of every row; swap/shift mutants of p20 FAIL",
+   "rtl": {
+    "module": "col_h9_l4_nx_b frame (u_f_0L00: 10 q pairs ot_v41_rom_elem_q_qxpq_w10 + frame return tree, LK5 landing ot_s81_land/dsfd_cfifo_crs4) driven by ot_v41_spine_pq_static_w17w10 + dsfd_pq_lx",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "78/78 simulated RTL files blob-identical to 19bf4121e (results/rtl/toksim_s81b_fgu_1019/rtl_blob_vs_release_19bf4121e.txt); only the new bench differs",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_dv/layer_prog/qf_producer/tb_toksim_fgu_seq.sv (+RETIRE) + toksim_fgu_check.py seq, @claude/toksim-s81b-fgu-1019",
+   "evidence": "results/rtl/toksim_s81b_fgu_1019/job4/sweep.txt 'seq_experts_gu_P145_R1 ... PASS ... rows 60 fixture_rows 60 go0 63 last_ret 3743 span 3680'; P144 FAIL (frame FAULT status 11, job5/sweep.txt)",
+   "job": "ot-run ot-epyc9 oth-ubuntu-1137230-1792470786 (job 4) + oth-ubuntu-1415027-1792471061 (job 5), Verilator 5.050, done",
+   "edges_owed": "xg successor +1 on xw (x into frames; +1/instance if bound, not in release). CAP EDLY24/WL3DLY16 is after the frame root (outside). CFG7 PINREG +4 already in bench (XDLY 4). Die wire tail owed (old: 140/phase + 28 tiles; back to back only one round trip + hub return exposed)",
+   "note": "3680 = 23 x 145 + 345 (single phase go->last RET 346/345). Uniform period: upper bound for alternating 4/1-row phases. One frame only (others assumed same 5-rows/matrix placement). Old value includes die wire; new excludes it. Back to back with shared_gu on the same frame: 4314 (28 phases, P147).",
+   "cycles_with_shared_gu": 4314
+  },
+  {
+   "op": "ffn.shared_gu",
+   "dag_cls": "field",
+   "n_crit": 0,
+   "old_cycles_per_instance": [
+    634.0
+   ],
+   "cycles": 798,
+   "grade": "measured-release-RTL",
+   "definition": "spine go of the op's first phase -> last return word at the frame root (RET), all of the op's phases of the frame back to back at the minimum passing uniform go period; die wire / hub return NOT included (as FIELD wq_b)",
+   "shape": "frame u_f_0L00: shared w1/w3 = 4 phases (4+1 rows), 10 rows, K 5120, FP8 ROM images",
+   "bit_exact": true,
+   "golden": "per phase, unchanged xs_place check: golden segment-tree node values bit-exact (hdc_golden_v41 on the L0 rank-0 fixture of the released checkpoint), each row's segments covered once, cycle-exact compiled calendar, fixture BF16 tie of every row; swap/shift mutants of p20 FAIL",
+   "rtl": {
+    "module": "col_h9_l4_nx_b frame (u_f_0L00: 10 q pairs ot_v41_rom_elem_q_qxpq_w10 + frame return tree, LK5 landing ot_s81_land/dsfd_cfifo_crs4) driven by ot_v41_spine_pq_static_w17w10 + dsfd_pq_lx",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e",
+    "blob": "78/78 simulated RTL files blob-identical to 19bf4121e (results/rtl/toksim_s81b_fgu_1019/rtl_blob_vs_release_19bf4121e.txt); only the new bench differs",
+    "in_release_source": true
+   },
+   "bench": "tools/s81_dv/layer_prog/qf_producer/tb_toksim_fgu_seq.sv (+RETIRE) + toksim_fgu_check.py seq, @claude/toksim-s81b-fgu-1019",
+   "evidence": "results/rtl/toksim_s81b_fgu_1019/job5/sweep.txt 'seq_shared_gu_P146_R1 ... PASS ... span 798'; P145 FAIL (FAULT) job4/sweep.txt",
+   "job": "ot-run ot-epyc9 oth-ubuntu-1415027-1792471061 (job 5), Verilator 5.050, done",
+   "edges_owed": "xg successor +1 on xw (x into frames; +1/instance if bound, not in release). CAP EDLY24/WL3DLY16 is after the frame root (outside). CFG7 PINREG +4 already in bench (XDLY 4). Die wire tail owed (old: 140/phase + 28 tiles; back to back only one round trip + hub return exposed)",
+   "note": "798 = 3 x 146 + 360. It runs on the SAME frames as experts_gu (field phases 16-19 then 20-43), so it is NOT off the critical path on this die: shared+experts back to back = 4314 (P147 PASS, P145 FAIL; 146 not run) = experts 3680 + 634. Fold either experts 3680 + shared 634 serial, or one 4314 node."
+  }
+ ]
+}

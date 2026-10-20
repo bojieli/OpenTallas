@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hbfd_pad_r17x115",
+ "enable": false,
+ "reason": "RTL registers every pin itself: input i -> face0 (1 load), output o <- capture flops; reset rs -> 2-stage landing (rs_s1 + kept hbfd_pad_rst_land copies). A flow pin register would add an edge the exact-N pad contract (N=115) forbids."
+}

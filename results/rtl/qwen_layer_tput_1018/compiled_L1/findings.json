@@ -1,6 +1,26 @@
 {
  "findings": [
   {
+   "id": "SEAM_AGE_SOURCE",
+   "severity": "INFO",
+   "owner": "QW-L1SEAM",
+   "what": "5 compute seam buses: the die table age (relay hops / exporter age_fields) differs from the as-built lane cycles; compiled with record_bundles.seam_stages (the strict-bind DIE_PARAM_AUDIT / RECORD_BUNDLE_AUDIT source)",
+   "lanes": [
+    "d2d_rom.kv_x3_slot -> native59.kv_x3_slot: table 2 -> seam 3",
+    "d2d_rom.rx_payload -> native59.native_rx_payload: table 1 -> seam 2",
+    "native59.x3 -> d2d_rom.x3: table 1 -> seam 2",
+    "native59.x3_generation -> d2d_rom.x3_generation: table 1 -> seam 2",
+    "native59.x3_identity -> d2d_rom.x3_identity: table 1 -> seam 2"
+   ]
+  },
+  {
+   "id": "TXDP K",
+   "severity": "FAIL",
+   "owner": "Q-LINK / die leads",
+   "what": "qkd_d2d_static binds TXDP [22, 4, 3, 3] (ports 0..3; 1d58421b9:rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh (image_parameter)); the die stages need [24, 4, 3, 3]",
+   "fix": "commit this pass's d2d/d2d_cal_image.svh (D2D_TXDP_K) as the production image and re-GEN the die"
+  },
+  {
    "id": "L0_WINDOW",
    "severity": "INFO",
    "owner": "Q-LINK + KV",
@@ -62,19 +82,22 @@
      "bus": "d2d_rom.native_tx_slot -> native59.tx_slot",
      "stages": 1,
      "age": 2,
-     "width": 1
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "d2d_rom.native_tx_slot_kind -> native59.tx_slot_kind",
      "stages": 1,
      "age": 2,
-     "width": 4
+     "width": 4,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "d2d_rom.native_tx_slot_beat -> native59.tx_slot_beat",
      "stages": 1,
      "age": 2,
-     "width": 5
+     "width": 5,
+     "age_source": "record_bundles.seam_stages"
     }
    ],
    "age": 2,
@@ -90,47 +113,36 @@
      "bus": "d2d_rom.native_rx_v -> native59.native_rx_v",
      "stages": 1,
      "age": 2,
-     "width": 1
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "d2d_rom.native_rx_slot -> native59.rx_slot",
      "stages": 1,
      "age": 2,
-     "width": 1
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "d2d_rom.native_rx_slot_kind -> native59.rx_slot_kind",
      "stages": 1,
      "age": 2,
-     "width": 4
+     "width": 4,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "d2d_rom.native_rx_slot_beat -> native59.rx_slot_beat",
      "stages": 1,
      "age": 2,
-     "width": 5
+     "width": 5,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "d2d_rom.rx_payload -> native59.native_rx_payload",
      "stages": 2,
      "age": 2,
-     "width": 548
-    }
-   ],
-   "age": 2,
-   "consistent": true,
-   "ages": [
-    2
-   ]
-  },
-  "C.x3_slot": {
-   "design": "qwen_compute",
-   "members": [
-    {
-     "bus": "d2d_rom.kv_x3_slot -> native59.kv_x3_slot",
-     "stages": 3,
-     "age": 2,
-     "width": 1
+     "width": 548,
+     "age_source": "record_bundles.seam_stages"
     }
    ],
    "age": 2,
@@ -146,13 +158,15 @@
      "bus": "native59.native_tx_v -> d2d_rom.native_tx_v",
      "stages": 1,
      "age": 2,
-     "width": 1
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "native59.native_tx_payload -> d2d_rom.native_tx_payload",
      "stages": 1,
      "age": 2,
-     "width": 548
+     "width": 548,
+     "age_source": "record_bundles.seam_stages"
     }
    ],
    "age": 2,
@@ -168,25 +182,45 @@
      "bus": "native59.x3 -> d2d_rom.x3",
      "stages": 2,
      "age": 2,
-     "width": 524
+     "width": 524,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "native59.x3_identity -> d2d_rom.x3_identity",
      "stages": 2,
      "age": 2,
-     "width": 59
+     "width": 59,
+     "age_source": "record_bundles.seam_stages"
     },
     {
      "bus": "native59.x3_generation -> d2d_rom.x3_generation",
      "stages": 2,
      "age": 2,
-     "width": 2
+     "width": 2,
+     "age_source": "record_bundles.seam_stages"
     }
    ],
    "age": 2,
    "consistent": true,
    "ages": [
     2
+   ]
+  },
+  "C.x3_slot": {
+   "design": "qwen_compute",
+   "members": [
+    {
+     "bus": "d2d_rom.kv_x3_slot -> native59.kv_x3_slot",
+     "stages": 3,
+     "age": 3,
+     "width": 1,
+     "age_source": "record_bundles.seam_stages"
+    }
+   ],
+   "age": 3,
+   "consistent": true,
+   "ages": [
+    3
    ]
   },
   "K.rx_record": {

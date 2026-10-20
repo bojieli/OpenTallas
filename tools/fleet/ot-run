@@ -80,6 +80,14 @@ die case waited ~90 min on the epyc8 DIE CAP):
   --dir lacks the scratch, the die job SPILLS (die lanes up to OT_RUN_SPILL_MAX_DIE_GB 400; tile lanes 40).
   INCREMENTAL SPILL: only directories/files the spill host lacks or holds older travel (manifests of both sides).
   Host side (ot-heavy-reconcile v10): growth charged capped at GROWTH_CAP_FRAC (0.10) x RAM.
+LOAD SPILL (v11, REFILL-0325 2026-10-20: at 03:24 ot-epyc6 ran 75 units at 289-313/128 while ot-epyc5 sat at 44/128
+admitting 349 GB: every lane --dir (s81-l20tok, s81lepenh2, s81-xr3, kv-params*, s81-topk7) existed only on ot-epyc6, so
+choose() saw ONE qualifying host and SPILL only fired when that host lacked MEMORY): a job of >= LOAD_SPILL_MIN_THREADS
+(4) threads whose best --dir host would run at > LOAD_SPILL_RATIO (1.25) x cores after it, while another host admits it
+NOW at <= LOAD_SPILL_DST (0.85) x cores and >= LOAD_SPILL_GAP (0.5) lower, is SPILLED there the same way (copy, run,
+copy back).  Nothing is held: when no such host exists or the lane cannot spill (paths outside the lane, size, symlinks)
+the job runs on the loaded host as before; a lane that cannot spill is remembered for LOAD_SPILL_NEG_S (1 h) so a burst
+does not rescan it.  OT_RUN_NO_LOAD_SPILL=1 (or --no-spill / --hosts) disables it.
 SIGNAL SENDER (v7, FLEET-143 2026-10-18: two agent `pkill -f 'ot-run --mem 24'`-style kills at 23:58 and 00:22 PDT
 cancelled ~30 gates of OTHER lanes, which reported "ot-run exit 143"): every SIGTERM/SIGINT/SIGHUP is taken with
 sigtimedwait, so the message names the SENDER (pid + command line), and one line goes to ~/.local/state/ot-run/signals.log.
@@ -90,14 +98,16 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["ot-epyc4", "ot-epyc5", "ot-epyc6", "ot-epyc7", "ot-epyc8", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["ot-epyc5", "ot-epyc6", "ot-epyc7", "ot-epyc9", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
 # "smalldisk" (FLEET-NEW2 2026-10-19: ot-epyc8 has only 2x 1 TB NVMe in RAID1, ~820 GB): die-level jobs (huge die-chain
 # scratch) skip it while another host qualifies; other work places normally.  ot-epyc9 (2x EPYC 7543, Zen 3) joins as
 # "throughput" when it is provisioned.
-HOST_ROLE = {"ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput"}
+HOST_ROLE = {"ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
+# FLEET-GOLD 2026-10-19: ot-gold1/2 (Cherry 1037247/1037249, Chicago 2x Xeon Gold 6330 Ice Lake, AVX-512 F present -> NOT in
+# NO_AVX512) pre-set "normal" (= no special role); NOT in HOSTS until lanes/fleet-gold/bringup_gold.sh registers them.
 # ot-epyc9 (Cherry 1036669, Chicago 2x EPYC 7543, Zen 3): role pre-set; it is NOT in HOSTS until it answers ssh and is
 # provisioned (claude-takeover-20261007/lanes/fleet-new2/bringup_epyc9.sh adds it).
 # DIE CAP (FLEET-NEW2 2026-10-19, coordinator): a host listed here runs at most N die-level jobs at a time (ot-epyc8: tile
@@ -129,8 +139,12 @@ THREADS, SMALL_CORES, SMALL_THREADS = 16, 48, 8
 REQUEUE_S = int(os.environ.get("OT_RUN_REQUEUE_S", "120"))   # v6 REBALANCE: a queued (unstarted) waiter is re-placed after
                                    # this long (v9: 120 s, was 300; every re-place re-reads HOSTS from this file)
 SPILL_MAX_GB = int(os.environ.get("OT_RUN_SPILL_MAX_GB", "40"))   # v8 SPILL
+LOAD_SPILL_RATIO = float(os.environ.get("OT_RUN_LOAD_SPILL_RATIO", "1.25"))   # v11 LOAD SPILL: source projected load / cores
+LOAD_SPILL_DST, LOAD_SPILL_GAP, LOAD_SPILL_MIN_THREADS = 0.85, 0.5, 4
+LOAD_SPILL_NEG_S = 3600
+LOAD_SPILL_NEG = os.path.expanduser("~/.local/state/ot-run/loadspill_no")
 SPILL_MAX_DIE_GB = int(os.environ.get("OT_RUN_SPILL_MAX_DIE_GB", "400"))   # v10: die lanes spill too (incremental copy)
-DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b)")
+DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|mu-die|die[_-]case|kvs14r-|dv2f\d)")  # COORD 10-19: MU die cases (mu-die-*, die-case, kvs14r-*, dv2f*) are die jobs (FLEET-DISK gap)
 
 
 CONF_NAMES = ("HOSTS", "HOST_ROLE", "HOST_MAX_DIE", "NO_AVX512")
@@ -309,6 +323,9 @@ def choose_selftest():
         ("die job: never the smalldisk host while another admits", {"ot-epyc5": row(900, 100), "ot-epyc8": row(1500, 0)}, 48, 16, "ot-epyc5", True),
         ("die job: smalldisk host when it is the only one", {"ot-epyc8": row(1500, 0)}, 48, 16, "ot-epyc8", True),
         ("tile gate: the smalldisk host places normally", {"ot-epyc5": row(900, 100), "ot-epyc8": row(1500, 0)}, 48, 16, "ot-epyc8"),
+        # v11 (REFILL-0325 2026-10-20, the 03:24 fleet): CPU-heavy job -> lowest load/cores among the hosts that admit it
+        ("CPU-heavy job: the 44/128 host over the 313/128 one", {"ot-epyc5": row(349, 44), "ot-epyc6": row(306, 313)}, 64, 16, "ot-epyc5"),
+        ("1-thread 48 GB job: still the idle-CPU host when both have RAM", {"ot-epyc5": row(349, 44), "ot-epyc6": row(306, 313)}, 48, 1, "ot-epyc5"),
     ]
     cases = [c if len(c) == 6 else c + (False,) for c in cases]
     bad = [f"{n}: got {choose(r, m, t, dj)[0]}, want {w}" for n, r, m, t, w, dj in cases if choose(r, m, t, dj)[0] != w]
@@ -350,7 +367,13 @@ def choose_selftest():
     if not okc:
         print("FAIL disk admission: a die job is placed on a host without scratch (or refused one that has it)")
         bad.append("disk")
-    print(f"ot-run choose selftest: {'FAIL' if bad else 'PASS'} ({len(cases) + 2} cases)")
+    # v11 LOAD SPILL trigger
+    okl = load_spill_wanted(row(300, 289), 16) and not load_spill_wanted(row(300, 289), 2) \
+        and not load_spill_wanted(row(300, 100), 16) and ratio(row(349, 44), 16) <= LOAD_SPILL_DST
+    if not okl:
+        print("FAIL load spill: trigger wrong (want: >=4 threads and > 1.25 x cores)")
+        bad.append("loadspill")
+    print(f"ot-run choose selftest: {'FAIL' if bad else 'PASS'} ({len(cases) + 3} cases)")
     sys.stdout.flush()
     return 1 if bad else 0
 
@@ -644,6 +667,23 @@ def main():
             first = False
             continue
         best, queue = choose(ok, mem, threads, die=die)
+        if spill and d and not pick and not queue and best and load_spill_wanted(ok[best], threads):   # v11 LOAD SPILL
+            src_r = ratio(ok[best], threads)
+            root = spill_root(d)
+            if not load_spill_neg(root):
+                plan, why, permanent = spill_plan(best, d, cmd, mem, threads, die, disk, held, say,
+                                                  max_ratio=min(LOAD_SPILL_DST, src_r - LOAD_SPILL_GAP))
+                if plan:
+                    say(f"ot-run: LOAD SPILL: {best} would run at {src_r:.2f} x cores; moving to {plan[0]}")
+                    left = None if max_wait is None else max(1, int(max_wait - (time.time() - t0)))
+                    rc = spill_run(best, *plan, mem, cmd, d, left, say)
+                    if rc is not None:
+                        sys.exit(rc)
+                else:
+                    if first:
+                        say(f"ot-run: LOAD SPILL not possible ({why}); running on {best} at {src_r:.2f} x cores")
+                    if permanent:
+                        load_spill_neg(root, why)
         if spill and d and not pick and queue:          # v8 SPILL: nobody with --dir admits it now
             plan, why, permanent = spill_plan(best, d, cmd, mem, threads, die, disk, held, say)
             if plan:
@@ -712,6 +752,28 @@ NO_AVX512 = {"ot-epyc7", "ot-epyc9"}                         # Zen 3: a -march=n
 SCRATCH_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
 
 
+def load_spill_wanted(r, threads):
+    """v11: a CPU-heavy job whose best --dir host would be past LOAD_SPILL_RATIO x cores"""
+    return (not os.environ.get("OT_RUN_NO_LOAD_SPILL") and threads >= LOAD_SPILL_MIN_THREADS
+            and ratio(r, threads) > LOAD_SPILL_RATIO)
+
+
+def load_spill_neg(root, why=None):
+    """v11 negative cache: why=None -> True when root was found unspillable in the last LOAD_SPILL_NEG_S; else record it"""
+    f = os.path.join(LOAD_SPILL_NEG, re.sub(r"[^A-Za-z0-9_.+-]", "_", root.strip("/")))
+    if why is None:
+        try:
+            return time.time() - os.path.getmtime(f) < LOAD_SPILL_NEG_S
+        except OSError:
+            return False
+    try:
+        os.makedirs(LOAD_SPILL_NEG, exist_ok=True)
+        open(f, "w").write(why + "\n")
+    except OSError:
+        pass
+    return True
+
+
 def spill_root(d):
     """the unit a spill copies: the lane directory under a scratch root's claude/, else --dir itself"""
     d = os.path.normpath(d)
@@ -766,7 +828,7 @@ def spill_scan(src, roots):
     return missing, int(lines[0]) / 1e9, (lines[1] if len(lines) > 1 else ""), bool(tail.strip()), lanes
 
 
-def spill_plan(src, d, cmd, mem, threads, die, disk, held, say):
+def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
     """-> ((dst, roots, size_gb), "", False) or (None, reason, permanent).  The roots are --dir's lane root plus every
     scratch lane the command or the lane's scripts name (closed under that relation, <= 4 lanes)"""
     root = spill_root(d)
@@ -801,7 +863,8 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say):
     with cf.ThreadPoolExecutor(len(cands)) as ex:
         res = dict(ex.map(lambda h: (h, [probe(h, b)[1] for b in bases]), cands))
     ok = {h: rs[0] for h, rs in res.items() if all(r and not r.get("error") for r in rs) and rs[0].get("ncpu")
-          and min(r["disk_gb"] for r in rs) >= disk + size_gb and physically_capable(rs[0], mem)}
+          and min(r["disk_gb"] for r in rs) >= disk + size_gb and physically_capable(rs[0], mem)
+          and (max_ratio is None or ratio(rs[0], threads) <= max_ratio)}
     dst, queue = choose(drop_low_disk(ok, die, disk + size_gb), mem, threads, die)
     if not dst or queue:
         return None, "no spill host admits it now", False

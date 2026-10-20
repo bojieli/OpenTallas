@@ -664,6 +664,10 @@ def load_pads(obj):
     return pads
 
 
+FUNC_OPENS_CONTRACTS = ('relay_zero_tail_contract', 'pvw_residual_contract', 'misc_unused_contract',
+                        'open_tail_contract', 'landing_tie_contract')
+
+
 def validate_derived_pad_contracts(doc, die_v, mparams=None, idx=None, root=ROOT):
     """Keep generated role exceptions bound when the actual CLI consumes them.
 
@@ -671,8 +675,7 @@ def validate_derived_pad_contracts(doc, die_v, mparams=None, idx=None, root=ROOT
     additionally bind the exact die and source bytes; external parameter changes
     require re-derivation into the inline, hashed bound netlist.
     """
-    names = ('source_contract', 'static_head_unused_contract', 'pvw_padding_contract', 'relay_zero_tail_contract',
-             'pvw_residual_contract', 'misc_unused_contract', 'open_tail_contract', 'landing_tie_contract')
+    names = ('source_contract', 'static_head_unused_contract', 'pvw_padding_contract') + FUNC_OPENS_CONTRACTS
     present = [name for name in names if name in doc]
     if not present:
         return
@@ -703,9 +706,32 @@ def validate_derived_pad_contracts(doc, die_v, mparams=None, idx=None, root=ROOT
             sources[rel] = sha
     if idx is None:
         return
+    _, _, _, insts = parse_die(str(die_v))
+    # ROOT-BINDROLES 10-19 (owner: no ties/straps, no dangling functional ports): a KV-FUNC-OPENS role contract
+    # admits UNREAD / OPEN OUTPUT bits of exact die instances only.  It can never excuse an input (a pad on an input
+    # would turn a real tie-low into a pad bit), a master-wide entry, or an instance the die does not hold with that
+    # master.  Ties, straps and unconnected inputs keep their own unchanged rules.
+    if any(name in present for name in FUNC_OPENS_CONTRACTS):
+        die_master = {inst: m for m, inst, *_ in insts}
+        for mst, ent in (doc.get('pads') or {}).items():
+            if isinstance(ent, dict) and 'KV-FUNC-OPENS' in str(ent.get('reason', '')):
+                raise ValueError('KV-FUNC-OPENS role pads must be per instance, not master-wide: ' + mst)
+        for inst, ent in doc.get('instances', {}).items():
+            if not isinstance(ent, dict) or 'KV-FUNC-OPENS' not in str(ent.get('reason', '')):
+                continue
+            if die_master.get(inst) != ent.get('master'):
+                raise ValueError(f'KV-FUNC-OPENS role pad names an instance/master not on the die: {inst}')
+            mod = idx.get(ent['master'])
+            # the provers EXTEND existing reviewed instance entries (source_contract / pvw_padding literal-zero input
+            # permissions keep their own rule); an entry that only a KV-FUNC-OPENS contract originated is outputs-only
+            prior = [s for s in re.split(r'\s*(?:\||;)\s*', str(ent.get('reason', '')))
+                     if s.strip() and not s.strip().startswith('KV-FUNC-OPENS')]
+            for pn in ent.get('ports', {}):
+                d = mod.ports.get(pn, ('',))[0] if mod is not None else ''
+                if d != 'output' and not (prior and d == 'input'):
+                    raise ValueError(f'KV-FUNC-OPENS role pad on a non-output port: {inst}.{pn}')
     # The RTL index may prefer a caller-supplied file over the hashed repository
     # copy. Check the actual selected relay and its pinned descendants too.
-    _, _, _, insts = parse_die(str(die_v))
     relay_masters = {m for m, *_ in insts
                      if re.fullmatch(r'qkd_(?:rlys|rlysh0?|landsh0?)_\d+|qkd_astk_rly_\d+_fl', m)}
     expected = {}

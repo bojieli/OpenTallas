@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81dvbk_g2-g2km2-1b13d46c2 bench bench_dsdv_bk_sel_mut_lateodd host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/s81dvbk_g2-g2km2-1b13d46c2 log cl/bench_dsdv_bk_sel_mut_lateodd.a1b1.log captured 2026-10-19T18:24:30-07:00
+# fail_regex '^DSDV_BK_SEL FAIL mut=3$'
+sel m3 odd: RESULT PASS segments 32 out_beats 684 replays 6 errors 0 tail_minus_ref max 87987 mean 4947 ref_holds 16 | WRAP_SUMMARY unit 0 thru 0 mir 0 lmap 0: through beats 23159, ingress words 67752, drain CTL 23162, egress words 729, errors 133
+DSDV_BK_SEL FAIL mut=3

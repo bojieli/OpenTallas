@@ -1,0 +1,22 @@
+DV_LOWER PASS 13/13 mutant=0 r=0x3ffa8944 psums=160 commands=25
+rc=0
+DV_LOWER FAIL 1/13 mutant=rso1 r=0x3ffa8944 psums=160 commands=25
+    slice 0: RB words ['0x4035818c'] want [0x3ffa8944]
+    slice 1: RB words ['0x4035818c'] want [0x3ffa8944]
+    slice 2: RB words ['0x4035818c'] want [0x3ffa8944]
+    slice 3: RB words ['0x4035818c'] want [0x3ffa8944]
+    slice 4: RB words ['0x4035818c'] want [0x3ffa8944]
+    slice 5: RB words ['0x4035818c'] want [0x3ffa8944]
+    slice 6: RB words ['0x4035818c'] want [0x3ffa8944]
+    slice 7: RB words ['0x4035818c'] want [0x3ffa8944]
+rc=1
+DV_LOWER FAIL 1/13 mutant=broadcast r=0x3ffa8944 psums=104 commands=14
+    S1ST fault bits 1000100 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000100 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000100 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000100 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000100 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1000100 (any,su,vm,stn,sc,stm,port)
+    S7ST fault bits 1000100 (any,su,vm,stn,sc,stm,port)
+    slice 0: RB words [] want [0x3ffa8944]
+rc=1

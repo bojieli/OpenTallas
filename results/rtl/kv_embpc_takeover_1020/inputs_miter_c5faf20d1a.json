@@ -1,0 +1,14 @@
+{
+ "name": "codex-emb-cal-native32-miter-c5faf20d1a",
+ "mode": "miter",
+ "sources": {
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv": "e1a3bbdd455fb984a96df8463844e351613e5bbb6f6e3c417766097c5d17b211",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv": "b4031ee0138af2cf4567626e185d81ded805bb1ba274ee03763a74232dc95a49",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv": "7b11153b99d0c8d0e864126476c1b2dfe088cb1a6a4052ff3583d5fc1e33d354",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join_fan32.sv": "c66d85face0804d2bfa5141b169d4f86efdbdaf36c1099d3da72f6a6ae518031",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "tools/qwen_kv_die/attn_rv_1019/fanout_census.py": "c71d865b2385177144d2ba83880d74ea684cffc4613cf6acf6e602531451971c",
+  "results/rtl/kv_embpc_takeover_1020/tb_cal_pipe_native32.sv": "f341acf947d5106bc904bcf294b604cb66a10b2490f359211102927a46852db0",
+  "ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+ }
+}

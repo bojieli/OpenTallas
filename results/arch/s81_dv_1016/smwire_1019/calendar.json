@@ -1,0 +1,283 @@
+{
+ "schema": "opentallas.s81_smwire_cal.v1",
+ "price": {
+  "W": {
+   "route": 2,
+   "injector": "s_3S",
+   "lane_age": 4,
+   "tier": "N",
+   "group": 1,
+   "injector_or_partner": 22,
+   "v_rung_age": 21,
+   "line_far_extra": 45,
+   "tail_last_write_to_entry_window_end": 50
+  },
+  "E": {
+   "route": 1,
+   "injector": "s_4S",
+   "lane_age": 4,
+   "tier": "S",
+   "group": 0,
+   "injector_or_partner": 16,
+   "line_far_extra": 48,
+   "tail_last_write_to_entry_window_end": 55
+  }
+ },
+ "schedule": {
+  "W": {
+   "heads": {
+    "12": {
+     "sid": 0,
+     "depth": 3,
+     "read": 95,
+     "retire": 135,
+     "first": 0,
+     "last": 92,
+     "win": [
+      118,
+      149
+     ]
+    },
+    "13": {
+     "sid": 1,
+     "depth": 2,
+     "read": 132,
+     "retire": 172,
+     "first": 0,
+     "last": 125,
+     "win": [
+      150,
+      181
+     ]
+    },
+    "15": {
+     "sid": 2,
+     "depth": 2,
+     "read": 164,
+     "retire": 204,
+     "first": 0,
+     "last": 158,
+     "win": [
+      182,
+      213
+     ]
+    },
+    "14": {
+     "sid": 3,
+     "depth": 1,
+     "read": 201,
+     "retire": 241,
+     "first": 0,
+     "last": 191,
+     "win": [
+      214,
+      245
+     ]
+    },
+    "8": {
+     "sid": 4,
+     "depth": 1,
+     "read": 233,
+     "retire": 273,
+     "first": 0,
+     "last": 224,
+     "win": [
+      246,
+      277
+     ]
+    },
+    "9": {
+     "sid": 5,
+     "depth": 0,
+     "read": 270,
+     "retire": 310,
+     "first": 0,
+     "last": 257,
+     "win": [
+      278,
+      309
+     ]
+    },
+    "11": {
+     "sid": 6,
+     "depth": 2,
+     "read": 292,
+     "retire": 332,
+     "first": 0,
+     "last": 290,
+     "win": [
+      310,
+      341
+     ]
+    },
+    "10": {
+     "sid": 7,
+     "depth": 1,
+     "read": 329,
+     "retire": 369,
+     "first": 0,
+     "last": 323,
+     "win": [
+      342,
+      373
+     ]
+    }
+   },
+   "gw_first": 118,
+   "gw_last": 373,
+   "order": [
+    12,
+    13,
+    15,
+    14,
+    8,
+    9,
+    11,
+    10
+   ]
+  },
+  "E": {
+   "heads": {
+    "2": {
+     "sid": 8,
+     "depth": 2,
+     "read": 105,
+     "retire": 145,
+     "first": 0,
+     "last": 92,
+     "win": [
+      123,
+      154
+     ]
+    },
+    "3": {
+     "sid": 9,
+     "depth": 1,
+     "read": 142,
+     "retire": 182,
+     "first": 0,
+     "last": 125,
+     "win": [
+      155,
+      186
+     ]
+    },
+    "0": {
+     "sid": 10,
+     "depth": 1,
+     "read": 174,
+     "retire": 214,
+     "first": 0,
+     "last": 158,
+     "win": [
+      187,
+      218
+     ]
+    },
+    "4": {
+     "sid": 11,
+     "depth": 0,
+     "read": 211,
+     "retire": 251,
+     "first": 0,
+     "last": 191,
+     "win": [
+      219,
+      250
+     ]
+    },
+    "1": {
+     "sid": 12,
+     "depth": 2,
+     "read": 233,
+     "retire": 273,
+     "first": 0,
+     "last": 224,
+     "win": [
+      251,
+      282
+     ]
+    },
+    "5": {
+     "sid": 13,
+     "depth": 1,
+     "read": 270,
+     "retire": 310,
+     "first": 0,
+     "last": 257,
+     "win": [
+      283,
+      314
+     ]
+    },
+    "6": {
+     "sid": 14,
+     "depth": 3,
+     "read": 292,
+     "retire": 332,
+     "first": 0,
+     "last": 290,
+     "win": [
+      315,
+      346
+     ]
+    },
+    "7": {
+     "sid": 15,
+     "depth": 2,
+     "read": 329,
+     "retire": 369,
+     "first": 0,
+     "last": 323,
+     "win": [
+      347,
+      378
+     ]
+    }
+   },
+   "gw_first": 123,
+   "gw_last": 378,
+   "order": [
+    2,
+    3,
+    0,
+    4,
+    1,
+    5,
+    6,
+    7
+   ]
+  }
+ },
+ "meas": {
+  "line": 16,
+  "v": 22,
+  "bench_lane_stations": 2,
+  "bench_K": 2
+ },
+ "wo_a_group": {
+  "0": 0,
+  "1": 1,
+  "2": 0,
+  "3": 1,
+  "4": 0,
+  "5": 1,
+  "6": 0,
+  "7": 1,
+  "8": 0,
+  "9": 1,
+  "10": 0,
+  "11": 1,
+  "12": 0,
+  "13": 1,
+  "14": 0,
+  "15": 1
+ },
+ "priced_edges": {
+  "note": "edges added to the layer calendar by the SO gather (static; MU.S81.CAL.1). Measured tb_smwire_e2e: target beat g_v -> XS gather port 16 (route 1 injector), 18 (next stop), 22 (route 2 V partner, direct rung); head one tree hop below the entry +5. Die: pv lane age 4 (= bench), col-3 rung via G-unit 21 (vs 2 in the bench), farthest line stop +45 (N) / +48 (S).",
+  "q_stream_sot_words": 3,
+  "E_tail_last_so_write_to_last_xs_arrival": 115,
+  "W_tail_last_so_write_to_last_xs_arrival": 132,
+  "end_delay": "entry END now waits for the slowest head retire (booked retire = read + 40): ~ +50 edges after the last SO write per half; the next job descriptor must not issue before it (static)"
+ }
+}

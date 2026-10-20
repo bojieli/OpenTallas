@@ -67,4 +67,15 @@ endmodule
 module dsfd_dvrlyh_70_SN (input wire ck, input wire rs, input wire [69:0] i, output wire [69:0] o, output wire ck_o);
     ot_dvrly_st #(.W(70), .HC(1)) u_st (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o(ck_o));
 endmodule
+// MU-S81/DIE (10-19): vertical 512 / 562 stations for the copy-B lane pair of the AB die variant (s_0N -> lk_WN2/3 along
+// the PHY faces).  Same ot_dvrly_st HC 1 body as every master above; NO closed physical view yet (stand-in relays).
+module dsfd_dvrlyh_512_NS (input wire ck, input wire rs, input wire [511:0] i, output wire [511:0] o, output wire ck_o);
+    ot_dvrly_st #(.W(512), .HC(1)) u_st (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o(ck_o));
+endmodule
+module dsfd_dvrlyh_512_SN (input wire ck, input wire rs, input wire [511:0] i, output wire [511:0] o, output wire ck_o);
+    ot_dvrly_st #(.W(512), .HC(1)) u_st (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o(ck_o));
+endmodule
+module dsfd_dvrlyh_562_NS (input wire ck, input wire rs, input wire [561:0] i, output wire [561:0] o, output wire ck_o);
+    ot_dvrly_st #(.W(562), .HC(1)) u_st (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o(ck_o));
+endmodule
 `default_nettype wire

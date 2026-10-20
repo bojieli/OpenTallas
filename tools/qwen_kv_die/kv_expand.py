@@ -44,6 +44,8 @@ VIEWS = dict(
     ot_qkh_head_nb_native=f'{RT}/qkh_r3_nb_1014/views/ot_qkh_head_nb_native',
     ot_qkh_lane8=f'{RT}/ot_qkh_lane8_m5/views/ot_qkh_lane8',
     ot_qkh_ktree=f'{RT}/ot_qkh_ktree_m5/views/ot_qkh_ktree',
+    # KV-DCAL2 10-19 (OT_KV_KPV_LK=1 heads): the per-lane KPV lockstep K-tree (kit physical/ref_tile/ot_qkh_ktree_lk)
+    ot_qkh_ktree_lk=f'{RT}/ot_qkh_ktree_lk/views/ot_qkh_ktree_lk',
     ot_qkh_head_score4_native=f'{RT}/qkh_r4_score4_1014/views/ot_qkh_head_score4_native',
     qkd_ectl_a_tp8_direct=f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_direct',
     # Q-ELEM 2026-10-15 22:34 (G3S2 composition: HXK5 silently wrong 512/512, HXK13 exact 53/53): OT_KV_ECTL_H13=1 binds
@@ -89,6 +91,7 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
            ot_qkh_head_stin_native=f'{SR}/ot_qkh_head_native.sv', ot_qkh_head_stk_native=f'{SR}/ot_qkh_head_native_r3.sv',
            ot_qkh_head_nb_native=f'{SR}/ot_qkh_head_native_r3.sv', ot_qkh_lane8='rtl/hdc/nearhbm/ot_qkh_subtiles.sv',
            ot_qkh_ktree='rtl/hdc/nearhbm/ot_qkh_subtiles.sv',
+           ot_qkh_ktree_lk='rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv',
            **{f'qkd_ectl_{x}_tp8_direct': f'{SR}/qkd_ectl_native_direct_tp8.sv' for x in 'abc'},
            qkd_ectl_a_tp8_epoch_direct=f'{SR}/qkd_ectl_a_tp8_epoch_direct.sv',
            qkd_ctrl_pc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv', qkd_ctrl_kc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv',

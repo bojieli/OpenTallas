@@ -1,0 +1,108 @@
+{
+  "schema": "opentallas.host_cdc_sram_candidate.v1",
+  "adopted": false,
+  "leaf": "qkd_hr_cdc_pc_sram",
+  "kit": "qkd_hr_cdc_pc_sram1",
+  "outline_um": [
+    475.2,
+    518.4
+  ],
+  "old_outline_um": [
+    151.2,
+    151.2
+  ],
+  "delta_um": [
+    324,
+    367.2
+  ],
+  "macros": 4,
+  "macro_area_um2": 114050.260224,
+  "macro_dimensions_um": [
+    177.768,
+    160.392
+  ],
+  "macro_origin_um": [
+    [
+      43.2,
+      43.2
+    ],
+    [
+      259.2,
+      43.2
+    ],
+    [
+      43.2,
+      302.4
+    ],
+    [
+      259.2,
+      302.4
+    ]
+  ],
+  "macro_pin_pitch_um": 0.192,
+  "steady_latency_change_edges": 0,
+  "effective_capacity_words": {
+    "receive": 4,
+    "asynchronous": 8
+  },
+  "implemented_capacity_words_each_macro": 32,
+  "source_boundaries": [
+    "Legacy generated leaves and common channel modules unchanged; new isolated modules selected only by new derivative PC top.",
+    "Parent/die binding and slot grant absent; larger die wires/hops not priced as zero.",
+    "Clock spread/reach/PG and routed SS/FF closure unmeasured.",
+    "Full PC generated pin/reset wrapper native census passes; host counterpart fence still owed."
+  ],
+  "native_coupon": {
+    "status": "PASS",
+    "max_dynamic_loads": 32,
+    "roots_examined": 13560,
+    "role_errors": 0,
+    "violations": 0,
+    "mapped_sha256": "354cfb82a9473cac045bb8932912cc519f06f6e454d4a41322c79cac6cdba1eb",
+    "libs": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-host-cdc-safe/loaded_real5/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+        "sha256": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-host-cdc-safe/loaded_real5/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+        "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-host-cdc-safe/loaded_real5/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+        "sha256": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-host-cdc-safe/loaded_real5/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+        "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-host-cdc-safe/loaded_real5/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+        "sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-host-cdc-safe/physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ss.lib",
+        "sha256": "d28d59a0e127ac833916594e54a7483158c028bbf02e0462e323e80203b3da23"
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-host-cdc-safe/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ss.lib",
+        "sha256": "9c16ad8526cc8557ef88083c51d10ea52636584b022f7db81af817e593e90541"
+      }
+    ],
+    "tool_source_commit": "94de8573f",
+    "tool_adopted": false
+  },
+  "source_sha256": {
+    "rtl/physical/ot_host_async_fifo_sram.sv": "da2d391322e2cdb58f7d4b04028591f8bd754e7e6f63acf9631368b55a515d22",
+    "rtl/physical/ot_host_die_cdc_sram.sv": "a1951cdd26c0558128e67936e0d1b16f613d9717203f2b7bd45f743dacc5906d",
+    "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc_sram.v": "d40fa9b7eb00878d5a2b39d75e2eaf517f630ecf3043d4979b00617835213061",
+    "physical/common_flow/ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+  },
+  "throughput": {
+    "received": 1408,
+    "read_edges": 1761,
+    "frames_per_read_edge": 0.7995457126632595,
+    "budget": 0.5,
+    "pass_": true
+  }
+}

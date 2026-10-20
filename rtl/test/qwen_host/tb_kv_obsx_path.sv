@@ -139,6 +139,7 @@ module tb_kv_obsx_path;
         end
     endtask
     integer errors = 0, i, k, it, lat, nchk = 0;
+    reg [NF-1:0] expected_sticky = 0;
     reg [31:0] rd;
     reg [NW*32-1:0] win;
     reg [40:0] got, e;
@@ -147,6 +148,11 @@ module tb_kv_obsx_path;
         host_obs = 0;
         repeat (5) @(negedge clk); rst_n = 1;
         for (it = 0; it < 12; it = it + 1) begin
+            // A one-edge fault pulse disappears before capture. The real CSR must retain it;
+            // MUT3 drops it. Rotate through the actual OBSX fault width, including its last bit.
+            @(negedge clk); flt = 0; flt[(it * 7) % NF] = 1'b1;
+            expected_sticky = expected_sticky | flt;
+            @(negedge clk); flt = 0;
             for (k = 0; k < 10 + it; k = k + 1) begin
                 @(negedge clk);
                 for (i = 0; i < EL; i = i + 32) host_obs[i +: 32] = $urandom;
@@ -157,6 +163,9 @@ module tb_kv_obsx_path;
                 axi_read(13'h1900 + 4 * k, rd, lat);
                 win[32 * k +: 32] = rd;
                 if (lat != 3) begin errors = errors + 1; $display("ERR word %0d latency %0d", k, lat); end
+            end
+            if (win[NB +: NF] !== expected_sticky) begin
+                errors = errors + 1; $display("ERR sticky got %h exp %h", win[NB +: NF], expected_sticky);
             end
             got = win[EL +: 41];
             // expected: each bus = its source KD / KL / KR edges before the snapshot edge

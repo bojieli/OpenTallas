@@ -1,0 +1,223 @@
+ot-run: ot-epyc4       admits     6 GB (avail 301, growth 297, headroom 0, waiters 4/544 GB) load 186/128 running 62 disk 629 GB 
+ot-run: -> ot-epyc4 (will queue: admits 6 GB < 8 GB)
+ot-heavy: waiting for memory on regular-crane: need 0.7 x 8 = 6 GB, admissible 6 GB: available 301 GB, growth charged 297 GB (x0.5), young 134 GB, floor 57 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-105906-1792394737 after 21 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+BF_IO boundary registers 776 insertion mean max 594.3876575438144 min 575.8933873853094
+GATE_PC constraints signoff /src/physical/s81_bf_hier/signoff_col.sdc (TT placement RC; diagnostic)
+Startpoint: pseg[2]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: pseg[2] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                        0.0    0.0   clock core_clk (rise edge)
+                        0.0    0.0   clock source latency
+     2   19.7    0.0    0.0    0.0 ^ clk (in)
+                49.0   15.5   15.5 ^ clkbuf_0_clk/A (BUFx24_ASAP7_75t_R)
+     2   10.4   13.6   35.9   51.4 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+                17.5    3.9   55.3 ^ clkbuf_1_0_0_clk/A (BUFx24_ASAP7_75t_R)
+     2    8.4   11.8   25.9   81.2 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+                14.2    2.7   84.0 ^ clkbuf_2_1_0_clk/A (BUFx24_ASAP7_75t_R)
+     2   10.3   12.4   25.1  109.1 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+                17.3    4.1  113.2 ^ clkbuf_3_2_0_clk/A (BUFx24_ASAP7_75t_R)
+     2   17.6   14.4   27.0  140.2 ^ clkbuf_3_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+                39.3   11.6  151.8 ^ clkbuf_leaf_9_clk/A (BUFx24_ASAP7_75t_R)
+     2    4.8   10.7   32.5  184.3 ^ clkbuf_leaf_9_clk/Y (BUFx24_ASAP7_75t_R)
+                10.7    0.2  184.5 ^ g_tcg.u_tc.u_cg.u_icg/CLK (ICGx1_ASAP7_75t_R)
+     2    5.9   56.4   35.1  219.6 ^ g_tcg.u_tc.u_cg.u_icg/GCLK (ICGx1_ASAP7_75t_R)
+                56.4    0.3  219.9 ^ clkbuf_regs_1_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    2.4   10.4   36.0  256.0 ^ clkbuf_regs_1_core_clk/Y (BUFx24_ASAP7_75t_R)
+                10.4    0.1  256.0 ^ clkbuf_0_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   10.0   11.9   23.5  279.5 ^ clkbuf_0_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                19.4    5.0  284.5 ^ clkbuf_1_0_0_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.8   11.5   26.5  311.0 ^ clkbuf_1_0_0_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                18.1    4.8  315.8 ^ clkbuf_1_0_1_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.6   11.8   26.1  341.9 ^ clkbuf_1_0_1_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                18.5    4.7  346.6 ^ clkbuf_2_0_0_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+     2   10.1   11.9   26.3  372.8 ^ clkbuf_2_0_0_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                20.0    5.2  378.1 ^ clkbuf_3_0_0_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.7   11.5   26.7  404.8 ^ clkbuf_3_0_0_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                17.9    4.7  409.5 ^ clkbuf_3_0_1_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+     4   17.1   17.1   27.2  436.7 ^ clkbuf_3_0_1_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                22.6    5.0  441.6 ^ clkbuf_5_1_0_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+     4   14.4   15.4   28.4  470.1 ^ clkbuf_5_1_0_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                18.1    3.2  473.2 ^ clkbuf_7_4_0_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+     4   14.0   15.1   27.0  500.2 ^ clkbuf_7_4_0_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                17.9    3.2  503.4 ^ clkbuf_9_17__f_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+     3    8.6   11.9   26.2  529.6 ^ clkbuf_9_17__f_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                12.8    1.5  531.1 ^ clkbuf_leaf_603_g_ch3.u_c0.clk_regs/A (BUFx24_ASAP7_75t_R)
+    26   18.6   17.6   26.7  557.8 ^ clkbuf_leaf_603_g_ch3.u_c0.clk_regs/Y (BUFx24_ASAP7_75t_R)
+                18.1    1.5  559.3 ^ pseg[2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    1.0   20.7   51.7  611.0 v pseg[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                20.7    0.1  611.1 v hold42363/A (BUFx2_ASAP7_75t_R)
+     1    0.7    7.2   22.5  633.6 v hold42363/Y (BUFx2_ASAP7_75t_R)
+                 7.2    0.0  633.6 v hold40875/A (BUFx2_ASAP7_75t_R)
+     1    1.7   10.6   19.7  653.3 v hold40875/Y (BUFx2_ASAP7_75t_R)
+                10.6    0.2  653.6 v hold42364/A (BUFx2_ASAP7_75t_R)
+     1    2.7   14.0   22.8  676.4 v hold42364/Y (BUFx2_ASAP7_75t_R)
+                14.1    0.6  676.9 v hold16743/A (BUFx2_ASAP7_75t_R)
+     1    2.4   13.0   23.4  700.4 v hold16743/Y (BUFx2_ASAP7_75t_R)
+                13.1    0.5  700.8 v hold42365/A (BUFx2_ASAP7_75t_R)
+     1    1.4    9.6   21.2  722.0 v hold42365/Y (BUFx2_ASAP7_75t_R)
+                 9.6    0.2  722.2 v hold40876/A (BUFx2_ASAP7_75t_R)
+     1    1.1    8.3   19.2  741.4 v hold40876/Y (BUFx2_ASAP7_75t_R)
+                 8.3    0.1  741.5 v hold42366/A (BUFx2_ASAP7_75t_R)
+     1    2.5   13.6   21.7  763.3 v hold42366/Y (BUFx2_ASAP7_75t_R)
+                13.6    0.5  763.8 v place14261/A (BUFx3_ASAP7_75t_R)
+     1    2.3   10.2   20.9  784.7 v place14261/Y (BUFx3_ASAP7_75t_R)
+                10.2    0.4  785.1 v hold42367/A (BUFx2_ASAP7_75t_R)
+     1    1.0    8.2   19.4  804.5 v hold42367/Y (BUFx2_ASAP7_75t_R)
+                 8.2    0.1  804.5 v hold40877/A (BUFx2_ASAP7_75t_R)
+     1    1.7   10.8   20.1  824.7 v hold40877/Y (BUFx2_ASAP7_75t_R)
+                10.8    0.3  824.9 v hold42368/A (BUFx2_ASAP7_75t_R)
+     1    0.9    7.6   19.2  844.1 v hold42368/Y (BUFx2_ASAP7_75t_R)
+                 7.6    0.1  844.2 v hold16744/A (BUFx2_ASAP7_75t_R)
+     1    1.1    8.5   18.6  862.8 v hold16744/Y (BUFx2_ASAP7_75t_R)
+                 8.5    0.1  862.9 v hold42369/A (BUFx2_ASAP7_75t_R)
+     1    1.6   10.1   19.8  882.7 v hold42369/Y (BUFx2_ASAP7_75t_R)
+                10.1    0.2  882.9 v hold40878/A (BUFx2_ASAP7_75t_R)
+     1    1.4    9.7   20.2  903.1 v hold40878/Y (BUFx2_ASAP7_75t_R)
+                 9.7    0.2  903.3 v hold42370/A (BUFx2_ASAP7_75t_R)
+     1    1.4    9.5   19.9  923.2 v hold42370/Y (BUFx2_ASAP7_75t_R)
+                 9.5    0.2  923.4 v _293102_/A (INVx1_ASAP7_75t_R)
+     1    2.5   25.0   15.3  938.7 ^ _293102_/Y (INVx1_ASAP7_75t_R)
+                25.0    0.5  939.2 ^ hold42371/A (BUFx2_ASAP7_75t_R)
+     1    1.1    9.7   22.8  962.0 ^ hold42371/Y (BUFx2_ASAP7_75t_R)
+                 9.7    0.1  962.1 ^ hold40879/A (BUFx2_ASAP7_75t_R)
+     1    0.9    8.3   17.6  979.7 ^ hold40879/Y (BUFx2_ASAP7_75t_R)
+                 8.3    0.1  979.8 ^ hold16745/A (BUFx2_ASAP7_75t_R)
+     1    0.6    7.1   16.4  996.2 ^ hold16745/Y (BUFx2_ASAP7_75t_R)
+                 7.1    0.0  996.2 ^ hold40880/A (BUFx2_ASAP7_75t_R)
+     1    0.7    7.5   16.2 1012.4 ^ hold40880/Y (BUFx2_ASAP7_75t_R)
+                 7.5    0.0 1012.4 ^ output3602/A (BUFx2_ASAP7_75t_R)
+     1    1.3   10.2   17.8 1030.2 ^ output3602/Y (BUFx2_ASAP7_75t_R)
+                10.2    0.1 1030.3 ^ hold40881/A (BUFx2_ASAP7_75t_R)
+     1    2.8   16.7   21.9 1052.2 ^ hold40881/Y (BUFx2_ASAP7_75t_R)
+                16.8    0.6 1052.9 ^ hold16746/A (BUFx2_ASAP7_75t_R)
+     1    2.8   16.8   24.1 1076.9 ^ hold16746/Y (BUFx2_ASAP7_75t_R)
+                16.9    0.6 1077.6 ^ hold40882/A (BUFx2_ASAP7_75t_R)
+     1    4.6   25.0   27.8 1105.4 ^ hold40882/Y (BUFx2_ASAP7_75t_R)
+                25.0    0.6 1106.0 ^ pseg[2] (out)
+                            1106.0   data arrival time
+
+                      833.3  833.3   clock core_clk (rise edge)
+                        0.0  833.3   clock network delay (propagated)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                      344.4 1117.7   output external delay
+                            1117.7   data required time
+-------------------------------------------------------------------------
+                            1117.7   data required time
+                            -1106.0   data arrival time
+-------------------------------------------------------------------------
+                              11.7   slack (MET)
+
+
+Startpoint: prow[14]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: prow[14] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout    Cap  Delay   Time   Description
+-------------------------------------------------------------------
+                 0.0    0.0   clock core_clk (rise edge)
+               558.8  558.8   clock network delay (propagated)
+                 0.0  558.8 ^ prow[14]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    1.7   56.3  615.1 v prow[14]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                 0.2  615.4 v hold42327/A (BUFx2_ASAP7_75t_R)
+     1    1.8   26.8  642.2 v hold42327/Y (BUFx2_ASAP7_75t_R)
+                 0.3  642.4 v hold40867/A (BUFx2_ASAP7_75t_R)
+     1    1.3   20.2  662.7 v hold40867/Y (BUFx2_ASAP7_75t_R)
+                 0.1  662.8 v hold42328/A (BUFx2_ASAP7_75t_R)
+     1    1.8   20.5  683.3 v hold42328/Y (BUFx2_ASAP7_75t_R)
+                 0.3  683.5 v hold16739/A (BUFx2_ASAP7_75t_R)
+     1    2.6   22.7  706.3 v hold16739/Y (BUFx2_ASAP7_75t_R)
+                 0.5  706.8 v hold42329/A (BUFx2_ASAP7_75t_R)
+     1    2.0   22.7  729.5 v hold42329/Y (BUFx2_ASAP7_75t_R)
+                 0.3  729.8 v hold40868/A (BUFx2_ASAP7_75t_R)
+     1    0.6   19.1  748.9 v hold40868/Y (BUFx2_ASAP7_75t_R)
+                 0.0  748.9 v hold42330/A (BUFx2_ASAP7_75t_R)
+     1    1.3   18.9  767.8 v hold42330/Y (BUFx2_ASAP7_75t_R)
+                 0.1  767.9 v place14269/A (BUFx3_ASAP7_75t_R)
+     1    0.8   17.0  785.0 v place14269/Y (BUFx3_ASAP7_75t_R)
+                 0.0  785.0 v hold42331/A (BUFx2_ASAP7_75t_R)
+     1    1.1   18.3  803.3 v hold42331/Y (BUFx2_ASAP7_75t_R)
+                 0.1  803.4 v hold40869/A (BUFx2_ASAP7_75t_R)
+     1    1.8   20.3  823.7 v hold40869/Y (BUFx2_ASAP7_75t_R)
+                 0.3  824.0 v hold42332/A (BUFx2_ASAP7_75t_R)
+     1    1.1   19.7  843.7 v hold42332/Y (BUFx2_ASAP7_75t_R)
+                 0.1  843.8 v hold16740/A (BUFx2_ASAP7_75t_R)
+     1    0.9   18.4  862.2 v hold16740/Y (BUFx2_ASAP7_75t_R)
+                 0.1  862.3 v hold42333/A (BUFx2_ASAP7_75t_R)
+     1    0.9   18.2  880.5 v hold42333/Y (BUFx2_ASAP7_75t_R)
+                 0.1  880.5 v hold40870/A (BUFx2_ASAP7_75t_R)
+     1    1.4   19.4  899.9 v hold40870/Y (BUFx2_ASAP7_75t_R)
+                 0.2  900.1 v hold42334/A (BUFx2_ASAP7_75t_R)
+     1    1.6   20.3  920.4 v hold42334/Y (BUFx2_ASAP7_75t_R)
+                 0.2  920.6 v _293085_/A (INVx1_ASAP7_75t_R)
+     1    0.7    8.7  929.3 ^ _293085_/Y (INVx1_ASAP7_75t_R)
+                 0.0  929.3 ^ hold42335/A (BUFx2_ASAP7_75t_R)
+     1    1.7   19.4  948.7 ^ hold42335/Y (BUFx2_ASAP7_75t_R)
+                 0.3  949.0 ^ hold40871/A (BUFx2_ASAP7_75t_R)
+     1    2.2   21.2  970.2 ^ hold40871/Y (BUFx2_ASAP7_75t_R)
+                 0.4  970.6 ^ hold16741/A (BUFx2_ASAP7_75t_R)
+     1    0.8   18.9  989.4 ^ hold16741/Y (BUFx2_ASAP7_75t_R)
+                 0.1  989.5 ^ hold40872/A (BUFx2_ASAP7_75t_R)
+     1    0.8   16.8 1006.2 ^ hold40872/Y (BUFx2_ASAP7_75t_R)
+                 0.0 1006.3 ^ output3589/A (BUFx2_ASAP7_75t_R)
+     1    2.0   19.3 1025.6 ^ output3589/Y (BUFx2_ASAP7_75t_R)
+                 0.3 1025.9 ^ hold40873/A (BUFx2_ASAP7_75t_R)
+     1    2.0   21.0 1047.0 ^ hold40873/Y (BUFx2_ASAP7_75t_R)
+                 0.3 1047.3 ^ hold16742/A (BUFx2_ASAP7_75t_R)
+     1    1.7   20.4 1067.6 ^ hold16742/Y (BUFx2_ASAP7_75t_R)
+                 0.2 1067.9 ^ hold40874/A (BUFx2_ASAP7_75t_R)
+     1    5.4   27.5 1095.4 ^ hold40874/Y (BUFx2_ASAP7_75t_R)
+                 1.2 1096.6 ^ prow[14] (out)
+                     1096.6   data arrival time
+
+               833.3  833.3   clock core_clk (rise edge)
+                 0.0  833.3   clock network delay (propagated)
+               -60.0  773.3   clock uncertainty
+                 0.0  773.3   clock reconvergence pessimism
+               344.4 1117.7   output external delay
+                     1117.7   data required time
+-------------------------------------------------------------------
+                     1117.7   data required time
+                     -1096.6   data arrival time
+-------------------------------------------------------------------
+                       21.1   slack (MET)
+
+
+[ERROR STA-0100] unsupported object type Port.
+Error: probe.tcl, 4 STA-0100
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-105906-1792394737): exit 1

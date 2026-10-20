@@ -290,6 +290,23 @@ def cap_cfg(obase=0, ops=0, np_=0, fmt=1, rbase=0, rcnt=0, rsplit=0, fp32_lo=0, 
         (rcnt & 0x7FF) << 45 | (rsplit & 0xFFFF) << 56 | (fp32_lo & 1) << 72 | (fp32_hi & 1) << 73
 
 
+SEND_DIR = dict(E=1, W=2, V=4, B=8)
+B_MAX_PAIRS = 2          # BIND mu4 10-19: the C3 band word B is 513 b = {pk[511:0], valid} (point-to-point to entry q)
+
+
+def send_cfg(dirs, kind=0, hops=0, dst_mask=0, dst_leaf=0, dst_row=0, pairs=1, sc_relay=0):
+    """ot_s81sl_xr send config (CTL target 4) body: [3:0] dir {B, V, W, E}, [6:4] kind, [11:7] hops, [27:12] dst slice
+    mask, [30:28] dst leaf, [40:31] dst row, [42:41] pairs - 1, [43] SC relay to V.  A send on B (C3 band port -> svc_rs
+    entry q) carries at most B_MAX_PAIRS row pairs; xr faults (sticky) on a B config with pairs > 2."""
+    d = 0
+    for x in dirs:
+        d |= SEND_DIR[x]
+    assert 1 <= pairs <= 4, pairs
+    assert not (d & SEND_DIR['B']) or pairs <= B_MAX_PAIRS, f'B send with {pairs} pairs > {B_MAX_PAIRS} (513-b band word)'
+    return d | (kind & 7) << 4 | (hops & 0x1F) << 7 | (dst_mask & 0xFFFF) << 12 | (dst_leaf & 7) << 28 | \
+        (dst_row & 0x3FF) << 31 | (pairs - 1) << 41 | (sc_relay & 1) << 43
+
+
 def memh(words, width):
     return ''.join(f'{w:0{(width + 3) // 4}x}\n' for w in words)
 

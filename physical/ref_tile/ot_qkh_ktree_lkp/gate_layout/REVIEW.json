@@ -1,0 +1,16 @@
+{
+ "reviewer": "KV-ROUTES3 (LEAD3-KV sub-lane; non-critical element, lane PNG review)",
+ "time": "2026-10-19T22:05-0700",
+ "gate_commit": "e2ce1fa6f",
+ "geometry_sha256": "2689082b258c4eff6baa5c0dea49bf9d8bd98fd169b1bb049632782885d7913b",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "no macros (std-cell only K-tree); n/a",
+  "std_cell_band": "one full-width std-cell band, PG straps regular, density even (peaks ~1.0 scattered bins, no hot cluster), util 64% of 151.2x97.2 core",
+  "pin_spread": "N face kp_in 512 over ~122 um = 4.2/um + gf_in/kpv_in balanced, S sc_d 32 over ~100 um; <= 6/um everywhere (lk2 PPL clustered ~7.7/um: rejected)",
+  "clock_entry": "one root clk W face; TT/FF insertion 196.9/161.4, pin-flop spread 7.6/7.2 ps (<=80)",
+  "shape": "151.2 x 97.2 = closed m5 die slot, aspect 1.56"
+ },
+ "gate": "WARN 0 fail (1 warn: reset copy u_rr.rst_n[15] 369 loads, closed m5 structure, in->reg reset slack 455.7 ps, waived in README item 3); reg->reg +215.9 ps TT placement RC, hold +44.4, GRT overflow 0 (M2 36.6%)",
+ "safe_checklist": "1 fixed (2-stage rst landing) 2 PASS 3 WARN-waived (reset copy, closed shared ktree unchanged) 4 PASS 5 PASS 6 PASS 7 PASS 8 PASS (+0 cycles)"
+}

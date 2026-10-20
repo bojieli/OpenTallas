@@ -1,0 +1,40 @@
+ success!
+  Trying to prove $equiv for \u.c_d [152]:ezsat
+ success!
+  Trying to prove $equiv for \u.c_d [153]:ezsat
+ success!
+  Trying to prove $equiv for \u.c_d [154]:ezsat
+ success!
+  Trying to prove $equiv for \u.c_d [155]:ezsat
+ success!
+  Trying to prove $equiv for \u.c_d [156]:ezsat
+ success!
+  Trying to prove $equiv for \u.c_d [157]:ezsat
+ success!
+  Trying to prove $equiv for \u.c_d [158]:ezsat
+ success!
+  Trying to prove $equiv for \u.c_d [159]:ezsat
+ success!
+Proved 15856 previously unproven $equiv cells.
+
+26. Executing EQUIV_INDUCT pass.
+Found 7011 unproven $equiv cells in module equiv:
+  Proving existence of base case for step 1. (6150208 clauses over 2322669 variables)
+  Proving induction step 1. (12793503 clauses over 4813413 variables)
+  Proof for induction step holds. Entire workset of 7011 cells proven!
+Proved 7011 previously unproven $equiv cells.
+
+27. Executing EQUIV_STATUS pass.
+Found 22867 $equiv cells in equiv:
+  Of those cells 22867 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+28. Executing EQUIV_STATUS pass.
+Found 22867 $equiv cells in equiv:
+  Of those cells 22867 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+Warnings: 16 unique messages, 32 total
+End of script. Logfile hash: 3f563d7847, time: 999.71s, user: 994.00s, system: 1.68s, MEM: 3064.98 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 63% 1x equiv_simple (627 sec), 35% 1x equiv_induct (356 sec), ...

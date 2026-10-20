@@ -1,0 +1,21 @@
+{
+ "lane": "QW-XHEAD", "date": "2026-10-19", "branch": "claude/qw-xhead-1019",
+ "vehicle": "XT1 = qfd_dv_slice2 core as dvs_W5 (sid 0) + near cluster c16_W5_1 (qfd_c_b16_dv cid 1, far 0) of dv2f14bi src d8b6a157e; 16 tiles ROM_TILE bound (16 cid + strap); real TP8 rank-0 L0 code ROM masks; QW-REALSTG L0 fixtures; Verilator 5.050 on ot-epyc5 (build 20 min, 35.8 GB RSS)",
+ "verdict": "PASS 64/64 bit-exact (qkv 8, o 24, gu 8, down 24 level-6 cluster words) at lead 8 gap 4 and lead 4 gap 2, with the qfd_dv_heads tag fix",
+ "measured_edges_from_hr_go_at_slice_pins": {
+   "hr_go_to_column_go_cw_s": 16, "hr_go_to_first_cluster_rs_word": 142,
+   "final_words_first_last": {"qkv": [198, 205], "o": [150, 189], "gu": [390, 397], "down": [182, 285]},
+   "round_period": {"o": 16, "down": 48},
+   "sum_last_final_4_ops": 1076,
+   "scope": "hr go at the slice -> last k=kc-1 word at the NEAR cluster's rs exit; excludes rs transport into the slice reducer (redstn) and the far cluster (+18 bc->bco, +14 rs feedthrough edges per SPEC)"
+ },
+ "analytic_before": "clayer2 column-tile matvec qkv 259 / o 367 / gu 562 / down 364 (tile_first 40 + ctlm ME price) -- NOT the same endpoint",
+ "tile_semantics": "tiles stream the running lane accumulator every issue edge (rounds x k x 8 words on rs); the op result is the k = kc-1 word per (r, j), selected by the static schedule (tile 16 t_out == in-order lane sums 64/64, v1_tile_acc.txt)",
+ "findings": [
+   "FIXED (ea371ad83): qfd_dv_heads corridor tags vs cluster sidx: cluster stations sidx {far,q} near / {far,~q} far along its own run, tiles strap 16 cid + morton(c,q); heads tid numbers S by die row -> S near and N far clusters row-reversed (S station 0 served tile 26's x to tile 16). Fix = tag s^3 for N s>=4 and S s<4 (no flop, no edge). S near verified by XT1; N far by the same rule, NOT simulated.",
+   "OPEN (Q-DIE15/HF-4): qfd_tt_ctlm_dv drives hr = {cmd380 (go at hr[73]), xpf, v}; slice2 reads go = hr[452] / ib = hr[451:73] in me_array order -> on the die no column go ever (asbuilt mode witness: no cw go, heads fault). Fix = zero-logic re-wire in tt_ctlm.",
+   "OPEN (GEN): die.v / qfd_c_b16_dv bind no ROM_TILE -> die-netlist benches run empty code ROMs; needs a sim-only binding in qc_gen/die GEN (XT1 uses defparams).",
+   "consumer: the slice's rs consumer must take the k = kc-1 words (the static schedule) -- check redstn2 selection in the 12-slice/die bench."
+ ],
+ "mutants": {"romswap (tiles 16/17 masks swapped)": "FAIL 0/64", "xbase1 (ib xbase+1)": "FAIL (heads fault at edge 145)", "asbuilt (tt_ctlm hr layout)": "FAIL (no column go, 0 rs words)"}
+}
