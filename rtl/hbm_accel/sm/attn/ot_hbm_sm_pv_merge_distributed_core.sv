@@ -234,13 +234,13 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     (* keep *) reg [NS-1:0] fd0_k, fd1_k;
     (* keep *) reg [NS-1:0] qb_k, qf_k, qklt_k, qk0_k, qck_k, qnk_k, qn0_k;
     // The old FF-only census missed the *D-input* common read cones of the
-    // 64 kept state copies. Four same-edge barrel provenance counters make
+    // 64 kept state copies. Nine same-edge barrel provenance counters make
     // each local state-read result drive16 captures, without adding an edge.
-    wire [2:0] bp_operand [0:3];
-    generate for (genvar cg=0;cg<4;cg=cg+1) begin:g_operand_provenance
+    wire [2:0] bp_operand [0:8];
+    generate for (genvar cg=0;cg<9;cg=cg+1) begin:g_operand_provenance
         if (FAN32 != 0) begin:g_local
             (* keep *) reg [2:0] count;
-            // Adder-valid reset groups have28 terminals: +3 =>31, not root0's30.
+            // Groups1..4:28+3=31; entry groups5..9:21+3=24. Never root0's30.
             always @(posedge clk or negedge rst_core_n[1+cg])
                 if(!rst_core_n[1+cg]) count<=0; else count<=count+3'd1;
             assign bp_operand[cg]=count;
@@ -317,10 +317,41 @@ module ot_hbm_sm_pv_merge_distributed_core #(
                 end
             end
         end
+        if(FAN32 != 0) begin:g_tag_local
+            for(genvar tg=0;tg<2;tg=tg+1) begin:g_half
+                always @(posedge clk) if(bp_operand[7+tg] == ei && ev_entry[ei])
+                    e_tag[ei][8*tg+:8] <= tag_d[8*tg+:8];
+            end
+        end else begin:g_tag_original
         always @(posedge clk) if (r == ei && ev_entry[ei]) e_tag[ei] <= tag_d;   // no reset value (as the original)
+        end
     end endgenerate
     generate for(genvar ei=0;ei<8;ei=ei+1) begin:g_entry_reset
         // Exactly the original per-entry recurrence; 4+8+9=21 reset terminals.
+        if(FAN32 != 0) begin:g_write_local
+            // Split the21-bit entry hold/update enable by field; each has
+            // independent same-edge barrel provenance, never a shared decode.
+            always @(posedge clk or negedge rst_core_n[5+ei]) begin
+                if(!rst_core_n[5+ei]) e_k[ei]<=0;
+                else if(bp_operand[4]==ei) begin
+                    if(ev_entry[ei]) begin
+                        if(ev_c[0]) e_k[ei]<=1;
+                        else if(ev_last) e_k[ei]<=0;
+                    end else if(e_busy[ei] && !e_fl[ei]) begin
+                        if(e_c[ei][e_k[ei][2:0]]) e_k[ei]<=e_k[ei]+1;
+                        else if(e_fin[ei]) e_k[ei]<=0;
+                    end else if(e_busy[ei] && e_fl[ei] && e_k[ei]<LV) e_k[ei]<=e_k[ei]+1;
+                end
+            end
+            always @(posedge clk or negedge rst_core_n[5+ei]) begin
+                if(!rst_core_n[5+ei]) e_c[ei]<=0;
+                else if(bp_operand[5]==ei && ev_entry[ei]) e_c[ei]<=ev_c;
+            end
+            always @(posedge clk or negedge rst_core_n[5+ei]) begin
+                if(!rst_core_n[5+ei]) e_n[ei]<=0;
+                else if(bp_operand[6]==ei && ev_entry[ei]) e_n[ei]<={1'b0,ev_c}+9'd1;
+            end
+        end else begin:g_write_original
         always @(posedge clk or negedge rst_core_n[5+ei]) begin
             if(!rst_core_n[5+ei]) begin e_k[ei]<=0; e_c[ei]<=0; e_n[ei]<=0; end
             else if(r==ei) begin
@@ -333,6 +364,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
                     else if(e_fin[ei]) e_k[ei]<=0;
                 end else if(e_busy[ei] && e_fl[ei] && e_k[ei]<LV) e_k[ei]<=e_k[ei]+1;
             end
+        end
         end
     end endgenerate
     generate if(FAN32 != 0) begin:g_finish_distribution
