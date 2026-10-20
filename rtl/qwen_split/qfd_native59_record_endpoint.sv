@@ -6,7 +6,7 @@
 module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX_FREE=0,LOCAL32=0)(  // RX_FREE / TX_FREE: qkd_native_attention_record (QW-N59-4)
  input wire ck,rst_n,
  input wire [58:0] operation_tag,
- input wire kernel_request_v,input wire [58:0] kernel_request_tag,
+ input wire kernel_request_v,input wire[23:0]kernel_request_pub,input wire [58:0] kernel_request_tag,
  input wire kernel_q_v,input wire [4:0] kernel_q_beat,input wire [58:0] kernel_q_tag,
  input wire [511:0] kernel_q_data,
  input wire tx_slot,input wire [3:0] tx_slot_kind,input wire [4:0] tx_slot_beat,
@@ -33,9 +33,17 @@ module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX
   assign result_slot_pub={76{result_slot}};
  end endgenerate
  wire request=kernel_request_v;
- wire [58:0] actual_tag=request?kernel_request_tag:kernel_q_tag;
+ // R3c (QW-CB16A0 10-20): the 512-bit tx_data and 59-bit tag selects use the service's kept same-edge request copies
+ // (kernel_request_pub[c] == kernel_request_v on every edge): [21:0] 24-bit tx_data segments, [22]/[23] tag low/high.
+ wire [58:0] actual_tag;
+ assign actual_tag[29:0]=kernel_request_pub[22]?kernel_request_tag[29:0]:kernel_q_tag[29:0];
+ assign actual_tag[58:30]=kernel_request_pub[23]?kernel_request_tag[58:30]:kernel_q_tag[58:30];
  // Position is an18-bit count, zero-extended from the actual TAG59 position13.
  wire [511:0] cmd_data={493'd0,5'd0,kernel_request_tag[18:6],1'b1};
+ wire [511:0] tx_sel_data;
+ for(genvar tb=0;tb<512;tb=tb+1)begin:g_txd
+  assign tx_sel_data[tb]=kernel_request_pub[tb/24]?cmd_data[tb]:kernel_q_data[tb];
+ end
  wire rv;wire[3:0]rk;wire[15:0]re;wire[5:0]rl;wire[4:0]rb;wire[511:0]rd;
  wire codec_fault;wire[3:0]fault_cause;reg local_fault;
  qkd_native_attention_record #(.KV_SIDE(0),.MUT(CODEC_MUT),.RX_FREE(RX_FREE),.TX_FREE(TX_FREE))u_codec(
@@ -44,7 +52,7 @@ module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX
  .tx_epoch(actual_tag[58:43]),.tx_expected_epoch(operation_tag[58:43]),
  .tx_layer(actual_tag[42:37]-6'd1),.tx_expected_layer(operation_tag[42:37]-6'd1),
  .tx_beat(request?5'd0:kernel_q_beat),.tx_expected_beat(tx_slot_beat),
- .tx_data(request?cmd_data:kernel_q_data),.tx_valid(tx_valid),.tx_payload(tx_payload),
+ .tx_data(tx_sel_data),.tx_valid(tx_valid),.tx_payload(tx_payload),
  .rx_event(rx_event),.rx_expected(rx_slot),.rx_payload(rx_payload),.rx_expected_kind(rx_slot_kind),
  .rx_expected_epoch(operation_tag[58:43]),.rx_expected_layer(operation_tag[42:37]-6'd1),.rx_expected_beat(rx_slot_beat),
  .rx_valid(rv),.rx_kind(rk),.rx_epoch(re),.rx_layer(rl),.rx_beat(rb),.rx_data(rd),.fault(codec_fault),.fault_cause(fault_cause));

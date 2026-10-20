@@ -424,7 +424,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  reg nf,fs,bs;                       // slot of the next begin, the front (latest begun) slot, the back (oldest active) slot
  wire[NS-1:0]s_active,s_completed,s_svc_fault,s_rec_fault,s_land_fault,s_commit_complete,s_tx_v;
  wire[NS-1:0]s_req_v,s_kq_v,s_vm_write_v;wire[58:0]s_vm_write_tag[0:NS-1];wire[19:0]s_vm_write_word[0:NS-1];
- wire[4:0]s_vm_write_beat[0:NS-1];wire[511:0]s_vm_write_data[0:NS-1];wire[547:0]s_tx_payload[0:NS-1];wire[94:0]s_ret[0:NS-1];
+ wire[4:0]s_vm_write_beat[0:NS-1];wire[511:0]s_vm_write_data[0:NS-1];wire[24:0]s_vm_pub[0:NS-1];wire[547:0]s_tx_payload[0:NS-1];wire[94:0]s_ret[0:NS-1];
  reg[58:0]s_optag[0:NS-1];reg[NS-1:0]s_vis_seen;
  wire svc_fault=|s_svc_fault,record_fault=|s_rec_fault,land_fault=|s_land_fault;
  wire[9:0]back_slot_pub;
@@ -447,15 +447,39 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    if(begin_slot)begin fs<=nf;nf<=~nf;end
    if(|(s_completed&sel_b))bs<=~bs;
   end
+ // R3c (QW-CB16A0 10-20): 16 kept same-D copies of the received Q valid (g_recv.p_qb_v: D qb_v, no reset) and of the
+ // front-slot register fs (async rst_top, D nf on begin_slot); each copy pair serves <= 5 of the 76 per-slot Q hold
+ // enables (64 data bytes, 8 tag bytes, beat, q_seen low/high, count/checks).  Exact: every copy equals its original on
+ // every edge, so q_slot_pub[b] == q_emit && f.  Other parameterisations alias the original nets (no added flops).
+ localparam integer QPUB=(LOCAL32!=0&&RECV_INPUTS!=0&&RECV_MUT==0)?1:0;
+ wire[15:0]qv_pub,fs_pub;
+ generate if(QPUB)begin:g_qv_pub
+  for(genvar k=0;k<16;k=k+1)begin:g_c
+   (* keep = "true" *) reg v;
+   (* keep = "true" *) reg s;
+   always @(posedge ck) v<=qb_v;
+   always @(posedge ck or negedge rst_top)
+    if(!rst_top)s<=0;
+    else if(MCTX!=0&&begin_slot)s<=nf;
+   assign qv_pub[k]=v;assign fs_pub[k]=s;
+  end
+ end else begin:g_qv_alias
+  assign qv_pub={16{q_emit}};assign fs_pub={16{fs}};
+ end endgenerate
  // the merged VM write (only the back slot writes; two at once is a slot collision)
- integer si;
+ integer si,vb;
  reg vmw_v;reg[19:0]vmw_word;reg[4:0]vmw_beat;reg[58:0]vmw_tag;reg[511:0]vmw_data;reg vmw_two;
  reg ntx_v;reg[547:0]ntx_p;
  always @*begin
   vmw_v=0;vmw_word=0;vmw_beat=0;vmw_tag=0;vmw_data=0;vmw_two=0;ntx_v=0;ntx_p=0;
   for(si=0;si<NS;si=si+1)begin
-   if(s_vm_write_v[si])begin vmw_two=vmw_two|vmw_v;vmw_v=1;vmw_word=vmw_word|s_vm_write_word[si];vmw_beat=vmw_beat|s_vm_write_beat[si];
-    vmw_tag=vmw_tag|s_vm_write_tag[si];vmw_data=vmw_data|s_vm_write_data[si];end
+   // R3c: each merged field is gated by its own kept vm_write_v copy ([21:0] 24-bit data segments, [22]/[23] tag
+   // low/high, [24] word+beat); s_vm_pub[si][c] == s_vm_write_v[si] on every edge, so the merge is unchanged.
+   if(s_vm_write_v[si])begin vmw_two=vmw_two|vmw_v;vmw_v=1;end
+   if(s_vm_pub[si][24])begin vmw_word=vmw_word|s_vm_write_word[si];vmw_beat=vmw_beat|s_vm_write_beat[si];end
+   if(s_vm_pub[si][22])vmw_tag[29:0]=vmw_tag[29:0]|s_vm_write_tag[si][29:0];
+   if(s_vm_pub[si][23])vmw_tag[58:30]=vmw_tag[58:30]|s_vm_write_tag[si][58:30];
+   for(vb=0;vb<512;vb=vb+1)if(s_vm_pub[si][vb/24])vmw_data[vb]=vmw_data[vb]|s_vm_write_data[si][vb];
    ntx_v=ntx_v|s_tx_v[si];if(NS==1||s_tx_v[si])ntx_p=ntx_p|s_tx_payload[si];   // NS 1: the codec register as built
   end
  end
@@ -472,6 +496,11 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   wire f=sel_f[gs],b=sel_b[gs];
   wire req_s=request_slot&&f;
   wire[75:0]result_slot_pub;
+  wire[75:0]q_slot_pub;wire[23:0]kreq_pub;
+  for(genvar qb=0;qb<76;qb=qb+1)begin:g_qsp
+   localparam integer K=(qb<64)?qb/4:qb-64;
+   assign q_slot_pub[qb]=qv_pub[K]&&((MCTX==0)?1'b1:(fs_pub[K]==1'(gs)));
+  end
   wire[9:0]slot_back_pub=(MCTX==0)?10'h3ff:(gs==0?~back_slot_pub:back_slot_pub);
   wire result_v,result_slot,kernel_done;wire[4:0]result_beat,result_slot_beat;wire[58:0]result_tag,kernel_done_tag;wire[511:0]result_data;
   wire[58:0]req_tag,kq_tag;wire[4:0]kq_beat;wire[511:0]kq_data;
@@ -485,15 +514,15 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   qfd_native59_static_service #(.LOCAL32(LOCAL32)) u_service(
   .ck(ck),.rst_n(rst_svc),.source_fault(src_fault),
   .begin_slot(begin_slot&&sel_nf[gs]),.begin_tag(begin_tag),.request_slot(req_s),.request_tag(request_tag),.result_base_word(base),
-  .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(s_req_v[gs]),.kernel_request_tag(req_tag),
-  .q_slot(q_emit&&f),.q_slot_beat(q_emit_beat),.q_v(q[523]&&f),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
+  .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(s_req_v[gs]),.kernel_request_pub(kreq_pub),.vm_write_pub(s_vm_pub[gs]),.kernel_request_tag(req_tag),
+  .q_slot(q_emit&&f),.q_slot_pub(q_slot_pub),.q_slot_beat(q_emit_beat),.q_v(q[523]&&f),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(QPUB?qrow:q[511:0]),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
   .result_slot(result_slot),.result_slot_pub(result_slot_pub),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
   .vm_write_v(s_vm_write_v[gs]),.vm_write_word(s_vm_write_word[gs]),.vm_write_beat(s_vm_write_beat[gs]),.vm_write_tag(s_vm_write_tag[gs]),.vm_write_data(s_vm_write_data[gs]),
   .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
   .complete_slot(p_cs&&b),.completed(s_completed[gs]),.active(s_active[gs]),.fault(s_svc_fault[gs]),.native_ret(s_ret[gs]));
   qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT),.RX_FREE(1),.TX_FREE(MCTX!=0),.LOCAL32(LOCAL32))u_record(   // QW-N59-4: free rx (svc2) / tx (svc3, MCTX 1: payload merged under tx_v) capture, output-exact
-  .ck(ck),.rst_n(rst_rec),.operation_tag(s_optag[gs]),.kernel_request_v(s_req_v[gs]),.kernel_request_tag(req_tag),
+  .ck(ck),.rst_n(rst_rec),.operation_tag(s_optag[gs]),.kernel_request_v(s_req_v[gs]),.kernel_request_pub(kreq_pub),.kernel_request_tag(req_tag),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
   .tx_slot(p_ts&&f),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(s_tx_v[gs]),.tx_payload(s_tx_payload[gs]),
   .rx_result_pub(rx_result_pub),.slot_back_pub(slot_back_pub),.rx_event(p_rv&&b),.rx_payload(p_rp),.rx_slot(p_rs&&b),.rx_slot_kind(p_rk),.rx_slot_beat(p_rb),
@@ -547,15 +576,18 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    if(!rst_top)begin e4<=0;k4b<=0;k4s<=0;e4c<=0;k4c<=0;end
    else begin e4<=e3;k4b<=k3[5:0];k4s<=(k3==7'd64);e4c<={16{e3}};k4c<={16{k3==7'd64}};end
   assign g1=e4;
-  integer sg;
+  integer sb,gi;
+  reg[21:0]g0s;
+  always @*begin g0s=0;for(gi=0;gi<NS;gi=gi+1)g0s=g0s|s_vm_pub[gi][21:0];end
   always @(posedge ck or negedge rst_top)
    if(!rst_top)begin dr_o<=0;dr_tag<=0;dr_s<=0;end
    else begin
     dr_tag<=vm_write_tag;dr_s<=(NS>1)?s_vm_write_v[NS-1]:1'b0;
     dr_o[519:512]<=g0?{1'b1,1'b0,1'b0,vm_write_beat}:e4?{1'b1,1'b1,k4s?6'd0:k4b}:8'd0;
-    for(sg=0;sg<16;sg=sg+1)
-     dr_o[32*sg+:32]<=g0?vm_write_data[32*sg+:32]:
-                      e4c[sg]?(k4c[sg]?((sg==0)?{16'd0,esq_r}:32'd0):ecq_r[32*sg+:32]):32'd0;
+    // R3c: the attention-result select per 24-bit segment is the OR of that segment's kept slot copies (== g0).
+    for(sb=0;sb<512;sb=sb+1)
+     dr_o[sb]<=g0s[sb/24]?vm_write_data[sb]:
+               e4c[sb/32]?(k4c[sb/32]?((sb<16)?esq_r[sb]:1'b0):ecq_r[sb]):1'b0;
    end
  end endgenerate
  // ---------------------------------------------------------------- sticky DV boundary faults and the fault pin

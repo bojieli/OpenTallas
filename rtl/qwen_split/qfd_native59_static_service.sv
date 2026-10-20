@@ -16,11 +16,12 @@ module qfd_native59_static_service #(
  input wire request_slot,input wire [58:0] request_tag,input wire [19:0] result_base_word,
  input wire qr_committed,input wire [58:0] qr_tag,
  output reg kernel_request_v,output reg [58:0] kernel_request_tag,
- input wire q_slot,input wire [4:0] q_slot_beat,
+ input wire q_slot,input wire[75:0]q_slot_pub,input wire [4:0] q_slot_beat,
  input wire q_v,input wire [4:0] q_beat,input wire [58:0] q_tag,input wire [511:0] q_data,
  output reg kernel_q_v,output reg [4:0] kernel_q_beat,output reg [58:0] kernel_q_tag,output reg [511:0] kernel_q_data,
  input wire result_slot,input wire[75:0]result_slot_pub,input wire [4:0] result_slot_beat,
  input wire result_v,input wire [4:0] result_beat,input wire [58:0] result_tag,input wire [511:0] result_data,
+ output wire[23:0]kernel_request_pub,output wire[24:0]vm_write_pub,
  output reg vm_write_v,output reg [19:0] vm_write_word,output reg [4:0] vm_write_beat,
  output reg [58:0] vm_write_tag,output reg [511:0] vm_write_data,
  input wire vm_commit_v,input wire [4:0] vm_commit_beat,input wire [58:0] vm_commit_tag,
@@ -52,6 +53,38 @@ module qfd_native59_static_service #(
    if(!rst_n)vm_write_beat<=0;
    else if(result_slot_pub[75])vm_write_beat<=result_slot_beat;
  end endgenerate
+ // R3c (QW-CB16A0 10-20): Q capture holds use the parent's same-edge kept q_slot publications ([63:0] data bytes,
+ // [71:64] tag bytes, [72] beat, [73]/[74] q_seen low/high, [75] count/checks); the kernel-request and VM-write valids
+ // publish kept same-D copies (each copy = the original register on every edge).  LOCAL32 0: aliases, no added flops.
+ wire kreq_d=request_slot&&!fault&&!source_fault,vmw_d=result_slot&&!fault&&!source_fault;
+ generate if(LOCAL32)begin:g_q_payload32
+  for(genvar qg=0;qg<64;qg=qg+1)begin:g_data
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)kernel_q_data[8*qg+:8]<=0;
+    else if(q_slot_pub[qg])kernel_q_data[8*qg+:8]<=q_data[8*qg+:8];
+  end
+  for(genvar qg=0;qg<8;qg=qg+1)begin:g_tag
+   localparam integer RW=(qg==7)?3:8;
+   always @(posedge ck or negedge rst_n)
+    if(!rst_n)kernel_q_tag[8*qg+:RW]<=0;
+    else if(q_slot_pub[64+qg])kernel_q_tag[8*qg+:RW]<=q_tag[8*qg+:RW];
+  end
+  always @(posedge ck or negedge rst_n)
+   if(!rst_n)kernel_q_beat<=0;
+   else if(q_slot_pub[72])kernel_q_beat<=q_slot_beat;
+  for(genvar c=0;c<24;c=c+1)begin:g_kreq
+   (* keep = "true" *) reg q;
+   always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=kreq_d;
+   assign kernel_request_pub[c]=q;
+  end
+  for(genvar c=0;c<25;c=c+1)begin:g_vmw
+   (* keep = "true" *) reg q;
+   always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=vmw_d;
+   assign vm_write_pub[c]=q;
+  end
+ end else begin:g_pub_alias
+  assign kernel_request_pub={24{kernel_request_v}};assign vm_write_pub={25{vm_write_v}};
+ end endgenerate
  reg [58:0] tag;
  reg [19:0] base;
  reg requested,done_seen,context_valid;reg [5:0] q_count,result_count,commit_count;
@@ -65,13 +98,13 @@ module qfd_native59_static_service #(
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin
    tag<=0;base<=0;context_valid<=0;commit_count<=0;requested<=0;done_seen<=0;q_seen<=0;result_seen<=0;committed<=0;q_count<=0;result_count<=0;
-   kernel_request_v<=0;kernel_request_tag<=0;kernel_q_v<=0;kernel_q_beat<=0;kernel_q_tag<=0;kernel_q_data<=0;
+   kernel_request_v<=0;kernel_request_tag<=0;kernel_q_v<=0;if(LOCAL32==0)begin kernel_q_beat<=0;kernel_q_tag<=0;kernel_q_data<=0;end
    vm_write_v<=0;if(LOCAL32==0)begin vm_write_word<=0;vm_write_beat<=0;vm_write_tag<=0;vm_write_data<=0;end
    completed<=0;active<=0;fault<=0;
   end else begin
-   kernel_request_v<=request_slot&&!fault&&!source_fault;
+   kernel_request_v<=kreq_d;
    kernel_q_v<=q_slot&&!fault&&!source_fault;
-   vm_write_v<=result_slot&&!fault&&!source_fault;
+   vm_write_v<=vmw_d;
    completed<=0;
    if(source_fault)fault<=1;
    if(begin_slot)begin
@@ -85,11 +118,13 @@ module qfd_native59_static_service #(
    end
    // An unexpected or absent native producer cannot silently change its slot.
    if(q_v!=q_slot)fault<=1;
-   if(q_slot)begin
-    kernel_q_beat<=q_slot_beat;kernel_q_tag<=q_tag;kernel_q_data<=q_data;q_count<=q_count+1'b1;
+   if(LOCAL32==0&&q_slot)begin kernel_q_beat<=q_slot_beat;kernel_q_tag<=q_tag;kernel_q_data<=q_data;end
+   if(LOCAL32?q_slot_pub[75]:q_slot)begin
+    q_count<=q_count+1'b1;
     if(!active||!requested||q_tag!=tag||q_beat!=q_slot_beat||q_seen[q_slot_beat]||q_count!={1'b0,q_slot_beat})fault<=1;
-    q_seen[q_slot_beat]<=1;
    end
+   if((LOCAL32?q_slot_pub[73]:q_slot)&&!q_slot_beat[4])q_seen[q_slot_beat]<=1;
+   if((LOCAL32?q_slot_pub[74]:q_slot)&&q_slot_beat[4])q_seen[q_slot_beat]<=1;
    if(result_v!=result_slot)fault<=1;
    if(result_slot)begin
     if(LOCAL32==0)begin vm_write_word<=base+result_slot_beat;vm_write_beat<=result_slot_beat;

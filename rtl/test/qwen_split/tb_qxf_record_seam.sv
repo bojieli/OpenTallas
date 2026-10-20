@@ -83,7 +83,7 @@ module tb;
     wire ep_rv, ep_slot, ep_done, ep_fault, ep_txv; wire [4:0] ep_rb, ep_slot_beat; wire [58:0] ep_rtag, ep_dtag;
     wire [511:0] ep_rd; wire [547:0] ep_txp;
     qfd_native59_record_endpoint u_ep (.ck(n59_ck), .rst_n(n59_rs), .operation_tag(TAG),
-        .kernel_request_v(1'b0), .kernel_request_tag(59'd0), .kernel_q_v(1'b0), .kernel_q_beat(5'd0), .kernel_q_tag(59'd0),
+        .kernel_request_v(1'b0), .kernel_request_pub(24'd0), .kernel_request_tag(59'd0), .kernel_q_v(1'b0), .kernel_q_beat(5'd0), .kernel_q_tag(59'd0),
         .kernel_q_data(512'd0), .tx_slot(1'b0), .tx_slot_kind(4'd0), .tx_slot_beat(5'd0), .tx_valid(ep_txv), .tx_payload(ep_txp),
         .rx_event(d_nrv), .rx_payload(d_pay_n), .rx_slot(d_nrs), .rx_slot_kind(d_nrk), .rx_slot_beat(d_nrb),
         .result_v(ep_rv), .result_beat(ep_rb), .result_tag(ep_rtag), .result_data(ep_rd), .result_slot(ep_slot),
