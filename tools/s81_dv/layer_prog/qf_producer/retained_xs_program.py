@@ -23,7 +23,9 @@ def main():
  # TOK.DS.BENCH.1 CAP-ED (LEAD2-S81/TOK2 10-19): global 12-pair placement from the exact root packing (packD_<D>.json)
  p.add_argument('--placements',default=None);p.add_argument('--edly',type=int,default=0)
  # TOK2: per-frame static CAP delays {frame suffix: edges} (default: --edly on every R frame); the W tree holds L01 L02 L03 R01
- p.add_argument('--shifts',default=None);a=p.parse_args()
+ p.add_argument('--shifts',default=None)
+ # TOKSIM-S81/FIELD 10-19: bench epoch period (edges between epoch calendars; 600 = TOK2 default). Sweep found the minimum.
+ p.add_argument('--epoch-period',type=int,default=600);a=p.parse_args()
  glob=json.loads(Path(a.placements).read_text()) if a.placements else None
  if glob:assert glob['complete_search'] and glob['solution']
  SH=json.loads(a.shifts) if a.shifts else {f:(a.edly if f[0]=='R' else 0) for f in ['L01','L02','L03','R01','R02','R03']}
@@ -75,7 +77,7 @@ def main():
  # All tags/positions remain0; odd epoch index is NOT a buffer parity change.
  cals=[];issuers={};epochrec=[]
  for i in range(15):
-  c=XC.compile_phase(phase,stream,i,6);base=len(cals);cals.extend(c['packed']);shift=1100+600*i
+  c=XC.compile_phase(phase,stream,i,6);base=len(cals);cals.extend(c['packed']);shift=1100+a.epoch_period*i
   for t,v in c['iss'].items():
    if t==XC.GW_IT:continue # actual single-owner retained window; never reload-valid by assumption
    if i and t==XC.T_OFFCFG:continue

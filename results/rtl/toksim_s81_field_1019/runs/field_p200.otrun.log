@@ -1,0 +1,26 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81-field
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81-field
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81-field
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/toksim-s81-field
+ot-run: ot-epyc9       admits  1305 GB (avail 984, growth 71, headroom 0, waiters 0/0 GB) load 43/128 running 14 disk 772 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81-field
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81-field
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-89663-1792459821 after 0 s
+CTL_DIFF_FROM_600
+sim rc=1
+RESET_CAP_DIAGNOSTIC_CLASSIFIED returns 317 missing 252 duplicates 57 unknown 0 CAPcause 0100 NO_NUMERIC_PASS
+classify rc=0
+TOKSIM_FIELD_P200 returns 317 missing 252 unknown 0 srcerr 9 CAPcause 0100 capt_mism 0 first_capture 1573 last_capture 4391 first_ret 1773 last_ret 4596 words_equal_600 False only_new 229 only_600 537
+ epoch 0 44 1773 1804
+ epoch 2 44 2173 2204
+ epoch 4 44 2573 2604
+ epoch 6 44 2973 3004
+ epoch 8 44 3373 3404
+ epoch 10 44 3773 3804
+ epoch 12 44 4173 4204
+ epoch 14 9 4578 4596
+FULLSIX_SOURCE_CHECK errors=9 rawwrites=320 gathers=20 epochs=15
+FULLSIX_PREPARATORY_TRACE_END CAPfault=1 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL
+TOKSIM_FIELD_DONE P=200
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-89663-1792459821): exit 0
