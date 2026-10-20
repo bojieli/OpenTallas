@@ -1,0 +1,48 @@
+{
+  "top": "qfd_dv_s5_ctl_repair3_leaf",
+  "sha256": "d49cf42e79c5cd50cffe3d5cc12d269145471aefcd45469b2933bac76d7f8e1d",
+  "nonclock_drivers_over32": 0,
+  "flop_drivers_over32": 0,
+  "raw_ports_over32": 0,
+  "max_nonclock_loads": 32,
+  "rst_n_loads": 2,
+  "metrics": {
+    "clock_roots": [
+      {
+        "root": "port:ck",
+        "ff": 7206,
+        "icg": 0,
+        "macro_pins": 0,
+        "example": "genblk1.g_safe4.u_ctl.u_0._2_"
+      }
+    ],
+    "hier_subblocks": 0,
+    "clock_max_root_sinks": 7206,
+    "clock_max_root": "port:ck",
+    "high_fanout_top": [],
+    "hf_max_port": 0,
+    "hf_max_reset": 0,
+    "hf_max_net": 0,
+    "reset_landing": [
+      {
+        "port": "rst_n",
+        "sinks": 2,
+        "flops": 2,
+        "macros": 0
+      }
+    ],
+    "in_to_out_bits": 0,
+    "in_to_reg_levels": 0,
+    "reg_to_out_levels": 0,
+    "icg_enable_from_port": 0,
+    "depth_ps": 688.5,
+    "depth_path": [
+      "genblk1.g_safe4.u_ctl.u_2965._2_",
+      "genblk1.g_safe4.u_ctl.u_22281._2_/D"
+    ],
+    "depth_levels": 22
+  },
+  "violations": [],
+  "verdict": "PASS_FANOUT_ONLY",
+  "qualification": "Mapped fanout census only; reset landing/pins/reach/storage still require their own proof"
+}
