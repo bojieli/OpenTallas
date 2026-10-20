@@ -55,7 +55,7 @@ def test_default_is_noop():
 def test_all_three_structural_sources():
     v, m, r = run(ALL)
     b = {x[0]: x for x in m['buses']}
-    assert b['clk_coll_blk'][3][0] == ('ckdiv_coll_blk', 'ck_o')
+    assert b['clk_coll_blk'][3][0] == ('ckdiv_coll_blk', 'blk_o')
     assert ('ckdiv_coll_blk', 'ck') in b['clk_coll'][3] and ('ckdiv_coll_blk', 'rst_n') in b['rst_io'][3]
     assert b['clk_ucie'][3][0] == ('io_ucie', 'lclk') and ('io_ucie', 'clk') in b['clk_ucie'][3]
     assert b['pll_core'][3] == [('ckb_core', 'pll_ck'), ('clk_rx', 'pll_fwd')]
@@ -65,7 +65,7 @@ def test_all_three_structural_sources():
     by = {i.name: i for i in m['insts']}
     d = by['ckdiv_coll_blk']
     assert abs(d.x - 1563.816) < 200 and abs(d.y - 2179.2) < 200            # beside the blk_ck pins
-    assert 'qfd_ckdiv6' in v.masters(m) and set(v.masters(m)['qfd_ckdiv6'].ports) == {'ck', 'rst_n', 'ck_o'}
+    assert 'qfd_ckdiv6' in v.masters(m) and set(v.masters(m)['qfd_ckdiv6'].ports) == {'ck', 'rst_n', 'blk_o'}
     assert r['core_feed']['xy'] == [16848.0, 12096.0]
     # the Codex hop-0 bump feed validator accepts the core-feed topology
     assert source_clock(m, 'lnk_fwd_epoch', [('bump_fwd_epoch', 'o'), ('d2d_rom', 'fwd_epoch')]) == 'pll_fwd'

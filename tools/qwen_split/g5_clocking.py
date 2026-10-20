@@ -117,12 +117,12 @@ def apply(v, m):
         q = v.Master(DIV[1], w, h, 3, 'QW-GEN5 real /6 clock divider (6 flops) of clk_coll -> coll_blk 5000 ps')
         q.face('ck', 1, 'W', 'M4', h / 2 + 2.16, 1)
         q.face('rst_n', 1, 'W', 'M4', h / 2 - 2.16, 1)
-        q.face('ck_o', 1, 'E', 'M4', h / 2, 1)
+        q.face('blk_o', 1, 'E', 'M4', h / 2, 1)
         M[DIV[1]] = q
         d_ = v.Inst(DIV[0], DIV[1], x, y, w, h, orient='R0', kind=col.kind, region=col.region, domain=col.domain)
         insts.append(d_)
         by[d_.name] = d_
-        m['buses'][j] = (b, c, n, [(DIV[0], 'ck_o')] + list(eps[1:]))
+        m['buses'][j] = (b, c, n, [(DIV[0], 'blk_o')] + list(eps[1:]))
         m['buses'][jc] = (bc, cc, nc, list(ec) + [(DIV[0], 'ck')])
         br, cr, nr, er = m['buses'][jr[0]]
         m['buses'][jr[0]] = (br, cr, nr, list(er) + [(DIV[0], 'rst_n')])

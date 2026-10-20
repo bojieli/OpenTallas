@@ -159,6 +159,11 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
     return '\n'.join(lines) + '\n'
 
 
+# QW-GEN5 g5: actual clock sources outside the receiver -- the real coll_blk /6 divider (rtl/qwen_split/qfd_ckdiv6.sv)
+# and the UCIe PHY's FDI clock output (PHY-modeled boundary, view nface_tall_1017 lclk)
+CLOCK_SOURCE_PORTS = {('qfd_ckdiv6', 'blk_o'), ('ot_qfd_ucie_x64_phy', 'lclk')}
+
+
 def clock_connections(path, dirs, leaves, clock_ports=None):
     """Resolve scalar and concatenated vector clock nets at actual physical bits."""
     nets, _, _, instances = parse_die(path)
@@ -171,6 +176,10 @@ def clock_connections(path, dirs, leaves, clock_ports=None):
             if E.FWD_RE.match(master) and port in E.FWD_NOT_ROOT:
                 continue        # Q-DIE11-RLY: a forwarded lane clock (n_fck_*) propagates through the ck -> ck_o arcs
             bits = expr_bits(expression, nets)
+            if (master, port) in CLOCK_SOURCE_PORTS:
+                if bits and len(bits) == 1 and bits[0][0] in nets:
+                    drivers.setdefault(bits[0][0], []).append(f'{inst}/{port}')
+                continue
             if is_clock:
                 if not bits or any(net in ('CONST', 'Z', 'UNDECL') for net, _ in bits):
                     raise ValueError(f'{inst}/{port}: missing or non-net clock connection')
@@ -184,7 +193,7 @@ def clock_connections(path, dirs, leaves, clock_ports=None):
                         raise ValueError(f'{inst}/{pin}: clock trunk must be a scalar declared net')
                     sinks.add(net)
                     pins.setdefault(net, []).append((inst, master, pin))
-            elif dirs.get(master, {}).get(port) == 'output' and port.startswith('pll'):
+            elif (dirs.get(master, {}).get(port) == 'output' and port.startswith('pll')):
                 if bits and len(bits) == 1 and bits[0][0] in nets:
                     drivers.setdefault(bits[0][0], []).append(f'{inst}/{port}')
     return drivers, sinks, pins

@@ -5,22 +5,22 @@
 // while clocks_*.tcl declares coll_blk at 5000 ps: functionally wrong. The r10 collective source documents
 // B(m) = F(5m) = C(6m): one coll_blk period = 6 core periods, so the divider runs on the collective's own core trunk.
 //
-// Function: ck_o is a 50 % duty /6 of ck, taken straight from a flop (q): high for counts 0..2, low for 3..5. After
-// reset release ck_o's first rising edge is the 3rd ck edge after rst_n releases (2 landing + 1; fixed, deterministic: the collective's
+// Function: blk_o is a 50 % duty /6 of ck, taken straight from a flop (q): high for counts 0..2, low for 3..5. After
+// reset release blk_o's first rising edge is the 3rd ck edge after rst_n releases (2 landing + 1; fixed, deterministic: the collective's
 // own reset releases the phase; the die reset calendar prices it, as for every other root).
 //
 // Safe-design checklist (owner 10-19):
-//  1 pins   : rst_n lands in 2 registered stages (rl); ck_o is a flop output; no other inputs.
+//  1 pins   : rst_n lands in 2 registered stages (rl); blk_o is a flop output; no other inputs.
 //  2 reach  : 3 + 3 flops, placed by the GEN beside io_collective's blk_ck pins (< 405 um).
 //  3 fanout : rl[1] drives 4 flops; q drives the coll_blk clock trunk (the die clock tool builds that tree).
 //  4 depth  : 3-bit counter compare, < 6 levels.
 //  5 storage: 6 flops.
-//  7 clock  : one clock ck (clk_coll); ck_o is the root of the coll_blk region tree (die clock tool).
+//  7 clock  : one clock ck (clk_coll); blk_o is the root of the coll_blk region tree (die clock tool).
 //  8 schedule: static; the coll_blk phase is a fixed count after reset release (no handshake).
 module qfd_ckdiv6 (
     input  wire ck,
     input  wire rst_n,      // collective reset (active low, async assert, release lands in 2 stages on ck)
-    output wire ck_o
+    output wire blk_o
 );
     reg [1:0] rl;
     always @(posedge ck or negedge rst_n)
@@ -41,5 +41,5 @@ module qfd_ckdiv6 (
 `endif
             q <= (c < 3'd3);
         end
-    assign ck_o = q;
+    assign blk_o = q;
 endmodule

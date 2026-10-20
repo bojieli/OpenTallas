@@ -26,12 +26,12 @@ if [ "$MODE" = prep ]; then
     || { say "clk_rx port completion FAIL (clkrx_ports.log)"; exit 1; }
   say "$(grep -h 'QCLK_CLKRX' $D/clkrx_ports.log | tr '\n' ' ' | cut -c1-600)"
   ROOTS=$(grep -o 'qfd_clkrx clk_rx (.*' $D/die.v | grep -o '\.pll_[a-z0-9_]*' | tr -d . | grep -v pll_fwd | sed 's#^#clk_rx/#' | paste -sd,)
-  # QW-GEN5 g5: clock roots outside the receiver: the real coll_blk divider output (qfd_ckdiv6 ck_o) and the UCIe
+  # QW-GEN5 g5: clock roots outside the receiver: the real coll_blk divider output (qfd_ckdiv6 blk_o) and the UCIe
   # PHY FDI clock output (io_ucie lclk)
   XR=$(python3 - $D/die.v <<'PY'
 import re, sys
 v = open(sys.argv[1]).read()
-r = [f'{i}/ck_o' for i in re.findall(r'^\s*qfd_ckdiv6\s+(\S+)\s*\(', v, re.M)]
+r = [f'{i}/blk_o' for i in re.findall(r'^\s*qfd_ckdiv6\s+(\S+)\s*\(', v, re.M)]
 r += [f'{i}/lclk' for i in re.findall(r'^\s*ot_qfd_ucie_x64_phy\s+(\S+)\s*\([^;]*\.lclk\(', v, re.M)]
 print(','.join(r))
 PY
