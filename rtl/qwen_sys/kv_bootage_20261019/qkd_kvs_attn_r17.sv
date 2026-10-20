@@ -176,8 +176,13 @@ module qkd_native_attention_static_ctl_r17 #(
  // status_slot = busy && age == tx_first + 33, as NSS kept copies computed from the next state (exact every edge)
  (* keep = "true", dont_touch = "true" *) reg [NSS-1:0] ss_c;
  wire [15:0] ss_age=(RETIRE_STATIC!=0)?last_nx-16'd1:tx_first_nx+16'd33;
- wire ss_nx=busy_nx&&(age_nx==ss_age-((MUT==5)?16'd1:16'd0));
- always @(posedge ck or negedge rst_n)if(!rst_n)ss_c<=0;else ss_c<={NSS{ss_nx}};
+ wire ss_eq=age_nx==ss_age-((MUT==5)?16'd1:16'd0);
+ // KV-ATTN4 r17: the copy enable is computed by TWO kept-hierarchy AND leaves (opt_merge cannot fold them), each driving
+ // <= 17 of the NSS copies (r16: one ss_nx net drove all 33 copies, native census 33 > 32).  Same function, same edge.
+ wire [1:0] ss_nx;
+ qkd_attn_keep_and2_r17 u_ssa(.a(busy_nx),.b(ss_eq),.y(ss_nx[0]));
+ qkd_attn_keep_and2_r17 u_ssb(.a(busy_nx),.b(ss_eq),.y(ss_nx[1]));
+ always @(posedge ck or negedge rst_n)if(!rst_n)ss_c<=0;else ss_c<={{(NSS-NSS/2){ss_nx[1]}},{(NSS/2){ss_nx[0]}}};
  wire status_slot=ss_c[NSS-1];
  // compiled values: the load capture is split over the NLD-1 load copies (<= 32 flops each)
  always @(posedge ck or negedge rst_n)begin
@@ -867,4 +872,10 @@ module qkd_native59_command_guard_r17 #(
     assign native_position = {5'd0,accepted_tag[18:6]};
     assign native_epoch = accepted_tag[58:43];
     assign native_layer = accepted_tag[42:37] - 6'd1;
+endmodule
+
+// KV-ATTN4 r17: a kept-hierarchy AND (one instance per copy group of a kept register family; keeps fanout <= 32).
+(* keep_hierarchy = "yes" *)
+module qkd_attn_keep_and2_r17(input wire a,input wire b,output wire y);
+ assign y=a&b;
 endmodule

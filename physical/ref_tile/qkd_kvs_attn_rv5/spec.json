@@ -272,5 +272,8 @@
  "slot_change_request": "Outline 216.0 um square, ba4 full-face groups N d2d / E tx+i_ctl / S ck,rst,uf*,fin / W outputs; ages vs ba1/bs: K.rx_record +1 (RESULT/STATUS TX slots +1: tx_first 1751, end 1785; ks_pvst/ks_ahs/ks_pvfst/acal/ks_prg/ks_arh +1 relative to the RX record), reset assert/release = kit landing 2 edges (was ot_rst_relay async assert / release +3); fin +1 / i_ctl +1 unchanged.",
  "reset_relay_split": {
   "max_loads": 32
+ },
+ "orfs_vars": {
+  "OT_RST_COPIES_WIDE": "1"
  }
 }
