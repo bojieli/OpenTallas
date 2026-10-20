@@ -1,10 +1,10 @@
-if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {
-  set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
-  if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
-  source $ot_pg_helper
-  ot_pg_install_final_write_guard
-  ot_pg_install_rc_observers
-}
+# PG binding before protection is required in standard mode too (ROOT4 10-19):
+# the helper is always sourced; its guards/observers stay strict-only.
+set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
+if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
+source $ot_pg_helper
+ot_pg_install_final_write_guard
+ot_pg_install_rc_observers
 # Opt-in strong output-pin driver (S-ELEM ENGRAM-LKP 2026-10-16, S81 relay/station electrical reach).
 # Use from a ref_tile spec:  "pin_hook_before_flops": ["physical/common_flow/out_pin_driver.tcl"],
 #                            "orfs_vars": {"OT_OUT_DRV": "BUFx8_ASAP7_75t_R"}
@@ -93,6 +93,7 @@ if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
     foreach pg_inst $ot_od_pg {ot_pg_bind_before_protect $pg_mapping $pg_inst}
     foreach pg_net $ot_od_pg_nets {$pg_net setDoNotTouch 1}
   }
+  if {$ot_od_n > 0 || [llength $ot_od_abs]} {ot_pg_standard_bind out_pin_driver}
   if {[llength $ot_od_abs]} { foreach n $ot_od_abs { set_dont_touch [get_cells $n] } } elseif {$ot_od_n > 0} { set_dont_touch [get_cells ot_outdrv_*] }
   if {[info exists ::env(RESULTS_DIR)]} {
     set fh [open $::env(RESULTS_DIR)/ot_inhold_firm.txt a]; if {[llength $ot_od_firm]} { puts $fh [join $ot_od_firm "\n"] }; close $fh

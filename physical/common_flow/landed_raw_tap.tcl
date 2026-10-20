@@ -1,10 +1,10 @@
-if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {
-  set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
-  if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
-  source $ot_pg_helper
-  ot_pg_install_final_write_guard
-  ot_pg_install_rc_observers
-}
+# PG binding before protection is required in standard mode too (ROOT4 10-19):
+# the helper is always sourced; its guards/observers stay strict-only.
+set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
+if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
+source $ot_pg_helper
+ot_pg_install_final_write_guard
+ot_pg_install_rc_observers
 # landed_raw_tap.tcl (HF-4d 2026-10-19, coordinator option A for qfd_tt_ctlm_dv / h16c): post-CTS delay tap for the RAW
 # SRAM clock pins of a hard child in a LANDED cluster (tools/ref_tile clock_entry_constraints.landed_raw_pins).
 #
@@ -52,7 +52,155 @@ proc ot_lrt_corner {cell} {
   }
   error "OT_LRT: no corner for the loaded library of [get_full_name $cell]"
 }
+proc ot_lrt_tap_batched {} {
+  if {![info exists ::ot_lrt_targets] || ![dict size $::ot_lrt_targets]} return
+  if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_require_cts_placement_or_empty_context}
+  set block [ord::get_db_block]
+  set bufname [expr {[info exists ::env(OT_LRT_BUF)] ? $::env(OT_LRT_BUF) : "BUFx4_ASAP7_75t_R"}]
+  set lim [expr {[info exists ::env(OT_LRT_MAX)] ? $::env(OT_LRT_MAX) : 64}]
+  set bm [[ord::get_db] findMaster $bufname]
+  if {$bm eq "NULL"} { error "OT_LRT: buffer master $bufname missing" }
+  set ain ""; set aout ""
+  foreach mt [$bm getMTerms] {
+    if {[$mt getSigType] in {POWER GROUND}} continue
+    if {[$mt getIoType] eq "INPUT"} { set ain [$mt getName] } elseif {[$mt getIoType] eq "OUTPUT"} { set aout [$mt getName] }
+  }
+  # measure on propagated clocks (the CTS wrapper runs before the flow propagates them); restore ideal ones after
+  set ideal {}
+  foreach c [all_clocks] { if {![get_property $c is_propagated]} { lappend ideal $c } }
+  if {[llength $ideal]} { set_propagated_clock $ideal }
+  # BATCHED (L2H-PGVM 2026-10-19, Gate-Rule neutral): gate_lg2 of hbm_su_pgslice_lg_light_d4g stalled 2 x 14400 s here --
+  # the per-pin loop ran one full-design estimate_parasitics per buffer per pin (~40 s on 210k cells, ~1,000 rounds).
+  # Same per-pin rule, targets, limits, errors and final overshoot drop; the pins are advanced together, one buffer per
+  # unfinished pin per round, with ONE estimate_parasitics per round (rounds = the longest chain, not the sum).
+  set recs {}
+  foreach inst [$block getInsts] {
+    set master [[$inst getMaster] getName]
+    foreach it [$inst getITerms] {
+      set key "$master/[[$it getMTerm] getName]"
+      if {![dict exists $::ot_lrt_targets $key]} continue
+      set t [dict get $::ot_lrt_targets $key]
+      set iname [$inst getName]
+      set refit [$inst findITerm [dict get $t ref]]
+      if {$refit eq "NULL" || [$refit getNet] eq "NULL" || [$it getNet] eq "NULL"} {
+        error "OT_LRT: $iname: raw pin or its co-timed pin [dict get $t ref] unconnected"
+      }
+      set cell [get_cells -quiet $iname]
+      if {[llength $cell] != 1} { error "OT_LRT: $iname: no unique STA cell" }
+      set rpin {}; set fpin {}
+      foreach p [get_pins -of_objects $cell] {
+        set lp [get_property $p lib_pin_name]
+        if {$lp eq [[$it getMTerm] getName]} { lappend rpin $p } elseif {$lp eq [dict get $t ref]} { lappend fpin $p }
+      }
+      if {[llength $rpin] != 1 || [llength $fpin] != 1} { error "OT_LRT: $iname: pins not unique in STA" }
+      set corner [ot_lrt_corner $cell]
+      set loc [$it getAvgXY]
+      set x [lindex $loc 1]; set y [lindex $loc 2]
+      if {![lindex $loc 0]} { set bb [$inst getBBox]; set x [$bb xMin]; set y [$bb yMin] }
+      lappend recs [dict create it $it iname $iname mterm [[$it getMTerm] getName] rpin $rpin fpin $fpin corner $corner \
+        want [dict get $t $corner] x $x y $y n 0 prev "" d 0 last {} made {} active 1]
+    }
+  }
+  set nr [llength $recs]
+  set round 0
+  while 1 {
+    set any 0
+    for {set i 0} {$i < $nr} {incr i} { if {[dict get [lindex $recs $i] active]} { set any 1; break } }
+    if {!$any} break
+    estimate_parasitics -placement
+    incr round
+    for {set i 0} {$i < $nr} {incr i} {
+      set r [lindex $recs $i]
+      if {![dict get $r active]} continue
+      dict with r {
+        set d [expr {[ot_lrt_wire $rpin] - [ot_lrt_wire $fpin]}]
+        puts [format "OT_LRT %s %s/%s %s buffers=%d raw-ref=%.1f target=%.1f" $corner $iname $mterm $bufname $n $d $want]
+        if {$prev ne "" && $d - $prev < 0.5} { error "OT_LRT: $iname/$mterm: a buffer adds no delay" }
+        if {$d >= $want || $n >= $lim} {
+          set active 0
+        } else {
+          set prev $d
+          # one more buffer in front of the raw pin: (net) -> buf -> new net -> raw pin
+          set old [$it getNet]
+          set b [odb::dbInst_create $block $bm "ot_lrt_${iname}_${mterm}_$n"]
+          if {$b eq "NULL"} { error "OT_LRT: cannot create tap buffer" }
+          $b setLocation [expr {int($x)}] [expr {int($y)}]
+          $b setPlacementStatus PLACED
+          set nn [odb::dbNet_create $block "ot_lrt_n_${iname}_${mterm}_$n"]
+          $nn setSigType CLOCK
+          $it disconnect
+          [$b findITerm $ain] connect $old
+          [$b findITerm $aout] connect $nn
+          $it connect $nn
+          # Bind before the next placement estimate and raw/ref arrival measurement.
+          if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_bind_before_protect [ot_pg_prepare_targets $block [list $b]] $b}
+          set last [list $b $nn $old]
+          lappend made $b $nn
+          incr n
+        }
+      }
+      lset recs $i $r
+    }
+  }
+  puts "OT_LRT batched: $nr raw pins, $round parasitics rounds"
+  # the last buffer overshoots by < one buffer delay: drop it when n-1 buffers were nearer the target (all pins, then
+  # one estimate and a re-measure of the dropped pins)
+  set dropped {}
+  for {set i 0} {$i < $nr} {incr i} {
+    set r [lindex $recs $i]
+    dict with r {
+      if {$d < $want} { error "OT_LRT: $iname/$mterm: $lim buffers reach [format %.1f $d] < target $want" }
+      if {$n > 0 && $prev ne "" && $want - $prev < $d - $want} {
+        lassign $last b nn old
+        set made [lrange $made 0 end-2]
+        $it disconnect
+        odb::dbInst_destroy $b
+        odb::dbNet_destroy $nn
+        $it connect $old
+        incr n -1
+        lappend dropped $i
+      }
+    }
+    lset recs $i $r
+  }
+  if {[llength $dropped]} {
+    estimate_parasitics -placement
+    foreach i $dropped {
+      set r [lindex $recs $i]
+      dict with r { set d [expr {[ot_lrt_wire $rpin] - [ot_lrt_wire $fpin]}] }
+      lset recs $i $r
+    }
+  }
+  set done 0
+  foreach r $recs {
+    dict with r {
+      # the chain is final: keep it out of later resizing / buffering / net repair
+      if {[expr {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"}]} {
+        set pg_instances {}
+        foreach o $made {if {[$o getObjectType] eq "dbInst"} {lappend pg_instances $o}}
+        set pg_mapping [ot_pg_prepare_targets [ord::get_db_block] $pg_instances]
+        foreach o $pg_instances {ot_pg_bind_before_protect $pg_mapping $o}
+      } else {
+        ot_pg_standard_bind landed_raw_tap
+      }
+      foreach o $made { $o setDoNotTouch 1 }
+      puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f" $corner $iname $mterm $n $d $want [expr {$d - $want}]]
+    }
+    incr done
+  }
+  if {!$done} { error "OT_LRT: no raw child clock pin found for [dict keys $::ot_lrt_targets]" }
+  detailed_placement
+  estimate_parasitics -placement
+  if {[llength $ideal]} { unset_propagated_clock $ideal }
+  puts "OT_LRT tapped $done raw child clock pins"
+}
 proc ot_lrt_tap {} {
+  # OT_LRT_BATCH=1 (ROOT3 10-19, opt-in; default = this per-pin loop, byte-identical behaviour for every existing kit):
+  # the batched form below (L2H-PGVM 84d1b9ee6) advances all raw pins together with one estimate_parasitics per round.
+  # Equal chains are shown only for independent pins (tools/ref_tile/tests/lrt_batched_mock.tcl); with a shared upstream
+  # net a pin finished early is not re-measured after later buffers, so the boundary wrapper's OT_LANDED RAW_PIN check
+  # stays the verdict.
+  if {[info exists ::env(OT_LRT_BATCH)] && $::env(OT_LRT_BATCH) eq "1"} { return [ot_lrt_tap_batched] }
   if {![info exists ::ot_lrt_targets] || ![dict size $::ot_lrt_targets]} return
   if {[info exists ::env(OT_PG_STRICT)] && $::env(OT_PG_STRICT) eq "1"} {ot_pg_require_cts_placement_or_empty_context}
   set block [ord::get_db_block]
@@ -139,6 +287,8 @@ proc ot_lrt_tap {} {
         foreach o $made {if {[$o getObjectType] eq "dbInst"} {lappend pg_instances $o}}
         set pg_mapping [ot_pg_prepare_targets [ord::get_db_block] $pg_instances]
         foreach o $pg_instances {ot_pg_bind_before_protect $pg_mapping $o}
+      } else {
+        ot_pg_standard_bind landed_raw_tap
       }
       foreach o $made { $o setDoNotTouch 1 }
       puts [format "OT_LRT DONE %s %s/%s buffers=%d raw-ref=%.1f target=%.1f residual=%.1f" $corner $iname [[$it getMTerm] getName] $n $d $want [expr {$d - $want}]]
