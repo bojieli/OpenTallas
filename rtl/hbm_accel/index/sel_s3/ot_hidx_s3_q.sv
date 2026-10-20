@@ -67,7 +67,7 @@ endmodule
   else assign y[i]=a[i]^(carry&&(&a[i-1:5]));
  end
 endmodule
-module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0)(
+module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0,PIPE_HAZARD=0)(
  input wire clk,
  input wire rst_n,
  input wire [13:0] cw,                 // {addr[7:0], pass[1:0], op[3:0]} from the ctl tile (landed)
@@ -100,8 +100,9 @@ module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0)(
   cwid=(c==0)?13:12;
  endfunction
  // ---------------- reset: 2 registered stages at the face + 15 regional leaves ----------------
- wire [14:0] rr;
- ot_rst_relay #(.REGIONS(15),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+ localparam integer NR=15+(PIPE_HAZARD?2:0);
+ wire [NR-1:0] rr;
+ ot_rst_relay #(.REGIONS(NR),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
  // ---------------- pin flops ----------------
  // P1 copies of cw: 0..3 lane groups, 4 SRAMs, 5 quadrant control, 6 histogram chains, 7..10 histogram read quarters
  wire [13:0] p1[0:NP1-1];
@@ -448,19 +449,44 @@ module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0)(
  end
  // ---------------- control registers (reset) ----------------
  reg [5:0] wp;reg [13:0] selected;reg [7:0] hz;reg qfault;reg [10:0] rtag;
+ // PIPE_HAZARD prices one extra fault/status edge; active data edges stay unchanged.
+ // Count is used only for overflow fault. Delaying its recurrence and every
+ // other fault qualifier by one edge keeps the sticky fault exactly aligned.
+ wire [4:0] count_work;wire vb_work,vh_work,clear_work;
+ wire [15:0] idbad_work;wire [7:0] hazard_next;
+ wire h0=qop==2&&(rv&&rop==6||s16_c||s2v_m||s3v_b||s4v_f[4]||wreq);
+ wire h1=qop==7&&(rv&&rop==6||s16_c||s2v_m||s3v_b||s4v_f[4]);
+ wire h2=qop==3&&(rv&&rop==4||s14||f_h7[0]||f_h2v[0][0]);
+ wire h4=wr_pk&&({2'd0,wp}>s4_addr);
+ generate if(PIPE_HAZARD)begin:g_hazard_pipe
+  reg [4:0] cnt_p;reg [2:0] v_p;reg [3:0] other_p;reg [15:0] id_p;
+  always @(posedge clk)cnt_p<=c_cnt[0]+5'(DMUT==8);
+  always @(posedge clk or negedge rr[15])begin
+   if(!rr[15])begin v_p<=0;other_p<=0;end
+   else begin v_p<={s3v_b,s3v_h,op1s};other_p<={h4,h2,h1,h0};end
+  end
+  always @(posedge clk or negedge rr[16])if(!rr[16])id_p<=0;else id_p<=idbad;
+  assign count_work=cnt_p;assign vb_work=v_p[2];assign vh_work=v_p[1];assign clear_work=v_p[0];
+  assign idbad_work=id_p;
+  assign hazard_next={3'd0,other_p[3],vh_work&&selected_over,other_p[2:0]};
+ end else begin:g_hazard_original
+  assign count_work=c_cnt[0];assign vb_work=s3v_b;assign vh_work=s3v_h;assign clear_work=op1s;
+  assign idbad_work=idbad;
+  assign hazard_next={3'd0,h4,vh_work&&selected_over,h2,h1,h0};
+ end endgenerate
  wire [13:0] selected_next;
  wire selected_over,selected_low_carry;
  generate if(FAST_COUNT)begin:g_fast_count
-  ot_hidx_s3_acc14 u_sum(.a(selected),.b(c_cnt[0]),.mut(DMUT==7),.y(selected_next),.low_carry(selected_low_carry));
+  ot_hidx_s3_acc14 u_sum(.a(selected),.b(count_work),.mut(DMUT==7),.y(selected_next),.low_carry(selected_low_carry));
   // Exact full-domain range decomposition of selected+count>512 (count5).
   // Below512 only480..511 can overflow512, and only when low5sum>32.
   assign selected_over=(|selected[13:10])||
-    (selected[9]&&((|selected[8:0])||(|c_cnt[0])))||
+    (selected[9]&&((|selected[8:0])||(|count_work)))||
     ((&selected[8:5])&&selected_low_carry&&(|selected_next[4:0]));
  end else begin:g_original_count
-  assign selected_next=selected+14'(c_cnt[0]);
+  assign selected_next=selected+14'(count_work);
   assign selected_low_carry=1'b0;
-  assign selected_over=int'(selected)+int'(c_cnt[0])>512;
+  assign selected_over=int'(selected)+int'(count_work)>512;
  end endgenerate
 
  wire wr_pk=s4v_f[4]&&nf_q[4]>=16;     // pack write (master replica)
@@ -474,13 +500,8 @@ module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0)(
    s2v_m<=s16_c;s3v_b<=s2v_m;s3v_h<=s2v_m;sel_v<=s2v_m;
    wreq<=wr_pk||wr_fl;
    // schedule hazards the compiler must never issue (registered terms, sticky OR one edge later)
-   hz[0]<=qop==2&&(rv&&rop==6||s16_c||s2v_m||s3v_b||s4v_f[4]||wreq);
-   hz[1]<=qop==7&&(rv&&rop==6||s16_c||s2v_m||s3v_b||s4v_f[4]);
-   hz[2]<=qop==3&&(rv&&rop==4||s14||f_h7[0]||f_h2v[0][0]);
-   hz[3]<=s3v_h&&selected_over;
-   hz[4]<=wr_pk&&({2'd0,wp}>s4_addr);   // never overwrite an unread source line
-   hz[7:5]<=3'd0;
-   if((|hz)||(|idbad))qfault<=1;
+   hz<=hazard_next;
+   if((|hz)||(|idbad_work))qfault<=1;
   end
  end
  always @(posedge clk or negedge rr[1])begin
@@ -497,8 +518,8 @@ module ot_hidx_s3_q #(parameter integer DMUT=0,FAST_COUNT=0)(
  always @(posedge clk)if(wr_pk||wr_fl)wa_r<=wp;
  always @(posedge clk or negedge rr[5])begin
   if(!rr[5])selected<=0;
-  else if(s3v_b)selected<=selected_next;
-  else if(op1s)selected<=0;
+  else if(vb_work)selected<=selected_next;
+  else if(clear_work)selected<=0;
  end
  always @(posedge clk or negedge rr[4])begin
   if(!rr[4])rtag<=0;else rtag<={qop==1,qop==3,qop==5,qpass,qaddr[5:0]};
