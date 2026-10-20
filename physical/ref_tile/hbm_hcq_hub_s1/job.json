@@ -1,0 +1,177 @@
+{
+ "name": "hbm_hcq_hub_s1-s1-COMMIT",
+ "block": "ot_hbm_hc_qhub_static",
+ "ref_tile": true,
+ "owner": "Claude:HBM-ELEMOWN3/QHUB",
+ "purpose": "HC quarter hub SAFE successor of hbm_hcq_hub_1017 (10-19 --cts gate: CTS/GRT rc137 4 h stall): central std band, SAFE 1 RTL",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/hcq-hub-s1-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_eng4_ring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/test/tb_hbm_hc_q_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_xw_rx_static.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/test/full_sm_service/sram_models.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv",
+   "physical/hbm_hc_hub"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_hc_qhub_static #(.DRLY(2), .CHX(11), .SAFE(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_ring_s1_exact",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_QDRLY=2 +define+HC_QSI=1' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=0 rc=0",
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_ring_s1_mut6",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=1 +define+HC_QDRLY=2 +define+HC_QSI=1' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m6 6",
+    "expect": "fail",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=6 rc=0",
+    "fail_regex": "HC_ENG FAIL",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "note": "quarter 0 hub centre: s_i pin register without the leaf-valid delay",
+    "fail_witness": "results/rtl/hbm_hcq_hub_s1/ring_mut6.log"
+   },
+   {
+    "name": "hcq_s1_exact",
+    "cmd": "HCQ_SAFE=1 MUTS=0 OUT={RUN}/bench/all bash rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^HC_Q_STATIC BENCH PASS",
+    "min_count_regex": "^TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=4 waves=(\\d+)"
+   },
+   {
+    "name": "hcq_s1_mut1",
+    "cmd": "HCQ_SAFE=1 MUTS=1 OUT={RUN}/bench/m1 bash rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^TB_HBM_HC_Q_STATIC PASS",
+    "fail_regex": "^TB_HBM_HC_Q_STATIC FAIL MUT=1 ",
+    "note": "residual wave word",
+    "fail_witness": "results/rtl/hbm_hcq_hub_s1/hcq_s1_mut1.log"
+   },
+   {
+    "name": "hcq_s1_mut7",
+    "cmd": "HCQ_SAFE=1 MUTS=7 OUT={RUN}/bench/m7 bash rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^TB_HBM_HC_Q_STATIC PASS",
+    "fail_regex": "^TB_HBM_HC_Q_STATIC FAIL MUT=7 ",
+    "note": "gathered-reader bounds from the previous programme word",
+    "fail_witness": "results/rtl/hbm_hcq_hub_s1/hcq_s1_mut7.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_hcq_hub_s1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_hcq_hub_s1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_hcq_hub_s1 --out {RUN}/record/views/ot_hbm_hc_qhub_static --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_hcq_hub_s1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_hcq_hub_s1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_hcq_hub_s1/hbm_hcq_hub_s1-s1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "QHUB-S1 10-19 SAFE successor of hbm_hcq_hub_1017 (its --cts gate 10-19 03:42 FAILED: CTS rc137 after a 4 h repair stall at WNS -155 ps / TNS -93 ns and trial GRT rc137, one 48.7k-flop root over 734.4 sq at ~10% util with pin flops anchored on all 4 faces, reset nets 2,193 / 1,063 / 299 loads, runtime part-select, calendar->issue_sector 678 ps / 17 lv, 1,600 s_i input endpoints > 3 lv). Structure: every std cell in ONE central band (345.6 um at 194.4..540.0, gpl region released before DPL, no face anchoring) so the single clock root serves a compact register mass; RTL SAFE 1: s_i pin register (+1 subtree edge, handed to the root as QCHX 12 and the programme as RAW0 179: HC_QSI=1), reset relay copies spread <= 32 loads (reset_relay_split), decoded assembly writes, gathered bounds precompute (0 edges), valid-only LG steering, 64 capture-enable copies, per-face beat-control copies; SRAM on the 43.2 lattice; pins/outline = the d4g contract (unchanged). Pin order: route.pin_balance {group_max 1} gives every face a defined, sorted bit order (gate pin_order; the hub<->bank joint ranges follow the die lead's open ring-vs-U geometry decision, unchanged from 1017)."
+}
