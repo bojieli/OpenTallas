@@ -1,0 +1,501 @@
+{
+ "cluster_pitch_um": 3891.0640000000003,
+ "slice_column_um": 1000.0,
+ "frame_top_um": 24619.44,
+ "die_um": [
+  31968.5,
+  25000.0
+ ],
+ "die_mm2": 799.2,
+ "reticle_margin_um": [
+  515.7,
+  500.0
+ ],
+ "rom_slots": 1130,
+ "rom_slots_c26l": 1220,
+ "rsv": {
+  "n": 16,
+  "um": [
+   1252.0,
+   1337.8
+  ],
+  "aspect": 1.07,
+  "mm2": 1.675,
+  "need_mm2": 1.491,
+  "fit": 1.124,
+  "region_um": [
+   10536.4,
+   1650.0,
+   21432.2,
+   4365.7
+  ],
+  "frames_dropped": [
+   "f_2R00",
+   "f_3L00",
+   "f_3R00",
+   "f_4L00",
+   "f_4R00",
+   "f_5L00"
+  ],
+  "gap_um": [
+   110.0,
+   110.0,
+   110.0,
+   110.0,
+   220.0,
+   110.0,
+   110.0
+  ],
+  "content": "svc 1/16 (13.43 mm2 estimate, no RTL) + ot_s81_su_sm 1/16 (8 tiles 10.42 mm2): scores / P stay inside",
+  "upper_gap_of_column": {
+   "0": 1,
+   "1": 2,
+   "2": 3,
+   "3": 4,
+   "4": 5,
+   "5": 5,
+   "6": 6,
+   "7": 7
+  }
+ },
+ "mix4_deleted": {
+  "units": [
+   "mix4_w",
+   "mix4_e"
+  ],
+  "reason": "HANDOFF 0dv (owner 10-18) + results/arch/s81_dv_1016/p4j/engram_mix_verdict.json"
+ },
+ "void_free_um": {
+  "1": 6552,
+  "3": 6552,
+  "4": 6552
+ },
+ "tier_w": 276,
+ "svc_chain": {
+  "lane_bits": {
+   "widths": {
+    "sg": 2133,
+    "ss": 1077,
+    "dn": 805,
+    "pr": 514,
+    "up": 16
+   },
+   "links": {
+    "dn": 14,
+    "up": 14,
+    "pr": 14,
+    "sg": 25,
+    "ss": 25
+   },
+   "source": "results/arch/s81_dv_1016/svc_rs/slice_cluster.json port_cut + svc_rs/tree.json (stream tree = facts.rsv_tree) + svc_rs/embed.json paths (score exchange)",
+   "stages": 0,
+   "note": "abutted neighbour faces (40-220 um gaps), no relay station, no landing"
+  },
+  "master": "dsdv_svc_rs",
+  "fold": [
+   "rsv_07",
+   "rsv_09"
+  ],
+  "reduction_order": "per half: each column folds lower -> upper, then the upper row toward the centre (W half cols 0 -> 3, E half cols 7 -> 4), then W + E at the centre fold; fixed, compiler-visible; S81U-1 must match the golden head-dim reduction order (open item 3)",
+  "order": {
+   "W": {
+    "outward_upper_row": [
+     "rsv_07",
+     "rsv_05",
+     "rsv_03",
+     "rsv_01"
+    ],
+    "column_folds": [
+     [
+      "rsv_06",
+      "rsv_07"
+     ],
+     [
+      "rsv_04",
+      "rsv_05"
+     ],
+     [
+      "rsv_02",
+      "rsv_03"
+     ],
+     [
+      "rsv_00",
+      "rsv_01"
+     ]
+    ]
+   },
+   "E": {
+    "outward_upper_row": [
+     "rsv_09",
+     "rsv_11",
+     "rsv_13",
+     "rsv_15"
+    ],
+    "column_folds": [
+     [
+      "rsv_08",
+      "rsv_09"
+     ],
+     [
+      "rsv_10",
+      "rsv_11"
+     ],
+     [
+      "rsv_12",
+      "rsv_13"
+     ],
+     [
+      "rsv_14",
+      "rsv_15"
+     ]
+    ]
+   }
+  },
+  "qpv_entry": {
+   "W": "rsv_05",
+   "E": "rsv_11"
+  },
+  "entry_note": "p4j: q / P.V enter at the slice under the slice-column void (W rsv_05, E rsv_11) -- the centre roots rsv_07 / rsv_09 sit under frames f_3R01 / f_4L01, so a direct q/P.V lane crosses a frame body (p4i). q broadcasts outward from the entry (incl. entry -> root); partials run toward the root (entry -> root on tp); the folded result returns root -> entry on tr (512 b), then pv to the slice. Same reduction order as p4i."
+ },
+ "rsv_tree": {
+  "W": {
+   "entry": "rsv_05",
+   "edges": [
+    [
+     "rsv_03",
+     "rsv_01"
+    ],
+    [
+     "rsv_05",
+     "rsv_03"
+    ],
+    [
+     "rsv_05",
+     "rsv_07"
+    ],
+    [
+     "rsv_01",
+     "rsv_00"
+    ],
+    [
+     "rsv_03",
+     "rsv_02"
+    ],
+    [
+     "rsv_05",
+     "rsv_04"
+    ],
+    [
+     "rsv_07",
+     "rsv_06"
+    ]
+   ],
+   "root": "rsv_07"
+  },
+  "E": {
+   "entry": "rsv_11",
+   "edges": [
+    [
+     "rsv_11",
+     "rsv_09"
+    ],
+    [
+     "rsv_11",
+     "rsv_13"
+    ],
+    [
+     "rsv_13",
+     "rsv_15"
+    ],
+    [
+     "rsv_09",
+     "rsv_08"
+    ],
+    [
+     "rsv_11",
+     "rsv_10"
+    ],
+    [
+     "rsv_13",
+     "rsv_12"
+    ],
+    [
+     "rsv_15",
+     "rsv_14"
+    ]
+   ],
+   "root": "rsv_09"
+  }
+ },
+ "unit_lanes": {
+  "cw_seqhost": {
+   "bits": 276,
+   "stations": 23,
+   "um": 9541.8
+  },
+  "jw_E_l0": {
+   "bits": 276,
+   "stations": 24,
+   "um": 9785.8
+  },
+  "jw_E_l1": {
+   "bits": 276,
+   "stations": 24,
+   "um": 9877.8
+  },
+  "jw_W_l0": {
+   "bits": 276,
+   "stations": 33,
+   "um": 13392.9
+  },
+  "jw_W_l1": {
+   "bits": 276,
+   "stations": 33,
+   "um": 13392.9
+  },
+  "jd_E": {
+   "bits": 276,
+   "stations": 24,
+   "um": 9731.8
+  }
+ },
+ "lane_margins_um": {
+  "col_ex_w": {
+   "4": 120.0
+  },
+  "col_ex_e": {
+   "3": 120.0
+  },
+  "why": "p4k: open the enclosed column-3 / column-4 unit voids to the streets for the dedicated unit lanes (the 25-um slice margins held no lane); die width +240.0 um"
+ },
+ "host_lanes": {
+  "hf_7N_l0": {
+   "bits": 276,
+   "stations": 58,
+   "um": 23854.9
+  },
+  "hf_7N_l1": {
+   "bits": 276,
+   "stations": 59,
+   "um": 24076.9
+  },
+  "hf_7N_l2": {
+   "bits": 276,
+   "stations": 59,
+   "um": 24298.9
+  },
+  "ht_7N": {
+   "bits": 276,
+   "stations": 60,
+   "um": 24520.9
+  },
+  "jd_W": {
+   "bits": 276,
+   "stations": 32,
+   "um": 13362.9
+  }
+ },
+ "host_plane": {
+  "endpoint": "s_7N",
+  "why": "end slice nearest the seqhost; the other three endpoints carry no host plane (S81-LEPV: host-less masters dsdv_slice_lepw / dsdv_slice_lepe_nh, HOST_EN 0, no host ports, no tied pads; the compiler addresses the host-side die only through s_7N)"
+ },
+ "mu_lanes": {
+  "mu_0N": {
+   "bits": 276,
+   "stations": 66,
+   "um": 26962.0
+  },
+  "rt_0N": {
+   "bits": 276,
+   "stations": 66,
+   "um": 27112.0
+  },
+  "mu_0S": {
+   "bits": 276,
+   "stations": 76,
+   "um": 30907.7
+  },
+  "mu_7S": {
+   "bits": 276,
+   "stations": 69,
+   "um": 28090.4
+  }
+ },
+ "mu": {
+  "variant": "MU_EN (multi-user)",
+  "masters": {
+   "s_0N": "dsdv_slice_lepw_mu",
+   "s_0S": "dsdv_slice_lepw_mus",
+   "s_7N": "dsdv_slice_lepe_mu",
+   "s_7S": "dsdv_slice_lepe_nh_mus",
+   "seqhost": "dsdv_seq_host_mux"
+  },
+  "packed": {
+   "s_7N": "mu in ht_7N bits 131..175, rt in hf_7N_l2 bits 20..51"
+  },
+  "f_mc": "host-stream CSR 0x15 decoded from f_host in dsdv_seq_host_mux (0 wires)"
+ },
+ "worst_allgather_slice_to_frame_um": 45174,
+ "worst_local_return_um": 3254,
+ "worst_slice_to_slice_um": 38930,
+ "phase_path_um": 48429,
+ "phase_path_stages": 121,
+ "scalar_exchange_stages": 97,
+ "worst_slice_to_attention_um": 24306,
+ "rsv_tree_deepest_um": 1180,
+ "worst_attention_to_frame_um": 29719,
+ "host_job": {
+  "decision": "p4k (coordinator 0dt): dedicated lanes for the benched RTL ports -- job / host-write seqhost -> both svc entries (one RTL source, broadcast), {jd, hc} from the E entry, gunit cw; the host / key-store ports keep the cross-die link endpoint as their source (S81-SLICE end-slice link endpoint, unbuilt): NOT planned",
+  "job_out": {
+   "E": {
+    "link": "jw_E",
+    "stations": 24,
+    "cycles_min": 15
+   },
+   "W": {
+    "link": "jw_W",
+    "stations": 33,
+    "cycles_min": 19
+   }
+  },
+  "hc_back": {
+   "link": "jd_E",
+   "stations": 24,
+   "cycles_min": 15
+  },
+  "cw": {
+   "link": "cw_seqhost",
+   "stations": 23,
+   "cycles_min": 14
+  },
+  "host_in": {
+   "status": "OWED",
+   "why": "f_host / f_lf / f_ks in, t_host / t_kd out (703 b) have no on-die source: the host and kit words arrive on the cross-die links, whose end-slice link endpoint (ot_s81ph_link_ep + gbx + coll lane) S81-SLICE has not built; the column-4 void is reachable only through the lane margins, so a dedicated host lane would run end slice -> top strip -> column 4 (~23 mm, ~57 stations x 703 b, +5% bit-mm) -- decide with the endpoint (S81-SLICE / S81U-SEQ)"
+  },
+  "critical_path": "off the token critical path: jobs are issued ahead by the static schedule",
+  "w_entry_jd": "the W entry rsv_05 jd / hc have no seqhost input (ONE s_jd / s_hc port): W-half job completion and host credits are not observed -- RTL owed (S81U-SEQ second jd / hc port or S81U-SVC W -> E fold)"
+ },
+ "slice_protocol": {
+  "kinds": {
+   "0": "CTL",
+   "1": "XQ",
+   "2": "XB",
+   "3": "NX",
+   "4": "RD",
+   "5": "SC",
+   "6": "CL",
+   "7": "HP"
+  },
+  "HP": "HC projection partial (golden-subtree roots of the 24 HC coefficients), single beat, slice -> tier line -> column-3 V rung -> gunit (vstop tap + sink kind 7); same route and cost class as SC (router scores)",
+  "rtl_owed": "S81-SLICE: K_HP = 3'd7 in ot_s81sl_xr (relay to V like SC) and ot_s81sl_rstop (deliver as CS); S81U-1: vstop strap tap_k/sink_k[7] at gunit"
+ },
+ "end_slice_lep": {
+  "s_0S": {
+   "master": "dsdv_slice_lep",
+   "tx": [
+    "lt_lk_WS0",
+    "lt_lk_WS1"
+   ],
+   "rx": [
+    "lr_lk_WS0",
+    "lr_lk_WS1"
+   ],
+   "lane_bits": 512,
+   "rtl_owed": "S81-SLICE: end-slice variant with 2 x 512-b link tx/rx ports (ot_s81ph_link_ep / ot_s81ph_coll_lane reuse); fold (p0+p1)+(p2+p3) stays in the slice"
+  },
+  "s_0N": {
+   "master": "dsdv_slice_lep",
+   "tx": [
+    "lt_lk_WN0",
+    "lt_lk_WN1"
+   ],
+   "rx": [
+    "lr_lk_WN0",
+    "lr_lk_WN1"
+   ],
+   "lane_bits": 512,
+   "rtl_owed": "S81-SLICE: end-slice variant with 2 x 512-b link tx/rx ports (ot_s81ph_link_ep / ot_s81ph_coll_lane reuse); fold (p0+p1)+(p2+p3) stays in the slice"
+  },
+  "s_7S": {
+   "master": "dsdv_slice_lep",
+   "tx": [
+    "lt_lk_ES0",
+    "lt_lk_ES1"
+   ],
+   "rx": [
+    "lr_lk_ES0",
+    "lr_lk_ES1"
+   ],
+   "lane_bits": 512,
+   "rtl_owed": "S81-SLICE: end-slice variant with 2 x 512-b link tx/rx ports (ot_s81ph_link_ep / ot_s81ph_coll_lane reuse); fold (p0+p1)+(p2+p3) stays in the slice"
+  },
+  "s_7N": {
+   "master": "dsdv_slice_lep",
+   "tx": [
+    "lt_lk_EN0",
+    "lt_lk_EN1"
+   ],
+   "rx": [
+    "lr_lk_EN0",
+    "lr_lk_EN1"
+   ],
+   "lane_bits": 512,
+   "rtl_owed": "S81-SLICE: end-slice variant with 2 x 512-b link tx/rx ports (ot_s81ph_link_ep / ot_s81ph_coll_lane reuse); fold (p0+p1)+(p2+p3) stays in the slice"
+  }
+ },
+ "coll_edge": "deleted (coordinator 0cj ~15:00 (a)): columns 0 / 7 tier rung = relay stations s_cS <-> s_cN",
+ "lane_over_block_um": {
+  "total": 0,
+  "top": {}
+ },
+ "lane_band_over_block": {
+  "bit_mm": 32.2,
+  "est_on_body_repeaters": 201,
+  "top": {
+   "mu_0S": 21.8,
+   "mu_7S": 10.4
+  },
+  "relay_overlaps": 74,
+  "relay_overlap_pairs": {
+   "mu_0N|rt_0N": 30,
+   "jw_E_l0|jw_E_l1": 11,
+   "hf_7N_l1|hf_7N_l2": 9,
+   "jw_W_l0|jw_W_l1": 6,
+   "hrd_05|hrq_05": 3,
+   "hrd_03|hrq_03": 3,
+   "hrd_15|hrq_15": 3,
+   "jd_W|jw_E_l0": 2,
+   "hrd_01|mu_0S": 2,
+   "hrd_01|hrq_01": 2
+  },
+  "rule": "MU-DIE-S81/PATH: hop band = max(bits x 0.096 + 3, relay across) um, station = relay body; 160-um repeater pitch"
+ },
+ "whitespace_before": {
+  "grid_um": 50.0,
+  "channel_um": 450.0,
+  "die_mm2": 799.2,
+  "white_pct": 21.4,
+  "white_mm2": 171.1,
+  "largest_empty": {
+   "x": 0.0,
+   "y": 0.0,
+   "w": 11700.0,
+   "h": 1650.0
+  },
+  "over_channel_mm2": 125.2
+ },
+ "hop_um": 405.0,
+ "slice_leaves": 5,
+ "leaf_um": [
+  950.0,
+  920.0
+ ],
+ "worst_cut": 0.5663,
+ "over_reach_bits": 0,
+ "relays": 3113,
+ "relay_bit_stages": 843266,
+ "bit_mm": 395325,
+ "cut_windows_over_limit": 0,
+ "slice_area_mm2": 4.37,
+ "n_frames": 122
+}
