@@ -114,3 +114,13 @@ With R4 the smb kinds L00/L02 get new set sequences: the old ones re-opened a se
 - **Qwen compiler**: done on branch `claude/toksim-hbm-smhbm-rotchk-1019` (bf2cea8c0, on claude/toksim-hbm-smhbm-1019). compile_qwen now lays the blocks out with `BL.static_run` and calls `BL.check_addrs`; the result goes in `budget.rotlayout`.
 - **Integration (LEAD2-HBM compiler mainline)**: the DS / Qwen program compilers must place embedding lookups as tokens of the first layer's stream (`hbm_table_images.layout_stream`). Engram rows stay indexed-DMA sector rows.
 - **KV and other streams.** The KV write-back / DMA linear byte streams follow the kport law (the set changes every 128 words per PC), so they are rotated by construction. They are single-row writes per token, not block streams.
+
+### TBL full96 (R4 L00/L02 images) — `full96_tbl/`
+The run used run_smb_unit.sh 02f66bcca bwsafe_face with XDEF=,FACE_MC3 and OPGAP320/PNUM88/PADD8/FETCH96, on ot-epyc5 under Verilator 5.050.
+Result: **SMB_UNIT PASS**:
+- ops 66/66 are bit-exact;
+- gos 154/154, go_slots_exact;
+- END 45260;
+- dram_reads 35372.
+
+So the L00/L02 images with the R4 set sequences decode exactly through the issuer and MC3b.
