@@ -45,3 +45,11 @@ m34 write-any copy 3 stuck 0 (xt c39).
 | 6 | floorplan | WAIVED pin-bound: 6,946 pins (W/E 2,176 each, S 1,482, N 1,113) need >= 371 um W/E at <= 6/um; 302.4 x 380.16 (aspect 1.26), W/E 5.85 / S 5.0 / N 3.8 pins/um, no macros, one full std-cell band. Fallback kit 345.6 x 440.64 (5.0 pins/um) gated in parallel |
 | 7 | clock | single ck, TritonCTS leaf tile, ck pin centre of S; gate rule pin-flop spread <= 80 ps TT+FF; io_hold_margin 0.03 |
 | 8 | schedule | static, no backpressure; every added edge in the table above |
+
+## Gate (10-19 17:43, --cts --remote auto, ot-agidock128) and submit
+qfd_dv_stream_t_1019: WARN, 0 fail. Synth 6,467 um2 (util 5.8 %, pin-bound waiver), 45,882 cells, 11,566 flops; textbook
+depth 473 ps, reach 290.5 um (<= 405 PASS); reset_landing rst_n 1 sink; CTS TT insertion 411.5 / FF 339.8 ps, pin-flop
+spread TT 37.5 / FF 35.9 ps (<= 80 PASS); reg->reg worst slack >= 0 setup and hold. PNG: packer blob centre column,
+taps spread toward N/S, pin flops on full W/E/N/S faces, ck centre of S. SUBMITTED qfd_dv_stream_t_1019-s1-2c97be786.
+Fallback qfd_dv_stream_t_fb_1019 (345.6 x 440.64): FAIL clock_rule spread TT 147.3 / FF 126.6 ps -- dropped (bigger
+outline stretches the pin-flop ring); not submitted.
