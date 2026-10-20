@@ -1,0 +1,62 @@
+[
+  {
+    "name": "ot_sram_1r1w2c_16x257_m1_p192",
+    "predecessor": "7e92217f5",
+    "behavior_equal_except_master_name": true,
+    "core_array_and_spec_equal_except_master_name": true,
+    "old_macro_area_um2": 3527.113536,
+    "new_macro_area_um2": 6884.633664,
+    "extra_macro_area_um2": 3357.520128,
+    "new_to_old_area_ratio": 1.9519172245891663,
+    "corners": {
+      "tt": {
+        "old_cq_ps": 258.62350680788563,
+        "new_cq_ps": 273.30270782607283,
+        "new_setup_ps": 42.93537978929832,
+        "new_min_period_ps": 292.43088192735536
+      },
+      "ss": {
+        "old_cq_ps": 335.0320446289671,
+        "new_cq_ps": 355.25577978434075,
+        "new_setup_ps": 60.024276324540274,
+        "new_min_period_ps": 381.3043174492893
+      },
+      "ff": {
+        "old_cq_ps": 210.72436655318486,
+        "new_cq_ps": 222.34618457026596,
+        "new_setup_ps": 36.31658909263666,
+        "new_min_period_ps": 237.53345305233404
+      }
+    }
+  },
+  {
+    "name": "ot_sram_1r1w2c_16x289_m1_p192",
+    "predecessor": "7e92217f5",
+    "behavior_equal_except_master_name": true,
+    "core_array_and_spec_equal_except_master_name": true,
+    "old_macro_area_um2": 4366.30176,
+    "new_macro_area_um2": 8539.867584,
+    "extra_macro_area_um2": 4173.565823999999,
+    "new_to_old_area_ratio": 1.9558583106267027,
+    "corners": {
+      "tt": {
+        "old_cq_ps": 262.49432711968024,
+        "new_cq_ps": 280.1514848793141,
+        "new_setup_ps": 45.91333653074502,
+        "new_min_period_ps": 302.2576157220434
+      },
+      "ss": {
+        "old_cq_ps": 338.90286494076173,
+        "new_cq_ps": 362.9295308489013,
+        "new_setup_ps": 63.827207077306255,
+        "new_min_period_ps": 392.7809992666159
+      },
+      "ff": {
+        "old_cq_ps": 214.59518686497944,
+        "new_cq_ps": 228.74005207544522,
+        "new_setup_ps": 38.839636286021346,
+        "new_min_period_ps": 246.450367750898
+      }
+    }
+  }
+]
