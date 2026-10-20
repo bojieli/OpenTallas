@@ -1,0 +1,76 @@
+diff --git a/tools/s81_dv/dv_rvcase.py b/tools/s81_dv/dv_rvcase.py
+index ebe9b2e05..c2493bb9c 100644
+--- a/tools/s81_dv/dv_rvcase.py
++++ b/tools/s81_dv/dv_rvcase.py
+@@ -28,7 +28,7 @@ Top-port nets (clock roots, rst_n, PMA, land_fault) are special (not die-top rou
+       -> CASE/{views/, die.v, place.tcl, run.tcl, run.sh, sta_<c>.tcl, sta.sh, landing.sdc, classify.py, case.json}
+ Labels: NOT_A_DIE_RESULT while case.json census lists stand-ins.
+ """
+-import argparse, collections, json, math, re, shutil, subprocess, sys
++import argparse, collections, hashlib, json, math, re, shutil, subprocess, sys
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+@@ -36,6 +36,7 @@ ROOT = HERE.parents[1]
+ sys.path.insert(0, str(ROOT / 'tools')); sys.path.insert(0, str(HERE))
+ import die_port_bind as DPB          # noqa: E402
+ import dv_diecase as DC              # noqa: E402
++import view_selection_guard as VSG
+ import dv_sta_pilot as SP            # noqa: E402
+ from die_cluster import boundary as CB   # noqa: E402
+ import abstract_pin_windows as APW   # noqa: E402
+@@ -354,6 +355,10 @@ def main():
+     ap.add_argument('--land-plan', required=True, type=Path)
+     ap.add_argument('--out', required=True, type=Path)
+     ap.add_argument('--view-refs', nargs='+', default=['origin/main'])
++    ap.add_argument('--qualification', choices=('diagnostic', 'release'), default='diagnostic')
++    ap.add_argument('--release-manifest', type=Path)
++    ap.add_argument('--component-holds', type=Path)
++    ap.add_argument('--root-selection-approval', type=Path, help='JSON identity of immutable ROOT approval blob')
+     ap.add_argument('--pin-window', type=float, default=3.0)
+     ap.add_argument('--die-repair', action='store_true')
+     ap.add_argument('--dieflow-ref', default='origin/main')
+@@ -388,6 +393,25 @@ def main():
+     # SAME view dv_bind's landing reset check derived landing_reset_stages from; it overrides the first-ref-wins pick
+     for m_, v_ in T.get('land_views', {}).items():
+         views[m_] = (v_.get('commit') or v_['ref'], f"{v_['kit']}/views/{m_}")
++    selection_receipt = dict(status='UNQUALIFIED_DIAGNOSTIC_SELECTION', note='LEF discovery is representation only; CLOSED labels do not establish admission')
++    if a.qualification == 'release':
++        if not all((a.release_manifest, a.component_holds, a.root_selection_approval)):
++            raise SystemExit('release selection requires explicit manifest, holds, and ROOT approval')
++        selected = {}
++        for mst, _, _, _ in insts:
++            if mst.endswith('_ASAP7_75t_R'):
++                continue
++            if mst not in views:
++                raise SystemExit('release selection refuses unqualified stand-in: ' + mst)
++            ref, directory = views[mst]
++            resolved = subprocess.run(['git', '-C', GITDIR, 'rev-parse', '--verify', ref + '^{commit}'], capture_output=True, text=True, check=True).stdout.strip()
++            selected[mst] = dict(commit=resolved, directory=directory)
++        paths = dict(plan=a.plan, bind_die=a.bind_dir / 'die.v', bind_case=a.bind_dir / 'bind_case.json', place_hints=a.bind_dir / 'place_hints.json', bind_table=a.bind_table, land_plan=a.land_plan, generator=Path(__file__), selection_guard=Path(VSG.__file__))
++        context = {name: hashlib.sha256(path.read_bytes()).hexdigest() for name, path in paths.items()}
++        try:
++            selection_receipt = VSG.qualify(json.loads(a.release_manifest.read_text()), json.loads(a.component_holds.read_text()), json.loads(a.root_selection_approval.read_text()), context, selected, lambda ref, path: git(ref, path, binary=True))
++        except (ValueError, KeyError, TypeError) as exc:
++            raise SystemExit('release selection refused: ' + str(exc)) from exc
+     idx = rtl_ports(bc['port_bind_cmd'])
+     kind = {}
+     for mst, nm, _, _ in insts:
+@@ -898,7 +922,7 @@ date > $D/run_all.done; exit $sta_rc
+                              else 'landing_closed_view' if f'ld_{r["link"]}' in loc else
+                              ('frame_lane_pins_mcp' if blocks[r['dst']]['kind'] == 'frame' else 'receiver_pins_mcp_NO_LANDING_TILE')
+                              if r['link'] in link_pins else 'none') for r in LP['links']}
+-    info = dict(schema='opentallas.s81_dv.rv_case.v1', plan=str(a.plan), bind_dir=str(a.bind_dir), bind_table=str(a.bind_table),
++    info = dict(selection_admission=selection_receipt, qualification_mode=a.qualification, schema='opentallas.s81_dv.rv_case.v1', plan=str(a.plan), bind_dir=str(a.bind_dir), bind_table=str(a.bind_table),
+                 land_plan=str(a.land_plan), die_um=[W, H], area_mm2=round(W * H / 1e6, 2), view_refs=a.view_refs,
+                 die_v_sha256=__import__('hashlib').sha256((a.bind_dir / 'die.v').read_bytes()).hexdigest(),
+                 port_bind_rc=bc.get('port_bind_rc'), instances=len(insts),
+@@ -908,7 +932,7 @@ date > $D/run_all.done; exit $sta_rc
+                 closed_instances=sum(1 for v in kind.values() if v == 'closed'), std_instances=sum(1 for v in kind.values() if v == 'std'),
+                 tie_wires=tz[0], tie_cells=len(ties), fwd_moves_over_20um={k: v for k, v in fwd_moves.items() if v[0] > 20}, placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
+                 land_plan_links_without_model=no_model, regional_roots='IDEAL top ports ck_<region> (DIE-CLOCK trees not built in this case)',
+-                label=('NOT_A_DIE_RESULT: real-view case; stand-ins = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('standin:')}))
++                label=('UNQUALIFIED_PARENT_DIE_RESULT: real-view case; stand-ins = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('standin:')}))
+                        + ' (no closed view yet); closed = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('closed:')}))),
+                 memory_note='case_p4l_r (stand-in die netlist) GRT 38.6 GB / 24 min, STA 24 GB / 3.3 min per corner (s81die6, ot-epyc5)',
+                 chains=chains, landings=lrows)
