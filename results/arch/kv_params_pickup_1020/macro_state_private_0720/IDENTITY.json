@@ -1,0 +1,20 @@
+{
+  "scope": "PRIVATE_EXACT_MACRO_TRANSITION_LEMMA_NOT_LEAF_RECEIPT",
+  "source_hashes": {
+    "macro.json": "d4fcd75754cbc71d2ce1ca9d700b779ec91af72ca48f635e79ee9186f3a3ebbc",
+    "run.py": "e1df3dffe904409901886c9039a0a98a4cc3bb62fa58e4bc4f4fb915c56b0e19",
+    "model.v": "f52f0e7f92b894a67de274a6980f8847eb0419485b67815d07688addf661e70f",
+    "actual_tt.lib": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7",
+    "actual.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa"
+  },
+  "compiler_defines": [
+    "OT_MEM_NO_INIT"
+  ],
+  "state_relation": "same arbitrary original32x128 array4096bits plus registeredrd_out128bits; no array/read zero-init constraint",
+  "causals": {
+    "1": "wrongextra readstage",
+    "2": "write-mask ignored",
+    "3": "write-first vs actual read-before-write on same-addresscollision"
+  },
+  "obligations": "All states and outputs in lemma compared; does not establish leaf cut controls, actual firstuse or physical timing."
+}

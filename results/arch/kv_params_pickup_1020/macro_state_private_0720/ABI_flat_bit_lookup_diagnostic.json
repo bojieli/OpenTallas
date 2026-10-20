@@ -1,0 +1,78 @@
+{
+  "cell": "ot_sram_1r1w_32x128_m1",
+  "liberty": [
+    {
+      "path": "/home/ubuntu/scratch/codex-pvslice-macro-state-0720/actual_tt.lib",
+      "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+    }
+  ],
+  "ports": [
+    {
+      "port": "clk",
+      "width": 1,
+      "direction": "input",
+      "all_bits_liberty_exist": true,
+      "all_directions_match": true,
+      "actualclock": true
+    },
+    {
+      "port": "r_ce_in",
+      "width": 1,
+      "direction": "input",
+      "all_bits_liberty_exist": true,
+      "all_directions_match": true,
+      "actualclock": false
+    },
+    {
+      "port": "r_addr_in",
+      "width": 5,
+      "direction": "input",
+      "all_bits_liberty_exist": false,
+      "all_directions_match": false,
+      "actualclock": false
+    },
+    {
+      "port": "rd_out",
+      "width": 128,
+      "direction": "output",
+      "all_bits_liberty_exist": false,
+      "all_directions_match": false,
+      "actualclock": false
+    },
+    {
+      "port": "w_ce_in",
+      "width": 1,
+      "direction": "input",
+      "all_bits_liberty_exist": true,
+      "all_directions_match": true,
+      "actualclock": false
+    },
+    {
+      "port": "w_addr_in",
+      "width": 5,
+      "direction": "input",
+      "all_bits_liberty_exist": false,
+      "all_directions_match": false,
+      "actualclock": false
+    },
+    {
+      "port": "wd_in",
+      "width": 128,
+      "direction": "input",
+      "all_bits_liberty_exist": false,
+      "all_directions_match": false,
+      "actualclock": false
+    },
+    {
+      "port": "w_mask_in",
+      "width": 128,
+      "direction": "input",
+      "all_bits_liberty_exist": false,
+      "all_directions_match": false,
+      "actualclock": false
+    }
+  ],
+  "actual_source_sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+  "total_functional_bits": 397,
+  "pass": false
+}
