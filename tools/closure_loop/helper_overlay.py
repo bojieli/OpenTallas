@@ -353,6 +353,13 @@ RULE_COMMITS = {
     # ROOT3 10-19 (merge note, history not rewritten): KV-PC 96ac666e1 changed ot_rst_copies.py/.tcl without a trailer.
     # Strided families apply only to (* ot_rst_split = W *) with an integer W >= 2 (1 / binary 1 -> the old family) and
     # --wide / opt_dff run only under OT_RST_COPIES_WIDE=1 -> every existing kit's prep and split are unchanged.
+    # ROOT3 10-19 (merge note): KV-RELAYGEN 1d4c26cb4 (inherited by claude/kv-attn2b-1019) added ot_rst_split.py/.tcl without
+    # a trailer; both were removed again on that branch (superseded by ot_rst_copies) and are absent from main's tree ->
+    # no gate ever reads them.
+    "1d4c26cb409c792c175b54cba00d45da36e773b6": dict(
+        kind="neutral", rule="rst-copies-opt-in",
+        paths=("physical/common_flow/ot_rst_split.py", "physical/common_flow/ot_rst_split.tcl"),
+        what="ot_rst_split.py/.tcl (OT_RST_SPLIT_MAX opt-in), removed again before the merge: not in any merged tree"),
     "96ac666e1019437db6b9c723cf9059aa9884a314": dict(
         kind="neutral", rule="rst-copies-opt-in",
         paths=("physical/common_flow/ot_rst_copies.py", "physical/common_flow/ot_rst_copies.tcl"),
