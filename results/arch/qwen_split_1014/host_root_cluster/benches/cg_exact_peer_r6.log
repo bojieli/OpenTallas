@@ -1,0 +1,9 @@
+# KV-HOST4 10-19: qkd_hr_core_peer r6 source claude/kv-host-peer6-1019 8fedfef89 (tar of the clean worktree on ot-epyc5), Verilator 5.050, run via ot-run
+seed=1 mode=0: LOCKSTEP PASS seed=1 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=1 mode=1: LOCKSTEP PASS seed=1 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=2 mode=0: LOCKSTEP PASS seed=2 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=2 mode=1: LOCKSTEP PASS seed=2 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=3 mode=0: LOCKSTEP PASS seed=3 mode=0 core_cycles=20000 compares=145291 outputs=73 inputs=50
+seed=3 mode=1: LOCKSTEP PASS seed=3 mode=1 core_cycles=20000 compares=145291 outputs=73 inputs=50
+CLUSTER_GATE PASS exact runs_pass=6/6 core_cycles=20000
+EXIT 0

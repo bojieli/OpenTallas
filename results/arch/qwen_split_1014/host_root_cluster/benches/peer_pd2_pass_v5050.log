@@ -1,0 +1,12 @@
+# KV-HOST4 10-19: qkd_hr_core_peer r6 source claude/kv-host-peer6-1019 8fedfef89 (tar of the clean worktree on ot-epyc5), Verilator 5.050, run via ot-run
+Verilator 5.050 2026-07-01 rev v5.050
+HKV_PEER_PD2_EQUIV ES=1 die=0 cycles=60000 accepted=6104 tk8_writes=16157 hc_writes=1055 tx_status=2938 resets=2027 mismatches=0 (now 0, delayed 0)
+HKV_PEER_PD2_EQUIV PASS
+HKV_PEER_PD2_EQUIV ES=1 die=3 cycles=60000 accepted=10189 tk8_writes=12473 hc_writes=11594 tx_status=9583 resets=2239 mismatches=0 (now 0, delayed 0)
+HKV_PEER_PD2_EQUIV PASS
+HKV_PEER_PD2_EQUIV ES=0 die=0 cycles=60000 accepted=8844 tk8_writes=16453 hc_writes=3157 tx_status=6146 resets=1461 mismatches=0 (now 0, delayed 0)
+HKV_PEER_PD2_EQUIV PASS
+HKV_PEER_PD2_EQUIV ES=0 die=5 cycles=60000 accepted=7655 tk8_writes=12431 hc_writes=11087 tx_status=6146 resets=1940 mismatches=0 (now 0, delayed 0)
+HKV_PEER_PD2_EQUIV PASS
+HKV_PEER_PD2 PASS 4/4
+EXIT 0
