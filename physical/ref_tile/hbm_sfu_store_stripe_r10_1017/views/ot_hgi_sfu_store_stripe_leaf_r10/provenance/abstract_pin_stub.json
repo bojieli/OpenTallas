@@ -11,17 +11,17 @@
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_store_stripe_r10_1017-r10n2-83f046320/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/home/ubuntu/wt/sfups11-1019/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_store_stripe_r10_1017-r10n2-83f046320/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_store_stripe_r10_1017-r10n2-83f046320/record/views/ot_hgi_sfu_store_stripe_leaf_r10/provenance/raw/ot_hgi_sfu_store_stripe_leaf_r10.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_store_stripe_r10_1017-r10n2-83f046320/record/views/ot_hgi_sfu_store_stripe_leaf_r10/provenance/ot_hgi_sfu_store_stripe_leaf_r10.candidate.lef"
+    "/home/ubuntu/wt/sfups11-1019/tools/hier_contract/abstract_pin_stub.py",
+    "/tmp/refin__dsyxplw/ot_hgi_sfu_store_stripe_leaf_r10/provenance/raw/ot_hgi_sfu_store_stripe_leaf_r10.lef",
+    "/tmp/refin__dsyxplw/ot_hgi_sfu_store_stripe_leaf_r10/provenance/ot_hgi_sfu_store_stripe_leaf_r10.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 565 OBS rects moved into 544 pins: clk, in_addr[2], in_addr[4], in_addr[6], in_addr[8], in_cv, in_data[100], in_data[102], in_data[104], in_data[106], in_data[108], in_data[10]; pockets: 660 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 565 OBS rects moved into 544 pins: clk, in_addr[2], in_addr[4], in_addr[6], in_addr[8], in_cv, in_data[100], in_data[102], in_data[104], in_data[106], in_data[108], in_data[10]; pockets: 661 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,7 +30,7 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_store_stripe_r10_1017-r10n2-83f046320/record/views/ot_hgi_sfu_store_stripe_leaf_r10/provenance/ot_hgi_sfu_store_stripe_leaf_r10.candidate.lef",
+    "lef": "/tmp/refin__dsyxplw/ot_hgi_sfu_store_stripe_leaf_r10/provenance/ot_hgi_sfu_store_stripe_leaf_r10.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
@@ -87,16 +87,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 660
+          "added": 661
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "ot_hgi_sfu_store_stripe_leaf_r10.lef",
-    "sha256": "95a455e6ba632d3590c9d7b42f3e5b3f159932c8e5353252a9ce4bf2786e4db7"
+    "sha256": "53f71593afe1ffc872d2809e9039cba2bca255f31ee7cd9e651c200cb4684b55"
   }
 }
