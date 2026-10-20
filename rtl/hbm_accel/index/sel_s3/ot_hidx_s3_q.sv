@@ -180,7 +180,8 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   always @(posedge clk)q<=rpass;
   assign spq[g]=q;
  end
- reg [7:0] s1_addr;reg [LW-1:0] rawr;
+ reg [7:0] s1_addr;
+ (* keep *) reg [LW-1:0] rawr;             // kept: else opt_merge folds it into the identical rawh bits
  wire [16:0] rawh[0:15];               // kept histogram-path copy of each lane's valid + key (compare path: rawr)
  for(genvar l=0;l<16;l=l+1)begin:grh
   (* keep *) reg [16:0] q;
@@ -248,7 +249,7 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   end
  end
  // selected line: main copy (-> pin flop, pack data) + 3 kept valid-bit copies (one pack prefix network per chunk)
- reg [LW-1:0] sel_line;
+ (* keep *) reg [LW-1:0] sel_line;          // kept: its valid bits equal the chv copies
  wire [15:0] chv[0:2];
  for(genvar l=0;l<16;l=l+1)begin:gsv
   (* keep *) reg [2:0] v;
