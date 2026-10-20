@@ -1,0 +1,51 @@
+ot-run: ot-epyc4       admits   979 GB (avail 799, growth 113, headroom 0, waiters 0/0 GB) load 59/128 running 43 disk 314 GB 
+ot-run: ot-epyc5       admits   914 GB (avail 748, growth 109, headroom 0, waiters 0/0 GB) load 85/128 running 27 disk 745 GB 
+ot-run: ot-epyc6       admits  1137 GB (avail 909, growth 113, headroom 0, waiters 0/0 GB) load 73/128 running 35 disk 5502 GB 
+ot-run: ot-epyc7       admits   610 GB (avail 528, growth 101, headroom 0, waiters 0/0 GB) load 78/96 running 22 disk 6091 GB 
+ot-run: ot-epyc8       admits  1150 GB (avail 896, growth 90, headroom 0, waiters 0/0 GB) load 29/128 running 13 disk 31 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/shlk-control-source-t3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/shlk-control-source-t3
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-337011-1792457033 after 0 s
+{
+  "scope": "PRIVATE_SOURCE_PROTOTYPE_NOT_CLOSED",
+  "source_sha256": "09e4d62c6a4032dead6ad208228555c3c53e3d35d2fcf81e715d227e3f7b7266",
+  "successor_sha256": "d7abffb115334206c5c043b6ec1631fc14279b778e1a21d679bdc49830099ed7",
+  "max_loads": 32,
+  "source_cells": 67046,
+  "successor_cells": 68683,
+  "added_cells_net": 1637,
+  "unowned_or_raw_input_loads": [],
+  "clone_structural_input_mismatches": [],
+  "reset_ff_requires_common_assertion_and_first_observation_authority": true,
+  "whole_closure": false,
+  "FF_added": 239,
+  "PG_terms_added": 3274,
+  "added_data_edges": 0
+}
+REMAINING 34
+TOP [{'net': '_051743_', 'instance': '_100085_', 'master': 'BUFx2_ASAP7_75t_R', 'terminal_loads': 513}, {'net': '_012162_', 'instance': '\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_kind[1]$_DFF_P_', 'master': 'DFFHQNx1_ASAP7_75t_R', 'terminal_loads': 513}, {'net': '_051744_', 'instance': '_100086_', 'master': 'INVx1_ASAP7_75t_R', 'terminal_loads': 256}, {'net': '_052262_', 'instance': '_100651_', 'master': 'BUFx2_ASAP7_75t_R', 'terminal_loads': 100}, {'net': '_052296_', 'instance': '_100688_', 'master': 'BUFx2_ASAP7_75t_R', 'terminal_loads': 100}, {'net': '_053365_', 'instance': '_101854_', 'master': 'BUFx2_ASAP7_75t_R', 'terminal_loads': 100}, {'net': '_053397_', 'instance': '_101889_', 'master': 'BUFx2_ASAP7_75t_R', 'terminal_loads': 100}, {'net': '_007473_', 'instance': '\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_mode[0]$_DFFE_PP_', 'master': 'DFFHQNx1_ASAP7_75t_R', 'terminal_loads': 89}, {'net': '_008079_', 'instance': '\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[3]$_DFFE_PN_', 'master': 'DFFHQNx1_ASAP7_75t_R', 'terminal_loads': 63}, {'net': '_000835_', 'instance': '\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[4]$_DFFE_PN_', 'master': 'DFFHQNx1_ASAP7_75t_R', 'terminal_loads': 63}, {'net': '_012238_', 'instance': '\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[216]$_DFFE_PP_', 'master': 'DFFHQNx1_ASAP7_75t_R', 'terminal_loads': 63}, {'net': '_007463_', 'instance': '\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[217]$_DFFE_PP_', 'master': 'DFFHQNx1_ASAP7_75t_R', 'terminal_loads': 63}, {'net': '_040700_', 'instance': '_084531_', 'master': 'BUFx2_ASAP7_75t_R', 'terminal_loads': 60}, {'net': '_007472_', 'instance': '\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[232]$_DFFE_PP_', 'master': 'DFFHQNx1_ASAP7_75t_R', 'terminal_loads': 60}, {'net': '_040282_', 'instance': '_084054_', 'master': 'BUFx2_ASAP7_75t_R', 'terminal_loads': 59}]
+	Command being timed: "python3 replicate_verified.py native_old.v comb_reset_verified --reset-ff"
+	User time (seconds): 10.04
+	System time (seconds): 0.32
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:10.37
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 334868
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 110511
+	Voluntary context switches: 1
+	Involuntary context switches: 42
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 34416
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-337011-1792457033): exit 0

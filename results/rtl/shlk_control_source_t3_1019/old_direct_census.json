@@ -1,0 +1,598 @@
+[
+  {
+    "net": "_061680_",
+    "loads": 1659,
+    "driver": null,
+    "sample": [
+      [
+        "TIEHIx1_ASAP7_75t_R",
+        "_114871_",
+        "H"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\jd_o[0]$_DFF_PN0_",
+        "SETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\jd_o[1]$_DFF_PN0_",
+        "SETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsc.reset_pipe[0]",
+    "loads": 56,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_110557_",
+      "Y",
+      {
+        "A": "_013384_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsc.reset_pipe[0]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\ot_rrs___pr_core_u_h_host_u_hi_u_rsc_g_regions_reset_regions__ot_rlv__c0$_DFF_PN0_",
+        "D"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\ot_rrs___pr_core_u_h_host_u_hi_u_rsc_g_regions_reset_regions__ot_rlv__c1$_DFF_PN0_",
+        "D"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\ot_rrs___pr_core_u_h_host_u_hi_u_rsc_g_regions_reset_regions__ot_rlv__c10$_DFF_PN0_",
+        "D"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[35]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_086570_",
+      "Y",
+      {
+        "A": "_013819_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[35]"
+      }
+    ],
+    "sample": [
+      [
+        "NAND2x1_ASAP7_75t_R",
+        "_086571_",
+        "A"
+      ],
+      [
+        "AND3x1_ASAP7_75t_R",
+        "_086576_",
+        "B"
+      ],
+      [
+        "AND4x1_ASAP7_75t_R",
+        "_087682_",
+        "C"
+      ]
+    ]
+  },
+  {
+    "net": "_024280_",
+    "loads": 34,
+    "driver": [
+      "AOI221x1_ASAP7_75t_R",
+      "_114669_",
+      "Y",
+      {
+        "A1": "_061597_",
+        "A2": "_061599_",
+        "B1": "_061609_",
+        "B2": "_061611_",
+        "C": "_061612_",
+        "Y": "_024280_"
+      }
+    ],
+    "sample": [
+      [
+        "NOR2x1_ASAP7_75t_R",
+        "_114670_",
+        "B"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.empty_c[0]$_DFF_PN1_",
+        "D"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.empty_c[10]$_DFF_PN1_",
+        "D"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[28]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114832_",
+      "Y",
+      {
+        "A": "_013812_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[28]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.g_hreg.hr_vc[10]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.g_hreg.hr_vc[11]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.g_hreg.hr_vc[12]$_DFFE_PN0P_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[19]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114823_",
+      "Y",
+      {
+        "A": "_013803_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[19]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_n[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_n[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_n[2]$_DFF_PN0_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[31]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114834_",
+      "Y",
+      {
+        "A": "_013815_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[31]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc[0]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc[10]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc[1]$_DFFE_PN0P_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[32]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114835_",
+      "Y",
+      {
+        "A": "_013816_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[32]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc[11]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc[12]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc[13]$_DFFE_PN0P_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[33]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114836_",
+      "Y",
+      {
+        "A": "_013817_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[33]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc[45]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc[46]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc[47]$_DFFE_PN0P_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[12]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114816_",
+      "Y",
+      {
+        "A": "_013796_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[12]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_n[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_n[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_n[2]$_DFF_PN0_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[13]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114817_",
+      "Y",
+      {
+        "A": "_013797_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[13]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_n[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_n[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_n[2]$_DFF_PN0_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[11]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114815_",
+      "Y",
+      {
+        "A": "_013795_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[11]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.sp_acc[0]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.sp_acc[1]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.sp_acc[2]$_DFFE_PN0P_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[34]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114837_",
+      "Y",
+      {
+        "A": "_013818_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[34]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ra_rpc[15]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ra_rpc[16]$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ra_rpc[17]$_DFFE_PN0P_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[14]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114818_",
+      "Y",
+      {
+        "A": "_013798_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[14]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.s_grp[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.s_grp[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.s_grp[2]$_DFF_PN0_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[15]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114819_",
+      "Y",
+      {
+        "A": "_013799_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[15]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.s_grp[10]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.s_grp[11]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.s_grp[12]$_DFF_PN0_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[17]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114821_",
+      "Y",
+      {
+        "A": "_013801_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[17]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.sl_ahi[0]$_DFF_PN1_",
+        "SETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.sl_ahi[1]$_DFF_PN1_",
+        "SETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.sl_ahi[2]$_DFF_PN1_",
+        "SETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[18]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114822_",
+      "Y",
+      {
+        "A": "_013802_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[18]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.sl_ahi[10]$_DFF_PN1_",
+        "SETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.sl_ahi[11]$_DFF_PN1_",
+        "SETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.sl_ahi[12]$_DFF_PN1_",
+        "SETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[16]",
+    "loads": 34,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114820_",
+      "Y",
+      {
+        "A": "_013800_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[16]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.sl_alo[0]$_DFF_PN1_",
+        "SETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.sl_alo[10]$_DFF_PN1_",
+        "SETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.u_eng.sl_alo[11]$_DFF_PN1_",
+        "SETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[29]",
+    "loads": 33,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114833_",
+      "Y",
+      {
+        "A": "_013813_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[29]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.csr_seam$_DFFE_PN0P_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.cx_wr$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.f_sent$_DFFE_PN0P_",
+        "RESETN"
+      ]
+    ]
+  },
+  {
+    "net": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[27]",
+    "loads": 33,
+    "driver": [
+      "INVx1_ASAP7_75t_R",
+      "_114831_",
+      "Y",
+      {
+        "A": "_013811_",
+        "Y": "\\u_ot_pr_core.u_h.host.u_hi.u_rsi.g_regions.reset_regions__ot_rlv[27]"
+      }
+    ],
+    "sample": [
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.rgray[0]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.rgray[1]$_DFF_PN0_",
+        "RESETN"
+      ],
+      [
+        "DFFASRHQNx1_ASAP7_75t_R",
+        "\\u_ot_pr_core.u_h.host.u_hi.g_hx_sram.u_hx.rgray[2]$_DFF_PN0_",
+        "RESETN"
+      ]
+    ]
+  }
+]

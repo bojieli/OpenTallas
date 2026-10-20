@@ -1,0 +1,300 @@
+{
+  "scope": "PRIVATE_SOURCE_PROTOTYPE_NOT_CLOSED",
+  "source_sha256": "09e4d62c6a4032dead6ad208228555c3c53e3d35d2fcf81e715d227e3f7b7266",
+  "successor_sha256": "d7abffb115334206c5c043b6ec1631fc14279b778e1a21d679bdc49830099ed7",
+  "max_loads": 32,
+  "source_cells": 67046,
+  "successor_cells": 68683,
+  "added_cells_net": 1637,
+  "remaining": [
+    {
+      "net": "_025649_",
+      "instance": "_066233_",
+      "master": "INVx1_ASAP7_75t_R",
+      "terminal_loads": 45
+    },
+    {
+      "net": "_025688_",
+      "instance": "_066272_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 39
+    },
+    {
+      "net": "_025969_",
+      "instance": "_066574_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 37
+    },
+    {
+      "net": "_039817_",
+      "instance": "_083558_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 45
+    },
+    {
+      "net": "_039818_",
+      "instance": "_083559_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 39
+    },
+    {
+      "net": "_039823_",
+      "instance": "_083564_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 40
+    },
+    {
+      "net": "_039828_",
+      "instance": "_083569_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 37
+    },
+    {
+      "net": "_040282_",
+      "instance": "_084054_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 59
+    },
+    {
+      "net": "_040283_",
+      "instance": "_084055_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 37
+    },
+    {
+      "net": "_040304_",
+      "instance": "_084076_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 50
+    },
+    {
+      "net": "_040700_",
+      "instance": "_084531_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 60
+    },
+    {
+      "net": "_040701_",
+      "instance": "_084532_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 53
+    },
+    {
+      "net": "_040708_",
+      "instance": "_084539_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 37
+    },
+    {
+      "net": "_051709_",
+      "instance": "_100051_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 35
+    },
+    {
+      "net": "_051743_",
+      "instance": "_100085_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 513
+    },
+    {
+      "net": "_051744_",
+      "instance": "_100086_",
+      "master": "INVx1_ASAP7_75t_R",
+      "terminal_loads": 256
+    },
+    {
+      "net": "_051746_",
+      "instance": "_100088_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 37
+    },
+    {
+      "net": "_051856_",
+      "instance": "_100208_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 46
+    },
+    {
+      "net": "_052262_",
+      "instance": "_100651_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 100
+    },
+    {
+      "net": "_052296_",
+      "instance": "_100688_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 100
+    },
+    {
+      "net": "_053365_",
+      "instance": "_101854_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 100
+    },
+    {
+      "net": "_053397_",
+      "instance": "_101889_",
+      "master": "BUFx2_ASAP7_75t_R",
+      "terminal_loads": 100
+    },
+    {
+      "net": "_008076_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[0]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 45
+    },
+    {
+      "net": "_008077_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[1]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 39
+    },
+    {
+      "net": "_008078_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[2]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 40
+    },
+    {
+      "net": "_008079_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[3]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 63
+    },
+    {
+      "net": "_000835_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[4]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 63
+    },
+    {
+      "net": "_012163_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_kind[0]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 35
+    },
+    {
+      "net": "_012162_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_kind[1]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 513
+    },
+    {
+      "net": "_012238_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[216]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 63
+    },
+    {
+      "net": "_007463_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[217]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 63
+    },
+    {
+      "net": "_007472_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[232]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 60
+    },
+    {
+      "net": "_000825_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[233]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 58
+    },
+    {
+      "net": "_007473_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_mode[0]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 89
+    }
+  ],
+  "unowned_or_raw_input_loads": [],
+  "clone_structural_input_mismatches": [],
+  "reset_ff_requires_common_assertion_and_first_observation_authority": true,
+  "whole_closure": false,
+  "FF_added": 239,
+  "PG_terms_added": 3274,
+  "added_data_edges": 0,
+  "critical_limit": "Census is scalar-primitive only: macro vector pins remain aggregate expressions and rd_out directions are unclassified. No all-driver/full macro-pin closure claim.",
+  "remaining_nontransparent_roots": [
+    {
+      "net": "_008076_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[0]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 45
+    },
+    {
+      "net": "_008077_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[1]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 39
+    },
+    {
+      "net": "_008078_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[2]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 40
+    },
+    {
+      "net": "_008079_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[3]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 63
+    },
+    {
+      "net": "_000835_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch[4]$_DFFE_PN_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 63
+    },
+    {
+      "net": "_012163_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_kind[0]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 35
+    },
+    {
+      "net": "_012162_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_kind[1]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 513
+    },
+    {
+      "net": "_012238_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[216]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 63
+    },
+    {
+      "net": "_007463_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[217]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 63
+    },
+    {
+      "net": "_007472_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[232]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 60
+    },
+    {
+      "net": "_000825_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_d[233]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 58
+    },
+    {
+      "net": "_007473_",
+      "instance": "\\u_ot_pr_core.u_h.host.u_hi.u_eng.st_mode[0]$_DFFE_PP_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "terminal_loads": 89
+    }
+  ],
+  "runtime_qualification": "NOT RUN; no behavioural PASS, mutant witness, source RTL equivalence, native synthesis or physical admission",
+  "post_assertion_condition": "Reset FF clone relation requires same actual asynchronous assertion; preassertion observation authority not established.",
+  "standard_area_cost": "Pending final full master accounting"
+}
