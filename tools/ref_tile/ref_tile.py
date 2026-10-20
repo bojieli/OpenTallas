@@ -501,6 +501,8 @@ def kit_pin_hooks(s: dict) -> bool:
 
 
 def gen_pin_hooks(s: dict) -> dict:
+    if s.get("pin_hook_after_flops") and not pin_hook_wrapper(s):
+        raise SpecError("pin_hook_after_flops needs the recipe-2 pin-hook wrapper")
     if pin_hook_flops_only(s):
         pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (pin flops, no hold stages): the spec's pin_hook_before_flops repo hooks, then",
                    "# every port's single launch / capture flop is fixed at its pin.  ORFS takes one hook per step."]
@@ -548,6 +550,15 @@ def gen_pin_hooks(s: dict) -> dict:
         if not (ROOT / rel).is_file():
             raise SpecError(f"missing pin hook: {rel}")
         pre_gpl.insert(-1, f"source /src/{rel}")
+    # spec "pin_hook_after_flops" (KV-RST3 2026-10-20): repo Tcl hooks sourced AFTER the pin flops are fixed, so they can
+    # read ot_out_flop_at_pins.txt / ot_inhold_firm.txt (e.g. a hard central placement fence for every non-boundary cell);
+    # safe relative repo paths only, and they join the source-sync list.  Kits without the key regenerate byte-identically.
+    for rel in s.get("pin_hook_after_flops", []):
+        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+            raise SpecError("pin_hook_after_flops must name safe relative repo Tcl files")
+        if not (ROOT / rel).is_file():
+            raise SpecError(f"missing pin hook: {rel}")
+        pre_gpl.append(f"source /src/{rel}")
     pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
                "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
                f"source /src/{QDM}/out_flop_release.tcl"]
@@ -2243,7 +2254,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
