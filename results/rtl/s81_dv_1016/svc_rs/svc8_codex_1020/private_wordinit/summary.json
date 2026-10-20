@@ -1,0 +1,26 @@
+[
+  {
+    "seed": 1,
+    "rc": 0,
+    "distinct_initial_memory_words": 1088,
+    "verdicts": [
+      "SVC8_MAPPED_PASS seed=1 cycles=400 checks=400 valid=198 first_valid=79 post_reset_valid=122"
+    ]
+  },
+  {
+    "seed": 2,
+    "rc": 0,
+    "distinct_initial_memory_words": 1088,
+    "verdicts": [
+      "SVC8_MAPPED_PASS seed=2 cycles=400 checks=400 valid=191 first_valid=80 post_reset_valid=121"
+    ]
+  },
+  {
+    "seed": 3,
+    "rc": 1,
+    "distinct_initial_memory_words": 1088,
+    "verdicts": [
+      "SVC8_MAPPED_MISMATCH cycle=1 rst=0 ov=1/1 oy=d7666d45561c5e9de08b80921e8718e8/56f352de86f3bc0371222b34e072e32c fault=e/4 seed=3"
+    ]
+  }
+]

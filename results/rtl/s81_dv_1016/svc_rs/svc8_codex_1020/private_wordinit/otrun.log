@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc7       admits  1019 GB (avail 776, growth 63, headroom 0, waiters 0/0 GB) load 57/96 running 17 disk 5380 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3183240-1792508652 after 0 s
+SVC8_PRIVATE_WORDINIT_BUILT 71ca173fce7161eeca2dd8c318cbf2f8ca89f9e369a539a7c42c07ed55517339 independent_seed_keys 3264 bit_identities 208896
+{"seed": 1, "rc": 0, "distinct_initial_memory_words": 1088, "verdicts": ["SVC8_MAPPED_PASS seed=1 cycles=400 checks=400 valid=198 first_valid=79 post_reset_valid=122"]}
+{"seed": 2, "rc": 0, "distinct_initial_memory_words": 1088, "verdicts": ["SVC8_MAPPED_PASS seed=2 cycles=400 checks=400 valid=191 first_valid=80 post_reset_valid=121"]}
+{"seed": 3, "rc": 1, "distinct_initial_memory_words": 1088, "verdicts": ["SVC8_MAPPED_MISMATCH cycle=1 rst=0 ov=1/1 oy=d7666d45561c5e9de08b80921e8718e8/56f352de86f3bc0371222b34e072e32c fault=e/4 seed=3"]}
+SVC8_PRIVATE_WORDINIT_COMPLETE
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3183240-1792508652): exit 0

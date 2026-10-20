@@ -1,0 +1,44 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc7       admits  1044 GB (avail 788, growth 57, headroom 0, waiters 0/0 GB) load 59/96 running 16 disk 5374 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3732277-1792509213 after 0 s
+{
+  "status": "SOURCE_ARCHITECTURE_MODEL_ONLY",
+  "source_json_sha256": "5137a0dcab0ac9b01467fbdb6df1a0b477b15da3b4a036ee6dcdfaf65902df4d",
+  "source_ledger_sha256": "4efe17cbad20057b0a7db3b1e5b8888e112eb0dbacc906cfa0faebaf56324430",
+  "logical_net_bits": {
+    "rst_n": [
+      3
+    ],
+    "rl0": [
+      84137
+    ],
+    "rl1": [
+      84125
+    ],
+    "rst_l": [
+      84125
+    ],
+    "ov": [
+      1886
+    ]
+  },
+  "rl1_original_consumer_roles": {
+    "RESETN": 4355,
+    "D": 17
+  },
+  "rl1_consumer_retained_loads_by_port": {
+    "D": 17,
+    "RESETN": 4614
+  },
+  "area_um2": {
+    "DFFHQNx1_ASAP7_75t_R": 0.2916,
+    "DFFASRHQNx1_ASAP7_75t_R": 0.37908
+  }
+}
+RESET_COPIES {'rl0': [6], 'rl1': [149], 'ov': [1]}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3732277-1792509213): exit 0

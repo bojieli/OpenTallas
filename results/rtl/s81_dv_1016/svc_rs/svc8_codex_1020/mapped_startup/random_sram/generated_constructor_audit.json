@@ -223,5 +223,8 @@
       "code": "vlSelf->tb_svc8_mapped__DOT__cand__DOT__c508214__DOT__arr[__Vi0] = VL_SCOPED_RAND_RESET_Q(64, __VscopeHash, 2301162133140465979ull);",
       "kind": "cand"
     }
-  ]
+  ],
+  "per_word_independent": false,
+  "runtime_semantics": "VL_SCOPED_RAND_RESET_Q creates a fresh RNG from seed^scopeHash^salt on every call; generated loop repeats salt for all32 words. Each array contains a repeated random64-bit word.",
+  "strict_startup_qualification": "HOLD pending private per-address initialization coupon"
 }

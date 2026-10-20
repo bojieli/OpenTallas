@@ -1,0 +1,264 @@
+{
+  "status": "BUILT_PRIVATE_INITIALIZATION_AND_OBSERVER_ONLY",
+  "source_manifest": "ed6943abed1e9b1141c71deca89043ca5c3bfda851a387f69ba592a46237181c  /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/gold.v\n6cc7756384633bed7fc0c70e636ca605e2e19e274df720c92d2244bcc6062e43  /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/cand.v\n8883a21d9557e9dc5e070cbb1cdb934529c06b324e84dc110d1e166f60ab611d  /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/cells.v\n9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2  /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/memory.v\n8ea4b479f99d42c9df108c63f9fef5aa94aed126543cc71d4ecbaf020096c865  /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/tb.v\nb9a0fd081de07c416d3c3f423307dad9bcdab685bee4c6ac65ef7504d9b1acc7  /srv/opentallas-scratch/claude/s81-svc8-1020/out_codex_mapped_probe_randommem/canonical_model_identity.json\n",
+  "runtime_source": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp",
+  "patched_files": [
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "old_sha256": "c005af94948ed3d193e0623feea34cee1a5d188c757d3dd0f1f12ad693664cd9",
+      "new_sha256": "be072ea4994723c0e68c45426ed14c92b339c5119bbf959f5fd14a80a40b9c49",
+      "scope": "17 SRAM constructor assignments and read-only init audit only; all other bytes unchanged"
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "old_sha256": "7a1400042586bcec30514c3fe78b1dc33fea1f96742f5e371ddf450f6b07e421",
+      "new_sha256": "dd8b9afb371b70798dd4371d1c3f1ff111e514e3b614dff1ba313e48182cf0d1",
+      "scope": "17 SRAM constructor assignments and read-only init audit only; all other bytes unchanged"
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__0.cpp",
+      "old_sha256": "ab4764d355ca0a11a84654a7b2452f93fd83381eee4f4dbf823909587ea9c836",
+      "new_sha256": "533190e399334a670ca48043e2667803c860b49b2dc100f5c9c676e7087f0fb7",
+      "scope": "TB comparison threshold12->1 and optional early observer causal control; no DUT state/eval changes"
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__0__Slow.cpp",
+      "old_sha256": "3379585d2e4a3d0ce4a0b375b9881344e41a8295ef80a841ae57ab7d99c365dc",
+      "new_sha256": "cec317ce40a5c6dec68d441ad6ef5a90aa588de696fc560bca35d9203a15fd13",
+      "scope": "TB banner only"
+    }
+  ],
+  "constructors": [
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__u_dfring__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 6057977876955828276
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b7__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 3895736929664231142
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b7__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 9035357460357304930
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b6__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 12703383663357456021
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b6__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 2177070127077612131
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b5__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 2783749397728601242
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b5__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 6594273487723350807
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b4__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 8513573671602632973
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b4__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 18014439147693653348
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b3__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 15517153795320268190
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b3__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 13590387424865206387
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b2__05d__02eg_r__02eu_rb__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 14079388167416903344
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_sk__05b2__05d__02eg_r__02eu_ra__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 4039577607981643490
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_h__05b3__05d__02eg_rn__02eu_fring__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 15539937654629005972
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_h__05b2__05d__02eg_rn__02eu_fring__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 3319329923538391182
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_h__05b1__05d__02eg_rn__02eu_fring__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 6679409471353074101
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__332__Slow.cpp",
+      "kind": "gold",
+      "field": "tb_svc8_mapped__DOT__gold__DOT__g_h__05b0__05d__02eg_rv__02eu_fring__02eg_m64__02eu_mem__DOT__arr",
+      "base_salt": 6584921530387069927
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508230__DOT__arr",
+      "base_salt": 13593108759569749161
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508229__DOT__arr",
+      "base_salt": 15906350511138036050
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508228__DOT__arr",
+      "base_salt": 3887031708696470081
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508227__DOT__arr",
+      "base_salt": 6383593858671109343
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508226__DOT__arr",
+      "base_salt": 16833577561085477981
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508225__DOT__arr",
+      "base_salt": 17549274229552597551
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508224__DOT__arr",
+      "base_salt": 17795036981646297082
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508223__DOT__arr",
+      "base_salt": 14257090305745069540
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508222__DOT__arr",
+      "base_salt": 4082000669298520713
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508221__DOT__arr",
+      "base_salt": 13010535428793001140
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508220__DOT__arr",
+      "base_salt": 3169545891502601444
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508219__DOT__arr",
+      "base_salt": 12150432380869903407
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508218__DOT__arr",
+      "base_salt": 13629474293195681487
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508217__DOT__arr",
+      "base_salt": 11241016768715822168
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508216__DOT__arr",
+      "base_salt": 4360066896715967031
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508215__DOT__arr",
+      "base_salt": 17090535029372776745
+    },
+    {
+      "file": "Vtb_svc8_mapped___024root__383__Slow.cpp",
+      "kind": "cand",
+      "field": "tb_svc8_mapped__DOT__cand__DOT__c508214__DOT__arr",
+      "base_salt": 2301162133140465979
+    }
+  ],
+  "unchanged_archive_members": {},
+  "TB_scope": "ov every sampled edge from1 including reset; payload/fault iff either ov; no reset/warmup comparison exclusion",
+  "reset_stimulus": "unchanged reset4/warm8/preload20/inflight reset180..184/inputresume192",
+  "runtime_sha256": "689d3f48fe0da03ec085c26b197e8a3f11cc88baa55c6d836845570511e7ab0f",
+  "distinct_instance_address_seed_keys": 3264,
+  "distinct_bit_identities": 208896,
+  "archive_original_sha256": "3fc84267983dbca2c59510f233866e233f395c323ec140b36c79eff090befff3",
+  "archive_member_changes": {
+    "Vtb_svc8_mapped_vm_classes_0.o": {
+      "before": "197917896a31dd2d53a1be4328104314dcd0d7340c8546b390bd760c7f2f6c60",
+      "after": "d2a1e2ca5153d71593817f608cb5f761270fef9b6df34b391818846fb95ec5c0"
+    },
+    "Vtb_svc8_mapped_vm_classes_Slow_0.o": {
+      "before": "9437e38081fb1e9e7bbf6bb6cf92afb69b80f96d4c8494c16af0475834d2d384",
+      "after": "476ce55306a2f6b6e253b2546651543bfea9a23129d872fb9025933e3cd6758e"
+    },
+    "Vtb_svc8_mapped_vm_classes_Slow_13.o": {
+      "before": "ef58d18da98ca5b239a67896f28a0fcff232a0131e146c518a7a20e2b94ff2da",
+      "after": "d6970ae7c7c32f018ea14d8a1bc6044f22d934b27e2b6b4023e6e638224654fa"
+    },
+    "Vtb_svc8_mapped_vm_classes_Slow_15.o": {
+      "before": "726c7f113a32d40aeee43e036c81edc21a6d1c892ba5799cbf38daf5cea98875",
+      "after": "dac83344de6aba9d7e21cb124a2080162f30901fa987576f04944bfef54a1320"
+    }
+  },
+  "binary_sha256": "71ca173fce7161eeca2dd8c318cbf2f8ca89f9e369a539a7c42c07ed55517339",
+  "archive_new_sha256": "a477e30235aa04bc0fbfe2e7db1cf85168da44b28714e98d9991a3cccb6754a1"
+}

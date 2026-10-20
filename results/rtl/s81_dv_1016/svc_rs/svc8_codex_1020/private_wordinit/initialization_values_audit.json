@@ -1,0 +1,22 @@
+{
+  "per_seed": [
+    {
+      "seed": 1,
+      "initial_words": 1088,
+      "distinct_word_values": 1088
+    },
+    {
+      "seed": 2,
+      "initial_words": 1088,
+      "distinct_word_values": 1088
+    },
+    {
+      "seed": 3,
+      "initial_words": 1088,
+      "distinct_word_values": 1088
+    }
+  ],
+  "distinct_values_across_all_three_seeds": 3264,
+  "bit_identities": 208896,
+  "qualification": "InitializationPASS; every-edge functionalcomparison FAIL seed3 cycle1; strict startup HOLD"
+}
