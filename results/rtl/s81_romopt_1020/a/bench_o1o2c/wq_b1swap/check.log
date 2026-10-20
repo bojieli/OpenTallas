@@ -1,0 +1,6 @@
+MISMATCH edge 353 row 0 lo 0 k 2 got bf30fb98/0 want bd8c79e8/0
+MISMATCH edge 354 row 1 lo 0 k 2 got 3f86565b/0 want 3f4d63ef/0
+MISMATCH edge 356 row 4 lo 0 k 1 got bed0442e/0 want bf83c739/0
+MISMATCH edge 357 row 5 lo 0 k 1 got bf480d56/0 want bf08c490/0
+PLAN_MISMATCH predicted 8 words, got 8; first diff ((353, 0, (0, 2, 3), 3180100072, 0), (353, 0, (0, 2, 3), 3207658392, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 attn.wq_b phase 1 mutant=swap rows=6 fixture_rows=6 errors=5 END edges=1023 ret_words=8 xo_checked=1021 fault=0

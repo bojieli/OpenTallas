@@ -1,0 +1,5 @@
+XS_PLACE_CHECK PASS u_f_3L02 attn.wo_b phase 1 mutant=None rows=11 fixture_rows=0 errors=0 END edges=2445 ret_words=42 xo_checked=2443 fault=4
+XS_PLACE_CHECK PASS u_f_3L02 attn.wo_b phase 2 mutant=None rows=11 fixture_rows=0 errors=0 END edges=2445 ret_words=42 xo_checked=2443 fault=4
+XS_PLACE_CHECK PASS u_f_3L02 attn.wo_b phase 3 mutant=None rows=10 fixture_rows=0 errors=0 END edges=2445 ret_words=42 xo_checked=2443 fault=4
+XS_PLACE_CHECK PASS u_f_3L02 attn.wo_b phase 4 mutant=None rows=10 fixture_rows=0 errors=0 END edges=2445 ret_words=42 xo_checked=2443 fault=4
+TOKSIM_FGU_SEQ FAIL op attn.wo_b PER 126 phases 4 rows 42 fixture_rows 0 go0 63 last_ret 755 span 692 errors 4 ['FAULT edge 403 status 11 lx 0', 'FAULT edge 404 status 11 lx 0', 'FAULT edge 405 status 11 lx 0']

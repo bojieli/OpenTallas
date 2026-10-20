@@ -1,0 +1,608 @@
+{
+ "schema": "opentallas.s81_dv.xs_field_calendar.v1",
+ "slice": "u_s_0S",
+ "periods_override": {},
+ "layers": {
+  "L0": {
+   "frame": "u_f_0L00",
+   "field_phases": 82,
+   "skipped": {},
+   "ops": {
+    "attn.wq_b": {
+     "nphases": 11,
+     "period": 126,
+     "floor": 126,
+     "predicted_span": 1483,
+     "serial_span": 2453,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.wo_b": {
+     "nphases": 4,
+     "period": 127,
+     "floor": 127,
+     "predicted_span": 701,
+     "serial_span": 1280,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.shared_gu": {
+     "nphases": 4,
+     "period": 146,
+     "floor": 146,
+     "predicted_span": 798,
+     "serial_span": 1440,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.experts_gu": {
+     "nphases": 24,
+     "period": 145,
+     "floor": 145,
+     "predicted_span": 3680,
+     "serial_span": 8280,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.down": {
+     "nphases": 21,
+     "period": 130,
+     "floor": 130,
+     "predicted_span": 2889,
+     "serial_span": 6069,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.wo_a": {
+     "nphases": 12,
+     "period": 231,
+     "floor": 231,
+     "predicted_span": 2893,
+     "serial_span": 4224,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.router": {
+     "nphases": 5,
+     "period": 231,
+     "floor": 231,
+     "predicted_span": 1269,
+     "serial_span": 1725,
+     "static_PASS": true,
+     "negative_control": false
+    }
+   },
+   "layer": {
+    "rows": 6091,
+    "PASS": false,
+    "windows": [
+     {
+      "op": "attn.wq_b",
+      "first_accept": 0,
+      "last_retire": 1393
+     },
+     {
+      "op": "attn.wo_a",
+      "first_accept": 1394,
+      "last_retire": 4068
+     },
+     {
+      "op": "attn.wo_b",
+      "first_accept": 4069,
+      "last_retire": 4583
+     },
+     {
+      "op": "ffn.router",
+      "first_accept": 4584,
+      "last_retire": 5641
+     },
+     {
+      "op": "ffn.shared_gu",
+      "first_accept": 5642,
+      "last_retire": 6248
+     },
+     {
+      "op": "ffn.experts_gu",
+      "first_accept": 6249,
+      "last_retire": 9752
+     },
+     {
+      "op": "ffn.down",
+      "first_accept": 9753,
+      "last_retire": 12486
+     }
+    ],
+    "fault": "('layer calendar compile fault', [('layer_rows_le_4096', 6091, {'attn.wq_b': 750, 'attn.wo_a': 829, 'attn.wo_b': 274, 'ffn.router': 346, 'ffn.shared_gu': 351, 'ffn.experts_gu': 2091, 'ffn.down': 1450})])"
+   },
+   "mu": [
+    {
+     "mode": "ar",
+     "users": 46,
+     "period": 989260,
+     "slot": 21505.7,
+     "windows": 322,
+     "field_busy_span": 12486,
+     "premise_busy_le_slot": true,
+     "collisions": 0,
+     "first": [],
+     "PASS": true
+    },
+    {
+     "mode": "mtp",
+     "users": 11,
+     "period": 1312908,
+     "slot": 126112,
+     "windows": 77,
+     "field_busy_span": 12486,
+     "premise_busy_le_slot": true,
+     "collisions": 0,
+     "first": [],
+     "PASS": true
+    }
+   ]
+  },
+  "L2": {
+   "frame": "u_f_0L00",
+   "field_phases": 89,
+   "skipped": {
+    "attn.cmp.wk": "one BF phase a layer: nothing to overlap (1 phases)"
+   },
+   "ops": {
+    "attn.wq_b": {
+     "nphases": 11,
+     "period": 126,
+     "floor": 126,
+     "predicted_span": 1483,
+     "serial_span": 2453,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.idx.q": {
+     "nphases": 6,
+     "period": 126,
+     "floor": 126,
+     "predicted_span": 925,
+     "serial_span": 1770,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.wo_b": {
+     "nphases": 4,
+     "period": 127,
+     "floor": 127,
+     "predicted_span": 701,
+     "serial_span": 1280,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.shared_gu": {
+     "nphases": 4,
+     "period": 146,
+     "floor": 146,
+     "predicted_span": 798,
+     "serial_span": 1440,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.experts_gu": {
+     "nphases": 24,
+     "period": 145,
+     "floor": 145,
+     "predicted_span": 3680,
+     "serial_span": 8280,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.down": {
+     "nphases": 21,
+     "period": 130,
+     "floor": 130,
+     "predicted_span": 2889,
+     "serial_span": 6069,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.wo_a": {
+     "nphases": 12,
+     "period": 231,
+     "floor": 231,
+     "predicted_span": 2893,
+     "serial_span": 4224,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.router": {
+     "nphases": 5,
+     "period": 231,
+     "floor": 231,
+     "predicted_span": 1269,
+     "serial_span": 1725,
+     "static_PASS": true,
+     "negative_control": false
+    }
+   },
+   "layer": {
+    "rows": 6501,
+    "PASS": false,
+    "windows": [
+     {
+      "op": "attn.wq_b",
+      "first_accept": 0,
+      "last_retire": 1393
+     },
+     {
+      "op": "attn.idx.q",
+      "first_accept": 1394,
+      "last_retire": 2157
+     },
+     {
+      "op": "attn.wo_a",
+      "first_accept": 2158,
+      "last_retire": 4832
+     },
+     {
+      "op": "attn.wo_b",
+      "first_accept": 4833,
+      "last_retire": 5347
+     },
+     {
+      "op": "ffn.router",
+      "first_accept": 5348,
+      "last_retire": 6405
+     },
+     {
+      "op": "ffn.shared_gu",
+      "first_accept": 6406,
+      "last_retire": 7012
+     },
+     {
+      "op": "ffn.experts_gu",
+      "first_accept": 7013,
+      "last_retire": 10516
+     },
+     {
+      "op": "ffn.down",
+      "first_accept": 10517,
+      "last_retire": 13250
+     }
+    ],
+    "fault": "('layer calendar compile fault', [('layer_rows_le_4096', 6501, {'attn.wq_b': 750, 'attn.idx.q': 410, 'attn.wo_a': 829, 'attn.wo_b': 274, 'ffn.router': 346, 'ffn.shared_gu': 351, 'ffn.experts_gu': 2091, 'ffn.down': 1450})])"
+   },
+   "mu": [
+    {
+     "mode": "ar",
+     "users": 46,
+     "period": 989260,
+     "slot": 21505.7,
+     "windows": 368,
+     "field_busy_span": 13250,
+     "premise_busy_le_slot": true,
+     "collisions": 0,
+     "first": [],
+     "PASS": true
+    },
+    {
+     "mode": "mtp",
+     "users": 11,
+     "period": 1312908,
+     "slot": 126112,
+     "windows": 88,
+     "field_busy_span": 13250,
+     "premise_busy_le_slot": true,
+     "collisions": 0,
+     "first": [],
+     "PASS": true
+    }
+   ]
+  },
+  "L14": {
+   "frame": "u_f_0L00",
+   "field_phases": 114,
+   "skipped": {
+    "eng.wkv": "not a field matvec calendar here (25 phases)",
+    "attn.cmp.wk": "one BF phase a layer: nothing to overlap (1 phases)"
+   },
+   "ops": {
+    "attn.wq_b": {
+     "nphases": 11,
+     "period": 126,
+     "floor": 126,
+     "predicted_span": 1483,
+     "serial_span": 2453,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.idx.q": {
+     "nphases": 6,
+     "period": 126,
+     "floor": 126,
+     "predicted_span": 925,
+     "serial_span": 1770,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.wo_b": {
+     "nphases": 4,
+     "period": 127,
+     "floor": 127,
+     "predicted_span": 701,
+     "serial_span": 1280,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.shared_gu": {
+     "nphases": 4,
+     "period": 146,
+     "floor": 146,
+     "predicted_span": 798,
+     "serial_span": 1440,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.experts_gu": {
+     "nphases": 24,
+     "period": 145,
+     "floor": 145,
+     "predicted_span": 3680,
+     "serial_span": 8280,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.down": {
+     "nphases": 21,
+     "period": 130,
+     "floor": 130,
+     "predicted_span": 2889,
+     "serial_span": 6069,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.wo_a": {
+     "nphases": 12,
+     "period": 231,
+     "floor": 231,
+     "predicted_span": 2893,
+     "serial_span": 4224,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.router": {
+     "nphases": 5,
+     "period": 231,
+     "floor": 231,
+     "predicted_span": 1269,
+     "serial_span": 1725,
+     "static_PASS": true,
+     "negative_control": false
+    }
+   },
+   "layer": {
+    "rows": 6501,
+    "PASS": false,
+    "windows": [
+     {
+      "op": "attn.wq_b",
+      "first_accept": 0,
+      "last_retire": 1393
+     },
+     {
+      "op": "attn.idx.q",
+      "first_accept": 1394,
+      "last_retire": 2157
+     },
+     {
+      "op": "attn.wo_a",
+      "first_accept": 2158,
+      "last_retire": 4832
+     },
+     {
+      "op": "attn.wo_b",
+      "first_accept": 4833,
+      "last_retire": 5347
+     },
+     {
+      "op": "ffn.router",
+      "first_accept": 5348,
+      "last_retire": 6405
+     },
+     {
+      "op": "ffn.shared_gu",
+      "first_accept": 6406,
+      "last_retire": 7012
+     },
+     {
+      "op": "ffn.experts_gu",
+      "first_accept": 7013,
+      "last_retire": 10516
+     },
+     {
+      "op": "ffn.down",
+      "first_accept": 10517,
+      "last_retire": 13250
+     }
+    ],
+    "fault": "('layer calendar compile fault', [('layer_rows_le_4096', 6501, {'attn.wq_b': 750, 'attn.idx.q': 410, 'attn.wo_a': 829, 'attn.wo_b': 274, 'ffn.router': 346, 'ffn.shared_gu': 351, 'ffn.experts_gu': 2091, 'ffn.down': 1450})])"
+   },
+   "mu": [
+    {
+     "mode": "ar",
+     "users": 46,
+     "period": 989260,
+     "slot": 21505.7,
+     "windows": 368,
+     "field_busy_span": 13250,
+     "premise_busy_le_slot": true,
+     "collisions": 0,
+     "first": [],
+     "PASS": true
+    },
+    {
+     "mode": "mtp",
+     "users": 11,
+     "period": 1312908,
+     "slot": 126112,
+     "windows": 88,
+     "field_busy_span": 13250,
+     "premise_busy_le_slot": true,
+     "collisions": 0,
+     "first": [],
+     "PASS": true
+    }
+   ]
+  },
+  "L20": {
+   "frame": "u_f_0L00",
+   "field_phases": 89,
+   "skipped": {
+    "attn.cmp.wk": "one BF phase a layer: nothing to overlap (1 phases)"
+   },
+   "ops": {
+    "attn.wq_b": {
+     "nphases": 11,
+     "period": 126,
+     "floor": 126,
+     "predicted_span": 1483,
+     "serial_span": 2453,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.idx.q": {
+     "nphases": 6,
+     "period": 126,
+     "floor": 126,
+     "predicted_span": 925,
+     "serial_span": 1770,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.wo_b": {
+     "nphases": 4,
+     "period": 127,
+     "floor": 127,
+     "predicted_span": 701,
+     "serial_span": 1280,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.shared_gu": {
+     "nphases": 4,
+     "period": 146,
+     "floor": 146,
+     "predicted_span": 798,
+     "serial_span": 1440,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.experts_gu": {
+     "nphases": 24,
+     "period": 145,
+     "floor": 145,
+     "predicted_span": 3680,
+     "serial_span": 8280,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.down": {
+     "nphases": 21,
+     "period": 130,
+     "floor": 130,
+     "predicted_span": 2889,
+     "serial_span": 6069,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "attn.wo_a": {
+     "nphases": 12,
+     "period": 231,
+     "floor": 231,
+     "predicted_span": 2893,
+     "serial_span": 4224,
+     "static_PASS": true,
+     "negative_control": false
+    },
+    "ffn.router": {
+     "nphases": 5,
+     "period": 231,
+     "floor": 231,
+     "predicted_span": 1269,
+     "serial_span": 1725,
+     "static_PASS": true,
+     "negative_control": false
+    }
+   },
+   "layer": {
+    "rows": 6501,
+    "PASS": false,
+    "windows": [
+     {
+      "op": "attn.wq_b",
+      "first_accept": 0,
+      "last_retire": 1393
+     },
+     {
+      "op": "attn.idx.q",
+      "first_accept": 1394,
+      "last_retire": 2157
+     },
+     {
+      "op": "attn.wo_a",
+      "first_accept": 2158,
+      "last_retire": 4832
+     },
+     {
+      "op": "attn.wo_b",
+      "first_accept": 4833,
+      "last_retire": 5347
+     },
+     {
+      "op": "ffn.router",
+      "first_accept": 5348,
+      "last_retire": 6405
+     },
+     {
+      "op": "ffn.shared_gu",
+      "first_accept": 6406,
+      "last_retire": 7012
+     },
+     {
+      "op": "ffn.experts_gu",
+      "first_accept": 7013,
+      "last_retire": 10516
+     },
+     {
+      "op": "ffn.down",
+      "first_accept": 10517,
+      "last_retire": 13250
+     }
+    ],
+    "fault": "('layer calendar compile fault', [('layer_rows_le_4096', 6501, {'attn.wq_b': 750, 'attn.idx.q': 410, 'attn.wo_a': 829, 'attn.wo_b': 274, 'ffn.router': 346, 'ffn.shared_gu': 351, 'ffn.experts_gu': 2091, 'ffn.down': 1450})])"
+   },
+   "mu": [
+    {
+     "mode": "ar",
+     "users": 46,
+     "period": 989260,
+     "slot": 21505.7,
+     "windows": 368,
+     "field_busy_span": 13250,
+     "premise_busy_le_slot": true,
+     "collisions": 0,
+     "first": [],
+     "PASS": true
+    },
+    {
+     "mode": "mtp",
+     "users": 11,
+     "period": 1312908,
+     "slot": 126112,
+     "windows": 88,
+     "field_busy_span": 13250,
+     "premise_busy_le_slot": true,
+     "collisions": 0,
+     "first": [],
+     "PASS": true
+    }
+   ]
+  }
+ }
+}

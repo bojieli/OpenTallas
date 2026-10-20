@@ -1,0 +1,1611 @@
+{
+ "layer": "L14",
+ "slice": "u_s_2S",
+ "frame": "u_f_2L00",
+ "ops": {
+  "attn.wq_b": {
+   "op": "attn.wq_b",
+   "fam": "fp8",
+   "mode": "pipeline",
+   "period": 126,
+   "cfg_lead": 52,
+   "floor": 126,
+   "nphases": 15,
+   "cal_rows": 1022,
+   "stream_words": 432,
+   "static": {
+    "checks": {
+     "rows_le_4096": true,
+     "rows_time_ordered_unique": true,
+     "streams_disjoint": true,
+     "tag_reuse_after_retire": true,
+     "tag0_even_x_parity": true,
+     "stream_addr_in_rom": true,
+     "isd_delay_line_le_ND": true,
+     "launch_spacing_eq_period": true,
+     "pipe_replay_period_ge_88": true,
+     "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+     "pipe_cfg_lead_ge_48": true,
+     "period_ge_measured_floor": true
+    },
+    "PASS": true,
+    "below_floor_negative_control": false
+   },
+   "predicted_span": 2060,
+   "span_tail": 296,
+   "span_metric": "spine_go0_to_last_frame_root_ret_edges",
+   "span_evidence": "results/rtl/s81_romopt_1020/a/fseq_o1/*/wq_b/check_P126.json",
+   "phases": [
+    {
+     "phase": 35,
+     "tag": 0,
+     "accept": 41,
+     "cfg": 51,
+     "launch": 103,
+     "stream": [
+      103,
+      166
+     ],
+     "retire": 174,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 36,
+     "tag": 2,
+     "accept": 167,
+     "cfg": 177,
+     "launch": 229,
+     "stream": [
+      229,
+      292
+     ],
+     "retire": 300,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 37,
+     "tag": 0,
+     "accept": 293,
+     "cfg": 303,
+     "launch": 355,
+     "stream": [
+      355,
+      418
+     ],
+     "retire": 426,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 38,
+     "tag": 2,
+     "accept": 419,
+     "cfg": 429,
+     "launch": 481,
+     "stream": [
+      481,
+      544
+     ],
+     "retire": 552,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 39,
+     "tag": 0,
+     "accept": 545,
+     "cfg": 555,
+     "launch": 607,
+     "stream": [
+      607,
+      670
+     ],
+     "retire": 678,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 40,
+     "tag": 2,
+     "accept": 671,
+     "cfg": 681,
+     "launch": 733,
+     "stream": [
+      733,
+      796
+     ],
+     "retire": 804,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 41,
+     "tag": 0,
+     "accept": 797,
+     "cfg": 807,
+     "launch": 859,
+     "stream": [
+      859,
+      922
+     ],
+     "retire": 930,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 42,
+     "tag": 2,
+     "accept": 923,
+     "cfg": 933,
+     "launch": 985,
+     "stream": [
+      985,
+      1048
+     ],
+     "retire": 1056,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 43,
+     "tag": 0,
+     "accept": 1049,
+     "cfg": 1059,
+     "launch": 1111,
+     "stream": [
+      1111,
+      1174
+     ],
+     "retire": 1182,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 44,
+     "tag": 2,
+     "accept": 1175,
+     "cfg": 1185,
+     "launch": 1237,
+     "stream": [
+      1237,
+      1300
+     ],
+     "retire": 1308,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 45,
+     "tag": 0,
+     "accept": 1301,
+     "cfg": 1311,
+     "launch": 1363,
+     "stream": [
+      1363,
+      1426
+     ],
+     "retire": 1434,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 46,
+     "tag": 2,
+     "accept": 1427,
+     "cfg": 1437,
+     "launch": 1489,
+     "stream": [
+      1489,
+      1552
+     ],
+     "retire": 1560,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 47,
+     "tag": 0,
+     "accept": 1553,
+     "cfg": 1563,
+     "launch": 1615,
+     "stream": [
+      1615,
+      1678
+     ],
+     "retire": 1686,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 48,
+     "tag": 2,
+     "accept": 1679,
+     "cfg": 1689,
+     "launch": 1741,
+     "stream": [
+      1741,
+      1804
+     ],
+     "retire": 1812,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 49,
+     "tag": 0,
+     "accept": 1805,
+     "cfg": 1815,
+     "launch": 1867,
+     "stream": [
+      1867,
+      1930
+     ],
+     "retire": 1938,
+     "nb": 64,
+     "stall_edges": 0
+    }
+   ],
+   "floor_evidence": "claude/s81-ratefix-1019@ff8fa3745 p126c52 PASS / p124c50 FAIL; claude/s81-wqbp-1020",
+   "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 296 (measured law); die wire / CAP tail not included"
+  },
+  "attn.idx.q": {
+   "op": "attn.idx.q",
+   "fam": "fp8",
+   "mode": "pipeline",
+   "period": 126,
+   "cfg_lead": 52,
+   "floor": 126,
+   "nphases": 8,
+   "cal_rows": 546,
+   "stream_words": 432,
+   "static": {
+    "checks": {
+     "rows_le_4096": true,
+     "rows_time_ordered_unique": true,
+     "streams_disjoint": true,
+     "tag_reuse_after_retire": true,
+     "tag0_even_x_parity": true,
+     "stream_addr_in_rom": true,
+     "isd_delay_line_le_ND": true,
+     "launch_spacing_eq_period": true,
+     "pipe_replay_period_ge_88": true,
+     "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+     "pipe_cfg_lead_ge_48": true,
+     "period_ge_measured_floor": true
+    },
+    "PASS": true,
+    "below_floor_negative_control": false
+   },
+   "predicted_span": 1177,
+   "phases": [
+    {
+     "phase": 50,
+     "tag": 0,
+     "accept": 41,
+     "cfg": 51,
+     "launch": 103,
+     "stream": [
+      103,
+      166
+     ],
+     "retire": 174,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 51,
+     "tag": 2,
+     "accept": 167,
+     "cfg": 177,
+     "launch": 229,
+     "stream": [
+      229,
+      292
+     ],
+     "retire": 300,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 52,
+     "tag": 0,
+     "accept": 293,
+     "cfg": 303,
+     "launch": 355,
+     "stream": [
+      355,
+      418
+     ],
+     "retire": 426,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 53,
+     "tag": 2,
+     "accept": 419,
+     "cfg": 429,
+     "launch": 481,
+     "stream": [
+      481,
+      544
+     ],
+     "retire": 552,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 54,
+     "tag": 0,
+     "accept": 545,
+     "cfg": 555,
+     "launch": 607,
+     "stream": [
+      607,
+      670
+     ],
+     "retire": 678,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 55,
+     "tag": 2,
+     "accept": 671,
+     "cfg": 681,
+     "launch": 733,
+     "stream": [
+      733,
+      796
+     ],
+     "retire": 804,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 56,
+     "tag": 0,
+     "accept": 797,
+     "cfg": 807,
+     "launch": 859,
+     "stream": [
+      859,
+      922
+     ],
+     "retire": 930,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 57,
+     "tag": 2,
+     "accept": 923,
+     "cfg": 933,
+     "launch": 985,
+     "stream": [
+      985,
+      1048
+     ],
+     "retire": 1056,
+     "nb": 64,
+     "stall_edges": 0
+    }
+   ],
+   "floor_evidence": "claude/toksim-s81c-fseq-1019 (lanes/TOKSIM-S81C-FSEQ.md: 6-phase PASS 8/8 to P126, P125 FAULT)",
+   "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 295 (measured law); die wire / CAP tail not included"
+  },
+  "attn.wo_b": {
+   "op": "attn.wo_b",
+   "fam": "fp8",
+   "mode": "pipeline",
+   "period": 127,
+   "cfg_lead": 52,
+   "floor": 127,
+   "nphases": 5,
+   "cal_rows": 342,
+   "stream_words": 432,
+   "static": {
+    "checks": {
+     "rows_le_4096": true,
+     "rows_time_ordered_unique": true,
+     "streams_disjoint": true,
+     "tag_reuse_after_retire": true,
+     "tag0_even_x_parity": true,
+     "stream_addr_in_rom": true,
+     "isd_delay_line_le_ND": true,
+     "launch_spacing_eq_period": true,
+     "pipe_replay_period_ge_88": true,
+     "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+     "pipe_cfg_lead_ge_48": true,
+     "period_ge_measured_floor": true
+    },
+    "PASS": true,
+    "below_floor_negative_control": false
+   },
+   "predicted_span": 828,
+   "span_tail": 320,
+   "span_metric": "spine_go0_to_last_frame_root_ret_edges",
+   "span_evidence": "results/rtl/s81_romopt_1020/a/fseq_o1/*/wo_b/check_P127.json",
+   "phases": [
+    {
+     "phase": 58,
+     "tag": 0,
+     "accept": 41,
+     "cfg": 51,
+     "launch": 103,
+     "stream": [
+      103,
+      166
+     ],
+     "retire": 174,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 59,
+     "tag": 2,
+     "accept": 168,
+     "cfg": 178,
+     "launch": 230,
+     "stream": [
+      230,
+      293
+     ],
+     "retire": 301,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 60,
+     "tag": 0,
+     "accept": 295,
+     "cfg": 305,
+     "launch": 357,
+     "stream": [
+      357,
+      420
+     ],
+     "retire": 428,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 61,
+     "tag": 2,
+     "accept": 422,
+     "cfg": 432,
+     "launch": 484,
+     "stream": [
+      484,
+      547
+     ],
+     "retire": 555,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 62,
+     "tag": 0,
+     "accept": 549,
+     "cfg": 559,
+     "launch": 611,
+     "stream": [
+      611,
+      674
+     ],
+     "retire": 682,
+     "nb": 64,
+     "stall_edges": 0
+    }
+   ],
+   "floor_evidence": "results/rtl/s81_calpipe_1020/wob (u_f_0L00 / 0L01 P127 PASS 699 / 701, P126 FAIL 4 words)",
+   "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 320 (measured law); die wire / CAP tail not included"
+  },
+  "ffn.shared_gu": {
+   "op": "ffn.shared_gu",
+   "fam": "fp8",
+   "mode": "pipeline",
+   "period": 146,
+   "cfg_lead": 52,
+   "floor": 146,
+   "nphases": 3,
+   "cal_rows": 264,
+   "stream_words": 432,
+   "static": {
+    "checks": {
+     "rows_le_4096": true,
+     "rows_time_ordered_unique": true,
+     "streams_disjoint": true,
+     "tag_reuse_after_retire": true,
+     "tag0_even_x_parity": true,
+     "stream_addr_in_rom": true,
+     "isd_delay_line_le_ND": true,
+     "launch_spacing_eq_period": true,
+     "pipe_replay_period_ge_88": true,
+     "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+     "pipe_cfg_lead_ge_48": true,
+     "period_ge_measured_floor": true
+    },
+    "PASS": true,
+    "below_floor_negative_control": false
+   },
+   "predicted_span": 653,
+   "span_tail": 361,
+   "span_metric": "spine_go0_to_last_frame_root_ret_edges",
+   "span_evidence": "results/rtl/s81_romopt_1020/a/fseq_o1/*/shared_gu/check_P146.json",
+   "phases": [
+    {
+     "phase": 63,
+     "tag": 0,
+     "accept": 41,
+     "cfg": 51,
+     "launch": 103,
+     "stream": [
+      103,
+      201
+     ],
+     "retire": 209,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 64,
+     "tag": 2,
+     "accept": 187,
+     "cfg": 197,
+     "launch": 249,
+     "stream": [
+      249,
+      347
+     ],
+     "retire": 355,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 65,
+     "tag": 0,
+     "accept": 333,
+     "cfg": 343,
+     "launch": 395,
+     "stream": [
+      395,
+      493
+     ],
+     "retire": 501,
+     "nb": 80,
+     "stall_edges": 19
+    }
+   ],
+   "floor_evidence": "results/rtl/toksim_s81b_fgu_1019/job5 P146 PASS 798, job4 P145 FAIL",
+   "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 361 (measured law); die wire / CAP tail not included"
+  },
+  "ffn.experts_gu": {
+   "op": "ffn.experts_gu",
+   "fam": "fp8",
+   "mode": "pipeline",
+   "period": 145,
+   "cfg_lead": 52,
+   "floor": 145,
+   "nphases": 18,
+   "cal_rows": 1569,
+   "stream_words": 432,
+   "static": {
+    "checks": {
+     "rows_le_4096": true,
+     "rows_time_ordered_unique": true,
+     "streams_disjoint": true,
+     "tag_reuse_after_retire": true,
+     "tag0_even_x_parity": true,
+     "stream_addr_in_rom": true,
+     "isd_delay_line_le_ND": true,
+     "launch_spacing_eq_period": true,
+     "pipe_replay_period_ge_88": true,
+     "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+     "pipe_cfg_lead_ge_48": true,
+     "period_ge_measured_floor": true
+    },
+    "PASS": true,
+    "below_floor_negative_control": false
+   },
+   "predicted_span": 2811,
+   "span_tail": 346,
+   "span_metric": "spine_go0_to_last_frame_root_ret_edges",
+   "span_evidence": "results/rtl/s81_romopt_1020/a/fseq_o1/*/experts_gu/check_P145.json",
+   "phases": [
+    {
+     "phase": 66,
+     "tag": 0,
+     "accept": 41,
+     "cfg": 51,
+     "launch": 103,
+     "stream": [
+      103,
+      201
+     ],
+     "retire": 209,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 67,
+     "tag": 2,
+     "accept": 186,
+     "cfg": 196,
+     "launch": 248,
+     "stream": [
+      248,
+      346
+     ],
+     "retire": 354,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 68,
+     "tag": 0,
+     "accept": 331,
+     "cfg": 341,
+     "launch": 393,
+     "stream": [
+      393,
+      491
+     ],
+     "retire": 499,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 69,
+     "tag": 2,
+     "accept": 476,
+     "cfg": 486,
+     "launch": 538,
+     "stream": [
+      538,
+      636
+     ],
+     "retire": 644,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 70,
+     "tag": 0,
+     "accept": 621,
+     "cfg": 631,
+     "launch": 683,
+     "stream": [
+      683,
+      781
+     ],
+     "retire": 789,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 71,
+     "tag": 2,
+     "accept": 766,
+     "cfg": 776,
+     "launch": 828,
+     "stream": [
+      828,
+      926
+     ],
+     "retire": 934,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 72,
+     "tag": 0,
+     "accept": 911,
+     "cfg": 921,
+     "launch": 973,
+     "stream": [
+      973,
+      1071
+     ],
+     "retire": 1079,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 73,
+     "tag": 2,
+     "accept": 1056,
+     "cfg": 1066,
+     "launch": 1118,
+     "stream": [
+      1118,
+      1216
+     ],
+     "retire": 1224,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 74,
+     "tag": 0,
+     "accept": 1201,
+     "cfg": 1211,
+     "launch": 1263,
+     "stream": [
+      1263,
+      1361
+     ],
+     "retire": 1369,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 75,
+     "tag": 2,
+     "accept": 1346,
+     "cfg": 1356,
+     "launch": 1408,
+     "stream": [
+      1408,
+      1506
+     ],
+     "retire": 1514,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 76,
+     "tag": 0,
+     "accept": 1491,
+     "cfg": 1501,
+     "launch": 1553,
+     "stream": [
+      1553,
+      1651
+     ],
+     "retire": 1659,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 77,
+     "tag": 2,
+     "accept": 1636,
+     "cfg": 1646,
+     "launch": 1698,
+     "stream": [
+      1698,
+      1796
+     ],
+     "retire": 1804,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 78,
+     "tag": 0,
+     "accept": 1781,
+     "cfg": 1791,
+     "launch": 1843,
+     "stream": [
+      1843,
+      1941
+     ],
+     "retire": 1949,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 79,
+     "tag": 2,
+     "accept": 1926,
+     "cfg": 1936,
+     "launch": 1988,
+     "stream": [
+      1988,
+      2086
+     ],
+     "retire": 2094,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 80,
+     "tag": 0,
+     "accept": 2071,
+     "cfg": 2081,
+     "launch": 2133,
+     "stream": [
+      2133,
+      2231
+     ],
+     "retire": 2239,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 81,
+     "tag": 2,
+     "accept": 2216,
+     "cfg": 2226,
+     "launch": 2278,
+     "stream": [
+      2278,
+      2376
+     ],
+     "retire": 2384,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 82,
+     "tag": 0,
+     "accept": 2361,
+     "cfg": 2371,
+     "launch": 2423,
+     "stream": [
+      2423,
+      2521
+     ],
+     "retire": 2529,
+     "nb": 80,
+     "stall_edges": 19
+    },
+    {
+     "phase": 83,
+     "tag": 2,
+     "accept": 2506,
+     "cfg": 2516,
+     "launch": 2568,
+     "stream": [
+      2568,
+      2666
+     ],
+     "retire": 2674,
+     "nb": 80,
+     "stall_edges": 19
+    }
+   ],
+   "floor_evidence": "TOKSIM-S81B/FGU + S81C/FSGU: 24 phases P145 3680, P144 FAULT",
+   "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 346 (measured law); die wire / CAP tail not included"
+  },
+  "ffn.down": {
+   "op": "ffn.down",
+   "fam": "fp8",
+   "mode": "pipeline",
+   "period": 130,
+   "cfg_lead": 52,
+   "floor": 130,
+   "nphases": 21,
+   "cal_rows": 1450,
+   "stream_words": 432,
+   "static": {
+    "checks": {
+     "rows_le_4096": true,
+     "rows_time_ordered_unique": true,
+     "streams_disjoint": true,
+     "tag_reuse_after_retire": true,
+     "tag0_even_x_parity": true,
+     "stream_addr_in_rom": true,
+     "isd_delay_line_le_ND": true,
+     "launch_spacing_eq_period": true,
+     "pipe_replay_period_ge_88": true,
+     "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+     "pipe_cfg_lead_ge_48": true,
+     "period_ge_measured_floor": true
+    },
+    "PASS": true,
+    "below_floor_negative_control": false
+   },
+   "predicted_span": 2892,
+   "span_tail": 292,
+   "span_metric": "spine_go0_to_last_frame_root_ret_edges",
+   "span_evidence": "results/rtl/s81_romopt_1020/a/fseq_o1/*/down/check_P130.json",
+   "phases": [
+    {
+     "phase": 84,
+     "tag": 0,
+     "accept": 41,
+     "cfg": 51,
+     "launch": 103,
+     "stream": [
+      103,
+      166
+     ],
+     "retire": 174,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 85,
+     "tag": 2,
+     "accept": 171,
+     "cfg": 181,
+     "launch": 233,
+     "stream": [
+      233,
+      296
+     ],
+     "retire": 304,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 86,
+     "tag": 0,
+     "accept": 301,
+     "cfg": 311,
+     "launch": 363,
+     "stream": [
+      363,
+      426
+     ],
+     "retire": 434,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 87,
+     "tag": 2,
+     "accept": 431,
+     "cfg": 441,
+     "launch": 493,
+     "stream": [
+      493,
+      556
+     ],
+     "retire": 564,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 88,
+     "tag": 0,
+     "accept": 561,
+     "cfg": 571,
+     "launch": 623,
+     "stream": [
+      623,
+      686
+     ],
+     "retire": 694,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 89,
+     "tag": 2,
+     "accept": 691,
+     "cfg": 701,
+     "launch": 753,
+     "stream": [
+      753,
+      816
+     ],
+     "retire": 824,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 90,
+     "tag": 0,
+     "accept": 821,
+     "cfg": 831,
+     "launch": 883,
+     "stream": [
+      883,
+      946
+     ],
+     "retire": 954,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 91,
+     "tag": 2,
+     "accept": 951,
+     "cfg": 961,
+     "launch": 1013,
+     "stream": [
+      1013,
+      1076
+     ],
+     "retire": 1084,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 92,
+     "tag": 0,
+     "accept": 1081,
+     "cfg": 1091,
+     "launch": 1143,
+     "stream": [
+      1143,
+      1206
+     ],
+     "retire": 1214,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 93,
+     "tag": 2,
+     "accept": 1211,
+     "cfg": 1221,
+     "launch": 1273,
+     "stream": [
+      1273,
+      1336
+     ],
+     "retire": 1344,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 94,
+     "tag": 0,
+     "accept": 1341,
+     "cfg": 1351,
+     "launch": 1403,
+     "stream": [
+      1403,
+      1466
+     ],
+     "retire": 1474,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 95,
+     "tag": 2,
+     "accept": 1471,
+     "cfg": 1481,
+     "launch": 1533,
+     "stream": [
+      1533,
+      1596
+     ],
+     "retire": 1604,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 96,
+     "tag": 0,
+     "accept": 1601,
+     "cfg": 1611,
+     "launch": 1663,
+     "stream": [
+      1663,
+      1726
+     ],
+     "retire": 1734,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 97,
+     "tag": 2,
+     "accept": 1731,
+     "cfg": 1741,
+     "launch": 1793,
+     "stream": [
+      1793,
+      1856
+     ],
+     "retire": 1864,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 98,
+     "tag": 0,
+     "accept": 1861,
+     "cfg": 1871,
+     "launch": 1923,
+     "stream": [
+      1923,
+      1986
+     ],
+     "retire": 1994,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 99,
+     "tag": 2,
+     "accept": 1991,
+     "cfg": 2001,
+     "launch": 2053,
+     "stream": [
+      2053,
+      2116
+     ],
+     "retire": 2124,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 100,
+     "tag": 0,
+     "accept": 2121,
+     "cfg": 2131,
+     "launch": 2183,
+     "stream": [
+      2183,
+      2246
+     ],
+     "retire": 2254,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 101,
+     "tag": 2,
+     "accept": 2251,
+     "cfg": 2261,
+     "launch": 2313,
+     "stream": [
+      2313,
+      2376
+     ],
+     "retire": 2384,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 102,
+     "tag": 0,
+     "accept": 2381,
+     "cfg": 2391,
+     "launch": 2443,
+     "stream": [
+      2443,
+      2506
+     ],
+     "retire": 2514,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 103,
+     "tag": 2,
+     "accept": 2511,
+     "cfg": 2521,
+     "launch": 2573,
+     "stream": [
+      2573,
+      2636
+     ],
+     "retire": 2644,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 104,
+     "tag": 0,
+     "accept": 2641,
+     "cfg": 2651,
+     "launch": 2703,
+     "stream": [
+      2703,
+      2766
+     ],
+     "retire": 2774,
+     "nb": 64,
+     "stall_edges": 0
+    }
+   ],
+   "floor_evidence": "TOKSIM-S81B/FDOWN + S81C/FSDN: 21 phases P130 2889, P125 FAULT 11",
+   "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 292 (measured law); die wire / CAP tail not included"
+  },
+  "attn.wo_a": {
+   "op": "attn.wo_a",
+   "fam": "bf16",
+   "mode": "pipeline",
+   "period": 231,
+   "cfg_lead": 52,
+   "floor": 231,
+   "nphases": 12,
+   "cal_rows": 829,
+   "stream_words": 432,
+   "static": {
+    "checks": {
+     "rows_le_4096": true,
+     "rows_time_ordered_unique": true,
+     "streams_disjoint": true,
+     "tag_reuse_after_retire": true,
+     "tag0_even_x_parity": true,
+     "stream_addr_in_rom": true,
+     "isd_delay_line_le_ND": true,
+     "launch_spacing_eq_period": true,
+     "pipe_replay_period_ge_88": true,
+     "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+     "pipe_cfg_lead_ge_48": true,
+     "period_ge_measured_floor": true,
+     "bf_go_spacing_ge_seg_label_floor_231": true
+    },
+    "PASS": true,
+    "below_floor_negative_control": false
+   },
+   "predicted_span": 2893,
+   "phases": [
+    {
+     "phase": 106,
+     "tag": 0,
+     "accept": 41,
+     "cfg": 51,
+     "launch": 103,
+     "stream": [
+      103,
+      166
+     ],
+     "retire": 174,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 107,
+     "tag": 2,
+     "accept": 272,
+     "cfg": 282,
+     "launch": 334,
+     "stream": [
+      334,
+      397
+     ],
+     "retire": 405,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 108,
+     "tag": 0,
+     "accept": 503,
+     "cfg": 513,
+     "launch": 565,
+     "stream": [
+      565,
+      628
+     ],
+     "retire": 636,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 109,
+     "tag": 2,
+     "accept": 734,
+     "cfg": 744,
+     "launch": 796,
+     "stream": [
+      796,
+      859
+     ],
+     "retire": 867,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 110,
+     "tag": 0,
+     "accept": 965,
+     "cfg": 975,
+     "launch": 1027,
+     "stream": [
+      1027,
+      1090
+     ],
+     "retire": 1098,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 111,
+     "tag": 2,
+     "accept": 1196,
+     "cfg": 1206,
+     "launch": 1258,
+     "stream": [
+      1258,
+      1321
+     ],
+     "retire": 1329,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 112,
+     "tag": 0,
+     "accept": 1427,
+     "cfg": 1437,
+     "launch": 1489,
+     "stream": [
+      1489,
+      1552
+     ],
+     "retire": 1560,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 113,
+     "tag": 2,
+     "accept": 1658,
+     "cfg": 1668,
+     "launch": 1720,
+     "stream": [
+      1720,
+      1783
+     ],
+     "retire": 1791,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 114,
+     "tag": 0,
+     "accept": 1889,
+     "cfg": 1899,
+     "launch": 1951,
+     "stream": [
+      1951,
+      2014
+     ],
+     "retire": 2022,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 115,
+     "tag": 2,
+     "accept": 2120,
+     "cfg": 2130,
+     "launch": 2182,
+     "stream": [
+      2182,
+      2245
+     ],
+     "retire": 2253,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 116,
+     "tag": 0,
+     "accept": 2351,
+     "cfg": 2361,
+     "launch": 2413,
+     "stream": [
+      2413,
+      2476
+     ],
+     "retire": 2484,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 117,
+     "tag": 2,
+     "accept": 2582,
+     "cfg": 2592,
+     "launch": 2644,
+     "stream": [
+      2644,
+      2707
+     ],
+     "retire": 2715,
+     "nb": 64,
+     "stall_edges": 0
+    }
+   ],
+   "floor_evidence": "results/rtl/s81_wqbp_1020/pipe3: 12 phases P231 2893 / 2886 PASS, P230 FAIL",
+   "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 352 (measured law); die wire / CAP tail not included"
+  },
+  "ffn.router": {
+   "op": "ffn.router",
+   "fam": "bf16",
+   "mode": "pipeline",
+   "period": 231,
+   "cfg_lead": 52,
+   "floor": 231,
+   "nphases": 5,
+   "cal_rows": 346,
+   "stream_words": 432,
+   "static": {
+    "checks": {
+     "rows_le_4096": true,
+     "rows_time_ordered_unique": true,
+     "streams_disjoint": true,
+     "tag_reuse_after_retire": true,
+     "tag0_even_x_parity": true,
+     "stream_addr_in_rom": true,
+     "isd_delay_line_le_ND": true,
+     "launch_spacing_eq_period": true,
+     "pipe_replay_period_ge_88": true,
+     "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+     "pipe_cfg_lead_ge_48": true,
+     "period_ge_measured_floor": true,
+     "bf_go_spacing_ge_seg_label_floor_231": true
+    },
+    "PASS": true,
+    "below_floor_negative_control": false
+   },
+   "predicted_span": 1269,
+   "phases": [
+    {
+     "phase": 118,
+     "tag": 0,
+     "accept": 41,
+     "cfg": 51,
+     "launch": 103,
+     "stream": [
+      103,
+      166
+     ],
+     "retire": 174,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 119,
+     "tag": 2,
+     "accept": 272,
+     "cfg": 282,
+     "launch": 334,
+     "stream": [
+      334,
+      397
+     ],
+     "retire": 405,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 120,
+     "tag": 0,
+     "accept": 503,
+     "cfg": 513,
+     "launch": 565,
+     "stream": [
+      565,
+      628
+     ],
+     "retire": 636,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 121,
+     "tag": 2,
+     "accept": 734,
+     "cfg": 744,
+     "launch": 796,
+     "stream": [
+      796,
+      859
+     ],
+     "retire": 867,
+     "nb": 64,
+     "stall_edges": 0
+    },
+    {
+     "phase": 122,
+     "tag": 0,
+     "accept": 965,
+     "cfg": 975,
+     "launch": 1027,
+     "stream": [
+      1027,
+      1090
+     ],
+     "retire": 1098,
+     "nb": 64,
+     "stall_edges": 0
+    }
+   ],
+   "floor_evidence": "TOKSIM-S81C/FSEQ: 5 phases P231 1269 PASS 6/6 frames, P230 FAIL",
+   "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 345 (measured law); die wire / CAP tail not included"
+  }
+ },
+ "skipped": {
+  "eng.wkv": "not a field matvec calendar here (34 phases)",
+  "attn.cmp.wk": "one BF phase a layer: nothing to overlap (1 phases)"
+ },
+ "layer_windows": [
+  {
+   "op": "attn.wq_b",
+   "start": 0,
+   "base": 0,
+   "rows": 1022,
+   "first_accept": 344,
+   "last_retire": 2241,
+   "nphases": 15,
+   "period": 126
+  },
+  {
+   "op": "attn.idx.q",
+   "start": 1898,
+   "base": 1022,
+   "rows": 546,
+   "first_accept": 2242,
+   "last_retire": 3257,
+   "nphases": 8,
+   "period": 126
+  },
+  {
+   "op": "attn.wo_a",
+   "start": 2914,
+   "base": 1568,
+   "rows": 829,
+   "first_accept": 3258,
+   "last_retire": 5932,
+   "nphases": 12,
+   "period": 231
+  },
+  {
+   "op": "attn.wo_b",
+   "start": 5589,
+   "base": 2397,
+   "rows": 342,
+   "first_accept": 5933,
+   "last_retire": 6574,
+   "nphases": 5,
+   "period": 127
+  },
+  {
+   "op": "ffn.router",
+   "start": 6231,
+   "base": 2739,
+   "rows": 346,
+   "first_accept": 6575,
+   "last_retire": 7632,
+   "nphases": 5,
+   "period": 231
+  },
+  {
+   "op": "ffn.shared_gu",
+   "start": 7289,
+   "base": 3085,
+   "rows": 264,
+   "first_accept": 7633,
+   "last_retire": 8093,
+   "nphases": 3,
+   "period": 146
+  },
+  {
+   "op": "ffn.experts_gu",
+   "start": 7750,
+   "base": 3349,
+   "rows": 1569,
+   "first_accept": 8094,
+   "last_retire": 10727,
+   "nphases": 18,
+   "period": 145
+  },
+  {
+   "op": "ffn.down",
+   "start": 10384,
+   "base": 4918,
+   "rows": 1450,
+   "first_accept": 10728,
+   "last_retire": 13461,
+   "nphases": 21,
+   "period": 130
+  }
+ ],
+ "rows": 2006,
+ "images": {
+  "is_d.txt": "9dbbd8629a5cbac54c3916e47d167187a565635d4c2e8b45533bf32c5191eeb3",
+  "pq_calendar_action.viamap.hex": "0ce5c82b656d5d4669eb8164c42e8f594faebf662fc711eb41ef2e6c732e7cae",
+  "pq_calendar_time.viamap.hex": "53c8e20dcaf89adb2627882674c0e537eb43fc4c4b2246dc83ea92d411a219ed",
+  "pq_phase0.viamap.hex": "6de9806380ab5989b4d5c9533d1a561d3b7e89a05f5a9e413d1301531ae1ed1b",
+  "pq_stream0.viamap.hex": "817b8ed8770b6a4ec3869498752f0dc5ee8687368f431ab7dc435f92ae4a096f",
+  "pq_stream1.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "pq_stream2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "pq_stream3.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+ }
+}

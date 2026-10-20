@@ -129,15 +129,106 @@ def slice_index(die, sl):
     return sorted(s).index(sl)
 
 
-def placement(die, sl):
+def aproj_topology_enabled():
+    return os.environ.get('OT_XS_APROJ_TOPO', '0') == '1'
+
+
+def aproj_rank_tags_enabled():
+    enabled = os.environ.get('OT_XS_APROJ_RANK_TAGS', '0') == '1'
+    assert not enabled or aproj_topology_enabled(), 'rank-tag a_proj requires the actual topology owner map'
+    return enabled
+
+
+def rank_cfg_words(words, rank_rows):
+    """Production cfg image row IDs; SENT, segments, ROM addresses and arithmetic stay unchanged."""
+    out = list(words)
+    assert len(rank_rows) == len(set(rank_rows)) and all(0 <= r < (1 << 14) for r in rank_rows)
+    for w in list(range(8)) + list(range(17, 25)):
+        v = out[w]
+        if not v or (v & 0x8000):
+            continue
+        row = v & 0xFFFF
+        assert row < len(rank_rows), ('a_proj cfg row outside owner map', row, rank_rows)
+        out[w] = (v & ~0xFFFF) | rank_rows[row]
+    return out
+
+
+def rank_plan(plan, rank_rows):
+    from static_return_calendar import _f, _mk, norm
+    out = dict(plan)
+    ret = []
+    for edge, tag, data, err in plan['ret']:
+        row19, lo, k, n = _f(norm(tag))
+        pos, flags, row = row19 >> 16, (row19 >> 14) & 3, row19 & 0x3FFF
+        ret.append([edge, _mk((pos << 16) | (flags << 14) | rank_rows[row], lo, k, n), data, err])
+    out['ret'] = ret
+    out['rows_vals'] = {str(rank_rows[int(r)]): v for r, v in plan['rows_vals'].items()}
+    return out
+
+
+def placement(die, sl, fx=None):
     frames = die.frames_of(sl)
     g = slice_index(die, sl)
+    if aproj_topology_enabled():
+        # One real phase on EVERY real frame: preserve tensor row order, keep
+        # wq_a/wkv in separate frames, and never exceed the measured four rows.
+        # CAP/gather ownership must consume this exact map before adoption.
+        assert fx is not None, 'OT_XS_APROJ_TOPO requires actual fixture shapes'
+        slices = sorted(die.slices(), key=lambda s: slice_index(die, s))
+        all_frames = [f for s in slices for f in die.frames_of(s)]
+        tensors = [('wq_a', fx['w']['wq_a'][0].shape[0]), ('wkv', fx['w']['wkv'][0].shape[0])]
+        total = sum(n for _, n in tensors)
+        numer = [n * len(all_frames) for _, n in tensors]
+        counts = [n // total for n in numer]
+        for i in sorted(range(len(counts)), key=lambda i: (-(numer[i] % total), i))[:len(all_frames) - sum(counts)]:
+            counts[i] += 1
+        assigned, row0, fi = {}, 0, 0
+        for (name, nrows), nf in zip(tensors, counts):
+            assert 0 < nf <= nrows and nrows <= nf * ROWS_PER_FRAME, ('a_proj one-phase capacity', name, nrows, nf)
+            q, rem = divmod(nrows, nf)
+            off = row0
+            for j in range(nf):
+                n = q + (j < rem)
+                assigned[all_frames[fi]] = list(range(off, off + n))
+                off += n
+                fi += 1
+            assert off == row0 + nrows
+            row0 += nrows
+        assert fi == len(all_frames) and row0 == total
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
         r0 = ROWS_PER_SLICE * g + ROWS_PER_FRAME * j
         rows = list(range(r0, r0 + ROWS_PER_FRAME)) if ROWS_PER_FRAME * (j + 1) <= ROWS_PER_SLICE else []
         out.append(dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=rows))
     return g, out
+
+
+def aproj_capture_contract(die, sl, fx, flags):
+    """Prospective one-phase native CAP descriptor, tied to the exact producer map.
+
+    Flags are the actual element GO epoch, never inferred from source row IDs.
+    This describes capture addresses only; FIN schedule, downstream gather and
+    current physical CAP parent remain unadmitted.
+    """
+    assert aproj_topology_enabled() and aproj_rank_tags_enabled()
+    assert type(flags) is int and 0 <= flags < 4
+    sid, frames = placement(die, sl, fx)
+    rows = [r for p in frames for r in p['rows']]
+    assert rows and rows == list(range(rows[0], rows[0] + len(rows)))
+    assert len(rows) < 2048
+    cfg = dict(obase=0, ops=0, np=0, fmt=2, rbase=(flags << 14) + rows[0], rcnt=len(rows),
+               rsplit=0, lo32=0, hi32=0)
+    word = (2 << 27) | (cfg['rbase'] << 29) | (cfg['rcnt'] << 45)
+    out = a_proj_rows(fx)
+    return dict(scope='PROSPECTIVE_CAPTURE_ADDRESS_CONTRACT_ONLY', admitted=False,
+                slice=sl, slice_index=sid, die_sha=die.die_sha, cfg=cfg, cfg_d=f'{word:040x}', flags=flags,
+                frames=frames, rows=[dict(rank_row=r, tensor=out[r][0], tensor_row=out[r][1],
+                                         golden_output_index=out[r][2]) for r in rows],
+                producer_added_phases=0, producer_added_edges=0, source_to_cap_ages=None,
+                requires=['actual frame-to-CAP arrival calendar and FIN lifetime',
+                          'registered cfg path for current source CAP candidate',
+                          'actual capture-to-consumer gather addresses and ages'])
 
 
 def base_master(m):
@@ -151,7 +242,7 @@ def land_e(lk):
 
 
 # ------------------------------------------------------------------------------------------------ one frame programme
-def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None):
+def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, rank_rows=None, cap_cfg=None):
     """legalise + place one a_proj phase on one frame (field phase 0); returns (field, ph, plan, pairs)"""
     import frame_bench as B
     import frame_return_plan as P
@@ -159,15 +250,39 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None):
     import v41_rom_ksplit_bankmap as S
     q, _bf = B.frame_pairs(base_master(master))
     assert len(mats) == 1, 'a frame phase mixing wq_a and wkv rows: plan_phase takes one matrix (not needed at 28 / slice)'
+    ret_score = None
+    if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1':
+        assert aproj_rank_tags_enabled() and rank_rows is not None and cap_cfg is not None
+        sys.path.insert(0, str(ROOT / 'tools/s81_slice'))
+        import cap_model as CM
+        cache = {}
+        def ret_score(ret):
+            key = tuple(tuple(w) for w in ret)
+            if key not in cache:
+                # One-frame FIN obligations are invariant under the parent's
+                # common input/tree/output time shift. This does NOT admit
+                # simultaneous other-frame traffic or current physical ages.
+                mapped = rank_plan(dict(ret=ret, rows_vals={}), rank_rows)['ret']
+                lanes = [{} for _ in range(8)]
+                lanes[0] = {edge: (tag, data, err, [(master, i)]) for i, (edge, tag, data, err) in enumerate(mapped)}
+                finish = CM.model(lanes, [(0, cap_cfg)])
+                count = len(finish['writes'])
+                cache[key] = len(finish['faults']) + abs(len(rank_rows) - count)
+            return cache[key]
     best = None
     for cand in ([pairs] if pairs else [q[:NPAIRS], q[len(q) - NPAIRS:], q[1:1 + NPAIRS]]):
-        plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters, land_e=land_e(lk))
-        key = (plan['faults'], plan['ret_words'])
+        plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters, land_e=land_e(lk), ret_score=ret_score)
+        finish_faults = ret_score(plan['ret']) if ret_score is not None else 0
+        key = (plan['faults'] + finish_faults, plan['ret_words'])
         if best is None or key < best[0]:
             best = (key, cand, plan)
-        if plan['faults'] == 0 and pairs is None:
+        if plan['faults'] == 0 and finish_faults == 0 and pairs is None:
             break
     _, qa, plan = best
+    if ret_score is not None:
+        plan['single_frame_cap_score'] = ret_score(plan['ret'])
+        plan['single_frame_cap_scope'] = 'logical FIN only; simultaneous frames and physical ages unadmitted'
+        assert plan['single_frame_cap_score'] == 0, ('no single-frame CAP-safe assignment found', master, plan['single_frame_cap_score'])
     seg_units = {S.unit_range('fp8', a0, el)[1] - S.unit_range('fp8', a0, el)[0] for a0, el in S.segments(mats[0].K, NSEG)}
     cls = (seg_units.pop(), 2)
     assert not seg_units and cls in ELEM_EXTRA, ('no measured element-work term for segment class', cls)
@@ -186,7 +301,7 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None):
     return field, ph, plan, qa, q, _bf
 
 
-def field_images(field, qa, q, bf, inst, out):
+def field_images(field, qa, q, bf, inst, out, rank_rows=None):
     """the frame's ROM images under its die instance name: element via-maps + il7 cfg banks (phase 0)"""
     import v41_die_images_w17w10 as I
     from field_cfg7_image import encode_bank
@@ -202,6 +317,9 @@ def field_images(field, qa, q, bf, inst, out):
                 names.append(f'{inst}_e{k}{mb}_{par}.viamap.hex')
     for k in q + bf:
         words = field.cfg[0][slot_of[k]] if k in slot_of else [0] * 25
+        if aproj_rank_tags_enabled():
+            assert rank_rows is not None, 'production a_proj images require their exact rank owner map'
+            words = rank_cfg_words(words, rank_rows)
         banked = [[0] * 4096 for _ in range(7)]
         for w_, v in enumerate(words):
             banked[w_ % 7][w_ // 7] = v
@@ -233,8 +351,8 @@ def lower(die, op, ctx):
         import xs_place
         return xs_place.lower_placed(die, op, ctx)
     sl = ctx['slice']
-    g, pl = placement(die, sl)
-    insts = [p['frame'] for p in pl] + [sl]
+    g = slice_index(die, sl)
+    insts = die.frames_of(sl) + [sl]
     gap_rest = dict(module='ot_s81sl_xs / ot_s81sl_cap', port='pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph '
                     'np, return fields), cap cfg_d',
                     missing='the frame images, the return calendar and the xs phase / stream ROM images are lowered and '
@@ -250,13 +368,15 @@ def lower(die, op, ctx):
         return dict(rec, status='GAP', gap=dict(module='lower_xs', port='fixtures', missing='no --fixtures: the frame '
                                                 'ROM images carry the checkpoint rows of the layer'))
     fx = load_fixture(fxd)
+    g, pl = placement(die, sl, fx)
     frames = []
     for p in pl:
         if not p['rows']:
             frames.append(dict(p, phase=None, note='no a_proj rows (28 rows / slice = 7 frames x 4)'))
             continue
         mats, gidx = frame_mats(fx, p['rows'])
-        field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'])
+        field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
+                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
         frames.append(dict(p, out_index=gidx, pairs=qa, nseg=NSEG, faults=plan['faults'], ret_words=plan['ret_words'],
                            merges=plan['merges'], ret=plan['ret'], placement=plan['placement'],
                            cfg_words={str(k): [f'{w:012x}' for w in field.cfg[0][s]] for s, k in enumerate(qa)},
@@ -264,7 +384,7 @@ def lower(die, op, ctx):
                            emission=plan['emission']))
     ok = all(f['phase'] is None or f['faults'] == 0 for f in frames)
     rec['files'] = {f'prog/xs/{op["id"]}.json': json.dumps(dict(
-        schema='opentallas.s81_dv.xs_lowering.v1', op=op, slice=sl, slice_index=g, nseg=NSEG, rows_per_slice=ROWS_PER_SLICE,
+        schema='opentallas.s81_dv.xs_lowering.v1', op=op, slice=sl, slice_index=g, nseg=NSEG, rows_per_slice=sum(len(p['rows']) for p in pl),
         frames=frames, images='per frame: python3 tools/s81_dv/layer_prog/lower_xs.py gen --frame <inst> --out DIR '
         '(element via-maps + il7 cfg banks named <inst>_*, xs pq_phase0 / pq_stream0..3)'), indent=1) + '\n'}
     if not ok:
@@ -283,13 +403,14 @@ def cmd_gen(a):
     out.mkdir(parents=True, exist_ok=True)
     die = C.Die(C.die_tree(a.die_ref, a.die_src))
     sl = a.slice or next(s for s in sorted(die.slices()) if a.frame in die.frames_of(s))
-    g, pl = placement(die, sl)
+    fx = load_fixture(a.fixtures)
+    g, pl = placement(die, sl, fx)
     p = next(x for x in pl if x['frame'] == a.frame)
     assert p['rows'], f'{a.frame}: no a_proj rows'
-    fx = load_fixture(a.fixtures)
     mats, gidx = frame_mats(fx, p['rows'])
-    field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'])
-    names, tmp = field_images(field, qa, q, bf, a.frame, out)
+    field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
+                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
+    names, tmp = field_images(field, qa, q, bf, a.frame, out, p['rows'])
     xsn = xs_roms(tmp, out)
     # the frame bench instantiates the master with INSTANCE "f": the same images under the bench name
     if a.mutant == 'swap':      # wrong placement: the ROM images of two elements holding different rows swapped
@@ -319,6 +440,9 @@ def cmd_gen(a):
     plan.pop('stream')
     if a.mutant == 'shift':     # the compiler's calendar one edge late: the check must reject the cycle-exact compare
         plan['ret'] = [[e + 1] + list(rest) for e, *rest in plan['ret']]
+    if aproj_rank_tags_enabled():
+        rows = {p['rows'][r]: v for r, v in rows.items()}
+        plan = rank_plan(plan, p['rows'])
     meta = dict(master=base_master(p['master']), die_frame=a.frame, die_master=p['master'], lk=p['lk'],
                 land_e=land_e(p['lk']), slice=sl, slice_index=g, seed=SEED, only=None, K=mats[0].K,
                 rows_per_mat=[m.rows for m in mats], mats=len(mats), q_pairs=q, bf_pairs=bf, pairs=qa,
