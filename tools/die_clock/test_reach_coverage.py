@@ -48,3 +48,17 @@ def test_actual_spine_source_coordinate_covers_non_tree_root():
     m['source_xy'] = {'core/pll_ck':[-5.,0.]}
     result = check(m)
     assert result['verdict'] == 'PASS' and result['nets'] == 2
+
+
+def test_build_preserves_marginal_sink_coordinate():
+    from build import sink_record
+    sink = sink_record('tree',('a','leaf',405.0004,0.,'leaf/ck'),[0,0,0])
+    assert sink['x'] == 405.0004
+    m = manifest();m['sinks']['a'] = sink
+    assert check(m)['verdict'] == 'FAIL'
+
+
+def test_conflicting_duplicate_coordinates_are_not_silently_overwritten():
+    m = manifest();m['source_xy'] = {'drv':[1.,0.]}
+    result = check(m)
+    assert result['verdict'] == 'FAIL' and 'drv' in result['invalid_coordinates']
