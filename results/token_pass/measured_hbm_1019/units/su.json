@@ -1,0 +1,501 @@
+{
+ "group": "su",
+ "branch": "claude/toksim-hbm-su-1019",
+ "updated_utc": "2026-10-20T04:35:10Z",
+ "designs": {
+  "ds_ar": {
+   "SU.VOP": {
+    "shapes": {
+     "{\"A\": [\"VM\", 1, 1, \"FP32\"], \"I\": [\"VM\", 1, 1, \"U32\"], \"O\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 85.2,
+      "n": 240
+     },
+     "{\"A\": [\"VM\", 1, 1, \"FP32\"], \"O\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 179.0,
+      "n": 120
+     },
+     "{\"A\": [\"VM\", 64, 1, \"FP32\"], \"B\": [\"VM\", 64, 1, \"FP32\"], \"D\": [\"VM\", 64, 1, \"FP32\"], \"O\": [\"VM\", 64, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 85.2,
+      "n": 120
+     },
+     "{\"A\": [\"VM\", 4, 1, \"FP32\"], \"O\": [\"VM\", 4, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 366.0,
+      "n": 84
+     },
+     "{\"A\": [\"VM\", 20480, 1, \"FP32\"], \"O\": [\"VM\", 20480, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 124.2,
+      "n": 80
+     },
+     "{\"A\": [\"VM\", 53, 1, \"FP32\"], \"C\": [\"VM\", 53, 1, \"FP32\"], \"O\": [\"VM\", 53, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 85.2,
+      "n": 80
+     },
+     "{\"A\": [\"VM\", 53, 1, \"FP32\"], \"C\": [\"VM\", 53, 1, \"FP32\"], \"D\": [\"VM\", 53, 1, \"FP32\"], \"O\": [\"VM\", 53, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 85.2,
+      "n": 80
+     },
+     "{\"A\": [\"VM\", 160, 8, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 209.2,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 1280, 1, \"FP32\"], \"B\": [\"VM\", 1280, 1, \"FP32\"], \"C\": [\"VM\", 1280, 1, \"FP32\"], \"O\": [\"VM\", 1280, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 87.2,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 64, 8, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 195.2,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"B\": [\"VM\", 512, 1, \"FP32\"], \"C\": [\"VM\", 512, 1, \"FP32\"], \"O\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 85.2,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 1, 1, \"FP32\"], \"B\": [\"VM\", 1, 1, \"FP32\"], \"C\": [\"VM\", 1, 1, \"FP32\"], \"O\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 181.0,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"B\": [\"VM\", 512, 1, \"FP32\"], \"O\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 101.2,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 384, 1, \"FP32\"], \"C\": [\"VM\", 384, 1, \"FP32\"], \"O\": [\"VM\", 384, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 85.2,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 6, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 159.2,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 6, 1, \"FP32\"], \"B\": [\"VM\", 6, 1, \"FP32\"], \"O\": [\"VM\", 6, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 100.2,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 24, 7, \"FP32\"], \"B\": [\"VM\", 24, 7, \"FP32\"], \"C\": [\"VM\", 24, 7, \"FP32\"], \"O\": [\"VM\", 24, 7, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 208.0,
+      "n": 40
+     },
+     "{\"A\": [\"VM\", 640, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 202.2,
+      "n": 38
+     },
+     "{\"A\": [\"VM\", 640, 1, \"FP32\"], \"B\": [\"VM\", 640, 1, \"FP32\"], \"O\": [\"VM\", 640, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 319.0,
+      "n": 38
+     },
+     "{\"A\": [\"VM\", 640, 1, \"FP32\"], \"O\": [\"VM\", 640, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 86.2,
+      "n": 38
+     },
+     "{\"A\": [\"VM\", 32, 1, \"FP32\"], \"O\": [\"VM\", 32, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 85.2,
+      "n": 8
+     },
+     "{\"A\": [\"VM\", 64, 32, \"FP32\"], \"B\": [\"VM\", 64, 32, \"FP32\"], \"D\": [\"VM\", 64, 32, \"FP32\"], \"O\": [\"VM\", 64, 32, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 88.2,
+      "n": 8
+     },
+     "{\"A\": [\"VM\", 5120, 4, \"FP32\"], \"R\": [\"VM\", 1, 4, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 258.2,
+      "n": 4
+     },
+     "{\"A\": [\"VM\", 4, 1, \"FP32\"], \"B\": [\"VM\", 4, 1, \"FP32\"], \"O\": [\"VM\", 4, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 85.2,
+      "n": 4
+     },
+     "{\"A\": [\"VM\", 128, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 183.2,
+      "n": 2
+     },
+     "{\"A\": [\"VM\", 128, 1, \"FP32\"], \"B\": [\"VM\", 128, 1, \"FP32\"], \"O\": [\"VM\", 128, 1, \"FP32\"], \"R\": [\"VM\", 1, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 299.0,
+      "n": 2
+     },
+     "{\"A\": [\"VM\", 128, 1, \"FP32\"], \"O\": [\"VM\", 128, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 85.2,
+      "n": 2
+     },
+     "{\"A\": [\"VM\", 32, 192, \"FP32\"], \"B\": [\"VM\", 32, 192, \"FP32\"], \"O\": [\"VM\", 32, 192, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 96.2,
+      "n": 2
+     },
+     "{\"A\": [\"VM\", 5120, 4, \"FP32\"], \"B\": [\"VM\", 5120, 4, \"FP32\"], \"O\": [\"VM\", 5120, 4, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 124.2,
+      "n": 2
+     },
+     "{\"A\": [\"VM\", 5120, 4, \"FP32\"], \"B\": [\"VM\", 5120, 4, \"FP32\"], \"R\": [\"VM\", 1, 4, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 258.2,
+      "n": 2
+     },
+     "{\"A\": [\"VM\", 5120, 4, \"FP32\"], \"B\": [\"VM\", 5120, 4, \"FP32\"], \"C\": [\"VM\", 5120, 4, \"FP32\"], \"O\": [\"VM\", 5120, 4, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 124.2,
+      "n": 2
+     }
+    },
+    "law": "shape_table",
+    "grade": "unmeasured",
+    "pending": [],
+    "coverage_model_sum": 0.0
+   },
+   "HC.HC_MIX": {
+    "law": "shape_table",
+    "ratio": 0.9072,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "engine+VM legs measured 1055 vs model 1162.9: x0.907; measured already contains the hc_tree (RAW0 178 incl. CPR/DRLY) -- do not add hc_tree 41 on top; weight re-ingest (~1,935 edges/record) is unpriced occupancy",
+    "shapes": {
+     "{\"A\": [\"VM\", 20480, 1, \"FP32\"], \"B\": [\"HBM\", 1, 1, \"BF16\"], \"O\": [\"VM\", 24, 1, \"FP32\"]}": {
+      "cycles": 1055,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_hc_root_static(QDRLY2,QCHX11) + 4 x [ot_hbm_hc_qcen_static(CHX11,DRLY2) + ot_hbm_hc_bankq0/_ft/bankq_static ring] + ot_hbm_hc_q_static (hc_<q> client in ot_hbm_hc_qhub_static) + ot_hgi_sfu_lg_pair_leaf + 18/15 HC tap",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a",
+      "bound_in_die": true,
+      "bench": "tools/hbm_static/toksim_su/hc/run_hc_cases.sh stages ring_die (rtl/test/tb_hbm_hc_eng4_static.sv) + qclient_t (tools/hbm_static/toksim_su/hc/tb_hbm_hc_q_static_t.sv)",
+      "job": "ot-epyc8:/srv/opentallas-scratch/claude/toksim-hbm-su/hc/out_ring_die (unit oth-ubuntu-241445-1792460075) + ot-epyc5:.../out_qclient_t (oth-ubuntu-889644-1792460143)",
+      "verilator": "5.050 (ring); iverilog 2.3.5 (hc_q client)",
+      "notes": "P1 K 20,480, 24 mixes + sigmoid + Sinkhorn 20, bit-exact (24/24 mixes, 96/96 result words vs hdc_golden_v41 chunk8 + tail ref; MUT 1 FAIL 24/96). Composed of two RTL benches on the die config (CPR 1, DRLY 2, XRLY 0 -> RAW0 178): engine span ingest event TB -> last result word = 1009 (HH-9 anchor DRLY1/RAW0 176 re-run: 1007); + hc_q VM read lead 26 (first LG read issue -> wave 0 due at the engine pin TB+1, RD_CAPTURE 23 at the 18/15 tap, measured first rq 2726 -> XWAVE 2753) + result store 20 (result at hc_q pin -> LG write issue +2 -> write-done back +18, measured 3583 -> 3603). NOT in the span: (a) the 24-row weight ingest (480 waves/quarter, t 9..1929 = ~1,935 edges before TB) -- the bench preloads the layer's mix weights into the bank SRAMs; per layer they must be re-ingested, so HC unit occupancy is ~2,990/record, off the data path only if the compiler issues it during the previous gap; (b) root<->quarter die crossing relays (die.v pb0 wires them direct; model term hc_xr 22 modelled); (c) programme start (+9 edges launch -> first issue, once per programme). 1.2 GHz engine edges (833 ps).",
+      "model_cost": 1162.9,
+      "n": 80
+     }
+    },
+    "coverage_model_sum": 1.0000279481540244
+   },
+   "FUSED.HC_PRE_NORM": {
+    "law": "shape_table",
+    "ratio": 0.647,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "pending": [],
+    "where_model_wrong": "priced on the credited P6 LL engine (649) that is not on the die; static engine measures 422 (x0.647) but has no d4g slot yet",
+    "shapes": {
+     "{\"A\": [\"VM\", 20480, 1, \"FP32\"], \"B\": [\"HBM\", 5120, 1, \"FP32\"], \"C\": [\"VM\", 4, 1, \"FP32\"], \"O\": [\"VM\", 5120, 1, \"BF16\"]}": {
+      "cycles": 422,
+      "golden": "PASS",
+      "rtl_master": "ot_hnx_fused_top (op pre)",
+      "rtl_source": "claude/hbm-next-units-fusedsram-1019@f2bf7ac6a",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/hc/hnx_fused_bench_rr.sh stage rr18 (rtl/hbm_next/fused/tb/tb_hnx_fused.sv)",
+      "job": "ot-epyc8:/srv/opentallas-scratch/claude/toksim-hbm-su/hc/out_fused_rr18 (oth-ubuntu-252031-1792460183)",
+      "verilator": "5.050",
+      "notes": "NO FUSED HC datapath is bound in the d4g GEN2e3 die.v (HC masters implement HC.HC_MIX only; LB2-HBM / COORD decision owed); newest bench-passing RTL = next-release static N-row engine ot_hnx_fused_top (32 lanes, KX 4, rgap 0, x/gain stores in 1R1W SRAM). N 1 (AR), D 5,120, 4 streams: job launch -> done = 422 at VM read return RR 18 (die SU/HC tap profile); 406 at RR 10 (m0 stage re-run; branch README 404 pre-SRAM). Bit-exact 5,120 words vs hdc_golden_v41 chunk8; m1 mutant FAIL. Gain read from VM: the HBM gain (B in HBM) DMA/first access is NOT in the span.",
+      "model_cost": 652.2,
+      "n": 81
+     }
+    },
+    "coverage_model_sum": 1.0000113576993845
+   },
+   "FUSED.HC_POST": {
+    "law": "shape_table",
+    "ratio": 1.3046,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "pending": [],
+    "where_model_wrong": "model 162.5 below the static engine's 212 (x1.305): 5 VM reads/sector + VM round trip not in the price; no d4g master",
+    "shapes": {
+     "{\"A\": [\"VM\", 5120, 1, \"FP32\"], \"B\": [\"VM\", 20480, 1, \"FP32\"], \"C\": [\"VM\", 20, 1, \"FP32\"], \"O\": [\"VM\", 20480, 1, \"FP32\"]}": {
+      "cycles": 212,
+      "golden": "PASS",
+      "rtl_master": "ot_hnx_fused_top (op post)",
+      "rtl_source": "claude/hbm-next-units-fusedsram-1019@f2bf7ac6a",
+      "bound_in_die": false,
+      "bench": "tools/hbm_static/toksim_su/hc/hnx_fused_bench_rr.sh stage rr18",
+      "job": "ot-epyc8:/srv/opentallas-scratch/claude/toksim-hbm-su/hc/out_fused_rr18 (oth-ubuntu-252031-1792460183)",
+      "verilator": "5.050",
+      "notes": "NO FUSED HC datapath is bound in the d4g GEN2e3 die.v (HC masters implement HC.HC_MIX only; LB2-HBM / COORD decision owed); newest bench-passing RTL = next-release static N-row engine ot_hnx_fused_top (32 lanes, KX 4, rgap 0, x/gain stores in 1R1W SRAM). N 1, D 5,120 x 4 streams (20,480 out words): launch -> done 212 at RR 18; 196 at RR 10. Bit-exact 20,480 words; m1 mutant FAIL.",
+      "model_cost": 162.5,
+      "n": 80
+     }
+    },
+    "coverage_model_sum": 0.9998000399920016
+   },
+   "FUSED.QDQ_FP8": {
+    "law": "shape_table",
+    "ratio": 2.32,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "price 25 = issue beats only (16 + dispatch); the record latency is 16 beats + 38-edge decoder/bank pipeline + 5 split edges = 58",
+    "shapes": {
+     "{\"A\": [\"VM\", 512, 1, \"FP32\"], \"O\": [\"VM\", 512, 1, \"FP32\"]}": {
+      "cycles": 58,
+      "golden": "PASS",
+      "rtl_master": "ot_hgi_qdq_host_split #(RL7,WC4,COMPACT1) (die hb_quant_NW)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_qdq_span.sh + tb_toksim_qdq_split.sv",
+      "job": "ot-epyc5 oth-ubuntu-922078-1792460461 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/qdq",
+      "verilator": "5.050",
+      "notes": "512-word FP8 QDQ (qdqvec record 0 = DS production vector, out_0 re-checked = hdc_golden_v41.qdq_fp8 512/512) on the split vs monolith lockstep: 16 beats, first VM read request -> record_done (bank commit) = 58 edges at 833 ps (stream clock); doorbell -> record_done 74 (host target48 / record calendar issue at +8 included). Bench VM model = fixed 7 edges at the quant pins (RL7); die GEN2c relay lanes to the NW banks NOT included. 8-record anchor re-run: split_last_write 158 (= 10-18 anchor), record pipeline 16 beats/record + 42-edge fill. Mutant RL5 -> LOCKSTEP_FAIL (witness qdq/qdq1_mut2.log).",
+      "model_cost": 25.0,
+      "n": 40
+     }
+    },
+    "coverage_model_sum": 1.0
+   }
+  },
+  "qwen": {
+   "SU.VOP": {
+    "shapes": {
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"VM\", 4096, 1, \"FP32\"], \"C\": [\"VM\", 4096, 1, \"FP32\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 92.2,
+      "n": 72
+     },
+     "{\"A\": [\"VM\", 1536, 1, \"FP32\"], \"B\": [\"VM\", 1536, 1, \"FP32\"], \"O\": [\"VM\", 1536, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 87.2,
+      "n": 36
+     },
+     "{\"A\": [\"VM\", 128, 10, \"FP32\"], \"B\": [\"VM\", 64, 10, \"FP32\"], \"D\": [\"VM\", 64, 10, \"FP32\"], \"O\": [\"VM\", 128, 10, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 87.2,
+      "n": 36
+     },
+     "{\"A\": [\"VM\", 1024, 1, \"FP32\"], \"O\": [\"VM\", 1024, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 86.2,
+      "n": 36
+     },
+     "{\"A\": [\"VM\", 8192, 8, \"FP32\"], \"R\": [\"VM\", 1, 8, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 399.2,
+      "n": 36
+     },
+     "{\"A\": [\"VM\", 8192, 8, \"FP32\"], \"B\": [\"VM\", 1, 8, \"FP32\"], \"O\": [\"VM\", 8192, 8, \"FP32\"], \"R\": [\"VM\", 1, 8, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 590.0,
+      "n": 36
+     },
+     "{\"A\": [\"VM\", 8192, 8, \"FP32\"], \"O\": [\"VM\", 8192, 8, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 212.2,
+      "n": 36
+     },
+     "{\"A\": [\"VM\", 128, 8, \"FP32\"], \"B\": [\"VM\", 128, 8, \"FP32\"], \"O\": [\"VM\", 128, 8, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 103.2,
+      "n": 36
+     },
+     "{\"A\": [\"VM\", 6144, 1, \"FP32\"], \"B\": [\"VM\", 6144, 1, \"FP32\"], \"O\": [\"VM\", 6144, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 96.2,
+      "n": 36
+     },
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"VM\", 4096, 1, \"FP32\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 92.2,
+      "n": 1
+     },
+     "{\"A\": [\"STREAM\", 37984, 1, \"FP32\"], \"B\": [\"VM\", 37984, 1, \"FP32\"], \"O\": [\"STREAM\", 37984, 1, \"FP32\"]}": {
+      "cycles": null,
+      "golden": null,
+      "notes": "not measured by this lane",
+      "model_cost": 139.2,
+      "n": 1
+     }
+    },
+    "law": "shape_table",
+    "grade": "unmeasured",
+    "pending": [],
+    "coverage_model_sum": 0.0
+   },
+   "FUSED.ROW_NORM": {
+    "law": "shape_table",
+    "ratio": 4.825693613975904,
+    "grade": "measured-current-d4g-lower-bound",
+    "pending": [
+     {
+      "job": "none launched",
+      "result_path": null,
+      "what": "full ROW_NORM record = SU ss/rs/y chain on ot_hbm_su_static_top; needs the SU lowering (fork A suvop machinery); compose from units/su.json SU.VOP q_norm.ss/rs/y measurements"
+     }
+    ],
+    "where_model_wrong": "price 175/125 assumes a D4096 norm engine that d4g does not have; the bound reducer alone needs >= 1832 (d4096) / 529 (q seg128) / 271 (k seg128) edges",
+    "ratio_lower_bound": 1.8,
+    "shapes": {
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"HBM\", 4096, 1, \"BF16\"], \"O\": [\"VM\", 4096, 1, \"BF16\"]}": {
+      "cycles": 1832.0,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_su_reduce_static (in ot_hbm_su_static_qcore, clk_red = pll_serial)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_rms_reduce.sh + rms_reduce_compile.py (tb tools/hbm_static/su_reduce_tb.cpp)",
+      "job": "ot-epyc5 oth-ubuntu-922126-1792460461 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/rms/d4096",
+      "verilator": "5.050",
+      "measured_lower_bound": 1832.0,
+      "notes": "NO FUSED.ROW_NORM engine/lowering exists in d4g (no norm engine in die.v; col_sfu grid lanes cannot reduce / rsqrt: tools/hbm_layer_vehicle/sfu_fused_compile.py audit) -> it runs as the SU ss/rs/y chain. MEASURED here: the sum-of-squares on the bound reducer (one operand/edge, LAT 9, RAW 10, csum8 + pairwise, exact cycles + bit-exact csum golden, phase mutant FAILS): d4096 = 1374 serial edges = 1832.0 edges at 833 ps (serial 3:4). (quarter 1024 squares 1323 + 4-root combine 51; the stree/RF transit of the 3 remote roots is NOT included) NOT included: lane x*x issue/stage to the reducer, RF/stree scalar transit, rsqrt on the quarter-0 FULL lane side pipe, the y = x*r*g pass with the HBM gain read (first access), VM drain. Lower bound only.",
+      "model_cost": 200.2,
+      "n": 73,
+      "cycles_kind": "measured lower bound (bound reducer chain only; ss/rs/y SU lowering not benched)"
+     },
+     "{\"A\": [\"VM\", 1024, 1, \"FP32\"], \"B\": [\"HBM\", 128, 1, \"BF16\"], \"O\": [\"VM\", 1024, 1, \"FP32\"]}": {
+      "cycles": 529.3,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_su_reduce_static (in ot_hbm_su_static_qcore, clk_red = pll_serial)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_rms_reduce.sh + rms_reduce_compile.py (tb tools/hbm_static/su_reduce_tb.cpp)",
+      "job": "ot-epyc5 oth-ubuntu-922126-1792460461 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/rms/seg128_q2",
+      "verilator": "5.050",
+      "measured_lower_bound": 529.3,
+      "notes": "NO FUSED.ROW_NORM engine/lowering exists in d4g (no norm engine in die.v; col_sfu grid lanes cannot reduce / rsqrt: tools/hbm_layer_vehicle/sfu_fused_compile.py audit) -> it runs as the SU ss/rs/y chain. MEASURED here: the sum-of-squares on the bound reducer (one operand/edge, LAT 9, RAW 10, csum8 + pairwise, exact cycles + bit-exact csum golden, phase mutant FAILS): seg128_q2 = 397 serial edges = 529.3 edges at 833 ps (serial 3:4). (2 heads of 128 on one quarter: q_norm 8 heads / 4 quarters) NOT included: lane x*x issue/stage to the reducer, RF/stree scalar transit, rsqrt on the quarter-0 FULL lane side pipe, the y = x*r*g pass with the HBM gain read (first access), VM drain. Lower bound only.",
+      "model_cost": 150.2,
+      "n": 36,
+      "cycles_kind": "measured lower bound (bound reducer chain only; ss/rs/y SU lowering not benched)"
+     },
+     "{\"A\": [\"VM\", 256, 1, \"FP32\"], \"B\": [\"HBM\", 128, 1, \"BF16\"], \"O\": [\"VM\", 256, 1, \"FP32\"]}": {
+      "cycles": 270.7,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_su_reduce_static (in ot_hbm_su_static_qcore, clk_red = pll_serial)",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_rms_reduce.sh + rms_reduce_compile.py (tb tools/hbm_static/su_reduce_tb.cpp)",
+      "job": "ot-epyc5 oth-ubuntu-922126-1792460461 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/rms/seg128_k1",
+      "verilator": "5.050",
+      "measured_lower_bound": 270.7,
+      "notes": "NO FUSED.ROW_NORM engine/lowering exists in d4g (no norm engine in die.v; col_sfu grid lanes cannot reduce / rsqrt: tools/hbm_layer_vehicle/sfu_fused_compile.py audit) -> it runs as the SU ss/rs/y chain. MEASURED here: the sum-of-squares on the bound reducer (one operand/edge, LAT 9, RAW 10, csum8 + pairwise, exact cycles + bit-exact csum golden, phase mutant FAILS): seg128_k1 = 203 serial edges = 270.7 edges at 833 ps (serial 3:4). (1 head of 128 a quarter: k_norm 2 heads) NOT included: lane x*x issue/stage to the reducer, RF/stree scalar transit, rsqrt on the quarter-0 FULL lane side pipe, the y = x*r*g pass with the HBM gain read (first access), VM drain. Lower bound only.",
+      "model_cost": 150.2,
+      "n": 36,
+      "cycles_kind": "measured lower bound (bound reducer chain only; ss/rs/y SU lowering not benched)"
+     }
+    },
+    "coverage_model_sum": 0.0
+   },
+   "SFU.GLU": {
+    "law": "shape_table",
+    "ratio": 3.803,
+    "grade": "measured-current-d4g",
+    "pending": [],
+    "where_model_wrong": "price 120 = \"GLU fast path 60 / half width\" estimate; one 16-lane SFU core needs 192 beats in + 192 out + the 168-edge SiLU horizon + 2x15 LG relays",
+    "shapes": {
+     "{\"A\": [\"VM\", 3072, 1, \"FP32\"], \"B\": [\"VM\", 3072, 1, \"FP32\"], \"C\": [\"VM\", 3072, 1, \"FP32\"], \"O\": [\"VM\", 3072, 1, \"BF16\"]}": {
+      "cycles": 467,
+      "golden": "PASS",
+      "rtl_master": "ot_hgi_sfu_core_split3 #(LWB15,LG_PATH15) [core split2] + ot_hgi_sfu_programme_store_r10 #(PAGE_AW1) + sfu LG pair taps",
+      "rtl_source": "claude/hd4g-gen2e3-1019@9787e078a (generic sources byte-equal to scoped_d4g for the bound modules)",
+      "bound_in_die": true,
+      "bench": "claude/toksim-hbm-su-1019:tools/hbm_static/toksim_su/sfu/run_glu_span.sh + tb_toksim_glu_split.sv + gen_glu_case.py",
+      "job": "ot-epyc9 oth-ubuntu-293088-1792460722 /srv/opentallas-scratch/claude/toksim-hbm-su/sfu/out/glu_r15_w3072_o1_l190",
+      "verilator": "5.050",
+      "notes": "Canonical Qwen3-8B swiglu fixture (hbm-sim P8191 L0, 3072 words, route scalar C; golden = machine u_glu words, VM readback 3072/3072 exact) on ONE sfucore: ot_hgi_sfu_core_split2 (core of the bound split3) + programme store r10 (D5) in lockstep (6.6k edges, 0 mismatch) with the reference split engine at R=15 die relays (LG_PATH 15) + LG pair taps 14/11 (= die.v defaults) + 8 ot_vms_bank_static banks; 16 SiLU lanes, 16 words/edge in and out.  Span = io_start_v -> last VM write done at the tap: overlap calendar (as compiled, make_qswiglu_io_calendar OVERLAP) 467 edges (first VM read 20, first/last write 264/455); serial calendar (default) 844; TAP 24/21 budget (= R 20 round trip) 482. Drain lag 190 rows after arith start is the minimum (SiLU horizon 46 + 122 + lead): earlier drains FAIL bit-exact (glu_r15_w3072_o1_l130, glu_r15_w3072_o1_l64, glu_r15_w768_o1_l100, glu_r15_w768_o1_l130, glu_r15_w768_o1_l160, glu_r15_w768_o1_l48, glu_r15_w768_o1_l64, glu_r20_w768_o1_l64). 833 ps stream clock. Per-quadrant split (768 words a core, 4 cores in parallel; NOT what the fixture/compiler of record does): 323 edges (glu_r15_w768_o1_l190 PASS).",
+      "tap_24_21_cycles": 482,
+      "serial_calendar_cycles": 844,
+      "per_core_768_cycles": 323,
+      "model_cost": 122.8,
+      "n": 36
+     }
+    },
+    "coverage_model_sum": 0.9996834154945503
+   }
+  }
+ }
+}
