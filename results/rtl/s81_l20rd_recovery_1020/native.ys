@@ -1,0 +1,20 @@
+read_liberty -lib /src/physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/views/ot_hdc_v41x_idx_hslice/ot_hdc_v41x_idx_hslice_tt.lib
+read_liberty -lib /src/physical/ref_tile/hidx_tail_native_rr/views/ot_hbm_idx_tail_native/ot_hbm_idx_tail_native_tt.lib
+read_liberty -lib /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
+read_liberty -lib /out/lib/AO.lib
+read_liberty -lib /out/lib/INVBUF.lib
+read_liberty -lib /out/lib/OA.lib
+read_liberty -lib /out/lib/SEQ.lib
+read_liberty -lib /out/lib/SIMPLE.lib
+read_verilog -sv -DSYNTHESIS /src/rtl/lib/ot_rst_relay.sv
+read_verilog -sv -DSYNTHESIS /src/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv
+chparam -set ENG 1 -set SRAM_MACRO 1 -set SQD 256 dsdv_idx_rg_r32
+hierarchy -check -top dsdv_idx_rg_r32
+tcl /src/physical/common_flow/ot_keep_regs.tcl
+synth -top dsdv_idx_rg_r32 -flatten -noshare
+dfflibmap -liberty /out/lib/SEQ.lib
+abc -liberty /out/lib/AO.lib -liberty /out/lib/INVBUF.lib -liberty /out/lib/OA.lib -liberty /out/lib/SEQ.lib -liberty /out/lib/SIMPLE.lib
+opt_clean
+stat
+write_verilog -noattr /out/mapped.v
+write_json /out/mapped.json
