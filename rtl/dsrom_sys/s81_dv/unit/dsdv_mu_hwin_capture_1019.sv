@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Private exact selected-anchor HWIN source; namespace projection only.
 module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integer NEV = 16, parameter integer NEP = 4,
-                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0, parameter integer CFG_RELAY = 0, parameter integer DUE_COPIES = 0) (
+                      parameter integer NRT = 2, parameter integer MUT = 0, parameter integer HEAD_STAGE = 0, parameter integer COMPACT_PTR = 0, parameter integer CHECK_STAGE = 0, parameter integer LIVE_COUNT = 0, parameter integer RAW_SELECT = 0, parameter integer LOCAL_BOOT = 0, parameter integer EARLY_HEAD_CAPTURE = 0, parameter integer CFG_RELAY = 0, parameter integer DUE_COPIES = 0, parameter integer SAFE_NATIVE = 0) (
     input  wire              ck,
     input  wire              rst_n,
     input  wire [52:0]       f_ks,            // tap of the unit start pin {start, user 10, tok 21, pos 21}
@@ -40,7 +40,9 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     localparam integer RMC_LIMIT=RPRED_BASE+((CHECK_STAGE!=0)?NEV:0);
     localparam integer RCFG_BASE=RMC_LIMIT+((CHECK_STAGE!=0)?1:0);
     // HWIN21g CFG_RELAY: 2 relay copies x {f_mw, f_mc}, one reset region each (26 sinks), so the copies stay distinct.
-    localparam integer RESET_REGIONS=RCFG_BASE+((CFG_RELAY!=0)?4:0);
+    localparam integer RNATIVE_BASE=RCFG_BASE+((CFG_RELAY!=0)?4:0);
+    localparam integer NATIVE_LW=(NSLOT+11)/12, NATIVE_GN=(NEV+3)/4;
+    localparam integer RESET_REGIONS=RNATIVE_BASE+((SAFE_NATIVE!=0)?2*NATIVE_LW+NATIVE_GN:0);
     wire [RESET_REGIONS-1:0] rr; dsdv_mu_hwin_capture_1019_reset_tree #(.REGIONS(RESET_REGIONS)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr)); wire rn = rr[0];
     // HWIN21g CFG_RELAY=1 (opt-in, default 0 = HWIN21cb bytes-equivalent logic): the config word ports f_mw / f_mc
     // land in a relay register stage before ANY consumer, so every config consumer sees the port one edge later
@@ -107,6 +109,31 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     wire [9:0] cmp_user [0:NC_REC-1];
     wire [3:0] id_we [0:NSLOT-1]; wire [NSLOT-1:0] rec_slot;
     wire [NC_REC-1:0] rec_event [0:NEV-1];
+    // HWIN21j: reset-distinct same-edge state copies, <=12 pointer decodes/4 events per domain.
+    wire [SI-1:0] native_lw[0:NATIVE_LW-1];
+    wire [SJ-1:0] native_gn_ptr[0:NATIVE_LW-1],native_gn_event[0:NATIVE_GN-1];
+    generate for(genvar ngc=0;ngc<NATIVE_LW;ngc=ngc+1) begin:g_native_pointer_state
+      if(SAFE_NATIVE!=0) begin:g_safe
+        (* keep *) reg [SI-1:0] lw_c;
+        (* keep *) reg [SJ-1:0] gn_c;
+        always @(posedge ck or negedge rr[RNATIVE_BASE+ngc])
+          if(!rr[RNATIVE_BASE+ngc]) lw_c<=SI'(NSLOT-1);
+          else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) lw_c<=(gn_c==0)?SI'(NSLOT-1):gn_c[SI-1:0];
+        always @(posedge ck or negedge rr[RNATIVE_BASE+NATIVE_LW+ngc])
+          if(!rr[RNATIVE_BASE+NATIVE_LW+ngc]) gn_c<=0;
+          else if(mc_q[25] && idle && !mc_q[24] && gn_c!=SJ'(NSLOT)) gn_c<=gn_c+1'b1;
+        assign native_lw[ngc]=lw_c;assign native_gn_ptr[ngc]=gn_c;
+      end else begin:g_old assign native_lw[ngc]=lw;assign native_gn_ptr[ngc]=gn;end
+    end
+    for(genvar ngc=0;ngc<NATIVE_GN;ngc=ngc+1) begin:g_native_event_state
+      if(SAFE_NATIVE!=0) begin:g_safe
+        (* keep *) reg [SJ-1:0] gn_c;
+        always @(posedge ck or negedge rr[RNATIVE_BASE+2*NATIVE_LW+ngc])
+          if(!rr[RNATIVE_BASE+2*NATIVE_LW+ngc]) gn_c<=0;
+          else if(mc_q[25] && idle && !mc_q[24] && gn_c!=SJ'(NSLOT)) gn_c<=gn_c+1'b1;
+        assign native_gn_event[ngc]=gn_c;
+      end else begin:g_old assign native_gn_event[ngc]=gn;end
+    end endgenerate
     reg udup; integer i;
     always @* begin udup = 1'b0; for (i = 0; i < NSLOT; i = i + 1) if (vld[i] && eu[i] == cmp_user[i/24]) udup = 1'b1; end
     wire col = |(vld & ss);
@@ -140,12 +167,13 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         // events (copy 0 -> west events 0..NEV/2-1, copy 1 -> east events; 8 loads each) instead of 16 per-event compares
         // fed by a 64-bit h_rts/tmr broadcast along the band (c21d gate: worst post-GRT cone = event count_r).  Same function, +0 edges.
         if(DUE_COPIES!=0) begin:g_due_central
-            wire [1:0] due_c;
-            for(genvar dc=0;dc<2;dc=dc+1) begin:g_copy
+            localparam integer DC=(SAFE_NATIVE!=0)?4:2;
+            wire [DC-1:0] due_c;
+            for(genvar dc=0;dc<DC;dc=dc+1) begin:g_copy
                 (* keep=1 *) dsdv_mu_hwin_capture_1019_retire_due u_due(.valid(rok),.fresh(h_rfr),.retire(h_rts),.now_time(tmr),.due(due_c[dc]));
             end
             for(genvar ed=0;ed<NEV;ed=ed+1) begin:g_event_due
-                assign event_due[ed]=due_c[(ed>=NEV/2 && NEV>1)?1:0];
+                assign event_due[ed]=due_c[(SAFE_NATIVE!=0)?(ed*DC/NEV):((ed>=NEV/2 && NEV>1)?1:0)];
             end
         end else begin:g_due_local
         for(genvar ed=0;ed<NEV;ed=ed+1) begin:g_event_due
@@ -186,7 +214,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     dsdv_mu_hwin_capture_1019_mem #(.W(32),.AW(SI)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
         .we(rec_q),.wa(ssqb),.wd(tsq),.ra(rpb),.q(h_rts));
     end else begin:g_retire_early
-    dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(32),.AW(SI),.RA_RESET((NSLOT>1)?1:0)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
+    dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(32),.AW(SI),.RA_RESET((NSLOT>1)?1:0),.SAFE_NATIVE(SAFE_NATIVE)) u_retire(.ck(ck),.rst_n(rr[MEM_RBASE+3 +: 4]),
         .we(rec_q),.wa(ssqb),.wd(tsq),.ra_current(rpb),.ra_d(rra_d),.load_d(radv),.q(h_rts));
     end endgenerate
     always @(posedge ck) tmr <= tm1 - {8'd0,crm};
@@ -464,9 +492,9 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             .we(attr_boot[se]),
             .wa(cfg_addr[se]),.wd(cfg_attr[se]),.ra(pbi[se]),.q(h_at[se]));
         end else begin:g_early
-        dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(63),.AW(SI),.RA_RESET((NSLOT>1)?1:0)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
+        dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(63),.AW(SI),.RA_RESET((NSLOT>1)?1:0),.SAFE_NATIVE(SAFE_NATIVE)) u_payload(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se +: 8]),.we(rec_event[se][0]),
             .wa(ssqb),.wd({due_at_start,spq,suq}),.ra_current(pbi[se]),.ra_d(ra_after),.load_d(adv[se]),.q(head));
-        dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(2),.AW(SI),.RA_RESET((NSLOT>1)?1:0)) u_attr(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+8]),
+        dsdv_mu_hwin_capture_1019_mem_early_capture #(.W(2),.AW(SI),.RA_RESET((NSLOT>1)?1:0),.SAFE_NATIVE(SAFE_NATIVE)) u_attr(.ck(ck),.rst_n(rr[MEM_EVENT_RBASE+MEM_EVENT_STRIDE*se+8]),
             .we(attr_boot[se]),.wa(cfg_addr[se]),.wd(cfg_attr[se]),.ra_current(pbi[se]),.ra_d(ra_after),.load_d(adv[se]),.q(h_at[se]));
         end
         assign h_ts[se]=head[62:31]; assign h_ep[se]=head[30:10]; assign h_eu[se]=head[9:0];
@@ -540,7 +568,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             if(CHECK_STAGE==0) begin:g_reference_rl
                 (* keep=1 *) dsdv_mu_hwin_capture_1019_boot_enable u_rlwrite(.count(boot_count),.armed(arm_r),.valid(cfg_rl_r),.match(1'b1),.en(rl_write));
             end else begin:g_unused_rl assign rl_write=1'b0;end
-            (* keep=1 *) dsdv_mu_hwin_capture_1019_boot_enable u_gap(.count(boot_count),.armed(arm_r),.valid(cfg_gap_r),.match(gn!=SJ'(NSLOT)),.en(gap_write));
+            (* keep=1 *) dsdv_mu_hwin_capture_1019_boot_enable u_gap(.count(boot_count),.armed(arm_r),.valid(cfg_gap_r),.match(native_gn_event[ce/4]!=SJ'(NSLOT)),.en(gap_write));
         end else begin:g_boot_direct
             assign boot_count=global_count;
             assign d_write={3{wv && idle_event[ce] && mw_q[22:21]==2'd1 && esel==EI'(ce)}};
@@ -567,7 +595,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
                 if(!rr[RPRED_BASE+ce]) begin small_r<=1;min_r<=7'(NSLOT+2);end
                 else begin
                     if(limit_write[0]) small_r<=mc_limit_small;
-                    if(gap_write) min_r<=min_word;
+                    if(gap_write) min_r<=(native_gn_event[ce/4]==0)?7'(NSLOT+2):7'(native_gn_event[ce/4])+7'd3;
                 end
             // Limits update at the exact original CSR state edge. The direct
             // checker then observes that current state, exactly CHECK_STAGE0,
@@ -590,7 +618,7 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
         always @(posedge ck or negedge rr[COPY_RBASE+7*ce+3])
             if(!rr[COPY_RBASE+7*ce+3]) lw_r<=SI'(NSLOT-1);
             else if(gap_write)
-                lw_r<=(gn==0)?SI'(NSLOT-1):gn[SI-1:0];
+                lw_r<=(native_gn_event[ce/4]==0)?SI'(NSLOT-1):native_gn_event[ce/4][SI-1:0];
         for(genvar lb=0;lb<NSLOT;lb=lb+1) begin:g_limit_reset
             (* keep *) reg bit_r;assign lm_r[lb]=bit_r;
             always @(posedge ck or negedge rr[RLM_BASE+ce*SLOT_RG+lb/24])
@@ -649,9 +677,9 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
             if(!rr[RPTR_BASE+2*SLOT_RG+pb/24]) gx_r<=(pb==0); else if(step_gap) gx_r<=gxn[pb];
         always @(posedge ck or negedge rr[RPTR_BASE+3*SLOT_RG+pb/24])
             if(!rr[RPTR_BASE+3*SLOT_RG+pb/24]) gm_r<=0;
-            else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) gm_r<=(gn[SI-1:0]==SI'(pb));
+            else if(mc_q[25] && idle && !mc_q[24] && gn!=SJ'(NSLOT)) gm_r<=(native_gn_ptr[pb/12][SI-1:0]==SI'(pb));
         always @(posedge ck or negedge rr[RPTR_BASE+4*SLOT_RG+pb/24])
-            if(!rr[RPTR_BASE+4*SLOT_RG+pb/24]) lm_bit_r<=(pb==NSLOT-1); else lm_bit_r<=(lw==SI'(pb));
+            if(!rr[RPTR_BASE+4*SLOT_RG+pb/24]) lm_bit_r<=(pb==NSLOT-1); else lm_bit_r<=(native_lw[pb/12]==SI'(pb));
         always @(posedge ck or negedge rr[RPTR_BASE+5*SLOT_RG+pb/24])
             if(!rr[RPTR_BASE+5*SLOT_RG+pb/24]) vld_r<=0; else vld_r<=(vld[pb] && !(pointer_due[pb/8] && rp[pb])) || rec_slot[pb];
     end endgenerate

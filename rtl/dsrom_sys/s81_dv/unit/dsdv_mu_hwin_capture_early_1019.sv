@@ -5,10 +5,10 @@
 // the advance compare). No compare/advance logic sits between ra_r and r_addr_in. The capture register
 // loads the SRAM word only when the head advanced last cycle (load_r = registered advance); otherwise it
 // holds and takes same-address writes through current_hit. Public edges unchanged (cycle-exact miter).
-module dsdv_mu_hwin_capture_1019_mem_early_capture #(parameter integer W=64, parameter integer AW=6, parameter integer N=(W+15)/16, parameter integer S=(W+7)/8, parameter integer RA_RESET=1)(
+module dsdv_mu_hwin_capture_1019_mem_early_capture #(parameter integer W=64, parameter integer AW=6, parameter integer N=(W+15)/16, parameter integer S=(W+7)/8, parameter integer RA_RESET=1, parameter integer SAFE_NATIVE=0)(
  input wire ck, we, input wire [S-1:0] rst_n, input wire [AW-1:0] wa, input wire [W-1:0] wd,
  input wire [AW-1:0] ra_current, ra_d, input wire load_d, output wire [W-1:0] q);
- reg wv; wire [S-1:0] hitq; reg [AW-1:0] waddr; reg [W-1:0] wdata, fd;
+ reg wv; wire [S-1:0] hitq; reg [AW-1:0] waddr; (* keep=SAFE_NATIVE *) reg [W-1:0] wdata, fd;
 `ifndef EC_MUT
 `define EC_MUT 0
 `endif
@@ -52,7 +52,7 @@ module dsdv_mu_hwin_capture_1019_mem_early_capture #(parameter integer W=64, par
 `endif
 endmodule
 
-module dsdv_mu_hwin_capture_1019_early_current_hit #(parameter integer AW=6)(
+(* keep_hierarchy=1 *) module dsdv_mu_hwin_capture_1019_early_current_hit #(parameter integer AW=6)(
  input wire valid, input wire [AW-1:0] current_address,write_address, output wire hit);
  assign hit=valid && current_address==write_address;
 endmodule
