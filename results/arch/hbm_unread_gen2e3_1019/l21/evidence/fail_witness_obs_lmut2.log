@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-epyc6       admits  1070 GB (avail 863, growth 113, headroom 0, waiters 0/0 GB) load 113/128 running 32 disk 5551 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2598078-1792455003 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+FAIL live addr 018 got 00001957 exp 00011957
+FAIL sticky_static addr 058 got 00001957 exp 00011957
+FAIL live addr 018 got 00002ece exp 00012ece
+FAIL sticky_static addr 058 got 00002ece exp 00012ece
+FAIL top_bit addr 018 got 000007dd exp 000107dd
+FAIL live addr 018 got 00007f2c exp 00017f2c
+FAIL sticky_static addr 058 got 00007f2c exp 00017f2c
+FAIL live addr 018 got 00009fcb exp 00019fcb
+FAIL sticky_static addr 058 got 00009fcb exp 00019fcb
+FAIL live addr 018 got 00002230 exp 00012230
+FAIL sticky_static addr 058 got 00002230 exp 00012230
+OBS RING BENCH FAIL errors=42 reads=7547 LMUT=2
+- rtl/hbm_accel/die_glue/tb/tb_hbm_obs_ring.sv:120: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 144us; walltime 0.227 s; speed 634.073 us/s
+- Verilator: cpu 0.226 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2598078-1792455003): exit 1

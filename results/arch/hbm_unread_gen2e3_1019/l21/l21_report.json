@@ -1,0 +1,67 @@
+{
+ "layer": "l21_obs_readback",
+ "residual_nets": 361,
+ "observation_bits": 876,
+ "dead_removed_bits": 2,
+ "leaves": {
+  "obs_C": {
+   "lid": 0,
+   "bits": 95,
+   "sync_bits": 0,
+   "blocks": 11
+  },
+  "obs_SW": {
+   "lid": 1,
+   "bits": 208,
+   "sync_bits": 16,
+   "blocks": 46
+  },
+  "obs_SE": {
+   "lid": 2,
+   "bits": 182,
+   "sync_bits": 18,
+   "blocks": 29
+  },
+  "obs_NE": {
+   "lid": 3,
+   "bits": 182,
+   "sync_bits": 18,
+   "blocks": 29
+  },
+  "obs_NW": {
+   "lid": 4,
+   "bits": 209,
+   "sync_bits": 18,
+   "blocks": 54
+  }
+ },
+ "ring": [
+  "host_cp_ingress",
+  "obs_C",
+  "obs_SW",
+  "obs_SE",
+  "obs_NE",
+  "obs_NW",
+  "host_cp_ingress"
+ ],
+ "ingress": [
+  "host_cp_ingress",
+  "ot_hbm_host_static_ingress",
+  "ot_hbm_host_static_ingress_obs"
+ ],
+ "ckgen": [
+  "hb_ckgen",
+  "hfd_ckgen",
+  "hfd_ckgen_nolink"
+ ],
+ "added_edges": 377,
+ "open_outputs_dropped": 337,
+ "sources_sha256": {
+  "rtl/hbm_accel/die_glue/ot_hbm_obs_leaf.sv": "eae855ff0a0db74331481be65995ca86dfc4af60face01a151796a58a2abee1f",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress_obs.sv": "c074f7edc7c2bed3ee16d22481bfeeda09e6265747b6266d734a47b6207b3546",
+  "rtl/hbm_accel/control/hfd_ckgen_nolink.sv": "010978fccae72e9df4799f7d53be269068496f987d470d53abcf6bd3c1449133"
+ },
+ "cycles_changed": 0,
+ "host_abi": "reads 0x000-0x3FF return obs words (were 32hffffffff); idx = araddr[9:2] = {lid[2:0], page, word[3:0]}; page 1 = sticky, read-to-clear",
+ "qualification": "SOURCE_ONLY_NEEDS_SYNTH (3 new masters; no view admitted)"
+}

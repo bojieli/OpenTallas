@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-epyc6       admits  1070 GB (avail 863, growth 113, headroom 0, waiters 0/0 GB) load 113/128 running 32 disk 5551 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-pad-l21/src
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2598070-1792455003 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+FAIL live_after_pulse addr 000 got b722072d exp b722072c
+FAIL sticky_pulse addr 040 got b722072c exp b722072d
+FAIL top_bit addr 018 got 00011957 exp 00001957
+FAIL live_after_pulse addr 004 got 9f5768fa exp 9f5768da
+FAIL sticky_pulse addr 044 got 9f5768da exp 9f5768fa
+FAIL top_bit addr 018 got 00012ece exp 00002ece
+FAIL live_after_pulse addr 008 got 5d125694 exp 5d125294
+FAIL sticky_pulse addr 048 got 5d125294 exp 5d125694
+FAIL live_after_pulse addr 00c got 4143cd6c exp 41434d6c
+FAIL sticky_pulse addr 04c got 41434d6c exp 4143cd6c
+FAIL top_bit addr 018 got 00017f2c exp 00007f2c
+OBS RING BENCH FAIL errors=63 reads=7547 LMUT=3
+- rtl/hbm_accel/die_glue/tb/tb_hbm_obs_ring.sv:120: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 144us; walltime 0.223 s; speed 645.133 us/s
+- Verilator: cpu 0.223 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2598070-1792455003): exit 1
