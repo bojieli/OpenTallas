@@ -82,7 +82,21 @@ module tb_toksim_smhbm;
   // refresh phases as tb_hbm_bw_pc4 H9B (HBM-BW): staggered per PC, die ot_hbm_pc_refresh_cfg reload class 118
   localparam integer RP=(p*118/32)%118;
   localparam integer RELOAD=118+RP+((RP+118+p)%2);
+`ifdef TOKSIM_SAFE_PC
+  // TOKSIM-HBM 10-19: successor PC controller (HBM-MC2 SAFE multi-row, claude/l2h-bw-safe-1019; port-identical to h9b +
+  // kr_v_regions).  TOKSIM_MC3 = the HBM-MC3 physical structure (pure face captures, reset forest, local pc_id copies).
+  // NOT bound in GEN2e3 die.v (release candidate controller).
+`ifdef TOKSIM_MC3
+  localparam integer MC3=1;
+`else
+  localparam integer MC3=0;
+`endif
+  wire[17:0]krvr_unused;
+  ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(.OREG(1),.KREG(1),.KRREG(1),.RREG(1),.WPAY(1),.PURE_FACE(MC3),.RST_FOREST(MC3),.PCID_LOCAL(MC3))
+   ctl(.clk(hbm),.rst_n(hrst),.kr_v_regions(krvr_unused),
+`else
   ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(.OREG(1),.KREG(1),.KRREG(1),.RREG(1),.WPAY(1),.QREG(1)) ctl(.clk(hbm),.rst_n(hrst),
+`endif
    .pc_id(5'(p)),.refresh_reload(8'(RELOAD)),
    .k_v(c_kv[p]),.k_rdy(c_krdy[p]),.k_we(c_kwe[p]),.k_addr(c_ka[p*30+:30]),.k_len(c_kl[p*4+:4]),.k_tag(c_kt[p*17+:17]),
    .k_wdata(c_kw[p*256+:256]),.k_wstrb(c_ks[p*32+:32]),.kr_v(c_krv[p]),.kr_rdy(c_krrdy[p]),.kr_tag(c_krt[p*17+:17]),

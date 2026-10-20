@@ -14,7 +14,7 @@ if [ "$MODE" = sync ]; then
     rtl/hbm_accel rtl/lib rtl/model_ready_hbm_r14 rtl/gpu rtl/hdc rtl/v41rom rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv \
     rtl/test/hbm_accel/svg_rel physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 \
     physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 \
-    physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 results/rtl/hbm_ds_layer_tput_1018/fixtures/L00 \
+    physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192 results/rtl/hbm_ds_layer_tput_1018/fixtures/L00 \
     results/rtl/hbm_ds_layer_tput_1018/fixtures/L02 results/rtl/hbm_ds_layer_tput_1018/fixtures/L14 \
     results/rtl/hbm_ds_layer_tput_1018/fixtures/head | ssh "$HOST" "tar -x -C $SRC" || exit 2
   echo "$SHA" | ssh "$HOST" "cat > $SRC/REV"; echo "SYNC $SHA"; exit 0

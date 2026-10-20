@@ -55,10 +55,21 @@ ot_hbm_svc_pc_ctrl_leaf.sv ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv""".split()] + \
      "rtl/test/hbm_accel/svg_rel/tb_svg_rel_dram_sparse.sv"]
 
 
+# TOKSIM-HBM 10-19: TOKSIM_PC=safe|mc3 swaps the four bound h9b PC masters for the successor controller (HBM-MC2 SAFE,
+# claude/l2h-bw-safe-1019; mc3 = + HBM-MC3 physical structure).  Not bound in GEN2e3; results are graded not-bound.
+PC_MODE = os.environ.get("TOKSIM_PC", "h9b")
+SAFE_FILES = [SN + "ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv", SN + "ot_hbm_svc_sram128_n64.sv", SN + "ot_hbm_svc_ring_bw_safe.sv",
+              SN + "ot_hbm_svc_pin_skid2_bw_safe.sv", "rtl/model_ready_hbm_r14/ot_hbm_r14_aq_pc_safe.sv", "rtl/lib/ot_rst_forest.sv",
+              "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+              "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v"]
+PC_DEFINES = {"h9b": [], "safe": ["TOKSIM_SAFE_PC"], "mc3": ["TOKSIM_SAFE_PC", "TOKSIM_MC3"]}[PC_MODE]
+
+
 def build(work: Path, bundle, defines):
+    defines = list(defines) + [d for d in PC_DEFINES if d not in defines]
     tag = "_".join(d.replace("=", "") for d in defines) or "base"
     files = []
-    for p in SM_FILES + SVC_FILES + [TB]:
+    for p in SM_FILES + SVC_FILES + (SAFE_FILES if PC_DEFINES else []) + [TB]:
         if p not in files:
             files.append(p)
     files = [ROOT / p for p in files]
@@ -338,12 +349,12 @@ def main(argv=None):
         if out.exists():
             d = json.loads(out.read_text())
             d["rtl"] = ("cp_svg ot_static_run_target -> ot_hbm_svc_sm_group_rel_id #(ID_COHORT 1) -> "
-                        "ot_hbm_svc_vm_kshare_splitstrap #(KRL1 1) -> 4 x ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (die params) -> "
+                        "ot_hbm_svc_vm_kshare_splitstrap #(KRL1 1) -> 4 x " + ({"h9b": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b (die params)", "safe": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe (HBM-MC2 successor, NOT bound)", "mc3": "ot_hbm_svc_pc_ctrl_leaf_cfg_safe MC3 (PURE_FACE/RST_FOREST/PCID_LOCAL, NOT bound)"}[PC_MODE]) + " -> "
                         "DRAM timing fixture; xc ot_hbm_svc_sm_xcal_rel_t; SM ot_hbm_accel_smh_attn #(ENABLE_INT8 1); "
                         "tb_toksim_smhbm.sv, Verilator 5.050 (GEN2e3 die composition)")
             d["static_schedule"] = dict(first_go=S.FIRST_GO, op_gap=S.OP_GAP, x_gap=S.X_GAP, pace_num=S.PACE_NUM,
                                         pace_den=S.PACE_DEN, pace_add=S.PACE_ADD, fetch=S.FETCH, expert_first=S.EXP_FIRST,
-                                        ids_lag=S.IDS_LAG, bscale=S.BSCALE)
+                                        ids_lag=S.IDS_LAG, bscale=S.BSCALE, pc=PC_MODE)
             d["source_revision"] = (ROOT / "REV").read_text().strip() if (ROOT / "REV").exists() else None
             out.write_text(json.dumps(d, indent=1, default=str) + "\n")
     return rc

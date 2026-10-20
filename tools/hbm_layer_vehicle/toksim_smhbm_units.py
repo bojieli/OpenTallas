@@ -109,11 +109,12 @@ def main():
                                    f"schedule {ms[0]['sched']}")
             ratios.append((c / s["model_cost"], s["n"] * s["model_cost"]))
             msum += s["n"] * s["model_cost"]
+        tot = sum(v["n"] * v["model_cost"] for v in cls["shapes"].values())
         ratio = sum(r * w for r, w in ratios) / sum(w for _, w in ratios) if ratios else None
         designs[des] = {"SM.MATVEC": dict(law="shape_table", shapes=shapes, ratio=round(ratio, 4) if ratio else None,
                                           ratio_weighting="model_sum-weighted over measured shapes",
                                           covered_model_sum=round(msum, 1), class_model_sum=cls["model_sum"],
-                                          covered_frac=round(msum / cls["model_sum"], 4))}
+                                          shapes_n_x_cost_sum=round(tot, 1), covered_frac=round(msum / tot, 4))}
     if a.extra:
         ex = json.loads(Path(a.extra).read_text())
         for des, v in ex.items():
