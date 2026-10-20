@@ -527,7 +527,7 @@ endmodule
 // fixed-latency pipeline: stage N is read only on vN, equal to the gated version there) and NV9 kept copies of the S10 strobe.
 // KV-ATTN4 10-20 (r17, COORD 09:56 decision): the S1..S9 data stages are CONTROL state of the calendar (their values become
 // the compiled calendar / tx_first / end / fault of the command) -> reset from the landed rst_n (kit reset_landing 2-stage,
-// leaves <= 32 loads; release synchronous to ck through the landing; flop reset pins, as the v bits).  Function after reset unchanged (stage N is still read only on vN); a stage can no longer hold a
+// leaves <= 32 loads) for S1; S2..S9 CLEAR whenever the feeding stage is not valid (zero after one reset edge).  Function after reset unchanged (stage N is still read only on vN); a stage can no longer hold a
 // pre-reset value.  MUT 8 = the r16 form (no data reset; reset witness bench).
 module qkd_attn_cal_gen_r17 #(
  parameter integer G3S2=1,
@@ -568,12 +568,18 @@ module qkd_attn_cal_gen_r17 #(
  // v bits: the kit's balanced reset landing publishes the reset to flop reset pins only).  MUT 8: no data reset (r16 form).
  wire rst_d=(MUT==8)?1'b1:rst_n;
  reg v1;reg [13:0] t1;reg [15:0] e1;
+ // KV-ATTN4 r17: S2..S9 data CLEAR when the stage is not valid (stage N <= v(N-1) ? f : 0): after one reset edge every
+ // stage reads 0, so no calendar data stage can hold a pre-reset value; read only on vN, so the value is unchanged where read.
+ // The clear enable is a kept copy family of v(N-1) (8 identical registers, ot_rst_split: loads re-pointed <= 32 per copy).
+ (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v1c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v2c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v3c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v4c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v5c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v6c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v7c; (* keep = "true", dont_touch = "true", ot_rst_split = 1 *) reg [7:0] v8c;
+ always @(posedge ck or negedge rst_n)if(!rst_n)begin v1c<=0;v2c<=0;v3c<=0;v4c<=0;v5c<=0;v6c<=0;v7c<=0;v8c<=0;end
+  else begin v1c<={8{go}};v2c<={8{v1}};v3c<={8{v2}};v4c<={8{v3}};v5c<={8{v4}};v6c<={8{v5}};v7c<={8{v6}};v8c<={8{v7}};end
  always @(posedge ck or negedge rst_n)if(!rst_n)v1<=0;else v1<=go;
  always @(posedge ck or negedge rst_d)if(!rst_d)begin t1<=0;e1<=0;end else begin t1<=ctx_t;e1<=epoch;end
  reg v2,f2,big1;reg [15:0] e2;reg [3:0][12:0] x2;reg [3:0] p2;reg [11:0] ns2;reg [5:0] c0_2,c1_2;
  wire [8:0] tl=t1[8:0];
  always @(posedge ck or negedge rst_n)if(!rst_n)v2<=0;else v2<=v1;
- always @(posedge ck or negedge rst_d)if(!rst_d)begin
+ always @(posedge ck)if(MUT!=8&&!v1c[0])begin
   f2<=0;e2<=0;big1<=0;ns2<=0;c0_2<=0;c1_2<=0;p2<=0;for(integer s=0;s<4;s=s+1)x2[s]<=0;
  end else begin
   f2<=(t1==14'd0)||(t1>14'd8192);e2<=e1;
@@ -584,7 +590,7 @@ module qkd_attn_cal_gen_r17 #(
  reg v3,f3;reg [15:0] e3;reg [3:0] p3,sm3,b3;reg [3:0][7:0] a3;reg [3:0][3:0] cnt3;reg [3:0][9:0] xs3;
  reg [10:0] m3,mm3;reg nbig3;reg [11:0] po0_3,po1_3;
  always @(posedge ck or negedge rst_n)if(!rst_n)v3<=0;else v3<=v2;
- always @(posedge ck or negedge rst_d)if(!rst_d)begin
+ always @(posedge ck)if(MUT!=8&&!v2c[0])begin
   f3<=0;e3<=0;p3<=0;sm3<=0;b3<=0;m3<=0;mm3<=0;nbig3<=0;po0_3<=0;po1_3<=0;
   for(integer s=0;s<4;s=s+1)begin a3[s]<=0;cnt3[s]<=0;xs3[s]<=0;end
  end else begin
@@ -603,7 +609,7 @@ module qkd_attn_cal_gen_r17 #(
  reg v4,f4;reg [15:0] e4;reg [3:0][9:0] zv4;reg [7:0] scan4;reg [11:0] po0_4,po1_4;reg [8:0] adj4;
  wire [6:0] lo7=mm3[6:0];
  always @(posedge ck or negedge rst_n)if(!rst_n)v4<=0;else v4<=v3;
- always @(posedge ck or negedge rst_d)if(!rst_d)begin
+ always @(posedge ck)if(MUT!=8&&!v3c[0])begin
   f4<=0;e4<=0;po0_4<=0;po1_4<=0;scan4<=0;adj4<=0;for(integer s=0;s<4;s=s+1)zv4[s]<=0;
  end else begin
   f4<=f3;e4<=e3;po0_4<=po0_3;po1_4<=po1_3;
@@ -613,7 +619,7 @@ module qkd_attn_cal_gen_r17 #(
  end
  reg v5,f5;reg [15:0] e5;reg [9:0] za5,zb5;reg [15:0] lmax5;reg [11:0] po0_5,po1_5;reg [8:0] adj5;
  always @(posedge ck or negedge rst_n)if(!rst_n)v5<=0;else v5<=v4;
- always @(posedge ck or negedge rst_d)if(!rst_d)begin
+ always @(posedge ck)if(MUT!=8&&!v4c[0])begin
   f5<=0;e5<=0;po0_5<=0;po1_5<=0;adj5<=0;za5<=0;zb5<=0;lmax5<=0;
  end else begin
   f5<=f4;e5<=e4;po0_5<=po0_4;po1_5<=po1_4;adj5<=adj4;
@@ -622,7 +628,7 @@ module qkd_attn_cal_gen_r17 #(
  end
  reg v6,f6;reg [15:0] e6;reg [9:0] zw6;reg [15:0] lmax6,exp6,zb6,hl6;reg [11:0] po0_6,po1_6;reg [8:0] adj6;
  always @(posedge ck or negedge rst_n)if(!rst_n)v6<=0;else v6<=v5;
- always @(posedge ck or negedge rst_d)if(!rst_d)begin
+ always @(posedge ck)if(MUT!=8&&!v5c[0])begin
   f6<=0;e6<=0;po0_6<=0;po1_6<=0;adj6<=0;lmax6<=0;zw6<=0;exp6<=0;zb6<=0;hl6<=0;
  end else begin
   f6<=f5;e6<=e5;po0_6<=po0_5;po1_6<=po1_5;adj6<=adj5;lmax6<=lmax5;
@@ -630,7 +636,7 @@ module qkd_attn_cal_gen_r17 #(
  end
  reg v7,f7;reg [15:0] e7;reg [15:0] lmax7,exp7,z7,hl7,pvo7;reg [11:0] po0_7,po1_7;
  always @(posedge ck or negedge rst_n)if(!rst_n)v7<=0;else v7<=v6;
- always @(posedge ck or negedge rst_d)if(!rst_d)begin
+ always @(posedge ck)if(MUT!=8&&!v6c[0])begin
   f7<=0;e7<=0;lmax7<=0;exp7<=0;hl7<=0;po0_7<=0;po1_7<=0;z7<=0;pvo7<=0;
  end else begin
   f7<=f6;e7<=e6;lmax7<=lmax6;exp7<=exp6;hl7<=hl6;po0_7<=po0_6;po1_7<=po1_6;
@@ -639,7 +645,7 @@ module qkd_attn_cal_gen_r17 #(
  end
  reg v8,f8;reg [15:0] e8;reg [15:0] lmax8,exp8,z8,hl8,hz8,hr8,hp8,pv8;reg [11:0] po0_8,po1_8;
  always @(posedge ck or negedge rst_n)if(!rst_n)v8<=0;else v8<=v7;
- always @(posedge ck or negedge rst_d)if(!rst_d)begin
+ always @(posedge ck)if(MUT!=8&&!v7c[0])begin
   f8<=0;e8<=0;lmax8<=0;exp8<=0;z8<=0;hl8<=0;po0_8<=0;po1_8<=0;hz8<=0;hr8<=0;hp8<=0;pv8<=0;
  end else begin
   f8<=f7;e8<=e7;lmax8<=lmax7;exp8<=exp7;z8<=z7;hl8<=hl7;po0_8<=po0_7;po1_8<=po1_7;
@@ -648,7 +654,7 @@ module qkd_attn_cal_gen_r17 #(
  reg f9;reg [15:0] e9;reg [175:0] cal9;reg [15:0] p09;reg [16:0] r9;
  (* keep = "true", dont_touch = "true" *) reg [NV9-1:0] v9c;
  always @(posedge ck or negedge rst_n)if(!rst_n)v9c<=0;else v9c<={NV9{v8}};
- always @(posedge ck or negedge rst_d)if(!rst_d)begin
+ always @(posedge ck)if(MUT!=8&&!v8c[0])begin
   f9<=0;e9<=0;r9<=0;p09<=0;cal9<=0;
  end else begin
   f9<=f8;e9<=e8;

@@ -13,6 +13,14 @@ face 512-b beat, RX record, TX launch) stays unreset.
 Reset loads: +~1,100 S1..S9 bits -> kit reset_landing 2 stages, 2 first / 64 final kept copies (rv3: 2 / 48; 1,896 loads / 64 = 29.6), <= 32 loads per
 copy (ot_rst_copies split, reset_relay_split max 32).
 
+## r17 final form (after gate tries 1-3, KV-ATTN4 10-20)
+* S1 (t1/e1, 30 b): reset from the landed rst_n (flop reset pins).  S2..S9: CLEAR whenever the feeding stage is not valid
+  (stage N <= v(N-1) ? f : 0) through a kept copy family v(N-1)c (8 identical registers per stage, ot_rst_split: loads re-pointed
+  <= 32 per copy).  After one reset edge every calendar data stage reads 0 (v bits are reset); values where read (on vN) are
+  unchanged.  Why not reset pins on all of S1..S9: the 2 -> 64 balanced landing holds at most 2,048 reset loads and r17 needed
+  2,378 (gate 81781bda3 OVER 38); a D-side synchronous reset is refused by textbook.reset_landing (publication polarity).
+* status_slot enable: 2 kept-hierarchy AND leaves (r16 ss_nx drove 33 copies; census limit 32).
+
 ## Benches (Verilator 5.050, fleet)
 * rv_pair_bench.sh RVB=r17 RS=1 SD=213: whole-tile pair vs ba5 (B = A + 1 edge, 11 modes) PASS; mutants 1-7 FAIL (witnesses
   results/rtl/kv_attn4_1020/r17rs_m*/verdict.log).
