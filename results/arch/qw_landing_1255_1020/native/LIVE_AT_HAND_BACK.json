@@ -1,0 +1,26 @@
+{
+  "status": "RUNNING_AT_CLAUDE_BACK",
+  "host": "ot-epyc6",
+  "unit": "oth-ubuntu-48722-1792527146",
+  "local_session": 17472,
+  "run": "/srv/opentallas-scratch/claude/codex-qw-landing-1255-1020/native",
+  "branch": "codex/qw-landing-1255-1020",
+  "head_at_launch": "b73c85579",
+  "rtl_commit": "6432a6cb8",
+  "top": "qfd_slice_ei_face_land",
+  "width": 2743,
+  "declared_macros": 43,
+  "qualification": false,
+  "source_archive_sha256": "aab5c2914601e8cef426dd17d30c29d4dfe2738081c3685a865c560ea6c4e5d3",
+  "command": "bash native/tools/synth_census.sh native/src qfd_slice_ei_face_land native/out rtl/qwen_dv/qfd_slice_ei_face_land.sv rtl/qwen_split/qfd_land8.sv rtl/qwen_split/qfd_land8s.sv rtl/hdc/ot_hdc_cg.sv",
+  "outputs": [
+    "sources.sha256",
+    "run.log",
+    "out/census.json",
+    "out/mapped.v",
+    "out/stat.json",
+    "out/yosys.log",
+    "out/liberties.sha256"
+  ],
+  "scope": "isolated mapped fanout/control-area/macro-count only; no parent or phase/aperture qualification"
+}
