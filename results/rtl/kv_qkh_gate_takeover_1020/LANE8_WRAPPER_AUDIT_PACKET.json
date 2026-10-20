@@ -186,8 +186,24 @@
     "measurement": {
       "bench": "results/rtl/kv_qkh_gate_takeover_1020/tb_lk_wrapper_age.sv",
       "run": "ot-epyc7:/srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020",
-      "log": "/home/ubuntu/scratch/codex-kv-qkh-gates-1020/lk_wrapper_age.log",
-      "scope": "complete16laneLK head with actual emitted data wrapper unchanged + exact core module rename; scans0..8retirelags against prior bare LK source; two seeds +wrongage0/1 causal controls; not native/CLOSED qualification"
+      "log": "/home/ubuntu/scratch/codex-kv-qkh-gates-1020/lk_wrapper_age_retry.log",
+      "scope": "complete16laneLK head with actual emitted data wrapper unchanged + exact core module rename; scans0..8retirelags against prior bare LK source; two seeds +wrongage0/1 causal controls; not native/CLOSED qualification",
+      "controls": {
+        "wrong_stage": "actual emitted output pinregister stages bypassed; own wholeLK build session18340",
+        "wrong_parameter": "LTW11 on actual wrapper core instance rejects fixed7/12 source trap; fleet expectedfail witness",
+        "wrong_compiler_age": "identical actualRTL binary compared against ages0/1, expects causalFAIL",
+        "flags": "additional wholeLK34bit score+fault retirement lag measurement session12005"
+      }
     }
+  },
+  "private_gold": {
+    "path": "results/rtl/kv_qkh_gate_takeover_1020/lane8_private_gold_shell.v",
+    "sha256": "7f214b50a12b7ecdf8396cc782b88b1ecd10c54bae42131f8a05df0d2d07613d",
+    "transformations": [
+      "top module identifier -> ot_kvp_wrap",
+      "core type -> original RTL module with explicit ADD_LAT7/LTW12; preserve u_ot_pr_core instance name"
+    ],
+    "all_wrapper_registers_connections_and_reset_stages_preserved": true,
+    "scope": "prepared exact wrapper gold; NOT a native/CLOSED proof"
   }
 }

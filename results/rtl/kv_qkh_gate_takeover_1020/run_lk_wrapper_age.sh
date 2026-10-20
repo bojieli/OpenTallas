@@ -10,9 +10,9 @@ import sys,hashlib,json
 r,w=map(Path,sys.argv[1:]);p=r/'rtl/hdc/nearhbm/ot_qkh_lane8_nc32c.sv';t=p.read_text()
 assert t.count('module ot_qkh_lane8_nc32c #(')==1
 (w/'lane8_core_renamed.v').write_text(t.replace('module ot_qkh_lane8_nc32c #(', 'module ot_qkh_lane8_nc32c__ot_pr_core #(',1))
-(w/'source_identity.json').write_text(json.dumps({'base_source':str(r),'core_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'wrapper_sha256':hashlib.sha256((w/'lane8_actual_pin_wrapper.v').read_bytes()).hexdigest(),'rename':'sole core module identifier; actual shipped wrapper unmodified','scope':'private complete LK RTL measurement; no CLOSED/native receipt'},indent=2)+'\n')
+(w/'source_identity.json').write_text(json.dumps({'base_source':str(r),'core_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'wrapper_sha256':hashlib.sha256((w/'lane8_actual_pin_wrapper.v').read_bytes()).hexdigest(),'head_sources':{x.name:hashlib.sha256(x.read_bytes()).hexdigest() for x in sorted((w/'heads').glob('*.sv'))},'rename':'sole core module identifier; actual shipped wrapper unmodified','scope':'private complete LK RTL measurement; no CLOSED/native receipt'},indent=2)+'\n')
 PY
-S=$R/rtl/qwen_sys/split_20261014
+S=$W/heads
 H=$R/rtl/hdc
 "$V" --binary --timing -j 8 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
   -DKVD_HEADS=1 -DKVD_Q_FP32=1 -DSYNTHESIS --top-module tb_lk_wrapper_age -Mdir "$W/obj" \
