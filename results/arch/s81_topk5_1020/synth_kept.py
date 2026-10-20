@@ -6,6 +6,7 @@ script.append('set ::env(DESIGN_NAME) ot_s81ph_native_sel_hist_bank')
 script.append('set ::env(OT_KEEP_PIN_REGS) 1')
 for line in lines:
  if not line:continue
+ if line.startswith('read_verilog ') and line.endswith('ot_s81ph_native_sel_lib.sv'):line='read_verilog -sv '+str(root/'results/arch/s81_topk5_1020/gold_hist256.sv')
  if line.startswith('read_verilog ') and line.endswith('ot_s81ph_native_sel_hist_bank.sv'):script.append('yosys read_verilog -sv '+str(root/'rtl/lib/ot_rst_relay.sv'))
  if line.startswith('synth -top '):script.append('source '+str(root/'ot_keep_regs.tcl'))
  line=line.replace(str(root/'synth_a7d'),str(out))

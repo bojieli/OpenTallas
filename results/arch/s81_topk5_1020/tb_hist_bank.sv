@@ -7,7 +7,7 @@ reg[15:0] en=0; reg[127:0] dg=0; reg[3:0] gs=0,gd=0;
 wire[239:0] goldsum,bsum; wire[175:0] goldbin; wire goldbusy;
 wire[8*176-1:0] bin_values;wire[7:0] busy;reg oldbusy;
 always@(posedge clk)begin gd<=gs;oldbusy<=goldbusy;end
-ot_s81ph_native_sel_hist #(.W(16),.CB(11),.HPIPE(1)) gold(
+ot_s81ph_hist256_gold_topk5 #(.W(16),.CB(11),.HPIPE(1)) gold(
 .clk(clk),.rst_n(rst_n),.clr(clr),.i_v(iv),.i_en(en),.i_dg(dg),.gsel(gd),.gsel_c({16{gd}}),.gsum(goldsum),.gbin(goldbin),.busy(goldbusy));
 genvar b;
 generate for(b=0;b<8;b=b+1)begin:leaf

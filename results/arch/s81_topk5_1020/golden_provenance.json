@@ -1,0 +1,9 @@
+{
+  "original_source_commit": "b6bba788c",
+  "original_file_sha256": "cfbaadc0d22d520785c063991c1ae3c3d7302d9267397b3f6c51cb92d0b42520",
+  "original_hist_module_sha256": "bcbbb7a0089e34eddc6b0c0468b60cd2bc9344d498ba51ae92294ad7934eba5b",
+  "original_popc_module_sha256": "c58b6cc84da5c3f202fa5b1c54b3d1a7fd09360ada5a98148692e15cb682a6fa",
+  "popc_identical_origin_main": true,
+  "transform": "module identifier renames only; all expression/operator/statement text unchanged in frozen golden",
+  "new_hard_bank_deps": "self-contained popc + public ot_hdc_prefix/ot_rst_relay; no unmerged selector-library changes required"
+}

@@ -91,7 +91,7 @@ module ot_s81ph_native_sel_hist_bank #(
             for (gl = 0; gl < W; gl = gl + 1) begin : g_x
                 assign x[gl] = h1_hi[16*gl + ((BANK*NB+gb) >> 4)] && h1_lo[16*gl + (gb & 15)];
             end
-            ot_s81ph_native_sel_popc #(.N(W), .OW(HW)) u_pc (.x(x), .y(h2_d[HW*gb +: HW]));
+            ot_s81ph_hist32_popc #(.N(W), .OW(HW)) u_pc (.x(x), .y(h2_d[HW*gb +: HW]));
         end
     endgenerate
     always @(posedge clk) h2 <= h2_d;
@@ -193,4 +193,34 @@ module ot_s81ph_native_sel_hist_bank #(
     always @(posedge clk or negedge bank_rst[16])
         if (!bank_rst[16]) busy <= 1'b0;
         else busy <= x_v || v1 || v2;
+endmodule
+
+// Same fixed popcount helper as golden; independent namespace avoids importing
+// unrelated unclosed selector-library changes into this standalone hard bank.
+module ot_s81ph_hist32_popc #(
+    parameter integer N  = 16,
+    parameter integer OW = 5
+) (
+    input  wire [N-1:0]  x,
+    output wire [OW-1:0] y
+);
+    localparam integer NP = (N > 1) ? (1 << $clog2(N)) : 2;
+    /* verilator lint_off UNOPTFLAT */
+    wire [2*NP*OW-1:0] t;
+    /* verilator lint_on UNOPTFLAT */
+    genvar n;
+    generate
+        for (n = 0; n < NP; n = n + 1) begin : g_leaf
+            if (n < N) begin : g_x
+                assign t[OW*(NP+n) +: OW] = {{(OW-1){1'b0}}, x[n]};
+            end else begin : g_0
+                assign t[OW*(NP+n) +: OW] = {OW{1'b0}};
+            end
+        end
+        for (n = 1; n < NP; n = n + 1) begin : g_node
+            assign t[OW*n +: OW] = t[OW*(2*n) +: OW] + t[OW*(2*n+1) +: OW];
+        end
+    endgenerate
+    assign t[OW-1:0] = {OW{1'b0}};
+    assign y = t[OW +: OW];
 endmodule

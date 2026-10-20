@@ -5,8 +5,8 @@
  "sources": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/hdc/ot_hdc_prefix.sv",
-  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
-  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv"
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv",
+  "results/arch/s81_topk5_1020/gold_hist256.sv"
  ],
  "params": {
   "W": 16,
