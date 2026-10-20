@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT / 'tools')); sys.path.insert(0, str(HERE))
 import die_port_bind as DPB          # noqa: E402
 import dv_diecase as DC              # noqa: E402
 import dv_sta_pilot as SP            # noqa: E402
+from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
 import abstract_pin_windows as APW   # noqa: E402
 
@@ -457,15 +458,14 @@ def main():
                 lib = git(ref, f'{d}/{m}_{c}.lib')
                 if lib is None:
                     raise SystemExit(f'dv_rvcase: closed view {m} has no {c} lib at {ref}:{d}')
-                if 'pin("ck_o")' in lib and m.startswith('dsfd_dvrlyh_'):
-                    # dv_sta_pilot: ETM self-related ck_o edges -> one ck -> ck_o arc, negative unate (half-cycle view)
-                    lib = SP.patch_ck_o(lib)
-                    i_ = lib.index('S81-DIE4 STA pilot: ETM self-related'); j_ = lib.rindex('timing_sense : positive_unate', 0, i_)
-                    lib = lib[:j_] + 'timing_sense : negative_unate' + lib[j_ + len('timing_sense : positive_unate'):]
-                elif 'pin("ck_o")' in lib:
-                    lib = SP.patch_ck_o(lib)
+                # Source-pinned native forwarding only: never reinterpret SELF ETM tables.
+                validate_native_forwarding(m, c, lib,
+                    lambda artifact: git(ref, f'{d}/{artifact}'))
                 (out / 'views' / 'sta' / f'{m}_{c}.lib').write_text(lib)    # STA corner libs (the GRT reads views/*.lib: TT copy below)
-            (out / 'views' / f'{m}.lib').write_text(git(ref, f'{d}/{m}_tt.lib'))
+            tt_lib = git(ref, f'{d}/{m}_tt.lib')
+            validate_native_forwarding(m, 'tt', tt_lib,
+                lambda artifact: git(ref, f'{d}/{artifact}'))
+            (out / 'views' / f'{m}.lib').write_text(tt_lib)
     placer = Placer(W, H)
     loc = {}            # inst -> (x, y lower-left, w, h, status)
     for b in blocks.values():
