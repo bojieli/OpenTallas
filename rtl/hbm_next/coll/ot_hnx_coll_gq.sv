@@ -244,7 +244,7 @@ module ot_hnx_coll_gq_issue #(
     reg [3:0] ir, g_n; reg [2:0] it3; reg [15:0] g_rso; reg [9:0] kx;
     // s4 kept copies of held gather fields (census s3: g_r2 155, g_rsa 100, g_src 44, g_qbg 110 with iph/iss)
     (* keep = "true" *) reg [7:0]  g_qbg_c;        // one per VM read bank
-    (* keep = "true" *) reg [14:0] g_r2_c;         // 0..7 qa | 8 sfv/scd | 9,10 pr_s rings | 11 qc_ohd | 12,14 pp_em rings | 13 pp_d
+    (* keep = "true" *) reg [15:0] g_r2_c;         // 0..7 qa | 8,15 sfv/scd rings | 9,10 pr_s rings | 11 qc_ohd | 12,14 pp_em rings | 13 pp_d
     (* keep = "true" *) reg [12:0] g_src_c [0:7];  // sb rows 2k, 2k+1
     (* keep = "true" *) reg [15:0] g_rsa_c [0:15]; // sb row r (copy 0 also nb)
     (* keep = "true" *) reg [13:0] rq_c [0:7];     // {R[1], R[49:37]} for the qa fire loads (one per qa)
@@ -380,7 +380,7 @@ module ot_hnx_coll_gq_issue #(
         if (fire_c[5]) g_str <= rc[84:69];
         if (fire_c[6]) g_rso <= rc[136:121];
         if (fire_c[22]) begin g_bs <= rc[36:29]; g_qbg_c <= {8{rc[0]}}; end
-        if (fire_c[23]) g_r2_c <= {15{rc[1]}};
+        if (fire_c[23]) g_r2_c <= {16{rc[1]}};
         for (integer k = 0; k < 8; k = k + 1) if (fire_c[24 + k]) g_src_c[k] <= rc[49:37];
         for (integer k = 0; k < 16; k = k + 1) if (fire_c[k < 8 ? 32 + k : 33 + k]) g_rsa_c[k] <= rc[120:105];
     end
@@ -455,7 +455,7 @@ module ot_hnx_coll_gq_issue #(
             end
         end else if (evi_c[2])
             for (integer r = 0; r < 2; r = r + 1) begin : nb_s1
-                sfv_n[r] = fv(g_r2_c[8], i_kn, r); scd_n[r] = is_code(flit_i(g_r2_c[8], i_kn, r));
+                sfv_n[r] = fv(g_r2_c[r == 0 ? 8 : 15], i_kn, r); scd_n[r] = is_code(flit_i(g_r2_c[r == 0 ? 8 : 15], i_kn, r));
             end
     end
     always @(posedge clk or negedge rl[6])

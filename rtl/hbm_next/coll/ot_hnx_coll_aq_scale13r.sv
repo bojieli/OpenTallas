@@ -104,12 +104,17 @@ module ot_hnx_coll_aq_mul13r (
 
 `ifdef OT_GQ_FAN32
     wire[23:0]s1_ac[0:5];
+    // s4 r5 (census r5: an s2_amax-derived normalise net drove 33): the normalised operand is formed twice in kept
+    // hierarchy (copies 0-2 / 3-5)
+    wire[23:0]an_k[0:1];
+    ot_hnx_coll_aq_anorm u_an0(.a(a),.q(an_k[0]));
+    ot_hnx_coll_aq_anorm u_an1(.a(a),.q(an_k[1]));
     generate for(genvar g=0;g<6;g=g+1)begin:g_s1_operand_copy
         ot_hnx_coll_scale_data_ff u_ff(.clk(clk),
 `ifdef OT_GQ_MUT_SCALE_DATA
-            .d((g==0)?((a_raw<<a_shift)^24'd1):(a_raw<<a_shift)),
+            .d((g==0)?(an_k[0]^24'd1):an_k[g/3]),
 `else
-            .d(a_raw<<a_shift),
+            .d(an_k[g/3]),
 `endif
             .q(s1_ac[g]));
     end endgenerate
@@ -290,4 +295,20 @@ module ot_hnx_coll_aq_pw(input wire [31:0] a, b, output wire signed [11:0] p);
     wire signed [11:0] ap = (af == 8'd0) ? (-12'sd149 - {7'd0, ash}) : ($signed({4'd0, af}) - 12'sd150);
     wire signed [11:0] bp = (bf == 8'd0) ? (-12'sd149 - {7'd0, bsh}) : ($signed({4'd0, bf}) - 12'sd150);
     assign p = ap + bp;
+endmodule
+
+// HNX-GQ s4: the normalised significand a_raw << lead_shift_24(a_raw) of ot_hnx_coll_aq_mul13r stage 1 (same expression)
+(* keep_hierarchy = "yes" *)
+module ot_hnx_coll_aq_anorm(input wire [31:0] a, output wire [23:0] q);
+    function automatic [4:0] lead_shift_24(input [23:0] value);
+        reg [4:0] shift;
+        begin
+            shift = 5'd23;
+            for (integer bit_index = 0; bit_index <= 23; bit_index = bit_index + 1)
+                if (value[bit_index]) shift = 5'd23 - bit_index[4:0];
+            lead_shift_24 = shift;
+        end
+    endfunction
+    wire [23:0] ar = {(a[30:23] != 8'd0), a[22:0]};
+    assign q = ar << lead_shift_24(ar);
 endmodule
