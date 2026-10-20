@@ -1,0 +1,12 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=4 out o_c0
+MISMATCH t=4 out o_c1
+MISMATCH t=4 out o_c2
+MISMATCH t=4 out o_c3
+MISMATCH t=4 out o_c4
+HROOT_LAND FAIL tile=hroot edges=4000 checks=51948 errors=38930 mut=3 (fan word one bit low)
+- ../out/hland_m3/tb.sv:77: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.006 s; speed 1.254 ms/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB
+

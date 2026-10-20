@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_hroot_k1-k1-da14c0bdf bench bench_hroot_land_mut1 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_k1-k1-da14c0bdf log cl/bench_hroot_land_mut1.a1b1.log captured 2026-10-19T02:33:58-07:00
+# fail_regex '^HROOT_LAND FAIL tile=hroot .* mut=1 '
+MISMATCH t=4 out o_emb
+MISMATCH t=5 out o_emb
+MISMATCH t=6 out o_emb
+MISMATCH t=7 out o_emb
+MISMATCH t=8 out o_emb
+HROOT_LAND FAIL tile=hroot edges=4000 checks=51948 errors=3996 mut=1 (r word not landed)

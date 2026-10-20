@@ -1,0 +1,7 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+KVS_TILE PASS tile=hroot edges=4000 checks=67949 active_out=50945 outs=13 child_inputs=4 forced=4 errors=0 mut=0 vs=die_bound_tile
+- ../out/hroot_m0/tb.sv:90: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.094 s; speed 85.330 us/s
+- Verilator: cpu 0.094 s on 1 threads; allocated 7 MB
+

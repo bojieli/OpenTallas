@@ -58,6 +58,17 @@ HROOT_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root.sv'
 # root).  Done for all four stacks so the group / root replicas stay one master each.  Removes the stack-middle fan
 # tile and its two 6-mm feeds (root -> fan 334 b, fan -> root 144 b) from the stack control channels.
 FANFOLD = HROOT and os.environ.get('OT_KV_FANFOLD', '0') == '1'
+# HKV-HROOTK2 10-19 (OT_KV_HROOT_LAND=1, needs OT_KV_HROOT=1; default off until the die lane prices it): the stack root
+# tile qkd_kvs_hroot registers EVERY PIN AT ITS FACE (kit qkd_kvs_hroot_k1-6355d06bd closed but failed the native pin
+# audit: mid-span single-flop relays, capture 452.7 / launch 418.4 ps).  qkd_kv_stack_relays -> qkd_kv_stack_relays_l (a
+# capture register at the input pin + a launch register at the output pin per relay word) and the es fan stack
+# qkd_kv_es_fan_stack_b -> qkd_kv_es_fan_stack_bl (capture register on h + strap; d is the o_pc launch register), both in
+# HROOT_LAND_RTL.  ADDED EDGES (compiler: one more relay stage on each word through the root), see HROOT_LAND_EDGES.
+# Tile file suffix '_hl' (the other kits keep their tile file byte-identical).
+HROOT_LAND = HROOT and os.environ.get('OT_KV_HROOT_LAND', '0') == '1'
+HROOT_LAND_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_land.sv'
+HROOT_LAND_EDGES = {'es chain head h -> o_pc (pc_<st>_31.chain_i)': 1, 'stack fan word i_ctl -> o_c*/o_kg/o_ch0': 1,
+                    'group gathers i_g -> o_ctl (kvs_ctl.i_hroot_<st>)': 1, 'PC 31 return train i_r -> o_emb (kvs_emb.i_hroot_<st>)': 1}
 # one generated tile file per design point (the ECTL frame pairing re-orders the fan's frame cfg words)
 # KV-INTEG2 10-18: ONE kit design point OT_KV_TILE_KITS=1 (alias OT_KV_KVS_CK1=1; default off, so every existing design
 # point and its tile file are unchanged; tile file suffix '_k').  Under it every kit tile takes ONE clock port per domain
@@ -110,6 +121,7 @@ PC_SRAM_RTL = ('rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv',
                'rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv')
 PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
+            ('_hl' if HROOT_LAND else '') +   # HKV-HROOTK2 10-19 (kit qkd_kvs_hroot_k1-da14c0bdf)
             ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
             ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
             ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + ('_sr' if PC_SRAM else '') +
@@ -425,6 +437,8 @@ def graph():
         import kv_bootage as _KB              # KV-BOOTAGE 10-19 (OT_KV_BOOT_AGES=1): boot-programmable schedule ages
         if _KB.ON:
             _KB.boot_ages_join(g)
+        if HROOT_LAND:
+            _hroot_land_join(g)
         _G['g'], _G['unpriced'] = g, left
         _G['ins'] = {i['name']: i for i in g['instances']}
         _G['spec'] = {}
@@ -440,6 +454,19 @@ def _attn_land_join(g):
         by[name]['parameters'][k] = 1
     g.setdefault('joins_added', []).append(dict(producer='attention_programme LAND / attn_root, attn_face CAL_PIPE',
         bound_inputs=0, owner_note='KV-ATTNKIT 10-18: registered kvs_attn boundary; added edges ' + json.dumps(ATTN_LAND_EDGES)))
+
+
+def _hroot_land_join(g):
+    """HKV-HROOTK2 (OT_KV_HROOT_LAND): the stack roots' es fan stack with a capture register on h (see HROOT_LAND)"""
+    by = {i['name']: i for i in g['instances']}
+    for st in STACKS:
+        e = by[f'esh_{st}']
+        if e['module'] != 'qkd_kv_es_fan_stack_b':
+            raise ValueError(f'kv_static_die HROOT_LAND: esh_{st} is {e["module"]} (needs BOOT)')
+        e.update(module='qkd_kv_es_fan_stack_bl', source=HROOT_LAND_RTL, sha256=None)
+    g.setdefault('joins_added', []).append(dict(producer='esh_<st> qkd_kv_es_fan_stack_bl / u_rly qkd_kv_stack_relays_l',
+        bound_inputs=0, owner_note='HKV-HROOTK2 10-19: every qkd_kvs_hroot pin registered at its face; added edges '
+        + json.dumps(HROOT_LAND_EDGES)))
 
 
 def _hroot_join(g):
@@ -1484,7 +1511,8 @@ def add_hroots(tiles):
                                              ('o_emb', RW, 'kvs_emb', f'i_hroot_{st}', 'w_rly__r')):
                 P[nm] = dict(dir='output', width=w, cls='bundle', peer=peer, peer_port=pport, consumers=[], expr=expr)
         t['wires'] += [f'    wire [{FW - 1}:0] w_rly__fan;', f'    wire [{GW - 1}:0] w_rly__g;', f'    wire [{RW - 1}:0] w_rly__r;']
-        t['body'].append(f'    qkd_kv_stack_relays #(.HW({HW}), .FW({FW}), .GW({GW}), .RW({RW})) u_rly (.ck(rly__ck), '
+        rmod = 'qkd_kv_stack_relays_l' if HROOT_LAND else 'qkd_kv_stack_relays'
+        t['body'].append(f'    {rmod} #(.HW({HW}), .FW({FW}), .GW({GW}), .RW({RW})) u_rly (.ck(rly__ck), '
                          f'.dn(i_ctl), .g_i(i_g), .r_i(i_r), .fan(w_rly__fan), .g(w_rly__g), .r(w_rly__r));')
         t['hroot'] = dict(HW=HW, FW=FW, GW=GW, RW=RW)
     return tiles

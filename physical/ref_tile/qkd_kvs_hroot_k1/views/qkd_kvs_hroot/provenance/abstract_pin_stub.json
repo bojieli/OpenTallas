@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qkd_kvs_hroot.lef",
-    "sha256": "8502cd5fa169eda6c6977b0d0535884a452875f8ba1d42414428fcda9d840973"
+    "sha256": "2a5006f3e243cccef25e6948d682dc799de1d90e273eee5a8318b7a69afcc6ed"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_hroot_k1-k1-6355d06bd/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_k1-k1-da14c0bdf/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_hroot_k1-k1-6355d06bd/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_hroot_k1-k1-6355d06bd/record/views/qkd_kvs_hroot/provenance/raw/qkd_kvs_hroot.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_hroot_k1-k1-6355d06bd/record/views/qkd_kvs_hroot/provenance/qkd_kvs_hroot.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_k1-k1-da14c0bdf/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_k1-k1-da14c0bdf/record/views/qkd_kvs_hroot/provenance/raw/qkd_kvs_hroot.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_k1-k1-da14c0bdf/record/views/qkd_kvs_hroot/provenance/qkd_kvs_hroot.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 356 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 68 OBS rects moved into 68 pins: ck, esh__stack[0], esh__stack[1], o_c0[0], o_c0[1], o_c0[2], o_c0[3], o_c0[4], o_c1[0], o_c1[1], o_c1[2], o_c1[3]; pockets: 1299 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_hroot_k1-k1-6355d06bd/record/views/qkd_kvs_hroot/provenance/qkd_kvs_hroot.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_k1-k1-da14c0bdf/record/views/qkd_kvs_hroot/provenance/qkd_kvs_hroot.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qkd_kvs_hroot 300.24 x 300.24: PG M5 VDD 55 stripes (97% spread, 100% cov) / VSS 55 stripes (97% spread, 100% cov); strap M6; face pins 3122 blocked-above 0 blocked-same 0; clock ck insertion 312 ps; pockets M5 0 (closed)",
+    "summary": "qkd_kvs_hroot 300.24 x 300.24: PG M5 VDD 55 stripes (97% spread, 100% cov) / VSS 55 stripes (97% spread, 100% cov); strap M6; face pins 3122 blocked-above 0 blocked-same 0; clock ck insertion 399 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qkd_kvs_hroot",
       "W": 300.24,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 3122,
         "blocked_above": 0,
-        "covered_below": 627,
+        "covered_below": 228,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 311.5,
-          "min_ps": 191.6
+          "max_ps": 399.46,
+          "min_ps": 312.41
         }
       },
       "pockets": {
@@ -87,16 +87,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 356
+          "added": 1299
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "qkd_kvs_hroot.lef",
-    "sha256": "70caddd290c69029f39c134ee29e03ea058eb21f9c159262b55ee7b690766136"
+    "sha256": "f791e87b4c27c1f28804203ed5b4008f8cc9acfd6a96ba29b583d2e8038d7600"
   }
 }
