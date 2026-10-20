@@ -1,0 +1,14 @@
+Verilator 5.050 2026-07-01 rev v5.050
+a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b  /srv/opentallas-scratch/claude/qw-tload2-1019/src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  /srv/opentallas-scratch/claude/qw-tload2-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e  /srv/opentallas-scratch/claude/qw-tload2-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  /srv/opentallas-scratch/claude/qw-tload2-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+bbdacf0bb0876d86a86ea2c5af5a1f73b9f9935e8dc799f0d59a9b68c78ddb30  /srv/opentallas-scratch/claude/qw-tload2-1019/src/rtl/qwen_dv/qfd_dv_vm.sv
+68cfd9bc123776f3070cb4630929f814f91a5aeef4db6ddf1770ed402fa6af91  /srv/opentallas-scratch/claude/qw-tload2-1019/src/rtl/qwen_dv/qfd_dv_table_rom_loader.sv
+f2f528e725347f8b0c843b23f1b4e1b2fa2e3be8fc5f9b415a0159843ffbe394  /srv/opentallas-scratch/claude/qw-tload2-1019/src/rtl/qwen_dv/qfd_dv_slice_tload.sv
+a612ac45fb533970a253a3b225a002a08f651ce1a647c0e32313149d7e65be1c  /srv/opentallas-scratch/claude/qw-tload2-1019/src/rtl/test/qwen_dv/tb_qfd_dv_slice_tload.sv
+DEFAULT0 edge_checks=12672 reads=149640 cycles=462663 first_age=5 all36 all4 retention head_guard=1
+CAPTURE1 edge_checks=12672 reads=149640 cycles=462807 first_age=6 all36 all4 retention head_guard=1
+COLLISION_REJECT_PASS
+F16_TLOAD_CAPTURE_PASS
+rc=0

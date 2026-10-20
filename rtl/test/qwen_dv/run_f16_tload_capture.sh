@@ -11,6 +11,7 @@ set -uo pipefail
 OUT=${1:?outdir}; MODE=${2:?mode}
 R=$(pwd)
 mkdir -p "$OUT/fx" "$OUT/logs"
+OUT=$(cd "$OUT" && pwd)
 verilator --version
 MAN="$OUT/fx/table_manifest.json"
 zcat "$R/results/arch/qwen_programme_store_1019/table_manifest.json.gz" > "$MAN" || { echo F16_TLOAD_FIXTURE_FAIL; exit 2; }
