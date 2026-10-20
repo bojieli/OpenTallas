@@ -1003,7 +1003,7 @@ echo "GATE_PIN_GEOMETRY_RC=$PINRC"
 # LAYOUT IMAGES (owner rule 20:45 10-15): the floorplan the route starts from (macros, pins, PG) -> PNG on the gate side
 ot_layout() {{  # ot_layout ODB TAG: tools/ref_tile/layout_dump.tcl on the odb, json back as one zlib+base64 line
   printf 'read_db /work/%s\nsource /src/tools/ref_tile/layout_dump.tcl\nexit\n' "$1" > $C/gate_layout_$2.tcl
-  docker run --rm -e OT_LAYOUT_OUT=/work/gate_layout_$2.json -e OT_LAYOUT_CLOCKS={CLKS} -e OT_LAYOUT_TOP={TOP} -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/gate_layout_$2.tcl > $R/layout_$2.log 2>&1
+  docker run --rm -e OT_LAYOUT_OUT=/work/gate_layout_$2.json -e OT_LAYOUT_ODB=/work/$1 -e OT_LAYOUT_CLOCKS={CLKS} -e OT_LAYOUT_TOP={TOP} -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/gate_layout_$2.tcl > $R/layout_$2.log 2>&1
   [ -s $C/gate_layout_$2.json ] && python3 -c "import zlib,base64,sys;print('GATE_LAYOUT_B64 '+sys.argv[2]+' '+base64.b64encode(zlib.compress(open(sys.argv[1],'rb').read(),9)).decode())" $C/gate_layout_$2.json $2
 }}
 ot_layout $NB/3_2_place_iop.odb floorplan
@@ -1437,6 +1437,10 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
         except Exception as ex:  # noqa: BLE001
             g.add("WARN", "layout_images", f"layout dump {tag} unreadable: {type(ex).__name__}")
     od = kd / "gate_layout"
+    if (spec.get("fill_reason") or {}).get("lattice_channel_bound") is not None and dumps.get("placed"):
+        # HBM-MC3G 10-20: the exact placed census (and the band kit's role list) for band_exception_harvest.py
+        od.mkdir(parents=True, exist_ok=True)
+        (od / "placed_occupancy.json").write_text(json.dumps(dumps["placed"]))
     imgs = {}
     title = spec.get("name", kd.name)
     if "floorplan" in dumps:
@@ -2669,6 +2673,8 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
          # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
          + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]
+         # post_cts_extra / post_grt_extra (HBM-MC3G 10-20): same existence check
+         + [x for k in ("post_cts_extra", "post_grt_extra") for x in sp.get(k, []) if isinstance(x, str)]
          # boundary_tcl / pre_cts_extra (RH-DBKCPL 10-19): ref_tile gen reads each at ROOT; without them the submit check
          # of hv16_dbk_cpl (child_pocket_guard.tcl) went SKIP "gate error FileNotFoundError" -- binding never checked
          + [x for k in ("boundary_tcl", "pre_cts_extra") for x in sp.get(k, []) if isinstance(x, str)]
