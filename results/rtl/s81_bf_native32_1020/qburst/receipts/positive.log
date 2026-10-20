@@ -1,0 +1,5 @@
+QUEUE_BURST PASS outputs=1024 stored=192 cycles=11532
+- tb.sv:29: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 115us; walltime 0.057 s; speed 2.022 ms/s
+- Verilator: cpu 0.057 s on 1 threads; allocated 7 MB

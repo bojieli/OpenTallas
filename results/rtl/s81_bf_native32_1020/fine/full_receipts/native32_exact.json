@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "positive": "fine32",
+  "trace_sha256": "c6cf9839168a375a834868cafa63e42973d5c49e8f3f203b1c8d25d8f495bf0d",
+  "trace_lines": 124422,
+  "extra_data_edges": 0,
+  "mutants": {
+    "fine_mut": {
+      "returncode": 1,
+      "first_trace_mismatch": 2701,
+      "sha256": "8c41a4a3c979ba5eebeff05cc971174a971a2ba98833ed1b8b04d4af476fb570",
+      "fail_regex": "DIFF TXN lane="
+    }
+  },
+  "baseline_record": "results/rtl/s81_c199_freeclk_1019/forep/forep_exact.json @4496f1308"
+}
