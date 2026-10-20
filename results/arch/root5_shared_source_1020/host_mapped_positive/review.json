@@ -1,0 +1,26 @@
+{
+  "claim": "Actual current HCDC mapped ownership/CDC mechanism proof only; no CTS, physical, die, token or source adoption inferred",
+  "frozen_gate": "ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/qkd_hr_cdc_host_q2-20261020-040646",
+  "source": "c05e7397c / RTL76fea95ec",
+  "helper_sha256": "375084ce607b0d9d429e2d3c56e996353305ef47b21ce3584f0948c54728fec3",
+  "frozen_sdc_contains_whole_exact_dual_tcl": true,
+  "native_status": "PASS",
+  "native_limit": 32,
+  "native_max": 32,
+  "native_violations": 0,
+  "actual_mapped_ownership": {
+    "roots": 2,
+    "registers": 6399,
+    "inputs": 620,
+    "outputs": 588,
+    "async_control_pins": 880,
+    "reviewed_crossing_classes": 46
+  },
+  "actual_causal_negatives": "../host_negatives (q1 same source, exact helper SHA; geometry differs only)",
+  "separate_long_diagnostic": "session78608/PID2127845 remains live and preserved; not needed to infer gate-owned mapped positive",
+  "file_sha256": {
+    "hcdc_q2_native.json": "4cbd21293fa6b11e48041ef7b87959c86e0b5330d4df227fdb5ffc53bc385595",
+    "hcdc_q2_signoff.sdc": "f566d1b9cde3e3719a8f53036ec51f1dc5e007deaa38dfc9c12423ef0ec7afc1",
+    "hcdc_q2_synth.log": "a667950da0ae4799ee72d051706bf53d568e268df4ed3c3f137604d1c7c0e939"
+  }
+}
