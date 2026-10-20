@@ -27,3 +27,30 @@ and recurring equal-value ties. This verifies MUT behavior preservation;
 it is not a claim that each mutant is rejected by a causal witness.
 
 No layout gate or submission is authorized by these construction receipts.
+
+PICKUP SEALED 2026-10-20: the stable cap32 source is NOT native qualified.
+NU1 actual ASAP7 mapping fails with 55 internal drivers above32, maximum64.
+Including the module input boundary gives60 violations; r_addr[18] drives36
+native pins. The exact mapped JSON/Verilog and census are in evidence/native.
+All7 functional configurations passed84,000 total edges before this mapping.
+
+The original NU4 mapping remains live on ot-epyc7. Preserve client2917450,
+tool session83703, fleet unit oth-ubuntu-1939911-1792482414, Docker container
+codex_amax_csafe_native_1020. Root remote directory:
+`/srv/opentallas-scratch/claude/codex-amax-csafe-1020`.
+Collect native/n4.json, native/n4.v, native/n4.log when terminal, then run
+this directory's census.py on the copied JSON. The Docker-created native
+directory is root-owned; run the census on a local writable copy.
+
+An UNVALIDATED cap16 construction is archived as evidence/private_cap16.sv.gz
+and its construction receipt. Regenerate with `--internal-cap16`; this private
+adapter limits internally driven generic nets to16 and retains a32 input
+ceiling. It has neither functional nor mapped qualification. The cap32 source
+above remains the public source. ABC's two input loads for a generic MUX
+select explain why the generic32 bound alone did not protect native32.
+
+Further address-retiming exploration exists only in remote generated16r;
+it is UNVALIDATED and must not be adopted. It moves leaf index offsets from
+the al0 input to the al1 combinational operands, which needs an additional
+reset-origin marker to preserve invalid-data output bits during reset drain.
+No layout gates or additional native mappings were launched for these trials.

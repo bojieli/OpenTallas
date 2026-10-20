@@ -5,15 +5,25 @@ Source construction is generic, before ABC. Existing arithmetic edges are
 unchanged; every original async reset is served by a two-edge reset tree.
 Actual technology mapping and independent equivalence remain required.
 """
-import copy,json,re,subprocess,sys
+import copy,json,re,subprocess,sys,inspect
+import bound_math_netlist as BM
 from pathlib import Path
 from bound_math_netlist import build
 root=Path(__file__).resolve().parents[2]
 out=Path(sys.argv[1]).resolve();out.mkdir(parents=True,exist_ok=True)
+cap=16 if '--internal-cap16' in sys.argv[2:] else 32
+if cap==16:
+    code=inspect.getsource(BM.build)
+    assert 'sum(v[0] for v in x)>32]' in code and 'cost+sink[0]>32:' in code
+    code=code.replace('sum(v[0] for v in x)>32]', 'sum(v[0] for v in x)>(16 if b in drivers else 32)]').replace('cost+sink[0]>32:', 'cost+sink[0]>16:')
+    exec(code,BM.__dict__)
+    build=BM.build
+
+seed=root/'rtl/qwen_dv/mu/qfd_dv_amax_mu.sv'
 helpers={};bodies=[];records=[];special_ports={}
 for nu,mut in [(1,0)]+[(4,m) for m in range(6)]:
     tag=f'n{nu}m{mut}'; p=out/(tag+'.json')
-    cmd=f'read_verilog -sv -D SYNTHESIS {root}/rtl/qwen_dv/mu/qfd_dv_amax_mu.sv; chparam -set NU {nu} -set MUT {mut} qfd_dv_amax_mu; synth -top qfd_dv_amax_mu -flatten -noabc -nofsm -noshare; write_json {p}'
+    cmd=f'read_verilog -sv -D SYNTHESIS {seed}; chparam -set NU {nu} -set MUT {mut} qfd_dv_amax_mu; synth -top qfd_dv_amax_mu -flatten -noabc -nofsm -noshare; write_json {p}'
     with (out/(tag+'.log')).open('w') as log:subprocess.run(['yosys','-Q','-p',cmd],stdout=log,stderr=subprocess.STDOUT,check=True)
     design=json.loads(p.read_text());mod=design['modules']['qfd_dv_amax_mu'];cells=mod['cells']
     rst=mod['ports']['rst']['bits'][0];clk=mod['ports']['ck']['bits'][0]
@@ -45,7 +55,7 @@ for nu,mut in [(1,0)]+[(4,m) for m in range(6)]:
         n=re.search(r'module (\w+)',h)[1]
         if n in helpers:assert helpers[n]==h
         helpers[n]=h
-    bodies.append(source);record.update(NU=nu,MUT=mut,reset_root_loads=source.count(f'.D(n_{rst})'),original_reset_flops=len(targets),reset_release_extra_edges=2)
+    bodies.append(source);record.update(NU=nu,MUT=mut,reset_root_loads=source.count(f'.D(n_{rst})'),original_reset_flops=len(targets),reset_release_extra_edges=2,internal_generic_load_cap=cap,input_generic_load_cap=32)
     records.append(record)
 port='ck,rst,c_stn,stn_amax_bit,stn_user,stn_pend,r_v,r_addr,r_d,c_am,am_clr,am_emit_cmd,am_user,am_v,am_idx,am_val,am_u,emit_empty,mu_fault'
 decl='''input wire ck,rst,c_stn,stn_amax_bit,stn_pend,r_v,c_am,am_clr,am_emit_cmd;

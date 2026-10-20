@@ -33,6 +33,8 @@ for filename in sys.argv[1:]:
  for pn,ps in mods[top]['ports'].items():
   if ps['direction']=='output':
    for b in ports[pn]:sinks[b].append(('$output/'+pn,'PORT','P'))
+  elif pn!='ck':
+   for b in ports[pn]:drivers.setdefault(b,('$input/'+pn,'INPUT','P'))
  rows=[]
  for b,driver in drivers.items():
   if b in clock or driver[0] in transparent or isinstance(b,str):continue
