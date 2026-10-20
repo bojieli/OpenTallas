@@ -325,6 +325,8 @@ module ot_hgi_coll_static_program_target_s128 #(
         (* keep = "true" *) reg [3:0] write_addr[0:7];
         wire [7:0] cfg_bits,scan_bits;
         for(genvar bk=0;bk<8;bk=bk+1)begin:g_bank
+            reg [15:0] loaded_local;
+            assign loaded[bk*16+:16]=loaded_local;
             always @(posedge clk or negedge rst_n)
                 if(!rst_n)begin scan_addr[bk]<=1;write_addr[bk]<=0;end
                 else begin
@@ -333,8 +335,8 @@ module ot_hgi_coll_static_program_target_s128 #(
                     if(frame && !frame_bad)write_addr[bk]<=a_row[3:0];
                 end
             always @(posedge clk or negedge rst_n)
-                if(!rst_n)loaded[bk*16+:16]<=0;
-                else if(drain_done && row[6:4]==3'(bk))loaded[bk*16+write_addr[bk]]<=1;
+                if(!rst_n)loaded_local<=0;
+                else if(drain_done && row[6:4]==3'(bk))loaded_local[write_addr[bk]]<=1;
             assign cfg_bits[bk]=loaded[bk*16+cfg_lookup_addr[bk*4+:4]];
             assign scan_bits[bk]=loaded[bk*16+scan_addr[bk]];
         end
