@@ -1,0 +1,18 @@
+port	dir	width	cycles	why
+ck_core	input	1	0	clock
+ck_phy_fam	input	1	0	clock
+host_rst_n	input	1	0	reset
+u_rank__d_ccr	input	1	0	excluded
+u_rank__d_cd	output	546	0	excluded
+u_rank__d_cv	output	1	0	excluded
+u_rank__raw_rx_cr	input	1	1	pin register
+u_rank__raw_rx_d	output	528	1	pin register
+u_rank__raw_rx_v	output	1	1	pin register
+u_rank__physical_tx_cr	output	1	1	pin register
+u_rank__physical_tx_d	input	528	1	pin register
+u_rank__physical_tx_v	input	1	1	pin register
+u_rank__u_phy__pad_cr	output	1	0	excluded
+u_rank__u_phy__pad_d	input	546	0	excluded
+u_rank__u_phy__pad_v	input	1	0	excluded
+service_faults_core	output	2	1	pin register
+service_faults_phy	output	2	0	excluded
