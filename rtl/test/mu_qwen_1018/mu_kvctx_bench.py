@@ -89,7 +89,15 @@ _orig_events_for = B.events_for
 def events_for(pb, face, res, users, ctx=True):
     if users == {0}:
         return _orig_events_for(pb, face, res, users, ctx=False)
-    return _orig_events_for(pb, face, res, users, ctx=False) + kv_events()   # NO image context: the KV die sends it
+    # NO image filler context: the KV die sends it.  The OPSEG image still carries its DW5 / DW6 context record (the ctlm
+    # checks it on the seal edge, ~1035, AFTER the KV loads at 218 / 418 / 618; a plain-0 record is a bad tag -> op_fault):
+    # the record with tag CTX_TAG and an EMPTY mask = a valid record that loads no filler (QW-KVCTX 10-19; the old harness
+    # forced c_ctx / c_ctxld and so never saw the seal check).
+    dw5, dw6 = O.ctx_words({}, set())
+    rec = {O.CTX_DW[0]: dw5, O.CTX_DW[1]: dw6}
+    ev = [(c, k, (v >> 64 << 64) | rec[v >> 64]) if k == 1 and (v >> 64) in rec else (c, k, v)
+          for c, k, v in _orig_events_for(pb, face, res, users, ctx=False)]
+    return ev + kv_events()
 
 
 B.events_for = events_for
