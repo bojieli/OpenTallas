@@ -60,7 +60,7 @@ if [ -n "${OT_PG_JOB_STRICT:-}" ] && [ "$OT_PG_JOB_STRICT" != "$OT_PG_STRICT" ];
 fi
 PG=()
 if [ "${OT_PG_STRICT:-0}" = 1 ]; then
-  PG=(--orfs-var OT_PG_STRICT=1 --orfs-var OT_PG_HELPER=/src/physical/common_flow/native_pg_binding.tcl --step-tcl PRE_FINAL_REPORT=physical/common_flow/native_pg_bootstrap.tcl)
+  PG=(--orfs-var OT_PG_STRICT=1 --orfs-var OT_PG_HELPER=/src/physical/common_flow/native_pg_binding.tcl --step-tcl PRE_FINAL_REPORT=physical/common_flow/native_pg_final_entry.tcl)
 fi
 SO=(); [ -n "$STOP" ] && SO=(--pnr-stop-after $STOP)
 # synthesis cap: unlimited for a route; the gate's floorplan smoke passes SYNTH_TIMEOUT (a SHARE stall fails in minutes)
