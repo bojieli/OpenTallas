@@ -1,0 +1,799 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qkd_kvs_attn_rv1-rv1-dd84cbbc5",
+ "block": "qkd_kvs_attn_fl",
+ "owner": "Claude:KV-ATTN2",
+ "source_branch": "claude/kv-attn2-1019",
+ "record_branch": "codex/closure-record-qkd_kvs_attn_rv1-rv1-dd84cbbc5",
+ "source_commit": "dd84cbbc598fcef77d1a9c32b423035ae29a775b",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 52.77,
+  "ff_ps": 13.79,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -305.39,
+  "ss_sensitivity_tns_ps": -12189.5,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/routes/qkd_kvs_attn_rv1_rv1_dd84cbbc5/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/routes/qkd_kvs_attn_rv1_rv1_dd84cbbc5/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/routes/qkd_kvs_attn_rv1_rv1_dd84cbbc5/work/orfs/logs/asap7/opentallas_qkd_kvs_attn_fl_asap7_ref_qkd_kvs_attn_rv1_rv1_dd84cbbc5/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.249 MB sources in 16 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.040 s (elab=0.009, cvt=0.018, bld=0.000); cpu 0.040 s on 1 threads; allocated 37.133 MB\n",
+   "track": "parallel"
+  },
+  "bench_rv_pair_ba5": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "AIR PASS mode=5 mut=0 checks=12892 errors=0 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=6 mut=0 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=7 mut=0 checks=12900 errors=0 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=8 mut=0 checks=12861 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=9 mut=0 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=10 mut=0 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1\nKVS_RVPAIR_ALL PASS mut=0 modes=11 checks=155024 fails=0\n",
+   "track": "parallel"
+  },
+  "bench_rv_mut1_fields_early": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": " cyc=141 prg q\nKVS_RVPAIR FAIL mode=8 mut=1 checks=12861 errors=8 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1\nMISMATCH cyc=137 prg valids\nMISMATCH cyc=138 prg q\nMISMATCH cyc=139 prg valids\nMISMATCH cyc=139 prg q\nMISMATCH cyc=140 prg valids\nMISMATCH cyc=140 prg q\nMISMATCH cyc=141 prg valids\nMISMATCH cyc=141 prg q\nMISMATCH cyc=142 prg valids\nMISMATCH cyc=142 prg q\nKVS_RVPAIR FAIL mode=9 mut=1 checks=12896 errors=71 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=10 mut=1 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1\nKVS_RVPAIR_ALL FAIL mut=1 modes=11 checks=13195 fails=9\n",
+   "track": "parallel"
+  },
+  "bench_rv_mut2_check_misaligned": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "TCH cyc=137 acal\nMISMATCH cyc=138 pvst\nKVS_RVPAIR FAIL mode=8 mut=2 checks=12861 errors=7272 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1\nMISMATCH cyc=136 pvst\nMISMATCH cyc=136 pvfst\nMISMATCH cyc=136 ahs\nMISMATCH cyc=136 acal\nMISMATCH cyc=136 prg valids\nMISMATCH cyc=137 pvst\nMISMATCH cyc=137 pvfst\nMISMATCH cyc=137 ahs\nMISMATCH cyc=137 acal\nMISMATCH cyc=138 pvst\nKVS_RVPAIR FAIL mode=9 mut=2 checks=12896 errors=7314 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=10 mut=2 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1\nKVS_RVPAIR_ALL FAIL mut=2 modes=11 checks=13195 fails=9\n",
+   "track": "parallel"
+  },
+  "bench_rv_mut3_admission_no_check": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "AIR PASS mode=5 mut=3 checks=12892 errors=0 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=6 mut=3 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=7 mut=3 checks=12900 errors=0 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=8 mut=3 checks=12861 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=9 mut=3 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=10 mut=3 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1\nKVS_RVPAIR_ALL FAIL mut=3 modes=11 checks=142200 fails=1\n",
+   "track": "parallel"
+  },
+  "bench_rv_mut4_tx_shift0": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "AIL mode=7 mut=4 checks=12893 errors=12 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=8 mut=4 checks=12854 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1\nMISMATCH cyc=1884 tx_valid\nMISMATCH cyc=1885 tx_valid\nMISMATCH cyc=1886 tx_valid\nMISMATCH cyc=1887 tx_valid\nMISMATCH cyc=1888 tx_valid\nMISMATCH cyc=1889 tx_valid\nMISMATCH cyc=1890 tx_valid\nKVS_RVPAIR FAIL mode=9 mut=4 checks=12889 errors=7 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=10 mut=4 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1\nKVS_RVPAIR_ALL FAIL mut=4 modes=11 checks=64639 fails=5\n",
+   "track": "parallel"
+  },
+  "bench_rv_mut5_status_copy_early": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "AIR PASS mode=5 mut=5 checks=12892 errors=0 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=6 mut=5 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=7 mut=5 checks=12900 errors=0 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=8 mut=5 checks=12861 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=9 mut=5 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=10 mut=5 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1\nKVS_RVPAIR_ALL FAIL mut=5 modes=11 checks=116258 fails=1\n",
+   "track": "parallel"
+  },
+  "bench_rv_mut6_face_stale_beat": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "=6 checks=12900 errors=12 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=8 mut=6 checks=12861 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1\nMISMATCH cyc=1884 tx_payload\nMISMATCH cyc=1885 tx_payload\nMISMATCH cyc=1886 tx_payload\nMISMATCH cyc=1887 tx_payload\nMISMATCH cyc=1888 tx_payload\nMISMATCH cyc=1889 tx_payload\nMISMATCH cyc=1890 tx_payload\nKVS_RVPAIR FAIL mode=9 mut=6 checks=12896 errors=7 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1\nKVS_RVPAIR PASS mode=10 mut=6 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1\nKVS_RVPAIR_ALL FAIL mut=6 modes=11 checks=64674 fails=5\n",
+   "track": "parallel"
+  },
+  "bench_rv_mut7_fault_root_one_pin": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "cks=12861 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1\nMISMATCH cyc=1891 tx_valid\nMISMATCH cyc=1892 tx_valid\nMISMATCH cyc=1893 tx_valid\nMISMATCH cyc=1894 tx_valid\nMISMATCH cyc=1895 tx_valid\nMISMATCH cyc=1896 tx_valid\nMISMATCH cyc=1897 tx_valid\nMISMATCH cyc=1898 tx_valid\nMISMATCH cyc=1899 tx_valid\nMISMATCH cyc=1900 tx_valid\nMISMATCH B missed fault mode 9\nKVS_RVPAIR FAIL mode=9 mut=7 checks=12896 errors=27 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=0\nKVS_RVPAIR PASS mode=10 mut=7 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1\nKVS_RVPAIR_ALL FAIL mut=7 modes=11 checks=142128 fails=1\n",
+   "track": "parallel"
+  }
+ },
+ "fail_witnesses": {
+  "bench_rv_mut1_fields_early": {
+   "path": "results/closure_loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/fail_witness/bench_rv_mut1_fields_early.log",
+   "sha256": "476fc310b2fc4d7962b44d2d042e97e79164c57e4a0bb907012fbfbf94dcf58e",
+   "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+   "matched": "KVS_RVPAIR_ALL FAIL",
+   "captured_at": "2026-10-19T17:40:02-07:00",
+   "declared": null
+  },
+  "bench_rv_mut2_check_misaligned": {
+   "path": "results/closure_loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/fail_witness/bench_rv_mut2_check_misaligned.log",
+   "sha256": "866b72e3073084f4ccf3d289970f592b1808eda963f2cc5374cd35accde0df44",
+   "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+   "matched": "KVS_RVPAIR_ALL FAIL",
+   "captured_at": "2026-10-19T17:40:59-07:00",
+   "declared": null
+  },
+  "bench_rv_mut3_admission_no_check": {
+   "path": "results/closure_loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/fail_witness/bench_rv_mut3_admission_no_check.log",
+   "sha256": "b136d38a6218d17a418ab76351a08de3129713621b6d56c0c4f897179c39a304",
+   "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+   "matched": "KVS_RVPAIR_ALL FAIL",
+   "captured_at": "2026-10-19T17:42:02-07:00",
+   "declared": null
+  },
+  "bench_rv_mut4_tx_shift0": {
+   "path": "results/closure_loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/fail_witness/bench_rv_mut4_tx_shift0.log",
+   "sha256": "ca98c82834c0ba0bc64755650ccaaf951c24349490aee84238f2c8575296e171",
+   "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+   "matched": "KVS_RVPAIR_ALL FAIL",
+   "captured_at": "2026-10-19T17:43:02-07:00",
+   "declared": null
+  },
+  "bench_rv_mut5_status_copy_early": {
+   "path": "results/closure_loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/fail_witness/bench_rv_mut5_status_copy_early.log",
+   "sha256": "d2b5ef0057bc595e37219174edf4a9a469950ad58c12d4c40b8d392a384672ce",
+   "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+   "matched": "KVS_RVPAIR_ALL FAIL",
+   "captured_at": "2026-10-19T17:44:04-07:00",
+   "declared": null
+  },
+  "bench_rv_mut6_face_stale_beat": {
+   "path": "results/closure_loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/fail_witness/bench_rv_mut6_face_stale_beat.log",
+   "sha256": "d2065dfba0eccf058ace0ddb0d774b6f26d5f97587bba0ae66eeab0f2ee8cf66",
+   "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+   "matched": "KVS_RVPAIR_ALL FAIL",
+   "captured_at": "2026-10-19T17:45:01-07:00",
+   "declared": null
+  },
+  "bench_rv_mut7_fault_root_one_pin": {
+   "path": "results/closure_loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5/fail_witness/bench_rv_mut7_fault_root_one_pin.log",
+   "sha256": "b3b1bda4f41c484e08dc4f2b3da811ea514946d992a098dfbd28715c6a5d0c54",
+   "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+   "matched": "KVS_RVPAIR_ALL FAIL",
+   "captured_at": "2026-10-19T17:46:05-07:00",
+   "declared": null
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": "_kvs_attn_fl_asap7_ref_qkd_kvs_attn_rv1_rv1_dd84cbbc5/base/4_1_cts.log: (single)=TT\nok  routes/qkd_kvs_attn_rv1_rv1_dd84cbbc5/work/orfs/logs/asap7/opentallas_qkd_kvs_attn_fl_asap7_ref_qkd_kvs_attn_rv1_rv1_dd84cbbc5/base/5_1_grt.log: (single)=TT\nROUTE_CORNER OK (setup corners must read TT liberties)\n"
+  }
+ },
+ "submit_checks": {
+  "closed_stands": {
+   "verdict": "PASS",
+   "mode": "refuse",
+   "kind": "rtl_change",
+   "closed": [
+    "qkd_kvs_attn-fl1-8e7ae12fb"
+   ],
+   "facts": {
+    "closed_job": "qkd_kvs_attn-fl1-8e7ae12fb",
+    "closed_commit": "8e7ae12fb",
+    "params": {},
+    "rtl": "differs",
+    "rtl_detail": "2 of 5 RTL source file(s) differ from 8e7ae12fb: rtl/lib/face_land/qkd_kvs_attn_fl_rv.sv, rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_rv.sv",
+    "evidence_gap": null
+   },
+   "message": "qkd_kvs_attn_fl is CLOSED with a published view (qkd_kvs_attn-fl1-8e7ae12fb @ 8e7ae12fb); reroute_reason rtl_change: 2 of 5 RTL source file(s) differ from 8e7ae12fb: rtl/lib/face_land/qkd_kvs_attn_fl_rv.sv, rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_rv.sv (verified)"
+  },
+  "bench_lint": {
+   "errors": [],
+   "warnings": []
+  },
+  "bench_gate": {
+   "verdict": "PASS"
+  },
+  "ref_gate": {
+   "verdict": "WARN",
+   "mode": "refuse",
+   "message": "sources: 22 referenced file(s) do not exist: ['physical/common_flow/anchor_row_packing.tcl', 'physical/common_flow/cg_pushdown.tcl', 'physical/common_flow/clk_net_protect.tcl', 'physical/common_flow/clock_spine.tcl', 'physical/common_flow/grt_macro_top_layer.tcl', 'physical/common_flow/link_budget_consistent.sdc'] (fix: commit them / fix the path) | clock_rule: 6,463 sinks on the largest root; measured TT insertion 407.4 ps, FF insertion 330.9 ps, TT pin-flop spread 34.0 ps, FF pin-flop spread 33.1 ps; WARN: insertion 407.4 ps > 300 (guidance; boundary matched by parent compensation / landing) (fix: guidance only (owner 10-17 0dq): the check is pin-flop spread <= 80 ps at TT and FF plus a neighbour-matched boundary)"
+  }
+ },
+ "calibration": null,
+ "route_overlay_plan": {
+  "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
+  "origin_main": "2a78a3917676f9b973ace39a54001ffce509b3fe",
+  "content_sha256": "72acb0e92fdd8e3380f47594602730a940f875afd26224756c568240f63cb39a",
+  "files": [
+   {
+    "path": "physical/common_flow/cg_pushdown.tcl",
+    "sha256": "09575e679bdbf90f99dca1ba100e14f4d7d9b54111159377626cb079f9daf118",
+    "git_blob": "56b97adbe97449de95775f371ce64f3111705135",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "56b97adbe97449de95775f371ce64f3111705135"
+   },
+   {
+    "path": "physical/common_flow/clk_net_protect.tcl",
+    "sha256": "94cc061d8ce0705457b239ea7422d233e8c06c9cddce7272be1ea3ca329cc902",
+    "git_blob": "c5aa8f5135761baed8c7c9c2b07dde3c693c3c7b",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "c5aa8f5135761baed8c7c9c2b07dde3c693c3c7b"
+   },
+   {
+    "path": "physical/common_flow/clock_family.tcl",
+    "sha256": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78",
+    "git_blob": "0cb8020ba042edd32a4ddb8851585c9da8546e2c",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "0cb8020ba042edd32a4ddb8851585c9da8546e2c"
+   },
+   {
+    "path": "physical/common_flow/edge_sliver_block.tcl",
+    "sha256": "714d28eeea112f820044e3c11a32ece53a76e44fc3fb54b1ce8fa87cb1619a74",
+    "git_blob": "601cdc0c3a9fafb123d288ebaf9dfcc4c0960e44",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "601cdc0c3a9fafb123d288ebaf9dfcc4c0960e44"
+   },
+   {
+    "path": "physical/common_flow/grt_macro_top_layer.tcl",
+    "sha256": "dfd76e540035bce859d8f2f303996390abe276f20bc1057c28d5781a87982389",
+    "git_blob": "a1527e60338a69bf165ea3518f8eb1ab1e938b4e",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "a1527e60338a69bf165ea3518f8eb1ab1e938b4e"
+   },
+   {
+    "path": "physical/common_flow/grt_macro_top_layer_post.tcl",
+    "sha256": "c1b31d6f5b1f9bcf3e586f25b7eeaf792611f3f00e4914abe482672460a43f18",
+    "git_blob": "124affca42fe9de5664556fa6778e3e546791335",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "124affca42fe9de5664556fa6778e3e546791335"
+   },
+   {
+    "path": "physical/common_flow/io_ref_routed.sdc",
+    "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095",
+    "git_blob": "be6fccf2fcd5d9a35c6c02d63b9af7f53e878588",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "be6fccf2fcd5d9a35c6c02d63b9af7f53e878588"
+   },
+   {
+    "path": "physical/common_flow/link_budget_consistent.sdc",
+    "sha256": "3d298ce13f96c011e8dc089c7b6617f36ba781fd64e92d8778e525d36028343f",
+    "git_blob": "f1358db231d660a7af3ed4b11a47de6fc94797d8",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f1358db231d660a7af3ed4b11a47de6fc94797d8"
+   },
+   {
+    "path": "physical/common_flow/link_budget_hook.tcl",
+    "sha256": "af848b76a6a29c5facbbd64b396951707e9ba5935f5db53efc5e6d1c7ee5485a",
+    "git_blob": "20feda96cb386012dc737547a1835470557d1283",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "20feda96cb386012dc737547a1835470557d1283"
+   },
+   {
+    "path": "physical/common_flow/m6_pin_access.tcl",
+    "sha256": "b3e574b2e4c1a90814c24df2f5321e77f9d462aee06ea59855361f2260b0e023",
+    "git_blob": "d7511665b4bc7b6c9582702ecbcc5ac12ce5ab97",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d7511665b4bc7b6c9582702ecbcc5ac12ce5ab97"
+   },
+   {
+    "path": "physical/common_flow/macro_cts_cluster.tcl",
+    "sha256": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
+    "git_blob": "df5f3153fe62b2fce5c539f23fce9911472f1aa7",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "df5f3153fe62b2fce5c539f23fce9911472f1aa7"
+   },
+   {
+    "path": "physical/common_flow/macro_sliver_block.tcl",
+    "sha256": "837dd48a48603ea95ddaa12ba5e6a66e80d9fe2976908c8734889540231c10a2",
+    "git_blob": "f989c3c340b9615f4e72c7635a97de1ccbc8056b",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f989c3c340b9615f4e72c7635a97de1ccbc8056b"
+   },
+   {
+    "path": "physical/common_flow/nbr_clk_measured_ttb.sdc",
+    "sha256": "ce6df0a5101ca85c53598bd65a234b7fdcd6ff6f414d4b914904b54f1df62f52",
+    "git_blob": "4d441aac8ea0dee0f6775fe11bb866e58714fe4f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "4d441aac8ea0dee0f6775fe11bb866e58714fe4f"
+   },
+   {
+    "path": "physical/qwen_die_masters/pinflop_ref.tcl",
+    "sha256": "6224638ef915d329d900dbea0db93bf41493f91e51a72e17bc4a82e5d7283a92",
+    "git_blob": "7d00f765d2e2a8f166b23d6c2221bc8bc963b891",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "7d00f765d2e2a8f166b23d6c2221bc8bc963b891"
+   },
+   {
+    "path": "tools/closure_loop/cal_classify.sh",
+    "sha256": "773bfb8d964e3a55eafdfc6ccb610380ef41e3897eb5f4fedeeb6ab4392d0e87",
+    "git_blob": "076cd5cd03a6a7d73797c902f832ffa3d524e388",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "076cd5cd03a6a7d73797c902f832ffa3d524e388"
+   },
+   {
+    "path": "tools/closure_loop/ck_insertion.py",
+    "sha256": "b90c1dc7643b327d9b2b0a94647f6070c2de90788f5d71a673d922a6e4f057a4",
+    "git_blob": "e42e404d4a1ee44741e62a9448f70cde2ed0c5c2",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "e42e404d4a1ee44741e62a9448f70cde2ed0c5c2"
+   },
+   {
+    "path": "tools/closure_loop/eco_recovery.py",
+    "sha256": "e53c1b932e3c8b57d0056a205feb95eb7f47e041af55773673cdee38e085dbdf",
+    "git_blob": "95ec2e19c2d81165f033212c125e6e3e7a65bbbb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "95ec2e19c2d81165f033212c125e6e3e7a65bbbb"
+   },
+   {
+    "path": "tools/closure_loop/h1_patch.py",
+    "sha256": "09c35b5d4e359eb3c1e0dd57f933ab92739962c6ac4df09ed8fc2fecdbbc2df1",
+    "git_blob": "d46106edd9daad6fd0476b4125af906b5fc1498f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d46106edd9daad6fd0476b4125af906b5fc1498f"
+   },
+   {
+    "path": "tools/closure_loop/hold_corners_patch.py",
+    "sha256": "3899d47b1e2b8101685dd627d63384385feb0b7574dc108bb9ed65a20686cfe9",
+    "git_blob": "72617e211054496b4b9a710462fbf052b904c2cb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "72617e211054496b4b9a710462fbf052b904c2cb"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco.sh",
+    "sha256": "3e362671e57a81d36234591883f48f73544b981b0ec371fb514ec3c48d088b7d",
+    "git_blob": "af8c55ce1c4628fd5ff7c7310b30cde28b5a0bb4",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "af8c55ce1c4628fd5ff7c7310b30cde28b5a0bb4"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco.tcl",
+    "sha256": "901fe67907976d69241c3741c0e10c8499eab38c171eaaff9e4361a297bd492b",
+    "git_blob": "7b0221b06df9cd1dbeb4e2a1bcd70a635842f220",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "7b0221b06df9cd1dbeb4e2a1bcd70a635842f220"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_corner.tcl",
+    "sha256": "58a7c443623e233abe36ef12cc93cead969035878cbba5257a952eea6dc8830e",
+    "git_blob": "f8ce5182e3b0720f408b43aa843235073b730ee0",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f8ce5182e3b0720f408b43aa843235073b730ee0"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_sdc.py",
+    "sha256": "81d7c403edb7899d96d88deb5b616d9821c066fefd6cbc6bc99328a1124ad9a7",
+    "git_blob": "7a7de573a4f1fe8eec1133c1a6eeee5d065e2b63",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "7a7de573a4f1fe8eec1133c1a6eeee5d065e2b63"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_window.tcl",
+    "sha256": "ad0d172d3b11952a27c22e11e02f6dd2158d200179faed87e58dbb953d99ac35",
+    "git_blob": "dfef049aac05beebdee3800806bae2add86a614e",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "dfef049aac05beebdee3800806bae2add86a614e"
+   },
+   {
+    "path": "tools/closure_loop/lane_kh_overlay.py",
+    "sha256": "d251933802ac6cdc6f3fe68c0a6b9bc58fda33bd72be1bb5b180015f1eb0df41",
+    "git_blob": "a063f6f72e788ab3f3756a75b7deb5b7ee4b3045",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "a063f6f72e788ab3f3756a75b7deb5b7ee4b3045"
+   },
+   {
+    "path": "tools/closure_loop/m6_stub_config.py",
+    "sha256": "f9b6c2eadae47304a2f6eba567b704acc9d356cf8b15d112d89be8cef53a8410",
+    "git_blob": "552407d50071b0dc995060ce124a765ab6df2ea5",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "552407d50071b0dc995060ce124a765ab6df2ea5"
+   },
+   {
+    "path": "tools/closure_loop/macro_views.py",
+    "sha256": "f36101f77b5d83d49ba81928bea7660920e4ac77931e2a4614738f677d306ea1",
+    "git_blob": "d4ed13e553ab0298839ccd973fc698d280bc1c0f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d4ed13e553ab0298839ccd973fc698d280bc1c0f"
+   },
+   {
+    "path": "tools/closure_loop/meas_resta.py",
+    "sha256": "ac1e0ee1d4fa3a12cff3f942de76e0a39ab85c7b55146f5e06339dec45f22839",
+    "git_blob": "6c3c8403f8045bf2b6b2061322ca9a1c7ca04eae",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "6c3c8403f8045bf2b6b2061322ca9a1c7ca04eae"
+   },
+   {
+    "path": "tools/closure_loop/path_summary.py",
+    "sha256": "5917b8f0263d52f0e15856549bb62ff97748b43fa8484cb98bc66885acf74a88",
+    "git_blob": "341e9a3da6d5561a5ca5717877fd2853f220ceda",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "341e9a3da6d5561a5ca5717877fd2853f220ceda"
+   },
+   {
+    "path": "tools/closure_loop/pinflop_overlay.py",
+    "sha256": "2654f6223d8a8bb4621b4d7ce6e92d36cb5c732fbafca0582bfd8c1a72fb59a9",
+    "git_blob": "2c721207626018eb2bef3ffa2b653e6bfa08b691",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "2c721207626018eb2bef3ffa2b653e6bfa08b691"
+   },
+   {
+    "path": "tools/closure_loop/resume_check.sh",
+    "sha256": "ff6cb4bd794dddd6a815c6f23b34bd72327a8af7e2e68a036fedf2d2914c31d5",
+    "git_blob": "fbdd0e40d18708183a3f6bc712fbe66bd84d91af",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "fbdd0e40d18708183a3f6bc712fbe66bd84d91af"
+   },
+   {
+    "path": "tools/closure_loop/resume_patch.py",
+    "sha256": "1a0284c4bfae8cf5545bd3987cb5320150737860f7fa5b85f8b992dda1063714",
+    "git_blob": "4d3590fc4339a349ded26432b3123cb2fb711355",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "4d3590fc4339a349ded26432b3123cb2fb711355"
+   },
+   {
+    "path": "tools/closure_loop/route_corner_check.py",
+    "sha256": "f7893aab46440460421b7e945f3be70ce9e509a61fba2fbfaccc162b8f9a94f4",
+    "git_blob": "c434d05a6c768738b5c540b1a6898cb34dce5a32",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "c434d05a6c768738b5c540b1a6898cb34dce5a32"
+   },
+   {
+    "path": "tools/closure_loop/tt_overlay.py",
+    "sha256": "fd24631ed6f1f3da746235a362c9085d6fa756f790db28e694c4e739ff9aed66",
+    "git_blob": "8c1b35bb8074ccb91a032150e6031163be7cd4d5",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "8c1b35bb8074ccb91a032150e6031163be7cd4d5"
+   },
+   {
+    "path": "tools/closure_loop/tt_resta.sh",
+    "sha256": "4b663918cc4a82c8b9839b31062e377eca1134e3ed45729f2cb4dde9dc5dc49b",
+    "git_blob": "2ce64ca5cd0837c0dcc16597bc7b6f7852eee0d3",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "2ce64ca5cd0837c0dcc16597bc7b6f7852eee0d3"
+   },
+   {
+    "path": "tools/closure_loop/vtswap_eco.sh",
+    "sha256": "cd9eecf0221f4ee24770bfcd68dcfefe36b0c1befa005e7813904e023bf90af2",
+    "git_blob": "20be6fd44d65e83d0cb980ac7c4098c143592c4b",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "20be6fd44d65e83d0cb980ac7c4098c143592c4b"
+   },
+   {
+    "path": "tools/closure_loop/vtswap_eco.tcl",
+    "sha256": "2cbd3efc900f093ffde47b065b13e5b0d364dd8f557d42aa6eabd4c868461e50",
+    "git_blob": "2a5cfdefc0e4d717246c65ed280657a82ab70433",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "2a5cfdefc0e4d717246c65ed280657a82ab70433"
+   },
+   {
+    "path": "tools/fp_margin_lint.py",
+    "sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8",
+    "git_blob": "50cd44004286545e51ff4f79bec3d6cac24c79aa",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "50cd44004286545e51ff4f79bec3d6cac24c79aa"
+   },
+   {
+    "path": "tools/fp_margin_lint.tcl",
+    "sha256": "43e9e7f2633bd55619f7f6b5b9fd71862a310e30ff68eab2ad123e5064635cf5",
+    "git_blob": "0a27c1b824e96143222337f0b467a79af17ac24b",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "0a27c1b824e96143222337f0b467a79af17ac24b"
+   },
+   {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890",
+    "git_blob": "013f81ad6dd73b277c2428858c5cae459efb116d",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "013f81ad6dd73b277c2428858c5cae459efb116d"
+   },
+   {
+    "path": "tools/hier_contract/child_lint.py",
+    "sha256": "8622591ab7b8a8b84e4858061086cbc6cc9c957d27877bf4057c22b066de0ac2",
+    "git_blob": "2edd5c6c8ef60c4158563e29e342e201d64ae2ac",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "2edd5c6c8ef60c4158563e29e342e201d64ae2ac"
+   },
+   {
+    "path": "tools/hier_contract/m6_pin_grant.py",
+    "sha256": "49cbb868ca6497ae1ab4add62c8d0bb8a3f0a75d931ca10f278629b5718ce928",
+    "git_blob": "2d189e2debb6b88a9d96cc4d8f16d5951387abf8",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "2d189e2debb6b88a9d96cc4d8f16d5951387abf8"
+   },
+   {
+    "path": "tools/orfs_hold_mm.py",
+    "sha256": "a6f23785798709adcf733fbfffb2e9cbe39930a469b0a931d8c5f6ed0d5bdd3b",
+    "git_blob": "ec6a94b243a23071875ba7b4c77fc5941ff5d6eb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "ec6a94b243a23071875ba7b4c77fc5941ff5d6eb"
+   },
+   {
+    "path": "tools/orfs_hold_mm.tcl",
+    "sha256": "e4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290",
+    "git_blob": "66e94dd7004247342685c7493bf6f0c8bd69a719",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "66e94dd7004247342685c7493bf6f0c8bd69a719"
+   },
+   {
+    "path": "tools/preroute_gate.py",
+    "sha256": "3acb3f5784563888aa984928dd992026c3767a0f890149f91d32c029bef458cf",
+    "git_blob": "558a8dad06b0d516fa089e498f12908c009bd901",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "558a8dad06b0d516fa089e498f12908c009bd901"
+   },
+   {
+    "path": "tools/preroute_gate.tcl",
+    "sha256": "cb26dd3c1faa53058290838dd53e53b2f6ba55a0cece82c0e833c6b0c3fcea68",
+    "git_blob": "f2ad9a44d8ea657526a074bf723d4554c0ebd09d",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f2ad9a44d8ea657526a074bf723d4554c0ebd09d"
+   },
+   {
+    "path": "tools/textbook_lint.py",
+    "sha256": "72d4c9571f4a05e2f7c4fe12f26dd716c4b5f25b0a663249b15c145366448dff",
+    "git_blob": "f50cb03310235e6a3949e29875b99ec71a7902e7",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "f50cb03310235e6a3949e29875b99ec71a7902e7"
+   },
+   {
+    "path": "tools/tt_views/view_export.py",
+    "sha256": "4b4e80e4f92876d795f867a2ddc385a418a8c63c81a07641e4c1aa3f59ae61e1",
+    "git_blob": "7ca5787732d1dabe3399ff4c0d15bc40c5eaf18d",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "7ca5787732d1dabe3399ff4c0d15bc40c5eaf18d"
+   },
+   {
+    "path": "tools/w18/corner_sta.py",
+    "sha256": "5c0649785baa7af8af2dcb8effdad69bfea0450ee478453de5f102a6c2e0a212",
+    "git_blob": "3d9972fe57195a3e2a29227621ad5fd565d3b8d0",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "3d9972fe57195a3e2a29227621ad5fd565d3b8d0"
+   }
+  ]
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-19T18:16:02-07:00",
+ "job_spec": {
+  "name": "qkd_kvs_attn_rv1-rv1-dd84cbbc5",
+  "block": "qkd_kvs_attn_fl",
+  "ref_tile": true,
+  "owner": "Claude:KV-ATTN2",
+  "purpose": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL.",
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/kv-attn2-1019",
+   "commit": "dd84cbbc5",
+   "extra_paths": [
+    "rtl",
+    "tools/qwen_kv_die/attn_rv_1019",
+    "results/rtl/kv_attn_rv_1019"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lint",
+     "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_attn_fl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_rv.sv rtl/lib/ot_pin_land.sv rtl/lib/face_land/qkd_kvs_attn_fl_rv.sv",
+     "expect": "pass",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "rv_pair_ba5",
+     "cmd": "bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/pair_m0 0",
+     "expect": "pass",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "pass_regex": "^KVS_RVPAIR_ALL PASS",
+     "min_count_regex": "checks=(\\d+)"
+    },
+    {
+     "name": "rv_mut1_fields_early",
+     "cmd": "bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/pair_m1 1",
+     "expect": "fail",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+     "fail_witness": "results/rtl/kv_attn_rv_1019/m1/verdict.log"
+    },
+    {
+     "name": "rv_mut2_check_misaligned",
+     "cmd": "bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/pair_m2 2",
+     "expect": "fail",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+     "fail_witness": "results/rtl/kv_attn_rv_1019/m2/verdict.log"
+    },
+    {
+     "name": "rv_mut3_admission_no_check",
+     "cmd": "bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/pair_m3 3",
+     "expect": "fail",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+     "fail_witness": "results/rtl/kv_attn_rv_1019/m3/verdict.log"
+    },
+    {
+     "name": "rv_mut4_tx_shift0",
+     "cmd": "bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/pair_m4 4",
+     "expect": "fail",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+     "fail_witness": "results/rtl/kv_attn_rv_1019/m4/verdict.log"
+    },
+    {
+     "name": "rv_mut5_status_copy_early",
+     "cmd": "bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/pair_m5 5",
+     "expect": "fail",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+     "fail_witness": "results/rtl/kv_attn_rv_1019/m5/verdict.log"
+    },
+    {
+     "name": "rv_mut6_face_stale_beat",
+     "cmd": "bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/pair_m6 6",
+     "expect": "fail",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+     "fail_witness": "results/rtl/kv_attn_rv_1019/m6/verdict.log"
+    },
+    {
+     "name": "rv_mut7_fault_root_one_pin",
+     "cmd": "bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/pair_m7 7",
+     "expect": "fail",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+     "fail_witness": "results/rtl/kv_attn_rv_1019/m7/verdict.log"
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_attn_rv1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_attn_rv1/kit.env {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_attn_rv1 --out {RUN}/record/views/qkd_kvs_attn_fl  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/ref_tile/qkd_kvs_attn_rv1/signoff.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/ref_tile/qkd_kvs_attn_rv1/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/ref_tile/qkd_kvs_attn_rv1/qkd_kvs_attn_rv1-rv1-e895e42d5"
+   }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null,
+  "structural_change": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL.",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL."
+  }
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}
