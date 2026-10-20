@@ -1,0 +1,231 @@
+{
+  "odb_sha256": "248bab8ae7993a1fd078c598230bc7d6e4719e5846223a5a1bfc2d22251a096b",
+  "unreached": 14,
+  "literal_tie": 14,
+  "rows": [
+    {
+      "net": "net",
+      "sink": [
+        236.264,
+        177.481,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[0\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.rst_n\\[0\\]$_DFF_PN0__1",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net1",
+      "sink": [
+        322.016,
+        177.838,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[1\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.rst_n\\[1\\]$_DFF_PN0__2",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net2",
+      "sink": [
+        408.524,
+        177.838,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[2\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.rst_n\\[2\\]$_DFF_PN0__3",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net3",
+      "sink": [
+        236.264,
+        242.281,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[3\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.rst_n\\[3\\]$_DFF_PN0__4",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net4",
+      "sink": [
+        236.264,
+        307.081,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[4\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.rst_n\\[4\\]$_DFF_PN0__5",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net5",
+      "sink": [
+        236.264,
+        371.881,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[5\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.rst_n\\[5\\]$_DFF_PN0__6",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net6",
+      "sink": [
+        322.664,
+        371.881,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[6\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.rst_n\\[6\\]$_DFF_PN0__7",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net7",
+      "sink": [
+        409.064,
+        371.881,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[7\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.rst_n\\[7\\]$_DFF_PN0__8",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net8",
+      "sink": [
+        419.54,
+        262.261,
+        "u_ot_pr_core.u_rst_bk.rst_n\\[8\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.rst_n\\[8\\]$_DFF_PN0__9",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net9",
+      "sink": [
+        378.954,
+        225.045,
+        "u_ot_pr_core.u_rst_bk.sync_q\\[0\\]$_DFF_PN0_/D"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.sync_q\\[0\\]$_DFF_PN0__10",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net10",
+      "sink": [
+        379.526,
+        225.001,
+        "u_ot_pr_core.u_rst_bk.sync_q\\[0\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.sync_q\\[0\\]$_DFF_PN0__11",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net11",
+      "sink": [
+        380.12,
+        224.461,
+        "u_ot_pr_core.u_rst_bk.sync_q\\[1\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_bk.sync_q\\[1\\]$_DFF_PN0__12",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net12",
+      "sink": [
+        345.128,
+        250.198,
+        "u_ot_pr_core.u_rst_ctl.relay_q\\[0\\]$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_ctl.relay_q\\[0\\]$_DFF_PN0__13",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    },
+    {
+      "net": "net13",
+      "sink": [
+        345.128,
+        249.658,
+        "u_ot_pr_core.u_rst_ctl.rst_n$_DFF_PN0_/SETN"
+      ],
+      "drivers": [
+        {
+          "instance": "u_ot_pr_core.u_rst_ctl.rst_n$_DFF_PN0__14",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "pin": "H"
+        }
+      ],
+      "literal_tie": true
+    }
+  ]
+}

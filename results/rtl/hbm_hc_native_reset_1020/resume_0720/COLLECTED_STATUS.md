@@ -9,3 +9,9 @@ Bank rr/rh four gates all FAIL. b0_rr clk_r0 TT154.2ps spread/800 internal sinks
 Tree16 daemon jobs NEEDS_RTL because wrapper hid finalmutantFAIL after six mismatch lines. Actualmutant rawFAIL9134/19986. Fix/physical-gate reuse request on separate codex-hc-tree16-reuse-1020@0dd3a0a14; same624consumed files exceptprinting-only wrapper, frozen artifacts unchanged. ROOT compatibility review required, no newP&R or submit.
 
 Latest tail k1/k1b and DBK regional-clock gate jobs preserved. Proposed full-parent one-rowNOP earliest-request test is running from exactsrc2 archive with actual fullparent RTL (no arithmetic stubs); unused external-quarter modules excluded after preserved Icarusparse incompatibility. Numeric/throughput qualification is outside that protocol test.
+
+Source full-parent configured-observed protocol (actualsrc2 a95cc8) now PASS3epochs: child resetready7/configured11/request12/start13/done25. Pre-scan request9 faults3/3. This test included an avoidable idle capture edge before descriptor; a tighter unchanged-RTL stimulus now brackets true earliest descriptor/scan request. It is not yet a global-minimum proof. Original compile failure from parsing unused external-quarter syntax is preserved.
+
+Bank rr/rh actual ring positives each HC_ENG PASS (24mixes/4outs/zero mismatches, HC_MIX1009 on that ring vehicle); m1/m5 each FAIL24mixes/96outputwords. Physical clock failures stand independently.
+
+DBK l1 immutable CTS4_1 planning full sequential displacement PASS8117/max383.616/zero>405. All21296 raw unboundPG terms ordinary/unprotected; existing canonical global_connect clears all in-memory. No original ODB mutation. This is neither finalGRT nor actualfinalPG qualification.

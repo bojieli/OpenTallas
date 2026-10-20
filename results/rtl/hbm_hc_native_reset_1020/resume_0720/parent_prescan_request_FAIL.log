@@ -1,0 +1,5 @@
+PARENT_EARLIEST MUTANT_FAIL epoch=0 child_ready=7 request=9 fault=1
+PARENT_EARLIEST MUTANT_FAIL epoch=1 child_ready=7 request=9 fault=1
+PARENT_EARLIEST MUTANT_FAIL epoch=2 child_ready=7 request=9 fault=1
+PARENT_EARLIEST MUTANT_DETECTED epochs=3
+tb_parent_earliest.sv:53: $finish called at 132000 (1ps)
