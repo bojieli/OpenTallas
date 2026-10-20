@@ -19,5 +19,14 @@
       "present_gate": true,
       "normalized_equal": false
     }
+  },
+  "external_core_dependency": {
+    "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_safe32.sv",
+    "generator_source": "04b625135",
+    "generator_sha256": "7d1d2095c023cfcc08eaf8867d2fd350b1d4007409d01491b91b1303f52cf4cb",
+    "held_source": "295504c93",
+    "held_sha256": "7d1d2095c023cfcc08eaf8867d2fd350b1d4007409d01491b91b1303f52cf4cb",
+    "byte_identical": true,
+    "authority": "bind_chain producer replay packet0b7affefe; source selector HROOT_S32_RTL/HROOT_ESH_MOD/HROOT_RLY_MOD actualgenerator settings; no livecaseinstallation"
   }
 }
