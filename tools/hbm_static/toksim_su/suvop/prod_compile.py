@@ -350,6 +350,10 @@ def reduce_pretree(P, a, red, emits, live, EI, N, ROWS, QPR, NGRP, NBQ, PERM, LA
                 _last_lg=last_lg)
 
 
+# Exact TP8 four-head records; use the same model-order lowering and storage admission.
+for _name, _base in [('qw_softmax_max_r4','qw_softmax_max'),('qw_softmax_exp_sum_r4','qw_softmax_exp_sum_r3')]:
+    _r=list(RECS[_base]); _r[2]=4; RECS[_name]=tuple(_r)
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('out'); ap.add_argument('rec')
     ap.add_argument('--rr', type=int, default=12); ap.add_argument('--wr', type=int, default=10)
@@ -371,6 +375,8 @@ def main():
                 print(f'qpr {qpr}: not feasible ({ex})', file=sys.stderr); continue
             print(f'qpr {qpr}: cycles_serial {r}', file=sys.stderr)
             if best is None or r < best[0]: best = (r, qpr)
+        if best is None:
+            ap.error("no feasible pre-tree quarter allocation: production record exceeds storage/shape admission")
         a.qpr = best[1]
     compile_rec(a)
 
