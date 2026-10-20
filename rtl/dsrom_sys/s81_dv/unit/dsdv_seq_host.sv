@@ -93,7 +93,11 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
 );
 `ifdef OT_S81_SH_S10E
     // S81-SHLK12 s10e: 32 relay copies (<= 16 reset loads a copy after the synthesis copy pass)
+    // rn gates the valid pin bits synchronously (fi[0] etc., as in every build) and resets the pd/mf flops; with the
+    // fence on its own reset synchroniser the lint attribution moves here (s10d reported it in the fence file)
+    /* verilator lint_off SYNCASYNCNET */
     wire [31:0] rr__ot_rlv; ot_rst_relay #(.REGIONS(32)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr__ot_rlv)); wire rn = rr__ot_rlv[0];
+    /* verilator lint_on SYNCASYNCNET */
 `elsif OT_S81_SH_APIPE10
     wire [15:0] rr__ot_rlv; ot_rst_relay #(.REGIONS(16)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr__ot_rlv)); wire rn = rr__ot_rlv[0];
 `elsif OT_S81_SH_APIPE9

@@ -36,7 +36,9 @@ module dsfd_host_native_n32 #(parameter integer ENABLE=0,PROTECT=0,
   .t_v(uv),.t_d(ud),.t_cr(uc),.clk_i(clk_i),.ck(ck),.o_v(o_v),.o_we(o_we),.o_addr(o_addr),.o_d(o_d),.o_cr(o_cr),.i_rv(i_rv),.i_rd(i_rd),.fault(uf));
  // S81-SHLK12 s10e: the native-32 fence (same values on the same edges for ENABLE 1 / PROTECT 0 / PIPE 2, ck == clk_h)
  initial if(!ENABLE||PROTECT||FPIPE!=2)$fatal(1,"dsfd_host_native: dsfd_host_native_n32 needs ENABLE 1, PROTECT 0, FPIPE 2");
- ot_s81_fence_n32 fence(.rst_n(rst_n),.ck(ck),.clk_h(clk_h),.ack_n(host_ack_n),
+ // the fence's own reset copies (<= 16 loads each): released 2 edges after rst_n (the fence is idle then)
+ wire rn_f; ot_reset_sync #(.OUTPUT_COPIES(32), .TREE(1)) u_rsf (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(rn_f));
+ ot_s81_fence_n32 fence(.rst_n(rn_f),.ck(ck),.clk_h(clk_h),.ack_n(host_ack_n),
   .in_v(uv),.in_d(ud),.in_cr(uc),.out_v(t_v),.out_d(t_d),.out_cr(t_cr),.fault(ff),.landed_debug(landed));
  assign fault=uf|ff;
 endmodule

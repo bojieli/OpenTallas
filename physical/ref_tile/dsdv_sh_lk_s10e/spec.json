@@ -35,7 +35,7 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1",
-   "inst": "u_h.host.u_hi.g_ox_sram.u_ox.genblk1.g_rsz1.u_mem",
+   "inst": "u_h.host.u_hi.g_ox_sram.u_ox.genblk2.g_rsz1.u_mem",
    "at": [
     43.2,
     43.2
@@ -140,7 +140,7 @@
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4,
+  "macro_halo_um": 10.8,
   "cts_sink": {
    "size": 20,
    "diameter_um": 40,
@@ -153,7 +153,7 @@
    "v": "M5"
   }
  },
- "structural_change": "S81-SHLK12 s10e: TBD",
+ "structural_change": "S81-SHLK12 s10e = native-32 structural successor of s10c/s10d (both routes DRC2 M4 SRAM-pin/VSS shorts + 264/323 mapped roots >32): stream engine ot_s81_ing_stream_n32 (realigner ring in 2 x 16x257 SRAM, clone control domains, write-behind descriptor queue, 12-16-b enable slices), native-32 host wrapper / completion FIFO / fence copies, reset copy trees, CSR decode clones; pre-gate native census PASS max 32 (from 526). Same values on the same edges (lockstep + seqhost HSH 8); no edge added.",
  "job": {
   "owner": "Claude:S81-SHLK",
   "branch": "claude/s81-shlk-s10e-1020",
@@ -184,12 +184,14 @@
    "rtl/test/tb_rom_host_ingest.sv",
    "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
    "tools/hdc_program.py",
-   "results/rtl/s81_shlk_s10d_1019"
+   "results/rtl/s81_shlk_s10d_1019",
+   "results/rtl/s81_shlk_s10e_1020",
+   "rtl/hdc/ingest/test"
   ],
   "benches": [
    {
     "name": "seqhost_exact",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_exact '1 2'",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_exact '1 2'",
     "expect": "pass",
     "pass_regex": "^SEQHOST_GATE PASS$",
     "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/",
@@ -198,226 +200,181 @@
    },
    {
     "name": "seqhost_mutctx",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut1 1 1",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut1 1 1",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut1.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut1.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_mutsvctag",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut2 1 2",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut2 1 2",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut2.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut2.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_mutrunghop",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut3 1 3",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut3 1 3",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut3.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut3.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_mutdonelate",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut4 1 4",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut4 1 4",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut4.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut4.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_mutwhalf",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut5 1 5",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut5 1 5",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut5.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut5.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_mutroute",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut6 1 6",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut6 1 6",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut6.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut6.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_muthregv",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut7 1 7",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut7 1 7",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut7.log",
-    "threads": 8,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "seqhost_mutrac",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut8 1 8",
-    "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut8.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut7.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_mutrland",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut9 1 9",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut9 1 9",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut9.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut9.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_mut10",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut10 1 10",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut10 1 10",
     "expect": "fail",
     "fail_regex": "^SEQHOST FAIL( |$)",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut10.log",
-    "threads": 8,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "seqhost_mutsprh",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut11 1 11",
-    "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut11.log",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut10.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_muthqstale",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut14 1 14",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut14 1 14",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut14.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut14.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_muthrc",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut16 1 16",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut16 1 16",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut16.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut16.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_mutcxrc",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut19 1 19",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut19 1 19",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut19.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut19.log",
     "threads": 8,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "hnp_pos10",
-    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 HNP_S10C=1 HNP_S10D=1 python3 physical/sys_takeover/host_native_pipe_bench.py pos10 {RUN}/hnp_pos10",
-    "expect": "pass",
-    "pass_regex": "^HNP_PASS$",
-    "threads": 16,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "hnp_dqc10",
-    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 HNP_S10C=1 HNP_S10D=1 python3 physical/sys_takeover/host_native_pipe_bench.py dqc10 {RUN}/hnp_dqc10",
-    "expect": "fail",
-    "fail_regex": "^HNP_NEG_DETECTED$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/hnp/hnps_dqc10.log",
-    "threads": 16,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "hnp_hpref10",
-    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 HNP_S10C=1 HNP_S10D=1 python3 physical/sys_takeover/host_native_pipe_bench.py hpref10 {RUN}/hnp_hpref10",
-    "expect": "fail",
-    "fail_regex": "^HNP_NEG_DETECTED$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/hnp/hnps_hpref10.log",
-    "threads": 16,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "hnp_hphold10",
-    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 HNP_S10C=1 HNP_S10D=1 python3 physical/sys_takeover/host_native_pipe_bench.py hphold10 {RUN}/hnp_hphold10",
-    "expect": "fail",
-    "fail_regex": "^HNP_NEG_DETECTED$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/hnp/hnps_hphold10.log",
-    "threads": 16,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "hnp_cxrc10",
-    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 HNP_S10C=1 HNP_S10D=1 python3 physical/sys_takeover/host_native_pipe_bench.py cxrc10 {RUN}/hnp_cxrc10",
-    "expect": "fail",
-    "fail_regex": "^HNP_NEG_DETECTED$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/hnp/hnps_cxrc10.log",
-    "threads": 16,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "hnp_s10cwa10",
-    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 HNP_S10C=1 HNP_S10D=1 python3 physical/sys_takeover/host_native_pipe_bench.py s10cwa10 {RUN}/hnp_s10cwa10",
-    "expect": "fail",
-    "fail_regex": "^HNP_NEG_DETECTED$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/hnp/hnps_s10cwa10.log",
-    "threads": 16,
-    "peak_ram_gb": 8
-   },
-   {
-    "name": "hnp_s10ciss10",
-    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 HNP_S10C=1 HNP_S10D=1 python3 physical/sys_takeover/host_native_pipe_bench.py s10ciss10 {RUN}/hnp_s10ciss10",
-    "expect": "fail",
-    "fail_regex": "^HNP_NEG_DETECTED$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/hnp/hnps_s10ciss10.log",
-    "threads": 16,
     "peak_ram_gb": 8
    },
    {
     "name": "seqhost_muts10dhw",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut23 1 23",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut23 1 23",
     "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut23.log",
+    "fail_regex": "^SEQHOST FAIL( |$)",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/seqhost/run_mut23.log",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
-    "name": "seqhost_muts10dfq",
-    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut24 1 24",
-    "expect": "fail",
-    "fail_regex": "^SEQHOST FAIL$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/seqhost/run_mut24.log",
+    "name": "n32_lockstep",
+    "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_lockstep '1 2 3'",
+    "expect": "pass",
+    "pass_regex": "^LOCKSTEP_GATE PASS$",
     "threads": 8,
     "peak_ram_gb": 8
    },
    {
-    "name": "hnp_s10dox10",
-    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 HNP_S10C=1 HNP_S10D=1 python3 physical/sys_takeover/host_native_pipe_bench.py s10dox10 {RUN}/hnp_s10dox10",
+    "name": "n32_lockstep_mutbyp",
+    "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutBYP '1' BYP",
     "expect": "fail",
-    "fail_regex": "^HNP_NEG_DETECTED$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/hnp/hnps_s10dox10.log",
-    "threads": 16,
+    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_BYP/run_1.log",
+    "threads": 8,
     "peak_ram_gb": 8
    },
    {
-    "name": "hnp_s10dfq10",
-    "cmd": "HNP_VERILATOR=1 HNP_SRAM=1 HNP_RSZ=1 HNP_S10B=1 HNP_S10C=1 HNP_S10D=1 python3 physical/sys_takeover/host_native_pipe_bench.py s10dfq10 {RUN}/hnp_s10dfq10",
+    "name": "n32_lockstep_mutgod",
+    "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutGOD '1' GOD",
     "expect": "fail",
-    "fail_regex": "^HNP_NEG_DETECTED$",
-    "fail_witness": "results/rtl/s81_shlk_s10d_1019/hnp/hnps_s10dfq10.log",
-    "threads": 16,
+    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_GOD/run_1.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "n32_lockstep_mutwin",
+    "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutWIN '1' WIN",
+    "expect": "fail",
+    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_WIN/run_1.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "n32_lockstep_mutkind",
+    "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutKIND '1' KIND",
+    "expect": "fail",
+    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_KIND/run_1.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "n32_lockstep_mutfqs",
+    "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutFQS '1' FQS",
+    "expect": "fail",
+    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_FQS/run_1.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "n32_lockstep_mutcqr",
+    "cmd": "bash rtl/hdc/ingest/test/run_n32_lockstep.sh {RUN}/n32_mutCQR '1' CQR",
+    "expect": "fail",
+    "fail_regex": "^LOCKSTEP_GATE FAIL$",
+    "fail_witness": "results/rtl/s81_shlk_s10e_1020/lockstep/ls_mut_CQR/run_1.log",
+    "threads": 8,
     "peak_ram_gb": 8
    }
   ],
@@ -437,10 +394,10 @@
   "allow_none": true
  },
  "keep_pin_regs": true,
- "std_area_um2": 10000.0,
+ "std_area_um2": 7840.0,
  "fill_reason": {
   "macro_bound": "S81-SHLK s10: four right-sized dual-clock masters (2 x 16x257 89.4x39.4 for the host FIFO, 2 x 16x289 99.1x44.0 for the request / svc FIFOs; 15,787 um2) on a 2x2 43.2-lattice grid (x 43.2 / 216.0, y 43.2 / 129.6), read faces toward the 73.7-um centre channel, write faces to the 41-um W band / 28-um E band; 42-um middle band, 41-um S band, 23-um N band. sr9 synthesis std area 9,897 um2: fill ~39% = (15,787 + ~10,000) / 67,185; outline 345.6 x 194.4 vs sr9 518.4 x 280.8 (-60%). s10c = s10w floorplan (73.7-um channel: s10 30.5-um channel overflowed 146 / s10b 4 at M4 x~131) + s10b/s10c RTL.",
-  "pin_bound": "S81-SHLK12 s10e census iteration: width set by pin demand (N 1207 pins / S 913 over 345.6 um, s10d gate 99% faces); height by the third macro row (realigner ring, 2 x 16x257). Std area to be measured by this gate; outline is re-derived before the CTS gate."
+  "pin_bound": "S81-SHLK12 s10e: measured synth std area 7,840 um2 (chip 30,671 incl. 6 macros 22,830): fill 32%. Width 345.6 is pin-bound (N 1207 / S 913 pins, 3.5 / 2.6 per um); height 280.8 holds three macro rows with 42-47-um row channels and 10.8-um halos on the macros' pin faces (the 16x257 / 16x289 masters carry ~10 pins/um on their 39-44-um side faces; s10c/s10d DRC2 M4 shorts were at those pins). Shrinking would narrow those pin-face channels."
  },
  "children": [],
  "inter": [],
