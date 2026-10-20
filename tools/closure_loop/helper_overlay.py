@@ -10,10 +10,9 @@ import subprocess
 from pathlib import Path
 
 PG_HELPERS = ("pg_receipt.py", "../../physical/common_flow/audit_native_pg.tcl",
-              "../../physical/common_flow/native_pg_binding.tcl",
               "../../physical/common_flow/native_pg_bootstrap.tcl")
 
-HELPERS = ("m6_stub_config.py", "eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
+HELPERS = ("../../physical/common_flow/native_pg_binding.tcl", "m6_stub_config.py", "eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../../physical/common_flow/clock_family.tcl", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
