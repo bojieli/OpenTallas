@@ -98,49 +98,49 @@ module qfd_dv_redstn2_ef (
     wire [1:0] nb_oc_x5; wire bt_re_x5; wire [8:0] bt_word_x5; wire r_v_x5; wire [7:0] r_idx_x5; wire r_last_x5; wire fault_x5;
     wire [1:0] nb_oc_x6; wire bt_re_x6; wire [8:0] bt_word_x6; wire r_v_x6; wire [7:0] r_idx_x6; wire r_last_x6; wire fault_x6;
     wire [1:0] nb_oc_x7; wire bt_re_x7; wire [8:0] bt_word_x7; wire r_v_x7; wire [7:0] r_idx_x7; wire r_last_x7; wire fault_x7;
-    qfd_dv_redstn2_region #(.PIN_IN(1), .BT_LAT(1)) u_r0 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_redstn2_region u_r0 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(cfg[28]), .cfg_mode_p(cfg[27:26]), .cfg_wsrc_p(cfg[25]), .cfg_nwords_p(cfg[24:17]), .cfg_sbase_p(cfg[16:8]), .cfg_kcm1_p(cfg[7:0]),
         .rs_s_lo_p(rs_s_lo_r0), .rs_s_hi_p(rs_s_hi_r0), .rs_n_lo_p(rs_n_lo_r0), .rs_n_hi_p(rs_n_hi_r0), .rs_s_c_p(rs_s_c), .rs_n_c_p(rs_n_c),
         .nb_d_p(nb_d_r0), .nb_c_p(nb_c), .nb_od(nb_od_r0), .nb_oc(nb_oc), .bt_re(bt_re), .bt_word(bt_word), .bt_q_p(bt_q_r0),
         .r_v(r_v), .r_idx(r_idx), .r_last(r_last), .r_d(r_d_r0),
         .flt_bank_i(flt_b2), .flt_vld_i(flt_v2), .flt_bank_o(flt_b0), .flt_vld_o(flt_v0), .fault(fault));
-    qfd_dv_redstn2_region #(.PIN_IN(1), .BT_LAT(1)) u_r1 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_redstn2_region u_r1 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(cfg[28]), .cfg_mode_p(cfg[27:26]), .cfg_wsrc_p(cfg[25]), .cfg_nwords_p(cfg[24:17]), .cfg_sbase_p(cfg[16:8]), .cfg_kcm1_p(cfg[7:0]),
         .rs_s_lo_p(rs_s_lo_r1), .rs_s_hi_p(rs_s_hi_r1), .rs_n_lo_p(rs_n_lo_r1), .rs_n_hi_p(rs_n_hi_r1), .rs_s_c_p(rs_s_c), .rs_n_c_p(rs_n_c),
         .nb_d_p(nb_d_r1), .nb_c_p(nb_c), .nb_od(nb_od_r1), .nb_oc(nb_oc_x1), .bt_re(bt_re_x1), .bt_word(bt_word_x1), .bt_q_p(bt_q_r1),
         .r_v(r_v_x1), .r_idx(r_idx_x1), .r_last(r_last_x1), .r_d(r_d_r1),
         .flt_bank_i(flt_b0), .flt_vld_i(flt_v0), .flt_bank_o(flt_b1), .flt_vld_o(flt_v1), .fault(fault_x1));
-    qfd_dv_redstn2_region #(.PIN_IN(1), .BT_LAT(1)) u_r2 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_redstn2_region u_r2 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(cfg[28]), .cfg_mode_p(cfg[27:26]), .cfg_wsrc_p(cfg[25]), .cfg_nwords_p(cfg[24:17]), .cfg_sbase_p(cfg[16:8]), .cfg_kcm1_p(cfg[7:0]),
         .rs_s_lo_p(rs_s_lo_r2), .rs_s_hi_p(rs_s_hi_r2), .rs_n_lo_p(rs_n_lo_r2), .rs_n_hi_p(rs_n_hi_r2), .rs_s_c_p(rs_s_c), .rs_n_c_p(rs_n_c),
         .nb_d_p(nb_d_r2), .nb_c_p(nb_c), .nb_od(nb_od_r2), .nb_oc(nb_oc_x2), .bt_re(bt_re_x2), .bt_word(bt_word_x2), .bt_q_p(bt_q_r2),
         .r_v(r_v_x2), .r_idx(r_idx_x2), .r_last(r_last_x2), .r_d(r_d_r2),
         .flt_bank_i(flt_b4), .flt_vld_i(flt_v4), .flt_bank_o(flt_b2), .flt_vld_o(flt_v2), .fault(fault_x2));
-    qfd_dv_redstn2_region #(.PIN_IN(1), .BT_LAT(1)) u_r3 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_redstn2_region u_r3 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(cfg[28]), .cfg_mode_p(cfg[27:26]), .cfg_wsrc_p(cfg[25]), .cfg_nwords_p(cfg[24:17]), .cfg_sbase_p(cfg[16:8]), .cfg_kcm1_p(cfg[7:0]),
         .rs_s_lo_p(rs_s_lo_r3), .rs_s_hi_p(rs_s_hi_r3), .rs_n_lo_p(rs_n_lo_r3), .rs_n_hi_p(rs_n_hi_r3), .rs_s_c_p(rs_s_c), .rs_n_c_p(rs_n_c),
         .nb_d_p(nb_d_r3), .nb_c_p(nb_c), .nb_od(nb_od_r3), .nb_oc(nb_oc_x3), .bt_re(bt_re_x3), .bt_word(bt_word_x3), .bt_q_p(bt_q_r3),
         .r_v(r_v_x3), .r_idx(r_idx_x3), .r_last(r_last_x3), .r_d(r_d_r3),
         .flt_bank_i(flt_b1), .flt_vld_i(flt_v1), .flt_bank_o(flt_b3), .flt_vld_o(flt_v3), .fault(fault_x3));
-    qfd_dv_redstn2_region #(.PIN_IN(1), .BT_LAT(1)) u_r4 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_redstn2_region u_r4 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(cfg[28]), .cfg_mode_p(cfg[27:26]), .cfg_wsrc_p(cfg[25]), .cfg_nwords_p(cfg[24:17]), .cfg_sbase_p(cfg[16:8]), .cfg_kcm1_p(cfg[7:0]),
         .rs_s_lo_p(rs_s_lo_r4), .rs_s_hi_p(rs_s_hi_r4), .rs_n_lo_p(rs_n_lo_r4), .rs_n_hi_p(rs_n_hi_r4), .rs_s_c_p(rs_s_c), .rs_n_c_p(rs_n_c),
         .nb_d_p(nb_d_r4), .nb_c_p(nb_c), .nb_od(nb_od_r4), .nb_oc(nb_oc_x4), .bt_re(bt_re_x4), .bt_word(bt_word_x4), .bt_q_p(bt_q_r4),
         .r_v(r_v_x4), .r_idx(r_idx_x4), .r_last(r_last_x4), .r_d(r_d_r4),
         .flt_bank_i(flt_b6), .flt_vld_i(flt_v6), .flt_bank_o(flt_b4), .flt_vld_o(flt_v4), .fault(fault_x4));
-    qfd_dv_redstn2_region #(.PIN_IN(1), .BT_LAT(1)) u_r5 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_redstn2_region u_r5 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(cfg[28]), .cfg_mode_p(cfg[27:26]), .cfg_wsrc_p(cfg[25]), .cfg_nwords_p(cfg[24:17]), .cfg_sbase_p(cfg[16:8]), .cfg_kcm1_p(cfg[7:0]),
         .rs_s_lo_p(rs_s_lo_r5), .rs_s_hi_p(rs_s_hi_r5), .rs_n_lo_p(rs_n_lo_r5), .rs_n_hi_p(rs_n_hi_r5), .rs_s_c_p(rs_s_c), .rs_n_c_p(rs_n_c),
         .nb_d_p(nb_d_r5), .nb_c_p(nb_c), .nb_od(nb_od_r5), .nb_oc(nb_oc_x5), .bt_re(bt_re_x5), .bt_word(bt_word_x5), .bt_q_p(bt_q_r5),
         .r_v(r_v_x5), .r_idx(r_idx_x5), .r_last(r_last_x5), .r_d(r_d_r5),
         .flt_bank_i(flt_b3), .flt_vld_i(flt_v3), .flt_bank_o(flt_b5), .flt_vld_o(flt_v5), .fault(fault_x5));
-    qfd_dv_redstn2_region #(.PIN_IN(1), .BT_LAT(1)) u_r6 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_redstn2_region u_r6 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(cfg[28]), .cfg_mode_p(cfg[27:26]), .cfg_wsrc_p(cfg[25]), .cfg_nwords_p(cfg[24:17]), .cfg_sbase_p(cfg[16:8]), .cfg_kcm1_p(cfg[7:0]),
         .rs_s_lo_p(rs_s_lo_r6), .rs_s_hi_p(rs_s_hi_r6), .rs_n_lo_p(rs_n_lo_r6), .rs_n_hi_p(rs_n_hi_r6), .rs_s_c_p(rs_s_c), .rs_n_c_p(rs_n_c),
         .nb_d_p(nb_d_r6), .nb_c_p(nb_c), .nb_od(nb_od_r6), .nb_oc(nb_oc_x6), .bt_re(bt_re_x6), .bt_word(bt_word_x6), .bt_q_p(bt_q_r6),
         .r_v(r_v_x6), .r_idx(r_idx_x6), .r_last(r_last_x6), .r_d(r_d_r6),
         .flt_bank_i(flt_b7), .flt_vld_i(flt_v7), .flt_bank_o(flt_b6), .flt_vld_o(flt_v6), .fault(fault_x6));
-    qfd_dv_redstn2_region #(.PIN_IN(1), .BT_LAT(1)) u_r7 (.ck(ck), .rst_n(rst_n),
+    qfd_dv_redstn2_region u_r7 (.ck(ck), .rst_n(rst_n),
         .cfg_v_p(cfg[28]), .cfg_mode_p(cfg[27:26]), .cfg_wsrc_p(cfg[25]), .cfg_nwords_p(cfg[24:17]), .cfg_sbase_p(cfg[16:8]), .cfg_kcm1_p(cfg[7:0]),
         .rs_s_lo_p(rs_s_lo_r7), .rs_s_hi_p(rs_s_hi_r7), .rs_n_lo_p(rs_n_lo_r7), .rs_n_hi_p(rs_n_hi_r7), .rs_s_c_p(rs_s_c), .rs_n_c_p(rs_n_c),
         .nb_d_p(nb_d_r7), .nb_c_p(nb_c), .nb_od(nb_od_r7), .nb_oc(nb_oc_x7), .bt_re(bt_re_x7), .bt_word(bt_word_x7), .bt_q_p(bt_q_r7),

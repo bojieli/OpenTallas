@@ -63,7 +63,7 @@ def flat_parent() -> str:
     for r in range(8):
         u = UP[r]
         sfx = "" if r == 0 else f"_x{r}"
-        L.append(f"    qfd_dv_redstn2_region #(.PIN_IN(1), .BT_LAT(1)) u_r{r} (.ck(ck), .rst_n(rst_n),")
+        L.append(f"    qfd_dv_redstn2_region u_r{r} (.ck(ck), .rst_n(rst_n),")
         L.append(f"        .cfg_v_p(cfg[28]), .cfg_mode_p(cfg[27:26]), .cfg_wsrc_p(cfg[25]), .cfg_nwords_p(cfg[24:17]),"
                  f" .cfg_sbase_p(cfg[16:8]), .cfg_kcm1_p(cfg[7:0]),")
         L.append(f"        .rs_s_lo_p(rs_s_lo_r{r}), .rs_s_hi_p(rs_s_hi_r{r}), .rs_n_lo_p(rs_n_lo_r{r}), .rs_n_hi_p(rs_n_hi_r{r}),"
