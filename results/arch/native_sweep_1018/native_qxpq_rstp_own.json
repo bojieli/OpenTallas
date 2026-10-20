@@ -1,0 +1,39 @@
+[
+ {
+  "cell": "ot_v41_rom_elem_q_qxpq_w10",
+  "view": "physical/s81_die_views/q_elem_qs5f_rstp",
+  "lib_cell": "ot_v41_rom_elem_q_qxpq_w10",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 489.4,
+  "spread_ps": 38.4,
+  "outputs": 131,
+  "inputs": 587,
+  "launch_ps": 258.9,
+  "launch_pin": "prow[26]",
+  "capture_ps": 127.8,
+  "capture_pin": "go",
+  "launch_over": 4,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 30.5,
+  "ff_launch_min_ps": 86.4,
+  "ff_hold_need_ps": -15.2,
+  "pass": false,
+  "fail_why": "launch 258.8533 > 220 (4 pins)",
+  "job": "dsrom-qelem-qs5f-rstp-f9192e143-tc-hm10-cl-2bded98f0",
+  "mode": "own-R (insertion.json boundary mean 489.4 TT); no relative reference exists: the q_elem sits inside the unhardened col_h9 frame/stand-in parent, no routed parent insertion or landed neighbour view to cite",
+  "launch_fails": {
+   "prow[26]": 258.9,
+   "pnseg[1]": 238.6,
+   "prow[23]": 230.1,
+   "prow[24]": 227.7
+  },
+  "capture_note": "rst_n capture 84.2 ps (old qs5f_efs view 239.2): the RSTP=1 fix holds; worst capture go 127.8",
+  "classification": "launch (4 N-face outputs of u_e.g_mac[*].g_o2 output registers): DFFHQNx1 output flop away from its pin (QN load 7-8 fF, slew 74-87 ps, clk->Q 77-81) + post-route hold-ECO HB2xp67 at the flop driving the long wire (89-106 ps, slew 114-150); same pins on the old qs5f_efs view launched 150-171. Spread PASS (TT 38.4 / FF 30.5).",
+  "evidence": "results/arch/native_sweep_1018/native_qxpq_rstp_launch_paths_tt.log (report_checks TT, verdict session of the export)"
+ }
+]

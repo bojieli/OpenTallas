@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hf1-qxpq/fbench
+ot-run: ot-epyc5       admits   305 GB (avail 396, growth 182, headroom 0, waiters 1/400 GB) load 141/128 running 25 disk 1822 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hf1-qxpq/fbench
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hf1-qxpq/fbench
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-4029863-1792380644 after 1 s
+  [plan] FRAME_BENCH PASS col_h10 rows=6 words=10 complete_at_root=2 partials=8 END edges=3063 ret_words=10 xo_checked=3061 fault=0
+FRAME_SET col_h10 MUT=0 set=plan pass=1 fail=0
+PASS frame col_h10
+FRAME_BENCH col_h10 plan rc=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-4029863-1792380644): exit 0

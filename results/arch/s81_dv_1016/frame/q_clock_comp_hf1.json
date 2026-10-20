@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.s81.frame_q_clock_comp.v1",
+ "lane": "HF-1 10-18",
+ "rule": "owner 10-17 boundary match: pin-flop spread <=80 at TT+FF and neighbour-matched boundary by parent compensation; landed-regions standard 10-18 (frame = 3 landed regions)",
+ "q_view": {
+  "job": "dsrom-qelem-qs5f-rstp-f9192e143-tc-hm10-cl-2bded98f0",
+  "boundary": {
+   "tt": [
+    510.3,
+    488.3,
+    539.2
+   ],
+   "ff": [
+    407.2,
+    391.4,
+    435.8
+   ]
+  },
+  "pin_flop_spread": {
+   "tt": 50.9,
+   "ff": 44.4
+  }
+ },
+ "q_links": "per slot k: u_e<k> <-> dsfd_qbank_S u_bs<k> (cfg/go/x inputs), dsfd_qbank_N u_bn<k> (pv/pval/... outputs, busy/fault), ot_s81_cfg7_seq u_s<k> (bank_free/sh_free/go_tag); rst_n = synchronous (RSTP=1, relay flop at pin)",
+ "scheme": "PARENT COMPENSATION inside each frame region: the q elements take the region clock at the region root (no added delay); every other sink of the region (qbank_S/N, cfg7_seq + its cfg ROMs, nodes, sstn stations, relays, cfifo side) hangs off ONE shared trunk delay line of D_TT so its pin flops arrive with the q pin flops. Region-to-region and frame boundary crossings stay LANDED (frame_l4 plan, 3 regions). No extra landings, no data cycles.",
+ "trunk_delay_ps": {
+  "tt": 425.4,
+  "ff": 339.5,
+  "ff_over_tt": 0.798,
+  "basis": "buffer chain assumed to track the q tree FF/TT ratio (q 407.2/510.3; neighbours 0.79-0.80)"
+ },
+ "pairs": {
+  "ot_s81_cfg7_seq (s81coll_cfg7_seq_pr)": {
+   "tt": {
+    "neighbour_shifted": [
+     507.2,
+     519.2
+    ],
+    "worst_pair_skew": 32.0
+   },
+   "ff": {
+    "neighbour_shifted": [
+     403.2,
+     414.5
+    ],
+    "worst_pair_skew": 32.6
+   }
+  },
+  "dsfd_qbank_N (s81fill2_qbank_n)": {
+   "tt": {
+    "neighbour_shifted": [
+     500.7,
+     503.5
+    ],
+    "worst_pair_skew": 38.5
+   },
+   "ff": {
+    "neighbour_shifted": [
+     399.0,
+     402.1
+    ],
+    "worst_pair_skew": 36.8
+   }
+  },
+  "dsfd_qbank_S (s81fill2_qbank_s)": {
+   "tt": {
+    "neighbour_shifted": [
+     510.8,
+     523.6
+    ],
+    "worst_pair_skew": 35.3
+   },
+   "ff": {
+    "neighbour_shifted": [
+     406.4,
+     419.5
+    ],
+    "worst_pair_skew": 29.4
+   }
+  },
+  "dsfd_qbank_S (s81fill2_qbank_s_t)": {
+   "tt": {
+    "neighbour_shifted": [
+     504.6,
+     512.6
+    ],
+    "worst_pair_skew": 34.6
+   },
+   "ff": {
+    "neighbour_shifted": [
+     401.3,
+     409.3
+    ],
+    "worst_pair_skew": 34.5
+   }
+  }
+ },
+ "ff_sensitivity_if_delay_tracks_5pct_worse": 53.8,
+ "fallback": "if frame CTS cannot hold the pairs <=80 at both corners: LAND the q pins (739 b/slot, 12 slots/frame: ~8.9k b, ~35k landing flops/frame, +3 edges on the q path) or split the leaf (HARD-REVIEW option, only if frame STA names it)",
+ "ck_face": "closed view clk on S (x 231, M5); HF-1 gate with clk at N centre: spread TT 35.7 / FF 27.6 (results/rtl/dsrom_qelem_pq_20261006/hf1_ckn_1018). Binding the N variant needs one re-route; the frame tap uses whichever view binds (S now).",
+ "reset": "frames re-emitted RSTP=1 (claude/hf1-qxpq-1018 5ebaa6d4d); q internal reset releases 1 edge after the frame reset; frame bench (L4, each + plan) proves the return calendar unchanged -> no reset-calendar change needed if PASS",
+ "native_relative": {
+  "view": "physical/s81_die_views/q_elem_qs5f_rstp (claude/ns-qxpq-1018 29e6012d7; routed insertion TT 489.4 / FF 387.5)",
+  "tool": "tools/hier_contract/native_pin_audit.py (main) --view ... --relative-to C",
+  "runs": {
+   "C=489.4/387.5 (neighbours matched to q mean)": "FAIL launch 258.9 x4 (prow/pnseg), capture 127.8, mismatch 26.8/21.1",
+   "C=510.3/407.2": "FAIL launch 238.0 x1, capture 148.7, mismatch 47.7/40.8",
+   "C=525/419": "FAIL launch 223.3 x1, capture 163.4, mismatch 62.4/52.6",
+   "C=530/423": "PASS launch 218.3 (prow[26]), capture 168.4 (go), mismatch 67.4/56.6, spread 38.4/30.5"
+  },
+  "chosen": {
+   "C_tt": 530,
+   "C_ff": 423,
+   "trunk_delay_tt": 445.0,
+   "trunk_delay_ff": 355.5,
+   "note": "neighbours deliberately ~40 ps (TT) / ~36 ps (FF) later than the q boundary mean (useful skew for the q output pin flops). Thin: launch margin 1.7 ps, mismatch margin 12.6 TT. Frame STA must confirm the q->qbank_N / q->cfg7_seq FF hold (neighbour capture later by ~36 ps FF)."
+  },
+  "structural_followup": "NS-QXPQ plan (output pin-flop band at the N face, hold padding at the pin, x2/x3 drive) restores launch to ~150-200 at C=489: combine it with OT_Q_CK_NORTH=1 in ONE re-route (reroute_reason native_launch + contract clock face) so C can drop back to the q mean."
+ },
+ "trunk_delay_ps_chosen": {
+  "C_tt": 530,
+  "C_ff": 423,
+  "trunk_delay_tt": 445.0,
+  "trunk_delay_ff": 355.5,
+  "note": "neighbours deliberately ~40 ps (TT) / ~36 ps (FF) later than the q boundary mean (useful skew for the q output pin flops). Thin: launch margin 1.7 ps, mismatch margin 12.6 TT. Frame STA must confirm the q->qbank_N / q->cfg7_seq FF hold (neighbour capture later by ~36 ps FF)."
+ }
+}
