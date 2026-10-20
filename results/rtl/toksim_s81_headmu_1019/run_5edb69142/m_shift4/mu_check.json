@@ -1,0 +1,32 @@
+{
+ "ok": false,
+ "errs": [
+  "(a) user 0 differs from the single-user run at event 0 (multi None vs single ('VO S', 374, '0000000000000000000000000001f4000000000000000000000000001fc0000200801'))",
+  "(b) 2 expected events missing (first ('VO S', 438, '000000000000000000000000000000000000000000000000001800002840000200801'))",
+  "(c) issuer fault at edge 432 code 9",
+  "(c) final issuer state PROG FCODE 9 fault 1 jobs 2 (want code 0 fault 0 jobs 2)",
+  "(c) unit status fault t_host[75] = 1"
+ ],
+ "users": 2,
+ "shifts": [
+  0,
+  4
+ ],
+ "ks": [
+  360,
+  364
+ ],
+ "user0_identical": false,
+ "user0_events": 9,
+ "events_per_user": 9,
+ "ctx_beats_per_user": 1,
+ "events_total": 16,
+ "missing": 2,
+ "extra": 0,
+ "faults": [
+  {
+   "edge": 432,
+   "code": 9
+  }
+ ]
+}
