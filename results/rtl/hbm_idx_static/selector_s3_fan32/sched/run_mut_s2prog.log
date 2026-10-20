@@ -1,0 +1,11 @@
+DIAG link-core flush edge1276 total501 ingests170 first1107 last1276 selected_observe00000000000000
+TXBAD edge1286 ord2850 gold0 seen0 rec407f0000 score407f
+TXBAD edge1286 ord2910 gold0 seen0 rec407f0000 score407f
+TXBAD edge1310 ord3305 gold0 seen0 rec407f0000 score407f
+TXBAD edge1310 ord3338 gold0 seen0 rec407f0000 score407f
+TXBAD edge1310 ord6075 gold0 seen0 rec407f0000 score407f
+DIAG faults(first edge from start; -1 never) calendar-1 operand-1 query-1 scorer-1 selector1277 link-1 parent_cal610 | errors spacing0 seq0 ord0 record17 missing34
+IDX_SCHEDULED_STATIC N1411 mutation0 scores10928 records512 flits64 errors51 fault1 status0 firstkey315 firstscore438 lastscore608 firsttx1286 lasttx1406 done1413 (edges from start; expected key315 tx1286)
+[16420000000] %Fatal: tb_idx_scheduled_static.sv:129: Assertion failed in tb_idx_scheduled_static: fullshape scheduled INDEX (pin-registered tiles) mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_scheduled_static.sv:129: Verilog $stop
+Aborting...
