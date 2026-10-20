@@ -1,0 +1,792 @@
+{
+ "name": "qkd_hr_core_peer_p32b",
+ "top": "qkd_hr_core_peer_n32",
+ "kind": "tile",
+ "recipe": 4,
+ "clock_port": "ck_core",
+ "reset_ports": [
+  "por_n",
+  "host_rst_n"
+ ],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "sources": [
+  "rtl/qwen_sys/host_peer_n32_1020/qkd_hr_core_peer_n32.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v"
+ ],
+ "params": {},
+ "defines": [],
+ "children": [],
+ "inter": [],
+ "outline": {
+  "w": 518.4,
+  "h": 518.4,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "ck_core",
+   "program_epoch",
+   "program_digest",
+   "token_epoch",
+   "hc",
+   "cohort_tag",
+   "participant_trace",
+   "participant_token",
+   "participant_pos",
+   "engine_result_tag",
+   "engine_result_token",
+   "engine_result_value",
+   "engine_result_cycles",
+   "certificate",
+   "certificate_prefix",
+   "cq_client_tag",
+   "cq_token",
+   "native_request_pos",
+   "native_request_tag",
+   "native_request_token",
+   "step_pos",
+   "step_retire_pos",
+   "step_retire_token",
+   "u_rank__u_control__kst8",
+   "u_rank__peer_service_epoch",
+   "u_rank__u_control__cmd_hc"
+  ],
+  "S": [
+   "host_rst_n",
+   "service_faults",
+   "allocated_valid",
+   "u_rank__u_control__por_n",
+   "cq_commit_v",
+   "step_issue_v",
+   "step_retire_cq",
+   "step_retire_slot",
+   "step_retire_v",
+   "step_slot",
+   "u_rank__u_control__begin_epoch",
+   "u_rank__u_control__ctrl_begin_available",
+   "u_rank__u_control__begin_cr",
+   "u_rank__u_control__begin_v",
+   "u_rank__u_control__boot8",
+   "u_rank__u_control__startup_allowed",
+   "u_rank__u_control__cmd_cr",
+   "u_rank__u_control__cmd_v",
+   "u_rank__u_control__u_packet__cr",
+   "u_rank__u_control__u_packet__cd",
+   "u_rank__u_control__u_packet__cv",
+   "u_rank__program_rx_cr",
+   "u_rank__program_rx_v",
+   "u_rank__raw_rx_cr",
+   "u_rank__raw_rx_d",
+   "u_rank__raw_rx_v",
+   "u_rank__physical_tx_cr",
+   "u_rank__physical_tx_d",
+   "u_rank__physical_tx_v"
+  ],
+  "E": [
+   "abort_drained",
+   "token_epoch_valid",
+   "native_kv_drained",
+   "native_vm_drained",
+   "native_collective_drained",
+   "native_host_drained",
+   "service_ready",
+   "ingest_permission",
+   "local_service_epoch",
+   "por_n",
+   "pll_locked",
+   "local_kst",
+   "program_ready",
+   "seen",
+   "slice_boot_ok",
+   "native_admit_ready",
+   "native_links_drained",
+   "native_link_reset_seen",
+   "native_retrained",
+   "peer_protocol_fault",
+   "dispatch_valid",
+   "dispatched",
+   "cohort_gen",
+   "accepted_ranks",
+   "engine_result_v",
+   "engine_result_gen",
+   "engine_result_done",
+   "engine_result_fault",
+   "engine_result_cause",
+   "engine_result_cr",
+   "program_consensus",
+   "coordinator_fault",
+   "recovery_complete",
+   "host_link_reset_req",
+   "host_recovery_clear",
+   "root_mux_fault",
+   "native_context_owned",
+   "u_rank__u_control__service_ready",
+   "u_rank__peer_link_fault",
+   "cancel_release_gen",
+   "cancel_release_tag",
+   "cancel_release_v",
+   "cancel_released",
+   "certificate_v",
+   "native_request_cr",
+   "native_request_gen",
+   "native_request_trace",
+   "native_request_v",
+   "native_result_cause",
+   "native_result_cr",
+   "native_result_cycles",
+   "native_result_done",
+   "native_result_fault",
+   "native_result_gen",
+   "native_result_tag",
+   "native_result_token",
+   "native_result_v",
+   "native_result_value",
+   "u_rank__peer_pending_ack",
+   "u_rank__peer_service_ready",
+   "u_rank__pending_advertised",
+   "u_rank__pending_epoch",
+   "u_rank__service_begin_epoch",
+   "u_rank__service_begin_v",
+   "u_rank__u_control__u_packet__ctc",
+   "u_rank__u_control__u_packet__ctd",
+   "u_rank__u_control__u_packet__ct",
+   "u_rank__tx_cr",
+   "u_rank__tx_d",
+   "u_rank__tx_v"
+  ],
+  "W": [
+   "package_abort",
+   "die_id",
+   "slice_boot_done",
+   "cq_pos",
+   "cq_slot",
+   "step_client_tag",
+   "step_retire_client_tag",
+   "u_rank__u_control__tk8",
+   "u_rank__guarded_tk",
+   "u_rank__program_rx_d"
+  ]
+ },
+ "pin_ranges": {
+  "ck_core": [
+   259.2,
+   259.59999999999997
+  ],
+  "program_epoch": [
+   64.8,
+   453.6
+  ],
+  "program_digest": [
+   64.8,
+   453.6
+  ],
+  "token_epoch": [
+   64.8,
+   453.6
+  ],
+  "hc": [
+   64.8,
+   453.6
+  ],
+  "cohort_tag": [
+   64.8,
+   453.6
+  ],
+  "participant_trace": [
+   64.8,
+   453.6
+  ],
+  "participant_token": [
+   64.8,
+   453.6
+  ],
+  "participant_pos": [
+   64.8,
+   453.6
+  ],
+  "engine_result_tag": [
+   64.8,
+   453.6
+  ],
+  "engine_result_token": [
+   64.8,
+   453.6
+  ],
+  "engine_result_value": [
+   64.8,
+   453.6
+  ],
+  "engine_result_cycles": [
+   64.8,
+   453.6
+  ],
+  "certificate": [
+   64.8,
+   453.6
+  ],
+  "certificate_prefix": [
+   64.8,
+   453.6
+  ],
+  "cq_client_tag": [
+   64.8,
+   453.6
+  ],
+  "cq_token": [
+   64.8,
+   453.6
+  ],
+  "native_request_pos": [
+   64.8,
+   453.6
+  ],
+  "native_request_tag": [
+   64.8,
+   453.6
+  ],
+  "native_request_token": [
+   64.8,
+   453.6
+  ],
+  "step_pos": [
+   64.8,
+   453.6
+  ],
+  "step_retire_pos": [
+   64.8,
+   453.6
+  ],
+  "step_retire_token": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__kst8": [
+   64.8,
+   453.6
+  ],
+  "u_rank__peer_service_epoch": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__cmd_hc": [
+   64.8,
+   453.6
+  ],
+  "host_rst_n": [
+   64.8,
+   453.6
+  ],
+  "service_faults": [
+   64.8,
+   453.6
+  ],
+  "allocated_valid": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__por_n": [
+   64.8,
+   453.6
+  ],
+  "cq_commit_v": [
+   64.8,
+   453.6
+  ],
+  "step_issue_v": [
+   64.8,
+   453.6
+  ],
+  "step_retire_cq": [
+   64.8,
+   453.6
+  ],
+  "step_retire_slot": [
+   64.8,
+   453.6
+  ],
+  "step_retire_v": [
+   64.8,
+   453.6
+  ],
+  "step_slot": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__begin_epoch": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__ctrl_begin_available": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__begin_cr": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__begin_v": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__boot8": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__startup_allowed": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__cmd_cr": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__cmd_v": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__u_packet__cr": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__u_packet__cd": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__u_packet__cv": [
+   64.8,
+   453.6
+  ],
+  "u_rank__program_rx_cr": [
+   64.8,
+   453.6
+  ],
+  "u_rank__program_rx_v": [
+   64.8,
+   453.6
+  ],
+  "u_rank__raw_rx_cr": [
+   64.8,
+   453.6
+  ],
+  "u_rank__raw_rx_d": [
+   64.8,
+   453.6
+  ],
+  "u_rank__raw_rx_v": [
+   64.8,
+   453.6
+  ],
+  "u_rank__physical_tx_cr": [
+   64.8,
+   453.6
+  ],
+  "u_rank__physical_tx_d": [
+   64.8,
+   453.6
+  ],
+  "u_rank__physical_tx_v": [
+   64.8,
+   453.6
+  ],
+  "abort_drained": [
+   64.8,
+   453.6
+  ],
+  "token_epoch_valid": [
+   64.8,
+   453.6
+  ],
+  "native_kv_drained": [
+   64.8,
+   453.6
+  ],
+  "native_vm_drained": [
+   64.8,
+   453.6
+  ],
+  "native_collective_drained": [
+   64.8,
+   453.6
+  ],
+  "native_host_drained": [
+   64.8,
+   453.6
+  ],
+  "service_ready": [
+   64.8,
+   453.6
+  ],
+  "ingest_permission": [
+   64.8,
+   453.6
+  ],
+  "local_service_epoch": [
+   64.8,
+   453.6
+  ],
+  "por_n": [
+   64.8,
+   453.6
+  ],
+  "pll_locked": [
+   64.8,
+   453.6
+  ],
+  "local_kst": [
+   64.8,
+   453.6
+  ],
+  "program_ready": [
+   64.8,
+   453.6
+  ],
+  "seen": [
+   64.8,
+   453.6
+  ],
+  "slice_boot_ok": [
+   64.8,
+   453.6
+  ],
+  "native_admit_ready": [
+   64.8,
+   453.6
+  ],
+  "native_links_drained": [
+   64.8,
+   453.6
+  ],
+  "native_link_reset_seen": [
+   64.8,
+   453.6
+  ],
+  "native_retrained": [
+   64.8,
+   453.6
+  ],
+  "peer_protocol_fault": [
+   64.8,
+   453.6
+  ],
+  "dispatch_valid": [
+   64.8,
+   453.6
+  ],
+  "dispatched": [
+   64.8,
+   453.6
+  ],
+  "cohort_gen": [
+   64.8,
+   453.6
+  ],
+  "accepted_ranks": [
+   64.8,
+   453.6
+  ],
+  "engine_result_v": [
+   64.8,
+   453.6
+  ],
+  "engine_result_gen": [
+   64.8,
+   453.6
+  ],
+  "engine_result_done": [
+   64.8,
+   453.6
+  ],
+  "engine_result_fault": [
+   64.8,
+   453.6
+  ],
+  "engine_result_cause": [
+   64.8,
+   453.6
+  ],
+  "engine_result_cr": [
+   64.8,
+   453.6
+  ],
+  "program_consensus": [
+   64.8,
+   453.6
+  ],
+  "coordinator_fault": [
+   64.8,
+   453.6
+  ],
+  "recovery_complete": [
+   64.8,
+   453.6
+  ],
+  "host_link_reset_req": [
+   64.8,
+   453.6
+  ],
+  "host_recovery_clear": [
+   64.8,
+   453.6
+  ],
+  "root_mux_fault": [
+   64.8,
+   453.6
+  ],
+  "native_context_owned": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__service_ready": [
+   64.8,
+   453.6
+  ],
+  "u_rank__peer_link_fault": [
+   64.8,
+   453.6
+  ],
+  "cancel_release_gen": [
+   64.8,
+   453.6
+  ],
+  "cancel_release_tag": [
+   64.8,
+   453.6
+  ],
+  "cancel_release_v": [
+   64.8,
+   453.6
+  ],
+  "cancel_released": [
+   64.8,
+   453.6
+  ],
+  "certificate_v": [
+   64.8,
+   453.6
+  ],
+  "native_request_cr": [
+   64.8,
+   453.6
+  ],
+  "native_request_gen": [
+   64.8,
+   453.6
+  ],
+  "native_request_trace": [
+   64.8,
+   453.6
+  ],
+  "native_request_v": [
+   64.8,
+   453.6
+  ],
+  "native_result_cause": [
+   64.8,
+   453.6
+  ],
+  "native_result_cr": [
+   64.8,
+   453.6
+  ],
+  "native_result_cycles": [
+   64.8,
+   453.6
+  ],
+  "native_result_done": [
+   64.8,
+   453.6
+  ],
+  "native_result_fault": [
+   64.8,
+   453.6
+  ],
+  "native_result_gen": [
+   64.8,
+   453.6
+  ],
+  "native_result_tag": [
+   64.8,
+   453.6
+  ],
+  "native_result_token": [
+   64.8,
+   453.6
+  ],
+  "native_result_v": [
+   64.8,
+   453.6
+  ],
+  "native_result_value": [
+   64.8,
+   453.6
+  ],
+  "u_rank__peer_pending_ack": [
+   64.8,
+   453.6
+  ],
+  "u_rank__peer_service_ready": [
+   64.8,
+   453.6
+  ],
+  "u_rank__pending_advertised": [
+   64.8,
+   453.6
+  ],
+  "u_rank__pending_epoch": [
+   64.8,
+   453.6
+  ],
+  "u_rank__service_begin_epoch": [
+   64.8,
+   453.6
+  ],
+  "u_rank__service_begin_v": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__u_packet__ctc": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__u_packet__ctd": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__u_packet__ct": [
+   64.8,
+   453.6
+  ],
+  "u_rank__tx_cr": [
+   64.8,
+   453.6
+  ],
+  "u_rank__tx_d": [
+   64.8,
+   453.6
+  ],
+  "u_rank__tx_v": [
+   64.8,
+   453.6
+  ],
+  "package_abort": [
+   64.8,
+   453.6
+  ],
+  "die_id": [
+   64.8,
+   453.6
+  ],
+  "slice_boot_done": [
+   64.8,
+   453.6
+  ],
+  "cq_pos": [
+   64.8,
+   453.6
+  ],
+  "cq_slot": [
+   64.8,
+   453.6
+  ],
+  "step_client_tag": [
+   64.8,
+   453.6
+  ],
+  "step_retire_client_tag": [
+   64.8,
+   453.6
+  ],
+  "u_rank__u_control__tk8": [
+   64.8,
+   453.6
+  ],
+  "u_rank__guarded_tk": [
+   64.8,
+   453.6
+  ],
+  "u_rank__program_rx_d": [
+   64.8,
+   453.6
+  ]
+ },
+ "std_area_um2": 11558.60118,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Exact source qkd_hr_core_peer_n32 (sha 1277bb49) is the mapped primitive-copy of the flow-wrapped peer (u_ot_pr_core): every input/output already has its registered station edge (1/1, rtl/test/host_peer_main_fixture_1020/primitive32/README.md); a second flow wrapper would add a cycle and re-merge copies."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Source already lands por_n/host_rst_n in 2 plain registered stages at the face (outer S1/S2 2/64 per port, outer_reset_profile.json; reset_graph_profile.json.gz); a flow landing wrapper would duplicate it. Mapped native census max32/0 incl. reset nets."
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "at": [
+    43.2,
+    302.4
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u72706_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u74592_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0",
+   "inst": "u74646_c0/u_cell"
+  }
+ ],
+ "structural_change": "PEER n32 (Codex primitive32 source, native max32/0, 3 real p192 SRAMs): central full-width std band y203.6..302.4 between the macro rows, both W/E macro pin faces open on vertical channels into the band, NE quadrant free std area; pins on the middle 75% of every face (corner-free, reach), ck_core at N-face centre beside the band.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "No CLOSED peer view; r6 native FAIL 2113 loads. Native32 SRAM primitive-copy successor with new floorplan."
+ },
+ "slot_change_request": "UNGRANTED: outline [518.4, 518.4] vs old 280.8 square (3 p192 SRAMs replace >2kb flop arrays); parent repack needed.",
+ "safe_design_checklist": {
+  "1_pins": "SOURCE: all pins registered in source (station edges 1/1); reset 2-stage outer landing in source (2/64 per port).",
+  "2_reach": "PLAN: pins confined to middle 75% of faces; macro faces <=160um from band; actual placed reach audit after gate.",
+  "3_fanout": "MEASURED PASS: resynth native census 62936 roots max32/0 (Codex primitive32).",
+  "4_depth": "textbook proxy 13 levels/470.1ps; gate STA measures.",
+  "5_storage": "PASS: three real p192 32x546 SRAMs; no FF group >2048 bits.",
+  "6_floorplan": "macros on 43.2 lattice, >=38um channels, full-width central band; outline from 97.1k synth area.",
+  "7_clock": "single ck_core, pin at band face centre; TT/FF spread<=80 measured at gate CTS.",
+  "8_schedule": "static; 0 added data edges vs mapped original."
+ }
+}

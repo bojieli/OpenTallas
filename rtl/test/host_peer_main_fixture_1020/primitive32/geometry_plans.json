@@ -1,0 +1,160 @@
+{
+  "synth_area_receipt": "area_storage_models.json",
+  "geometry_only": true,
+  "added_data_edges": 0,
+  "existing_input_output_station_edges": [
+    1,
+    1
+  ],
+  "existing_outer_reset_edges": 2,
+  "existing_regional_reset_release_edges": 3,
+  "plans": [
+    {
+      "outline_um": [
+        518.4,
+        475.2
+      ],
+      "status": "REJECTED band too dense",
+      "R0_macro_origins": [
+        [
+          43.2,
+          43.2
+        ],
+        [
+          302.4,
+          43.2
+        ],
+        [
+          43.2,
+          259.2
+        ]
+      ],
+      "macro_size_um": [
+        177.768,
+        160.392
+      ],
+      "core_inset_um": 2.16,
+      "halo_um": 10.8,
+      "face_escape_um": 20,
+      "fullwidth_band": {
+        "x0": 2.16,
+        "x1": 516.24,
+        "y0": 439.592,
+        "y1": 464.4,
+        "area_um2": 12753.296639999995,
+        "stdcell_util": 0.9063226165183909
+      },
+      "total_outline_util": 0.394149736173463,
+      "pins_per_um": {
+        "N": 2.9918981481481484,
+        "S": 3.1597222222222223,
+        "E": 3.2765151515151514,
+        "W": 3.2723063973063975
+      },
+      "limits": {
+        "native_max32": true,
+        "reach405": "NOT_YET_QUALIFIED",
+        "clock_TT_FF_spread80": "NOT_YET_QUALIFIED",
+        "source_native_duplicate_wrapper_suppression": "ROOT_REVIEW_OPEN"
+      }
+    },
+    {
+      "outline_um": [
+        518.4,
+        496.8
+      ],
+      "status": "MODEL_ONLY_NO_GATE_APPROVAL",
+      "R0_macro_origins": [
+        [
+          43.2,
+          43.2
+        ],
+        [
+          302.4,
+          43.2
+        ],
+        [
+          43.2,
+          259.2
+        ]
+      ],
+      "macro_size_um": [
+        177.768,
+        160.392
+      ],
+      "core_inset_um": 2.16,
+      "halo_um": 10.8,
+      "face_escape_um": 20,
+      "fullwidth_band": {
+        "x0": 2.16,
+        "x1": 516.24,
+        "y0": 439.592,
+        "y1": 486.0,
+        "area_um2": 23857.424640000005,
+        "stdcell_util": 0.48448654263463686
+      },
+      "total_outline_util": 0.37701279112244285,
+      "pins_per_um": {
+        "N": 2.9918981481481484,
+        "S": 3.1597222222222223,
+        "E": 3.1340579710144927,
+        "W": 3.1300322061191626
+      },
+      "limits": {
+        "native_max32": true,
+        "reach405": "NOT_YET_QUALIFIED",
+        "clock_TT_FF_spread80": "NOT_YET_QUALIFIED",
+        "source_native_duplicate_wrapper_suppression": "ROOT_REVIEW_OPEN"
+      }
+    },
+    {
+      "outline_um": [
+        518.4,
+        518.4
+      ],
+      "status": "MODEL_ONLY_NO_GATE_APPROVAL",
+      "R0_macro_origins": [
+        [
+          43.2,
+          43.2
+        ],
+        [
+          302.4,
+          43.2
+        ],
+        [
+          43.2,
+          259.2
+        ]
+      ],
+      "macro_size_um": [
+        177.768,
+        160.392
+      ],
+      "core_inset_um": 2.16,
+      "halo_um": 10.8,
+      "face_escape_um": 20,
+      "fullwidth_band": {
+        "x0": 2.16,
+        "x1": 516.24,
+        "y0": 439.592,
+        "y1": 507.59999999999997,
+        "area_um2": 34961.55263999999,
+        "stdcell_util": 0.330608920576818
+      },
+      "total_outline_util": 0.3613039248256744,
+      "pins_per_um": {
+        "N": 2.9918981481481484,
+        "S": 3.1597222222222223,
+        "E": 3.0034722222222223,
+        "W": 2.9996141975308643
+      },
+      "limits": {
+        "native_max32": true,
+        "reach405": "NOT_YET_QUALIFIED",
+        "clock_TT_FF_spread80": "NOT_YET_QUALIFIED",
+        "source_native_duplicate_wrapper_suppression": "ROOT_REVIEW_OPEN"
+      }
+    }
+  ]
+}
