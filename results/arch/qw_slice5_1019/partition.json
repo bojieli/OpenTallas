@@ -1,0 +1,1021 @@
+{
+ "schema": "opentallas.qwen_compute.slice5_partition.v1",
+ "lane": "QW-SLICE5 (LEAD3-QW) 10-19",
+ "element": "Q.STA.SLICE.2 qfd_dv_slice2_w / qfd_dv_slice2_e (critical prefix qfd_dv_slice2: no REVIEW / submit by the lane)",
+ "why": "gates of record FAILED structurally (one 173,895-flop soft core root + 56,306 heads root, CTS/GRT rc 137)",
+ "census": {
+  "source": "a775ac6d8 (QW-PARENT-PICKUP3 CALR base of QW-TLOAD2): qfd_dv_slice2 #(SU_TLS 1, SU_LT 1, MU_NU 4, HD_W130 1, PRIVATE_CALR 1); yosys 0.68 proc + memory -nomap, stat -width (flop BITS, hierarchical)",
+  "file": "results/arch/qw_slice5_1019/census/stat_slice2_calr_a775ac6d8.txt",
+  "slice_total_ff": 667217,
+  "by_child": {
+   "slice glue (pin regs, decode, SETID, VM write merge, chains, status)": 9234,
+   "su8 SU control + RD relays (soft)": 10204,
+   "ot_hdc_vreduce (soft)": 13188,
+   "qfd_dv_su_lane glue x8 (IREG/OREG, reset)": 8504,
+   "lane_h + exp/rcp/rsq leaves x8 (HARD, closed)": 256632,
+   "qfd_dv_vm (soft + 22 SRAM)": 5843,
+   "qfd_dv_redstn2 monolith (-> 8 x stnrgc)": 71702,
+   "qfd_dv_scalar2 (soft)": 17253,
+   "qfd_dv_amax_mu (soft)": 2016,
+   "qfd_dv_stream (-> stream tile t2)": 6454,
+   "qfd_dv_slice_tload (-> tload tile, 4 ROM)": 1147,
+   "ot_qfd_xs_tap (soft)": 8042,
+   "ot_qfd_xhead x4 (soft)": 32292,
+   "qfd_dv_heads local": 1024,
+   "ot_qfd_xs_leaf x32 (HARD w130)": 223680
+  },
+  "soft_before": "gate of record: ck_core 173,895 + ck_hd 56,306 + ck_ef/ck_wf 27,770 flops on 4 roots"
+ },
+ "outline_um": [
+  2462.376,
+  2591.976
+ ],
+ "leaves": [
+  {
+   "name": "stnrgc",
+   "master": "qfd_dv_redstn2_region",
+   "count": 8,
+   "sinks": 10808,
+   "state": "CLOSED (5fb7dcb72, TT +74.64 / FF +18.08)",
+   "wh": [
+    151.2,
+    151.2
+   ],
+   "note": "8 region leaves = the stnent arrangement (2x4, 64.8 gaps, 108 channel), absorbed into the slice regions r_st0..7"
+  },
+  {
+   "name": "lane_h",
+   "master": "qfd_dv_lane_h_safe2",
+   "count": 8,
+   "sinks": null,
+   "state": "CLOSED (e95c9709b TT +10.97 / FF +6.50)",
+   "wh": [
+    172.8,
+    129.6
+   ]
+  },
+  {
+   "name": "sfu_exp",
+   "master": "ot_hdc_sfu_exp_t",
+   "count": 8,
+   "sinks": 11322,
+   "state": "closed view",
+   "wh": [
+    129.6,
+    151.2
+   ]
+  },
+  {
+   "name": "sfu_rcp",
+   "master": "ot_hdc_sfu_rcp_t",
+   "count": 8,
+   "sinks": 8193,
+   "state": "closed view",
+   "wh": [
+    108.0,
+    129.6
+   ]
+  },
+  {
+   "name": "sfu_rsq",
+   "master": "ot_hdc_sfu_rsq_t",
+   "count": 8,
+   "sinks": 12564,
+   "state": "closed view",
+   "wh": [
+    129.6,
+    151.2
+   ]
+  },
+  {
+   "name": "xs_leaf",
+   "master": "ot_qfd_xs_leaf (qfd_xs_leaf_w130m5)",
+   "count": 32,
+   "sinks": 6990,
+   "state": "STAND-IN (M5 re-kit of the closed w130 view owed)",
+   "wh": [
+    129.6,
+    69.12
+   ]
+  },
+  {
+   "name": "stream",
+   "master": "qfd_dv_stream_t2 (QW-STREAM2)",
+   "count": 1,
+   "sinks": 6454,
+   "state": "GATING (t2 / t2c, claude/qw-stream2-1019@532649182); STAND-IN until closed",
+   "wh": [
+    302.4,
+    380.16
+   ]
+  },
+  {
+   "name": "tload",
+   "master": "qfd_dv_slice_tload_ns3 (QW-TLOAD2)",
+   "count": 1,
+   "sinks": 1147,
+   "state": "GATING (ns3 / ns3b, claude/qw-tload2-1019); STAND-IN until closed",
+   "wh": [
+    388.8,
+    216.0
+   ]
+  },
+  {
+   "name": "suvm",
+   "master": "qfd_dv_s5_suvm (NEW)",
+   "count": 1,
+   "sinks": 8007,
+   "state": "NEW leaf: VM (22 SRAM) + SU issue control",
+   "ports": 5798,
+   "wh": [
+    561.6,
+    561.6
+   ]
+  },
+  {
+   "name": "lrly",
+   "master": "qfd_dv_s5_lrly (NEW, 1 master x 8)",
+   "count": 8,
+   "sinks": 2068,
+   "state": "NEW leaf: one lane's RD relay stages + the qfd_dv_su_lane IREG/OREG/reset glue",
+   "ports": 2128,
+   "wh": [
+    86.4,
+    86.4
+   ]
+  },
+  {
+   "name": "red",
+   "master": "qfd_dv_s5_red (NEW)",
+   "count": 1,
+   "sinks": 13188,
+   "state": "NEW leaf: ot_hdc_vreduce SW 8 (R-ARITH csum8)",
+   "ports": 409,
+   "wh": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "sc",
+   "master": "qfd_dv_s5_sc (NEW)",
+   "count": 1,
+   "sinks": 17253,
+   "state": "NEW leaf: qfd_dv_scalar2 (rsqrt inside; 17k = guidance, judged on spread)",
+   "ports": 563,
+   "wh": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "ctl",
+   "master": "qfd_dv_s5_ctl (NEW)",
+   "count": 1,
+   "sinks": 5450,
+   "state": "NEW leaf: decode / SETID / VM write merge / own AR+D2D word builder / gather / status + amax_mu (face pin regs move to the face strips)",
+   "ports": 3600,
+   "wh": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "xhead",
+   "master": "qfd_dv_s5_xhead (NEW, 1 master x 4)",
+   "count": 4,
+   "sinks": 8073,
+   "state": "NEW leaf: ot_qfd_xhead (w130 config); pin-bound 7,546 pins -> 216 x 432 (5.8/um)",
+   "ports": 7546,
+   "wh": [
+    216.0,
+    432.0
+   ]
+  },
+  {
+   "name": "tap",
+   "master": "qfd_dv_s5_tap (NEW)",
+   "count": 1,
+   "sinks": 9066,
+   "state": "NEW leaf: ot_qfd_xs_tap + heads fault join; pin-bound 648 x 172.8",
+   "ports": 6281,
+   "wh": [
+    648.0,
+    172.8
+   ]
+  },
+  {
+   "name": "frly",
+   "master": "qfd_dv_s5_frly<W> (NEW, forwarded pass-lane relay station)",
+   "count": null,
+   "sinks": null,
+   "state": "NEW leaf family: half-cycle forwarded relay stations of the W<->E pass chains (st, ch, hr, cmd, sc, ag, treq) and the N->S corridor (cw_s, rs_n); <= 405 um per hop",
+   "wh": [
+    43.2,
+    129.6
+   ]
+  },
+  {
+   "name": "face_land",
+   "master": "LAND8 qfd_landh0d8_* / qfd_c_land_{w,r}258_narrow",
+   "count": null,
+   "sinks": null,
+   "state": "CLOSED masters (182 slice<->slice face landings, plan 7811217d7)",
+   "wh": null
+  }
+ ],
+ "regions": [
+  {
+   "name": "r_fw",
+   "leaves": "face landings (W half), pin regs, frly launch",
+   "root_sinks": "landing-tile clock pins + ~4k parent pin/landing flops (strip 259 x 1296; root at strip centre, <= 650 um)"
+  },
+  {
+   "name": "r_fe",
+   "leaves": "face landings (E half), pin regs, frly launch",
+   "root_sinks": "as r_fw"
+  },
+  {
+   "name": "r_st0..7",
+   "leaves": "1 stnrgc each",
+   "root_sinks": "1 leaf clock pin + its landing halves (stnent record: 1,129 landing flops total)"
+  },
+  {
+   "name": "r_stm",
+   "leaves": "stream + tload",
+   "root_sinks": "2 leaf clock pins + landing halves"
+  },
+  {
+   "name": "r_ctl",
+   "leaves": "ctl",
+   "root_sinks": "1 leaf pin + landing halves"
+  },
+  {
+   "name": "r_sc",
+   "leaves": "sc",
+   "root_sinks": "1 leaf pin + landing halves"
+  },
+  {
+   "name": "r_su",
+   "leaves": "suvm, red, 8 lrly, 8 lane_h, 24 SFU",
+   "root_sinks": "42 leaf clock pins (no soft parent flops); H-tree from the centre, parent-compensated entries; judged per linked pair (lrly<->suvm, lrly<->lane_h, lane_h<->SFU) at TT/FF <= 80"
+  },
+  {
+   "name": "r_tap",
+   "leaves": "tap",
+   "root_sinks": "1 leaf pin + landing halves"
+  },
+  {
+   "name": "r_hc0..3",
+   "leaves": "xhead + 8 xs_leaf each",
+   "root_sinks": "9 leaf pins + landing halves; column 486 x 432"
+  },
+  {
+   "name": "frly hops",
+   "leaves": "frly stations",
+   "root_sinks": "forwarded clock with the data (neighbour-relative), landed where consumed"
+  }
+ ],
+ "floorplan": {
+  "r_fw": {
+   "rect": [
+    0,
+    0,
+    259.2,
+    1296.0
+   ],
+   "what": "dn face strip: 91/2 face landings (LAND8 + narrow pairs) of this master, pin registers, pass-lane launch/landing halves, rst_n face landing",
+   "w": 259.2,
+   "h": 1296.0,
+   "centre": [
+    129.6,
+    648.0
+   ]
+  },
+  "r_fe": {
+   "rect": [
+    2203.2,
+    0,
+    2462.4,
+    1296.0
+   ],
+   "what": "up face strip: the other face landings, pin registers, pass-lane halves",
+   "w": 259.2,
+   "h": 1296.0,
+   "centre": [
+    2332.8,
+    648.0
+   ]
+  },
+  "r_ch": {
+   "rect": [
+    259.2,
+    864.0,
+    2203.2,
+    1296.0
+   ],
+   "what": "pass channel (std cells only): forwarded W<->E pass lanes st x2, ch x2, hr, cmd, sc x2, ag, treq (frly stations every <= 405 um)",
+   "w": 1944.0,
+   "h": 432.0,
+   "centre": [
+    1231.2,
+    1080.0
+   ]
+  },
+  "r_st": {
+   "rect": [
+    302.4,
+    43.2,
+    1188.0,
+    540.0
+   ],
+   "what": "station: 8 stnrgc leaves 2x4 (stnent geometry 885.6 x 496.8), regions r_st0..r_st7, rs_s from the S face directly above",
+   "w": 885.6,
+   "h": 496.8,
+   "centre": [
+    745.2,
+    291.6
+   ]
+  },
+  "r_stm": {
+   "rect": [
+    1252.8,
+    43.2,
+    1987.2,
+    453.6
+   ],
+   "what": "stream tile + tload tile (one region: tload joins the stream table-write port)",
+   "w": 734.4,
+   "h": 410.4,
+   "centre": [
+    1620.0,
+    248.4
+   ]
+  },
+  "r_ctl": {
+   "rect": [
+    1252.8,
+    496.8,
+    1641.6,
+    820.8
+   ],
+   "what": "ctl leaf (decode, VM write merge, own AR/D2D words, gather, amax, status)",
+   "w": 388.8,
+   "h": 324.0,
+   "centre": [
+    1447.2,
+    658.8
+   ]
+  },
+  "r_sc": {
+   "rect": [
+    1684.8,
+    496.8,
+    1987.2,
+    820.8
+   ],
+   "what": "scalar leaf (psum / RB / argmax tree)",
+   "w": 302.4,
+   "h": 324.0,
+   "centre": [
+    1836.0,
+    658.8
+   ]
+  },
+  "r_su": {
+   "rect": [
+    345.6,
+    1296.0,
+    2116.8,
+    1987.2
+   ],
+   "what": "SU block 1771.2 x 691.2: 2 rows x (2 lane cells | centre 561.6 | 2 lane cells); centre = suvm + red; lane cell 302.4 x 345.6 = lane_h + exp/rcp/rsq + its lrly (lrly at the path midpoint: every hop <= 405 um)",
+   "w": 1771.2,
+   "h": 691.2,
+   "centre": [
+    1231.2,
+    1641.6
+   ]
+  },
+  "r_vc": {
+   "rect": [
+    2116.8,
+    1296.0,
+    2203.2,
+    2160.0
+   ],
+   "what": "N->S corridor E (std cells only, 86.4 um): forwarded cw_s2..3 + rs_n relays",
+   "w": 86.4,
+   "h": 864.0,
+   "centre": [
+    2160.0,
+    1728.0
+   ]
+  },
+  "r_vc2": {
+   "rect": [
+    259.2,
+    1296.0,
+    345.6,
+    2160.0
+   ],
+   "what": "N->S corridor W (86.4 um): forwarded cw_s0..1 relays",
+   "w": 86.4,
+   "h": 864.0,
+   "centre": [
+    302.4,
+    1728.0
+   ]
+  },
+  "r_tap": {
+   "rect": [
+    907.2,
+    1987.2,
+    1555.2,
+    2160.0
+   ],
+   "what": "tap leaf 648 x 172.8 (pin-bound: 6,281 pins at 3.8/um) under the head band centre",
+   "w": 648.0,
+   "h": 172.8,
+   "centre": [
+    1231.2,
+    2073.6
+   ]
+  },
+  "r_hc": {
+   "rect": [
+    259.2,
+    2160.0,
+    2203.2,
+    2592.0
+   ],
+   "what": "head band: 4 column regions r_hc0..3 (486 x 432): 8 xs_leaf 2x4 (259.2 x 276.5) + xhead leaf 216 x 432 (pin-bound); cw_n0..3 straight up to the N face",
+   "w": 1944.0,
+   "h": 432.0,
+   "centre": [
+    1231.2,
+    2376.0
+   ]
+  }
+ },
+ "crossings": [
+  {
+   "name": "st_up pass",
+   "src": "r_fw",
+   "dst": "r_fe",
+   "bits": 1088,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "pass",
+   "note": "stream toward E5; FWD main: the stream tile only TAPS (landed copy) and INSERTS (merge at the out face); THRU fallback +6",
+   "manhattan_um": 2203.2,
+   "reach_ok": true
+  },
+  {
+   "name": "st_dn pass",
+   "src": "r_fe",
+   "dst": "r_fw",
+   "bits": 1088,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "pass",
+   "note": "",
+   "manhattan_um": 2203.2,
+   "reach_ok": true
+  },
+  {
+   "name": "ch_up (outbound AR+D2D) pass",
+   "src": "r_fe",
+   "dst": "r_fw",
+   "bits": 1095,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "pass",
+   "note": "merge of own words at the out face (priority as qfd_dv_slice2: pass word wins, collision = sticky fault)",
+   "manhattan_um": 2203.2,
+   "reach_ok": true
+  },
+  {
+   "name": "ch_dn (return AR+D2D) pass",
+   "src": "r_fw",
+   "dst": "r_fe",
+   "bits": 1038,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "pass",
+   "note": "",
+   "manhattan_um": 2203.2,
+   "reach_ok": true
+  },
+  {
+   "name": "hr pass",
+   "src": "r_fw",
+   "dst": "r_fe",
+   "bits": 453,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "pass",
+   "note": "pure pass; heads tap a landed copy",
+   "manhattan_um": 2203.2,
+   "reach_ok": true
+  },
+  {
+   "name": "cmd pass (SETID +1 at the out face)",
+   "src": "r_fw",
+   "dst": "r_fe",
+   "bits": 116,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "pass",
+   "note": "the out-face frly keeps a kept sid copy (1 edge as today: cmd_o is its own register)",
+   "manhattan_um": 2203.2,
+   "reach_ok": true
+  },
+  {
+   "name": "sc up/dn pass",
+   "src": "r_fw",
+   "dst": "r_fe",
+   "bits": 96,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "pass",
+   "note": "scalar ring pass + insert + tap: pass at the face, insert/tap landed to/from r_sc",
+   "manhattan_um": 2203.2,
+   "reach_ok": true
+  },
+  {
+   "name": "ag OR chain",
+   "src": "r_fe",
+   "dst": "r_fw",
+   "bits": 10,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "pass",
+   "note": "status OR: own term ORed at the out face (landed from r_ctl)",
+   "manhattan_um": 2203.2,
+   "reach_ok": true
+  },
+  {
+   "name": "treq row hop",
+   "src": "r_fw",
+   "dst": "r_fe",
+   "bits": 9,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "pass",
+   "note": "",
+   "manhattan_um": 2203.2,
+   "reach_ok": true
+  },
+  {
+   "name": "cmd tap -> ctl",
+   "src": "r_fw",
+   "dst": "r_ctl",
+   "bits": 116,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "tap",
+   "note": "",
+   "manhattan_um": 1328.4,
+   "reach_ok": true
+  },
+  {
+   "name": "cmd fields -> stnrgc / sc / stream / suvm (via ctl)",
+   "src": "r_ctl",
+   "dst": "r_st,r_sc,r_stm,r_su",
+   "bits": 480,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "tap",
+   "note": "decoded configs; stnent already lands cfg per region (+3 r1..7, record 3fb182a3d)",
+   "manhattan_um": 1069.2,
+   "reach_ok": true
+  },
+  {
+   "name": "st taps -> stream",
+   "src": "r_fw,r_fe",
+   "dst": "r_stm",
+   "bits": 2176,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "tap",
+   "note": "",
+   "manhattan_um": 972.0,
+   "reach_ok": true
+  },
+  {
+   "name": "stream inserts -> out faces",
+   "src": "r_stm",
+   "dst": "r_fw,r_fe",
+   "bits": 2176,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "insert",
+   "note": "",
+   "manhattan_um": 972.0,
+   "reach_ok": true
+  },
+  {
+   "name": "xw (SU x write) -> stream",
+   "src": "r_su",
+   "dst": "r_stm",
+   "bits": 456,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "insert",
+   "note": "",
+   "manhattan_um": 1836.0,
+   "reach_ok": true
+  },
+  {
+   "name": "stream/tload table write -> VM",
+   "src": "r_stm",
+   "dst": "r_su",
+   "bits": 1051,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "table",
+   "note": "static exclusive table-write window (f16_calr_edges)",
+   "manhattan_um": 1836.0,
+   "reach_ok": true
+  },
+  {
+   "name": "xt (x beat) -> tap",
+   "src": "r_stm",
+   "dst": "r_tap",
+   "bits": 1050,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "x",
+   "note": "1024 BF16 bits; the {bf16,16h0} expansion moves into the tap leaf",
+   "manhattan_um": 2268.0,
+   "reach_ok": true
+  },
+  {
+   "name": "hr tap -> tap/heads",
+   "src": "r_fw",
+   "dst": "r_tap",
+   "bits": 453,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "x",
+   "note": "",
+   "manhattan_um": 2527.2,
+   "reach_ok": true
+  },
+  {
+   "name": "tap -> xhead columns",
+   "src": "r_tap",
+   "dst": "r_hc0..3",
+   "bits": 4400,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "x",
+   "note": "per column ~1,100 b (fill words + ctl); estimate from tap 6,281 ports",
+   "manhattan_um": 302.4,
+   "reach_ok": true
+  },
+  {
+   "name": "cw_n0..3 -> N face",
+   "src": "r_hc0..3",
+   "dst": "N face",
+   "bits": 2064,
+   "kind": "LOCAL",
+   "edges": 0,
+   "path": "x",
+   "note": "xhead output flops beside the N face",
+   "manhattan_um": 216.0,
+   "reach_ok": true
+  },
+  {
+   "name": "cw_s0..3 -> S face",
+   "src": "r_hc0..3",
+   "dst": "S face",
+   "bits": 2064,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "x",
+   "note": "2.2 mm N->S corridor r_vc (PARTITION.md 10-18 already owed +2-3 per x delivery)",
+   "manhattan_um": 2376.0,
+   "reach_ok": true
+  },
+  {
+   "name": "rs_s -> station",
+   "src": "S face",
+   "dst": "r_st0..7",
+   "bits": 1028,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "mv",
+   "note": "stnent: r0 lands, regions 1..7 +3 (already priced by QW-SLICE4)",
+   "manhattan_um": 777.6,
+   "reach_ok": true
+  },
+  {
+   "name": "rs_n -> station",
+   "src": "N face",
+   "dst": "r_st",
+   "bits": 1028,
+   "kind": "FWD",
+   "edges": 3,
+   "path": "mv",
+   "note": "2.2 mm corridor; aligned with rs_s at the station (pad rs_s +3 or schedule)",
+   "manhattan_um": 2786.4,
+   "reach_ok": true
+  },
+  {
+   "name": "l9 in/out (neighbour L9 word)",
+   "src": "r_fw",
+   "dst": "r_st",
+   "bits": 1028,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "mv",
+   "note": "",
+   "manhattan_um": 972.0,
+   "reach_ok": true
+  },
+  {
+   "name": "bt_q (BTAB -> station)",
+   "src": "r_su",
+   "dst": "r_st0..7",
+   "bits": 266,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "mv",
+   "note": "stnent presents bt_q per region at +3 (same landing, counted once)",
+   "manhattan_um": 1836.0,
+   "reach_ok": true
+  },
+  {
+   "name": "station results r_v/r_idx/r_last/r_d -> ctl",
+   "src": "r_st",
+   "dst": "r_ctl",
+   "bits": 522,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "mv",
+   "note": "to the VM write merge / own AR word / amax",
+   "manhattan_um": 1069.2,
+   "reach_ok": true
+  },
+  {
+   "name": "ctl -> VM w16 / w1 writes",
+   "src": "r_ctl",
+   "dst": "r_su",
+   "bits": 594,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "mv",
+   "note": "",
+   "manhattan_um": 1198.8,
+   "reach_ok": true
+  },
+  {
+   "name": "ch return tap -> ctl (AR/D2D land, gather)",
+   "src": "r_fw",
+   "dst": "r_ctl",
+   "bits": 1038,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "ar",
+   "note": "",
+   "manhattan_um": 1328.4,
+   "reach_ok": true
+  },
+  {
+   "name": "ctl own AR/D2D words -> out face merge",
+   "src": "r_ctl",
+   "dst": "r_fe",
+   "bits": 1095,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "ar",
+   "note": "",
+   "manhattan_um": 896.4,
+   "reach_ok": true
+  },
+  {
+   "name": "SU q/kv own D2D words -> ctl",
+   "src": "r_su",
+   "dst": "r_ctl",
+   "bits": 912,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "ar",
+   "note": "",
+   "manhattan_um": 1198.8,
+   "reach_ok": true
+  },
+  {
+   "name": "red psum -> sc / VM (red_we/addr/data)",
+   "src": "r_su",
+   "dst": "r_sc",
+   "bits": 57,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "norm",
+   "note": "",
+   "manhattan_um": 1587.6,
+   "reach_ok": true
+  },
+  {
+   "name": "SU RB scalar -> sc",
+   "src": "r_su",
+   "dst": "r_sc",
+   "bits": 33,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "norm",
+   "note": "",
+   "manhattan_um": 1587.6,
+   "reach_ok": true
+  },
+  {
+   "name": "sc w1 (RB tap / root total) -> VM",
+   "src": "r_sc",
+   "dst": "r_su",
+   "bits": 57,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "norm",
+   "note": "",
+   "manhattan_um": 1587.6,
+   "reach_ok": true
+  },
+  {
+   "name": "sc taps/inserts <-> faces",
+   "src": "r_fw,r_fe",
+   "dst": "r_sc",
+   "bits": 192,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "norm",
+   "note": "",
+   "manhattan_um": 1717.2,
+   "reach_ok": true
+  },
+  {
+   "name": "amax <-> sc (am_v/idx/val/u)",
+   "src": "r_ctl",
+   "dst": "r_sc",
+   "bits": 119,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "amax",
+   "note": "",
+   "manhattan_um": 388.8,
+   "reach_ok": true
+  },
+  {
+   "name": "SU issue (p_re/p_idx, su_go) + progress",
+   "src": "r_ctl",
+   "dst": "r_su",
+   "bits": 61,
+   "kind": "LAND",
+   "edges": 3,
+   "path": "su",
+   "note": "",
+   "manhattan_um": 1198.8,
+   "reach_ok": true
+  },
+  {
+   "name": "lrly <-> suvm (RD relay stages)",
+   "src": "r_su",
+   "dst": "r_su",
+   "bits": 4800,
+   "kind": "LOCAL",
+   "edges": 0,
+   "path": "su",
+   "note": "inside r_su: the existing RD 2 relay stages ARE the reach stages (centre <= ~650 um)",
+   "manhattan_um": 0.0,
+   "reach_ok": true
+  },
+  {
+   "name": "lrly <-> lane group",
+   "src": "r_su",
+   "dst": "r_su",
+   "bits": 8512,
+   "kind": "LOCAL",
+   "edges": 0,
+   "path": "su",
+   "note": "lane_h ML 1 / RD 2 unchanged (closed lane_h binds)",
+   "manhattan_um": 0.0,
+   "reach_ok": true
+  },
+  {
+   "name": "faults / status (stn, su, vm, sc, stm, tld, hd, port)",
+   "src": "all",
+   "dst": "r_ctl",
+   "bits": 8,
+   "kind": "LOOSE",
+   "edges": 0,
+   "path": "status",
+   "note": "sticky; lag <= 6 edges/hop, never a scheduled value",
+   "manhattan_um": null,
+   "reach_ok": true
+  },
+  {
+   "name": "reset",
+   "src": "rst_n face landing",
+   "dst": "every region",
+   "bits": 1,
+   "kind": "RESET",
+   "edges": 0,
+   "path": "reset",
+   "note": "lp reset runs (1-bit plain hops <= 405 um), per-region depth; release +4..+8 (boot only)",
+   "manhattan_um": null,
+   "reach_ok": true
+  }
+ ],
+ "cuts": [
+  {
+   "cut": "W<->E pass channel (vertical cut, x mid)",
+   "bits": 6088,
+   "tracks": 11756,
+   "note": "pass lanes + the ctl own-word lane to the out face (taps read the pass lanes in place); channel 432 um on M4+M6 + M6 over the station row",
+   "ratio": 0.518,
+   "ok": true
+  },
+  {
+   "cut": "N->S corridor (horizontal cut through r_vc + over the SU block on M7)",
+   "bits": 3092,
+   "tracks": 9009,
+   "note": "two 86.4-um std-cell corridors beside the SU block + M7 over 1/4 of its width",
+   "ratio": 0.343,
+   "ok": true
+  },
+  {
+   "cut": "head band / SU block boundary (y 2160)",
+   "bits": 7945,
+   "tracks": 35437,
+   "note": "tap -> columns, hr copy, cw_s and rs_n corridors leave downward",
+   "ratio": 0.224,
+   "ok": true
+  },
+  {
+   "cut": "SU block <-> south band (y 1339, over the pass channel)",
+   "bits": 3967,
+   "tracks": 28444,
+   "note": "crossings of r_su leave its S face over half its width",
+   "ratio": 0.139,
+   "ok": true
+  },
+  {
+   "cut": "W (or E) face pins",
+   "bits": 5884,
+   "tracks": 47250,
+   "note": "pins on M4 + M6 over 1,296 um (pin rule <= 6/um: 5884/1296 = 4.5/um)",
+   "ratio": 0.125,
+   "ok": true
+  }
+ ],
+ "price": {
+  "rule": "landing E = K = 2: +3 edges; forwarded W<->E / N->S lane (2.2-2.46 mm, ~6 half-cycle hops <= 405 um) + far-end landing: +3",
+  "pass_chain_edges_per_slice_hop": 3,
+  "pass_chain_note": "physical floor: the flat slice crossed 2.46 mm pin register -> pin register in ONE edge (1,491 stages > 500 um in the gate); in addition to the 7811217d7 face landing (+3/hop, already priced) unless the in-slice forwarded lane continues the sender's ck_s and lands once at the receiver face (then the two merge: +3 total) -- kit decision",
+  "serial_passes_per_layer": {
+   "st": 2,
+   "ch": 2,
+   "sc": 4
+  },
+  "hops_per_pass": 10,
+  "pass_cycles_per_layer": 240,
+  "tap_insert_cycles_per_layer": 87,
+  "taps": {
+   "x": 15,
+   "ar": 9,
+   "mv": 9,
+   "norm": 9,
+   "table": 0,
+   "su": 3
+  },
+  "su_lane_path_cycles": 0,
+  "su_lane_note": "lanes stay in r_su: lane_h ML 1 / RD 2 unchanged (closed lane_h binds). FALLBACK (if r_su child-pair spread > 80): lane groups in own regions, lrly->suvm return landed: +3 per VM read round trip -> lane_h re-hardened at RD 2 + 3 (ML +3), ~+3 x SU ops/layer",
+  "station_cycles": "stnent record: regions 1..7 +3 vs r0, reset +4 (QW-SLICE4, included in mv)",
+  "added_cycles_per_layer": 327,
+  "layers": 36,
+  "added_cycles_per_token": 11772,
+  "added_us_per_token": 9.81,
+  "token_us_ref": 194.5,
+  "est_rate_loss_pct": 5.04,
+  "thru_fallback": "chains THROUGH the core tiles (stream t2 tile as is, ch merge in ctl): +6 per slice hop on st/ch/sc -> pass cycles x2",
+  "compiler": "NOTICE lanes/QW-GEN3.md: exact per-op offsets come from the lp records of the kits; the per-layer composition here is the plan bound"
+ },
+ "layer_contract": {
+  "decision": "ONE cluster level (coordinator 0gs(c), PARTITION.md 10-18 s7): children capped at M5, slice signals M2-M7, PG M7",
+  "consequence": "the stnent CLUSTER (PG M7, straps M8) cannot nest under a hardened slice: its 8 stnrgc leaves + its lp regions / landings (spec tools/landed_parent/specs/qfd_dv_stn_ent.json) are ABSORBED into the slice parent; stnent stays the proof vehicle of that sub-arrangement. Likewise lane groups = lane_h + 3 SFU leaves directly (no qfd_dv_su_lane cluster); heads = xhead leaf + 8 xs_leaf per column (no heads_w130 cluster).",
+  "alternative": "die-placed wires-only slice parent folded by the GEN (KV-PVW qkd_pvw_die_t precedent, owner 0je): stnent / lane / column clusters as die elements; needs a coordinator decision; same crossings and price"
+ },
+ "lessons": [
+  "stnent gate3 (QW-SLICE4 @805ddb993) FAIL clock_rule: regions r1..r7 = 122 landing-read sinks each, TT pin-flop spread 95-234 ps: the read halves sat away from the region clock entry. Rule for every region here: landing read halves FENCED beside the reader leaf, the region entry beside that leaf+halves mass (<= ~150 um), checked per region at the first gate image",
+  "stnentb gate4 FAIL cts_run (fenced halves, 151.2 channel): fences must leave legal rows (DPL) -- size fences from the record flop count x 1.6"
+ ],
+ "build_steps": [
+  "1 RTL: qfd_dv_s5_flat = wires-only flat parent (tools/qwen_dv/gen_slice5_flat.py) with leaves suvm, lrly x8, red, sc, ctl, xhead x4, tap, frly lanes + the closed leaves; lockstep vs qfd_dv_slice2 #(SU_LT 1, HD_W130 1, MU_NU 4, PRIVATE_CALR 1) at 0 offset (Verilator 5.050)",
+  "2 lp.py spec (regions above; schedule reference for the ctl <-> SU / sc loops, ref_params = chain relay depths) -> qfd_dv_s5_lp + record (compiler offsets) + lockstep MUT0 PASS / MUT1,2,4 FAIL, audit PASS / unland FAIL",
+  "3 new leaf kits (non-critical: gate + submit main + fallback in parallel): suvm, lrly, red, sc, ctl, xhead, tap, frly",
+  "4 slice kits qfd_dv_slice2_w5 / _e5 (main, this floorplan) + _w5b / _e5b (fallback: r_su split into 2 lane-column regions with landed lrly returns + lane_h RD+3 re-harden, wider 388.8 pass channel) with stand-ins (labelled) for stream / tload / xs_leaf m5 until closed; --cts --remote auto",
+  "5 182 face landings (7811217d7) placed in r_fw / r_fe; ck_s_wi / ck_s_ei inputs per face group"
+ ]
+}
