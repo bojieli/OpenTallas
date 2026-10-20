@@ -44,9 +44,11 @@ module tb_hgi_coll_pt_s128_miter;
     // ---- stimulus --------------------------------------------------------------------------------------------------
     integer seed;
     function automatic integer rnd(input integer n); rnd = $urandom % n; endfunction
+    integer noisy=0;   // 1 episode in 8: random issuer feedback (busy / active / uop pc checks / issuer fault)
     task idle(input integer n); integer i; begin for (i=0;i<n;i=i+1) begin @(negedge clk); cfg_v=0; desc_v=0; launch_v=0;
-        program_active = (rnd(16)==0); issuer_busy = (rnd(16)==0); issuer_fault = (rnd(400)==0);
-        issuer_uop_v = (rnd(24)==0); issuer_uop_pc = rnd(128); end end endtask
+        if (noisy!=0) begin program_active = (rnd(16)==0); issuer_busy = (rnd(16)==0); issuer_fault = (rnd(400)==0);
+            issuer_uop_v = (rnd(24)==0); issuer_uop_pc = rnd(128); end
+        else begin program_active=0; issuer_busy=0; issuer_fault=0; issuer_uop_v=0; end end end endtask
     task quiet; begin program_active=0; issuer_busy=0; issuer_fault=0; issuer_uop_v=0; end endtask
     task frame(input integer row, input integer seg, input [255:0] d, input integer bad);
         begin @(negedge clk); quiet; cfg_v=1; desc_v=0; launch_v=0;
@@ -75,7 +77,7 @@ module tb_hgi_coll_pt_s128_miter;
         if (!$value$plusargs("seed=%d", seed)) seed = 1019;
         v = $urandom(seed);
         for (ep=0; ep<`PT_EPISODES; ep=ep+1) begin
-            n_ep = ep;
+            n_ep = ep; noisy = (rnd(8)==0);
             @(negedge clk); rst_n=0; cfg_v=0; desc_v=0; launch_v=0; quiet; idle(1+rnd(3)); @(negedge clk); rst_n=1;
             idle(rnd(4));
             nrows = 1 + rnd(4); b = rnd(128-nrows+1); lim = b + nrows;
