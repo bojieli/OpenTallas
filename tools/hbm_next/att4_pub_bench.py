@@ -13,7 +13,12 @@ Golden per node = csum8 pairwise tree of the run's chunk sums (tools/hgi_sim/lib
 Checks: every requested node is published exactly once, 16 words in order, data bit-exact, pub_tag = the run's last
 tag, pub_out_lane / pub_out_slot = the request, no fault.  Verilator 5.050 (the closure daemon's).
 
-  att4_pub_bench.py run --work DIR --out R.json [--rounds 24] [--seed 1019] [--mut 0|1..5]
+  att4_pub_bench.py run --work DIR --out R.json [--rounds 24] [--seed 1019] [--mut 0|1..5] [--top spvm|scl]
+
+--top scl (HNEXT.ATT4 cluster-leaf successor, claude/hnx-att4-leaf-1020): the same stimulus drives the two-leaf cluster
+ot_hnx_att4_scl (tb_hnx_att4_scl) next to the flat ot_hnx_att4_spvm; the cluster's streams are checked against the
+golden AND every output is compared in lockstep with the flat tile 3 edges earlier (LOCKSTEP_MISMATCH fails the run).
+--mut then drives the cluster only (1..6 core mutants, 7 S->N seam late, 8 S reset run long, 9 wrong publication half).
 """
 from __future__ import annotations
 
@@ -41,6 +46,9 @@ SRC = ["physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43/hnx_sram_1r1w_12
        "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/hbm_next/att/ot_hnx_att4_smerge.sv", "rtl/hbm_next/att/ot_hnx_att4_spvm.sv",
        "rtl/hbm_next/att/tb_hnx_att4_pub.sv"]
+SRC_SCL = [x for x in SRC if not x.endswith("tb_hnx_att4_pub.sv")] + [
+    "rtl/hbm_next/att/ot_hnx_att4_smerge_h.sv", "rtl/hbm_next/att/ot_hnx_att4_sleaf.sv", "rtl/hbm_next/att/tb_hnx_att4_scl.sv"]
+TOP = "spvm"
 SAFE_RESET = os.environ.get("HNX_ATT_SAFE_RESET") == "1"
 VERILATOR = os.environ.get("VERILATOR") or next(
     (c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)),
@@ -135,8 +143,9 @@ def write_stim(recs, path):
 
 
 def build(work, mut):
-    obj = work / (f"obj_pub_m{mut}" + ("" if NL == 4 else f"_nl{NL}"))
-    exe = obj / "Vtb_hnx_att4_pub"
+    tb = "tb_hnx_att4_scl" if TOP == "scl" else "tb_hnx_att4_pub"
+    obj = work / (f"obj_pub_m{mut}" + ("" if NL == 4 else f"_nl{NL}") + ("_scl" if TOP == "scl" else ""))
+    exe = obj / f"V{tb}"
     if SAFE_RESET:
         obj = Path(str(obj) + "_safe")
         exe = obj / exe.name
@@ -144,7 +153,7 @@ def build(work, mut):
         return exe
     cmd = [VERILATOR] + (["-DOT_HNX_ATT_SAFE_RESET", "-DOT_FP_DATA_NORST"] if SAFE_RESET else []) + ["--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
            "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module",
-           "tb_hnx_att4_pub", f"-GMUT={mut}", f"-GNL={NL}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
+           tb, f"-GMUT={mut}", f"-GNL={NL}", "--Mdir", str(obj)] + [str(ROOT / s) for s in (SRC_SCL if TOP == "scl" else SRC)]
     for _ in range(2):                                          # one retry on a precompiled-header race
         r = subprocess.run(cmd, capture_output=True, text=True)
         (work / f"build_pub_m{mut}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
@@ -163,9 +172,11 @@ def main(argv=None):
     p.add_argument("--seed", type=int, default=1019)
     p.add_argument("--mut", type=int, default=0)
     p.add_argument("--nl", type=int, default=3, help="query lanes = SM lanes P (P3 production default 3; 4 = old P4)")
+    p.add_argument("--top", choices=["spvm", "scl"], default="spvm", help="scl = two-leaf cluster + lockstep vs spvm")
     a = ap.parse_args(argv)
-    global NL
+    global NL, TOP
     NL = a.nl
+    TOP = a.top
     if not 3 <= NL <= 4:
         ap.error("--nl 3..4 (spvm: 2 lanes N face + NL - 2 S face)")
     work = Path(a.work)
@@ -205,11 +216,14 @@ def main(argv=None):
                 bad.append(dict(exp={k: e[k] for k in ("round", "lane", "slot", "tag", "n", "req")},
                                 got={k: g.get(k) for k in ("lane", "slot", "tag", "bad")}))
     fault = "FAULT" in out
-    ok = r.returncode == 0 and not fault and mism == 0 and len(streams) == len(exp) and len(exp) > 0
+    lock_mism = sum(1 for ln in out.splitlines() if ln.startswith("LOCKSTEP_MISMATCH"))
+    lock_ok = TOP != "scl" or ("LOCKSTEP lag=3 mismatches=0" in out and lock_mism == 0)
+    ok = r.returncode == 0 and not fault and mism == 0 and len(streams) == len(exp) and len(exp) > 0 and lock_ok
     nrun = {k: sum(1 for x in nodes if x["n"] == k) for k in range(1, 5)}
     res = dict(bench="att4_pub", nl=NL, mut=a.mut, seed=a.seed, rounds=a.rounds, nodes=len(exp), streams=len(streams),
                node_mismatches=mism, word_mismatches=word_mism, fault=fault, rc=r.returncode, runs_by_chunks=nrun,
-               verilator=VERILATOR, safe_reset=SAFE_RESET, examples=bad, pass_=ok)
+               verilator=VERILATOR, safe_reset=SAFE_RESET, top=TOP, lockstep_mismatch_lines=lock_mism,
+               lockstep_ok=lock_ok, examples=bad, pass_=ok)
     Path(a.out).write_text(json.dumps(res, indent=1))
     print(("PASS" if ok else "FAIL") + " HNX_ATT4_PUB " + json.dumps({k: v for k, v in res.items() if k != "examples"}))
     if not ok and bad:

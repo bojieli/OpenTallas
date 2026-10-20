@@ -1,0 +1,157 @@
+{
+ "_draft": "HNEXT.ATT4 cluster parent, variant A. Copy to physical/ref_tile/hnx_rp3a3_scl_a/spec.json and run ref_tile gen once both leaf views exist (leaf --cts gates -> routes -> views).",
+ "name": "hnx_rp3a3_scl_a",
+ "top": "ot_hnx_att4_scl",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_next/att/ot_hnx_att4_sleaf.sv"
+ ],
+ "params": {
+  "NL": 3
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 432.0,
+  "h": 648.0,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/hnx_rp3a3_sls_a/views/ot_hnx_att4_sleaf_s",
+   "count": 1,
+   "inst": "u_s",
+   "at": [
+    0.0,
+    0.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hnx_rp3a3_sln_a/views/ot_hnx_att4_sleaf_n",
+   "count": 1,
+   "inst": "u_n",
+   "at": [
+    0.0,
+    345.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "rst_n",
+   "ev",
+   "sum_lo",
+   "tag_lo",
+   "pub_start",
+   "pub_lane",
+   "pub_slot"
+  ],
+  "S": [
+   "sum_hi",
+   "tag_hi",
+   "pub_v",
+   "pub_data",
+   "pub_word",
+   "pub_out_slot",
+   "pub_out_lane",
+   "pub_tag",
+   "fault"
+  ],
+  "W": [
+   "clk"
+  ]
+ },
+ "pin_ranges": {
+  "sum_lo": [
+   8,
+   380
+  ],
+  "tag_lo": [
+   382,
+   406
+  ],
+  "ev": [
+   408,
+   412
+  ],
+  "pub_start": [
+   413,
+   415
+  ],
+  "pub_lane": [
+   416,
+   419
+  ],
+  "pub_slot": [
+   420,
+   424
+  ],
+  "rst_n": [
+   426,
+   429
+  ],
+  "sum_hi": [
+   8,
+   300
+  ],
+  "tag_hi": [
+   302,
+   326
+  ],
+  "pub_data": [
+   328,
+   376
+  ],
+  "pub_word": [
+   378,
+   384
+  ],
+  "pub_out_slot": [
+   386,
+   391
+  ],
+  "pub_out_lane": [
+   392,
+   396
+  ],
+  "pub_tag": [
+   398,
+   418
+  ],
+  "pub_v": [
+   420,
+   422
+  ],
+  "fault": [
+   424,
+   427
+  ],
+  "clk": [
+   318.0,
+   330.0
+  ]
+ },
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "wires-only parent: every parent pin lands in a leaf pin register"
+ },
+ "structural_change": "cluster-leaf successor of hnx_rp3a3_spvm_safe_nf: two word-half leaves (u_n N, u_s S) with identical control replicas, registered seam across a 43.2 um parent band; outputs +3 edges vs spvm (compiler)"
+}
