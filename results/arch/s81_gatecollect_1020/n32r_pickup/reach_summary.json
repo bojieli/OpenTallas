@@ -1,0 +1,1457 @@
+{
+  "scope": "Native CTS pin averageXY, full unrestricted combinational input-to-output cones, sequential/SRAM/port endpoints; conservative all-input combinational connectivity. Manhattan lower bound, NOT routed detour or final PG qualification",
+  "status": "FAIL",
+  "role_errors": [],
+  "actual_liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib",
+      "sha256": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_tt.lib",
+      "sha256": "ff49e94118c4f96fde1763f3a755ba12b427c72f82d8e9f97737b98ce19aab08"
+    }
+  ],
+  "terms": 56687,
+  "sources": 6211,
+  "pairs": 12937,
+  "categories": {
+    "ff->port": 1246,
+    "ff->ff": 7088,
+    "ff->macro": 1388,
+    "macro->ff": 1914,
+    "port->ff": 1301
+  },
+  "max_um": 416.893,
+  "over405": 2,
+  "worst": [
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.st[0]$_DFF_PN0_/RESETN",
+      "um": 416.893,
+      "kind": "ff->ff",
+      "source_xy": [
+        36.142,
+        230.175
+      ],
+      "endpoint_xy": [
+        384.725,
+        298.485
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.st[1]$_DFF_PN0_/RESETN",
+      "um": 415.866,
+      "kind": "ff->ff",
+      "source_xy": [
+        36.142,
+        230.175
+      ],
+      "endpoint_xy": [
+        383.969,
+        298.214
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_srs.q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_srbank.q[2]$_DFF_PN0_/RESETN",
+      "um": 387.895,
+      "kind": "ff->ff",
+      "source_xy": [
+        36.142,
+        230.175
+      ],
+      "endpoint_xy": [
+        333.587,
+        139.725
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[339]",
+      "endpoint": "ot_prs_00561_ff/D",
+      "um": 309.183,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        240.012
+      ],
+      "endpoint_xy": [
+        289.368,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[338]",
+      "endpoint": "ot_prs_00560_ff/D",
+      "um": 307.857,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        239.82
+      ],
+      "endpoint_xy": [
+        287.694,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[337]",
+      "endpoint": "ot_prs_00558_ff/D",
+      "um": 307.827,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        239.628
+      ],
+      "endpoint_xy": [
+        288.126,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[336]",
+      "endpoint": "ot_prs_00557_ff/D",
+      "um": 307.473,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        239.436
+      ],
+      "endpoint_xy": [
+        288.234,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[335]",
+      "endpoint": "ot_prs_00556_ff/D",
+      "um": 306.363,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        239.244
+      ],
+      "endpoint_xy": [
+        287.046,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[331]",
+      "endpoint": "ot_prs_00552_ff/D",
+      "um": 305.433,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        238.476
+      ],
+      "endpoint_xy": [
+        286.614,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[333]",
+      "endpoint": "ot_prs_00554_ff/D",
+      "um": 305.331,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        238.86
+      ],
+      "endpoint_xy": [
+        286.938,
+        4.455
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[330]",
+      "endpoint": "ot_prs_00551_ff/D",
+      "um": 305.241,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        238.284
+      ],
+      "endpoint_xy": [
+        285.534,
+        2.565
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[332]",
+      "endpoint": "ot_prs_00553_ff/D",
+      "um": 304.977,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        238.668
+      ],
+      "endpoint_xy": [
+        286.506,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[334]",
+      "endpoint": "ot_prs_00555_ff/D",
+      "um": 304.497,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        239.052
+      ],
+      "endpoint_xy": [
+        286.452,
+        4.995
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[328]",
+      "endpoint": "ot_prs_00549_ff/D",
+      "um": 303.615,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        237.9
+      ],
+      "endpoint_xy": [
+        285.372,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[327]",
+      "endpoint": "ot_prs_00546_ff/D",
+      "um": 303.477,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        237.708
+      ],
+      "endpoint_xy": [
+        285.696,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sgray[2]$_DFF_PN0_/D",
+      "um": 302.798,
+      "kind": "ff->ff",
+      "source_xy": [
+        110.284,
+        2.835
+      ],
+      "endpoint_xy": [
+        174.672,
+        241.245
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[329]",
+      "endpoint": "ot_prs_00550_ff/D",
+      "um": 302.727,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        238.092
+      ],
+      "endpoint_xy": [
+        285.102,
+        4.455
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sgray[0]$_DFF_PN0_/D",
+      "um": 302.69,
+      "kind": "ff->ff",
+      "source_xy": [
+        110.284,
+        2.835
+      ],
+      "endpoint_xy": [
+        175.914,
+        239.895
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[326]",
+      "endpoint": "ot_prs_00545_ff/D",
+      "um": 302.529,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        237.516
+      ],
+      "endpoint_xy": [
+        284.13,
+        3.105
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sgray[1]$_DFF_PN0_/D",
+      "um": 302.366,
+      "kind": "ff->ff",
+      "source_xy": [
+        110.284,
+        2.835
+      ],
+      "endpoint_xy": [
+        175.05,
+        240.435
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sgray[0]$_DFF_PN0_/RESETN",
+      "um": 302.196,
+      "kind": "ff->ff",
+      "source_xy": [
+        208.996,
+        74.925
+      ],
+      "endpoint_xy": [
+        339.203,
+        246.914
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sgray[1]$_DFF_PN0_/RESETN",
+      "um": 301.657,
+      "kind": "ff->ff",
+      "source_xy": [
+        208.996,
+        74.925
+      ],
+      "endpoint_xy": [
+        338.393,
+        247.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[324]",
+      "endpoint": "ot_prs_00543_ff/D",
+      "um": 301.443,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        237.132
+      ],
+      "endpoint_xy": [
+        284.508,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[322]",
+      "endpoint": "ot_prs_00541_ff/D",
+      "um": 301.383,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        236.748
+      ],
+      "endpoint_xy": [
+        284.292,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sbin[1]$_DFF_PN0_/RESETN",
+      "um": 301.224,
+      "kind": "ff->ff",
+      "source_xy": [
+        208.996,
+        74.925
+      ],
+      "endpoint_xy": [
+        338.771,
+        246.374
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sgray[2]$_DFF_PN0_/RESETN",
+      "um": 300.954,
+      "kind": "ff->ff",
+      "source_xy": [
+        208.996,
+        74.925
+      ],
+      "endpoint_xy": [
+        337.421,
+        247.454
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[325]",
+      "endpoint": "ot_prs_00544_ff/D",
+      "um": 300.879,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        237.324
+      ],
+      "endpoint_xy": [
+        284.022,
+        4.455
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sbin[3]$_DFF_PN0_/D",
+      "um": 300.8,
+      "kind": "ff->ff",
+      "source_xy": [
+        110.284,
+        2.835
+      ],
+      "endpoint_xy": [
+        172.944,
+        240.975
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sbin[0]$_DFF_PN0_/D",
+      "um": 300.746,
+      "kind": "ff->ff",
+      "source_xy": [
+        110.284,
+        2.835
+      ],
+      "endpoint_xy": [
+        175.32,
+        238.545
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sbin[0]$_DFF_PN0_/RESETN",
+      "um": 300.307,
+      "kind": "ff->ff",
+      "source_xy": [
+        208.996,
+        74.925
+      ],
+      "endpoint_xy": [
+        338.663,
+        245.565
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[323]",
+      "endpoint": "ot_prs_00542_ff/D",
+      "um": 300.225,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        236.94
+      ],
+      "endpoint_xy": [
+        282.942,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sbin[2]$_DFF_PN0_/D",
+      "um": 300.206,
+      "kind": "ff->ff",
+      "source_xy": [
+        110.284,
+        2.835
+      ],
+      "endpoint_xy": [
+        173.43,
+        239.895
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.wd_q$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[0].u_pc.u_wd.sbin[1]$_DFF_PN0_/D",
+      "um": 299.72,
+      "kind": "ff->ff",
+      "source_xy": [
+        110.284,
+        2.835
+      ],
+      "endpoint_xy": [
+        174.024,
+        238.815
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[319]",
+      "endpoint": "ot_prs_00538_ff/D",
+      "um": 299.511,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        236.172
+      ],
+      "endpoint_xy": [
+        283.266,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[318]",
+      "endpoint": "ot_prs_00537_ff/D",
+      "um": 299.265,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        235.98
+      ],
+      "endpoint_xy": [
+        281.862,
+        2.565
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sbin[2]$_DFF_PN0_/RESETN",
+      "um": 299.119,
+      "kind": "ff->ff",
+      "source_xy": [
+        208.996,
+        74.925
+      ],
+      "endpoint_xy": [
+        336.935,
+        246.105
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_hrbank.q[0]$_DFF_PN0_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_wd.sbin[3]$_DFF_PN0_/RESETN",
+      "um": 299.118,
+      "kind": "ff->ff",
+      "source_xy": [
+        208.996,
+        74.925
+      ],
+      "endpoint_xy": [
+        336.125,
+        246.914
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[320]",
+      "endpoint": "ot_prs_00539_ff/D",
+      "um": 298.515,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        236.364
+      ],
+      "endpoint_xy": [
+        282.348,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[321]",
+      "endpoint": "ot_prs_00540_ff/D",
+      "um": 297.681,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        236.556
+      ],
+      "endpoint_xy": [
+        282.672,
+        5.535
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[316]",
+      "endpoint": "ot_prs_00534_ff/D",
+      "um": 297.585,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        235.596
+      ],
+      "endpoint_xy": [
+        281.916,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[317]",
+      "endpoint": "ot_prs_00535_ff/D",
+      "um": 297.453,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        235.788
+      ],
+      "endpoint_xy": [
+        282.132,
+        4.455
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[314]",
+      "endpoint": "ot_prs_00532_ff/D",
+      "um": 297.363,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        235.212
+      ],
+      "endpoint_xy": [
+        281.808,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[315]",
+      "endpoint": "ot_prs_00533_ff/D",
+      "um": 297.177,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        235.404
+      ],
+      "endpoint_xy": [
+        281.16,
+        3.375
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[312]",
+      "endpoint": "ot_prs_00530_ff/D",
+      "um": 295.629,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        234.828
+      ],
+      "endpoint_xy": [
+        280.728,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[313]",
+      "endpoint": "ot_prs_00531_ff/D",
+      "um": 295.551,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        235.02
+      ],
+      "endpoint_xy": [
+        280.728,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[311]",
+      "endpoint": "ot_prs_00529_ff/D",
+      "um": 294.411,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        234.636
+      ],
+      "endpoint_xy": [
+        280.512,
+        4.725
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[310]",
+      "endpoint": "ot_prs_00528_ff/D",
+      "um": 293.733,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        234.444
+      ],
+      "endpoint_xy": [
+        280.296,
+        4.995
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[308]",
+      "endpoint": "ot_prs_00526_ff/D",
+      "um": 293.619,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        234.06
+      ],
+      "endpoint_xy": [
+        279.216,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[309]",
+      "endpoint": "ot_prs_00527_ff/D",
+      "um": 293.595,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        234.252
+      ],
+      "endpoint_xy": [
+        279.81,
+        4.455
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[307]",
+      "endpoint": "ot_prs_00524_ff/D",
+      "um": 293.373,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        233.868
+      ],
+      "endpoint_xy": [
+        279.432,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[306]",
+      "endpoint": "ot_prs_00523_ff/D",
+      "um": 293.343,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        233.676
+      ],
+      "endpoint_xy": [
+        278.784,
+        3.105
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[339]",
+      "endpoint": "ot_prs_00276_ff/D",
+      "um": 291.957,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        240.012
+      ],
+      "endpoint_xy": [
+        97.722,
+        2.565
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[304]",
+      "endpoint": "ot_prs_00521_ff/D",
+      "um": 291.717,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        233.292
+      ],
+      "endpoint_xy": [
+        278.352,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[336]",
+      "endpoint": "ot_prs_00273_ff/D",
+      "um": 291.327,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        239.436
+      ],
+      "endpoint_xy": [
+        98.478,
+        3.375
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[302]",
+      "endpoint": "ot_prs_00519_ff/D",
+      "um": 291.279,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        232.908
+      ],
+      "endpoint_xy": [
+        278.028,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[338]",
+      "endpoint": "ot_prs_00275_ff/D",
+      "um": 290.901,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        239.82
+      ],
+      "endpoint_xy": [
+        98.748,
+        4.455
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[305]",
+      "endpoint": "ot_prs_00522_ff/D",
+      "um": 290.343,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        233.484
+      ],
+      "endpoint_xy": [
+        277.866,
+        4.995
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[303]",
+      "endpoint": "ot_prs_00520_ff/D",
+      "um": 290.229,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        233.1
+      ],
+      "endpoint_xy": [
+        277.056,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[301]",
+      "endpoint": "ot_prs_00518_ff/D",
+      "um": 289.791,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        232.716
+      ],
+      "endpoint_xy": [
+        277.542,
+        4.455
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[335]",
+      "endpoint": "ot_prs_00272_ff/D",
+      "um": 289.677,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        239.244
+      ],
+      "endpoint_xy": [
+        96.75,
+        3.105
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[334]",
+      "endpoint": "ot_prs_00271_ff/D",
+      "um": 289.107,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        239.052
+      ],
+      "endpoint_xy": [
+        97.182,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[298]",
+      "endpoint": "ot_prs_00515_ff/D",
+      "um": 289.053,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        232.14
+      ],
+      "endpoint_xy": [
+        275.76,
+        2.835
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[337]",
+      "endpoint": "ot_prs_00274_ff/D",
+      "um": 288.711,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        239.628
+      ],
+      "endpoint_xy": [
+        97.29,
+        4.995
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[299]",
+      "endpoint": "ot_prs_00516_ff/D",
+      "um": 288.705,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        232.332
+      ],
+      "endpoint_xy": [
+        275.76,
+        3.375
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[333]",
+      "endpoint": "ot_prs_00269_ff/D",
+      "um": 288.699,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        238.86
+      ],
+      "endpoint_xy": [
+        97.236,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[300]",
+      "endpoint": "ot_prs_00517_ff/D",
+      "um": 288.681,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        232.524
+      ],
+      "endpoint_xy": [
+        276.354,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[331]",
+      "endpoint": "ot_prs_00267_ff/D",
+      "um": 288.531,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        238.476
+      ],
+      "endpoint_xy": [
+        95.562,
+        2.295
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[329]",
+      "endpoint": "ot_prs_00265_ff/D",
+      "um": 288.039,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        238.092
+      ],
+      "endpoint_xy": [
+        96.534,
+        3.375
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[297]",
+      "endpoint": "ot_prs_00513_ff/D",
+      "um": 287.673,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        231.948
+      ],
+      "endpoint_xy": [
+        276.462,
+        4.725
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[296]",
+      "endpoint": "ot_prs_00512_ff/D",
+      "um": 287.589,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        231.756
+      ],
+      "endpoint_xy": [
+        275.76,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[295]",
+      "endpoint": "ot_prs_00511_ff/D",
+      "um": 287.559,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        231.564
+      ],
+      "endpoint_xy": [
+        275.652,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[275]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[275]",
+      "um": 287.468,
+      "kind": "ff->macro",
+      "source_xy": [
+        384.749,
+        3.105
+      ],
+      "endpoint_xy": [
+        216.012,
+        121.836
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[276]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[276]",
+      "um": 287.33,
+      "kind": "ff->macro",
+      "source_xy": [
+        385.343,
+        3.645
+      ],
+      "endpoint_xy": [
+        216.012,
+        121.644
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[332]",
+      "endpoint": "ot_prs_00268_ff/D",
+      "um": 287.319,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        238.668
+      ],
+      "endpoint_xy": [
+        95.778,
+        3.915
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[294]",
+      "endpoint": "ot_prs_00510_ff/D",
+      "um": 287.097,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        231.372
+      ],
+      "endpoint_xy": [
+        274.842,
+        3.105
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[271]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[271]",
+      "um": 286.994,
+      "kind": "ff->macro",
+      "source_xy": [
+        383.777,
+        3.375
+      ],
+      "endpoint_xy": [
+        216.012,
+        122.604
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[273]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[273]",
+      "um": 286.718,
+      "kind": "ff->macro",
+      "source_xy": [
+        384.425,
+        3.915
+      ],
+      "endpoint_xy": [
+        216.012,
+        122.22
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[268]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[268]",
+      "um": 286.436,
+      "kind": "ff->macro",
+      "source_xy": [
+        382.643,
+        3.375
+      ],
+      "endpoint_xy": [
+        216.012,
+        123.18
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[274]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[274]",
+      "um": 286.364,
+      "kind": "ff->macro",
+      "source_xy": [
+        384.803,
+        4.455
+      ],
+      "endpoint_xy": [
+        216.012,
+        122.028
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[269]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[269]",
+      "um": 286.298,
+      "kind": "ff->macro",
+      "source_xy": [
+        382.967,
+        3.645
+      ],
+      "endpoint_xy": [
+        216.012,
+        122.988
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[263]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[263]",
+      "um": 286.262,
+      "kind": "ff->macro",
+      "source_xy": [
+        381.239,
+        3.105
+      ],
+      "endpoint_xy": [
+        216.012,
+        124.14
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[327]",
+      "endpoint": "ot_prs_00263_ff/D",
+      "um": 286.197,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        237.708
+      ],
+      "endpoint_xy": [
+        94.266,
+        2.565
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[264]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[264]",
+      "um": 286.07,
+      "kind": "ff->macro",
+      "source_xy": [
+        381.509,
+        3.375
+      ],
+      "endpoint_xy": [
+        216.012,
+        123.948
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[270]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[270]",
+      "um": 285.998,
+      "kind": "ff->macro",
+      "source_xy": [
+        383.399,
+        4.185
+      ],
+      "endpoint_xy": [
+        216.012,
+        122.796
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[293]",
+      "endpoint": "ot_prs_00509_ff/D",
+      "um": 285.933,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        231.18
+      ],
+      "endpoint_xy": [
+        274.95,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[330]",
+      "endpoint": "ot_prs_00266_ff/D",
+      "um": 285.909,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        238.284
+      ],
+      "endpoint_xy": [
+        95.832,
+        4.995
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[292]",
+      "endpoint": "ot_prs_00508_ff/D",
+      "um": 285.903,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        230.988
+      ],
+      "endpoint_xy": [
+        274.572,
+        3.645
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[272]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[272]",
+      "um": 285.776,
+      "kind": "ff->macro",
+      "source_xy": [
+        383.291,
+        3.915
+      ],
+      "endpoint_xy": [
+        216.012,
+        122.412
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[267]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[267]",
+      "um": 285.548,
+      "kind": "ff->macro",
+      "source_xy": [
+        381.833,
+        3.645
+      ],
+      "endpoint_xy": [
+        216.012,
+        123.372
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[259]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[259]",
+      "um": 285.518,
+      "kind": "ff->macro",
+      "source_xy": [
+        379.997,
+        3.375
+      ],
+      "endpoint_xy": [
+        216.012,
+        124.908
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.u_q.u_mem/rd_out[290]",
+      "endpoint": "ot_prs_00506_ff/D",
+      "um": 285.411,
+      "kind": "macro->ff",
+      "source_xy": [
+        216.012,
+        230.604
+      ],
+      "endpoint_xy": [
+        274.194,
+        3.375
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[255]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[255]",
+      "um": 285.26,
+      "kind": "ff->macro",
+      "source_xy": [
+        378.701,
+        3.105
+      ],
+      "endpoint_xy": [
+        216.012,
+        125.676
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[266]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[266]",
+      "um": 285.038,
+      "kind": "ff->macro",
+      "source_xy": [
+        381.941,
+        4.455
+      ],
+      "endpoint_xy": [
+        216.012,
+        123.564
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[328]",
+      "endpoint": "ot_prs_00264_ff/D",
+      "um": 284.931,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        237.9
+      ],
+      "endpoint_xy": [
+        94.698,
+        4.455
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[326]",
+      "endpoint": "ot_prs_00262_ff/D",
+      "um": 284.925,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        237.516
+      ],
+      "endpoint_xy": [
+        94.806,
+        4.185
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[261]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[261]",
+      "um": 284.918,
+      "kind": "ff->macro",
+      "source_xy": [
+        380.591,
+        4.185
+      ],
+      "endpoint_xy": [
+        216.012,
+        124.524
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[265]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[265]",
+      "um": 284.798,
+      "kind": "ff->macro",
+      "source_xy": [
+        380.699,
+        3.645
+      ],
+      "endpoint_xy": [
+        216.012,
+        123.756
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[257]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[257]",
+      "um": 284.66,
+      "kind": "ff->macro",
+      "source_xy": [
+        379.025,
+        3.645
+      ],
+      "endpoint_xy": [
+        216.012,
+        125.292
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[1].u_pc.krd_q[252]$_DFF_P_/QN",
+      "endpoint": "u_ot_pr_core.g_pc[1].u_pc.u_r.u_mem/wd_in[252]",
+      "um": 284.486,
+      "kind": "ff->macro",
+      "source_xy": [
+        377.621,
+        3.375
+      ],
+      "endpoint_xy": [
+        216.012,
+        126.252
+      ]
+    },
+    {
+      "source": "u_ot_pr_core.g_pc[0].u_pc.u_q.u_mem/rd_out[324]",
+      "endpoint": "ot_prs_00260_ff/D",
+      "um": 284.433,
+      "kind": "macro->ff",
+      "source_xy": [
+        43.212,
+        237.132
+      ],
+      "endpoint_xy": [
+        93.888,
+        3.375
+      ]
+    }
+  ]
+}

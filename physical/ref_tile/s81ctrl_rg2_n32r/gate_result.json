@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81ctrl_rg2_n32r",
  "verdict": "WARN",
- "generated": "2026-10-20T03:09:28-0700",
- "host": "ot-agidock128",
+ "generated": "2026-10-20T04:27:45-0700",
+ "host": "ot-epyc6",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "eca3e0db709a9fda312d436a717c555343d92c06",
+  "start_commit": "aa706068968030a0a37d6811d5dca22d738476fa",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,7 +25,7 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "3a90c4f341de185c42e431da3dc09dcd7d4fcf14ae5762daa2795319969b0600",
+  "archive_sha256": "466efeab3ddc033105d155390debc450285a5afe55c2f9f2bd87818573305208",
   "manifest_sha256": "5809f920d6b840701bd57af107e4b1f0c748a8b381def79aaf2ced1c7ff7ecd0",
   "files": [
    {
@@ -75295,7 +75295,7 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 89992725,
+   "archive_bytes": 89992736,
    "unpacked_bytes": 634089472,
    "pick_gb": 22,
    "runtime_gb": 22
@@ -77363,16 +77363,16 @@
    },
    "digest": "28bdb0584ecea3535c031508dddec94843ea3d6c4762a0819f744c2dfe4bb1bc"
   },
-  "captured": "2026-10-20T02:33:54-0700",
+  "captured": "2026-10-20T03:13:49-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/s81ctrl_rg2_n32r/signoff.sdc"
   },
-  "remote_script_sha256": "a12990f9efc336f368e90062f16d827e6e6c55a1b44544fea53f9614796db271",
+  "remote_script_sha256": "e57d04d777d4b51e5c0f65de566d033bb2b73b80f0d66fbdc27a210d4cbf48f5",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81ctrl_rg2_n32r-20261020-023329",
+  "remote_host": "ot-epyc6",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81ctrl_rg2_n32r-20261020-031319",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -77820,7 +77820,7 @@
   "kind": "parent",
   "skip_incremental_repair": false,
   "rc": "0",
-  "grt_s": 994,
+  "grt_s": 1210,
   "layers": [
    {
     "layer": "M1",

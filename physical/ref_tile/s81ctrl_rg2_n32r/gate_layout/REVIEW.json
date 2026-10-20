@@ -1,0 +1,14 @@
+{
+  "reviewer": "codex S81-GATECOLLECT (delegated coordinator)",
+  "time": "2026-10-20",
+  "gate_commit": "2026-10-20T04:27:45-0700",
+  "verdict": "CHANGES",
+  "checklist": {
+    "lattice": "geometry retained, PNG viewed",
+    "std_cell_band": "full-width legal middle band + N/S pin rows",
+    "pin_spread": "clockPASS46.3/47.9 +44.6/40.9; PHYSICAL REACH FAIL2resetpairs>405,max416.893",
+    "clock_entry": "unchanged regional clocks, no timing exception",
+    "shape": "388.8x302.4 aspect1.29; GRT rc0/ovf0"
+  },
+  "blocker": "Native reset endpoints st[0,1] cross416.893um; n32s successor already submitted with reachPASS."
+}
