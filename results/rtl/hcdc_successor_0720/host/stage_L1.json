@@ -1,0 +1,29 @@
+{
+  "metric": "Complete actual-Liberty-function combinational-STAGE endpoint Manhattan L1; all ITerm and BTerm geometry actual, including macro control/data and FF asynchronous control, static constants separate categories; clocks recorded separately",
+  "pairs": 25099,
+  "over405": 0,
+  "max_L1_um": 401.943,
+  "counts_by_role": {
+    "input_port->data_next_state": 620,
+    "sequential_output->data_next_state": 15228,
+    "sequential_output->asynchronous_preset": 422,
+    "synchronous_sram_output->data_next_state": 2694,
+    "sequential_output->asynchronous_clear": 5,
+    "sequential_output->memory_data_control": 2192,
+    "synchronous_sram_output->memory_data_control": 160,
+    "sequential_output->output_port": 588,
+    "constant_function_driver->constant_sequential_input": 3190
+  },
+  "max_by_role": {
+    "input_port->data_next_state": 333.33900000000006,
+    "sequential_output->data_next_state": 358.81,
+    "sequential_output->asynchronous_preset": 247.90199999999996,
+    "synchronous_sram_output->data_next_state": 401.943,
+    "sequential_output->asynchronous_clear": 130.61700000000002,
+    "sequential_output->memory_data_control": 371.956,
+    "synchronous_sram_output->memory_data_control": 13.05600000000004,
+    "sequential_output->output_port": 323.473,
+    "constant_function_driver->constant_sequential_input": 321.7940000000001
+  },
+  "worst": []
+}

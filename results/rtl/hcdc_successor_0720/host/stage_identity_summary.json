@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.cdc_stage_pin_identity.v1",
+  "status": "PASS",
+  "scope": "PRE-CTS DIAGNOSTIC of exact frozen CDC placement ODB. Complete Liberty-function combinational-STAGE endpoint graph; actual ITerm geometry for all cells/macros. Not candidate geometry, final CTS/GRT/405um or source-native reset admission.",
+  "odb_path": "/gate/routes/gate/work/orfs/results/asap7/opentallas_qkd_hr_cdc_host_sram_asap7_ref_gate/base/3_place.odb",
+  "odb_sha256": "87cf21a5d0eb2cfd19dfe130cd66446723f32d642c3089aa306782313dce1214",
+  "audit_source_sha256": "463dcc60039020d8ea09192ef5d988b9bedc61426eaac9e68b2e4d378313981d",
+  "spec_path": "/src/physical/ref_tile/qkd_hr_cdc_host_h1g/spec.json",
+  "spec_sha256": "ff2bc2dd5321517b7d9c8027800a488854f8e234bf54f2551bf2828d517b46e8",
+  "synchronous_memory_proof": [
+    {
+      "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir.v",
+      "sha256": "cf42d815879bb3635e92071f05ceb31a1004f64ebe1aa10e2a02c69288608841",
+      "boundary": "actual registered rd_out under r_ce_in; separate rclk/wclk"
+    },
+    {
+      "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir.v",
+      "sha256": "6ce389d8e19d76c9e1cccf7d2a4a647d43469cc424f130be52410f7bea8c03b9",
+      "boundary": "actual registered rd_out under r_ce_in; single clk read-before-write"
+    },
+    {
+      "master": "ot_sram_1r1w_32x64_m1_p192_mir",
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_32x64_m1_p192_mir/ot_sram_1r1w_32x64_m1_p192_mir.v",
+      "sha256": "67ca4e296b296c2a4ad938f9a852c8bac06c75cba00eb902e80f5d64fcaebd2b",
+      "boundary": "actual registered rd_out under r_ce_in; single clk read-before-write"
+    }
+  ],
+  "die_um": [
+    0.0,
+    0.0,
+    475.2,
+    540.0
+  ],
+  "role_errors": [],
+  "counts": {
+    "combinational_instances": 21859,
+    "constant_function_drivers": 3185,
+    "power_ground_only_instances": 17769,
+    "actual_liberty_clock_pins_excluded": 5345,
+    "sequential_instances": 5338,
+    "synchronous_sram_instances": 5,
+    "declared_clock_ports_excluded": 2
+  },
+  "port_bit_count": 1210,
+  "sequential_instance_count": 5343,
+  "data_stage_edge_count": 25099,
+  "combinational_cell_count": 18674,
+  "boundary_classes": {
+    "direct_port_data_input": 620,
+    "interior_or_multistage_landing_unresolved": 4135,
+    "direct_port_data_output": 588
+  }
+}

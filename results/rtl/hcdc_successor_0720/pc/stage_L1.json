@@ -1,0 +1,1543 @@
+{
+  "metric": "Complete actual-Liberty-function combinational-STAGE endpoint Manhattan L1; all ITerm and BTerm geometry actual, including macro control/data and FF asynchronous control, static constants separate categories; clocks recorded separately",
+  "pairs": 17445,
+  "over405": 336,
+  "max_L1_um": 475.8550000000001,
+  "counts_by_role": {
+    "input_port->data_next_state": 1079,
+    "sequential_output->data_next_state": 8172,
+    "sequential_output->asynchronous_preset": 238,
+    "sequential_output->asynchronous_clear": 4,
+    "sequential_output->memory_data_control": 2234,
+    "synchronous_sram_output->data_next_state": 2166,
+    "sequential_output->output_port": 1082,
+    "constant_function_driver->constant_sequential_input": 2470
+  },
+  "max_by_role": {
+    "input_port->data_next_state": 370.773,
+    "sequential_output->data_next_state": 418.85800000000006,
+    "sequential_output->asynchronous_preset": 291.262,
+    "sequential_output->asynchronous_clear": 83.44200000000001,
+    "sequential_output->memory_data_control": 434.404,
+    "synchronous_sram_output->data_next_state": 390.225,
+    "sequential_output->output_port": 475.8550000000001,
+    "constant_function_driver->constant_sequential_input": 341.24000000000007
+  },
+  "worst": [
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[0\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[0\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          417.22,
+          335.745
+        ],
+        "net": "_06647_",
+        "net_id": 6648
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[0]",
+        "net_id": 34992,
+        "name": "port:u_rank__d_cd[0]",
+        "pin": "u_rank__d_cd[0]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          277.068
+        ]
+      },
+      "L1_um": 475.8550000000001
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[185\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[185\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          440.278,
+          335.205
+        ],
+        "net": "_06832_",
+        "net_id": 6833
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[185]",
+        "net_id": 34898,
+        "name": "port:u_rank__d_cd[185]",
+        "pin": "u_rank__d_cd[185]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          307.932
+        ]
+      },
+      "L1_um": 467.509
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[184\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[184\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          438.55,
+          335.205
+        ],
+        "net": "_06831_",
+        "net_id": 6832
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[184]",
+        "net_id": 34899,
+        "name": "port:u_rank__d_cd[184]",
+        "pin": "u_rank__d_cd[184]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          307.74
+        ]
+      },
+      "L1_um": 465.973
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[12\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[12\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          407.446,
+          335.205
+        ],
+        "net": "_06659_",
+        "net_id": 6660
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[12]",
+        "net_id": 34959,
+        "name": "port:u_rank__d_cd[12]",
+        "pin": "u_rank__d_cd[12]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          279.084
+        ]
+      },
+      "L1_um": 463.52500000000003
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[100\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[100\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          416.14,
+          335.205
+        ],
+        "net": "_06747_",
+        "net_id": 6748
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[100]",
+        "net_id": 34991,
+        "name": "port:u_rank__d_cd[100]",
+        "pin": "u_rank__d_cd[100]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          293.772
+        ]
+      },
+      "L1_um": 457.531
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[104\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[104\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          415.006,
+          335.475
+        ],
+        "net": "_06751_",
+        "net_id": 6752
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[104]",
+        "net_id": 34987,
+        "name": "port:u_rank__d_cd[104]",
+        "pin": "u_rank__d_cd[104]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          294.396
+        ]
+      },
+      "L1_um": 456.043
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[108\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[108\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          413.926,
+          335.205
+        ],
+        "net": "_06755_",
+        "net_id": 6756
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[108]",
+        "net_id": 34983,
+        "name": "port:u_rank__d_cd[108]",
+        "pin": "u_rank__d_cd[108]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          295.068
+        ]
+      },
+      "L1_um": 454.021
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[112\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[112\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          412.846,
+          335.205
+        ],
+        "net": "_06759_",
+        "net_id": 6760
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[112]",
+        "net_id": 34978,
+        "name": "port:u_rank__d_cd[112]",
+        "pin": "u_rank__d_cd[112]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          295.74
+        ]
+      },
+      "L1_um": 452.269
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[16\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[16\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          395.62,
+          335.205
+        ],
+        "net": "_06663_",
+        "net_id": 6664
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[16]",
+        "net_id": 34915,
+        "name": "port:u_rank__d_cd[16]",
+        "pin": "u_rank__d_cd[16]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          279.756
+        ]
+      },
+      "L1_um": 451.02700000000004
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[116\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[116\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          411.766,
+          335.205
+        ],
+        "net": "_06763_",
+        "net_id": 6764
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[116]",
+        "net_id": 34974,
+        "name": "port:u_rank__d_cd[116]",
+        "pin": "u_rank__d_cd[116]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          296.412
+        ]
+      },
+      "L1_um": 450.51700000000005
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[120\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[120\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          410.686,
+          335.205
+        ],
+        "net": "_06767_",
+        "net_id": 6768
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[120]",
+        "net_id": 34969,
+        "name": "port:u_rank__d_cd[120]",
+        "pin": "u_rank__d_cd[120]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          297.084
+        ]
+      },
+      "L1_um": 448.765
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[189\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[189\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          420.838,
+          335.475
+        ],
+        "net": "_06836_",
+        "net_id": 6837
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[189]",
+        "net_id": 34894,
+        "name": "port:u_rank__d_cd[189]",
+        "pin": "u_rank__d_cd[189]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          308.604
+        ]
+      },
+      "L1_um": 447.6670000000001
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[124\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[124\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          409.606,
+          335.205
+        ],
+        "net": "_06771_",
+        "net_id": 6772
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[124]",
+        "net_id": 34965,
+        "name": "port:u_rank__d_cd[124]",
+        "pin": "u_rank__d_cd[124]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          297.756
+        ]
+      },
+      "L1_um": 447.01300000000003
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[209\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[209\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          422.08,
+          336.015
+        ],
+        "net": "_06856_",
+        "net_id": 6857
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[209]",
+        "net_id": 34871,
+        "name": "port:u_rank__d_cd[209]",
+        "pin": "u_rank__d_cd[209]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          311.916
+        ]
+      },
+      "L1_um": 446.137
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[20\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[20\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          391.3,
+          334.935
+        ],
+        "net": "_06667_",
+        "net_id": 6668
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[20]",
+        "net_id": 34870,
+        "name": "port:u_rank__d_cd[20]",
+        "pin": "u_rank__d_cd[20]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          280.428
+        ]
+      },
+      "L1_um": 445.76500000000004
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[128\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[128\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          408.526,
+          335.205
+        ],
+        "net": "_06775_",
+        "net_id": 6776
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[128]",
+        "net_id": 34961,
+        "name": "port:u_rank__d_cd[128]",
+        "pin": "u_rank__d_cd[128]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          298.428
+        ]
+      },
+      "L1_um": 445.261
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[24\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[24\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          390.22,
+          335.475
+        ],
+        "net": "_06671_",
+        "net_id": 6672
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[24]",
+        "net_id": 34826,
+        "name": "port:u_rank__d_cd[24]",
+        "pin": "u_rank__d_cd[24]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          281.1
+        ]
+      },
+      "L1_um": 444.55300000000005
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[28\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[28\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          389.14,
+          335.475
+        ],
+        "net": "_06675_",
+        "net_id": 6676
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[28]",
+        "net_id": 34782,
+        "name": "port:u_rank__d_cd[28]",
+        "pin": "u_rank__d_cd[28]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          281.772
+        ]
+      },
+      "L1_um": 442.80100000000004
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[132\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[132\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          406.366,
+          335.205
+        ],
+        "net": "_06779_",
+        "net_id": 6780
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[132]",
+        "net_id": 34956,
+        "name": "port:u_rank__d_cd[132]",
+        "pin": "u_rank__d_cd[132]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          299.1
+        ]
+      },
+      "L1_um": 442.429
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[264\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[264\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          427.318,
+          335.205
+        ],
+        "net": "_06911_",
+        "net_id": 6912
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[264]",
+        "net_id": 34810,
+        "name": "port:u_rank__d_cd[264]",
+        "pin": "u_rank__d_cd[264]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          321.084
+        ]
+      },
+      "L1_um": 441.397
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[32\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[32\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          388.114,
+          335.205
+        ],
+        "net": "_06679_",
+        "net_id": 6680
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[32]",
+        "net_id": 34737,
+        "name": "port:u_rank__d_cd[32]",
+        "pin": "u_rank__d_cd[32]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          282.396
+        ]
+      },
+      "L1_um": 440.881
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[136\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[136\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          405.286,
+          335.205
+        ],
+        "net": "_06783_",
+        "net_id": 6784
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[136]",
+        "net_id": 34952,
+        "name": "port:u_rank__d_cd[136]",
+        "pin": "u_rank__d_cd[136]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          299.772
+        ]
+      },
+      "L1_um": 440.677
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[4\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[4\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          382.66,
+          335.475
+        ],
+        "net": "_06651_",
+        "net_id": 6652
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[4]",
+        "net_id": 34548,
+        "name": "port:u_rank__d_cd[4]",
+        "pin": "u_rank__d_cd[4]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          277.74
+        ]
+      },
+      "L1_um": 440.35300000000007
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[36\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[36\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          386.926,
+          335.475
+        ],
+        "net": "_06683_",
+        "net_id": 6684
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[36]",
+        "net_id": 34693,
+        "name": "port:u_rank__d_cd[36]",
+        "pin": "u_rank__d_cd[36]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          283.068
+        ]
+      },
+      "L1_um": 439.29100000000005
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[140\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[140\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          404.206,
+          335.475
+        ],
+        "net": "_06787_",
+        "net_id": 6788
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[140]",
+        "net_id": 34947,
+        "name": "port:u_rank__d_cd[140]",
+        "pin": "u_rank__d_cd[140]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          300.396
+        ]
+      },
+      "L1_um": 439.24300000000005
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[40\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[40\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          385.9,
+          335.745
+        ],
+        "net": "_06687_",
+        "net_id": 6688
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[40]",
+        "net_id": 34648,
+        "name": "port:u_rank__d_cd[40]",
+        "pin": "u_rank__d_cd[40]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          283.74
+        ]
+      },
+      "L1_um": 437.863
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[144\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[144\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          403.18,
+          335.205
+        ],
+        "net": "_06791_",
+        "net_id": 6792
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[144]",
+        "net_id": 34943,
+        "name": "port:u_rank__d_cd[144]",
+        "pin": "u_rank__d_cd[144]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          301.068
+        ]
+      },
+      "L1_um": 437.27500000000003
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[44\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[44\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          384.82,
+          335.475
+        ],
+        "net": "_06691_",
+        "net_id": 6692
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[44]",
+        "net_id": 34604,
+        "name": "port:u_rank__d_cd[44]",
+        "pin": "u_rank__d_cd[44]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          284.412
+        ]
+      },
+      "L1_um": 435.84100000000007
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[148\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[148\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          402.046,
+          335.475
+        ],
+        "net": "_06795_",
+        "net_id": 6796
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[148]",
+        "net_id": 34939,
+        "name": "port:u_rank__d_cd[148]",
+        "pin": "u_rank__d_cd[148]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          301.74
+        ]
+      },
+      "L1_um": 435.73900000000003
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[388\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[388\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          243.161,
+          129.195
+        ],
+        "net": "_04002_",
+        "net_id": 4003
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[388]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[388]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          369.804
+        ],
+        "net": "net9098",
+        "net_id": 30642,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          24.20399999999995
+        ]
+      },
+      "L1_um": 434.404
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[152\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[152\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          401.02,
+          335.745
+        ],
+        "net": "_06799_",
+        "net_id": 6800
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[152]",
+        "net_id": 34934,
+        "name": "port:u_rank__d_cd[152]",
+        "pin": "u_rank__d_cd[152]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          302.412
+        ]
+      },
+      "L1_um": 434.31100000000004
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[48\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[48\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          383.74,
+          335.475
+        ],
+        "net": "_06695_",
+        "net_id": 6696
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[48]",
+        "net_id": 34560,
+        "name": "port:u_rank__d_cd[48]",
+        "pin": "u_rank__d_cd[48]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          285.084
+        ]
+      },
+      "L1_um": 434.08900000000006
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[306\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[306\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          249.641,
+          107.325
+        ],
+        "net": "_04084_",
+        "net_id": 4085
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[306]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[306]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          354.06
+        ],
+        "net": "net9016",
+        "net_id": 30560,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          8.45999999999998
+        ]
+      },
+      "L1_um": 434.05000000000007
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[278\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[278\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          249.101,
+          104.085
+        ],
+        "net": "_04112_",
+        "net_id": 4113
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[278]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[278]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          348.684
+        ],
+        "net": "net8988",
+        "net_id": 30532,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          3.084000000000003
+        ]
+      },
+      "L1_um": 432.45400000000006
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[305\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[305\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          249.425,
+          108.945
+        ],
+        "net": "_04085_",
+        "net_id": 4086
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[305]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[305]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          353.868
+        ],
+        "net": "net9015",
+        "net_id": 30559,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          8.267999999999972
+        ]
+      },
+      "L1_um": 432.454
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[380\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[380\\]$_DFF_P_",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          245.249,
+          127.575
+        ],
+        "net": "_04010_",
+        "net_id": 4011
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[380]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[380]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          368.268
+        ],
+        "net": "net15309",
+        "net_id": 30633,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          22.66799999999995
+        ]
+      },
+      "L1_um": 432.4
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[283\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[283\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          252.665,
+          101.655
+        ],
+        "net": "_04107_",
+        "net_id": 4108
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[283]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[283]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          349.644
+        ],
+        "net": "net8993",
+        "net_id": 30537,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          4.043999999999983
+        ]
+      },
+      "L1_um": 432.28000000000003
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[395\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[395\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          246.185,
+          129.735
+        ],
+        "net": "_03995_",
+        "net_id": 3996
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[395]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[395]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          371.148
+        ],
+        "net": "net9105",
+        "net_id": 30649,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          25.548000000000002
+        ]
+      },
+      "L1_um": 432.184
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[156\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[156\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          399.94,
+          335.205
+        ],
+        "net": "_06803_",
+        "net_id": 6804
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[156]",
+        "net_id": 34930,
+        "name": "port:u_rank__d_cd[156]",
+        "pin": "u_rank__d_cd[156]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          303.084
+        ]
+      },
+      "L1_um": 432.019
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[52\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[52\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          381.58,
+          335.745
+        ],
+        "net": "_06699_",
+        "net_id": 6700
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[52]",
+        "net_id": 34515,
+        "name": "port:u_rank__d_cd[52]",
+        "pin": "u_rank__d_cd[52]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          285.756
+        ]
+      },
+      "L1_um": 431.52700000000004
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[289\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[289\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          250.937,
+          105.435
+        ],
+        "net": "_04101_",
+        "net_id": 4102
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[289]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[289]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          350.796
+        ],
+        "net": "net8999",
+        "net_id": 30543,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          5.1959999999999695
+        ]
+      },
+      "L1_um": 431.38
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[276\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[276\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          251.747,
+          102.195
+        ],
+        "net": "_04114_",
+        "net_id": 4115
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[276]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[276]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          348.3
+        ],
+        "net": "net8986",
+        "net_id": 30530,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          2.6999999999999886
+        ]
+      },
+      "L1_um": 431.314
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[326\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[326\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          249.803,
+          113.805
+        ],
+        "net": "_04064_",
+        "net_id": 4065
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[326]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[326]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          357.9
+        ],
+        "net": "net9036",
+        "net_id": 30580,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          12.299999999999955
+        ]
+      },
+      "L1_um": 431.248
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[298\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[298\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          252.952,
+          105.435
+        ],
+        "net": "_04092_",
+        "net_id": 4093
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[298]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[298]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          352.524
+        ],
+        "net": "net9008",
+        "net_id": 30552,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          6.923999999999978
+        ]
+      },
+      "L1_um": 431.093
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[268\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[268\\]$_DFF_P_",
+        "master": "DFFHQNx3_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          253.349,
+          99.495
+        ],
+        "net": "_04122_",
+        "net_id": 4123
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[268]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[268]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          346.764
+        ],
+        "net": "net15228",
+        "net_id": 30521,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          1.1639999999999873
+        ]
+      },
+      "L1_um": 430.87600000000003
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[160\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[160\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          398.86,
+          335.745
+        ],
+        "net": "_06807_",
+        "net_id": 6808
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[160]",
+        "net_id": 34925,
+        "name": "port:u_rank__d_cd[160]",
+        "pin": "u_rank__d_cd[160]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          303.756
+        ]
+      },
+      "L1_um": 430.8070000000001
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[343\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[343\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          247.643,
+          120.015
+        ],
+        "net": "_04047_",
+        "net_id": 4048
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[343]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[343]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          361.164
+        ],
+        "net": "net9053",
+        "net_id": 30597,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          15.563999999999965
+        ]
+      },
+      "L1_um": 430.462
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[317\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.o_d\\[317\\]$_DFF_P_",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          425.104,
+          335.205
+        ],
+        "net": "_06964_",
+        "net_id": 6965
+      },
+      "endpoint": {
+        "net": "u_rank__d_cd[317]",
+        "net_id": 34751,
+        "name": "port:u_rank__d_cd[317]",
+        "pin": "u_rank__d_cd[317]",
+        "kind": "output_port",
+        "xy_um": [
+          0.042,
+          329.916
+        ]
+      },
+      "L1_um": 430.351
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[411\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[411\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          246.239,
+          134.595
+        ],
+        "net": "_03979_",
+        "net_id": 3980
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[411]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[411]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          374.22
+        ],
+        "net": "net9121",
+        "net_id": 30665,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          28.620000000000005
+        ]
+      },
+      "L1_um": 430.34200000000004
+    },
+    {
+      "root": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[307\\]$_DFF_P_/QN",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.wq_data\\[307\\]$_DFF_P_",
+        "master": "DFFHQNx2_ASAP7_75t_R",
+        "pin": "QN",
+        "kind": "sequential_output",
+        "xy_um": [
+          250.073,
+          110.835
+        ],
+        "net": "_04083_",
+        "net_id": 4084
+      },
+      "endpoint": {
+        "name": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m/wd_in[307]",
+        "instance": "u_ot_pr_core.u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+        "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+        "pin": "wd_in[307]",
+        "kind": "memory_data_control",
+        "xy_um": [
+          436.956,
+          354.252
+        ],
+        "net": "net9017",
+        "net_id": 30561,
+        "macro_origin_um": [
+          259.2,
+          345.6
+        ],
+        "orientation": "R0",
+        "pin_offset_from_origin_um": [
+          177.75600000000003,
+          8.651999999999987
+        ]
+      },
+      "L1_um": 430.30000000000007
+    }
+  ]
+}

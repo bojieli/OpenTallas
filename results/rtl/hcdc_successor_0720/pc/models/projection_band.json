@@ -1,0 +1,19 @@
+{
+  "scope": "Constructive coordinate projection only: exact FULL Liberty-arc stage pairs; restore registered pin-stage membership to pre-DPL anchors, project y to230um ranges, interior FF centres clamped to proposed horizontal band (constructive targets only, not legal/overlap proof). Not legal P&R/candidate admission; source branch geometry must implement targets.",
+  "swap_core_data_halves": false,
+  "pairs": 17445,
+  "stage_over405": 0,
+  "stage_max_L1": 389.63,
+  "over_by_role": {},
+  "worst": [],
+  "moved_boundaryFF": 2161,
+  "ambiguous_boundary_membership": [],
+  "clock_sinks": {
+    "port:ck_core": 4371,
+    "port:ck_phy_fam": 3399
+  },
+  "clock_max_L1": {
+    "port:ck_core": 499.19,
+    "port:ck_phy_fam": 451.938
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.cdc_stage_pin_identity.v1",
+  "status": "PASS",
+  "scope": "PRE-CTS DIAGNOSTIC of exact frozen CDC placement ODB. Complete Liberty-function combinational-STAGE endpoint graph; actual ITerm geometry for all cells/macros. Not candidate geometry, final CTS/GRT/405um or source-native reset admission.",
+  "odb_path": "/gate/routes/gate/work/orfs/results/asap7/opentallas_qkd_hr_cdc_pc_sram_asap7_ref_gate/base/3_5_place_dp-failed.odb",
+  "odb_sha256": "2fd3a136e4a8228a180ea138555b7833edbea78e30172454bb4bf5e4e2fd478e",
+  "audit_source_sha256": "463dcc60039020d8ea09192ef5d988b9bedc61426eaac9e68b2e4d378313981d",
+  "spec_path": "/src/physical/ref_tile/qkd_hr_cdc_pc_sram1j/spec.json",
+  "spec_sha256": "8c4790fcb6c6d834e6bfef65a09a11e2924ef3b16c30da218360c66c2b64d6e0",
+  "synchronous_memory_proof": [
+    {
+      "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir.v",
+      "sha256": "cf42d815879bb3635e92071f05ceb31a1004f64ebe1aa10e2a02c69288608841",
+      "boundary": "actual registered rd_out under r_ce_in; separate rclk/wclk"
+    },
+    {
+      "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir.v",
+      "sha256": "6ce389d8e19d76c9e1cccf7d2a4a647d43469cc424f130be52410f7bea8c03b9",
+      "boundary": "actual registered rd_out under r_ce_in; single clk read-before-write"
+    }
+  ],
+  "die_um": [
+    0.0,
+    0.0,
+    475.2,
+    540.0
+  ],
+  "role_errors": [],
+  "counts": {
+    "combinational_instances": 27954,
+    "constant_function_drivers": 2468,
+    "actual_liberty_clock_pins_excluded": 7770,
+    "sequential_instances": 7764,
+    "power_ground_only_instances": 17608,
+    "synchronous_sram_instances": 4,
+    "declared_clock_ports_excluded": 2
+  },
+  "port_bit_count": 2163,
+  "sequential_instance_count": 7768,
+  "data_stage_edge_count": 17445,
+  "combinational_cell_count": 25486,
+  "boundary_classes": {
+    "direct_port_data_input": 1079,
+    "interior_or_multistage_landing_unresolved": 5607,
+    "direct_port_data_output": 1082
+  }
+}
