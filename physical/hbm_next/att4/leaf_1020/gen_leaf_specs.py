@@ -12,7 +12,8 @@ import json
 from pathlib import Path
 
 SRC = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-       "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hbm_next/att/ot_hnx_att4_smerge_h.sv",
+       "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv", "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v",
+       "rtl/hbm_next/att/ot_hnx_att4_smerge_h.sv",
        "rtl/hbm_next/att/ot_hnx_att4_sleaf.sv",
        "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43/hnx_sram_1r1w_128x256_r43_bb.v"]
 MV = "physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43"
@@ -61,7 +62,8 @@ def spec(leaf, v):
                             "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2", "rtl/gpu", "rtl/hbm_next/att",
                             "rtl/proto", "tools/hbm_next", "tools/hgi_sim", "tools/hdc_golden.py",
                             "tools/hdc_golden_v41.py", MV, "physical/hbm_next/att4/leaf_1020",
-                            "tools/orfs_allcorner_spef.py", "physical/common_flow/ot_keep_regs.tcl",
+                            "tools/orfs_allcorner_spef.py", "tools/prepare_fp32_fan32_models.py",
+                            "results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz", "physical/common_flow/ot_keep_regs.tcl",
                             "physical/common_flow/ot_rst_copies.tcl", "physical/common_flow/ot_rst_copies.py"],
             "benches": [
                 {"name": "att4_scl_lockstep_exact",

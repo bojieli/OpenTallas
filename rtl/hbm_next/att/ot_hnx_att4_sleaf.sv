@@ -53,7 +53,7 @@ module ot_hnx_att4_sleaf_n #(
     output reg                     f_flt
 );
     initial if (NL < 3 || NL > 4) $fatal(1, "ot_hnx_att4_sleaf_n: 3 <= NL <= 4");
-    localparam integer RK = `ifdef OT_HNX_ATT_SAFE_RESET 8 `else 1 `endif;
+    localparam integer RK = 1;                           // the core lands its own kept per-group copies
     // reset: 2-stage landing at the face (single flops), then the kept split stage
     (* keep = "true" *) reg r1, r2;
     (* keep = "true", ot_rst_split = 1 *) reg [RK-1:0] r3v;
@@ -114,7 +114,7 @@ module ot_hnx_att4_sleaf_s #(
     output reg                     fault
 );
     initial if (NL < 3 || NL > 4) $fatal(1, "ot_hnx_att4_sleaf_s: 3 <= NL <= 4");
-    localparam integer RK = `ifdef OT_HNX_ATT_SAFE_RESET 8 `else 1 `endif;
+    localparam integer RK = 1;                           // the core lands its own kept per-group copies
     // reset: the N leaf's landing flop r1 -> seam pin register g1 (stage 2) -> kept split stage (stage 3, as the N leaf)
     (* keep = "true" *) reg g1;
     (* keep = "true", ot_rst_split = 1 *) reg [RK-1:0] g2v;

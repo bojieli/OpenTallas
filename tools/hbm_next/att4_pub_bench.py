@@ -47,6 +47,7 @@ SRC = ["physical/hbm_next/att4/macros/hnx_sram_1r1w_128x256_r43/hnx_sram_1r1w_12
        "rtl/hbm_next/att/ot_hnx_att4_smerge.sv", "rtl/hbm_next/att/ot_hnx_att4_spvm.sv",
        "rtl/hbm_next/att/tb_hnx_att4_pub.sv"]
 SRC_SCL = [x for x in SRC if not x.endswith("tb_hnx_att4_pub.sv")] + [
+    "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv", "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v",
     "rtl/hbm_next/att/ot_hnx_att4_smerge_h.sv", "rtl/hbm_next/att/ot_hnx_att4_sleaf.sv", "rtl/hbm_next/att/tb_hnx_att4_scl.sv"]
 TOP = "spvm"
 SAFE_RESET = os.environ.get("HNX_ATT_SAFE_RESET") == "1"
@@ -151,9 +152,14 @@ def build(work, mut):
         exe = obj / exe.name
     if exe.exists():
         return exe
+    extra = []
+    if TOP == "scl":       # the leaves' native fan-32 FP32 adders: unpack the PDK-couponed cell models (identity-checked)
+        cells = work / "fan32_cells.v"
+        subprocess.run([sys.executable, str(ROOT / "tools/prepare_fp32_fan32_models.py"), "--out", str(cells)], check=True)
+        extra = [str(cells)]
     cmd = [VERILATOR] + (["-DOT_HNX_ATT_SAFE_RESET", "-DOT_FP_DATA_NORST"] if SAFE_RESET else []) + ["--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
            "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module",
-           tb, f"-GMUT={mut}", f"-GNL={NL}", "--Mdir", str(obj)] + [str(ROOT / s) for s in (SRC_SCL if TOP == "scl" else SRC)]
+           tb, f"-GMUT={mut}", f"-GNL={NL}", "--Mdir", str(obj)] + [str(ROOT / s) for s in (SRC_SCL if TOP == "scl" else SRC)] + extra
     for _ in range(2):                                          # one retry on a precompiled-header race
         r = subprocess.run(cmd, capture_output=True, text=True)
         (work / f"build_pub_m{mut}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
