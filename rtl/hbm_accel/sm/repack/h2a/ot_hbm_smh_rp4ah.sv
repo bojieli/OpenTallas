@@ -18,6 +18,13 @@
 //     h128 calendar, HBM-PVM-SAFE 10-19), not the original ot_hbm_sm_pv_merge;
 //   * attn_column / attn_row are STATIC straps registered at the face (u_as*, 2 kept stages) like the x-store straps.
 // INT8 (ENABLE_INT8, smh_int8_s2 CLOSED) lives in the SM front (ot_hbm_accel_smh_attn g_int8), NOT in this tile.
+// GN / GS (kit defaults 2 / 1): the attention leaf stack makes the halves 1,425.6 (n) / 1,123.2 (s) um tall (rp4h:
+// 864-907 / 691-734), so the N->S gather lanes that cross a whole half would run 475-710 um a cycle (> 405 reach).  The n
+// half adds GN kept relays on the leaf-0 and pass lanes (u_xgr / u_xpr, before the S-face out registers), the s half GS
+// relays on the leaf-0 and pass lanes (u_xg3 / u_xp3, after u_xg2 / u_xp2) and GN + GS pads on the leaf-1 lane (u_g1p),
+// so EVERY gout lane is +(GN + GS) edges vs the rp4h / lp record (kits: gout +6 instead of +3, all 4 lanes uniform, all
+// other ports unchanged).  PRICED SCHEDULE CHANGE (checklist item 8): the front's per-hop result deskew grows by GN + GS
+// per tile hop -> compiler / die schedule owner.  GN = GS = 0 = the rp4h latencies (bench comparison only).
 // MUT (bench only, 0 in every kit): 1/2/3 as ot_hbm_smh_rp4h (bin crossing short / gpm crossing short / leaf-1 rl1 pad
 // short); 5 = n-half attn strap one row off (leaf 0 publishes as row 1: a wrong static strap must be visible).
 `timescale 1ns/1ps
@@ -27,6 +34,18 @@ module ot_rp4a_astrap (input wire clk, input wire [4:0] d, output wire [4:0] q);
     (* keep *) reg [4:0] s0, s1;
     always @(posedge clk) begin s0 <= d; s1 <= s0; end
     assign q = s1;
+endmodule
+
+// N kept relay stages (valid bits in VMASK sync-cleared); stage k = g_s[k].u_r (FIRM station groups match on it)
+module ot_rp4a_relay #(parameter integer W = 50, parameter integer N = 1, parameter [W-1:0] VMASK = 0) (
+    input wire clk, input wire rst_n, input wire [W-1:0] d, output wire [W-1:0] q);
+    wire [W-1:0] c [0:N];
+    assign c[0] = d;
+    genvar k;
+    generate for (k = 0; k < N; k = k + 1) begin : g_s
+        ot_rp4h_xreg #(.W(W), .VMASK(VMASK)) u_r (.clk(clk), .rst_n(rst_n), .d(c[k]), .q(c[k+1]));
+    end endgenerate
+    assign q = c[N];
 endmodule
 
 // PV sum capture (as ot_hbm_sm_attn_sum_capture, synchronous reset): event at the closed tct's LL = 16 boundary
@@ -159,7 +178,7 @@ module ot_rp4a_leaf (input wire clk, input wire rst_n, input wire [25:0] st, inp
 endmodule
 
 // n half: ot_hbm_smh_rp4h_n with the attention leaf; attn = {attn_rowbase[1:0], attn_column[2:0]} (static strap)
-module ot_hbm_smh_rp4ah_n #(parameter integer MUT = 0, parameter integer SOFTBEAT = 1) (
+module ot_hbm_smh_rp4ah_n #(parameter integer MUT = 0, parameter integer SOFTBEAT = 1, parameter integer GN = 2) (
     input wire clk, input wire rst_n,
     input wire [8:0] xs_a1, input wire [4:0] xs_g1, input wire [6:0] xs_a2, input wire [4:0] xs_g2, input wire [4:0] attn,
     input wire [817:0] rin_n, input wire [2068:0] bin, input wire [99:0] gin,
@@ -200,12 +219,20 @@ module ot_hbm_smh_rp4ah_n #(parameter integer MUT = 0, parameter integer SOFTBEA
         ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_xb2 (.clk(clk), .rst_n(r[9]), .d(xb1), .q(xb2));
     end endgenerate
     ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_xbo (.clk(clk), .rst_n(r[9]), .d(xb2), .q(xo_b));
-    ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xgo (.clk(clk), .rst_n(r[10]), .d(g0m), .q(xo_g0));
-    ot_rp4h_xreg #(.W(100), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xpo (.clk(clk), .rst_n(r[10]), .d(gpm), .q(xo_gp));
+    wire [49:0] g0r;
+    wire [99:0] gpr;
+    generate if (GN != 0) begin : g_grel
+        ot_rp4a_relay #(.W(50), .N(GN), .VMASK({2'b11, 48'b0})) u_xgr (.clk(clk), .rst_n(r[10]), .d(g0m), .q(g0r));
+        ot_rp4a_relay #(.W(100), .N(GN), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xpr (.clk(clk), .rst_n(r[10]), .d(gpm), .q(gpr));
+    end else begin : g_nogrel
+        assign g0r = g0m; assign gpr = gpm;
+    end endgenerate
+    ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xgo (.clk(clk), .rst_n(r[10]), .d(g0r), .q(xo_g0));
+    ot_rp4h_xreg #(.W(100), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xpo (.clk(clk), .rst_n(r[10]), .d(gpr), .q(xo_gp));
 endmodule
 
 // s half: ot_hbm_smh_rp4h_s with the attention leaf (leaf 1 = attn_rowbase + 1)
-module ot_hbm_smh_rp4ah_s #(parameter integer MUT = 0) (
+module ot_hbm_smh_rp4ah_s #(parameter integer MUT = 0, parameter integer GN = 2, parameter integer GS = 1) (
     input wire clk, input wire rst_n,
     input wire [8:0] xss_a1, input wire [4:0] xss_g1, input wire [6:0] xss_a2, input wire [4:0] xss_g2, input wire [4:0] attn,
     input wire [817:0] rin_s, output wire [817:0] rout_s,
@@ -226,11 +253,24 @@ module ot_hbm_smh_rp4ah_s #(parameter integer MUT = 0) (
     wire [99:0] xp, gpm;
     ot_rp4h_xreg #(.W(2069), .VMASK({1'b1, 2068'b0})) u_lands (.clk(clk), .rst_n(r_land), .d(xi_b), .q(bk1_s));
     ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xgi (.clk(clk), .rst_n(r[6]), .d(xi_g0), .q(xg));
-    ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xg2 (.clk(clk), .rst_n(r[6]), .d(xg), .q(g0m));
+    wire [49:0] xg2o;
+    ot_rp4h_xreg #(.W(50), .VMASK({2'b11, 48'b0})) u_xg2 (.clk(clk), .rst_n(r[6]), .d(xg), .q(xg2o));
     ot_rp4h_xreg #(.W(100), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xpi (.clk(clk), .rst_n(r[7]), .d(xi_gp), .q(xp));
     wire [99:0] xp2;
     ot_rp4h_xreg #(.W(100), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xp2 (.clk(clk), .rst_n(r[7]), .d(xp), .q(xp2));
-    assign gpm = (MUT == 2) ? xp : xp2;
+    wire [99:0] gpm0 = (MUT == 2) ? xp : xp2;
+    wire [49:0] g1p;
+    generate if (GS != 0) begin : g_grel
+        ot_rp4a_relay #(.W(50), .N(GS), .VMASK({2'b11, 48'b0})) u_xg3 (.clk(clk), .rst_n(r[6]), .d(xg2o), .q(g0m));
+        ot_rp4a_relay #(.W(100), .N(GS), .VMASK({2'b11, 48'b0, 2'b11, 48'b0})) u_xp3 (.clk(clk), .rst_n(r[7]), .d(gpm0), .q(gpm));
+    end else begin : g_nogrel
+        assign g0m = xg2o; assign gpm = gpm0;
+    end endgenerate
+    generate if (GN + GS != 0) begin : g_g1pad
+        ot_rp4a_relay #(.W(50), .N(GN + GS), .VMASK({2'b11, 48'b0})) u_g1p (.clk(clk), .rst_n(r_gs), .d(g1), .q(g1p));
+    end else begin : g_nog1pad
+        assign g1p = g1;
+    end endgenerate
     ot_rp4l_strap u_sr_s (.clk(clk), .d({xss_g2, xss_a2, xss_g1, xss_a1}), .q(st_s));
     ot_rp4a_astrap u_as_s (.clk(clk), .d({attn[4:3] + 2'd1, attn[2:0]}), .q(at_s));
     ot_rp4l_pinrow u_pr_s (.clk(clk), .rst_n(r[0]), .d(rin_s), .q(rl_s));
@@ -239,11 +279,11 @@ module ot_hbm_smh_rp4ah_s #(parameter integer MUT = 0) (
     ot_pl_pad #(.W(818), .N((MUT == 3) ? 2 : 3)) u_pp_rl1 (.ck(clk), .d(rl1_s), .q(rl1_s_p));
     ot_pl_pad #(.W(26), .N(3)) u_pp_st (.ck(clk), .d(st_s), .q(st_s_p));
     ot_rp4a_leaf u_lf1 (.clk(clk), .rst_n(r_lf1), .st(st_s_p), .at(at_s), .rl1(rl1_s_p), .bk1(bk1_s), .g(g1));
-    ot_rp4l_gs u_gs (.clk(clk), .rst_n(r_gs), .g1in(g1), .g0m(g0m), .gpm(gpm), .gout(gout));
+    ot_rp4l_gs u_gs (.clk(clk), .rst_n(r_gs), .g1in(g1p), .g0m(g0m), .gpm(gpm), .gout(gout));
 endmodule
 
 // the SM frame slot: both halves abutted (die binder form; also the bench DUT)
-module ot_hbm_smh_rp4ah2 #(parameter integer MUT = 0, parameter integer SOFTBEAT = 1) (
+module ot_hbm_smh_rp4ah2 #(parameter integer MUT = 0, parameter integer SOFTBEAT = 1, parameter integer GN = 2, parameter integer GS = 1) (
     input wire rst_n, input wire [4:0] attn,
     input wire [8:0] xs_a1, input wire [4:0] xs_g1, input wire [6:0] xs_a2, input wire [4:0] xs_g2,
     input wire [8:0] xss_a1, input wire [4:0] xss_g1, input wire [6:0] xss_a2, input wire [4:0] xss_g2,
@@ -253,10 +293,10 @@ module ot_hbm_smh_rp4ah2 #(parameter integer MUT = 0, parameter integer SOFTBEAT
     input wire ck_n, input wire ck_s
 );
     wire [2068:0] x_b; wire [49:0] x_g0; wire [99:0] x_gp;
-    ot_hbm_smh_rp4ah_n #(.MUT(MUT), .SOFTBEAT(SOFTBEAT)) u_n (.clk(ck_n), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1),
+    ot_hbm_smh_rp4ah_n #(.MUT(MUT), .SOFTBEAT(SOFTBEAT), .GN(GN)) u_n (.clk(ck_n), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1),
         .xs_a2(xs_a2), .xs_g2(xs_g2), .attn(attn), .rin_n(rin_n), .bin(bin), .gin(gin), .rout_n(rout_n), .bout(bout),
         .xo_b(x_b), .xo_g0(x_g0), .xo_gp(x_gp));
-    ot_hbm_smh_rp4ah_s #(.MUT(MUT)) u_s (.clk(ck_s), .rst_n(rst_n), .xss_a1(xss_a1), .xss_g1(xss_g1), .xss_a2(xss_a2),
+    ot_hbm_smh_rp4ah_s #(.MUT(MUT), .GN(GN), .GS(GS)) u_s (.clk(ck_s), .rst_n(rst_n), .xss_a1(xss_a1), .xss_g1(xss_g1), .xss_a2(xss_a2),
         .xss_g2(xss_g2), .attn(attn), .rin_s(rin_s), .rout_s(rout_s), .xi_b(x_b), .xi_g0(x_g0), .xi_gp(x_gp), .gout(gout));
 endmodule
 

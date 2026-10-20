@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       admits  1271 GB (avail 1003, growth 113, headroom 0, waiters 0/0 GB) load 50/128 running 31 disk 600 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/l2h-rp4a/bench_3decd04c5
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/l2h-rp4a/bench_3decd04c5
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/l2h-rp4a/bench_3decd04c5
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/l2h-rp4a/bench_3decd04c5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/l2h-rp4a/bench_3decd04c5
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1280942-1792471404 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+H2A_MISMATCH port=gout cycle=801 flat=d6702a2c1aa26108959af18675dcbfb709ae87e35a138002b8 landed=d6702a2c1aa26108959af18675dcbfb709ae87e1a986c002c8
+H2A_MISMATCH port=gout cycle=802 flat=f45dc5a8906d30e03bd3c8a98ca5abe0002423e1a986c002c8 landed=f45dc5a8906d30e03bd3c8a98ca5abe00024237e9281d002d8
+H2A_MISMATCH port=gout cycle=803 flat=ed29c451c3f4499633b793a9fca03c700024637e9281d002d8 landed=ed29c451c3f4499633b793a9fca03c7000246340f5230002e8
+H2A_MISMATCH port=gout cycle=804 flat=9c6f88a5f0e393ac02fe69446ee1fa680024a340f5230002e8 landed=9c6f88a5f0e393ac02fe69446ee1fa680024a3551ff9c00208
+H2A_MISMATCH port=gout cycle=805 flat=84d3bf252b223ffc288a79917db442d00024e3551ff9c00208 landed=84d3bf252b223ffc288a79917db442d00024e346554d000218
+H2A_ACTIVITY bdc_out=1994 qk_out=1218 pv_events=223 publications=6850 pv_inputs=986
+H2A_LOCKSTEP FAIL MUT=3 mismatches=3184 of 12796
+- rtl/hbm_accel/sm/repack/h2a/tb_ot_hbm_smh_rp4ah2.sv:108: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.878 s; speed 4.553 us/s
+- Verilator: cpu 0.878 s on 1 threads; allocated 19 MB
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1280942-1792471404): exit 1
