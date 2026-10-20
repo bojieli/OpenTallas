@@ -1,0 +1,4624 @@
+{
+  "creator": "Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "modules": {
+    "pc_async_coupon": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "coupon_stopped1_first_D.v:1.1-22.10"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "want": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "ok": {
+          "direction": "output",
+          "bits": [ 5 ]
+        },
+        "released": {
+          "direction": "output",
+          "bits": [ 6, 7, 8, 9, 10, 11, 12, 13 ]
+        }
+      },
+      "cells": {
+        "$auto$clk2fflogic.cc:108:sample_data$143": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 14 ],
+            "Q": [ 15 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$145": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 16 ],
+            "Q": [ 17 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$179": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 18 ],
+            "Q": [ 19 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$181": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 16 ],
+            "Q": [ 20 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$215": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 21 ],
+            "Q": [ 22 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$217": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 16 ],
+            "Q": [ 23 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$251": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 16 ],
+            "Q": [ 24 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$253": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "1" ],
+            "Q": [ 25 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$287": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 26 ],
+            "Q": [ 27 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$289": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 16 ],
+            "Q": [ 28 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$323": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 29 ],
+            "Q": [ 30 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$325": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 16 ],
+            "Q": [ 31 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$359": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 32 ],
+            "Q": [ 33 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$361": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 16 ],
+            "Q": [ 34 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$395": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 35 ],
+            "Q": [ 36 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$397": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 16 ],
+            "Q": [ 37 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$431": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "clk2fflogic": "00000000000000000000000000000001"
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 38 ],
+            "Q": [ 39 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:108:sample_data$433": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 16 ],
+            "Q": [ 40 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$150": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 15 ],
+            "B": [ 17 ],
+            "S": [ 41 ],
+            "Y": [ 42 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$186": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 19 ],
+            "B": [ 20 ],
+            "S": [ 43 ],
+            "Y": [ 44 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$222": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 22 ],
+            "B": [ 23 ],
+            "S": [ 45 ],
+            "Y": [ 46 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$258": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 24 ],
+            "B": [ 25 ],
+            "S": [ 47 ],
+            "Y": [ 48 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$294": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 27 ],
+            "B": [ 28 ],
+            "S": [ 49 ],
+            "Y": [ 50 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$330": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 30 ],
+            "B": [ 31 ],
+            "S": [ 51 ],
+            "Y": [ 52 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$366": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 33 ],
+            "B": [ 34 ],
+            "S": [ 53 ],
+            "Y": [ 54 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$402": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 36 ],
+            "B": [ 37 ],
+            "S": [ 55 ],
+            "Y": [ 56 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:123:mux$438": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 39 ],
+            "B": [ 40 ],
+            "S": [ 57 ],
+            "Y": [ 58 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$158": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 59 ],
+            "B": [ 60 ],
+            "Y": [ 61 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$160": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 60 ],
+            "Y": [ 62 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$162": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 42 ],
+            "B": [ 59 ],
+            "Y": [ 63 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$164": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 63 ],
+            "B": [ 62 ],
+            "Y": [ 64 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$166": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 64 ],
+            "B": [ "x" ],
+            "S": [ 61 ],
+            "Y": [ 65 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$168": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 66 ],
+            "B": [ "0" ],
+            "Y": [ 67 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$170": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "Y": [ 68 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$172": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 65 ],
+            "B": [ 66 ],
+            "Y": [ 69 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$174": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 69 ],
+            "B": [ 68 ],
+            "Y": [ 70 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$176": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 70 ],
+            "B": [ "x" ],
+            "S": [ 67 ],
+            "Y": [ 14 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$194": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 71 ],
+            "B": [ 72 ],
+            "Y": [ 73 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$196": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 72 ],
+            "Y": [ 74 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$198": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 44 ],
+            "B": [ 71 ],
+            "Y": [ 75 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$200": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 75 ],
+            "B": [ 74 ],
+            "Y": [ 76 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$202": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 76 ],
+            "B": [ "x" ],
+            "S": [ 73 ],
+            "Y": [ 77 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$204": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 78 ],
+            "B": [ "0" ],
+            "Y": [ 79 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$206": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "Y": [ 80 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$208": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 77 ],
+            "B": [ 78 ],
+            "Y": [ 81 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$210": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 81 ],
+            "B": [ 80 ],
+            "Y": [ 82 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$212": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 82 ],
+            "B": [ "x" ],
+            "S": [ 79 ],
+            "Y": [ 18 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$230": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 83 ],
+            "B": [ 84 ],
+            "Y": [ 85 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$232": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 84 ],
+            "Y": [ 86 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$234": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 46 ],
+            "B": [ 83 ],
+            "Y": [ 87 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$236": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 87 ],
+            "B": [ 86 ],
+            "Y": [ 88 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$238": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 88 ],
+            "B": [ "x" ],
+            "S": [ 85 ],
+            "Y": [ 89 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$240": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 90 ],
+            "B": [ "0" ],
+            "Y": [ 91 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$242": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "Y": [ 92 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$244": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 89 ],
+            "B": [ 90 ],
+            "Y": [ 93 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$246": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 93 ],
+            "B": [ 92 ],
+            "Y": [ 94 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$248": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 94 ],
+            "B": [ "x" ],
+            "S": [ 91 ],
+            "Y": [ 21 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$266": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 95 ],
+            "B": [ 96 ],
+            "Y": [ 97 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$268": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 96 ],
+            "Y": [ 98 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$270": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 48 ],
+            "B": [ 95 ],
+            "Y": [ 99 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$272": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 99 ],
+            "B": [ 98 ],
+            "Y": [ 100 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$274": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 100 ],
+            "B": [ "x" ],
+            "S": [ 97 ],
+            "Y": [ 101 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$276": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 102 ],
+            "B": [ "0" ],
+            "Y": [ 103 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$278": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "Y": [ 104 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$280": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 101 ],
+            "B": [ 102 ],
+            "Y": [ 105 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$282": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 105 ],
+            "B": [ 104 ],
+            "Y": [ 106 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$284": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 106 ],
+            "B": [ "x" ],
+            "S": [ 103 ],
+            "Y": [ 16 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$302": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 107 ],
+            "B": [ 108 ],
+            "Y": [ 109 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$304": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 108 ],
+            "Y": [ 110 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$306": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 50 ],
+            "B": [ 107 ],
+            "Y": [ 111 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$308": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 111 ],
+            "B": [ 110 ],
+            "Y": [ 112 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$310": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 112 ],
+            "B": [ "x" ],
+            "S": [ 109 ],
+            "Y": [ 113 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$312": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 114 ],
+            "B": [ "0" ],
+            "Y": [ 115 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$314": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "Y": [ 116 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$316": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 113 ],
+            "B": [ 114 ],
+            "Y": [ 117 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$318": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 117 ],
+            "B": [ 116 ],
+            "Y": [ 118 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$320": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 118 ],
+            "B": [ "x" ],
+            "S": [ 115 ],
+            "Y": [ 26 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$338": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 119 ],
+            "B": [ 120 ],
+            "Y": [ 121 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$340": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 120 ],
+            "Y": [ 122 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$342": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 52 ],
+            "B": [ 119 ],
+            "Y": [ 123 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$344": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 123 ],
+            "B": [ 122 ],
+            "Y": [ 124 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$346": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 124 ],
+            "B": [ "x" ],
+            "S": [ 121 ],
+            "Y": [ 125 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$348": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 126 ],
+            "B": [ "0" ],
+            "Y": [ 127 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$350": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "Y": [ 128 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$352": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 125 ],
+            "B": [ 126 ],
+            "Y": [ 129 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$354": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 129 ],
+            "B": [ 128 ],
+            "Y": [ 130 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$356": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 130 ],
+            "B": [ "x" ],
+            "S": [ 127 ],
+            "Y": [ 29 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$374": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 131 ],
+            "B": [ 132 ],
+            "Y": [ 133 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$376": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 132 ],
+            "Y": [ 134 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$378": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 54 ],
+            "B": [ 131 ],
+            "Y": [ 135 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$380": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 135 ],
+            "B": [ 134 ],
+            "Y": [ 136 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$382": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 136 ],
+            "B": [ "x" ],
+            "S": [ 133 ],
+            "Y": [ 137 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$384": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 138 ],
+            "B": [ "0" ],
+            "Y": [ 139 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$386": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "Y": [ 140 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$388": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 137 ],
+            "B": [ 138 ],
+            "Y": [ 141 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$390": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 141 ],
+            "B": [ 140 ],
+            "Y": [ 142 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$392": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 142 ],
+            "B": [ "x" ],
+            "S": [ 139 ],
+            "Y": [ 32 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$410": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 143 ],
+            "B": [ 144 ],
+            "Y": [ 145 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$412": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 144 ],
+            "Y": [ 146 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$414": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 56 ],
+            "B": [ 143 ],
+            "Y": [ 147 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$416": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 147 ],
+            "B": [ 146 ],
+            "Y": [ 148 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$418": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 148 ],
+            "B": [ "x" ],
+            "S": [ 145 ],
+            "Y": [ 149 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$420": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 150 ],
+            "B": [ "0" ],
+            "Y": [ 151 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$422": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "Y": [ 152 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$424": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 149 ],
+            "B": [ 150 ],
+            "Y": [ 153 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$426": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 153 ],
+            "B": [ 152 ],
+            "Y": [ 154 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$428": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 154 ],
+            "B": [ "x" ],
+            "S": [ 151 ],
+            "Y": [ 35 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$446": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 155 ],
+            "B": [ 156 ],
+            "Y": [ 157 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$448": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 156 ],
+            "Y": [ 158 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$450": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 58 ],
+            "B": [ 155 ],
+            "Y": [ 159 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$452": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 159 ],
+            "B": [ 158 ],
+            "Y": [ 160 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$454": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 160 ],
+            "B": [ "x" ],
+            "S": [ 157 ],
+            "Y": [ 161 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$456": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 162 ],
+            "B": [ "0" ],
+            "Y": [ 163 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$458": {
+          "hide_name": 1,
+          "type": "$_NOT_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "Y": [ 164 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$460": {
+          "hide_name": 1,
+          "type": "$_OR_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 161 ],
+            "B": [ 162 ],
+            "Y": [ 165 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$462": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 165 ],
+            "B": [ 164 ],
+            "Y": [ 166 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:131:bitwise_sr$464": {
+          "hide_name": 1,
+          "type": "$_MUX_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 166 ],
+            "B": [ "x" ],
+            "S": [ 163 ],
+            "Y": [ 38 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:71:sample_control$152": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 66 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:71:sample_control$188": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 78 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:71:sample_control$224": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 90 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:71:sample_control$260": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 102 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:71:sample_control$296": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 114 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:71:sample_control$332": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 126 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:71:sample_control$368": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 138 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:71:sample_control$404": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 150 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:71:sample_control$440": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "Y": [ 162 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$155": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 66 ],
+            "Q": [ 59 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$157": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "0" ],
+            "Q": [ 60 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$191": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 78 ],
+            "Q": [ 71 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$193": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "0" ],
+            "Q": [ 72 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$227": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 90 ],
+            "Q": [ 83 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$229": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "0" ],
+            "Q": [ 84 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$263": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 102 ],
+            "Q": [ 95 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$265": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "0" ],
+            "Q": [ 96 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$299": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 114 ],
+            "Q": [ 107 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$301": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "0" ],
+            "Q": [ 108 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$335": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 126 ],
+            "Q": [ 119 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$337": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "0" ],
+            "Q": [ 120 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$371": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 138 ],
+            "Q": [ 131 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$373": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "0" ],
+            "Q": [ 132 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$407": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 150 ],
+            "Q": [ 143 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$409": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "0" ],
+            "Q": [ 144 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$443": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 162 ],
+            "Q": [ 155 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:80:sample_control$445": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ "0" ],
+            "Q": [ 156 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$147": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 167 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$183": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 168 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$219": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 169 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$255": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 170 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$291": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 171 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$327": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 172 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$363": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 173 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$399": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 174 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:92:sample_control_edge$435": {
+          "hide_name": 1,
+          "type": "$ff",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "D": [ 2 ],
+            "Q": [ 175 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$148": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 167 ],
+            "B": [ "1", "0" ],
+            "Y": [ 41 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$184": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 168 ],
+            "B": [ "1", "0" ],
+            "Y": [ 43 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$220": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 169 ],
+            "B": [ "1", "0" ],
+            "Y": [ 45 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$256": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 170 ],
+            "B": [ "1", "0" ],
+            "Y": [ 47 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$292": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 171 ],
+            "B": [ "1", "0" ],
+            "Y": [ 49 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$328": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 172 ],
+            "B": [ "1", "0" ],
+            "Y": [ 51 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$364": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 173 ],
+            "B": [ "1", "0" ],
+            "Y": [ 53 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$400": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 174 ],
+            "B": [ "1", "0" ],
+            "Y": [ 55 ]
+          }
+        },
+        "$auto$clk2fflogic.cc:93:sample_control_edge$436": {
+          "hide_name": 1,
+          "type": "$eqx",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000010",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000010",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 2, 175 ],
+            "B": [ "1", "0" ],
+            "Y": [ 57 ]
+          }
+        },
+        "$eq$coupon_stopped1_first_D.v:21$15": {
+          "hide_name": 1,
+          "type": "$eq",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:21.11-21.30"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 6, 7, 8, 9, 10, 11, 12, 13 ],
+            "B": [ 4, 4, 4, 4, 4, 4, 4, 4 ],
+            "Y": [ 5 ]
+          }
+        },
+        "$not$coupon_stopped1_first_D.v:20$14": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:20.17-20.43"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 21, 18, 14, 38, 35, 32, 29, 26 ],
+            "Y": [ 6, 7, 8, 9, 10, 11, 12, 13 ]
+          }
+        },
+        "ff0": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "coupon_stopped1_first_D.v:3.25-3.83",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "coupon_stopped1_first_D.v:5.25-5.82",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "coupon_stopped1_first_D.v:7.25-7.82",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "coupon_stopped1_first_D.v:9.25-9.82",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff4": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "coupon_stopped1_first_D.v:11.25-11.82",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff5": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "coupon_stopped1_first_D.v:13.25-13.82",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff6": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "coupon_stopped1_first_D.v:15.25-15.82",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff7": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "coupon_stopped1_first_D.v:17.25-17.82",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "ff8": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "coupon_stopped1_first_D.v:19.25-19.82",
+            "module": "DFFASRHQNx1_ASAP7_75t_R",
+            "module_src": "canonical_ASR_normalized.v:38.1-43.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        }
+      },
+      "netnames": {
+        "$auto$clk2fflogic.cc:101:sample_data$1'1#sampled$252": {
+          "hide_name": 1,
+          "bits": [ 25 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$144": {
+          "hide_name": 1,
+          "bits": [ 17 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$180": {
+          "hide_name": 1,
+          "bits": [ 20 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$216": {
+          "hide_name": 1,
+          "bits": [ 23 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$250": {
+          "hide_name": 1,
+          "bits": [ 24 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$288": {
+          "hide_name": 1,
+          "bits": [ 28 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$324": {
+          "hide_name": 1,
+          "bits": [ 31 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$360": {
+          "hide_name": 1,
+          "bits": [ 34 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$396": {
+          "hide_name": 1,
+          "bits": [ 37 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff0.QN#sampled$432": {
+          "hide_name": 1,
+          "bits": [ 40 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff1.QN#sampled$214": {
+          "hide_name": 1,
+          "bits": [ 22 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff2.QN#sampled$178": {
+          "hide_name": 1,
+          "bits": [ 19 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff3.QN#sampled$142": {
+          "hide_name": 1,
+          "bits": [ 15 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff4.QN#sampled$430": {
+          "hide_name": 1,
+          "bits": [ 39 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff5.QN#sampled$394": {
+          "hide_name": 1,
+          "bits": [ 36 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff6.QN#sampled$358": {
+          "hide_name": 1,
+          "bits": [ 33 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff7.QN#sampled$322": {
+          "hide_name": 1,
+          "bits": [ 30 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:101:sample_data$\\ff8.QN#sampled$286": {
+          "hide_name": 1,
+          "bits": [ 27 ],
+          "attributes": {
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$$auto$rtlil.cc:3264:Not$153#sampled$154": {
+          "hide_name": 1,
+          "bits": [ 59 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$$auto$rtlil.cc:3264:Not$189#sampled$190": {
+          "hide_name": 1,
+          "bits": [ 71 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$$auto$rtlil.cc:3264:Not$225#sampled$226": {
+          "hide_name": 1,
+          "bits": [ 83 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$$auto$rtlil.cc:3264:Not$261#sampled$262": {
+          "hide_name": 1,
+          "bits": [ 95 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$$auto$rtlil.cc:3264:Not$297#sampled$298": {
+          "hide_name": 1,
+          "bits": [ 107 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$$auto$rtlil.cc:3264:Not$333#sampled$334": {
+          "hide_name": 1,
+          "bits": [ 119 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$$auto$rtlil.cc:3264:Not$369#sampled$370": {
+          "hide_name": 1,
+          "bits": [ 131 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$$auto$rtlil.cc:3264:Not$405#sampled$406": {
+          "hide_name": 1,
+          "bits": [ 143 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$$auto$rtlil.cc:3264:Not$441#sampled$442": {
+          "hide_name": 1,
+          "bits": [ 155 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$1'0#sampled$156": {
+          "hide_name": 1,
+          "bits": [ 60 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$1'0#sampled$192": {
+          "hide_name": 1,
+          "bits": [ 72 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$1'0#sampled$228": {
+          "hide_name": 1,
+          "bits": [ 84 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$1'0#sampled$264": {
+          "hide_name": 1,
+          "bits": [ 96 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$1'0#sampled$300": {
+          "hide_name": 1,
+          "bits": [ 108 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$1'0#sampled$336": {
+          "hide_name": 1,
+          "bits": [ 120 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$1'0#sampled$372": {
+          "hide_name": 1,
+          "bits": [ 132 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$1'0#sampled$408": {
+          "hide_name": 1,
+          "bits": [ 144 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:75:sample_control$1'0#sampled$444": {
+          "hide_name": 1,
+          "bits": [ 156 ],
+          "attributes": {
+            "init": "0"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\clk#sampled$146": {
+          "hide_name": 1,
+          "bits": [ 167 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\clk#sampled$182": {
+          "hide_name": 1,
+          "bits": [ 168 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\clk#sampled$218": {
+          "hide_name": 1,
+          "bits": [ 169 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\clk#sampled$254": {
+          "hide_name": 1,
+          "bits": [ 170 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\clk#sampled$290": {
+          "hide_name": 1,
+          "bits": [ 171 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\clk#sampled$326": {
+          "hide_name": 1,
+          "bits": [ 172 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\clk#sampled$362": {
+          "hide_name": 1,
+          "bits": [ 173 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\clk#sampled$398": {
+          "hide_name": 1,
+          "bits": [ 174 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$clk2fflogic.cc:87:sample_control_edge$\\clk#sampled$434": {
+          "hide_name": 1,
+          "bits": [ 175 ],
+          "attributes": {
+            "init": "1"
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$153": {
+          "hide_name": 1,
+          "bits": [ 66 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$189": {
+          "hide_name": 1,
+          "bits": [ 78 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$225": {
+          "hide_name": 1,
+          "bits": [ 90 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$261": {
+          "hide_name": 1,
+          "bits": [ 102 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$297": {
+          "hide_name": 1,
+          "bits": [ 114 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$333": {
+          "hide_name": 1,
+          "bits": [ 126 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$369": {
+          "hide_name": 1,
+          "bits": [ 138 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$405": {
+          "hide_name": 1,
+          "bits": [ 150 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3264:Not$441": {
+          "hide_name": 1,
+          "bits": [ 162 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$149": {
+          "hide_name": 1,
+          "bits": [ 41 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$185": {
+          "hide_name": 1,
+          "bits": [ 43 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$221": {
+          "hide_name": 1,
+          "bits": [ 45 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$257": {
+          "hide_name": 1,
+          "bits": [ 47 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$293": {
+          "hide_name": 1,
+          "bits": [ 49 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$329": {
+          "hide_name": 1,
+          "bits": [ 51 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$365": {
+          "hide_name": 1,
+          "bits": [ 53 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$401": {
+          "hide_name": 1,
+          "bits": [ 55 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3320:Eqx$437": {
+          "hide_name": 1,
+          "bits": [ 57 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$151": {
+          "hide_name": 1,
+          "bits": [ 42 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$187": {
+          "hide_name": 1,
+          "bits": [ 44 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$223": {
+          "hide_name": 1,
+          "bits": [ 46 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$259": {
+          "hide_name": 1,
+          "bits": [ 48 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$295": {
+          "hide_name": 1,
+          "bits": [ 50 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$331": {
+          "hide_name": 1,
+          "bits": [ 52 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$367": {
+          "hide_name": 1,
+          "bits": [ 54 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$403": {
+          "hide_name": 1,
+          "bits": [ 56 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3399:Mux$439": {
+          "hide_name": 1,
+          "bits": [ 58 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$161": {
+          "hide_name": 1,
+          "bits": [ 62 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$171": {
+          "hide_name": 1,
+          "bits": [ 68 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$197": {
+          "hide_name": 1,
+          "bits": [ 74 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$207": {
+          "hide_name": 1,
+          "bits": [ 80 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$233": {
+          "hide_name": 1,
+          "bits": [ 86 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$243": {
+          "hide_name": 1,
+          "bits": [ 92 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$269": {
+          "hide_name": 1,
+          "bits": [ 98 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$279": {
+          "hide_name": 1,
+          "bits": [ 104 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$305": {
+          "hide_name": 1,
+          "bits": [ 110 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$315": {
+          "hide_name": 1,
+          "bits": [ 116 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$341": {
+          "hide_name": 1,
+          "bits": [ 122 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$351": {
+          "hide_name": 1,
+          "bits": [ 128 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$377": {
+          "hide_name": 1,
+          "bits": [ 134 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$387": {
+          "hide_name": 1,
+          "bits": [ 140 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$413": {
+          "hide_name": 1,
+          "bits": [ 146 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$423": {
+          "hide_name": 1,
+          "bits": [ 152 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$449": {
+          "hide_name": 1,
+          "bits": [ 158 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3501:NotGate$459": {
+          "hide_name": 1,
+          "bits": [ 164 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$159": {
+          "hide_name": 1,
+          "bits": [ 61 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$165": {
+          "hide_name": 1,
+          "bits": [ 64 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$169": {
+          "hide_name": 1,
+          "bits": [ 67 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$175": {
+          "hide_name": 1,
+          "bits": [ 70 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$195": {
+          "hide_name": 1,
+          "bits": [ 73 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$201": {
+          "hide_name": 1,
+          "bits": [ 76 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$205": {
+          "hide_name": 1,
+          "bits": [ 79 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$211": {
+          "hide_name": 1,
+          "bits": [ 82 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$231": {
+          "hide_name": 1,
+          "bits": [ 85 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$237": {
+          "hide_name": 1,
+          "bits": [ 88 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$241": {
+          "hide_name": 1,
+          "bits": [ 91 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$247": {
+          "hide_name": 1,
+          "bits": [ 94 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$267": {
+          "hide_name": 1,
+          "bits": [ 97 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$273": {
+          "hide_name": 1,
+          "bits": [ 100 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$277": {
+          "hide_name": 1,
+          "bits": [ 103 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$283": {
+          "hide_name": 1,
+          "bits": [ 106 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$303": {
+          "hide_name": 1,
+          "bits": [ 109 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$309": {
+          "hide_name": 1,
+          "bits": [ 112 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$313": {
+          "hide_name": 1,
+          "bits": [ 115 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$319": {
+          "hide_name": 1,
+          "bits": [ 118 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$339": {
+          "hide_name": 1,
+          "bits": [ 121 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$345": {
+          "hide_name": 1,
+          "bits": [ 124 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$349": {
+          "hide_name": 1,
+          "bits": [ 127 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$355": {
+          "hide_name": 1,
+          "bits": [ 130 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$375": {
+          "hide_name": 1,
+          "bits": [ 133 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$381": {
+          "hide_name": 1,
+          "bits": [ 136 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$385": {
+          "hide_name": 1,
+          "bits": [ 139 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$391": {
+          "hide_name": 1,
+          "bits": [ 142 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$411": {
+          "hide_name": 1,
+          "bits": [ 145 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$417": {
+          "hide_name": 1,
+          "bits": [ 148 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$421": {
+          "hide_name": 1,
+          "bits": [ 151 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$427": {
+          "hide_name": 1,
+          "bits": [ 154 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$447": {
+          "hide_name": 1,
+          "bits": [ 157 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$453": {
+          "hide_name": 1,
+          "bits": [ 160 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$457": {
+          "hide_name": 1,
+          "bits": [ 163 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3502:AndGate$463": {
+          "hide_name": 1,
+          "bits": [ 166 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$163": {
+          "hide_name": 1,
+          "bits": [ 63 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$173": {
+          "hide_name": 1,
+          "bits": [ 69 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$199": {
+          "hide_name": 1,
+          "bits": [ 75 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$209": {
+          "hide_name": 1,
+          "bits": [ 81 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$235": {
+          "hide_name": 1,
+          "bits": [ 87 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$245": {
+          "hide_name": 1,
+          "bits": [ 93 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$271": {
+          "hide_name": 1,
+          "bits": [ 99 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$281": {
+          "hide_name": 1,
+          "bits": [ 105 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$307": {
+          "hide_name": 1,
+          "bits": [ 111 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$317": {
+          "hide_name": 1,
+          "bits": [ 117 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$343": {
+          "hide_name": 1,
+          "bits": [ 123 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$353": {
+          "hide_name": 1,
+          "bits": [ 129 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$379": {
+          "hide_name": 1,
+          "bits": [ 135 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$389": {
+          "hide_name": 1,
+          "bits": [ 141 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$415": {
+          "hide_name": 1,
+          "bits": [ 147 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$425": {
+          "hide_name": 1,
+          "bits": [ 153 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$451": {
+          "hide_name": 1,
+          "bits": [ 159 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3504:OrGate$461": {
+          "hide_name": 1,
+          "bits": [ 165 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3510:MuxGate$167": {
+          "hide_name": 1,
+          "bits": [ 65 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3510:MuxGate$203": {
+          "hide_name": 1,
+          "bits": [ 77 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3510:MuxGate$239": {
+          "hide_name": 1,
+          "bits": [ 89 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3510:MuxGate$275": {
+          "hide_name": 1,
+          "bits": [ 101 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3510:MuxGate$311": {
+          "hide_name": 1,
+          "bits": [ 113 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3510:MuxGate$347": {
+          "hide_name": 1,
+          "bits": [ 125 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3510:MuxGate$383": {
+          "hide_name": 1,
+          "bits": [ 137 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3510:MuxGate$419": {
+          "hide_name": 1,
+          "bits": [ 149 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3510:MuxGate$455": {
+          "hide_name": 1,
+          "bits": [ 161 ],
+          "attributes": {
+          }
+        },
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:1.35-1.38"
+          }
+        },
+        "ff0.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff0 CLK",
+            "src": "canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "ff0.D": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff0 D",
+            "src": "canonical_ASR_normalized.v:38.42-38.43"
+          }
+        },
+        "ff0.QN": {
+          "hide_name": 0,
+          "bits": [ 16 ],
+          "attributes": {
+            "hdlname": "ff0 QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "ff0.RESETN": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff0 RESETN",
+            "src": "canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "ff0.SETN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "hdlname": "ff0 SETN",
+            "src": "canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "ff0.asr_clear": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff0 asr_clear",
+            "src": "canonical_ASR_normalized.v:39.7-39.16"
+          }
+        },
+        "ff1.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff1 CLK",
+            "src": "canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "ff1.QN": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+            "hdlname": "ff1 QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "ff1.RESETN": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff1 RESETN",
+            "src": "canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "ff1.SETN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "hdlname": "ff1 SETN",
+            "src": "canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "ff1.asr_clear": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff1 asr_clear",
+            "src": "canonical_ASR_normalized.v:39.7-39.16"
+          }
+        },
+        "ff2.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff2 CLK",
+            "src": "canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "ff2.QN": {
+          "hide_name": 0,
+          "bits": [ 18 ],
+          "attributes": {
+            "hdlname": "ff2 QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "ff2.RESETN": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff2 RESETN",
+            "src": "canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "ff2.SETN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "hdlname": "ff2 SETN",
+            "src": "canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "ff2.asr_clear": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff2 asr_clear",
+            "src": "canonical_ASR_normalized.v:39.7-39.16"
+          }
+        },
+        "ff3.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff3 CLK",
+            "src": "canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "ff3.QN": {
+          "hide_name": 0,
+          "bits": [ 14 ],
+          "attributes": {
+            "hdlname": "ff3 QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "ff3.RESETN": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff3 RESETN",
+            "src": "canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "ff3.SETN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "hdlname": "ff3 SETN",
+            "src": "canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "ff3.asr_clear": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff3 asr_clear",
+            "src": "canonical_ASR_normalized.v:39.7-39.16"
+          }
+        },
+        "ff4.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff4 CLK",
+            "src": "canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "ff4.QN": {
+          "hide_name": 0,
+          "bits": [ 38 ],
+          "attributes": {
+            "hdlname": "ff4 QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "ff4.RESETN": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff4 RESETN",
+            "src": "canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "ff4.SETN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "hdlname": "ff4 SETN",
+            "src": "canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "ff4.asr_clear": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff4 asr_clear",
+            "src": "canonical_ASR_normalized.v:39.7-39.16"
+          }
+        },
+        "ff5.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff5 CLK",
+            "src": "canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "ff5.QN": {
+          "hide_name": 0,
+          "bits": [ 35 ],
+          "attributes": {
+            "hdlname": "ff5 QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "ff5.RESETN": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff5 RESETN",
+            "src": "canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "ff5.SETN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "hdlname": "ff5 SETN",
+            "src": "canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "ff5.asr_clear": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff5 asr_clear",
+            "src": "canonical_ASR_normalized.v:39.7-39.16"
+          }
+        },
+        "ff6.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff6 CLK",
+            "src": "canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "ff6.QN": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "hdlname": "ff6 QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "ff6.RESETN": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff6 RESETN",
+            "src": "canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "ff6.SETN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "hdlname": "ff6 SETN",
+            "src": "canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "ff6.asr_clear": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff6 asr_clear",
+            "src": "canonical_ASR_normalized.v:39.7-39.16"
+          }
+        },
+        "ff7.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff7 CLK",
+            "src": "canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "ff7.QN": {
+          "hide_name": 0,
+          "bits": [ 29 ],
+          "attributes": {
+            "hdlname": "ff7 QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "ff7.RESETN": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff7 RESETN",
+            "src": "canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "ff7.SETN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "hdlname": "ff7 SETN",
+            "src": "canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "ff7.asr_clear": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff7 asr_clear",
+            "src": "canonical_ASR_normalized.v:39.7-39.16"
+          }
+        },
+        "ff8.CLK": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "ff8 CLK",
+            "src": "canonical_ASR_normalized.v:38.38-38.41"
+          }
+        },
+        "ff8.QN": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "hdlname": "ff8 QN",
+            "keep": "00000000000000000000000000000001",
+            "src": "canonical_ASR_normalized.v:38.67-38.69"
+          }
+        },
+        "ff8.RESETN": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "ff8 RESETN",
+            "src": "canonical_ASR_normalized.v:38.44-38.50"
+          }
+        },
+        "ff8.SETN": {
+          "hide_name": 0,
+          "bits": [ "1" ],
+          "attributes": {
+            "hdlname": "ff8 SETN",
+            "src": "canonical_ASR_normalized.v:38.51-38.55"
+          }
+        },
+        "ff8.asr_clear": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "hdlname": "ff8 asr_clear",
+            "src": "canonical_ASR_normalized.v:39.7-39.16"
+          }
+        },
+        "ok": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:1.62-1.64"
+          }
+        },
+        "q0": {
+          "hide_name": 0,
+          "bits": [ 16 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:2.6-2.8"
+          }
+        },
+        "q1": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:4.6-4.8"
+          }
+        },
+        "q2": {
+          "hide_name": 0,
+          "bits": [ 18 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:6.6-6.8"
+          }
+        },
+        "q3": {
+          "hide_name": 0,
+          "bits": [ 14 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:8.6-8.8"
+          }
+        },
+        "q4": {
+          "hide_name": 0,
+          "bits": [ 38 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:10.6-10.8"
+          }
+        },
+        "q5": {
+          "hide_name": 0,
+          "bits": [ 35 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:12.6-12.8"
+          }
+        },
+        "q6": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:14.6-14.8"
+          }
+        },
+        "q7": {
+          "hide_name": 0,
+          "bits": [ 29 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:16.6-16.8"
+          }
+        },
+        "q8": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:18.6-18.8"
+          }
+        },
+        "released": {
+          "hide_name": 0,
+          "bits": [ 6, 7, 8, 9, 10, 11, 12, 13 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:1.83-1.91"
+          }
+        },
+        "rst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:1.39-1.44"
+          }
+        },
+        "want": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "coupon_stopped1_first_D.v:1.45-1.49"
+          }
+        }
+      }
+    }
+  }
+}
