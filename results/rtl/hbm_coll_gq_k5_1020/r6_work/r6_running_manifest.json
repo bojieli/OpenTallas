@@ -1,0 +1,20 @@
+{
+  "source_commit": "e8956f9d9",
+  "helpers_commit": "c08afcc64ff982004ef092375996905b90bd7836",
+  "native_session": 28783,
+  "native_run": "ot-epyc6:/srv/opentallas-scratch/codex-gq7-native-r6",
+  "native_scope": "onlycanonical1_2_yosys target+normalise+nativecensus, NO floorplan/CTS/layout",
+  "fullbench_session": 78512,
+  "fullbench_scope": "baselineVM_RT0/IA0 productionquantization/faults8mutants",
+  "ia_session": 77795,
+  "ia_scope": "actualVM_RT74/ISSUE_AHEAD1 productioncalendar +slot/RAWdependency/IAignored3mutants",
+  "behavior_run": "ot-epyc9:/srv/opentallas-scratch/claude/codex-gq7-r6-full-1020",
+  "geometry": "HOLD35f39f06c modelonly; no newlayoutgate",
+  "source_sha256": {
+    "ot_hgi_coll_gq.sv": "deeddb8f1a580aae247b80ff1f8f1a2468b11d65dd80b144413017e048abfb20",
+    "ot_hgi_coll_gq_target16.sv": "fac5b8e277d8429d28cb266f90f21d9cc6af1e045b2962bea76e9bcb3e3a1aa9",
+    "ot_hgi_coll_aq13.sv": "c7fb5962ecef302f786f0345e5fe860f050da0795583ed38d3456c1851901967",
+    "ot_hgi_coll_aq_scale13r.sv": "bc0482885144e55b0a7b77dd0d4b5c05b0ff67d492dca5e62ef77dd70f10d5e4"
+  },
+  "helper_archive_sha256": "958b6eb37b6e5cd0e435652f2ccecd63b91f340bbf5c8a046fb53b1fc24f61f6"
+}
