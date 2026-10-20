@@ -72,10 +72,18 @@ module ot_coll_fold_slice_native32 #(parameter integer N = 4, parameter integer 
         always @(posedge clk or negedge rsg[g]) if (!rsg[g]) edl <= 0; else edl <= {edl[ADD_LAT-2:0], se[g-1]};
         wire [3:0] lv;
         wire [7:0] le;
+        // QW-ORPHANS 10-20 (pre-gate census: stage leaf drove 35 = edl 7 + 4 native adders x 7): with ADD_FAN32 the
+        // lanes 2..3 adders get a second identical two-flop leaf (same rst_n, same release edge; behaviour unchanged).
+        wire rsh;
+        if (ADD_FAN32 != 0 && RSTSPLIT != 0) begin : g_rsh
+            (* keep_hierarchy *) ot_coll_rst_leaf u_rs (.clk(clk), .arst_n(rst_n), .q(rsh));
+        end else begin : g_rsh0
+            assign rsh = rsg[g];
+        end
         for (l = 0; l < 4; l = l + 1) begin : g_lane
             if (ADD_FAN32 != 0) begin : g_fan32
                 ot_hdc_fp32_add_lat_fan32 #(.LAT(ADD_LAT), .DRST(ADRST), .SAFE_DIST(1)) u_add (
-                    .clk(clk), .rst_n(rsg[g]), .valid_in(sv[g-1]),
+                    .clk(clk), .rst_n((l < 2) ? rsg[g] : rsh), .valid_in(sv[g-1]),
                     .a(sm[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
                     .y(sm[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
             end else begin : g_legacy_add
