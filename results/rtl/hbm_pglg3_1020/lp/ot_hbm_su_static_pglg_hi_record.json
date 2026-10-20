@@ -1,0 +1,470 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "ot_hbm_su_static_pglg_hif",
+ "top": "ot_hbm_su_static_pglg_hi",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "s": {
+   "clock_port": "ck_s",
+   "children": [
+    "u_erly",
+    "u_sinh",
+    "u_wrly"
+   ]
+  },
+  "r2": {
+   "clock_port": "ck_r2",
+   "children": [
+    "u_bk_r2_0",
+    "u_bk_r2_1",
+    "u_bk_r2_2",
+    "u_bk_r2_3",
+    "u_bk_r2_4",
+    "u_bk_r2_5",
+    "u_bk_r2_6",
+    "u_bk_r2_7",
+    "u_dly2",
+    "u_ln_r2_0",
+    "u_ln_r2_1",
+    "u_ln_r2_2",
+    "u_ln_r2_3",
+    "u_ln_r2_4",
+    "u_ln_r2_5",
+    "u_ln_r2_6",
+    "u_ln_r2_7",
+    "u_rg2",
+    "u_rly2",
+    "u_rlyb2"
+   ]
+  },
+  "r3": {
+   "clock_port": "ck_r3",
+   "children": [
+    "u_bk_r3_0",
+    "u_bk_r3_1",
+    "u_bk_r3_2",
+    "u_bk_r3_3",
+    "u_bk_r3_4",
+    "u_bk_r3_5",
+    "u_bk_r3_6",
+    "u_bk_r3_7",
+    "u_ln_r3_0",
+    "u_ln_r3_1",
+    "u_ln_r3_2",
+    "u_ln_r3_3",
+    "u_ln_r3_4",
+    "u_ln_r3_5",
+    "u_ln_r3_6",
+    "u_ln_r3_7",
+    "u_rg3"
+   ]
+  }
+ },
+ "D": 2,
+ "E": 1,
+ "K": 1,
+ "added_edges_per_landing": 2,
+ "window": "(1 - 2) T + t_hold < dL < 1 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "control_f",
+   "src_region": "s",
+   "dst_region": "r2",
+   "src_nodes": [
+    "u_wrly"
+   ],
+   "width": 1742,
+   "readers": [
+    "u_rly2.d",
+    "u_rg2.control"
+   ],
+   "ring": "u_lpl_0_w (ck_s)",
+   "read": "u_lpl_0_r (ck_r2)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "di3",
+   "src_region": "s",
+   "dst_region": "r2",
+   "src_nodes": [
+    "u_sinh"
+   ],
+   "width": 542,
+   "readers": [
+    "u_rly2.d"
+   ],
+   "ring": "u_lpl_1_w (ck_s)",
+   "read": "u_lpl_1_r (ck_r2)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "rf_u",
+   "src_region": "s",
+   "dst_region": "r2",
+   "src_nodes": [
+    "u_sinh"
+   ],
+   "width": 164,
+   "readers": [
+    "u_rly2.d",
+    "u_rg2.rf_u"
+   ],
+   "ring": "u_lpl_2_w (ck_s)",
+   "read": "u_lpl_2_r (ck_r2)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  },
+  {
+   "name": "3",
+   "net": "ret_r3",
+   "src_region": "r3",
+   "dst_region": "r2",
+   "src_nodes": [
+    "u_rg3"
+   ],
+   "width": 521,
+   "readers": [
+    "u_rlyb2.d"
+   ],
+   "ring": "u_lpl_3_w (ck_r3)",
+   "read": "u_lpl_3_r (ck_r2)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+  },
+  {
+   "name": "4",
+   "net": "di2",
+   "src_region": "s",
+   "dst_region": "r2",
+   "src_nodes": [
+    "u_sinh"
+   ],
+   "width": 542,
+   "readers": [
+    "u_rg2.di"
+   ],
+   "ring": "u_lpl_4_w (ck_s)",
+   "read": "u_lpl_4_r (ck_r2)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+  },
+  {
+   "name": "5",
+   "net": "rly2_q",
+   "src_region": "r2",
+   "dst_region": "r3",
+   "src_nodes": [
+    "u_rly2"
+   ],
+   "width": 2448,
+   "readers": [
+    "u_rg3.control",
+    "u_rg3.rf_u",
+    "u_rg3.di"
+   ],
+   "ring": "u_lpl_5_w (ck_r2)",
+   "read": "u_lpl_5_r (ck_r3)",
+   "added_edges": 2,
+   "sdc": "set_multicycle_path -setup 1 / -hold 1 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+  }
+ ],
+ "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
+ "reset": {
+  "port": "rst_n",
+  "root_region": "s",
+  "depth": 4,
+  "hops": {
+   "s": 0,
+   "r2": 2,
+   "r3": 3
+  },
+  "same_depth_forest": {
+   "regional_stages": 3,
+   "root_D_loads": 3,
+   "regions": {
+    "s": {
+     "leaves": 127,
+     "terms": [
+      "1",
+      "(((((1741) - (0) + 1))+24-1)/24)",
+      "(((((541) - (0) + 1))+24-1)/24)",
+      "(((((163) - (0) + 1))+24-1)/24)",
+      "(((((541) - (0) + 1))+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 73,
+       "first_expr": "1",
+       "chunks_expr": "(((((1741) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "1",
+       "role": "w",
+       "first_leaf": 74,
+       "chunks": 23,
+       "first_expr": "1+(((((1741) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((541) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "2",
+       "role": "w",
+       "first_leaf": 97,
+       "chunks": 7,
+       "first_expr": "1+(((((1741) - (0) + 1))+24-1)/24)+(((((541) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((163) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "4",
+       "role": "w",
+       "first_leaf": 104,
+       "chunks": 23,
+       "first_expr": "1+(((((1741) - (0) + 1))+24-1)/24)+(((((541) - (0) + 1))+24-1)/24)+(((((163) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((541) - (0) + 1))+24-1)/24)"
+      }
+     ],
+     "branches": 4,
+     "FFs": 132,
+     "scalar_child_pad_port_uses": 1
+    },
+    "r2": {
+     "leaves": 251,
+     "terms": [
+      "1",
+      "(((((1741) - (0) + 1))+24-1)/24)",
+      "(((((541) - (0) + 1))+24-1)/24)",
+      "(((((163) - (0) + 1))+24-1)/24)",
+      "(((((520) - (0) + 1))+24-1)/24)",
+      "(((((541) - (0) + 1))+24-1)/24)",
+      "(((((2447) - (0) + 1))+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 73,
+       "first_expr": "1",
+       "chunks_expr": "(((((1741) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "1",
+       "role": "r",
+       "first_leaf": 74,
+       "chunks": 23,
+       "first_expr": "1+(((((1741) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((541) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "2",
+       "role": "r",
+       "first_leaf": 97,
+       "chunks": 7,
+       "first_expr": "1+(((((1741) - (0) + 1))+24-1)/24)+(((((541) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((163) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "3",
+       "role": "r",
+       "first_leaf": 104,
+       "chunks": 22,
+       "first_expr": "1+(((((1741) - (0) + 1))+24-1)/24)+(((((541) - (0) + 1))+24-1)/24)+(((((163) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((520) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "4",
+       "role": "r",
+       "first_leaf": 126,
+       "chunks": 23,
+       "first_expr": "1+(((((1741) - (0) + 1))+24-1)/24)+(((((541) - (0) + 1))+24-1)/24)+(((((163) - (0) + 1))+24-1)/24)+(((((520) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((541) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "5",
+       "role": "w",
+       "first_leaf": 149,
+       "chunks": 102,
+       "first_expr": "1+(((((1741) - (0) + 1))+24-1)/24)+(((((541) - (0) + 1))+24-1)/24)+(((((163) - (0) + 1))+24-1)/24)+(((((520) - (0) + 1))+24-1)/24)+(((((541) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((2447) - (0) + 1))+24-1)/24)"
+      }
+     ],
+     "branches": 8,
+     "FFs": 260,
+     "scalar_child_pad_port_uses": 17
+    },
+    "r3": {
+     "leaves": 125,
+     "terms": [
+      "1",
+      "(((((520) - (0) + 1))+24-1)/24)",
+      "(((((2447) - (0) + 1))+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "3",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 22,
+       "first_expr": "1",
+       "chunks_expr": "(((((520) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "5",
+       "role": "r",
+       "first_leaf": 23,
+       "chunks": 102,
+       "first_expr": "1+(((((520) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((2447) - (0) + 1))+24-1)/24)"
+      }
+     ],
+     "branches": 4,
+     "FFs": 130,
+     "scalar_child_pad_port_uses": 17
+    }
+   },
+   "incremental_FFs": 513,
+   "required_rtl_sources": [
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+   ],
+   "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified."
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 21127,
+  "pads": 0,
+  "reset": 625,
+  "out_regs": 2084
+ },
+ "out_regs": [
+  {
+   "port": "ret2d",
+   "stages": 4,
+   "region": "r2",
+   "inst": "u_lpo_ret2d"
+  }
+ ],
+ "communicating_region_pairs": {
+  "landed": [
+   "r2-r3",
+   "r2-s"
+  ],
+  "reset_hops": [
+   "r2-s",
+   "r3-s"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_wrly": 0,
+   "u_erly": 0,
+   "u_sinh": 0,
+   "u_rly2": 2,
+   "u_rlyb2": 6,
+   "u_dly2": 2,
+   "u_rg2": 2,
+   "u_ln_r2_0": 2,
+   "u_bk_r2_0": 2,
+   "u_ln_r2_1": 2,
+   "u_bk_r2_1": 2,
+   "u_ln_r2_2": 2,
+   "u_bk_r2_2": 2,
+   "u_ln_r2_3": 2,
+   "u_bk_r2_3": 2,
+   "u_ln_r2_4": 2,
+   "u_bk_r2_4": 2,
+   "u_ln_r2_5": 2,
+   "u_bk_r2_5": 2,
+   "u_ln_r2_6": 2,
+   "u_bk_r2_6": 2,
+   "u_ln_r2_7": 2,
+   "u_bk_r2_7": 2,
+   "u_rg3": 4,
+   "u_ln_r3_0": 4,
+   "u_bk_r3_0": 4,
+   "u_ln_r3_1": 4,
+   "u_bk_r3_1": 4,
+   "u_ln_r3_2": 4,
+   "u_bk_r3_2": 4,
+   "u_ln_r3_3": 4,
+   "u_bk_r3_3": 4,
+   "u_ln_r3_4": 4,
+   "u_bk_r3_4": 4,
+   "u_ln_r3_5": 4,
+   "u_bk_r3_5": 4,
+   "u_ln_r3_6": 4,
+   "u_bk_r3_6": 4,
+   "u_ln_r3_7": 4,
+   "u_bk_r3_7": 4
+  },
+  "input_port_offset_edges": {
+   "control": 0,
+   "vmr_cmd": 0,
+   "vmw_cmd": 0,
+   "rf_bword": 0,
+   "rf_bcmd": 0,
+   "dw_v1": 0,
+   "dw_row1": 0,
+   "dw_d1": 0,
+   "su_rr": 0,
+   "ij_v1": 0,
+   "ij_row1": 0
+  },
+  "output_port_offset_edges": {
+   "ret2d": 6,
+   "ret3b": 6
+  },
+  "reset_release_added_edges": 4,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
+  "max_added_edges": 6
+ },
+ "warnings": [
+  "child u_rly2 runs t = 2 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_rlyb2 runs t = 6 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+  "child u_dly2 runs t = 2 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)"
+ ],
+ "landing_implementation": {
+  "chunk_bits": 24,
+  "direct_quarter_period_timing": false,
+  "pad_ring_min": 3,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['r2-s', 'r3-s']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 6,
+  "reset_hops": 2,
+  "fails": []
+ }
+}

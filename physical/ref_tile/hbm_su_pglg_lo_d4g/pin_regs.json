@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_static_pglg_lo",
+ "enable": false,
+ "reason": "the RTL registers every data pin: W/E face relays u_wrly / u_erly (flop-first, ck_s), u_sout FRLY on rf_dsec / red_sel / tree_cmd, outputs from u_sout / lp landing-read registers, seam inputs into the landing read ot_pl_land_phys_local_r; pos straps are static identity straps (die constants)"
+}
