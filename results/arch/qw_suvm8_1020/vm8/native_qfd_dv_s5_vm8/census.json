@@ -1,6 +1,6 @@
 {
   "top": "qfd_dv_s5_vm8",
-  "sha256": "d198e97e6a0ff21147bd9f4535612964766f4698a1716300fd88b7546aea329c",
+  "sha256": "88900e4f44a01142563700c88eb5c5018f6afc44b7824bbeec4debc342c9d32b",
   "nonclock_drivers_over32": 0,
   "flop_drivers_over32": 0,
   "raw_ports_over32": 0,
@@ -12,26 +12,47 @@
         "root": "port:ck_rd",
         "ff": 8077,
         "icg": 0,
-        "macro_pins": 10,
-        "example": "_36870_"
+        "macro_pins": 0,
+        "example": "_36932_"
       },
       {
         "root": "port:ck_su",
         "ff": 3850,
         "icg": 0,
-        "macro_pins": 8,
-        "example": "_36869_"
+        "macro_pins": 0,
+        "example": "_36931_"
       },
       {
         "root": "port:ck_wr",
-        "ff": 3107,
+        "ff": 3159,
         "icg": 0,
         "macro_pins": 0,
-        "example": "_36866_"
+        "example": "_36928_"
+      },
+      {
+        "root": "port:ckm10",
+        "ff": 0,
+        "icg": 0,
+        "macro_pins": 1,
+        "example": null
+      },
+      {
+        "root": "port:ckm11",
+        "ff": 0,
+        "icg": 0,
+        "macro_pins": 1,
+        "example": null
+      },
+      {
+        "root": "port:ckm12",
+        "ff": 0,
+        "icg": 0,
+        "macro_pins": 1,
+        "example": null
       }
     ],
     "hier_subblocks": 0,
-    "clock_max_root_sinks": 8087,
+    "clock_max_root_sinks": 8077,
     "clock_max_root": "port:ck_rd",
     "high_fanout_top": [],
     "hf_max_port": 0,
@@ -51,8 +72,8 @@
     "icg_enable_from_port": 0,
     "depth_ps": 286.7,
     "depth_path": [
-      "_46749_",
-      "_36870_/D"
+      "_46675_",
+      "_36932_/D"
     ],
     "depth_levels": 8
   },

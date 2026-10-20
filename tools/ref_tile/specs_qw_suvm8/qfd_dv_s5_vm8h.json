@@ -1,5 +1,5 @@
 {
- "name": "qfd_dv_s5_vm8",
+ "name": "qfd_dv_s5_vm8h",
  "top": "qfd_dv_s5_vm8",
  "kind": "tile",
  "sources": [
@@ -27,7 +27,12 @@
     86.4
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm0",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -38,7 +43,12 @@
     198.72
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm1",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -49,7 +59,12 @@
     311.04
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm2",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -60,7 +75,12 @@
     423.36
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm6",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -71,7 +91,12 @@
     535.68
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm7",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -82,7 +107,12 @@
     86.4
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm3",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -93,7 +123,12 @@
     198.72
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm4",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -104,7 +139,12 @@
     311.04
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm5",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -115,7 +155,12 @@
     423.36
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm8",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
@@ -126,7 +171,12 @@
     535.68
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm9",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
@@ -137,7 +187,12 @@
     86.4
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm14",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
@@ -148,7 +203,12 @@
     155.52
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm15",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
@@ -159,7 +219,12 @@
     224.64
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm16",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
@@ -170,7 +235,12 @@
     293.76
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm17",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -181,7 +251,12 @@
     362.88
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm10",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -192,7 +267,12 @@
     432.0
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm11",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -203,7 +283,12 @@
     501.12
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm12",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -214,7 +299,12 @@
     570.24
    ],
    "at_exact": true,
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "ckm13",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   }
  ],
  "pins": {
@@ -231,7 +321,17 @@
    "b_q",
    "c_q",
    "cr_q",
-   "ck_rd"
+   "ck_rd",
+   "ckm0",
+   "ckm1",
+   "ckm2",
+   "ckm3",
+   "ckm4",
+   "ckm5",
+   "ckm6",
+   "ckm7",
+   "ckm8",
+   "ckm9"
   ],
   "E": [
    "bs_re",
@@ -240,7 +340,15 @@
    "p_idx",
    "bs_q",
    "p_q",
-   "ck_su"
+   "ck_su",
+   "ckm10",
+   "ckm11",
+   "ckm12",
+   "ckm13",
+   "ckm14",
+   "ckm15",
+   "ckm16",
+   "ckm17"
   ],
   "S": [
    "rst_n",
@@ -290,14 +398,14 @@
   "7_clock": "a: three regional related roots (ck_wr S band, ck_rd W + VM/CROM, ck_su E + PROG/BTAB), each < 8k flops and judged on pin-flop spread <= 80 TT+FF; b: one S-centre root (fallback); io_hold_margin 0.03",
   "8_schedule": "static, no credits/backpressure; PRICED: reads +2 (answer 2 -> 4 edges), VM writes +3 vs suvm (write->read distance 1 -> 3), table writes +2 (table write->read distance 1 -> 2), fault +1"
  },
- "structural_change": "QW-SUVM8: VM split out of suvm7 as its own hardened block; every pin registered; registered write stage at the macros; table writes landed per group; three regional related CTS roots; 3 columns, all macro channels >= 20 um",
+ "structural_change": "QW-SUVM8: VM split out of suvm7 as its own hardened block; every pin registered; registered write stage at the macros; table writes landed per group; three regional related CTS roots + 18 raw SRAM clock entries (hybrid_entries); 3 columns, all macro channels >= 20 um",
  "children": [],
  "inter": [],
  "job": {
   "owner": "Claude:QW-SUVM8",
   "branch": "claude/qw-suvm8-1020",
-  "tag": "v8a",
-  "purpose": "QW-SUVM8 slice2 VM hardened block (18 SRAM), main: 3 regional roots",
+  "tag": "v8h",
+  "purpose": "QW-SUVM8 slice2 VM hardened block (18 SRAM), main: 3 regional roots + raw SRAM clock entries",
   "extra_paths": [
    "rtl",
    "rtl/test/qwen_dv",
@@ -353,11 +461,34 @@
     ]
    }
   ],
-  "views_to": "physical/ref_tile/qfd_dv_s5_vm8/views",
-  "record_to": "results/rtl/ref_tile/qfd_dv_s5_vm8"
+  "views_to": "physical/ref_tile/qfd_dv_s5_vm8h/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_s5_vm8h"
  },
- "clock": "multiple_cts_roots",
+ "clock": "hybrid_entries",
  "clock_ports": [
+  "ck_wr",
+  "ck_rd",
+  "ck_su",
+  "ckm0",
+  "ckm1",
+  "ckm2",
+  "ckm3",
+  "ckm4",
+  "ckm5",
+  "ckm6",
+  "ckm7",
+  "ckm8",
+  "ckm9",
+  "ckm10",
+  "ckm11",
+  "ckm12",
+  "ckm13",
+  "ckm14",
+  "ckm15",
+  "ckm16",
+  "ckm17"
+ ],
+ "clock_cts_roots": [
   "ck_wr",
   "ck_rd",
   "ck_su"
@@ -443,6 +574,204 @@
     "bs_q",
     "p_q"
    ]
+  },
+  "mem0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm3"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm4"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm5"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm6"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm7"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem8": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm8"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem9": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm9"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem10": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm10"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem11": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm11"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem12": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm12"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem13": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm13"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem14": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm14"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem15": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm15"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem16": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm16"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mem17": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ckm17"
+   ],
+   "inputs": [],
+   "outputs": []
   }
  }
 }

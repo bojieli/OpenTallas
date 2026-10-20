@@ -32,6 +32,9 @@ module qfd_dv_s5_vm8 #(parameter integer MUT = 0) (
     input  wire            ck_wr,
     input  wire            ck_rd,
     input  wire            ck_su,
+    // raw SRAM clock entries (one per macro; kit qfd_dv_s5_vm8h hybrid_entries): VM 0-5 [2*rep+bank], CROM 6-9
+    // [6+2*bank+hi], BTAB 10-13, PROG 14-17 [14+2*bank+hi]; tied to the root clock in vm8s and the benches
+    input  wire            ckm0, ckm1, ckm2, ckm3, ckm4, ckm5, ckm6, ckm7, ckm8, ckm9, ckm10, ckm11, ckm12, ckm13, ckm14, ckm15, ckm16, ckm17,
     input  wire            rst_n,
     // ---- ck_rd (W face): lane operand reads + CROM reads
     input  wire [7:0]      a_re, b_re, c_re,
@@ -65,6 +68,7 @@ module qfd_dv_s5_vm8 #(parameter integer MUT = 0) (
 );
     integer l, b, s, k;
     genvar gl, gb, gs, gk, op, bk;
+    wire [17:0] ckm = {ckm17, ckm16, ckm15, ckm14, ckm13, ckm12, ckm11, ckm10, ckm9, ckm8, ckm7, ckm6, ckm5, ckm4, ckm3, ckm2, ckm1, ckm0};
     // ================================================================ reset landing (ck_wr, 2 stages)
     reg rl0, rl1;
     always @(posedge ck_wr or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
@@ -77,18 +81,31 @@ module qfd_dv_s5_vm8 #(parameter integer MUT = 0) (
     end
     reg pbs_re, pp_re; reg [23:0] pbs_addr; reg [8:0] pp_idx;
     always @(posedge ck_su) begin pbs_re <= bs_re; pbs_addr <= bs_addr; pp_re <= p_re; pp_idx <= p_idx; end
-    reg [7:0] pvm_we; reg [8*24-1:0] pvm_waddr; reg [8*32-1:0] pvm_wdata;
+    reg [8*24-1:0] pvm_waddr; reg [8*32-1:0] pvm_wdata;
     reg pw16_we, pw1_we, ptw_we; reg [23:0] pw16_addr, pw1_addr, ptw_addr; reg [511:0] pw16_data; reg [31:0] pw1_data;
     reg [1:0] ptw_kind; reg [1023:0] ptw_data;
     always @(posedge ck_wr) begin
-        pvm_we <= vm_we; pvm_waddr <= vm_waddr; pvm_wdata <= vm_wdata;
+        pvm_waddr <= vm_waddr; pvm_wdata <= vm_wdata;
         pw16_we <= w16_we; pw16_addr <= w16_addr; pw16_data <= w16_data;
         pw1_we <= w1_we; pw1_addr <= w1_addr; pw1_data <= w1_data;
         ptw_we <= tw_we; ptw_kind <= tw_kind; ptw_addr <= tw_addr; ptw_data <= tw_data;
     end
     // ================================================================ VM write decode (= vm7 landing, from pin registers; ck_wr)
-    wire su_any_r = (|pvm_we) && pvm_waddr[23:22] == 2'b00;
-    wire [7:0] su_we_r = su_any_r ? pvm_we : 8'd0;
+    // window decode from KEPT pin-register copies of {vm_we, vm_waddr[23:22]} (gate 054252 vm8b: one shared
+    // vm_waddr[22] pin register drove 41 loads): copies 0-3 serve the slot hits of lane pairs, 4 the bank selects,
+    // 5 the write checks
+    wire [9:0] pwin [0:5];
+    wire [5:0] su_any_k;
+    generate for (gk = 0; gk < 6; gk = gk + 1) begin : g_pwin
+        qfd_dv_s8_kff #(.W(10), .ID(8000 + gk)) u (.ck(ck_wr), .d({vm_we, vm_waddr[23:22]}), .q(pwin[gk]));
+        assign su_any_k[gk] = (|pwin[gk][9:2]) && pwin[gk][1:0] == 2'b00;
+    end endgenerate
+    wire su_any_r = su_any_k[4];
+    wire [7:0] su_we_r, su_we_c;
+    generate for (gl = 0; gl < 8; gl = gl + 1) begin : g_swe
+        assign su_we_r[gl] = su_any_k[gl / 2] && pwin[gl / 2][2 + gl];
+        assign su_we_c[gl] = su_any_k[5] && pwin[5][2 + gl];
+    end endgenerate
     wire su_bank_r = pvm_waddr[3];
     wire w1_bank_r = pw1_addr[3];
     reg [7:0] off_oh [0:7];
@@ -127,9 +144,9 @@ module qfd_dv_s5_vm8 #(parameter integer MUT = 0) (
     always @(*) begin
         w_coll_r = 1'b0; w_bad_r = 1'b0;
         if (pw1_we && pw1_addr[23:14] != 10'd0) w_bad_r = 1'b1;
-        if (su_any_r) begin
+        if (su_any_k[5]) begin
             for (l = 0; l < 8; l = l + 1)
-                if (su_we_r[l] && (pvm_waddr[24*l+3 +: 21] != pvm_waddr[3 +: 21] || !su_we_r[0])) w_bad_r = 1'b1;
+                if (su_we_c[l] && (pvm_waddr[24*l+3 +: 21] != pvm_waddr[3 +: 21] || !su_we_c[0])) w_bad_r = 1'b1;
             if (pvm_waddr[23:14] != 10'd0) w_bad_r = 1'b1;
             if (pw1_we && w1_bank_r == su_bank_r) w_coll_r = 1'b1;
         end
@@ -212,7 +229,7 @@ module qfd_dv_s5_vm8 #(parameter integer MUT = 0) (
 `endif
             wire [255:0] wm;
             for (gs = 0; gs < 8; gs = gs + 1) begin : g_m assign wm[32*gs +: 32] = {32{mms[2*op + bk][gs]}}; end
-            ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(ck_rd),
+            ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(ckm[2*op + bk]),
                 .r_ce_in(rq_re[op] && rq_a0[24*op+3] == bk[0] && !coll_u),
                 .r_addr_in(rq_a0[24*op+4 +: 10]),
                 .rd_out(vm_rd[(2*op+bk)*256 +: 256]),
@@ -291,10 +308,10 @@ module qfd_dv_s5_vm8 #(parameter integer MUT = 0) (
             end
     end
     generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_crom
-        ot_sram_1r1w_1024x256_m2_r2c2 u_lo (.clk(ck_rd), .r_ce_in(pcr_re[0] && pcr_addr[3] == bk[0]), .r_addr_in(pcr_addr[4 +: 10]),
+        ot_sram_1r1w_1024x256_m2_r2c2 u_lo (.clk(ckm[6 + 2*bk]), .r_ce_in(pcr_re[0] && pcr_addr[3] == bk[0]), .r_addr_in(pcr_addr[4 +: 10]),
             .rd_out(cr_rd[(2*bk)*256 +: 256]), .w_ce_in(twc_crw), .w_addr_in(twc_a), .wd_in(cw_lo[bk]),
             .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        ot_sram_1r1w_1024x256_m2_r2c2 u_hi (.clk(ck_rd), .r_ce_in(pcr_re[0] && pcr_addr[3] == bk[0]), .r_addr_in(pcr_addr[4 +: 10]),
+        ot_sram_1r1w_1024x256_m2_r2c2 u_hi (.clk(ckm[7 + 2*bk]), .r_ce_in(pcr_re[0] && pcr_addr[3] == bk[0]), .r_addr_in(pcr_addr[4 +: 10]),
             .rd_out(cr_rd[(2*bk+1)*256 +: 256]), .w_ce_in(twc_crw), .w_addr_in(twc_a), .wd_in(cw_hi[bk]),
             .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
@@ -336,7 +353,7 @@ module qfd_dv_s5_vm8 #(parameter integer MUT = 0) (
     wire [8:0] bs_word = pbs_addr[8:0];
     wire [4*256-1:0] bt_rd;
     generate for (bk = 0; bk < 4; bk = bk + 1) begin : g_btb
-        ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(ck_su), .r_ce_in(pbs_re && bs_word[1:0] == bk[1:0]), .r_addr_in(bs_word[8:2]),
+        ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(ckm[10 + bk]), .r_ce_in(pbs_re && bs_word[1:0] == bk[1:0]), .r_addr_in(bs_word[8:2]),
             .rd_out(bt_rd[bk*256 +: 256]), .w_ce_in(twp_w[0]), .w_addr_in(twp_a[8:2]),
             .wd_in(twp_d[256*bk +: 256]), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
@@ -356,11 +373,11 @@ module qfd_dv_s5_vm8 #(parameter integer MUT = 0) (
     // ================================================================ PROG: 2 banks x (256 + 201) x 256 (ck_su)
     wire [4*256-1:0] p_rd;
     generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_prog
-        ot_sram_1r1w_256x256_m2_r2c2 u_lo (.clk(ck_su), .r_ce_in(pp_re && pp_idx[0] == bk[0]), .r_addr_in(pp_idx[8:1]),
+        ot_sram_1r1w_256x256_m2_r2c2 u_lo (.clk(ckm[14 + 2*bk]), .r_ce_in(pp_re && pp_idx[0] == bk[0]), .r_addr_in(pp_idx[8:1]),
             .rd_out(p_rd[(2*bk)*256 +: 256]), .w_ce_in(twp_w[1]), .w_addr_in(twp_a[7:0]),
             .wd_in(twp_d[512*bk +: 256]), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        ot_sram_1r1w_256x256_m2_r2c2 u_hi (.clk(ck_su), .r_ce_in(pp_re && pp_idx[0] == bk[0]), .r_addr_in(pp_idx[8:1]),
+        ot_sram_1r1w_256x256_m2_r2c2 u_hi (.clk(ckm[15 + 2*bk]), .r_ce_in(pp_re && pp_idx[0] == bk[0]), .r_addr_in(pp_idx[8:1]),
             .rd_out(p_rd[(2*bk+1)*256 +: 256]), .w_ce_in(twp_w[1]), .w_addr_in(twp_a[7:0]),
             .wd_in({55'd0, twp_d[512*bk + 256 +: 201]}), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
@@ -437,7 +454,7 @@ module qfd_dv_s5_vm8s #(parameter integer MUT = 0) (
     input  wire [1023:0]   tw_data,
     output wire            fault
 );
-    qfd_dv_s5_vm8 #(.MUT(MUT)) u_vm (.ck_wr(ck), .ck_rd(ck), .ck_su(ck), .rst_n(rst_n),
+    qfd_dv_s5_vm8 #(.MUT(MUT)) u_vm (.ck_wr(ck), .ck_rd(ck), .ck_su(ck), .ckm0(ck), .ckm1(ck), .ckm2(ck), .ckm3(ck), .ckm4(ck), .ckm5(ck), .ckm6(ck), .ckm7(ck), .ckm8(ck), .ckm9(ck), .ckm10(ck), .ckm11(ck), .ckm12(ck), .ckm13(ck), .ckm14(ck), .ckm15(ck), .ckm16(ck), .ckm17(ck), .rst_n(rst_n),
         .a_re(a_re), .b_re(b_re), .c_re(c_re), .a_addr(a_addr), .b_addr(b_addr), .c_addr(c_addr),
         .a_q(a_q), .b_q(b_q), .c_q(c_q), .cr_re(cr_re), .cr_addr(cr_addr), .cr_q(cr_q),
         .bs_re(bs_re), .bs_addr(bs_addr), .bs_q(bs_q), .p_re(p_re), .p_idx(p_idx), .p_q(p_q),

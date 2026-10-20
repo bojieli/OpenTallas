@@ -2,5 +2,5 @@ VM8_STATS compares=59620 mismatches=0 fault_cycles=41510 read_cycles=19746
 VM8_EQ PASS
 - rtl/test/qwen_dv/s5/vm8/tb_vm8.sv:116: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 120us; walltime 0.290 s; speed 413.144 us/s
-- Verilator: cpu 0.290 s on 1 threads; allocated 8 MB
+- Verilator: $finish at 120us; walltime 0.297 s; speed 404.359 us/s
+- Verilator: cpu 0.297 s on 1 threads; allocated 8 MB

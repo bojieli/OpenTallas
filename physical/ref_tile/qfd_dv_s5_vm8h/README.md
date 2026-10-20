@@ -1,4 +1,4 @@
-# qfd_dv_s5_vm8 / qfd_dv_s5_vm8b -- slice2 VM as its own hardened block (QW-SUVM8, Q.STA.SLICE.2)
+# qfd_dv_s5_vm8h / qfd_dv_s5_vm8b -- slice2 VM as its own hardened block (QW-SUVM8, Q.STA.SLICE.2)
 
 Successor of the VM half of qfd_dv_s5_suvm7 / suvm7b (claude/qw-slice6-suvm-1019 03ba379bf), whose gates were classified
 FAIL: one 9.7k-flop root over 480 x 687 um, boundary pin-flop spread TT 217 / FF 201 (7b 381 / 337) ps, placement
@@ -7,8 +7,13 @@ reg->macro -519 (r_ce collision compare), in->macro -406 (tw_data -> PROG wd), r
 (next step), the slice2 parent lands the crossings.
 
 RTL `rtl/qwen_dv/s5/qfd_dv_s5_vm8.sv` (qfd_dv_s5_vm8 = 3 clock ports; qfd_dv_s5_vm8s = single-root wrapper), generator
-`tools/qwen_dv/s5_vm8_kit.py a|b`.  main qfd_dv_s5_vm8 = three regional related CTS roots (multiple_cts_roots:
-ck_wr S band, ck_rd W face + VM/CROM, ck_su E face + PROG/BTAB); parallel fallback qfd_dv_s5_vm8b = same RTL, one root.
+`tools/qwen_dv/s5_vm8_kit.py h|b`.  main qfd_dv_s5_vm8h = three regional related CTS roots (ck_wr S band, ck_rd W face +
+VM/CROM logic, ck_su E face + PROG/BTAB logic) + 18 raw SRAM clock entries ckm0..17 (hybrid_entries; die delivers each
+macro clock compensated); parallel fallback qfd_dv_s5_vm8b = same RTL via qfd_dv_s5_vm8s, one S-centre root.
+Gate history (results/arch/qw_suvm8_1020/vm8/gate_054252_fail): r1 vm8 (multiple_cts_roots) FAIL at CTS -- OT_HYBRID
+"CTS source ck_rd must reach only standard-cell clock pins" (SRAM clocks need raw entries) -> vm8h; r1 vm8b FAIL in-flow
+native census: one vm_waddr[22] pin register 41 loads (flow ABC re-shared the window decode) -> 6 kept pin-register copies
+of {vm_we, vm_waddr[23:22]}.
 
 ## Structure
 - every input lands in a pin register, every output leaves one (no in->macro / macro->out / pin arc); rst_n rl0 -> rl1.
@@ -22,10 +27,10 @@ reads (VM a/b/c, CROM, BTAB, PROG): answer 2 -> 4 edges (+2); VM writes (lane wi
 (+2 vs suvm7), write -> read distance 1 -> 3; table writes tw_*: +2, table write -> read distance 1 -> 2; fault +1.
 
 ## Pre-gate native census (ASAP7 RVT TT mapped, macros blackbox; suvm7/native.sh in openroad/orfs:asap7lock, fleet ep7)
-vm8 : 0 drivers > 32 (raw ports + reset included), max 32; rst_n 2 loads; 15,034 FF; std area 6,101 um2; roots ck_rd
-      8,077 FF + 10 macros, ck_su 3,850 FF + 8 macros, ck_wr 3,107 FF; depth 286.7 ps / 8 lv; in->out 0, in->reg 0 lv,
-      reg->out 0 lv.  results/arch/qw_suvm8_1020/vm8/native_qfd_dv_s5_vm8/census.json (mapped SHA256 d198e97e6a0ff211...).
-vm8s: same, one root 15,034 FF + 18 macros, depth 280.1 ps / 8 lv (native_qfd_dv_s5_vm8s, SHA256 1389ed06ebaa94a8...).
+vm8 : 0 drivers > 32 (raw ports + reset included), max 32; rst_n 2 loads; 15,086 FF; roots ck_rd 8,077 FF, ck_su 3,850,
+      ck_wr 3,159, ckm0..17 one macro each; depth 286.7 ps / 8 lv; in->out 0, in->reg 0 lv,
+      reg->out 0 lv.  results/arch/qw_suvm8_1020/vm8/native_qfd_dv_s5_vm8/census.json (mapped SHA256 88900e4f44a01142...).
+vm8s: same, one root 15,086 FF + 18 macros, depth 250.1 ps (native_qfd_dv_s5_vm8s, SHA256 e20676ca83f4dfc9...).
 
 ## Benches (Verilator 5.050, fleet; rtl/test/qwen_dv/s5/vm8/bench.sh)
 vm8_eq: lockstep vs qfd_dv_s5_vm7 fed reads +1 / VM writes +2 / tw +2, every output +1, 60,000 cycles, random resets,

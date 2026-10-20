@@ -68,8 +68,8 @@ CHECKLIST = {
 
 
 def spec(var):
-    name = "qfd_dv_s5_vm8" if var == "a" else "qfd_dv_s5_vm8b"
-    top = "qfd_dv_s5_vm8" if var == "a" else "qfd_dv_s5_vm8s"
+    name = {"a": "qfd_dv_s5_vm8", "h": "qfd_dv_s5_vm8h", "b": "qfd_dv_s5_vm8b"}[var]
+    top = "qfd_dv_s5_vm8s" if var == "b" else "qfd_dv_s5_vm8"
     W, Hh = 691.2, 648.0
     c0 = [VM(0, 0), VM(0, 1), VM(1, 0), CR(0, "lo"), CR(0, "hi")]
     c1 = [VM(1, 1), VM(2, 0), VM(2, 1), CR(1, "lo"), CR(1, "hi")]
@@ -77,8 +77,15 @@ def spec(var):
     macros = [mac(v, i, 43.2, Y0 + k * PB) for k, (v, i) in enumerate(c0)]
     macros += [mac(v, i, 259.2, Y0 + k * PB) for k, (v, i) in enumerate(c1)]
     macros += [mac(v, i, 475.2, Y0 + k * PS) for k, (v, i) in enumerate(c2)]
-    if var == "a":
-        pins = {"W": RD_IN + RD_OUT + ["ck_rd"], "E": SU_IN + SU_OUT + ["ck_su"], "S": WR_IN + WR_OUT + ["ck_wr"]}
+    # raw macro clock entry index per macro (RTL ckm<i>): order of c0 / c1 / c2 below
+    ent = [0, 1, 2, 6, 7] + [3, 4, 5, 8, 9] + [14, 15, 16, 17, 10, 11, 12, 13]
+    if var == "h":
+        for m, i in zip(macros, ent):
+            m["clock_entry"] = {"port": f"ckm{i}", "pin": "clk", "reference": "raw_liberty_clock_pin"}
+    km = lambda ids: [f"ckm{i}" for i in ids]
+    if var in ("a", "h"):
+        pins = {"W": RD_IN + RD_OUT + ["ck_rd"] + km(range(10)), "E": SU_IN + SU_OUT + ["ck_su"] + km(range(10, 18)),
+                "S": WR_IN + WR_OUT + ["ck_wr"]}
     else:
         pins = {"W": RD_IN + RD_OUT, "E": SU_IN + SU_OUT, "S": WR_IN + WR_OUT + ["ck"]}
     wdir = "results/arch/qw_suvm8_1020/vm8/bench"
@@ -93,7 +100,7 @@ def spec(var):
         "sources": ["rtl/qwen_dv/s5/qfd_dv_s5_vm8.sv",
                     f"{MV}/{BIG}/{BIG}_bb.v", f"{MV}/{BT}/{BT}_bb.v", f"{MV}/{PG}/{PG}_bb.v"],
         "params": {},
-        "clock_port": "ck_wr" if var == "a" else "ck",
+        "clock_port": "ck" if var == "b" else "ck_wr",
         "reset_ports": ["rst_n"],
         "outline": {"w": W, "h": Hh},
         "macros": macros,
@@ -112,7 +119,7 @@ def spec(var):
         "safe_design_checklist": CHECKLIST,
         "structural_change": ("QW-SUVM8: VM split out of suvm7 as its own hardened block; every pin registered; "
                               "registered write stage at the macros; table writes landed per group; "
-                              + ("three regional related CTS roots" if var == "a" else "single S-centre root (fallback)")
+                              + ({"a": "three regional related CTS roots", "h": "three regional related CTS roots + 18 raw SRAM clock entries (hybrid_entries)"}.get(var) if var != "b" else "single S-centre root (fallback)")
                               + "; 3 columns, all macro channels >= 20 um"),
         "children": [],
         "inter": [],
@@ -121,7 +128,7 @@ def spec(var):
             "branch": "claude/qw-suvm8-1020",
             "tag": "v8" + var,
             "purpose": "QW-SUVM8 slice2 VM hardened block (18 SRAM), " +
-                       ("main: 3 regional roots" if var == "a" else "parallel fallback: single root, same RTL"),
+                       ({"a": "3 regional roots", "h": "main: 3 regional roots + raw SRAM clock entries"}.get(var) or "parallel fallback: single root, same RTL"),
             "extra_paths": ["rtl", "rtl/test/qwen_dv", "physical/asap7_memory_macros_v2", "results/arch/qw_suvm8_1020"],
             "benches": [
                 {"name": "vm8_eq", "cmd": vl + "bash rtl/test/qwen_dv/s5/vm8/bench.sh {RUN}/eq 0",
@@ -132,9 +139,11 @@ def spec(var):
             "record_to": f"results/rtl/ref_tile/{name}",
         },
     }
-    if var == "a":
-        s["clock"] = "multiple_cts_roots"
-        s["clock_ports"] = ["ck_wr", "ck_rd", "ck_su"]
+    if var in ("a", "h"):
+        s["clock"] = "multiple_cts_roots" if var == "a" else "hybrid_entries"
+        s["clock_ports"] = ["ck_wr", "ck_rd", "ck_su"] + (km(range(18)) if var == "h" else [])
+        if var == "h":
+            s["clock_cts_roots"] = ["ck_wr", "ck_rd", "ck_su"]
         s["clock_data_paths"] = "related_same_frequency"
         s["clock_relationship"] = {"kind": "same_pll_fixed_phase", "ratio": [1, 1], "phase_ps": 0}
         s["clock_entry_domains"] = {
@@ -142,13 +151,16 @@ def spec(var):
             "rd": {"ratio": [1, 1], "ports": ["ck_rd"], "inputs": RD_IN, "outputs": RD_OUT},
             "su": {"ratio": [1, 1], "ports": ["ck_su"], "inputs": SU_IN, "outputs": SU_OUT},
         }
+        if var == "h":
+            for i in range(18):
+                s["clock_entry_domains"][f"mem{i}"] = {"ratio": [1, 1], "ports": [f"ckm{i}"], "inputs": [], "outputs": []}
     return s
 
 
 def main():
     out = ROOT / "tools/ref_tile/specs_qw_suvm8"
     out.mkdir(parents=True, exist_ok=True)
-    for v in sys.argv[1:] or ["a", "b"]:
+    for v in sys.argv[1:] or ["h", "b"]:
         s = spec(v)
         p = out / f"{s['name']}.json"
         p.write_text(json.dumps(s, indent=1) + "\n")

@@ -1,6 +1,6 @@
 {
   "top": "qfd_dv_s5_vm8s",
-  "sha256": "1389ed06ebaa94a859bdb614cc668dd5b6825ee31bf57314ff53ed722c40802d",
+  "sha256": "e20676ca83f4dfc9e4c57af20decaea86dccb70d935731406761d22ad5762883",
   "nonclock_drivers_over32": 0,
   "flop_drivers_over32": 0,
   "raw_ports_over32": 0,
@@ -10,14 +10,14 @@
     "clock_roots": [
       {
         "root": "port:ck",
-        "ff": 15034,
+        "ff": 15086,
         "icg": 0,
         "macro_pins": 18,
-        "example": "_36852_"
+        "example": "_36880_"
       }
     ],
     "hier_subblocks": 0,
-    "clock_max_root_sinks": 15052,
+    "clock_max_root_sinks": 15104,
     "clock_max_root": "port:ck",
     "high_fanout_top": [],
     "hf_max_port": 0,
@@ -35,12 +35,12 @@
     "in_to_reg_levels": 0,
     "reg_to_out_levels": 0,
     "icg_enable_from_port": 0,
-    "depth_ps": 280.1,
+    "depth_ps": 250.1,
     "depth_path": [
-      "_37236_",
-      "_37633_/D"
+      "_37924_",
+      "_38076_/D"
     ],
-    "depth_levels": 8
+    "depth_levels": 7
   },
   "violations": [],
   "verdict": "PASS_FANOUT_ONLY",

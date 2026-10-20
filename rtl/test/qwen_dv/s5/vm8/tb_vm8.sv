@@ -43,7 +43,7 @@ module tb_vm8;
         .w16_we(d2_w16_we), .w16_addr(d2_w16_addr), .w16_data(d2_w16_data),
         .w1_we(d2_w1_we), .w1_addr(d2_w1_addr), .w1_data(d2_w1_data),
         .tw_we(d2_tw_we), .tw_kind(d2_tw_kind), .tw_addr(d2_tw_addr), .tw_data(d2_tw_data), .fault(r_f));
-    qfd_dv_s5_vm8 #(.MUT(0)) u_new (.ck_wr(ck), .ck_rd(ck), .ck_su(ck), .rst_n(rst_n),
+    qfd_dv_s5_vm8 #(.MUT(0)) u_new (.ck_wr(ck), .ck_rd(ck), .ck_su(ck), .ckm0(ck), .ckm1(ck), .ckm2(ck), .ckm3(ck), .ckm4(ck), .ckm5(ck), .ckm6(ck), .ckm7(ck), .ckm8(ck), .ckm9(ck), .ckm10(ck), .ckm11(ck), .ckm12(ck), .ckm13(ck), .ckm14(ck), .ckm15(ck), .ckm16(ck), .ckm17(ck), .rst_n(rst_n),
         .a_re(a_re), .b_re(b_re), .c_re(c_re), .a_addr(a_addr), .b_addr(b_addr), .c_addr(c_addr),
         .a_q(n_a), .b_q(n_b), .c_q(n_c), .cr_re(cr_re), .cr_addr(cr_addr), .cr_q(n_cr),
         .bs_re(bs_re), .bs_addr(bs_addr), .bs_q(n_bs), .p_re(p_re), .p_idx(p_idx), .p_q(n_p),
