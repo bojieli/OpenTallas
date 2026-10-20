@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       admits   743 GB (avail 633, growth 113, headroom 0, waiters 0/0 GB) load 52/128 running 43 disk 35 GB 
+ot-run: ot-epyc6       admits  1014 GB (avail 823, growth 113, headroom 0, waiters 0/0 GB) load 66/128 running 40 disk 4613 GB 
+ot-run: ot-epyc7       admits   537 GB (avail 477, growth 101, headroom 0, waiters 0/0 GB) load 60/96 running 28 disk 5670 GB 
+ot-run: ot-epyc9       admits   677 GB (avail 620, growth 146, headroom 0, waiters 0/0 GB) load 52/128 running 30 disk 161 GB 
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2020095-1792488856 after 0 s
+SLCAP_GOLD MUT 0 DE 24 DL 16 rows 1280 written_ok 1280 bad_writes 0 missing 0 arrivals 7446/7446 arr_mismatch 0 fault 0 fcause 0000
+SLCAP_LATENCY last_lane_arrival_to_leaf_write edges min 47 max 88 mean 64.44
+PASS cap_c5_gold MUT=0 vec_m0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2020095-1792488856): exit 0
