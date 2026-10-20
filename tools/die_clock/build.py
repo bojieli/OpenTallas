@@ -36,6 +36,7 @@ import time
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import regtree as rt  # noqa: E402
+from qualification import carry_unqualified
 
 XPITCH, YPITCH = 1.620, 0.270
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
@@ -284,11 +285,7 @@ def build(a):
     rec = dict(schema='opentallas.die_clock.manifest.v1', odb=a.odb, spec=spec, trees={}, cells=[], parent={}, cell_tree={},
                leaves={}, iterations=[])
     if a.targets:
-        modeled = {k: v for k, v in json.loads(Path(a.targets).read_text())['masters'].items()
-                   if v.get('physical_qualification_eligible') is False or v.get('view') == 'MODEL_PASS_THROUGH_R0'}
-        if modeled:
-            rec['physical_qualification_eligible'] = False
-            rec['qualification'] = dict(scope='MODEL_ONLY', modeled_masters=modeled)
+        rec.update(carry_unqualified(json.loads(Path(a.targets).read_text())))
     clocks, sink_pins, builders = [], {}, {}
     tree_group = {t['name']: t['balance_group'] for t in trees if t.get('balance_group')}
     by_root = defaultdict(list)

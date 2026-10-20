@@ -23,3 +23,5 @@ Validation:
 - Inherited divider PASS and div5 fail witnesses are source-pinned to d502ea9ae; actual macro/root timing, reset epoch/first use, and any new physical clock output remain unqualified.
 
 Next: ROOT review this concrete packet; then run paired affected fleet tests (native ODB receiver/BTerm guard, legacy/new tree build and actual clock/STA root exports). No current job should be restarted to consume the packet.
+
+Qualification-chain follow-up: the existing source contract already says qualification=false. STA views now preserve that flag, prep carries it into targets, and manifest/final clock reports keep MODEL_ONLY even when no modeled receiver master remains. The actual source-to-STA-to-prep-to-report chain is covered by a focused regression; legacy artifacts without explicit false qualification remain byte-unchanged.

@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import qwen_die_element_lib as E   # noqa: E402
 from hier_contract.pinreg_audit import parse_lib, clock_refs
 from die_port_bind import parse_die, expr_bits
+from die_clock.qualification import carry_unqualified as clock_qualification
 
 HARD = {'ot_hbm3e_phy': 'physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy'}
 PERIOD = dict(stream=833.333, serial=833.333 * 4.0 / 3.0, ucie=833.333, serdes=833.333)
@@ -320,6 +321,7 @@ def main():
                  clock_budget='related shallow/early levels: setup 60 + 90 ps shallow/shallow, 60 + 150 ps when either TT R > 300 ps; hold H1 50 margin + 50 skew = 100 ps',
                  insertion_ps={m: v for m, v in leaves.items() if m in views['real']},
                  note='PATHFINDING: unbound masters remain assumed single-flop views; no physical die CTS proof')
+    views.update(clock_qualification(contract))
     fwd_m = sorted(m_ for m_ in dirs if E.FWD_RE.match(m_))
     if land or fwd_m:      # Q-DIE11-RLY (only on an OT_SPLIT_FWD_LANES case: older cases keep views.json byte-identical)
         views.update(fwd_landing_sdc=bool(land), fwd_lane_masters=fwd_m)
