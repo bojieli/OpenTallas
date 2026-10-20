@@ -19,4 +19,5 @@ Everything else (floorplan, macros on 43.2, pins, fences, regions, CTS roots, io
 7 Clock: regional roots ck / ck_dw / ck_de / ck_tx[g]; crossings now single-cycle timed -> gate --cts must show TT/FF pin-flop
   spread <= 80 per root and setup/hold >= 0 WITHOUT MCP. If single-cycle fails: structural repartition / clock design (never MCP).
 8 Schedule: static; +6 t_out (results/arch/qw_a0_land32_0720/latency.json).
-Bench: V6 full positive tb_full_rr9_n32 PASS checks 29899 (MUT0); MUT60-65 all FAIL (ep5 full_proof_v6/run_6x.log).
+Bench: V7 (this source) full positive tb_full_rr9_n32 PASS checks 29899; MUT60-65 all FAIL (results/arch/qw_a0_rc11_1020/v7_proof). V7 = V6 + split tiers 1..3 on the same-edge copy (NL rc11 first gate: ib_i[125] 33 loads).
+Fences: rc11 regions = rc10 + FREE land_rings before the catch-all hub (NK rc11 first gate: hub 3,973 um2 in a 3,872 um2 box, 10,830 ring FFs; now hub 800 um2, fill 0.21).

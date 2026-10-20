@@ -470,7 +470,8 @@ module ot_qwen_w12_matvec_part #(
         wire [3:0] split_nx2 = ld_go ? i_split : spc[3:0];      // REGROOT 7 second tier (copies 24..) holds from copy 0
         wire [15:0] spt;                                         // REGROOT 8 tier next-state (4 tiers)
         for (sc = 0; sc < 4; sc = sc + 1) begin : g_spt
-            assign spt[4*sc +: 4] = (REGROOT >= 8 && ldv[NLDD + sc]) ? ((SPLIT_CP != 0 && sc >= 2) ? i_split_copy : i_split) : spc[4*((REGROOT >= 8) ? 23*sc : 0) +: 4];
+            // QW-CB16A0-3 rc11 (V7): tiers 1..3 on the same-edge copy (NL rc11 in-flow census: ib_i[125] 33 loads with tiers 2..3 only)
+            assign spt[4*sc +: 4] = (REGROOT >= 8 && ldv[NLDD + sc]) ? ((SPLIT_CP != 0 && sc >= 1) ? i_split_copy : i_split) : spc[4*((REGROOT >= 8) ? 23*sc : 0) +: 4];
         end
         for (sc = 0; sc < NSPC; sc = sc + 1) begin : g_sp
             (* keep *) reg [3:0] q;

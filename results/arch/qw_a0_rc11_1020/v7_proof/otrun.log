@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits  1026 GB (avail 831, growth 113, headroom 0, waiters 0/0 GB) load 42/128 running 28 disk 438 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3782225-1792513691 after 0 s
+POS_RC=0
+FULL_LAND32_MUTANT_CAUGHT 60
+FULL_LAND32_MUTANT_CAUGHT 61
+FULL_LAND32_MUTANT_CAUGHT 62
+FULL_LAND32_MUTANT_CAUGHT 63
+FULL_LAND32_MUTANT_CAUGHT 64
+FULL_LAND32_MUTANT_CAUGHT 65
+NEG_RC=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3782225-1792513691): exit 0
