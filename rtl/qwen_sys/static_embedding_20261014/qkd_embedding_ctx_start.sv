@@ -30,6 +30,9 @@
 // start/token/epoch output register (consumers capture it in their own landing flops; die relays add the fork).
 // MUT (bench only): 1 = no repeated-owner suppression; 2 = token from the wrong TAG field (position); 3 = no header-epoch
 //                   check; 4 = no kind check (a kind-13 AUTH record starts a fill).
+// MUT 5/6/7 remove prior-fault / actual-row-open / early-gap veto, respectively.
+// Admission is fail closed: an early new owner or sticky prior fault never changes start/token/epoch/owner.
+// MIN_GAP is a consistency floor; the compiler must independently place the next start after full row drain.
 // ---------------------------------------------------------------------------------------------------------------------
 module qkd_embedding_ctx_start #(
     parameter integer MUT = 0,
@@ -38,6 +41,7 @@ module qkd_embedding_ctx_start #(
     input  wire          ck,
     input  wire          rst_n,
     // HOST record face fork (qkd_host_record_port tx_*): header [547:512] and DATA[60:0] of the registered record
+    input  wire          row_open,           // existing row_tx armed state: static overlap fault, never waits
     input  wire          ctx_v,
     input  wire          ctx_observed_v,
     input  wire [35:0]   ctx_hdr,              // record[547:512] = {res5 [35:31], kind4 [30:27], layer6 [26:21], epoch16 [20:5], beat5 [4:0]}
@@ -66,9 +70,10 @@ module qkd_embedding_ctx_start #(
     wire        hdr_ok = qh[35:31] == 5'd0 && qh[26:21] == 6'd63 && qh[4:0] == 5'd0 && (MUT == 3 || qh[20:5] == t_ep);
     wire        own_ok = t_st == 6'd0 && t_seg == 6'd0 && tag[36:19] < 18'd151936;
     wire        fresh  = !have || qd != last || MUT == 1;
+    wire        admit = take && hdr_ok && own_ok && fresh && (MUT == 5 || !fault) && (MUT == 7 || gap == 10'd0) && (MUT == 6 || !row_open);
     // face capture (plain D, no reset: the data face; valid bits carry the reset)
     always @(posedge ck) begin qh <= ctx_hdr; qd <= ctx_owner; end
-    always @(posedge ck) if (take && hdr_ok && own_ok && fresh) begin token <= t_tok; epoch <= t_ep; end
+    always @(posedge ck) if (admit) begin token <= t_tok; epoch <= t_ep; end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
             qv <= 1'b0; qo <= 1'b0; start <= 1'b0; last <= 61'd0; have <= 1'b0; gap <= 10'd0; fault <= 1'b0;
@@ -79,8 +84,10 @@ module qkd_embedding_ctx_start #(
             if (take) begin
                 if (!hdr_ok || !own_ok) fault <= 1'b1;
                 else if (fresh) begin
-                    if (gap != 10'd0) fault <= 1'b1;
-                    start <= 1'b1; last <= qd; have <= 1'b1; gap <= 10'(MIN_GAP);
+                    if (gap != 10'd0 || row_open) fault <= 1'b1;
+                    if (admit) begin
+                        start <= 1'b1; last <= qd; have <= 1'b1; gap <= 10'(MIN_GAP);
+                    end
                 end
             end
         end
