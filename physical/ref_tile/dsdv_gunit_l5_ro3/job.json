@@ -1,0 +1,150 @@
+{
+ "name": "dsdv_gunit_l5_ro3-ro3-COMMIT",
+ "block": "dsdv_gunit_l5",
+ "ref_tile": true,
+ "owner": "Claude:REFILL-1830/FALLBACK (for LEAD2-S81/SVCGU)",
+ "purpose": "Parallel fallback of dsdv_gunit_l5 (S81.STA.PAR.3): same RTL/params, outline 388.8x302.4 (fill ~41%, more routing room than 259.2: GPL routing overflow 7.6% tiles).",
+ "threads": 8,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/refill1830-gunit-ro-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/hdc",
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "physical/ref_tile_specs/s81dv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "rtl/lib"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_gunit_l5 #(.PIN_COPY(1), .CONTROL_SAFE(1), .Q4(1), .FANOUT_SAFE(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_region16.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_sinkhorn_p.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v rtl/hdc/v41/ot_hdc_skp_predecode.sv rtl/hdc/v41/ot_hdc_skf_predecode.sv rtl/hdc/v41/ot_hdc_sinkhorn_fs.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail_fs.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gunit_exact",
+    "cmd": "GUNIT_PIN_COPY=1 GUNIT_CONTROL_SAFE=1 GUNIT_Q4=1 GUNIT_FANOUT_SAFE=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
+    "expect": "pass",
+    "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
+    "threads": 6,
+    "peak_ram_gb": 24,
+    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/gunit_m0.log"
+   },
+   {
+    "name": "gunit_mut8",
+    "cmd": "GUNIT_PIN_COPY=1 GUNIT_CONTROL_SAFE=1 GUNIT_Q4=1 GUNIT_FANOUT_SAFE=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 8",
+    "expect": "fail",
+    "fail_regex": "^MUT=8: GUNIT FAIL ",
+    "threads": 6,
+    "peak_ram_gb": 24,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/gunit_m8.log"
+   },
+   {
+    "name": "gunit_mut10",
+    "cmd": "GUNIT_PIN_COPY=1 GUNIT_CONTROL_SAFE=1 GUNIT_Q4=1 GUNIT_FANOUT_SAFE=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut10 4 10",
+    "expect": "fail",
+    "fail_regex": "^MUT=10: GUNIT FAIL ",
+    "threads": 6,
+    "peak_ram_gb": 24,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/gunit_m10.log"
+   },
+   {
+    "name": "sinkhorn_fs_eq",
+    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_fs_eq.sh {RUN}/skeq 300 0 0",
+    "expect": "pass",
+    "pass_regex": "^MUT=0 MUTQ4=0: SKF PASS cases=300 ",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/skf_eq.log"
+   },
+   {
+    "name": "sinkhorn_fs_mut1",
+    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_fs_eq.sh {RUN}/skmut 40 1 0",
+    "expect": "fail",
+    "fail_regex": "^MUT=1 MUTQ4=0: SKF FAIL ",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/skf_mut1.log"
+   },
+   {
+    "name": "sinkhorn_fs_mutq4",
+    "cmd": "bash rtl/hdc/v41/test/run_sinkhorn_fs_eq.sh {RUN}/skq4 300 0 1",
+    "expect": "fail",
+    "fail_regex": "^MUT=0 MUTQ4=1: SKF FAIL ",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_witness": "results/rtl/s81_gunit_wm_1019/bench_svcgu/skf_mutq4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsdv_gunit_l5_ro3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsdv_gunit_l5_ro3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_gunit_l5_ro3 --out {RUN}/record/views/dsdv_gunit_l5 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsdv_gunit_l5_ro3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsdv_gunit_l5_ro3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsdv_gunit_l5_ro3/dsdv_gunit_l5_ro3-ro3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-GUNIT whole model (10-19, FANOUT_SAFE 1 + CONTROL_SAFE 1 + Q4 1, LEAD-S81 approved): base table 3,072 b -> 12 native ot_sram_1r1w2c_32x64_m1 banks (registered read = old bases capture, 0 edges; selected-word write-before-launch = sticky fault); kept same-edge copies for every >32-load driver (mapped census 3ca0d8055); regional reset ot_rst_region16 (raw port -> 2 sync flops, 16 kept roots, release edge 3); Q4 fault/range stage (+40 HC edges, priced to the compiler: HC offsets remeasured with run_gu_bench.sh). Outline 388.8 x 432 (was 259.2^2). S81-SAFE-FIX/GUNIT (10-19, SAFE-DESIGN review after the first route dsdv_gunit_l5-g3-37cf95cf2): the tail's Sinkhorn is ot_hdc_sinkhorn_p -- bit-identical, PIPELINED on the core clock (11 registered stages a normalisation, <= ~20 levels each; step 0 in 12) -- replacing ot_hdc_sinkhorn behind an ICG with a 9-cycle multicycle SDC (gunit_sinkh_mcp.sdc, 138 levels / ~5.3 ns in one reg->reg stage: masked depth); the ICG and the multicycle exception are gone; HC result +55 edges (handed to MU-DIE-S81). The table select tj_set/tj_w (3,456 loads) is replicated in two kept ranks (8 -> 108 copies, <= ~32 loads, 0 edges: stable from mix_go). reset_landing 2, io_hold_margin 0.03. S81U-GUNIT6 (10-17): native pin rules -- rst_n drives only ot_rst_relay (0 data edges). S81U-GUNIT3 (10-17): dsdv_gunit_l5 successor: the tail's exp / fdiv units (11.5k flops) moved to the E-side leaf dsdv_gunit_l5f (GUNIT2 L5: 23,268 sinks, TT insertion 563 ps / spread 109 ps, clock-rule FAIL); the row max is a 2-stage tree (one-cycle 3-deep scan was TT -970 ps); the Sinkhorn ICG enable is a flop, not the rst_n port (in->ICG -345 ps). Tail calendar re-derived (XS 3, MAX +1): bit-exact bench. The mixes arrive one a cycle and are assembled here (launch +1 edge). SVCGU re-outline (10-19, after gate2 d9ef27598 FAIL fill 28%/band: measured native std 40,172 um2 + 12 macros 6,643 in 388.8 x 432): outline 388.8 x 259.2 (S face kept 388.8 um for the ~1,173 S pins), top macro pair moved y 345.6/388.8 -> 172.8/216, whole core is the std band (no band exception), fill ~46%. REFILL-1830/FALLBACK re-outline (10-19, parallel fallback): the 8623463ca gate 'cts_run FAIL' was an infrastructure fault (docker client rc=1 at 17:09 while the ORFS container finished 3_5 DPL + 4_1_cts at 17:45, hold ws +30, DPL util 50.3%), but GPL showed routing overflow in 7.6% of tiles at 388.8x259.2; this kit adds one 43.2 row pair: 388.8 x 302.4 (fill ~41%), top macro pair y 216/259.2 (N-edge channel 25.9, band y 103.7..216). Same RTL, params, benches and witnesses."
+}
