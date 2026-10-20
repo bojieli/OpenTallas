@@ -5,7 +5,7 @@ reg clk=0; always #5 clk=~clk;
 reg rst_n=0,clr=0,iv=0;
 reg[15:0] en=0; reg[127:0] dg=0; reg[3:0] gs=0,gd=0;
 wire[239:0] goldsum,bsum; wire[175:0] goldbin; wire goldbusy;
-wire[8*176-1:0] bins;wire[7:0] busy;reg oldbusy;
+wire[8*176-1:0] bin_values;wire[7:0] busy;reg oldbusy;
 always@(posedge clk)begin gd<=gs;oldbusy<=goldbusy;end
 ot_s81ph_native_sel_hist #(.W(16),.CB(11),.HPIPE(1)) gold(
 .clk(clk),.rst_n(rst_n),.clr(clr),.i_v(iv),.i_en(en),.i_dg(dg),.gsel(gd),.gsel_c({16{gd}}),.gsum(goldsum),.gbin(goldbin),.busy(goldbusy));
@@ -15,10 +15,10 @@ generate for(b=0;b<8;b=b+1)begin:leaf
  wire[3:0] s=(MUT==1 && b==3)?(gs^4'b0001):gs;
  ot_s81ph_native_sel_hist_bank #(.W(16),.CB(11),.BANK(b)) u(
  .clk(clk),.rst_n(rst_n),.clr(c),.i_v(iv),.i_en(en),.i_dg(dg),.gsel(s),
- .gsum(bsum[30*b+:30]),.gbin(bins[176*b+:176]),.busy(busy[b]));
+ .gsum(bsum[30*b+:30]),.gbin(bin_values[176*b+:176]),.busy(busy[b]));
 end endgenerate
 reg[175:0] joined;integer k;
-always@*begin joined=0;for(integer q=0;q<8;q=q+1)joined=joined|bins[176*q+:176];end
+always@*begin joined=0;for(integer q=0;q<8;q=q+1)joined=joined|bin_values[176*q+:176];end
 integer cyc=0,checks=0;reg[31:0] random=32'h12345678;
 function automatic[31:0] rnd(input[31:0]x);reg[31:0]r;begin r=x^(x<<13);r=r^(r>>17);rnd=r^(r<<5);end endfunction
 initial begin
@@ -28,7 +28,7 @@ initial begin
   if(cyc>20)begin
    checks=checks+1;
    if(bsum!==goldsum || joined!==goldbin || busy!=={8{oldbusy}})begin
-    $display("HIST_BANK FAIL MUT=%0d cycle=%0d sums=%0b bins=%0b busy=%0b",MUT,cyc,bsum!==goldsum,joined!==goldbin,busy!=={8{oldbusy}});$finish;
+    $display("HIST_BANK FAIL MUT=%0d cycle=%0d sums=%0b bin_values=%0b busy=%0b",MUT,cyc,bsum!==goldsum,joined!==goldbin,busy!=={8{oldbusy}});$finish;
    end
   end
   random=rnd(random);gs=random[3:0];
