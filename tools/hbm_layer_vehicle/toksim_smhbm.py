@@ -360,8 +360,10 @@ def compile_qwen(tags, seed=20261019, wide=False):
     for i, b in enumerate(descs):
         d = S.desc_row(i, row_base=b["row_base"], landing=b["landing"], epoch=b["epoch"], rows=b["n_lines"],
                        tag_base=b["tag_base"], prog_base=b["prog"][0], prog_limit=b["prog"][1], go_at=b["go_at"],
-                       layer_stride=0, expert_stride=0, id_sel=0, row_off=b["r0"], loops=1, lstep=0, mode=0, mrel=1,
-                       fl=int(b["head"]))
+                       layer_stride=0, expert_stride=0, id_sel=0, row_off=b["r0"], loops=1, lstep=0,
+                       mode=3 if wide else 0, mrel=1, fl=0 if wide else int(b["head"]))
+        # int8w: the xc substitutes the descriptor's mode on every magic word (mrel) -> mode 3; no format launch (fl 0):
+        # wide rows bypass the normal front's format registers
         for j, tgt in enumerate((S.SVG_TGT, S.XC_TGT)):
             ing.append((desc_install_t + 2 * i + j, S.ingress(cfg=(1 << 10 | i, d), target=tgt)))
     ing.sort(key=lambda e: e[0])
