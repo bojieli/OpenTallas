@@ -1,0 +1,40 @@
+{
+ "ot_qwen_tp8_pv_wide_ctl_tb": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_params2_1019/receipts/receipts/ot_qwen_tp8_pv_wide_ctl_tb.json",
+   "sha256": "5d17ba3162c68568795743f112eeb3888949eaf61fb9cb1da53d07c8677e649a"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "b03566706dd85b5fc82f5818e042a7b765c5f59eec514b447dede617941743b5",
+    "child_lint.json": "dad643dc21f3cab1f135e62f95e2cef2995b4b0e61e231e0d0a56e2dd3da14b6",
+    "export_ff.log": "0911166aa9c7a240fd1f6e355c35573f5fecbb608b99f9996610c3b435138619",
+    "export_ff.tcl": "409a2c080c225fc9f23456456ec5c12d603d7453cbc8c4b973f4ea75a540b757",
+    "export_ss.log": "cf61ac636c4cec56b7bbb0b8e58c5a0d7fc8a2fa28ba6a9088a15fa51d2c2c43",
+    "export_ss.tcl": "f46db7fb669da485020b78016d201c80dfa6f3b766db754243ad2bf5026d6d7d",
+    "export_tt.log": "bdfb7ab17515ed03ad958792729305dfc7e99221515a1dff78174c71ff2e0958",
+    "export_tt.tcl": "cb6b4d401ad39c10ed0dd371b96b8b5e5b2bc45b53d0f54178942886cd46e769",
+    "insertion.json": "b40e635b9b74f4c00a4eeb5931b3d789e71e063e743c8f959b6fbd031c335e68",
+    "ot_qwen_tp8_pv_wide_ctl_tb.lef": "c7deb4350376382ea368fa993cf3383056c46e77c9201fcb88a86c7beb421116",
+    "ot_qwen_tp8_pv_wide_ctl_tb_ff.lib": "bb95a628b14a6c5c56c946c31374b5d23c8474b69ca2407ae96a326c3d6e1d10",
+    "ot_qwen_tp8_pv_wide_ctl_tb_ss.lib": "9d4ec45f9e705990430c1e611b778e9602b511357a0102b3125e8a5729aa0e4c",
+    "ot_qwen_tp8_pv_wide_ctl_tb_tt.lib": "02ee40e39f57d324ff9013929bcda0229b38fcf9a0e75e815a063e4369e06b57",
+    "provenance/abstract_pin_stub.json": "274b4d00b647fd84927e842c3f86e9d3d4cc1a55a40fdae709b95b0f1edf9878",
+    "provenance/raw/ot_qwen_tp8_pv_wide_ctl_tb.lef": "b190e3fdd9b451d410f6ecfbbbff815f75c8da25f625ece0b0957a18e477fdfa",
+    "provenance/view_export.abstract.json": "986b89c2ef82ec8896255ffa347b27d6b574ef11288a5358b4d06d9dfd505b92"
+   },
+   "rtl": {
+    "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv",
+    "sha256": "707680841087a2a7ef3871e47541843863a1eaa60a9a23e144af266077ed4bba"
+   },
+   "view": "physical/ref_tile/qkd_pv_ctl_tb1/views/ot_qwen_tp8_pv_wide_ctl_tb"
+  },
+  "parameters": {
+   "FIRST_INPUT_AGE": 127,
+   "FLAG_D": 58,
+   "MUT": 0,
+   "RESET_PIN": 1,
+   "TRUNK_D": 54
+  }
+ }
+}

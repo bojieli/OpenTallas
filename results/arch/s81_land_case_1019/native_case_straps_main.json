@@ -1,0 +1,400 @@
+{
+ "schema": "opentallas.native_pin_audit.case_pins.v1",
+ "generated": "2026-10-19T16:45-07:00",
+ "tool": "tools/hier_contract/native_pin_audit.py --view <v> --case <pats> --case-evidence <e> (origin/main b31708013)",
+ "supersedes": "results/arch/s81_misc_1018/native_case_straps.json for the CURRENT main views: the po2-df5c2d585 records (AUTO-MERGE 10-19 04:2x) replaced the l1/l2/g3a views that receipt audited, so it no longer matched any main job",
+ "roots": "each view git-archived from its view_src closure-record branch into a scratch root",
+ "rule": "identity-strap inputs the die ties to constants (tie cells) and set_case_analysis-es in the die SDC carry no timed transition: excluded from the 220/190 pin budgets and listed (case_pins, case_pins_raw_capture_ps). Every other pin and the TT/FF pin-flop spread are judged unchanged. DIE OBLIGATION: S81 die SDC set_case_analysis on landing k (pvrd k, nw, rb; crs4 lk).",
+ "views": [
+  {
+   "cell": "dsfd_dvland_70",
+   "view": "physical/ref_tile/s81dv_land_70/views/dsfd_dvland_70",
+   "lib_cell": "dsfd_dvland_70",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 98.4,
+   "spread_ps": 3.2,
+   "outputs": 71,
+   "inputs": 71,
+   "launch_ps": 109.6,
+   "launch_pin": "o[13]",
+   "capture_ps": 100.3,
+   "capture_pin": "i[53]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k"
+   ],
+   "case_pins": [
+    "k[0]",
+    "k[1]",
+    "k[2]"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k[2]": 273.9,
+    "k[1]": 422.9,
+    "k[0]": 437.4
+   },
+   "ff_spread_ps": 2.4,
+   "ff_launch_min_ps": 68.4,
+   "ff_hold_need_ps": -23.0,
+   "pass": true,
+   "fail_why": "",
+   "case_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_70-po2-df5c2d585"
+  },
+  {
+   "cell": "dsfd_dvland_276",
+   "view": "physical/ref_tile/s81dv_land_276/views/dsfd_dvland_276",
+   "lib_cell": "dsfd_dvland_276",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 95.7,
+   "spread_ps": 10.9,
+   "outputs": 277,
+   "inputs": 277,
+   "launch_ps": 105.2,
+   "launch_pin": "fault",
+   "capture_ps": 106.2,
+   "capture_pin": "i[4]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k"
+   ],
+   "case_pins": [
+    "k[0]",
+    "k[1]",
+    "k[2]"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k[2]": 283.2,
+    "k[1]": 442.5,
+    "k[0]": 439.1
+   },
+   "ff_spread_ps": 10.7,
+   "ff_launch_min_ps": 58.7,
+   "ff_hold_need_ps": -20.1,
+   "pass": true,
+   "fail_why": "",
+   "case_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_276-po2-df5c2d585"
+  },
+  {
+   "cell": "dsfd_dvland_276l",
+   "view": "physical/ref_tile/s81dv_land_276l/views/dsfd_dvland_276l",
+   "lib_cell": "dsfd_dvland_276l",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 113.7,
+   "spread_ps": 17.8,
+   "outputs": 277,
+   "inputs": 277,
+   "launch_ps": 112.1,
+   "launch_pin": "o[1]",
+   "capture_ps": 121.3,
+   "capture_pin": "i[229]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k"
+   ],
+   "case_pins": [
+    "k[0]",
+    "k[1]",
+    "k[2]",
+    "k[3]",
+    "k[4]",
+    "k[5]"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k[5]": 172.7,
+    "k[4]": 171.6,
+    "k[3]": 220.7,
+    "k[2]": 448.9,
+    "k[1]": 443.8,
+    "k[0]": 447.3
+   },
+   "ff_spread_ps": 17.9,
+   "ff_launch_min_ps": 57.9,
+   "ff_hold_need_ps": -21.6,
+   "pass": true,
+   "fail_why": "",
+   "case_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_276l-po2-df5c2d585"
+  },
+  {
+   "cell": "dsfd_dvland_562",
+   "view": "physical/ref_tile/s81dv_land_562/views/dsfd_dvland_562",
+   "lib_cell": "dsfd_dvland_562",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 120.9,
+   "spread_ps": 30.2,
+   "outputs": 563,
+   "inputs": 563,
+   "launch_ps": 111.0,
+   "launch_pin": "fault",
+   "capture_ps": 109.3,
+   "capture_pin": "i[69]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k"
+   ],
+   "case_pins": [
+    "k[0]",
+    "k[1]",
+    "k[2]"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k[2]": 288.3,
+    "k[1]": 448.3,
+    "k[0]": 447.0
+   },
+   "ff_spread_ps": 31.0,
+   "ff_launch_min_ps": 57.0,
+   "ff_hold_need_ps": -22.2,
+   "pass": true,
+   "fail_why": "",
+   "case_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_562-po2-df5c2d585"
+  },
+  {
+   "cell": "dsfd_dvland_682",
+   "view": "physical/ref_tile/s81dv_land_682/views/dsfd_dvland_682",
+   "lib_cell": "dsfd_dvland_682",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 95.0,
+   "spread_ps": 10.0,
+   "outputs": 683,
+   "inputs": 683,
+   "launch_ps": 112.0,
+   "launch_pin": "fault",
+   "capture_ps": 124.3,
+   "capture_pin": "i[254]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k"
+   ],
+   "case_pins": [
+    "k[0]",
+    "k[1]",
+    "k[2]"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k[2]": 298.1,
+    "k[1]": 444.7,
+    "k[0]": 437.8
+   },
+   "ff_spread_ps": 10.1,
+   "ff_launch_min_ps": 56.1,
+   "ff_hold_need_ps": -26.1,
+   "pass": true,
+   "fail_why": "",
+   "case_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_682-l1-1da4d6aae"
+  },
+  {
+   "cell": "dsfd_dvland_pvrd",
+   "view": "physical/ref_tile/s81dv_land_pvrd/views/dsfd_dvland_pvrd",
+   "lib_cell": "dsfd_dvland_pvrd",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 127.6,
+   "spread_ps": 18.0,
+   "outputs": 527,
+   "inputs": 515,
+   "launch_ps": 138.5,
+   "launch_pin": "fault",
+   "capture_ps": 131.2,
+   "capture_pin": "rs",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k",
+    "nw",
+    "rb"
+   ],
+   "case_pins": [
+    "k[0]",
+    "k[1]",
+    "k[2]",
+    "nw[0]",
+    "nw[1]",
+    "nw[2]",
+    "nw[3]",
+    "nw[4]",
+    "nw[5]",
+    "nw[6]",
+    "nw[7]",
+    "rb[0]",
+    "rb[1]",
+    "rb[2]",
+    "rb[3]",
+    "rb[4]",
+    "rb[5]",
+    "rb[6]",
+    "rb[7]",
+    "rb[8]",
+    "rb[9]"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k[2]": 249.3,
+    "k[1]": 437.1,
+    "k[0]": 442.7,
+    "nw[7]": 277.3,
+    "nw[6]": 269.2,
+    "nw[5]": 273.3,
+    "nw[4]": 329.7,
+    "nw[3]": 323.9,
+    "nw[2]": 323.7,
+    "nw[1]": 336.5,
+    "nw[0]": 333.4,
+    "rb[9]": 221.1,
+    "rb[8]": 198.4,
+    "rb[7]": 256.4,
+    "rb[6]": 254.5,
+    "rb[5]": 254.8,
+    "rb[4]": 254.2,
+    "rb[3]": 275.8,
+    "rb[2]": 294.8,
+    "rb[1]": 296.9,
+    "rb[0]": 295.6
+   },
+   "ff_spread_ps": 17.5,
+   "ff_launch_min_ps": 56.1,
+   "ff_hold_need_ps": -18.5,
+   "pass": true,
+   "fail_why": "",
+   "case_evidence": "dsfd_dvland_pvrd.sv header: 'Straps (identity, die ties): k (ring K), nw, rb' (dv_bind adapter_straps)",
+   "job": "s81dv_land_pvrd-p3-b15a4ddad"
+  },
+  {
+   "cell": "dsfd_cfifo_crs4",
+   "view": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4",
+   "lib_cell": "dsfd_cfifo_crs4",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 176.6,
+   "spread_ps": 61.3,
+   "outputs": 1171,
+   "inputs": 1173,
+   "launch_ps": 182.5,
+   "launch_pin": "xa[208]",
+   "capture_ps": 183.8,
+   "capture_pin": "rst",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "lk"
+   ],
+   "case_pins": [
+    "lk[0]",
+    "lk[10]",
+    "lk[11]",
+    "lk[1]",
+    "lk[2]",
+    "lk[3]",
+    "lk[4]",
+    "lk[5]",
+    "lk[6]",
+    "lk[7]",
+    "lk[8]",
+    "lk[9]"
+   ],
+   "case_pins_raw_capture_ps": {
+    "lk[11]": 336.8,
+    "lk[10]": 417.0,
+    "lk[9]": 408.6,
+    "lk[8]": 310.7,
+    "lk[7]": 420.8,
+    "lk[6]": 414.4,
+    "lk[5]": 341.9,
+    "lk[4]": 438.9,
+    "lk[3]": 428.9,
+    "lk[2]": 328.1,
+    "lk[1]": 430.3,
+    "lk[0]": 424.1
+   },
+   "ff_spread_ps": 60.6,
+   "ff_launch_min_ps": 92.9,
+   "ff_hold_need_ps": -54.3,
+   "pass": true,
+   "fail_why": "",
+   "case_evidence": "dsfd_cfifo_crs4.sv: lk[3k +: 3] = lane k's K, an identity strap tied by the die binder (L7)",
+   "job": "s81coll_cfifo_crs4-c4a-f11bb1950"
+  },
+  {
+   "cell": "dsfd_dvland_512",
+   "view": "physical/ref_tile/s81dv_land_512/views/dsfd_dvland_512",
+   "lib_cell": "dsfd_dvland_512",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 119.0,
+   "spread_ps": 21.3,
+   "outputs": 513,
+   "inputs": 513,
+   "launch_ps": 106.2,
+   "launch_pin": "fault",
+   "capture_ps": 111.0,
+   "capture_pin": "i[200]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "case_patterns": [
+    "k"
+   ],
+   "case_pins": [
+    "k[0]",
+    "k[1]",
+    "k[2]"
+   ],
+   "case_pins_raw_capture_ps": {
+    "k[2]": 282.6,
+    "k[1]": 433.7,
+    "k[0]": 442.6
+   },
+   "ff_spread_ps": 21.6,
+   "ff_launch_min_ps": 57.5,
+   "ff_hold_need_ps": -22.6,
+   "pass": true,
+   "fail_why": "",
+   "case_evidence": "ot_s81_land k = identity strap K tied by tools/s81_dv/dv_bind.py (straps.append([lm,'k']), land plan E) -- rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv L7; kit spec: 'k is a static identity strap tied by the die binder (case-analysed at die STA)'",
+   "job": "s81dv_land_512-po2-df5c2d585"
+  }
+ ]
+}

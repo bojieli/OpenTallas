@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.token_compose_xdie.v1.index",
- "generated_from": "44efbc63b",
+ "generated_from": "566b12ac1",
  "tool": "tools/token_compose_xdie.py",
  "clock_hz": 1200000000.0,
  "formula": "T_token = sum_l n_l C_die(l) + sum_l n_l sum_x max(0, E_meas(x) - O_meas(l,x)); tok/s = f_clk / T (MTP: per accepted token = step / tau)",

@@ -1,0 +1,20 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH ck  t=22518000 av 1/1 sec 17c/39f data b80159e0/45982ca3 fh 0/0 fc 0/1 ih 0/0 ic 0/0
+MISMATCH hck t=22528000 av 1/1 sec 17c/39f data b80159e0/45982ca3 fh 0/0 fc 0/1 ih 0/0 ic 0/0
+MISMATCH ck  t=23352000 av 0/0 sec 17c/39f data b80159e0/45982ca3 fh 0/0 fc 0/1 ih 0/0 ic 0/0
+MISMATCH hck t=23552000 av 0/0 sec 17c/39f data b80159e0/45982ca3 fh 0/0 fc 0/1 ih 0/0 ic 0/0
+MISMATCH ck  t=24186000 av 0/0 sec 17c/39f data b80159e0/45982ca3 fh 0/0 fc 0/1 ih 0/0 ic 0/0
+MISMATCH hck t=24576000 av 0/0 sec 17c/39f data b80159e0/45982ca3 fh 0/0 fc 0/1 ih 0/0 ic 0/0
+MISMATCH ck  t=25020000 av 0/0 sec 17c/39f data b80159e0/45982ca3 fh 0/0 fc 0/1 ih 0/0 ic 0/0
+MISMATCH hck t=25600000 av 1/1 sec 1b0/1b0 data d377fd56/d377fd56 fh 0/0 fc 0/1 ih 0/0 ic 0/0
+MISMATCH ck  t=25854000 av 1/1 sec 1b0/1b0 data d377fd56/d377fd56 fh 0/0 fc 0/1 ih 0/0 ic 0/0
+INFO first fault_core t=3086336000 phase=2 np=1075 nc=1072
+INFO first fault_hbm t=4671488000 phase=3 np=1811 nc=1805 ncs=1803
+INFO first fault_core t=9286656000 phase=2 np=1113 nc=1109
+INFO first fault_hbm t=10849280000 phase=3 np=1840 nc=1835 ncs=1832
+KVPC_RETURN FAIL edges=12000 checks=26734 errors=18920 consumed=9128 mut=2
+- rtl/test/qwen_static_kv/kvpc_sram/tb_kvpc_return.sv:117: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.032 s; speed 383.064 us/s
+- Verilator: cpu 0.032 s on 1 threads; allocated 7 MB
+

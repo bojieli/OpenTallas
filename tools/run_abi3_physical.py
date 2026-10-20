@@ -63,9 +63,9 @@ timeouts respectively. ``none`` is an alias. The corresponding environment
 variables are ``OT_SYNTH_TIMEOUT_SECONDS`` and ``OT_FLOW_TIMEOUT_SECONDS``.
 Python callers may use ``main(argv, synth_timeout=None, flow_timeout=None)``
 or ``run(command, timeout=None)``. CLI overrides take precedence over Python
-overrides; both are scoped to the invocation. Omitted options retain the
-existing numeric defaults. Tool identity and platform probes keep their own
-timeouts; this policy does not change inherited operating-system limits.
+overrides; both are scoped to the invocation. Synthesis/STA has no default wall
+cap; route retains its numeric default. Tool identity and platform probes keep
+their own timeouts; this policy does not change inherited operating-system limits.
 """
 
 from __future__ import annotations
@@ -365,21 +365,21 @@ def tns_end_percent() -> int:
 
 
 def synth_timeout_seconds() -> int | None:
-    """Synthesis/STA wall timeout: legacy two-hour default, or none/unlimited."""
+    """Synthesis/STA wall timeout: unlimited unless a positive cap is explicit."""
     import os
 
     raw = os.environ.get("OT_SYNTH_TIMEOUT_SECONDS")
     if not raw:
-        return 7200
+        return None
     if raw.strip().lower() in {"none", "unlimited"}:
         return None
     try:
         value = int(raw)
     except ValueError as exc:
         raise SystemExit(f"OT_SYNTH_TIMEOUT_SECONDS is not an integer: {raw!r}") from exc
-    if value <= 0:
-        raise SystemExit("OT_SYNTH_TIMEOUT_SECONDS must be positive")
-    return value
+    if value < 0:
+        raise SystemExit("OT_SYNTH_TIMEOUT_SECONDS must be nonnegative")
+    return value or None
 
 
 def orfs_num_cores() -> int | None:
@@ -2733,7 +2733,7 @@ def run_pnr(
     # blocks, both killed at exactly 7,200 s having produced nothing:
     # ``ot_a3_engine_array`` and ``ot_a3_fp32_transcendental_cr_rne``, the latter
     # the widest-fan-in leaf in the datapath at eight parents.  The default is
-    # unchanged, so no existing route moves.
+    # now unlimited unless an operator explicitly supplies a positive cap.
     proc = orfs_make(
         f"{mapped_container} && chmod a+w {mapped_container}",
         "orfs_synth.log",
@@ -3316,7 +3316,7 @@ def _max_fanout_arg(text: str) -> int | str:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--synth-timeout-seconds", default=argparse.SUPPRESS,
-                        help="synthesis/STA seconds or unlimited (alias: none); otherwise env/default 7200")
+                        help="synthesis/STA seconds (0 = unlimited, alias: none); otherwise env/default unlimited")
     parser.add_argument("--flow-timeout-seconds", default=argparse.SUPPRESS,
                         help="route seconds or unlimited (alias: none); otherwise env/default 21600")
     parser.add_argument("--view", required=True, choices=sorted(VIEWS))

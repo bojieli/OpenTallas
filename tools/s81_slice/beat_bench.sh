@@ -1,5 +1,5 @@
 #!/bin/bash
-# beat_bench.sh <outdir> [base|baseimm|muttree|mutcoef|mutpostlast|mutnormimm] [BEAT] [L0|L2]  (cwd = repo root): S81-SLICE beat-leaf bench (vp + vn + vq)
+# beat_bench.sh <outdir> [base|baseimm|muttree|mutcoef|mutpostlast|mutnormimm|mutpre] [BEAT] [L0|L2]  (cwd = repo root): S81-SLICE beat-leaf bench (vp + vn + vq)
 # on the 1M token's real layer chain (su_cases).  base must PASS; the mutants must FAIL.  Exit 0 = the expected verdict.
 # S81SL_VQ_XMEM=1|2 builds vq with its SRAM-ring x wait line (ot_s81sl_vq AQ_XMEM; the kit sets 2).
 # baseimm = base with the legacy op 5 NORM (hc_pre in the imm) instead of op 7 NORMR (hc_pre = the G-unit's leaf row R);
@@ -9,7 +9,7 @@ set -u; O=$1; M=${2:-base}; B=${3:-37}; L=${4:-L0}; mkdir -p $O/run
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 CASES=${S81_SU_CASES:-tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl}
 python3 tools/s81_slice/leaf_gold.py $CASES $B $O/run $L > $O/gold.log 2>&1 || { echo "BENCH_SETUP_FAILED gold"; tail -5 $O/gold.log; exit 4; }
-DEF=""; [ "$M" = muttree ] && DEF="+define+OT_S81SL_MUT_TREE"; [ "$M" = mutcoef ] && DEF="+define+OT_S81SL_TB_MUT_COEF"
+DEF=""; [ "$M" = muttree ] && DEF="+define+OT_S81SL_MUT_TREE"; [ "$M" = mutcoef ] && DEF="+define+OT_S81SL_TB_MUT_COEF"; [ "$M" = mutpre ] && DEF="+define+OT_S81SL_MUT_PRESTALE"
 [ "$M" = mutpostlast ] && DEF="+define+OT_S81SL_VP_MUT_POSTLAST"; [ "$M" = mutnormimm ] && DEF="+define+OT_S81SL_VP_MUT_NORMIMM"
 NR=1; [ "$M" = baseimm ] && NR=0
 MACV="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"

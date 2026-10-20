@@ -5,7 +5,8 @@
 //         qkd_host_post_collector_mu #(MU 1) (4 owned steps, POST in acceptance order).  The POST collector's terminal
 //         identity is the lifecycle's accepted-terminal tag (acknowledged_tag during the terminal_accepted pulse), not
 //         the latest grant's: with 4 users in flight the latest grant is usually another user's.
-module qkd_host_coordinator_services_mu #(parameter [15:0] INITIAL_EPOCH = 16'd0, parameter integer MU = 1) (
+module qkd_host_coordinator_services_mu #(parameter [15:0] INITIAL_EPOCH = 16'd0, parameter integer MU = 1,
+  parameter integer POST_UID_SLOT = 0) (  // POST_UID_SLOT 1: real-observer binding (raw positions + slot UID), see post_collector_mu
  input wire clk, por_n, warm_ready,
  input wire request_valid, output wire request_ready,
  input wire [17:0] request_token, request_position,
@@ -201,7 +202,7 @@ end else begin : g_mu
  .identity_fault(identity_fault),
  .terminal_accepted(terminal_accepted),
  .lifecycle_fault(lifecycle_fault));
- qkd_host_post_collector_mu #(.MU(1))u_post(.ck(ck_post),.por_n(por_n),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_tag(grant_tag),.allocated_gen(grant_generation),
+ qkd_host_post_collector_mu #(.MU(1),.UID_SLOT(POST_UID_SLOT))u_post(.ck(ck_post),.por_n(por_n),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_tag(grant_tag),.allocated_gen(grant_generation),
  .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),
  .step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),

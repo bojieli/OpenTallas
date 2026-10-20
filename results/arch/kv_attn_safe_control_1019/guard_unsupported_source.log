@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-attn-safe-control-1019/tools/qwen_kv_die/attn_safe_control_1019/fork.py", line 7, in <module>
+    source=pathlib.Path(a.source);raw=source.read_text();assert hashlib.sha256(raw.encode()).hexdigest() in ('5df37e9f0736f57c12a10464caa0820333480804584e74790cb1937bb26c5b25','32a891ce0f649699d38e03ece227dbe0ba31ccb20c650d9a9d047d4a5a20b2ab'),'unsupported source hash';mods=T.parse_verilog(raw);g,top=T.flatten(mods,None);A=T.build(g,None)
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unsupported source hash

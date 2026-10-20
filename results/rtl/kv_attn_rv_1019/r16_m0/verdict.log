@@ -1,0 +1,13 @@
+KVS_RVPAIR build B=r16 mut=0 verilator Verilator 5.050 (fleet ot-epyc7 /srv/opentallas-scratch/claude/kv-attn2-1019/bench2/r16_m0, per-mode sim logs)
+KVS_RVPAIR PASS mode=0 mut=0 checks=38766 errors=0 cmds=3 req=3 Q=96 TX=99 faultA=0 faultB=0
+KVS_RVPAIR PASS mode=1 mut=0 checks=12824 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=2 mut=0 checks=12863 errors=0 cmds=1 req=1 Q=6 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=3 mut=0 checks=12866 errors=0 cmds=1 req=1 Q=9 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=4 mut=0 checks=12889 errors=0 cmds=1 req=1 Q=32 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=5 mut=0 checks=12892 errors=0 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=6 mut=0 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=7 mut=0 checks=12900 errors=0 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=8 mut=0 checks=12861 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=9 mut=0 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=10 mut=0 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR_ALL PASS mut=0 modes=11 checks=155024 fails=0

@@ -6,6 +6,7 @@ set -u; O=$1; M=${2:-base}; S=${3:-1}; H=${4:-0}; N=${5:-6000}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 DEF=""; case $M in hops) DEF="+define+OT_S81SL_XR_MUT_HOPS";; row) DEF="+define+OT_S81SL_XR_MUT_ROW";;
   porder) DEF="+define+OT_S81SL_XR_MUT_PORDER";; nocol) DEF="+define+OT_S81SL_XR_MUT_NOCOL";; base) ;; *) echo "BAD_MODE $M"; exit 2;; esac
+[ "${XR_FOREG:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_FOREG"   # XR6 fallback build (dedicated fault output flop)
 srcs="rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv"
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GHB=$H -GSEED=$S -GNC=$N --top-module tb_s81sl_xr \
   -Mdir $O/obj $srcs --build-jobs ${J:-4} -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 \

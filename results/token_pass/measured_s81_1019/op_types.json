@@ -1,0 +1,1285 @@
+[
+ {
+  "cls": "field",
+  "op": "ffn.experts_gu",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 94571.5,
+  "per_instance": [
+   1238.9,
+   1239.8,
+   1852.8,
+   1856.9,
+   1857.9,
+   2470.7
+  ],
+  "note": "ROM field: L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 840 cyc over 6 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q fram..."
+ },
+ {
+  "cls": "field",
+  "op": "attn.wo_a",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 88880.0,
+  "per_instance": [
+   2222.0
+  ],
+  "note": "ROM field: L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 584 cyc over 4 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221..."
+ },
+ {
+  "cls": "field",
+  "op": "ffn.down",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 88191.0,
+  "per_instance": [
+   1516.3,
+   1517.7,
+   1540.7,
+   2028.2,
+   2050.7,
+   3071.5
+  ],
+  "note": "ROM field: L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 867 cyc over 6 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221...."
+ },
+ {
+  "cls": "hop",
+  "op": "unplaced_hops",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 62649.2,
+  "per_instance": [
+   62649.2
+  ],
+  "note": "27 hops of the S81 / q-element frame over the S58 graph (22.59 us) + 35 hops of the 1,792 HALF mapping (120 vs 85 stages) x 0.8425 us + cable flight 0.15 us (+ the composition's tok/s rounding, < 0.03 us); where they fall between stages is not in the composition record"
+ },
+ {
+  "cls": "field",
+  "op": "attn.wq_b",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 45753.6,
+  "per_instance": [
+   1039.9,
+   1559.6
+  ],
+  "note": "ROM field: L3.attn.wq_b: one-region full-shape ROM field RTL (S81 canonical placement), 8192 rows exact=True, + r8 die wire 143 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221..."
+ },
+ {
+  "cls": "hop",
+  "op": "substage_hop0",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 40240.0,
+  "per_instance": [
+   1006.0
+  ],
+  "note": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc) + s81_die_tiles: 2 cyc / x1.0000 (SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direct..."
+ },
+ {
+  "cls": "field",
+  "op": "ffn.router",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 39088.0,
+  "per_instance": [
+   977.2
+  ],
+  "note": "ROM field: L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 122 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221...."
+ },
+ {
+  "cls": "field",
+  "op": "attn.a_proj",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 38658.5,
+  "per_instance": [
+   628.0,
+   1858.1,
+   1859.2,
+   3090.3
+  ],
+  "note": "ROM field: L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 142 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 22..."
+ },
+ {
+  "cls": "coll",
+  "op": "attn.out_allreduce",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 33080.0,
+  "per_instance": [
+   827.0
+  ],
+  "note": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact + r8 hub-slab stations 1.667 ns + s81_die_tiles: 131 cyc / x1.0000 (Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors,..."
+ },
+ {
+  "cls": "coll",
+  "op": "ffn.combine_allreduce",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 33080.0,
+  "per_instance": [
+   827.0
+  ],
+  "note": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_reduce 20480 B, bit-exact + r8 hub-slab stations 1.667 ns + s81_die_tiles: 131 cyc / x1.0000 (Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors,..."
+ },
+ {
+  "cls": "field",
+  "op": "attn.wo_b",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 21956.0,
+  "per_instance": [
+   548.9
+  ],
+  "note": "ROM field: L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 146 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 221..."
+ },
+ {
+  "cls": "hbm",
+  "op": "attn.idx.score",
+  "n_all": 8,
+  "n_crit": 8,
+  "cyc_crit": 18282.0,
+  "per_instance": [
+   873.0,
+   2951.0,
+   5937.0
+  ],
+  "note": "model + s81_die_tiles: 1 cyc / x1.0000 (CTRL status chain: +1 cycle per column (HBM stream reads)) + s81_die_tiles: 2 cyc / x1.0000 (Scan service IO hub / per-PC tiles: one register each way (+2 a request)) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing..."
+ },
+ {
+  "cls": "coll",
+  "op": "attn.a_allgather",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 17360.0,
+  "per_instance": [
+   434.0
+  ],
+  "note": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 3648 B, bit-exact + r8 hub-slab stations 1.667 ns + s81_die_tiles: 50 cyc / x1.0000 (Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, l..."
+ },
+ {
+  "cls": "hop",
+  "op": "substage_hop1",
+  "n_all": 17,
+  "n_crit": 17,
+  "cyc_crit": 17102.0,
+  "per_instance": [
+   1006.0
+  ],
+  "note": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc) + s81_die_tiles: 2 cyc / x1.0000 (SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direct..."
+ },
+ {
+  "cls": "coll",
+  "op": "ffn.router_allgather",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 16876.0,
+  "per_instance": [
+   421.9
+  ],
+  "note": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 1536 B, bit-exact + r8 hub-slab stations 1.667 ns + s81_die_tiles: 38 cyc / x1.0000 (Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors, l..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.quant",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 12960.0,
+  "per_instance": [
+   324.0
+  ],
+  "note": "su_norm: ot_dsrom_su_norm hc (N 1024, D 5120): hc_pre -> RMSNorm -> FP8 act-quant 323 cycles at 1.2 GHz from the vector-memory read to the last quantised block landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 golden 1M operands + 6 stress row..."
+ },
+ {
+  "cls": "su",
+  "op": "ffn.norm.scale",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 12240.0,
+  "per_instance": [
+   306.0
+  ],
+  "note": "su_norm: ot_dsrom_su_norm hc (N 1024, D 5120): hc_pre -> RMSNorm 305 cycles at 1.2 GHz from the vector-memory read to the last normalised vector landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 golden 1M operands + 6 stress rows (Verilator, f..."
+ },
+ {
+  "cls": "select",
+  "op": "attn.idx.topk_local",
+  "n_all": 8,
+  "n_crit": 8,
+  "cyc_crit": 11784.0,
+  "per_instance": [
+   230.0,
+   262.0,
+   2176.0,
+   2177.0,
+   2190.0,
+   4225.0
+  ],
+  "note": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 20 cyc / x1.0000 (Selector tiles: +20 a segment (mean; +15 max)) ..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.q_quant",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 11520.0,
+  "per_instance": [
+   288.0
+  ],
+  "note": "su_norm: ot_dsrom_su_norm q (N 256, D 1280): q RMSNorm -> FP8 act-quant 287 cycles at 1.2 GHz from the vector-memory read to the last quantised block landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 golden 1M operands + 6 stress rows (Verilat..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.exp",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 11481.2,
+  "per_instance": [
+   236.3,
+   289.7
+  ],
+  "note": "SU: L3.attn.exp: wired RTL (BCAST 22 / RET 15 stages) 0.21222 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 1 cyc / x1.0000 (Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): normalize 141 -> 171 (+30), exp 224 -> 225 (+1). Cost only; die pin FF hold remains unqual..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.normalize",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 9796.0,
+  "per_instance": [
+   244.9
+  ],
+  "note": "SU: L3.attn.normalize: wired RTL (BCAST 22 / RET 15 stages) 0.16778 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 30 cyc / x1.0000 (Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): normalize 141 -> 171 (+30), exp 224 -> 225 (+1). Cost only; die pin FF hold remains..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.max",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 8794.6,
+  "per_instance": [
+   186.9,
+   221.6
+  ],
+  "note": "SU: L3.attn.max: wired RTL (BCAST 22 / RET 15 stages) 0.17333 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every ..."
+ },
+ {
+  "cls": "head",
+  "op": "head.lm_head",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 8429.0,
+  "per_instance": [
+   8429.0
+  ],
+  "note": "head: ot_dsrom_head_bundle (5 logical macros, 16 BF16 mult/macro, skewed ROM, streaming tree, join) go->last logit 8353 cyc measured + 34 labelled wire cyc @1.2 GHz; every bundle of the rank runs in lockstep (252.5 bundles = 2,525 ROM4096) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fu..."
+ },
+ {
+  "cls": "coll",
+  "op": "attn.rows_allgather",
+  "n_all": 40,
+  "n_crit": 8,
+  "cyc_crit": 8227.6,
+  "per_instance": [
+   1024.0,
+   1032.9
+  ],
+  "note": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 67584 B, bit-exact + r8 hub-slab stations 1.667 ns + s81_die_tiles: 361 cyc / x1.0000 (Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors,..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.sink",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 7840.0,
+  "per_instance": [
+   196.0
+  ],
+  "note": "SU: L3.attn.sink: wired RTL (BCAST 22 / RET 15 stages) 0.16 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.quant2",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 7640.0,
+  "per_instance": [
+   191.0
+  ],
+  "note": "su_swiglu: ot_dsrom_su_swiglu W1024 LM5/LA4/QLAT5: 33 in + lane 116 + quant 18 + 23 out stages, 4 vectors: 190 cyc at 1.2 GHz first input -> last code, exact L0/L3/L20/L24 routed+shared + stress (rtl W64 + dpi_beh W1024) + r8 hub-slab stations 0.833 ns"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.softplus_sqrt",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 7424.0,
+  "per_instance": [
+   185.6
+  ],
+  "note": "su_routeract: ot_dsrom_su_spsqrt (24 lanes of ot_hdc_v41x_softplus_s #(PCUT 1), 0.9 GHz serial domain (measured CDC charged on its edges), at the router field's output root: 2 in + 2 out wire stages) 132 cycles first raw row in -> the die's 96 scores out (4 beats), exact on all 40 layers x 384 rows of the 1M token +..."
+ },
+ {
+  "cls": "select",
+  "op": "attn.gather",
+  "n_all": 8,
+  "n_crit": 8,
+  "cyc_crit": 6487.0,
+  "per_instance": [
+   808.0,
+   811.0,
+   819.0
+  ],
+  "note": "model + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps crossings): +6 cycles per selector segment / collector job) + s81_die_tiles: 2 cyc / x1.0000 (Collector tiles: +2 a job)"
+ },
+ {
+  "cls": "hbm",
+  "op": "attn.window_load",
+  "n_all": 40,
+  "n_crit": 32,
+  "cyc_crit": 5698.8,
+  "per_instance": [
+   169.9,
+   207.1,
+   265.9,
+   300.9
+  ],
+  "note": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.bias",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 4704.0,
+  "per_instance": [
+   117.6
+  ],
+  "note": "SU: L3.ffn.bias: wired RTL (BCAST 22 / RET 15 stages) 0.08667 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every ..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.hc_post",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 4516.0,
+  "per_instance": [
+   112.9
+  ],
+  "note": "su_hcpost: ot_dsrom_su_hcpost (NG 256 groups x 4 lanes = 1,024 outputs/cycle, mul_f12 L5 / add_f12 L5): go -> last of 20 output beats landed 103 cycles at 1.2 GHz incl. hub in 33 / out 23 register stages; bit-exact on the 8 golden 1M hc_post chains (L0/L3/L20/L24 attn+ffn) + 32 stress cases + r8 hub-slab stations 0...."
+ },
+ {
+  "cls": "su",
+  "op": "ffn.hc_post",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 4516.0,
+  "per_instance": [
+   112.9
+  ],
+  "note": "su_hcpost: ot_dsrom_su_hcpost (NG 256 groups x 4 lanes = 1,024 outputs/cycle, mul_f12 L5 / add_f12 L5): go -> last of 20 output beats landed 103 cycles at 1.2 GHz incl. hub in 33 / out 23 register stages; bit-exact on the 8 golden 1M hc_post chains (L0/L3/L20/L24 attn+ffn) + 32 stress cases + r8 hub-slab stations 0...."
+ },
+ {
+  "cls": "coll",
+  "op": "attn.idx.topk_merge",
+  "n_all": 8,
+  "n_crit": 8,
+  "cyc_crit": 4408.0,
+  "per_instance": [
+   551.0
+  ],
+  "note": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 16384 B, bit-exact + r8 hub-slab stations 1.667 ns + s81_die_tiles: 113 cyc / x1.0000 (Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors,..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.q_rope",
+  "n_all": 40,
+  "n_crit": 32,
+  "cyc_crit": 3763.2,
+  "per_instance": [
+   117.6
+  ],
+  "note": "SU: L3.attn.q_rope: wired RTL (BCAST 22 / RET 15 stages) 0.08667 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on eve..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.den",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 3488.0,
+  "per_instance": [
+   72.0,
+   88.0
+  ],
+  "note": "SU: L3.attn.den: wired RTL (BCAST 22 / RET 15 stages) 0.07 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.z_quant",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 3200.0,
+  "per_instance": [
+   80.0
+  ],
+  "note": "su_swiglu: ot_dsrom_su_qbank NB32 QLAT5 (2 beats): 76 cyc at 1.2 GHz, exact L0/L3/L20/L24 + stress + r8 hub-slab stations 0.833 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing ..."
+ },
+ {
+  "cls": "hop",
+  "op": "token.return",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 2194.0,
+  "per_instance": [
+   2194.0
+  ],
+  "note": "token return: 8 x (link_rt endpoint 6 cyc + full-KP4 PHY VENDOR BUDGET 209 ns + 4 cyc cable flight) + 90 wire + s81_die_tiles: 16 cyc / x1.0000 (SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direction per traversal: stage hops +2, token return..."
+ },
+ {
+  "cls": "hbm",
+  "op": "attn.scores",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 2104.0,
+  "per_instance": [
+   49.9,
+   103.9
+  ],
+  "note": "model + s81_die_tiles: 1 cyc / x1.0000 (CTRL status chain: +1 cycle per column (HBM stream reads)) + s81_die_tiles: 2 cyc / x1.0000 (Scan service IO hub / per-PC tiles: one register each way (+2 a request)) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing..."
+ },
+ {
+  "cls": "select",
+  "op": "ffn.top6_order",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 1760.0,
+  "per_instance": [
+   44.0
+  ],
+  "note": "router: ot_hdc_select_tree (64 lanes x 6 beats, sort-8 leaves + top-8 merge trees + ascending-id sort) 44 cycles at 1.2 GHz first score beat -> 6 ids, exact on all 40 layers' golden 1M router scores (select_tree.json)"
+ },
+ {
+  "cls": "select",
+  "op": "attn.idx.topk_final",
+  "n_all": 8,
+  "n_crit": 8,
+  "cyc_crit": 1424.0,
+  "per_instance": [
+   178.0
+  ],
+  "note": "{\"model_us\": 0.12, \"measured_us\": 0.1483, \"measured_cycles\": 178, \"source\": \"cross-die final select L8 (4 x 512 real local selections)\"}"
+ },
+ {
+  "cls": "embed",
+  "op": "embed",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 1074.3,
+  "per_instance": [
+   1074.3
+  ],
+  "note": "embed: owner-rank ROM row read 323 cyc (ot_dsrom_embed_row_reader on the ROM macro, 320 words) + S81 floorplan wire 80 cyc + TP4 owner->4 ranks (all_gather 160 words/rank on tb_w15b_v41_tp4 S81) 442 cyc + SU 4-copy expand wired 97 slow cyc; serial + 100 cyc full-FEC board leg (links_full_fec.json, constant over ever..."
+ },
+ {
+  "cls": "hop",
+  "op": "head.hop",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 1006.0,
+  "per_instance": [
+   1006.0
+  ],
+  "note": "stage hop: ot_dsrom_link_rt RTL 652 cyc (40,976 B, 64-B flits) + full-KP4 PHY VENDOR BUDGET 209 ns + UCIe fan-out 10 ns + 2x45 routed wire stages (1004 cyc) + s81_die_tiles: 2 cyc / x1.0000 (SerDes tx / rx through two 256-b half-span stations (--link-split; 1,122 um pin span, last hop <= 281 um): +1 cycle per direct..."
+ },
+ {
+  "cls": "su",
+  "op": "eng.gate",
+  "n_all": 2,
+  "n_crit": 2,
+  "cyc_crit": 989.4,
+  "per_instance": [
+   494.7
+  ],
+  "note": "Engram SU chain: ot_hdc_v41x_vec N1024/M256 MLAT5/ALAT4 at 0.9 GHz, wired BCAST 22 / RET 15 (unit 0.31889 us); Engram chain on operands rebuilt from the released checkpoint, bit-exact vs golden + shard + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "field",
+  "op": "attn.idx.q",
+  "n_all": 8,
+  "n_crit": 8,
+  "cyc_crit": 744.0,
+  "per_instance": [
+   93.0
+  ],
+  "note": "su_swiglu: ot_dsrom_su_qbank NB32 ROPE 1 QLAT5 (index-q RoPE front on ot_dsrom_su_rope_el, then FP4 QDQ): 89 cyc at 1.2 GHz incl. the 33 / 23 hub traverse, exact L20/L24 golden + random (dpi_beh NB32 full shape, bit-level RTL NB8) + r8 hub-slab stations 0.833 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through..."
+ },
+ {
+  "cls": "field",
+  "op": "eng.dot",
+  "n_all": 2,
+  "n_crit": 2,
+  "cyc_crit": 539.2,
+  "per_instance": [
+   269.6
+  ],
+  "note": "Engram SU chain: ot_hdc_v41x_vec N1024/M256 MLAT5/ALAT4 at 0.9 GHz, wired BCAST 22 / RET 15 (unit 0.17222 us); Engram chain on operands rebuilt from the released checkpoint, bit-exact vs golden + shard + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_..."
+ },
+ {
+  "cls": "coll",
+  "op": "head.argmax_merge",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 374.9,
+  "per_instance": [
+   374.9
+  ],
+  "note": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 32 B, bit-exact + r8 hub-slab stations 1.667 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) e..."
+ },
+ {
+  "cls": "su",
+  "op": "ffn.hc_pre",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 356.0,
+  "per_instance": [
+   8.9
+  ],
+  "note": "su_norm: covered by ffn.norm.scale (one fused ot_dsrom_su_norm pipeline) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer)"
+ },
+ {
+  "cls": "select",
+  "op": "ffn.top6",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 356.0,
+  "per_instance": [
+   8.9
+  ],
+  "note": "router: covered by ffn.top6_order (one ot_hdc_select_tree pass selects and orders) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer)"
+ },
+ {
+  "cls": "head",
+  "op": "head.norm.scale",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 306.0,
+  "per_instance": [
+   306.0
+  ],
+  "note": "su_norm: ot_dsrom_su_norm hc (N 1024, D 5120): hc_pre -> RMSNorm 305 cycles at 1.2 GHz from the vector-memory read to the last normalised vector landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 + head golden 1M operands + 6 stress rows (Veril..."
+ },
+ {
+  "cls": "su",
+  "op": "ffn.route_w",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 236.0,
+  "per_instance": [
+   5.9
+  ],
+  "note": "su_swiglu: covered by ffn.quant2 (route weight is the fused E2 multiply)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.hc_pre",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 233.1,
+  "per_instance": [
+   3.0,
+   5.9
+  ],
+  "note": "su_norm: covered by attn.quant (one fused ot_dsrom_su_norm pipeline) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer)"
+ },
+ {
+  "cls": "su",
+  "op": "eng.add",
+  "n_all": 2,
+  "n_crit": 2,
+  "cyc_crit": 213.8,
+  "per_instance": [
+   106.9
+  ],
+  "note": "Engram SU chain: ot_hdc_v41x_vec N1024/M256 MLAT5/ALAT4 at 0.9 GHz, wired BCAST 22 / RET 15 (unit 0.05333 us); Engram chain on operands rebuilt from the released checkpoint, bit-exact vs golden + shard + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.q_norm.sumsq",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 120.0,
+  "per_instance": [
+   3.0
+  ],
+  "note": "su_norm: covered by attn.q_quant (one fused ot_dsrom_su_norm pipeline) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer)"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.swiglu",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 120.0,
+  "per_instance": [
+   3.0
+  ],
+  "note": "su_swiglu: covered by ffn.quant2 (fused ot_dsrom_su_swiglu W1024) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer)"
+ },
+ {
+  "cls": "head",
+  "op": "head.argmax",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 21.6,
+  "per_instance": [
+   21.6
+  ],
+  "note": "head: in-element lowest-id first-max + 2-level bundle compare tree measured (4 cyc after the last logit) + 8 labelled rank compare levels (1 cyc each, same node) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycle..."
+ },
+ {
+  "cls": "head",
+  "op": "head.hc_pre",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 8.9,
+  "per_instance": [
+   8.9
+  ],
+  "note": "su_norm: covered by head.norm.scale (one fused ot_dsrom_su_norm pipeline) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.norm.sumsq",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by attn.quant (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.norm.rsqrt",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by attn.quant (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.norm.scale",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by attn.quant (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.q_norm.rsqrt",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by attn.q_quant (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.q_norm.scale",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by attn.q_quant (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.norm.sumsq",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by ffn.norm.scale (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.norm.rsqrt",
+  "n_all": 40,
+  "n_crit": 40,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by ffn.norm.scale (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "head",
+  "op": "head.norm.sumsq",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by head.norm.scale (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "head",
+  "op": "head.norm.rsqrt",
+  "n_all": 1,
+  "n_crit": 1,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by head.norm.scale (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.hc.sumsq",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   244.0,
+   250.6,
+   253.6
+  ],
+  "note": "SU: L3.attn.hc.sumsq: wired RTL (BCAST 22 / RET 15 stages) 0.2 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.hc.rsqrt",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   197.3
+  ],
+  "note": "SU: L3.attn.hc.rsqrt: wired RTL (BCAST 22 / RET 15 stages) 0.16111 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.hc.fn",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   229.0,
+   237.0,
+   242.9
+  ],
+  "note": "no measured patch"
+ },
+ {
+  "cls": "su",
+  "op": "attn.hc.pre_post",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   212.3
+  ],
+  "note": "SU: L3.attn.hc.pre_post: wired RTL (BCAST 22 / RET 15 stages) 0.16556 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, o..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.hc.sinkhorn",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   637.2
+  ],
+  "note": "SU: L3.attn.hc.sinkhorn: SU front (row max + exp) wired RTL 0.25778 us + ot_hdc_sinkhorn 41 clocks at routed 151.9 MHz; CDC 0.0 us modelled + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.kv_norm.sumsq",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   3.0
+  ],
+  "note": "su_norm: covered by attn.kv_rope_qdq (one fused ot_dsrom_su_norm pipeline) + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.kv_norm.rsqrt",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by attn.kv_rope_qdq (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.kv_norm.scale",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   0.0
+  ],
+  "note": "su_norm: covered by attn.kv_rope_qdq (one fused ot_dsrom_su_norm pipeline)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.kv_rope_qdq",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   283.0
+  ],
+  "note": "su_norm: ot_dsrom_su_norm kv (N 512, D 512): kv RMSNorm -> RoPE tail -> FP8 QDQ 282 cycles at 1.2 GHz from the vector-memory read to the last QDQ block landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the L0/L3/L20/L24 golden 1M operands + 6 stress rows (Veril..."
+ },
+ {
+  "cls": "hbm",
+  "op": "attn.own_row_write",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   649.8,
+   1129.9,
+   3220.6
+  ],
+  "note": "L24.lf_kg_p1/p2 (worse): write with the gather, load after it (results/rtl/dsrom_s81_window_bind_20261004/window_load.json)"
+ },
+ {
+  "cls": "hbm",
+  "op": "attn.pv",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   143.9,
+   271.9
+  ],
+  "note": "SU: attention tile P.V pass, last score -> last P.V (w11_attn_ploader pwords2_psup2, full geometry, synthetic vectors, exact) + r8 hub-slab stations 3.333 ns + s81_die_tiles: 1 cyc / x1.0000 (CTRL status chain: +1 cycle per column (HBM stream reads)) + s81_die_tiles: 2 cyc / x1.0000 (Scan service IO hub / per-PC til..."
+ },
+ {
+  "cls": "su",
+  "op": "ffn.hc.sumsq",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   253.6
+  ],
+  "note": "SU: L3.ffn.hc.sumsq: wired RTL (BCAST 22 / RET 15 stages) 0.2 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every ..."
+ },
+ {
+  "cls": "su",
+  "op": "ffn.hc.rsqrt",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   197.3
+  ],
+  "note": "SU: L3.ffn.hc.rsqrt: wired RTL (BCAST 22 / RET 15 stages) 0.16111 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.hc.fn",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   229.0
+  ],
+  "note": "no measured patch"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.hc.pre_post",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   212.3
+  ],
+  "note": "SU: L3.ffn.hc.pre_post: wired RTL (BCAST 22 / RET 15 stages) 0.16556 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on..."
+ },
+ {
+  "cls": "su",
+  "op": "ffn.hc.sinkhorn",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   637.2
+  ],
+  "note": "SU: L3.ffn.hc.sinkhorn: SU front (row max + exp) wired RTL 0.25778 us + ot_hdc_sinkhorn 41 clocks at routed 151.9 MHz; CDC 0.0 us modelled + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.quant",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   19.0
+  ],
+  "note": "su_norm: ot_dsrom_su_norm hc: the FP8 act-quant behind the normalised vector (ffn.norm.scale): 18 cycles at 1.2 GHz (ot_dsrom_aq12, 32 instances), exact + r8 hub-slab stations 0.833 ns"
+ },
+ {
+  "cls": "su",
+  "op": "ffn.weights",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   258.9
+  ],
+  "note": "SU: L3.ffn.weights: wired RTL (BCAST 22 / RET 15 stages) 0.20444 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on eve..."
+ },
+ {
+  "cls": "field",
+  "op": "ffn.shared_gu",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   634.0
+  ],
+  "note": "ROM field: L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 142 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame..."
+ },
+ {
+  "cls": "su",
+  "op": "ffn.shared_swiglu",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   245.6
+  ],
+  "note": "SU: L3.ffn.shared_swiglu: wired RTL (BCAST 22 / RET 15 stages) 0.19333 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, ..."
+ },
+ {
+  "cls": "su",
+  "op": "ffn.shared_quant",
+  "n_all": 40,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   94.7
+  ],
+  "note": "SU: L3.ffn.shared_quant: wired RTL (BCAST 22 / RET 15 stages) 0.07556 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "eng.hh",
+  "n_all": 2,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   239.9
+  ],
+  "note": "Engram SU chain: ot_hdc_v41x_vec N1024/M256 MLAT5/ALAT4 at 0.9 GHz, wired BCAST 22 / RET 15 (unit 0.15 us); Engram chain on operands rebuilt from the released checkpoint, bit-exact vs golden + shard + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.cmp.pool",
+  "n_all": 3,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   289.9
+  ],
+  "note": "model + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer)"
+ },
+ {
+  "cls": "su",
+  "op": "attn.cmp.norm.sumsq",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   186.7,
+   196.3
+  ],
+  "note": "SU: L20.attn.cmp.norm.sumsq: wired RTL (BCAST 22 / RET 15 stages) 0.15222 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cd..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.cmp.norm.rsqrt",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   197.3
+  ],
+  "note": "SU: L20.attn.cmp.norm.rsqrt: wired RTL (BCAST 22 / RET 15 stages) 0.16111 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.cmp.norm.scale",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   74.7
+  ],
+  "note": "SU: L20.attn.cmp.norm.scale: wired RTL (BCAST 22 / RET 15 stages) 0.05889 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "field",
+  "op": "attn.cmp.wk",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   608.6
+  ],
+  "note": "ROM field: L20.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + r8 die wire 123 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81 m221pq layer1 die (1,792 pairs, mixed221: 4 BF + 10 q a region, q frame 2..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.cmp.k_norm.sumsq",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   185.6
+  ],
+  "note": "SU: L20.attn.cmp.k_norm.sumsq: wired RTL (BCAST 22 / RET 15 stages) 0.14333 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.cmp.k_norm.rsqrt",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   197.3
+  ],
+  "note": "SU: L20.attn.cmp.k_norm.rsqrt: wired RTL (BCAST 22 / RET 15 stages) 0.16111 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.cmp.k_norm.scale",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   74.7
+  ],
+  "note": "SU: L20.attn.cmp.k_norm.scale: wired RTL (BCAST 22 / RET 15 stages) 0.05889 us, golden-exact + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.cmp.k_rope_qdq",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   146.7
+  ],
+  "note": "SU: L20.attn.cmp.k_rope_qdq: RoPE wired RTL 0.05889 us + ot_hdc_actquant QDQ wired RTL 0.06 us (1 instance, golden-exact) + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.cmp.row_qdq",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   156.0
+  ],
+  "note": "SU: L20.attn.cmp.row_qdq: RoPE wired RTL 0.05889 us + ot_hdc_actquant QDQ wired RTL 0.06778 us (1 instance, golden-exact) + r8 hub-slab stations 3.333 ns"
+ },
+ {
+  "cls": "su",
+  "op": "attn.idx.newkey",
+  "n_all": 4,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   117.9
+  ],
+  "note": "model + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast cycles) each way vs the d4 crossing in su_cdc, on every slow<->fast edge consumer)"
+ },
+ {
+  "cls": "select",
+  "op": "attn.cand.topk_local",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   11747.0
+  ],
+  "note": "ot_hdc_v41x_sel_cand on the golden 1M L20 scores (12366 cyc incl. 2 overflow re-streams; re-streams priced at the measured reader rate 5821 cyc) + s81_die_tiles: 6 cyc / x1.0000 (Selector / collector crossing stages (--sel-xstg: d8g1 meso FIFO with registered pins on the end block -> band block buses, 382-385 ps cro..."
+ },
+ {
+  "cls": "coll",
+  "op": "attn.cand.merge",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   1002.0
+  ],
+  "note": "TP4 collective tb_w15b_v41_tp4 at S81 (U_WIRE 34, X_WIRE 45, 1.2 GHz, board leg full RS(544,514)), all_gather 65536 B, bit-exact + r8 hub-slab stations 1.667 ns + s81_die_tiles: 348 cyc / x1.0000 (Collective slab v4 tiles (S81-PH f4b4e0a71: EDEPTH 512, link-up gate; bench_v4 coll_price, trained links, no bit errors,..."
+ },
+ {
+  "cls": "su",
+  "op": "attn.cand.final",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   355.0
+  ],
+  "note": "ot_hdc_v41x_sel final top-2048 of 4 x 2048 block maxima (golden-equal)"
+ },
+ {
+  "cls": "hop",
+  "op": "E1.lead_flit",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   3045.0
+  ],
+  "note": "3 stage hops x (1011 hop + 4 relay) from S0, cut-through"
+ },
+ {
+  "cls": "embed",
+  "op": "E1.hash",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   17.0
+  ],
+  "note": "ot_hdc_engram_hash_shipped inside dsfd_engram_lkp: pin flop 1 + window fed oldest first 4 + fixed latency 12 (part of lookup_local_cycles)"
+ },
+ {
+  "cls": "embed",
+  "op": "E1.hbm_read",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   483.0
+  ],
+  "note": "address 2 + request + HBM read (200 ns, 240 cycles) + 9 atoms x 6 rows + alignment / CRC + local sink (rest of lookup_local_cycles); modelled (campaign record absent)"
+ },
+ {
+  "cls": "coll",
+  "op": "E1.rows_allgather",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   1422.0
+  ],
+  "note": "1584 B a rank (6 packed FP8 rows), upper bound ceil(1584/640) x 442 + 100 FEC leg (results/arch/token_path_20261008/ds_rom.json node 'embed' note: TP4 owner->4 ranks all_gather 160 words/rank on tb_w15b_v41_tp4 S81 442 cyc + 100 cyc full-FEC board leg)"
+ },
+ {
+  "cls": "field",
+  "op": "E1.wkv",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   1876.0
+  ],
+  "note": "engram.wkv [25,600 x 6,144] FP8 matvec on the home die's ROM field (the composition's E{L}.wkv; weights in that stage's field)"
+ },
+ {
+  "cls": "su",
+  "op": "E1.knorm",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   602.0
+  ],
+  "note": "tools/dsrom_1m_allmeasured.py composition graph (replayed by tools/token_path_export.ds_capture): E{L}.wkv / E{L}.knorm.{sumsq,rsqrt,scale} contributions; E{L}.gather (0.25 us 'row gather port' placeholder of the ROM tables) and E{L}.deliver (2 board legs) are the terms this design replaces"
+ },
+ {
+  "cls": "hop",
+  "op": "E14.lead_flit",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   42630.0
+  ],
+  "note": "42 stage hops x (1011 hop + 4 relay) from S0, cut-through"
+ },
+ {
+  "cls": "embed",
+  "op": "E14.hash",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   17.0
+  ],
+  "note": "ot_hdc_engram_hash_shipped inside dsfd_engram_lkp: pin flop 1 + window fed oldest first 4 + fixed latency 12 (part of lookup_local_cycles)"
+ },
+ {
+  "cls": "embed",
+  "op": "E14.hbm_read",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   483.0
+  ],
+  "note": "address 2 + request + HBM read (200 ns, 240 cycles) + 9 atoms x 6 rows + alignment / CRC + local sink (rest of lookup_local_cycles); modelled (campaign record absent)"
+ },
+ {
+  "cls": "coll",
+  "op": "E14.rows_allgather",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   1422.0
+  ],
+  "note": "1584 B a rank (6 packed FP8 rows), upper bound ceil(1584/640) x 442 + 100 FEC leg (results/arch/token_path_20261008/ds_rom.json node 'embed' note: TP4 owner->4 ranks all_gather 160 words/rank on tb_w15b_v41_tp4 S81 442 cyc + 100 cyc full-FEC board leg)"
+ },
+ {
+  "cls": "field",
+  "op": "E14.wkv",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   530.0
+  ],
+  "note": "engram.wkv [25,600 x 6,144] FP8 matvec on the home die's ROM field (the composition's E{L}.wkv; weights in that stage's field)"
+ },
+ {
+  "cls": "su",
+  "op": "E14.knorm",
+  "n_all": 1,
+  "n_crit": 0,
+  "cyc_crit": 0.0,
+  "per_instance": [
+   602.0
+  ],
+  "note": "tools/dsrom_1m_allmeasured.py composition graph (replayed by tools/token_path_export.ds_capture): E{L}.wkv / E{L}.knorm.{sumsq,rsqrt,scale} contributions; E{L}.gather (0.25 us 'row gather port' placeholder of the ROM tables) and E{L}.deliver (2 board legs) are the terms this design replaces"
+ }
+]

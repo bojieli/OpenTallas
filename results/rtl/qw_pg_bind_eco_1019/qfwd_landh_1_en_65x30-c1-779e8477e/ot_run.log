@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       admits  1180 GB (avail 939, growth 113, headroom 0, waiters 0/0 GB) load 78/128 running 28 disk 618 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root4-qw-eco-1019/qfwd_landh_1_en_65x30-c1-779e8477e
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/root4-qw-eco-1019/qfwd_landh_1_en_65x30-c1-779e8477e
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root4-qw-eco-1019/qfwd_landh_1_en_65x30-c1-779e8477e
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root4-qw-eco-1019/qfwd_landh_1_en_65x30-c1-779e8477e
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root4-qw-eco-1019/qfwd_landh_1_en_65x30-c1-779e8477e
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1161168-1792471017 after 0 s
+OT_PG_ECO bound_terminals=12 instances=6 dont_touch_instances=6
+OT_PG_ECO_POST_PASS checked=11314
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_GRID_VDD PASS 1
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_GRID_VSS PASS 1
+SIGNAL_IDENTICAL
+89e28bbefa5d80e22fabf1e5c2780ce590f08ba6de4a99f414674ba24d8231d3  6_final_pgbound.odb
+089757f082f3715f0b7ebd745a51738cb08c318b2b525facfa81b9e77032e352  pre_signal.txt
+089757f082f3715f0b7ebd745a51738cb08c318b2b525facfa81b9e77032e352  post_signal.txt
+2c924729eff4c2fec21249dea83254fa3ea305864304af530a5fd05122b33936  /srv/opentallas-scratch/claude/root4-qw-eco-1019/qfwd_landh_1_en_65x30-c1-779e8477e/base/6_final.odb
+RC=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1161168-1792471017): exit 0
