@@ -1,0 +1,1 @@
+r1 (794d33e4d synth) SW/E/NW 55/47/47 roots >32 max 48; r2 (b8b9bd43c gate synth 1_2_yosys.raw.v, ot-epyc4 ref_gate/*_g6-20261019-170037) 0/0/0, max 32; tool tools/hbm_die_v16/vms_glue_census.py (ties excluded: ORFS repair_tie_fanout)

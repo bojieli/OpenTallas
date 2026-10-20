@@ -1,0 +1,14 @@
+{
+ "top": "hfd_hgi_vms_glue_nw_t",
+ "netlist_sha256": "37beb20a7da9f30a1ebd4992f98efb0cb2e3913c9b2b2cde5f0b25a9b9b45471",
+ "census_sha256": "07db1fad30aa411b74979d37200ae45c8b29f4f22f6e2db90d6a7dc4c5df43aa",
+ "textbook_sha256": "72d4c9571f4a05e2f7c4fe12f26dd716c4b5f25b0a663249b15c145366448dff",
+ "scope": "all non-clock nonconstant drivers, including ports, reset, combinational and FF; BUF/INV transparent",
+ "cells": 202041,
+ "ff_cells": 87534,
+ "roots": 122938,
+ "over32": [],
+ "maximum": 32,
+ "native_timing_qualified": false,
+ "physical_qualified": false
+}
