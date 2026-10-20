@@ -310,25 +310,35 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // nc_pub 0 formatter eb_q, 1/2 formatter eb_r halves, 3/4 formatter_identity low/high + generation; ddc 3l+0 lane l
  // we + waddr (25 loads), 3l+1 / 3l+2 lane l wdata low / high 16 bits.  R3c census: one OR3 per lane drove 57 loads and
  // native_context 281.  0 added edges.  Other parameterisations alias the originals (no added flops).
- wire[4:0]nc_pub;wire[10:0]ddc[0:23];
+ // R3e: nc_pub widened to 26 (5/6 command-context context_tag halves, 7/8 context_tag halves + valid, 9/10 the vm_q_epoch
+ // copies' D, 11/12 q_epoch_tag select halves, 13 fs_pub enables, 14+6s+k service slot s begin groups); rq_pub = 20 kept
+ // copies of p_cmd[0] (== request_slot: 10s+0..3 service, +4..7 landing, +8/9 s_optag halves); pu_c = 2 kept copies of
+ // p_pos[17:16] (the MU user: fseq read / write decode).  Same D / reset as the originals: exact.
+ localparam integer NNC=26;
+ wire[NNC-1:0]nc_pub;wire[10:0]ddc[0:23];wire[19:0]rq_pub;wire[1:0]pu_pub[0:1];
  generate if(LOCAL32)begin:g_pin_pub
-  (* keep = "true" *) reg[4:0]lcv_c;(* keep = "true" *) reg[5:0]stage_c[0:4];(* keep = "true" *) reg[10:0]dd_c[0:23];
+  (* keep = "true" *) reg[NNC-1:0]lcv_c;(* keep = "true" *) reg[5:0]stage_c[0:NNC-1];(* keep = "true" *) reg[10:0]dd_c[0:23];
+  (* keep = "true" *) reg[19:0]rq_c;(* keep = "true" *) reg[1:0]pu_c[0:1];
   integer pk;
   always @(posedge ck or negedge rst_pin)
-   if(!rst_pin)begin lcv_c<=0;for(pk=0;pk<5;pk=pk+1)stage_c[pk]<=0;for(pk=0;pk<24;pk=pk+1)dd_c[pk]<=0;end
-   else begin lcv_c<={5{bnd_layer_context_v}};for(pk=0;pk<5;pk=pk+1)stage_c[pk]<=bnd_command_stage;for(pk=0;pk<24;pk=pk+1)dd_c[pk]<=bnd_dd_i[547:537];end
-  for(genvar k=0;k<5;k=k+1)begin:g_nc
+   if(!rst_pin)begin lcv_c<=0;for(pk=0;pk<NNC;pk=pk+1)stage_c[pk]<=0;for(pk=0;pk<24;pk=pk+1)dd_c[pk]<=0;rq_c<=0;pu_c[0]<=0;pu_c[1]<=0;end
+   else begin lcv_c<={NNC{bnd_layer_context_v}};for(pk=0;pk<NNC;pk=pk+1)stage_c[pk]<=bnd_command_stage;for(pk=0;pk<24;pk=pk+1)dd_c[pk]<=bnd_dd_i[547:537];
+              rq_c<={20{bnd_native_cmd[0]}};pu_c[0]<=bnd_native_position[17:16];pu_c[1]<=bnd_native_position[17:16];end
+  for(genvar k=0;k<NNC;k=k+1)begin:g_nc
    assign nc_pub[k]=lcv_c[k]&&stage_c[k]>=1&&stage_c[k]<=36;
   end
   for(genvar k=0;k<24;k=k+1)begin:g_ddc
    assign ddc[k]=dd_c[k];
   end
+  assign rq_pub=rq_c;assign pu_pub[0]=pu_c[0];assign pu_pub[1]=pu_c[1];
  end else begin:g_pin_alias
-  assign nc_pub={5{p_lcv&&p_stage>=1&&p_stage<=36}};
+  assign nc_pub={NNC{p_lcv&&p_stage>=1&&p_stage<=36}};
   for(genvar k=0;k<24;k=k+1)begin:g_ddc
    assign ddc[k]=p_dd[547:537];
   end
+  assign rq_pub={20{p_cmd[0]}};assign pu_pub[0]=p_pos[17:16];assign pu_pub[1]=p_pos[17:16];
  end endgenerate
+ wire[4:0]emit_beat_pub[0:1];   // R3e: kept copies of dr_o[516:512] per landing slot (assigned with dr_o below)
  // ---------------------------------------------------------------- command context (unchanged child)
  wire[94:0]service_ret_raw;
  always @(posedge ck or negedge rst_pin)
@@ -345,14 +355,15 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[17:0]c_pos=MU?{2'b00,p_pos[15:0]}:p_pos;
  reg[13:0]fseq[0:3];reg[3:0]fstart;reg mu_fault;
  wire c_l0=p_stage==6'd1;
- wire[13:0]c_seq=(fstart[c_user]&&c_l0&&MUT!=6)?fseq[c_user]+14'd1:fseq[c_user];
+ wire[1:0]c_user_r=MU?pu_pub[0]:2'd0,c_user_w=MU?pu_pub[1]:2'd0;   // R3e: == c_user
+ wire[13:0]c_seq=(fstart[c_user_r]&&c_l0&&MUT!=6)?fseq[c_user_r]+14'd1:fseq[c_user_r];
  wire[1:0]c_tag=(MUT==5&&c_user==2'd3)?2'd0:c_user;
  wire[15:0]c_epoch=(MU==0||c_user==2'd0)?p_he:{c_seq,c_tag};
  integer fu;
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin for(fu=0;fu<4;fu=fu+1)fseq[fu]<=MU_SEQ0;fstart<=0;mu_fault<=0;end
   else if(MU!=0&&native_context&&c_user!=2'd0)begin
-   fseq[c_user]<=c_seq;if(c_l0)fstart[c_user]<=1'b1;
+   fseq[c_user_w]<=c_seq;if(c_l0)fstart[c_user_w]<=1'b1;
    if({1'b0,c_user}>=3'(NU)||(!c_l0&&!fstart[c_user]))mu_fault<=1'b1;
   end
  generate if(MU==0)begin:g_ctx1
@@ -362,12 +373,13 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   .native_cmd(p_cmd),.command_stage(p_stage),.command_token(p_tok),.command_position(p_pos),
   .service_active(active),.begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),.fault(context_fault));
  end else begin:g_ctxmu
-  qfd_native59_command_context_mu #(.NU(NU)) u_context(
+  qfd_native59_command_context_mu #(.NU(NU),.LOCAL32(LOCAL32)) u_context(
   .ck(ck),.rst_n(rst_ctx),.host_epoch_valid(p_hev),.host_fused_capability(p_hfc),.host_epoch(p_he),.host_tag(p_ht),.host_generation(p_hg),
   .context_v(native_context),.context_stage(p_stage),.context_token(p_tok),.context_position(c_pos),
   .native_cmd(p_cmd),.command_stage(p_stage),.command_token(p_tok),.command_position(c_pos),
   .service_active(active),.ctx_user(c_user),.ctx_epoch(c_epoch),
-  .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),.fault(context_fault));
+  .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),.fault(context_fault),
+  .context_v_pub(nc_pub[6:5]));
  end endgenerate
  // ---------------------------------------------------------------- dd word decode (the bank relays bnd_dd_i one edge: see the header)
  wire dd_v=p_dd[547];wire[1:0]dd_kind=p_dd[546:545];wire[7:0]dd_mask=p_dd[544:537];
@@ -392,16 +404,27 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  qfd_native59_q_export_control u_qexport_control(
  .ck(ck),.rst_n(rst_ctx),.begin_slot(begin_slot),.request_slot(request_slot),.q_committed(q_committed),
  .vm_q_epoch(vm_q_epoch),.vm_q_start(vm_q_start),.fault(export_control_fault));
+ // R3e: two kept copies of vm_q_epoch (u_qexport_control: vm_q_epoch <= begin_slot under rst_ctx), one per q_epoch_tag half.
+ wire[1:0]vq_pub;
+ generate if(LOCAL32)begin:g_vq_pub
+  (* keep = "true" *) reg[1:0]q;
+  always @(posedge ck or negedge rst_ctx)if(!rst_ctx)q<=0;else q<=nc_pub[10:9];
+  assign vq_pub=q;
+ end else begin:g_vq_alias
+  assign vq_pub={2{vm_q_epoch}};
+ end endgenerate
  reg[58:0]context_tag,q_epoch_tag,q_frame_tag;
  reg context_valid,q_window,qtag_fault;reg[5:0]q_count;
  always @(posedge ck or negedge rst_top)begin
   if(!rst_top)begin context_tag<=0;q_epoch_tag<=0;q_frame_tag<=0;context_valid<=0;q_window<=0;qtag_fault<=0;q_count<=0;end
   else begin
-   if(begin_slot)begin context_tag<=begin_tag;context_valid<=1;end
+   if(nc_pub[7])context_tag[29:0]<=begin_tag[29:0];
+   if(nc_pub[8])begin context_tag[58:30]<=begin_tag[58:30];context_valid<=1;end
    if(vm_q_epoch)begin
     if(q_window||(!context_valid&&!begin_slot))qtag_fault<=1;
-    q_epoch_tag<=begin_slot?begin_tag:context_tag;
    end
+   if(vq_pub[0])q_epoch_tag[29:0]<=nc_pub[11]?begin_tag[29:0]:context_tag[29:0];
+   if(vq_pub[1])q_epoch_tag[58:30]<=nc_pub[12]?begin_tag[58:30]:context_tag[58:30];
    if(q_open)begin
     if(q_window||!q_committed)qtag_fault<=1;
     q_window<=1;q_count<=0;q_frame_tag<=q_epoch_tag;
@@ -475,7 +498,16 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[NS-1:0]sel_nf=NS'(1)<<(MCTX!=0?nf:1'b0),sel_f=NS'(1)<<(MCTX!=0?fs:1'b0),sel_b=NS'(1)<<(MCTX!=0?bs:1'b0);
  assign active=|(s_active&sel_nf);   // the command context faults a begin into a slot that is still active
  assign completed=|s_completed;
- assign service_ret_raw={s_ret[MCTX!=0?bs:1'b0][94:2],{2{!(|(s_active&sel_nf))&&!svc_fault}}};
+ // R3e: kept copy of bs (same statement) for the 95-bit native_ret select.
+ wire bs_ret;
+ generate if(LOCAL32)begin:g_bs_pub
+  (* keep = "true" *) reg q;
+  always @(posedge ck or negedge rst_top)if(!rst_top)q<=0;else if(MCTX!=0&&(|(s_completed&sel_b)))q<=~q;
+  assign bs_ret=q;
+ end else begin:g_bs_alias
+  assign bs_ret=bs;
+ end endgenerate
+ assign service_ret_raw={s_ret[MCTX!=0?bs_ret:1'b0][94:2],{2{!(|(s_active&sel_nf))&&!svc_fault}}};
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin nf<=0;fs<=0;bs<=0;end
   else if(MCTX!=0)begin
@@ -495,11 +527,25 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    always @(posedge ck) v<=qb_v;
    always @(posedge ck or negedge rst_top)
     if(!rst_top)s<=0;
-    else if(MCTX!=0&&begin_slot)s<=nf;
+    else if(MCTX!=0&&nc_pub[13])s<=nf;   // R3e: nc_pub[13] == begin_slot
    assign qv_pub[k]=v;assign fs_pub[k]=s;
   end
  end else begin:g_qv_alias
   assign qv_pub={16{q_emit}};assign fs_pub={16{fs}};
+ end endgenerate
+ // R3e: 4 kept same-D copies of the received Q beat (g_recv.p_qb_beat: D qb_beat, no reset), 2 per slot (service
+ // q_slot_beat and its q_seen decode).
+ wire[4:0]qbeat_pub[0:3];
+ generate if(QPUB)begin:g_qbeat_pub
+  for(genvar k=0;k<4;k=k+1)begin:g_c
+   (* keep = "true" *) reg[4:0]b;
+   always @(posedge ck) b<=qb_beat;
+   assign qbeat_pub[k]=b;
+  end
+ end else begin:g_qbeat_alias
+  for(genvar k=0;k<4;k=k+1)begin:g_c
+   assign qbeat_pub[k]=q_emit_beat;
+  end
  end endgenerate
  // the merged VM write (only the back slot writes; two at once is a slot collision)
  integer si,vb;
@@ -543,19 +589,37 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   always @(posedge ck or negedge rst_top)
    if(!rst_top)begin s_optag[gs]<=0;s_vis_seen[gs]<=0;end
    else begin
-    if(req_s)begin s_optag[gs]<=request_tag;s_vis_seen[gs]<=0;end
+    if(req_s)s_vis_seen[gs]<=0;
     else if(p_vis&&b)s_vis_seen[gs]<=s_commit_complete[gs]&&!s_land_fault[gs];
+    if(rq_pub[10*gs+8]&&f)s_optag[gs][29:0]<=request_tag[29:0];     // R3e: rq_pub[k] && f == req_s
+    if(rq_pub[10*gs+9]&&f)s_optag[gs][58:30]<=request_tag[58:30];
    end
+  // R3e: result_slot_beat kept copies (record: result_slot_beat <= rx_slot_beat = p_rb under rst_rec), 2 per slot.
+  wire[4:0]rsb_a,rsb_b;
+  if(LOCAL32)begin:g_rsb_pub
+   (* keep = "true" *) reg[4:0]a,c;
+   always @(posedge ck or negedge rst_rec)if(!rst_rec)begin a<=0;c<=0;end else begin a<=p_rb;c<=p_rb;end
+   assign rsb_a=a;assign rsb_b=c;
+  end else begin:g_rsb_alias
+   assign rsb_a=result_slot_beat;assign rsb_b=result_slot_beat;
+  end
+  wire[5:0]svc_begin_pub;
+  for(genvar k=0;k<6;k=k+1)begin:g_sbp
+   assign svc_begin_pub[k]=nc_pub[14+6*gs+k]&&sel_nf[gs];
+  end
+  wire[4:0]vm_commit_beat_pub;
   qfd_native59_static_service #(.LOCAL32(LOCAL32)) u_service(
   .ck(ck),.rst_n(rst_svc),.source_fault(src_fault),
   .begin_slot(begin_slot&&sel_nf[gs]),.begin_tag(begin_tag),.request_slot(req_s),.request_tag(request_tag),.result_base_word(base),
   .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(s_req_v[gs]),.kernel_request_pub(kreq_pub),.vm_write_pub(s_vm_pub[gs]),.kernel_request_tag(req_tag),
-  .q_slot(q_emit&&f),.q_slot_pub(q_slot_pub),.q_slot_beat(q_emit_beat),.q_v(q[523]&&f),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(QPUB?qrow:q[511:0]),
+  .q_slot(q_emit&&f),.q_slot_pub(q_slot_pub),.q_slot_beat(qbeat_pub[2*gs]),.q_v(q[523]&&f),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(QPUB?qrow:q[511:0]),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
-  .result_slot(result_slot),.result_slot_pub(result_slot_pub),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
+  .result_slot(result_slot),.result_slot_pub(result_slot_pub),.result_slot_beat(rsb_a),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
   .vm_write_v(s_vm_write_v[gs]),.vm_write_word(s_vm_write_word[gs]),.vm_write_beat(s_vm_write_beat[gs]),.vm_write_tag(s_vm_write_tag[gs]),.vm_write_data(s_vm_write_data[gs]),
   .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
-  .complete_slot(p_cs&&b),.completed(s_completed[gs]),.active(s_active[gs]),.fault(s_svc_fault[gs]),.native_ret(s_ret[gs]));
+  .complete_slot(p_cs&&b),.completed(s_completed[gs]),.active(s_active[gs]),.fault(s_svc_fault[gs]),.native_ret(s_ret[gs]),
+  .begin_pub(svc_begin_pub),.request_pub(rq_pub[10*gs+:4]&{4{f}}),.q_slot_beat_pub(qbeat_pub[2*gs+1]),
+  .result_slot_beat_pub(rsb_b),.vm_commit_beat_pub(vm_commit_beat_pub));
   qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT),.RX_FREE(1),.TX_FREE(MCTX!=0),.LOCAL32(LOCAL32))u_record(   // QW-N59-4: free rx (svc2) / tx (svc3, MCTX 1: payload merged under tx_v) capture, output-exact
   .ck(ck),.rst_n(rst_rec),.operation_tag(s_optag[gs]),.kernel_request_v(s_req_v[gs]),.kernel_request_pub(kreq_pub),.kernel_request_tag(req_tag),
   .kernel_q_v(s_kq_v[gs]),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
@@ -563,26 +627,32 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   .rx_result_pub(rx_result_pub),.slot_back_pub(slot_back_pub),.rx_event(p_rv&&b),.rx_payload(p_rp),.rx_slot(p_rs&&b),.rx_slot_kind(p_rk),.rx_slot_beat(p_rb),
   .result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),.result_slot(result_slot),.result_slot_pub(result_slot_pub),.result_slot_beat(result_slot_beat),
   .kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),.fault(s_rec_fault[gs]));
-  qfd_native59_dr_landing #(.LAND_EDGES(LAND_EDGES))u_land(
+  qfd_native59_dr_landing #(.LAND_EDGES(LAND_EDGES),.LOCAL32(LOCAL32))u_land(
   .ck(ck),.rst_n(rst_land),.request_slot(req_s),.request_tag59(request_tag),
   .emit_v(dr_o[519]&&!dr_o[518]&&(NS==1||dr_s==1'(gs))),.emit_beat(dr_o[516:512]),.emit_tag59(dr_tag),.visibility_slot(p_vis&&b),
-  .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag59(vm_commit_tag),.complete(s_commit_complete[gs]),.fault(s_land_fault[gs]));
+  .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag59(vm_commit_tag),.complete(s_commit_complete[gs]),.fault(s_land_fault[gs]),
+  .request_pub(rq_pub[10*gs+4+:4]&{4{f}}),.emit_beat_pub(emit_beat_pub[gs]),.vm_commit_beat_pub(vm_commit_beat_pub));
  end endgenerate
  // ---------------------------------------------------------------- embedding row read (G9), fixed 65-edge sequence
  wire emb_go=!p_cmd[0]&&p_cmd[379:376]==4'hE;
  wire cmd_bad=(emb_go&&((|p_cmd[357:1])||p_cmd[375:358]>=18'd151936))||(!p_cmd[0]&&(|p_cmd)&&!emb_go);
  reg emb_act;reg[6:0]emb_k;reg[17:0]emb_tok;
  reg e1,e2,e3;reg[6:0]k1,k2,k3;
+ // R3e: 3 kept copies of emb_act (the same set / clear statements, so ea_c[k] == emb_act on every edge): [0] code
+ // address / re, [1] scale address / re, [2] emb_tok start.  LOCAL32 0: the original.
+ (* keep = "true" *) reg[2:0]ea_c;
+ wire[2:0]ea=LOCAL32?ea_c:{3{emb_act}};
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin emb_act<=0;emb_k<=0;emb_tok<=0;emb_code_re<=0;emb_code_addr<=0;emb_scale_re<=0;emb_scale_addr<=0;
-                  e1<=0;e2<=0;e3<=0;k1<=0;k2<=0;k3<=0;end
+                  e1<=0;e2<=0;e3<=0;k1<=0;k2<=0;k3<=0;ea_c<=0;end
   else begin
    emb_code_re<=0;emb_scale_re<=0;
-   if(emb_go&&!emb_act&&!cmd_bad)begin emb_act<=1;emb_k<=0;emb_tok<=p_cmd[375:358];end
+   if(emb_go&&!emb_act&&!cmd_bad)begin emb_act<=1;ea_c<=3'b111;emb_k<=0;end
+   if(emb_go&&!ea[2]&&!cmd_bad)emb_tok<=p_cmd[375:358];
+   if(ea[0]&&emb_k<7'd64)begin emb_code_re<=1;emb_code_addr<={emb_tok,emb_k[5:0]^((MUT==3)?6'd1:6'd0)};end
+   if(ea[1]&&!(emb_k<7'd64))begin emb_scale_re<=1;emb_scale_addr<=emb_tok;end
    if(emb_act)begin
-    if(emb_k<7'd64)begin emb_code_re<=1;emb_code_addr<={emb_tok,emb_k[5:0]^((MUT==3)?6'd1:6'd0)};end
-    else begin emb_scale_re<=1;emb_scale_addr<=emb_tok;end
-    emb_k<=emb_k+7'd1;if(emb_k==7'd64)emb_act<=0;
+    emb_k<=emb_k+7'd1;if(emb_k==7'd64)begin emb_act<=0;ea_c<=0;end
    end
    // read edge (e1: the re flop is at the pin), provider answer (e2), answer in the pin register (e3)
    e1<=emb_act;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2;k3<=k2;
@@ -600,29 +670,36 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
     dr_o<=g0?{1'b1,1'b0,1'b0,vm_write_beat,vm_write_data}:
           g1?{1'b1,1'b1,(k3==7'd64)?6'd0:k3[5:0],(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
    end
+ assign emit_beat_pub[0]=dr_o[516:512];assign emit_beat_pub[1]=dr_o[516:512];
  end else begin:g_emb_relay
   // relay stage (no reset on the data: every use is qualified by the reset e4 copies)
   reg[511:0]ecq_r;reg[15:0]esq_r;
   always @(posedge ck)begin ecq_r<=p_ecq;esq_r<=p_esq;end
   reg e4;reg[5:0]k4b;reg k4s;
-  (* keep = "true" *) reg[15:0]e4c;   // one select copy per 32-bit dr_o segment
-  (* keep = "true" *) reg[15:0]k4c;   // scale-word select copies (k3 == 64)
+  localparam integer EC=LOCAL32?32:16,ES=512/EC;   // R3e: 32 copies (16-bit segments) under LOCAL32
+  (* keep = "true" *) reg[EC-1:0]e4c;   // one select copy per ES-bit dr_o segment
+  (* keep = "true" *) reg[EC-1:0]k4c;   // scale-word select copies (k3 == 64)
   always @(posedge ck or negedge rst_top)
    if(!rst_top)begin e4<=0;k4b<=0;k4s<=0;e4c<=0;k4c<=0;end
-   else begin e4<=e3;k4b<=k3[5:0];k4s<=(k3==7'd64);e4c<={16{e3}};k4c<={16{k3==7'd64}};end
+   else begin e4<=e3;k4b<=k3[5:0];k4s<=(k3==7'd64);e4c<={EC{e3}};k4c<={EC{k3==7'd64}};end
   assign g1=e4;
   integer sb,gi;
   reg[21:0]g0s;
+  wire[7:0]dr_hi_n=g0?{1'b1,1'b0,1'b0,vm_write_beat}:e4?{1'b1,1'b1,k4s?6'd0:k4b}:8'd0;
+  // R3e: per landing slot a kept copy of dr_o[516:512] (same D, same reset) for its issued-bit decode.
+  (* keep = "true" *) reg[4:0]em_c[0:1];
+  always @(posedge ck or negedge rst_top)if(!rst_top)begin em_c[0]<=0;em_c[1]<=0;end else begin em_c[0]<=dr_hi_n[4:0];em_c[1]<=dr_hi_n[4:0];end
+  assign emit_beat_pub[0]=LOCAL32?em_c[0]:dr_o[516:512];assign emit_beat_pub[1]=LOCAL32?em_c[1]:dr_o[516:512];
   always @*begin g0s=0;for(gi=0;gi<NS;gi=gi+1)g0s=g0s|s_vm_pub[gi][21:0];end
   always @(posedge ck or negedge rst_top)
    if(!rst_top)begin dr_o<=0;dr_tag<=0;dr_s<=0;end
    else begin
     dr_tag<=vm_write_tag;dr_s<=(NS>1)?s_vm_write_v[NS-1]:1'b0;
-    dr_o[519:512]<=g0?{1'b1,1'b0,1'b0,vm_write_beat}:e4?{1'b1,1'b1,k4s?6'd0:k4b}:8'd0;
+    dr_o[519:512]<=dr_hi_n;
     // R3c: the attention-result select per 24-bit segment is the OR of that segment's kept slot copies (== g0).
     for(sb=0;sb<512;sb=sb+1)
      dr_o[sb]<=g0s[sb/24]?vm_write_data[sb]:
-               e4c[sb/32]?(k4c[sb/32]?((sb<16)?esq_r[sb]:1'b0):ecq_r[sb]):1'b0;
+               e4c[sb/ES]?(k4c[sb/ES]?((sb<16)?esq_r[sb]:1'b0):ecq_r[sb]):1'b0;
    end
  end endgenerate
  // ---------------------------------------------------------------- sticky DV boundary faults and the fault pin

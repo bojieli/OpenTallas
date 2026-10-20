@@ -501,40 +501,60 @@ endmodule
 // Static landing fence for the group-0 dr words: the compiler owns LAND_EDGES (dr_o edge -> last slice VM write).
 // Nothing here gates an issue or acknowledges a write; a missing / duplicate / foreign word or an early visibility
 // slot is a fault.
-module qfd_native59_dr_landing #(parameter integer LAND_EDGES=8)(
+module qfd_native59_dr_landing #(parameter integer LAND_EDGES=8,LOCAL32=0)(
  input wire ck,rst_n,
  input wire request_slot,input wire[58:0]request_tag59,
  input wire emit_v,input wire[4:0]emit_beat,input wire[58:0]emit_tag59,
  input wire visibility_slot,
  output reg vm_commit_v,output reg[4:0]vm_commit_beat,output reg[58:0]vm_commit_tag59,
- output wire complete,output reg fault
+ output wire complete,output reg fault,
+ // R3e (QW-N59-6 10-20) opt-in same-edge publications (LOCAL32; 0 ignores / aliases): request_pub[k] == request_slot,
+ // emit_beat_pub == emit_beat on every edge; vm_commit_beat_pub is a kept copy of vm_commit_beat.
+ input wire[3:0]request_pub,input wire[4:0]emit_beat_pub,output wire[4:0]vm_commit_beat_pub
 );
  reg active;reg[58:0]tag;reg[31:0]issued,covered;
  reg[LAND_EDGES-1:0]pending;reg[4:0]beat_pipe[0:LAND_EDGES-1];reg[58:0]tag_pipe[0:LAND_EDGES-1];
  integer i;
  wire[4:0]lb=beat_pipe[LAND_EDGES-1];
  assign complete=active&&(&covered)&&!fault;
+ // R3e: kept copies of the last pipe stage (lb_c == beat_pipe[LAND_EDGES-1], pend_c[k] == pending[LAND_EDGES-1]: same D,
+ // same reset) and of vm_commit_beat, so the commit capture (65 flops) and the covered decode each take their own driver.
+ (* keep = "true" *) reg[4:0]lb_c;(* keep = "true" *) reg[2:0]pend_c;(* keep = "true" *) reg[4:0]vcb_c;
+ wire[3:0]rp=LOCAL32?request_pub:{4{request_slot}};
+ wire[4:0]ebp=LOCAL32?emit_beat_pub:emit_beat,lbc=LOCAL32?lb_c:lb;
+ wire[2:0]pc=LOCAL32?pend_c:{3{pending[LAND_EDGES-1]}};
+ assign vm_commit_beat_pub=LOCAL32?vcb_c:vm_commit_beat;
+ wire commit_bad=!active||request_slot||tag_pipe[LAND_EDGES-1]!=tag||covered[lb];
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin
    active<=0;tag<=0;issued<=0;covered<=0;pending<=0;vm_commit_v<=0;vm_commit_beat<=0;vm_commit_tag59<=0;fault<=0;
    for(i=0;i<LAND_EDGES;i=i+1)begin beat_pipe[i]<=0;tag_pipe[i]<=0;end
+   lb_c<=0;pend_c<=0;vcb_c<=0;
   end else begin
    vm_commit_v<=0;
    pending<={pending[LAND_EDGES-2:0],emit_v};
    beat_pipe[0]<=emit_beat;tag_pipe[0]<=emit_tag59;
+   lb_c<=beat_pipe[LAND_EDGES-2];pend_c<={3{pending[LAND_EDGES-2]}};
    for(i=1;i<LAND_EDGES;i=i+1)begin beat_pipe[i]<=beat_pipe[i-1];tag_pipe[i]<=tag_pipe[i-1];end
    if(request_slot)begin
     if((active&&!(&covered))||(|pending)||emit_v)fault<=1;
-    active<=1;tag<=request_tag59;issued<=0;covered<=0;
+    active<=1;
    end
+   if(rp[0])tag[29:0]<=request_tag59[29:0];
+   if(rp[1])tag[58:30]<=request_tag59[58:30];
+   if(rp[2])issued<=0;
+   if(rp[3])covered<=0;
    if(emit_v)begin
     if(!active||request_slot||emit_tag59!=tag||issued[emit_beat])fault<=1;
-    issued[emit_beat]<=1;
+    issued[ebp]<=1;
    end
    if(pending[LAND_EDGES-1])begin
-    if(!active||request_slot||tag_pipe[LAND_EDGES-1]!=tag||covered[lb])fault<=1;
-    else begin covered[lb]<=1;if(!fault)begin vm_commit_v<=1;vm_commit_beat<=lb;vm_commit_tag59<=tag_pipe[LAND_EDGES-1];end end
+    if(commit_bad)fault<=1;
+    else covered[lbc]<=1;
    end
+   if(pc[0]&&!commit_bad&&!fault)vm_commit_tag59[29:0]<=tag_pipe[LAND_EDGES-1][29:0];
+   if(pc[1]&&!commit_bad&&!fault)vm_commit_tag59[58:30]<=tag_pipe[LAND_EDGES-1][58:30];
+   if(pc[2]&&!commit_bad&&!fault)begin vm_commit_v<=1;vm_commit_beat<=lb;vcb_c<=lb;end
    if(visibility_slot&&(!active||!(&issued)||!(&covered)||(|pending)))fault<=1;
   end
 endmodule
@@ -556,7 +576,7 @@ endmodule
 //   * NEW: user 0's HOST epoch must be a user-0 MU epoch (host_epoch[1:0] == 0), and the request's user must be the
 //     context's user (the head segment that asks for attention is the one whose context opened the operation).
 // Every other check of the original is kept unchanged.  Static schedule: checks only fault, never stall.
-module qfd_native59_command_context_mu #(parameter integer NU=4)(
+module qfd_native59_command_context_mu #(parameter integer NU=4,LOCAL32=0)(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire [15:0] host_epoch,
  input wire [58:0] host_tag,input wire [1:0] host_generation,
@@ -568,8 +588,12 @@ module qfd_native59_command_context_mu #(parameter integer NU=4)(
  input wire [1:0] ctx_user,input wire [15:0] ctx_epoch,
  output wire begin_slot,output wire [58:0] begin_tag,
  output wire request_slot,output wire [58:0] request_tag,
- output wire [19:0] result_base_word,output reg fault
+ output wire [19:0] result_base_word,output reg fault,
+ // R3e (QW-N59-6 10-20) opt-in: context_v_pub[k] == context_v on every edge (parent kept pin copies); the 59-bit
+ // context_tag capture halves take their own copy.  Unconnected / zero ports leave the original (default 0 = off).
+ input wire [1:0] context_v_pub
 );
+ wire[1:0]cvp=LOCAL32?context_v_pub:{2{context_v}};
  localparam [379:0] TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
  reg valid,cap;reg [1:0] generation;reg [58:0] context_tag;reg [1:0] ctx_u;
  wire host0=ctx_user==2'd0;
@@ -585,8 +609,10 @@ module qfd_native59_command_context_mu #(parameter integer NU=4)(
     if(host_tag[58:43]!=host_epoch||host_tag[42:37]!=0||host_tag[5:0]!=0||
        (host0&&(host_tag[36:19]!=context_token||host_tag[18:6]!=context_position||host_epoch[1:0]!=2'd0))||
        service_active||!host_epoch_valid||!host_fused_capability||(valid&&begin_tag==context_tag)||context_stage<1||context_stage>36||context_token>=151936||context_position>=8192)fault<=1;
-    valid<=1;cap<=host_fused_capability;generation<=host_generation;context_tag<=begin_tag;ctx_u<=ctx_user;
+    valid<=1;cap<=host_fused_capability;generation<=host_generation;ctx_u<=ctx_user;
    end
+   if(cvp[0])context_tag[29:0]<=begin_tag[29:0];
+   if(cvp[1])context_tag[58:30]<=begin_tag[58:30];
    if(request_slot)begin
     if(host_tag[58:43]!=host_epoch||host_tag[42:37]!=0||host_tag[5:0]!=0||
        (ctx_u==2'd0&&(host_tag[36:19]!=context_tag[36:19]||host_tag[18:6]!=context_tag[18:6]||host_epoch!=context_tag[58:43]))||

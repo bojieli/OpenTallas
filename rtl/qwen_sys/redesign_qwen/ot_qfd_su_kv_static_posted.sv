@@ -281,7 +281,10 @@ module ot_qfd_su_kv_static_posted #(
   always @(posedge clk or negedge rst_n)
    if(!rst_n)begin seen[NB*gs+:NB]<=0;bytes_r[8*NB*gs+:8*NB]<=0;end
    else if(ENABLE!=0)begin
-    if(eb_r[gs])begin if(eb_clear_ok)seen[NB*gs+:NB]<=0;end
+    // R3e (LOCAL_CTL): the segment clears on its eb_r copy alone.  A begin with !eb_clear_ok sets the sticky formatter
+    // fault on this same edge; afterwards no word can be emitted (every emission / data / control publication requires
+    // !fault), so seen is unobservable then: output-exact, and eb_clear_ok no longer fans out to the 256 seat bits.
+    if(eb_r[gs])begin if(LOCAL_CTL!=0||eb_clear_ok)seen[NB*gs+:NB]<=0;end
     else begin seen[NB*gs+:NB]<=seen_n[NB*gs+:NB];bytes_r[8*NB*gs+:8*NB]<=bytes_n[8*NB*gs+:8*NB];end
    end
  end endgenerate
