@@ -225,11 +225,10 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0)(
  reg[511:0]qrow_r;
  always @(posedge ck)qrow_r<=qrow_a;
  assign qb_row=(QB_MUT==1)?qrow_a:qrow_r;
- reg qv_b;reg[4:0]qbt_b;
  always @(posedge ck or negedge rst_top)
-  if(!rst_top)begin qv_b<=0;qbt_b<=0;qb_v<=0;qb_beat<=0;qb_full<=0;qb_committed<=0;qb_bad<=0;end
+  if(!rst_top)begin qb_v<=0;qb_beat<=0;qb_full<=0;qb_committed<=0;qb_bad<=0;end
   else begin
-   qv_b<=qv_a;qbt_b<=qbt_a;qb_v<=qv_b;qb_beat<=qbt_b;qb_full<=full_q;
+   qb_v<=qv_a;qb_beat<=qbt_a;qb_full<=full_q;
    qb_committed<=qctx_a&&(&as_a);
    qb_bad<=qhi_a||(|dup_a);
   end
