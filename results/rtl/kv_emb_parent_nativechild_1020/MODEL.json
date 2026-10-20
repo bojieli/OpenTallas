@@ -46,5 +46,14 @@
     "floorplan": "parent same slot; child237.6x151.2 requires actual exported view/lattice symmetry",
     "clock": "region/spine inherited; child-parent compensated boundary OPEN",
     "schedule": "static no credits, existing+2 active/+6 reset composed; no new cycle"
+  },
+  "native_fix": {
+    "baseline_full_parent": "FAIL max33 one driver u_ctx.pending_valid[0],14943 roots,0roleerrors",
+    "change": "split first16bit pending-owner selector into two kept8bit selector copies; one addedFF; clone ctx module so shared original unchanged",
+    "active_edges_added": 0,
+    "reset_edges_added": 0,
+    "clock_load_added": 1,
+    "area": "one mapped controlFF plus local selector decomposition; exact mapped area/census owed",
+    "safe_checklist": "no new storage/wire/hierarchy/clockregion; keep copies; rerun fullparent native census and fullview miter"
   }
 }

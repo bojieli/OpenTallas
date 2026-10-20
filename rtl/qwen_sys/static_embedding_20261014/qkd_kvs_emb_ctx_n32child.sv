@@ -38,7 +38,7 @@ module qkd_kvs_emb_ctx_n32child #(parameter integer NATIVE32 = 1, parameter inte
     wire [17:0] w_token;
     wire [5:0]  w_index;
     wire [15:0] w_epoch;
-    qkd_embedding_ctx_start #(.NATIVE32(NATIVE32)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]), .ctx_observed_v(i_ctx[97]),
+    qkd_embedding_ctx_start_n32child #(.NATIVE32(NATIVE32)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]), .ctx_observed_v(i_ctx[97]),
         .ctx_hdr(i_ctx[96:61]), .ctx_owner(i_ctx[60:0]), .start(st), .token(tok), .epoch(tep), .owner(), .fault(cf));
     qkd_embedding_static_join4_cal #(.MUT(0), .NATIVE32(NATIVE32), .PIPE_JOIN(PIPE_JOIN)) u_join (.ck(ck), .rst_n(rst_n), .up0(i_hroot_WS), .up1(i_hroot_WN),
         .up2(i_hroot_ES), .up3(i_hroot_EN), .start(st), .cfg_we(i_ctl[72]), .cfg_addr(i_ctl[7:0]), .cfg_data(i_ctl[71:8]),

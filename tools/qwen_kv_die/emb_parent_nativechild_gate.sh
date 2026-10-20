@@ -20,7 +20,7 @@ assert m==0 or s!=(e/'qkd_kvs_emb_ctx_n32child.sv').read_text()
 (o/'dut.sv').write_text(s)
 PY
 "$v" --binary --timing -O2 -j 4 -Wno-fatal --top-module tb_parent --Mdir "$out/obj" \
- rtl/lib/ot_rst_relay.sv "$e/qkd_embedding_ctx_start.sv" "$e/qkd_embedding_static_join.sv" \
+ rtl/lib/ot_rst_relay.sv "$e/qkd_embedding_ctx_start.sv" "$e/qkd_embedding_ctx_start_n32child.sv" "$e/qkd_embedding_static_join.sv" \
  "$e/qkd_embedding_static_join_fan32.sv" "$e/qkd_embedding_static_join4.sv" "$e/qkd_embedding_static_join4_cal.sv" \
  "$e/qkd_embedding_row_tx_ctx_native32.sv" "$out/old_core.sv" "$out/old_view.v" "$out/reference.sv" "$out/dut.sv" \
  physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v \
