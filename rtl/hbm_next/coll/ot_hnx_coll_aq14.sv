@@ -100,7 +100,7 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
     // -- S2b: 2 -> 1 and the floor ---------------------------------------------------------------------------------------
     reg        s2_v, s2_fp4, s2_nf;
     reg [30:0] s2_amax;
-    (* keep = "true" *) reg [30:0] s2_amax_c;   // s4 r7: copy for the scale's second exponent / normalise copies
+    (* keep = "true" *) reg [30:0] s2_amax_c [0:2];   // s4 r8: copies for the scale's exponent / normalise copy groups
     // s4 (census s3: the s2a_m compare select drove 59 loads): mx(mx(m0, m1), floor) as two kept-hierarchy halves
     wire [30:0] s2_mx;
     ot_hnx_coll_aq_max3h #(.LO(0),  .W(16)) u_s2lo(.a(s2a_m[0]), .b(s2a_m[1]), .f(s2a_fp4 ? FLOOR_FP4 : FLOOR_FP8), .q(s2_mx[15:0]));
@@ -108,13 +108,13 @@ module ot_hnx_coll_aq14 #(parameter integer MUT = 0, parameter integer LMUT = 0,
     always @(posedge clk or negedge rst_n) if (!rst_n) s2_v <= 1'b0; else s2_v <= s2a_v;
     always @(posedge clk) begin
         s2_fp4 <= s2a_fp4; s2_nf <= s2a_nf;
-        s2_amax <= s2_mx; s2_amax_c <= s2_mx;
+        s2_amax <= s2_mx; for (i = 0; i < 3; i = i + 1) s2_amax_c[i] <= s2_mx;
     end
 
     // -- S3-S7: amax * (1/448 or 1/6), one binary32 multiply ----------------------------------------------------------
     wire [31:0] prod;
     wire        pfault;
-    ot_hnx_coll_aq_scale13r u_scale (.clk(clk), .rst_n(rst_n), .v(s2_v), .a({1'b0, s2_amax}), .a2({1'b0, s2_amax_c}),
+    ot_hnx_coll_aq_scale13r u_scale (.clk(clk), .rst_n(rst_n), .v(s2_v), .a({1'b0, s2_amax}), .a2({1'b0, s2_amax_c[0]}), .a3({1'b0, s2_amax_c[1]}), .a4({1'b0, s2_amax_c[2]}),
                          .b((s2_fp4^(MUT!=0)) ? INV_6 : INV_448), .y(prod), .fault(pfault));
     reg [4:0] vl;
     always @(posedge clk or negedge rst_n) if (!rst_n) vl <= 5'd0; else vl <= {vl[3:0], s2_v};
