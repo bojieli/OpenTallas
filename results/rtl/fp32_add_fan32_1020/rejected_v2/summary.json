@@ -1,0 +1,199 @@
+{
+ "source_commit": "cdfc8fc40",
+ "verdict": "REJECTED_NATIVE_FANOUT",
+ "native_roots": 4974,
+ "over32": 19,
+ "area_um2": 924.19704,
+ "violations": [
+  {
+   "root": "_319_/Y",
+   "kind": "comb",
+   "loads": "34",
+   "flop_loads": "1",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "_388_/A2,_384_/A2,u.g_dist.u_a2.g_part\\[23\\].u/rd\\[115\\]$_DFF_P_/D,_343_/A,_373_/A,_363_/A"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[0\\].u/rd\\[0\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "71",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[0\\].u/_922_/A1,u.g_dist.u_a2.g_part\\[0\\].u/_921_/A1,u.g_dist.u_a2.g_part\\[0\\].u/_908_/A2,u.g_dist.u_a2.g_part\\[0\\].u/_907_/A2,u.g_dist.u_a2.g_part\\[0\\].u/_758_/B,u.g_dist.u_a2.g_part\\[0\\].u/_743_/B"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[0\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "55",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[0\\].u/_790_/A,u.g_dist.u_a2.g_part\\[0\\].u/_737_/B,u.g_dist.u_a2.g_part\\[0\\].u/_972_/C,u.g_dist.u_a2.g_part\\[0\\].u/_815_/D,u.g_dist.u_a2.g_part\\[0\\].u/_756_/C,u.g_dist.u_a2.g_part\\[0\\].u/_744_/C"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[0\\].u/rd\\[8\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "75",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[0\\].u/_840_/C,u.g_dist.u_a2.g_part\\[0\\].u/_792_/B,u.g_dist.u_a2.g_part\\[0\\].u/_662_/B,u.g_dist.u_a2.g_part\\[0\\].u/_627_/B,u.g_dist.u_a2.g_part\\[0\\].u/_808_/D,u.g_dist.u_a2.g_part\\[0\\].u/_802_/A2"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[0\\].u/rd\\[9\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "60",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[0\\].u/_851_/A2,u.g_dist.u_a2.g_part\\[0\\].u/_840_/B,u.g_dist.u_a2.g_part\\[0\\].u/_835_/B,u.g_dist.u_a2.g_part\\[0\\].u/_808_/C,u.g_dist.u_a2.g_part\\[0\\].u/_802_/A1,u.g_dist.u_a2.g_part\\[0\\].u/_792_/A"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[0\\].u/rd\\[10\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "39",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[0\\].u/_851_/A1,u.g_dist.u_a2.g_part\\[0\\].u/_840_/A,u.g_dist.u_a2.g_part\\[0\\].u/_835_/A,u.g_dist.u_a2.g_part\\[0\\].u/_802_/C,u.g_dist.u_a2.g_part\\[0\\].u/_791_/A,u.g_dist.u_a2.g_part\\[0\\].u/_780_/B"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[0\\].u/rd\\[2\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "40",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[0\\].u/_908_/C,u.g_dist.u_a2.g_part\\[0\\].u/_841_/A,u.g_dist.u_a2.g_part\\[0\\].u/_834_/A,u.g_dist.u_a2.g_part\\[0\\].u/_801_/C,u.g_dist.u_a2.g_part\\[0\\].u/_798_/B,u.g_dist.u_a2.g_part\\[0\\].u/_775_/B"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[0\\].u/rd\\[119\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "37",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[0\\].u/_850_/B,u.g_dist.u_a2.g_part\\[0\\].u/_841_/B,u.g_dist.u_a2.g_part\\[0\\].u/_799_/B,u.g_dist.u_a2.g_part\\[0\\].u/_791_/B,u.g_dist.u_a2.g_part\\[0\\].u/_787_/B,u.g_dist.u_a2.g_part\\[0\\].u/_775_/C"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[1\\].u/rd\\[119\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "69",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[1\\].u/_376_/A,u.g_dist.u_a2.g_part\\[1\\].u/_373_/A,u.g_dist.u_a2.g_part\\[1\\].u/_361_/A,u.g_dist.u_a2.g_part\\[1\\].u/_354_/A,u.g_dist.u_a2.g_part\\[1\\].u/_350_/A1,u.g_dist.u_a2.g_part\\[1\\].u/_298_/A1"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[2\\].u/rd\\[0\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "37",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[2\\].u/_449_/A1,u.g_dist.u_a2.g_part\\[2\\].u/_448_/A,u.g_dist.u_a2.g_part\\[2\\].u/_436_/A,u.g_dist.u_a2.g_part\\[2\\].u/_433_/A,u.g_dist.u_a2.g_part\\[2\\].u/_424_/A,u.g_dist.u_a2.g_part\\[2\\].u/_474_/A1"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[2\\].u/rd\\[8\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "34",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[2\\].u/_451_/A,u.g_dist.u_a2.g_part\\[2\\].u/_438_/A,u.g_dist.u_a2.g_part\\[2\\].u/_431_/A,u.g_dist.u_a2.g_part\\[2\\].u/_427_/A,u.g_dist.u_a2.g_part\\[2\\].u/_309_/B,u.g_dist.u_a2.g_part\\[2\\].u/_473_/A1"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[2\\].u/rd\\[119\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "58",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[2\\].u/_452_/C,u.g_dist.u_a2.g_part\\[2\\].u/_428_/C,u.g_dist.u_a2.g_part\\[2\\].u/_309_/A,u.g_dist.u_a2.g_part\\[2\\].u/_281_/A1,u.g_dist.u_a2.g_part\\[2\\].u/_273_/A1,u.g_dist.u_a2.g_part\\[2\\].u/_272_/A"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[3\\].u/rd\\[119\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "48",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[3\\].u/_272_/C,u.g_dist.u_a2.g_part\\[3\\].u/_236_/A,u.g_dist.u_a2.g_part\\[3\\].u/_229_/A1,u.g_dist.u_a2.g_part\\[3\\].u/_221_/A1,u.g_dist.u_a2.g_part\\[3\\].u/_220_/A,u.g_dist.u_a2.g_part\\[3\\].u/_275_/A1"
+  },
+  {
+   "root": "u.g_dist.u_b2b.g_part\\[4\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "45",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_b2b.g_part\\[4\\].u/_219_/A,u.g_dist.u_b2b.g_part\\[4\\].u/_206_/A,u.g_dist.u_b2b.g_part\\[4\\].u/_203_/A,u.g_dist.u_b2b.g_part\\[4\\].u/_199_/A,u.g_dist.u_b2b.g_part\\[4\\].u/_197_/A,u.g_dist.u_b2b.g_part\\[4\\].u/_159_/A"
+  },
+  {
+   "root": "u.g_dist.u_b2b.g_part\\[5\\].u/rd\\[3\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "49",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_b2b.g_part\\[5\\].u/_234_/A,u.g_dist.u_b2b.g_part\\[5\\].u/_231_/A,u.g_dist.u_b2b.g_part\\[5\\].u/_226_/A,u.g_dist.u_b2b.g_part\\[5\\].u/_222_/A,u.g_dist.u_b2b.g_part\\[5\\].u/_215_/A,u.g_dist.u_b2b.g_part\\[5\\].u/_205_/A"
+  },
+  {
+   "root": "u.g_dist.u_b2b.g_part\\[5\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "54",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_b2b.g_part\\[5\\].u/_353_/C,u.g_dist.u_b2b.g_part\\[5\\].u/_346_/A1,u.g_dist.u_b2b.g_part\\[5\\].u/_332_/A,u.g_dist.u_b2b.g_part\\[5\\].u/_326_/A,u.g_dist.u_b2b.g_part\\[5\\].u/_265_/C,u.g_dist.u_b2b.g_part\\[5\\].u/_248_/A"
+  },
+  {
+   "root": "u.g_dist.u_b2b.g_part\\[6\\].u/rd\\[3\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "36",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_b2b.g_part\\[6\\].u/_223_/B,u.g_dist.u_b2b.g_part\\[6\\].u/_332_/A1,u.g_dist.u_b2b.g_part\\[6\\].u/_308_/B,u.g_dist.u_b2b.g_part\\[6\\].u/_295_/A1,u.g_dist.u_b2b.g_part\\[6\\].u/_292_/A1,u.g_dist.u_b2b.g_part\\[6\\].u/_289_/A1"
+  },
+  {
+   "root": "u.g_dist.u_b2b.g_part\\[6\\].u/rd\\[2\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "37",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_b2b.g_part\\[6\\].u/_223_/A,u.g_dist.u_b2b.g_part\\[6\\].u/_311_/A,u.g_dist.u_b2b.g_part\\[6\\].u/_300_/A,u.g_dist.u_b2b.g_part\\[6\\].u/_282_/A2,u.g_dist.u_b2b.g_part\\[6\\].u/_279_/A2,u.g_dist.u_b2b.g_part\\[6\\].u/_269_/A2"
+  },
+  {
+   "root": "u.g_dist.u_b2b.g_part\\[6\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "51",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_b2b.g_part\\[6\\].u/_325_/A2,u.g_dist.u_b2b.g_part\\[6\\].u/_274_/B,u.g_dist.u_b2b.g_part\\[6\\].u/_269_/C,u.g_dist.u_b2b.g_part\\[6\\].u/_244_/A,u.g_dist.u_b2b.g_part\\[6\\].u/_238_/C,u.g_dist.u_b2b.g_part\\[6\\].u/_229_/C"
+  }
+ ]
+}

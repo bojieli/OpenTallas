@@ -1,0 +1,109 @@
+{
+ "source_commit": "0e2da3e23",
+ "verdict": "REJECTED_NATIVE_FANOUT",
+ "native_roots": 5711,
+ "over32": 10,
+ "area_um2": 1220.36058,
+ "violations": [
+  {
+   "root": "_342_/Y",
+   "kind": "comb",
+   "loads": "34",
+   "flop_loads": "1",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[46\\].u/rd\\[115\\]$_DFF_P_/D,_368_/A,_412_/A2,_408_/A2,_401_/B,_386_/B"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[0\\].u/rd\\[9\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "46",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_b/_239_/A,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_b/_229_/A,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_b/_155_/A,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_b/_151_/B,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_b/_234_/A,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_b/_227_/A1"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[0\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "46",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_a/_239_/A,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_a/_229_/A,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_a/_155_/A,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_a/_151_/B,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_a/_234_/A,u.g_dist.u_a2.g_part\\[0\\].u/g_jam.u_a/_227_/A1"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[1\\].u/rd\\[9\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "37",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_b/_173_/A,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_b/_168_/A,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_b/_155_/A,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_b/_152_/B,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_b/_145_/B,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_b/_135_/A"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[1\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "37",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_a/_173_/A,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_a/_168_/A,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_a/_155_/A,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_a/_152_/B,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_a/_145_/B,u.g_dist.u_a2.g_part\\[1\\].u/g_jam.u_a/_135_/A"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[2\\].u/rd\\[9\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "34",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_b/_127_/A,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_b/_128_/A1,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_b/_117_/C,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_b/_110_/C,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_b/_156_/A,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_b/_151_/A"
+  },
+  {
+   "root": "u.g_dist.u_a2.g_part\\[2\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "34",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_a/_127_/A,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_a/_128_/A1,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_a/_117_/C,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_a/_110_/C,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_a/_156_/A,u.g_dist.u_a2.g_part\\[2\\].u/g_jam.u_a/_151_/A"
+  },
+  {
+   "root": "u.g_dist.u_b2b.g_part\\[10\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "37",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_b2b.g_part\\[10\\].u/_170_/B,u.g_dist.u_b2b.g_part\\[10\\].u/_168_/B,u.g_dist.u_b2b.g_part\\[10\\].u/_166_/B,u.g_dist.u_b2b.g_part\\[10\\].u/_157_/B,u.g_dist.u_b2b.g_part\\[10\\].u/_155_/B,u.g_dist.u_b2b.g_part\\[10\\].u/_153_/A"
+  },
+  {
+   "root": "u.g_dist.u_b2b.g_part\\[11\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "42",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_b2b.g_part\\[11\\].u/_132_/B,u.g_dist.u_b2b.g_part\\[11\\].u/_129_/B,u.g_dist.u_b2b.g_part\\[11\\].u/_195_/A1,u.g_dist.u_b2b.g_part\\[11\\].u/_192_/A1,u.g_dist.u_b2b.g_part\\[11\\].u/_190_/A1,u.g_dist.u_b2b.g_part\\[11\\].u/_188_/A1"
+  },
+  {
+   "root": "u.g_dist.u_b2b.g_part\\[8\\].u/rd\\[1\\]$_DFF_P_/QN",
+   "kind": "ff",
+   "loads": "35",
+   "flop_loads": "0",
+   "macro_loads": "0",
+   "reset_loads": "0",
+   "ports": "0",
+   "examples": "u.g_dist.u_b2b.g_part\\[8\\].u/_162_/A,u.g_dist.u_b2b.g_part\\[8\\].u/_159_/A,u.g_dist.u_b2b.g_part\\[8\\].u/_155_/A,u.g_dist.u_b2b.g_part\\[8\\].u/_153_/A,u.g_dist.u_b2b.g_part\\[8\\].u/_114_/A1,u.g_dist.u_b2b.g_part\\[8\\].u/_113_/A"
+  }
+ ]
+}
