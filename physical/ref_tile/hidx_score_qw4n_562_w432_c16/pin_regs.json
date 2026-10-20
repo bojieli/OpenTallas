@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_idx_score_qw_r4s",
+ "enable": false,
+ "reason": "every input lands in an A-stage capture flop, every output launches from a C-stage flop (RTL); o_bus0/1 are the head rows' constant zero sum-bus words"
+}
