@@ -1,0 +1,352 @@
+{
+  "scope": "IMMUTABLE PRE_CTS 3_place ODB ONLY; no final-route/native eligibility claim",
+  "summary": {
+    "std_count": 156593,
+    "std_area": 19644.144299944048,
+    "std_bbox": [
+      2.16,
+      2.16,
+      516.24,
+      645.84
+    ],
+    "std_outside_band_area": 15255.78300001145,
+    "std_outside_band_count": 125826,
+    "std_max43p2_bin_density": 0.44149218749999125,
+    "status": {
+      "PLACED": 125867,
+      "LOCKED": 30726
+    },
+    "macro_count": 32,
+    "under20_gap_count": 8,
+    "pg": {
+      "terms": 313250,
+      "bound": 280368,
+      "unbound": 32882
+    }
+  },
+  "pg_unbound_examples": [
+    [
+      "load_slew50495",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "load_slew50495",
+      "VSS",
+      "GROUND",
+      null
+    ],
+    [
+      "place40917",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "place40917",
+      "VSS",
+      "GROUND",
+      null
+    ],
+    [
+      "place38849",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "place38849",
+      "VSS",
+      "GROUND",
+      null
+    ],
+    [
+      "place38847",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "place38847",
+      "VSS",
+      "GROUND",
+      null
+    ],
+    [
+      "place38852",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "place38852",
+      "VSS",
+      "GROUND",
+      null
+    ],
+    [
+      "place38848",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "place38848",
+      "VSS",
+      "GROUND",
+      null
+    ],
+    [
+      "place38843",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "place38843",
+      "VSS",
+      "GROUND",
+      null
+    ],
+    [
+      "place38842",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "place38842",
+      "VSS",
+      "GROUND",
+      null
+    ],
+    [
+      "place38841",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "place38841",
+      "VSS",
+      "GROUND",
+      null
+    ],
+    [
+      "place40926",
+      "VDD",
+      "POWER",
+      null
+    ],
+    [
+      "place40926",
+      "VSS",
+      "GROUND",
+      null
+    ]
+  ],
+  "macro_gaps_under20": [
+    {
+      "a": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[0\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[1\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical"
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[1\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[2\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical"
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[1\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical"
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[1\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[2\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical"
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[0\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[3\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical"
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[1\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[4\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical"
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[0\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[3\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical"
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[1\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[4\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical"
+    }
+  ],
+  "native_face_counts_by_master": {
+    "ot_sram_1r1w_128x256_m1_r2c2_p192_mir": {
+      "W": 410,
+      "E": 409
+    },
+    "ot_sram_1r1w_32x128_m1_p192_rc": {
+      "W": 199,
+      "E": 198
+    },
+    "ot_s81ph_native_sel_hist_bank": {
+      "N": 31,
+      "S": 6,
+      "W": 146,
+      "E": 176
+    }
+  },
+  "logical_std_excluding_tap": {
+    "count": 125867,
+    "area": 18748.17413999849,
+    "outside_band_area": 14429.796840010114,
+    "outside_fraction": 0.7696641140762989
+  },
+  "nonpin_gap_row_proof": [
+    {
+      "a": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[0\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[1\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical",
+      "corridor": [
+        388.8,
+        102.072,
+        483.624,
+        102.096
+      ],
+      "lower_N_signalpins": 0,
+      "upper_S_signalpins": 0,
+      "full_legal_rows_in_gap": [],
+      "stdcell_bbox_intersections": []
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[1\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[2\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical",
+      "corridor": [
+        388.8,
+        182.568,
+        483.624,
+        182.592
+      ],
+      "lower_N_signalpins": 0,
+      "upper_S_signalpins": 0,
+      "full_legal_rows_in_gap": [],
+      "stdcell_bbox_intersections": []
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[1\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical",
+      "corridor": [
+        388.8,
+        462.792,
+        483.624,
+        462.816
+      ],
+      "lower_N_signalpins": 0,
+      "upper_S_signalpins": 0,
+      "full_legal_rows_in_gap": [],
+      "stdcell_bbox_intersections": []
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[1\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[2\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical",
+      "corridor": [
+        388.8,
+        543.288,
+        483.624,
+        543.312
+      ],
+      "lower_N_signalpins": 0,
+      "upper_S_signalpins": 0,
+      "full_legal_rows_in_gap": [],
+      "stdcell_bbox_intersections": []
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[0\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[3\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical",
+      "corridor": [
+        43.2,
+        407.16,
+        94.608,
+        407.184
+      ],
+      "lower_N_signalpins": 0,
+      "upper_S_signalpins": 0,
+      "full_legal_rows_in_gap": [],
+      "stdcell_bbox_intersections": []
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[1\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[4\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical",
+      "corridor": [
+        129.6,
+        407.16,
+        181.008,
+        407.184
+      ],
+      "lower_N_signalpins": 0,
+      "upper_S_signalpins": 0,
+      "full_legal_rows_in_gap": [],
+      "stdcell_bbox_intersections": []
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[0\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[3\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical",
+      "corridor": [
+        43.2,
+        255.96,
+        94.608,
+        255.984
+      ],
+      "lower_N_signalpins": 0,
+      "upper_S_signalpins": 0,
+      "full_legal_rows_in_gap": [],
+      "stdcell_bbox_intersections": []
+    },
+    {
+      "a": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[1\\].u_m",
+      "b": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[4\\].u_m",
+      "gap_um": 0.02400000000000091,
+      "direction": "vertical",
+      "corridor": [
+        129.6,
+        255.96,
+        181.008,
+        255.984
+      ],
+      "lower_N_signalpins": 0,
+      "upper_S_signalpins": 0,
+      "full_legal_rows_in_gap": [],
+      "stdcell_bbox_intersections": []
+    }
+  ],
+  "PG_scope": "PRE_CTS 3_place insertion-state diagnostic only. NOT FINAL SIGNOFF PGFAIL; finalallmaster/grid/receipt stillowed."
+}

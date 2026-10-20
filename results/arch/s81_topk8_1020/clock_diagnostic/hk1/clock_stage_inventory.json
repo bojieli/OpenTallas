@@ -1,0 +1,28 @@
+{
+  "scope": "ONGOING LOG SNAPSHOT, NOT TERMINAL",
+  "clock_split_lines": [
+    "CLOCK_SPLIT_KM: cluster 0 3850 sinks x 129.2..237.5 y 303.8..411.5 buffer at (186.4, 348.8)",
+    "CLOCK_SPLIT_KM: cluster 1 1363 sinks x 3.0..155.5 y 197.4..330.2 buffer at (88.7, 275.7)",
+    "CLOCK_SPLIT_KM: cluster 2 423 sinks x 2.4..248.2 y 3.0..207.1 buffer at (99.1, 128.8)",
+    "CLOCK_SPLIT_KM: cluster 3 2571 sinks x 146.9..252.9 y 154.7..330.8 buffer at (213.5, 285.7)",
+    "CLOCK_SPLIT_KM: cluster 4 3435 sinks x 219.7..306.7 y 194.4..364.8 buffer at (259.4, 319.3)",
+    "CLOCK_SPLIT_KM: cluster 5 602 sinks x 253.0..402.1 y 21.6..274.9 buffer at (376.9, 151.1)",
+    "CLOCK_SPLIT_KM: cluster 6 2382 sinks x 277.1..498.3 y 269.5..386.9 buffer at (323.6, 350.1)",
+    "CLOCK_SPLIT_KM: cluster 7 2495 sinks x 247.0..332.2 y 353.7..423.6 buffer at (290.7, 393.7)",
+    "CLOCK_SPLIT_KM: cluster 8 2227 sinks x 303.1..417.2 y 375.8..531.9 buffer at (345.1, 422.9)",
+    "CLOCK_SPLIT_KM: cluster 9 3055 sinks x 248.0..334.3 y 423.9..521.4 buffer at (290.3, 455.9)",
+    "CLOCK_SPLIT_KM: cluster 10 3937 sinks x 177.4..260.7 y 385.6..541.1 buffer at (216.9, 443.0)",
+    "CLOCK_SPLIT_KM: cluster 11 1130 sinks x 220.6..388.8 y 525.1..645.6 buffer at (287.5, 585.0)",
+    "CLOCK_SPLIT_KM: cluster 12 937 sinks x 136.7..269.0 y 531.1..645.6 buffer at (198.6, 636.9)",
+    "CLOCK_SPLIT_KM: cluster 13 704 sinks x 2.7..136.0 y 517.3..645.6 buffer at (84.8, 626.3)",
+    "CLOCK_SPLIT_KM: cluster 14 1928 sinks x 2.6..184.2 y 407.2..558.9 buffer at (135.0, 457.7)",
+    "CLOCK_SPLIT_KM: cluster 15 1086 sinks x 2.8..141.3 y 321.0..435.0 buffer at (100.4, 376.5)"
+  ],
+  "spine_lines": [
+    "REF_TILE spine: child insertion targets ot_s81ph_native_sel_hist_bank 128.0",
+    "OT_SPINE iter 0 (coarse) leaves 16 sinks 16 cells 32 leaf arrival 247.1..275.1 ps (spread 28.0) pad 60.0 / 14.0 ps",
+    "OT_SPINE iter 1 (fine) leaves 16 sinks 16 cells 34 leaf arrival 258.2..275.1 ps (spread 17.0) pad 60.0 / 20.0 ps"
+  ],
+  "triton_info_cts_lines": [],
+  "no_original4cts_checkpoint": true
+}

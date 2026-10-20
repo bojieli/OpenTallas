@@ -1,0 +1,137 @@
+{
+  "rule": "literal 43.2um origin audit ALL actual32 blocks",
+  "status": "FAIL",
+  "blocks": 32,
+  "violations": [
+    {
+      "name": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[0\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "x": 388.8,
+      "y": 21.6,
+      "pitch_units": [
+        9.0,
+        0.5
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[1\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "x": 388.8,
+      "y": 102.096,
+      "pitch_units": [
+        9.0,
+        2.3633333333333333
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_mem.g_b\\[0\\].g_w\\[2\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "x": 388.8,
+      "y": 182.592,
+      "pitch_units": [
+        9.0,
+        4.226666666666667
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[0\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "x": 388.8,
+      "y": 382.32,
+      "pitch_units": [
+        9.0,
+        8.85
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[1\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "x": 388.8,
+      "y": 462.816,
+      "pitch_units": [
+        9.0,
+        10.713333333333331
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_mem.g_b\\[1\\].g_w\\[2\\].u_m",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+      "x": 388.8,
+      "y": 543.312,
+      "pitch_units": [
+        9.0,
+        12.576666666666666
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[0\\].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "x": 43.2,
+      "y": 367.2,
+      "pitch_units": [
+        1.0,
+        8.5
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[1\\].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "x": 129.6,
+      "y": 367.2,
+      "pitch_units": [
+        2.9999999999999996,
+        8.5
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[2\\].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "x": 216.0,
+      "y": 367.2,
+      "pitch_units": [
+        5.0,
+        8.5
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[3\\].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "x": 43.2,
+      "y": 407.184,
+      "pitch_units": [
+        1.0,
+        9.425555555555556
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_s.u_fq.g_bank\\[4\\].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "x": 129.6,
+      "y": 407.184,
+      "pitch_units": [
+        2.9999999999999996,
+        9.425555555555556
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[3\\].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "x": 43.2,
+      "y": 255.984,
+      "pitch_units": [
+        1.0,
+        5.9255555555555555
+      ]
+    },
+    {
+      "name": "u_ot_pr_core.u_q.u_s.u_ofq.g_bank\\[4\\].u_m",
+      "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+      "x": 129.6,
+      "y": 255.984,
+      "pitch_units": [
+        2.9999999999999996,
+        5.9255555555555555
+      ]
+    }
+  ]
+}

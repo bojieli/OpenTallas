@@ -1,0 +1,28 @@
+{
+  "scope": "ONGOING LOG SNAPSHOT, NOT TERMINAL",
+  "clock_split_lines": [
+    "CLOCK_SPLIT_KM: cluster 0 3892 sinks x 124.7..238.7 y 299.7..399.3 buffer at (188.4, 346.2)",
+    "CLOCK_SPLIT_KM: cluster 1 1611 sinks x 2.7..163.9 y 223.6..378.5 buffer at (101.6, 306.5)",
+    "CLOCK_SPLIT_KM: cluster 2 646 sinks x 2.3..192.6 y 3.5..253.0 buffer at (71.5, 170.6)",
+    "CLOCK_SPLIT_KM: cluster 3 2010 sinks x 169.4..247.8 y 22.4..322.9 buffer at (212.0, 275.5)",
+    "CLOCK_SPLIT_KM: cluster 4 2986 sinks x 215.7..295.6 y 202.0..349.1 buffer at (252.2, 308.4)",
+    "CLOCK_SPLIT_KM: cluster 5 627 sinks x 234.7..486.4 y 21.6..283.8 buffer at (376.3, 154.7)",
+    "CLOCK_SPLIT_KM: cluster 6 2477 sinks x 233.6..328.5 y 315.4..389.9 buffer at (287.4, 356.8)",
+    "CLOCK_SPLIT_KM: cluster 7 1760 sinks x 306.5..455.2 y 277.6..436.1 buffer at (346.1, 384.0)",
+    "CLOCK_SPLIT_KM: cluster 8 2304 sinks x 257.9..336.2 y 381.2..446.0 buffer at (297.1, 414.0)",
+    "CLOCK_SPLIT_KM: cluster 9 2264 sinks x 271.3..388.8 y 427.1..522.2 buffer at (316.3, 459.1)",
+    "CLOCK_SPLIT_KM: cluster 10 2457 sinks x 215.7..283.4 y 409.3..472.8 buffer at (246.6, 440.6)",
+    "CLOCK_SPLIT_KM: cluster 11 920 sinks x 202.2..368.4 y 586.4..645.6 buffer at (280.4, 641.0)",
+    "CLOCK_SPLIT_KM: cluster 12 1805 sinks x 192.7..388.8 y 491.9..578.6 buffer at (270.3, 542.0)",
+    "CLOCK_SPLIT_KM: cluster 13 1142 sinks x 3.0..204.3 y 543.5..645.6 buffer at (125.4, 638.4)",
+    "CLOCK_SPLIT_KM: cluster 14 3008 sinks x 149.4..222.5 y 394.7..523.0 buffer at (194.5, 446.2)",
+    "CLOCK_SPLIT_KM: cluster 15 2221 sinks x 2.8..149.3 y 370.2..546.5 buffer at (111.4, 442.6)"
+  ],
+  "spine_lines": [
+    "REF_TILE spine: child insertion targets ot_s81ph_native_sel_hist_bank 128.0",
+    "OT_SPINE iter 0 (coarse) leaves 15 sinks 16 cells 30 leaf arrival 242.8..275.6 ps (spread 32.8) pad 60.0 / 14.0 ps",
+    "OT_SPINE iter 1 (fine) leaves 15 sinks 16 cells 35 leaf arrival 249.9..275.6 ps (spread 25.7) pad 60.0 / 19.9 ps"
+  ],
+  "triton_info_cts_lines": [],
+  "no_original4cts_checkpoint": true
+}

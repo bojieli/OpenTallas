@@ -1,0 +1,35 @@
+{
+  "source": "8dec8d8d5",
+  "source_hashes": [
+    {
+      "path": "physical/common_flow/clock_spine.tcl",
+      "sha256": "aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83",
+      "snapshot": "aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83",
+      "match": true
+    },
+    {
+      "path": "physical/common_flow/clock_split_km.tcl",
+      "sha256": "853786bc79e3ea535123c3e51e9e6e38e76963074e811b9728f113b389fa3192",
+      "snapshot": "853786bc79e3ea535123c3e51e9e6e38e76963074e811b9728f113b389fa3192",
+      "match": true
+    },
+    {
+      "path": "physical/ref_tile/s81dvbk_sq_hk1l/pre_cts.tcl",
+      "sha256": "b4e24153eac89df8a21cd80f02088d5901862dd06da6b77c24e4576b82333b54",
+      "snapshot": "b4e24153eac89df8a21cd80f02088d5901862dd06da6b77c24e4576b82333b54",
+      "match": true
+    },
+    {
+      "path": "physical/ref_tile/s81dvbk_sq_hk1l/spine_ins.tcl",
+      "sha256": "ce86fb497e82629d94053d6d00909e44b7fab25e31669a2db62736c02386547a",
+      "snapshot": "ce86fb497e82629d94053d6d00909e44b7fab25e31669a2db62736c02386547a",
+      "match": true
+    }
+  ],
+  "status": "STRUCTURAL_CLOCK_ORCHESTRATION_DEFECT_PROVED_FROM_SOURCE_AND_LOG_NOT_FINAL_STA",
+  "finding": "clock_split_km immediately moves all port sinks under16BUFroots; clock_spine wrapper later sees16BUFrootA sinks, balances15leaves, and defaults OT_SPINE_CTS_REST0 so nevercalls originalTritonCTS onregionalnets. HIST128targetdict lookup does notmatchBUFx24roots.",
+  "correction": "Prior16sink hard-childspine interpretation was wrong;16K16bufferroots are actualspine sinks.",
+  "root_scope": "Onlyspine rootAarrival balanced; no regional31kFF+32hardmacro nativephase qualification. Existing originalCTSjobs preserved.",
+  "propagated_checkpoint": "NOT AVAILABLE whileoriginalrepairrunning; not reconstructed/rerun",
+  "source_fix_model": "SeparateexplicitownedregionalCTSstage + actualall32nativeclock/linkedleaf TT+FFboth-edge phase validation. No blind SPINE_REST1, syntheticclock, falsepath, arc transplant or sharedhelperchange."
+}
