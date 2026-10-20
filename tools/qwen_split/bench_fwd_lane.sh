@@ -18,12 +18,13 @@
 #   sel / naive / vld / full / hop0inv: the same bench on the RTL built with one mutant define (read slot one late; no
 #          ring; every slot valid at once; full-cycle forwards; the first-form inverting hop-0 gate) -- each must FAIL.
 set -u
-mode=$1; O=$2; W=${3:-16}
+mode=$1; O=$2; W=${3:-16}; D=${4:-4}
+[ "$D" = 4 ] || [ "$D" = 8 ] || { echo "unsupported native depth $D"; exit 2; }
 cd "$(dirname "$0")/../.."; mkdir -p "$O"
 export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH
 DEF=
 case $mode in
-  pass) ;; sel) DEF=+define+OT_QFD_LAND_MUT_SEL ;; naive) DEF=+define+OT_QFD_LAND_MUT_NAIVE ;;
+  pass) ;; k3) [ "$D" = 8 ] || { echo "k3 mutant requires D8"; exit 2; } ;; sel) DEF=+define+OT_QFD_LAND_MUT_SEL ;; naive) DEF=+define+OT_QFD_LAND_MUT_NAIVE ;;
   vld) DEF=+define+OT_QFD_LAND_MUT_VLD ;; full) DEF=+define+OT_QFD_LANE_MUT_FULL ;; hop0inv) DEF=+define+OT_QFD_LANE_MUT_HOP0INV ;;
   encomb) DEF="+define+OT_QFD_LAND_MUT_ENCOMB +define+OT_QFD_LANE_MUT_ENCOMB" ;;
   rlyencomb) DEF=+define+OT_QFD_LANE_MUT_ENCOMB ;;
@@ -40,7 +41,25 @@ $(for n in n_ck n_en n_ckf1 n_ckf2 n_e1 n_e2 n_ck2 n_rs n_hi n_lo n_flt; do echo
   qfd_landh0_${W}_EW_65x30 rly_y_0 (.ck_s(n_ck), .en(n_en), .a(n_a), .ck(n_ck2), .rs(n_rs), .k0(n_hi), .k1(n_lo), .k2(n_lo), .tie_hi(n_hi), .tie_lo(n_lo), .b(n_d), .fault(n_flt));
 endmodule
 EOT
+if [ "$D" = 8 ]; then
+  python3 - "$O/mini_die.v" <<'PYD'
+import re,sys
+from pathlib import Path
+p=Path(sys.argv[1]);s=p.read_text()
+s=re.sub(r'(qfd_landh0?_\w+_65x30)', r'\1_d8', s)
+s=s.replace('.k2(n_lo),', '.k2(n_lo), .k3(n_lo),')
+p.write_text(s)
+PYD
+fi
 python3 tools/qwen_split/gen_relay_rtl.py "$O/mini_die.v" "$O/wrappers.sv" > "$O/wrappers.json" || { echo GEN_FAILED; exit 2; }
+if [ "$mode" = k3 ]; then
+  python3 - "$O/wrappers.sv" <<'PYK'
+import sys
+from pathlib import Path
+p=Path(sys.argv[1]);s=p.read_text();assert '.k({k3,' in s
+p.write_text(s.replace('.k({k3,', ".k({1'b0,"))
+PYK
+fi
 cat > "$O/tb.sv" <<'EOT'
 `timescale 1ns/1ps
 // wire leg of D ns: a chain of inertial segments of <= 4 ns each (an inertial #d longer than the 5-ns half period would
@@ -157,6 +176,18 @@ module tb;
 endmodule
 EOT
 sed -i "s/_16_EW_65x30/_${W}_EW_65x30/g; s/parameter integer W = 16/parameter integer W = ${W}/" "$O/tb.sv"
+if [ "$D" = 8 ]; then
+  python3 - "$O/tb.sv" <<'PYD'
+import re,sys
+from pathlib import Path
+p=Path(sys.argv[1]);s=p.read_text()
+s=re.sub(r'(qfd_landh0?_\w+_65x30)', r'\1_d8', s)
+s=s.replace('wire [2:0] kk = K[2:0];', 'wire [3:0] kk = K[3:0];')
+s=s.replace('.k2(kk[2]),', '.k2(kk[2]), .k3(kk[3]),')
+s=s.replace('% 8 + 8) % 8', '% 16 + 16) % 16')
+p.write_text(s)
+PYD
+fi
 verilator --binary --timing -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-COMBDLY -Wno-LATCH -Wno-INITIALDLY --top-module tb $DEF \
   -Mdir "$O/obj" -o tb "$O/tb.sv" "$O/wrappers.sv" rtl/qwen_split/qfd_fwd_lane.sv rtl/hdc/ot_hdc_cg.sv > "$O/build.log" 2>&1 || {
   echo BUILD_FAILED; tail -20 "$O/build.log"; exit 2; }

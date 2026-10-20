@@ -29,6 +29,7 @@ The module bodies are behaviour (always blocks), not shells: tools/die_port_bind
 """
 import json, re, sys
 from pathlib import Path
+from ring_contract import contract as ring_contract
 
 INST = re.compile(r'^\s*(qfd_rly[pf]?_\w+|qfd_rlyh0?_\w+|qfd_rlyr[0l]?_\w+|qfd_landh0?_\w+|qfd_rst_rep\w*|qfd_clkrx)\s+(\w+)\s*\((.*)\);\s*$')
 # Q-DIE11-RLY: the full port set of each forwarded-lane family (an open output, e.g. fault, is still a real port)
@@ -43,6 +44,22 @@ FWD_OUT = ('b', 'eb', 'ck_o', 'tie_hi', 'tie_lo', 'fault')
 
 def fwd_family(mn):
     return next((f for f in sorted(FWD, key=len, reverse=True) if mn.startswith(f)), None)
+
+
+def landing_depth(mn):
+    """Explicit source-only D8 wrapper suffix; physical binding/shape remains a separate obligation."""
+    return 8 if mn.endswith('_d8') else 4
+
+
+def fwd_ports(mn):
+    fam = fwd_family(mn)
+    ports = FWD[fam]
+    if landing_depth(mn) == 8:
+        if fam not in ('qfd_landh_', 'qfd_landh0_'):
+            raise ValueError('D8 suffix requires a landing')
+        ports = ports[:ports.index('k2')+1] + ('k3',) + ports[ports.index('k2')+1:]
+    return ports
+
 CONN = re.compile(r'\.(\w+)\(([^()]*)\)')
 WIRE = re.compile(r'^\s*wire\s*(?:\[(\d+):(\d+)\])?\s*(\w+)\s*;')
 
@@ -97,7 +114,7 @@ def main(die_v, out_sv):
             kinds['ready_pair'] = kinds.get('ready_pair', 0) + 1
         elif fwd_family(mn):
             fam = fwd_family(mn)
-            allp = FWD[fam]
+            allp = fwd_ports(mn)
             if set(ports) - set(allp) or not {'a', 'b'} <= set(ports) or ports['a'] != ports['b'] or \
                     any(w != 1 for p, w in ports.items() if p not in ('a', 'b')):
                 raise SystemExit(f'{mn}: unexpected forwarded-lane ports {ports}')
@@ -119,10 +136,12 @@ def main(die_v, out_sv):
                     kinds.get('fwd_station_hop0' if fam == 'qfd_rlyh0_' else 'fwd_station', 0) + 1
             else:
                 first = fam == 'qfd_landh0_'
+                depth = landing_depth(mn)
+                keys = ', '.join(f'k{b}' for b in reversed(range(ring_contract(depth)['K_bits'])))
                 L += ['    (* keep = "true" *) wire tie_hi_w = 1\'b1;', '    (* keep = "true" *) wire tie_lo_w = 1\'b0;',
                       '    assign tie_hi = tie_hi_w;', '    assign tie_lo = tie_lo_w;',
-                      f'    ot_qfd_land #(.W({W}), .D(4), .FIRST({int(first)})) u_land (.ckf({"ck_s" if first else "ckf"}), '
-                      f'.ea({"en" if first else "ea"}), .i(a), .ck(ck), .rs(rs), .k({{k2, k1, k0}}), .o(b), .fault(fault));']
+                      f'    ot_qfd_land #(.W({W}), .D({depth}), .FIRST({int(first)})) u_land (.ckf({"ck_s" if first else "ckf"}), '
+                      f'.ea({"en" if first else "ea"}), .i(a), .ck(ck), .rs(rs), .k({{{keys}}}), .o(b), .fault(fault));']
                 kinds['fwd_landing'] = kinds.get('fwd_landing', 0) + 1
             L += ['endmodule']
         elif mn.startswith('qfd_rly_'):
