@@ -1,5 +1,5 @@
 {
- "name": "s81svc_attn_hgrp-s81svc_attn_hgrp-COMMIT",
+ "name": "s81svc_attn_hgrp-s81svc_attn_hgrp-afe8c9afd",
  "block": "ot_hdc_v41x_attn_hgrp_s81",
  "ref_tile": true,
  "owner": "Claude:LEAD2-S81/SVC3",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-svc3-tilel-1019",
-  "commit": "COMMIT",
+  "commit": "afe8c9afd",
   "extra_paths": [
    "rtl/test/tb_hdc_v41x_attn_tile_s_lockstep.sv",
    "rtl/hdc/v41x",
@@ -105,7 +105,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81svc_attn_hgrp/s81svc_attn_hgrp-s81svc_attn_hgrp-COMMIT"
+   "to": "results/rtl/ref_tile/s81svc_attn_hgrp/s81svc_attn_hgrp-s81svc_attn_hgrp-afe8c9afd"
   }
  ],
  "cycles_added": 0,
