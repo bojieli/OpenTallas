@@ -49,11 +49,11 @@ module ot_hbm_sm_pv_merge_distributed #(parameter integer MUT=0, FAN32=0)(
  endgenerate
  reg [511:0] sum1,sum2; reg [15:0] tag1,tag2;
  reg [2:0] pubslot1,pubslot2,folda1,folda2,foldb1,foldb2;
- (* keep *) reg [26:0] pubslot2t;                   // r5: 9 kept pub_slot copies (node_tag read mux x8 (2 bits each), slot0)
+ (* keep *) reg [50:0] pubslot2t;                   // r5: 17 kept pub_slot copies (node_tag read mux, 1 tag bit each; slot0)
  (* keep *) reg [1:0] first2c;                      // r5: 2 kept tag_d[14] second captures (= tag2[14]) for the core ev_c copies
  always @(posedge clk) begin
   sum1<=sum;sum2<=sum1;tag1<=tag_d;tag2<=tag1;
-  pubslot1<=pub_slot;pubslot2<=pubslot1;pubslot2t<={9{pubslot1}};first2c<={2{tag1[14]}};
+  pubslot1<=pub_slot;pubslot2<=pubslot1;pubslot2t<={17{pubslot1}};first2c<={2{tag1[14]}};
   folda1<=fold_a;folda2<=folda1;foldb1<=fold_b;foldb2<=foldb1;
  end
  // pub / fold commands: first capture -> control second capture (+ 4 fold_start copies for the fd0_k slices)

@@ -15,3 +15,8 @@ Rings sit on reset groups 16..27 (18 + 8 = 26 terminals). No edge / schedule cha
 Benches (5.050, FAN32=1): exact/tight/reassert/stopclk/tight_reassert/xrand x4 PASS; pubearly, MUT1-13 FAIL
 (kit_bench/ in ../r4 re-captured on r5); FAN32=0 xrand stopclk PASS; MUT13 with -DSYNTHESIS fails behaviourally.
 Census verdict = the s6a/s6b gate's in-flow census on this commit.
+
+r5 in-flow census (gate @432d088cf, ot-pve1 smh_pvm_ref_s6a-20261020-025107): FAIL 63,688 roots, max 45, 2 roots:
+pubslot2t[1] 33 (2-bit node_tag read with binary select) and u_core.fd1 45 (fold ring write enables).
+r5b: 17 one-bit pub_slot copies; fr_a slot rewritten at every visit (read only under fr_v of the same visit),
+so fd1 drives only fr_v + the fold mux. Benches re-captured (9 PASS, 14 mutants FAIL, FAN32=0 PASS).

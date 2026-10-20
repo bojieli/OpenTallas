@@ -64,7 +64,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
     input wire [7:0] ev_entry,                       // per entry recurrence
     input wire [3:0] fold_operand,                   // fold_start copies for fd0_k (16 slices each)
     input wire [3:0] pub_operand,                    // pub_start copies for the pub_buffer capture enables (8 groups each)
-    input wire [26:0] pub_slot_tag,                  // 9 pub_slot copies: node_tag read mux (2 tag bits each) + slot0 (r5)
+    input wire [50:0] pub_slot_tag,                  // 17 pub_slot copies: node_tag read mux (1 tag bit each) + slot0 (r5)
     input wire [1:0] first_copy,                     // r5: 2 kept tag_d[14] copies (ev_c for entry state / for e_c,e_n)
     input wire ev,                                   // control copy (turn mux / finish / faults / node_valid)
     input wire [L*32-1:0] sum,
@@ -514,7 +514,9 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             else fr_v[fr_c]<=fd1;
         end
     always @(posedge clk)
-        if (FAN32 != 0) begin for(fk=0;fk<8;fk=fk+1) if (fd1 && oh_frw[fk]) fr_a[fk]<=fa1; end
+        // r5: the slot's entry is rewritten at every visit (fd1 drove 45 loads); it is read only through fold_write
+        // (= fr_v of the same slot, written with fd1 at the same visit), so every observable use is unchanged.
+        if (FAN32 != 0) begin for(fk=0;fk<8;fk=fk+1) if (oh_frw[fk]) fr_a[fk]<=fa1; end
         else if(fd1)fr_a[fr_c]<=fa1;
     reg [TAGW-1:0] node_tag[0:7];
     reg pub_d0,pub_d1,pub_active,pub_fault;
@@ -560,9 +562,9 @@ module ot_hbm_sm_pv_merge_distributed_core #(
             pub_data_r<=pub_buffer[32*(word_next ^ ((MUT==3)?4'd1:4'd0))+:32];
         end
         // PVMD: the same captures on kept copies of their enables (publish_request / pub_d0 / pub_d1)
-        if(pub_operand[2]) slot0<=pub_slot_tag[26:24];
-        if(pub_operand[0]) for(fk=0;fk<4;fk=fk+1) tag0[2*fk+:2]<=node_tag[pub_slot_tag[3*fk+:3]][2*fk+:2];
-        if(pub_operand[1]) for(fk=4;fk<8;fk=fk+1) tag0[2*fk+:2]<=node_tag[pub_slot_tag[3*fk+:3]][2*fk+:2];
+        if(pub_operand[2]) slot0<=pub_slot_tag[50:48];
+        if(pub_operand[0]) for(fk=0;fk<8;fk=fk+1) tag0[fk]<=node_tag[pub_slot_tag[3*fk+:3]][fk];
+        if(pub_operand[1]) for(fk=8;fk<16;fk=fk+1) tag0[fk]<=node_tag[pub_slot_tag[3*fk+:3]][fk];
         if(pd0_o[0]) tag1[7:0]<=tag0[7:0];
         if(pd0_o[1]) tag1[TAGW-1:8]<=tag0[TAGW-1:8];
         if(pd0_o[2]) slot1<=slot0;
@@ -594,7 +596,7 @@ module ot_hbm_sm_pv_merge_distributed_core #(
 `endif
     end endgenerate
 `ifndef SYNTHESIS
-    always @(posedge clk) if (rst_n && publish_request && pub_slot_tag !== {9{pub_slot}})
+    always @(posedge clk) if (rst_n && publish_request && pub_slot_tag !== {17{pub_slot}})
         $fatal(1, "pv_merge PVMD pub_slot copy differs");
     always @(posedge clk) if (rst_n && pub_operand !== {4{publish_request}})
         $fatal(1, "pv_merge PVMD pub_start copy differs");
