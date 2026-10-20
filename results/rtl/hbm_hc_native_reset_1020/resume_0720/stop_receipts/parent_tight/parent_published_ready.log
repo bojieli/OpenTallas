@@ -1,0 +1,5 @@
+PARENT_EARLIEST_TIGHT PASS epoch=0 child_ready=7 configured=11 request=12 start=13 done=25 boot_extra=1 active_calendar_shift=0
+PARENT_EARLIEST_TIGHT PASS epoch=1 child_ready=7 configured=11 request=12 start=13 done=25 boot_extra=1 active_calendar_shift=0
+PARENT_EARLIEST_TIGHT PASS epoch=2 child_ready=7 configured=11 request=12 start=13 done=25 boot_extra=1 active_calendar_shift=0
+PARENT_EARLIEST_TIGHT ALL_PASS epochs=3
+tb_parent_earliest.sv:58: $finish called at 174000 (1ps)

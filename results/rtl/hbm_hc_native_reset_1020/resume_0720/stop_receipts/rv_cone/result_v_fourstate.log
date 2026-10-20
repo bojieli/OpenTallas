@@ -1,0 +1,15 @@
+RV_4STATE_ASYNC t=0 valid=0
+RV_4STATE_TRACE t=1000 cyc=0 clk=1 reset=0 launch=0 valid=0
+RV_4STATE_TRACE t=3000 cyc=1 clk=1 reset=0 launch=0 valid=0
+RV_4STATE_TRACE t=5000 cyc=2 clk=1 reset=0 launch=0 valid=0
+RV_4STATE_TRACE t=7000 cyc=3 clk=1 reset=0 launch=0 valid=0
+RV_4STATE_TRACE t=9000 cyc=4 clk=1 reset=0 launch=0 valid=0
+RV_4STATE_TRACE t=11000 cyc=5 clk=1 reset=1 launch=0 valid=0
+RV_4STATE_TRACE t=13000 cyc=6 clk=1 reset=1 launch=0 valid=0
+RV_4STATE_TRACE t=15000 cyc=7 clk=1 reset=1 launch=0 valid=0
+RV_4STATE_TRACE t=17000 cyc=8 clk=1 reset=1 launch=0 valid=0
+RV_4STATE_TRACE t=19000 cyc=9 clk=1 reset=1 launch=0 valid=0
+RV_4STATE_TRACE t=27000 cyc=13 clk=1 reset=1 launch=1 valid=0
+RV_4STATE_TRACE t=1023000 cyc=511 clk=1 reset=1 launch=0 valid=1
+RV_4STATE PASS heldlow_from_time0=1 stopped_clock_assert=1 requests=1 results=1 exact_latency=498
+tb_result_v_fourstate.sv:23: $finish called at 1088000 (1ps)

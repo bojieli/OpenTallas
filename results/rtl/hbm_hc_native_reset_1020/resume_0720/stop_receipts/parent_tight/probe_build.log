@@ -1,0 +1,12 @@
+Compiling parent_readonly_probe.c...
+parent_readonly_probe.c: In function ‘probe’:
+parent_readonly_probe.c:4:34: warning: unused parameter ‘cb’ [-Wunused-parameter]
+    4 | static PLI_INT32 probe(p_cb_data cb){s_vpi_time t;t.type=vpiSimTime;vpi_get_time(0,&t);
+      |                        ~~~~~~~~~~^~
+parent_readonly_probe.c: In function ‘begin_probe’:
+parent_readonly_probe.c:6:40: warning: unused parameter ‘cb’ [-Wunused-parameter]
+    6 | static PLI_INT32 begin_probe(p_cb_data cb){static s_vpi_time times[6];static s_cb_data calls[6];unsigned delays[6]={17010,19010,21010,23010,25010,27010};for(int i=0;i<6;i++){times[i].type=vpiSimTime;times[i].low=delays[i];calls[i].reason=cbAfterDelay;calls[i].cb_rtn=probe;calls[i].time=&times[i];vpi_register_cb(&calls[i]);}return 0;}
+      |                              ~~~~~~~~~~^~
+cc: warning: 0-3: linker input file unused because linking not done
+cc: error: 0-3: linker input file not found: No such file or directory
+/usr/bin/iverilog-vpi: 1 file(s) failed to compile.

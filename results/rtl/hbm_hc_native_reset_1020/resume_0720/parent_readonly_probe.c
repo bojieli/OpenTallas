@@ -1,0 +1,8 @@
+#include <vpi_user.h>
+#include <stdio.h>
+static int val(const char *p){vpiHandle h=vpi_handle_by_name((PLI_BYTE8*)p,0);if(!h){vpi_printf("PROBE_MISSING %s\n",p);return -999;}s_vpi_value v;v.format=vpiIntVal;vpi_get_value(h,&v);return v.value.integer;}
+static PLI_INT32 probe(p_cb_data cb){s_vpi_time t;t.type=vpiSimTime;vpi_get_time(0,&t);
+vpi_printf("PARENT_READONLY t=%u precision=%d phase=%d cfgwe=%d seq_cfgwe=%d SRAM_wce=%d commit=%d scanning=%d validated=%d launch_pin=%d lv=%d ready=%d start=%d target_fault=%d root_fault=%d\n",t.low,vpi_get(vpiTimePrecision,0),val("tb_parent_earliest.edge_no"),val("tb_parent_earliest.dut.cfg_we"),val("tb_parent_earliest.dut.u_seq.cfg_we_q"),val("tb_parent_earliest.dut.u_seq.u_program.w_ce_in"),val("tb_parent_earliest.dut.g_ptf.u_ptgt.commit"),val("tb_parent_earliest.dut.g_ptf.u_ptgt.scanning"),val("tb_parent_earliest.dut.g_ptf.u_ptgt.validated"),val("tb_parent_earliest.launch_v"),val("tb_parent_earliest.dut.g_ptf.u_ptgt.lv"),val("tb_parent_earliest.dut.g_ptf.u_ptgt.launch_ready"),val("tb_parent_earliest.dut.start_v"),val("tb_parent_earliest.dut.g_ptf.u_ptgt.fault"),val("tb_parent_earliest.fault"));return 0;}
+static PLI_INT32 begin_probe(p_cb_data cb){static s_vpi_time times[6];static s_cb_data calls[6];unsigned delays[6]={17010,19010,21010,23010,25010,27010};for(int i=0;i<6;i++){times[i].type=vpiSimTime;times[i].low=delays[i];calls[i].reason=cbAfterDelay;calls[i].cb_rtn=probe;calls[i].time=&times[i];vpi_register_cb(&calls[i]);}return 0;}
+static void registration(void){s_cb_data cb={0};cb.reason=cbStartOfSimulation;cb.cb_rtn=begin_probe;vpi_register_cb(&cb);}
+void (*vlog_startup_routines[])(void)={registration,0};
