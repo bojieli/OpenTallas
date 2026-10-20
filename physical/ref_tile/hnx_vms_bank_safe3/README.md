@@ -51,3 +51,11 @@ Bench (Verilator 5.050, fleet): HNX_VM_BENCH PASS 2/2 (lockstep bit-identical to
 MUTANTS FAIL-AS-REQUIRED 3/3, on both 105811946 (clock change) and eac29e067 (census fixes).
 
 REPORT ONLY: critical fork of hfd_vms_bank. No REVIEW.json or submit_exact; coordinator reviews gate PNGs.
+
+## Gate 1 (--cts, 10-20 06:52, ot-epyc9 hnx_vms_bank_safe3-20261020-065241): CTS FAIL
+Root clk_e (E face root) had a pin-flop spread of 89.6 ps TT, over the 80 limit. The H-tree path depth was 4-5 with size 16 /
+diameter 30 clustering (safe2 had 22 ps on the same root). The other roots passed: clk 0.0 (SRAMs as raw sinks, insertion
+~310 ps), clk_n 69.4, clk_s 39.6. This is a clock-tree build fix, not a timing relaxation, run as two parallel variants:
+- safe3 uses automatic sink clustering with -balance_levels.
+- safe3b uses size 8 / diameter 20 clustering with -balance_levels.
+Bind whichever passes the checklist first.

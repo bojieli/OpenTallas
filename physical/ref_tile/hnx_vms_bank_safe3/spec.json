@@ -277,8 +277,6 @@
   },
   "macro_halo_um": 5.4,
   "cts_sink": {
-   "size": 16,
-   "diameter_um": 30,
    "extra": "-balance_levels"
   },
   "io_hold_margin_ns": 0.03
@@ -287,7 +285,7 @@
   "owner": "Claude:HNX-UNITS/VM",
   "branch": "claude/hnx-vm-safe3-1020",
   "tag": "s3",
-  "purpose": "P3 critical VM safe3: SRAMs on the core clk root (no direct macro entries); report only",
+  "purpose": "P3 critical VM safe3: SRAMs on the core clk root (no direct macro entries); report only; CTS auto clustering (gate1 clk_e spread 89.6 with size16/dia30)",
   "structural_change": "After safe2 gate FAIL (cross_clock ot_entry_6/8->ot_entry_0 setup -10.9/-1.1 ps): the four SRAM clock pins move from raw direct die entries clk_macro0..3 onto the core clk CTS root shared with their m_* launch and c_* capture registers; clk_macro ports removed (RTL+pins), so rd_out->c_* and m_*->SRAM are intra-root hops (no distinct-entry reserve). Geometry, data RTL and latency unchanged from safe2.",
   "extra_paths": [
    "rtl/hbm_next/vm",

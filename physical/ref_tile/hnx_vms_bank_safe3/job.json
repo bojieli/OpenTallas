@@ -3,7 +3,7 @@
  "block": "hnx_vms_bank_q0_faces",
  "ref_tile": true,
  "owner": "Claude:HNX-UNITS/VM",
- "purpose": "P3 critical VM safe3: SRAMs on the core clk root (no direct macro entries); report only",
+ "purpose": "P3 critical VM safe3: SRAMs on the core clk root (no direct macro entries); report only; CTS auto clustering (gate1 clk_e spread 89.6 with size16/dia30)",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
