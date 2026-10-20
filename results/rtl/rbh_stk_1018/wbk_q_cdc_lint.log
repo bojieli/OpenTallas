@@ -1,0 +1,7 @@
+# ROOT-0330-CDC 2026-10-18: gray_fifo_cdc_constraints.lint on the REAL ot_hbm_svc_wb_kport_q (spec wbk_q_cdc_lint_spec.json), ot-epyc5, tools as committed with this log on branch claude/root-0330-cdc, RTL as on origin/claude/root-0330 (cutthrough sha d526e268a54716d4)
+# VERDICT: REFUSE (sound): with req_valid[pc]=1 the K pin skid captures fifo_head[req_lane[pc]] without that FIFO's !empty in the cone
+LINT REFUSE GrayFifoError reviewed_gray_fifos consumer pc[0].u_k.head_data[256]/pc[0].u_k.out_data[256]/w_k_addr[0] loads FIFO u_wb.g_root[0].g_lane[0].u_fifo storage while the FIFO read-valid is false (read not gated by the FIFO; exact SAT miter)
+elapsed_s 444.1 maxrss_GB 37.03
+	Command being timed: "python3 /home/ubuntu/wt/root-0330-cdc-out/real_lint.py results/rtl/rbh_stk_1018/wbk_q_cdc_lint_spec.json /home/ubuntu/wt/root-0330-cdc"
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 7:28.33
+	Maximum resident set size (kbytes): 37025204

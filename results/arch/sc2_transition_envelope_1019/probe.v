@@ -1,0 +1,1 @@
+module probe(input clk,input en,output [545:0] q); wire [545:0] mid; wire dep; ot_sram_1r1w_32x546_m1 launch(.clk(clk),.r_ce_in(en),.rd_out(mid)); INVx1_ASAP7_75t_R dependent(.A(mid[0]),.Y(dep)); ot_sram_1r1w_32x546_m1 capture(.clk(clk),.r_ce_in(en),.wd_in({545'b0,dep}),.rd_out(q)); endmodule

@@ -1,0 +1,90 @@
+SLICE_START slice=hbm_v16_die_slice_calx replay=slice/replay/calx_probe cycles=500
+SLICE_VM_PRELOAD words=0
+SLICE_CHECK_FAIL out=1 dom=0 cyc=364 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=365 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=365 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=366 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=366 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=366 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=367 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=367 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=367 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=367 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=368 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=368 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=368 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=368 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=368 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=369 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=369 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=369 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=369 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=369 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=369 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=370 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=370 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=370 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=370 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=370 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=370 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=370 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=371 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=371 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=371 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=371 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=371 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=371 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=371 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=372 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=372 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=372 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=372 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=372 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=372 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=373 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=373 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=373 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=373 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=373 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=374 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=374 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=374 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=374 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=375 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=375 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=375 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=376 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=376 rec=-1
+SLICE_CHECK_FAIL out=1 dom=0 cyc=377 rec=-1
+SLICE_OUT calendar_SW__bank_enable first=371 last=379 changes=9
+SLICE_OUT calendar_SW__rslot_v first=371 last=379 changes=9
+SLICE_OUT hb_ckgen__pll_hbm first=0 last=499 changes=187
+SLICE_OUT hb_ckgen__pll_serial first=2 last=500 changes=250
+SLICE_OUT hb_ckgen__pll_stream first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__por_hbm first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__por_serial first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__por_stream first=0 last=0 changes=1
+SLICE_OUT hleaf_SW__a_cfg_addr first=104 last=344 changes=7
+SLICE_OUT hleaf_SW__a_cfg_data first=64 last=344 changes=8
+SLICE_OUT hleaf_SW__a_cfg_target first=64 last=64 changes=1
+SLICE_OUT hleaf_SW__a_cfg_v first=64 last=345 changes=16
+SLICE_OUT hleaf_SW__a_desc_limit first=354 last=354 changes=1
+SLICE_OUT hleaf_SW__a_desc_loops first=354 last=354 changes=1
+SLICE_OUT hleaf_SW__a_desc_v first=354 last=355 changes=2
+SLICE_OUT hleaf_SW__a_launch_v first=364 last=365 changes=2
+SLICE_OUT hleaf_SW__b_cfg_addr first=104 last=344 changes=7
+SLICE_OUT hleaf_SW__b_cfg_data first=64 last=344 changes=8
+SLICE_OUT hleaf_SW__b_cfg_target first=64 last=64 changes=1
+SLICE_OUT hleaf_SW__b_cfg_v first=64 last=345 changes=16
+SLICE_OUT hleaf_SW__b_desc_limit first=354 last=354 changes=1
+SLICE_OUT hleaf_SW__b_desc_loops first=354 last=354 changes=1
+SLICE_OUT hleaf_SW__b_desc_v first=354 last=355 changes=2
+SLICE_OUT hleaf_SW__b_launch_v first=364 last=365 changes=2
+SLICE_OUT hleaf_SW__s_active first=371 last=381 changes=2
+SLICE_OUT hleaf_SW__s_ready first=367 last=368 changes=2
+SLICE_SUMMARY drives=48 checks=64 fails=56 rec_commit_ok=0 rec_fail=0 stream_edges=500 serial_edges=374 hbm_edges=406
+SLICE_FAIL
+- slice/tb_slice.sv:607: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 554ns; walltime 0.001 s; speed 523.484 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 8 MB

@@ -19,19 +19,17 @@
   }
  ],
  "pins": {
-  "W": [
-   "d_q"
-  ],
   "S": [
    "cw",
-   "rst_n",
-   "clk",
    "apply",
    "o_unc",
    "o_ne",
-   "fs"
+   "fs",
+   "rst_n",
+   "clk",
+   "d_q"
   ],
-  "E": [
+  "N": [
    "q_v",
    "q_first",
    "q_unc",
@@ -41,61 +39,61 @@
   ]
  },
  "pin_ranges": {
-  "d_q": [
-   4.32,
-   125.28
-  ],
   "cw": [
    4.32,
-   118.8
-  ],
-  "rst_n": [
-   120.96,
-   122.04
-  ],
-  "clk": [
-   124.2,
-   125.28
+   113.4
   ],
   "apply": [
-   127.44,
-   136.08
+   114.48,
+   116.64
   ],
   "o_unc": [
-   138.24,
-   139.32
+   117.72,
+   118.8
   ],
   "o_ne": [
-   141.48,
-   146.88
+   119.88,
+   122.04
   ],
   "fs": [
-   149.04,
-   150.12
+   123.12,
+   124.2
+  ],
+  "rst_n": [
+   125.28,
+   126.36
+  ],
+  "clk": [
+   127.44,
+   128.52
+  ],
+  "d_q": [
+   131.76,
+   244.08
   ],
   "q_v": [
-   4.32,
-   5.4
+   100.44,
+   101.52
   ],
   "q_first": [
-   6.48,
-   7.56
+   102.6,
+   103.68
   ],
   "q_unc": [
-   8.64,
-   9.72
+   104.76,
+   105.84
   ],
   "q_nerr": [
-   10.8,
-   12.96
+   106.92,
+   109.08
   ],
   "q_seq": [
-   14.04,
-   17.28
+   110.16,
+   113.4
   ],
   "q_d": [
-   19.44,
-   125.28
+   115.56,
+   221.4
   ]
  },
  "params": {},
@@ -122,15 +120,15 @@
    "h": "M4",
    "v": "M5"
   },
-  "io_hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.03,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  dout: the 32 x 546 correction-mask SRAM delay (DC = 9), corrected words straight from the two read ports, fixed-offset beat select; macro at (43.2, 129.6) R0 on the 43.2 lattice against the N face (20.5 um channel), one std-cell band S (127 um) holding every register: all pins below the macro (gate 1 at 248.4 x 146.88 with pins on W / S / E full faces and clk at the E corner measured 3,139 sinks TT 252-370 ps, spread 118 -- a register ring around the macro).  R0 puts the macro read port on its W edge above d_q.  d_q W face below the macro (from ddly, 4.5/um), cw S W half + decision S E half (from dchn), clk / rst_n S centre, q_* E face below the macro (4.9/um).  248.4 x 233.28 (1.06:1).",
+ "structural_change": "TW-S81/SERDES 10-19: SerDes COLUMN re-pin (results/arch/s81_link_col_1019/serdes_column_plan.json; decision results/arch/s81_dv_1016/p4l_lkcol/lk_slot_decision.json @ origin/claude/die-s81-lead-1019): ot_pdie_serdes becomes ONE landed column parent 259.2 wide along the die edge, children stacked N-S (dsyn, ddly, dchn, dout, rate_match, enc above the analog PMA), the kp4_dec 2x2 level is retired (its p2 gate failed the clock rule: one spine, child pairs TT 83.5 / FF 87.2 > 80). This tile: d_q W -> S (from ddly N via the dchn E channel), q_* E -> N (to the rate matcher above). Same RTL, outline and macro; route.io_hold_margin_ns 0.0 -> 0.03 (KITS 10-18 >= 0.025). PREVIOUS: S81-TILES2 10-17: four-tile re-split of the KP4 decoder cluster ot_s81_kp4_dec (replaces s81lk_kp4_deca / decb, REJECTED at their CTS gates: 259.2 um tiles, SRAM in the middle, clock on the S face; TT insertion 307-455 / 295-417 ps, spread 148 / 122 ps).  Cluster 2 x 2: dsyn SW (PMA in W), ddly NW, dchn SE, dout NE (beats out E); every seam registered at both pins.  Bit-exact vs the 33a35eb7d two-tile decoder on every output and cycle (tb_s81_kp4_eq: RTL same cycle, hardware view with all tile pin registers = reference + 2 cycles; mutants DMUT 2 / 3 and a one-short word seam FAIL).  dout: the ",
  "job": {
-  "owner": "Claude:S81-TILES2",
-  "branch": "claude/s81kp4-1017",
-  "tag": "t2",
+  "owner": "Claude:TW-S81/SERDES",
+  "branch": "claude/tw-s81-serdes-1019",
+  "tag": "col",
   "cycles_added": 2,
   "purpose": "S81 link KP4 decoder tile dout (mask SRAM delay, corrected words, beats) of the 4-tile cluster ot_s81_kp4_dec, 10-17. Bench = cluster equivalence vs 33a35eb7d and the Forney mutant DMUT 2.",
   "extra_paths": [
@@ -194,5 +192,10 @@
  "pin_regs": {
   "enable": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "DIE-S81-LEAD SerDes slot decision 10-19 (results/arch/s81_dv_1016/p4l_lkcol/lk_slot_decision.json @ origin/claude/die-s81-lead-1019) -> column plan results/arch/s81_link_col_1019/serdes_column_plan.json: d_q W -> S (from ddly N via the dchn E channel), q_* E -> N (to the rate matcher above)",
+  "contract": "results/arch/s81_link_col_1019/serdes_column_plan.json"
+ }
 }

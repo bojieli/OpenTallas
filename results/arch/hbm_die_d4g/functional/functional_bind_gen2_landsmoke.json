@@ -1,0 +1,299 @@
+{
+ "schema": "opentallas.d4g_functional_bind.v1",
+ "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/land_smoke/net/contract.json",
+ "verdict": "FAIL",
+ "classes": {
+  "INJ": {
+   "paths": 200,
+   "bits": 39296,
+   "fail": 6,
+   "relay_stages": [
+    0,
+    19,
+    20,
+    21,
+    23
+   ]
+  },
+  "DEL": {
+   "paths": 96,
+   "bits": 26080,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "RC": {
+   "paths": 84,
+   "bits": 5628,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ]
+  },
+  "SFUJ": {
+   "paths": 64,
+   "bits": 2048,
+   "fail": 0,
+   "relay_stages": [
+    2,
+    3
+   ]
+  },
+  "DMA": {
+   "paths": 44,
+   "bits": 9620,
+   "fail": 0,
+   "relay_stages": [
+    0,
+    3,
+    4
+   ]
+  },
+  "HC": {
+   "paths": 376,
+   "bits": 82452,
+   "fail": 0,
+   "relay_stages": [
+    0,
+    6,
+    8,
+    9,
+    10,
+    17,
+    18,
+    19
+   ]
+  },
+  "XCMD": {
+   "paths": 296,
+   "bits": 124816,
+   "fail": 0,
+   "relay_stages": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    12,
+    13
+   ]
+  }
+ },
+ "stale_gaps": [
+  "G-CIL-DEL",
+  "G-CIL-RC",
+  "G-DMA-WB",
+  "G-HC-ENG",
+  "G-SFU-OPERAND-JOIN-NE",
+  "G-SFU-OPERAND-JOIN-NW",
+  "G-SFU-OPERAND-JOIN-SE",
+  "G-SFU-OPERAND-JOIN-SW",
+  "G-SMVM-XCMD"
+ ],
+ "open_gaps": [
+  "G-CIL-INJ"
+ ],
+ "unlisted_open_gaps": [],
+ "fails": [
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "INJ_RET.SE",
+   "inst": "cxij_SE",
+   "param": "INJ_RET",
+   "expect": [
+    "cij",
+    "cij_SE",
+    "INJLAT",
+    -3
+   ],
+   "why": "ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_SE.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))"
+   ],
+   "have": 11,
+   "want": 9,
+   "src": [
+    "cxij_SE",
+    "INJ_RET",
+    0
+   ],
+   "dst": [
+    "cxij_SE",
+    "INJ_RET",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "B39_NOOP.SE",
+   "inst": "cxij_SE",
+   "param": "B39_NOOP",
+   "expect": [
+    "const",
+    1
+   ],
+   "why": "addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_SE.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))"
+   ],
+   "have": 0,
+   "want": 1,
+   "src": [
+    "cxij_SE",
+    "B39_NOOP",
+    0
+   ],
+   "dst": [
+    "cxij_SE",
+    "B39_NOOP",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "INJ_RET.NW",
+   "inst": "cxij_NW",
+   "param": "INJ_RET",
+   "expect": [
+    "cij",
+    "cij_NW",
+    "INJLAT",
+    -3
+   ],
+   "why": "ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NW.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))"
+   ],
+   "have": 11,
+   "want": 9,
+   "src": [
+    "cxij_NW",
+    "INJ_RET",
+    0
+   ],
+   "dst": [
+    "cxij_NW",
+    "INJ_RET",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "B39_NOOP.NW",
+   "inst": "cxij_NW",
+   "param": "B39_NOOP",
+   "expect": [
+    "const",
+    1
+   ],
+   "why": "addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NW.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))"
+   ],
+   "have": 0,
+   "want": 1,
+   "src": [
+    "cxij_NW",
+    "B39_NOOP",
+    0
+   ],
+   "dst": [
+    "cxij_NW",
+    "B39_NOOP",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "INJ_RET.NE",
+   "inst": "cxij_NE",
+   "param": "INJ_RET",
+   "expect": [
+    "cij",
+    "cij_NE",
+    "INJLAT",
+    -3
+   ],
+   "why": "ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NE.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))"
+   ],
+   "have": 11,
+   "want": 9,
+   "src": [
+    "cxij_NE",
+    "INJ_RET",
+    0
+   ],
+   "dst": [
+    "cxij_NE",
+    "INJ_RET",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "B39_NOOP.NE",
+   "inst": "cxij_NE",
+   "param": "B39_NOOP",
+   "expect": [
+    "const",
+    1
+   ],
+   "why": "addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NE.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))"
+   ],
+   "have": 0,
+   "want": 1,
+   "src": [
+    "cxij_NE",
+    "B39_NOOP",
+    0
+   ],
+   "dst": [
+    "cxij_NE",
+    "B39_NOOP",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  }
+ ],
+ "paths": 1160
+}

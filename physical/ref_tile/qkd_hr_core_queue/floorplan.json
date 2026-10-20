@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "qkd_hr_core_queue",
- "top": "qkd_hr_core_queue",
+ "top": "qkd_hr_core_queue_fl",
  "kind": "tile",
  "die": [
   0,
@@ -153,6 +153,9 @@
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
   "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_pin_land.sv",
+  "rtl/lib/face_land/qkd_hr_core_queue_fl.sv",
   "physical/ref_tile/qkd_hr_core_queue/kit.env",
   "physical/ref_tile/qkd_hr_core_queue/clock.sdc",
   "physical/ref_tile/qkd_hr_core_queue/signoff.sdc",

@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_rst_region_pr-pr1-b43a6d9ad bench bench_rst_pr_bad_strap host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/qkd_rst_region_pr-pr1-b43a6d9ad log cl/bench_rst_pr_bad_strap.a1b1.log captured 2026-10-18T06:39:56-07:00
+# fail_regex '^RST_REGION_PR_FAIL errors=[1-9]'
+ERR original mismatch cyc=607 got=000 want=111
+ERR late release region 0 cyc 612 (calendar 612)
+ERR late release region 1 cyc 667 (calendar 667)
+ERR late release region 2 cyc 727 (calendar 727)
+ERR original mismatch cyc=1019 got=000 want=001
+RST_REGION_PR_FAIL errors=5
+FATAL: /srv/opentallas-scratch/claude/closure-loop/qkd_rst_region_pr-pr1-b43a6d9ad/bench_src_a1/rtl/test/qwen_split/tb_qkd_rst_region_pr.sv:69: 
+       Time: 1445000  Scope: tb_qkd_rst_region_pr

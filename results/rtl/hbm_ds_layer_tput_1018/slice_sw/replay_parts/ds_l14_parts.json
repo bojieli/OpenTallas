@@ -1,0 +1,45 @@
+{
+ "source": "/home/ubuntu/scratch/lb2-hbm2-rpl/dsemit/l14/replay.json",
+ "nev": 6309,
+ "parts": [
+  {
+   "name": "ds_l14_p0",
+   "events": 6216,
+   "preload": 1316,
+   "cycles": 18300,
+   "programmes": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "records": [
+    60,
+    76,
+    122,
+    129
+   ],
+   "carried_sectors": 0
+  },
+  {
+   "name": "ds_l14_p1",
+   "events": 3636,
+   "preload": 757,
+   "cycles": 27187,
+   "programmes": [
+    4,
+    5,
+    6
+   ],
+   "records": [
+    142,
+    148,
+    184,
+    185,
+    189,
+    190
+   ],
+   "carried_sectors": 676
+  }
+ ]
+}

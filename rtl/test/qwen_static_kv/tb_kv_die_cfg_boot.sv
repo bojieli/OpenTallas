@@ -11,7 +11,12 @@
 // SCN 2: target 10 offered after target 1 has started: dispatcher fault (code 3), die cfg never written.
 // SCN 3: an ECTL word with a non-zero padding bit: die cfg fault -> dispatcher sink fault, never sealed.
 // MUT (qkd_kv_die_cfg): 1 B/C swapped, 3 regions one off (SCN 0 must FAIL); 2 padding unchecked (SCN 3 must FAIL).
-module tb_kv_die_cfg_boot #(parameter integer SCN = 0, parameter integer MUT = 0, parameter integer NRST = 43);
+// RTL-BUILD-KV/FAULT 10-18 (P8), CAP=1 (die cfg CAP=1 + dispatcher DIECAP=1): the capability word 32+NRST (data[0] = CAPV)
+// precedes the seal.  SCN 0 also checks fused_program_capability == 0 after the capability word but BEFORE the seal,
+// == CAPV after the seal, and unchanged across the functional re-reset; SCN 4 = capability word with data[1] set:
+// die cfg fault, never sealed, capability 0.  MUT 4 (bit taken from data[1]) / MUT 5 (not seal-gated) must FAIL SCN 0.
+module tb_kv_die_cfg_boot #(parameter integer SCN = 0, parameter integer MUT = 0, parameter integer NRST = 43,
+                            parameter integer CAP = 0, parameter integer CAPV = 1);
  reg ck = 0; always #5 ck = ~ck;
  reg por_n = 0, host_rst = 0;
  reg [142:0] pr = 0; reg [3:0] target = 1; reg ready = 0, source_fault = 0, active = 0;
@@ -19,7 +24,7 @@ module tb_kv_die_cfg_boot #(parameter integer SCN = 0, parameter integer MUT = 0
  wire lw, ww, ow; wire [8:0] la; wire [7:0] wa, ga; wire [1:0] oa; wire [63:0] ld, wd, gd, cd; wire [31:0] od, lwe, fwe;
  wire [127:0] cwe, last; wire [7:0] ca; wire [31:0] flast; wire setup, dfault; wire [7:0] code; wire [15:0] ie; wire [63:0] id;
  wire dwe; wire [7:0] dad; wire [63:0] dda;
- wire [159:0] ea, eb, ec; wire [NRST*8-1:0] dly; wire sealed, cfault;
+ wire [159:0] ea, eb, ec; wire [NRST*8-1:0] dly; wire sealed, cfault, capb;
  // ---- regional reset roots: chain depth d_r from the HOST level, dly from the die cfg ----
  function automatic integer depth(input integer r); depth = 1 + ((r * 7 + 3) % 19); endfunction
  integer D = 0;
@@ -33,7 +38,7 @@ module tb_kv_die_cfg_boot #(parameter integer SCN = 0, parameter integer MUT = 0
   for (j = 2; j <= DR; j = j + 1) begin : g_ch always @(posedge ck) ch[j] <= ch[j-1]; end
   qkd_rst_region #(.IGNORE(64), .HOLD(16)) u (.ck(ck), .por_n(por_n), .a(ch[DR]), .dly(dly[8*r +: 8]), .b(rb[r]));
  end endgenerate
- qkd_static_kv_boot_dispatch #(.MUT(0), .DIECFG(1), .NRST(NRST)) disp (.ck(ck), .rst_n(rb[0]), .boot_pr(pr),
+ qkd_static_kv_boot_dispatch #(.MUT(0), .DIECFG(1), .NRST(NRST), .DIECAP(CAP)) disp (.ck(ck), .rst_n(rb[0]), .boot_pr(pr),
   .boot_image_target(target), .boot_image_ready(ready), .boot_image_fault(source_fault), .boot_image_epoch(epoch),
   .boot_image_digest(digest), .execution_active(active), .sink_applied(applied), .local_configured(configured),
   .sink_fault(1'b0), .diecfg_sealed(sealed), .diecfg_fault(cfault),
@@ -42,8 +47,9 @@ module tb_kv_die_cfg_boot #(parameter integer SCN = 0, parameter integer MUT = 0
   .controller_we(cwe), .controller_addr(ca), .controller_data(cd), .controller_last(last), .front_last(flast),
   .diecfg_we(dwe), .diecfg_addr(dad), .diecfg_data(dda),
   .setup_ready(setup), .fault(dfault), .fault_code(code), .installed_epoch(ie), .installed_isa_digest(id));
- qkd_kv_die_cfg #(.NRST(NRST), .MUT(MUT)) dcfg (.ck(ck), .por_n(por_n), .cfg_we(dwe), .cfg_addr(dad), .cfg_data(dda),
-  .ectl_a_cfg(ea), .ectl_b_cfg(eb), .ectl_c_cfg(ec), .rst_dly(dly), .sealed(sealed), .fault(cfault));
+ qkd_kv_die_cfg #(.NRST(NRST), .CAP(CAP), .MUT(MUT)) dcfg (.ck(ck), .por_n(por_n), .cfg_we(dwe), .cfg_addr(dad), .cfg_data(dda),
+  .ectl_a_cfg(ea), .ectl_b_cfg(eb), .ectl_c_cfg(ec), .rst_dly(dly), .fused_program_capability(capb), .sealed(sealed),
+  .fault(cfault));
  integer errors = 0, cyc = 0, t, a, n, rel_host;
  integer relc[0:NRST-1];
  always @(posedge ck) cyc <= cyc + 1;
@@ -61,7 +67,12 @@ module tb_kv_die_cfg_boot #(parameter integer SCN = 0, parameter integer MUT = 0
  task load_diecfg(input integer pad_bad); begin
   for (a = 0; a < 32; a = a + 1) word(10, a, {49'((pad_bad && a == 5) ? 1 : 0), ectl_word(a)});
   for (a = 0; a < NRST; a = a + 1) word(10, 32 + a, {56'd0, dly_of(a)});
-  word(10, 32 + NRST, 64'h514b5644_43464731);
+  if (CAP) begin
+   word(10, 32 + NRST, {62'd0, 1'(SCN == 4), 1'(CAPV)});
+   repeat (4) tick();
+   if (capb !== 1'b0) begin $display("BAD capability %b before the seal", capb); errors++; end
+  end
+  word(10, 32 + NRST + CAP, 64'h514b5644_43464731);
   image_done(10);
  end endtask
  task full_boot; begin
@@ -84,10 +95,11 @@ module tb_kv_die_cfg_boot #(parameter integer SCN = 0, parameter integer MUT = 0
    load_diecfg(SCN == 3);
    if (SCN == 2) begin
     if (!dfault || !code[3] || sealed) begin $display("BAD late target 10 not refused: fault%0d code%h sealed%0d", dfault, code, sealed); errors++; end
-   end else if (SCN == 3) begin
+   end else if (SCN == 3 || SCN == 4) begin
     if (!cfault || sealed || !dfault) begin $display("BAD padding not refused: cfg_fault%0d sealed%0d disp_fault%0d", cfault, sealed, dfault); errors++; end
    end else begin
     if (!sealed || cfault || dfault) begin $display("BAD die cfg not sealed: sealed%0d cfault%0d dfault%0d code%h", sealed, cfault, dfault, code); errors++; end
+    if (CAP && capb !== 1'(CAPV)) begin $display("BAD capability %b after the seal, image %0d", capb, CAPV); errors++; end
     for (integer i = 0; i < 32; i = i + 1)
      if ({ec[5*i +: 5], eb[5*i +: 5], ea[5*i +: 5]} !== ectl_word(i)) begin if (errors < 8) $display("BAD ECTL cfg group %0d", i); errors++; end
     for (integer k = 0; k < NRST; k = k + 1)
@@ -95,6 +107,7 @@ module tb_kv_die_cfg_boot #(parameter integer SCN = 0, parameter integer MUT = 0
     // HOST re-asserts the functional resets, then releases: aligned now
     host_rst = 0; repeat (D + 40) tick();
     if (!sealed) begin $display("BAD die cfg lost across the functional reset"); errors++; end
+    if (CAP && capb !== 1'(CAPV)) begin $display("BAD capability %b lost across the functional reset", capb); errors++; end
     release_all(rel_host);
     for (integer k = 0; k < NRST; k = k + 1)
      if (relc[k] != relc[0]) begin if (errors < 8) $display("BAD region %0d released at %0d, region 0 at %0d", k, relc[k] - rel_host, relc[0] - rel_host); errors++; end
@@ -108,8 +121,9 @@ module tb_kv_die_cfg_boot #(parameter integer SCN = 0, parameter integer MUT = 0
    full_boot();
    if (setup) begin $display("BAD setup_ready without the die cfg image"); errors++; end
   end
+  if (SCN == 4 && capb !== 1'b0) begin $display("BAD capability %b from a refused image", capb); errors++; end
   if (errors) begin $display("FAIL kv_die_cfg_boot scn%0d mut%0d errors%0d", SCN, MUT, errors); $fatal(1); end
-  $display("PASS kv_die_cfg_boot scn%0d mut%0d regions%0d D%0d", SCN, MUT, NRST, D);
+  $display("PASS kv_die_cfg_boot scn%0d mut%0d cap%0d capv%0d regions%0d D%0d", SCN, MUT, CAP, CAPV, NRST, D);
   $finish;
  end
  initial begin #5000000; $display("FAIL kv_die_cfg_boot timeout"); $fatal(1); end

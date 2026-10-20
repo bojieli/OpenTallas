@@ -1,0 +1,11 @@
+--- a/rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv
++++ b/rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv
+@@ -142,7 +142,7 @@
+    pick_lane[pc]=0;
+    for(l=0;l<32;l=l+1)if(!pick_v[pc]&&!fifo_empty[l]&&fifo_pc[l]==pc)begin pick_v[pc]=1;pick_lane[pc]=l;end
+    selected_lane[pc]=req_valid[pc]?req_lane[pc]:pick_lane[pc];
+-   if(meta_active&&(req_valid[pc]||pick_v[pc])&&!ack_pending&&
++   if(meta_active&&(req_valid[pc]||pick_v[pc])&&!fifo_empty[selected_lane[pc]]&&!ack_pending&&
+       (outstanding[pc]<64||k_wr_done[pc])&&!hbm_fault)begin
+     k_v[pc]=1;k_addr[30*pc+:30]=fifo_head[selected_lane[pc]][285:256];k_wdata[256*pc+:256]=fifo_head[selected_lane[pc]][255:0];
+     if(k_rdy[pc])pop[selected_lane[pc]]=1;

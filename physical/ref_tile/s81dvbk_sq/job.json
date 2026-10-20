@@ -16,6 +16,7 @@
    "results/rtl/s81_dv_1016/bk_units_bk2",
    "rtl/common",
    "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_glue",
    "rtl/dsrom_sys/s81_ph",
    "rtl/hdc",
    "rtl/link"
@@ -54,7 +55,7 @@
     ],
     "expect": "fail",
     "fail_regex": "^DSDV_BK_SEL FAIL mut=3$",
-    "fail_witness": "results/rtl/s81_dv_1016/bk_units_bk2/sel_mut3.txt"
+    "fail_witness": "results/rtl/s81_dv_1016/bk_units_t8/sel_mut3.txt"
    }
   ],
   "calibrate": {

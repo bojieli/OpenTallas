@@ -1,0 +1,228 @@
+{
+ "schema": "opentallas.qwen_layer_tput.v3",
+ "lane": "TOKEN-PASS-QWEN 2026-10-18",
+ "grade_of_this_record": "PILOT / REGRESSION (not final RTL; not evidence of record)",
+ "owner_ask": "per-layer RTL sim of every representative Qwen3-8B ROM layer at production shape on CURRENT die RTL (compute dv2f14 + KV kvs14c co-simulated through the landed d2d link) with the compiler's static schedule",
+ "verdict": "NOT YET POSSIBLE on current die RTL: no functional vehicle of either die top exists (qfd_die is a portless GEN netlist: dv2f14bg 3,114 inst / 183 masters, kvs14c 33,206 inst; never simulated). This record = (1) current link-end RTL measured, (2) KV layer-programme control root, (3) the 10-13 reference-core layer vehicle re-run on today's tree (pending) after restoring its lost fixtures, (4) the plan for a die-slice vehicle.",
+ "rtl": {
+  "compute_die": "dv2f14 (claude/q-die13-1018 d5a922c32; chain dv2f14bg running, land_plan.json not produced yet)",
+  "kv_die": "kvs14c (claude/kv-clock-1018 f05f9338f / kv-landslot c1989d8c5; native PHY bind MISMATCH -> diagnostic)",
+  "this_run_source": "claude/tokpass-qwen-1018 b1af01f1c (= d5a922c32 + vehicle steps)"
+ },
+ "tp": {
+  "plan_of_record": "TP4 for this vehicle (gold = TP4 P8191)",
+  "tp8": "the split compute die is one 1/8 rank (768 of 6,144 tiles); TP8 per-layer UNMEASURED: no TP8 layer vehicle and no TP8 golden; only the component native_tp8_collective (results/rtl/qwen_layer_tput_1013/native_tp8_collective)"
+ },
+ "price": {
+  "per_layer": 6835,
+  "source": "results/arch/token_path_20261009/qwen_rom.json (L1 = me 3,459 + link 2,100 + su 1,276; L0 6,797)"
+ },
+ "layers": [
+  {
+   "layer": "L0 (cold KV fill)",
+   "position": 8191,
+   "rtl": "reference core (ot_qwen_rom_rt_die_w12_stream4_tagged_ar x4, partitioned) at b1af01f1c",
+   "cycles": null,
+   "cycles_10_13": 6151,
+   "price": 6797,
+   "ratio": null,
+   "exact": null,
+   "status": "PENDING: fleet ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018 (driver ~/scratch/tokpass-qwen/driver3b.sh; STATUS.log) -- 10-18 10:45: guard-clean (--unroll-count 4096) build pos rc=0 08:49, neg building; runL3/runL3neg/gold/runhead not yet run; LAYERBENCH-QWEN collects (pending_results)",
+   "grade": "measured-on-reference-RTL (regression) -- NOT current die RTL"
+  },
+  {
+   "layer": "L1 (chained, x35)",
+   "position": 8191,
+   "rtl": "same",
+   "cycles": null,
+   "cycles_10_13": 5480,
+   "composed_10_13": {
+    "cycles": 6639,
+    "ratio": 0.9713,
+    "how": "5,480 vehicle - 1,550 tile attention + 1,620 KV-die attention (static_kv_20261014 component) + 1,089 still priced (623 issue relays + 432 die relays + 34)"
+   },
+   "price": 6835,
+   "ratio": null,
+   "exact": null,
+   "status": "PENDING: fleet ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018 (driver ~/scratch/tokpass-qwen/driver3b.sh; STATUS.log) -- 10-18 10:45: guard-clean (--unroll-count 4096) build pos rc=0 08:49, neg building; runL3/runL3neg/gold/runhead not yet run; LAYERBENCH-QWEN collects (pending_results)",
+   "grade": "measured-on-reference-RTL + priced"
+  },
+  {
+   "layer": "LM head",
+   "rtl": "same",
+   "cycles": null,
+   "cycles_10_13": 3048,
+   "next_token_10_13": 24,
+   "price": 3101,
+   "ratio": null,
+   "exact": null,
+   "status": "PENDING: fleet ot-epyc5 /srv/opentallas-scratch/claude/tokpass-qwen-1018 (driver ~/scratch/tokpass-qwen/driver3b.sh; STATUS.log) -- 10-18 10:45: guard-clean (--unroll-count 4096) build pos rc=0 08:49, neg building; runL3/runL3neg/gold/runhead not yet run; LAYERBENCH-QWEN collects (pending_results)",
+   "grade": "measured-on-reference-RTL"
+  }
+ ],
+ "current_rtl_measured": {
+  "d2d_link_programme": {
+   "bench": "rtl/test/qwen_split/run_d2d_program.sh BACKEND=verilator (Verilator 5.050, ot-epyc5)",
+   "rtl": "qfd_d2d_static + qkd_d2d_static (rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv; the modules both die netlists bind) + qfd_kvn_static_transport + behavioural UCIe PHY pair (PHY = allowed model)",
+   "schedule": "tools/qwen_split/d2d_link_calendar.py --profile program, 36 layer calendars from token_path qwen_rom.json; compiled layer period 6,836",
+   "result": "PASS: 36/36 layers start on the compiled cycle (pin cycle = compiled - 2, constant), C->S 1188 / S->C 1188 frames, kvn 144, results 36, host checks 36, 0 normal-epoch faults, 0 errors; CRC-abort/retrain/replay recovery exact",
+   "mutants": {
+    "1 write slot +1": "FAIL (required)",
+    "2 KV RX demux swap": "FAIL",
+    "3 producer 1 cycle late": "FAIL",
+    "4 calendar wrong TXL": "FAIL",
+    "6 sequencer start 1 edge late (DRV=1 KV_PIN_SEQ=1)": "FAIL",
+    "7 KV anchor skew short (DRV=1 KV_PIN_SEQ=1)": "FAIL",
+    "5 kind-15 status stale": "PASSES = NOT IMPLEMENTED (header comment only; no MUT==5 in tb or RTL) -> bench gap"
+   },
+   "build_run_wall_s": "~7 s per config (build+run), 53 s for 8 configs",
+   "scope": "link protocol + calendar only: payloads are declared boundary stimuli; no die relays/landings; not native compute",
+   "logs": "d2d_program/"
+  },
+  "kv_layer_programme": {
+   "bench": "tools/qwen_static_kv/run_layer_programme.py (iverilog; tiny control root)",
+   "rtl": "qkd_static_kv_layer_programme (= kvs14c u_lprg in qkd_kvs_tiles_hroot_ff_k.sv)",
+   "result": "COMPONENT_PASS_WITH_FAILING_MUTANTS (3/3 mutants FAIL): 36 layers, 504 fixed control events",
+   "scope": "control/metadata only, no arithmetic/memory/link",
+   "receipt": "kv_layer_programme/receipt.json"
+  }
+ },
+ "native_FAIL_on_chip_parts": [
+  "compute layer arithmetic/control: vehicle = emitted cycle-reference core (controller/ME spine/SU partition), NOT the hardened qfd_c_b16_dv x48 / qfd_dv_slice2_e,w / qfd_native59_dv_service / qfd_tt_ctlm_dv tiles of dv2f14",
+  "attention: vehicle runs in-die HBM STREAM4 tile attention; the kvs14c attention (qkh/qkd_kvs tiles) is only priced (1,620 from the static_kv_20261014 component), never co-simulated with compute",
+  "TP collective: ot_rom_oneshot_allreduce over ot_rom_pkg_link (LAT 339) reference, not qfd_collective_static_io_production + serdes lanes",
+  "die relays / landings / forwarded half-cycle hops: priced (623 + 432 a layer), in NO RTL vehicle; dv2f14 land_plan.json not yet produced; die chain logs RELAY_CHECK SKIPPED (no compiled schedule OT_RELAY_SCHEDULE) -> the compiler does not consume the die relay/landing ages yet",
+  "d2d payloads in the link bench are external stimuli (link RTL itself is current)",
+  "KV die: native PHY bind MISMATCH keeps every KV GEN diagnostic; 16 lane views pending",
+  "embedding stage not in the per-layer vehicle"
+ ],
+ "fixture_finding": "All Qwen ROM layer-vehicle fixtures lived on EPYC1/EPYC2 (retired): W12 TP4 stage images (/home/ubuntu/w12, qwen-dspark-system/img_p1), the TP4 36-layer gold, the KV history. None on the live fleet or archive. Restored: stage images L0..L35 + head x4 from the local pinned prep npz (sha-checked vs prep image pins; head via new tools/qwen_tokpass/w12_head_restore.py), L0..L2 gold from local realmem-ctx8k, TP4 36+head gold re-run on CPU (local GPU in ERR state; owner 10-09 CPU goldens on the fleet).",
+ "next_vehicle_plan": "die-slice Verilator vehicle from GEN die.v + port_bind die_glue.sv (lane masters ot_qfd_lane_st/ot_qfd_land) + bound tile RTL; qfd_c_b16_dv as hier_block (one model x48); PHY _bb -> _model; UCIe to a kvs14c-side qkd_d2d_static + KV attention tiles (or the attention service component first); serdes ports to a TP collective boundary stimulus; romleaf +OT_ROM_DIR viamap images (7,680/die) generated from the restored W12 images; checks = tb_qwen_d2d_program calendars + TP gold X/KV; lane ages from land_plan.json once dv2f14bg/bhd chains emit it.",
+ "wall_time": {
+  "d2d_bench_s": 53,
+  "kv_programme_s": 1,
+  "reference_vehicle_10_13": {
+   "build_s": 1300,
+   "L3_run_s": 5024
+  },
+  "restore_s": 34,
+  "verilate_die_s": 352
+ },
+ "fixture_restore": {
+  "stage_images": "148/148 restored (L0..L35 + head x 4 dies) sha-equal to the prep image pins, 34 s on ot-epyc5 (fx/img_p1, 31 GB)",
+  "kv_history_l3": "L0..L2 real (L0 die0 pin match) + 132 zero placeholders (L3 chain only)",
+  "gold_tp4_36": "CPU golden queued after restore (torch 2.14.1+cpu in pip --target pylib; fleet has no python3-venv)"
+ },
+ "vehicle_build_finding": "the 10-15 fleet Verilator NBA guard (tools/verilator_guarded.py) REFUSES the 10-13 reference die: 3 in-place NBA loops (u_hbm t_rd_sectors, kvw_ce, st_rsp_stall) -> 10-13-era builds predate the guard; rebuilt with --unroll-count 4096 (QROM_VFLAGS_EXTRA): guard clean at verilate (352 s, 35.6 GB). If the L3 cycles/exactness differ from 10-13, the 10-13 numbers were from a guard-flagged model.",
+ "source_commit": "8a01e4a5a",
+ "lane_layerbench": "LAYERBENCH-QWEN 2026-10-18 (branch claude/layerbench-qwen-1018; forks lbq-compiler / lbq-fixtures merged)",
+ "die_revisions_of_record": {
+  "compute": {
+   "revision": "dv2f14bn",
+   "die_v": "ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bn/chain/case_r22k/die.v",
+   "die_sha256": "a7a9f9804f63b785484c73b51ffbf4d71bf2c5fb4ab03ecbf092a59bcd510c57",
+   "src": "0a9c93921",
+   "bind": "chain/port_bind/port_bind.json strict PASS (180 masters / 3,053 inst)"
+  },
+  "kv": {
+   "revision": "kvs14c (supersedes kvs14b; kvs14d prep FAILED dirty tree, not a revision)",
+   "die_v": "ot-epyc4:/srv/opentallas-scratch/claude/qwen-kvsys/kvs14c-place/port_bind_v2/die_bound.v (bound netlist of case_kv/die.v sha 073bbe80...)",
+   "src": "f05f9338f",
+   "bind": "port_bind_v2/port_bind_v2.json DIAGNOSTIC FAIL only at the two PHY models (ot_qfd_serdes_112g_x12_phy, ot_qkvd_ucie_x64_phy: PORT_NOT_IN_RTL / INPUT_UNCONNECTED) + 1,630 undriven bits; 40 masters / 33,206 inst"
+  }
+ },
+ "slice_bench": {
+  "cutter": "tools/qwen_layerbench/slice_cut.py (die_port_bind parsers + the die bind rtl_roots/rtl_files/defines; instances verbatim; --grow through relays/landings/reset repeaters along signal direction; boundary die-net bits -> ports)",
+  "smoke": "tools/qwen_layerbench/slice_smoke.py + run_smoke.sh (Verilator 5.050, 2 random initial states) + drive_qwc_slice_ctl.svh (compute programme load)",
+  "campaign": "results/rtl/qwen_layer_tput_1018/slice_smoke/campaign.sh (env results/rtl/qwen_layer_tput_1018/slice_smoke/env.sh); slices results/rtl/qwen_layer_tput_1018/slice_smoke/slices/<name>/ (slice top .sv, .f, slice.json), runs results/rtl/qwen_layer_tput_1018/slice_smoke/runs/<run>/",
+  "slices": {
+   "c_ctl": "compute qfd_sys_face + qfd_tt_ctlm_dv + 698 die relays/landings/reset repeaters (700 inst, in 788 / out 2,529 bits), as netlisted",
+   "c_ctl_x": "c_ctl with --override tt_ctlm XPF_TRANSPORT_EDGES=26 (DIE GAP G-C1; smoke-only value)",
+   "k_attn": "KV qkd_kvs_attn + 1,228 die relays (1,229 inst, in 1,709 / out 1,580 bits)",
+   "k_ctl": "KV qkd_kvs_ctl (incl. u_lprg layer programme, u_boot dispatch) + 1,322 die relays (1,323 inst)",
+   "c_colW5": "compute column: qfd_dv_slice2_w dvs_W5 + 4 x qfd_c_b16_dv c16_W5_0..3 + 718 relays (723 inst, in 3,861 / out 4,532 bits: dvs_W4 2,241/3,257, io_collective 518/598, native59 520/548, tt_ctlm 569/117) -- cut, smoke launched"
+  },
+  "smoke_results": {
+   "c_ctl_asis": {
+    "slice": "c_ctl (as netlisted)",
+    "result": "FAIL at time 0: tt_ctlm g_unassigned_arm_route $error (G-C1)",
+    "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/c_ctl_asis/run_m0_s1.log"
+   },
+   "c_ctl_xpf_idle": {
+    "slice": "c_ctl_x",
+    "result": "PASS reset + idle 3,000 edges: no fault output, every control output deterministic from 2 random initial states (2 declared data outputs differ: hr_wi / native_cmd = ME program-store RAM words before any programme load)",
+    "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/c_ctl_xpf_idle/"
+   },
+   "c_ctl_xpf": {
+    "slice": "c_ctl_x",
+    "result": "FAIL programme load: face boot done (54 records); first HOST BEGIN -> record-port slot_fault; landing probe rx_payload +3 / prog_rx_v +3 / context +3 / auth +5 / witness +4 edges (G-C2); 0 PW delivered",
+    "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/c_ctl_xpf/run_m0_s1.log"
+   },
+   "c_ctl_xpf_comp2": {
+    "slice": "c_ctl_x, DIAGNOSTIC bench variant (payload/rx_v held back 2 edges at the slice edge; NOT the die)",
+    "result": "PW 1,024 + DW 8 at the tt_ctlm pins bit-exact through the die relays; then tt_ctlm head_fault on the bench filler programme (G-C3); ledgers do not commit, witness not sent",
+    "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/c_ctl_xpf_comp2/run_m0_s1.log"
+   },
+   "k_attn": {
+    "slice": "k_attn",
+    "result": "PASS reset + idle: no fault, all 14 outputs deterministic",
+    "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/k_attn/"
+   },
+   "k_attn_m1": {
+    "slice": "k_attn, MUT 1 (24-edge reset)",
+    "result": "FAIL as required: 6 outputs (acal/ahs/arh/pvst/pvfst) depend on the initial state = committed fail witness of the reset-completeness check",
+    "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/k_attn_m1/"
+   },
+   "k_ctl": {
+    "slice": "k_ctl",
+    "result": "PASS reset + idle: no fault, all 17 outputs deterministic (build 351 s / 3.5 GB)",
+    "log": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/k_ctl/"
+   },
+   "c_colW5": {
+    "slice": "c_colW5",
+    "result": "PENDING (first build at --mem 96 terminated during verilation; relaunched at 300 GB, pending_results)"
+   },
+   "face_component_reference": "run_sys_face_bench.sh (compute src) on the same image: SYS_FACE_PASS MUT 0 (boot 54, PW 1024 DW 8, 1512 events exact), MUT 1 FAIL -> the face itself loads the programme when its pins are driven aligned; the die landing breaks it"
+  },
+  "composition_rule": "A layer = the slowest (critical) slice under the FIXED compiled schedule: every slice runs against the same compiled calendar, its boundary traffic replayed at the scheduled cycles; because nothing stalls (static schedule, no backpressure), the layer cycle count is the compiled layer period, and a slice that misses a scheduled cycle is a FAIL, not a longer layer. Measured slice latencies replace the priced segment ages; the critical slice path (compute column -> D2D -> KV attention -> D2D -> compute) sets the layer.",
+  "smoke_verdict": "KV slices reset/idle PASS; compute control slice reset/idle PASS only with the XPF parameter supplied; programme load FAILS on the compute die as netlisted (G-C2) and on the missing deployment programme (G-C3); KV programme load not yet run (G-K1)."
+ },
+ "die_gaps_found_by_smoke": [
+  {
+   "id": "G-C1",
+   "owner": "Q-DIE (dv2f14 GEN) + compiler",
+   "module": "qfd_tt_ctlm_dv (instance tt_ctlm)",
+   "port": "parameter XPF_TRANSPORT_EDGES",
+   "what": "the GEN netlist instantiates tt_ctlm with no parameters: XPF_TRANSPORT_EDGES stays -1 and the RTL g_unassigned_arm_route $error stops the simulation at time 0 -> the compute die as netlisted cannot simulate at all. The compiler (relay schedule: hr_wi = pin register + 25 relays) must assign it and GEN must emit it.",
+   "witness": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/c_ctl_asis/run_m0_s1.log"
+  },
+  {
+   "id": "G-C2",
+   "owner": "Q-DIE (LAND_CROSS) ",
+   "module": "qfd_d2d_static d2d_rom -> qfd_sys_face sys_face",
+   "port": "prog_auth_slot (net n_sf_prog_auth_slot__r6), prog_witness_slot (__r5)",
+   "what": "programme-record bundle lands split: measured at the face pins rx_payload +3, prog_rx_v +3, prog_context_slot +3, prog_auth_slot +5, prog_witness_slot +4 edges after the d2d_rom pins -> the record port slot_fault (rx_v != auth|context) on the first HOST BEGIN: NO programme can be loaded into the compute die as netlisted. LAND_CROSS must land the whole {rx_payload, prog_rx_v, prog_*_slot} bundle on one edge (the same class as F5 native_rx_*).",
+   "witness": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/c_ctl_xpf/run_m0_s1.log (SMOKE_LAND line + record port slot fault)"
+  },
+  {
+   "id": "G-C3",
+   "owner": "compiler (compiled_L1 findings gap 1)",
+   "module": "qfd_tt_ctlm_dv / qfd_tt_ctlm_head_static / qfd_dv_cmd_cal",
+   "port": "pw / dh programme image (PW0..1023 + DW0..7)",
+   "what": "diagnostic variant with the auth slot landing compensated in the bench (NOT the die): all 1,024 PW + 8 DW words reach the tt_ctlm pins bit-exact through the die relays, then the ME head faults (head_fault) on the bench filler programme: no compiler emits the deployment programme image.",
+   "witness": "results/rtl/qwen_layer_tput_1018/slice_smoke/runs/c_ctl_xpf_comp2/run_m0_s1.log"
+  },
+  {
+   "id": "G-K1",
+   "owner": "LAYERBENCH-QWEN next step (not an RTL gap)",
+   "module": "qkd_kvs_ctl u_boot (qkd_static_kv_boot_dispatch) / u_lprg",
+   "what": "the KV programme load is the authenticated HOST boot of targets 10, 1..9, 11, 12, 13, 0 whose setup_ready needs sink_applied from 32 front + 128 PC boot CDC queues: the smallest vehicle that loads the u_lprg layer programme is kvs_ctl + the boot CDC sinks, with boot_pr records from compiled_L1/kv_programme/boot.hex at the slice edge. Reset + idle of kvs_ctl and kvs_attn PASS; programme load NOT yet run."
+  }
+ ],
+ "reset_finding": "compute reset trees (qfd_rst_rep chains) reach ~300 taps deep: reset must be held > ~300 edges and the release takes as long to land; with that, every control output of all four slices is deterministic from two random initial states (MUT 1 = 24-edge reset must FAIL the check).",
+ "token_compose": {
+  "terms": [],
+  "note": "LAYERBENCH-QWEN 10-18: no term is measured on CURRENT die RTL yet (the die slices only reached reset/idle/programme-load smoke, which fails at die gaps G-C1/G-C2/G-C3); base terms keep their grades."
+ },
+ "reference_rebuild_verdict": "PENDING: the 10-13 numbers (L0 6,151 / chained 5,480 / head 3,048) neither stand nor fall yet; graded measured-old-RTL either way"
+}

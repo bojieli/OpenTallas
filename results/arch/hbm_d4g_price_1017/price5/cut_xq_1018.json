@@ -1,0 +1,196 @@
+{
+ "geometry_um": {
+  "coll_SW": [
+   6676.64,
+   14345.28
+  ],
+  "coll_SE": [
+   13523.36,
+   14390.28
+  ],
+  "coll_NW": [
+   6865.696,
+   16830.28
+  ],
+  "coll_NE": [
+   13523.36,
+   16830.28
+  ]
+ },
+ "link_manhattan_um": {
+  "edge_SW_SE": 6891.72,
+  "edge_SE_NE": 2439.999999999998,
+  "edge_NE_NW": 6657.664000000001,
+  "edge_NW_SW": 2674.0559999999978,
+  "diag_SW_NE": 9331.719999999998,
+  "diag_SE_NW": 9097.663999999999
+ },
+ "one_ring": {
+  "added_ring_bits_per_direction": 0,
+  "diagonal_bits_per_direction": 0,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "worst_v": {
+   "ratio": 0.402,
+   "x": 12400.0,
+   "y": [
+    19600.0,
+    20600.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.472,
+   "y": 18400.0,
+   "x": [
+    0.0,
+    1000.0
+   ]
+  },
+  "graph_bit_mm": 795005.4,
+  "coll_ring_stages": 9.38
+ },
+ "two_ring": {
+  "added_ring_bits_per_direction": 280,
+  "diagonal_bits_per_direction": 0,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "worst_v": {
+   "ratio": 0.402,
+   "x": 12400.0,
+   "y": [
+    19600.0,
+    20600.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.472,
+   "y": 18400.0,
+   "x": [
+    0.0,
+    1000.0
+   ]
+  },
+  "graph_bit_mm": 803206.2,
+  "coll_ring_stages": 9.38
+ },
+ "three_ring": {
+  "added_ring_bits_per_direction": 560,
+  "diagonal_bits_per_direction": 0,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "worst_v": {
+   "ratio": 0.402,
+   "x": 12400.0,
+   "y": [
+    19600.0,
+    20600.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.472,
+   "y": 18400.0,
+   "x": [
+    0.0,
+    1000.0
+   ]
+  },
+  "graph_bit_mm": 811407.1,
+  "coll_ring_stages": 8.88
+ },
+ "four_ring": {
+  "added_ring_bits_per_direction": 840,
+  "diagonal_bits_per_direction": 0,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "worst_v": {
+   "ratio": 0.402,
+   "x": 12400.0,
+   "y": [
+    19600.0,
+    20600.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.472,
+   "y": 18400.0,
+   "x": [
+    0.0,
+    1000.0
+   ]
+  },
+  "graph_bit_mm": 819607.9,
+  "coll_ring_stages": 8.88
+ },
+ "mesh_1w": {
+  "added_ring_bits_per_direction": 0,
+  "diagonal_bits_per_direction": 280,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "worst_v": {
+   "ratio": 0.402,
+   "x": 12400.0,
+   "y": [
+    19600.0,
+    20600.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.472,
+   "y": 18400.0,
+   "x": [
+    0.0,
+    1000.0
+   ]
+  },
+  "graph_bit_mm": 803206.2,
+  "coll_ring_stages": 10.3
+ },
+ "mesh_2w": {
+  "added_ring_bits_per_direction": 280,
+  "diagonal_bits_per_direction": 560,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "worst_v": {
+   "ratio": 0.402,
+   "x": 12400.0,
+   "y": [
+    19600.0,
+    20600.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.472,
+   "y": 18400.0,
+   "x": [
+    0.0,
+    1000.0
+   ]
+  },
+  "graph_bit_mm": 819607.9,
+  "coll_ring_stages": 10.61
+ },
+ "two_ring_plus_diag_1w": {
+  "added_ring_bits_per_direction": 280,
+  "diagonal_bits_per_direction": 280,
+  "cut_v": 0.402,
+  "cut_h": 0.472,
+  "worst_v": {
+   "ratio": 0.402,
+   "x": 12400.0,
+   "y": [
+    19600.0,
+    20600.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.472,
+   "y": 18400.0,
+   "x": [
+    0.0,
+    1000.0
+   ]
+  },
+  "graph_bit_mm": 811407.1,
+  "coll_ring_stages": 10.01
+ }
+}

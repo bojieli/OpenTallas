@@ -15,17 +15,30 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
  reg[289:0]q[0:7];reg[2:0]wp,rp;reg[3:0]count;
  reg[3:0]kc;reg[2:0]hc;reg[8:0]oc;
  reg iv_q,kcr_q,hcr_q,boot_hold,image_dirty;reg[289:0]id_q;reg ff;
- wire[289:0]head=q[rp];wire[31:0]addr=head[33:2];wire marker=addr==32'hffffffff;
- wire embed=addr[31]&&!marker;wire we=head[1];
- wire[24:0]logical_e=addr[24:0];wire[24:0]scale_e=logical_e-25'd19447808;
- wire[1:0]stack=(logical_e<25'd19447808)?logical_e[6:5]:scale_e[6:5];
- wire[6:0]target=embed?{stack,(logical_e<25'd19447808)?logical_e[4:0]:scale_e[4:0]}:addr[6:0];
- wire good=we&&(marker||(embed?(addr[30:25]==0&&logical_e<25'd19457304):(addr[30:24]==0)));
+ // HRORDER 10-18 (route qkd_hr_core_order-r2-c420f015e TT -17 ps: rp -> q[rp] -> address decode -> send -> issued):
+ // the decode {target7,good,embed,marker} is done once at enqueue from the registered id_q and kept beside the word;
+ // a 10-bit head register hd = those fields of q[rp] (write-bypassed) feeds send. Cycle-exact with the previous form
+ // (bench tools/qwen_kv_die/host_cluster/bench/hrorder_equiv); no added latency.
+ wire[31:0]i_addr=id_q[33:2];wire i_marker=i_addr==32'hffffffff;
+ wire i_embed=i_addr[31]&&!i_marker;wire i_we=id_q[1];
+ wire[24:0]i_le=i_addr[24:0];wire[24:0]i_se=i_le-25'd19447808;
+ wire[1:0]i_stack=(i_le<25'd19447808)?i_le[6:5]:i_se[6:5];
+ wire[6:0]i_target=i_embed?{i_stack,(i_le<25'd19447808)?i_le[4:0]:i_se[4:0]}:i_addr[6:0];
+ wire i_good=i_we&&(i_marker||(i_embed?(i_addr[30:25]==0&&i_le<25'd19457304):(i_addr[30:24]==0)));
+ wire[9:0]id_dec={i_target,i_good,i_embed,i_marker};
+ reg[9:0]qd[0:7];reg[9:0]hd;
+ wire[289:0]head=q[rp];wire[24:0]logical_e=head[26:2];
+ wire marker=hd[0],embed=hd[1],good=hd[2];wire[6:0]target=hd[9:3];
  wire send=count!=0&&!fault&&(!boot_hold||MUT==2)&&good&&(marker?(issued==landed&&kc!=0&&(!image_dirty||hc!=0)):(oc!=0&&(embed?hc!=0:kc!=0)));
  reg issue_v;reg[6:0]issue_pc;wire order_fault;
  qkd_host_commit_order_debt #(.MUT(MUT))u_order(.ck(ck_order),.rst_n(rst_n),.issue_v(issue_v),.issue_pc(issue_pc),.acks(acks),.prefix_v(prefix_v),.prefix_count(landed),.fault(order_fault),.order_quiet(order_quiet));
  assign fault=ff|order_fault;
- always @(posedge ck)begin id_q<=ing;if(iv_q&&count<8)q[wp]<=id_q;end
+ wire wr=iv_q&&count<8;wire[2:0]rp1=rp+3'd1;
+ always @(posedge ck)begin
+  id_q<=ing;if(wr)begin q[wp]<=id_q;qd[wp]<=id_dec;end
+  if(send)hd<=(wr&&wp==rp1)?id_dec:qd[rp1];
+  else hd<=(wr&&wp==rp)?id_dec:qd[rp];
+ end
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin wp<=0;rp<=0;count<=0;kc<=8;hc<=4;oc<=256;iv_q<=0;kcr_q<=0;hcr_q<=0;ff<=0;boot_hold<=0;image_dirty<=0;image_check<=0;ing_cr<=0;kv<=0;hb<=0;issued<=0;issue_v<=0;issue_pc<=0;end
   else begin
@@ -33,7 +46,7 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
    if(iv_q)begin if(count==8&&!send)ff<=1;else wp<=wp+1'b1;end
    if(boot_release)begin if(!boot_hold)ff<=1;else begin boot_hold<=0;image_dirty<=0;end end
    if(send)begin
-    rp<=rp+1'b1;
+    rp<=rp1;
     if(marker||!embed)kv<=head;
     if(embed)image_dirty<=1;
     if(embed)hb<={head[289:34],logical_e,1'b0,1'b1};

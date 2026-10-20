@@ -1,0 +1,1 @@
+PASS QDQ_HOST_SPLIT_LOCKSTEP_GATE m0 split==monolith (rq +1, wq/done +5) golden writes; mutants 1 2 killed (LOCKSTEP_FAIL)

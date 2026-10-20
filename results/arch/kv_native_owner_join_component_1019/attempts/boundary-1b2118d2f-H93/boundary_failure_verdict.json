@@ -1,0 +1,18 @@
+{
+  "verdict": "GENUINE_APPLICATION_FAIL_PRESERVED",
+  "source": "1b2118d2f",
+  "private_RTL": "a8ddbb4c1 unchanged",
+  "fixture_H": 93,
+  "fixture_deadline": 93,
+  "added_declared_bits": 1827,
+  "same_edge_boundary": {
+    "edge": 339,
+    "rawdone": 1,
+    "attempt": 1,
+    "key_ok": 1,
+    "accepted_certificate": 1,
+    "actual_POST_edge": 344
+  },
+  "later_failure": "Four-step fixture issues third token445 while previous POST waits until467, actual allocation468; deadline93 reached539 before rawdone. HEALTHY_SOURCE_FAULT rc1.",
+  "not_claimed": "No whole-four-step H93 PASS. First-boundary witness is preserved inside actual failing run. Separate single-prompt descriptor fixture proposed, no private RTL change."
+}

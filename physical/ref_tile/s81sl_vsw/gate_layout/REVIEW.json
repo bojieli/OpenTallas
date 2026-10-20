@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "s81sl_vsw",
+ "block": "ot_s81sl_vsw",
+ "reviewer": "lane OWNERS-S81/VSW (Claude, 2026-10-18 ~05:00); non-critical kit, not a coordinator approval",
+ "verdict": "APPROVED",
+ "time": "2026-10-18T05:00:00-07:00",
+ "gate_commit": "2026-10-18T04:52:10-0700",
+ "gate_source_commit": "a8d14fd02",
+ "geometry_sha256": "91a3f2e349af90002f4d5db666e2e6dba7cc373cfb4f58ebbf8bcda0a649ab50",
+ "checklist": {
+  "lattice": "PASS (track): both 128x256 SRAMs offtrack 0 on the asap7 track lattice, x 107.568, y 71.28 / 112.368 (abutted N-S pair, h 41.064, so not both on 43.2 multiples); E edge 20 um from the core edge; tile-internal macros, the 224.64 outline is the leaf's slot",
+  "std_cell_band": "PASS: one contiguous C-shaped std-cell mass W/N/S of the SRAM pair (density.png), util 0.52 plan / 41.9% measured; no slivers",
+  "pin_spread": "PASS: N face i_v/i_d/i_w/i_lim 321 pins over 212 um (1.5/um), S face o_v/o_d/o_f + clk/rst_n ~70 pins; full faces, slice seam faces",
+  "clock_entry": "PASS: clk on the S face below the register mass; 13,035 sinks, TT insertion 340.1 (guidance) / FF 280.7, pin-flop spread TT 28.6 / FF 27.9 ps (<=80); cts_native_probe launch 103.9 (o_d[17]) <= 220, capture 88.8 <= 190, 0 comb pins",
+  "shape": "PASS 224.64 x 224.64 square"
+ },
+ "notes": "Gate WARN only: reset relay region rs_l 758 loads (swl internal resets; WARN), abutted SRAM pair 0-um channel (intended, halos block it), insertion > 300 guidance. Pins flop-first in/out + ot_rst_relay, no cycle change."
+}

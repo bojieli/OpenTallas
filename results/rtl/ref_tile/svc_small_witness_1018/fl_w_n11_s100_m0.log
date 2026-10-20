@@ -1,0 +1,3 @@
+PASS tb_hbm_fault_leaf N=11 SYNC_MASK=0000000000000100 MUT=0 pulses=11 checks=20216
+/home/ubuntu/svcsmall_1018/wt/rtl/hbm_accel/die_glue/tb_hbm_fault_leaf.sv:83: $finish called at 40433200 (1ps)
+FAULT_LEAF_BENCH PASS w_n11_s100_m0

@@ -1,0 +1,11 @@
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_embedding_row_tx/src/00_qkd_embedding_row_tx.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_embedding_row_tx/new/ot_hbm_svc_stack_fault.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_embedding_row_tx/new/ot_hbm_svc_wb_cutthrough_cdc.sv
+read_verilog -defer -sv -DSYNTHESIS  /tmp/r0330_eqv/qkd_embedding_row_tx/new/qkd_pvw_die_t.sv
+hierarchy -top qkd_embedding_row_tx 
+tee -o /tmp/r0330_eqv/qkd_embedding_row_tx/out_new/modules.txt ls
+proc; flatten; opt_clean -purge
+rename -enumerate
+tee -o /tmp/r0330_eqv/qkd_embedding_row_tx/out_new/stat.txt stat
+write_rtlil /tmp/r0330_eqv/qkd_embedding_row_tx/out_new/netlist.il
+write_verilog -noattr /tmp/r0330_eqv/qkd_embedding_row_tx/out_new/netlist.v

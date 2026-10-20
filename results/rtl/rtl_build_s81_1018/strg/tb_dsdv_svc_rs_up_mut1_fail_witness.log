@@ -1,0 +1,12 @@
+BAD epoch 1 entry 11: uc 4449 ref 0449
+BAD epoch 3 entry 5: uc c20b ref 820b
+BAD epoch 3 entry 11: uc d28c ref 928c
+BAD epoch 5 entry 5: uc 6110 ref 2110
+BAD epoch 7 entry 5: uc d40d ref 940d
+FAIL MUTANT 1 REJECTED mismatches=297/800
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_rs_up.sv:98: Verilog $finish
+FAIL dsdv_svc_rs_up mismatches=297/800 live-down 298 fault 299
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_rs_up.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 0.010 s; speed 1.714 ms/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB

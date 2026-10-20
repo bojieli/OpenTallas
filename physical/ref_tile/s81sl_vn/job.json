@@ -6,6 +6,8 @@
  "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
  "threads": 8,
  "peak_ram_gb": 24,
+ "early_fail": false,
+ "early_fail_reason": "S81-VNHOLD 10-18: c084e259a EARLY_FAIL_HOLD was a stuckscan false positive -- guarded flow, FIRST repair_timing call still padding the 30-ps margin flood (25,429 endpoints, OT_HM_GUARD ~42,263 buffers projected; killed at 1.2 h / 24,190 buffers rising ~2/it) by the fixed 1 h PAD-FIRST bound; fixed on main 460c89206 (PAD-SCALE). The flow's OT_HOLD_GUARD stays on and reports any real residual stall as OT_HOLD_STALL with endpoint classes.",
  "source": {
   "branch": "claude/s81slice-1017",
   "commit": "COMMIT",

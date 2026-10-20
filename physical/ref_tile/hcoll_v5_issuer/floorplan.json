@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  315.36,
-  324.0
+  302.4,
+  302.4
  ],
  "core": [
   2.16,
   2.16,
-  313.2,
-  321.84
+  300.23999999999995,
+  300.23999999999995
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -30,12 +30,7 @@
  },
  "pins": {
   "W": [
-   "uop_d1",
-   "busy_d3",
-   "done_d3",
-   "start_d3",
-   "tap_iteration",
-   "tap_steps"
+   "uop_d1"
   ],
   "N": [
    "clk_control",
@@ -47,9 +42,14 @@
    "done",
    "fault",
    "uop_v",
-   "uop_pc"
+   "uop_pc",
+   "busy_d3",
+   "done_d3",
+   "start_d3"
   ],
   "S": [
+   "tap_iteration",
+   "tap_steps",
    "busy_d2",
    "start_d2"
   ]
@@ -62,8 +62,8 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": "u_issuer.g_mem[0].u_bank.u_sram",
    "idx": 0,
-   "x": 81.216,
-   "y": 23.76,
+   "x": 86.4,
+   "y": 43.2,
    "w": 171.288,
    "h": 77.784,
    "orient": "R0",
@@ -75,8 +75,8 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": "u_issuer.g_mem[1].u_bank.u_sram",
    "idx": 0,
-   "x": 81.216,
-   "y": 123.12,
+   "x": 86.4,
+   "y": 121.008,
    "w": 171.288,
    "h": 77.784,
    "orient": "R0",
@@ -88,8 +88,8 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": "u_issuer.g_mem[2].u_bank.u_sram",
    "idx": 0,
-   "x": 81.216,
-   "y": 222.48,
+   "x": 86.4,
+   "y": 198.816,
    "w": 171.288,
    "h": 77.784,
    "orient": "R0",

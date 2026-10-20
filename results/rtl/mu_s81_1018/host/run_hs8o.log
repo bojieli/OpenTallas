@@ -1,0 +1,19 @@
+U0 S 40 tok 1000 pos 500
+U0 R 519 tok 32501
+U0 S 552 tok 32501 pos 501
+ERR return at 584 tag {user 0 pos 0} != start {user 1 pos 511}
+U0 R 584 tok 33688
+U0 R 1031 tok 1009035
+U0 S 1064 tok 1009035 pos 502
+U0 R 1543 tok 1921464
+U0 S 1576 tok 1921464 pos 503
+U0 R 2055 tok 846638
+U0 S 2088 tok 846638 pos 504
+U0 R 2567 tok 1081467
+U0 S 2600 tok 1081467 pos 505
+U0 R 3079 tok 2069713
+MUHSLOT  OFFCAL NS 8 PASS (fault raised) t_mf 0110
+- /srv/opentallas-scratch/claude/mu-s81-host/src/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hslot.sv:130: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.001 s; speed 6.345 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

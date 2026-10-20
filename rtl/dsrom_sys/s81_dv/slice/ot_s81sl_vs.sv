@@ -13,6 +13,9 @@
 //   imm[9:0] ob (result row base)   imm[10] wb (write results)   imm[11] uq (stream to vq)   imm[12] / [13] um_q / um_b
 //   imm[21:14] um_i (the vector's global beat index for vq)  imm[24:22] j0 (first vq sub-beat)
 //   imm[63:32] lim   imm[95:64] w0 (groups 0..7)   imm[127:96] w1 (groups 8..15)            (SW only)
+//   imm[25] wr, imm[28:26] wsel (SW only; TOK-S81-GAPS 10-18): w0 = w1 = FP32 word wsel of the leaf-store row pair a1
+//           (the gunit router's weights rows R+1 / R+2, CTL target 5).  The weight row pair is read at step 0, the groups
+//           follow 4 edges later on the same SW cadence (fixed timeline, +4 edges; no handshake).  wr = 0: imm w0 / w1.
 // ONE op runs at a time, from its command to its last result: a command while busy, op 14 / 15, or a malformed count is
 // a sticky fault (the compiler schedules every op on its measured fixed timeline; nothing waits or arbitrates).
 // Operand layouts are compiler-fixed: a read is the row pair (a0 + 2 s, a0 + 2 s + 1) = x_qd[127:0], x_qd[255:128].
@@ -34,12 +37,32 @@
 //           reads one a cycle: the adder loop is 8 cycles (operand register, LAT 6, acc register), so chunk c's partial
 //           meets its next expert exactly; phase 0 passes e0 through the adder as e0 + (-0), an exact identity in RNE
 //           for every e0 (a NaN / Inf operand raises the adder fault, as it would in e0 + e1).
+//   14 ENG  (RTL-BUILD-S81 2026-10-18) the Engram mix feeder of the beat's ve sub-leaf (ot_s81sl_ve, the 4 HC copies x 64
+//           elements of this beat; golden tools/hdc_golden_v41.py engram_layer).  imm[30] = phase.  The beat's h is first
+//           copied into the leaf store by vp HSTORE (32 rows at Hb, vn's half-row layout: half row i = rows Hb + 2 i,
+//           Hb + 2 i + 1 = elements 4 i .. 4 i + 3 of all 4 copies, copy j element 4 i + e at bits (4 j + e) * 16).
+//           K / W / V region (compiler row map results/arch/s81_dv_1016/eng/kv_rowmap.json, A0 per Engram layer): K_j at
+//           A0 + 16 j (element 4 r + w at row A0 + 16 j + r, word w), W_j at A0 + 64 + 16 j, V at A0 + 128 (144 rows).
+//           phase 0 REDUCE  n = 64, a0 = Hb, a1 = A0: 16 h row-pair reads (one a cycle) into the h stash (4 kb), then
+//                   64 reads alternating K_j and W_j row pairs (8 elements = 2 quads each; copy-major) -> ve quads, one a
+//                   cycle after the first pair (GAP 0); the 4 ve beat partial triples (hh, kk, dd)
+//                   leave the leaf on e_v / e_c / e_d (pin flops, toward xr -> xfin ENG).  Done = 4th triple out.
+//                   The gate latch is cleared at the command.
+//           gates   g_v / g_c / g_d (eg -> centre -> this leaf): gate of copy g_c latched; a second gate of one copy
+//                   before the next REDUCE is a sticky fault.
+//           phase 1 ADD  n = 32, a0 = A0, a1 = Hb' (write-back base): all 4 gates must be latched (else fault, command
+//                   refused).  32 reads of the V row pairs (A0 + 128 + 2 s = V[8 s .. 8 s + 7], re-read per copy) -> one ve add
+//                   beat a cycle (8 elements of copy j = read >> 3, h from the stash, gate j) -> the 32 BF16 results land
+//                   in the stash in place (copy j's slots only) -> 16 row-pair writes Hb' + 2 i (the h layout) -> vp HLOAD
+//                   moves them back into vn's h store.  Done = last write.
 // Pins: every input lands in a flop; every output leaves a flop.  Reset: ot_rst_relay (regional synchronous release).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_vs #(
     parameter integer XL = 6,          // qmul / qadd latency (ot_hdc_qmul_lat 6 as rxqr, ot_dsrom_qadd 6 = f12_l6)
     parameter integer MUT = 0          // bench negative controls: 1 SW drops w, 2 RB drops bias, 3 QR inverse rotation,
-                                       // 4 MOE rounds every partial to BF16, 5 QB swaps the sub-beat halves, 6 RA returns rows shifted
+                                       // 4 MOE rounds every partial to BF16, 5 QB swaps the sub-beat halves, 6 RA returns rows shifted,
+                                       // 9 SW wr takes w1 from word wsel ^ 1 of the weight row
+                                       // 7 ENG ADD takes the gate of copy j ^ 1, 8 ENG REDUCE feeds K as W
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -77,13 +100,40 @@ module ot_s81sl_vs #(
     input  wire          ra_vi,
     input  wire [31:0]   ra_ri,
     input  wire          ra_fi,
+    // ve sub-leaf (Engram mix of this beat): reduce quads / add beats out, beat partials / results / fault back
+    output reg           ve_rv,
+    output reg  [1:0]    ve_rc,
+    output reg  [127:0]  ve_rh,
+    output reg  [127:0]  ve_rk,
+    output reg  [127:0]  ve_rw,
+    input  wire          ve_pv,
+    input  wire [1:0]    ve_pc,
+    input  wire [31:0]   ve_phh,
+    input  wire [31:0]   ve_pkk,
+    input  wire [31:0]   ve_pdd,
+    output reg           ve_av,
+    output reg  [1:0]    ve_ac,
+    output reg  [255:0]  ve_ah,
+    output reg  [255:0]  ve_aval,
+    output reg  [31:0]   ve_ag,
+    input  wire          ve_ov,
+    input  wire [1:0]    ve_oc,
+    input  wire [255:0]  ve_oy,
+    input  wire          ve_fi,
+    // Engram beat partials to the slice centre ({dd, kk, hh}) and gates from it
+    output reg           e_v,
+    output reg  [1:0]    e_c,
+    output reg  [95:0]   e_d,
+    input  wire          g_v,
+    input  wire [1:0]    g_c,
+    input  wire [31:0]   g_d,
     output reg           fault
 );
-    localparam [3:0] OP_SW = 4'd8, OP_QB = 4'd9, OP_RA = 4'd10, OP_RB = 4'd11, OP_QR = 4'd12, OP_MOE = 4'd13;
+    localparam [3:0] OP_SW = 4'd8, OP_QB = 4'd9, OP_RA = 4'd10, OP_RB = 4'd11, OP_QR = 4'd12, OP_MOE = 4'd13, OP_ENG = 4'd14;
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_c = rsv[0], rs_r = rsv[1], rs_x = rsv[2], rs_o = rsv[3];
-    integer i;
+    integer i, k, e2;
     function automatic [31:0] bf16(input [31:0] x);
         reg [32:0] s;
         begin s = {1'b0, x} + 33'h7FFF + {32'd0, x[16]}; bf16 = {s[31:16], 16'd0}; end
@@ -95,16 +145,28 @@ module ot_s81sl_vs #(
         if (!rs_c) begin sv_c <= 1'b0; xqv_c <= 1'b0; rav_c <= 1'b0; raf_c <= 1'b0; swv_c <= 1'b0; swf_c <= 1'b0; end
         else begin sv_c <= s_v; xqv_c <= x_qv; rav_c <= ra_vi; raf_c <= ra_fi; swv_c <= sw_vi; swf_c <= sw_fi; end
     always @(posedge clk) begin sd_c <= s_d; xq_c <= x_qd; rar_c <= ra_ri; swr_c <= sw_ri; end
+    reg vpv_c, vov_c, vef_c, gv_c; reg [1:0] vpc_c, voc_c, gc_c; reg [95:0] vpd_c; reg [255:0] voy_c; reg [31:0] gd_c;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) begin vpv_c <= 1'b0; vov_c <= 1'b0; vef_c <= 1'b0; gv_c <= 1'b0; end
+        else begin vpv_c <= ve_pv; vov_c <= ve_ov; vef_c <= ve_fi; gv_c <= g_v; end
+    always @(posedge clk) begin
+        vpc_c <= ve_pc; vpd_c <= {ve_pdd, ve_pkk, ve_phh}; voc_c <= ve_oc; voy_c <= ve_oy; gc_c <= g_c; gd_c <= g_d;
+    end
 
     // ---------------------------------------------------------------- command register and checks
     wire [3:0] c_op = sd_c[3:0]; wire [9:0] c_a0 = sd_c[13:4]; wire [7:0] c_n = sd_c[31:24]; wire [127:0] c_imm = sd_c[159:32];
     wire [2:0] c_j0 = c_imm[24:22];
+    wire [9:0] c_a1 = sd_c[23:14]; wire c_ph = c_imm[30];
+    reg  [3:0] gmask;                                                     // ENG gates latched (copy mask)
     wire [7:0] c_nsb = (c_op == OP_QB) ? c_n : {1'b0, c_n[7:1]};          // vq sub-beats of a streaming op
     wire c_uq = c_imm[11] || c_op == OP_QB;
-    wire c_bad = (c_op != OP_SW && c_op != OP_QB && c_op != OP_RA && c_op != OP_RB && c_op != OP_QR && c_op != OP_MOE) ||
+    wire c_bad = (c_op != OP_SW && c_op != OP_QB && c_op != OP_RA && c_op != OP_RB && c_op != OP_QR && c_op != OP_MOE &&
+                  c_op != OP_ENG) ||
+                 (c_op == OP_ENG && (c_ph ? (c_n != 8'd32 || gmask != 4'hF) : c_n != 8'd64)) ||
                  (c_n == 8'd0) || (c_op == OP_SW && c_n > 8'd16) || (c_op == OP_MOE && c_n != 8'd8) ||
                  (c_uq && (c_op == OP_SW || c_op == OP_QB) && ((c_op == OP_SW && c_n[0]) || ({5'd0, c_j0} + c_nsb) > 8'd8));
-    reg busy, done; reg [3:0] op; reg [9:0] a0, ob; reg [7:0] n; reg wb, uq; reg [2:0] j0; reg [31:0] lim, w0, w1;
+    reg busy, done; reg [3:0] op; reg [9:0] a0, a1, ob; reg [7:0] n; reg wb, uq, ph, wr; reg [2:0] j0, wsel; reg [31:0] lim, w0, w1;
+    wire c_wr = c_op == OP_SW && c_imm[25];
     wire acc_cmd = sv_c && !busy && !c_bad;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin busy <= 1'b0; op <= 4'd0; end
@@ -112,8 +174,15 @@ module ot_s81sl_vs #(
         else if (done) busy <= 1'b0;
     always @(posedge clk)
         if (acc_cmd) begin
-            a0 <= c_a0; n <= c_n; ob <= c_imm[9:0]; wb <= c_imm[10]; uq <= c_uq; j0 <= c_j0;
-            lim <= c_imm[63:32]; w0 <= c_imm[95:64]; w1 <= c_imm[127:96];
+            a0 <= c_a0; a1 <= c_a1; ph <= c_ph; n <= c_n; ob <= c_imm[9:0]; wb <= c_imm[10]; uq <= c_uq; j0 <= c_j0;
+            lim <= c_imm[63:32]; wr <= c_wr; wsel <= c_imm[28:26];
+        end
+    // SW weights: from the immediate, or (wr) from word wsel of the row pair a1 = the op's first arrival
+    wire w_arr;
+    always @(posedge clk)
+        if (acc_cmd) begin w0 <= c_imm[95:64]; w1 <= c_imm[127:96]; end
+        else if (w_arr) begin
+            w0 <= xq_c[32 * wsel +: 32]; w1 <= (MUT == 9) ? xq_c[32 * (wsel ^ 3'd1) +: 32] : xq_c[32 * wsel +: 32];
         end
 
     // ---------------------------------------------------------------- read issue (fixed cadence per op)
@@ -128,20 +197,24 @@ module ot_s81sl_vs #(
             if (acc_cmd) begin
                 rrun <= 1'b1; rs <= 9'd0;
                 cad <= (c_op == OP_RA) ? 3'd7 : (c_op == OP_SW) ? 3'd3 : (c_op == OP_QR) ? 3'd1 : 3'd0;
-                rn  <= (c_op == OP_MOE) ? 9'd55 : (c_op == OP_RA) ? {c_nr[5:0], 3'd0} - 9'd8 :
-                       (c_op == OP_SW) ? {c_nr[6:0], 2'd0} - 9'd4 : (c_op == OP_QR) ? {c_nr[7:0], 1'b0} - 9'd2 : c_nr - 9'd1;
+                rn  <= (c_op == OP_ENG) ? (c_ph ? 9'd31 : 9'd79) : (c_op == OP_MOE) ? 9'd55 : (c_op == OP_RA) ? {c_nr[5:0], 3'd0} - 9'd8 :
+                       (c_op == OP_SW) ? {c_nr[6:0], 2'd0} - (c_wr ? 9'd0 : 9'd4) : (c_op == OP_QR) ? {c_nr[7:0], 1'b0} - 9'd2 : c_nr - 9'd1;
             end else if (rrun) begin
                 rs <= rs + 9'd1;
                 if (rs == rn) rrun <= 1'b0;
                 x_rv <= (rs[2:0] & cad) == 3'd0;
             end
         end
+    wire [8:0] rs_e = rs - 9'd16;                    // ENG REDUCE K / W read r: copy r[6:4], pair r[3:1], W when r[0]
     always @(posedge clk)
         case (op)
             OP_MOE: x_ra <= a0 + {3'd0, rs[5:3], 4'd0} + {6'd0, rs[2:0], 1'b0};
             OP_RA:  x_ra <= a0 + {2'd0, rs[8:3], 1'b0};
-            OP_SW:  x_ra <= a0 + {1'b0, rs[8:2], 1'b0};
+            OP_SW:  x_ra <= (wr && rs == 9'd0) ? a1 : a0 + {1'b0, rs[8:2] - {6'd0, wr}, 1'b0};
             OP_QR:  x_ra <= a0 + {rs[8:1], 1'b0};
+            OP_ENG: x_ra <= ph ? a0 + 10'd128 + {6'd0, rs[2:0], 1'b0} :
+                           (rs < 9'd16) ? a0 + {rs[8:0], 1'b0} :
+                           a1 + {3'd0, rs_e[0], 6'd0} + {3'd0, rs_e[6:4], 4'd0} + {6'd0, rs_e[3:1], 1'b0};
             default: x_ra <= a0 + {rs[8:0], 1'b0};
         endcase
 
@@ -157,12 +230,25 @@ module ot_s81sl_vs #(
         if (!rs_c) ka <= 8'd0;
         else if (acc_cmd) ka <= 8'd0;
         else if (arr) ka <= ka + 8'd1;
+    // ENG stash-read index replicas (gate high_fanout: one 16 x 256-b stash read select drove 4,100 loads): 4 identical
+    // copies of the arrival and flush counters, one per 64-b column group of the stash (keep: not merged by synthesis)
+    (* keep = "true" *) reg [7:0] ka_q [0:3];
+    (* keep = "true" *) reg [3:0] fl_q [0:3];
+    (* keep = "true" *) reg [3:0] eqp_q [0:3];
+    (* keep = "true" *) reg       ep_q [0:3];
+    integer rq;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) for (rq = 0; rq < 4; rq = rq + 1) ka_q[rq] <= 8'd0;
+        else for (rq = 0; rq < 4; rq = rq + 1)
+            if (acc_cmd) ka_q[rq] <= 8'd0; else if (arr) ka_q[rq] <= ka_q[rq] + 8'd1;
 
     // ================================================================ SW: groups to the lane sub-leaf
-    always @(posedge clk or negedge rs_r) if (!rs_r) sw_v <= 1'b0; else sw_v <= arr && op == OP_SW;
+    assign w_arr = arr && op == OP_SW && wr && ka == 8'd0;
+    wire [7:0] kg = ka - {7'd0, wr};                 // SW group index of this arrival (wr: arrival 0 = the weight row)
+    always @(posedge clk or negedge rs_r) if (!rs_r) sw_v <= 1'b0; else sw_v <= arr && op == OP_SW && !w_arr;
     always @(posedge clk) begin
         sw_d <= xq_c; sw_lim <= lim;
-        sw_w <= (MUT == 1) ? 32'h3F800000 : (ka >= 8'd8 ? w1 : w0);
+        sw_w <= (MUT == 1) ? 32'h3F800000 : (kg >= 8'd8 ? w1 : w0);
     end
 
     // ================================================================ X lanes: 8 x ot_dsrom_qadd, 4 x ot_hdc_qmul_lat
@@ -250,6 +336,84 @@ module ot_s81sl_vs #(
     always @(posedge clk) if (rav_c) for (i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) rad[32 * i +: 32] <= rar_c;
     wire ra_row = rav_c && op == OP_RA && (k_ra[1:0] == 2'd3 || k_ra + 8'd1 == n);
 
+    // ================================================================ ENG: h stash, ve feeder, gate latch, write-back
+    reg [255:0] hst [0:15];                          // the beat's h half rows (vn layout), updated in place by ADD
+    reg [2:0] kp_e; reg [5:0] ko_e; reg [4:0] fl_e; reg fl_on;
+    reg [31:0]  gate [0:3];
+    wire eng_r = arr && op == OP_ENG && !ph, eng_a = arr && op == OP_ENG && ph;
+    wire [7:0] er = ka - 8'd16;                      // REDUCE K / W arrival r (16 .. 79): K pair even r, W pair odd r
+    reg  [255:0] kst; reg [127:0] wst; reg epend;    // K pair stash, W upper half, second quad pending
+    wire [5:0] eq0 = {er[6:4], er[3:1], 1'b0}; reg [5:0] eqp;
+    wire [5:0] eq = epend ? eqp : eq0;              // quad 16 j + i (W arrival: even quad; next cycle: odd)
+    reg [255:0] hrow, hra, hrb, xwsel; reg [31:0] gsel;
+    always @(*) begin
+        for (rq = 0; rq < 4; rq = rq + 1) begin
+            hrow[64 * rq +: 64] = hst[ep_q[rq] ? eqp_q[rq] : {ka_q[rq][3:1], 1'b0}][64 * rq +: 64];
+            hra[64 * rq +: 64] = hst[{ka_q[rq][2:0], 1'b0}][64 * rq +: 64];
+            hrb[64 * rq +: 64] = hst[{ka_q[rq][2:0], 1'b1}][64 * rq +: 64];
+            xwsel[64 * rq +: 64] = hst[fl_q[rq]][64 * rq +: 64];
+        end
+        gsel = gate[(MUT == 7) ? ka[4:3] ^ 2'd1 : ka[4:3]];
+    end
+    function automatic [31:0] hw32(input [255:0] r, input [1:0] j, input [1:0] e);
+        hw32 = {r[(4 * j + e) * 16 +: 16], 16'd0};
+    endfunction
+    always @(posedge clk or negedge rs_o)
+        if (!rs_o) begin ve_rv <= 1'b0; ve_av <= 1'b0; gmask <= 4'd0; epend <= 1'b0;
+                         for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= 1'b0; end
+        else begin
+            ve_rv <= (eng_r && ka >= 8'd16 && er[0]) || epend;
+            epend <= eng_r && ka >= 8'd16 && er[0];
+            for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
+            ve_av <= eng_a;
+            if (acc_cmd && c_op == OP_ENG && !c_ph) gmask <= 4'd0;
+            else if (gv_c) gmask <= gmask | (4'd1 << gc_c);
+        end
+    always @(posedge clk) begin
+        if (gv_c) gate[gc_c] <= gd_c;
+        // REDUCE: arrivals 0..15 = h half rows into the stash; 16..79 = K / W of quad q -> ve
+        if (eng_r && ka < 8'd16) hst[ka[3:0]] <= xq_c;
+        ve_rc <= eq[5:4];
+        for (i = 0; i < 4; i = i + 1) ve_rh[32 * i +: 32] <= hw32(hrow, eq[5:4], i[1:0]);
+        if (eng_r && ka >= 8'd16 && !er[0]) kst <= xq_c;
+        if (eng_r && ka >= 8'd16 && er[0]) wst <= xq_c[255:128];
+        eqp <= eq0 | 6'd1;
+        for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
+        ve_rk <= epend ? kst[255:128] : kst[127:0];
+        ve_rw <= (MUT == 8) ? (epend ? kst[255:128] : kst[127:0]) : (epend ? wst : xq_c[127:0]);
+        // ADD: arrival s (copy j = ka[4:3], elements 8 s' .. 8 s' + 7, s' = ka[2:0]) = V row pair; h from half rows 2 s', 2 s' + 1
+        ve_ac <= ka[4:3];
+        for (i = 0; i < 4; i = i + 1) begin
+            ve_ah[32 * i +: 32] <= hw32(hra, ka[4:3], i[1:0]); ve_ah[32 * (i + 4) +: 32] <= hw32(hrb, ka[4:3], i[1:0]);
+        end
+        ve_aval <= xq_c;
+        ve_ag <= gsel;
+        // ADD results: copy j's slots of half rows 2 s, 2 s + 1
+        // (decoded constant-index slices: one-hot row pair x copy, no runtime part-select)
+        if (vov_c && op == OP_ENG && ph)
+            for (i = 0; i < 16; i = i + 1)
+                for (k = 0; k < 4; k = k + 1)
+                    if ((i >> 1) == ko_e[2:0] && k == voc_c)
+                        for (e2 = 0; e2 < 4; e2 = e2 + 1)
+                            hst[i][(4 * k + e2) * 16 +: 16] <= voy_c[32 * (4 * (i & 1) + e2) + 16 +: 16];
+    end
+    // partial triples out; result / flush counters
+    always @(posedge clk or negedge rs_o)
+        if (!rs_o) begin e_v <= 1'b0; kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
+                         for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0; end
+        else begin
+            e_v <= vpv_c;
+            if (acc_cmd) begin kp_e <= 3'd0; ko_e <= 6'd0; fl_e <= 5'd0; fl_on <= 1'b0;
+                               for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= 4'd0; end
+            else begin
+                if (vpv_c) kp_e <= kp_e + 3'd1;
+                if (vov_c) begin ko_e <= ko_e + 6'd1; if (ko_e == 6'd31) fl_on <= 1'b1; end
+                if (fl_on) begin fl_e <= fl_e + 5'd1; if (fl_e == 5'd15) fl_on <= 1'b0; end
+                if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
+            end
+        end
+    always @(posedge clk) begin e_c <= vpc_c; e_d <= vpd_c; end
+
     // ================================================================ results: leaf-store write port, vq stream, done
     reg [7:0] k_out; reg [127:0] sw_prev;
     wire [127:0] sw_w32 = {swr_c[63:48], 16'd0, swr_c[47:32], 16'd0, swr_c[31:16], 16'd0, swr_c[15:0], 16'd0};
@@ -280,6 +444,12 @@ module ot_s81sl_vs #(
                     x_wv <= 1'b1; k_out <= k_out + 8'd1;
                     if (k_out == 8'd7) done <= 1'b1;
                 end
+                OP_ENG: if (!ph) begin
+                    if (vpv_c && kp_e == 3'd3) done <= 1'b1;
+                end else if (fl_on) begin
+                    x_wv <= 1'b1;
+                    if (fl_e == 5'd15) done <= 1'b1;
+                end
                 default: ;
             endcase
         end
@@ -301,6 +471,7 @@ module ot_s81sl_vs #(
                 for (i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) x_wd[32 * i +: 32] <= rar_c;
             end
             OP_RB, OP_QR: begin x_wa <= ob + {2'd0, k_out[7:0]}; x_wm <= 8'h0F; x_wd <= {128'd0, xo_d[127:0]}; end
+            OP_ENG: begin x_wa <= a1 + {4'd0, fl_e[4:0], 1'b0}; x_wm <= 8'hFF; x_wd <= xwsel; end
             default: begin x_wa <= ob + {1'b0, k_out[7:0], 1'b0}; x_wm <= 8'hFF; x_wd <= xo_d; end   // MOE
         endcase
     end
@@ -310,8 +481,10 @@ module ot_s81sl_vs #(
     always @(posedge clk or negedge rs_o)
         if (!rs_o) begin fault <= 1'b0; f_cmd <= 1'b0; f_unit <= 1'b0; end
         else begin
-            f_cmd <= (sv_c && (busy || c_bad)) || (xqv_c && !busy) || (swv_c && op != OP_SW) || (rav_c && op != OP_RA);
-            f_unit <= (|mf) | (|af) | raf_c | swf_c;
+            f_cmd <= (sv_c && (busy || c_bad)) || (xqv_c && !busy) || (swv_c && op != OP_SW) || (rav_c && op != OP_RA) ||
+                     (vpv_c && !(busy && op == OP_ENG && !ph)) || (vov_c && !(busy && op == OP_ENG && ph)) ||
+                     (vov_c && voc_c != ko_e[4:3]) || (gv_c && gmask[gc_c]);
+            f_unit <= (|mf) | (|af) | raf_c | swf_c | vef_c;
             fault <= fault | f_cmd | f_unit;
         end
 endmodule

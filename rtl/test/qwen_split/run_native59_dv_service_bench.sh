@@ -3,6 +3,7 @@
 # usage: run_native59_dv_service_bench.sh OUTDIR
 #   positive (MUT 0) must print N59DV_PASS; BAD_Q (one Q dd word never sent) must PASS its fault check;
 #   mutants MUT 1 (Q lane packing), 2 (KV lane address), 3 (EMB code word index) must FAIL.
+#   N59_ONLY=<run name> (S-QWCOL 10-18, closure-loop benches): run only that one (positive|bad_q|mut1_q_lane|...).
 set -uo pipefail
 out=${1:?fresh output directory}; mkdir -p "$out"
 R=$(cd "$(dirname "$0")/../../.." && pwd)
@@ -18,6 +19,7 @@ SRC=("$R/rtl/test/qwen_split/tb_qfd_native59_dv_service.sv"
 rc_all=0
 run() { # name expect(pass|fail) -G...
   local n=$1 exp=$2; shift 2
+  [[ -n ${N59_ONLY:-} && $n != "$N59_ONLY" ]] && return
   verilator --cc --exe --build -O2 -Wno-fatal -Wno-lint -Wno-style --top-module tb_qfd_native59_dv_service "$@" \
     -Mdir "$out/$n.obj" "${SRC[@]}" "$R/rtl/test/qwen_split/tb_qfd_native59_dv_service_main.cpp" > "$out/$n.build.log" 2>&1 \
     || { echo "$n BUILD_FAILED"; tail -20 "$out/$n.build.log"; rc_all=1; return; }
@@ -27,7 +29,15 @@ run() { # name expect(pass|fail) -G...
   else
     if [[ $rc != 0 ]] || ! grep -q '^N59DV_PASS' "$out/$n.log"; then echo "$n OK (mutant fails)"; else echo "$n MUTANT SURVIVED"; rc_all=1; fi
   fi
-  grep -E '^N59DV_' "$out/$n.log" | head -3; rm -rf "$out/$n.obj"
+  grep -E '^N59DV_ERR' "$out/$n.log" | head -3
+  # QW-N59 10-19: the simulator's own verdict line goes to stdout (the closure daemon judges fail_regex '^N59DV_FAIL'
+  # on the stage log, which held only the first 3 ERR lines), and in N59_ONLY mode the exit code is the simulator's raw
+  # verdict (non-zero = the run FAILED, the daemon's expect-fail convention); the all-runs mode keeps rc 0 = as expected.
+  grep -E '^N59DV_(PASS|FAIL)' "$out/$n.log" || echo "N59DV_NOVERDICT (sim rc=$rc): not a detected mutant"
+  if [[ -n ${N59_ONLY:-} ]]; then
+    if [[ $rc == 0 ]] && grep -q '^N59DV_PASS' "$out/$n.log"; then rc_all=0; else rc_all=1; fi
+  fi
+  rm -rf "$out/$n.obj"
 }
 run positive pass
 run bad_q pass -GBAD_Q=1

@@ -25,7 +25,8 @@
 // Static schedule only: every input lands in a pin register, every output is a flop, no ready/credit; any schedule
 // violation (missing/duplicate/late Q seat, malformed dd word, dr group collision, EMB while busy, unknown command)
 // is a sticky fault.  All internal slots are one edge later than at qfd_native59_compute_service's pins.
-// MUT (bench mutants, must FAIL): 1 Q lane packing e^1, 2 KV lane address ^1, 3 EMB code word k^1.
+// MUT (bench mutants, must FAIL): 1 Q lane packing e^1, 2 KV lane address ^1, 3 EMB code word k^1,
+// 4 legacy Q window from vm_q_start (Q beat 0 one link slot late against the compiled calendar, F1).
 module qfd_native59_dv_service #(
  parameter integer MUT=0,CODEC_MUT=0,
  // LAND_EDGES=0 profile is not allowed: production must supply the measured W5..E5 return-chain landing edge count.
@@ -90,29 +91,59 @@ module qfd_native59_dv_service #(
  wire dd_q=dd_v&&dd_kind==2'd0,dd_kv=dd_v&&(dd_kind==2'd1||dd_kind==2'd2);
  wire dd_form_bad=(!dd_v&&(|p_dd[546:0]))||(dd_v&&((|p_dd[88:0])||dd_mask==8'd0||dd_kind==2'd3));
  // ---------------------------------------------------------------- Q seat bank (replaces the VM Q rows)
- reg[16383:0]qbuf;reg[511:0]qseen;reg qctx,qlock;
+ // Q export window (QXF-LINK 2026-10-18, TOKEN-XDIE-QWEN F1): the compiler's D2D calendar sends Q beat 0 in the slot
+ // right after the CMD (tools/qwen_split/d2d_link_calendar.py layer_msgs: Q beat b at q0 + 1 + b; the KV
+ // qkd_native_attention_static_ctl expects Q at RX_CMD+1..+32).  The Q words come from the local seat bank (no VM read),
+ // so the window opens on the accepted request edge itself: q_slot may be the edge after request_slot, and the Q record
+ // follows the CMD record on consecutive codec edges.  MUT 4 (bench): the legacy window from the registered vm_q_start
+ // (Q beat 0 >= 2 edges after the CMD, i.e. one idle link slot), which the compiled calendar does not reserve.
+ reg[16383:0]qbuf;reg[511:0]qseen;reg qctx,qlock;   // ROOT-N59 10-19: restored (as MU-DQ-TOK 16299df8a); merge e28fa950f dropped it -> no elaboration
  wire vm_q_epoch,vm_q_start;
- reg[16383:0]qbuf_n;reg[511:0]qseen_n;reg q_in_bad;reg[23:0]qa;reg[8:0]qe;
- always @*begin
-  qbuf_n=qbuf;qseen_n=qseen;q_in_bad=0;qa=0;qe=0;
-  if(dd_q)begin
-   if(!qctx||qlock||begin_slot)q_in_bad=1;
-   for(l=0;l<8;l=l+1)if(dd_mask[l])begin
-    qa=p_dd[345+24*l+:24];qe=qa[8:0]^((MUT==1)?9'd1:9'd0);
-    if(|qa[23:9])q_in_bad=1;
-    if(qseen_n[qe])q_in_bad=1;
-    qseen_n[qe]=1'b1;qbuf_n[32*qe+:32]=p_dd[89+32*l+:32];
-   end
+ wire q_open=(MUT==4)?vm_q_start:request_slot;
+ // Decoded constant-index form (S-QWCOL 10-18): the n1c gate's synthesis smoke timed out (2700 s, yosys SHARE on the
+ // 8 x 16384-b runtime $shift writes + the 512-b $shiftx read).  Same function as the per-lane loop it replaces: each
+ // lane l decodes its element qe_l once; seat e takes the data of the HIGHEST hitting lane (the old loop's last write
+ // wins); q_in_bad = a hit on a seat already seen this epoch, or two lanes of one word on the same seat.
+ wire[16383:0]qbuf_n;wire[511:0]qseen_n,qdup;
+ wire[71:0]qe_all;wire[7:0]qhit_any,qhi_bad;
+ genvar gl,ge;
+ generate
+  for(gl=0;gl<8;gl=gl+1)begin:g_qlane
+   assign qe_all[9*gl+:9]=p_dd[345+24*gl+:9]^((MUT==1)?9'd1:9'd0);
+   assign qhit_any[gl]=dd_q&&dd_mask[gl];
+   assign qhi_bad[gl]=qhit_any[gl]&&(|p_dd[345+24*gl+9+:15]);
   end
- end
+  for(ge=0;ge<512;ge=ge+1)begin:g_qseat
+   wire[7:0]hit;
+   for(gl=0;gl<8;gl=gl+1)begin:g_h
+    assign hit[gl]=qhit_any[gl]&&(qe_all[9*gl+:9]==ge);
+   end
+   assign qbuf_n[32*ge+:32]=hit[7]?p_dd[89+32*7+:32]:hit[6]?p_dd[89+32*6+:32]:hit[5]?p_dd[89+32*5+:32]:
+                             hit[4]?p_dd[89+32*4+:32]:hit[3]?p_dd[89+32*3+:32]:hit[2]?p_dd[89+32*2+:32]:
+                             hit[1]?p_dd[89+32*1+:32]:hit[0]?p_dd[89+32*0+:32]:qbuf[32*ge+:32];
+   assign qseen_n[ge]=qseen[ge]|(|hit);
+   assign qdup[ge]=(qseen[ge]&&(|hit))||(|(hit&(hit-8'd1)));
+  end
+ endgenerate
+ wire q_in_bad=(dd_q&&(!qctx||qlock||begin_slot))||(|qhi_bad)||(|qdup);
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin qseen<=0;qctx<=0;qlock<=0;end
   else if(begin_slot)begin qseen<=0;qctx<=1;qlock<=0;end
-  else begin qseen<=qseen_n;if(vm_q_start)qlock<=1;end
+  else begin qseen<=qseen_n;if(q_open)qlock<=1;end
  always @(posedge ck)if(!begin_slot)qbuf<=qbuf_n;
  wire q_committed=qctx&&(&qseen);
- wire q_miss=p_qs&&!(&qseen[16*p_qb+:16]);
- wire[523:0]q=p_qs?{1'b1,3'd1,3'd0,p_qb,qbuf[512*p_qb+:512]}:524'd0;
+ // beat read as a decoded AND-OR over the 32 constant beats (no runtime part-select)
+ wire[511:0]qrow_t[0:32];wire[32:0]qfull_t;
+ assign qrow_t[0]=512'd0;assign qfull_t[0]=1'b0;
+ genvar gb;
+ generate for(gb=0;gb<32;gb=gb+1)begin:g_qbeat
+  wire sel=(p_qb==gb);
+  assign qrow_t[gb+1]=qrow_t[gb]|({512{sel}}&qbuf[512*gb+:512]);
+  assign qfull_t[gb+1]=qfull_t[gb]|(sel&&(&qseen[16*gb+:16]));
+ end endgenerate
+ wire[511:0]qrow=qrow_t[32];wire qrow_full=qfull_t[32];
+ wire q_miss=p_qs&&!qrow_full;
+ wire[523:0]q=p_qs?{1'b1,3'd1,3'd0,p_qb,qrow}:524'd0;
  wire export_control_fault;
  qfd_native59_q_export_control u_qexport_control(
  .ck(ck),.rst_n(rst_n),.begin_slot(begin_slot),.request_slot(request_slot),.q_committed(q_committed),
@@ -128,7 +159,7 @@ module qfd_native59_dv_service #(
     if(q_window||(!context_valid&&!begin_slot))qtag_fault<=1;
     q_epoch_tag<=begin_slot?begin_tag:context_tag;
    end
-   if(vm_q_start)begin
+   if(q_open)begin
     if(q_window||!q_committed)qtag_fault<=1;
     q_window<=1;q_count<=0;q_frame_tag<=q_epoch_tag;
    end
@@ -242,7 +273,7 @@ module qfd_native59_dv_service #(
  initial begin
   if(NATIVE_PROFILE!=0&&LAND_QUALIFIED!=1)$fatal(1,"native service requires the measured dr landing edge contract");
   if(LAND_EDGES<2)$fatal(1,"LAND_EDGES must include the slice pin register and VM write");
-  if(MUT<0||MUT>3)$fatal(1,"qfd_native59_dv_service: MUT undefined");
+  if(MUT<0||MUT>4)$fatal(1,"qfd_native59_dv_service: MUT undefined");
  end
 endmodule
 

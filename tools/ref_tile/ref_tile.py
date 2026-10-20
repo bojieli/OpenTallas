@@ -565,6 +565,8 @@ def gen_pin_hooks(s: dict) -> dict:
 # --------------------------------------------------------------------------------------------- spec
 def load_spec(path: str) -> dict:
     s = json.loads(Path(path).read_text())
+    if type(s.get("pg_strict", False)) is not bool:
+        raise SpecError("pg_strict must be a boolean")
     for k in ("name", "top", "sources", "clock_port", "pins"):
         if k not in s:
             raise SpecError(f"spec: missing '{k}'")
@@ -2139,6 +2141,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({shell_array(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
+        *(["export OT_PG_STRICT=1"] if s.get("pg_strict", False) else []),
         *pin_order_desc_env(s),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
@@ -2303,6 +2306,13 @@ def referenced_paths(s: dict, kd: str) -> list:
         except (ValueError, OSError) as error:
             raise SpecError(str(error)) from error
         out += ["tools/ref_tile/raw_macro_clocks.py", *raw_paths]
+    pg_strict = s.get("pg_strict", False)
+    if type(pg_strict) is not bool:
+        raise SpecError("pg_strict must be a boolean")
+    if pg_strict:
+        out += ["physical/common_flow/native_pg_binding.tcl",
+                "physical/common_flow/native_pg_bootstrap.tcl",
+                "physical/common_flow/audit_native_pg.tcl", "tools/closure_loop/pg_receipt.py"]
     return out
 
 
@@ -2378,6 +2388,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     mv = " ".join(f"--macro-view {v}" for v in views)
     spec = {
         "name": name, "block": s["top"], "ref_tile": True,
+        **({"pg_strict": True} if s.get("pg_strict", False) else {}),
         **({"m6_pin_grant": s["m6_pin_grant"]} if s.get("m6_pin_grant") else {}),
         "owner": j.get("owner", "Claude:ref-flow"),
         "purpose": j.get("purpose", f"reference tile flow ({s['kind']}) kit {kd}"),

@@ -350,7 +350,8 @@ def main(argv=None):
     ap.add_argument('--parameter-profiles', type=Path,
                     default=__import__('os').environ.get('OT_KV_PARAMETER_PROFILES'),
                     help='Exact selected child profiles (or OT_KV_PARAMETER_PROFILES)')
-    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Source-only preservation; never native qualification')
+    ap.add_argument('--diagnostic-parameter-profiles', action='store_true', help='Source-only preservation; never native qualification',
+                    default=__import__('os').environ.get('OT_KV_PARAM_DIAG', '0') == '1')
     a = ap.parse_args(argv)
     if __import__('os').environ.get('OT_KV_STATIC', '0') == '1' or (a.run / 'static_bind.json').exists():
         ap.error('static source graph cannot inherit legacy frame/leaf views; actual static physical bindings/clock homes remain required')
@@ -492,8 +493,8 @@ def main(argv=None):
         rectangles = []
         for cname, c in J['cells'].items():
             cell = cname.lstrip('\\')
-            ct = base_type(c['type'])
-            ct = ALIAS.get(ct, ct)            # HKV-DIE3: a child bound to its face-landed successor view (same ports)
+            original_ct = base_type(c['type'])
+            ct = ALIAS.get(original_ct, original_ct)            # HKV-DIE3: a child bound to its face-landed successor view (same ports)
             if ct not in leaf:
                 raise ValueError(f'{mst}: child {cell} ({ct}) has no closed view (glue is not expanded)')
             used_leaf.add(ct)
@@ -518,11 +519,18 @@ def main(argv=None):
             if cinst in occupied or cinst in child_params:
                 raise ValueError(f'{cinst}: duplicate instance or stale child parameters')
             occupied.add(cinst)
-            literals, profile = EP.preserve(ROOT, base_type(c['type']), c.get('parameters', {}),
+            overrides = c.get('parameters', {})
+            if ct != original_ct:
+                # Same ports do not establish parameter compatibility. This alias
+                # preserves only a parameterless original with no inherited overrides;
+                # other aliases require an explicit compatible parameter mapping.
+                if overrides or EP.integer_defaults((ROOT / RTL[original_ct]).read_text(), original_ct):
+                    raise ValueError(f'{original_ct} -> {ct}: explicit compatible parameter mapping required')
+            literals, profile = EP.preserve(ROOT, ct, overrides,
                                             RTL[ct], L['view'], profiles, a.diagnostic_parameter_profiles)
             if profile is not None:
                 child_params[cinst] = literals
-                rep['parameter_instances'][cinst] = dict(module=base_type(c['type']), literals=literals, profile=profile)
+                rep['parameter_instances'][cinst] = dict(module=ct, literals=literals, profile=profile)
             pc = []
             for p, bits in c['connections'].items():
                 if p not in L['ports']:

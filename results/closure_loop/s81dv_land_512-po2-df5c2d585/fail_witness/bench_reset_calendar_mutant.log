@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81dv_land_512-po2-df5c2d585 bench bench_reset_calendar_mutant host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/s81dv_land_512-po2-df5c2d585 log cl/bench_reset_calendar_mutant.a1b1.log captured 2026-10-19T04:13:29-07:00
+# fail_regex 'LAND_BENCH FAIL dsfd_dvland_512 mut_rlcal'
+mut_rlcal FAIL sweep 0/36 slip-fault 0 {'dL0_wrap/w512': [4], 'dL_halfT/w512': [7], 'dL_T_wrap_age1/w512': [11], 'dL_2T_wrap_16hop/w512': [21]}
+BENCH PASS /srv/opentallas-scratch/claude/closure-loop/s81dv_land_512-po2-df5c2d585/bench_rlcal/bench.json
+LAND_BENCH FAIL dsfd_dvland_512 mut_rlcal D=4 KW=3 sweep 0/36 slip-fault 0/4 latency {'dL0_wrap/w512': [4], 'dL_halfT/w512': [7], 'dL_T_wrap_age1/w512': [11], 'dL_2T_wrap_16hop/w512': [21]}

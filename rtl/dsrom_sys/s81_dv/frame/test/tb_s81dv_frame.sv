@@ -17,7 +17,7 @@ module tb_s81dv_frame;
     always #0.5 clk = ~clk;
     reg rst_n = 1'b0;
     reg go = 1'b0;
-    integer T, K, OPS, edge_n = 0;
+    integer T, K, OPS, PH, edge_n = 0;   // PH: the field phase the spine runs (+PH, default 0; TOK-S81-GAPS/XS multi-phase fields)
     // ---------------- spine + vector memory (as ot_v41_fieldtop_pq_static_w17w10)
     reg [31:0] vm [0:(1 << VAW) - 1];
     reg [8*1024-1:0] rom_dir;
@@ -28,6 +28,7 @@ module tb_s81dv_frame;
         if (!$value$plusargs("T=%d", T)) T = 3000;
         if (!$value$plusargs("K=%d", K)) K = 2048;
         if (!$value$plusargs("OPS=%d", OPS)) OPS = 8;
+        if (!$value$plusargs("PH=%d", PH)) PH = 0;
     end
     wire x_re; wire [VAW-1:0] x_addr; reg [64*32-1:0] x_q;
     integer k;
@@ -36,7 +37,7 @@ module tb_s81dv_frame;
     wire sp_ready, sp_idle, sp_fault;
     wire [0:0] w_we; wire [VAW-1:0] w_addr; wire [31:0] w_data; wire [31:0] phase_cycles; wire ev_go, ev_end; wire [1:0] ev_tag;
     ot_v41_spine_pq_static_w17w10 #(.PHW(10), .SAW(14), .R(1), .VAW(VAW), .VRD(64), .KMAX(6144), .BST(2), .PQ(1), .GSLACK(GSLACK)) u_sp (
-        .clk(clk), .rst_n(rst_n), .go(go), .i_ph(10'd0), .i_np(3'd0), .i_xbase({VAW{1'b0}}), .i_xps(VAW'(K)),
+        .clk(clk), .rst_n(rst_n), .go(go), .i_ph(PH[9:0]), .i_np(3'd0), .i_xbase({VAW{1'b0}}), .i_xps(VAW'(K)),
         .i_obase({VAW{1'b0}}), .i_ops(VAW'(OPS)), .i_fmt(2'd0), .ready(sp_ready), .idle(sp_idle), .x_re(x_re),
         .x_addr(x_addr), .x_q(x_q), .w_we(w_we), .w_addr(w_addr), .w_data(w_data),
         .f_cfg_go(), .f_cfg_ph(), .f_cfg_np(), .f_go(), .f_go_bf(), .f_go_tag(), .f_xs_v(), .f_xs_p(), .f_xs_b(), .f_xs_sv(),
@@ -60,12 +61,35 @@ module tb_s81dv_frame;
     always @(*) xwd[0] = xw;
     always @(posedge clk) for (di = XDLY; di > 0; di = di - 1) xwd[di] <= xwd[di - 1];
     wire [1100:0] xs = xwd[XDLY];
-    wire [1100:0] xw2 = {xs[1100:565], xw[564:550], xs[549:1], xw[550] | xw[551] | xs[283]};
+    // TOK-S81-GAPS/XS2: a BF16 word (dsfd_pq_lx bv: go_bf = xw[565], xb_v = xw[569]; its payload replaces x0 / x1) is
+    // valid too -- the delayed BF beat and the delayed go_bf (the BF front samples it with the sequencer's go_e, +4 like
+    // the beats).  q-only words are unchanged (xw[565] = xw[569] = 0).
+    wire [1100:0] xw2 = {xs[1100:565], xw[564:550], xs[549:1], xw[550] | xw[551] | xs[283] | xs[565] | xs[569]};
     wire [1103:0] x = {xw2[1100:565], xw2[0], mk, xw2[564:0], mk};
     // ---------------- DUT
     wire [1103:0] xo; wire [3:0] xok; wire [69:0] ret;
+`ifdef TB_FWD_GATE
+    // LANDFIX-SQ/F (10-18): the die's forwarded lane, as LANDING-CONTRACT L2 builds it -- the source's hop-0 clock gate
+    // opens on the source edge G = the frame's regional reset release (2-flop sync of rst_n, the same edge as the
+    // dsfd_cfifo_crs4 rsync), and the lane (ck_f AND data) reaches the frame TB_LDLY whole periods later (dL = LDLY x T).
+    // With the gate, the landing's write epoch is source-relative, so ret must not move with LDLY inside the window
+    // (E - D) T < dL < E T (E = LK, D = 4).  Without TB_FWD_GATE: xk = the free-running bench clock (old form).
+    localparam integer LDLY = `ifdef TB_LDLY `TB_LDLY `else 0 `endif;
+    reg [1:0] gsy; always @(posedge clk or negedge rst_n) if (!rst_n) gsy <= 2'b00; else gsy <= {gsy[0], 1'b1};
+    reg [1103:0] xl_ [0:LDLY]; reg gl_ [0:LDLY];
+    integer li;
+    always @(*) begin xl_[0] = x; gl_[0] = gsy[1]; end
+    always @(posedge clk) for (li = LDLY; li > 0; li = li - 1) begin xl_[li] <= xl_[li - 1]; gl_[li] <= gl_[li - 1]; end
+    reg gen_l = 1'b0; always @(negedge clk) gen_l <= gl_[LDLY];       // ICG: enable latched while clk is low
+    wire xkg = clk & gen_l;
+    wire [1103:0] xin = xl_[LDLY];
+    `FRAME #(.INSTANCE("f")) dut (.clk(clk), .cr(clk), .cr_s(clk), .rst_n(rst_n), .x(xin), .xk({4{xkg}}), .xo(xo), .xok(xok),
+                                  .ret(ret));
+`else
+    wire [1103:0] xin = x;
     `FRAME #(.INSTANCE("f")) dut (.clk(clk), .cr(clk), .cr_s(clk), .rst_n(rst_n), .x(x), .xk({4{clk}}), .xo(xo), .xok(xok),
                                   .ret(ret));
+`endif
 `ifdef TB_DEBUG
     always @(posedge clk) if (rst_n && edge_n < 400) begin
         if (dut.u_cf.xflt || dut.u_cf.sti != 2'b00 || dut.u_cf.flt)
@@ -77,7 +101,7 @@ module tb_s81dv_frame;
     // ---------------- checks / capture
     reg [1103:0] x_d; reg live = 1'b0; integer xo_checked = 0, nret = 0, nflt = 0;
     always @(posedge clk) begin
-        x_d <= x;
+        x_d <= xin;
         if (rst_n) edge_n <= edge_n + 1;
         if (live) begin
             if (xo !== x_d) begin
@@ -110,4 +134,28 @@ module tb_s81dv_pvtrace (input wire clk, input wire [1:0] pv, input wire [31:0] 
                                             prow[15:0], prow[31:16], pseg[4:0], pseg[9:5], pnseg[4:0]);
 endmodule
 bind ot_v41_rom_elem_q_qxpq_w10 tb_s81dv_pvtrace u_pvt (.clk(clk), .pv(pv), .prow(prow), .pseg(pseg), .pnseg(pnseg));
+`endif
+`ifdef TB_BFTRACE
+// TOK-S81-GAPS/XS2 measurement probe (simulation only): every BF core's walker availability edge with the identity a
+// static programme must present (the tools/s81/bf_programme_compile.py trace: G = core go, I = available, off = core
+// cycles since go) on the RET edge numbering, every programmed issue the core rejects (programme_bad: the sticky
+// programme_fault cause), and every BF column partial (the frame return tree leaf e<k>{w,e}.r = dsfd_bf_col r[0]).
+module tb_bf_issue_trace (input wire fclk, input wire go, input wire go_bf, input wire ia, input wire [13:0] a_ctr,
+                          input wire [14:0] op, input wire [2:0] ws, input wire wh, input wire [3:0] wc, input wire pi,
+                          input wire pbad);
+    integer cyc = 0, g = -1;
+    always @(posedge fclk) begin
+        cyc = cyc + 1;
+        if (go) begin g = cyc; $display("BFG %m %0d %0d %0d", tb_s81dv_frame.edge_n, cyc, go_bf); end
+        if (ia) $display("BFI %m %0d %0d %0d %0d %0d %0d %0d %0d %0d", tb_s81dv_frame.edge_n, cyc, cyc - g, a_ctr, op, ws,
+                         wh, wc, go_bf);
+        if (pi && pbad) $display("BFP_BAD %m edge %0d", tb_s81dv_frame.edge_n);
+    end
+endmodule
+bind ot_v41_bf_front_core_roots tb_bf_issue_trace u_bft (.fclk(fclk), .go(go), .go_bf(go_bf), .ia(issue_available),
+    .a_ctr(a_ctr), .op(programme_operand), .ws(w_s), .wh(w_h), .wc(w_cnt), .pi(prog_issue_u), .pbad(programme_bad));
+module tb_bf_pvtrace (input wire clk, input wire pv, input wire [15:0] prow, input wire [4:0] pseg, input wire [4:0] pnseg);
+    always @(posedge clk) if (pv) $display("BFPV %0d %m rows %0d seg %0d n %0d", tb_s81dv_frame.edge_n, prow, pseg, pnseg);
+endmodule
+bind ot_v41_bf_col tb_bf_pvtrace u_bfpv (.clk(clk), .pv(pv), .prow(prow), .pseg(pseg), .pnseg(pnseg));
 `endif

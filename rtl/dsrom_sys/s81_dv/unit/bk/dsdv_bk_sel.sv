@@ -13,6 +13,14 @@
 //                                 Its 26,013 sinks FAIL the clock rule (s81dvbk_selc: TT insertion 347.4 ps): it needs a
 //                                 control / landing split before closure (decision owed, see the lane file).
 // Every leaf-to-leaf hop is <= ~405 um, so the S81U-BK2 lane relays (3 stages) are gone (-3 edges on the lane path).
+// S81-TILES8/bk (10-18, spec tools/ref_tile/specs_s81dvbk/s81dvbk_selv.json rung_relays, coordinator S81-TILES6 10-17):
+// the sel rung segment face -> glue is ~518-562 um (> 405 planned reach), so each input direction lands in ONE closed
+// 276-b relay inside the cluster: u_rs = dsfd_dvrly_276_SN (s81dv_rly_276_sn) at the S face (518.4, 43.2) on vi_s,
+// u_rn = dsfd_dvrly_276_NS (s81dv_rly_276_ns) at the N face (518.4, 1252.8) on vi_n.  LATENCY: +1 rung cycle per
+// direction through the sel unit (vi -> vo through beats 2 -> 3 edges; the drain CTL reaches the vstop 1 cycle later,
+// so the egress window moves +1 with it).  The compiler's rung schedule (SLAT / rung arrival) takes the +1; the bench
+// model (tb_dsdv_bk_wrap RL) carries it.  ck_o is unused here (forwarded clock only between die stations).  The col
+// unit is unchanged (no relay).  The cluster now has 2 x 276 relay flops of its own (inside hard relay children).
 // Hard children carry no #(): their wrappers fix the hardened configuration.  The quarter -> control credit loop is
 // internal and fixed-latency; no unit port carries credit / ready / back-pressure.  MUT (bench only) 1..4:
 // dsdv_bk_v.sv mutants.
@@ -37,13 +45,16 @@ module dsdv_bk_sel #(
 );
     localparam integer CB = 66, SB = 865, OB = 354;   // = `SELT_CB / `SELT_SB / `SELT_OB (ot_s81ph_sel_tile.sv)
     wire [514:0] l0, l1, l2, l3; wire [513:0] vd;
+    wire [V-1:0] vi_s_r, vi_n_r; wire rck_s, rck_n;      // rung relays (+1 cycle per direction); ck_o unused
+    dsfd_dvrly_276_SN u_rs (.ck(clk), .rs(rst_n), .i(vi_s), .o(vi_s_r), .ck_o(rck_s));
+    dsfd_dvrly_276_NS u_rn (.ck(clk), .rs(rst_n), .i(vi_n), .o(vi_n_r), .ck_o(rck_n));
 `ifdef OT_DSDV_BK_HARD
     dsdv_bk_g u_g (
 `else
     dsdv_bk_g #(.V(V), .MUT(MUT)) u_g (
 `endif
         .clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),
-        .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .ln0(l0), .ln1(l1), .ln2(l2), .ln3(l3), .vd(vd), .fault(fault));
+        .vi_s(vi_s_r), .vo_s(vo_s), .vi_n(vi_n_r), .vo_n(vo_n), .ln0(l0), .ln1(l1), .ln2(l2), .ln3(l3), .vd(vd), .fault(fault));
     wire [4*515-1:0] ln = {l3, l2, l1, l0};
     wire [4*CB-1:0] tc; wire [3:0] tcr; wire [4*SB-1:0] fs; wire [4*OB-1:0] fo;
     genvar g;

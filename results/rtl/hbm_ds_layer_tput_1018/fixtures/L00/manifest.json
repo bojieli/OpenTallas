@@ -1,0 +1,1084 @@
+{
+ "schema": "opentallas.hbm_ds_layer_fixture_manifest.v1",
+ "layer": 0,
+ "files": {
+  "ds_native.json": {
+   "bytes": 3323,
+   "sha256": "f9f9f59c879e17213f21abc61528ea4b6ee49ec20755c895829f0b74820c6c4a"
+  },
+  "images/ds_v41_1M_L00_per_die.json": {
+   "bytes": 3112868,
+   "sha256": "48797c64a8aef182695fb9f36e41b3e34a780873bd3dcbb9f53c746c6f861a3f"
+  },
+  "operands.npz": {
+   "bytes": 1635288,
+   "sha256": "b81077d2749ff81fbe56cb391af9898b781e09a6255514283e764e12c102aeb9"
+  },
+  "records.json": {
+   "bytes": 105127,
+   "sha256": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9"
+  }
+ },
+ "arrays": {
+  "r0.k0.A": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931"
+  },
+  "r0.k0.C": {
+   "n": 4,
+   "dtype": "uint32",
+   "sha256": "ccaf6f183579497e8bfcd71045c04286fd3c2e60f3641e3eea164b761a4494b7"
+  },
+  "r0.k0.O": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "d3ee639f5701851a549e46720ac38075b195fda29a5eaa25eb94caebc0141805"
+  },
+  "r0.k1.O": {
+   "n": 1280,
+   "dtype": "uint32",
+   "sha256": "43ea136b66952854462e6c9e808a7223551568a95878c06324c49d59871bad77"
+  },
+  "r0.k2.O": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "0e3b667c2518a2b144d2e2797fb2aa1462eee1f99771bedb5f892be51c7bbea8"
+  },
+  "r0.k3.O": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "9fcbeb54192ff58902d030f471775eab4d7695ec096f4685b5a0dcaee3441330"
+  },
+  "r0.k4.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "d3ee639f5701851a549e46720ac38075b195fda29a5eaa25eb94caebc0141805"
+  },
+  "r0.k4.O": {
+   "n": 13,
+   "dtype": "uint32",
+   "sha256": "6a6cb103e688feebe09edf572ec0478764868fdd1dce537e130117bedb9477b9"
+  },
+  "r0.k5.A": {
+   "n": 1280,
+   "dtype": "uint32",
+   "sha256": "c5db6f132bd49d830bc82503a2cedf717c26a652efd083d64036dba7bb776274"
+  },
+  "r0.k5.O": {
+   "n": 1280,
+   "dtype": "uint32",
+   "sha256": "f2d1351fa018cc6708973313ba3d7fb4ac974ea4156553246faa710e04fd89c5"
+  },
+  "r0.k6.A": {
+   "n": 1280,
+   "dtype": "uint32",
+   "sha256": "f2d1351fa018cc6708973313ba3d7fb4ac974ea4156553246faa710e04fd89c5"
+  },
+  "r0.k6.R": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+  },
+  "r0.k7.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "d3ee639f5701851a549e46720ac38075b195fda29a5eaa25eb94caebc0141805"
+  },
+  "r0.k7.O": {
+   "n": 5,
+   "dtype": "uint32",
+   "sha256": "1cee88d13f764ff9e2c6b0802330767ab51b463b1bef1b09c6ce818303541d02"
+  },
+  "r0.k8.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "b17ccc53a1e3589fbf9f15ad055e2cef77a1a3c64dcd51d7f4f67b785ee55e93"
+  },
+  "r0.k9.A": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "7db8d29f343c34c8f64c6747e5ee0062467feac12e8facb74644063edf398882"
+  },
+  "r0.k9.O": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "d41131fa919c128786fc30612628dafa48d92b6761fdbd788e5d699340c3ea8b"
+  },
+  "r0.k10.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "c33ce94b79f8045330ebf323bd510223e29c8c282225f1ee218ceee159d02ee6"
+  },
+  "r0.k10.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "7d0bf8e183f0e8bf822a831398ddcb7078ceba2cd3b05144792560aef4f8459b"
+  },
+  "r0.k11.A": {
+   "n": 1280,
+   "dtype": "uint32",
+   "sha256": "f2d1351fa018cc6708973313ba3d7fb4ac974ea4156553246faa710e04fd89c5"
+  },
+  "r0.k11.B": {
+   "n": 1280,
+   "dtype": "uint32",
+   "sha256": "595ccfcc554e446667fc31ea71ad8101c6443b8912da60216275609d8174a05d"
+  },
+  "r0.k11.C": {
+   "n": 1280,
+   "dtype": "uint32",
+   "sha256": "43ea136b66952854462e6c9e808a7223551568a95878c06324c49d59871bad77"
+  },
+  "r0.k11.O": {
+   "n": 1280,
+   "dtype": "uint32",
+   "sha256": "d4daf9681c2490e1a152d7ced0a31cd40a5c2e46125b7f4b6147734f66de8377"
+  },
+  "r0.k12.A": {
+   "n": 1280,
+   "dtype": "uint32",
+   "sha256": "d4daf9681c2490e1a152d7ced0a31cd40a5c2e46125b7f4b6147734f66de8377"
+  },
+  "r0.k12.O": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "b2d0e974ccf021cc080a28671ad1785af72499a33f5af4d562528a8614d42e46"
+  },
+  "r0.k13.A": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "d41131fa919c128786fc30612628dafa48d92b6761fdbd788e5d699340c3ea8b"
+  },
+  "r0.k13.R": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "c33ce94b79f8045330ebf323bd510223e29c8c282225f1ee218ceee159d02ee6"
+  },
+  "r0.k14.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "d5f3c72f06c8163573586b2701e3eb2b934842a892a2470380e8377c6913700e"
+  },
+  "r0.k14.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "26c2d6ddffc8582d8842f04911dca4dc450b08dc91f108e91864b9583e41cfdc"
+  },
+  "r0.k15.A": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "d41131fa919c128786fc30612628dafa48d92b6761fdbd788e5d699340c3ea8b"
+  },
+  "r0.k15.B": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "67922900608963e71174ff810db80285405b2e0d9089953a4682a83c86cab1fe"
+  },
+  "r0.k15.C": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "0e3b667c2518a2b144d2e2797fb2aa1462eee1f99771bedb5f892be51c7bbea8"
+  },
+  "r0.k15.O": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "73b500f4beb53a06b1b697a81676e27311d8e4fc7483d6972746b23773919a55"
+  },
+  "r0.k16.A": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "b4f3632b7b448a165add159a12e5f73467e7db2a848dccb667ee99863cbdac7d"
+  },
+  "r0.k16.B": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "9fcbeb54192ff58902d030f471775eab4d7695ec096f4685b5a0dcaee3441330"
+  },
+  "r0.k16.D": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "797f0cc08a22a0166d8243f202e7c6245517f68b21e84f209897193fd8906cd2"
+  },
+  "r0.k16.O": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "0fd04432ea63759895c8bd37237e48714c98c28d016b878dfc3e1fd697882c4c"
+  },
+  "r0.k17.A": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "03a9f6f2b35b5e70376fb319fb5afaaa36063aab5bd0ab6dfe543bb289a62aea"
+  },
+  "r0.k17.O": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "2dca60a19958ecc00b0cae730de2f70920c8fbfc8cccb140b346cbe0645f431b"
+  },
+  "r0.k18.A": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "2dca60a19958ecc00b0cae730de2f70920c8fbfc8cccb140b346cbe0645f431b"
+  },
+  "r0.k19.A": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "533e50977a280d7f31ec26d0049346266e1287177c6f9fff51d275dfb3c439bb"
+  },
+  "r0.k19.B": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "9fcbeb54192ff58902d030f471775eab4d7695ec096f4685b5a0dcaee3441330"
+  },
+  "r0.k19.D": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "797f0cc08a22a0166d8243f202e7c6245517f68b21e84f209897193fd8906cd2"
+  },
+  "r0.k19.O": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "1f2be61252347d65c62902cb9a720d32dec03c859c017bf64a8f10e255681c87"
+  },
+  "r0.k20.A": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "f37263349ed792172d2c52e0dc87e798dac90aed267763c5f6cbd8bd987f7919"
+  },
+  "r0.k20.O": {
+   "n": 128,
+   "dtype": "uint32",
+   "sha256": "caf1e7ed2218da64d452713058189b76662092db17a711afee6edcddbad16935"
+  },
+  "r0.k21.A": {
+   "n": 128,
+   "dtype": "uint32",
+   "sha256": "caf1e7ed2218da64d452713058189b76662092db17a711afee6edcddbad16935"
+  },
+  "r0.k21.R": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+  },
+  "r0.k22.A": {
+   "n": 128,
+   "dtype": "uint32",
+   "sha256": "caf1e7ed2218da64d452713058189b76662092db17a711afee6edcddbad16935"
+  },
+  "r0.k22.B": {
+   "n": 128,
+   "dtype": "uint32",
+   "sha256": "d4621e89505ef8f8a1ce0f00fcb572546bb97405840b7632b10099ec64633043"
+  },
+  "r0.k22.R": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+  },
+  "r0.k22.O": {
+   "n": 128,
+   "dtype": "uint32",
+   "sha256": "a1907eda433b0cc3d0c698786e9d5a0773349815410c3c3bae0453ba5df90fd9"
+  },
+  "r0.k23.A": {
+   "n": 128,
+   "dtype": "uint32",
+   "sha256": "a1907eda433b0cc3d0c698786e9d5a0773349815410c3c3bae0453ba5df90fd9"
+  },
+  "r0.k23.O": {
+   "n": 128,
+   "dtype": "uint32",
+   "sha256": "52ecf93631b7c6a70680e63726d57a7ec2886c8e37480a4a33a7aa6b74fb5d58"
+  },
+  "r0.k24.A": {
+   "n": 128,
+   "dtype": "uint32",
+   "sha256": "52ecf93631b7c6a70680e63726d57a7ec2886c8e37480a4a33a7aa6b74fb5d58"
+  },
+  "r0.k24.O": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "0d65eb8b1fac13ba9d4bab967631349429389f8ad3e5b02dc50979cdb855565c"
+  },
+  "r0.k26.A": {
+   "n": 24,
+   "dtype": "uint32",
+   "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+  },
+  "r0.k26.O": {
+   "n": 24,
+   "dtype": "uint32",
+   "sha256": "5bc862655406fd53cc526c0f8adf3c3c606279fcf280ba257eb49b466fcc0be4"
+  },
+  "r0.k27.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "b17ccc53a1e3589fbf9f15ad055e2cef77a1a3c64dcd51d7f4f67b785ee55e93"
+  },
+  "r0.k27.B": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "89c3eb1c7d2202f2a1e69179c37e234ffba550b972eb04bc1b7072b09514a884"
+  },
+  "r0.k27.C": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "7eae0404b153cf6bb50ddbbe3910ce68a685e857245c36473bae8f0eca855210"
+  },
+  "r0.k27.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "408414645c66ccf9f6ab72490cfef4021bb366c4dcd440bf3e86d9375b287093"
+  },
+  "r0.k28.A": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "0d65eb8b1fac13ba9d4bab967631349429389f8ad3e5b02dc50979cdb855565c"
+  },
+  "r0.k28.B": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "e15625e7271a15a9c37c606d384aafbad8904567bd47f0e63cc375326236f547"
+  },
+  "r0.k28.O": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "c4b53e9fc0d71b96d8b514faaf91dbde186220102e4d8bfab1ce177b04cce888"
+  },
+  "r0.k29.A": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "9f13701470373091def31e783b0406cb345c96dc756b47fb17df81f2d5090ded"
+  },
+  "r0.k29.B": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "9fcbeb54192ff58902d030f471775eab4d7695ec096f4685b5a0dcaee3441330"
+  },
+  "r0.k29.D": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "797f0cc08a22a0166d8243f202e7c6245517f68b21e84f209897193fd8906cd2"
+  },
+  "r0.k29.O": {
+   "n": 64,
+   "dtype": "uint32",
+   "sha256": "da44fd5389fa0c1cb59764b2f068aa7f95e943b4ec9674f664b00ca5471ad225"
+  },
+  "r0.k30.A": {
+   "n": 512,
+   "dtype": "uint32",
+   "sha256": "ded1472fa41fa430f041975cc3a6407838f691fd09d4e929d22e78ed5bdea106"
+  },
+  "r0.k30.O": {
+   "n": 1024,
+   "dtype": "uint32",
+   "sha256": "684da1160c820d37f1e50d44a45bff418ee319c6f9ef952d66e825934fa28e68"
+  },
+  "r0.k31.A": {
+   "n": 24,
+   "dtype": "uint32",
+   "sha256": "5bc862655406fd53cc526c0f8adf3c3c606279fcf280ba257eb49b466fcc0be4"
+  },
+  "r0.k31.O": {
+   "n": 24,
+   "dtype": "uint32",
+   "sha256": "f25e387cd49999a00fa2303e8f372dec74a17815402eb7bb4d15437585331e8c"
+  },
+  "r0.k32.A": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931"
+  },
+  "r0.k32.O": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931"
+  },
+  "r0.k33.A": {
+   "n": 1024,
+   "dtype": "uint32",
+   "sha256": "684da1160c820d37f1e50d44a45bff418ee319c6f9ef952d66e825934fa28e68"
+  },
+  "r0.k33.O": {
+   "n": 12288,
+   "dtype": "uint32",
+   "sha256": "f6ba4799b48665e7bc5766a1f9dfbc6184ae9affb416897cda8120e98909c8b8"
+  },
+  "r0.k34.O": {
+   "n": 384,
+   "dtype": "uint32",
+   "sha256": "7cc2d71eb39af331c32cf35fea8fcc84be5706a7188791eaa54df7cad5f43b0b"
+  },
+  "r0.k35.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c"
+  },
+  "r0.k37.A": {
+   "n": 8192,
+   "dtype": "uint32",
+   "sha256": "a6c53f51ac4d1e776bce6d160f7ad8ff6048071837fd6e09c876b63c82aa1947"
+  },
+  "r0.k37.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "0bcc0e2715a9a730a77567e8353fc29eb22ba4f802183c64d168424cec3ba2c5"
+  },
+  "r0.k38.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "8e6f455ccac1d7e4a40848cf80bd81497bb7d066f53ad8f28edf5c976e9107f4"
+  },
+  "r0.k38.O": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "206db736d9f1ba6c065f4df79f55f2811b798986889a6cb3005132a0106ec41b"
+  },
+  "r0.k39.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "206db736d9f1ba6c065f4df79f55f2811b798986889a6cb3005132a0106ec41b"
+  },
+  "r0.k39.B": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931"
+  },
+  "r0.k39.C": {
+   "n": 20,
+   "dtype": "uint32",
+   "sha256": "aa41816eb3f54f4ed8e8278c1db9d456be834f04142c4309c14e815479724bbc"
+  },
+  "r0.k39.O": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "d3e65a07a6c4397959f3a4eb457ad92ee7ac0938ebb4674173480ff367d943dd"
+  },
+  "r0.k40.A": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "d3e65a07a6c4397959f3a4eb457ad92ee7ac0938ebb4674173480ff367d943dd"
+  },
+  "r0.k40.C": {
+   "n": 4,
+   "dtype": "uint32",
+   "sha256": "75d66f1b2a9133db7c6215b5d39eca9bca99dc9b8dc5348d310f4074a508083d"
+  },
+  "r0.k40.O": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891"
+  },
+  "r0.k41.A": {
+   "n": 24,
+   "dtype": "uint32",
+   "sha256": "5bc862655406fd53cc526c0f8adf3c3c606279fcf280ba257eb49b466fcc0be4"
+  },
+  "r0.k41.O": {
+   "n": 24,
+   "dtype": "uint32",
+   "sha256": "9f56cf7c074f960fe398d4d5750449f35d2ae732e1ef61b2401a20f7eb0e190a"
+  },
+  "r0.k42.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891"
+  },
+  "r0.k42.O": {
+   "n": 4,
+   "dtype": "uint32",
+   "sha256": "608782cda054cfd03afa06569257141327f1dfd980f8dd21d57bfc9e5ec4a582"
+  },
+  "r0.k43.A": {
+   "n": 4,
+   "dtype": "uint32",
+   "sha256": "608782cda054cfd03afa06569257141327f1dfd980f8dd21d57bfc9e5ec4a582"
+  },
+  "r0.k43.O": {
+   "n": 4,
+   "dtype": "uint32",
+   "sha256": "2364fe63301ff974072f32ac8de8f4ccd7cd5136381026ccbee8f1d0a47d4158"
+  },
+  "r0.k44.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891"
+  },
+  "r0.k44.O": {
+   "n": 48,
+   "dtype": "uint32",
+   "sha256": "1c5119d8f0369810e07f43ac38e5ced9a4f6cb0a1b5651404dab1eaa1bad4c60"
+  },
+  "r0.k45.A": {
+   "n": 384,
+   "dtype": "uint32",
+   "sha256": "43f56b4b41e874a4dcad5881c945980eaf6655e592281726b34624ca017f0065"
+  },
+  "r0.k45.O": {
+   "n": 384,
+   "dtype": "uint32",
+   "sha256": "68ce84264ee4c6d2537758aece72e02154c45b5692b784cae178fc6129d27796"
+  },
+  "r0.k46.A": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "d3e65a07a6c4397959f3a4eb457ad92ee7ac0938ebb4674173480ff367d943dd"
+  },
+  "r0.k46.O": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "d3e65a07a6c4397959f3a4eb457ad92ee7ac0938ebb4674173480ff367d943dd"
+  },
+  "r0.k47.A": {
+   "n": 384,
+   "dtype": "uint32",
+   "sha256": "68ce84264ee4c6d2537758aece72e02154c45b5692b784cae178fc6129d27796"
+  },
+  "r0.k47.C": {
+   "n": 384,
+   "dtype": "uint32",
+   "sha256": "7cc2d71eb39af331c32cf35fea8fcc84be5706a7188791eaa54df7cad5f43b0b"
+  },
+  "r0.k47.O": {
+   "n": 384,
+   "dtype": "uint32",
+   "sha256": "f0ef040f9dc7a701f1ba3e7df663732c56b88242db366a991b4130fa70214487"
+  },
+  "r0.k48.A": {
+   "n": 384,
+   "dtype": "uint32",
+   "sha256": "f0ef040f9dc7a701f1ba3e7df663732c56b88242db366a991b4130fa70214487"
+  },
+  "r0.k48.O": {
+   "n": 6,
+   "dtype": "uint32",
+   "sha256": "744709c9f0555ab6f5a2f37bae21d8bf55d48e58b5bbe030ba7e5b36b1ffba28"
+  },
+  "r0.k49.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891"
+  },
+  "r0.k49.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "4b4c91edbeecd267c6d7d7e0b8737c80c7277e8bdcc24d91e034c3359f166664"
+  },
+  "r0.k49.O": {
+   "n": 48,
+   "dtype": "uint32",
+   "sha256": "b01931d3a98b04e7ddc78f859fac67ba0ca64b4d0ca101ba368940cbdee30feb"
+  },
+  "r0.k50.A": {
+   "n": 24,
+   "dtype": "uint32",
+   "sha256": "9f56cf7c074f960fe398d4d5750449f35d2ae732e1ef61b2401a20f7eb0e190a"
+  },
+  "r0.k50.O": {
+   "n": 24,
+   "dtype": "uint32",
+   "sha256": "72d49daf464414db8a7ccb7e33ef877a60050c052da6d43b1ed67af35dff274d"
+  },
+  "r0.k51.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "298419607aeb2cb6b77858790cd4be60c17b977468b8a257ac3cb355da30b756"
+  },
+  "r0.k51.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "4b4c91edbeecd267c6d7d7e0b8737c80c7277e8bdcc24d91e034c3359f166664"
+  },
+  "r0.k51.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "298419607aeb2cb6b77858790cd4be60c17b977468b8a257ac3cb355da30b756"
+  },
+  "r0.k52.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "dfd01753b1685b4b838a0a5f8728aab3ff1a684fec5deb7a1d63ff0334b33162"
+  },
+  "r0.k52.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "4fd33dcde4707d09696a8430402a149b74cc4d9d8ecbfb4037ca44ea024c9fa1"
+  },
+  "r0.k52.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "dfd01753b1685b4b838a0a5f8728aab3ff1a684fec5deb7a1d63ff0334b33162"
+  },
+  "r0.k53.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "cd68845080fd85dcc862913dc868f14a1203f024b5c2df7cd8533d14d0c5fb81"
+  },
+  "r0.k53.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "d3fe97979d0fbe3bf464e5001637443d72b890242a801cc221b1c8a169a69761"
+  },
+  "r0.k53.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "cd68845080fd85dcc862913dc868f14a1203f024b5c2df7cd8533d14d0c5fb81"
+  },
+  "r0.k54.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "5bdb7cc0c5e090c01a67ee77ff30220b1ee8fb10e950cd27caa62109bd424482"
+  },
+  "r0.k54.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "eed72f47b9a4ba7d6f139f8f731768824bb7a19f9a3882d1db4337da657a0c76"
+  },
+  "r0.k54.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "5bdb7cc0c5e090c01a67ee77ff30220b1ee8fb10e950cd27caa62109bd424482"
+  },
+  "r0.k55.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "6ad820ba38e5964161ef2e59cafe8d990b4f29d52ad3567fb0db8193cbb1e802"
+  },
+  "r0.k55.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "e731f334a4bb51f3adfd1d57d561bd2a8af7a9bb8d377e2fcc7924df5326e47a"
+  },
+  "r0.k55.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "6ad820ba38e5964161ef2e59cafe8d990b4f29d52ad3567fb0db8193cbb1e802"
+  },
+  "r0.k56.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "95b726c90a7d60e8737245e7ea5a1a754bac1614badfaa94999020315bb38492"
+  },
+  "r0.k56.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "14905f7bda5ef2d000061639889834fd8c662960d9c2f0dc4e5df52f70134159"
+  },
+  "r0.k56.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "95b726c90a7d60e8737245e7ea5a1a754bac1614badfaa94999020315bb38492"
+  },
+  "r0.k57.A": {
+   "n": 6,
+   "dtype": "uint32",
+   "sha256": "9eec00d2da3c4886e0be6a48bc33b5827dea1e8728960e0ab676bd7654e30a9e"
+  },
+  "r0.k57.R": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+  },
+  "r0.k58.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891"
+  },
+  "r0.k58.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "4fd33dcde4707d09696a8430402a149b74cc4d9d8ecbfb4037ca44ea024c9fa1"
+  },
+  "r0.k58.O": {
+   "n": 48,
+   "dtype": "uint32",
+   "sha256": "320363bfcf8d2bea06fba6880e0f067da9e868ce246bbe9e81a1b375dac7429f"
+  },
+  "r0.k59.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891"
+  },
+  "r0.k59.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "d3fe97979d0fbe3bf464e5001637443d72b890242a801cc221b1c8a169a69761"
+  },
+  "r0.k59.O": {
+   "n": 48,
+   "dtype": "uint32",
+   "sha256": "61f91e29af4e52e97e41a2d9af647b638e5246ca6e05979f35289bbd444acd1e"
+  },
+  "r0.k61.A": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "9f441deba66ac8ee29092731be3ad7304ef87e18f1021d70b688b1c99f6b5832"
+  },
+  "r0.k61.O": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "9f441deba66ac8ee29092731be3ad7304ef87e18f1021d70b688b1c99f6b5832"
+  },
+  "r0.k62.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891"
+  },
+  "r0.k62.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "eed72f47b9a4ba7d6f139f8f731768824bb7a19f9a3882d1db4337da657a0c76"
+  },
+  "r0.k62.O": {
+   "n": 48,
+   "dtype": "uint32",
+   "sha256": "71d0d73fb579ba3df77a0fa75ab58795e270755e8a93e4fc8c950c60a75facd0"
+  },
+  "r0.k63.A": {
+   "n": 6,
+   "dtype": "uint32",
+   "sha256": "9eec00d2da3c4886e0be6a48bc33b5827dea1e8728960e0ab676bd7654e30a9e"
+  },
+  "r0.k63.B": {
+   "n": 6,
+   "dtype": "uint32",
+   "sha256": "a0ca5b12682bd17ef12d13f46850ac9ef689427d084295688df7adf531cbed20"
+  },
+  "r0.k63.O": {
+   "n": 6,
+   "dtype": "uint32",
+   "sha256": "0a8cf3117c82deebe9f197224312d9269bfd6d7a715e58dcfe762638a0421853"
+  },
+  "r0.k64.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891"
+  },
+  "r0.k64.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "e731f334a4bb51f3adfd1d57d561bd2a8af7a9bb8d377e2fcc7924df5326e47a"
+  },
+  "r0.k64.O": {
+   "n": 48,
+   "dtype": "uint32",
+   "sha256": "d34b275a8489d8d3c901a4d196091e9bf10c9de37f8436def74d1d86d2a647cf"
+  },
+  "r0.k65.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "ad1455e2f0b46c580ae5a48cea42e5520bcbf67dc0c5d22e8a6f46f2e9d4b891"
+  },
+  "r0.k65.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "14905f7bda5ef2d000061639889834fd8c662960d9c2f0dc4e5df52f70134159"
+  },
+  "r0.k65.O": {
+   "n": 48,
+   "dtype": "uint32",
+   "sha256": "420f539c9d6ff4ce509c89c07585216adeccf9f9a230dbd677f74358d166c5b5"
+  },
+  "r0.k66.A": {
+   "n": 168,
+   "dtype": "uint32",
+   "sha256": "8c171bf63a51630cc9edf860a93203c517221526f4f26c889b68e086197a9641"
+  },
+  "r0.k66.B": {
+   "n": 168,
+   "dtype": "uint32",
+   "sha256": "659b64a48baae7c90a050a22295fb41481aacee29694ff59c1daca78054371d6"
+  },
+  "r0.k66.C": {
+   "n": 168,
+   "dtype": "uint32",
+   "sha256": "d0f2ad6d83af29d0cdecafe5f2c012f89ca9ed9e9240f91ae48bed0bd90faed3"
+  },
+  "r0.k66.O": {
+   "n": 168,
+   "dtype": "uint32",
+   "sha256": "52a1b0332b6fbcff116b91115b2537345605900757de32dcb5a1c1d8b9347d99"
+  },
+  "r0.k67.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "cb3fabdb8bab0ecb9791c0b87a3e451998cfb672891559a3282054a44257e7d5"
+  },
+  "r0.k67.O": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "f559f51c947ca370e90d226cb8407a3bbcdaa40812354f03b6a736342096f973"
+  },
+  "r0.k68.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "212ea89a476e61b67df03509764c785b967a33a892fea1802e29ce9e0e6e4f47"
+  },
+  "r0.k68.O": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "8a92015abb0cd03d00c289ac79bb21a925b9b4c94a2d53097ea8259a61b07f06"
+  },
+  "r0.k69.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "47ea4ed2c831cbcb0b707083a3e23fa0e48420bd3d4ba54779f9c19487f4019a"
+  },
+  "r0.k69.O": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "e2c36d4ca55e05bd385a82aee3c6cb209b23219baeaafb9be229fc069ca5fc95"
+  },
+  "r0.k70.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "95ffe4738a7e68954252d8f8bbd44aa6289a2f4a0ff02d8c5f14ddec539c34b2"
+  },
+  "r0.k70.O": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "506734fd1d3bdf9bfc32ee95cbdb1290388c40f82cb30af8f76bac1b9dba6ee7"
+  },
+  "r0.k71.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "506734fd1d3bdf9bfc32ee95cbdb1290388c40f82cb30af8f76bac1b9dba6ee7"
+  },
+  "r0.k71.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "4b4c91edbeecd267c6d7d7e0b8737c80c7277e8bdcc24d91e034c3359f166664"
+  },
+  "r0.k71.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "4acadabd90c3dfcf922bee470910e06b2cbf5656a85207931d0eeceeeb65f358"
+  },
+  "r0.k72.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "aeb4cb90b69662ff593f6ac25fbe45cafe5e4a8ba5c7832f91eb9b6ec61ab1af"
+  },
+  "r0.k72.O": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "f6442848393a322447682b8299275783ac9b3fb2cedbc4bbb41b0cc092330cad"
+  },
+  "r0.k73.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "f559f51c947ca370e90d226cb8407a3bbcdaa40812354f03b6a736342096f973"
+  },
+  "r0.k73.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "eed72f47b9a4ba7d6f139f8f731768824bb7a19f9a3882d1db4337da657a0c76"
+  },
+  "r0.k73.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "36d32cbc9e79318300e7feb3cea96d004c17545c9e74f1cb32b5ffeeebbfb568"
+  },
+  "r0.k74.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "6062e11d380a175f16f07f3f37ee6c5b1ed63e2ddcf631cf887ee8d7d76b9325"
+  },
+  "r0.k74.O": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "b8ba2d3aed4a8c57fac636f3dc7a1f392a599b9380d508f9f67fd23f7ad9138c"
+  },
+  "r0.k75.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "e2c36d4ca55e05bd385a82aee3c6cb209b23219baeaafb9be229fc069ca5fc95"
+  },
+  "r0.k75.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "4fd33dcde4707d09696a8430402a149b74cc4d9d8ecbfb4037ca44ea024c9fa1"
+  },
+  "r0.k75.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "b2ace94d8c26a4d4dbc733e86c68a63ca35522012c63cc58525ee389e2e184a9"
+  },
+  "r0.k76.A": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "4acadabd90c3dfcf922bee470910e06b2cbf5656a85207931d0eeceeeb65f358"
+  },
+  "r0.k76.C": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "b2ace94d8c26a4d4dbc733e86c68a63ca35522012c63cc58525ee389e2e184a9"
+  },
+  "r0.k76.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "18f2d83b9f4bc71fd14b985b1614c79f0d11ceddf0a1d9ce8a4011c144193219"
+  },
+  "r0.k77.A": {
+   "n": 4,
+   "dtype": "uint32",
+   "sha256": "a4cfd44aa1533e3bd6c12d90c6c3df5cb5a052d33ab9b255c673577159997fda"
+  },
+  "r0.k77.O": {
+   "n": 4,
+   "dtype": "uint32",
+   "sha256": "a4cfd44aa1533e3bd6c12d90c6c3df5cb5a052d33ab9b255c673577159997fda"
+  },
+  "r0.k78.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "b8ba2d3aed4a8c57fac636f3dc7a1f392a599b9380d508f9f67fd23f7ad9138c"
+  },
+  "r0.k78.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "d3fe97979d0fbe3bf464e5001637443d72b890242a801cc221b1c8a169a69761"
+  },
+  "r0.k78.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "52c22339513d71b486a45d1401263ff84468bf8b55e781dbc94b9bfa5d33642e"
+  },
+  "r0.k79.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "f6442848393a322447682b8299275783ac9b3fb2cedbc4bbb41b0cc092330cad"
+  },
+  "r0.k79.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "e731f334a4bb51f3adfd1d57d561bd2a8af7a9bb8d377e2fcc7924df5326e47a"
+  },
+  "r0.k79.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "e49cd270c8eebe7d7503fa8e493487b981130dc80cd6925adcc4a13e4edf82c4"
+  },
+  "r0.k80.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "8a92015abb0cd03d00c289ac79bb21a925b9b4c94a2d53097ea8259a61b07f06"
+  },
+  "r0.k80.I": {
+   "n": 1,
+   "dtype": "uint32",
+   "sha256": "14905f7bda5ef2d000061639889834fd8c662960d9c2f0dc4e5df52f70134159"
+  },
+  "r0.k80.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "132dd9afc8cbb72928dd322b55de9070e79a4605e67eb09c46dd8b3cc7b26cd5"
+  },
+  "r0.k81.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "e812c5bc35ecb3b268ebe271657c53c82cc5602c7b88df1b2d65e9f657690588"
+  },
+  "r0.k81.O": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "75d50787aaa58df51e7c6178e1f09b089c5d46a61388eea4059501bf456a263d"
+  },
+  "r0.k82.A": {
+   "n": 2304,
+   "dtype": "uint32",
+   "sha256": "75d50787aaa58df51e7c6178e1f09b089c5d46a61388eea4059501bf456a263d"
+  },
+  "r0.k82.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "5928fa626766f3383ef0b21c36272624f6e4f9c5113e9506ff7ab24387a5464f"
+  },
+  "r0.k83.A": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "18f2d83b9f4bc71fd14b985b1614c79f0d11ceddf0a1d9ce8a4011c144193219"
+  },
+  "r0.k83.C": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "36d32cbc9e79318300e7feb3cea96d004c17545c9e74f1cb32b5ffeeebbfb568"
+  },
+  "r0.k83.D": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "52c22339513d71b486a45d1401263ff84468bf8b55e781dbc94b9bfa5d33642e"
+  },
+  "r0.k83.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "af28dcd75cd456a95ca0ee27f443892835835356b618da5b9c13c1b62f9dfe7e"
+  },
+  "r0.k84.A": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "af28dcd75cd456a95ca0ee27f443892835835356b618da5b9c13c1b62f9dfe7e"
+  },
+  "r0.k84.C": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "132dd9afc8cbb72928dd322b55de9070e79a4605e67eb09c46dd8b3cc7b26cd5"
+  },
+  "r0.k84.D": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "e49cd270c8eebe7d7503fa8e493487b981130dc80cd6925adcc4a13e4edf82c4"
+  },
+  "r0.k84.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "7f17e4598b1b0bbe33e8508ce2aa4255ef837a2fa95e91ad5cfa7c25f666279e"
+  },
+  "r0.k85.A": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "7f17e4598b1b0bbe33e8508ce2aa4255ef837a2fa95e91ad5cfa7c25f666279e"
+  },
+  "r0.k85.C": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "5928fa626766f3383ef0b21c36272624f6e4f9c5113e9506ff7ab24387a5464f"
+  },
+  "r0.k85.O": {
+   "n": 53,
+   "dtype": "uint32",
+   "sha256": "191f1ff71cd141e192934010428586b3f47a6f5170131630ae6c87bedaeff463"
+  },
+  "r0.k86.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "4caba63d06492544bd535bf58f41fd768b22a61da8c377554ff7db29ce89e49d"
+  },
+  "r0.k86.O": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "44a08d03382606d7ea2a8285b364cf91b5e09c3c5321a627dbb950400a25f4ee"
+  },
+  "r0.k87.A": {
+   "n": 5120,
+   "dtype": "uint32",
+   "sha256": "44a08d03382606d7ea2a8285b364cf91b5e09c3c5321a627dbb950400a25f4ee"
+  },
+  "r0.k87.B": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "d3e65a07a6c4397959f3a4eb457ad92ee7ac0938ebb4674173480ff367d943dd"
+  },
+  "r0.k87.C": {
+   "n": 20,
+   "dtype": "uint32",
+   "sha256": "8f71af7f358d83429cfd2f50f5553fc28abf43a7ad7010a2f7deb24187813583"
+  },
+  "r0.k87.O": {
+   "n": 20480,
+   "dtype": "uint32",
+   "sha256": "47353c300b5d5600a7707683d06485d0832b4091c2bde3f142ade22cea01fb61"
+  }
+ }
+}

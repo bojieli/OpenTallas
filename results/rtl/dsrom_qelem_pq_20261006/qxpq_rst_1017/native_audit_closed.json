@@ -1,0 +1,37 @@
+{
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (daemon tree)",
+ "source": "origin/main views extracted 2026-10-17 08:40",
+ "budget": {
+  "launch": 220,
+  "capture": 190,
+  "spread": 80
+ },
+ "records": [
+  {
+   "cell": "ot_v41_rom_elem_q_qxpq_w10",
+   "view": "physical/s81_die_views/q_elem_qs5f_efs",
+   "lib_cell": "ot_v41_rom_elem_q_qxpq_w10",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 510.3,
+   "spread_ps": 50.2,
+   "outputs": 131,
+   "inputs": 587,
+   "launch_ps": 212.4,
+   "launch_pin": "bank_free",
+   "capture_ps": 239.2,
+   "capture_pin": "rst_n",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "ff_launch_min_ps": 70.3,
+   "ff_hold_need_ps": -16.3,
+   "pass": false,
+   "fail_why": "capture 239.19169 > 190 (1 pins)"
+  }
+ ],
+ "copied_from": "/home/ubuntu/claude-takeover-20261007/lanes/S81-A_logs/native_audit_s81a_1017.json (record of this cell only)"
+}

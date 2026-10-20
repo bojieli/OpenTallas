@@ -1,0 +1,124 @@
+{
+ "stage": "L0",
+ "position": 8191,
+ "mutant": null,
+ "pass_": true,
+ "records": 35,
+ "image_bytes": 3792,
+ "image_sha256": "b271dc1bf41883d5e71e99f31e32f566d65da343d72b5e7f7598615103c0ffaf",
+ "executed_records": 35,
+ "wall_s": 6.4,
+ "families": {
+  "prenorm": {
+   "checks": 16,
+   "exact": 16
+  },
+  "qkv+row_scale_qkv": {
+   "checks": 8,
+   "exact": 8
+  },
+  "qknorm": {
+   "checks": 16,
+   "exact": 16
+  },
+  "rope": {
+   "checks": 8,
+   "exact": 8
+  },
+  "round_q": {
+   "checks": 8,
+   "exact": 8
+  },
+  "kv_append": {
+   "checks": 16,
+   "exact": 16
+  },
+  "attention_qk": {
+   "checks": 8,
+   "exact": 8
+  },
+  "softmax": {
+   "checks": 8,
+   "exact": 8
+  },
+  "attention_pv": {
+   "checks": 8,
+   "exact": 8
+  },
+  "pv_normalize": {
+   "checks": 8,
+   "exact": 8
+  },
+  "o": {
+   "checks": 8,
+   "exact": 8
+  },
+  "all_reduce_o+row_scale_o+residual": {
+   "checks": 8,
+   "exact": 8
+  },
+  "gu+row_scale_gu": {
+   "checks": 8,
+   "exact": 8
+  },
+  "swiglu": {
+   "checks": 8,
+   "exact": 8
+  },
+  "act_all_gather": {
+   "checks": 8,
+   "exact": 8
+  },
+  "down": {
+   "checks": 8,
+   "exact": 8
+  },
+  "all_reduce_down+row_scale_down+residual": {
+   "checks": 8,
+   "exact": 8
+  }
+ },
+ "numerics_witness": {
+  "L0.o_tree_8_equals_golden": true,
+  "L0.plain_tp8_even_down_differs": {
+   "down_elems_differ": 1899,
+   "x_out_elems_differ": 1077,
+   "of": 4096
+  }
+ },
+ "token": 0,
+ "fixture": {
+  "dir": "../fix/L0",
+  "files": 35,
+  "expected": 160,
+  "manifest_sha256": "97433370f230dae5cdf983a717149f04e7261abc0285f43b87cfda74c4d9a22a"
+ }
+}
+kv_swap FAILS (expected) 
+qknorm_bf16 FAILS (expected) 
+rkj_wrong FAILS (expected) 
+grm_s8 FAILS (expected) GROUP_REDUCE_MCAST: O does not hold (G / s) sub-group results
+pass
+	Command being timed: "python3 tools/hbm_qwen_layer/qwen_d4g_proof.py --snapshot /home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218 --cache ../img --stage L0 --mutants --dump ../fix --out ../out/proof_L0.json"
+	User time (seconds): 1132.66
+	System time (seconds): 313.96
+	Percent of CPU this job got: 629%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:49.92
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 6107976
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 25
+	Minor (reclaiming a frame) page faults: 82989490
+	Voluntary context switches: 263174
+	Involuntary context switches: 40157
+	Swaps: 0
+	File system inputs: 768
+	File system outputs: 2913760
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

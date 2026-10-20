@@ -53,7 +53,14 @@ module ot_hbm_su_static_pgslice #(
  //   RF classes 0..3 and 5 one edge earlier (su_top_compile --rf-local 1): class p at n-2 for a lane request at n
  //   (core register held n+1..n+2, local copy held n+2..n+3, consumed n+3 as before); class 5 at E-2 for the drain at E
  //   (local rf_dsec held E+3). Lane / drain / reducer edges and the op calendar are unchanged; no stall, no dynamic path.
- parameter integer RF_LOCAL=0
+ parameter integer RF_LOCAL=0,
+ // PG_RSYNC (HBM-SU3 2026-10-17; default 0 = unchanged): the two stream-domain VM bank leaves (pg_clk) no longer take
+ //   the serial power-on reset rst_n as a raw asynchronous clear. rst_n is registered once on clk_ctl (g_pg_rsync.rc,
+ //   serial source flop) and re-timed by two pg_clk flops (rs[0] -> rs[1]); rs[1] is the leaves' reset (assert and
+ //   release on pg_clk edges, serial->stream crossing on a reviewed 1-bit synchroniser, as col_su r3). Serial and stream
+ //   share one fixed-phase PLL lattice, so the release edge is deterministic: the first serial edge that samples
+ //   rst_n=1, then the second following pg_clk edge. Datapath edges unchanged; only reset assert/release move.
+ parameter integer PG_RSYNC=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -86,9 +93,12 @@ module ot_hbm_su_static_pgslice #(
  // Serial fill destination delay and stream leaf tap return are different
  // contracts at3:4. n+12 response is sampled into fill at n+13; pinned store
  // macros commit n+15. Stream leaf retains its native10/7 edge contract.
- localparam integer RR=MULTIRATE ? 12 : READ_RETURN;
- initial if(MULTIRATE && (READ_RETURN!=10 || WRITE_RETURN!=7))
-  $fatal(1,"SU multirate candidate requires source-proven stream tap10/7");
+ // HBM-BANKLAT-SU 2026-10-19: READ_RETURN/WRITE_RETURN = the stream LG round trip the die binds (10/7 = zero-lane
+ // non-pin bank; the d4g faces bank + relay lanes need more). MULTIRATE: serial fill delay = the bridge's serial read
+ // edge SRD = ceil((3*READ_RETURN+18)/4) (12 at 10; su_multirate_compile.srd), fill commit n+SRD+3.
+ localparam integer RR=MULTIRATE ? (3*READ_RETURN+18+3)/4 : READ_RETURN;
+ initial if(MULTIRATE && (READ_RETURN<10 || WRITE_RETURN<7 || WRITE_RETURN>READ_RETURN))
+  $fatal(1,"SU multirate candidate requires stream tap round trip >= 10/7");
  function automatic integer lid(input integer n); lid=(n<16)?16*G+n:64+16*G+(n-16); endfunction
  // ------------------------------------------------------------------ lanes
  wire [31:0] vi_re,vm_we,kv_we,ro_v,l_fault,l_coll;
@@ -167,9 +177,18 @@ module ot_hbm_su_static_pgslice #(
  // ------------------------------------------------------------------ VM bank leaves (port group G = banks 2G, 2G+1)
  wire [2*17-1:0] su_rq; wire [2*281-1:0] su_wq; wire [2*257-1:0] su_rr; wire [1:0] su_w_done,leaf_fault,bridge_fault;
  wire [33:0] leaf_rq; wire [561:0] leaf_wq; wire [513:0] leaf_rr; wire [1:0] leaf_done;
+ wire leaf_rst_n;
+ if(PG_RSYNC)begin:g_pg_rsync
+  reg rc; reg [1:0] rs;
+  always @(posedge clk_ctl) rc <= rst_n;
+  always @(posedge pg_clk) rs <= {rs[0], rc};
+  assign leaf_rst_n = rs[1];
+ end else begin:g_pg_rst_raw
+  assign leaf_rst_n = rst_n;
+ end
  for(genvar h=0;h<2;h=h+1)begin:g_leaf
   if(MULTIRATE)begin:g_multirate
-   ot_hbm_su_multirate_bridge u_bridge(
+   ot_hbm_su_multirate_bridge #(.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_bridge(
     .serial_clk(clk_ctl),.stream_clk(pg_clk),.rst_n(bridge_rst_n),
     .serial_rq(su_rq[h*17+:17]),.serial_wq(su_wq[h*281+:281]),
     .serial_rr(su_rr[h*257+:257]),.serial_done(su_w_done[h]),
@@ -183,7 +202,7 @@ module ot_hbm_su_static_pgslice #(
    assign bridge_fault[h]=1'b0;
   end
   ot_hbm_su_static_vm_bank_leaf #(.QID(QID),.B(2*G+h),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_leaf(
-   .clk(pg_clk),.rst_n(rst_n),.su_rq(leaf_rq[h*17+:17]),.su_wq(leaf_wq[h*281+:281]),.su_rr(leaf_rr[h*257+:257]),
+   .clk(pg_clk),.rst_n(leaf_rst_n),.su_rq(leaf_rq[h*17+:17]),.su_wq(leaf_wq[h*281+:281]),.su_rr(leaf_rr[h*257+:257]),
    .su_w_done(leaf_done[h]),.lg_rq(lg_rq[h*17+:17]),.lg_wq(lg_wq[h*281+:281]),.lg_rr(lg_rr[h*257+:257]),
    .lg_w_done(lg_w_done[h]),.fault(leaf_fault[h]));
  end

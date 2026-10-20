@@ -1,0 +1,9 @@
+{
+ "schema": "opentallas.qwen.ctlm-lane-ages.v1",
+ "die": "dv2f14bn (chain/case_r22k/die.v, the qwc_slice_ctl cut of tools/qwen_layerbench/slice_cut.py)",
+ "why": "the compiled relay table counts relay HOPS (stages 25 / 22); these lanes are forwarded half-cycle relays (qfd_rlyh0 / qfd_rlyh) closed by a landing (qfd_landh), so the lane AGE in edges differs, and the dv2f14bn chain exports no land_plan.json (LAYERBENCH gap 3).  Measured on the slice netlist by the c_ctl bench (tools/qwen_layerbench/drive_qwc_slice_ctl_prog.svh: SETID / every command at tt_ctlm.cmd vs the dvs_W5 cmd_wi pin; hr ib go; a one-edge pulse on ag_wo / ss_wo to the tt_ctlm pins).",
+ "measured_run": "ot-epyc4:/srv/opentallas-scratch/claude/qlb-prog-1018/runs/c3 (Verilator 5.050)",
+ "R_CMD": 14, "R_HR": 14, "R_SS": 13, "R_AG": 13,
+ "hops": {"R_CMD": 25, "R_HR": 25, "R_SS": 22, "R_AG": 22},
+ "relay_masters": {"tt_ctlm.cmd -> dvs_W5.cmd_wi": "1 qfd_rlyh0 + 23 qfd_rlyh + 1 qfd_landh", "tt_ctlm.hr -> dvs_W5.hr_wi": "1 qfd_rlyh0 + 23 qfd_rlyh + 1 qfd_landh"}
+}

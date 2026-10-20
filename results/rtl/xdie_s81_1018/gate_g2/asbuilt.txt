@@ -1,0 +1,10 @@
+LATE dst 0 src 13 k 59 land 13191 deadline 13116
+LATE dst 1 src 4 k 59 land 13191 deadline 13116
+LATE dst 2 src 11 k 59 land 13191 deadline 13116
+LATE dst 4 src 1 k 59 land 13191 deadline 13116
+LATE dst 5 src 8 k 59 land 13191 deadline 13116
+XDIE_STATS beats 12096 landed 12096 mismatches 0 late 9204 maxlate 1629 extra 0 faults 0000000000000000 live 32/32 last_cycle 20570
+FAIL xdie_s81: landed 12096/12096 mismatches 0 late 9204 extra 0 faults 0000000000000000 live 32/32
+BENCH_FAIL asbuilt
+EXIT 1
+XDIE_LINK timeouts 228 retx_flits 36660 (all 32 lanes; go-back-N ACK timeouts and replayed flits)

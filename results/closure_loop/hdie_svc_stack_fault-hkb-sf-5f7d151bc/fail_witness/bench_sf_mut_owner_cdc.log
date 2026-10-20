@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_svc_stack_fault-hkb-sf-5f7d151bc bench bench_sf_mut_owner_cdc host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hdie_svc_stack_fault-hkb-sf-5f7d151bc log cl/bench_sf_mut_owner_cdc.a1b1.log captured 2026-10-18T22:49:34-07:00
+# fail_regex '^FAIL tb_hbm_svc_stack_fault MUT=2'
+Verilator 5.050 2026-07-01 rev v5.050
+source 2: fault 0 status 0000000
+FAIL tb_hbm_svc_stack_fault MUT=2 OWN_W=6 NPC=16 NG=4 ND=8 errors=1 checks=8

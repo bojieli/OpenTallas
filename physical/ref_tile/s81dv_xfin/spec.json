@@ -54,12 +54,18 @@
    "s_i",
    "s",
    "rb_v",
-   "rb_d"
+   "rb_d",
+   "e_v",
+   "e_c",
+   "e_hh",
+   "e_kk",
+   "e_dd"
   ],
   "S": [
    "clk",
    "rst_n",
    "go",
+   "mode",
    "sid",
    "eps",
    "fault"
@@ -75,12 +81,12 @@
   "io_hold_margin_ns": 0.0,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-DV (owner 0cj 10-16): new leaf. Slice norm exchange: beat-partial collector, exchange ring stop (fixed hop counts, no flow control, collisions fault) and replicated golden-tree finish (ot_dsrom_su_norm vector levels verbatim, divide by D, + eps, rsqrt). Every input lands in a flop (robust first cell); no input/output hold padding (die-level hold budget at relay stations).",
+ "structural_change": "S81-DV (owner 0cj 10-16): new leaf. Slice norm exchange: beat-partial collector, exchange ring stop (fixed hop counts, no flow control, collisions fault) and replicated golden-tree finish (ot_dsrom_su_norm vector levels verbatim, divide by D, + eps, rsqrt). Every input lands in a flop (robust first cell); no input/output hold padding (die-level hold budget at relay stations). RTL-BUILD-S81 10-18: ENG mode (mode pin, sampled with go) -- 12-vector Engram collector, slot-fill ring inject (forwards first), 4 per-copy eng_finish trees (hh/kk/dd on one adder each), e_* csum totals; NORM paths unchanged.",
  "job": {
-  "owner": "Claude:S81-DV",
-  "branch": "claude/s81dv-1016",
-  "tag": "x5",
-  "purpose": "S81-DV deliverable 3: first new slice leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "owner": "Claude:RTL-BUILD-S81",
+  "branch": "claude/rtl-build-s81-1018-xfin",
+  "tag": "e1",
+  "purpose": "xfin NORM + ENG (in-slice Engram mix finish, mix4_half deleted 0dv) to closure",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/hbm_norm_split_20261008",
@@ -89,7 +95,13 @@
    "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
    "rtl/dsrom_sys/s81_dv/test/tb_s81dv_xfin16.sv",
    "rtl/hdc/v41x",
-   "tools/s81_dv/norm16_bench.sh"
+   "tools/s81_dv/norm16_bench.sh",
+   "rtl/dsrom_sys/s81_dv/test/tb_s81dv_xfin16e.sv",
+   "tools/s81_dv/xfin_eng_bench.sh",
+   "tools/s81_dv/xfin_eng_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "results/rtl/rtl_build_s81_1018/xfin"
   ],
   "benches": [
    {
@@ -117,6 +129,32 @@
     "fail_witness": "results/rtl/s81_dv_1016/xfin16_strap/mutleaf.log",
     "threads": 4,
     "peak_ram_gb": 64
+   },
+   {
+    "name": "dv_xfin16e_exact",
+    "cmd": "bash tools/s81_dv/xfin_eng_bench.sh {RUN}/eng base 0 0 1",
+    "expect": "pass",
+    "pass_regex": "^PASS dvxfin16e ",
+    "threads": 4,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "dv_xfin16e_mutetag",
+    "cmd": "bash tools/s81_dv/xfin_eng_bench.sh {RUN}/etag mutetag 0 0 1 raw",
+    "expect": "fail",
+    "fail_regex": "^DVXFIN16E slices=16 .* err=[1-9][0-9]* ",
+    "fail_witness": "results/rtl/rtl_build_s81_1018/xfin/mutetag.log",
+    "threads": 4,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "dv_xfin16e_muteassoc",
+    "cmd": "bash tools/s81_dv/xfin_eng_bench.sh {RUN}/eass muteassoc 0 0 1 raw",
+    "expect": "fail",
+    "fail_regex": "^DVXFIN16E slices=16 .* err=[1-9][0-9]* ",
+    "fail_witness": "results/rtl/rtl_build_s81_1018/xfin/muteassoc.log",
+    "threads": 4,
+    "peak_ram_gb": 32
    }
   ],
   "views_to": "physical/ref_tile/s81dv_xfin/views",
@@ -126,9 +164,10 @@
   "enable": false,
   "reason": "Source-registered: every input lands in a flop at the pin (ot_s81dv_xfin go/eps/s_* capture flops, ot_s81dv_xstop wi/ei input flops) and every output is a flop (eo/wo/rb/fault regs); recipe-3 pin_regs would add a second unpriced stage on every ring hop. io_flop_at_pins (recipe 2) anchors them at the faces."
  },
- "std_area_um2": 16108,
  "util": 0.52,
  "hold_budget": "die",
+ "outline_note": "ENG mode (RTL-BUILD-S81 10-18) adds 4 eng_finish (3 x 80-leaf trees each) + the 12-vector collector: std area re-measured by the remote gate",
+ "std_area_um2": 60000,
  "children": [],
  "inter": [],
  "inhold": false,

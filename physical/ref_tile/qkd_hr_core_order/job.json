@@ -1,13 +1,13 @@
 {
- "name": "qkd_hr_core_order-r2-COMMIT",
+ "name": "qkd_hr_core_order-r4-COMMIT",
  "block": "qkd_hr_core_order",
  "ref_tile": true,
- "owner": "Claude:KV-HOSTCL",
- "purpose": "HOST root cluster r2 child qkd_hr_core_order (pre-route gate + route; parent qkd_host_root is CRITICAL)",
+ "owner": "Claude:HKV-RSTCAP2",
+ "purpose": "HKV-RSTCAP2: native capture re-route of closed qkd_hr_core_order r3 (host_rst_n capture 386.9 > 190) with main's reset_landing kit option (2 registered face stages)",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/kvj-a3-1017",
+  "branch": "claude/kv-rstcap2-ord-1019",
   "commit": "COMMIT"
  },
  "stages": {
@@ -45,6 +45,173 @@
     "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/cluster_gate.py mutant --out {RUN}/bench/cg_mut --child core_order",
     "fail_regex": "CLUSTER_GATE FAIL mutant",
     "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/cg_mutant_qkd_hr_core_order.log"
+   },
+   {
+    "name": "hrorder_equiv",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py exact --out {RUN}/bench/hrorder_exact",
+    "pass_regex": "HRORDER_EQUIV PASS exact runs_pass=3/3",
+    "sources": [
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_ingest_map_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_debt_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_boot_dispatch_debt_ref.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv"
+    ]
+   },
+   {
+    "name": "hrorder_mut_map_hold_bypass",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m map_hold_bypass --out {RUN}/bench/hrorder_mut_map_hold_bypass",
+    "fail_regex": "HRORDER_EQUIV FAIL mutant map_hold_bypass",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_map_hold_bypass.log",
+    "sources": [
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_ingest_map_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_debt_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_boot_dispatch_debt_ref.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv"
+    ]
+   },
+   {
+    "name": "hrorder_mut_map_adv_bypass",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m map_adv_bypass --out {RUN}/bench/hrorder_mut_map_adv_bypass",
+    "fail_regex": "HRORDER_EQUIV FAIL mutant map_adv_bypass",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_map_adv_bypass.log",
+    "sources": [
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_ingest_map_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_debt_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_boot_dispatch_debt_ref.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv"
+    ]
+   },
+   {
+    "name": "hrorder_mut_order_hold_bypass",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m order_hold_bypass --out {RUN}/bench/hrorder_mut_order_hold_bypass",
+    "fail_regex": "HRORDER_EQUIV FAIL mutant order_hold_bypass",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_order_hold_bypass.log",
+    "sources": [
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_ingest_map_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_debt_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_boot_dispatch_debt_ref.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv"
+    ]
+   },
+   {
+    "name": "hrorder_mut_order_adv_bypass",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m order_adv_bypass --out {RUN}/bench/hrorder_mut_order_adv_bypass",
+    "fail_regex": "HRORDER_EQUIV FAIL mutant order_adv_bypass",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_order_adv_bypass.log",
+    "sources": [
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_ingest_map_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_debt_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_boot_dispatch_debt_ref.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv"
+    ]
+   },
+   {
+    "name": "hrorder_mut_disp_hold_bypass",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m disp_hold_bypass --out {RUN}/bench/hrorder_mut_disp_hold_bypass",
+    "fail_regex": "HRORDER_EQUIV FAIL mutant disp_hold_bypass",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_disp_hold_bypass.log",
+    "sources": [
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_ingest_map_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_debt_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_boot_dispatch_debt_ref.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv"
+    ]
+   },
+   {
+    "name": "hrorder_mut_disp_order_adv",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py mutant --m disp_order_adv --out {RUN}/bench/hrorder_mut_disp_order_adv",
+    "fail_regex": "HRORDER_EQUIV FAIL mutant disp_order_adv",
+    "fail_witness": "results/arch/qwen_split_1014/host_root_cluster/benches/hrorder_equiv_mut_disp_order_adv.log",
+    "sources": [
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/hrorder_equiv.py",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/tb_hrorder_equiv.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_ingest_map_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_commit_order_debt_ref.sv",
+     "tools/qwen_kv_die/host_cluster/bench/hrorder_equiv/ref/qkd_host_boot_dispatch_debt_ref.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_commit_order_debt.sv",
+     "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv"
+    ]
    }
   ],
   "calibrate": {
@@ -95,7 +262,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_hr_core_order/qkd_hr_core_order-r2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_hr_core_order/qkd_hr_core_order-r4-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -104,5 +271,11 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json"
+ "structural_change": "KVJ-A3 r2 HOST cluster child qkd_hr_core_order (core family, one ck_core entry): members u_chain, u_dispatch + their glue, generated wrapper (tools/qwen_kv_die/host_cluster/gen_cluster.py). Partition results/arch/qwen_split_1014/host_root_cluster/partition_r2.json; HRORDER r3 10-18: route r2-c420f015e TT -112 = logic depth (map rp->q[rp]->sector decode->128:1 credit mux->emit->1164-b out enable; commit_order fr->front[fr]->128 compares->pop; dispatch rp->decode->send): decode moved to enqueue + write-bypassed head registers (map/dispatch), one-hot head register (commit_order); cycle-exact, 0 added cycles",
+ "reroute_reason": {
+  "kind": "native_capture",
+  "source": "results/arch/qwen_kv_die/rstcap_1019/native_receipts.json",
+  "cell": "qkd_hr_core_order",
+  "fix": "input side: host_rst_n lands at the face in main's reset_landing (ROOT-RST 10-19: 2 registered stages <port>__ot_rl0 -> __ot_rl1, then equal-depth fan-out) instead of the raw pin clearing every member flop tile-wide; reset assert and release +2 tile-clock edges (scheduled constant), data latency unchanged; RTL, outline and pin faces unchanged"
+ }
 }

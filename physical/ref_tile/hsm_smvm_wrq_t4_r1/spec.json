@@ -109,16 +109,17 @@
   "cts_sink": {
    "size": 16,
    "diameter_um": 30,
-   "extra": "-balance_levels"
+   "extra": "-balance_levels -no_obstruction_aware"
   },
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.0,
+  "cts_sink_note": "ELEM-GAPS/HBMN2 10-18: closed q4-bf8dd74e8 native FAIL = clk_l3 boundary pin-flop spread TT 88.1 / FF 83.3. Cause: the table SRAM u_tab (94.8x41 at 23.3,302.4) sits in lane 3's W/E pin band; obstruction-aware TritonCTS legalised the l3 branch buffers off the macro (level-4 at x 114 feeding a W-face leaf at x 4: 110 um wire, leaf_35/36 at 251 ps; W-top corner leaves 215-233 ps via 64 um wires). Replay on the route's 3_place.odb (placement RC): l3 TT 71.6 -> 47.8, FF 62.2 -> 36.3 with -no_obstruction_aware; clk / clk_l0..2 unchanged (no macro in their bands). Geometry, pins, RTL unchanged."
  },
  "recipe": 4,
  "purpose": "HBM-B-RTL1 2026-10-17 (owner 0do, plan (b) d4g): the QUADRANT SM result -> VM writer smw_<Q> (one master, 4 instances, strap quad + lbase): 4 SM lanes (one clock root each: pin flops + DEPTH-4 FIFO + server + two launch-flop sets for the bank halves LB+k / LB+k+4, chosen per descriptor by cmd[26]), core root = calendar / N-face host pins, clk_cal = table SRAM.  Lockstep with the d4f 8-SM writer: same rows/data/timing (rv(t) -> wq slot 0 at t+3), 0 edges added.",
  "job": {
-  "owner": "Claude HBM-B-RTL1 1017",
-  "branch": "claude/hbm-b-rtl1-vm-1017",
-  "tag": "q4",
+  "owner": "Claude ELEM-GAPS/HBMN2 1018",
+  "branch": "claude/eg-hbmn2-1018",
+  "tag": "q5",
   "purpose": "HBM-B-RTL1 2026-10-17 (owner 0do, plan (b) d4g): the QUADRANT SM result -> VM writer smw_<Q> (one master, 4 instances, strap quad + lbase): 4 SM lanes (one clock root each: pin flops + DEPTH-4 FIFO + server + two launch-flop sets for the bank halves LB+k / LB+k+4, chosen per descriptor by cmd[26]), core root = calendar / N-face host pins, clk_cal = table SRAM.  Lockstep with the d4f 8-SM writer: same rows/data/timing (rv(t) -> wq slot 0 at t+3), 0 edges added.",
   "benches": [
    {

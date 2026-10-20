@@ -1,0 +1,5 @@
+XDIE_STATS beats 12096 landed 12096 mismatches 0 late 0 maxlate -2 extra 0 faults 0000000000000000 live 32/32 last_cycle 19107
+PASS xdie_s81: 12096 beats of the TP4 calendar landed bit-exact, in order, by their compiled deadlines, no fault
+BENCH_PASS min_err
+EXIT 0
+XDIE_LINK timeouts 0 retx_flits 0 (all 32 lanes; go-back-N ACK timeouts and replayed flits)

@@ -198,11 +198,14 @@ endmodule
 // equal-age trees of depth T.  Pair p drives SMs 2p / 2p + 1.
 module ot_hgi_sm_xload_static_xql #(
     parameter integer PMAX   = 8,
-    parameter integer RD_LAT = 6,
+    parameter [63:0]  RD_LAT = 64'd6,    // scalar or per-bank vector, passed to the ctl (ot_hgi_sm_xload_cl2_ctl RD_LAT)
     parameter integer MUT    = 0,
     parameter integer NP     = 4,
     parameter integer T      = 2,
-    parameter integer XQL_MUT = 0
+    parameter integer XQL_MUT = 0,
+    // CTL_OLD=1 (bench reference only, ELEM-GAPS/HBMN1 10-18): the control is the CLOSED q1-7af6f4406 ctlx function
+    // (ctlw EGRESS_SPLIT 1 SEL_KEEP 1, raw rst_n, l_d_o = l_d) instead of today's native ctlx.
+    parameter integer CTL_OLD = 0
 ) (
     input  wire               clk,
     input  wire               clk_cal,
@@ -241,6 +244,17 @@ module ot_hgi_sm_xload_static_xql #(
     wire [15:0] r_wsel; wire zlo, zhi; wire [NBQ2-1:0] bsel; wire [PMAX*8-1:0] lane_en;
     wire [7:0] eg_ed5; wire [16:0] eg_ede; wire eg_bqv, eg_bqlast; wire [6:0] eg_bqaddr, eg_bqb;
     // d4f die master ctlx (HBM-B 10-17) = ctlw EGRESS_SPLIT 1 with the die-connected ports only + kept select replicas
+    generate if (CTL_OLD != 0) begin : g_ctl_old
+    ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT), .EGRESS_SPLIT(1), .SEL_KEEP(1)) u_ctl (
+        .clk(clk), .clk_eg(clk), .clk_cal(clk_cal), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
+        .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit),
+        .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .fault(fault), .active(active),
+        .x_done(), .xw_en(), .xw_last(), .xw_addr(), .xw_grp(), .xw_data(), .rq(rq), .rr(rr), .rn_o(rn),
+        .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(1024'd0),
+        .l_d_o(l_d), .qv_lo(qv_lo), .qv_hi(qv_hi), .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi),
+        .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en), .bq_d(2048'd0),
+        .eg_ed5(eg_ed5), .eg_ede(eg_ede), .eg_bqv(eg_bqv), .eg_bqlast(eg_bqlast), .eg_bqaddr(eg_bqaddr), .eg_bqb(eg_bqb));
+    end else begin : g_ctl
     ot_hgi_sm_xload_cl2_ctlx #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT)) u_ctl (
         .clk(clk), .clk_cal(clk_cal), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
         .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit),
@@ -250,6 +264,7 @@ module ot_hgi_sm_xload_static_xql #(
         .l_d_o(l_d), .qv_lo(qv_lo), .qv_hi(qv_hi), .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi),
         .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en),
         .eg_ed5(eg_ed5), .eg_ede(eg_ede), .eg_bqv(eg_bqv), .eg_bqlast(eg_bqlast), .eg_bqaddr(eg_bqaddr), .eg_bqb(eg_bqb));
+    end endgenerate
     ot_hbm_xp_aq_tree13 u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),
                              .e(qe_lo), .y(), .fault(qf_lo));
     ot_hbm_xp_aq_tree13 u_aq_hi (.clk(clk_qhi), .rst_n(rn), .v(qv_hi), .fp4(1'b0), .x(l_d[2047:1024]), .vo(qo_hi), .q(qq_hi),

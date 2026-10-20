@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.hbm_d4g.binding.v1",
+  "lane": "HBM-COLLQ/X",
+  "date": "2026-10-18",
+  "branch": "claude/hbm-collq-xl-1018",
+  "element": "SM x-load PRE-QUANTISED block-dot mode (x_fmt 3) for quantize-before-gather consumers",
+  "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2p.sv (+ ot_hgi_sm_xload_static_cl2.sv from main for the shared leaves)",
+  "format": "PRE-QUANTISED VM FORMAT v1: S<=4 segments x Bs blocks; record at word base + p*x_stride/8 + s*ss: Bs code words (E4M3, element j at [8j+:8]) then Es=ceil(Bs/32) exponent words (byte k = e(block 32g+k)+127)",
+  "command_fmt3": {"x_base[17:0]": "element address of the image (word = [17:3])", "x_base[27:18]": "Bs (even, <=128)", "x_base[39:28]": "ss segment stride, words", "x_n": "K elements (multiple of 32)", "x_p/x_stride": "as fmt 1 (stride in elements)", "limits": "S=ceil(K/32/Bs)<=4, P*S*Es<=16, else sticky x_fault"},
+  "master_swaps": [
+    {"inst": "xl_<q>_ctl", "from": "ot_hgi_sm_xload_cl2_ctlx", "to": "ot_hgi_sm_xload_cl2p_ctlx", "new_ports": {"pv_lo": "out 1", "pv_hi": "out 1", "po_lo": "in 1", "po_hi": "in 1", "pf_lo": "in 1", "pf_hi": "in 1"}, "note": "all other ports identical; fmt 0/1/2 cycle-identical (bench +SAME=1, D=0)"},
+    {"inst": "NEW xl_<q>_bp_lo / xl_<q>_bp_hi", "master": "ot_hgi_xp_aq_bypass13", "ports": "same as ot_hbm_xp_aq_tree13 (clk, rst_n, v=pv_*, fp4=0, x=l_d_o half, vo->po_*, q, e, y open, fault->pf_*)", "placement": "beside each quantiser tile (same l_d_o source, same BD-ring sink)", "size": "~3.2k flops each (13 x 264-b delay line)"},
+    {"inst": "BD ring leaf (wherever ot_hgi_sm_xload_cl2_bdring binds)", "from": "ot_hgi_sm_xload_cl2_bdring", "to": "ot_hgi_sm_xload_cl2p_bdring", "new_ports": {"pq_lo/pq_hi": "in 256", "pe_lo/pe_hi": "in 10 signed", "pvo_lo/pvo_hi": "in 1 (bypass vo)"}}
+  ],
+  "compiler_constants": {
+    "fmt3_shift_edges": "D = P*S*Es + 3: every xw beat and x_done of fmt 3 = fmt 1's on the same vector D edges later",
+    "vm_reads": "NE = P*S*Es exponent-preload waves (8-bank, one per edge) from the command start, then fmt 1's 8-bank issue pattern shifted by D; code and exponent reads never share an edge (no bank conflict)",
+    "bypass_latency": 13
+  },
+  "bench": {"script": "rtl/hbm_accel/generic/adapters/tb/run_xload_preq.sh", "tb": "rtl/hbm_accel/generic/adapters/tb/tb_hgi_xload_preq.sv", "vectors": "tools/hgi_sim/xload_preq_vectors_1018.py (hdc_golden_v41.quant_fp8 images)",
+            "verdict": "XLOAD_PREQ PASS cases=8 (ei 2304 S4 Bs18, og 1024 Bs8, engram 6144 Bs48 Es2, local 512 S1; P 1..4; normal/heavy-tail/amax-floor/saturating/BF16/tie-heavy/zeros) + fmt1 regression PASS",
+            "logs": ["results/rtl/hbm_collq_xl_1018/xload_preq_pass.log", "results/rtl/hbm_collq_xl_1018/xload_preq_fmt1_regress.log"],
+            "mutants": {"7": "exponent byte of the next pair -> FAIL (bench_witness/xload_preq_mut7.log)", "8": "bypass bias 126 -> FAIL (bench_witness/xload_preq_mut8.log)"}},
+  "open": ["kits/gates for cl2p ctlx successor, bypass tile, bdring_p (not built)", "die layer: swap xl_<q>_ctl master + add 2 bypass tiles per quadrant", "x-load issuer/compiler: emit fmt 3 commands for QBG consumers (expert_intermediate -> w2, o-group -> wo_b, engram.rows -> engram.wkv)"]
+}

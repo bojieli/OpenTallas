@@ -200,8 +200,8 @@
   },
   "dsfd_engram_mix4_half": {
    "module": null,
-   "owner": "S81U-3",
-   "reason": "no half module over engram_mix4_c (audit S-6)"
+   "owner": "S81U-MIX -> S81-SLICE (slice op ENG)",
+   "reason": "NOT deletable yet (S81U-MIX 10-17, results/arch/s81_dv_1016/p4j/engram_mix_verdict.json): no bound DV RTL computes the Engram mix (slice vn/vp/vq/vs/xr/xfin, gunit, seq_host, svc_rs checked). Replacement = slice op ENG: ot_s81sl_ve beat sub-leaf (RTL + golden bench PASS, claude/s81u-mix-1017) + vs op 14 feeder + xfin ENG mode + ot_s81sl_eg scalar finish (owed). Delete mix4_w / mix4_e from the plan when those bind."
   },
   "dsdv_gunit": {
    "module": null,

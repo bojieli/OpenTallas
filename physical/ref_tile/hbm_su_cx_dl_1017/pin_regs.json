@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_static_cxport_dl",
+ "enable": false,
+ "reason": "Every pin is registered in RTL (cxport rule: stream inputs land in phase-indexed pin slots, serial inputs in pin registers, every output is a register); a wrapper stage would move the fixed 3:4 crossing edges."
+}

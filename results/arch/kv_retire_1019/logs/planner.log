@@ -1,0 +1,22 @@
+test_cutoff_path_and_exact_status (test_kv_retirement_contract.Contract.test_cutoff_path_and_exact_status) ... ok
+test_dcal_alternative_sink_prices_its_relay (test_kv_retirement_contract.Contract.test_dcal_alternative_sink_prices_its_relay) ... ok
+test_dropped_operation_deadline_refused (test_kv_retirement_contract.Contract.test_dropped_operation_deadline_refused) ... ok
+test_every_source_has_an_operation_and_dcal_is_inventoried (test_kv_retirement_contract.Contract.test_every_source_has_an_operation_and_dcal_is_inventoried) ... ok
+test_reset_release_covers_every_clear_plus_flush (test_kv_retirement_contract.Contract.test_reset_release_covers_every_clear_plus_flush) ... ok
+test_every_layer_start_and_token_period_include_tail (test_kv_retirement.Calendar.test_every_layer_start_and_token_period_include_tail) ... /srv/opentallas-scratch/claude/kv-retire-1019/r2/tools/qwen_split/d2d_link_calendar.py:142: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd73fezc0' mode='r' encoding='UTF-8'>
+  d = json.load(open(tp_path))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_tail_moves_only_status_and_prices_window (test_kv_retirement.Calendar.test_tail_moves_only_status_and_prices_window) ... ok
+test_abstract_tree_receipt_never_qualifies_suffix (test_kv_retirement.Retirement.test_abstract_tree_receipt_never_qualifies_suffix) ... ok
+test_complete_logical_fixture_remains_unqualified (test_kv_retirement.Retirement.test_complete_logical_fixture_remains_unqualified) ... ok
+test_early_status_fails_at_exact_boundary (test_kv_retirement.Retirement.test_early_status_fails_at_exact_boundary) ... ok
+test_missing_deadline_and_uninventoried_source_fail (test_kv_retirement.Retirement.test_missing_deadline_and_uninventoried_source_fail) ... ok
+test_missing_or_reordered_path_fails (test_kv_retirement.Retirement.test_missing_or_reordered_path_fails) ... ok
+test_overflow_and_boolean_ages_fail (test_kv_retirement.Retirement.test_overflow_and_boolean_ages_fail) ... ok
+test_reset_hold128_cannot_flush216_edge_path (test_kv_retirement.Retirement.test_reset_hold128_cannot_flush216_edge_path) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.007s
+
+OK

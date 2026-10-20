@@ -1,0 +1,122 @@
+{
+  "rows": [
+    {
+      "layer": "l2",
+      "source_manifest": "/home/ubuntu/scratch/lb2-hbm2-rpl/dsemit/l2/manifest.json",
+      "source_manifest_sha256": "e0146df4e108c72cd3ac9f48ee4514229c2c2c9f92ff3b796ce0b1b58239ccb5",
+      "programme": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L02/images/ds_v41_1M_L02_per_die.json",
+      "programme_sha256": "08f39c9845a798b928b513ceab406b19c7e7170a3735da40b5687090d1691f63",
+      "scope": "historical_priced_timeline_not_native_CP_SVG_evidence",
+      "records": [
+        {
+          "i": 77,
+          "op": "SM.MATVEC",
+          "tag": "router gate",
+          "start": 16658.66,
+          "end": 16934.18,
+          "status": "blocked:format_open"
+        },
+        {
+          "i": 79,
+          "op": "SU.VOP",
+          "tag": "router_act",
+          "start": 16958.18,
+          "end": 17288.2,
+          "status": "blocked:unsupported_lowering"
+        },
+        {
+          "i": 80,
+          "op": "SM.MATVEC",
+          "tag": "expert slot 6 w1",
+          "start": 16959.18,
+          "end": 17158.72,
+          "status": "blocked:format_open"
+        },
+        {
+          "i": 85,
+          "op": "SU.VOP",
+          "tag": "route.scores_bias",
+          "start": 18106.72,
+          "end": 18155.9,
+          "status": "emitted"
+        },
+        {
+          "i": 86,
+          "op": "IDX.TOPK",
+          "tag": "route.top6",
+          "start": 18184.9,
+          "end": 18416.4,
+          "status": "emitted_unparameterised"
+        },
+        {
+          "i": 89,
+          "op": "SM.MATVEC",
+          "tag": "expert slot 0 w1",
+          "start": 18475.4,
+          "end": 18507.97,
+          "status": "blocked:format_open"
+        }
+      ]
+    },
+    {
+      "layer": "l14",
+      "source_manifest": "/home/ubuntu/scratch/lb2-hbm2-rpl/dsemit/l14/manifest.json",
+      "source_manifest_sha256": "43b638129f69f9ed414261970fd20818327adb20337fd6bdf28fa7e60a46bff8",
+      "programme": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L14/images/ds_v41_1M_L14_per_die.json",
+      "programme_sha256": "c4cad8ef0c3a672c9fc8793ae2aef44a4ed60ef99ea6a4469c7d59f85e3c9161",
+      "scope": "historical_priced_timeline_not_native_CP_SVG_evidence",
+      "records": [
+        {
+          "i": 140,
+          "op": "SM.MATVEC",
+          "tag": "router gate",
+          "start": 21978.5,
+          "end": 22254.02,
+          "status": "blocked:format_open"
+        },
+        {
+          "i": 143,
+          "op": "SU.VOP",
+          "tag": "router_act",
+          "start": 22278.02,
+          "end": 22608.04,
+          "status": "blocked:unsupported_lowering"
+        },
+        {
+          "i": 144,
+          "op": "SM.MATVEC",
+          "tag": "expert slot 6 w1",
+          "start": 22279.02,
+          "end": 22478.57,
+          "status": "blocked:format_open"
+        },
+        {
+          "i": 148,
+          "op": "SU.VOP",
+          "tag": "route.scores_bias",
+          "start": 23426.56,
+          "end": 23475.74,
+          "status": "emitted"
+        },
+        {
+          "i": 149,
+          "op": "IDX.TOPK",
+          "tag": "route.top6",
+          "start": 23504.74,
+          "end": 23736.25,
+          "status": "emitted_unparameterised"
+        },
+        {
+          "i": 151,
+          "op": "SM.MATVEC",
+          "tag": "expert slot 0 w1",
+          "start": 23794.25,
+          "end": 23826.81,
+          "status": "blocked:format_open"
+        }
+      ]
+    }
+  ],
+  "qualifies_native_layer": false,
+  "note": "Shared expert slot6 can start before route.top6. First routed expert slot0 needs actual current native collector result and layer/cohort identity; historical top6 unparameterised and router_act unsupported, so replace costs and install actual CP/SVG chronology."
+}

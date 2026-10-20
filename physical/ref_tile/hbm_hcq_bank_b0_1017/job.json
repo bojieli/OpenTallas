@@ -1,0 +1,132 @@
+{
+ "name": "hbm_hcq_bank_b0_1017-pord1-COMMIT",
+ "block": "ot_hbm_hc_bankq0_static",
+ "ref_tile": true,
+ "owner": "Claude:HBM-HCRING",
+ "purpose": "HC ring bank b0: chain out N; exit relay S -> E; HH-9 chain pin registers (successor of 47247cc08 FLOORPLAN_MARGIN)",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/hcring-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_eng4_ring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/hbm_hc_ring_1019_cpr",
+   "results/rtl/hbm_hc_ring_1019_joint",
+   "results/rtl/hbm_hc_ring_1019_drly2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_hc_bankq0_static #(.CPO(1), .DRLY(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_ring_exact",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=0 rc=0",
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_ring_mut1",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=1 rc=0",
+    "fail_regex": "HC_ENG FAIL",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "note": "bank 3 (ring corner, fed through bank 2) weight slice rotated",
+    "fail_witness": "results/rtl/hbm_hc_ring_1019_drly2/ring_mut1.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_hcq_bank_b0_1017/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_hcq_bank_b0_1017/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_hcq_bank_b0_1017 --out {RUN}/record/views/ot_hbm_hc_bankq0_static --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 --macro-view physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_hcq_bank_b0_1017/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_hcq_bank_b0_1017/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_hcq_bank_b0_1017/hbm_hcq_bank_b0_1017-pord1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HC quarter engine (plan (b) d4g, HBM-B-RTL2b): 3x3 ring of 8 bank tiles around the hub (hc_<q> + centre, coordinator 10-17 23:45: no empty middle). Chain clockwise from W: b0 W, b1 NW, b2 N, b3 NE, b4 E, b5 SE, b6 S, b7 SW; masters by pin plan (R0 / R180 only): e2 = b2 / b6, e0 = b4, b0 = b0, ca = b1 / b5, cb = b3 / b7. Inside: 8 closed lane leaves hc_lanes_ref (2 cols x 4 rows, 43.2 lattice), the 8 weight macros as ONE abutted N-S stack W of the leaves (pins E, facing them; macro g beside leaf row g//2), the 4 x macros E of the leaves at their rows. b0: first = 1 (no sum_in/f_in ports); the DRLY chain-exit relay of bank 7 sits here (S -> E). HH-9 10-19 (47247cc08 FLOORPLAN_MARGIN bank_distance, no lint override): CHAIN PIN REGISTERS at the tile faces (RTL ot_hbm_hc_bankq_core CPI/CPO; qeng CPR 1, centre CHX / root QCHX 11): the chain flops were inside the lane leaves, 550 um from the faces (bank->bank hop ~1.1 mm); now every hop is face flop -> face flop and no leaf is wired to a block pin. Chain pins spread over the full faces (3.5 b/um, e2 convention). MX middle band rejected: M4+M6 W/E leaf pins cannot be mirrored on track; corner/b0 banks have no 100 um leaf placement at all. HCRING 10-19 (HH-9 flag, R0->R180 joints): route.pin_balance gives every face a defined bit order (PPL chunks of 32 scattered the buses); faces that abut an R180 neighbour are the mirror image of that neighbour's shared face (range 734.4 - x, high bit first: pin_order_desc). HCBANK 10-19: DRLY 2 (HC-RINGPLAN GEN2d closed ring: b7 abuts b0, hcx die relay removed; the 2-stage chain-exit relay of bank 7 now sits in b0)."
+}

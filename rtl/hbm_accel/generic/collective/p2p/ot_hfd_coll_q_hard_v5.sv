@@ -34,7 +34,7 @@
 // ot_hgi_coll_static_program_target #(TARGET 52); the identity strap compares the raw HOST target with 52+qid
 // before the target's own input capture, so the captured target equals 52 exactly when the original TARGET
 // 52+QID instance would have matched.
-module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOKAHEAD=0)(
+module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOKAHEAD=0,ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,
  input wire [1:0] qid,
  input wire cfg_v,
@@ -47,10 +47,10 @@ module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOK
  input wire [15:0] desc_loops,
  input wire launch_v,program_active,
  input wire issuer_busy,issuer_fault,issuer_uop_v,
- input wire [5:0] issuer_uop_pc,
+ input wire [PW-1:0] issuer_uop_pc,
  output wire [36:0] issuer_cfg,
  output wire issuer_start,
- output wire [5:0] issuer_start_pc,
+ output wire [PW-1:0] issuer_start_pc,
  output wire configured,init_busy,program_fault,
  // child fault faces (each a registered child output)
  input wire protocol_fault,
@@ -72,7 +72,7 @@ module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOK
  always @(posedge clk) rst_q<=rst_n;
  reg cv_q,dv_q,lv_q,act_q,ibusy_q,ifault_q,iuv_q;
  reg [7:0] tgt_q;reg [1:0] qid_q;reg [11:0] addr_q,base_q;reg [255:0] data_q;reg [12:0] limit_q;reg [15:0] loops_q;
- reg [5:0] iupc_q;
+ reg [PW-1:0] iupc_q;
  reg prot_q,ring_q,writer_q,reduce_q,arg_q,tkm_q,argcap_q,tkmstart_q;
  reg [NS-1:0] cap_q;reg [NSL-1:0] sel_q,unav_q;reg [NPT-1:0] lk_q;reg [3:0] tdel_q,tdest_q;
  always @(posedge clk)begin
@@ -90,7 +90,7 @@ module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOK
    sel_q<=select_fault;unav_q<=unavailable_fault;lk_q<=link_abort;tdel_q<=tkm_del_slot;tdest_q<=tkm_dest_v;
   end
  wire [7:0] target_eff=(tgt_q==(8'd52+{6'd0,qid_q}))?8'd52:8'd0;
- ot_hgi_coll_static_program_target #(.TARGET(8'd52),.LOOKAHEAD(PT_LOOKAHEAD)) u_program(
+ ot_hgi_coll_static_program_target #(.TARGET(8'd52),.LOOKAHEAD(PT_LOOKAHEAD),.ROWS(ROWS)) u_program(
   .clk(clk),.rst_n(rst_q),.cfg_v(cv_q),.cfg_target(target_eff),
   .cfg_addr(addr_q),.cfg_data(data_q),.desc_v(dv_q),.desc_base(base_q),
   .desc_limit(limit_q),.desc_loops(loops_q),.launch_v(lv_q),
@@ -136,60 +136,60 @@ module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,PT_LOOK
   else begin fault<=fault | (|cause_now);fault_cause<=fault_cause | cause_now;end
 endmodule
 
-module ot_hgi_coll_fj_q3(
+module ot_hgi_coll_fj_q3 #(parameter integer ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
- input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [5:0] issuer_uop_pc,
- output wire [36:0] issuer_cfg,output wire issuer_start,output wire [5:0] issuer_start_pc,
+ input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [PW-1:0] issuer_uop_pc,
+ output wire [36:0] issuer_cfg,output wire issuer_start,output wire [PW-1:0] issuer_start_pc,
  output wire configured,init_busy,program_fault,
  input wire protocol_fault,input wire [10:0] capture_fault,input wire [17:0] select_fault,unavailable_fault,
  input wire [2:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,arg_fault,tkm_fault,
  output wire fault,output wire [15:0] fault_cause);
- ot_hgi_coll_fj_core #(.NPT(3),.SOLO(1),.NS(11),.NSL(18)) u(.*,
+ ot_hgi_coll_fj_core #(.NPT(3),.SOLO(1),.NS(11),.NSL(18),.ROWS(ROWS)) u(.*,
   .arg_capture_slot(1'b0),.tkm_start(1'b0),.tkm_del_slot(4'd0),.tkm_dest_v(4'd0));
 endmodule
 
-module ot_hgi_coll_fj_q2(
+module ot_hgi_coll_fj_q2 #(parameter integer ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
- input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [5:0] issuer_uop_pc,
- output wire [36:0] issuer_cfg,output wire issuer_start,output wire [5:0] issuer_start_pc,
+ input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [PW-1:0] issuer_uop_pc,
+ output wire [36:0] issuer_cfg,output wire issuer_start,output wire [PW-1:0] issuer_start_pc,
  output wire configured,init_busy,program_fault,
  input wire protocol_fault,input wire [8:0] capture_fault,input wire [17:0] select_fault,unavailable_fault,
  input wire [1:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,
  input wire arg_capture_slot,tkm_start,input wire [3:0] tkm_del_slot,tkm_dest_v,
  output wire fault,output wire [15:0] fault_cause);
- ot_hgi_coll_fj_core #(.NPT(2),.SOLO(0),.NS(9),.NSL(18)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
+ ot_hgi_coll_fj_core #(.NPT(2),.SOLO(0),.NS(9),.NSL(18),.ROWS(ROWS)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
 endmodule
 // d4f NLINK shapes (SW NLINK 2 = n2s1, SE/NW/NE NLINK 1 = n1s0): same leaves, own hardened shape names.
-module ot_hgi_coll_fj_n2s1(
+module ot_hgi_coll_fj_n2s1 #(parameter integer ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
- input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [5:0] issuer_uop_pc,
- output wire [36:0] issuer_cfg,output wire issuer_start,output wire [5:0] issuer_start_pc,
+ input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [PW-1:0] issuer_uop_pc,
+ output wire [36:0] issuer_cfg,output wire issuer_start,output wire [PW-1:0] issuer_start_pc,
  output wire configured,init_busy,program_fault,
  input wire protocol_fault,input wire [9:0] capture_fault,input wire [17:0] select_fault,unavailable_fault,
  input wire [1:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,arg_fault,tkm_fault,
  output wire fault,output wire [15:0] fault_cause);
- ot_hgi_coll_fj_core #(.NPT(2),.SOLO(1),.NS(10),.NSL(18)) u(.*,
+ ot_hgi_coll_fj_core #(.NPT(2),.SOLO(1),.NS(10),.NSL(18),.ROWS(ROWS)) u(.*,
   .arg_capture_slot(1'b0),.tkm_start(1'b0),.tkm_del_slot(4'd0),.tkm_dest_v(4'd0));
 endmodule
 
-module ot_hgi_coll_fj_n1s0(
+module ot_hgi_coll_fj_n1s0 #(parameter integer ROWS=64,PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
  input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
- input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [5:0] issuer_uop_pc,
- output wire [36:0] issuer_cfg,output wire issuer_start,output wire [5:0] issuer_start_pc,
+ input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [PW-1:0] issuer_uop_pc,
+ output wire [36:0] issuer_cfg,output wire issuer_start,output wire [PW-1:0] issuer_start_pc,
  output wire configured,init_busy,program_fault,
  input wire protocol_fault,input wire [7:0] capture_fault,input wire [17:0] select_fault,unavailable_fault,
  input wire [0:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,
  input wire arg_capture_slot,tkm_start,input wire [3:0] tkm_del_slot,tkm_dest_v,
  output wire fault,output wire [15:0] fault_cause);
- ot_hgi_coll_fj_core #(.NPT(1),.SOLO(0),.NS(8),.NSL(18),.PT_LOOKAHEAD(1)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
+ ot_hgi_coll_fj_core #(.NPT(1),.SOLO(0),.NS(8),.NSL(18),.PT_LOOKAHEAD(1),.ROWS(ROWS)) u(.*,.arg_fault(1'b0),.tkm_fault(1'b0));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -206,11 +206,16 @@ module ot_hgi_coll_uop_pipe(input wire clk,input wire [1535:0] uop_d1,output reg
  always @(posedge clk)begin uop_d2<=uop_d1;uop_d3<=uop_d2;end
 endmodule
 
-module ot_hgi_coll_issuer_m(
+// COLLPIN 10-18 (coordinator 0gd): PIN_REGS=1 (default; d4g) registers every data/control input pin (cfg, start,
+// start_pc) in the leaf: issue path +1 edge (lockstep SH 4 -> 5). The exported raw busy (fj programme-target
+// occupancy + program_active) is busy | start_q, so the programme target sees busy on the SAME edge as before the
+// pin stage (no new launch window); busy_d1..d3 / done / uop stream take the core busy, i.e. everything +1.
+// XDIE-HBM4 (10-19): ROWS (default 64 = unchanged) -> static_issuer_v6 #(ROWS); 128 widens start_pc / uop_pc to 7 b.
+module ot_hgi_coll_issuer_m #(parameter integer PIN_REGS=1,parameter integer ROWS=64,parameter integer PW=(ROWS>128)?8:(ROWS>64)?7:6)(
  input wire clk_control,input wire rst_n,
- input wire [36:0] cfg,input wire start,input wire [5:0] start_pc,
+ input wire [36:0] cfg,input wire start,input wire [PW-1:0] start_pc,
  output wire busy,done,fault,uop_v,          // raw (programme-target feedback, host_v4 edges)
- output wire [5:0] uop_pc,
+ output wire [PW-1:0] uop_pc,
  // V5 issue timing: the instruction stream and its control (start/busy/done) leave 2 edges later; the early tap
  // carries iteration and the six step fields at the raw edge for the protocol leaf's pipelined products.
  // V6 (+1 issue edge): the protocol leaf pin-captures the d2 taps (its flop = the d3 edge); every other child and
@@ -222,8 +227,32 @@ module ot_hgi_coll_issuer_m(
  output wire [87:0] tap_steps                // {lk8, rgx16, del16, iaddr16, vm16, idx16}
 );
  wire [1535:0] raw,uop;wire [31:0] iteration;
- ot_hgi_coll_static_issuer_v6 u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_n),
-  .cfg(cfg),.start(start),.start_pc(start_pc),.busy(busy),.done(done),.fault(fault),
+ // COLL-ISS 10-18 (die standard: regional reset regs; gate rst_n 492 loads): rst_n loads ONE flop (async assert,
+ // synchronous release one edge later, as the ctl_v5 leaf V7); rst_l resets the leaf.
+ reg rst_l;
+ always @(posedge clk_control or negedge rst_n) if(!rst_n)rst_l<=1'b0;else rst_l<=1'b1;
+ wire [36:0] cfg_i;wire start_i;wire [PW-1:0] start_pc_i;wire busy_c;
+`ifdef OT_COLL_ISS_MUT_NOPIN
+ localparam integer PR=0;                    // mutant: pin stage removed (bench expects the +1 issue edge)
+`else
+ localparam integer PR=PIN_REGS;
+`endif
+ generate if(PR!=0)begin:g_pin
+  reg [35:0] cfg_q;reg cfgv_q,start_q;reg [PW-1:0] start_pc_q;
+  always @(posedge clk_control)begin cfg_q<=cfg[35:0];start_pc_q<=start_pc;end
+  always @(posedge clk_control or negedge rst_l) if(!rst_l)begin cfgv_q<=1'b0;start_q<=1'b0;end
+   else begin cfgv_q<=cfg[36];start_q<=start;end
+  assign cfg_i={cfgv_q,cfg_q};assign start_i=start_q;assign start_pc_i=start_pc_q;
+`ifdef OT_COLL_ISS_MUT_NOHOLD
+  assign busy=busy_c;                       // mutant: no occupancy cover on the pin-stage edge
+`else
+  assign busy=busy_c|start_q;
+`endif
+ end else begin:g_nopin
+  assign cfg_i=cfg;assign start_i=start;assign start_pc_i=start_pc;assign busy=busy_c;
+ end endgenerate
+ ot_hgi_coll_static_issuer_v6 #(.ROWS(ROWS)) u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_l),
+  .cfg(cfg_i),.start(start_i),.start_pc(start_pc_i),.busy(busy_c),.done(done),.fault(fault),
   .uop_v(uop_v),.uop(raw),.iteration(iteration),.uop_pc(uop_pc));
 `ifdef OT_COLL_V5_MUT_NOMASK
  assign uop=raw;
@@ -234,17 +263,17 @@ module ot_hgi_coll_issuer_m(
  assign tap_steps={uop[1407+:8],uop[1318+:16],uop[1350+:16],uop[1366+:16],uop[1302+:16],uop[1334+:16]};
  reg busy_d1,done_d1,done_d2,start_d1;
  always @(posedge clk_control)uop_d1<=uop;
- always @(posedge clk_control or negedge rst_n)
-  if(!rst_n)begin busy_d1<=0;busy_d2<=0;busy_d3<=0;done_d1<=0;done_d2<=0;done_d3<=0;start_d1<=0;start_d2<=0;start_d3<=0;end
-  else begin busy_d1<=busy;busy_d2<=busy_d1;busy_d3<=busy_d2;done_d1<=done;done_d2<=done_d1;done_d3<=done_d2;
-   start_d1<=start;start_d2<=start_d1;start_d3<=start_d2;end
+ always @(posedge clk_control or negedge rst_l)
+  if(!rst_l)begin busy_d1<=0;busy_d2<=0;busy_d3<=0;done_d1<=0;done_d2<=0;done_d3<=0;start_d1<=0;start_d2<=0;start_d3<=0;end
+  else begin busy_d1<=busy_c;busy_d2<=busy_d1;busy_d3<=busy_d2;done_d1<=done;done_d2<=done_d1;done_d3<=done_d2;
+   start_d1<=start_i;start_d2<=start_d1;start_d3<=start_d2;end
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
 // Protocol leaves (V5 issue timing, INJLAT 12; parameters fixed by name for hardening): one leaf = the pipelined
 // iteration-product unit (pin capture of the early tap at E+3, registered partials at E+4) + ot_hgi_coll_q_static_ctl_v5
 // on the 2-edge-delayed instruction (valid E+4..E+5): only field+partial adders remain in the cycle.
-module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
+module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13,VM_RT=0)(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [ND-1:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
@@ -253,7 +282,7 @@ module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
  output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
  output wire [3:0] vm_assembled_v,output wire [NPT*8-1:0] held_epoch,
  output wire [NPT*16-1:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
- output wire protocol_fault,output wire [31:0] cycles);
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
  wire [15:0] m_idx,m_vm,m_iaddr_h,m_del_h,m_rgx_h;wire [31:0] m_iaddr_l,m_del_l,m_rgx_l;wire [23:0] m_lk_l,m_lk_h;
  ot_hgi_coll_iter_mul u_mul(.clk(clk_control),.iteration(tap_iteration),.s_idx(tap_steps[0+:16]),
   .s_vm(tap_steps[16+:16]),.s_iaddr(tap_steps[32+:16]),.s_del(tap_steps[48+:16]),.s_rgx(tap_steps[64+:16]),
@@ -267,7 +296,7 @@ module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
  always @(posedge clk_control or negedge rst_n) if(!rst_n)rst_l<=1'b0;else rst_l<=1'b1;
  always @(posedge clk_control) inst_q<=inst;
  always @(posedge clk_control or negedge rst_l) if(!rst_l)begin hs_q<=0;hb_q<=0;end else begin hs_q<=hgi_start;hb_q<=hgi_busy;end
- ot_hgi_coll_q_static_ctl_v5 #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12)) u(.clk_control(clk_control),.rst_n(rst_l),
+ ot_hgi_coll_q_static_ctl_v5 #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12),.VM_RT(VM_RT)) u(.clk_control(clk_control),.rst_n(rst_l),
   .inst(inst_q),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
   .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h),
   .hgi_start(hs_q),.hgi_busy(hb_q),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
@@ -276,7 +305,7 @@ module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
   .rgx_addr_pin(rgx_addr_pin),.inj_source_v(inj_source_v),.inj_source_meta(inj_source_meta),
   .vm_source_meta(vm_source_meta),.vm_assembled_v(vm_assembled_v),
   .held_epoch(held_epoch),.wr_sequence_pin(wr_sequence_pin),.rd_sequence_pin(rd_sequence_pin),
-  .rx_sequence_pin(rx_sequence_pin),.protocol_fault(protocol_fault),.cycles(cycles));
+  .rx_sequence_pin(rx_sequence_pin),.protocol_fault(protocol_fault),.cycles(cycles),.vm_sel_d(vm_sel_d));
 endmodule
 
 module ot_hgi_coll_ctl_v5_q3(
@@ -289,7 +318,7 @@ module ot_hgi_coll_ctl_v5_q3(
  output wire [3:0] vm_assembled_v,output wire [23:0] held_epoch,
  output wire [47:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_ctl_v5_core #(.NPT(3),.SOLO(1)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(3),.SOLO(1)) u(.*,.vm_sel_d());
 endmodule
 
 module ot_hgi_coll_ctl_v5_q2(
@@ -302,7 +331,7 @@ module ot_hgi_coll_ctl_v5_q2(
  output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
  output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(0)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(0)) u(.*,.vm_sel_d());
 endmodule
 module ot_hgi_coll_ctl_v5_n2s1(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
@@ -314,7 +343,7 @@ module ot_hgi_coll_ctl_v5_n2s1(
  output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
  output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(1)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(1)) u(.*,.vm_sel_d());
 endmodule
 module ot_hgi_coll_ctl_v5_n1s0(
  input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
@@ -326,7 +355,59 @@ module ot_hgi_coll_ctl_v5_n1s0(
  output wire [3:0] vm_assembled_v,output wire [7:0] held_epoch,
  output wire [15:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
  output wire protocol_fault,output wire [31:0] cycles);
- ot_hgi_coll_ctl_v5_core #(.NPT(1),.SOLO(0)) u(.*);
+ ot_hgi_coll_ctl_v5_core #(.NPT(1),.SOLO(0)) u(.*,.vm_sel_d());
+endmodule
+
+// HBM-BANKLAT-COLL 10-19: VM_RT variants of the four protocol leaves (new hardened views, one per NPT/SOLO shape;
+// parameter fixed by name for hardening, default = the d4g GEN2c/GEN2d scalar budget 74). Ports = the v5 leaf + vm_sel_d
+// (24 flop-Q outputs: the VM pair select delayed VM_RT edges, to the vmasm slices). The v5 leaves above are unchanged.
+module ot_hgi_coll_ctl_v5r_q3 #(parameter integer VM_RT=74)(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [15:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [23:0] held_epoch,
+ output wire [47:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
+ ot_hgi_coll_ctl_v5_core #(.NPT(3),.SOLO(1),.VM_RT(VM_RT)) u(.*);
+endmodule
+module ot_hgi_coll_ctl_v5r_q2 #(parameter integer VM_RT=74)(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [14:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
+ output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(0),.VM_RT(VM_RT)) u(.*);
+endmodule
+module ot_hgi_coll_ctl_v5r_n2s1 #(parameter integer VM_RT=74)(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [14:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [15:0] held_epoch,
+ output wire [31:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
+ ot_hgi_coll_ctl_v5_core #(.NPT(2),.SOLO(1),.VM_RT(VM_RT)) u(.*);
+endmodule
+module ot_hgi_coll_ctl_v5r_n1s0 #(parameter integer VM_RT=74)(
+ input wire clk_control,rst_n,input wire [1535:0] inst,input wire [31:0] tap_iteration,input wire [87:0] tap_steps,
+ input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,input wire [13:0] dest_v,
+ input wire rc_v,input wire [2:0] rc_tag,input wire [7:0] vm_rv,
+ output wire [135:0] vm_req_pin,output wire [1:0] inj_req_pin,output wire [31:0] inj_idx_pin,
+ output wire [159:0] inj_addr_pin,delivery_obase_pin,rgx_addr_pin,
+ output wire [1:0] inj_source_v,output wire [65:0] inj_source_meta,output wire [131:0] vm_source_meta,
+ output wire [3:0] vm_assembled_v,output wire [7:0] held_epoch,
+ output wire [15:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
+ output wire protocol_fault,output wire [31:0] cycles,output wire [23:0] vm_sel_d);
+ ot_hgi_coll_ctl_v5_core #(.NPT(1),.SOLO(0),.VM_RT(VM_RT)) u(.*);
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------

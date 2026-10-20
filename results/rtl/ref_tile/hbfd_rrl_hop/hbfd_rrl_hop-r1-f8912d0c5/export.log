@@ -1,0 +1,3 @@
+{"name": "hbfd_rrl_hop", "ok": true, "checked": true, "files": {"hbfd_rrl_hop.lef": "4f678c95db96bf19335f0cef1605159db91b119c61023a99ef2956ee65be3264", "hbfd_rrl_hop_ff.lib": "b6771d0986a36aaccfdc6fe89f90b8db9080e20cc43b21cd92ddd989d0c0306d", "hbfd_rrl_hop_ss.lib": "0a95537ee42219cd4b5bb511d30bbe909685cbcedf388ddf109ad95ea01608a6", "hbfd_rrl_hop_tt.lib": "cc0461612e359845e7f5ad663036d6afeffb1ad5678fe222d59cd10a0c3966b7"}}
+CK_SS_MEAN=1 CK_SS_ALL_MEAN=1 CK_SS_MIN=1 CK_SS_ALL_MIN=1 CK_SS_MAX=1 CK_SS_ALL_MAX=1 CK_TT_MEAN=1 CK_TT_ALL_MEAN=1 CK_TT_MIN=1 CK_TT_ALL_MIN=1 CK_TT_MAX=1 CK_TT_ALL_MAX=1 CK_FF_MEAN=1 CK_FF_ALL_MEAN=1 CK_FF_MIN=1 CK_FF_ALL_MIN=1 CK_FF_MAX=1 CK_FF_ALL_MAX=1 CK_ROUTE_REF=SS
+REF_TILE export hbfd_rrl_hop: views rc=0 child_lint PASS 

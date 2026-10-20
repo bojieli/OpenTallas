@@ -1,0 +1,110 @@
+{
+ "name": "hcoll_q3_lp_ar128-ar128-COMMIT",
+ "block": "ot_hfd_coll_q3_lp_ar",
+ "ref_tile": true,
+ "owner": "Claude:TW2-COLLAR",
+ "purpose": "HBM COLL q3 quadrant engine parent (SW, TP 192) as landed regions; contains the critical ot_hgi_coll_ctl_v5_n2s1 leaf: coordinator PNG review before any submit -- XDIE-HBM4 AR_ITER 1 / ROWS 128 re-gate (gate + PNG review only)",
+ "threads": 16,
+ "peak_ram_gb": 128,
+ "source": {
+  "branch": "claude/tw2-collar-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/landed_parent_1018/collq",
+   "results/rtl/landed_parent_1018/collq/bench_witness"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hfd_coll_q3_lp_ar u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/landed/ot_hfd_coll_q3_lp_ar.sv rtl/common/landed_parent/ot_pl_land.sv rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v5.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v6.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_capture_pin_v2.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ariter_tag.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "q3lpar_lockstep",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/landed/run_q3_lp_ar_all.sh {RUN}/bench/q3lpar",
+    "expect": "pass",
+    "min_count_regex": "Q3_LP_AR_ALL_EXIT (0)",
+    "threads": 16,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_q3_lp_ar128/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_q3_lp_ar128/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 128
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_q3_lp_ar128 --out {RUN}/record/views/ot_hfd_coll_q3_lp_ar --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2 --macro-view physical/ref_tile/hcoll_ring_ag_ctl_1017/views/ot_hgi_coll_ring_ag_ctl --macro-view physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane --macro-view physical/ref_tile/hcoll_v5_ctl3/views/ot_hgi_coll_ctl_v5_n2s1 --macro-view physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2 --macro-view physical/ref_tile/hcoll_v5_qso3n/views/ot_hgi_coll_qso_n2s1_b1 --macro-view physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32 --macro-view physical/ref_tile/hcoll_v7_arg_tp192/views/ot_hgi_coll_argmax_m_tp192 --macro-view physical/ref_tile/hcoll_vmwrite_static_v6_roots_fsw/views/ot_hgi_coll_static_vmwrite_roots_v6_physical > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_q3_lp_ar128/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile/hcoll_ring_ag_ctl_1017/views/ot_hgi_coll_ring_ag_ctl",
+   "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "physical/ref_tile/hcoll_v5_ctl3/views/ot_hgi_coll_ctl_v5_n2s1",
+   "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "physical/ref_tile/hcoll_v5_qso3n/views/ot_hgi_coll_qso_n2s1_b1",
+   "physical/ref_tile/hcoll_v5_qso3w/views/ot_hgi_coll_qso_n2s1_b32",
+   "physical/ref_tile/hcoll_v7_arg_tp192/views/ot_hgi_coll_argmax_m_tp192",
+   "physical/ref_tile/hcoll_vmwrite_static_v6_roots_fsw/views/ot_hgi_coll_static_vmwrite_roots_v6_physical"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_q3_lp_ar128/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hcoll_q3_lp_ar128/hcoll_q3_lp_ar128-ar128-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "hold_merge": "critical (ot_hgi_coll_ctl_v5 prefix inside): gate + PNG review only; issuer / link_e / reduce views missing (soft here); fj ROWS 128 soft (no closed r128 view yet)",
+ "structural_change": "TW2-COLLAR (10-19): PL-COLLQ (PARENTS-LANDED 10-18): the HBM COLL q3 (SW, NLINK 2, TP 192) quadrant parent as a LANDED-REGION cluster (lp.py): 3 local clock regions sw / wr / rg, 10 landed writer crossings (2,258 b) + 2 loose (sticky fault) landings, 1-bit reset runs only; replaces the never-kitted single-tree ot_hfd_coll_q3_hard_v8x die SYNTH binding; XDIE-HBM4 AR_ITER 1 / ROWS 128: issuer 6 SRAMs (u_sram + g128.u_sram_hi per bank), fj ROWS 128 soft, u_ariter leaf (sw)"
+}

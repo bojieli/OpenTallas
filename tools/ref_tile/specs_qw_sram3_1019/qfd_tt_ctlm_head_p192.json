@@ -1,0 +1,340 @@
+{
+ "name": "qfd_tt_ctlm_head_p192",
+ "top": "qfd_tt_ctlm_head",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+  "rtl/physical/ot_qfd_tt_ctlm_slot.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm_tp8.sv",
+  "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv",
+  "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fp.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm.sv",
+  "rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "G": 3072,
+  "PSRAM": 1,
+  "HQ2": 1,
+  "MEREG": 3,
+  "RRG": 1,
+  "PCUT": 1,
+  "AUD": 33975
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 388.8
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "clk",
+   "token",
+   "pw_addr",
+   "x_oidle",
+   "x_oprog",
+   "kv_write_drained",
+   "m_fidx_o",
+   "c_fault",
+   "kvd_ts",
+   "kvd_wcs",
+   "kvd_tiles",
+   "kvd_kindk"
+  ],
+  "N": [
+   "rst_n",
+   "pos",
+   "pw_data",
+   "kv_ok",
+   "m_fin_o",
+   "me_clk_en",
+   "kvd_v",
+   "kvd_ks",
+   "kvd_split",
+   "kvd_k",
+   "kvd_pos"
+  ],
+  "W": [
+   "h_start",
+   "prog_base",
+   "pw_v",
+   "x_oacc",
+   "x_orows",
+   "me_mem_ok",
+   "m_fval_o",
+   "kvd_wbase",
+   "kvd_js",
+   "kvd_jsh",
+   "kvd_nout"
+  ],
+  "E": [
+   "cmd",
+   "ret"
+  ]
+ },
+ "pin_ranges": {
+  "cmd": [
+   40,
+   84
+  ],
+  "ret": [
+   92,
+   104
+  ],
+  "clk": [
+   6.0,
+   7.5
+  ],
+  "rst_n": [
+   6.0,
+   7.5
+  ],
+  "h_start": [
+   6.0,
+   7.5
+  ],
+  "token": [
+   9.5,
+   11.48
+  ],
+  "pos": [
+   9.5,
+   11.48
+  ],
+  "prog_base": [
+   9.5,
+   11.0
+  ],
+  "pw_v": [
+   13.0,
+   14.5
+  ],
+  "pw_addr": [
+   13.48,
+   14.98
+  ],
+  "pw_data": [
+   13.48,
+   20.52
+  ],
+  "x_oacc": [
+   16.5,
+   19.14
+  ],
+  "x_oidle": [
+   16.98,
+   18.48
+  ],
+  "x_oprog": [
+   20.48,
+   22.24
+  ],
+  "x_orows": [
+   21.14,
+   22.9
+  ],
+  "kv_ok": [
+   22.52,
+   24.02
+  ],
+  "kv_write_drained": [
+   24.24,
+   25.74
+  ],
+  "me_mem_ok": [
+   24.9,
+   26.4
+  ],
+  "m_fin_o": [
+   26.02,
+   27.52
+  ],
+  "m_fidx_o": [
+   27.74,
+   29.72
+  ],
+  "m_fval_o": [
+   28.4,
+   31.92
+  ],
+  "me_clk_en": [
+   29.52,
+   31.02
+  ],
+  "c_fault": [
+   31.72,
+   33.22
+  ],
+  "kvd_v": [
+   33.02,
+   34.52
+  ],
+  "kvd_wbase": [
+   33.92,
+   36.56
+  ],
+  "kvd_ts": [
+   35.22,
+   37.86
+  ],
+  "kvd_ks": [
+   36.52,
+   39.16
+  ],
+  "kvd_js": [
+   38.56,
+   41.2
+  ],
+  "kvd_wcs": [
+   39.86,
+   42.5
+  ],
+  "kvd_split": [
+   41.16,
+   42.66
+  ],
+  "kvd_jsh": [
+   43.2,
+   44.7
+  ],
+  "kvd_tiles": [
+   44.5,
+   46.48
+  ],
+  "kvd_k": [
+   44.66,
+   46.64
+  ],
+  "kvd_nout": [
+   46.7,
+   48.68
+  ],
+  "kvd_kindk": [
+   48.48,
+   49.98
+  ],
+  "kvd_pos": [
+   48.64,
+   50.62
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "count": 1,
+   "at": [
+    43.2,
+    197.136
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:QW-SRAM3",
+  "branch": "claude/qw-sram3-1019",
+  "tag": "p192a",
+  "purpose": "Real-parent pin-access gate of the p192 SRAM successor (INF.SRAM): qfd_tt_ctlm_head unchanged RTL with both 64x512 program SRAMs on ot_sram_1r1w_64x512_m1_r2c2_p192_mir (<=5.21 pins/um, M4 lead RC in Liberty). Checks: GRT overflow 0 at the macro pin faces, TT/FF pin-flop spread <=80, setup TT / hold FF, util.",
+  "extra_paths": [
+   "physical/qfd_tt_ctlm_split",
+   "rtl/test/tb_qfd_tt_ctlm_i_psram.sv",
+   "rtl/test/run_tt_ctlm_i_lockstep.sh",
+   "rtl/lib/sram_p192_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir",
+   "tools/mem_compiler/build_qw_p192_1019.py"
+  ],
+  "benches": [
+   {
+    "name": "split_cycle_exact",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/strict strict",
+    "expect": "pass",
+    "pass_regex": "^PASS tt_ctlm_split strict",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "split_mutant",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/neg strict mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL tt_ctlm_split strict mut",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "split_argmax",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/argmax strict_argmax",
+    "expect": "pass",
+    "pass_regex": "^PASS tt_ctlm_split strict_argmax",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ]
+ },
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_SAFE_BALANCE": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_MACRO_LEAF": "1"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "slot_change_request": "QW-SRAM3 10-19: same RTL/params/pins as closed qfd_tt_ctlm_head; only the two 64x512 program SRAMs bind the <=5.21 pins/um successor ot_sram_1r1w_64x512_m1_r2c2_p192_mir (171.288x153.912, W/E 793 pins at 0.192 um; old master 10.2 pins/um). Outline 237.6 sq -> 259.2x388.8 (6x9 lattice): abutted N-S stack (no N/S pins) at x=43.2, 43.2 um W pin channel, 44.7 um E band; die slot must grow by the macro pin-face cost (+52.7k vs +26.6k um2 macros).",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Unchanged closed qfd_tt_ctlm_head RTL registers every port at the face (io_flop_at_pins cols 4 places those flops FIRM at their pins, inhold/outhold); adding generated pin regs would add a cycle to every head port, outside this SRAM-only change"
+ }
+}

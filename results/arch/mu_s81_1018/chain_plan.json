@@ -1,0 +1,522 @@
+{
+ "schema": "opentallas.s81_dv.mu_chain_plan.v1",
+ "lane": "MU-S81",
+ "grade": "modelled",
+ "array": {
+  "dies": 520,
+  "stacks": 520,
+  "added_dies": 80,
+  "added_stacks": 80,
+  "added_trays": 16,
+  "die_mm2": 799.2,
+  "total_mm2": 478504,
+  "switch_ports_added": {
+   "serdes": 480,
+   "note": "UCIe lanes stay inside the two-die package"
+  },
+  "extra_circuits_on_existing_dies": {
+   "circuits": 64,
+   "die_variant": "the 4 rank dies of each pre-group and post-group stage need a die master with +1 SerDes lane pair (2 PHY lanes) and lep_mu (lane face ~4.4k pins): 64 dies, a p4l variant",
+   "note": "+1 tx lane pair on each upstream rank die, +1 rx lane pair on each downstream rank die"
+  }
+ },
+ "reuse": "per the token DAG of record (results/arch/token_path_20261009/ds_rom.json) every layer writes and reads its own rows on its own stage (own_row_write / window_load / pv nodes); what later layers reuse from the owner layers 2/8/14/20 is the top-k selection, which rides the stage h message with the user tag. So copy B needs NO reuse link; the owner copy is addressed by user only through the h message order. Lane MU-S81/SVC confirms on the RTL (svc_bases.json).",
+ "latency": {
+  "copy_a": "unchanged (the latency user is always on copy A: same dies, same circuits)",
+  "copy_b_delta_cycles": 0,
+  "why": "every crossing is the same fixed-delay switched channel (377.6 ns budget), so copy B's hop latency equals copy A's; a copy-B user's windows are the copy-A windows shifted by its slot"
+ },
+ "checks": {
+  "link_occupancy_le_slot": "PASS",
+  "cable_budget_m": 6.0
+ },
+ "groups": [
+  {
+   "group": "S029",
+   "label": "Stage 29: L19, L20.ffn",
+   "owns_layer": 20,
+   "copy_b_dies": [
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447,
+    448,
+    449
+   ],
+   "copy_b_trays": 2,
+   "copy_b_stacks": 10,
+   "placement": "copy B trays in the rack row of copy A (S029), same switch plane set; cable <= the 27.6 ns budget share (~6.0 m twinax) like every other crossing",
+   "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
+   "upstream": "S028",
+   "downstream": "S030",
+   "occ_single": 38900,
+   "occ_per_copy_users": {
+    "A": 23,
+    "B": 23
+   }
+  },
+  {
+   "group": "S020",
+   "label": "Stage 20: L13, L14.ffn",
+   "owns_layer": 14,
+   "copy_b_dies": [
+    450,
+    451,
+    452,
+    453,
+    454,
+    455,
+    456,
+    457,
+    458,
+    459
+   ],
+   "copy_b_trays": 2,
+   "copy_b_stacks": 10,
+   "placement": "copy B trays in the rack row of copy A (S020), same switch plane set; cable <= the 27.6 ns budget share (~6.0 m twinax) like every other crossing",
+   "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
+   "upstream": "S019",
+   "downstream": "S021",
+   "occ_single": 35325,
+   "occ_per_copy_users": {
+    "A": 23,
+    "B": 23
+   }
+  },
+  {
+   "group": "S011",
+   "label": "Stage 11: L7, L8.ffn",
+   "owns_layer": 8,
+   "copy_b_dies": [
+    460,
+    461,
+    462,
+    463,
+    464,
+    465,
+    466,
+    467,
+    468,
+    469
+   ],
+   "copy_b_trays": 2,
+   "copy_b_stacks": 10,
+   "placement": "copy B trays in the rack row of copy A (S011), same switch plane set; cable <= the 27.6 ns budget share (~6.0 m twinax) like every other crossing",
+   "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
+   "upstream": "S010",
+   "downstream": "S012",
+   "occ_single": 34394,
+   "occ_per_copy_users": {
+    "A": 23,
+    "B": 23
+   }
+  },
+  {
+   "group": "S002",
+   "label": "Stage 2: L1, L2.ffn",
+   "owns_layer": 2,
+   "copy_b_dies": [
+    470,
+    471,
+    472,
+    473,
+    474,
+    475,
+    476,
+    477,
+    478,
+    479
+   ],
+   "copy_b_trays": 2,
+   "copy_b_stacks": 10,
+   "placement": "copy B trays in the rack row of copy A (S002), same switch plane set; cable <= the 27.6 ns budget share (~6.0 m twinax) like every other crossing",
+   "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
+   "upstream": "S001",
+   "downstream": "S003",
+   "occ_single": 31144,
+   "occ_per_copy_users": {
+    "A": 23,
+    "B": 23
+   }
+  },
+  {
+   "group": "S034",
+   "label": "Stage 34: L23, L24.ffn",
+   "owns_layer": 24,
+   "copy_b_dies": [
+    480,
+    481,
+    482,
+    483,
+    484,
+    485,
+    486,
+    487,
+    488,
+    489
+   ],
+   "copy_b_trays": 2,
+   "copy_b_stacks": 10,
+   "placement": "copy B trays in the rack row of copy A (S034), same switch plane set; cable <= the 27.6 ns budget share (~6.0 m twinax) like every other crossing",
+   "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
+   "upstream": "S033",
+   "downstream": "S035",
+   "occ_single": 23170,
+   "occ_per_copy_users": {
+    "A": 23,
+    "B": 23
+   }
+  },
+  {
+   "group": "S040",
+   "label": "Stage 40: L27, L28.ffn",
+   "owns_layer": 28,
+   "copy_b_dies": [
+    490,
+    491,
+    492,
+    493,
+    494,
+    495,
+    496,
+    497,
+    498,
+    499
+   ],
+   "copy_b_trays": 2,
+   "copy_b_stacks": 10,
+   "placement": "copy B trays in the rack row of copy A (S040), same switch plane set; cable <= the 27.6 ns budget share (~6.0 m twinax) like every other crossing",
+   "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
+   "upstream": "S039",
+   "downstream": "S041",
+   "occ_single": 23190,
+   "occ_per_copy_users": {
+    "A": 23,
+    "B": 23
+   }
+  },
+  {
+   "group": "S046",
+   "label": "Stage 46: L31, L32.ffn",
+   "owns_layer": 32,
+   "copy_b_dies": [
+    500,
+    501,
+    502,
+    503,
+    504,
+    505,
+    506,
+    507,
+    508,
+    509
+   ],
+   "copy_b_trays": 2,
+   "copy_b_stacks": 10,
+   "placement": "copy B trays in the rack row of copy A (S046), same switch plane set; cable <= the 27.6 ns budget share (~6.0 m twinax) like every other crossing",
+   "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
+   "upstream": "S045",
+   "downstream": "S047",
+   "occ_single": 23190,
+   "occ_per_copy_users": {
+    "A": 23,
+    "B": 23
+   }
+  },
+  {
+   "group": "S052",
+   "label": "Stage 52: L35, L36.ffn",
+   "owns_layer": 36,
+   "copy_b_dies": [
+    510,
+    511,
+    512,
+    513,
+    514,
+    515,
+    516,
+    517,
+    518,
+    519
+   ],
+   "copy_b_trays": 2,
+   "copy_b_stacks": 10,
+   "placement": "copy B trays in the rack row of copy A (S052), same switch plane set; cable <= the 27.6 ns budget share (~6.0 m twinax) like every other crossing",
+   "rom": "copy B dies carry copy A's ROM content: the same die masks fabricated twice (no new mask set); its HBM holds only copy-B users' KV / index state",
+   "upstream": "S051",
+   "downstream": "S053",
+   "occ_single": 23190,
+   "occ_per_copy_users": {
+    "A": 23,
+    "B": 23
+   }
+  }
+ ],
+ "links": [
+  {
+   "group": "S029",
+   "kind": "stage hop in (h message)",
+   "src": "S028",
+   "dst": "S029.B",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S029",
+   "kind": "stage hop out (h message)",
+   "src": "S029.B",
+   "dst": "S030",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S029",
+   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "src": "S029.B",
+   "dst": "S029.B",
+   "circuits": 60,
+   "form": "identical to copy A on the new dies' own lanes"
+  },
+  {
+   "group": "S020",
+   "kind": "stage hop in (h message)",
+   "src": "S019",
+   "dst": "S020.B",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S020",
+   "kind": "stage hop out (h message)",
+   "src": "S020.B",
+   "dst": "S021",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S020",
+   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "src": "S020.B",
+   "dst": "S020.B",
+   "circuits": 60,
+   "form": "identical to copy A on the new dies' own lanes"
+  },
+  {
+   "group": "S011",
+   "kind": "stage hop in (h message)",
+   "src": "S010",
+   "dst": "S011.B",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S011",
+   "kind": "stage hop out (h message)",
+   "src": "S011.B",
+   "dst": "S012",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S011",
+   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "src": "S011.B",
+   "dst": "S011.B",
+   "circuits": 60,
+   "form": "identical to copy A on the new dies' own lanes"
+  },
+  {
+   "group": "S002",
+   "kind": "stage hop in (h message)",
+   "src": "S001",
+   "dst": "S002.B",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S002",
+   "kind": "stage hop out (h message)",
+   "src": "S002.B",
+   "dst": "S003",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S002",
+   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "src": "S002.B",
+   "dst": "S002.B",
+   "circuits": 60,
+   "form": "identical to copy A on the new dies' own lanes"
+  },
+  {
+   "group": "S034",
+   "kind": "stage hop in (h message)",
+   "src": "S033",
+   "dst": "S034.B",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S034",
+   "kind": "stage hop out (h message)",
+   "src": "S034.B",
+   "dst": "S035",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S034",
+   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "src": "S034.B",
+   "dst": "S034.B",
+   "circuits": 60,
+   "form": "identical to copy A on the new dies' own lanes"
+  },
+  {
+   "group": "S040",
+   "kind": "stage hop in (h message)",
+   "src": "S039",
+   "dst": "S040.B",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S040",
+   "kind": "stage hop out (h message)",
+   "src": "S040.B",
+   "dst": "S041",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S040",
+   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "src": "S040.B",
+   "dst": "S040.B",
+   "circuits": 60,
+   "form": "identical to copy A on the new dies' own lanes"
+  },
+  {
+   "group": "S046",
+   "kind": "stage hop in (h message)",
+   "src": "S045",
+   "dst": "S046.B",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S046",
+   "kind": "stage hop out (h message)",
+   "src": "S046.B",
+   "dst": "S047",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S046",
+   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "src": "S046.B",
+   "dst": "S046.B",
+   "circuits": 60,
+   "form": "identical to copy A on the new dies' own lanes"
+  },
+  {
+   "group": "S052",
+   "kind": "stage hop in (h message)",
+   "src": "S051",
+   "dst": "S052.B",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S052",
+   "kind": "stage hop out (h message)",
+   "src": "S052.B",
+   "dst": "S053",
+   "circuits": 4,
+   "bytes_per_user_pos": 163904,
+   "cycles_per_user_pos": 652,
+   "slot": 21313.7,
+   "occupancy": 0.0306,
+   "form": "second lane pair = second static circuit a rank die (MU-S81/LINK 258c9894b: a destination field is NOT possible, the frozen lane tile link layer is end-to-end per peer pair; ot_s81sl_lep_mu selects pair A / B per the compiled slot bit, user 0 forced to A)"
+  },
+  {
+   "group": "S052",
+   "kind": "copy B internal (TP4 collectives + intra-group stage hops)",
+   "src": "S052.B",
+   "dst": "S052.B",
+   "circuits": 60,
+   "form": "identical to copy A on the new dies' own lanes"
+  }
+ ],
+ "calendar": {
+  "ar_users": 46,
+  "ar_agg_model": 56302,
+  "record": "calendar_ar.json"
+ }
+}

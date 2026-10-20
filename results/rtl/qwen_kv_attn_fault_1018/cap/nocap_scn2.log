@@ -1,0 +1,3 @@
+pass 1 (dly 0): region release spread 3..21 cycles after the host (unaligned, D 19)
+PASS kv_die_cfg_boot scn2 mut0 cap0 capv1 regions43 D19
+rtl/test/qwen_static_kv/tb_kv_die_cfg_boot.sv:127: $finish called at 2240000 (1ps)

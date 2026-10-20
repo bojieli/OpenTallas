@@ -33,13 +33,31 @@
 
 module ot_hgi_sm_xload_cl2_ctl #(
     parameter integer PMAX   = 8,
-    parameter integer RD_LAT = 6,
+    // RD_LAT (HBM-BANKLAT-XL 10-19): VM read round trip in edges = registers between the rq pins and the rr pins
+    // (ref 6 = ot_vms_bank_static n+6 with zero die stages; faces bank +1; + die lane stations each way).
+    //   SCALAR (RD_LAT[63:8] == 0): every bank answers RD_LAT edges after its request (today's form, default 6;
+    //     unequal lanes are padded by the die).
+    //   PER-BANK VECTOR (die contract list [l0..l7], packed element b at RD_LAT[8b +: 8]): bank b answers l_b edges
+    //     after ITS request.  The ctl issues bank b's request D_b = RLM - l_b edges late (RLM = max l_b) from ONE
+    //     shared 16-bit tapped delay line of the wave issue {valid, s0} (DMX = max D_b stages), so every bank's
+    //     answer reaches the rr pins on the same edge, RLM edges after the wave issue: no 257-bit lane padding.
+    //   Everything after the rr pins sees RLM exactly as it saw the scalar RD_LAT (md depth, em_off, egress eg_*,
+    //   x_done): the x-load schedule is the scalar schedule at RD_LAT = RLM.  VM calendar: bank b's x-load read
+    //   arrives at its port D_b + lane_rq_b edges after the wave issue (the compiler's rslot for the x-load group).
+    // MUT 7 (bench): the per-bank stagger is ignored (all D_b = 0, schedule still at RLM) -> must FAIL on unequal lanes.
+    parameter [63:0] RD_LAT = 64'd6,
     parameter integer MUT    = 0,
     parameter integer NR     = 32,       // select replicas (each drives 2048 / NR data bits)
     parameter integer EGRESS_SPLIT = 0,  // XQL (H-SM 10-16): 1 = export the egress controls (eg_*) to pair-egress leaves
     // SEL_KEEP=1 (HBM-B 10-17, ctlx): the NR rotation-select replicas are (* keep *) flops, so synthesis keeps NR copies
     // (ctlw f20a: opt_merge folded them, u_ctl.s0r[26][*] drove 5,045 loads).  Same function, same edges.
-    parameter integer SEL_KEEP = 0
+    parameter integer SEL_KEEP = 0,
+    // PIN_NATIVE=1 (ELEM-GAPS/HBMN1 10-18, ctlx native audit of CLOSED q1-7af6f4406: l_d_o launch 403 ps on 580 pins):
+    // l_d_o leaves from a dedicated (* keep *) pin register copy of L1 (D = l0_d, same edge as l_d), so the l_d_o
+    // pin flops sit at the E face while l_d feeds the C stage on the W side.  Same function, same edges.
+    parameter integer PIN_NATIVE = 0,
+    // RST_PRE=1: rst_n is already a relayed, synchronous reset (ctlx pin relay); rn = rst_n (no second relay).
+    parameter integer RST_PRE = 0
 ) (
     input  wire               clk,
     input  wire               clk_eg,    // egress root (rw / BD-beat pin capture, beat select, xw pins): related phase 0
@@ -96,9 +114,42 @@ module ot_hgi_sm_xload_cl2_ctl #(
     localparam integer LAND = 4;           // cl2g: + 1 landing stage (L1) between the rotation mux and l_d_o / C
     localparam integer RDP = 7;            // + 1: rw captured at the ctl pins (egress edge)
     localparam integer RB = 2048 / NR;     // data bits per select replica
+    // ---- per-bank read round trip (RD_LAT header): l_b, RLM = max l_b, D_b = RLM - l_b, DMX = max D_b
+    function automatic integer rlat(input integer b);
+        reg [63:0] v;
+        begin
+            v = (RD_LAT >> 8 == 64'd0) ? RD_LAT : (RD_LAT >> (8 * b));
+            rlat = v[7:0];
+        end
+    endfunction
+    function automatic integer rl_max(input integer dummy);
+        integer b2;
+        begin
+            rl_max = 0;
+            for (b2 = 0; b2 < 8; b2 = b2 + 1) if (rlat(b2) > rl_max) rl_max = rlat(b2);
+        end
+    endfunction
+    localparam integer RLM = rl_max(0);
+    function automatic integer dstag(input integer b);
+        dstag = (MUT == 7) ? 0 : RLM - rlat(b);
+    endfunction
+    function automatic integer dst_max(input integer dummy);
+        integer b2;
+        begin
+            dst_max = 0;
+            for (b2 = 0; b2 < 8; b2 = b2 + 1) if (dstag(b2) > dst_max) dst_max = dstag(b2);
+        end
+    endfunction
+    localparam integer DMX = dst_max(0);
     // ---- local reset relay
-    reg rs1, rs2, rn;
-    always @(posedge clk or negedge rst_n) if (!rst_n) {rs1, rs2, rn} <= 3'b000; else {rs1, rs2, rn} <= {1'b1, rs1, rs2};
+    wire rn;
+    generate if (RST_PRE != 0) begin : g_rpre
+        assign rn = rst_n;
+    end else begin : g_rrel
+        reg rs1, rs2, rnq;
+        always @(posedge clk or negedge rst_n) if (!rst_n) {rs1, rs2, rnq} <= 3'b000; else {rs1, rs2, rnq} <= {1'b1, rs1, rs2};
+        assign rn = rnq;
+    end endgenerate
     assign rn_o = rn;
     function automatic [15:0] bf16(input [31:0] x);
         reg [31:0] r;
@@ -157,7 +208,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
             gn <= 8'(((c_n - 21'd1) >> 9) + 21'd1);
             nb <= 7'((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11);
             ew <= 11'(((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11) * 8);
-            em_off <= (MUT == 2) ? 11'(RD_LAT) : 11'({c_p, 3'd0} + RD_LAT + LAND + 2);   // + 1: raw rr pin capture
+            em_off <= (MUT == 2) ? 11'(RLM) : 11'({c_p, 3'd0} + RLM + LAND + 2);   // + 1: raw rr pin capture
             ig <= 8'd0; iw <= 11'd0; tc <= 11'd0; eg <= 8'd0; et <= 3'd0; eb <= 7'd0;
             a_g <= c_base[17:0]; a_gp <= c_base[17:0];
             r_g <= {1'b0, c_n}; r_w <= {1'b0, c_n};
@@ -194,22 +245,43 @@ module ot_hgi_sm_xload_cl2_ctl #(
     generate for (gl = 0; gl < 8; gl = gl + 1) begin : g_rq
         assign rq[gl*17 +: 17] = {q_v[gl], q_s[gl]};
     end endgenerate
-    always @(posedge clk or negedge rn) if (!rn) q_v <= 8'd0; else q_v <= {8{w_iss}};
     // lane b carries the wave's sector whose bank is b: {s0[14:3] + (b < s0[2:0]), b}  (= s0 + ((b - s0) mod 8))
-    wire [11:0] s_hi = i_s0[14:3], s_hi1 = i_s0[14:3] + 12'd1;
-    always @(posedge clk) for (integer b = 0; b < 8; b = b + 1)
-        q_s[b] <= {1'b0, (3'(b) < i_s0[2:0]) ? s_hi1 : s_hi, 3'(b)};
+    generate if (DMX == 0) begin : g_iq0
+        always @(posedge clk or negedge rn) if (!rn) q_v <= 8'd0; else q_v <= {8{w_iss}};
+        wire [11:0] s_hi = i_s0[14:3], s_hi1 = i_s0[14:3] + 12'd1;
+        always @(posedge clk) for (integer b = 0; b < 8; b = b + 1)
+            q_s[b] <= {1'b0, (3'(b) < i_s0[2:0]) ? s_hi1 : s_hi, 3'(b)};
+    end else begin : g_iqd
+        // per-bank stagger: one shared tapped delay line of the wave issue {valid, s0}; lane b taps stage D_b
+        reg [DMX-1:0] iq_v; reg [14:0] iq_s [0:DMX-1];
+        always @(posedge clk or negedge rn) if (!rn) iq_v <= '0; else iq_v <= {iq_v, w_iss};
+        always @(posedge clk) begin
+            iq_s[0] <= i_s0;
+            for (integer d = 1; d < DMX; d = d + 1) iq_s[d] <= iq_s[d-1];
+        end
+        for (genvar gb = 0; gb < 8; gb = gb + 1) begin : g_lane
+            localparam integer DB = dstag(gb);
+            wire tv; wire [14:0] ts;
+            if (DB == 0) begin : g_d0
+                assign tv = w_iss; assign ts = i_s0;
+            end else begin : g_dn
+                assign tv = iq_v[DB-1]; assign ts = iq_s[DB-1];
+            end
+            always @(posedge clk or negedge rn) if (!rn) q_v[gb] <= 1'b0; else q_v[gb] <= tv;
+            always @(posedge clk) q_s[gb] <= {1'b0, (3'(gb) < ts[2:0]) ? ts[14:3] + 12'd1 : ts[14:3], 3'(gb)};
+        end
+    end endgenerate
     localparam integer MW = 1 + 4 + 3 + 3 + 3 + 7;
-    reg [MW-1:0] md [0:RD_LAT+1];          // + 1: rr is captured raw at the pins, rotated one edge later
+    reg [MW-1:0] md [0:RLM+1];             // + 1: rr is captured raw at the pins, rotated one edge later
     wire [6:0] i_rem = (r_w <= 22'sd0) ? 7'd0 : (r_w >= 22'sd64) ? 7'd64 : r_w[6:0];
     always @(posedge clk or negedge rn) begin
-        if (!rn) for (integer d = 0; d <= RD_LAT + 1; d = d + 1) md[d] <= '0;
+        if (!rn) for (integer d = 0; d <= RLM + 1; d = d + 1) md[d] <= '0;
         else begin
             md[0] <= bdm ? {bd_iss, bd_meta[16:7], i_s0[2:0], bd_meta[6:0]} : {iss_w, ig[3:0], i_p[2:0], i_wq, i_s0[2:0], i_rem};
-            for (integer d = 1; d <= RD_LAT + 1; d = d + 1) md[d] <= md[d-1];
+            for (integer d = 1; d <= RLM + 1; d = d + 1) md[d] <= md[d-1];
         end
     end
-    wire [MW-1:0] mr = md[RD_LAT+1];
+    wire [MW-1:0] mr = md[RLM+1];
     wire m_v = mr[MW-1];
     // raw rr pin registers (valid bits reset)
     reg [8*257-1:0] rr_c;
@@ -220,7 +292,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
     reg [7:0] rr_v_seen;
     always @* for (integer b = 0; b < 8; b = b + 1) rr_v_seen[b] = rr_c[b*257 + 256];
     assign resp_bad = (m_v && rr_v_seen != 8'hFF) || (!m_v && rr_v_seen != 8'h00);
-    // ---- L: capture + rotate; the rotation select is replicated (NR copies of md[RD_LAT][9:7], same edge)
+    // ---- L: capture + rotate; the rotation select is replicated (NR copies of md[RLM][9:7], same edge)
     // cl2g (ctlw f20a route TT -58.79: rr_c / s0r / md -> rotation mux -> ~300 um wire -> l_d_o pin register, 399 paths):
     // the rotation result lands in L0 next to the rr pins and is re-registered in L1 (plain wire to the l_d_o pin
     // registers / the C stage).  + 1 edge on EVERY xw beat and x_done of both formats (LAND 3 -> 4, quantiser valids
@@ -231,14 +303,14 @@ module ot_hgi_sm_xload_cl2_ctl #(
     generate if (SEL_KEEP != 0) begin : g_s0k
         for (genvar k = 0; k < NR; k = k + 1) begin : g_r
             (* keep = 1 *) reg [2:0] q;
-            always @(posedge clk or negedge rn) if (!rn) q <= 3'd0; else q <= md[RD_LAT][9:7];
+            always @(posedge clk or negedge rn) if (!rn) q <= 3'd0; else q <= md[RLM][9:7];
             assign s0r[k] = q;
         end
     end else begin : g_s0
         reg [2:0] s0q [0:NR-1];
         always @(posedge clk or negedge rn)
             if (!rn) for (integer k = 0; k < NR; k = k + 1) s0q[k] <= 3'd0;
-            else for (integer k = 0; k < NR; k = k + 1) s0q[k] <= md[RD_LAT][9:7];
+            else for (integer k = 0; k < NR; k = k + 1) s0q[k] <= md[RLM][9:7];
         for (genvar k = 0; k < NR; k = k + 1) begin : g_a
             assign s0r[k] = s0q[k];
         end
@@ -250,7 +322,21 @@ module ot_hgi_sm_xload_cl2_ctl #(
             l0_d[k*RB +: RB] <= rr_c[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
         {l_g, l_p, l_wq} <= {l0_g, l0_p, l0_wq}; l_rem <= l0_rem; l_d <= l0_d;
     end
-    assign l_d_o = l_d;
+    // l_dcs: the L1 data the C stage converts.  PIN_NATIVE n2 (10-18 gate n1: opt_merge folded the plain l_d into the
+    // kept l_dpo, so ONE flop drove the E-face pins AND the W-side C stage, sat mid-tile, 2,048 l_d_o ports were "not
+    // single-flop" for io_flop_at_pins and launched at 477 ps): the C stage reads its own kept copy l_dc (D = l0_d, same
+    // edge), so l_dpo has the pins as its only load and is anchored at the E face.  Same function, same edges.
+    wire [8*256-1:0] l_dcs;
+    generate if (PIN_NATIVE != 0) begin : g_ldo
+        (* keep = 1 *) reg [8*256-1:0] l_dpo;
+        (* keep = 1 *) reg [8*256-1:0] l_dc;
+        always @(posedge clk) begin l_dpo <= l0_d; l_dc <= l0_d; end
+        assign l_d_o = l_dpo;
+        assign l_dcs = l_dc;
+    end else begin : g_ldw
+        assign l_d_o = l_d;
+        assign l_dcs = l_d;
+    end endgenerate
     // quantiser valids registered with L1 (= l_v && bdm && l_wq[2] / [1] of cl)
     reg qv0_lo, qv0_hi;
     always @(posedge clk or negedge rn)
@@ -268,7 +354,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
         c_g <= l_g; c_pp <= l_p; c_wq <= l_wq; c_wa <= {l_g, l_p};
         c_mhi <= l_wq[0] ^ (MUT == 4); c_mlo <= ~l_wq[0] ^ (MUT == 4);
         for (integer l = 0; l < 8; l = l + 1) for (integer tv = 0; tv < 8; tv = tv + 1)
-            c_d[(tv*8 + l)*16 +: 16] <= (7'(l * 8 + tv) < l_rem) ? bf16(l_d[l*256 + 32*tv +: 32]) : 16'd0;
+            c_d[(tv*8 + l)*16 +: 16] <= (7'(l * 8 + tv) < l_rem) ? bf16(l_dcs[l*256 + 32*tv +: 32]) : 16'd0;
     end
     // ---- emission decision E0 (as cl) ...
     reg [3:0] e_slot; reg e_has;
@@ -540,16 +626,18 @@ endmodule
 // command face (x_v + 108 b fields, x_busy, x_fault) becomes internal: issuer cmd flops -> ctl command pin flops (the
 // ctl edges are unchanged), x_busy -> tgt_active, x_fault -> tgt_fault.  x_done / xw_last stay on the face (open on
 // the die, as before).  Fire edge: x_v reaches the ctl command flops at launch_v(ingress) + 2 + LEAD + at.
-// MUT 1..5 = ctl mutants; MUT 6 = issuer fires one edge late (must FAIL the F20 lock bench).
+// MUT 1..5, 7 = ctl mutants; MUT 6 = issuer fires one edge late (must FAIL the F20 lock bench).
 // =====================================================================================================================
 module ot_hgi_sm_xload_cl2_ctlw #(
     parameter integer PMAX   = 8,
-    parameter integer RD_LAT = 6,
+    parameter [63:0]  RD_LAT = 64'd6,    // scalar or per-bank vector (ot_hgi_sm_xload_cl2_ctl RD_LAT)
     parameter integer MUT    = 0,
     parameter integer NR     = 32,
     parameter integer LEAD   = 8,
     parameter integer EGRESS_SPLIT = 0,  // XQL: export the egress controls (eg_*), see ot_hgi_sm_xload_static_xql
-    parameter integer SEL_KEEP = 0       // kept rotation-select replicas (ot_hgi_sm_xload_cl2_ctl SEL_KEEP)
+    parameter integer SEL_KEEP = 0,      // kept rotation-select replicas (ot_hgi_sm_xload_cl2_ctl SEL_KEEP)
+    parameter integer PIN_NATIVE = 0,    // ot_hgi_sm_xload_cl2_ctl PIN_NATIVE (l_d_o pin register copy)
+    parameter integer RST_PRE = 0        // rst_n already relayed (ctlx pin relay); see ot_hgi_sm_xload_cl2_ctl
 ) (
     input  wire               clk,
     input  wire               clk_eg,
@@ -613,7 +701,8 @@ module ot_hgi_sm_xload_cl2_ctlw #(
         .w_ce_in(t_wce[0]), .w_addr_in(t_waddr), .wd_in(t_wdata), .w_mask_in({256{1'b1}}),
         .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(16'b0));
     // cmd = {x_xb7, x_fmt2, x_space2, x_stride32, x_p4, x_n21, x_base40} (die contract v16 cp1_194..201)
-    ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5) ? MUT : 0), .NR(NR), .EGRESS_SPLIT(EGRESS_SPLIT), .SEL_KEEP(SEL_KEEP)) u_ctl (
+    ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT((MUT <= 5 || MUT == 7) ? MUT : 0), .NR(NR), .EGRESS_SPLIT(EGRESS_SPLIT), .SEL_KEEP(SEL_KEEP),
+                            .PIN_NATIVE(PIN_NATIVE), .RST_PRE(RST_PRE)) u_ctl (
         .clk(clk), .clk_eg(clk_eg), .rst_n(rst_n), .x_v(x_v), .x_base(xc[39:0]), .x_n(xc[60:40]), .x_p(xc[64:61]),
         .x_stride(xc[96:65]), .x_space(xc[98:97]), .x_fmt(xc[100:99]), .x_xb(xc[107:101]),
         .x_busy(x_busy), .x_done(x_done), .x_fault(x_fault), .xw_en(xw_en), .xw_last(xw_last), .xw_addr(xw_addr),
@@ -636,7 +725,7 @@ endmodule
 // =====================================================================================================================
 module ot_hgi_sm_xload_cl2_ctlx #(
     parameter integer PMAX   = 8,
-    parameter integer RD_LAT = 6,
+    parameter [63:0]  RD_LAT = 64'd6,    // scalar or per-bank vector (ot_hgi_sm_xload_cl2_ctl RD_LAT; die contract list)
     parameter integer MUT    = 0,
     parameter integer NR     = 32,
     parameter integer LEAD   = 8
@@ -678,11 +767,26 @@ module ot_hgi_sm_xload_cl2_ctlx #(
     output wire               eg_bqv, eg_bqlast,
     output wire [6:0]         eg_bqaddr, eg_bqb
 );
-    ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT), .NR(NR), .LEAD(LEAD), .EGRESS_SPLIT(1), .SEL_KEEP(1)) u_w (
-        .clk(clk), .clk_eg(clk), .clk_cal(clk_cal), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
+    // ELEM-GAPS/HBMN1 10-18 (native audit of CLOSED q1-7af6f4406: rst_n capture 455.7 ps): rst_n was the async clear
+    // of the issuer (ot_static_cmd_target_core) flops and the ctl relay, i.e. a pin net across the tile.  Now the pin
+    // drives ONE flop: rp1 (* keep *, async clear, D = 1) at the S face; rp2 / rq_n are plain flops (2-flop release
+    // synchroniser behind rp1, no port load); rq_n is the tile's reset: issuer and ctl body (RST_PRE: no second relay).
+    // Edges: assert reaches the issuer / ctl body 2 edges after rst_n falls (was 0 / 0); release 3 edges after rst_n
+    // rises for both (was 0 issuer / 3 ctl body; rn_o unchanged at 3).  Data / command edges unchanged.
+    // n2 (10-18 gate n1 probe: rn_o launched at 605 ps -- rn_o was rq_n itself, the reset net of 1,310 async clears):
+    // rn_o now leaves from its own kept flop rn_q (D = rp2, the same edge as rq_n), anchored at the E-face rn_o pin.
+    // rn_q == rq_n every cycle: rn_o assert / release edges unchanged.
+    (* keep = 1 *) reg rp1;
+    (* keep = 1 *) reg rp2, rq_n, rn_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rp1 <= 1'b0; else rp1 <= 1'b1;
+    always @(posedge clk) begin rp2 <= rp1; rq_n <= rp2; rn_q <= rp2; end
+    assign rn_o = rn_q;
+    ot_hgi_sm_xload_cl2_ctlw #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT), .NR(NR), .LEAD(LEAD), .EGRESS_SPLIT(1), .SEL_KEEP(1),
+                               .PIN_NATIVE(1), .RST_PRE(1)) u_w (
+        .clk(clk), .clk_eg(clk), .clk_cal(clk_cal), .rst_n(rq_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target),
         .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit),
         .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .fault(fault), .active(active),
-        .x_done(), .xw_en(), .xw_last(), .xw_addr(), .xw_grp(), .xw_data(), .rq(rq), .rr(rr), .rn_o(rn_o),
+        .x_done(), .xw_en(), .xw_last(), .xw_addr(), .xw_grp(), .xw_data(), .rq(rq), .rr(rr), .rn_o(),
         .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(1024'd0),
         .l_d_o(l_d_o), .qv_lo(qv_lo), .qv_hi(qv_hi), .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi),
         .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en), .bq_d(2048'd0),

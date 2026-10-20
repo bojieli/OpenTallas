@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/kv-astk-wrapper-functional-1019/prove.py", line 75, in <module>
+    assert set(con)==set(pins),(typ,con.keys(),pins.keys())
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: ('INVx4_ASAP7_75t_R', dict_keys(['A']), dict_keys(['Y', 'A']))

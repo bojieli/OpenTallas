@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_static_ectla_kiss",
+ "enable": false,
+ "reason": "RTL registers every data pin (FLOW-HOLD recipe 4, hold_budget die; ECTLA-3 2026-10-17): routed r3-32e20b9e0 netlist audit -- 1,103 input bits land only on flop D pins, 37 unused, the 1,573 driven outputs leave a flop Q/QN(+INV); the last three non-flop-first inputs are fixed in RTL: rsp_valid / rsp_v (issuer rs[0] = rv_q && !vv_q, bit-identical) and rst_n (ECTL A body reset relay fed by the pin flop rst_q). A synthesis pin register (+1 edge per port) would shift the ECTL static calendar (QK_ISSUE_AGE, ROW_RETURN_LAT, HXK count every boundary edge in the RTL)."
+}

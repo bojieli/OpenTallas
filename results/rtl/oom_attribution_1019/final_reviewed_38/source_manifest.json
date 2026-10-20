@@ -1,0 +1,35 @@
+{
+  "source_commit": "38a7dca6b1bc39f503fbfff1fb1e6171bc3e21b9",
+  "files": {
+    "tools/closure_loop/closure_loop.py": "85c441fe0c903ca08df7a8fa8357dc1c692df5636e42fd94f297a9af2a97fed9",
+    "tools/closure_loop/test_oom_identity.py": "f922dd8e436b748cefaf9ac4efe243db22e46f6649c079a7ed38d5469cfce48d",
+    "tools/closure_loop/test_fleet_oom.py": "5121b7e8a46e8f7392bd537ef83aa063465a90fae08e59063c28cf71568fdd96"
+  },
+  "baseline": {
+    "commit": "efae17de2128f3813aff8cf76226e8be8d60ea97",
+    "path": "results/rtl/pg_flow_review_1019/policy_final_full.log",
+    "sha256": "94d09a69c560d25f94ff4b0478241afb3e6a0912f02bb13e27a5382d8000ae2c"
+  },
+  "fleet": {
+    "unit": "oth-ubuntu-2227362-1792448582",
+    "host": "ot-epyc8",
+    "mem_gb": 8,
+    "threads": 4,
+    "run": "/srv/opentallas-scratch/claude/oom-reviewed-38-full-1019",
+    "command": "PYTHONPATH=/srv/opentallas-scratch/codex/root-tests-1019/pylib python3 -m pytest -q -p no:cacheprovider tools/ref_tile tools/closure_loop"
+  },
+  "validation": {
+    "failed": 112,
+    "passed": 1713,
+    "skipped": 41,
+    "subtests_passed": 448,
+    "seconds": 277.36,
+    "added_controls_passed": 17,
+    "comparison_status": "PASS",
+    "preserved_failed_cases": 112,
+    "preserved_error_lines": 728,
+    "added_failures": 0,
+    "removed_failures": 0,
+    "changed_error_cases": 0
+  }
+}

@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.s81_dv.layer_prog_manifest.v1",
+ "layer": "L0",
+ "die_ref": "origin/claude/s81-die6-1018",
+ "die_ref_sha": "3923ae6de4426e37d6ae327ff4b6b9674be44a55",
+ "die_v_sha256": "d0222e67dc3da5c5c163a959aafdbfe2858613d3c609e05eece77467cfbf7fc8",
+ "land_plan_sha256": "e043db52a4d9f911dfb65fbb53f6587c1b29f4ba7934c4e517969107eb4eec6b",
+ "plan_sha256": "a64382535c82872469d00c6548589de0ac238f79a1b45b0068e75cca0d753665",
+ "compiler_sha256": "ef103ea578630571442a80169f6fecee903f751af06227a1a28d60f512ba4e2d",
+ "files": {
+  "lowering.json": "37f13b04e459cf8e5adac81a8946b16c03ede017df5c6ec8e6eab74c6d5b438a",
+  "prog/calendar.json": "635b8006710c81103f596aa3199ea6613e779e44d5c75f93eb709b18b7feaf27",
+  "prog/ctl_templates.json": "addde2d6fc047c94f58ac86b193fc3c1464815560b4c55171a511ccc44ad748e",
+  "prog/frame_cfg7/u_f_3L01.json": "e96dab15ceb94a0ad6ad1d096305acef3529c5ffd401eaa0287e8bb14d9e0be0",
+  "prog/frame_cfg7/u_f_3L02.json": "0046237b0bdb19d448fc54cc4b5209a7b2ff1a409c7cd9e054b1b2256afe3c44",
+  "prog/frame_cfg7/u_f_3L03.json": "4110c67a9605259ba736675d3d0e33b4397f0bc082893206dea97c9d4cebaaea",
+  "prog/frame_cfg7/u_f_3R01.json": "1042eacfd58a26863bdeae0e2d99a361eae8dccc8975d8f13c059469b8254b0e",
+  "prog/frame_cfg7/u_f_3R02.json": "349de02c27f9219e5361826d1fda22e6186bd2a9a2e11295a91b4112418e4f6f",
+  "prog/frame_cfg7/u_f_3R03.json": "d2c11cd8b83c8c9bf78270849f22b71137d66b6616545a222429fdbdcf160907",
+  "prog/gunit_rows.json": "e5aa0776e6f4cadf9d19af77051897aea653058dbc23e3fd25d144d7a2a0d457",
+  "prog/host_boot.memh": "a685a0d3aa066cdb73f1c0f5b1adba41947c3f3e293db4f223780c6368dc8cfb",
+  "prog/svc_jobs.json": "b566a9087f4f36b46f1b5c1d9569377fdabc829b13ac254f683818b99bedadd4",
+  "schedule.json": "5101d4bb7ff6389ffddff5dd69919fa9116ca4f3e6f7127f20280c9dda61d4e8"
+ }
+}

@@ -15,6 +15,11 @@
 //   C5 no target ever sees a launch while armed and not ready (both paths; fault[1] stays 0 until the poison round)
 // MUT: passed to every leaf, or only to leaf MUTQ (1 dropped bit, 2 copy one stage short, 3 ready swap, 4 fault drop).
 // D4G 0: 4 x ot_hbm_host_cfg_leaf2 NT5/NF10 (fault bit 2j+b = target j fault[b]).
+// D4G 2 (HBM-RTL5 10-18): SE / NE = the re-hardened ot_hbm_host_cfg_leaf_{se,ne}2 at NT21/NF30 and NT17/NF27 (SW / NW
+//   unchanged): 75 targets / 115 fault bits = the d4g GEN1 host_status widths with the six new E targets through the
+//   leaves.  PLAST 1: the poison round poisons the LAST target of the quadrant (its fault[0] = leaf t_fault bit NT-1, a
+//   new slot in SE / NE; the ingress refuses writes after the first program fault, so one poison per run), so a dropped
+//   new fault bit (MUT 7) is observed.  MUT 5 / 6 invert the top s_ready / s_fault bit.
 // D4G 1 (HBM-B-RTL1b): the d4g per-quadrant masters ot_hbm_host_cfg_leaf_{sw,se,nw,ne} at their exact NT/NF
 //   (18/29, 18/26, 19/29, 14/23): NT bench targets per leaf (one per ready/active bit); leaf fault bit j < NT = target
 //   j fault[0], j >= NT = target j-NT fault[1] (NF < 2 NT in every quadrant), so every leaf input is driven.
@@ -24,9 +29,12 @@ module tb_hbm_host_cfg_leaf_lockstep;
     parameter integer SEED = 7;
     parameter integer D4G = 0;
     parameter integer MUTQ = -1;
+    parameter integer PLAST = 0;
     localparam integer NQ = 4;
-    function integer ntq(input integer q); ntq = D4G ? (q == 0 ? 18 : q == 1 ? 18 : q == 2 ? 19 : 14) : 5; endfunction
-    function integer nfq(input integer q); nfq = D4G ? (q == 0 ? 29 : q == 1 ? 26 : q == 2 ? 29 : 23) : 10; endfunction
+    function integer ntq(input integer q); ntq = D4G == 2 ? (q == 0 ? 18 : q == 1 ? 21 : q == 2 ? 19 : 17)
+                                                : D4G ? (q == 0 ? 18 : q == 1 ? 18 : q == 2 ? 19 : 14) : 5; endfunction
+    function integer nfq(input integer q); nfq = D4G == 2 ? (q == 0 ? 29 : q == 1 ? 30 : q == 2 ? 29 : 27)
+                                                : D4G ? (q == 0 ? 29 : q == 1 ? 26 : q == 2 ? 29 : 23) : 10; endfunction
     function integer toff(input integer q); integer i; begin toff = 0; for (i = 0; i < q; i = i + 1) toff = toff + ntq(i); end endfunction
     function integer foff(input integer q); integer i; begin foff = 0; for (i = 0; i < q; i = i + 1) foff = foff + nfq(i); end endfunction
     localparam integer NTG = toff(NQ), NF = foff(NQ);
@@ -120,6 +128,16 @@ module tb_hbm_host_cfg_leaf_lockstep;
             .b_desc_base(odb[23:12]), .b_desc_limit(odl[25:13]), .b_desc_loops(odp[31:16]), .b_launch_v(olv[1]),
             .t_ready(d_rdy[TO +: NTQ]), .t_active(d_act[TO +: NTQ]), .t_fault(d_flt[FO +: NFQ]),
             .s_ready(j_rdy[TO +: NTQ]), .s_active(j_act[TO +: NTQ]), .s_fault(j_flt[FO +: NFQ]));
+        end else if (q == 1 && D4G == 2) begin : g_se2
+        ot_hbm_host_cfg_leaf_se2 #(.MUT(LM)) leaf (.clk(clk), .rst_n(rst_n),
+            .cfg_v(d_cv), .cfg_target(d_ct), .cfg_addr(d_ca), .cfg_data(d_cd), .desc_v(d_dv), .desc_base(d_db),
+            .desc_limit(d_dl), .desc_loops(d_dp), .launch_v(d_lv),
+            .a_cfg_v(ocv[0]), .a_cfg_target(oct[7:0]), .a_cfg_addr(oca[11:0]), .a_cfg_data(ocd[255:0]), .a_desc_v(odv[0]),
+            .a_desc_base(odb[11:0]), .a_desc_limit(odl[12:0]), .a_desc_loops(odp[15:0]), .a_launch_v(olv[0]),
+            .b_cfg_v(ocv[1]), .b_cfg_target(oct[15:8]), .b_cfg_addr(oca[23:12]), .b_cfg_data(ocd[511:256]), .b_desc_v(odv[1]),
+            .b_desc_base(odb[23:12]), .b_desc_limit(odl[25:13]), .b_desc_loops(odp[31:16]), .b_launch_v(olv[1]),
+            .t_ready(d_rdy[TO +: NTQ]), .t_active(d_act[TO +: NTQ]), .t_fault(d_flt[FO +: NFQ]),
+            .s_ready(j_rdy[TO +: NTQ]), .s_active(j_act[TO +: NTQ]), .s_fault(j_flt[FO +: NFQ]));
         end else if (q == 1) begin : g_se
         ot_hbm_host_cfg_leaf_se #(.MUT(LM)) leaf (.clk(clk), .rst_n(rst_n),
             .cfg_v(d_cv), .cfg_target(d_ct), .cfg_addr(d_ca), .cfg_data(d_cd), .desc_v(d_dv), .desc_base(d_db),
@@ -132,6 +150,16 @@ module tb_hbm_host_cfg_leaf_lockstep;
             .s_ready(j_rdy[TO +: NTQ]), .s_active(j_act[TO +: NTQ]), .s_fault(j_flt[FO +: NFQ]));
         end else if (q == 2) begin : g_nw
         ot_hbm_host_cfg_leaf_nw #(.MUT(LM)) leaf (.clk(clk), .rst_n(rst_n),
+            .cfg_v(d_cv), .cfg_target(d_ct), .cfg_addr(d_ca), .cfg_data(d_cd), .desc_v(d_dv), .desc_base(d_db),
+            .desc_limit(d_dl), .desc_loops(d_dp), .launch_v(d_lv),
+            .a_cfg_v(ocv[0]), .a_cfg_target(oct[7:0]), .a_cfg_addr(oca[11:0]), .a_cfg_data(ocd[255:0]), .a_desc_v(odv[0]),
+            .a_desc_base(odb[11:0]), .a_desc_limit(odl[12:0]), .a_desc_loops(odp[15:0]), .a_launch_v(olv[0]),
+            .b_cfg_v(ocv[1]), .b_cfg_target(oct[15:8]), .b_cfg_addr(oca[23:12]), .b_cfg_data(ocd[511:256]), .b_desc_v(odv[1]),
+            .b_desc_base(odb[23:12]), .b_desc_limit(odl[25:13]), .b_desc_loops(odp[31:16]), .b_launch_v(olv[1]),
+            .t_ready(d_rdy[TO +: NTQ]), .t_active(d_act[TO +: NTQ]), .t_fault(d_flt[FO +: NFQ]),
+            .s_ready(j_rdy[TO +: NTQ]), .s_active(j_act[TO +: NTQ]), .s_fault(j_flt[FO +: NFQ]));
+        end else if (q == 3 && D4G == 2) begin : g_ne2
+        ot_hbm_host_cfg_leaf_ne2 #(.MUT(LM)) leaf (.clk(clk), .rst_n(rst_n),
             .cfg_v(d_cv), .cfg_target(d_ct), .cfg_addr(d_ca), .cfg_data(d_cd), .desc_v(d_dv), .desc_base(d_db),
             .desc_limit(d_dl), .desc_loops(d_dp), .launch_v(d_lv),
             .a_cfg_v(ocv[0]), .a_cfg_target(oct[7:0]), .a_cfg_addr(oca[11:0]), .a_cfg_data(ocd[255:0]), .a_desc_v(odv[0]),
@@ -233,12 +261,14 @@ module tb_hbm_host_cfg_leaf_lockstep;
         end
         // poison round: a config row at the fault address of one target (t_fault path through the leaf)
         poison = 1; tgt = 16 + toff((MUTQ >= 0) ? MUTQ : $urandom % NQ);   // target 0 of a quadrant: its fault[0] is leaf t_fault bit 0
+        if (PLAST) tgt = tgt + ntq(tgt - 16 >= toff(3) ? 3 : tgt - 16 >= toff(2) ? 2 : tgt - 16 >= toff(1) ? 1 : 0) - 1;
+                   // PLAST: the LAST target of the quadrant instead (fault[0] = leaf t_fault bit NT-1: a new SE/NE slot at D4G 2)
         wr(12'hf20, {12'd0, 12'habc, 8'(tgt)});
         for (w = 0; w < 8; w = w + 1) wr(12'hf24, $urandom);
         idle(40);
         if (!r_pf || !d_pf) begin m4 = m4 + 1; $display("poison fault not seen r=%0d d=%0d", r_pf, d_pf); end
         if (m1 == 0 && m2 == 0 && m3 == 0 && m4 == 0 && m5 == 0 && nlaunch_r == ROUNDS && nirq_d == nirq_r && ncfg > 0)
-            $display("HOST_CFG_LEAF_LOCKSTEP_PASS d4g=%0d mutq=%0d nt=%0d nf=%0d rounds=%0d cfg=%0d desc=%0d launches=%0d irq=%0d cyc=%0d", D4G, MUTQ, NTG, NF, ROUNDS, ncfg, ndesc, nlaunch_r, nirq_r, cyc);
+            $display("HOST_CFG_LEAF_LOCKSTEP_PASS plast=%0d d4g=%0d mutq=%0d nt=%0d nf=%0d rounds=%0d cfg=%0d desc=%0d launches=%0d irq=%0d cyc=%0d", PLAST, D4G, MUTQ, NTG, NF, ROUNDS, ncfg, ndesc, nlaunch_r, nirq_r, cyc);
         else
             $display("HOST_CFG_LEAF_LOCKSTEP_FAIL mism=%0d c1=%0d c2=%0d c3=%0d c4=%0d c5=%0d launches=%0d/%0d irq=%0d/%0d",
                      m1 + m2 + m3 + m4 + m5 + (nlaunch_r != ROUNDS) + (nirq_d != nirq_r), m1, m2, m3, m4, m5, nlaunch_r, nlaunch_d, nirq_r, nirq_d);

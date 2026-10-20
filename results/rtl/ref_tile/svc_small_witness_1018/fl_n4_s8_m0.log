@@ -1,0 +1,2 @@
+PASS tb_hbm_fault_leaf N=4 SYNC_MASK=0000000000000008 MUT=0 pulses=4 checks=20090
+FAULT_LEAF_BENCH PASS n4_s8_m0

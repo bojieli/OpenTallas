@@ -1,12 +1,13 @@
 `timescale 1ns/1ps
 // RBH-SFUS 10-18: lockstep of the hard tile ot_hbm_su_static_sfustore_hw (one root, relay reset, qid strap pin, per-lane ports) against today's
 // ot_hbm_su_static_sfustore (HARD=0, every clk_bank/clk_bank_macro on the same clock), on identical random traffic.
-//  - vi_q (all 16 lanes) must match on every edge outside the reset windows (read data n+2 unchanged);
+//  - vi_q (all 16 lanes) must equal ref vi_q delayed by ONE edge outside the reset windows (r2 read capture: n+3);
 //  - dut.fault must equal ref.fault delayed by ONE edge (the flop-first identity check, n+2 instead of n+1);
 //  - traffic: random reads/writes on all lanes, legal addresses (lane id, QID, all 512 rows) with rare illegal ones
 //    (each check field, only in the 400 edges before each reset), +RESETS mid-run resets (traffic stops 4 edges before assert and resumes 4 edges after release,
 //    the relay's +3 release).
-// MUT (DUT): 1 lane n^1 read data, 2 write row bits swapped, 3 lane n^1 check bits -- each must FAIL.
+// MUT (DUT): 1 lane n^1 read data, 2 write row bits swapped, 3 lane n^1 check bits, 4 read capture dropped,
+// 5 lanes 8..15 bit-swapped qid replica -- each must FAIL.
 module tb_hbm_su_sfustore_hw #(parameter integer MUT=0, QID=1);
  reg clk=0; always #5 clk=~clk;
  reg rst_n=0;
@@ -35,7 +36,8 @@ module tb_hbm_su_sfustore_hw #(parameter integer MUT=0, QID=1);
   .fault(f_dut));
  integer seed=1, cycles=24000, nresets=6, errors=0, checks=0, qchecks=0, fchecks=0, faults_seen=0, rd=0, wr=0, bad_issued=0;
  integer quiet=0;            // edges since the last reset release (traffic + compare need >= 4)
- reg f_ref_d=0;
+ reg f_ref_d=0; reg [511:0] q_ref_d=0;
+ always @(posedge clk) q_ref_d<=q_ref;
  integer rises=0;
  always @(posedge clk) begin if(f_ref&&!f_ref_d) rises=rises+1; f_ref_d<=f_ref; end
  function automatic [23:0] legal(input integer lane, input integer row);
@@ -54,7 +56,7 @@ module tb_hbm_su_sfustore_hw #(parameter integer MUT=0, QID=1);
  // compare just before each rising edge
  always @(negedge clk) if(rst_n && quiet>=4) begin
   qchecks=qchecks+1;
-  if(q_dut!==q_ref) begin errors=errors+1; if(errors<6) $display("SFUSTORE_HW MISMATCH vi_q t=%0t ref=%h dut=%h",$time,q_ref,q_dut); end
+  if(q_dut!==q_ref_d) begin errors=errors+1; if(errors<6) $display("SFUSTORE_HW MISMATCH vi_q t=%0t ref_d=%h dut=%h",$time,q_ref_d,q_dut); end
   fchecks=fchecks+1;
   if(f_dut!==f_ref_d) begin errors=errors+1; if(errors<6) $display("SFUSTORE_HW MISMATCH fault t=%0t ref_d=%b dut=%b",$time,f_ref_d,f_dut); end
   if(f_ref) faults_seen=faults_seen+1;

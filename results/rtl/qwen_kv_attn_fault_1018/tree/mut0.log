@@ -1,0 +1,6 @@
+phase 1: 56 single faults, max path latency 25 edges
+phase 2: 1540 pairs
+phase 3: 20000 random cycles
+phase 4: 8 held fault sets
+PASS attn_fault_tree mut0: 70985 exact cycle checks, 56 sources, 10 lanes, max latency 25
+rtl/test/qwen_static_kv/tb_qkd_attn_fault_tree.sv:164: $finish called at 711156000 (1ps)

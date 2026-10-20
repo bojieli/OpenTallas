@@ -192,8 +192,8 @@ module qkd_hr_cluster(ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy, host_upst
   wire [127:0] slice_boot_ok;
   input [127:0] slice_boot_fault;
   wire [127:0] slice_boot_fault;
-  input [127:0] ctrl_completion_fault;
-  wire [127:0] ctrl_completion_fault;
+  input ctrl_completion_fault;
+  wire ctrl_completion_fault;
   output marker_v;
   wire marker_v;
   output [65:0] marker;
@@ -436,7 +436,7 @@ module qkd_hr_cluster(ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy, host_upst
   wire [7:0] u_rank__cq_slot;
   wire [17:0] u_rank__cq_token;
   wire u_rank__crom_fault;
-  wire [127:0] u_rank__ctrl_completion_fault;
+  wire u_rank__ctrl_completion_fault;
   wire u_rank__d_ccr;
   wire [1023:0] u_rank__d_cd;
   wire u_rank__d_cv;
@@ -890,7 +890,8 @@ module qkd_hr_cluster(ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy, host_upst
     .ck_core(ck_core),
     .ck_host(ck_host),
     .host_rst_n(host_rst_n),
-    .service_faults({ service_faults[15], service_faults[11:7] }),
+    .service_faults_core({ service_faults[11], service_faults[7] }),
+    .service_faults_host({ service_faults[15], service_faults[10:8] }),
     .u_rank__done_cr(u_rank__u_control__u_packet__ing_t_cr),
     .u_rank__done_d(u_rank__u_control__u_packet__ing_t_d),
     .u_rank__done_v(u_rank__u_control__u_packet__ing_t_v),
@@ -910,7 +911,8 @@ module qkd_hr_cluster(ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy, host_upst
     .ck_core(ck_core),
     .ck_phy_fam(ck_phy_fam),
     .host_rst_n(host_rst_n),
-    .service_faults(service_faults[5:2]),
+    .service_faults_core(service_faults[4:3]),
+    .service_faults_phy({ service_faults[5], service_faults[2] }),
     .u_rank__d_ccr(u_rank__u_phy__phy_tx_cr),
     .u_rank__d_cd(u_rank__u_phy__tx_d),
     .u_rank__d_cv(u_rank__u_phy__phy_tx_v),
@@ -1335,7 +1337,9 @@ module qkd_hr_cluster(ck_core, ck_host, ck_ingest, ck_phy_fam, ck_phy, host_upst
     .ck_host(ck_host),
     .ck_ingest(ck_ingest),
     .host_rst_n(host_rst_n),
-    .host_upstream_quiet(host_upstream_quiet[3:1]),
+    .host_upstream_quiet_core(host_upstream_quiet[3]),
+    .host_upstream_quiet_host(host_upstream_quiet[1]),
+    .host_upstream_quiet_ingest(host_upstream_quiet[2]),
     .service_faults(u_rank__qm_fault),
     .u_rank__oa(u_rank__oa),
     .u_rank__ocr(u_rank__ocr),

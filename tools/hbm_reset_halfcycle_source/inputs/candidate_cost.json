@@ -1,0 +1,31 @@
+{
+ "TT": {
+  "ASR_clock_pin_cap_fF": 2552.425086,
+  "clock_INV_input_cap_fF": 1709.1414960000002,
+  "clockBUF_output_cap_delta_fF": 432.9289530000001,
+  "FF1_to_INV1_minimum_wire_cap_for_grid_fF": 0.10007199999999994,
+  "clockINV_to_FF1_minimum_wire_cap_for_grid_fF": 0.25710099999999997,
+  "root_PLL_new_load_fF": 2.34288
+ },
+ "FF": {
+  "ASR_clock_pin_cap_fF": 2774.3801280000002,
+  "clock_INV_input_cap_fF": 1885.005012,
+  "clockBUF_output_cap_delta_fF": 497.81494799999984,
+  "FF1_to_INV1_minimum_wire_cap_for_grid_fF": 0.03628399999999998,
+  "clockINV_to_FF1_minimum_wire_cap_for_grid_fF": 0.21684799999999993,
+  "root_PLL_new_load_fF": 2.60175
+ },
+ "cost": {
+  "pairs": 2757,
+  "ASR_FF": 5514,
+  "INV1": 5514,
+  "INV6": 2757,
+  "BUFx12f": 2263,
+  "TIEHI": 2263,
+  "area_um2": 3345.8913,
+  "area_delta_um2": 321.57648,
+  "PG_MTerm_bindings": 36622,
+  "actual_phase": null,
+  "compiler_age": null
+ }
+}

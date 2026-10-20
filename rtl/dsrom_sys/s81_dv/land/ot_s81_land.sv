@@ -31,10 +31,15 @@
 module ot_s81_land #(
     parameter integer W  = 276,
     parameter integer D  = 4,       // ring depth (power of two, >= 2): window width in periods
-    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D),
+    parameter integer KW = AW + 1   // LANDFIX-SQ (10-18): strap width.  KW = AW + 1 (default) = the original tiles
+                                    // (1 <= K <= 2D-1).  A long lane (E > 2D-1, e.g. the 24-mm S81 host plane, E 28)
+                                    // takes KW > AW + 1: the slot / epoch arithmetic stays mod 2D (2^KW is a multiple
+                                    // of 2D), only the warm-up count uses the full K, so K = E + G - R0 needs no
+                                    // reset-calendar offset between the source gate G and the receiver release R0.
 ) (
-    input  wire [AW:0]  k,          // read offset K: identity STRAP (die tie, compile-time per lane from the die STA dL
-                                    // at TT and FF; 1 <= K <= 2D-1); case-analysed in the tile and die STA
+    input  wire [KW-1:0] k,         // read offset K: identity STRAP (die tie, compile-time per lane from the die STA dL
+                                    // at TT and FF; 1 <= K <= 2^KW-1); case-analysed in the tile and die STA
     input  wire         ck_f,       // lane forwarded clock (last station ck_o)
     input  wire [W-1:0] i,          // lane data (last station o)
     input  wire         ck,         // block root clock
@@ -44,7 +49,8 @@ module ot_s81_land #(
 );
     reg [W-1:0]  bank [0:D-1];
     reg [AW:0]   epo  [0:D-1];
-    reg [AW:0]   wc, rc;
+    reg [AW:0]   wc;
+    reg [KW-1:0] rc;                // read counter: low AW+1 bits = the read epoch; full width = the warm-up count
     reg          warm;
     // ------------------------------------------------------------------ write side (ck_f)
     always @(posedge ck_f or negedge rs)
@@ -57,12 +63,13 @@ module ot_s81_land #(
     end endgenerate
     // ------------------------------------------------------------------ read side (ck)
 `ifdef OT_S81_LAND_MUT_SEL
-    wire [AW:0] exp_ = rc - k + 1'b1;          // bench mutant: read slot one late
+    wire [KW-1:0] expw = rc - k + 1'b1;        // bench mutant: read slot one late
 `else
-    wire [AW:0] exp_ = rc - k;
+    wire [KW-1:0] expw = rc - k;
 `endif
+    wire [AW:0] exp_ = expw[AW:0];
     always @(posedge ck or negedge rs)
-        if (!rs) begin rc <= {(AW + 1){1'b0}}; warm <= 1'b0; fault <= 1'b0; end
+        if (!rs) begin rc <= {KW{1'b0}}; warm <= 1'b0; fault <= 1'b0; end
         else begin
             rc <= rc + 1'b1;
             if (rc == k - 1'b1) warm <= 1'b1;
@@ -76,6 +83,7 @@ module ot_s81_land #(
 `endif
 `ifndef SYNTHESIS
     initial if (D < 2 || (D & (D - 1)) != 0) $fatal(1, "ot_s81_land: D must be a power of two >= 2");
+    initial if (KW < AW + 1) $fatal(1, "ot_s81_land: KW must be >= AW + 1");
     always @(posedge ck) if (warm && (k == 0)) $fatal(1, "ot_s81_land: strap k must be >= 1");
 `endif
 endmodule

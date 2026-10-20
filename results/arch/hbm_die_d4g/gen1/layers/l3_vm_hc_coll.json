@@ -1,0 +1,831 @@
+{
+ "schema": "opentallas.hbm.d4g.gen1_l3.v1",
+ "region": "d4g_gen1_l3",
+ "inp": "/tmp/d4g_layers_uzk9i70p/c0.json",
+ "vm": {
+  "hubs": {
+   "hb_vms_SE": "hfd_hgi_vms_static_SEb_glue",
+   "hb_vms_NE": "hfd_hgi_vms_static_NEb_glue"
+  },
+  "banks_remastered": 16,
+  "writers": {
+   "SW": "smw_SW lanes4 tgt 160",
+   "SE": "smw_SE lanes4 tgt 161",
+   "NW": "smw_NW lanes4 tgt 162",
+   "NE": "smw_NE lanes4 tgt 163"
+  },
+  "new_status_targets": [
+   161,
+   163
+  ],
+  "delivery_lanes": 32,
+  "kshare_vm_moved": 80
+ },
+ "hc": {
+  "root": "hc_eng = ot_hbm_hc_root_static (XRD 0 / XRU 0)",
+  "hubs": {
+   "SW": "hc_SW",
+   "SE": "hc_SE",
+   "NW": "hc_NW",
+   "NE": "hc_NE"
+  },
+  "banks": 32,
+  "quarter_index": {
+   "SW": 0,
+   "SE": 1,
+   "NW": 2,
+   "NE": 3
+  },
+  "compiler": "RAW0 165 + XRD + XRU (was 137 single block); corner banks 1/3/5/7 wave landing +1 edge (feed register); residual fault +2..+3 edges (sticky only)",
+  "u_placement": {
+   "SW": {
+    "engine_block": "hce_SW",
+    "vm_hub": "vmh_SW",
+    "mouth": "E",
+    "rule": "8 bank tiles in a U around hc_<q>; the hub VM/LG face (lg_rq/lg_wq/lg_rr 4,448 b) on the open side (E, toward vmh_SW); x_wave stays inside the hub",
+    "hub_cell": "E-middle of the U footprint",
+    "bank_order": "b0 next to the hub (descriptor), chain b0..b7 around the U, b7 back to b0 (s_i relay)",
+    "note": "a 3x3 footprint with the hub on the mouth cell cannot keep b0..b7 + b7->b0 all edge-adjacent (bipartite count 5/3): the U needs a 3x4 footprint or the existing DRLY relay on the b7->b0 exit; the hub kit (hbm_hcq_hub_1017) has LG on N/E and banks on all 4 faces -> re-pin owed to the kit lane"
+   },
+   "SE": {
+    "engine_block": "hce_SE",
+    "vm_hub": "vmh_SE",
+    "mouth": "W",
+    "rule": "8 bank tiles in a U around hc_<q>; the hub VM/LG face (lg_rq/lg_wq/lg_rr 4,448 b) on the open side (W, toward vmh_SE); x_wave stays inside the hub",
+    "hub_cell": "W-middle of the U footprint",
+    "bank_order": "b0 next to the hub (descriptor), chain b0..b7 around the U, b7 back to b0 (s_i relay)",
+    "note": "a 3x3 footprint with the hub on the mouth cell cannot keep b0..b7 + b7->b0 all edge-adjacent (bipartite count 5/3): the U needs a 3x4 footprint or the existing DRLY relay on the b7->b0 exit; the hub kit (hbm_hcq_hub_1017) has LG on N/E and banks on all 4 faces -> re-pin owed to the kit lane"
+   },
+   "NW": {
+    "engine_block": "hce_NW",
+    "vm_hub": "vmh_NW",
+    "mouth": "E",
+    "rule": "8 bank tiles in a U around hc_<q>; the hub VM/LG face (lg_rq/lg_wq/lg_rr 4,448 b) on the open side (E, toward vmh_NW); x_wave stays inside the hub",
+    "hub_cell": "E-middle of the U footprint",
+    "bank_order": "b0 next to the hub (descriptor), chain b0..b7 around the U, b7 back to b0 (s_i relay)",
+    "note": "a 3x3 footprint with the hub on the mouth cell cannot keep b0..b7 + b7->b0 all edge-adjacent (bipartite count 5/3): the U needs a 3x4 footprint or the existing DRLY relay on the b7->b0 exit; the hub kit (hbm_hcq_hub_1017) has LG on N/E and banks on all 4 faces -> re-pin owed to the kit lane"
+   },
+   "NE": {
+    "engine_block": "hce_NE",
+    "vm_hub": "vmh_NE",
+    "mouth": "W",
+    "rule": "8 bank tiles in a U around hc_<q>; the hub VM/LG face (lg_rq/lg_wq/lg_rr 4,448 b) on the open side (W, toward vmh_NE); x_wave stays inside the hub",
+    "hub_cell": "W-middle of the U footprint",
+    "bank_order": "b0 next to the hub (descriptor), chain b0..b7 around the U, b7 back to b0 (s_i relay)",
+    "note": "a 3x3 footprint with the hub on the mouth cell cannot keep b0..b7 + b7->b0 all edge-adjacent (bipartite count 5/3): the U needs a 3x4 footprint or the existing DRLY relay on the b7->b0 exit; the hub kit (hbm_hcq_hub_1017) has LG on N/E and banks on all 4 faces -> re-pin owed to the kit lane"
+   }
+  }
+ },
+ "coll": {
+  "bound": false,
+  "reason": "no die master instantiates ot_hgi_coll_ring_ag / ot_hgi_coll_ring_ag_lane: the ring stop is u_ring (ot_hgi_coll_ring_v5) inside hb_coll_<q> (ot_hfd_coll_q2_hard_v5 / q3_hard_v7x); two rings need a COLL-quadrant master with u_ring = ot_hgi_coll_ring_ag + a ring-B ot_hgi_coll_ring_ag_lane, the ring-B command fields from the COLL calendar and a VM publish consumer for ag_* (2 x 256 b) -> HBM-B-RTL3",
+  "view_ready": "physical/ref_tile/hcoll_ring_ag_ctl_1017/views/ot_hgi_coll_ring_ag_ctl (CLOSED) binds once that master exists"
+ },
+ "log": {
+  "edges_dropped": 1048,
+  "remastered": 23,
+  "edges_added": 2372,
+  "instances_added": 68,
+  "instances_dropped": 18,
+  "kshare_vm_moved": 80
+ },
+ "exposed_inputs": [
+  [
+   "hb_vms_SE",
+   "cq",
+   338
+  ],
+  [
+   "hb_vms_NE",
+   "cq",
+   338
+  ],
+  [
+   "vmb_SE0",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_SE0",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_SE0",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_SE1",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_SE1",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_SE1",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_SE2",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_SE2",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_SE2",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_SE3",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_SE3",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_SE3",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_SE4",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_SE4",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_SE4",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_SE5",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_SE5",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_SE5",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_SE6",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_SE6",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_SE6",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_SE7",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_SE7",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_SE7",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_NE0",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_NE0",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_NE0",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_NE1",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_NE1",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_NE1",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_NE2",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_NE2",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_NE2",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_NE3",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_NE3",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_NE3",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_NE4",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_NE4",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_NE4",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_NE5",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_NE5",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_NE5",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_NE6",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_NE6",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_NE6",
+   "rq4",
+   17
+  ],
+  [
+   "vmb_NE7",
+   "rq1",
+   17
+  ],
+  [
+   "vmb_NE7",
+   "rq2",
+   17
+  ],
+  [
+   "vmb_NE7",
+   "rq4",
+   17
+  ]
+ ],
+ "unlisted_exposed": [],
+ "gaps": [
+  {
+   "id": "G-D4G-L3-IDXQ-SE",
+   "owner": "HBM-B-RTL2 (IDX quad client, claude/hbm-b-rtl2-idx-1017, lockstep pending)",
+   "missing_rtl": "hb_vms_SE.cq[337:0] (hub client 0 = quadrant IDX ctl/query) and vmb_SE0..7.rq4 (IDX read group 4)",
+   "affects": [
+    [
+     "hb_vms_SE",
+     "cq",
+     0,
+     338
+    ],
+    [
+     "vmb_SE0",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_SE1",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_SE2",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_SE3",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_SE4",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_SE5",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_SE6",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_SE7",
+     "rq4",
+     0,
+     17
+    ]
+   ],
+   "note": "bind the per-quadrant IDX client (ot_hbm_idx_client_static_quad) when its lockstep passes",
+   "region": "d4g_gen1_l3",
+   "undriven_ports": 9,
+   "undriven_bits": 474
+  },
+  {
+   "id": "G-D4G-L3-DBKXL-SE",
+   "owner": "H-D4G host/x-load/stack layer (xql_quadrant_rebind 101/103, hb_dbk_SE/NE 105/107)",
+   "missing_rtl": "vmb_SE0..7.rq1 (DMA-back) and .rq2 (x-load)",
+   "affects": [
+    [
+     "vmb_SE0",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_SE0",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_SE1",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_SE1",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_SE2",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_SE2",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_SE3",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_SE3",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_SE4",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_SE4",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_SE5",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_SE5",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_SE6",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_SE6",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_SE7",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_SE7",
+     "rq2",
+     0,
+     17
+    ]
+   ],
+   "note": "that layer must run AFTER l3 (it addresses the q0 bank ports)",
+   "region": "d4g_gen1_l3",
+   "undriven_ports": 16,
+   "undriven_bits": 272
+  },
+  {
+   "id": "G-D4G-L3-IDXQ-NE",
+   "owner": "HBM-B-RTL2 (IDX quad client, claude/hbm-b-rtl2-idx-1017, lockstep pending)",
+   "missing_rtl": "hb_vms_NE.cq[337:0] (hub client 0 = quadrant IDX ctl/query) and vmb_NE0..7.rq4 (IDX read group 4)",
+   "affects": [
+    [
+     "hb_vms_NE",
+     "cq",
+     0,
+     338
+    ],
+    [
+     "vmb_NE0",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_NE1",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_NE2",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_NE3",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_NE4",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_NE5",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_NE6",
+     "rq4",
+     0,
+     17
+    ],
+    [
+     "vmb_NE7",
+     "rq4",
+     0,
+     17
+    ]
+   ],
+   "note": "bind the per-quadrant IDX client (ot_hbm_idx_client_static_quad) when its lockstep passes",
+   "region": "d4g_gen1_l3",
+   "undriven_ports": 9,
+   "undriven_bits": 474
+  },
+  {
+   "id": "G-D4G-L3-DBKXL-NE",
+   "owner": "H-D4G host/x-load/stack layer (xql_quadrant_rebind 101/103, hb_dbk_SE/NE 105/107)",
+   "missing_rtl": "vmb_NE0..7.rq1 (DMA-back) and .rq2 (x-load)",
+   "affects": [
+    [
+     "vmb_NE0",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_NE0",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_NE1",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_NE1",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_NE2",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_NE2",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_NE3",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_NE3",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_NE4",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_NE4",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_NE5",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_NE5",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_NE6",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_NE6",
+     "rq2",
+     0,
+     17
+    ],
+    [
+     "vmb_NE7",
+     "rq1",
+     0,
+     17
+    ],
+    [
+     "vmb_NE7",
+     "rq2",
+     0,
+     17
+    ]
+   ],
+   "note": "that layer must run AFTER l3 (it addresses the q0 bank ports)",
+   "region": "d4g_gen1_l3",
+   "undriven_ports": 16,
+   "undriven_bits": 272
+  },
+  {
+   "id": "G-D4G-L3-SFAULT-SE",
+   "owner": "H-D4G host/x-load/stack layer (sfault_<q> NPC16 ND8, stk_quadrant_services.json)",
+   "missing_rtl": "observer of vmdel_SE0..7.fault and vmfc_SE.fault (open outputs until sfault_SE exists)",
+   "affects": [
+    [
+     "vmdel_SE0",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_SE1",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_SE2",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_SE3",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_SE4",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_SE5",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_SE6",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_SE7",
+     "fault",
+     0,
+     1
+    ]
+   ],
+   "note": "outputs only (not a bind failure)",
+   "region": "d4g_gen1_l3",
+   "undriven_ports": 0,
+   "undriven_bits": 0
+  },
+  {
+   "id": "G-D4G-L3-SFAULT-NE",
+   "owner": "H-D4G host/x-load/stack layer (sfault_<q> NPC16 ND8, stk_quadrant_services.json)",
+   "missing_rtl": "observer of vmdel_NE0..7.fault and vmfc_NE.fault (open outputs until sfault_NE exists)",
+   "affects": [
+    [
+     "vmdel_NE0",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_NE1",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_NE2",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_NE3",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_NE4",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_NE5",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_NE6",
+     "fault",
+     0,
+     1
+    ],
+    [
+     "vmdel_NE7",
+     "fault",
+     0,
+     1
+    ]
+   ],
+   "note": "outputs only (not a bind failure)",
+   "region": "d4g_gen1_l3",
+   "undriven_ports": 0,
+   "undriven_bits": 0
+  }
+ ],
+ "summary": {
+  "instances": 1508,
+  "masters": 76,
+  "edges": 10598,
+  "edge_bits": 1093646,
+  "clock_reset_ports": 4267,
+  "straps": 341,
+  "die_pins": 27,
+  "exposed_input_ports": 50,
+  "exposed_input_bits": 1492,
+  "exposed_unassigned_ports": 0,
+  "gaps": 36,
+  "open_output_ports": 698,
+  "problems": 0,
+  "before_v15": {
+   "instances": 83,
+   "exposed_input_ports": 1070,
+   "exposed_input_bits": 177247,
+   "unresolved_source_ports": 1660,
+   "source": "results/arch/hbm_die_v15/views_v5/exposed_inputs_by_owner_1705.json"
+  }
+ }
+}

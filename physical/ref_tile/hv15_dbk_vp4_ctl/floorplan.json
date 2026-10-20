@@ -56,18 +56,24 @@
    "wb_fill_epoch",
    "wb_reserve_sectors",
    "wb_reserve_base",
-   "wb_fill_start"
+   "wb_fill_start",
+   "bank_read_addr_n",
+   "bank_read_slot_n",
+   "bank_write_slot_n"
   ],
   "W": [
    "rq",
    "rr_valid_i",
    "bank_read_en",
-   "bank_read_slot",
-   "bank_write_slot",
-   "bank_output_en"
+   "bank_output_en",
+   "bank_read_addr_w",
+   "bank_read_slot_w",
+   "bank_write_slot_w"
   ],
   "S": [
-   "bank_read_addr"
+   "bank_read_addr_s",
+   "bank_read_slot_s",
+   "bank_write_slot_s"
   ]
  },
  "clock_port": "clk",

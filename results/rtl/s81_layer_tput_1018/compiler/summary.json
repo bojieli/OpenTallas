@@ -1,0 +1,127 @@
+{
+ "schema": "opentallas.s81_dv.compiler_summary.v1",
+ "date": "2026-10-18",
+ "lane": "LB2-S81/CC (TOK.DS.BENCH.1) integration 10-18",
+ "tool": "tools/s81_dv/dv_layer_compile.py",
+ "test": "tools/s81_dv/test_dv_layer_compile.py (PASS)",
+ "die_ref": "origin/main (p4l bind9 die.v, RTL of record 711fb3da3+)",
+ "seqhost_boot": {
+  "bench": "tools/s81_dv/layer_prog/{tb_dv_prog_seqhost.sv,run_seqhost_prog.sh,check_seqhost.py}",
+  "verilator": "5.050",
+  "L0_s0S": true,
+  "L0_s3S": true,
+  "C": 11,
+  "mutant_shift3_caught": true,
+  "note": "the compiled host boot stream (0x11 / 0x10 PW / 0x13 templates) seals the REAL dsdv_seq_host calendar; every V command leaves vo_s at KS + issue + 11 (= issuer +4 + V register -> vo +7, the header contract), KIT done at +7, no fault; the shifted-row mutant collides (fault) and fails"
+ },
+ "layers": {
+  "L14": {
+   "status": {
+    "GAP": 63,
+    "PARTIAL": 24,
+    "LOWERED": 5
+   },
+   "gaps": 22,
+   "file": "results/rtl/s81_layer_tput_1018/compiler/lowering_L14.json",
+   "by_family": {
+    "-:GAP": 51,
+    "vpx:PARTIAL": 9,
+    "-:PARTIAL": 6,
+    "xs:PARTIAL": 1,
+    "svc:PARTIAL": 4,
+    "vs:PARTIAL": 4,
+    "vpx:GAP": 7,
+    "svc:GAP": 5,
+    "vs:LOWERED": 5
+   }
+  },
+  "L2": {
+   "status": {
+    "GAP": 54,
+    "PARTIAL": 24,
+    "LOWERED": 5
+   },
+   "gaps": 19,
+   "file": "results/rtl/s81_layer_tput_1018/compiler/lowering_L2.json",
+   "by_family": {
+    "-:GAP": 41,
+    "vpx:PARTIAL": 9,
+    "-:PARTIAL": 6,
+    "xs:PARTIAL": 1,
+    "svc:PARTIAL": 4,
+    "vs:PARTIAL": 4,
+    "vpx:GAP": 8,
+    "svc:GAP": 5,
+    "vs:LOWERED": 5
+   }
+  },
+  "L20": {
+   "status": {
+    "GAP": 55,
+    "PARTIAL": 24,
+    "LOWERED": 5
+   },
+   "gaps": 19,
+   "file": "results/rtl/s81_layer_tput_1018/compiler/lowering_L20.json",
+   "by_family": {
+    "-:GAP": 43,
+    "vpx:PARTIAL": 9,
+    "-:PARTIAL": 6,
+    "xs:PARTIAL": 1,
+    "svc:PARTIAL": 4,
+    "vs:PARTIAL": 4,
+    "vpx:GAP": 7,
+    "svc:GAP": 5,
+    "vs:LOWERED": 5
+   }
+  },
+  "head": {
+   "status": {
+    "GAP": 8
+   },
+   "gaps": 1,
+   "file": "results/rtl/s81_layer_tput_1018/compiler/lowering_head.json",
+   "by_family": {
+    "-:GAP": 8
+   }
+  },
+  "mtp_draft": {
+   "status": {
+    "GAP": 11
+   },
+   "gaps": 1,
+   "file": "results/rtl/s81_layer_tput_1018/compiler/lowering_mtp_draft.json",
+   "by_family": {
+    "-:GAP": 11
+   }
+  },
+  "L0": {
+   "status": {
+    "GAP": 36,
+    "PARTIAL": 24,
+    "LOWERED": 5
+   },
+   "gaps": 17,
+   "file": "results/rtl/s81_layer_tput_1018/compiler/prog_L0_s0S/lowering.json",
+   "by_family": {
+    "-:GAP": 24,
+    "vpx:PARTIAL": 9,
+    "-:PARTIAL": 6,
+    "xs:PARTIAL": 1,
+    "vpx:GAP": 7,
+    "svc:PARTIAL": 4,
+    "vs:PARTIAL": 4,
+    "svc:GAP": 5,
+    "vs:LOWERED": 5
+   }
+  }
+ },
+ "families": {
+  "svc": "origin/claude/lb2-s81-cc-svc-1018 33549a7f7",
+  "vs": "origin/claude/lb2-s81-cc-vs-1018 cf7598e1f",
+  "xs": "origin/claude/lb2-s81-cc-xs-1018 50e1fef76",
+  "vpx": "origin/claude/lb2-s81-cc-vpx-1018 87dc694a7",
+  "gu": "not pushed yet"
+ },
+ "note": "L2/L14/L20 compiled with the L0 fixture dir (status counts valid; data images are L0 until per-layer fixtures exist). Before the forks: L0 GAP 49 / PARTIAL 16."
+}

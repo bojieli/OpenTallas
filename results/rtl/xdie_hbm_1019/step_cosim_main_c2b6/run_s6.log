@@ -1,0 +1,51 @@
+Verilator 5.050 2026-07-01 rev v5.050
+XDIE6 build obj ok
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=711 first_pub=667 last_pub=714 vm_reqs=48 | d1 first_vm=13 first_wr=25 last_rx=711 first_pub=667 last_pub=714 vm_reqs=48
+XDIE3_E d0 701 d1 701 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=682 first_pub=638 last_pub=685 vm_reqs=48 | d1 first_vm=13 first_wr=25 last_rx=676 first_pub=632 last_pub=679 vm_reqs=48
+XDIE3_E d0 672 d1 666 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=610 first_pub=566 last_pub=613 vm_reqs=48 | d1 first_vm=13 first_wr=25 last_rx=604 first_pub=560 last_pub=607 vm_reqs=48
+XDIE3_E d0 600 d1 594 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE6_CFG reg_ds_ag48 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=836 first_pub=582 last_pub=839 vm_reqs=144 | d1 first_vm=13 first_wr=25 last_rx=836 first_pub=582 last_pub=839 vm_reqs=144
+XDIE3_E d0 826 d1 826 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=770 first_pub=566 last_pub=773 vm_reqs=144 | d1 first_vm=13 first_wr=25 last_rx=764 first_pub=560 last_pub=767 vm_reqs=144
+XDIE3_E d0 760 d1 754 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=770 first_pub=566 last_pub=773 vm_reqs=144 | d1 first_vm=13 first_wr=25 last_rx=764 first_pub=560 last_pub=767 vm_reqs=144
+XDIE3_E d0 760 d1 754 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE6_CFG reg_ds_ag144 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=889 first_pub=597 last_pub=907 vm_reqs=288 | d1 first_vm=13 first_wr=25 last_rx=889 first_pub=597 last_pub=907 vm_reqs=288
+XDIE3_E d0 894 d1 894 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=857 first_pub=573 last_pub=875 vm_reqs=288 | d1 first_vm=13 first_wr=25 last_rx=867 first_pub=583 last_pub=885 vm_reqs=288
+XDIE3_E d0 862 d1 872 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=857 first_pub=573 last_pub=875 vm_reqs=288 | d1 first_vm=13 first_wr=25 last_rx=867 first_pub=583 last_pub=885 vm_reqs=288
+XDIE3_E d0 862 d1 872 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE6_CFG ds_rs144 PASS
+XDIE2_FAULT d=0 rel=526 coll=0 cause=0000 gq=0/0 cp=0 cal=0 ep=1 epcause=100 link=000 abort=0
+XDIE2_ERR d=0 delivery 48 payload mismatch meta 1ff000030/1ff000030
+XDIE2_ERR d=0 delivery 48 lane 0 got 441cc241 expected c19620d3
+XDIE2_ERR d=0 delivery 48 lane 1 got 3fa54178 expected 409dacd7
+XDIE2_ERR d=0 delivery 48 lane 2 got c2b5cdcd expected c2c093cc
+XDIE2_ERR d=0 delivery 48 lane 3 got bd62ce1a expected ba86a358
+XDIE2_ERR d=0 delivery 48 lane 4 got bfcf59e7 expected c365299f
+XDIE2_ERR d=0 delivery 48 lane 5 got 3f4aa695 expected 41224c1f
+XDIE6_MUTANT m_nogap REJECTED
+XDIE2_ERR d=0 link frame 4 mismatch
+XDIE2_ERR d=0 delivery 4 payload mismatch meta 1ff000004/1ff000004
+XDIE2_ERR d=0 delivery 4 lane 0 got bd3b3714 expected 3d563f4c
+XDIE2_ERR d=0 delivery 4 lane 1 got 42f9b716 expected 412ab8e8
+XDIE2_ERR d=0 delivery 4 lane 2 got c08a41ee expected 43d76b5b
+XDIE2_ERR d=0 delivery 4 lane 3 got 3ee1cdb3 expected bc8fc630
+XDIE2_ERR d=0 delivery 4 lane 4 got c31298bc expected c32afd6b
+XDIE2_ERR d=0 delivery 4 lane 5 got bc64a764 expected c35c6040
+XDIE6_MUTANT m_vmstep REJECTED
+XDIE6_GATE rc=0

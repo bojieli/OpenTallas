@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits  1212 GB (avail 905, growth 57, headroom 0, waiters 0/0 GB) load 46/128 running 16 disk 552 GB 
+ot-run: ot-epyc5       admits  1085 GB (avail 850, growth 90, headroom 0, waiters 0/0 GB) load 81/128 running 18 disk 671 GB 
+ot-run: ot-pve1        skipped: no /home/ubuntu/scratch/kvattnkit/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/scratch/kvattnkit/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-111318-1792387193 after 0 s
+MISMATCH t=3 child u_attn.compiled_rx_cmd
+MISMATCH t=3 child u_attn.compiled_tx_first
+MISMATCH t=4 child u_attn.compiled_rx_cmd
+MISMATCH t=4 child u_attn.compiled_tx_first
+MISMATCH t=5 child u_attn.compiled_rx_cmd
+KVS_TILE FAIL tile=attn edges=4000 checks=287784 errors=7992 mut=2 (swapped .compiled_rx_cmd(w_attn_cal__rx_cmd[15:0]) <-> .compiled_tx_first(w_attn_cal__tx_first[15:0]))
+rc=1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-111318-1792387193): exit 0

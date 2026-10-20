@@ -33,13 +33,13 @@ module tb_s81dv_xfin16 #(parameter integer LS = 9, parameter integer LE = 29);
         for (g = 0; g < NS; g = g + 1) begin : sl
             wire mine = s_v && s_i >= g * NVL && s_i < (g + 1) * NVL;
             wire [7:0] li = s_i - g * NVL;
-            ot_s81dv_xfin #(.NS(NS), .NVL(NVL)) u (.clk(clk), .rst_n(rst_n), .go(go), .sid(g[3:0]), .eps(cfg[5]),
+            ot_s81dv_xfin #(.NS(NS), .NVL(NVL)) u (.clk(clk), .rst_n(rst_n), .go(go), .mode(1'b0), .sid(g[3:0]), .eps(cfg[5]),
                 .s_v(mine), .s_i(li), .s(s),
                 .wi_v(wi[g][KW-1]), .wi_h(wi[g][KW-2 -: 4]), .wi_b(wi[g][KW-6 -: 8]), .wi_d(wi[g][NVL*32-1:0]),
                 .ei_v(ei[g][KW-1]), .ei_h(ei[g][KW-2 -: 4]), .ei_b(ei[g][KW-6 -: 8]), .ei_d(ei[g][NVL*32-1:0]),
                 .eo_v(eo[g][KW-1]), .eo_h(eo[g][KW-2 -: 4]), .eo_b(eo[g][KW-6 -: 8]), .eo_d(eo[g][NVL*32-1:0]),
                 .wo_v(wo[g][KW-1]), .wo_h(wo[g][KW-2 -: 4]), .wo_b(wo[g][KW-6 -: 8]), .wo_d(wo[g][NVL*32-1:0]),
-                .rb_v(rb_v[g]), .rb_d(rb_d[g]), .fault(flt[g]));
+                .rb_v(rb_v[g]), .rb_d(rb_d[g]), .e_v(), .e_c(), .e_hh(), .e_kk(), .e_dd(), .fault(flt[g]));
             localparam integer L = (g == 7 || g == NS - 1) ? LE : LS;
             ot_hdc_delay #(.W(KW), .D(L), .RESET(1)) u_le (.clk(clk), .rst_n(rst_n), .d(eo[g]), .q(wi[(g + 1) % NS]));
             ot_hdc_delay #(.W(KW), .D(L), .RESET(1)) u_lw (.clk(clk), .rst_n(rst_n), .d(wo[(g + 1) % NS]), .q(ei[g]));

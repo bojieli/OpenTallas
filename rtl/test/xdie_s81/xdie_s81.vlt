@@ -1,0 +1,12 @@
+`verilator_config
+// TOKEN-XDIE-S81: keep each PHY / KP4 / link-layer module ONE generated module (24 SerDes macros in the co-sim; inlining
+// them multiplies verilator_bin memory by the instance count).
+no_inline -module "ot_pdie_serdes"
+no_inline -module "ot_pdie_ucie"
+no_inline -module "ot_s81_kp4_*"
+no_inline -module "ot_s81ph_coll_lane"
+no_inline -module "ot_s81ph_link_ep"
+no_inline -module "ot_s81ph_link_gbx"
+no_inline -module "ot_s81sl_lep"
+no_inline -module "ot_s81sl_rstop"
+no_inline -module "xdie_s81_ep"

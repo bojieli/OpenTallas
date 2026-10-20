@@ -1,0 +1,11 @@
+DBG fault t=1851000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=210 c_age=210 run 1/1 rr 0/0 rv 0 qv 0 qr 0
+DBG fault t=3797000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=154 c_age=154 run 1/1 rr 0/0 rv 0 qv 0 qr 0
+DBG fault t=5539000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=182 c_age=182 run 1/1 rr 0/0 rv 0 qv 0 qr 0
+DBG fault t=7279000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=165 c_age=165 run 1/1 rr 0/0 rv 0 qv 0 qr 0
+DBG fault t=8811000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=110 c_age=110 run 1/1 rr 0/0 rv 0 qv 0 qr 0
+DBG fault t=10525000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=171 c_age=171 run 1/1 rr 0/0 rv 0 qv 0 qr 0
+KVBA_ATTN PASS PL=0 FD=1 mut=0 fmut=0 checks=4777 cmds=24 clean=18
+- /srv/opentallas-scratch/claude/kv-bootage/src/rtl/test/kv_bootage_1019/tb_kvba_attn.sv:124: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 0.003 s; speed 3.732 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

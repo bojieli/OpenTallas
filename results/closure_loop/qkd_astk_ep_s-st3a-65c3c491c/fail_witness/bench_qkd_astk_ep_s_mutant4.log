@@ -1,0 +1,15 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_astk_ep_s-st3a-65c3c491c bench bench_qkd_astk_ep_s_mutant4 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_astk_ep_s-st3a-65c3c491c log cl/bench_qkd_astk_ep_s_mutant4.a1b1.log captured 2026-10-18T18:33:46-07:00
+# fail_regex '^FAIL qkd_astk_strip_st'
+MISMATCH cycle=678 si=1 ap=1 apPV0=1 lt=1 er=111 af=1/0 com=1
+MISMATCH cycle=679 si=1 ap=1 apPV0=1 lt=1 er=111 af=1/0 com=1
+MISMATCH cycle=680 si=1 ap=1 apPV0=1 lt=1 er=111 af=1/0 com=1
+MISMATCH cycle=681 si=1 ap=1 apPV0=1 lt=1 er=111 af=1/0 com=1
+MISMATCH cycle=682 si=1 ap=1 apPV0=1 lt=1 er=111 af=1/0 com=1
+FAIL Z word=0 got=42f00000
+FAIL Z word=1 got=42f00000
+FAIL Z word=2 got=42f00000
+FAIL Z word=3 got=42f00000
+FAIL counts af=00000000000000000000000000000001 scores=8192 lm=4 z=64 done=1 reads=2048 commits=ffff
+FAIL lockstep mismatches=3541
+FAIL qkd_astk_strip_st errors=6 mismatches=3541 mut 4

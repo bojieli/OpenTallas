@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_ahub_static_dw",
+ "enable": false,
+ "reason": "qkd_ahub_static_dw carries its own pin flops (KV-AHUBDW 10-18): every input lands in a flop first (hs -> u_io start / epoch / layer / T / cal_q / cal_r_q, ap0..3 -> ap_q), every output leaves a flop (am = core am regs, fr = u_io export regs, hf = u_io fault reg); a recipe pin register would add an unpriced edge."
+}

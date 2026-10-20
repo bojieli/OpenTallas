@@ -1,0 +1,42 @@
+[
+ {
+  "component": "qfd_c_xstn_safe",
+  "geometry": {
+   "schema": "opentallas.ref_tile.review_geometry.v1",
+   "sha256": "916078bc6f16aef11c397962bfa12b6d89a9f57eded8eddf94a2533fc291c648",
+   "components": {
+    "outline": "425676d66f3f3a85cfdfb8eff1bbf4f74428c1ba4c1f179a802920ff62251ead",
+    "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+    "pins": "0c294ec240b8cb66d75cd0748328ed5fbe50ed422dbc52ee4eba8112f7fef75e",
+    "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+   }
+  },
+  "route_source": "cbb09ff421a1381fc8fa83e1ac07214f95aba842",
+  "manifest_sha256": "c15d05f6d106dc5f40fb9b697ac7f40407e24a5798611f32f84daa5fcea26942",
+  "archive_sha256": "b6de3ea9c68a1ab5f40576b78cc7b530df44db4c2d8bbb64f1a18eac3a48cb7f",
+  "current_tool_binding_ok": true,
+  "current_tool_binding_message": "gate-consumed source and gate-executed overlays match; 1 staged file(s) the gate did not consume differ (reported, not refused): tools/qwen_cluster/qc_cp_place.py",
+  "gate_verdict": "WARN",
+  "host": "ot-agidock128"
+ },
+ {
+  "component": "qfd_c_xstnw_safe",
+  "geometry": {
+   "schema": "opentallas.ref_tile.review_geometry.v1",
+   "sha256": "315929f4021301b21eebc44c7e6761492ecca787f424c9653678b61d184a52a3",
+   "components": {
+    "outline": "425676d66f3f3a85cfdfb8eff1bbf4f74428c1ba4c1f179a802920ff62251ead",
+    "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+    "pins": "46d6f89931cf9340f276b24046051846e0d04c05c7bea06ea84e1181531164d9",
+    "clock_entry": "42b5bd798b940980f817799d72849cc44a6075456e0e9ede59dcffd0e3ce5251"
+   }
+  },
+  "route_source": "cbb09ff421a1381fc8fa83e1ac07214f95aba842",
+  "manifest_sha256": "2b0f72ca31637480a3ac55aa6a0bc1aa4b3f6ca9300c79afbb08e985e03cfef3",
+  "archive_sha256": "027a247ffc0721a7841e6912393885cd10a7effaf037e7d0afa511cf41c16d31",
+  "current_tool_binding_ok": true,
+  "current_tool_binding_message": "gate-consumed source and gate-executed overlays match; 1 staged file(s) the gate did not consume differ (reported, not refused): tools/qwen_cluster/qc_cp_place.py",
+  "gate_verdict": "WARN",
+  "host": "ot-agidock128"
+ }
+]

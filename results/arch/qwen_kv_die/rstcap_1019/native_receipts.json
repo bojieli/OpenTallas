@@ -1,0 +1,5489 @@
+{
+ "qkd_astk_ctl": {
+  "cell": "qkd_astk_ctl",
+  "view": "physical/ref_tile/qkd_astk_ctl/views/qkd_astk_ctl",
+  "lib_cell": "qkd_astk_ctl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 262.4,
+  "spread_ps": 55.3,
+  "outputs": 1164,
+  "inputs": 1509,
+  "launch_ps": 316.7,
+  "launch_pin": "lt[6]",
+  "capture_ps": 175.5,
+  "capture_pin": "aq[251]",
+  "launch_over": 39,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 52.1,
+  "ff_launch_min_ps": 110.1,
+  "ff_hold_need_ps": -64.9,
+  "pass": false,
+  "fail_why": "launch 316.68685 > 220 (39 pins)",
+  "view_sha256": {
+   "qkd_astk_ctl.lef": "4b1b2275e5e3ad585d322f96acd874767d2ed81c3a0fdf138e78ed916b91194a",
+   "qkd_astk_ctl_ff.lib": "6277f0520e14d68e0ec91a2f63524b8db1b6adf7dc578e4b9ea40b7c2380d04a",
+   "qkd_astk_ctl_ss.lib": "af4c2d06167d85d52dc42c922bb999e3ea0a7396a5ba4c50dd09cbfee9555941",
+   "qkd_astk_ctl_tt.lib": "767d887b137baeb2ead5703859d0ad641e45ede88ebb35792710e7e6787dbdd3"
+  },
+  "view_commit": "a14a0667a6c08d26df65a3913bc774d396598fbd",
+  "view_commit_subject": "closure-loop: qkd_astk_ctl CLOSED TT +98.04 / FF +20.87 ps DRC 0; SS sensitivity -206.52 ps at core_clk 833.333 ps (source 53707518d, EPYC1 /srv/opentallas/cla",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_ctl_s": {
+  "cell": "qkd_astk_ctl_s",
+  "view": "physical/ref_tile/qkd_astk_ctl_s/views/qkd_astk_ctl_s",
+  "lib_cell": "qkd_astk_ctl_s",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 154.6,
+  "spread_ps": 33.7,
+  "outputs": 636,
+  "inputs": 1009,
+  "launch_ps": 102.6,
+  "launch_pin": "qo[536]",
+  "capture_ps": 77.1,
+  "capture_pin": "aq[131]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 32.3,
+  "ff_launch_min_ps": 42.7,
+  "ff_hold_need_ps": -7.0,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_ctl_s.lef": "6610a8b26f79da5159638d963b345a159d7666bb12272a888ad181c738e5dfe1",
+   "qkd_astk_ctl_s_ff.lib": "b9b49438d41f1438c2d04b557eb6b6e9992241a701410f214a0b37a90a6554ae",
+   "qkd_astk_ctl_s_ss.lib": "43e281f9b2ed033dd949bb8354ddffc260c63afa4e5bf585c606fd4f454332ab",
+   "qkd_astk_ctl_s_tt.lib": "b90b09e604b88702ead475bbcc1dfd7389fd6e084c2df3977b13886c56dbbdf3"
+  },
+  "view_commit": "072610dbe7f9d7c6f67133a114482a78455e7190",
+  "view_commit_subject": "AD-KV-ASTK: record CLOSED astk strip leaves on main base: ctl_s s1-77d9451ed, ex_s s1-9ad544640, ep_s st3a-65c3c491c (views + route records + st3a RTL/generato",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_ctl_tp8": {
+  "cell": "qkd_astk_ctl_tp8",
+  "view": "physical/ref_tile/qkd_astk_ctl_tp8/views/qkd_astk_ctl_tp8",
+  "lib_cell": "qkd_astk_ctl_tp8",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 259.3,
+  "spread_ps": 64.0,
+  "outputs": 1163,
+  "inputs": 1376,
+  "launch_ps": 198.2,
+  "launch_pin": "qo[547]",
+  "capture_ps": 170.7,
+  "capture_pin": "py[122]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 60.4,
+  "ff_launch_min_ps": 106.7,
+  "ff_hold_need_ps": -64.9,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_ctl_tp8.lef": "983542c0b836be63c0c0fad0e08e7bd7cad808bef0d8b6e950f0c2e582841720",
+   "qkd_astk_ctl_tp8_ff.lib": "ebae08a95fe3a805414daea19d65a5c406500a7426ed5a3921e9f04ec4508d1f",
+   "qkd_astk_ctl_tp8_ss.lib": "fdf360769d74ec628d5e378c63e26ef8fb05251177cc303b90a2932b44fc93d1",
+   "qkd_astk_ctl_tp8_tt.lib": "0055c7caf14d0b631690970f70a2df28f6eef91d916f9ee7fdcbafe466446b76"
+  },
+  "view_commit": "4c52e47a412a2eabb4b844c5e605b1a03d4d8c74",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_ctl_tp8-tp1-0a9705ab5 (qkd_astk_ctl_tp8 CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_ep_s": {
+  "cell": "qkd_astk_ep_s",
+  "view": "physical/ref_tile/qkd_astk_ep_s/views/qkd_astk_ep_s",
+  "lib_cell": "qkd_astk_ep_s",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json child_flop boundary mean"
+  ],
+  "R_ps": 319.6,
+  "spread_ps": 63.6,
+  "outputs": 1815,
+  "inputs": 2584,
+  "launch_ps": 187.4,
+  "launch_pin": "zo[0]",
+  "capture_ps": 100.5,
+  "capture_pin": "xe[1]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 59.0,
+  "ff_launch_min_ps": 47.7,
+  "ff_hold_need_ps": -0.6,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_ep_s.lef": "9123bab1a2e938704092990c88477da2bec16778c663487088522561a21b78b1",
+   "qkd_astk_ep_s_ff.lib": "d0712879274541127a0ebef95322203312d6a3c7ca9e45ecf240c4082099a1a6",
+   "qkd_astk_ep_s_ss.lib": "5f53bfb0a45b3bb8b1c3cfa37d38bed4e6c7ab5e70950098b19df0e6e9cd914c",
+   "qkd_astk_ep_s_tt.lib": "7ed953a35851b2fcfc28b5afb5763f34fe031f6387a1f5caa60d88c3aeaf3689"
+  },
+  "view_commit": "072610dbe7f9d7c6f67133a114482a78455e7190",
+  "view_commit_subject": "AD-KV-ASTK: record CLOSED astk strip leaves on main base: ctl_s s1-77d9451ed, ex_s s1-9ad544640, ep_s st3a-65c3c491c (views + route records + st3a RTL/generato",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_er_tap": {
+  "cell": "qkd_astk_er_tap",
+  "view": "physical/ref_tile/qkd_astk_er_tap/views/qkd_astk_er_tap",
+  "lib_cell": "qkd_astk_er_tap",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 106.9,
+  "spread_ps": 27.5,
+  "outputs": 401,
+  "inputs": 569,
+  "launch_ps": 190.0,
+  "launch_pin": "response_addr[32]",
+  "capture_ps": 157.5,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 27.7,
+  "ff_launch_min_ps": 106.3,
+  "ff_hold_need_ps": -63.8,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_er_tap.lef": "bd486ab84cde6ffa9765f2177e32037b62f4be165c44a71c576301e670fa5cb0",
+   "qkd_astk_er_tap_ff.lib": "d26e42fd85f86e079aa8250d87cc3ae825fff02462e181eed10ce58de5f5350d",
+   "qkd_astk_er_tap_ss.lib": "943db9b49b344fd70eec557774ee1a8f5ffbc154e4e91aee6ce44b1b6df9e73f",
+   "qkd_astk_er_tap_tt.lib": "3b75c9c10b7c54c1296b88732349e899acf78ce01ff1e6432bfe94b8553f630d"
+  },
+  "view_commit": "e7dda061729886b1e61a0a4ed5e0025d96fd7da3",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_er_tap-e2-889997e65 (qkd_astk_er_tap CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_er_tap_st": {
+  "cell": "qkd_astk_er_tap_st",
+  "view": "physical/ref_tile/qkd_astk_er_tap_st/views/qkd_astk_er_tap_st",
+  "lib_cell": "qkd_astk_er_tap_st",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 111.2,
+  "spread_ps": 26.8,
+  "outputs": 401,
+  "inputs": 697,
+  "launch_ps": 190.1,
+  "launch_pin": "response_data[168]",
+  "capture_ps": 188.1,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 26.6,
+  "ff_launch_min_ps": 102.4,
+  "ff_hold_need_ps": -57.3,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_er_tap_st.lef": "b521da2c68a2672b575a6cb78fb5aeb14a97b012d9e3c9c99d977bbf178fc9c3",
+   "qkd_astk_er_tap_st_ff.lib": "7ef5b76ab60c97c72d57c72327f27c0d6cd5a379233c493b8dccbc08b54e7aeb",
+   "qkd_astk_er_tap_st_ss.lib": "2a9af8ba30cc93e5bef9f85670c0044dcccd753d9393d5819f6ab151f0377a9b",
+   "qkd_astk_er_tap_st_tt.lib": "8cf8f9fb27a72403f3e3f8f944a14c68a2d1594cb2157d3780d1620b7aa51cf7"
+  },
+  "view_commit": "c402cb103ddfe19d839aae373ecdd542c27d79d5",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_er_tap_st-v2-f54472799 (qkd_astk_er_tap_st CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_ex": {
+  "cell": "qkd_astk_ex",
+  "view": "physical/ref_tile/qkd_astk_ex/views/qkd_astk_ex",
+  "lib_cell": "qkd_astk_ex",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 260.8,
+  "spread_ps": 35.8,
+  "outputs": 1386,
+  "inputs": 1419,
+  "launch_ps": 320.6,
+  "launch_pin": "uo[44]",
+  "capture_ps": 179.2,
+  "capture_pin": "di[430]",
+  "launch_over": 1267,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 33.4,
+  "ff_launch_min_ps": 123.5,
+  "ff_hold_need_ps": -64.0,
+  "pass": false,
+  "fail_why": "launch 320.55327 > 220 (1267 pins)",
+  "view_sha256": {
+   "qkd_astk_ex.lef": "2291ca121f1b9a66a31b6b8a0007bd29409b5e75cb7caf0a8dc7f9276d9111df",
+   "qkd_astk_ex_ff.lib": "02dd58ac07d1e8a4cb6d4f130d5a6014d30eeb24fe251c765a5323bd45eb2256",
+   "qkd_astk_ex_ss.lib": "9dab8bc3d1d47ad32afe02e324e97728f80e933ed5478a2f05c2f7769af91f2b",
+   "qkd_astk_ex_tt.lib": "cc78860567f41175b0ab71957f9b88346808d83aa1d4af0eb0340a42046b4b05"
+  },
+  "view_commit": "a896b350480e1e02dbd778d9654061669d8078e7",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_ex-np1-24a3e3d02 (qkd_astk_ex CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_ex_s": {
+  "cell": "qkd_astk_ex_s",
+  "view": "physical/ref_tile/qkd_astk_ex_s/views/qkd_astk_ex_s",
+  "lib_cell": "qkd_astk_ex_s",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 204.5,
+  "spread_ps": 3.2,
+  "outputs": 34,
+  "inputs": 67,
+  "launch_ps": 96.5,
+  "launch_pin": "xe[1]",
+  "capture_ps": 71.8,
+  "capture_pin": "xa[0]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 3.5,
+  "ff_launch_min_ps": 54.7,
+  "ff_hold_need_ps": -22.8,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_ex_s.lef": "09c1d276efea4ffa4c3c39f7c98194cdb6103184354dfff12bd00a7862d2be05",
+   "qkd_astk_ex_s_ff.lib": "aa91bde9ca1b291c73c3932bc0f06aee36a3e44e8ecf73c861e8a9ff9f355a5f",
+   "qkd_astk_ex_s_ss.lib": "91eed206a065d661266e4b83956f2aae952f5cf3ed4734a0635b91536d353eb9",
+   "qkd_astk_ex_s_tt.lib": "c2fa0d5bfeb966ede6352f3377e1b05b9d47ba4a7d50cdbf74f515364af52d81"
+  },
+  "view_commit": "072610dbe7f9d7c6f67133a114482a78455e7190",
+  "view_commit_subject": "AD-KV-ASTK: record CLOSED astk strip leaves on main base: ctl_s s1-77d9451ed, ex_s s1-9ad544640, ep_s st3a-65c3c491c (views + route records + st3a RTL/generato",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_fault_join": {
+  "cell": "qkd_astk_fault_join",
+  "view": "physical/ref_tile/qkd_astk_fault_join/views/qkd_astk_fault_join",
+  "lib_cell": "qkd_astk_fault_join",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 0.3,
+  "spread_ps": 0.0,
+  "outputs": 1,
+  "inputs": 3,
+  "launch_ps": 80.6,
+  "launch_pin": "q",
+  "capture_ps": 85.5,
+  "capture_pin": "b",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 0.0,
+  "ff_launch_min_ps": 55.7,
+  "ff_hold_need_ps": -13.4,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_fault_join.lef": "a415605eed880ac3fe38e13d5ffcfa594345448b89f39ff6db30c8282c4deb2a",
+   "qkd_astk_fault_join_ff.lib": "2f6adf1da4be013f03bc57f94e2cc7167dd65d871cfce0c2bf8a72e3cf56d386",
+   "qkd_astk_fault_join_ss.lib": "e846cf656b3edf6a1c7c114bed36792e9d891ff1e7376565621a617f4062649b",
+   "qkd_astk_fault_join_tt.lib": "de11bf995d672df9da6e7258fd1f9ff9f97ff5a72d064822246654ddbbda3e26"
+  },
+  "view_commit": "f72e3096c56ab6255da20d7f219b3e761a70686f",
+  "view_commit_subject": "closure-loop: qkd_astk_fault_join CLOSED TT +431.16 / FF +27.12 ps DRC 0; SS sensitivity +392.50 ps at core_clk 833.333 ps (source 849bb441e, AGIdock /srv/open",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_pv": {
+  "cell": "qkd_astk_pv",
+  "view": "physical/ref_tile/qkd_astk_pv/views/qkd_astk_pv",
+  "lib_cell": "qkd_astk_pv",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 213.3,
+  "spread_ps": 23.7,
+  "outputs": 1509,
+  "inputs": 2549,
+  "launch_ps": 247.8,
+  "launch_pin": "co[5]",
+  "capture_ps": 263.6,
+  "capture_pin": "ui[82]",
+  "launch_over": 96,
+  "capture_over": 494,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 23.0,
+  "ff_launch_min_ps": 116.7,
+  "ff_hold_need_ps": -57.9,
+  "pass": false,
+  "fail_why": "launch 247.82833 > 220 (96 pins); capture 263.56028 > 190 (494 pins)",
+  "view_sha256": {
+   "qkd_astk_pv.lef": "0a50be2824ab2b9cb0bc4cbd088e0e20a66568e52794f3c8895ddb083c63645f",
+   "qkd_astk_pv_ff.lib": "0190382bf4559129dff2c7de895bf34f6d3ba1df7476d1c62f04a3e61f551ca2",
+   "qkd_astk_pv_ss.lib": "6a01dbdb927e8d82c1411c74f62254ecf60324a01a3d7f64fd76fe2aaca4c217",
+   "qkd_astk_pv_tt.lib": "bdaef09d5bc2a0b2b17245b05e8f0af761cbc6a2b6ca1fd70c854580ab8fb9d5"
+  },
+  "view_commit": "680528a2e062ee29833424c1ffdfe073ef3deab5",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_pv-ks1-53707518d (qkd_astk_pv CLOSED)",
+  "capture_over_pins": [
+   [
+    "ui[82]",
+    263.6
+   ],
+   [
+    "ui[78]",
+    261.1
+   ],
+   [
+    "ui[135]",
+    255.3
+   ],
+   [
+    "ui[0]",
+    255.1
+   ],
+   [
+    "ui[216]",
+    254.1
+   ],
+   [
+    "ui[205]",
+    253.8
+   ],
+   [
+    "ui[210]",
+    248.2
+   ],
+   [
+    "ui[74]",
+    246.3
+   ],
+   [
+    "ui[138]",
+    245.6
+   ],
+   [
+    "ui[3]",
+    245.5
+   ],
+   [
+    "ui[71]",
+    244.1
+   ],
+   [
+    "ui[208]",
+    243.1
+   ],
+   [
+    "ui[134]",
+    241.6
+   ],
+   [
+    "ui[211]",
+    240.9
+   ],
+   [
+    "ui[79]",
+    240.8
+   ],
+   [
+    "pi[0]",
+    240.1
+   ],
+   [
+    "ui[80]",
+    239.6
+   ],
+   [
+    "ui[214]",
+    239.6
+   ],
+   [
+    "ui[271]",
+    238.9
+   ],
+   [
+    "ui[76]",
+    238.1
+   ],
+   [
+    "ui[94]",
+    238.0
+   ],
+   [
+    "ui[212]",
+    237.9
+   ],
+   [
+    "ui[196]",
+    236.6
+   ],
+   [
+    "ui[51]",
+    236.2
+   ],
+   [
+    "ui[185]",
+    235.7
+   ],
+   [
+    "ui[186]",
+    235.4
+   ],
+   [
+    "ui[69]",
+    234.6
+   ],
+   [
+    "ui[54]",
+    234.3
+   ],
+   [
+    "ui[197]",
+    234.3
+   ],
+   [
+    "ui[165]",
+    233.5
+   ],
+   [
+    "ui[118]",
+    233.4
+   ],
+   [
+    "ui[77]",
+    233.2
+   ],
+   [
+    "ui[32]",
+    233.2
+   ],
+   [
+    "ui[25]",
+    232.6
+   ],
+   [
+    "ui[209]",
+    232.6
+   ],
+   [
+    "ui[166]",
+    232.6
+   ],
+   [
+    "ui[137]",
+    232.6
+   ],
+   [
+    "ui[123]",
+    231.9
+   ],
+   [
+    "ui[159]",
+    231.7
+   ],
+   [
+    "ui[191]",
+    231.4
+   ],
+   [
+    "ui[52]",
+    230.2
+   ],
+   [
+    "ui[206]",
+    230.1
+   ],
+   [
+    "ui[198]",
+    229.8
+   ],
+   [
+    "ui[473]",
+    228.9
+   ],
+   [
+    "ui[201]",
+    228.5
+   ],
+   [
+    "ui[4]",
+    228.4
+   ],
+   [
+    "ui[75]",
+    228.3
+   ],
+   [
+    "ui[203]",
+    228.2
+   ],
+   [
+    "ui[252]",
+    227.9
+   ],
+   [
+    "ui[200]",
+    227.9
+   ],
+   [
+    "ui[1]",
+    227.9
+   ],
+   [
+    "ui[402]",
+    227.5
+   ],
+   [
+    "ui[39]",
+    227.3
+   ],
+   [
+    "ui[20]",
+    227.3
+   ],
+   [
+    "ui[171]",
+    227.3
+   ],
+   [
+    "ui[168]",
+    227.2
+   ],
+   [
+    "ui[111]",
+    227.2
+   ],
+   [
+    "ui[2]",
+    226.9
+   ],
+   [
+    "ui[477]",
+    226.8
+   ],
+   [
+    "ui[91]",
+    226.7
+   ],
+   [
+    "ui[41]",
+    226.7
+   ],
+   [
+    "ui[183]",
+    226.7
+   ],
+   [
+    "ui[110]",
+    226.7
+   ],
+   [
+    "ui[112]",
+    226.3
+   ],
+   [
+    "ui[187]",
+    226.2
+   ],
+   [
+    "ui[213]",
+    226.1
+   ],
+   [
+    "di[378]",
+    225.8
+   ],
+   [
+    "ui[189]",
+    225.6
+   ],
+   [
+    "ui[119]",
+    225.6
+   ],
+   [
+    "ui[31]",
+    225.5
+   ],
+   [
+    "ui[202]",
+    225.5
+   ],
+   [
+    "ui[188]",
+    225.5
+   ],
+   [
+    "ui[62]",
+    225.4
+   ],
+   [
+    "ui[136]",
+    225.4
+   ],
+   [
+    "ui[67]",
+    225.3
+   ],
+   [
+    "ui[170]",
+    225.3
+   ],
+   [
+    "ui[164]",
+    225.2
+   ],
+   [
+    "ui[418]",
+    224.9
+   ],
+   [
+    "ui[235]",
+    224.9
+   ],
+   [
+    "ui[72]",
+    224.2
+   ],
+   [
+    "ui[177]",
+    224.2
+   ],
+   [
+    "ui[64]",
+    224.1
+   ],
+   [
+    "ui[116]",
+    223.9
+   ],
+   [
+    "ui[63]",
+    223.8
+   ],
+   [
+    "ui[144]",
+    223.7
+   ],
+   [
+    "ui[60]",
+    223.6
+   ],
+   [
+    "ui[53]",
+    223.6
+   ],
+   [
+    "ui[43]",
+    223.6
+   ],
+   [
+    "ui[155]",
+    223.6
+   ],
+   [
+    "ui[269]",
+    223.5
+   ],
+   [
+    "ui[106]",
+    223.5
+   ],
+   [
+    "ui[244]",
+    223.4
+   ],
+   [
+    "ui[148]",
+    223.3
+   ],
+   [
+    "ui[268]",
+    222.9
+   ],
+   [
+    "ui[73]",
+    222.7
+   ],
+   [
+    "ui[226]",
+    222.6
+   ],
+   [
+    "ui[57]",
+    222.5
+   ],
+   [
+    "ui[16]",
+    222.5
+   ],
+   [
+    "ui[405]",
+    222.4
+   ],
+   [
+    "ui[250]",
+    222.3
+   ],
+   [
+    "ui[199]",
+    222.3
+   ],
+   [
+    "ui[10]",
+    222.3
+   ],
+   [
+    "di[457]",
+    222.2
+   ],
+   [
+    "ui[108]",
+    221.9
+   ],
+   [
+    "ui[61]",
+    221.8
+   ],
+   [
+    "ui[182]",
+    221.7
+   ],
+   [
+    "ui[46]",
+    221.6
+   ],
+   [
+    "ui[175]",
+    221.5
+   ],
+   [
+    "ui[140]",
+    221.4
+   ],
+   [
+    "ui[121]",
+    221.4
+   ],
+   [
+    "ui[109]",
+    221.4
+   ],
+   [
+    "ui[150]",
+    221.3
+   ],
+   [
+    "ui[195]",
+    221.2
+   ],
+   [
+    "ui[36]",
+    221.1
+   ],
+   [
+    "ui[217]",
+    221.1
+   ],
+   [
+    "ui[129]",
+    221.1
+   ],
+   [
+    "ui[66]",
+    221.0
+   ],
+   [
+    "ui[476]",
+    221.0
+   ],
+   [
+    "ui[26]",
+    220.9
+   ],
+   [
+    "ui[180]",
+    220.9
+   ],
+   [
+    "ui[154]",
+    220.7
+   ],
+   [
+    "ui[173]",
+    220.6
+   ],
+   [
+    "ui[158]",
+    220.5
+   ],
+   [
+    "di[382]",
+    220.5
+   ],
+   [
+    "ui[34]",
+    220.4
+   ],
+   [
+    "ui[49]",
+    220.2
+   ],
+   [
+    "ui[223]",
+    219.9
+   ],
+   [
+    "ui[416]",
+    219.8
+   ],
+   [
+    "ui[263]",
+    219.8
+   ],
+   [
+    "ui[181]",
+    219.8
+   ],
+   [
+    "ui[100]",
+    219.8
+   ],
+   [
+    "ui[125]",
+    219.7
+   ],
+   [
+    "di[455]",
+    219.5
+   ],
+   [
+    "ui[172]",
+    219.2
+   ],
+   [
+    "ui[56]",
+    219.1
+   ],
+   [
+    "ui[270]",
+    219.0
+   ],
+   [
+    "di[106]",
+    219.0
+   ],
+   [
+    "ui[89]",
+    218.7
+   ],
+   [
+    "ui[411]",
+    218.5
+   ],
+   [
+    "ui[404]",
+    218.5
+   ],
+   [
+    "ui[124]",
+    218.5
+   ],
+   [
+    "ui[141]",
+    218.4
+   ],
+   [
+    "di[524]",
+    218.3
+   ],
+   [
+    "ui[153]",
+    218.1
+   ],
+   [
+    "ui[264]",
+    217.9
+   ],
+   [
+    "ui[156]",
+    217.9
+   ],
+   [
+    "ui[122]",
+    217.8
+   ],
+   [
+    "di[454]",
+    217.8
+   ],
+   [
+    "di[437]",
+    217.7
+   ],
+   [
+    "ui[190]",
+    217.6
+   ],
+   [
+    "ui[179]",
+    217.5
+   ],
+   [
+    "ui[128]",
+    217.5
+   ],
+   [
+    "ui[192]",
+    217.3
+   ],
+   [
+    "ui[161]",
+    217.2
+   ],
+   [
+    "di[411]",
+    217.0
+   ],
+   [
+    "ui[412]",
+    216.9
+   ],
+   [
+    "ui[207]",
+    216.9
+   ],
+   [
+    "di[303]",
+    216.7
+   ],
+   [
+    "ui[37]",
+    216.6
+   ],
+   [
+    "ui[152]",
+    216.6
+   ],
+   [
+    "ui[92]",
+    216.5
+   ],
+   [
+    "ui[251]",
+    216.5
+   ],
+   [
+    "ui[143]",
+    216.5
+   ],
+   [
+    "ui[242]",
+    216.4
+   ],
+   [
+    "ui[169]",
+    216.2
+   ],
+   [
+    "ui[120]",
+    216.2
+   ],
+   [
+    "di[511]",
+    215.9
+   ],
+   [
+    "ui[81]",
+    215.8
+   ],
+   [
+    "ui[227]",
+    215.8
+   ],
+   [
+    "ui[403]",
+    215.7
+   ],
+   [
+    "ui[178]",
+    215.6
+   ],
+   [
+    "ui[48]",
+    215.4
+   ],
+   [
+    "ui[272]",
+    215.4
+   ],
+   [
+    "ui[420]",
+    215.3
+   ],
+   [
+    "ui[38]",
+    215.3
+   ],
+   [
+    "ui[228]",
+    215.1
+   ],
+   [
+    "ui[24]",
+    214.8
+   ],
+   [
+    "ui[22]",
+    214.8
+   ],
+   [
+    "ui[162]",
+    214.6
+   ],
+   [
+    "ui[246]",
+    214.4
+   ],
+   [
+    "ui[234]",
+    214.4
+   ],
+   [
+    "ui[98]",
+    214.3
+   ],
+   [
+    "ui[97]",
+    214.3
+   ],
+   [
+    "di[364]",
+    214.3
+   ],
+   [
+    "ui[225]",
+    214.2
+   ],
+   [
+    "ui[130]",
+    214.1
+   ],
+   [
+    "ui[224]",
+    214.0
+   ],
+   [
+    "ui[115]",
+    214.0
+   ],
+   [
+    "ui[18]",
+    213.9
+   ],
+   [
+    "ui[346]",
+    213.8
+   ],
+   [
+    "ui[65]",
+    213.6
+   ],
+   [
+    "ui[95]",
+    213.5
+   ],
+   [
+    "ui[237]",
+    213.4
+   ],
+   [
+    "ui[151]",
+    213.4
+   ],
+   [
+    "ui[47]",
+    213.3
+   ],
+   [
+    "ui[465]",
+    213.2
+   ],
+   [
+    "ui[147]",
+    213.2
+   ],
+   [
+    "ui[105]",
+    213.2
+   ],
+   [
+    "ui[422]",
+    213.1
+   ],
+   [
+    "ui[265]",
+    213.0
+   ],
+   [
+    "ui[456]",
+    212.9
+   ],
+   [
+    "ui[260]",
+    212.9
+   ],
+   [
+    "ui[245]",
+    212.7
+   ],
+   [
+    "ui[176]",
+    212.6
+   ],
+   [
+    "ui[101]",
+    212.6
+   ],
+   [
+    "ui[163]",
+    212.5
+   ],
+   [
+    "ui[44]",
+    212.3
+   ],
+   [
+    "di[376]",
+    212.3
+   ],
+   [
+    "ui[42]",
+    212.2
+   ],
+   [
+    "ui[167]",
+    212.2
+   ],
+   [
+    "ui[29]",
+    212.1
+   ],
+   [
+    "ui[19]",
+    212.1
+   ],
+   [
+    "di[463]",
+    212.1
+   ],
+   [
+    "ui[55]",
+    212.0
+   ],
+   [
+    "di[486]",
+    212.0
+   ],
+   [
+    "ui[342]",
+    211.9
+   ],
+   [
+    "ui[258]",
+    211.9
+   ],
+   [
+    "ui[58]",
+    211.8
+   ],
+   [
+    "ui[238]",
+    211.7
+   ],
+   [
+    "ui[68]",
+    211.6
+   ],
+   [
+    "ui[126]",
+    211.6
+   ],
+   [
+    "ui[99]",
+    211.5
+   ],
+   [
+    "ui[9]",
+    211.4
+   ],
+   [
+    "ui[470]",
+    211.3
+   ],
+   [
+    "ui[243]",
+    211.3
+   ],
+   [
+    "di[134]",
+    211.3
+   ],
+   [
+    "ui[406]",
+    211.2
+   ],
+   [
+    "di[441]",
+    211.2
+   ],
+   [
+    "ui[30]",
+    211.0
+   ],
+   [
+    "ui[221]",
+    211.0
+   ],
+   [
+    "ui[17]",
+    211.0
+   ],
+   [
+    "ui[93]",
+    210.8
+   ],
+   [
+    "ui[96]",
+    210.7
+   ],
+   [
+    "ui[127]",
+    210.7
+   ],
+   [
+    "ui[415]",
+    210.6
+   ],
+   [
+    "ui[454]",
+    210.5
+   ],
+   [
+    "ui[414]",
+    210.5
+   ],
+   [
+    "ui[14]",
+    210.4
+   ],
+   [
+    "ui[133]",
+    210.3
+   ],
+   [
+    "ui[350]",
+    210.2
+   ],
+   [
+    "ui[262]",
+    210.2
+   ],
+   [
+    "ui[256]",
+    210.2
+   ],
+   [
+    "di[217]",
+    210.2
+   ],
+   [
+    "ui[453]",
+    210.1
+   ],
+   [
+    "ui[259]",
+    210.1
+   ],
+   [
+    "ui[149]",
+    210.1
+   ],
+   [
+    "ui[413]",
+    209.8
+   ],
+   [
+    "ui[103]",
+    209.8
+   ],
+   [
+    "di[299]",
+    209.6
+   ],
+   [
+    "ui[249]",
+    209.5
+   ],
+   [
+    "ui[157]",
+    209.5
+   ],
+   [
+    "ui[142]",
+    209.4
+   ],
+   [
+    "di[358]",
+    209.4
+   ],
+   [
+    "ui[160]",
+    209.1
+   ],
+   [
+    "ui[255]",
+    209.0
+   ],
+   [
+    "ui[239]",
+    209.0
+   ],
+   [
+    "ui[104]",
+    209.0
+   ],
+   [
+    "ui[83]",
+    208.8
+   ],
+   [
+    "di[369]",
+    208.8
+   ],
+   [
+    "ui[21]",
+    208.7
+   ],
+   [
+    "ui[480]",
+    208.6
+   ],
+   [
+    "ui[257]",
+    208.6
+   ],
+   [
+    "ui[11]",
+    208.6
+   ],
+   [
+    "ui[194]",
+    208.5
+   ],
+   [
+    "ui[174]",
+    208.5
+   ],
+   [
+    "di[373]",
+    208.5
+   ],
+   [
+    "ui[90]",
+    208.4
+   ],
+   [
+    "ui[87]",
+    208.4
+   ],
+   [
+    "ui[484]",
+    208.4
+   ],
+   [
+    "di[316]",
+    208.4
+   ],
+   [
+    "ui[145]",
+    208.2
+   ],
+   [
+    "ui[232]",
+    208.1
+   ],
+   [
+    "ui[184]",
+    207.9
+   ],
+   [
+    "di[522]",
+    207.6
+   ],
+   [
+    "di[368]",
+    207.6
+   ],
+   [
+    "ui[428]",
+    207.3
+   ],
+   [
+    "di[71]",
+    207.3
+   ],
+   [
+    "ui[267]",
+    207.2
+   ],
+   [
+    "ui[464]",
+    207.0
+   ],
+   [
+    "ui[339]",
+    207.0
+   ],
+   [
+    "ui[86]",
+    206.9
+   ],
+   [
+    "ui[35]",
+    206.9
+   ],
+   [
+    "ui[253]",
+    206.9
+   ],
+   [
+    "ui[13]",
+    206.9
+   ],
+   [
+    "ui[132]",
+    206.8
+   ],
+   [
+    "ui[241]",
+    206.7
+   ],
+   [
+    "ui[113]",
+    206.7
+   ],
+   [
+    "ui[423]",
+    206.6
+   ],
+   [
+    "di[214]",
+    206.6
+   ],
+   [
+    "di[205]",
+    206.5
+   ],
+   [
+    "ui[45]",
+    206.4
+   ],
+   [
+    "ui[247]",
+    206.4
+   ],
+   [
+    "ui[33]",
+    206.3
+   ],
+   [
+    "ui[27]",
+    206.2
+   ],
+   [
+    "ui[117]",
+    206.2
+   ],
+   [
+    "ui[50]",
+    206.1
+   ],
+   [
+    "ui[408]",
+    206.1
+   ],
+   [
+    "di[315]",
+    206.0
+   ],
+   [
+    "ui[102]",
+    205.8
+   ],
+   [
+    "di[393]",
+    205.7
+   ],
+   [
+    "ui[131]",
+    205.6
+   ],
+   [
+    "ui[478]",
+    205.3
+   ],
+   [
+    "ui[459]",
+    205.2
+   ],
+   [
+    "di[439]",
+    205.2
+   ],
+   [
+    "ui[193]",
+    205.1
+   ],
+   [
+    "di[394]",
+    205.1
+   ],
+   [
+    "di[116]",
+    205.1
+   ],
+   [
+    "ui[266]",
+    205.0
+   ],
+   [
+    "ui[481]",
+    204.9
+   ],
+   [
+    "di[402]",
+    204.9
+   ],
+   [
+    "ui[229]",
+    204.8
+   ],
+   [
+    "di[482]",
+    204.8
+   ],
+   [
+    "di[370]",
+    204.6
+   ],
+   [
+    "di[355]",
+    204.6
+   ],
+   [
+    "di[313]",
+    204.3
+   ],
+   [
+    "ui[436]",
+    204.2
+   ],
+   [
+    "ui[433]",
+    204.1
+   ],
+   [
+    "ui[107]",
+    204.0
+   ],
+   [
+    "ui[254]",
+    203.8
+   ],
+   [
+    "ui[215]",
+    203.7
+   ],
+   [
+    "ui[23]",
+    203.5
+   ],
+   [
+    "ui[220]",
+    203.5
+   ],
+   [
+    "ui[434]",
+    203.4
+   ],
+   [
+    "ui[463]",
+    203.3
+   ],
+   [
+    "ui[231]",
+    203.3
+   ],
+   [
+    "ui[218]",
+    203.3
+   ],
+   [
+    "di[282]",
+    203.3
+   ],
+   [
+    "di[223]",
+    203.3
+   ],
+   [
+    "di[166]",
+    203.3
+   ],
+   [
+    "ui[426]",
+    203.2
+   ],
+   [
+    "ui[485]",
+    203.1
+   ],
+   [
+    "ui[469]",
+    203.0
+   ],
+   [
+    "kdi[1]",
+    203.0
+   ],
+   [
+    "ui[59]",
+    202.9
+   ],
+   [
+    "ui[455]",
+    202.6
+   ],
+   [
+    "ui[40]",
+    202.6
+   ],
+   [
+    "ui[85]",
+    202.5
+   ],
+   [
+    "di[95]",
+    202.5
+   ],
+   [
+    "ui[425]",
+    202.4
+   ],
+   [
+    "ui[410]",
+    202.4
+   ],
+   [
+    "di[341]",
+    202.4
+   ],
+   [
+    "ui[28]",
+    202.3
+   ],
+   [
+    "ui[230]",
+    202.2
+   ],
+   [
+    "ui[261]",
+    202.0
+   ],
+   [
+    "di[246]",
+    202.0
+   ],
+   [
+    "ui[417]",
+    201.9
+   ],
+   [
+    "ui[8]",
+    201.7
+   ],
+   [
+    "di[224]",
+    201.7
+   ],
+   [
+    "ui[236]",
+    201.6
+   ],
+   [
+    "di[449]",
+    201.4
+   ],
+   [
+    "di[110]",
+    201.4
+   ],
+   [
+    "ui[6]",
+    201.3
+   ],
+   [
+    "ui[146]",
+    201.0
+   ],
+   [
+    "ui[233]",
+    200.7
+   ],
+   [
+    "di[367]",
+    200.7
+   ],
+   [
+    "ui[419]",
+    200.5
+   ],
+   [
+    "ui[219]",
+    200.5
+   ],
+   [
+    "di[535]",
+    200.5
+   ],
+   [
+    "ui[448]",
+    200.4
+   ],
+   [
+    "di[268]",
+    200.3
+   ],
+   [
+    "di[218]",
+    200.2
+   ],
+   [
+    "ui[451]",
+    200.1
+   ],
+   [
+    "ui[343]",
+    200.1
+   ],
+   [
+    "ui[474]",
+    199.9
+   ],
+   [
+    "ui[468]",
+    199.9
+   ],
+   [
+    "di[208]",
+    199.9
+   ],
+   [
+    "ui[7]",
+    199.8
+   ],
+   [
+    "ui[482]",
+    199.8
+   ],
+   [
+    "di[458]",
+    199.7
+   ],
+   [
+    "ui[466]",
+    199.6
+   ],
+   [
+    "di[340]",
+    199.5
+   ],
+   [
+    "di[219]",
+    199.5
+   ],
+   [
+    "ui[248]",
+    199.4
+   ],
+   [
+    "di[323]",
+    199.4
+   ],
+   [
+    "ui[84]",
+    199.3
+   ],
+   [
+    "di[526]",
+    199.3
+   ],
+   [
+    "di[375]",
+    199.1
+   ],
+   [
+    "ui[438]",
+    198.9
+   ],
+   [
+    "di[379]",
+    198.9
+   ],
+   [
+    "di[388]",
+    198.8
+   ],
+   [
+    "ui[445]",
+    198.7
+   ],
+   [
+    "di[529]",
+    198.6
+   ],
+   [
+    "di[409]",
+    198.5
+   ],
+   [
+    "di[304]",
+    198.5
+   ],
+   [
+    "ui[471]",
+    198.1
+   ],
+   [
+    "di[73]",
+    198.1
+   ],
+   [
+    "ui[450]",
+    198.0
+   ],
+   [
+    "ui[443]",
+    198.0
+   ],
+   [
+    "ui[12]",
+    198.0
+   ],
+   [
+    "ui[430]",
+    197.9
+   ],
+   [
+    "di[434]",
+    197.8
+   ],
+   [
+    "di[444]",
+    197.7
+   ],
+   [
+    "di[241]",
+    197.7
+   ],
+   [
+    "ui[281]",
+    197.6
+   ],
+   [
+    "di[112]",
+    197.6
+   ],
+   [
+    "di[204]",
+    197.5
+   ],
+   [
+    "ui[467]",
+    197.3
+   ],
+   [
+    "ui[240]",
+    197.2
+   ],
+   [
+    "ui[421]",
+    197.1
+   ],
+   [
+    "ui[347]",
+    197.1
+   ],
+   [
+    "di[461]",
+    197.1
+   ],
+   [
+    "di[527]",
+    197.0
+   ],
+   [
+    "ui[278]",
+    196.9
+   ],
+   [
+    "ui[424]",
+    196.7
+   ],
+   [
+    "di[418]",
+    196.7
+   ],
+   [
+    "ui[439]",
+    196.6
+   ],
+   [
+    "ui[435]",
+    196.6
+   ],
+   [
+    "ui[15]",
+    196.6
+   ],
+   [
+    "di[412]",
+    196.4
+   ],
+   [
+    "di[523]",
+    196.3
+   ],
+   [
+    "di[513]",
+    196.3
+   ],
+   [
+    "di[423]",
+    196.3
+   ],
+   [
+    "di[344]",
+    196.2
+   ],
+   [
+    "di[145]",
+    196.1
+   ],
+   [
+    "di[366]",
+    196.0
+   ],
+   [
+    "di[319]",
+    196.0
+   ],
+   [
+    "ui[114]",
+    195.8
+   ],
+   [
+    "di[532]",
+    195.8
+   ],
+   [
+    "di[324]",
+    195.8
+   ],
+   [
+    "ui[458]",
+    195.7
+   ],
+   [
+    "ui[222]",
+    195.5
+   ],
+   [
+    "di[362]",
+    195.5
+   ],
+   [
+    "di[325]",
+    195.5
+   ],
+   [
+    "di[503]",
+    195.4
+   ],
+   [
+    "ui[460]",
+    195.3
+   ],
+   [
+    "di[426]",
+    195.3
+   ],
+   [
+    "di[531]",
+    195.2
+   ],
+   [
+    "di[497]",
+    194.9
+   ],
+   [
+    "ui[427]",
+    194.8
+   ],
+   [
+    "di[432]",
+    194.7
+   ],
+   [
+    "di[334]",
+    194.7
+   ],
+   [
+    "di[357]",
+    194.4
+   ],
+   [
+    "ui[441]",
+    194.3
+   ],
+   [
+    "di[52]",
+    194.3
+   ],
+   [
+    "di[466]",
+    194.2
+   ],
+   [
+    "ui[503]",
+    194.1
+   ],
+   [
+    "di[453]",
+    194.0
+   ],
+   [
+    "ui[204]",
+    193.9
+   ],
+   [
+    "di[517]",
+    193.9
+   ],
+   [
+    "di[472]",
+    193.9
+   ],
+   [
+    "di[185]",
+    193.8
+   ],
+   [
+    "ui[344]",
+    193.7
+   ],
+   [
+    "di[506]",
+    193.7
+   ],
+   [
+    "di[419]",
+    193.7
+   ],
+   [
+    "di[345]",
+    193.7
+   ],
+   [
+    "ui[449]",
+    193.6
+   ],
+   [
+    "di[438]",
+    193.6
+   ],
+   [
+    "di[346]",
+    193.6
+   ],
+   [
+    "di[148]",
+    193.6
+   ],
+   [
+    "ui[432]",
+    193.2
+   ],
+   [
+    "di[445]",
+    193.1
+   ],
+   [
+    "di[410]",
+    193.0
+   ],
+   [
+    "di[298]",
+    193.0
+   ],
+   [
+    "di[512]",
+    192.9
+   ],
+   [
+    "di[301]",
+    192.9
+   ],
+   [
+    "di[277]",
+    192.9
+   ],
+   [
+    "ui[409]",
+    192.5
+   ],
+   [
+    "di[420]",
+    192.5
+   ],
+   [
+    "di[98]",
+    192.3
+   ],
+   [
+    "di[528]",
+    192.2
+   ],
+   [
+    "di[456]",
+    192.2
+   ],
+   [
+    "di[3]",
+    192.1
+   ],
+   [
+    "di[400]",
+    192.0
+   ],
+   [
+    "ui[440]",
+    191.9
+   ],
+   [
+    "di[467]",
+    191.9
+   ],
+   [
+    "di[416]",
+    191.9
+   ],
+   [
+    "ui[70]",
+    191.6
+   ],
+   [
+    "di[43]",
+    191.5
+   ],
+   [
+    "di[352]",
+    191.5
+   ],
+   [
+    "di[468]",
+    191.4
+   ],
+   [
+    "di[475]",
+    191.3
+   ],
+   [
+    "di[470]",
+    191.3
+   ],
+   [
+    "ui[446]",
+    191.2
+   ],
+   [
+    "di[446]",
+    191.1
+   ],
+   [
+    "di[490]",
+    191.0
+   ],
+   [
+    "di[203]",
+    191.0
+   ],
+   [
+    "ui[444]",
+    190.9
+   ],
+   [
+    "di[520]",
+    190.9
+   ],
+   [
+    "di[489]",
+    190.9
+   ],
+   [
+    "ui[462]",
+    190.8
+   ],
+   [
+    "di[525]",
+    190.7
+   ],
+   [
+    "di[481]",
+    190.7
+   ],
+   [
+    "di[477]",
+    190.6
+   ],
+   [
+    "ui[457]",
+    190.4
+   ],
+   [
+    "ui[279]",
+    190.4
+   ],
+   [
+    "di[533]",
+    190.4
+   ],
+   [
+    "ui[348]",
+    190.3
+   ],
+   [
+    "ui[282]",
+    190.2
+   ],
+   [
+    "di[384]",
+    190.2
+   ],
+   [
+    "ui[88]",
+    190.1
+   ],
+   [
+    "ui[442]",
+    190.1
+   ],
+   [
+    "di[348]",
+    190.1
+   ],
+   [
+    "ui[294]",
+    190.0
+   ],
+   [
+    "di[491]",
+    190.0
+   ]
+  ],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_pv_tp8": {
+  "cell": "qkd_astk_pv_tp8",
+  "view": "physical/ref_tile/qkd_astk_pv_tp8/views/qkd_astk_pv_tp8",
+  "lib_cell": "qkd_astk_pv_tp8",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 214.6,
+  "spread_ps": 28.1,
+  "outputs": 1509,
+  "inputs": 2549,
+  "launch_ps": 198.6,
+  "launch_pin": "uo[245]",
+  "capture_ps": 249.8,
+  "capture_pin": "ui[494]",
+  "launch_over": 0,
+  "capture_over": 549,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 27.0,
+  "ff_launch_min_ps": 105.9,
+  "ff_hold_need_ps": -60.7,
+  "pass": false,
+  "fail_why": "capture 249.79145 > 190 (549 pins)",
+  "view_sha256": {
+   "qkd_astk_pv_tp8.lef": "907e3a9b5651681adbb1516ef445a2be6a56990030b99a826ef1d71b42d84bba",
+   "qkd_astk_pv_tp8_ff.lib": "0c3046d5d59ca896f6b96943fd11565b1a0a157b4b22717d4627f84ab19262e3",
+   "qkd_astk_pv_tp8_ss.lib": "bd706ad863e64269120ee7cb2465b965430319fa125c7e1e594db52339e32c95",
+   "qkd_astk_pv_tp8_tt.lib": "d6fcff9ca36131dabd3e609c4bc00ea9f8b7ac0ab3b5fc535bd01c22ed79641f"
+  },
+  "view_commit": "f709976bc98f597d62faafdcbacc5b3dcb6aadf5",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_pv_tp8-tp1-24a3e3d02 (qkd_astk_pv_tp8 CLOSED)",
+  "capture_over_pins": [
+   [
+    "ui[494]",
+    249.8
+   ],
+   [
+    "di[524]",
+    249.7
+   ],
+   [
+    "di[76]",
+    247.9
+   ],
+   [
+    "di[267]",
+    247.7
+   ],
+   [
+    "di[514]",
+    246.8
+   ],
+   [
+    "di[82]",
+    245.6
+   ],
+   [
+    "ui[226]",
+    245.0
+   ],
+   [
+    "di[81]",
+    244.6
+   ],
+   [
+    "ui[493]",
+    244.4
+   ],
+   [
+    "ui[490]",
+    243.8
+   ],
+   [
+    "di[78]",
+    243.8
+   ],
+   [
+    "di[523]",
+    243.6
+   ],
+   [
+    "di[214]",
+    242.0
+   ],
+   [
+    "di[80]",
+    241.4
+   ],
+   [
+    "ui[222]",
+    241.2
+   ],
+   [
+    "di[204]",
+    240.3
+   ],
+   [
+    "ui[225]",
+    240.1
+   ],
+   [
+    "ui[214]",
+    240.0
+   ],
+   [
+    "ui[486]",
+    239.9
+   ],
+   [
+    "ui[484]",
+    239.8
+   ],
+   [
+    "di[240]",
+    239.8
+   ],
+   [
+    "di[239]",
+    239.2
+   ],
+   [
+    "ui[80]",
+    238.9
+   ],
+   [
+    "di[100]",
+    238.2
+   ],
+   [
+    "di[234]",
+    237.4
+   ],
+   [
+    "di[90]",
+    237.3
+   ],
+   [
+    "ui[482]",
+    237.0
+   ],
+   [
+    "ui[483]",
+    236.8
+   ],
+   [
+    "di[245]",
+    235.9
+   ],
+   [
+    "di[228]",
+    235.7
+   ],
+   [
+    "di[266]",
+    235.3
+   ],
+   [
+    "di[211]",
+    235.2
+   ],
+   [
+    "ui[485]",
+    235.0
+   ],
+   [
+    "di[216]",
+    234.9
+   ],
+   [
+    "ui[32]",
+    234.8
+   ],
+   [
+    "di[213]",
+    234.7
+   ],
+   [
+    "ui[215]",
+    234.6
+   ],
+   [
+    "di[96]",
+    234.5
+   ],
+   [
+    "di[218]",
+    234.5
+   ],
+   [
+    "di[84]",
+    234.2
+   ],
+   [
+    "di[77]",
+    234.2
+   ],
+   [
+    "di[219]",
+    234.0
+   ],
+   [
+    "di[94]",
+    233.9
+   ],
+   [
+    "ui[92]",
+    233.8
+   ],
+   [
+    "ui[218]",
+    233.7
+   ],
+   [
+    "di[244]",
+    233.5
+   ],
+   [
+    "di[210]",
+    232.9
+   ],
+   [
+    "ui[216]",
+    232.2
+   ],
+   [
+    "di[217]",
+    232.0
+   ],
+   [
+    "di[79]",
+    231.8
+   ],
+   [
+    "ui[88]",
+    231.7
+   ],
+   [
+    "ui[217]",
+    231.2
+   ],
+   [
+    "di[238]",
+    231.1
+   ],
+   [
+    "ui[81]",
+    230.9
+   ],
+   [
+    "ui[30]",
+    230.9
+   ],
+   [
+    "di[215]",
+    230.7
+   ],
+   [
+    "di[70]",
+    230.6
+   ],
+   [
+    "ui[230]",
+    230.3
+   ],
+   [
+    "ui[91]",
+    230.0
+   ],
+   [
+    "ui[231]",
+    230.0
+   ],
+   [
+    "di[86]",
+    230.0
+   ],
+   [
+    "di[212]",
+    229.9
+   ],
+   [
+    "ui[179]",
+    229.7
+   ],
+   [
+    "di[83]",
+    229.6
+   ],
+   [
+    "ui[134]",
+    229.5
+   ],
+   [
+    "di[91]",
+    228.9
+   ],
+   [
+    "di[521]",
+    228.9
+   ],
+   [
+    "di[224]",
+    228.7
+   ],
+   [
+    "di[88]",
+    228.6
+   ],
+   [
+    "di[74]",
+    228.5
+   ],
+   [
+    "ui[97]",
+    228.4
+   ],
+   [
+    "ui[166]",
+    228.4
+   ],
+   [
+    "ui[96]",
+    228.2
+   ],
+   [
+    "ui[167]",
+    228.2
+   ],
+   [
+    "di[85]",
+    228.2
+   ],
+   [
+    "ui[45]",
+    228.1
+   ],
+   [
+    "di[97]",
+    228.0
+   ],
+   [
+    "di[207]",
+    227.9
+   ],
+   [
+    "di[515]",
+    227.7
+   ],
+   [
+    "di[29]",
+    227.6
+   ],
+   [
+    "ui[44]",
+    227.5
+   ],
+   [
+    "ui[178]",
+    227.5
+   ],
+   [
+    "ui[487]",
+    227.4
+   ],
+   [
+    "ui[168]",
+    226.9
+   ],
+   [
+    "di[246]",
+    226.7
+   ],
+   [
+    "di[256]",
+    226.2
+   ],
+   [
+    "di[227]",
+    226.2
+   ],
+   [
+    "ui[224]",
+    225.9
+   ],
+   [
+    "di[254]",
+    225.9
+   ],
+   [
+    "ui[205]",
+    225.6
+   ],
+   [
+    "ui[177]",
+    225.1
+   ],
+   [
+    "di[222]",
+    224.6
+   ],
+   [
+    "ui[172]",
+    224.3
+   ],
+   [
+    "ui[33]",
+    224.2
+   ],
+   [
+    "di[208]",
+    224.1
+   ],
+   [
+    "di[264]",
+    224.0
+   ],
+   [
+    "di[522]",
+    223.8
+   ],
+   [
+    "ui[34]",
+    223.3
+   ],
+   [
+    "ui[165]",
+    223.1
+   ],
+   [
+    "di[209]",
+    223.1
+   ],
+   [
+    "di[262]",
+    222.9
+   ],
+   [
+    "di[248]",
+    222.9
+   ],
+   [
+    "ui[43]",
+    222.8
+   ],
+   [
+    "ui[173]",
+    222.8
+   ],
+   [
+    "ui[211]",
+    222.7
+   ],
+   [
+    "di[95]",
+    222.7
+   ],
+   [
+    "di[71]",
+    222.3
+   ],
+   [
+    "di[225]",
+    222.2
+   ],
+   [
+    "di[93]",
+    222.1
+   ],
+   [
+    "ui[227]",
+    221.8
+   ],
+   [
+    "ui[232]",
+    221.7
+   ],
+   [
+    "ui[164]",
+    221.7
+   ],
+   [
+    "ui[38]",
+    221.6
+   ],
+   [
+    "ui[169]",
+    221.4
+   ],
+   [
+    "ui[93]",
+    221.3
+   ],
+   [
+    "ui[71]",
+    221.3
+   ],
+   [
+    "ui[473]",
+    221.3
+   ],
+   [
+    "ui[360]",
+    221.3
+   ],
+   [
+    "di[154]",
+    221.3
+   ],
+   [
+    "di[44]",
+    221.2
+   ],
+   [
+    "di[235]",
+    221.0
+   ],
+   [
+    "ui[219]",
+    220.8
+   ],
+   [
+    "di[232]",
+    220.6
+   ],
+   [
+    "di[260]",
+    220.5
+   ],
+   [
+    "ui[137]",
+    220.4
+   ],
+   [
+    "di[45]",
+    220.1
+   ],
+   [
+    "di[226]",
+    220.0
+   ],
+   [
+    "ui[477]",
+    219.7
+   ],
+   [
+    "di[148]",
+    219.7
+   ],
+   [
+    "di[253]",
+    219.5
+   ],
+   [
+    "di[89]",
+    219.2
+   ],
+   [
+    "ui[99]",
+    219.1
+   ],
+   [
+    "ui[84]",
+    219.1
+   ],
+   [
+    "ui[77]",
+    219.1
+   ],
+   [
+    "ui[83]",
+    219.0
+   ],
+   [
+    "ui[36]",
+    219.0
+   ],
+   [
+    "ui[31]",
+    219.0
+   ],
+   [
+    "ui[138]",
+    218.9
+   ],
+   [
+    "ui[90]",
+    218.8
+   ],
+   [
+    "di[205]",
+    218.8
+   ],
+   [
+    "di[75]",
+    218.7
+   ],
+   [
+    "di[20]",
+    218.1
+   ],
+   [
+    "di[2]",
+    218.0
+   ],
+   [
+    "di[223]",
+    218.0
+   ],
+   [
+    "ui[356]",
+    217.9
+   ],
+   [
+    "di[163]",
+    217.9
+   ],
+   [
+    "ui[170]",
+    217.7
+   ],
+   [
+    "ui[359]",
+    217.2
+   ],
+   [
+    "di[191]",
+    216.9
+   ],
+   [
+    "di[134]",
+    216.9
+   ],
+   [
+    "di[30]",
+    216.7
+   ],
+   [
+    "ui[316]",
+    216.6
+   ],
+   [
+    "di[507]",
+    216.6
+   ],
+   [
+    "ui[209]",
+    216.3
+   ],
+   [
+    "di[243]",
+    216.2
+   ],
+   [
+    "di[172]",
+    216.1
+   ],
+   [
+    "ui[479]",
+    216.0
+   ],
+   [
+    "ui[62]",
+    215.9
+   ],
+   [
+    "ui[35]",
+    215.9
+   ],
+   [
+    "ui[136]",
+    215.9
+   ],
+   [
+    "di[110]",
+    215.9
+   ],
+   [
+    "ui[98]",
+    215.8
+   ],
+   [
+    "ui[82]",
+    215.8
+   ],
+   [
+    "di[242]",
+    215.8
+   ],
+   [
+    "di[508]",
+    215.7
+   ],
+   [
+    "di[229]",
+    215.7
+   ],
+   [
+    "di[206]",
+    215.7
+   ],
+   [
+    "di[35]",
+    215.6
+   ],
+   [
+    "ui[0]",
+    215.5
+   ],
+   [
+    "ui[196]",
+    215.4
+   ],
+   [
+    "ui[114]",
+    215.4
+   ],
+   [
+    "di[152]",
+    215.4
+   ],
+   [
+    "ui[135]",
+    215.2
+   ],
+   [
+    "ui[39]",
+    215.1
+   ],
+   [
+    "ui[212]",
+    214.9
+   ],
+   [
+    "di[220]",
+    214.8
+   ],
+   [
+    "di[105]",
+    214.8
+   ],
+   [
+    "ui[233]",
+    214.6
+   ],
+   [
+    "ui[95]",
+    214.5
+   ],
+   [
+    "di[104]",
+    214.4
+   ],
+   [
+    "di[92]",
+    214.3
+   ],
+   [
+    "ui[308]",
+    214.2
+   ],
+   [
+    "ui[3]",
+    214.1
+   ],
+   [
+    "di[87]",
+    214.1
+   ],
+   [
+    "di[188]",
+    214.1
+   ],
+   [
+    "ui[351]",
+    214.0
+   ],
+   [
+    "di[54]",
+    213.9
+   ],
+   [
+    "di[192]",
+    213.9
+   ],
+   [
+    "ui[229]",
+    213.6
+   ],
+   [
+    "ui[1]",
+    213.6
+   ],
+   [
+    "ui[352]",
+    213.4
+   ],
+   [
+    "di[479]",
+    213.4
+   ],
+   [
+    "di[160]",
+    213.4
+   ],
+   [
+    "di[158]",
+    213.4
+   ],
+   [
+    "di[162]",
+    212.9
+   ],
+   [
+    "di[170]",
+    212.8
+   ],
+   [
+    "di[140]",
+    212.6
+   ],
+   [
+    "ui[210]",
+    212.5
+   ],
+   [
+    "di[259]",
+    212.4
+   ],
+   [
+    "di[193]",
+    212.4
+   ],
+   [
+    "di[106]",
+    212.4
+   ],
+   [
+    "di[53]",
+    212.3
+   ],
+   [
+    "ui[478]",
+    212.2
+   ],
+   [
+    "ui[228]",
+    212.2
+   ],
+   [
+    "di[73]",
+    211.9
+   ],
+   [
+    "ui[499]",
+    211.8
+   ],
+   [
+    "ui[475]",
+    211.7
+   ],
+   [
+    "di[263]",
+    211.7
+   ],
+   [
+    "di[131]",
+    211.7
+   ],
+   [
+    "ui[492]",
+    211.5
+   ],
+   [
+    "di[98]",
+    211.4
+   ],
+   [
+    "di[32]",
+    211.4
+   ],
+   [
+    "ui[75]",
+    211.2
+   ],
+   [
+    "ui[474]",
+    211.2
+   ],
+   [
+    "ui[235]",
+    211.2
+   ],
+   [
+    "di[31]",
+    211.2
+   ],
+   [
+    "di[402]",
+    210.9
+   ],
+   [
+    "ui[78]",
+    210.8
+   ],
+   [
+    "ui[4]",
+    210.8
+   ],
+   [
+    "di[485]",
+    210.8
+   ],
+   [
+    "di[484]",
+    210.6
+   ],
+   [
+    "di[230]",
+    210.5
+   ],
+   [
+    "di[166]",
+    210.4
+   ],
+   [
+    "ui[522]",
+    210.2
+   ],
+   [
+    "di[265]",
+    210.2
+   ],
+   [
+    "di[221]",
+    210.2
+   ],
+   [
+    "di[168]",
+    210.2
+   ],
+   [
+    "di[9]",
+    210.1
+   ],
+   [
+    "di[99]",
+    210.1
+   ],
+   [
+    "kui[1]",
+    210.0
+   ],
+   [
+    "di[247]",
+    209.9
+   ],
+   [
+    "di[143]",
+    209.9
+   ],
+   [
+    "di[258]",
+    209.8
+   ],
+   [
+    "di[161]",
+    209.7
+   ],
+   [
+    "ui[371]",
+    209.5
+   ],
+   [
+    "di[483]",
+    209.5
+   ],
+   [
+    "di[182]",
+    209.5
+   ],
+   [
+    "ui[480]",
+    209.4
+   ],
+   [
+    "di[58]",
+    209.4
+   ],
+   [
+    "di[233]",
+    209.3
+   ],
+   [
+    "ui[472]",
+    209.2
+   ],
+   [
+    "di[237]",
+    209.2
+   ],
+   [
+    "di[165]",
+    208.9
+   ],
+   [
+    "di[472]",
+    208.8
+   ],
+   [
+    "di[66]",
+    208.7
+   ],
+   [
+    "di[480]",
+    208.7
+   ],
+   [
+    "di[173]",
+    208.7
+   ],
+   [
+    "ui[408]",
+    208.5
+   ],
+   [
+    "ui[2]",
+    208.5
+   ],
+   [
+    "ui[190]",
+    208.4
+   ],
+   [
+    "ui[122]",
+    208.3
+   ],
+   [
+    "di[55]",
+    208.3
+   ],
+   [
+    "di[3]",
+    208.3
+   ],
+   [
+    "ui[319]",
+    208.1
+   ],
+   [
+    "ui[350]",
+    208.0
+   ],
+   [
+    "di[147]",
+    207.9
+   ],
+   [
+    "ui[380]",
+    207.8
+   ],
+   [
+    "di[252]",
+    207.8
+   ],
+   [
+    "di[261]",
+    207.7
+   ],
+   [
+    "ui[76]",
+    207.6
+   ],
+   [
+    "di[185]",
+    207.4
+   ],
+   [
+    "di[180]",
+    207.4
+   ],
+   [
+    "ui[348]",
+    207.3
+   ],
+   [
+    "di[68]",
+    207.3
+   ],
+   [
+    "di[187]",
+    207.3
+   ],
+   [
+    "di[150]",
+    207.3
+   ],
+   [
+    "di[516]",
+    207.2
+   ],
+   [
+    "di[111]",
+    207.1
+   ],
+   [
+    "ui[349]",
+    207.0
+   ],
+   [
+    "di[72]",
+    207.0
+   ],
+   [
+    "di[61]",
+    207.0
+   ],
+   [
+    "di[535]",
+    207.0
+   ],
+   [
+    "ui[56]",
+    206.9
+   ],
+   [
+    "di[174]",
+    206.9
+   ],
+   [
+    "di[36]",
+    206.8
+   ],
+   [
+    "di[14]",
+    206.8
+   ],
+   [
+    "di[141]",
+    206.8
+   ],
+   [
+    "di[194]",
+    206.7
+   ],
+   [
+    "ui[447]",
+    206.6
+   ],
+   [
+    "ui[213]",
+    206.6
+   ],
+   [
+    "di[513]",
+    206.5
+   ],
+   [
+    "ui[208]",
+    206.4
+   ],
+   [
+    "di[65]",
+    206.4
+   ],
+   [
+    "di[405]",
+    206.4
+   ],
+   [
+    "di[167]",
+    206.4
+   ],
+   [
+    "di[169]",
+    206.3
+   ],
+   [
+    "di[133]",
+    206.2
+   ],
+   [
+    "di[38]",
+    206.1
+   ],
+   [
+    "di[186]",
+    206.0
+   ],
+   [
+    "ui[318]",
+    205.9
+   ],
+   [
+    "ui[207]",
+    205.9
+   ],
+   [
+    "di[175]",
+    205.9
+   ],
+   [
+    "di[157]",
+    205.9
+   ],
+   [
+    "di[146]",
+    205.9
+   ],
+   [
+    "ui[310]",
+    205.8
+   ],
+   [
+    "di[33]",
+    205.6
+   ],
+   [
+    "di[136]",
+    205.6
+   ],
+   [
+    "di[121]",
+    205.6
+   ],
+   [
+    "ui[206]",
+    205.5
+   ],
+   [
+    "ui[101]",
+    205.5
+   ],
+   [
+    "di[6]",
+    205.4
+   ],
+   [
+    "di[257]",
+    205.4
+   ],
+   [
+    "di[183]",
+    205.4
+   ],
+   [
+    "ui[85]",
+    205.3
+   ],
+   [
+    "ui[79]",
+    205.3
+   ],
+   [
+    "di[101]",
+    205.3
+   ],
+   [
+    "ui[109]",
+    205.2
+   ],
+   [
+    "di[59]",
+    205.2
+   ],
+   [
+    "di[57]",
+    205.2
+   ],
+   [
+    "di[142]",
+    205.2
+   ],
+   [
+    "ui[72]",
+    205.1
+   ],
+   [
+    "ui[145]",
+    205.1
+   ],
+   [
+    "di[156]",
+    205.1
+   ],
+   [
+    "di[406]",
+    205.0
+   ],
+   [
+    "di[196]",
+    205.0
+   ],
+   [
+    "di[255]",
+    204.9
+   ],
+   [
+    "ui[379]",
+    204.8
+   ],
+   [
+    "di[176]",
+    204.7
+   ],
+   [
+    "di[56]",
+    204.5
+   ],
+   [
+    "di[13]",
+    204.4
+   ],
+   [
+    "di[128]",
+    204.3
+   ],
+   [
+    "ui[94]",
+    204.2
+   ],
+   [
+    "di[155]",
+    204.1
+   ],
+   [
+    "ui[488]",
+    204.0
+   ],
+   [
+    "di[10]",
+    203.9
+   ],
+   [
+    "ui[397]",
+    203.8
+   ],
+   [
+    "di[177]",
+    203.6
+   ],
+   [
+    "di[69]",
+    203.5
+   ],
+   [
+    "di[512]",
+    203.5
+   ],
+   [
+    "di[118]",
+    203.5
+   ],
+   [
+    "ui[204]",
+    203.4
+   ],
+   [
+    "ui[18]",
+    203.4
+   ],
+   [
+    "ui[52]",
+    203.3
+   ],
+   [
+    "di[48]",
+    203.2
+   ],
+   [
+    "ui[68]",
+    203.1
+   ],
+   [
+    "di[404]",
+    203.1
+   ],
+   [
+    "di[7]",
+    203.0
+   ],
+   [
+    "di[149]",
+    203.0
+   ],
+   [
+    "di[137]",
+    203.0
+   ],
+   [
+    "di[122]",
+    203.0
+   ],
+   [
+    "di[64]",
+    202.8
+   ],
+   [
+    "ui[16]",
+    202.6
+   ],
+   [
+    "di[4]",
+    202.5
+   ],
+   [
+    "di[482]",
+    202.5
+   ],
+   [
+    "di[138]",
+    202.5
+   ],
+   [
+    "di[124]",
+    202.5
+   ],
+   [
+    "di[250]",
+    202.4
+   ],
+   [
+    "di[202]",
+    202.4
+   ],
+   [
+    "ui[500]",
+    202.3
+   ],
+   [
+    "di[28]",
+    202.3
+   ],
+   [
+    "di[241]",
+    202.1
+   ],
+   [
+    "ui[108]",
+    201.9
+   ],
+   [
+    "di[159]",
+    201.9
+   ],
+   [
+    "di[153]",
+    201.8
+   ],
+   [
+    "di[107]",
+    201.8
+   ],
+   [
+    "ui[149]",
+    201.7
+   ],
+   [
+    "di[47]",
+    201.7
+   ],
+   [
+    "di[27]",
+    201.7
+   ],
+   [
+    "di[21]",
+    201.7
+   ],
+   [
+    "di[62]",
+    201.6
+   ],
+   [
+    "di[181]",
+    201.5
+   ],
+   [
+    "ui[489]",
+    201.4
+   ],
+   [
+    "di[49]",
+    201.4
+   ],
+   [
+    "di[373]",
+    201.4
+   ],
+   [
+    "di[372]",
+    201.4
+   ],
+   [
+    "di[117]",
+    201.4
+   ],
+   [
+    "ui[220]",
+    201.3
+   ],
+   [
+    "ui[193]",
+    201.3
+   ],
+   [
+    "di[60]",
+    201.3
+   ],
+   [
+    "di[164]",
+    201.3
+   ],
+   [
+    "di[0]",
+    201.3
+   ],
+   [
+    "di[129]",
+    201.2
+   ],
+   [
+    "di[67]",
+    201.1
+   ],
+   [
+    "di[115]",
+    201.1
+   ],
+   [
+    "ui[481]",
+    201.0
+   ],
+   [
+    "ui[15]",
+    201.0
+   ],
+   [
+    "di[24]",
+    200.9
+   ],
+   [
+    "di[179]",
+    200.9
+   ],
+   [
+    "ui[353]",
+    200.8
+   ],
+   [
+    "ui[194]",
+    200.8
+   ],
+   [
+    "di[475]",
+    200.8
+   ],
+   [
+    "di[43]",
+    200.8
+   ],
+   [
+    "di[42]",
+    200.8
+   ],
+   [
+    "di[368]",
+    200.8
+   ],
+   [
+    "di[231]",
+    200.8
+   ],
+   [
+    "di[203]",
+    200.8
+   ],
+   [
+    "di[338]",
+    200.7
+   ],
+   [
+    "ui[150]",
+    200.4
+   ],
+   [
+    "di[171]",
+    200.4
+   ],
+   [
+    "di[486]",
+    200.3
+   ],
+   [
+    "ui[458]",
+    200.1
+   ],
+   [
+    "di[178]",
+    200.1
+   ],
+   [
+    "di[19]",
+    200.0
+   ],
+   [
+    "ui[374]",
+    199.8
+   ],
+   [
+    "di[135]",
+    199.8
+   ],
+   [
+    "ui[373]",
+    199.7
+   ],
+   [
+    "di[197]",
+    199.7
+   ],
+   [
+    "di[114]",
+    199.7
+   ],
+   [
+    "ui[504]",
+    199.6
+   ],
+   [
+    "ui[148]",
+    199.4
+   ],
+   [
+    "di[200]",
+    199.4
+   ],
+   [
+    "ui[476]",
+    199.3
+   ],
+   [
+    "di[151]",
+    199.1
+   ],
+   [
+    "ui[357]",
+    198.9
+   ],
+   [
+    "ui[146]",
+    198.9
+   ],
+   [
+    "ui[456]",
+    198.8
+   ],
+   [
+    "di[34]",
+    198.8
+   ],
+   [
+    "di[18]",
+    198.8
+   ],
+   [
+    "di[130]",
+    198.7
+   ],
+   [
+    "ui[73]",
+    198.5
+   ],
+   [
+    "di[46]",
+    198.4
+   ],
+   [
+    "di[251]",
+    198.4
+   ],
+   [
+    "ui[398]",
+    198.2
+   ],
+   [
+    "ui[21]",
+    198.1
+   ],
+   [
+    "ui[186]",
+    198.1
+   ],
+   [
+    "ui[160]",
+    198.1
+   ],
+   [
+    "di[481]",
+    198.1
+   ],
+   [
+    "di[15]",
+    198.1
+   ],
+   [
+    "ui[152]",
+    198.0
+   ],
+   [
+    "di[26]",
+    198.0
+   ],
+   [
+    "di[236]",
+    198.0
+   ],
+   [
+    "ui[86]",
+    197.9
+   ],
+   [
+    "ui[70]",
+    197.9
+   ],
+   [
+    "ui[460]",
+    197.8
+   ],
+   [
+    "di[120]",
+    197.8
+   ],
+   [
+    "di[119]",
+    197.8
+   ],
+   [
+    "ui[74]",
+    197.7
+   ],
+   [
+    "ui[337]",
+    197.6
+   ],
+   [
+    "ui[221]",
+    197.6
+   ],
+   [
+    "di[348]",
+    197.6
+   ],
+   [
+    "di[132]",
+    197.6
+   ],
+   [
+    "di[112]",
+    197.6
+   ],
+   [
+    "di[195]",
+    197.5
+   ],
+   [
+    "di[346]",
+    197.4
+   ],
+   [
+    "di[123]",
+    197.4
+   ],
+   [
+    "ui[423]",
+    197.3
+   ],
+   [
+    "di[350]",
+    197.2
+   ],
+   [
+    "ui[144]",
+    197.0
+   ],
+   [
+    "di[198]",
+    197.0
+   ],
+   [
+    "ui[517]",
+    196.9
+   ],
+   [
+    "ui[13]",
+    196.9
+   ],
+   [
+    "ci[2]",
+    196.7
+   ],
+   [
+    "kdi[1]",
+    196.6
+   ],
+   [
+    "ui[325]",
+    196.5
+   ],
+   [
+    "di[189]",
+    196.5
+   ],
+   [
+    "ui[389]",
+    196.4
+   ],
+   [
+    "ui[375]",
+    196.4
+   ],
+   [
+    "di[199]",
+    196.3
+   ],
+   [
+    "ci[5]",
+    196.3
+   ],
+   [
+    "ui[395]",
+    196.2
+   ],
+   [
+    "di[39]",
+    196.2
+   ],
+   [
+    "di[344]",
+    196.2
+   ],
+   [
+    "di[52]",
+    196.1
+   ],
+   [
+    "di[50]",
+    196.1
+   ],
+   [
+    "di[488]",
+    196.0
+   ],
+   [
+    "ui[531]",
+    195.9
+   ],
+   [
+    "di[487]",
+    195.9
+   ],
+   [
+    "di[473]",
+    195.9
+   ],
+   [
+    "di[23]",
+    195.9
+   ],
+   [
+    "di[504]",
+    195.8
+   ],
+   [
+    "ui[402]",
+    195.7
+   ],
+   [
+    "ui[276]",
+    195.7
+   ],
+   [
+    "ui[234]",
+    195.7
+   ],
+   [
+    "di[506]",
+    195.7
+   ],
+   [
+    "ui[416]",
+    195.6
+   ],
+   [
+    "ui[156]",
+    195.6
+   ],
+   [
+    "di[40]",
+    195.6
+   ],
+   [
+    "ui[516]",
+    195.5
+   ],
+   [
+    "di[190]",
+    195.5
+   ],
+   [
+    "ui[63]",
+    195.4
+   ],
+   [
+    "ui[288]",
+    195.4
+   ],
+   [
+    "ui[61]",
+    195.3
+   ],
+   [
+    "ui[390]",
+    195.3
+   ],
+   [
+    "ui[59]",
+    195.2
+   ],
+   [
+    "ui[46]",
+    195.2
+   ],
+   [
+    "di[374]",
+    195.2
+   ],
+   [
+    "ui[155]",
+    195.0
+   ],
+   [
+    "kdi[0]",
+    195.0
+   ],
+   [
+    "ui[147]",
+    194.9
+   ],
+   [
+    "di[25]",
+    194.9
+   ],
+   [
+    "ui[404]",
+    194.7
+   ],
+   [
+    "di[8]",
+    194.7
+   ],
+   [
+    "ui[199]",
+    194.6
+   ],
+   [
+    "di[345]",
+    194.6
+   ],
+   [
+    "ui[523]",
+    194.5
+   ],
+   [
+    "ui[437]",
+    194.3
+   ],
+   [
+    "di[126]",
+    194.3
+   ],
+   [
+    "ui[87]",
+    194.2
+   ],
+   [
+    "ui[14]",
+    194.2
+   ],
+   [
+    "di[358]",
+    194.1
+   ],
+   [
+    "ui[22]",
+    194.0
+   ],
+   [
+    "di[51]",
+    193.9
+   ],
+   [
+    "di[102]",
+    193.7
+   ],
+   [
+    "ci[4]",
+    193.7
+   ],
+   [
+    "di[249]",
+    193.6
+   ],
+   [
+    "di[144]",
+    193.6
+   ],
+   [
+    "ui[65]",
+    193.5
+   ],
+   [
+    "ui[60]",
+    193.5
+   ],
+   [
+    "ui[498]",
+    193.5
+   ],
+   [
+    "ui[197]",
+    193.5
+   ],
+   [
+    "di[400]",
+    193.5
+   ],
+   [
+    "di[17]",
+    193.4
+   ],
+   [
+    "ui[58]",
+    193.3
+   ],
+   [
+    "di[440]",
+    193.2
+   ],
+   [
+    "ui[495]",
+    193.1
+   ],
+   [
+    "ui[405]",
+    193.1
+   ],
+   [
+    "di[184]",
+    193.1
+   ],
+   [
+    "ui[181]",
+    192.9
+   ],
+   [
+    "ui[491]",
+    192.7
+   ],
+   [
+    "di[16]",
+    192.6
+   ],
+   [
+    "di[109]",
+    192.6
+   ],
+   [
+    "ui[320]",
+    192.5
+   ],
+   [
+    "di[353]",
+    192.5
+   ],
+   [
+    "ui[42]",
+    192.3
+   ],
+   [
+    "di[534]",
+    192.3
+   ],
+   [
+    "di[339]",
+    192.1
+   ],
+   [
+    "ui[529]",
+    192.0
+   ],
+   [
+    "ui[461]",
+    192.0
+   ],
+   [
+    "ui[387]",
+    191.9
+   ],
+   [
+    "ui[382]",
+    191.9
+   ],
+   [
+    "ui[296]",
+    191.8
+   ],
+   [
+    "ui[159]",
+    191.8
+   ],
+   [
+    "ui[509]",
+    191.7
+   ],
+   [
+    "ui[174]",
+    191.7
+   ],
+   [
+    "di[113]",
+    191.7
+   ],
+   [
+    "ui[300]",
+    191.6
+   ],
+   [
+    "ui[343]",
+    191.5
+   ],
+   [
+    "ui[452]",
+    191.3
+   ],
+   [
+    "ui[440]",
+    191.3
+   ],
+   [
+    "ui[321]",
+    191.3
+   ],
+   [
+    "ui[535]",
+    191.2
+   ],
+   [
+    "ui[435]",
+    191.2
+   ],
+   [
+    "ui[12]",
+    191.2
+   ],
+   [
+    "ui[11]",
+    191.1
+   ],
+   [
+    "ui[513]",
+    191.0
+   ],
+   [
+    "ui[508]",
+    191.0
+   ],
+   [
+    "di[490]",
+    190.7
+   ],
+   [
+    "di[476]",
+    190.7
+   ],
+   [
+    "ui[515]",
+    190.6
+   ],
+   [
+    "ui[425]",
+    190.6
+   ],
+   [
+    "ui[406]",
+    190.6
+   ],
+   [
+    "ui[171]",
+    190.6
+   ],
+   [
+    "ui[119]",
+    190.6
+   ],
+   [
+    "di[478]",
+    190.6
+   ],
+   [
+    "ui[298]",
+    190.5
+   ],
+   [
+    "ui[151]",
+    190.4
+   ],
+   [
+    "kdi[3]",
+    190.3
+   ],
+   [
+    "ui[468]",
+    190.1
+   ],
+   [
+    "di[342]",
+    190.1
+   ]
+  ],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_rly_296": {
+  "cell": "qkd_astk_rly_296",
+  "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296",
+  "lib_cell": "qkd_astk_rly_296",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 74.7,
+  "spread_ps": 4.9,
+  "outputs": 296,
+  "inputs": 297,
+  "launch_ps": 145.6,
+  "launch_pin": "b[44]",
+  "capture_ps": 277.4,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 4.9,
+  "ff_launch_min_ps": 64.6,
+  "ff_hold_need_ps": -20.7,
+  "pass": false,
+  "fail_why": "capture 277.44152 > 190 (1 pins)",
+  "view_sha256": {
+   "qkd_astk_rly_296.lef": "cd1f219b3d62252a8a9407eac3e9362a0ae9ebc99d6f7318cdb15d27daf6ff82",
+   "qkd_astk_rly_296_ff.lib": "e1c1d88fddaa1ba7f780d86858b64f88ef45c444562c720ecacbdd671ec017f9",
+   "qkd_astk_rly_296_ss.lib": "723872e30ea2760ee6676ebe441d3e2521fe68ba701ee6670d3c7b30e6a394e8",
+   "qkd_astk_rly_296_tt.lib": "315b7a027bad9f318d884c3f2f2b3ba1e27fab537180f8f87c54fe41985ce5e9"
+  },
+  "view_commit": "c73e314f2d229ce9f497033e1e55b6ae1b611aab",
+  "view_commit_subject": "closure-loop: qkd_astk_rly_296 CLOSED TT +239.41 / FF +39.57 ps DRC 0; SS sensitivity +97.61 ps at core_clk 833.333 ps (source 849bb441e, AGIdock /srv/opentall",
+  "capture_over_pins": [
+   [
+    "rst_n",
+    277.4
+   ]
+  ],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_zn": {
+  "cell": "qkd_astk_zn",
+  "view": "physical/ref_tile/qkd_astk_zn/views/qkd_astk_zn",
+  "lib_cell": "qkd_astk_zn",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 143.8,
+  "spread_ps": 11.3,
+  "outputs": 138,
+  "inputs": 159,
+  "launch_ps": 185.0,
+  "launch_pin": "zo[69]",
+  "capture_ps": 140.6,
+  "capture_pin": "zi[8]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 11.4,
+  "ff_launch_min_ps": 108.2,
+  "ff_hold_need_ps": -60.2,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_zn.lef": "234b9cc112e01923089a33315decefff17fad6e5c9a51ad4ef49985b2286cd1b",
+   "qkd_astk_zn_ff.lib": "fc476dea9f292d86887de2b2dbe02cd31e4c29b0152ac5b5aed95fdc508e76f6",
+   "qkd_astk_zn_ss.lib": "f6f872749c9dec49812967309db49164b8fe63ad6dd3177c55fb8a6c08700ecb",
+   "qkd_astk_zn_tt.lib": "1d6d32736b5fe306dad33178fe60078781fc17379849ea12c1cfecdd9b2bfd5e"
+  },
+  "view_commit": "41db0a111cd8f07fa057c779ffbbd8ecd26b4215",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_zn-np1-0a9705ab5 (qkd_astk_zn CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_d2d_cal_seq_pin": {
+  "cell": "qkd_d2d_cal_seq_pin",
+  "view": "physical/ref_tile/qkd_d2d_cal_seq_pin_ep3/views/qkd_d2d_cal_seq_pin",
+  "lib_cell": "qkd_d2d_cal_seq_pin",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 81.4,
+  "spread_ps": 5.2,
+  "outputs": 46,
+  "inputs": 4,
+  "launch_ps": 175.6,
+  "launch_pin": "cal_seg",
+  "capture_ps": 132.2,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 5.2,
+  "ff_launch_min_ps": 110.4,
+  "ff_hold_need_ps": -61.0,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_d2d_cal_seq_pin.lef": "9be40146558ae7dbeeab2f23a6d552b939a01bd2be62b057515bfc15aee7ac19",
+   "qkd_d2d_cal_seq_pin_ff.lib": "aec1cd680340110e8c743dd52ceebb9a5fe3bfb9c449eec956880d1a992dc8db",
+   "qkd_d2d_cal_seq_pin_ss.lib": "d552797efdf65329f13c025651711d65ebc1003612081b4f3acf8aaca44a44f8",
+   "qkd_d2d_cal_seq_pin_tt.lib": "7a84e82aea97993ed5156b155ef27cbcadd894f2b17a1c5e2a7f883399cc5c47"
+  },
+  "view_commit": "ace320510a466acfd5de7cf758be0fccc2388bf1",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_d2d_cal_seq_pin_ep3-ep3-r1-fbc4a2e0d (qkd_d2d_cal_seq_pin CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_d2d_static": {
+  "cell": "qkd_d2d_static",
+  "view": "physical/ref_tile/qkd_d2d_static_r5_native/views/qkd_d2d_static",
+  "lib_cell": "qkd_d2d_static",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json child_flop boundary mean"
+  ],
+  "R_ps": 540.0,
+  "spread_ps": 75.0,
+  "outputs": 2502,
+  "inputs": 2361,
+  "launch_ps": 237.8,
+  "launch_pin": "fdi_tx_flit[197]",
+  "capture_ps": 201.8,
+  "capture_pin": "status_epoch16[7]",
+  "launch_over": 53,
+  "capture_over": 7,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 67.6,
+  "ff_launch_min_ps": 113.8,
+  "ff_hold_need_ps": -69.6,
+  "pass": false,
+  "fail_why": "launch 237.77515 > 220 (53 pins); capture 201.75769 > 190 (7 pins)",
+  "view_sha256": {
+   "qkd_d2d_static.lef": "b709f98bf4b8a3826f50e43a741982eda1facf8475eb059fb31c81223d8717c5",
+   "qkd_d2d_static_ff.lib": "fc53040fbe2d198c2437e2c804f8909aa8fcfef4d1b46f5d360860f545a5f4c9",
+   "qkd_d2d_static_ss.lib": "7fffb82a69daf911dc06bcaafcb951d817e7ebe312d501b0ae7276a759b4d1ba",
+   "qkd_d2d_static_tt.lib": "4ec7255bfa88670f25cd7af11f95afc2076b7bbd566062439c51c8823fcf4e7f"
+  },
+  "view_commit": "22ba3a7087d7661c16d180becae9cc6f3c0d2234",
+  "view_commit_subject": "KV-PLAN5 kvs14p: physical KV die chain on the QLB-KV GEN source (64ce0504d)",
+  "capture_over_pins": [
+   [
+    "status_epoch16[7]",
+    201.8
+   ],
+   [
+    "status_epoch16[3]",
+    199.4
+   ],
+   [
+    "status_epoch16[6]",
+    197.9
+   ],
+   [
+    "serdes_up",
+    197.8
+   ],
+   [
+    "status_epoch16[10]",
+    197.7
+   ],
+   [
+    "status_epoch16[2]",
+    197.6
+   ],
+   [
+    "rst_n",
+    194.2
+   ]
+  ],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_host_rx_class_admission": {
+  "cell": "qkd_host_rx_class_admission",
+  "view": "physical/ref_tile/qkd_hr_core_rx/views/qkd_host_rx_class_admission",
+  "lib_cell": "qkd_host_rx_class_admission",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 216.4,
+  "spread_ps": 30.6,
+  "outputs": 1577,
+  "inputs": 542,
+  "launch_ps": 95.1,
+  "launch_pin": "ctrl_d[54]",
+  "capture_ps": 256.6,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 29.6,
+  "ff_launch_min_ps": 46.5,
+  "ff_hold_need_ps": -7.9,
+  "pass": false,
+  "fail_why": "capture 256.5915 > 190 (1 pins)",
+  "view_sha256": {
+   "qkd_host_rx_class_admission.lef": "e6f7e8c9c190cd9e194544131544af42ff810e732875f2f0f4d5a7c08eeb2495",
+   "qkd_host_rx_class_admission_ff.lib": "5bb84096e85ad86fb88320c6d1c9c71621f7e87c3b386150637d7ee08bf28892",
+   "qkd_host_rx_class_admission_ss.lib": "db0bee32291bd458f5c311aed15da4caa0f2ba86a7be0fb5b300a1b98f779a3f",
+   "qkd_host_rx_class_admission_tt.lib": "7e85f27e41688775e5acd50433bc35df2cb9d86856eecf0e9d29a21d58fa8b4c"
+  },
+  "view_commit": "6edde47214cffbe95d9289fc78110f42dbfd848b",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_rx-b1-161e15878 (qkd_host_rx_class_admission CLOSED)",
+  "capture_over_pins": [
+   [
+    "rst_n",
+    256.6
+   ]
+  ],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_host_rx_class_admission_rr": {
+  "cell": "qkd_host_rx_class_admission_rr",
+  "view": "physical/ref_tile/qkd_hr_core_rx/views/qkd_host_rx_class_admission_rr",
+  "lib_cell": "qkd_host_rx_class_admission_rr",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 211.0,
+  "spread_ps": 20.3,
+  "outputs": 1577,
+  "inputs": 542,
+  "launch_ps": 96.1,
+  "launch_pin": "ctrl_d[394]",
+  "capture_ps": 69.8,
+  "capture_pin": "rx_d[186]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 20.6,
+  "ff_launch_min_ps": 46.9,
+  "ff_hold_need_ps": -11.7,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_host_rx_class_admission_rr.lef": "03fe793555afc8b9ffbad348ffb8e1317c03fbf3f5ea780c50ee8a2cd09139ad",
+   "qkd_host_rx_class_admission_rr_ff.lib": "d226588d9a6d2aac8a52f62714615a7e2aff3e2a1abeac5230880ef8ade78024",
+   "qkd_host_rx_class_admission_rr_ss.lib": "f1018ea36e38474833cdfb1e0fda12d975a64d29608f64b7ab4784e5ae17323d",
+   "qkd_host_rx_class_admission_rr_tt.lib": "05fda772c9d3776b3345ad43690de10bf3ea3d42fc3c1fca4f74a6389538ba56"
+  },
+  "view_commit": "892ded80e02c092dcbed3f462a214f73d514848b",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_rx-rr1-66b174d42 (qkd_host_rx_class_admission_rr CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_host_rx_pad5": {
+  "cell": "qkd_host_rx_pad5",
+  "view": "physical/ref_tile/qkd_hr_phy_pad/views/qkd_host_rx_pad5",
+  "lib_cell": "qkd_host_rx_pad5",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 175.8,
+  "spread_ps": 17.8,
+  "outputs": 531,
+  "inputs": 1027,
+  "launch_ps": 90.1,
+  "launch_pin": "in_cr",
+  "capture_ps": 103.2,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 16.8,
+  "ff_launch_min_ps": 48.4,
+  "ff_hold_need_ps": -14.8,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_host_rx_pad5.lef": "7cd8cc43249d4ef3825dc8f736b741d0ab10ea340bc256a01a1bc4985f8c72fc",
+   "qkd_host_rx_pad5_ff.lib": "f6616e65fbdca6a0163455d5841c62abddd850ca728c20b12ccef9f4cad9070f",
+   "qkd_host_rx_pad5_ss.lib": "8faa34be00ab397c5c0d0b9f54f536865bed925ae81434eb53b3e57b47fb8acc",
+   "qkd_host_rx_pad5_tt.lib": "49f05a7dd366377f534c418173f88dddab57108d79361e4f49d2204aefaa523c"
+  },
+  "view_commit": "2d16d1870a5f0684d8be01e2e20194f26f6e4293",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_phy_pad-b1-0705b4562 (qkd_host_rx_pad5 CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_hr_core_order": {
+  "cell": "qkd_hr_core_order",
+  "view": "physical/ref_tile/qkd_hr_core_order/views/qkd_hr_core_order",
+  "lib_cell": "qkd_hr_core_order",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 264.1,
+  "spread_ps": 26.3,
+  "outputs": 1582,
+  "inputs": 681,
+  "launch_ps": 132.8,
+  "launch_pin": "chain_f[1092]",
+  "capture_ps": 74.7,
+  "capture_pin": "u_rank__oa[24]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 24.6,
+  "ff_launch_min_ps": 56.2,
+  "ff_hold_need_ps": -14.8,
+  "pass": true,
+  "fail_why": "",
+  "audited_at": "7763b94327065e364a62eba117ee35198de11967",
+  "tool": "tools/hier_contract/native_pin_audit.py --view",
+  "view_sha256": {
+   "qkd_hr_core_order.lef": "542f1abe9c138e723957ac414fb914751a9ab6eae23d7b20d1f13fbc6494746c",
+   "qkd_hr_core_order_ff.lib": "0e1d5daf1f30268095f470ed1c5f22621a0fb16bb6be34ff8b2f3c7ab5e1579c",
+   "qkd_hr_core_order_ss.lib": "856d86cf5e3c1b80d079a7b11459627b50e01995580498e43080018abd491478",
+   "qkd_hr_core_order_tt.lib": "1d3442da143f3ad2c556ee2f6ecca8111c365d21ebfbd31dd699c07a3b3707b0"
+  },
+  "view_commit": "31fac4878ee584f2421c0e789a4e8b6f2eccfc11",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_order-r4-d9e4f6a44 (qkd_hr_core_order CLOSED)"
+ },
+ "qkd_hr_core_queue": {
+  "cell": "qkd_hr_core_queue",
+  "view": "physical/ref_tile/qkd_hr_core_queue/views/qkd_hr_core_queue",
+  "lib_cell": "qkd_hr_core_queue",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 202.4,
+  "spread_ps": 29.3,
+  "outputs": 687,
+  "inputs": 653,
+  "launch_ps": 121.6,
+  "launch_pin": "u_rank__u_bridge__qd[116]",
+  "capture_ps": 274.0,
+  "capture_pin": "host_rst_n",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 30.1,
+  "ff_launch_min_ps": 55.0,
+  "ff_hold_need_ps": -15.1,
+  "pass": false,
+  "fail_why": "capture 273.98894 > 190 (1 pins)",
+  "view_sha256": {
+   "qkd_hr_core_queue.lef": "4f91ebe866d3cc30bc604dd35e85849bda25513803022769b228165e879609f1",
+   "qkd_hr_core_queue_ff.lib": "e8e33c8a0a268dc2b932ba44b3f2a2a2577674bf141bfa8894d287c2bc87dacc",
+   "qkd_hr_core_queue_ss.lib": "abf7a2f0ad3d91a08a4bddc4d5984f7486e16e9498ca1b63531cb253736cc7da",
+   "qkd_hr_core_queue_tt.lib": "b4e1b421bd679c2f2d2c3076c422534a9ce991ee17f8f0d92b786f49a438fdd6"
+  },
+  "view_commit": "56bbc048c42489408ed78615e0ae63b3fc930785",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_queue-r4-24f17c338 (qkd_hr_core_queue CLOSED)",
+  "capture_over_pins": [
+   [
+    "host_rst_n",
+    274.0
+   ]
+  ],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_hr_core_tx": {
+  "cell": "qkd_hr_core_tx",
+  "view": "physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx",
+  "lib_cell": "qkd_hr_core_tx",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 187.5,
+  "spread_ps": 30.6,
+  "outputs": 520,
+  "inputs": 1142,
+  "launch_ps": 101.9,
+  "launch_pin": "u_rank__tx_d[505]",
+  "capture_ps": 76.5,
+  "capture_pin": "u_rank__u_control__u_packet__ctd[283]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 28.7,
+  "ff_launch_min_ps": 50.1,
+  "ff_hold_need_ps": -3.5,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_hr_core_tx.lef": "555744bbd79be999b3a1278bfb0aae1a9dfcdebd565def875fbb94ad4c695203",
+   "qkd_hr_core_tx_ff.lib": "37e76dbf052ee40a2c8e8c0cb6d37a46dd4bc0df0df7522ce11255f3a88e0ad7",
+   "qkd_hr_core_tx_ss.lib": "466fbdca175276162a01e085ac6534cb865b74178fce2f57dafcf5f57e3455ee",
+   "qkd_hr_core_tx_tt.lib": "263f3c1adc66b8fa9fe667df29536df4ce255403b5fbc2b6ba6a9ce913ab7e23"
+  },
+  "view_commit": "51771578052b348c2cd2fbc40e74a49c35be041a",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_tx-rr1-fe5df3c49 (qkd_hr_core_tx CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_kvs_attn": {
+  "cell": "qkd_kvs_attn",
+  "view": "physical/ref_tile/qkd_kvs_attn/views/qkd_kvs_attn",
+  "lib_cell": "qkd_kvs_attn",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 281.0,
+  "spread_ps": 34.1,
+  "outputs": 1418,
+  "inputs": 1183,
+  "launch_ps": 207.9,
+  "launch_pin": "attn__tx_payload[306]",
+  "capture_ps": 383.3,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 58,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 33.3,
+  "ff_launch_min_ps": 111.6,
+  "ff_hold_need_ps": -54.1,
+  "pass": false,
+  "fail_why": "capture 383.29639 > 190 (58 pins)",
+  "view_sha256": {
+   "qkd_kvs_attn.lef": "c8a616f7de7e2f74e4f4981031c0e5377c4b55f8ac9fbc550078efb1ed28c7df",
+   "qkd_kvs_attn_ff.lib": "670d541a32260ac30581ab184b9879ad2ab7760c994f09d6990c49da3025f612",
+   "qkd_kvs_attn_ss.lib": "30a4eee749eef6fc55325cc926363d37a11d63aafe84ed91021acce88b80b849",
+   "qkd_kvs_attn_tt.lib": "57cc8b3058cd11450a55e87d52e59ff987b70fd6bf8c72afe10f80640c3d9e55"
+  },
+  "view_commit": "8fe6b2a06ebffedb22f0847484b5f38669d30c3c",
+  "view_commit_subject": "closure-loop: qkd_kvs_attn CLOSED TT +22.81 / FF +12.10 ps DRC 0; SS sensitivity -310.78 ps at core_clk 833.333 ps (source 477f1e3ba, EPYC4 /srv/opentallas-scr",
+  "capture_over_pins": [
+   [
+    "rst_n",
+    383.3
+   ],
+   [
+    "fin[0]",
+    372.4
+   ],
+   [
+    "i_ctl[2]",
+    338.0
+   ],
+   [
+    "i_ctl[0]",
+    334.2
+   ],
+   [
+    "i_ctl[58]",
+    256.1
+   ],
+   [
+    "i_ctl[3]",
+    236.1
+   ],
+   [
+    "fin[66]",
+    224.2
+   ],
+   [
+    "fin[374]",
+    223.7
+   ],
+   [
+    "i_ctl[71]",
+    222.0
+   ],
+   [
+    "fin[345]",
+    216.9
+   ],
+   [
+    "fin[196]",
+    214.6
+   ],
+   [
+    "fin[384]",
+    210.6
+   ],
+   [
+    "fin[2]",
+    209.5
+   ],
+   [
+    "fin[335]",
+    209.2
+   ],
+   [
+    "fin[399]",
+    207.9
+   ],
+   [
+    "fin[377]",
+    207.2
+   ],
+   [
+    "fin[202]",
+    206.9
+   ],
+   [
+    "fin[343]",
+    205.8
+   ],
+   [
+    "fin[68]",
+    205.6
+   ],
+   [
+    "fin[3]",
+    203.5
+   ],
+   [
+    "fin[380]",
+    203.3
+   ],
+   [
+    "fin[400]",
+    202.8
+   ],
+   [
+    "fin[354]",
+    202.6
+   ],
+   [
+    "fin[156]",
+    202.1
+   ],
+   [
+    "fin[342]",
+    201.7
+   ],
+   [
+    "fin[172]",
+    200.0
+   ],
+   [
+    "fin[232]",
+    199.3
+   ],
+   [
+    "fin[266]",
+    199.1
+   ],
+   [
+    "fin[326]",
+    198.5
+   ],
+   [
+    "fin[253]",
+    198.4
+   ],
+   [
+    "fin[360]",
+    198.2
+   ],
+   [
+    "fin[330]",
+    197.2
+   ],
+   [
+    "fin[250]",
+    197.2
+   ],
+   [
+    "fin[64]",
+    196.6
+   ],
+   [
+    "fin[351]",
+    196.6
+   ],
+   [
+    "fin[320]",
+    196.6
+   ],
+   [
+    "fin[221]",
+    196.6
+   ],
+   [
+    "fin[361]",
+    196.4
+   ],
+   [
+    "fin[264]",
+    195.9
+   ],
+   [
+    "fin[27]",
+    195.8
+   ],
+   [
+    "fin[397]",
+    195.6
+   ],
+   [
+    "fin[379]",
+    195.5
+   ],
+   [
+    "fin[43]",
+    194.6
+   ],
+   [
+    "fin[344]",
+    194.6
+   ],
+   [
+    "fin[365]",
+    194.4
+   ],
+   [
+    "fin[291]",
+    193.9
+   ],
+   [
+    "fin[226]",
+    193.3
+   ],
+   [
+    "fin[370]",
+    192.5
+   ],
+   [
+    "i_ctl[75]",
+    192.4
+   ],
+   [
+    "fin[192]",
+    192.2
+   ],
+   [
+    "fin[1]",
+    192.1
+   ],
+   [
+    "fin[390]",
+    191.5
+   ],
+   [
+    "fin[358]",
+    191.1
+   ],
+   [
+    "fin[73]",
+    191.0
+   ],
+   [
+    "fin[300]",
+    190.9
+   ],
+   [
+    "fin[259]",
+    190.6
+   ],
+   [
+    "fin[364]",
+    190.5
+   ],
+   [
+    "fin[383]",
+    190.4
+   ]
+  ],
+  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
+  "tool": "tools/hier_contract/native_pin_audit.py --view"
+ },
+ "qkd_astk_rly_296_fl": {
+  "cell": "qkd_astk_rly_296_fl",
+  "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296_fl",
+  "lib_cell": "qkd_astk_rly_296_fl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 72.5,
+  "spread_ps": 4.4,
+  "outputs": 296,
+  "inputs": 297,
+  "launch_ps": 143.4,
+  "launch_pin": "b[1]",
+  "capture_ps": 64.5,
+  "capture_pin": "a[106]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 4.5,
+  "ff_launch_min_ps": 63.8,
+  "ff_hold_need_ps": -7.2,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_rly_296_fl.lef": "061494c716b15b60667ac01a288df27edef3fa23e28ed6705a9bf442855674e6",
+   "qkd_astk_rly_296_fl_ff.lib": "8fa266bf4bc78a9a7c21338b20e2192065ab81275d6c5d10679730b6db47a55b",
+   "qkd_astk_rly_296_fl_ss.lib": "bb9c36dab588dda574848c1734ebe272e9c78314d09d56f9e59235c9b386a27c",
+   "qkd_astk_rly_296_fl_tt.lib": "985a2753664d1b122546648c405e21de3e4764537513f3c5c92c24880d213e0e"
+  },
+  "view_commit": "e63008b4a02a2706e98a0823dc5c8044db72fcf8",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_rly_296-fl1-bd369b99e (qkd_astk_rly_296_fl CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "fa91551ffde9541a93ddf061b681b8eb5c5fafa9",
+  "tool": "tools/hier_contract/native_pin_audit.py --view",
+  "route": "qkd_astk_rly_296-fl1-bd369b99e",
+  "note": "HKV-RSTCAP2 10-19: fl1 (face_land rst_n relay) CLOSED view; worst capture 64.5 ps (a[106]) so rst_n capture <= 64.5 << 190 (r1 view was rst_n 277.4 FAIL). Native PASS: no re-route."
+ },
+ "qkd_astk_er_owner_st": {
+  "cell": "qkd_astk_er_owner_st",
+  "view": "physical/ref_tile/qkd_astk_er_owner_st/views/qkd_astk_er_owner_st",
+  "lib_cell": "qkd_astk_er_owner_st",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 122.0,
+  "spread_ps": 24.1,
+  "outputs": 365,
+  "inputs": 438,
+  "launch_ps": 178.8,
+  "launch_pin": "response_data[214]",
+  "capture_ps": 161.2,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 24.5,
+  "ff_launch_min_ps": 104.8,
+  "ff_hold_need_ps": -51.5,
+  "pass": true,
+  "fail_why": "",
+  "view_sha256": {
+   "qkd_astk_er_owner_st.lef": "94a9941c3f62d79a9afbc4e8c7f9c30faba3b7dc6c036737929f17de65120a29",
+   "qkd_astk_er_owner_st_ff.lib": "7f2cd9b7e2a743564fdfb4fde17d0a82b704905cea9311be6e030fc482fd54d1",
+   "qkd_astk_er_owner_st_ss.lib": "82d2e495e7482168e1237c90072fc190c0e1eda68a90d7946eb79d853fc3efbe",
+   "qkd_astk_er_owner_st_tt.lib": "34cf11b51099177f95d27a11dec45ba04962b360480165bd5a753ff9f1d3b34a"
+  },
+  "view_commit": "6f14f765d411a7ae6d71b1c29d57974a590e5d91",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_astk_er_owner_st-v1-7fc9f17f8 (qkd_astk_er_owner_st CLOSED)",
+  "capture_over_pins": [],
+  "audited_at": "c7cbd0216428cebaa1471bf63c862183cc7f2a01",
+  "tool": "tools/hier_contract/native_pin_audit.py --view",
+  "route": "qkd_astk_er_owner_st-v1-7fc9f17f8",
+  "note": "TW4-KV-EROWN 10-19: CLOSED routed view (HKV-ERTAP gate probe had failed on the tool path bug fixed ae0bd344a). Native PASS: worst capture is rst_n 161.2 ps (<190), launch 178.8 (<220), spread TT/FF 24.1/24.5. No re-route."
+ },
+ "qkd_hr_core_queue_fl": {
+  "cell": "qkd_hr_core_queue_fl",
+  "view": "physical/ref_tile/qkd_hr_core_queue/views/qkd_hr_core_queue_fl",
+  "lib_cell": "qkd_hr_core_queue_fl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 204.3,
+  "spread_ps": 22.0,
+  "outputs": 687,
+  "inputs": 653,
+  "launch_ps": 125.2,
+  "launch_pin": "u_rank__u_bridge__qd[179]",
+  "capture_ps": 109.2,
+  "capture_pin": "u_rank__ing_v",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 21.5,
+  "ff_launch_min_ps": 57.8,
+  "ff_hold_need_ps": -11.8,
+  "pass": true,
+  "fail_why": "",
+  "audited_at": "7763b94327065e364a62eba117ee35198de11967",
+  "tool": "tools/hier_contract/native_pin_audit.py --view",
+  "view_sha256": {
+   "qkd_hr_core_queue_fl.lef": "3a21f77358951b1f270ac8b7d5e30b7a5401a28e49341783a0836b1f344824fe",
+   "qkd_hr_core_queue_fl_ff.lib": "1841c8fec73754896f1237d8faf03962578365dedc0942597627f28f5d378407",
+   "qkd_hr_core_queue_fl_ss.lib": "5a440a250a79789411f67a4eff7a55f0970fb10da2aea51a7a8b9560a4c4a291",
+   "qkd_hr_core_queue_fl_tt.lib": "d3df025d2dc2460686c43119bc07e5d6ceaf5b51fa02f9953fcfea61d3365edb"
+  },
+  "view_commit": "fd4fafa02adca40fc78aa9a7fba7da84185fcd5d",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_queue-fl1-e1880062d (qkd_hr_core_queue_fl CLOSED)"
+ },
+ "qkd_kvs_attn_fl": {
+  "cell": "qkd_kvs_attn_fl",
+  "view": "physical/ref_tile/qkd_kvs_attn/views/qkd_kvs_attn_fl",
+  "lib_cell": "qkd_kvs_attn_fl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 292.2,
+  "spread_ps": 43.2,
+  "outputs": 1418,
+  "inputs": 1183,
+  "launch_ps": 247.7,
+  "launch_pin": "ahs[0]",
+  "capture_ps": 158.3,
+  "capture_pin": "d2d__rx_payload[22]",
+  "launch_over": 1,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 39.5,
+  "ff_launch_min_ps": 103.6,
+  "ff_hold_need_ps": -60.6,
+  "pass": false,
+  "fail_why": "launch 247.7411 > 220 (1 pins)",
+  "port_max_capture_ps": {
+   "rst_n": {
+    "pin": "rst_n",
+    "ps": 124.1,
+    "n": 1
+   },
+   "fin": {
+    "pin": "fin[282]",
+    "ps": 149.1,
+    "n": 534
+   },
+   "i_ctl": {
+    "pin": "i_ctl[75]",
+    "ps": 141.9,
+    "n": 77
+   }
+  },
+  "previous_g3_capture_ps": {
+   "rst_n": 383.3,
+   "fin[0]": 372.4,
+   "i_ctl[2]": 338.0
+  },
+  "launch_top": [
+   [
+    "ahs[0]",
+    247.7
+   ],
+   [
+    "pvfst[24]",
+    194.6
+   ],
+   [
+    "pvst[11]",
+    192.1
+   ],
+   [
+    "pvst[30]",
+    191.5
+   ],
+   [
+    "pvst[25]",
+    190.5
+   ]
+  ],
+  "clock_rule": {
+   "clock": "ck",
+   "tt_spread_ps": 43.2,
+   "ff_spread_ps": 39.5,
+   "limit_ps": 80,
+   "pass": true,
+   "insertion_tt": {
+    "n": 2601,
+    "mean": 292.2,
+    "min": 275.8,
+    "max": 319.0
+   },
+   "insertion_ff": {
+    "n": 2601,
+    "mean": 238.0,
+    "min": 222.5,
+    "max": 262.0
+   }
+  },
+  "verdict": "capture PASS (rst_n 124.1 <= 190, was 383.3; fin 149.1, i_ctl 141.9 clear); clock rule PASS (single clock ck, TT/FF pin-flop spread 43.2/39.5 <= 80); guidance launch FAIL on ONE output ahs[0] 247.7 > 220 (= w_attn_root__start_qk, also the internal start strobe of u_attn_face; g3 view 185.6): die STA judges it, no re-route",
+  "launch_classification": {
+   "pin": "ahs[0]",
+   "signal": "u_attn_root.start_qk (assign ahs[0]=w_attn_root__start_qk)",
+   "tt_ck_to_out_ps_at_1.44fF": 539.9,
+   "g3_ps": 466.6,
+   "class": "shared-fanout output: the pin hangs off the start_qk strobe net that also feeds u_attn_face (no dedicated pin flop); the fl1 placement put the pin tap at the tail of that net",
+   "fix_plan": "die STA first (consumer of ahs[0] has 833-247.7 ps); only if die STA names ahs[0]: next attn kit revision adds a dedicated output copy flop for ahs[0] (pin_regs / io_flop_at_pins on output start_qk, 0 cycles if duplicated from the same D) -- no re-route now because the native rule that binds (TT/FF spread <=80) passes and the launch budget is guidance (owner 10-17 0dq)"
+  },
+  "view_sha256": {
+   "qkd_kvs_attn_fl.lef": "62cf17f599e00b5531e5a88e90bb2c9af85f9025dd00548e77afdb1e2acc5a07",
+   "qkd_kvs_attn_fl_ff.lib": "72bd2e4f59d26a157e01e5261034cfbd810025dacdd3374ec95dff3db57168ea",
+   "qkd_kvs_attn_fl_ss.lib": "1ccf1a82406bcd3d0d29ee0a8f30db01e6464289414392a4fcab083f774620f7",
+   "qkd_kvs_attn_fl_tt.lib": "3c8e2def476a6d64921b232518a3c359732b96d3b253a9f647fdc9232e6961d7"
+  },
+  "view_commit": "9b0854b11896a91ec65ccd57842e5c7d711b6b9e",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_kvs_attn-fl1-8e7ae12fb (qkd_kvs_attn_fl CLOSED)",
+  "route": "qkd_kvs_attn-fl1-8e7ae12fb CLOSED TT +11.05 / FF +21.88 ps DRC 0",
+  "audited_at": "7f35a3e4b178f0034f5c6f99f615111632170241",
+  "tool": "tools/hier_contract/native_pin_audit.py --view (own R)"
+ }
+}

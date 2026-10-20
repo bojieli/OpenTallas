@@ -1,0 +1,14 @@
+read_rtlil /tmp/r0330_eqv/qkd_seq_core_st_p/out_new/netlist.il
+rename qkd_seq_core_static_p gate
+design -stash gatedes
+read_rtlil /tmp/r0330_eqv/qkd_seq_core_st_p/out_old/netlist.il
+rename qkd_seq_core_static_p gold
+design -copy-from gatedes -as gate gate
+async2sync
+memory_map
+opt_clean
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -seq 5
+equiv_induct -seq 5
+equiv_status -assert

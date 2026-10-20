@@ -638,8 +638,14 @@
    "evidence": "results/arch/s81_hub_parents_1016/native_audit_capture_1316/native_audit_cd_split1016p.json (job dsfd_capt_cd_split1016p-split1p-4d451d0fb CLOSED TT +342.86/FF +26.90, native PASS 170.1/123.9); RTL ab1d77b6d; capcd_eq PINREG=1 16/16 + capc_split eq 9/9 at a75a12947",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-VM 2026-10-16 (S-FUNC not running; priced by S-VM per coordinator). Old cd views failed native capture (214.2 / 203.7 ps on f_st[2] -> ICG ENA); no zero-cycle structure (hold select on arrival edge). Conservative: +2 stream cycles (ceil of 1.333) on EVERY field matvec node incl idx.q/eng.dot/wkv/accept.seed and lm_head, assuming the field sequencer waits on t_cd before the next phase. Exact +1.333 sensitivity: 0.047 % AR / 0.040 % MTP."
+   "status": "superseded",
+   "note": "S-VM 2026-10-16 (S-FUNC not running; priced by S-VM per coordinator). Old cd views failed native capture (214.2 / 203.7 ps on f_st[2] -> ICG ENA); no zero-cycle structure (hold select on arrival edge). Conservative: +2 stream cycles (ceil of 1.333) on EVERY field matvec node incl idx.q/eng.dot/wkv/accept.seed and lm_head, assuming the field sequencer waits on t_cd before the next phase. Exact +1.333 sensitivity: 0.047 % AR / 0.040 % MTP.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -845,11 +851,17 @@
    "evidence": "results/rtl/s81_layer_tput_1013/record.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "per-layer die run at production shape: COEF 17 cycles, serial in front of every NORM (hc_pre node), with the --coef-split program (COEF-a reads the previous block's pre row; COEF-b after the NORM is off the NORM's start). The die program and the coefficient producers' row map MUST be written as --coef-split: the single-COEF program of the first bench serialises the block's whole coefficient chain in front of its NORM (1,555-1,560 cycles, 11.7 % AR) and is not accepted",
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -895,8 +907,14 @@
    "evidence": "",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ENGRAM+NORM HC-COLUMN (coordinator-approved 10-16), measured on the proven RTL claude/s81-hccol-0600 YB_STAGE=1; supersedes the +1 proposal. Charged +3 (request +1, return +2) on every hc_pre token-path node (one chain traversal per NORM pre job; upper, no overlap credit). Native/physical column views not yet built."
+   "status": "superseded",
+   "note": "S-ENGRAM+NORM HC-COLUMN (coordinator-approved 10-16), measured on the proven RTL claude/s81-hccol-0600 YB_STAGE=1; supersedes the +1 proposal. Charged +3 (request +1, return +2) on every hc_pre token-path node (one chain traversal per NORM pre job; upper, no overlap credit). Native/physical column views not yet built.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -928,11 +946,17 @@
    "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-14",
-   "status": "accepted",
+   "status": "superseded",
    "note": "COUNT (fact): 2 a token (L1, L14 Engram layers: S001 / S020 hold Ln.ffn.hc_post -> L(n+1).eng.dot / eng.hh reading raw h from the VM, and eng.add -> attn.hc_pre needs the Engram-updated h reloaded into the HC cache); both on the critical path. Cost per pair = the measured store-and-forward H_STORE 387 + H_LOAD 336 (r6 pA, production shape): the streaming landing and the cut-through do not serve this path (the Engram writes are not the landing tee). Modelled share: node delta on L1/L14.eng.add (the chain is serial). Removal: a POST -> VM row tap (the POST write-back emits the h rows the hop store would) and a tee of the Engram VM writes into the landing streamer.",
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -978,11 +1002,17 @@
    "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-14",
-   "status": "accepted",
+   "status": "superseded",
    "note": "MEASURED AFTER THE STRUCTURAL FIX (main: cseq PIPE default 1 + FD16 registered H landing streamer ot_s81_hc_hland + cut-through hand-off at an 8-row ARMN watermark): per h transfer H_STORE head 233 + H_LOAD tail 5 = 238 (r6 pC, 64-row landing) + 8 (FD16 pin registers: r8 original order 8,060 / 16,966 vs pC 8,052 / 16,970) = 246 cycles, was 723 (store-and-forward, r6 pA). Production shape NG 256 hierarchical HC, bit-exact NORM rows + 640 H_STORE rows + 640 hand-off flits; mutants mut_hl / mut_tx / HLMUT FAIL. COUNT (fact, round_1014.json h_transfer_count): 41 hop transfers a token on the critical path (40 substage_hop0 + head.hop; programs results/rtl/s81_ctrl_20261008 + h_materialization_audit.json); the 2 Engram materializations are row HC.H_MAT_ENGRAM; the 37 same-stage coefficient materializations are off-critical (>= 6,483 cycles slack, 0 e2e if issued after the NORM). QUALIFIER: streaming needs H_LOAD issued before the 16-row FIFO fills (r8 used PGAP 600; a cold payload falls back to the VM path at 723) and the native 120-stage programs do not exist yet; cseq/comb have no CLOSED view and no die slot (v17): the route waits for the S81 die lead's slot.",
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1028,8 +1058,14 @@
    "evidence": "/home/ubuntu/claude-takeover-20261007/el1015-s81-surx-engram.log",
    "evidence_grade": "interim_log",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ELEM 1315 retcol a4 decision GO-22 (14:36): retcol c2/c3 a3 CLOSED but native capture 276.8/299.8 (hrq_col same-cycle bank round-trip merge). Charged +24 per HC chain on EVERY hc_pre AND hc_post token-path node (upper: one chain traversal per HC job, no overlap credit; hc_pre only would be 0.234 % AR / 0.197 % MTP). RTL a4 not yet built: re-price on the measured exact HC gate cycles when it lands. Priced by S81-PRICE helper (S-FUNC not running)."
+   "status": "superseded",
+   "note": "S-ELEM 1315 retcol a4 decision GO-22 (14:36): retcol c2/c3 a3 CLOSED but native capture 276.8/299.8 (hrq_col same-cycle bank round-trip merge). Charged +24 per HC chain on EVERY hc_pre AND hc_post token-path node (upper: one chain traversal per HC job, no overlap credit; hc_pre only would be 0.234 % AR / 0.197 % MTP). RTL a4 not yet built: re-price on the measured exact HC gate cycles when it lands. Priced by S81-PRICE helper (S-FUNC not running).",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1075,8 +1111,14 @@
    "evidence": "/home/ubuntu/claude-takeover-20261007/el1015-s81-surx-engram.log",
    "evidence_grade": "interim_log",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ENGRAM+NORM HC-HOMES 10-16 10:22: exact HC gate program 4695 -> 4700 (+5 over 20 jobs incl 4 POST), lag-only control PASS 0/1940. Charged +2 (y +1, cs +1, summed) on every hc_post node (upper vs measured ~1.25 per POST). Previously unpriced. Priced by S81-PRICE helper."
+   "status": "superseded",
+   "note": "S-ENGRAM+NORM HC-HOMES 10-16 10:22: exact HC gate program 4695 -> 4700 (+5 over 20 jobs incl 4 POST), lag-only control PASS 0/1940. Charged +2 (y +1, cs +1, summed) on every hc_post node (upper vs measured ~1.25 per POST). Previously unpriced. Priced by S81-PRICE helper.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1122,8 +1164,14 @@
    "evidence": "",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ENGRAM+NORM MIX4-PARENT claude/s81-mix4-parent-0600 1ce30c65c/e1a3198b2/880dc9d88: exact 20480 w/640 wr/4161 rd PASS at 811 cycles (plain + VM-banked), MUT1/26/27/28 rejected; 0 TT-negative joins (was 248, worst -146.99 ps). Priced +1 on every eng.gate/hh/add node (upper). Compiler: die_layer_stim --mix-p2p 811 once the banded cluster is on main."
+   "status": "superseded",
+   "note": "S-ENGRAM+NORM MIX4-PARENT claude/s81-mix4-parent-0600 1ce30c65c/e1a3198b2/880dc9d88: exact 20480 w/640 wr/4161 rd PASS at 811 cycles (plain + VM-banked), MUT1/26/27/28 rejected; 0 TT-negative joins (was 248, worst -146.99 ps). Priced +1 on every eng.gate/hh/add node (upper). Compiler: die_layer_stim --mix-p2p 811 once the banded cluster is on main.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (in-slice Engram mix, ENG slice op)",
+    "reason": "mix4_w / mix4_e deleted with the hub design (HANDOFF 0dv, owner 10-18; results/arch/s81_dv_1016/p4j/engram_mix_verdict.json): Engram mix is the in-slice ENG path",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1169,8 +1217,14 @@
    "evidence": "results/arch/s81_mix4_banded_1016/native_rq_audit_p17b_1016.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-ELEM COMB+ENGRAM 1315: RTL d11a778b4, rq0/rq1 p17c CLOSED + native PASS, main 9b53d0594; bench flat 879 PASS / MUT2 FAIL. Banded MIX4 (870) does not instantiate ot_s81_mx4_rq. Priced +1 on every eng.gate/hh/add node (upper, same method as MIX4.BANDED_COPY). Priced by S81-PRICE helper."
+   "status": "superseded",
+   "note": "S-ELEM COMB+ENGRAM 1315: RTL d11a778b4, rq0/rq1 p17c CLOSED + native PASS, main 9b53d0594; bench flat 879 PASS / MUT2 FAIL. Banded MIX4 (870) does not instantiate ot_s81_mx4_rq. Priced +1 on every eng.gate/hh/add node (upper, same method as MIX4.BANDED_COPY). Priced by S81-PRICE helper.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (in-slice Engram mix, ENG slice op)",
+    "reason": "mix4_w / mix4_e deleted with the hub design (HANDOFF 0dv, owner 10-18; results/arch/s81_dv_1016/p4j/engram_mix_verdict.json): Engram mix is the in-slice ENG path",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1207,6 +1261,209 @@
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
    "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+  },
+  {
+   "design": "s81",
+   "unit": "S81 L20 index scan split over 2x the dies (coordinator 0li): L20 rank keys over k=6 TP4 stages (43,691 a die; record D k=3 87,382), static rank tree: per-die measured reader (dsdv_idx_rg P=3) -> bk_sel, children merged on lane 3, 729-cycle legs (L20 idx path 19391 vs record D 13855 cycles; decision price 18309)",
+   "group": "S81.L20_SPLIT",
+   "measured": 19391.0,
+   "price": 13855.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.3996,
+   "e2e_loss_pct": 2.41,
+   "binding_workload": "mtp",
+   "per_workload": {
+    "ar": {
+     "model": "B3.compose (10-09 DS ROM DAG + 10-18 composition) with the L20 idx path = the compiled k=6 rank tree",
+     "base_cycles": 980312.6,
+     "cycles": 985848.6,
+     "added_cycles": 5536.0,
+     "e2e_loss_pct": 0.56,
+     "composition_1018": {
+      "T_cycles": 985848.6,
+      "tok_s": 1217.2
+     },
+     "multi_user": {
+      "users": 46,
+      "fillers": 0,
+      "aggregate_tok_s": 56297,
+      "vs_record_agg_pct": -0.01,
+      "helper_check": "PASS"
+     }
+    },
+    "mtp": {
+     "model": "B3.compose (10-09 DS ROM DAG + 10-18 composition) with the L20 idx path = the compiled k=6 rank tree",
+     "base_cycles": 1344614.8,
+     "cycles": 1377830.8,
+     "added_cycles": 33216.0,
+     "e2e_loss_pct": 2.41,
+     "composition_1018": {
+      "T_cycles": 1377830.8,
+      "tok_s": 3622.2
+     },
+     "multi_user": {
+      "users": 10,
+      "fillers": 1,
+      "aggregate_tok_s": 39225,
+      "vs_record_agg_pct": 0.04,
+      "helper_check": "PASS"
+     }
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_l20_1019/split/split.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "Incremental over S81.SCAN_STACKS_P4L (which charges L20 at k=3 with the OLD W11 reader 7,700): the current p4l reader (dsdv_idx_rg, measured 16,895 at 87,382 keys) made L20 k=3 cost 1u AR -0.90 % / MTP -3.81 % and MU AR 46 -> 40 users (-13.98 %, out of rule); the split restores 46 AR / 10+1 MTP users (MU calendar with the helper S030 windows: PASS) at 1u AR -0.56 % / MTP -2.41 % (decision price -0.45 / -1.95). Bench: PASS 5/5 bit-exact at the compiled edges, mutants FAIL 2/2. Sensitivity: without a shared 6-query read (p4l has one query store, MU.BAL.SX.4) the MTP filler collides on the helper (10 MTP users still fit). Applied by tools/token_compose_xdie.py until dv_price carries the row.",
+   "evidence_grade_detail": "compiled static plan + RTL bk_sel bench (Verilator 5.050) + measured reader law + measured leg",
+   "decision": "coordinator 0li (HANDOFF 10-19 ~15:45): adopted"
+  },
+  {
+   "design": "s81",
+   "unit": "S81 index scan at p4l 1 HBM stack a die, option D (coordinator 0iq): full-scan keys over k=3 TP4 stages (L20 5,937 -> 9630 cycles = measured 1-stack reader 7700 at 87382 keys + 116 adders + legs/merge 1814; L2/L8/L14 2,951 -> 5654; re-index L24-36 873 -> 1,656 priced)",
+   "group": "S81.SCAN_STACKS_P4L",
+   "measured": 9630.0,
+   "price": 5937.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.622,
+   "e2e_loss_pct": 2.758,
+   "binding_workload": "mtp",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 843800.4,
+     "added_cycles": 14934.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.77,
+     "composition_1018": {
+      "T_cycles": 980312.6,
+      "tok_s": 1224.1
+     }
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1210915.1,
+     "added_cycles": 33399.0,
+     "runs_per_token": 8,
+     "critical_runs": 8,
+     "overlapped_runs": 0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 3693.0,
+     "e2e_loss_pct": 2.758,
+     "composition_1018": {
+      "T_cycles": 1344614.8,
+      "tok_s": 3711.7
+     }
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_scand_1018/scand.json + reader_1stack.json (W11 reader, 1 stack a die, Verilator 5.050, ot-epyc5); results/arch/s81_scanchk_1018/scan_stacks.json (1-stack fact, re-index price)",
+   "evidence_grade": "measured-old-RTL reader + priced legs/merge",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "S81-SCAND: option D measured. The reader term is the measured 1-stack W11 reader at the per-die key count (k=1 reproduces SCANCHK: AR 1,185.6 / MTP 3,455.7); D k=3 -> AR 1.77 % / MTP 2.76 % e2e loss (DAG basis), within the 5 % unit limit. Open: the index reader/scorer is NOT bound on p4l (bind9 has no dsfd_svc_idx successor) and has one query store (no B3 MTP read sharing); the merge legs and the 4k x 512 final select are compiler + priced. tools/token_compose_xdie.py applies this row until dv_price is re-run with it."
+  },
+  {
+   "design": "s81",
+   "unit": "S81.DV_LANDING_HALFCYCLE (p4l DV die: landed die-link crossings 1+E on every linked block input, forwarded half-cycle dsfd_dvrlyh relay hops, host plane hf/ht E28 once per token; added cycles a token, landing was unpriced)",
+   "group": "S81.DV_LANDING_HALFCYCLE",
+   "measured": 18275.5,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 1.904,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "dv_price --land-plan p4l --half-cycle (token-path DAG + p4l plan geometry + land plan E; COMPOSED_NOT_NATIVE), host plane once per token",
+     "base_tok_s": 1392.0,
+     "tok_s": 1365.5,
+     "added_cycles": 18275.5,
+     "landing_cycles": {
+      "land_norm_tree_full": {
+       "nodes": 162,
+       "cycles": 2268.0
+      },
+      "land_field_phase": {
+       "nodes": 324,
+       "cycles": 14352.0
+      },
+      "land_norm_tree_q": {
+       "nodes": 40,
+       "cycles": 220.0
+      },
+      "land_attn_q_path": {
+       "nodes": 40,
+       "cycles": 340.0
+      },
+      "land_h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 522.0
+      },
+      "land_router_tree": {
+       "nodes": 40,
+       "cycles": 340.0
+      },
+      "land_norm_tree_kv": {
+       "nodes": 40,
+       "cycles": 100.0
+      }
+     },
+     "host_cycles": 133.5,
+     "e2e_loss_pct": 1.904
+    },
+    "mtp": {
+     "model": "dv_price --land-plan p4l --half-cycle (token-path DAG + p4l plan geometry + land plan E; COMPOSED_NOT_NATIVE), host plane once per token",
+     "base_tok_s": 4109.5,
+     "tok_s": 4045.0,
+     "added_cycles": 16281.0,
+     "landing_cycles": {
+      "land_norm_tree_full": {
+       "nodes": 88,
+       "cycles": 1232.0
+      },
+      "land_norm_tree_q": {
+       "nodes": 43,
+       "cycles": 236.5
+      },
+      "land_attn_q_path": {
+       "nodes": 35,
+       "cycles": 297.5
+      },
+      "land_router_tree": {
+       "nodes": 43,
+       "cycles": 365.5
+      },
+      "land_field_phase": {
+       "nodes": 280,
+       "cycles": 13494.0
+      },
+      "land_h_xfer_ring": {
+       "nodes": 58,
+       "cycles": 522.0
+      }
+     },
+     "host_cycles": 133.5,
+     "e2e_loss_pct": 1.57
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_dv_1016/p4l/price_land.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-18",
+   "status": "accepted",
+   "note": "S81-DIE7/PRICE dcaa88358 (README_price_land.md). Composed price, not a die run. The DV die drops the hub rows (VM/SU/HC/CAPT.CD_PINREG); DV running total = kept rows 0.871 + this 1.90 = 2.77 % AR (MTP 0.903 + 1.57 = 2.47 %) vs 15 %. Sensitivity: host serial at every stage -2.38 % AR / -1.93 % MTP; full-cycle hops -4.96 % / -4.11 %.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-18",
+   "owner_exception": "OWNER 10-18 03:50 accepted S81 landing + half-cycle hops; the s81 total includes the hub rows the DV die drops (DV total 2.77 % AR)",
+   "acceptance_note": "OWNER 10-18 03:50: S81 half-cycle hops + landing accepted (about -2 %); merged by ROOT-0750 (coordinator 0gs)"
   },
   {
    "design": "s81",
@@ -1252,11 +1509,17 @@
    "evidence": "results/rtl/s81hc_throughput_20261013/baseline.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "twelve production POST jobs at 286-287 cycles against the immutable 112.9 (source 3c62573d5); 80 runs a token (attn + ffn x 40 layers), all on the critical path; in MTP the slowest verify stage holds two, paid again at each of the 5 wave positions; the 6 draft-block hc_post nodes (641.3, another vehicle) are not touched.  CURRENT BASELINE: to be replaced by the POST express measurement (post_express_spec.json).",
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1302,11 +1565,17 @@
    "evidence": "results/rtl/s81_layer_tput_1013/record.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "per-layer die run tb_s81_die_layer HCH=1 NG=256 nominal link, L0 / L2 / L14 bit-exact, mut_hc + mut_coll fail: NORM 713 cycles in all 6 jobs against the fused price 327.0-333.9 (hc_pre + quant [+ norm.scale]); hc_gate --hier 3 unit bench 727. REPLACES the row at 449 (1.361x, 1.178 %), which was the FLAT engine at the reduced NG 16 shape; the flat engine at NG 256 measures 235-237 (0.71x): the excess is the hierarchical slab's serial forward / return chains, not arithmetic DECOMPOSITION (Codex trace 7eb398556, hc_gate NG 256 hier3, 4 NORMs identical, exact 0/1940): accept -> sum_return 339 (mix forward + partial sums back over the 22-half-tile chain) + rsqrt 74 + rsqrt -> first row 238 (scale broadcast forward + scaled rows back) + 40 rows 39 + writer 22 + done 15 = 727; the two chain traversal pairs are 577 of 727. Structural fix (not built): registered regional reduction collectors + a narrow registered rsqrt broadcast tree instead of the serial chains (no FP reassociation). | MEASURED 2026-10-14 T3 (results/rtl/s81_layer_tput_1013/variants_1014, same bench, LVM 54): NORM tree NTREE 1 NT_K 67 (7d904baa4) L0/L2/L14 8,276/17,190/18,752 vs default 8,702/17,610/19,183 = -426/-420/-431 a layer (2 NORMs), -2.04 % AR by layer delta (accepted_cost node delta 383.1 -> 167.1: 3.609 -> 1.607 %); all exact, mut_hc FAIL. Row status unchanged (swap only when every variant tile closes).",
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); owner ~06:55 PT 2026-10-14: stays accepted at its CURRENT measured figure (serial chain); the NORM tree replaces it only if it closes"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); owner ~06:55 PT 2026-10-14: stays accepted at its CURRENT measured figure (serial chain); the NORM tree replaces it only if it closes",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1352,11 +1621,17 @@
    "evidence": "results/rtl/ref_tile/s81su_full_gate_9e37b21b2/run_full_dpi_m0_a0_h.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.z_quant) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1402,11 +1677,17 @@
    "evidence": "results/rtl/ref_tile/s81su_full_gate_9e37b21b2/run_full_dpi_m0_a0_h.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.normalize) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1452,11 +1733,50 @@
    "evidence": "results/rtl/ref_tile/s81su_full_gate_9e37b21b2/run_full_dpi_m0_a0_h.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "accepted",
+   "status": "superseded",
    "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.ffn.quant2) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
+  },
+  {
+   "design": "s81",
+   "unit": "SVC.PV_DRAIN (dsdv_svc_att P.V buffer pvq 4 -> 8, P.V and score runtime credits removed (engine PV_CRED 0, SC_CRED 0); compiled drain base PVO = PO + 8 ceil(T/32) + 55, was PO + ceil(T/4) + 112)",
+   "group": "SVC.PV_DRAIN",
+   "measured": 79.0,
+   "price": 124.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 0.6371,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 828866.4,
+     "added_cycles": 0.0,
+     "runs_per_token": 40,
+     "critical_runs": 0,
+     "overlapped_runs": 40,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": -1800.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_dv_1016/svc_rs/svc_pv/pvd8b.txt",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "SVC-PV 10-18 (claude/svc-pv-1018 b109174d1; svc_rs not on main yet). A GAIN, no cost: price/measured = the compiled P.V drain distance PVO - PO at T 46 (124 -> 79 cycles; -45 .. -57 cycles per attention job for T 1 .. 640). The old 4-deep pvq faulted 15/19 (engine's 8-beat P.V burst vs ~45-cycle pv_cr loop inside the 40-cycle static drain window); coordinator fix (b) (per-owner p-feed offset) is infeasible at depth 4 (tb_dsdv_svc_pvdrain: depth 4 fails at every W and T), so fallback (a): depth 8, the credit never binds (passes with pv_cr never returned), drain purely static; SVC-PV2 (8dcf8fcac, coordinator 0hl, owner no-runtime-credit rule) then REMOVED the credit (engine PV_CRED 0, no pv_cr; only static fault 15 overflow / 19 underflow remain). Area +4 x 2,120 b flops per owner slice (16 owner slices a die). Token path: attn.pv is overlapped (40 runs, 0 critical) -> e2e 0.0 %. 16-slice bench verdict pending (lanes/S81U-SVC.md SVC-PV). SVC-PV3 (claude/svc-pv-1018 9e3f9583e, witnesses 3766090d6 results/rtl/s81_dv_1016/svc_rs/svc_pv/svc_pv3_compare.txt): score credit (SC_CRED 8) also removed; it DID bind (~1 beat / 4.8 cycles), so credit-free scores land 32 (T 46) .. 608 (T 640) cycles EARLIER; go/end/outputs/P.V schedule identical to the credited run; 0 cycles added."
   },
   {
    "design": "s81",
@@ -1490,8 +1810,14 @@
    "evidence": "results/rtl/s81_vm_a2f_parent_bc297977c/record.json; results/arch/s81_mtp_ledger_1016/summary.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
-   "status": "proposed",
-   "note": "S-FUNC 2026-10-16: re-priced on the measured A2-F hop-1 parent (bc297977c gate: write raw P+11+n, commit P+12+n, read raw Q+6, return Q+14; legacy w1 P+10/P+12/Q+7/Q+16) and the 5,037 screen commit relay 5. Hop-2 (P+14/Q+16) would be +7 = 1.438 % AR / 1.26 % MTP. Previous +5 basis (VM.RELAY +25) superseded. Compiler profile s81_vm_a2f_hop1_r4_c2_w1 enforces Q >= P+6+n."
+   "status": "superseded",
+   "note": "S-FUNC 2026-10-16: re-priced on the measured A2-F hop-1 parent (bc297977c gate: write raw P+11+n, commit P+12+n, read raw Q+6, return Q+14; legacy w1 P+10/P+12/Q+7/Q+16) and the 5,037 screen commit relay 5. Hop-2 (P+14/Q+16) would be +7 = 1.438 % AR / 1.26 % MTP. Previous +5 basis (VM.RELAY +25) superseded. Compiler profile s81_vm_a2f_hop1_r4_c2_w1 enforces Q >= P+6+n.",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1522,7 +1848,7 @@
    "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-14",
-   "status": "accepted",
+   "status": "superseded",
    "note": "CURRENT DESIGN (leaf hop 2): MEASURED unit latency flat dsfd_vm_bgr 41 (master gate s81_vm_gate tp, price basis) -> 81 at leaf hop 2 (claude/s81-bgq28-1013 1640f47fb) + 4 from the vm_fe hierarchy FRL 6 (693940a56) = 85. Per-layer MEASURED part: tb_s81_die_layer LVM 10/30/54 (3 serial HC reads a layer, +139 a layer at +44); su_gate --lvm 54: two serial VM read round trips a SU job (+87..89). Token share MODELLED (upper bound) -> 9.093 % AR / 7.556 % MTP (round_1014.json vm_read.model_upper_bound_pct.hop2_fe). Hop-1 variant (a841984b9, 53 cycles, 2.654 %) built in parallel; replaces this row only if it closes (then re-measured). | MEASURED 2026-10-14 T3 (results/rtl/s81_layer_tput_1013/variants_1014, tb_s81_die_layer NG256 HCH1 nom --coef-split --h-stream PIPE/HST/HTX2): layer L0/L2/L14 at LVM 54 (this row) 8,702/17,610/19,183; XGOS-equivalent LVM 38 (unit 107->91) 8,688/17,594/19,130 = -14/-16/-53 a layer = -0.082 % AR (HC share only, not the ~45 estimated: with the H landing stream only the attn COEF-a VM read stays serial); LVM 10 -42/-44/-133. Field/SU VM-read shares remain modelled. Row status unchanged.",
    "share_basis": "modelled",
    "supersedes": {
@@ -1538,7 +1864,13 @@
    },
    "accepted_date": "2026-10-14",
    "owner_exception": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces",
-   "acceptance_note": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces; S81 accepted total 17.485 % is OVER the 15 % design limit: owner-accepted exception (owner ~06:55 PT 2026-10-14 accepts the CURRENT VM read (leaf hop 2) and HC NORM (serial chain) designs as long as they close)"
+   "acceptance_note": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces; S81 accepted total 17.485 % is OVER the 15 % design limit: owner-accepted exception (owner ~06:55 PT 2026-10-14 accepts the CURRENT VM read (leaf hop 2) and HC NORM (serial chain) designs as long as they close)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "s81",
@@ -1586,12 +1918,18 @@
    "evidence": "results/arch/s81_vm_a2f_1015/reach_price_a2f_midcapd.json; results/arch/s81_vm_hub_faces_2210/summary.json; results/arch/s81_mtp_ledger_1016/hub_faces_5037_hop1.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
-   "status": "accepted",
+   "status": "superseded",
    "note": "MEASURED on the committed pin-accurate A2-F floorplan screen (tools/s81_vm/a2f_route_plan.py midcapd, 4,104 x 4,115 um; longest connection per hop class -> ceil(L/R)-1 relays; tools/s81_vm/a2f_reach_price.py), NOT a routed die: basis R = 900 um/stage (TT 0.76 ps/um minus clk-q/setup/80-ps spread) -> +25 = 5.133 % AR / 4.565 % MTP (charged); R = 1,118 um/stage (raw TT wire) -> +18 = 3.75 % AR / 3.329 % MTP. Same method on the A2 v4 floorplan: +33 = 6.666 % AR. Base 30 = write commit P+14 + read return P+16. Possible partial overlap with VM.READ (leaf-chain RTL latency of the legacy front); re-price both from real relay reach once the A2-F pilots and die routing land. | S-FUNC 2026-10-15 23:2x: re-priced to the honest 28 edges (S-VM hub-face screen bccc12fc2, results/arch/s81_vm_hub_faces_2210): 5.714 % AR / 5.096 % MTP (same tool, same node set; the 25-edge row re-solves to 5.133 / 4.575 on today's path). | S-FUNC 2026-10-16 ~07:30: re-screened on main 834efdae2 with today's leaf shapes: front_scatter 2,326 um -> 2 relays (was 1) -> W11/R18 = 29 edges: 5.906 % AR / 5.257 % MTP (same tool and node set). Commit relay b8->seq is 5 (never in this row; see VM.A2_COMMIT_REMAINDER). Hop-1 does not change any relay count (b8->bank 695 um < 900).",
    "share_basis": "modelled",
    "accepted_date": "2026-10-15",
    "owner_exception": "owner floor rule via coordinator 2026-10-15 21:20: accepted above 5 %/unit and with S81 over 15 % as long as S81 MTP stays well above 3,000 tok/s",
-   "acceptance_note": "coordinator 21:20 PT 2026-10-15: A2-F adopted as production S81 VM front; relay cost accepted under the owner floor (S81 MTP well above 3,000 tok/s: ~4,235 -> ~4,040)"
+   "acceptance_note": "coordinator 21:20 PT 2026-10-15: A2-F adopted as production S81 VM front; relay cost accepted under the owner floor (S81 MTP well above 3,000 tok/s: ~4,235 -> ~4,040)",
+   "superseded": {
+    "from_status": "accepted",
+    "by": "S81 DV die p4l (results/arch/s81_dv_1016/p4l; plan.json + price_land.json, S81-DIE7 dcaa88358)",
+    "reason": "retired S81 hub design: the DV die has no hub strip (VM / SU / HC / capture-cd units removed; owner 10-15 more dies + wider hub superseded by the DV die); tools/s81_dv/dv_price.py DROP set, README_price_land.md",
+    "date": "2026-10-18"
+   }
   },
   {
    "design": "r25gq",
@@ -1630,6 +1968,105 @@
   },
   {
    "design": "r25gq",
+   "unit": "ATT.D4G.PV_MERGE: on-die cross-SM ATT.PV merge (SU lane-store pairwise tree + COLL ring all-gather + top levels in attend.norm; previously unpriced)",
+   "group": "ATT.D4G.PV_MERGE",
+   "measured": 400.8,
+   "price": 0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 2.463,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "SU edge model from the RTL constants of the merge bench (start 5, fill +13, lane LAT 30, store read +3, drain +7, 3:4 serial) + d4g ring all-gather (ag_cycles)",
+     "base_cycles": 629775.1,
+     "cycles": 645676.5,
+     "added_cycles": 15901.4,
+     "e2e_loss_pct": 2.463
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "superseded",
+   "note": "exactness benched on the real N512 SU arithmetic with the RTL PV nodes (golden pairwise tree incl. +0 pads, final == fixture PV): RTL bench RUNNING (tb_su_static_arithmetic build >120 GB, ot-epyc6; pending_results HBM-ATTGAP); python golden tree of the RTL nodes == fixture PV; cycles MODELLED (not a die run). HBM-ATTGAP 10-19.",
+   "share_basis": "modelled",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "HBM.D4G_SM_ATTENTION (HBM-REPRICE2 10-19)",
+    "reason": "same attention terms re-priced in the composed d4g S2 schedule with component accounting (measured span replaces the 288/386 SM component, not the 547/808 record)",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "design": "r25gq",
+   "unit": "ATT.D4G.SPAN: ATT.QK + ATT.PV on the d4g die SM master (GEN2b ot_hbm_accel_smh_attn, real DS L2 rows, busiest SM KV8), per T640 layer",
+   "group": "ATT.D4G.SPAN",
+   "measured": 1523,
+   "price": 1355,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.124,
+   "e2e_loss_pct": 1.004,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "d4g price5 priced_layers: attend.qk/pv serial on every T640 layer's critical path; the record at its measured span (first command word -> last result)",
+     "base_cycles": 629775.1,
+     "cycles": 636159.1,
+     "added_cycles": 6384,
+     "e2e_loss_pct": 1.004
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/hbm_ds_layer_tput_1018/veh_att_1019/unit/L2_pos.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "superseded",
+   "note": "VEH-ATT 07a99bc0a: 20/20 ops bit-exact; QK 684 (KV8) / 660 (KV4), PV 839 / 815 vs base 547 / 808; 38 T640 layers (T128 not measured, kept at price). HBM-ATTGAP 10-19.",
+   "share_basis": "modelled",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "HBM.D4G_SM_ATTENTION (HBM-REPRICE2 10-19)",
+    "reason": "same attention terms re-priced in the composed d4g S2 schedule with component accounting (measured span replaces the 288/386 SM component, not the 547/808 record)",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "design": "r25gq",
+   "unit": "ATT.D4G.SUBRUN32: QK / PV as two 32-row sub-runs a SM (programme residency: one resident QK + PV copy, 1,019 / 971 of 1,024 words; no RTL)",
+   "group": "ATT.D4G.SUBRUN32",
+   "measured": 509.0,
+   "price": 0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 2.98,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "sub-run spans summed + issuer go bubble 5, minus the one-op spans, per T640 layer",
+     "base_cycles": 629775.1,
+     "cycles": 649117.1,
+     "added_cycles": 19342,
+     "e2e_loss_pct": 2.98
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "superseded",
+   "note": "replaces a 1,531-word one-op programme that cannot be resident (1,024-word svg/xc programme SRAM; reinstall ~61k ingress edges a SM op). Alternative BIGPROG (2,048-word programme stores, SM-service tile re-close) would save this row; not taken (closure first, owner: HBM accepts AR loss without numerics change). Window staging refresh (DMA, 0 critical cycles) removes per-token descriptor/programme changes. HBM-ATTGAP 10-19.",
+   "share_basis": "modelled",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "HBM.D4G_SM_ATTENTION (HBM-REPRICE2 10-19)",
+    "reason": "same attention terms re-priced in the composed d4g S2 schedule with component accounting (measured span replaces the 288/386 SM component, not the 547/808 record)",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "design": "r25gq",
    "unit": "ATT.QK + ATT.PV on the SM engines (owner option B; DS-V4.1 T640/T128 records, canonical KV8 528 B / KV4 288 B rows)",
    "group": "ATT",
    "measured": 53472.0,
@@ -1656,46 +2093,52 @@
    "evidence": "results/hbm_sm_attention_1015/b_measured_model.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
-   "status": "proposed",
+   "status": "superseded",
    "note": "per-token attention cycles at measured spans (QK 547/411, PV 808/580 per T640/T128 record, exposed) vs A price 339.144/147.144 a record (38 T640 + 2 T128 layers); exposed -4.57 % e2e (2,024.7 vs 2,121.8 tok/s), KV-prefetched -3.22 % (2,053.5). Structural: dedicated ATT tiles retired (111.1 mm2 / ~161 W freed). Spans are component-shape (r6 bench_r6_canonical, 12/12 gates); SM-element bench r2 in progress; first access, publish, cross-SM merge MODEL. qwen_ar row pending the r2 Qwen measurement (standard 128-B rows + in-SM fold). NOTE r25gq proposed total is already far over 15 % from SM.MATVEC/IDX rows (owner decision needed independent of this row).",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "superseded": {
+    "from_status": "proposed",
+    "by": "d4g price5 (547/808 are the d4g base_cost) + ATT.D4G.* rows",
+    "reason": "HBM-ATTGAP 10-19: the A-price composition of this row is retired by the d4g price; the d4g die measurements are the ATT.D4G rows",
+    "date": "2026-10-19"
+   }
   },
   {
    "design": "r25gq",
-   "unit": "COLL quadrant hard_v5 V6 issue timing (host launch -> first uop effect 5 -> 9 edges; V5 +3 plus the V6 ctl product/combine stage +1)",
+   "unit": "COLL quadrant hard_v5 V6 + COLLPIN issue timing (host launch -> first uop effect 5 -> 10 edges; V5 +3, V6 ctl product/combine +1, COLLPIN issuer input pin registers +1)",
    "group": "COLL.HARD_V5_ISSUE",
-   "measured": 9.0,
+   "measured": 10.0,
    "price": 5.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 1.8,
-   "e2e_loss_pct": 0.331,
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.414,
    "binding_workload": "ds_ar",
    "per_workload": {
     "ds_ar": {
      "model": "S2 schedule, fixed cycles added to every record of the op",
      "base_cycles": 576702.4,
-     "cycles": 578611.6,
-     "added_cycles": 1909.2,
+     "cycles": 579088.9,
+     "added_cycles": 2386.5,
      "program_records": 642,
-     "added_cycles_per_record": 4.0,
-     "e2e_loss_pct": 0.248
+     "added_cycles_per_record": 5.0,
+     "e2e_loss_pct": 0.31
     },
     "qwen_ar": {
      "model": "S2 schedule, fixed cycles added to every record of the op",
      "base_cycles": 1269120.1,
-     "cycles": 1269412.1,
-     "added_cycles": 292.0,
+     "cycles": 1269509.4,
+     "added_cycles": 389.3,
      "program_records": 3,
-     "added_cycles_per_record": 3.0,
-     "e2e_loss_pct": 0.023
+     "added_cycles_per_record": 4.0,
+     "e2e_loss_pct": 0.031
     }
    },
    "within_unit_limit": true,
    "evidence": "results/arch/hbm_coll_hard_v5_1045/bench_q2_v6 (claude/hnl-coll-ctl-1045; V5 receipt bench_q2_5bb671b57)",
    "evidence_grade": "committed_bench",
-   "date": "2026-10-16",
+   "date": "2026-10-18",
    "status": "proposed",
-   "note": "H-NETLIST/COLL 1045 V5 issue timing of the hard-hierarchy COLL quadrant (ot_hfd_coll_q{2,3}_hard_v5): HOST frame capture +1 at the fj pin registers, uop stream +2 for the pipelined iteration products (ctl gate in->reg -959 ps on the one-cycle 32x16 multiply), so every issue-path output is +3 edges vs host_v4 (lockstep bench tb_hgi_coll_q_hard_v5 SH=3/SHP=1, q2 gate PASS 5bb671b57). V6 (H-ELEM 14:20 accepted +1: ctl3 gate combine/field adders -322 ps, 16x8 stage ~845 ps). Charged conservatively as 4 fixed cycles on EVERY COLL record of the S2 schedule (every record treated as its own programme launch on the critical path; one launch a programme would cost ~3 cycles a token). Programme frames are +1 but frame gaps are relative (unchanged); child faults +1 are exceptional. Compiler constants: tools/hbm_coll_static/parent_timing.py (hard_v5 selectable; host_v4 unchanged; V4 constants on hard_v5 FAIL the lockstep check)."
+   "note": "H-NETLIST/COLL 1045 V5 issue timing of the hard-hierarchy COLL quadrant (ot_hfd_coll_q{2,3}_hard_v5): HOST frame capture +1 at the fj pin registers, uop stream +2 for the pipelined iteration products (ctl gate in->reg -959 ps on the one-cycle 32x16 multiply), so every issue-path output is +3 edges vs host_v4 (lockstep bench tb_hgi_coll_q_hard_v5 SH=3/SHP=1, q2 gate PASS 5bb671b57). V6 (H-ELEM 14:20 accepted +1: ctl3 gate combine/field adders -322 ps, 16x8 stage ~845 ps). Charged conservatively as 4 fixed cycles on EVERY COLL record of the S2 schedule (every record treated as its own programme launch on the critical path; one launch a programme would cost ~3 cycles a token). Programme frames are +1 but frame gaps are relative (unchanged); child faults +1 are exceptional. Compiler constants: tools/hbm_coll_static/parent_timing.py (hard_v5 selectable; host_v4 unchanged; V4 constants on hard_v5 FAIL the lockstep check). COLLPIN 10-18 (coordinator HANDOFF 0gd: issuer input pin registers, +1 issue edge, latency accepted): lockstep SH 4 -> 5 (tb_hgi_coll_q_hard_v5 + scen8 occupancy edge; branch claude/hd4g5-collpin); parent_timing.py hard_v5 = SH 5. Cycles per record 4 -> 5 (qwen 3 -> 4); added cycles and e2e scaled LINEARLY from the +4 S2 run (fixed cycles a record), not re-priced."
   },
   {
    "design": "r25gq",
@@ -1866,6 +2309,352 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "751 / 168 = 4.47x is a serial-transaction measurement (bench waits done per record); the overlap prototype 0edd4cbcf reaches 184 / 168 = 1.095"
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g GEN2-and-later latency changes (pgslice_lg landed regions, HC chain regs + closed ring hc_tree 41, HC XR landing, VM bank pin flop, SU 128-word pre-tree, e86 TKM input reg, qcore r6 fault, idx_link_p + rootctl_am_pin pair, landed half-cycle hops) vs the d4g price of record",
+   "group": "HBM.D4G_GEN2_LATENCY",
+   "measured": 1785.7,
+   "price": 1849.2,
+   "unit_of_measure": "tok/s (DS AR)",
+   "unit_ratio": 1.0356,
+   "e2e_loss_pct": 3.43,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice_1019.py S2 schedule, variant rec_lat vs rec (= d4g_2ring_qbg + collq, the HBM.D4G_PLAN_B price of record)",
+     "base_tok_s": 1849.2,
+     "tok_s": 1785.7,
+     "e2e_loss_pct": 3.43,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice_1019.py S2 schedule, variant rec_lat vs rec (= d4g_2ring_qbg + collq, the HBM.D4G_PLAN_B price of record)",
+     "base_tok_s": 946.2,
+     "tok_s": 936.8,
+     "e2e_loss_pct": 0.99,
+     "blocking": true,
+     "note": "on the d4g_quadrant Qwen path (946.2 basis); price of record 948.8 (D4G8) -> 948.8 x (1 - loss)"
+    }
+   },
+   "terms": {
+    "pg_cmd": {
+     "grade": "measured",
+     "ds_ar_pct": -0.47,
+     "qwen_pct": -0.2
+    },
+    "pg_operand": {
+     "grade": "measured",
+     "ds_ar_pct": -0.2,
+     "qwen_pct": -0.06
+    },
+    "pg_vmwrite": {
+     "grade": "measured",
+     "ds_ar_pct": -0.96,
+     "qwen_pct": -0.44
+    },
+    "pg_reset": {
+     "grade": "modelled",
+     "ds_ar_pct": -0.0,
+     "qwen_pct": -0.0
+    },
+    "hc_tree": {
+     "grade": "measured",
+     "ds_ar_pct": -0.17,
+     "qwen_pct": 0.0
+    },
+    "hc_xr": {
+     "grade": "modelled",
+     "ds_ar_pct": -0.04,
+     "qwen_pct": 0.0
+    },
+    "bank_pin": {
+     "grade": "priced",
+     "ds_ar_pct": -0.34,
+     "qwen_pct": -0.08
+    },
+    "su_red": {
+     "grade": "priced",
+     "ds_ar_pct": 0.0,
+     "qwen_pct": -0.12
+    },
+    "e86_tkm": {
+     "grade": "measured",
+     "ds_ar_pct": -0.09,
+     "qwen_pct": 0.0
+    },
+    "qcore_r6": {
+     "grade": "measured",
+     "ds_ar_pct": 0.0,
+     "qwen_pct": 0.0
+    },
+    "idx_link": {
+     "grade": "measured",
+     "ds_ar_pct": -0.04,
+     "qwen_pct": 0.0
+    },
+    "idx_pin": {
+     "grade": "measured",
+     "ds_ar_pct": -0.04,
+     "qwen_pct": 0.0
+    },
+    "land": {
+     "grade": "priced",
+     "ds_ar_pct": -1.13,
+     "qwen_pct": -0.07
+    },
+    "pt_p2": {
+     "grade": "measured",
+     "ds_ar_pct": 0.0,
+     "qwen_pct": -0.03
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hbm_reprice_1019/price.json results/arch/hbm_reprice_1019/record.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "accepted",
+   "share_basis": "modelled",
+   "note": "HBM-REPRICE 10-19 (tools/hgi_sim/d4g_reprice_1019.py, every term an explicit knob; S2 static schedule on the PRICE5/COLLQ d4g pricer). Single-term attribution on the 1905.4 basis in price.json attribution (largest: pg_vmwrite -0.96 %, land -1.13 %, pg_cmd -0.47 %, bank_pin -0.34 %). No numerics change. MTP not priced (next release).  HBM-REPRICE2 10-19: + pt_p2 (HBM-PRETREE p2 PT 70 -> 81, COORD 0kb): DS 0.00 / Qwen -0.03 % on top of su_red; DS row unchanged 1785.7, Qwen 936.8.",
+   "owner_exception": "OWNER 10-18 03:50: HBM accepts > 15 % AR loss rather than changing numerics; OWNER 10-18 02:15: d4g budget counts DS AR only",
+   "accepted_date": "2026-10-19",
+   "acceptance_note": "HBM-REPRICE 10-19: unit loss 3.43 % DS AR (< 5 %), design accepted total stays < 15 %; written directly (tok/s row, as HBM.D4G_PLAN_B)"
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g GEN2e SU LG tap relays 18/15 (sourceprofile 708d112f3) vs 1017 kits 10/7",
+   "group": "HBM.D4G_GEN2E_SU_TAP",
+   "measured": 18,
+   "price": 10,
+   "unit_of_measure": "edges (tap read return)",
+   "unit_ratio": 1.8,
+   "e2e_loss_pct": 1.43,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_gen2e_su",
+     "base_tok_s": 1905.4,
+     "tok_s": 1878.2,
+     "e2e_loss_pct": 1.43,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_gen2e_su",
+     "base_tok_s": 946.2,
+     "tok_s": 940.4,
+     "e2e_loss_pct": 0.61,
+     "blocking": true
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hbm_reprice_1019/reprice3b_current.json results/arch/hbm_reprice_1019/reprice3b_successor.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "LH-REPRICE3 10-19: +8 read / +8 write an SU-executed VM record, fully exposed (priced; GEN2e PRE-RELAY, planned profile, not die STA).",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g SM attention: HBM-ATTGAP S32 sub-runs (busiest-SM QK 861 / PV 1,171 vs priced components 288 / 386) + window staging (0) + on-die SU PV merge model (400.8 / 335.5 minus priced 99 / 79) + VEH-ATT3 MEASURED Qwen spans (QK 1,195 / PV 2,364 per SM at P 8192)",
+   "group": "HBM.D4G_SM_ATTENTION",
+   "measured": 826.0,
+   "price": 946.2,
+   "unit_of_measure": "tok/s (Qwen AR)",
+   "unit_ratio": 1.1455,
+   "e2e_loss_pct": 12.7,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice_1019.py S2 schedule, variant rec_att vs rec (= d4g_2ring_qbg + collq, the HBM.D4G_PLAN_B price of record)",
+     "base_tok_s": 1849.2,
+     "tok_s": 1686.1,
+     "e2e_loss_pct": 8.82,
+     "blocking": true,
+     "note": "BIGPROG (2,048-word programme store, COORD 0jx / HBM-SMBUDGET, expected): rec_att_bigprog DS 1738.0 (6.01 %)"
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice_1019.py S2 schedule, variant rec_att vs rec",
+     "base_tok_s": 946.2,
+     "tok_s": 826.0,
+     "e2e_loss_pct": 12.7,
+     "blocking": true
+    }
+   },
+   "terms": {
+    "att_s32": {
+     "grade": "measured",
+     "ds_ar_pct": -7.5,
+     "qwen_pct": 0.0
+    },
+    "att_merge": {
+     "grade": "modelled",
+     "ds_ar_pct": -1.82,
+     "qwen_pct": -0.66
+    },
+    "att_qwen": {
+     "grade": "measured",
+     "ds_ar_pct": 0.0,
+     "qwen_pct": -12.2
+    },
+    "att_prog": {
+     "grade": "measured",
+     "ds_ar_pct": 0.0,
+     "qwen_pct": 0.0
+    },
+    "att_desc": {
+     "grade": "modelled",
+     "ds_ar_pct": 0.0,
+     "qwen_pct": 0.0
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/hbm_reprice_1019/price.json results/arch/hbm_reprice_1019/record.json results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json claude/veh-att3-1019@fb8fd695b:results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/L0_L0_pos.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "share_basis": "modelled",
+   "note": "HBM-REPRICE2 10-19: att_meas retired; ATTGAP choice S32 + staging + SU merge, Qwen MEASURED (VEH-ATT3). Accounting: the measured span replaces the SM component of the priced record (fa 259 / publish 64 stay: the span excludes them); HBM-ATTGAP's own comparison against the whole record (ATT.D4G.* rows) reproduces as info_attgap_total DS 1790.2 and under-counts. > 5 % -> COORD-REVIEW-QUEUE. Swap S32 -> BIGPROG measured row when HBM-SMBUDGET lands."
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g bank-client relay budgets (x-load 65, COLL VM_RT 74+10 = E+84 measured v74, DMA 93, IDX 181 / rootctl 75; fully exposed)",
+   "group": "HBM.D4G_BANKLAT_BUDGET",
+   "measured": 0,
+   "price": 0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 9.85,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, info_banklat_all vs all",
+     "base_tok_s": 1338.1,
+     "tok_s": 1206.3,
+     "e2e_loss_pct": 9.85,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, info_banklat_all vs all",
+     "base_tok_s": 410.1,
+     "tok_s": 407.0,
+     "e2e_loss_pct": 0.74,
+     "blocking": true
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/hbm_reprice_1019/reprice3b_current.json results/arch/hbm_reprice_1019/reprice3b_successor.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "LH-REPRICE3 10-19: REPRICE3 composed budgets (conservative, whole budget exposed); GEN2d measured depths will replace them.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g physical HBM bandwidth: released PC controller 45.03 B/edge/SM (HBM-BW measured) vs 99 priced; SM/ATT/DMA stream floor",
+   "group": "HBM.D4G_BW_CONTROLLER",
+   "measured": 45.03,
+   "price": 99.0,
+   "unit_of_measure": "B/edge/SM",
+   "unit_ratio": 2.1985,
+   "e2e_loss_pct": 54.93,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_hbm_bw",
+     "base_tok_s": 1905.4,
+     "tok_s": 1513.1,
+     "e2e_loss_pct": 20.59,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "tools/hgi_sim/d4g_reprice3b_1019.py S2 schedule (wraps d4g_reprice3_1019), single term on the d4g_2ring_qbg basis 1905.4 / 946.2, only_hbm_bw",
+     "base_tok_s": 946.2,
+     "tok_s": 426.5,
+     "e2e_loss_pct": 54.93,
+     "blocking": true
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/hbm_reprice_1019/reprice3b_current.json results/arch/hbm_reprice_1019/reprice3b_successor.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-19",
+   "status": "proposed",
+   "note": "LH-REPRICE3 10-19. Successor (codex/hbm-bw-safe-1019, static96 cadence 90.67 B/edge + cold bridge +1, +11.59 mm2/die; NOT adopted: fanout/native/CTS open): only_hbm_bw DS -1.46 % / Qwen -8.54 %, bridge DS -0.15 %. Over 5 %: COORD (structural lever = adopt the SAFE successor controller).",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM d4g plan (b) as built (two rings + QBG + measured COLL gather master spans + ISA ring-A +2 + RTL1/2 ledger latencies) vs plan (b) model",
+   "group": "HBM.D4G_PLAN_B",
+   "measured": 1849.2,
+   "price": 1978.4,
+   "unit_of_measure": "tok/s (DS AR)",
+   "unit_ratio": 1.0699,
+   "e2e_loss_pct": 6.59,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "collq (d4g_2ring_qbg + ag_collq measured gather-master spans + ra_extra 2) vs plan (b) model (tools/hgi_sim/d4g_collq_price_1018.py)",
+     "base_tok_s": 1978.4,
+     "tok_s": 1849.2,
+     "e2e_loss_pct": 6.53,
+     "blocking": true
+    },
+    "qwen_ar": {
+     "model": "d4g8 compiled TP8 programme (tools/hgi_sim/qwen_compiler.py Geometry(tp=8), landed half-cycle; tools/hbm_qwen_layer/qwen_d4g_price.py) vs plan (b) model",
+     "base_tok_s": 955.2,
+     "tok_s": 948.8,
+     "e2e_loss_pct": 0.67,
+     "blocking": true,
+     "tok_s_previous": 946.2,
+     "evidence": "results/rtl/hbm_qwen_layer_tput_1018/price_per_layer.json"
+    },
+    "ds_mtp": {
+     "model": "collq (d4g_2ring_qbg + ag_collq measured gather-master spans + ra_extra 2) vs plan (b) model (tools/hgi_sim/d4g_collq_price_1018.py)",
+     "base_tok_s": 3370.7,
+     "tok_s": 3148.5,
+     "e2e_loss_pct": 6.59,
+     "blocking": false,
+     "rule": "owner: MTP is recorded, not blocking"
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/hbm_d4g_price_1017/collq/price_collq.json results/arch/hbm_d4g_price_1017/price5/summary.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-18",
+   "status": "accepted",
+   "note": "d4g_2ring_qbg (price_rtl3c, claude/hbm-price5-1018 b98e4492e; results/arch/hbm_d4g_price_1017/price.json) vs b_plan (plan (b) model without d4g adders): DS AR 1905.4 vs 1978.4 (-3.69 %), DS MTP 3258.7 vs 3370.7 (-3.32 %), Qwen 946.2 vs 955.2 (-0.94 %). Owner rule: MTP is recorded but not blocking (binding = DS AR). Priced model, not a bench: interim grade until die runs measure it. ROOT-0510 2026-10-18.  RE-BASE 2026-10-18 (coordinator 0he): HBM-Qwen price of record = 948.8 tok/s, the real compiled 8-die D4G8 programme with landed half-cycle hops (was 946.2 = TP-4 programme under a split transform). D4G8 down_proj = whole TP-4 slice-j partial per row half after the SwiGLU ALL_GATHER + GROUP_REDUCE_MCAST s4 in j order: bit-identical to the qwen_r25 golden. An EVEN 8-way down_proj K split (1,536/die) is NOT ALLOWED: it changes the golden rounding (1,899/4,096 down and 1,077/4,096 x_out elements of L0 differ, proof_L0.json numerics_witness); any Qwen d4g RTL/compiler work must use D4G8. RE-PRICE 2026-10-18 (HBM-COLLQ c8d42a3a4, tools/hgi_sim/d4g_collq_price_1018.py): MEASURED per-quadrant COLL gather master (rtl ot_hgi_coll_gq, bench tb_hgi_coll_gq PASS on Verilator 5.050; gq_land CLOSED 44e16c567) replaces the ring-schedule model: DS AR 1905.4 -> 1849.2 (-6.53 %), DS MTP 3258.7 -> 3148.5 (-6.59 %); Qwen stays at the D4G8 re-base 948.8 (collq Qwen delta 0 vs ring model). Attribution: gather spans -2.92 % AR (no gather pipeline in the model, canonical 3-hop vs 2-hop MODE 1), ring-A +2 -0.03 %. e2e_loss_pct = worst workload per the ledger check rule (6.59 %, DS MTP); the owner budget counts DS AR only (6.53 %). The 2-hop MODE-1 gather schedule recovery is NOT pursued now (coordinator 0gm: closure first, only significant gains).",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-18",
+   "owner_exception": "OWNER 10-18 02:15 (HBM d4g budget counts DS AR only; MTP recorded, not blocking) + OWNER 10-18 03:50 (HBM accepts > 15 % AR loss rather than changing numerics): DS AR -6.53 % accepted above the 5 %/unit limit",
+   "acceptance_note": "coordinator 0gm 10-18 ~07:30: HBM-COLLQ2 as-built price (DS AR 1849.2, -6.53 %; MTP -6.59 % recorded; Qwen 948.8) accepted under the owner rules; merged by ROOT-1945 with the gq_land record 44e16c567. Written directly: accepted_cost.py accept short-circuits on unit_ratio 1.0699 <= 1.10 ('qualifies'), but the e2e rate loss is over the 5 % unit limit, so the owner exception is recorded."
+  },
+  {
+   "design": "r25gq",
+   "unit": "HBM-Qwen TP8 all-reduce form on the 5 d4g die links (hypercube, kept by coordinator 0hd)",
+   "group": "HBM.QWEN_TP8_AR_FORM",
+   "measured": 1688.0,
+   "price": 1394.5,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.2105,
+   "e2e_loss_pct": 1.61,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "qwen_ar": {
+     "model": "token_compose_xdie T = sum n_l C_die + sum n_l sum_x max(0,E-O) at measured E",
+     "base_tok_s": 946.2,
+     "tok_s": 930.9,
+     "e2e_loss_pct": 1.61
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/token_path_1018/README.md",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-18",
+   "status": "proposed",
+   "note": "TOKEN-COMPOSE 10-18: the realisable hypercube TP8 all-reduce measures 1,688 vs 1,394.5 priced cycles per instance (5 die links: direct form impossible) -> HBM-Qwen AR 930.9 vs 946.2 (-1.61 %). Coordinator 0hd 10-18 ~09:15 DECISION: keep the all-reduce form the 5 die links carry (small loss, closure first); no topology change. Base 946.2 predates the 948.8 re-base; re-compose against 948.8 when the layer bench lands."
   },
   {
    "design": "r25gq",
@@ -2310,29 +3099,35 @@
    "proposed_rows": 12,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
-   "over_limit_by_owner_exception": false
+   "over_limit_by_owner_exception": false,
+   "superseded_rows": 0,
+   "superseded_pct_not_counted": 0
   },
   "s81": {
-   "accepted_pct": 23.391,
-   "proposed_pct": 2.074,
-   "accepted_plus_proposed_pct": 25.465,
+   "accepted_pct": 2.063,
+   "proposed_pct": 6.039,
+   "accepted_plus_proposed_pct": 8.102,
    "limit_pct": 15.0,
-   "accepted_rows": 11,
-   "proposed_rows": 12,
-   "headroom_pct": -8.391,
-   "owner_exception_rows": 2,
-   "over_limit_by_owner_exception": true
+   "accepted_rows": 2,
+   "proposed_rows": 8,
+   "headroom_pct": 12.937,
+   "owner_exception_rows": 1,
+   "over_limit_by_owner_exception": false,
+   "superseded_rows": 17,
+   "superseded_pct_not_counted": 24.435
   },
   "r25gq": {
-   "accepted_pct": 0.895,
-   "proposed_pct": 114.037,
-   "accepted_plus_proposed_pct": 114.932,
+   "accepted_pct": 10.915,
+   "proposed_pct": 190.066,
+   "accepted_plus_proposed_pct": 200.981,
    "limit_pct": 15.0,
-   "accepted_rows": 1,
-   "proposed_rows": 22,
-   "headroom_pct": 14.105,
-   "owner_exception_rows": 0,
-   "over_limit_by_owner_exception": false
+   "accepted_rows": 3,
+   "proposed_rows": 26,
+   "headroom_pct": 4.085,
+   "owner_exception_rows": 2,
+   "over_limit_by_owner_exception": false,
+   "superseded_rows": 4,
+   "superseded_pct_not_counted": 11.021
   }
  }
 }

@@ -15,7 +15,7 @@ Each leaf is a placement group of hardened sub-leaves. **Every sub-leaf has its 
 | `ot_s81sl_vp` | 5 | leaf store (2 x 512x128), hc_post (16 x closed `ot_dsrom_su_hcpost_lane_pr`), command sequencer |
 | `ot_s81sl_xr` (ring/control) | 1 (centre leaf) | ring stop E/W (+ V, + B on C3), ctl decode, command fan-out, partial collector, rstd fan |
 | `ot_s81sl_xs` (x streamer) | 1 (centre leaf) | x buffer, slice-local phase / stream / calendar ROMs, static PQ stream path, x-chain words |
-| `ot_s81sl_cap` (capture root) | 1 (centre leaf) | 8 return lanes, static return tree + root finish, tag decode, leaf capture writes |
+| `ot_s81sl_cap` (capture root) | 1 (centre leaf) | 8 return lanes, static return tree + root finish, tag decode, leaf capture writes. Hardened as a wires-only cluster `s81sl_capc` of 3 leaves with own clock roots (S81U-CAP2, 10-17): 2 x `ot_s81sl_cap_tr` (W / E column tree) + `ot_s81sl_cap_rt` (n6 + finish SRAM + decode) |
 | `ot_s81dv_xfin` | 1 (centre leaf) | S81-DV's exchange + replicated finish |
 
 Slice variants (p4c): **C1** = E/W + V (14 slices); **C3** = C1 + B (s_1S, s_6S). They differ only in the `xr` master.
@@ -88,6 +88,8 @@ Bench: lockstep with the production PQ core + `dsfd_pq_lx` on the L0/L2 phases, 
 | `fault` | 1 | sticky fault |
 
 Row segments of a slice's rows stay inside its 8 frames. The slice finishes partials with golden sibling adds: the static return nodes plus a root finish. A word whose row belongs to another slice is a fault.
+
+Physical split (S81U-CAP2, 10-17; the flat form failed the clock rule: 22,261 sinks / one root, TT insertion 368.5 ps): the tree seams are the n4 / n5 RST output flop -> abutted wire -> n6 P1 port flop, so the split adds **0 cycles** to every capture word (cap_bench real1 / small / rand2 / rand3: identical write edges, last-arrival -> leaf-write 43..84 / 43..94 edges; `tools/s81_slice/cap_model.py` unchanged). Only sticky-fault visibility of lane err/status and n0..n5 faults moves +2 edges (leaf fault flop + root pin flop); fault is checked at phase end (F11), not timed. Evidence results/rtl/s81_slice_1017/cap_split/. OWNERS-S81/CAP2 (10-18): the `ot_s81sl_cap_rt` fault pin is a dedicated copy flop of the internal sticky (**+1 edge on fault visibility**, now +3 for lane err/status and n0..n5 faults, +1 for n6 / F5..F11); the held `cw_a` / `cw_d` pins launch from same-edge copy flops (0 edges). Evidence results/rtl/s81_slice_1017/cap_owners/bench_fa49ec3e9/.
 
 ### `ot_s81sl_vp` command word `c_d[159:0]`
 

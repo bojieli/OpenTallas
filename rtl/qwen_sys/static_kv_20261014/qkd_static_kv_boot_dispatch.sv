@@ -39,7 +39,9 @@
 // -> fault code 5.  Image = tools/qwen_kv_die/kvjc3_pc_chain.boot_words (kv_static_programme.es_cfg_words).  setup_ready
 // also needs targets 12 and 13 installed.  ESCFG=0 = unchanged (12/13 refused, code 3; es_cfg_* constant 0).
 // MUT 7: target-12 address with pc and reg swapped; MUT 8: target-13 segment 1 dropped (bench mutants).
-module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0)(
+// RTL-BUILD-KV/FAULT 10-18 (P8): DIECAP=1 = the die cfg's capability word (qkd_kv_die_cfg CAP=1: word 32+NRST, data[0] =
+// the fused attention-programme capability): target 10 is 32 + NRST + 2 words.  DIECAP=0 = unchanged.
+module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[3:0]boot_image_target,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
@@ -62,7 +64,7 @@ module qkd_static_kv_boot_dispatch #(parameter integer MUT=0,parameter integer D
  wire[9:0]addr=boot_pr[73:64];wire[63:0]data=boot_pr[63:0];
  function automatic[10:0]word_count(input[3:0]t);
  case(t)1:word_count=327;2:word_count=181;3:word_count=4;4,5:word_count=192;
- 6,7,8,9:word_count=1024;10:word_count=(DIECFG!=0)?11'(32+NRST+1):11'd0;11:word_count=(LINKCFG!=0)?11'd66:11'd0;12:word_count=(ESCFG!=0)?11'd1024:11'd0;13:word_count=(ESCFG!=0)?11'd8:11'd0;default:word_count=0;endcase
+ 6,7,8,9:word_count=1024;10:word_count=(DIECFG!=0)?11'(32+NRST+1+((DIECAP!=0)?1:0)):11'd0;11:word_count=(LINKCFG!=0)?11'd66:11'd0;12:word_count=(ESCFG!=0)?11'd1024:11'd0;13:word_count=(ESCFG!=0)?11'd8:11'd0;default:word_count=0;endcase
  endfunction
  // Registered HOST output is consumed one edge later by the real cfg inputs.
  // Final ISA readiness remains tied to the actual loader, so a new BEGIN drops
