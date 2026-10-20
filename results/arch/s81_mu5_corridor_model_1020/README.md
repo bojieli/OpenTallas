@@ -1,0 +1,21 @@
+# S81 MU5 PHY/control long-path structural model, 2026-10-20
+
+Actual case inputs were read without changing progressing jobs. Exact case die and PHY LEF digests appear in model.json; model.py reproduces direct-pin Manhattan spans using each placed instance orientation and first LEF rectangle centroid. This is an analytical endpoint model, not routed delay or final reach qualification. Case source is claude/s81-mu5-1019 804d68ef6; macro-view option 13337f0ae enabled in case_mu5k.
+
+## Classification and measured cause
+
+The source die.v connects a_phy_hbm_k*/kr* directly between u_phy_hbm and u_ctrl_00..15. These seam buses have no intervening planned relay register. All 19,904 mapped bus bits were enumerated. case_mu5r uses a synthetic rv_phy_hbm; case_mu5k binds native ot_hbm3e_phy_v41x_aw30_e8p5_k. Both case censuses explicitly mark all sixteen dsfd_ctrl_rg2 instances as stand-ins (rv_ctrl_nn), dimension531.25x250um, so neither case gives a fully native PHY/controller boundary.
+
+Stand-in PHY: 17,416 endpoint pairs exceed405um; worst4261.64um. Native PHY: 8,716 exceed405um; worst669.426um. Native worst k_wdata[0] is PHY(11745.596,1197.104) to synthetic controller00 E pin(12265.456,1346.670). Native request8192 data bits have3292 overreach, return8192 data bits4096; all other control bus groups are listed. Thus most multi-mm paths are artificial PHY stand-in pin placement, while remaining sub-mm spans still depend on synthetic controller pins. No route or model waiver is justified.
+
+The completed repeater diagnostic in mu5r reports17,918 post-legal segments over405um, max4626.63um, slew18,986/cap19,997; corridor_stats has17,540 overreach/max4112.07um. mu5rb has12,903 post-legal overreach/max1812.81um, slew38,181/cap11,356. These differ from endpoint counts: corridor placement moves buffer nodes off shortest paths, avoids macro interiors, and later spread legalization changes the nodes again. The diagnostic PASS explicitly uses report-only reach/DRV policy. It is not a reach PASS.
+
+## Concrete successor sequence before physical regeneration
+
+1. Preserve all three original GRT chains. Prefer native-PHY k diagnostic once its post-segment result lands; retain r/rb as evidence, never promote the synthetic seam to a die result.
+2. CTRL3 must supply the exact release dsfd_ctrl_rg2 view/pin contract (current regional-clock successors), then rebind all16 instances. Recompute this endpoint model using both native boundaries. Actual instance identity and source connections, not endpoint names alone, determine whether a link needs a landing.
+3. For every remaining real seam above405um, build a static registered boundary bundle per controller/PC and carry all transaction/control/data fields together in each direction. A model lower bound is ceil(Manhattan/405)-1 additional stages: native-PHY/synthetic-CTRL currently needs at most1; synthetic-PHY model misleadingly needs10. Actual routing around obstacles can require more. Do not add unpriced ready loops, backpressure or credits. Price request plus response latency in the controller/HBM schedule and exact replay before integration.
+4. Repositioning controller pins to the N/S PHY-facing band may remove some required hops, but only if realized by the actual controller kit and closed native view. Native clock/reference boundary, reset<=32 loads, pin registration and per-stage reaches must all be modeled.
+5. If actual endpoint spacing passes but post-legal buffer segments fail, a separate shared die_repeaters tool change is needed: preserve routed corridor waypoints/landing endpoints through legalization and bound each legalized segment, or reserve legal repeater channels/slots before placement. The current algorithm chooses only an L-shaped path and free intervals, then allows nearest-slot spread. A generic obstacle detour cannot create missing registered cycle boundaries and must not silently reprice schedule. Propose/test any shared flow change through ROOT; none is made here.
+
+No RTL, gate, flow helper, schedule, placement, original job, or shared source was changed by this model packet. Open blockers are both-native CTRL view, remaining-real-seam stage/area/timing price, and actual k post-legal report.

@@ -1,0 +1,886 @@
+{
+  "mu5r": {
+    "case_die_sha256": "e3b80a607c460a043d03436a153c43ea3eccdde1d920376a2ed5ccbaf3dbd545",
+    "phy_lef_sha256": "b7b50ae2f37d834a9544801660984c3d4bab9ebc2b4acee905f709ae16f9da13",
+    "bits": 19904,
+    "over405": 17416,
+    "worst": [
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[0]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[0]",
+        "phy_xy": [
+          16377.376,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.67
+        ],
+        "um": 4261.64,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[0]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[0]",
+        "phy_xy": [
+          16377.376,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.67
+        ],
+        "um": 4261.64,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[1]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[1]",
+        "phy_xy": [
+          16377.279999999999,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.574
+        ],
+        "um": 4261.448,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[1]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[1]",
+        "phy_xy": [
+          16377.279999999999,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.574
+        ],
+        "um": 4261.448,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[2]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[2]",
+        "phy_xy": [
+          16377.184,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.478
+        ],
+        "um": 4261.256,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[2]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[2]",
+        "phy_xy": [
+          16377.184,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.478
+        ],
+        "um": 4261.256,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[3]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[3]",
+        "phy_xy": [
+          16377.088,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.382
+        ],
+        "um": 4261.064,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[3]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[3]",
+        "phy_xy": [
+          16377.088,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.382
+        ],
+        "um": 4261.064,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[4]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[4]",
+        "phy_xy": [
+          16376.991999999998,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.286
+        ],
+        "um": 4260.872,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[4]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[4]",
+        "phy_xy": [
+          16376.991999999998,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.286
+        ],
+        "um": 4260.872,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[5]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[5]",
+        "phy_xy": [
+          16376.895999999999,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.19
+        ],
+        "um": 4260.68,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[5]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[5]",
+        "phy_xy": [
+          16376.895999999999,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.19
+        ],
+        "um": 4260.68,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[6]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[6]",
+        "phy_xy": [
+          16376.8,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.094
+        ],
+        "um": 4260.488,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[6]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[6]",
+        "phy_xy": [
+          16376.8,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.094
+        ],
+        "um": 4260.488,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[7]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[7]",
+        "phy_xy": [
+          16376.704,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1345.998
+        ],
+        "um": 4260.296,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[7]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[7]",
+        "phy_xy": [
+          16376.704,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1345.998
+        ],
+        "um": 4260.296,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[8]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[8]",
+        "phy_xy": [
+          16376.608,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1345.902
+        ],
+        "um": 4260.104,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[8]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[8]",
+        "phy_xy": [
+          16376.608,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1345.902
+        ],
+        "um": 4260.104,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[9]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[9]",
+        "phy_xy": [
+          16376.511999999999,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1345.806
+        ],
+        "um": 4259.912,
+        "registered_hops_lower_bound": 10
+      },
+      {
+        "port": "kr_data",
+        "phy_pin": "kr_data[9]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "kr_data[9]",
+        "phy_xy": [
+          16376.511999999999,
+          1196.95
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1345.806
+        ],
+        "um": 4259.912,
+        "registered_hops_lower_bound": 10
+      }
+    ],
+    "ports": {
+      "k_v": {
+        "bits": 32,
+        "min_um": 85.86,
+        "median_um": 1982.8,
+        "max_um": 3845.48,
+        "over405": 28,
+        "max_extra_registered_hops_lb": 9
+      },
+      "k_rdy": {
+        "bits": 32,
+        "min_um": 85.86,
+        "median_um": 1982.8,
+        "max_um": 3845.48,
+        "over405": 28,
+        "max_extra_registered_hops_lb": 9
+      },
+      "k_addr": {
+        "bits": 960,
+        "min_um": 83.07,
+        "median_um": 2005.07,
+        "max_um": 3892.81,
+        "over405": 840,
+        "max_extra_registered_hops_lb": 9
+      },
+      "k_len": {
+        "bits": 128,
+        "min_um": 85.57,
+        "median_um": 1985.1,
+        "max_um": 3850.38,
+        "over405": 112,
+        "max_extra_registered_hops_lb": 9
+      },
+      "k_tag": {
+        "bits": 544,
+        "min_um": 84.32,
+        "median_um": 1995.08,
+        "max_um": 3871.59,
+        "over405": 476,
+        "max_extra_registered_hops_lb": 9
+      },
+      "k_we": {
+        "bits": 32,
+        "min_um": 85.86,
+        "median_um": 1982.8,
+        "max_um": 3845.48,
+        "over405": 28,
+        "max_extra_registered_hops_lb": 9
+      },
+      "k_wdata": {
+        "bits": 8192,
+        "min_um": 61.38,
+        "median_um": 2178.63,
+        "max_um": 4261.64,
+        "over405": 7168,
+        "max_extra_registered_hops_lb": 10
+      },
+      "k_wstrb": {
+        "bits": 1024,
+        "min_um": 82.88,
+        "median_um": 2006.6,
+        "max_um": 3896.07,
+        "over405": 896,
+        "max_extra_registered_hops_lb": 9
+      },
+      "k_wr_done": {
+        "bits": 32,
+        "min_um": 85.86,
+        "median_um": 1982.8,
+        "max_um": 3845.48,
+        "over405": 28,
+        "max_extra_registered_hops_lb": 9
+      },
+      "kr_v": {
+        "bits": 32,
+        "min_um": 85.86,
+        "median_um": 1982.8,
+        "max_um": 3845.48,
+        "over405": 28,
+        "max_extra_registered_hops_lb": 9
+      },
+      "kr_rdy": {
+        "bits": 32,
+        "min_um": 85.86,
+        "median_um": 1982.8,
+        "max_um": 3845.48,
+        "over405": 28,
+        "max_extra_registered_hops_lb": 9
+      },
+      "kr_tag": {
+        "bits": 544,
+        "min_um": 84.32,
+        "median_um": 1995.08,
+        "max_um": 3871.59,
+        "over405": 476,
+        "max_extra_registered_hops_lb": 9
+      },
+      "kr_beat": {
+        "bits": 128,
+        "min_um": 85.57,
+        "median_um": 1985.1,
+        "max_um": 3850.38,
+        "over405": 112,
+        "max_extra_registered_hops_lb": 9
+      },
+      "kr_data": {
+        "bits": 8192,
+        "min_um": 61.38,
+        "median_um": 2178.63,
+        "max_um": 4261.64,
+        "over405": 7168,
+        "max_extra_registered_hops_lb": 10
+      }
+    }
+  },
+  "mu5k": {
+    "case_die_sha256": "370b49755b966248a2c93fea593bbdd5f1612f8d78f75beaefb233150b5635f1",
+    "phy_lef_sha256": "188c0f25011aa87da11f5934085de5bb562966f4d110a5ec0f623d5d12d67a29",
+    "bits": 19904,
+    "over405": 8716,
+    "worst": [
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[0]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[0]",
+        "phy_xy": [
+          11745.596,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.67
+        ],
+        "um": 669.426,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[1]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[1]",
+        "phy_xy": [
+          11745.787999999999,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.574
+        ],
+        "um": 669.138,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[512]",
+        "ctrl": "u_ctrl_01",
+        "ctrl_pin": "k_wdata[0]",
+        "phy_xy": [
+          12276.764,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12796.706,
+          1346.238
+        ],
+        "um": 669.076,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[2]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[2]",
+        "phy_xy": [
+          11745.98,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.478
+        ],
+        "um": 668.85,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[513]",
+        "ctrl": "u_ctrl_01",
+        "ctrl_pin": "k_wdata[1]",
+        "phy_xy": [
+          12276.956,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12796.706,
+          1346.142
+        ],
+        "um": 668.788,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[1024]",
+        "ctrl": "u_ctrl_02",
+        "ctrl_pin": "k_wdata[0]",
+        "phy_xy": [
+          12807.931999999999,
+          1197.104
+        ],
+        "ctrl_xy": [
+          13327.956,
+          1345.648
+        ],
+        "um": 668.568,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[3]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[3]",
+        "phy_xy": [
+          11746.171999999999,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.382
+        ],
+        "um": 668.562,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[514]",
+        "ctrl": "u_ctrl_01",
+        "ctrl_pin": "k_wdata[2]",
+        "phy_xy": [
+          12277.148,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12796.706,
+          1346.046
+        ],
+        "um": 668.5,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[1025]",
+        "ctrl": "u_ctrl_02",
+        "ctrl_pin": "k_wdata[1]",
+        "phy_xy": [
+          12808.124,
+          1197.104
+        ],
+        "ctrl_xy": [
+          13327.956,
+          1345.552
+        ],
+        "um": 668.28,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[4]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[4]",
+        "phy_xy": [
+          11746.364,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.286
+        ],
+        "um": 668.274,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[515]",
+        "ctrl": "u_ctrl_01",
+        "ctrl_pin": "k_wdata[3]",
+        "phy_xy": [
+          12277.34,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12796.706,
+          1345.95
+        ],
+        "um": 668.212,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[1026]",
+        "ctrl": "u_ctrl_02",
+        "ctrl_pin": "k_wdata[2]",
+        "phy_xy": [
+          12808.315999999999,
+          1197.104
+        ],
+        "ctrl_xy": [
+          13327.956,
+          1345.456
+        ],
+        "um": 667.992,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[5]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[5]",
+        "phy_xy": [
+          11746.555999999999,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.19
+        ],
+        "um": 667.986,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[516]",
+        "ctrl": "u_ctrl_01",
+        "ctrl_pin": "k_wdata[4]",
+        "phy_xy": [
+          12277.532,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12796.706,
+          1345.854
+        ],
+        "um": 667.924,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[1536]",
+        "ctrl": "u_ctrl_03",
+        "ctrl_pin": "k_wdata[0]",
+        "phy_xy": [
+          13339.099999999999,
+          1197.104
+        ],
+        "ctrl_xy": [
+          13859.206,
+          1344.797
+        ],
+        "um": 667.799,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[1027]",
+        "ctrl": "u_ctrl_02",
+        "ctrl_pin": "k_wdata[3]",
+        "phy_xy": [
+          12808.508,
+          1197.104
+        ],
+        "ctrl_xy": [
+          13327.956,
+          1345.3600000000001
+        ],
+        "um": 667.704,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[6]",
+        "ctrl": "u_ctrl_00",
+        "ctrl_pin": "k_wdata[6]",
+        "phy_xy": [
+          11746.748,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12265.456,
+          1346.094
+        ],
+        "um": 667.698,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[517]",
+        "ctrl": "u_ctrl_01",
+        "ctrl_pin": "k_wdata[5]",
+        "phy_xy": [
+          12277.724,
+          1197.104
+        ],
+        "ctrl_xy": [
+          12796.706,
+          1345.758
+        ],
+        "um": 667.636,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[1537]",
+        "ctrl": "u_ctrl_03",
+        "ctrl_pin": "k_wdata[1]",
+        "phy_xy": [
+          13339.292,
+          1197.104
+        ],
+        "ctrl_xy": [
+          13859.206,
+          1344.701
+        ],
+        "um": 667.511,
+        "registered_hops_lower_bound": 1
+      },
+      {
+        "port": "k_wdata",
+        "phy_pin": "k_wdata[1028]",
+        "ctrl": "u_ctrl_02",
+        "ctrl_pin": "k_wdata[4]",
+        "phy_xy": [
+          12808.699999999999,
+          1197.104
+        ],
+        "ctrl_xy": [
+          13327.956,
+          1345.2640000000001
+        ],
+        "um": 667.416,
+        "registered_hops_lower_bound": 1
+      }
+    ],
+    "ports": {
+      "k_v": {
+        "bits": 32,
+        "min_um": 86.02,
+        "median_um": 387.7,
+        "max_um": 655.31,
+        "over405": 8,
+        "max_extra_registered_hops_lb": 1
+      },
+      "k_rdy": {
+        "bits": 32,
+        "min_um": 86.21,
+        "median_um": 387.69,
+        "max_um": 655.12,
+        "over405": 8,
+        "max_extra_registered_hops_lb": 1
+      },
+      "k_addr": {
+        "bits": 960,
+        "min_um": 89.18,
+        "median_um": 384.81,
+        "max_um": 657.71,
+        "over405": 240,
+        "max_extra_registered_hops_lb": 1
+      },
+      "k_len": {
+        "bits": 128,
+        "min_um": 92.45,
+        "median_um": 382.88,
+        "max_um": 649.46,
+        "over405": 32,
+        "max_extra_registered_hops_lb": 1
+      },
+      "k_tag": {
+        "bits": 544,
+        "min_um": 94.46,
+        "median_um": 380.96,
+        "max_um": 649.94,
+        "over405": 136,
+        "max_extra_registered_hops_lb": 1
+      },
+      "k_we": {
+        "bits": 32,
+        "min_um": 96.19,
+        "median_um": 379.28,
+        "max_um": 645.14,
+        "over405": 8,
+        "max_extra_registered_hops_lb": 1
+      },
+      "k_wdata": {
+        "bits": 8192,
+        "min_um": 120.86,
+        "median_um": 372.34,
+        "max_um": 669.43,
+        "over405": 3292,
+        "max_extra_registered_hops_lb": 1
+      },
+      "k_wstrb": {
+        "bits": 1024,
+        "min_um": 148.51,
+        "median_um": 370.57,
+        "max_um": 598.77,
+        "over405": 512,
+        "max_extra_registered_hops_lb": 1
+      },
+      "k_wr_done": {
+        "bits": 32,
+        "min_um": 151.68,
+        "median_um": 370.57,
+        "max_um": 589.65,
+        "over405": 16,
+        "max_extra_registered_hops_lb": 1
+      },
+      "kr_v": {
+        "bits": 32,
+        "min_um": 151.87,
+        "median_um": 370.57,
+        "max_um": 589.46,
+        "over405": 16,
+        "max_extra_registered_hops_lb": 1
+      },
+      "kr_rdy": {
+        "bits": 32,
+        "min_um": 152.06,
+        "median_um": 370.57,
+        "max_um": 589.27,
+        "over405": 16,
+        "max_extra_registered_hops_lb": 1
+      },
+      "kr_tag": {
+        "bits": 544,
+        "min_um": 153.79,
+        "median_um": 370.57,
+        "max_um": 590.61,
+        "over405": 272,
+        "max_extra_registered_hops_lb": 1
+      },
+      "kr_beat": {
+        "bits": 128,
+        "min_um": 155.81,
+        "median_um": 370.57,
+        "max_um": 586.1,
+        "over405": 64,
+        "max_extra_registered_hops_lb": 1
+      },
+      "kr_data": {
+        "bits": 8192,
+        "min_um": 180.77,
+        "median_um": 370.57,
+        "max_um": 609.52,
+        "over405": 4096,
+        "max_extra_registered_hops_lb": 1
+      }
+    }
+  }
+}
