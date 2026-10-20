@@ -4,7 +4,7 @@
 //  Phase A (cycles < 6500): the rr7 fixture (five full-width GT3072 ROM ops over all five banks): ref == dut (t_out one
 //  edge later, n_y, ties) AND d7 == dut.
 //  Phase B (6500..PHB): random descriptors (random split 7..11, KV ops wsrc=1, tiles 1..3, k 1..24, strides, jsh,
-//  round, random go gaps incl. go while busy): d7 == dut on every output AND on the engine's memory-request
+//  round, random go gaps incl. go while busy, tile strap 37 from cycle 6500): d7 == dut on every output AND on the engine's memory-request
 //  interface every cycle (wrom_re/addr, kv_re/addr, e_gm, k_r, tstep, the per-group KV offsets), so the KV-path
 //  copies (whose data are zero in this KV_SLICE 0 parent) are compared directly.  Fault pins excluded (REGROOT 8
 //  lands leaf faults one edge later; no fault is raised by either stimulus).
@@ -26,6 +26,7 @@ initial begin #0.2;
  if (MUT==55) force `ME.g_issue_fast.g_ctl_rr8.tsc_q[24+:24] = '0;
 end
 reg ck=0,rs=0; always #0.5 ck=~ck;
+reg [15:0] tid=16'd0;   // phase B: a non-zero tile strap (dut and d7 only) so the per-group KV offsets / K limits are non-trivial
 reg [507:0] tap=0;
 reg [513:0] na=0,nb=0;
 wire [513:0] rt,rn,ut,un,st,sn;
@@ -34,8 +35,8 @@ reg [512:0] rt_prev;
 always @(posedge ck) rt_prev <= rt[512:0];
 wire [513:0] expected_t={rt[513],rt_prev};
 qfd_tile_nk_rp1 ref_tile (.ck(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_rom0(ck), .ck_rom1(ck), .ck_rom2(ck), .ck_rom3(ck), .ck_rom4(ck), .ck_rom5(ck), .ck_rom6(ck), .ck_rom7(ck), .ck_rom8(ck), .ck_rom9(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rs),.tile_id(16'd0),.tie_hi(rhi),.tie_lo(rlo),.tap(tap),.t_out(rt),.n_a(na),.n_b(nb),.n_y(rn));
-qfd_tile_nk_rp2_romleaf_rr #(.REGROOT_MODE(8)) dut (.ck_rsw(ck), .ck_rnw(ck), .ck_dw(ck), .ck_de(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_rp5(ck), .ck_rp6(ck), .ck_rp7(ck), .ck_rp8(ck), .ck_rp9(ck), .ck(ck), .ck_rs(ck), .ck_rn(ck), .ck_tx0(ck), .ck_tx1(ck), .ck_tx2(ck), .ck_tx3(ck), .ck_tx4(ck), .ck_tx5(ck), .ck_tx6(ck), .ck_tx7(ck), .ck_fa0(ck), .ck_fa1(ck), .ck_fa2(ck), .ck_fa3(ck), .ck_fa4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rs),.tile_id(16'd0),.tie_hi(uhi),.tie_lo(ulo),.tap(tap),.t_out(ut),.n_a(na),.n_b(nb),.n_y(un));
-qfd_tile_nk_rp2_romleaf_rr #(.REGROOT_MODE(7)) d7 (.ck_rsw(ck), .ck_rnw(ck), .ck_dw(ck), .ck_de(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_rp5(ck), .ck_rp6(ck), .ck_rp7(ck), .ck_rp8(ck), .ck_rp9(ck), .ck(ck), .ck_rs(ck), .ck_rn(ck), .ck_tx0(ck), .ck_tx1(ck), .ck_tx2(ck), .ck_tx3(ck), .ck_tx4(ck), .ck_tx5(ck), .ck_tx6(ck), .ck_tx7(ck), .ck_fa0(ck), .ck_fa1(ck), .ck_fa2(ck), .ck_fa3(ck), .ck_fa4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rs),.tile_id(16'd0),.tie_hi(shi),.tie_lo(slo),.tap(tap),.t_out(st),.n_a(na),.n_b(nb),.n_y(sn));
+qfd_tile_nk_rp2_romleaf_rr #(.REGROOT_MODE(8)) dut (.ck_rsw(ck), .ck_rnw(ck), .ck_dw(ck), .ck_de(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_rp5(ck), .ck_rp6(ck), .ck_rp7(ck), .ck_rp8(ck), .ck_rp9(ck), .ck(ck), .ck_rs(ck), .ck_rn(ck), .ck_tx0(ck), .ck_tx1(ck), .ck_tx2(ck), .ck_tx3(ck), .ck_tx4(ck), .ck_tx5(ck), .ck_tx6(ck), .ck_tx7(ck), .ck_fa0(ck), .ck_fa1(ck), .ck_fa2(ck), .ck_fa3(ck), .ck_fa4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rs),.tile_id(tid),.tie_hi(uhi),.tie_lo(ulo),.tap(tap),.t_out(ut),.n_a(na),.n_b(nb),.n_y(un));
+qfd_tile_nk_rp2_romleaf_rr #(.REGROOT_MODE(7)) d7 (.ck_rsw(ck), .ck_rnw(ck), .ck_dw(ck), .ck_de(ck), .ck_rp0(ck), .ck_rp1(ck), .ck_rp2(ck), .ck_rp3(ck), .ck_rp4(ck), .ck_rp5(ck), .ck_rp6(ck), .ck_rp7(ck), .ck_rp8(ck), .ck_rp9(ck), .ck(ck), .ck_rs(ck), .ck_rn(ck), .ck_tx0(ck), .ck_tx1(ck), .ck_tx2(ck), .ck_tx3(ck), .ck_tx4(ck), .ck_tx5(ck), .ck_tx6(ck), .ck_tx7(ck), .ck_fa0(ck), .ck_fa1(ck), .ck_fa2(ck), .ck_fa3(ck), .ck_fa4(ck), .ck_lsl0(ck), .ck_lsl1(ck), .ck_lsl2(ck), .ck_lsl3(ck), .ck_lsl4(ck), .ck_lsl5(ck), .ck_lsl6(ck), .ck_lsl7(ck), .ck_node(ck), .rst_n(rs),.tile_id(tid),.tie_hi(shi),.tie_lo(slo),.tap(tap),.t_out(st),.n_a(na),.n_b(nb),.n_y(sn));
 genvar p,b;
 generate for(p=0;p<2;p=p+1)begin: cols
  for(b=0;b<5;b=b+1)begin:banks
@@ -84,6 +85,7 @@ initial begin
   if(cyc>=200 && (cyc-200)%1200==0 && cyc<6200)begin
    tap[379:1]=command((cyc-200)/1200);tap[0]=1;
   end
+  if(cyc==6500)tid=16'd37;
   if(cyc>=next_go)begin
    tap[379:1]=rcommand(0);tap[0]=1;gos=gos+1;if(tap[379-54])kvops=kvops+1;
    next_go=cyc+$urandom_range(700,1);
