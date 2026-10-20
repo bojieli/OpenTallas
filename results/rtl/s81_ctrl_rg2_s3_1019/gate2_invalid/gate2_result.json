@@ -1,0 +1,167 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: RTL registers every pin at its face in its own clock domain (S81-SAFE-FIX 10-19: rq pin register, rd/rk/wd/status output flops on clk; PHY k_rdy/kr_*/k_wr_done pin flops and k_* output flops on ckh -- k_rdy was the last exception and is now a face flop with kept per-group copies). The flow pin-regis",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc8 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81ctrl_rg2_s3_20261019-172323.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81ctrl_rg2_s3_20261019-172323.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/s81ctrl_rg2_s3-20261019-172323",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc8 in 37 s (gate total 2621 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2492, 'pin_rectangles': 2492, 'pin_track_checked': 2492, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 5cba33a69cc8d0762394654da9b1f14fb25e5cb52a997f9f186b6886c8da5d41",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 1120 um2 + macros 46117 in core 168449: util 1% (std-cell density 1.0% of placeable 112569 um2; total fill 28.0%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS dsfd_ctrl_rg2 cells 7,374 flops 2,740 depth 375.1 ps util 0.2809 reach 0.0 um (0.3 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 483.1..648.7 ps (spread 165.6), boundary mean 539.1; tt insertion all 388.9..509.7 ps (spread 120.8), boundary mean 410.7; ff insertion all 312.4..422.2 ps (spread 109.8), boundary mean 332.9; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.450 vs spec PD 0.45",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81ctrl_rg2_s3/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro      4 paths, worst slack 77.2 ps (e.g. u_ot_pr_core.g_pc[0].u_pc.u_r.u_mem/r_ce_in)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg    451 paths, worst slack 179.7 ps (e.g. u_ot_pr_core.g_pc[1].u_pc.r_data[182]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      451 paths, worst slack 205.7 ps (e.g. ot_prs_00262_ff/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         9 paths, worst slack 315.9 ps (e.g. u_ot_pr_core.g_pc[1].u_pc.g_h[10].krq_c$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 7.716105532296069e-11 hold WNS -5.4573678909264345e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "core_clk->hclk max: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 704 declared (max_delay) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "core_clk->hclk min: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 704 declared (min_delay) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "hclk->core_clk max: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 587 declared (max_delay) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "hclk->core_clk min: 0 undeclared timed path(s), worst - ps (uncertainty - ps); 587 declared (min_delay) not counted",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "2 register clocks (core_clk,hclk): no undeclared cross-clock reg->reg setup violation under signoff.sdc",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ckh: 1,390 sinks on the largest root; measured TT insertion 453.1 ps, FF insertion 371.7 ps, TT pin-flop spread 75.1 ps, FF pin-flop spread 66.0 ps; WARN: insertion 453.1 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81ctrl-s3-1019/physical/ref_tile/s81ctrl_rg2_s3/gate_layout/floorplan.png; density /home/ubuntu/wt/s81ctrl-s3-1019/physical/ref_tile/s81ctrl_rg2_s3/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 28% = (hard macros 46117.1 + synthesized std cells 1197.3) / outline 172125.0 um2; pin demand per face: S 1321 pins over 522.2/531.2 um (98%), N 1246 pins over 522.2/531.2 um (98%), W 61 pins over 37.0/324.0 um (11%), E 60 pins over 0.0/324.0 um (0%) (pin-bound: PHY-face slot: N 1246 pins over 522/531 um (98%) and S 1321 pins over 522/531 um (98%) (gate1 measured); width = PHY PC pitch 531.25, height = two 100.71 um wide-pitch SRAM rows; total fill 28% (macros 46117 + std 1197 um2))",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M3 11.98% used; GRT 1843 s",
+   "fix": ""
+  }
+ ]
+}

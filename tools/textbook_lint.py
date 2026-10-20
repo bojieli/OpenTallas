@@ -150,7 +150,8 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 (OT_PIN_BALANCE_H from route.pin_balance, or PINEX=0 from an exact io_tcl) and the closed kit did not
 #                 (Gate-Rule: relaxing, submit-time CLOSED-STANDS only).
 CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
-                       "native_launch", "native_capture", "native_spread", "flow_failure", "pin_order")
+                       "native_launch", "native_capture", "native_spread", "flow_failure", "pin_order",
+                       "pg_binding")
 DIE_WINDOW_CUT_MIN = 0.6
 PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
 PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
@@ -168,7 +169,8 @@ CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it ag
                          "tools/ref_tile/rekit_native_launch.py) | \"native_capture\" / \"native_spread\" (+ "
                          "\"source\" COMMITTED native audit receipt recording the closed view's FAIL, \"cell\", "
                          "\"fix\") | \"flow_failure\" (+ \"failed_job\": the id of the failed, ADMITTED re-route "
-                         "being retried)}")
+                         "being retried) | \"pg_binding\" (+ \"source\" COMMITTED native PG-binding audit summary that "
+                         "records the closed view's unbound VDD/VSS terminals, \"fix\"; same RTL and outline)}")
 
 
 def _num(x):
