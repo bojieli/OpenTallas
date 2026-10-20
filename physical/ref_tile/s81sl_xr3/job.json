@@ -1,0 +1,155 @@
+{
+ "name": "s81sl_xr3-s81sl_xr3-COMMIT",
+ "block": "ot_s81sl_xr3",
+ "ref_tile": true,
+ "owner": "Claude:ROOT4-S81POST",
+ "purpose": "S81 C3 control-plane sub-leaf ot_s81sl_xr3 (HB 1: band port B, S81-SMWIRE SO assembler) -- first hardened view; SAFE item 3 fix on the SO lo/hi capture enables (KEPT copies 64+64).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/root4-s81post-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv",
+   "rtl/dsrom_sys/s81_suhc",
+   "rtl/hdc",
+   "rtl/lib",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "tools/s81_slice",
+   "tools/s81_dv/sm_target",
+   "results/rtl/root4_s81post_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_xr3 #(.FOREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "slxr3_exact",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_exact base 1 1 6000",
+    "expect": "pass",
+    "pass_regex": "^PASS xr base hb=1 seed=1$",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_muthops",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_muthops hops 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_hops/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_mutrow",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutrow row 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_row/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_mutporder",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutporder porder 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_porder/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "slxr3_mutnocol",
+    "cmd": "XR_FOREG=1 bash tools/s81_slice/xr_bench.sh {RUN}/slxr3_mutnocol nocol 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRILL missed=[1-9][0-9]* of 14",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/xr3_nocol/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "smwire_e2e",
+    "cmd": "bash tools/s81_dv/sm_target/run_e2e.sh {RUN}/smwire_e2e",
+    "expect": "pass",
+    "pass_regex": "^E2E_DONE bad=0 define=none$",
+    "threads": 16,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "smwire_soen_mut",
+    "cmd": "bash tools/s81_dv/sm_target/run_e2e.sh {RUN}/smwire_soen OT_S81SL_XR_MUT_SOEN",
+    "expect": "fail",
+    "fail_regex": "E2E rtlmut_OT_S81SL_XR_MUT_SOEN expect=fail smwire=PASS",
+    "fail_witness": "results/rtl/root4_s81post_1019/witness/e2e_soen/run_rtlmut_OT_S81SL_XR_MUT_SOEN.log",
+    "threads": 16,
+    "peak_ram_gb": 24
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sl_xr3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_xr3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_xr3 --out {RUN}/record/views/ot_s81sl_xr3  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_xr3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_xr3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_xr3/s81sl_xr3-s81sl_xr3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "ROOT4-S81POST 10-19: FIRST xr3 kit (no earlier xr3 route). C3 variant of the closed xr1 (s81sl_xr1f-12b616b54; same XR2..XR7 structure, FOREG 1) plus the band port B: bi input flops, the bo 513-b {pk, valid} register, and the S81-SMWIRE SO assembler (main 0408184bd). SAFE checklist: 1 pins PASS (source-registered: every input a flop at the pin, every output a flop; reset_landing 2 stages); 2 reach PASS (pin flops anchored at the faces by io_flop_at_pins, 16 regional clock roots km16; longest flop->flop span is inside a 570 x 395 tile with registered classify stage); 3 fanout FIXED: the SO lo/hi capture enables (b_so && so_n == 0 / 1, 512 loads each) are now KEPT registered copies one per 8 bits (sol_c / soh_c 64 + 64) over a staged word so_w (verified: flow keep hook ot_keep_regs.tcl keeps 64/64 + 64/64 on the paramod, sos_r 69, cis_c 69); the SO ci select sos_c is a kept copy per 16 bits; every XR5 kept copy as xr1; 4 depth PASS (as xr1; SO beat select is a registered one-hot); 5 storage PASS (no runtime-indexed flop arrays; so_lo / so_hi / so_w are 512-b registers, not delay lines); 6 floorplan waived-with-reason (pin-bound, util ~7%, see outline_why; no macros; aspect 1.44); 7 clock PASS (km16 regional roots, pin-flop spread checked by the --cts gate, io_hold_margin 0.03); 8 schedule PASS (static; the enable fix adds 0 cycles: lo / hi are captured one edge after their B word and both are valid in the so_go cycle as before)."
+}
