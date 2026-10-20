@@ -1,0 +1,2342 @@
+{
+  "scope": "READONLY actualGRT PG status classes and failed sequential-output driver placement model. Source-D origins traverse complete actual Liberty Boolean input dependencies; output stage endpoints traverse complete actual Liberty Boolean dependencies, with native unary endpoints separately retained. Listed original boundary-anchor membership explicitly recorded; not permission to move. Hardmacro output boundary semantics explicitly UNQUALIFIED. Geometric diamond intersection necessary only: no legal placement/density/clock/reset/pinface/newstage or global feasible claim. No source/layout edits or global_connect applied.",
+  "odb_sha256": "5894bed77099376158e18cf230918c4e326c9b5daf999b7a2919643a7890ad36",
+  "input_summary_sha256": "ae5989a360b680b13ff1f2956b38b01bbc08fa2dad8b0b73559a9320a55c72af",
+  "PG_unbound_classes": [
+    {
+      "master": "BUFx6f_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": "False",
+      "placement_status": "PLACED",
+      "why": "empty_net",
+      "iterms": 128
+    },
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": "False",
+      "placement_status": "PLACED",
+      "why": "empty_net",
+      "iterms": 21464
+    },
+    {
+      "master": "BUFx16f_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": "False",
+      "placement_status": "PLACED",
+      "why": "empty_net",
+      "iterms": 1130
+    },
+    {
+      "master": "BUFx10_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": "False",
+      "placement_status": "PLACED",
+      "why": "empty_net",
+      "iterms": 304
+    },
+    {
+      "master": "BUFx12f_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": "False",
+      "placement_status": "PLACED",
+      "why": "empty_net",
+      "iterms": 464
+    },
+    {
+      "master": "BUFx12_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": "False",
+      "placement_status": "PLACED",
+      "why": "empty_net",
+      "iterms": 72
+    },
+    {
+      "master": "BUFx4f_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": "False",
+      "placement_status": "PLACED",
+      "why": "empty_net",
+      "iterms": 154
+    },
+    {
+      "master": "BUFx3_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": "False",
+      "placement_status": "PLACED",
+      "why": "empty_net",
+      "iterms": 6
+    }
+  ],
+  "PG_unbound_total": 23722,
+  "PG_samples": [
+    {
+      "iterm": "rebuffer23668/VDD",
+      "master": "BUFx6f_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "rebuffer23668/VSS",
+      "master": "BUFx6f_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23669/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23669/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23670/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23670/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23671/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23671/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23672/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23672/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23673/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23673/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23674/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23674/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23675/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23675/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23676/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23676/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23677/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23677/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23678/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23678/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23679/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23679/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23680/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23680/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23681/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23681/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23682/VDD",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    },
+    {
+      "iterm": "hold23682/VSS",
+      "master": "BUFx2_ASAP7_75t_R",
+      "kind": "standard",
+      "protected": false,
+      "placement_status": "PLACED",
+      "net": null,
+      "why": "empty_net"
+    }
+  ],
+  "sequential_bad_roots_modeled": 84,
+  "listed_boundary_anchors_among_modeled": 1,
+  "geometric_nonempty_roots": 84,
+  "role_or_trace_errors": [],
+  "worst10": [
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[202\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        444.215,
+        253.935
+      ],
+      "D_xy_um": [
+        443.44,
+        253.935
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_350_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[527\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            443.135,
+            259.875
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "record_rx\\[527\\]$_DFF_P_/D",
+          "xy_um": [
+            184.51,
+            254.475
+          ]
+        },
+        {
+          "pin": "ot_prs_01018_ff/D",
+          "xy_um": [
+            150.706,
+            3.105
+          ]
+        },
+        {
+          "pin": "ot_prs_00478_ff/D",
+          "xy_um": [
+            202.114,
+            3.105
+          ]
+        },
+        {
+          "pin": "_47684_/B",
+          "xy_um": [
+            444.325,
+            254.785
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "record_rx\\[527\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            184.51,
+            254.475
+          ]
+        },
+        {
+          "pin": "ot_prs_01018_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            150.706,
+            3.105
+          ]
+        },
+        {
+          "pin": "ot_prs_00478_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            202.114,
+            3.105
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 544.339,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        298.78499999999997,
+        -142.48699999999997,
+        558.8109999999999,
+        335.03499999999997
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 139.33900000000006
+    },
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[193\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        443.837,
+        253.125
+      ],
+      "D_xy_um": [
+        443.062,
+        253.125
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_349_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[518\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            335.891,
+            258.525
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "_43838_/B",
+          "xy_um": [
+            171.433,
+            249.097
+          ]
+        },
+        {
+          "pin": "record_rx\\[518\\]$_DFF_P_/D",
+          "xy_um": [
+            149.248,
+            3.915
+          ]
+        },
+        {
+          "pin": "_47686_/B",
+          "xy_um": [
+            444.325,
+            252.815
+          ]
+        },
+        {
+          "pin": "ot_prs_00468_ff/D",
+          "xy_um": [
+            199.414,
+            4.455
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        },
+        {
+          "pin": "record_rx\\[518\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            149.248,
+            3.915
+          ]
+        },
+        {
+          "pin": "ot_prs_00468_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            199.414,
+            4.455
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.u_core.kvn_f$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            205.516,
+            247.725
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_kvn_word_valid$_DFF_PN0_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            205.084,
+            247.995
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 543.799,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        266.94100000000003,
+        -142.48699999999997,
+        558.163,
+        362.089
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 138.79899999999998
+    },
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[201\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        443.999,
+        253.395
+      ],
+      "D_xy_um": [
+        443.224,
+        253.395
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_349_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[526\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            394.589,
+            270.405
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "ot_prs_00477_ff/D",
+          "xy_um": [
+            201.034,
+            4.995
+          ]
+        },
+        {
+          "pin": "record_rx\\[526\\]$_DFF_P_/D",
+          "xy_um": [
+            189.478,
+            253.395
+          ]
+        },
+        {
+          "pin": "_47683_/B",
+          "xy_um": [
+            444.325,
+            253.355
+          ]
+        },
+        {
+          "pin": "ot_prs_01017_ff/D",
+          "xy_um": [
+            150.976,
+            3.375
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "record_rx\\[526\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            189.478,
+            253.395
+          ]
+        },
+        {
+          "pin": "ot_prs_01017_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            150.976,
+            3.375
+          ]
+        },
+        {
+          "pin": "ot_prs_00477_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            201.034,
+            4.995
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 543.043,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        266.94100000000003,
+        -142.48699999999997,
+        559.351,
+        341.08299999999997
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 138.043
+    },
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[206\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        440.975,
+        256.635
+      ],
+      "D_xy_um": [
+        440.2,
+        256.635
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_351_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[531\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            317.423,
+            263.115
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "ot_prs_00483_ff/D",
+          "xy_um": [
+            203.68,
+            3.375
+          ]
+        },
+        {
+          "pin": "ot_prs_01023_ff/D",
+          "xy_um": [
+            152.056,
+            3.375
+          ]
+        },
+        {
+          "pin": "_47690_/B",
+          "xy_um": [
+            442.165,
+            256.405
+          ]
+        },
+        {
+          "pin": "_43827_/A",
+          "xy_um": [
+            203.121,
+            253.125
+          ]
+        },
+        {
+          "pin": "record_rx\\[531\\]$_DFF_P_/D",
+          "xy_um": [
+            179.38,
+            269.865
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "record_rx\\[531\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            179.38,
+            269.865
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.u_core.kvn_f$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            205.516,
+            247.725
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_kvn_word_valid$_DFF_PN0_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            205.084,
+            247.995
+          ]
+        },
+        {
+          "pin": "ot_prs_01023_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            152.056,
+            3.375
+          ]
+        },
+        {
+          "pin": "ot_prs_00483_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            203.68,
+            3.375
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 542.1790000000001,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        266.94100000000003,
+        -142.48699999999997,
+        560.431,
+        314.515
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 137.17899999999997
+    },
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[194\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        439.301,
+        254.205
+      ],
+      "D_xy_um": [
+        438.526,
+        254.205
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_351_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[519\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            332.813,
+            260.415
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "record_rx\\[519\\]$_DFF_P_/D",
+          "xy_um": [
+            150.274,
+            2.835
+          ]
+        },
+        {
+          "pin": "_43828_/B",
+          "xy_um": [
+            200.917,
+            248.243
+          ]
+        },
+        {
+          "pin": "ot_prs_00469_ff/D",
+          "xy_um": [
+            199.954,
+            4.995
+          ]
+        },
+        {
+          "pin": "_47693_/B",
+          "xy_um": [
+            441.895,
+            254.245
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        },
+        {
+          "pin": "record_rx\\[519\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            150.274,
+            2.835
+          ]
+        },
+        {
+          "pin": "ot_prs_00469_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            199.954,
+            4.995
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.u_core.kvn_f$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            205.516,
+            247.725
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_kvn_word_valid$_DFF_PN0_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            205.084,
+            247.995
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 540.397,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        266.94100000000003,
+        -142.48699999999997,
+        558.109,
+        362.089
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 135.39699999999993
+    },
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[204\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        440.867,
+        255.285
+      ],
+      "D_xy_um": [
+        440.092,
+        255.285
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_351_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[529\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            400.529,
+            260.955
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "record_rx\\[529\\]$_DFF_P_/D",
+          "xy_um": [
+            176.356,
+            255.285
+          ]
+        },
+        {
+          "pin": "_47688_/B",
+          "xy_um": [
+            441.895,
+            255.515
+          ]
+        },
+        {
+          "pin": "ot_prs_01020_ff/D",
+          "xy_um": [
+            151.354,
+            4.455
+          ]
+        },
+        {
+          "pin": "ot_prs_00480_ff/D",
+          "xy_um": [
+            201.844,
+            3.915
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "record_rx\\[529\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            176.356,
+            255.285
+          ]
+        },
+        {
+          "pin": "ot_prs_01020_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            151.354,
+            4.455
+          ]
+        },
+        {
+          "pin": "ot_prs_00480_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            201.844,
+            3.915
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 540.343,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        266.94100000000003,
+        -142.48699999999997,
+        560.809,
+        326.071
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 135.34300000000007
+    },
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[200\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        438.383,
+        255.825
+      ],
+      "D_xy_um": [
+        437.608,
+        255.825
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_351_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[525\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            435.467,
+            270.675
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "ot_prs_00476_ff/D",
+          "xy_um": [
+            202.924,
+            3.915
+          ]
+        },
+        {
+          "pin": "_47691_/B",
+          "xy_um": [
+            442.327,
+            255.865
+          ]
+        },
+        {
+          "pin": "ot_prs_01016_ff/D",
+          "xy_um": [
+            151.03,
+            4.185
+          ]
+        },
+        {
+          "pin": "record_rx\\[525\\]$_DFF_P_/D",
+          "xy_um": [
+            175.276,
+            255.825
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "record_rx\\[525\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            175.276,
+            255.825
+          ]
+        },
+        {
+          "pin": "ot_prs_01016_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            151.03,
+            4.185
+          ]
+        },
+        {
+          "pin": "ot_prs_00476_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            202.924,
+            3.915
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 538.993,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        301.9169999999999,
+        -142.48699999999997,
+        560.215,
+        324.451
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 133.99299999999994
+    },
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[196\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        439.895,
+        252.315
+      ],
+      "D_xy_um": [
+        439.12,
+        252.315
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_351_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[521\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            349.013,
+            260.685
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "_47681_/B",
+          "xy_um": [
+            445.135,
+            252.625
+          ]
+        },
+        {
+          "pin": "ot_prs_01012_ff/D",
+          "xy_um": [
+            149.626,
+            4.185
+          ]
+        },
+        {
+          "pin": "record_rx\\[521\\]$_DFF_P_/D",
+          "xy_um": [
+            169.822,
+            249.615
+          ]
+        },
+        {
+          "pin": "_43836_/A",
+          "xy_um": [
+            170.383,
+            249.1215
+          ]
+        },
+        {
+          "pin": "ot_prs_00472_ff/D",
+          "xy_um": [
+            199.684,
+            3.915
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        },
+        {
+          "pin": "record_rx\\[521\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            169.822,
+            249.615
+          ]
+        },
+        {
+          "pin": "ot_prs_01012_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            149.626,
+            4.185
+          ]
+        },
+        {
+          "pin": "ot_prs_00472_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            199.684,
+            3.915
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.u_core.kvn_f$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            205.516,
+            247.725
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_kvn_word_valid$_DFF_PN0_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            205.084,
+            247.995
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 538.399,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        266.94100000000003,
+        -142.48699999999997,
+        558.811,
+        325.207
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 133.399
+    },
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[203\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        438.113,
+        255.285
+      ],
+      "D_xy_um": [
+        437.338,
+        255.285
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_351_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[528\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            316.667,
+            261.765
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "record_rx\\[528\\]$_DFF_P_/D",
+          "xy_um": [
+            175.978,
+            257.175
+          ]
+        },
+        {
+          "pin": "ot_prs_00479_ff/D",
+          "xy_um": [
+            202.114,
+            3.645
+          ]
+        },
+        {
+          "pin": "ot_prs_01019_ff/D",
+          "xy_um": [
+            151.624,
+            3.915
+          ]
+        },
+        {
+          "pin": "_47694_/B",
+          "xy_um": [
+            442.057,
+            255.325
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "record_rx\\[528\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            175.978,
+            257.175
+          ]
+        },
+        {
+          "pin": "ot_prs_01019_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            151.624,
+            3.915
+          ]
+        },
+        {
+          "pin": "ot_prs_00479_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            202.114,
+            3.645
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 537.859,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        266.94100000000003,
+        -142.48699999999997,
+        560.539,
+        323.803
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 132.85900000000004
+    },
+    {
+      "driver": "u_ot_pr_core.u_core.st_he_c\\[197\\]$_DFF_P_/QN",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "Q_xy_um": [
+        436.007,
+        256.095
+      ],
+      "D_xy_um": [
+        435.232,
+        256.095
+      ],
+      "clock_pins": [
+        {
+          "pin": "CLK",
+          "net": "clknet_leaf_351_ck_regs"
+        }
+      ],
+      "placement_status": "PLACED",
+      "protected": false,
+      "input_D_actual_full_comb_origins": [
+        {
+          "pin": "u_ot_pr_core.u_core.u_end.u_link.u_ctl.rf\\[522\\]$_DFF_P_/QN",
+          "kind": "actual_lib_sequential_output",
+          "xy_um": [
+            367.643,
+            261.225
+          ]
+        }
+      ],
+      "all_actual_transparent_output_endpoints": [
+        {
+          "pin": "_47689_/B",
+          "xy_um": [
+            442.381,
+            256.595
+          ]
+        },
+        {
+          "pin": "ot_prs_01013_ff/D",
+          "xy_um": [
+            150.922,
+            3.645
+          ]
+        },
+        {
+          "pin": "ot_prs_00473_ff/D",
+          "xy_um": [
+            200.926,
+            4.725
+          ]
+        },
+        {
+          "pin": "record_rx\\[522\\]$_DFF_P_/D",
+          "xy_um": [
+            171.874,
+            256.095
+          ]
+        }
+      ],
+      "all_full_comb_stage_output_endpoints": [
+        {
+          "pin": "record_rx\\[522\\]$_DFF_P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            171.874,
+            256.095
+          ]
+        },
+        {
+          "pin": "ot_prs_01013_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            150.922,
+            3.645
+          ]
+        },
+        {
+          "pin": "ot_prs_00473_ff/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            200.926,
+            4.725
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[31\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.746,
+            210.195
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[30\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.8,
+            209.385
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[29\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            461.368,
+            208.845
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[28\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.772,
+            208.035
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[27\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.88,
+            207.225
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[26\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            463.096,
+            205.875
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[25\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            204.795
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[24\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.988,
+            203.985
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[23\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.232,
+            202.635
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[22\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.61,
+            202.095
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[21\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.664,
+            201.285
+          ]
+        },
+        {
+          "pin": "u_ot_pr_core.c_engine_result_cycles\\[20\\]$_DFFE_PN0P_/D",
+          "kind": "actual_lib_sequential_capture",
+          "xy_um": [
+            462.718,
+            200.205
+          ]
+        }
+      ],
+      "listed_boundary_anchor": false,
+      "unresolved_output_endpoints": [],
+      "original_worst_output_L1_um": 537.535,
+      "geometric_only_Q_diamond_intersection_uv_um": [
+        266.94100000000003,
+        -142.48699999999997,
+        559.567,
+        320.779
+      ],
+      "geometric_intersection_nonempty": true,
+      "minimum_geometric_root_L1_shift_um": 132.53500000000008
+    }
+  ]
+}
