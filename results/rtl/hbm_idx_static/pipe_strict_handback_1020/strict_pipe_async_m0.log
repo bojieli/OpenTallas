@@ -1,0 +1,31 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-idx-pipe-strict-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-idx-pipe-strict-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-idx-pipe-strict-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-idx-pipe-strict-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-idx-pipe-strict-1020
+ot-run: ot-agidock128  admits    96 GB (avail 80, growth 13, headroom 0, waiters 0/0 GB) load 26/64 running 12 disk 169 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2705824-1792498230 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+STRICT_RETAINED_INIT physicalbits201240 readbits768 paired_actual_arrays PASS
+STRICT_ASYNC_PIPE_RESET_PASS checks=         30
+S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 1 resets 30 selected_lines 29629 nonzero_hist_reads 59427 qfault_cycles 199139
+- rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:111: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 2.786 s; speed 143.594 us/s
+- Verilator: cpu 2.785 s on 1 threads; allocated 8 MB
+STRICT_RETAINED_INIT physicalbits201240 readbits768 paired_actual_arrays PASS
+STRICT_ASYNC_PIPE_RESET_PASS checks=         30
+S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 2 resets 30 selected_lines 29624 nonzero_hist_reads 59412 qfault_cycles 199129
+- rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:111: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 2.763 s; speed 144.765 us/s
+- Verilator: cpu 2.763 s on 1 threads; allocated 8 MB
+STRICT_RETAINED_INIT physicalbits201240 readbits768 paired_actual_arrays PASS
+STRICT_ASYNC_PIPE_RESET_PASS checks=         30
+S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 3 resets 30 selected_lines 29626 nonzero_hist_reads 59419 qfault_cycles 199130
+- rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:111: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 2.771 s; speed 144.345 us/s
+- Verilator: cpu 2.771 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2705824-1792498230): exit 0

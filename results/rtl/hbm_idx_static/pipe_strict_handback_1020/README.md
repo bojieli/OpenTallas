@@ -1,0 +1,11 @@
+# PIPE proof scope and STOP handback
+
+CLAUDE IS BACK at05:10: no new launches/tasks/submits/merges; existing PIPE gate3372604/session1522 and E86/r5v preserved. Frozen PIPE source branch codex/hbm-idx-fast-counter-1020@aedbb4076; sourceSHA8646e261d854b12a432da4413c7fe80c8b014482ce7a9268e0b0fcc62fd0aa10. Compiler3434731fb models active data+0/fault assertion+1/finalNOP1; full parent bind NOT RUN.
+
+Correction: inherited original-vs-PIPE 3x200k benchmark masks public comparisons during reset/quiet and default-initializes SRAM. It does not establish complete reset/storage proof. Separate strict proof compares the current FAN32 source with PIPE1 vs PIPE0 on EVERY public output edge, including reset/quiet. It uses OT_MEM_NO_INIT and explicitly pairs arbitrary contents of all201240physical SRAM bits and768 read-output bits; control stimulus still issues quiet NOPs around reset, but no observations are masked. Fault reference is +1 during active operation and same-edge clear while raw reset asserted, now explicitly priced.
+
+Nominal strict public-port proof session62494 PASS3x200000. Later strict+asynchronous new-control observer session23871 PASS3x200000/30 reset assertions per seed. Actual mutant disconnects the new v_p/other_p bank from rr15; session82423 ALSO PASS. It is NONCAUSAL under quiet qualifier stimulus, therefore reset causal qualification remains OPEN. No submit/waiver; do not promote positive alone. All proof jobs terminal. Only scratch proof fixtures changed; actual consumed PIPE gate source remains frozen.
+
+Live gate: ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/hidx_sel_s3p_a-20261020-050446, sourcearchive9305401e2da382b496e0932a6086241c72024ea49191df6eae7eb7da47129817. Current canonical10 source snapshot hash identity PASS. Square345.6, lower37.8um EXCLUSIVE band actual6335.083std/12900.384=49.1%;1257fullSfacepins; literalR0 macro lattice/channel45.336um. Physical actual outcomes pending.
+
+E86V3 ot-epyc5:ref_gate/hcoll_v7_tkm_tile_e86v3-20261020-022738 CTS_RC0, GRTzerooverflow interim, no terminalGRT verdict atlastcheck. r5v ot-epyc9:ref_gate/hidx_link_r5v-20261020-034021 CTS_RC0, clock/GRT pending. Preserve all. s3d final audit6314d5b04 ready/unmerged; recordbae6465e5 rootmerge pending.
