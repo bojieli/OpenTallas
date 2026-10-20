@@ -1,0 +1,17 @@
+{
+  "rtl_commit": "5aa523531",
+  "helper_sync_commit": "7eb7cfb48",
+  "archive": "/home/ubuntu/scratch/codex-qw-n59v3-census-1020.tgz",
+  "archive_sha256": "2268aa6286f2ffb929d5a03c6ef2cf555a5d6e97afe5bf301312fc36b29c06d9",
+  "production_params": {
+    "qbank": "fixed16 lane x8 SRAM",
+    "svc": {
+      "NU": 4,
+      "MCTX": 1,
+      "EMB_RELAY": 1
+    }
+  },
+  "driver_stop": "SystemExit immediately after mapped synthesis before floorplan phase2",
+  "qbank_remote": "ot-epyc9:/srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/qbank",
+  "svc_remote": "ot-epyc7:/srv/opentallas-scratch/claude/codex-qw-n59v3-census-1020/svc"
+}
