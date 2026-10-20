@@ -1,0 +1,267 @@
+{
+  "sequential_actual_lib_roles": {
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "ff_variables": "IQN,IQNN",
+      "clocked_on": "CLK",
+      "next_state": "!D",
+      "clear": "!SETN",
+      "preset": "!RESETN",
+      "lib": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "lib_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "function": "IQN",
+          "clock": false
+        },
+        "CLK": {
+          "direction": "input",
+          "function": null,
+          "clock": true
+        },
+        "D": {
+          "direction": "input",
+          "function": null,
+          "clock": false
+        },
+        "RESETN": {
+          "direction": "input",
+          "function": null,
+          "clock": false
+        },
+        "SETN": {
+          "direction": "input",
+          "function": null,
+          "clock": false
+        }
+      }
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "ff_variables": "IQN,IQNN",
+      "clocked_on": "CLK",
+      "next_state": "!D",
+      "clear": null,
+      "preset": null,
+      "lib": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "lib_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "function": "IQN",
+          "clock": false
+        },
+        "CLK": {
+          "direction": "input",
+          "function": null,
+          "clock": true
+        },
+        "D": {
+          "direction": "input",
+          "function": null,
+          "clock": false
+        }
+      }
+    },
+    "DFFHQNx2_ASAP7_75t_R": {
+      "ff_variables": "IQN,IQNN",
+      "clocked_on": "CLK",
+      "next_state": "!D",
+      "clear": null,
+      "preset": null,
+      "lib": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "lib_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "pins": {
+        "QN": {
+          "direction": "output",
+          "function": "IQN",
+          "clock": false
+        },
+        "CLK": {
+          "direction": "input",
+          "function": null,
+          "clock": true
+        },
+        "D": {
+          "direction": "input",
+          "function": null,
+          "clock": false
+        }
+      }
+    }
+  },
+  "macro_actual_lib_roles": {
+    "tt": {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_slice_tload_ns4-20261020-013443/src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+      "sha256": "6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021",
+      "cell": "ot_rom_4096x266_m8",
+      "pins": [
+        {
+          "pin": "clk",
+          "direction": "input",
+          "clock": "true",
+          "arcs": []
+        },
+        {
+          "pin": "ce_in",
+          "direction": "input",
+          "clock": null,
+          "arcs": [
+            {
+              "type": "setup_rising",
+              "related_pin": "clk"
+            },
+            {
+              "type": "hold_rising",
+              "related_pin": "clk"
+            }
+          ]
+        },
+        {
+          "pin": "addr_in",
+          "direction": "input",
+          "clock": null,
+          "arcs": [
+            {
+              "type": "setup_rising",
+              "related_pin": "clk"
+            },
+            {
+              "type": "hold_rising",
+              "related_pin": "clk"
+            }
+          ]
+        },
+        {
+          "pin": "rd_out",
+          "direction": "output",
+          "clock": null,
+          "arcs": [
+            {
+              "type": "rising_edge",
+              "related_pin": "clk"
+            }
+          ]
+        }
+      ],
+      "has_max_clock_tree_path": false,
+      "has_insertion_json": false,
+      "reference_basis": "realmemoryLib definesdata readclkQ andaddr/ce setuphold directlyat clk; no hiddenchildCTSreference. Rawphysicalclk pinarrival is0reference, internalreadlatency/delay remainsfiniteLibSTA."
+    },
+    "ff": {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_slice_tload_ns4-20261020-013443/src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib",
+      "sha256": "d9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346",
+      "cell": "ot_rom_4096x266_m8",
+      "pins": [
+        {
+          "pin": "clk",
+          "direction": "input",
+          "clock": "true",
+          "arcs": []
+        },
+        {
+          "pin": "ce_in",
+          "direction": "input",
+          "clock": null,
+          "arcs": [
+            {
+              "type": "setup_rising",
+              "related_pin": "clk"
+            },
+            {
+              "type": "hold_rising",
+              "related_pin": "clk"
+            }
+          ]
+        },
+        {
+          "pin": "addr_in",
+          "direction": "input",
+          "clock": null,
+          "arcs": [
+            {
+              "type": "setup_rising",
+              "related_pin": "clk"
+            },
+            {
+              "type": "hold_rising",
+              "related_pin": "clk"
+            }
+          ]
+        },
+        {
+          "pin": "rd_out",
+          "direction": "output",
+          "clock": null,
+          "arcs": [
+            {
+              "type": "rising_edge",
+              "related_pin": "clk"
+            }
+          ]
+        }
+      ],
+      "has_max_clock_tree_path": false,
+      "has_insertion_json": false,
+      "reference_basis": "realmemoryLib definesdata readclkQ andaddr/ce setuphold directlyat clk; no hiddenchildCTSreference. Rawphysicalclk pinarrival is0reference, internalreadlatency/delay remainsfiniteLibSTA."
+    },
+    "ss": {
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qfd_dv_slice_tload_ns4-20261020-013443/src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib",
+      "sha256": "8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805",
+      "cell": "ot_rom_4096x266_m8",
+      "pins": [
+        {
+          "pin": "clk",
+          "direction": "input",
+          "clock": "true",
+          "arcs": []
+        },
+        {
+          "pin": "ce_in",
+          "direction": "input",
+          "clock": null,
+          "arcs": [
+            {
+              "type": "setup_rising",
+              "related_pin": "clk"
+            },
+            {
+              "type": "hold_rising",
+              "related_pin": "clk"
+            }
+          ]
+        },
+        {
+          "pin": "addr_in",
+          "direction": "input",
+          "clock": null,
+          "arcs": [
+            {
+              "type": "setup_rising",
+              "related_pin": "clk"
+            },
+            {
+              "type": "hold_rising",
+              "related_pin": "clk"
+            }
+          ]
+        },
+        {
+          "pin": "rd_out",
+          "direction": "output",
+          "clock": null,
+          "arcs": [
+            {
+              "type": "rising_edge",
+              "related_pin": "clk"
+            }
+          ]
+        }
+      ],
+      "has_max_clock_tree_path": false,
+      "has_insertion_json": false,
+      "reference_basis": "realmemoryLib definesdata readclkQ andaddr/ce setuphold directlyat clk; no hiddenchildCTSreference. Rawphysicalclk pinarrival is0reference, internalreadlatency/delay remainsfiniteLibSTA."
+    }
+  },
+  "native_odb_sha256": "28b6105649fa1cfcbe530dff7499f01e76628d8af31de2adf2bef236f234685f",
+  "scope": "Role/clockarc provenance only; no behavioral/native sequential functionalproof."
+}
