@@ -1,0 +1,5 @@
+KVPC_PRIMITIVE PASS top=qkd_kvs_pc mut=0 checks=36274 er=5639 her=2803 resetchecks=50
+- /srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/qkd_kvs_pc_r4/tb.sv:80: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 18.278 s; speed 913.136 ns/s
+- Verilator: cpu 18.277 s on 1 threads; allocated 17 MB

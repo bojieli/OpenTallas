@@ -1,0 +1,32 @@
+{
+  "m0_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE PASS",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/pc_r2/m0_s11.log",
+    "pass": false
+  },
+  "m0_s29": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE PASS",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/pc_r2/m0_s29.log",
+    "pass": false
+  },
+  "m1_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/pc_r2/m1_s11.log",
+    "pass": true
+  },
+  "m2_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/pc_r2/m2_s11.log",
+    "pass": true
+  },
+  "m3_s11": {
+    "rc": 1,
+    "expected": "KVPC_PRIMITIVE FAIL",
+    "witness": "/srv/opentallas-scratch/claude/codex-kvpc-primitive-miter-1020/pc_r2/m3_s11.log",
+    "pass": true
+  }
+}
