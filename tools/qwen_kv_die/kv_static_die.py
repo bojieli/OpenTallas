@@ -2362,7 +2362,10 @@ def place(m, K, geo, F):
         # of it, same row) and the pocket HOST-top x [HOST.x - halo, D2D.x] x [HOST-top, D2D-top] is kept free of tiles, so the
         # channel is open from the W column: relay stations for the S-face words (att / emb tx payload, rec_tx / rec_rx)
         ew_ = FRAME['emb'][0]
-        anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - ew_ / 2), anchors['kvs_emb'][1])
+        # OT_KV_EMB_WEST=2: the row of the HOST root's centre instead (W of the HOST, below the channel): the four stack
+        # roots' o_emb returns then end W of the HOST without entering the HOST-top / D2D channel (d17n: ES o_emb stage 72)
+        ey_ = (host.y + host.h / 2) if EMB_WEST_MODE == '2' else anchors['kvs_emb'][1]
+        anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - ew_ / 2), ey_)
         emb_keep = [('emb_west_pocket', host.x - 21.6, host.y + host.h, d2d.x - (host.x - 21.6), d2d.y + d2d.h - host.y - host.h)]
         m['geo']['emb_west'] = dict(pocket=list(emb_keep[0][1:]), anchor=list(anchors['kvs_emb']))
     for nm, kind in order + hro:
@@ -2402,7 +2405,8 @@ def place(m, K, geo, F):
 # sit inside the KV service window, so the net is NOT a gain on this floorplan: default OFF, not proposed for adoption
 # until the start words get a direct channel S (KV-PLAN4 floorplan item).
 ATTN_AT_D2D = os.environ.get('OT_KV_ATTN_AT_D2D', '0') == '1'
-EMB_WEST = os.environ.get('OT_KV_EMB_WEST', '0') == '1'      # KV-BIND12 10-20: kvs_emb W of the HOST root (see the anchors)
+EMB_WEST_MODE = os.environ.get('OT_KV_EMB_WEST', '0')
+EMB_WEST = EMB_WEST_MODE in ('1', '2')      # KV-BIND12 10-20: kvs_emb W of the HOST root (see the anchors)
 ATTN_D2D_TOP = float(os.environ.get('OT_KV_ATTN_D2D_TOP', '0.0'))
 
 
