@@ -1,0 +1,279 @@
+{
+  "source": "9a4faab57",
+  "kit": "8195e6e4a",
+  "native_fence_helper": "bf429e404b:physical/dscoll_cx/native_cell_fence.tcl",
+  "band": [
+    2.16,
+    259.2,
+    473.04,
+    298.08
+  ],
+  "native_connections_only": true,
+  "qualified": false,
+  "variants": {
+    "a": {
+      "mapped_sha256": "4b165582a972d0a53d0785fbad15abd55ec3857f8742a2143d85bd9a4793e832",
+      "macro_count": 20,
+      "macro_signal_pin_bits": 5042,
+      "top_signal_pin_bits": 6715,
+      "unique_external_signal_nets": 11723,
+      "cut_below_nets": 3738,
+      "cut_above_nets": 7672,
+      "cross_both_nets": 0,
+      "terminal_band_lowerbound_max_um": 579.9839999999999,
+      "terminal_band_lowerbound_gt405": 8,
+      "worst": [
+        {
+          "um": 579.9839999999999,
+          "bit": 30260,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[2]"
+          ]
+        },
+        {
+          "um": 579.8879999999999,
+          "bit": 12727,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[1]"
+          ]
+        },
+        {
+          "um": 579.7919999999999,
+          "bit": 12729,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[0]"
+          ]
+        },
+        {
+          "um": 579.6959999999999,
+          "bit": 30350,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_ce_in"
+          ]
+        },
+        {
+          "um": 536.7840000000001,
+          "bit": 29976,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[2]"
+          ]
+        },
+        {
+          "um": 536.6880000000001,
+          "bit": 11073,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[1]"
+          ]
+        },
+        {
+          "um": 536.5920000000001,
+          "bit": 11075,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[0]"
+          ]
+        },
+        {
+          "um": 536.4960000000001,
+          "bit": 30066,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_ce_in"
+          ]
+        },
+        {
+          "um": 325.68,
+          "bit": 18883,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]",
+            "u_ot_pr_core.u.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]"
+          ]
+        },
+        {
+          "um": 264.58199999999994,
+          "bit": 4506,
+          "endpoints": [
+            "TOP/ml_wv"
+          ]
+        },
+        {
+          "um": 264.5640000000001,
+          "bit": 6716,
+          "endpoints": [
+            "TOP/ml_f"
+          ]
+        },
+        {
+          "um": 264.552,
+          "bit": 1107,
+          "endpoints": [
+            "TOP/ro[1103]"
+          ]
+        }
+      ],
+      "missing_endpoints": []
+    },
+    "h": {
+      "mapped_sha256": "b7e9d32207d91e7a3119656421b18f07683a14dd4a62382b87745f7a4d46edab",
+      "macro_count": 20,
+      "macro_signal_pin_bits": 5042,
+      "top_signal_pin_bits": 7422,
+      "unique_external_signal_nets": 12430,
+      "cut_below_nets": 4445,
+      "cut_above_nets": 7672,
+      "cross_both_nets": 0,
+      "terminal_band_lowerbound_max_um": 579.9839999999999,
+      "terminal_band_lowerbound_gt405": 8,
+      "worst": [
+        {
+          "um": 579.9839999999999,
+          "bit": 33157,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[2]"
+          ]
+        },
+        {
+          "um": 579.8879999999999,
+          "bit": 14026,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[1]"
+          ]
+        },
+        {
+          "um": 579.7919999999999,
+          "bit": 14028,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[0]"
+          ]
+        },
+        {
+          "um": 579.6959999999999,
+          "bit": 33247,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_ce_in"
+          ]
+        },
+        {
+          "um": 536.7840000000001,
+          "bit": 32593,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[2]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[2]"
+          ]
+        },
+        {
+          "um": 536.6880000000001,
+          "bit": 11872,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[1]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[1]"
+          ]
+        },
+        {
+          "um": 536.5920000000001,
+          "bit": 11874,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_addr_in[0]",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_addr_in[0]"
+          ]
+        },
+        {
+          "um": 536.4960000000001,
+          "bit": 32683,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m/w_ce_in",
+            "u_ot_pr_core.u.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m/w_ce_in"
+          ]
+        },
+        {
+          "um": 325.68,
+          "bit": 17410,
+          "endpoints": [
+            "u_ot_pr_core.u.u.g_tx[0].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]",
+            "u_ot_pr_core.u.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m/wd_in[40]"
+          ]
+        },
+        {
+          "um": 264.58199999999994,
+          "bit": 5213,
+          "endpoints": [
+            "TOP/ml_wv"
+          ]
+        },
+        {
+          "um": 264.5640000000001,
+          "bit": 7423,
+          "endpoints": [
+            "TOP/ml_f"
+          ]
+        },
+        {
+          "um": 264.552,
+          "bit": 1107,
+          "endpoints": [
+            "TOP/ro[1103]"
+          ]
+        }
+      ],
+      "missing_endpoints": []
+    }
+  }
+}
