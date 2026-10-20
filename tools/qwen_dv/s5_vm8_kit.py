@@ -18,7 +18,15 @@ writes, reset, fault (ck_wr).
   a  qfd_dv_s5_vm8   (main)     three regional CTS roots ck_wr / ck_rd / ck_su (multiple_cts_roots, related same PLL)
   b  qfd_dv_s5_vm8b  (fallback) the same RTL through the single-root wrapper qfd_dv_s5_vm8s, one S-centre-fed tree
 
-    python3 tools/qwen_dv/s5_vm8_kit.py a|b   -> tools/ref_tile/specs_qw_suvm8/<name>.json
+  c  qfd_dv_s5_vm8c  (QW-SUVM9) vm8b RTL/single root, floorplan with full W and E std-cell bands 86.4 um (777.6 x 648):
+     vm8b r2 CTS measured boundary spread TT 100.3 / FF 88.3 ps; the ~280 late sinks (TT 785-827 vs mean 745) are ONLY the
+     E-face p_q / ptw pin registers in the 43.2 um strip beside the PROG column: their level-8 H-tree tap legalised into
+     the 28 um PROG channel at x 559 and reached the strip through a 110 um wire hop (+80 ps); W / S faces 727..765.
+     The register mass at every face now sits in a real band where the tree's taps can land beside it.
+  d  qfd_dv_s5_vm8d  (QW-SUVM9 parallel fallback) vm8c + tighter CTS sink clustering (diameter 40 um, size 16) so leaf
+     buffers sit inside each face band.
+
+    python3 tools/qwen_dv/s5_vm8_kit.py a|b|c|d   -> tools/ref_tile/specs_qw_suvm8/<name>.json
 """
 import json
 import sys
@@ -68,22 +76,25 @@ CHECKLIST = {
 
 
 def spec(var):
-    name = {"a": "qfd_dv_s5_vm8", "h": "qfd_dv_s5_vm8h", "b": "qfd_dv_s5_vm8b"}[var]
-    top = "qfd_dv_s5_vm8s" if var == "b" else "qfd_dv_s5_vm8"
-    W, Hh = 691.2, 648.0
+    name = {"a": "qfd_dv_s5_vm8", "h": "qfd_dv_s5_vm8h", "b": "qfd_dv_s5_vm8b", "c": "qfd_dv_s5_vm8c",
+            "d": "qfd_dv_s5_vm8d"}[var]
+    one = var in ("b", "c", "d")
+    top = "qfd_dv_s5_vm8s" if one else "qfd_dv_s5_vm8"
+    XB = 86.4 if var in ("c", "d") else 43.2           # W / E std-cell band width (c/d: full 86.4 bands, like S)
+    W, Hh = (691.2 + 2 * (XB - 43.2)), 648.0
     c0 = [VM(0, 0), VM(0, 1), VM(1, 0), CR(0, "lo"), CR(0, "hi")]
     c1 = [VM(1, 1), VM(2, 0), VM(2, 1), CR(1, "lo"), CR(1, "hi")]
     c2 = [PR(0, "lo"), PR(0, "hi"), PR(1, "lo"), PR(1, "hi"), BB(0), BB(1), BB(2), BB(3)]
-    macros = [mac(v, i, 43.2, Y0 + k * PB) for k, (v, i) in enumerate(c0)]
-    macros += [mac(v, i, 259.2, Y0 + k * PB) for k, (v, i) in enumerate(c1)]
-    macros += [mac(v, i, 475.2, Y0 + k * PS) for k, (v, i) in enumerate(c2)]
+    macros = [mac(v, i, XB, Y0 + k * PB) for k, (v, i) in enumerate(c0)]
+    macros += [mac(v, i, XB + 216.0, Y0 + k * PB) for k, (v, i) in enumerate(c1)]
+    macros += [mac(v, i, XB + 432.0, Y0 + k * PS) for k, (v, i) in enumerate(c2)]
     # raw macro clock entry index per macro (RTL ckm<i>): order of c0 / c1 / c2 below
     ent = [0, 1, 2, 6, 7] + [3, 4, 5, 8, 9] + [14, 15, 16, 17, 10, 11, 12, 13]
     if var == "h":
         for m, i in zip(macros, ent):
             m["clock_entry"] = {"port": f"ckm{i}", "pin": "clk", "reference": "raw_liberty_clock_pin"}
     km = lambda ids: [f"ckm{i}" for i in ids]
-    if var in ("a", "h"):
+    if not one:
         pins = {"W": RD_IN + RD_OUT + ["ck_rd"] + km(range(10)), "E": SU_IN + SU_OUT + ["ck_su"] + km(range(10, 18)),
                 "S": WR_IN + WR_OUT + ["ck_wr"]}
     else:
@@ -100,7 +111,7 @@ def spec(var):
         "sources": ["rtl/qwen_dv/s5/qfd_dv_s5_vm8.sv",
                     f"{MV}/{BIG}/{BIG}_bb.v", f"{MV}/{BT}/{BT}_bb.v", f"{MV}/{PG}/{PG}_bb.v"],
         "params": {},
-        "clock_port": "ck" if var == "b" else "ck_wr",
+        "clock_port": "ck" if one else "ck_wr",
         "reset_ports": ["rst_n"],
         "outline": {"w": W, "h": Hh},
         "macros": macros,
@@ -119,16 +130,20 @@ def spec(var):
         "safe_design_checklist": CHECKLIST,
         "structural_change": ("QW-SUVM8: VM split out of suvm7 as its own hardened block; every pin registered; "
                               "registered write stage at the macros; table writes landed per group; "
-                              + ({"a": "three regional related CTS roots", "h": "three regional related CTS roots + 18 raw SRAM clock entries (hybrid_entries)"}.get(var) if var != "b" else "single S-centre root (fallback)")
+                              + ({"a": "three regional related CTS roots", "h": "three regional related CTS roots + 18 raw SRAM clock entries (hybrid_entries)",
+                                  "c": "single S-centre root; QW-SUVM9: full 86.4 um W and E std-cell bands so every face register mass has tree taps beside it (vm8b E strip 43.2 um -> +80 ps leaf hop)",
+                                  "d": "vm8c + CTS sink clustering 40 um / 16 sinks (parallel fallback)"}.get(var) or "single S-centre root (fallback)")
                               + "; 3 columns, all macro channels >= 20 um"),
         "children": [],
         "inter": [],
         "job": {
-            "owner": "Claude:QW-SUVM8",
-            "branch": "claude/qw-suvm8-1020",
+            "owner": "Claude:QW-SUVM9" if var in ("c", "d") else "Claude:QW-SUVM8",
+            "branch": "claude/qw-suvm9-1020" if var in ("c", "d") else "claude/qw-suvm8-1020",
             "tag": "v8" + var,
             "purpose": "QW-SUVM8 slice2 VM hardened block (18 SRAM), " +
-                       ({"a": "3 regional roots", "h": "main: 3 regional roots + raw SRAM clock entries"}.get(var) or "parallel fallback: single root, same RTL"),
+                       ({"a": "3 regional roots", "h": "main: 3 regional roots + raw SRAM clock entries",
+                         "c": "single root, full W/E std-cell bands (vm8b spread fix)",
+                         "d": "vm8c + tight CTS sink clustering (parallel fallback)"}.get(var) or "parallel fallback: single root, same RTL"),
             "extra_paths": ["rtl", "rtl/test/qwen_dv", "physical/asap7_memory_macros_v2", "results/arch/qw_suvm8_1020"],
             "benches": [
                 {"name": "vm8_eq", "cmd": vl + "bash rtl/test/qwen_dv/s5/vm8/bench.sh {RUN}/eq 0",
@@ -139,6 +154,18 @@ def spec(var):
             "record_to": f"results/rtl/ref_tile/{name}",
         },
     }
+    if var in ("c", "d"):
+        s["safe_design_checklist"] = dict(CHECKLIST, **{
+            "2_reach": "PASS (by floorplan): VM macros rows 0-2 <= 381 um from the S write band; table writes land twice; "
+                       "read faces <= 302 um (W) / 259 um (E) from their pins (+43.2 for the bands); gate checks 405 um",
+            "6_floorplan": "PASS: x on the 43.2 lattice (cols 86.4 / 302.4 / 518.4), y on 8.64, every macro channel >= "
+                           "20 um, full-width S band 86.4 AND full-height W / E bands 86.4, 777.6 x 648 aspect 1.20",
+            "7_clock": "single S-centre root (die delivers one clock); vm8b r2 CTS: boundary TT 726.9..827.2 -- late tail = "
+                       "E-strip p_q/ptw pin registers only (tap legalised into a 28 um PROG channel, 110 um leaf hop); "
+                       "fix = W/E bands so face register masses have tree taps beside them" +
+                       ("; d: CTS sink clustering 40 um / 16" if var == "d" else "") + "; judged pin-flop spread <= 80 TT+FF; io_hold_margin 0.03"})
+    if var == "d":
+        s["orfs_vars"] = {"CTS_CLUSTER_DIAMETER": "40", "CTS_CLUSTER_SIZE": "16"}
     if var in ("a", "h"):
         s["clock"] = "multiple_cts_roots" if var == "a" else "hybrid_entries"
         s["clock_ports"] = ["ck_wr", "ck_rd", "ck_su"] + (km(range(18)) if var == "h" else [])

@@ -1,0 +1,364 @@
+{
+ "name": "qfd_dv_s5_vm8c",
+ "top": "qfd_dv_s5_vm8s",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 777.6,
+  "h": 648.0
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_rep?0?*g_bank?0?*u_m",
+   "at": [
+    86.4,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_rep?0?*g_bank?1?*u_m",
+   "at": [
+    86.4,
+    198.72
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_rep?1?*g_bank?0?*u_m",
+   "at": [
+    86.4,
+    311.04
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_crom?0?*u_lo",
+   "at": [
+    86.4,
+    423.36
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_crom?0?*u_hi",
+   "at": [
+    86.4,
+    535.68
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_rep?1?*g_bank?1?*u_m",
+   "at": [
+    302.4,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_rep?2?*g_bank?0?*u_m",
+   "at": [
+    302.4,
+    198.72
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_rep?2?*g_bank?1?*u_m",
+   "at": [
+    302.4,
+    311.04
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_crom?1?*u_lo",
+   "at": [
+    302.4,
+    423.36
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_crom?1?*u_hi",
+   "at": [
+    302.4,
+    535.68
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_prog?0?*u_lo",
+   "at": [
+    518.4,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_prog?0?*u_hi",
+   "at": [
+    518.4,
+    155.52
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_prog?1?*u_lo",
+   "at": [
+    518.4,
+    224.64
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_prog?1?*u_hi",
+   "at": [
+    518.4,
+    293.76
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?0?*u_m",
+   "at": [
+    518.4,
+    362.88
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?1?*u_m",
+   "at": [
+    518.4,
+    432.0
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?2?*u_m",
+   "at": [
+    518.4,
+    501.12
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_btb?3?*u_m",
+   "at": [
+    518.4,
+    570.24
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "a_re",
+   "b_re",
+   "c_re",
+   "a_addr",
+   "b_addr",
+   "c_addr",
+   "cr_re",
+   "cr_addr",
+   "a_q",
+   "b_q",
+   "c_q",
+   "cr_q"
+  ],
+  "E": [
+   "bs_re",
+   "bs_addr",
+   "p_re",
+   "p_idx",
+   "bs_q",
+   "p_q"
+  ],
+  "S": [
+   "rst_n",
+   "vm_we",
+   "vm_waddr",
+   "vm_wdata",
+   "w16_we",
+   "w16_addr",
+   "w16_data",
+   "w1_we",
+   "w1_addr",
+   "w1_data",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_data",
+   "fault",
+   "ck"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input and every output at its pin (qfd_dv_s5_vm8: p* input registers, answer / fault output registers; +1 in / +1 out priced in the slice2 schedule, bench tb_vm8 proves the edges); a flow pin register would add a second, unpriced edge"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in two registered stages (rl0 -> rl1 on ck_wr) and rl1 resets only the sticky fault register"
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: RTL registers every input and every output at its pin (pin regs on 3 roots); rst_n lands rl0 -> rl1 (2 registered stages) and resets only the sticky fault; no combinational pin arc",
+  "2_reach": "PASS (by floorplan): VM macros rows 0-2 <= 381 um from the S write band; table writes land twice; read faces <= 302 um (W) / 259 um (E) from their pins (+43.2 for the bands); gate checks 405 um",
+  "3_fanout": "PASS: pre-gate mapped census (results/arch/qw_suvm8_1020/vm8/native*): kept per-(replica, bank) write registers, kept one-hot read selects, pin registers <= 20 loads",
+  "4_depth": "PASS: no logic before any macro pin except the 2-register read-collision compare (10-b eq); answer path capture -> kept one-hot 2:1 x 8:1 -> answer pin register",
+  "5_storage": "PASS: all > 2 kb state in 18 SRAM macros; flops are pin / capture / landing / write-stage registers",
+  "6_floorplan": "PASS: x on the 43.2 lattice (cols 86.4 / 302.4 / 518.4), y on 8.64, every macro channel >= 20 um, full-width S band 86.4 AND full-height W / E bands 86.4, 777.6 x 648 aspect 1.20",
+  "7_clock": "single S-centre root (die delivers one clock); vm8b r2 CTS: boundary TT 726.9..827.2 -- late tail = E-strip p_q/ptw pin registers only (tap legalised into a 28 um PROG channel, 110 um leaf hop); fix = W/E bands so face register masses have tree taps beside them; judged pin-flop spread <= 80 TT+FF; io_hold_margin 0.03",
+  "8_schedule": "static, no credits/backpressure; PRICED: reads +2 (answer 2 -> 4 edges), VM writes +3 vs suvm (write->read distance 1 -> 3), table writes +2 (table write->read distance 1 -> 2), fault +1"
+ },
+ "structural_change": "QW-SUVM8: VM split out of suvm7 as its own hardened block; every pin registered; registered write stage at the macros; table writes landed per group; single S-centre root; QW-SUVM9: full 86.4 um W and E std-cell bands so every face register mass has tree taps beside it (vm8b E strip 43.2 um -> +80 ps leaf hop); 3 columns, all macro channels >= 20 um",
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:QW-SUVM9",
+  "branch": "claude/qw-suvm9-1020",
+  "tag": "v8c",
+  "purpose": "QW-SUVM8 slice2 VM hardened block (18 SRAM), single root, full W/E std-cell bands (vm8b spread fix)",
+  "extra_paths": [
+   "rtl",
+   "rtl/test/qwen_dv",
+   "physical/asap7_memory_macros_v2",
+   "results/arch/qw_suvm8_1020"
+  ],
+  "benches": [
+   {
+    "name": "vm8_eq",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8/bench.sh {RUN}/eq 0",
+    "expect": "pass",
+    "pass_regex": "VM8_EQ PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm8_mut_coll",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8/bench.sh {RUN}/m_coll coll",
+    "expect": "fail",
+    "fail_regex": "VM8_EQ FAIL",
+    "fail_witness": "results/arch/qw_suvm8_1020/vm8/bench/run_coll.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm8_mut_wpri",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8/bench.sh {RUN}/m_wpri wpri",
+    "expect": "fail",
+    "fail_regex": "VM8_EQ FAIL",
+    "fail_witness": "results/arch/qw_suvm8_1020/vm8/bench/run_wpri.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm8_mut_bsel",
+    "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/vm8/bench.sh {RUN}/m_bsel bsel",
+    "expect": "fail",
+    "fail_regex": "VM8_EQ FAIL",
+    "fail_witness": "results/arch/qw_suvm8_1020/vm8/bench/run_bsel.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_s5_vm8c/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_s5_vm8c"
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}
