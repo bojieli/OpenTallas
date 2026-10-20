@@ -570,7 +570,11 @@ module ot_hgi_su_lgroup2 #(
     parameter integer MACRO = 1,
     parameter integer MUT_XBAR = 0,        // bench mutant: identity lanes take the neighbouring bank's word
     parameter integer LAT = 0,             // bench mutant: bank read latency 1 = +1 edge, 2 = -1 edge (see ot_hgi_su_lbank)
-    parameter integer NS = 1               // sector lanes: NS independent 8-word stage writes / drain reads an edge
+    parameter integer NS = 1,              // sector lanes: NS independent 8-word stage writes / drain reads an edge
+    // LH-SU (10-19): WROT=1 (N=16 only): the stage sectors arrive bank-aligned (swr_*, rotated once by the parent and
+    // shared by its groups); bank b takes the highest sector s with sw_v[s] && swr_m[s*N+b] (same last-wins order and
+    // collision fault as the per-word loop below). WROT=0: swr_* unused (bit-identical).
+    parameter integer WROT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -586,6 +590,10 @@ module ot_hgi_su_lgroup2 #(
     input  wire [NS*LWB-1:0] sw_addr,
     input  wire [NS*8-1:0]   sw_mask,
     input  wire [NS*256-1:0] sw_d,
+    input  wire [NS*N*32-1:0] swr_d,                // WROT: per sector, the word landing in bank b (slot b)
+    input  wire [NS*N-1:0]   swr_m,                 // WROT: per sector, bank b written (mask applied; sw_v not)
+    input  wire [NS*N-1:0]   swr_w,                 // WROT: per sector, bank b row = row1 (address wrapped) else row0
+    input  wire [NS*(LWB-$clog2(N))-1:0] swr_r0, swr_r1,
     input  wire [(NLW>0?NLW:1)-1:0]    lw,          // lane writes (element writes)
     input  wire [(NLW>0?NLW:1)*AW-1:0] lwa,
     input  wire [(NLW>0?NLW:1)*32-1:0] lwd,
@@ -684,6 +692,15 @@ module ot_hgi_su_lgroup2 #(
         sb = {LWB{1'b0}}; wb_ = {LN{1'b0}}; ok_ = 1'b0;
         for (b = 0; b < N; b = b + 1) begin b_we[b] = 1'b0; b_wa[b] = {RB{1'b0}}; b_wd[b] = 32'd0; end
         wcoll = 1'b0;
+        if (WROT) begin
+            for (b = 0; b < N; b = b + 1)
+                for (ws_ = 0; ws_ < NS; ws_ = ws_ + 1) if (sw_v[ws_] && swr_m[ws_*N + b]) begin
+                    if (b_we[b]) wcoll = 1'b1;               // two sector lanes on one bank: fail closed
+                    b_we[b] = 1'b1;
+                    b_wa[b] = swr_w[ws_*N + b] ? swr_r1[ws_*RB +: RB] : swr_r0[ws_*RB +: RB];
+                    b_wd[b] = swr_d[32*(ws_*N + b) +: 32];
+                end
+        end else
         for (ws_ = 0; ws_ < NS; ws_ = ws_ + 1) if (sw_v[ws_])
             for (wj_ = 0; wj_ < 8; wj_ = wj_ + 1) if (sw_mask[ws_*8 + wj_]) begin
                 sb = sw_addr[ws_*LWB +: LWB] + wj_;

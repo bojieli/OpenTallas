@@ -55,9 +55,18 @@ if [ "${STORE9:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r9.sv $P/
 if [ "${STORE10:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r10.sv $P/ot_hgi_sfu_store_stripe_leaf_r10.sv physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v); defs+=(-DSFU_PSTORE_R10); fi
 # CORE2=1 (k7, opt-in): the core under test is ot_hgi_sfu_core_split2 (W/E lane ports, regional clock roots, reset relay)
 if [ "${CORE2:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_CORE_SPLIT2); fi
+# CORE3=1 (k9, opt-in): ot_hgi_sfu_core_split3 = split2 re-sliced into W/N/E/S lane face groups (pure port wrapper)
+if [ "${CORE3:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_core_split2.sv $P/ot_hgi_sfu_core_split3.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_kept_tree.sv); defs+=(-DSFU_CORE_SPLIT3); fi
+# CORE3 runs split3 with DRAIN_PIPE=1 (SFU-K9 10-18: registered drain interface, local_wq +1 edge); EQ_MUT=nodrainpipe:
+# drain data bypasses that stage while its valids keep it (must fail)
+# HBM-SAFE-K9 (10-19): CORE3 also runs WPIPE=1 (bank-write landing stage) + GCLK=1 (store group roots clk_st[4:0]);
+# EQ_MUT=gclk: clk_st[2] undriven; EQ_MUT=wpskew: write enables bypass the landing stage, address/data take it (both must fail)
+# LH-SU (10-19): CORE3 runs WROT=1 (bank-aligned shared sector rotate); EQ_MUT=wrot: rotate off by one bank (must fail)
+# LH-K9R (10-19): CORE3 runs RST_TREE=1 (registered reset distribution trees, kept copies); EQ_MUT=rsttree: lg path 1's
+# tree output never releases (must fail)
 # SYNC_RST=1 (k8, owner standard 10-16): synchronous regional resets in the SFU core files (OT_SFU_SYNC_RST)
 if [ "${SYNC_RST:-0}" = 1 ];then defs+=(-DOT_SFU_SYNC_RST); fi
-case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
+case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; early) defs+=(-DSFU_PSTORE_R7_EARLY);; cfgdrop) defs+=(-DOT_SFU_PSTORE9_MUT_CFGDROP);; split) defs+=(-DOT_SFU_PSTORE9_MUT_SPLIT);; chain) defs+=(-DOT_SFU_PSTORE10_MUT_CHAIN);; noshift) defs+=(-DOT_SFU_PSTORE10B_MUT_NOSHIFT);; rowskew) defs+=(-DOT_SFU_PSTORE10C_MUT_ROWSKEW);; clkpw) defs+=(-DOT_SFU_CORE2_MUT_CLKPW);; gclk) defs+=(-DOT_SFU_CORE3_MUT_GCLK);; wpskew) defs+=(-DOT_SFU_STORE_MUT_WPIPE_SKEW);; wrot) defs+=(-DOT_SFU_STORE_MUT_WROT);; rsttree) defs+=(-DOT_SFU_CORE_MUT_RSTTREE);; nodrainpipe) defs+=(-DOT_SFU_BRIDGE_MUT_NODRAINPIPE);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
 defs+=(-DSFU_IO_ROWS=$rows -DSFU_SCALAR_EDGE=$sedge)
