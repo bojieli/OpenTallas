@@ -35,7 +35,7 @@ ref+=sh+''' reg r1,r2;
 (out/'references.sv').write_text(ref)
 for kind,source in [('red',red),('sc',sc)]:
  ports=re.findall(r'(input|output)\s+(?:wire|reg)\s*(\[[^\]]+\])?\s*(\w+)\s*[,\n)]',source[:source.index(');')+2])
- t='`timescale 1ns/1ps\nmodule tb_'+kind+';\nreg ck=0;always #5 ck=~ck;reg rst_n=0;integer cycle;\n'
+ t='`timescale 1ns/1ps\nmodule tb_'+kind+';\nreg ck=0;always #5 ck=~ck;reg rst_n=0;integer cycle;integer checked=0;\n'
  for d,w,n in ports:
   if n in ('ck','rst_n'):continue
   t+=('reg ' if d=='input' else 'wire ')+(w or '')+' '+n+('=0;' if d=='input' else ', ref_'+n+';')+'\n'
@@ -51,7 +51,7 @@ for kind,source in [('red',red),('sc',sc)]:
   t+="l_ov=(cycle%20<16)?8'hff:0; l_last0=(cycle%20==15);l_red0=(cycle<400)?1:2;l_redsq0=(cycle>=200 && cycle<400);l_raddr0=cycle/20;\nfor(integer j=0;j<8;j=j+1) l_out[j*32+:32]=32'h3f000000+((cycle*8+j)<<12);\n"
  else:
   t+="sc_cfg=0;dn_i=0;up_i=0;red_we=0;vm_we=0;am_v=0;\nif(cycle==10) sc_cfg={1'b1,1'b0,1'b0,6'd4,24'd0,1'b0,24'd12,32'd0,5'd0,6'd2};\nif(cycle>20 && cycle<100 && cycle%4==0) dn_i={1'b1,3'd2,12'd0,32'h3f800000+cycle};\nif(cycle>100 && cycle<180 && cycle%4==0) up_i={1'b1,3'd5,12'd0,8'd0,24'(cycle)};\nif(cycle==200) sc_cfg={1'b1,1'b1,1'b0,6'd4,24'd0,1'b0,24'd12,32'd0,5'd0,6'd2};\nif(cycle>=210 && cycle<214) begin red_we=1;red_addr={2'b11,22'(cycle-210)};red_data=32'h3f800000;end\nif(cycle==400 || cycle==450) begin am_v=1;am_idx=cycle;am_val=32'h40000000;am_u=2;end\n"
- t+='#1;end\nrepeat(200) @(negedge ck);$display("PASS '+kind+' 800 stimulus cycles");$finish;end\nalways @(negedge ck) if(rst_n && cycle>8) begin #2;\n'
+ t+='#1;end\nrepeat(200) @(negedge ck);'+('if(checked<30) $fatal(1,"TOO_FEW_RESULTS %0d",checked);' if kind=='red' else '')+'$display("PASS '+kind+' 800 stimulus cycles");$finish;end\nalways @(negedge ck) if(rst_n && cycle>8) begin #2;\n'
  for d,w,n in ports:
-  if d=='output':t+='if('+n+' !== ref_'+n+') $fatal(1,"MISMATCH '+kind+' '+n+' cycle=%0d",cycle);\n'
- t+='end\nendmodule\n';(out/('tb_'+kind+'.sv')).write_text(t)
+  if d=='output':t+='if('+('red_we && ' if kind=='red' and n in ('red_addr','red_data') else '')+'('+n+' !== ref_'+n+')) $fatal(1,"MISMATCH '+kind+' '+n+' cycle=%0d",cycle);\n'
+ t+=('if(red_we) checked=checked+1;\n' if kind=='red' else '')+'end\nendmodule\n';(out/('tb_'+kind+'.sv')).write_text(t)
