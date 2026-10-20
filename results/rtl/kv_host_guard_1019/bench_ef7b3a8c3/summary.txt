@@ -1,0 +1,35 @@
+src ef7b3a8c3 Verilator 5.050 2026-07-01 rev v5.050
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1/ot_sram_1r1w2c_32x546_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4/ot_sram_1rw_2048x128_m4.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_1rw_64x128_m1/ot_sram_1rw_64x128_m1.v': No such file or directory
+cp: cannot stat '/srv/opentallas-scratch/claude/kv-host-guard-bench-1019/src/physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2/ot_sram_2rw_512x64_m4_r2c2.v': No such file or directory
+MU_HROOT lint_guard_mu: FAIL LINT_GUARD_MU rc=1
+rc[lint_guard_mu]=1
+MU_HROOT tb_mu_hroot_e2e rc=0: PASS MU_HROOT_E2E rounds=3 steps=12 writer_stages=432 rows=64+l+256u epochs={seq14,user2} retire=acceptance order
+rc[tb_mu_hroot_e2e]=0
+MU_HROOT ep1 rc=0: FAIL MU_HROOT_E2E fails=134994 retires=0 requests=1 writer_stages=145
+rc[ep1]=1
+MU_HROOT ep2 rc=0: FAIL MU_HROOT_E2E fails=18 retires=12 requests=12 writer_stages=432
+rc[ep2]=1
+rc[lint_sram]=0 lint-ok
+rc[fifo_m0]=0 PASS cycles=100140 accepted=67057 retired=64730 full=3794 empty=4081 simultaneous=44379 full_simultaneous=512 resets=121 overflow=3238 underflow=6035 zero_added_edges=1 GUARD_FIFO_VERILATOR_PASS mutant=0 observed_exit=0 
+rc[fifo_m1]=0 [76000] %Fatal: tb_guard_fifo_sram.sv:29: Assertion failed in tb_guard_fifo_sram.check: cycle 7 data got 0000000000000000 ref 1f87f86be49d628d GUARD_FIFO_VERILATOR_PASS mutant=1 observed_exit=1 
+rc[fifo_m2]=0 [66000] %Fatal: tb_guard_fifo_sram.sv:28: Assertion failed in tb_guard_fifo_sram.check: cycle 6 control got 1/  4/0/0 ref 0/  4/0/0 GUARD_FIFO_VERILATOR_PASS mutant=2 observed_exit=1 
+rc[fifo_m3]=0 [1296000] %Fatal: tb_guard_fifo_sram.sv:28: Assertion failed in tb_guard_fifo_sram.check: cycle 129 control got 1/127/1/0 ref 1/127/0/0 GUARD_FIFO_VERILATOR_PASS mutant=3 observed_exit=1 
+# lint_guard_mu re-run after staging the 19 macro models the list names (first run's fail = staging omission, not RTL):
+PASS LINT_GUARD_MU qkd_hr_core_guard (u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu, MU 1)
