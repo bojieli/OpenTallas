@@ -82,6 +82,20 @@ XRING = 128
 XRD = int(os.environ.get("SMB_XRD", 16))
 XNB = -(-MV.XC // 2048) if hasattr(MV, "XC") else 2       # beats per x word on the die (P = 1)
 XLAT = {1: (84, 2), 2: (88, 3), 0: (81, 1)}               # fmt -> (first beat after launch F, edges per beat CAD), RL55
+# HBM-SMXL residency model (non-bench13 modes): once the x leg no longer separates ops, the go slots must respect the
+# elastic HBM side of the svg exactly as built: in-order reserve pipeline (3 edges a descriptor; routed descriptors and
+# everything behind them wait for the router ids), LANDING 4 landing banks (block n reserves after block n-4's copy
+# drained), fetch latency FLAT (measured V -> block_ready median 183 edges, successor PC, distinct rows) and the HBM
+# stream rate (1.375 edges / 136-B line at 98.9 B/edge), 2 cache banks (block n opens after block n-2 retired and after
+# block n-1's copy drained: OPEN_IL), copy = 5/16 edge a sector; the go needs the copy done + RMARGIN.
+FLAT = int(os.environ.get("SMB_FLAT", 200))
+RMARGIN = int(os.environ.get("SMB_RMARGIN", 8))
+RESMODEL = os.environ.get("SMB_RESMODEL", "0" if XMODE == "bench13" else "1") == "1"
+
+
+def _drain_edges(lines):
+    sec = ((lines * 136 + 127) // 128) * 4
+    return -(-sec * 5 // 16)
 
 
 def put(v, lo, w, x, name):
@@ -377,6 +391,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         x_free, prev_r, prev_first = 0, None, None
         install_end = desc_install_t + 2 * len(descs) + 4
         flat = [b for r_ in recs for b in r_["blocks"]]          # issue order of the kind's blocks
+        rm = dict(res=[], rdy=[], opn=[], dend=[], ret=[])       # residency model (rc domain), by issue index
         for r in recs:
             fp = len(r["xw"])
             raw = prev_r is None or (prod[r["k"]] is not None and prod[r["k"]] > _fk(prev_r))
@@ -454,6 +469,18 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                         ids_rc = lo - EXP_FIRST - 1                    # no router record in this kind: ids just in time
                     lo = max(lo, ids_rc + EXP_FIRST + n_after * FETCH)
                     n_after += 1
+                if RESMODEL:
+                    n = len(rm["res"])
+                    L_ = b["n_lines"]
+                    rs = max(rm["res"][n - 1] + 3 if n else 0, rm["dend"][n - LANDING] + 2 if n >= LANDING else 0,
+                             (ids_rc + 2) if (kd["exp"] and n_after and ids_rc is not None) else 0)
+                    rd = max(rs + FLAT, (rm["rdy"][n - 1] if n else 0) + -(-L_ * 11 // 8))
+                    op_ = max(rd, rm["ret"][n - 2] if n >= 2 else 0, rm["dend"][n - 1] if n else 0) + 1
+                    de = op_ + _drain_edges(L_) + 2
+                    lo = max(lo, de + RMARGIN)
+                    rm["res"].append(rs); rm["rdy"].append(rd); rm["opn"].append(op_); rm["dend"].append(de)
+                    rm["ret"].append(lo + LAT_GO + b["nwords"] + 2)
+                    b["res_model"] = dict(reserve=rs, ready=rd, open=op_, drained=de)
                 b["go_at"] = lo
                 b["first_cmd_abs"] = rc0 + lo + LAT_GO + P
                 b["landing"] = b["desc_i"] % LANDING
