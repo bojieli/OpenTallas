@@ -1,0 +1,10 @@
+LP_MISMATCH port=r_d_r1 cycle=242 flat=4189e362c30a8e2f landed=c0752275c40cc134
+LP_MISMATCH port=r_d_r1 cycle=246 flat=c0231d39cb413aca landed=4ae6ceb3b8423db2
+LP_MISMATCH port=r_d_r1 cycle=247 flat=c0231d39cb413aca landed=4ae6ceb3b8423db2
+LP_MISMATCH port=r_d_r1 cycle=248 flat=c0231d39cb413aca landed=4ae6ceb3b8423db2
+LP_MISMATCH port=r_d_r1 cycle=249 flat=c0231d39cb413aca landed=4ae6ceb3b8423db2
+LP_LOCKSTEP FAIL MUT=2 mismatches=2008 of 365263 stimulus=stn_ent legal+inject / random, two resets
+- rtl/qwen_dv/lp/tb_qfd_dv_redstn2_ef_lp.sv:246: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 18.491 s; speed 865.286 ns/s
+- Verilator: cpu 18.197 s on 1 threads; allocated 25 MB

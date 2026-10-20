@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits  1160 GB (avail 925, growth 113, headroom 0, waiters 0/0 GB) load 56/128 running 33 disk 592 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-slice4/src_805ddb993
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-slice4/src_805ddb993
+ot-run: ot-epyc9       admits  1045 GB (avail 852, growth 121, headroom 0, waiters 0/0 GB) load 42/128 running 35 disk 601 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-slice4/src_805ddb993
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-slice4/src_805ddb993
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1350162-1792471723 after 1 s
+FAULT_SOURCE edge5010 mono in_bad1 fp_bad0 cfg_sched0
+[50426000] %Fatal: tb_station_regional.sv:121: Assertion failed in tb_station_regional: REGIONAL_FAULT_LATE edge5042 (> 32 edges)
+%Error: rtl/test/qwen_dv/safe_storage/tb_station_regional.sv:121: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1350162-1792471723): exit 1

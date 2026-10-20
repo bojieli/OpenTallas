@@ -1,0 +1,25 @@
+QW-SLICE4 benches of record, source 805ddb993, Verilator 5.050 (ot-epyc5), 2026-10-19T22:13:32-07:00
+2026-10-19T22:00:05-07:00 lp_m2 rc=0 BENCH_EXIT 0
+2026-10-19T22:00:05-07:00 lp_m1 rc=0 BENCH_EXIT 0
+2026-10-19T22:00:15-07:00 lp_m0 rc=0 BENCH_EXIT 0
+2026-10-19T22:00:29-07:00 lp_m4 rc=0 BENCH_EXIT 0
+2026-10-19T22:12:55-07:00 ef_p1_r2 rc=0 [50426000] %Fatal: tb_station_regional.sv:121: Assertion failed in tb_station_regional: REGIONAL_FAULT_LATE edge5042 (> 32 edges)
+2026-10-19T22:13:04-07:00 ef_p1_r1 rc=0 [2476000] %Fatal: tb_station_regional.sv:118: Assertion failed in tb_station_regional: REGIONAL_STATION_MISMATCH
+2026-10-19T22:13:07-07:00 ef_p1 rc=0 STATION_REGIONAL_EQ PASS PIN1 MUT0 edges20000 tworesets r_v11276 bt_re10386 nb_v713 fault_rises3 all outputs exact, fault lag<=32
+2026-10-19T22:13:07-07:00 ALL
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 1: LP_LOCKSTEP FAIL
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 2: LP_LOCKSTEP FAIL
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 4: LP_LOCKSTEP FAIL
+LP_LOCKSTEP FAIL MUT=1 mismatches=6551 of 365263 stimulus=stn_ent legal+inject / random, two resets
+LP_LOCKSTEP FAIL MUT=4 mismatches=5 of 365263 stimulus=stn_ent legal+inject / random, two resets
+LP_LOCKSTEP PASS MUT=0 compared=365263 cycles=15999 warm=117 stimulus=stn_ent legal+inject / random, two resets
+LP_LOCKSTEP FAIL MUT=2 mismatches=2008 of 365263 stimulus=stn_ent legal+inject / random, two resets
