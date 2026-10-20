@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # HBM-ELEMOWN3/COLLQ3 10-19: SAFE successor of the q2/q3 COLL quadrant landed parents (ot_hfd_coll_<v>_lp_ars: hard issuer /
 # fj / link_e1 / 16 reduce lanes, rc bundle pin registers).  FLEET ONLY (Verilator 5.050):
-#   LP_ROOT=<tree> bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3|q2 OUT [eq|lp|rs|all]
+#   LP_ROOT=<tree> bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3|q2 OUT [eq|lp|rs|all|ptmut|fjmut]
 # (1) EQ: the hard parent #(AR_ITER 1, ROWS 128) == ot_hfd_coll_<v>_lpf_ars under the _ar scripted programme
 #     (stim_<v>_lp_ar.vh), every output every cycle (+ LP_ACTIVITY ariter_step_cycles > 0).  EQ mutants (each MUST FAIL):
 #     m_refnostep (OT_COLL_ARITER_MUT_NOSTEP, reference), m_leafedge (OT_ARITER_TAG_MUT_EDGE, u_ariter leaf),
@@ -40,6 +40,18 @@ if [ "$WHICH" = ptmut ]; then
   eq m_latespc +define+OT_PT_MUT_LATE_SPC
   if grep -q '^LPF_EQ FAIL' "$OUT/m_latespc.log" 2>/dev/null; then echo "EQ_MUTANT m_latespc REJECTED"; rc=1; else echo "EQ_MUTANT m_latespc SURVIVED"; rc=0; fi
   echo "COLL_LP_ARS_PTMUT_EXIT $rc"; exit $rc
+fi
+if [ "$WHICH" = fjmut ]; then
+  # HBM-COLLFJ2 10-19: mutants of the SAFE fj body (ot_hgi_coll_static_program_target_s128, ot_hgi_coll_safe_leaves.sv):
+  # OT_PT_MUT_LA_STALE = SRAM flow read / loaded lookahead never advance; OT_PT_MUT_LDH_NOFWD = the registered loaded[row]
+  # decode drops the same-edge drain-completion forward.  Exit 1 when EVERY mutant is REJECTED (job: expect fail).
+  nrej=0; nall=0
+  for m in "m_lastale +define+OT_PT_MUT_LA_STALE" "m_ldhnofwd +define+OT_PT_MUT_LDH_NOFWD"; do
+    set -- $m; eq $1 $2; nall=$((nall+1))
+    if grep -q '^LPF_EQ FAIL' "$OUT/$1.log" 2>/dev/null; then echo "EQ_MUTANT $1 REJECTED"; nrej=$((nrej+1)); else echo "EQ_MUTANT $1 SURVIVED"; fi
+  done
+  [ $nrej -eq $nall ] && rc=1 || rc=0
+  echo "COLL_LP_ARS_FJMUT rejected=$nrej/$nall"; echo "COLL_LP_ARS_FJMUT_EXIT $rc"; exit $rc
 fi
 if [ "$WHICH" = all ] || [ "$WHICH" = rs ]; then
   RSRC="$p/ot_hgi_coll_reduce_static.sv $p/ot_hgi_coll_safe_leaves.sv $p/ot_hgi_coll_pring_static.sv $p/ot_hfd_coll_q_hard_v5.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv"
