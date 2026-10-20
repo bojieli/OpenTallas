@@ -13,19 +13,16 @@
 set -u; O=$1; JOB=$2; mkdir -p $O
 X="bash tools/xdie_s81_2/xdie2.sh"; GD=goldens
 BIG="-GNSMAX=327680 -GQD=32768 -GMAXCYC=1600000 -GNMMAX=2048"
-r() { n=$1; b=$2; g=$3; shift 3
-      ( $X run $O $b $n $GD/$g "$@" > $O/$n.txt 2>&1; echo "EXIT $?" >> $O/$n.txt
-        python3 tools/xdie_s81_2/mu_check.py $GD/$g $O/$n/run.log --json $O/$n.chk.json > $O/$n.chk.txt 2>&1
-        echo "EXIT $?" >> $O/$n.chk.txt; gzip -kf $O/$n/run.log ) & }
-bld() { b=$1; shift; $X build $O "$@" > $O/build_$b.txt 2>&1; echo "EXIT $?" >> $O/build_$b.txt; }
+source tools/xdie_s81_2/gate_result.sh
+bld() { b=$1; shift; $X build "$O" "$@" > "$O/build_$b.txt" 2>&1; rc=$?; echo "EXIT $rc" >> "$O/build_$b.txt"; return "$rc"; }
 case $JOB in
-  u) bld bU bU mu -GMU=1 $BIG
+  u) bld bU bU mu -GMU=1 $BIG || exit $?
      r u_su bU su; r u_ar46r bU ar46r; r u_ar46d bU ar46d; r u_ar46d_err bU ar46d +ERRP=7; r u_mtp10r bU mtp10r; r u_mtp10d bU mtp10d ;;
-  a) bld bA bA mu -GMU=2 $BIG
+  a) bld bA bA mu -GMU=2 $BIG || exit $?
      r a_su bA su; r a_a23r bA a23r; r a_a46d bA a46d; r a_a46d_err bA a46d +ERRP=7 ;;
-  c) bld bC bC cur $BIG
+  c) bld bC bC cur $BIG || exit $?
      r c_g1 bC g1; r c_g1_err bC g1 +ERRP=7 ;;
-  x) bld bS bS mu -GMU=2 $BIG +define+OT_S81SL_LEP_MUT_STALEHD; r x_stalehd bS su
-     bld bL bL mu -GMU=2 $BIG +define+OT_S81_LAND_MUT_SEL; r x_landsel bL su ;;
+  x) bld bS bS mu -GMU=2 $BIG +define+OT_S81SL_LEP_MUT_STALEHD || exit $?; r_reject "^BENCH_FAIL" x_stalehd bS su
+     bld bL bL mu -GMU=2 $BIG +define+OT_S81_LAND_MUT_SEL || exit $?; r_reject "^WIN_FAIL" x_landsel bL su ;;
 esac
-wait; touch $O/DONE_$JOB
+finish_jobs "$JOB"

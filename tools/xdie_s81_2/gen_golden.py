@@ -133,6 +133,8 @@ def main():
     ap.add_argument("--dl-model", default="linear", choices=("linear", "fluid"))
     ap.add_argument("--fluid-lat", type=int, default=563, help="fixed crossing latency (563 LEG 1, 553 LEG 0)")
     ap.add_argument("--fluid-guard", type=int, default=1)
+    ap.add_argument("--reserve-mu-tag", action="store_true",
+                    help="MU endpoint even for SU traffic: reserve bits1077:1045 cleared by MU RX")
     ap.add_argument("--mu-copy-a-only", action="store_true")
     ap.add_argument("--mu-users-of", default="", help="real mode: keep only the calendar users of this copy (A / B)")
     a = ap.parse_args()
@@ -168,7 +170,7 @@ def main():
     inst = 0
     U = a.mu_users
     global MU_SPARE
-    MU_SPARE = bool(U)
+    MU_SPARE = bool(U) or a.reserve_mu_tag
     shifts = None
     if U and a.mu_mode == "real":
         cal = json.loads(Path(a.mu_cal).read_text())
@@ -294,6 +296,8 @@ def main():
              commands=len(mucmds), users_run=users, copy_a_only=a.mu_copy_a_only),
              dl_model=dict(model=a.dl_model, R="4096/3069", flat=a.fluid_lat, guard=a.fluid_guard, window=2)
              if a.dl_model == "fluid" else dict(model="linear"))
+    if a.reserve_mu_tag:
+        g["payload_contract"] = {"mu_tag_spare_bits": [1077, 1045], "reserved": True}
     (out / "golden.json").write_text(json.dumps(g, indent=1))
     print(f"beats {len(lines)} instances {len(insts)} last issue {g['last_issue']} gate {gate}")
 
