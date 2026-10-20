@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -28,10 +29,69 @@ ROOT = B.ROOT
 SRCS2 = [s for s in B.SRCS if not s.endswith(("qfd_dv_slice.sv", "qfd_dv_redstn.sv", "qfd_dv_scalar.sv",
                                                 "tb_qfd_dv.sv"))] + \
     ["rtl/qwen_dv/qfd_dv_slice2.sv", "rtl/qwen_dv/qfd_dv_redstn2.sv", "rtl/qwen_dv/qfd_dv_scalar2.sv",
-     "rtl/test/qwen_dv/tb_qfd_dv2.sv", "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv", "rtl/qwen_dv/qfd_dv_slice2_faces.sv"]
+     "rtl/test/qwen_dv/tb_qfd_dv2.sv", "rtl/test/qwen_dv/safe_storage/sram_model.sv", "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv", "rtl/qwen_dv/qfd_dv_slice2_faces.sv"]
+NATIVE_SRAM = os.environ.get("DV2_NATIVE_SRAM", "0") == "1"
+if NATIVE_SRAM:
+    SRCS2 = [s.replace("rtl/test/qwen_dv/safe_storage/sram_model.sv", "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v") for s in SRCS2]
+    SRCS2.append("rtl/test/qwen_dv/safe_storage/native_collision_checker.sv")
+SAFE_RESET = os.environ.get("DV2_SAFE_RESET", "0") == "1"
+SAFE_AMAX_RESET = os.environ.get("DV2_SAFE_AMAX_RESET", "0") == "1"
+if SAFE_AMAX_RESET and not SAFE_RESET:
+    raise SystemExit("DV2_SAFE_AMAX_RESET requires DV2_SAFE_RESET")
+SAFE_SCALAR_RESET = os.environ.get("DV2_SAFE_SCALAR_RESET", "0") == "1"
+if SAFE_SCALAR_RESET and not SAFE_AMAX_RESET:
+    raise SystemExit("DV2_SAFE_SCALAR_RESET requires DV2_SAFE_AMAX_RESET")
+SAFE_STATION_CFG = os.environ.get("DV2_SAFE_STATION_CFG", "0") == "1"
+if SAFE_STATION_CFG and not SAFE_RESET:
+    raise SystemExit("DV2_SAFE_STATION_CFG requires DV2_SAFE_RESET")
+SAFE_STATION_MATH = os.environ.get("DV2_SAFE_STATION_MATH", "0") == "1"
+if SAFE_STATION_MATH and not SAFE_STATION_CFG:
+    raise SystemExit("DV2_SAFE_STATION_MATH requires DV2_SAFE_STATION_CFG")
+SAFE_STREAM_RESET = os.environ.get("DV2_SAFE_STREAM_RESET", "0") == "1"
+if SAFE_STREAM_RESET and not SAFE_RESET:
+    raise SystemExit("DV2_SAFE_STREAM_RESET requires DV2_SAFE_RESET")
+SAFE_CFG = os.environ.get("DV2_SAFE_CFG", "0") == "1"
+if SAFE_CFG and not SAFE_SCALAR_RESET:
+    raise SystemExit("DV2_SAFE_CFG requires DV2_SAFE_SCALAR_RESET")
+RESET_WARM = 16 if (SAFE_SCALAR_RESET or SAFE_STATION_MATH) else 8 if SAFE_RESET else 0  # deterministic boot guard, outside steady execution
+if SAFE_RESET:
+    SRCS2 = [s.replace("rtl/qwen_dv/qfd_dv_slice2.sv", "rtl/qwen_dv/qfd_dv_slice2_rsafe.sv").replace("rtl/qwen_dv/qfd_dv_redstn2.sv", "rtl/qwen_dv/qfd_dv_redstn2_rsafe.sv") for s in SRCS2]
+    SRCS2.append("rtl/qwen_dv/qfd_dv_reset_tree.sv")
+if SAFE_AMAX_RESET:
+    SRCS2 = [s.replace("rtl/qwen_dv/mu/qfd_dv_amax_mu.sv", "rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv") for s in SRCS2]
+    SRCS2.append("rtl/qwen_dv/qfd_dv_reset_bank.sv")
+if SAFE_SCALAR_RESET:
+    SRCS2 = [s.replace("rtl/qwen_dv/qfd_dv_scalar2.sv", "rtl/qwen_dv/qfd_dv_scalar2_rsafe.sv") for s in SRCS2]
+    SRCS2.extend(["rtl/qwen_dv/qfd_dv_ring_delay.sv", "rtl/common/landed_parent/ot_pl_land.sv"])
+if SAFE_CFG:
+    SRCS2 = [s.replace("qfd_dv_scalar2_rsafe.sv", "qfd_dv_scalar2_csafe.sv") for s in SRCS2]
+if SAFE_STATION_CFG:
+    SRCS2 = [s.replace("qfd_dv_redstn2_rsafe.sv", "qfd_dv_redstn2_csafe.sv") for s in SRCS2]
+if SAFE_STATION_MATH:
+    SRCS2 = [s.replace("qfd_dv_redstn2_csafe.sv", "qfd_dv_redstn2_gsafe.sv") for s in SRCS2]
+    SRCS2.append("rtl/qwen_dv/qfd_dv_station_math_g.sv")
+    SRCS2.append("rtl/common/landed_parent/ot_pl_land_physical.sv")
+    for dep in ["rtl/qwen_dv/qfd_dv_ring_delay.sv", "rtl/common/landed_parent/ot_pl_land.sv"]:
+        if dep not in SRCS2:
+            SRCS2.append(dep)
+# QW-SLICE 10-19: DV2_STATION_REGIONAL=1 swaps the station for the 8-region partition (qfd_dv_redstn2_regional.sv,
+# +define+OT_STATION_REGIONAL); DV2_OT_ASSERT=1 builds the simulation-only landing epoch checkers (+define+OT_ASSERT),
+# default = the physical (synthesized) landing source.
+STATION_REGIONAL = os.environ.get("DV2_STATION_REGIONAL", "0") == "1"
+if STATION_REGIONAL and not SAFE_STATION_MATH:
+    raise SystemExit("DV2_STATION_REGIONAL requires DV2_SAFE_STATION_MATH")
+if STATION_REGIONAL:
+    SRCS2.append("rtl/qwen_dv/qfd_dv_redstn2_regional.sv")
+OT_ASSERT = os.environ.get("DV2_OT_ASSERT", "0") == "1"
+DEFINES2 = (["+define+OT_STATION_REGIONAL"] if STATION_REGIONAL else []) + (["+define+OT_ASSERT"] if OT_ASSERT else [])
+if SAFE_STREAM_RESET:
+    SRCS2 = [s.replace("rtl/qwen_dv/qfd_dv_stream.sv", "rtl/qwen_dv/qfd_dv_stream_rsafe.sv") for s in SRCS2]
 # MU-ADOPT-SLICE 10-19 (environment, default = today): DV2_MU_NU users of the LM-head argmax (qfd_dv_slice2 MU_NU);
 # DV2_FACE 0 master qfd_dv_slice2 / 1 qfd_dv_slice2_w / 2 qfd_dv_slice2_e (tb_dv2_slice port map); DV2_AM_MUT bench-only
 # qfd_dv_amax_mu mutant (+define+OT_DV_AMAX_MUT); DV2_GAP edges between an STN op's last data word and the next op (m).
+# MU-DQ-SLICEKC 10-19 (merge of MU-SLICE-GATE c9276ad29 / 4180abc13 with main's FACE wrapper): -GMU_NU=<n> / -GFACE=<f>
+# in --vflags override DV2_MU_NU / DV2_FACE; -GSU_LT=1 / -GHD_W130=1 (the kitted slice) reach every FACE through
+# tb_qfd_dv2 -> tb_dv2_slice and add XSRCS (hard SU lane tile + its lane sources).
 import os  # noqa: E402
 MU_NU = int(os.environ.get("DV2_MU_NU", "1"))
 FACE = int(os.environ.get("DV2_FACE", "0"))
@@ -79,7 +139,7 @@ class Ev2(B.Ev):
                 out.append((t, p, v))
         with open(path, "w") as f:
             for t, p, v in sorted(out, key=lambda e: (e[0], e[1])):
-                f.write(f"{t} {p} {v:x}\n")
+                f.write(f"{t + RESET_WARM} {p} {v:x}\n")
 
 
 def load_vm2(ev, sl, base, vals):
@@ -101,10 +161,19 @@ def conv48(w):
     return (1 << 95) | (k1 << 92) | (idx << 64) | val
 
 
+VFLAGS: list[str] = []          # S-QSLICE 10-18: --vflags (e.g. -GSU_LT=1 -GHD_W130=1); empty = the original build
+# MU-SLICE-GATE 10-19: MU_NU follows -GMU_NU=<n> in --vflags (else DV2_MU_NU), FACE follows -GFACE=<f> (else DV2_FACE);
+# DV2_AM_MUT adds +define+OT_DV_AMAX_MUT=<n> (bench-only qfd_dv_amax_mu / qfd_dv_scalar2 mutants, 7 = no mixed-merge check).
+XSRCS = ["rtl/qwen_dv/qfd_dv_su_lane.sv", "rtl/hdc/ot_hdc_vstream_lane_t.sv", "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+         "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+         "rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv"]
+
+
 def run_sim2(name, ev, work, mut, ncyc, n=2):
     work.mkdir(parents=True, exist_ok=True)
     evf, lgf = work / f"{name}.ev", work / f"{name}.log"
-    obj = work / f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}"
+    vtag = "".join(c for c in "_".join(f.lstrip("-+") for f in VFLAGS) if c.isalnum() or c in "_=")
+    obj = work / (f"obj2_n{n}_nu{MU_NU}_f{FACE}_am{AM_MUT}" + ("_sr1" if SAFE_RESET else "") + ("_ar1" if SAFE_AMAX_RESET else "") + ("_sc1" if SAFE_SCALAR_RESET else "") + ("_cfg1" if SAFE_CFG else "") + ("_stm1" if SAFE_STREAM_RESET else "") + ("_stcfg1" if SAFE_STATION_CFG else "") + ("_stmath1" if SAFE_STATION_MATH else "") + ("_ns1" if NATIVE_SRAM else "") + ("_rg1" if STATION_REGIONAL else "") + ("_oa1" if OT_ASSERT else "")) / (vtag or "base")
     exe = obj / "Vtb"
     ev.write(evf)
     if not exe.exists():
@@ -112,14 +181,21 @@ def run_sim2(name, ev, work, mut, ncyc, n=2):
                "-Wno-TIMESCALEMOD", "--x-assign", "0", "--x-initial", "0", "--top-module", "tb_qfd_dv2",
                "--prefix", "Vtb", f"-GMUT={mut}", f"-GN={n}", f"-GMU_NU={MU_NU}", f"-GFACE={FACE}"] + \
               ([f"+define+OT_DV_AMAX_MUT={AM_MUT}"] if AM_MUT else []) + \
-              ["-Mdir", str(obj), str(HERE / "main2.cpp")] + [str(ROOT / s) for s in SRCS2]
-        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.run([str(exe), f"+EV={evf}", f"+LOG={lgf}", f"+NCYC={ncyc}"], check=True, stdout=subprocess.DEVNULL)
+              DEFINES2 + \
+              VFLAGS + ["-Mdir", str(obj), str(HERE / "main2.cpp")] + \
+              [str(ROOT / s) for s in SRCS2 + (XSRCS if VFLAGS else [])]
+        obj.mkdir(parents=True, exist_ok=True)
+        with open(obj.parent / f"build_{obj.name}.log", "w") as bl:     # kept: a failed build names its error
+            r = subprocess.run(cmd, stdout=bl, stderr=subprocess.STDOUT)
+        if r.returncode:
+            print("    VERILATOR BUILD FAIL:", "".join(open(obj.parent / f"build_{obj.name}.log").readlines()[-15:]))
+            raise subprocess.CalledProcessError(r.returncode, cmd[:4])
+    subprocess.run([str(exe), f"+EV={evf}", f"+LOG={lgf}", f"+NCYC={ncyc + RESET_WARM}"], check=True, stdout=subprocess.DEVNULL)
     out = {}
     for line in lgf.read_text().split("\n"):
         if line.strip():
             c, nm, h = line.split()
-            out.setdefault(nm, []).append((int(c), int(h.replace('x', '0').replace('X', '0').replace('z', '0'), 16)))
+            out.setdefault(nm, []).append((int(c) - RESET_WARM, int(h.replace('x', '0').replace('X', '0').replace('z', '0'), 16)))
     # dv_bench names: root words leaving up = S0SC, slice 1's words leaving down = S1SC; D2D of any slice
     out["S0SC"] = [(c, conv48(w)) for c, w in out.get("S0SU", [])]
     out["S1SC"] = [(c, conv48(w)) for c, w in out.get("S1SD", [])]
@@ -263,6 +339,74 @@ def bench_c2(work, mut, seed=3):
         ok += B.cmp(name, {i: got.get(base + i) for i in range(len(y))}, B.fbits(y), errs)
         n += len(y)
     return ok, n, errs
+
+
+def bench_k2(work, mut, seed=11, users=(0, 0, 0), name="k"):
+    """(k) redstn2 LAST-K selection (QW-DIEFIX 10-19): every pair streams JB = 8 words per (round, k) -- the tiles' running
+    accumulator -- and only the k = kc - 1 block is the level-6 result.  L8 scaled kc 3, L7 gate/up kc 2 (two rounds of
+    the lower pair would be a second op), L8 unscaled kc 1 (regression).  The k < kc - 1 blocks carry different
+    (partial-sum-sized) words; MUT 14 (kcm1 ignored) must FAIL (wrong sums, more result words than nwords)."""
+    rng = np.random.default_rng(seed)
+    ev = B.Ev()
+    kcl = 2
+
+    def mat(S):
+        w = rng.integers(-127, 128, size=(128, S * kcl)).astype(F)
+        x = (rng.standard_normal(S * kcl) * 2.0).astype(F)
+        s = G.to_bf16((rng.random(128) * 0.02 + 1e-3).astype(F))
+        return w, x, s
+
+    def junk(n):
+        return [(rng.standard_normal(128) * 300.0).astype(F) for _ in range(n)]
+
+    tests = []
+    w8, x8, s8 = mat(256)
+    wg, xg, sg = mat(128)
+    wu, xu, su_ = mat(128)
+    B.load_btab(ev, 0, 0, np.concatenate([sg, su_]))
+    B.load_btab(ev, 0, 16, s8)
+    ev.step(4)
+    l8 = B.l6_parts(w8, x8, 256)
+    for kc, wsrc, base, u in ((3, 0, 0x2400, users[0]), (1, 1, 0x2800, users[1])):
+        ev.at(B.P_CMD, B.cmd_stn(1, wsrc, 8, 16, 3, base, kcm1=kc - 1) | (u << 51)); ev.step(4 + SK)
+        for kk in range(kc):
+            src = l8 if kk == kc - 1 else junk(4)
+            for k in range(8):
+                sl_ = slice(16 * k, 16 * k + 16)
+                pair2(ev, 0, src[0][sl_], src[1][sl_], src[3][sl_], src[2][sl_], ev.t); ev.step()
+        ev.step(50)
+        y = G.matvec(w8, x8, 256)
+        tests.append((f"L8 kc{kc} {'unscaled' if wsrc else 'scaled'}", base,
+                      G.mul(y, F(1.0)) if wsrc else G.mul(y, s8)))
+    lg, lu = B.l6_parts(wg, xg, 128), B.l6_parts(wu, xu, 128)
+    ev.at(B.P_CMD, B.cmd_stn(0, 0, 16, 0, 2, 0x2000, kcm1=1) | (users[2] << 51)); ev.step(4 + SK)
+    for kk in range(2):
+        g_, u_ = (lg, lu) if kk == 1 else (junk(2), junk(2))
+        for k in range(8):
+            sl_ = slice(16 * k, 16 * k + 16)
+            pair2(ev, 0, g_[0][sl_], g_[1][sl_], u_[1][sl_], u_[0][sl_], ev.t); ev.step()
+    ev.step(60)
+    tests.append(("L7 gate/up kc2", 0x2000, np.concatenate([G.mul(G.matvec(wg, xg, 128), sg),
+                                                           G.mul(G.matvec(wu, xu, 128), su_)])))
+    log = run_sim2(name, ev, work, mut, ev.t + 20)
+    errs = status_ok2(log)
+    got = {}
+    for _, w in log.get("S0AR", []):
+        tag = (w >> 514) & 0xFFFFFFFF
+        for l in range(16):
+            got[tag + l] = (w >> (32 * l)) & 0xFFFFFFFF
+    ok = n = 0
+    for name, base, y in tests:
+        ok += B.cmp(name, {i: got.get(base + i) for i in range(len(y))}, B.fbits(y), errs)
+        n += len(y)
+    return ok, n, errs
+
+
+def bench_q2(work, mut):
+    """(q) MU-DQ-SLICEKC 10-19 (COORD 0kg): bench k with MU STN users 1 / 2 / 3 in cmd[52:51] TOGETHER with kc - 1 in
+    cmd[66:59] (kc 3 / 1 / 2): the user field and the last-k count must not overlap.  MUT 15 (kcm1 read from the pre-fix
+    field [58:51], whose low bits are the user) must FAIL; MUT 14 (kcm1 ignored) FAILs too."""
+    return bench_k2(work, mut, users=(1, 2, 3), name="q")
 
 
 def bench_f2(work, mut, seed=6):
@@ -660,7 +804,7 @@ def install():
     B.status_ok = status_ok2
 
 
-BENCHES = {"a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
+BENCHES = {"k": bench_k2, "q": bench_q2, "a": bench_a2, "b": B.bench_b, "c": bench_c2, "d": B.bench_d, "e": B.bench_e, "f": bench_f2,
            "g": B.bench_g, "h": bench_h, "i": bench_i, "j": bench_j, "m": bench_m, "o": bench_o, "n": bench_n}
 
 
@@ -669,7 +813,17 @@ def main():
     ap.add_argument("benches", nargs="*", default=list("abcdefghij"))
     ap.add_argument("--mut", type=int, default=0)
     ap.add_argument("--work", default="/tmp/qdv_bench2v")
+    ap.add_argument("--vflags", default="", help="extra Verilator flags (use a separate --work: objects are cached)")
     a = ap.parse_args()
+    VFLAGS[:] = a.vflags.split()
+    if SAFE_RESET and not any("OT_QFD_DV_SAFE_STORAGE" in f for f in VFLAGS):
+        raise SystemExit("DV2_SAFE_RESET requires OT_QFD_DV_SAFE_STORAGE: station source is shape-specialized")
+    global MU_NU, FACE
+    for f in list(VFLAGS):        # MU_NU / FACE are passed by run_sim2 itself (one -G each)
+        if f.startswith("-GMU_NU="):
+            MU_NU = int(f.split("=", 1)[1]); VFLAGS.remove(f)
+        elif f.startswith("-GFACE="):
+            FACE = int(f.split("=", 1)[1]); VFLAGS.remove(f)
     install()
     allpass = True
     for b in a.benches:

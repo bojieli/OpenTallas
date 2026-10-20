@@ -1,0 +1,23 @@
+# Original record23 native return profile
+
+Qualification: component study only. No current expanded GEN2e topology exists. The source-expanded GEN2c+l12 profile is diagnostic and must be regenerated after GEN2e S4/S5.
+
+Original released-checkpoint record23 retains all128 original input/golden words and the original VM placement: input sectors264..279 (rows33/34), output280..295 (35/36). Compiler/golden proof passed on the fleet. The original failed16 numerical checks remain immutable in the preceding calendar closure packet.
+
+Opt-in NativeTiming(18,15) derives serial read presentation18 and fill commit21 from the RTL bridge ceiling and three pinned-store stages. Drain presentation remains4, serial write return16, observation20. Legacy defaults remain13/11. Original setup6/emit14/44commands/final completion54 becomes setup14/emit22/52commands/final completion71: +8 issue delay and +9 drain observation = +17 serial edges. Golden words, masks, operand values, and allocation are unchanged. This is a source/golden proof, not an RTL arithmetic result.
+
+Minimum arithmetic unit includes current53cb source CKgen, native face banks, monolithic pgslice/pinned stores/32 lanes, actual C5 producer with resident7111/index4/startup9, and real CP96 calendar installation. It tests SW group0: original32 arithmetic words from four256-bit sectors, across two banks. The other bank groups are outside this unit. Source-expanded GEN2c+l12 read paths are bank0 request4/return3 and bank1 request5/return2; write request3/ack4 both banks. Actual historical hbfd_pad and624-bit relay masters implement those paths; unused bits of isolated relay payloads are zero. New per-bank calendar compiler inputs price these asymmetric owner selectors. Native bank loading and result reads use actual owner1 ports at fixed slots; arithmetic uses owner0. No hierarchical data forcing or runtime wait/admission path is used.
+
+The minimum unit uses the local source bridge-release/CKgen epoch. The full19-edge reset distribution and forwarded landing network in the profile are not composed in this first test. Current split PGSTREAM53cb, FAULT_REG1, its three-stage reset landing and subsequent region arithmetic differences remain the successor obligation. No physical phase, full parent or die qualification is claimed.
+
+Negative control changes only the arithmetic control load/emit to their old deadline while retaining the52-command image, original VM read/write slots, calendar and exact expected values. An actual arithmetic mismatch is required; a producer failure alone does not qualify this negative control.
+
+Live build: ep6 /srv/opentallas-scratch/claude/hbm-native-record23-1019, ot-heavy unit188567-1792429143, local arithmetic6.out, execution23028. It uses Verilator5.050,160GB admission/6threads and retains incremental obj_arithmetic. Earlier attempts were source-manifest/elaboration failures and are preserved as arithmetic.out through arithmetic5.out; no earlier arithmetic result exists.
+
+## Clock-model recovery (2026-10-19)
+
+The preceding run was not an arithmetic verdict: its selected production PLL interface had no behavioral clock drivers. Generated C++ assigned stream/serial/lock only during initialization; PID210397 spent over40 CPU minutes with an empty arithmetic log. Exact process, binary, source, selected-file and static-assignment receipts are preserved in clockless_failure. Only that identity-verified process was stopped.
+
+This successor explicitly selects the functional PLL module extracted from canonical rtl/hbm_accel/control/tb_hfd_ckgen.sv. Production blackbox and actual hfd_ckgen/release RTL remain unchanged. With1ps precision the stream/link halfperiod is417ps and serial556ps, starting from zero: rising edges417+834k and556+1112n ps. HBM halfperiod512ps. Lock asserts after acquisition==3 on the reference edge, then actual CKgen synchronizers release after two domain edges. These are digital functional simulation phases, not analog PLL or physical timing qualification. The original programme/calendar/operands/golden/event indices are unchanged.
+
+A causal200ns guard requires observed stream/serial edges, PLL lock and released CKgen resets: ref acquisition completes by135ns after POR100ns, plus two serial periods<3ns. It reports missing clock/lock separately before implicit waits can hang. Phase monitors enforce exact417/556 first edges and834/1112ps periods. A4000-stream-edge completion guard exceeds the fixed3800-edge terminal observation by200edges. Test-only +NO_CLOCK/+NO_LOCK suppress the corresponding model behavior and must fail CLOCK_CAUSAL_GUARD. They do not modify production logic or numerical data.

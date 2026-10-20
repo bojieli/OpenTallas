@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_dv_redstn2_rg8",
+ "enable": false,
+ "reason": "the RTL lands rst_n in 2 registered stages (rst_l0/rst_l1) in each region's own clock, then kept 32-ary trees (qfd_dv_reset_tree)"
+}

@@ -12,6 +12,13 @@ module tb_s81_hbm;
     reg [31:0] k_v = 0; wire [31:0] k_rdy; reg [959:0] k_addr = 0; reg [127:0] k_len = 0; reg [543:0] k_tag = 0;
     reg [31:0] k_we = 0; reg [8191:0] k_wdata = 0; reg [1023:0] k_wstrb = 0; wire [31:0] k_wr_done;
     wire [31:0] kr_v; reg [31:0] kr_rdy = 0; wire [543:0] kr_tag; wire [127:0] kr_beat; wire [8191:0] kr_data;
+`ifdef PHY_K
+    // BIND/mu4: the S81 K-only macro (no W port, no counter ports); refreshes read hierarchically from the model
+    wire k_oor; wire [63:0] refreshes = dut.n_refreshes;
+    ot_hbm3e_phy_v41x_aw30_e8p5_k #(.MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .k_v(k_v), .k_rdy(k_rdy), .k_addr(k_addr),
+        .k_len(k_len), .k_tag(k_tag), .k_we(k_we), .k_wdata(k_wdata), .k_wstrb(k_wstrb), .k_wr_done(k_wr_done), .kr_v(kr_v),
+        .kr_rdy(kr_rdy), .kr_tag(kr_tag), .kr_beat(kr_beat), .kr_data(kr_data), .k_oor(k_oor));
+`else
     wire w_rdy; wire [7:0] w_room, wr_v; wire [79:0] wr_tag; wire [39:0] wr_beat; wire [2047:0] wr_data;
     wire k_oor, w_oor; wire [63:0] refreshes; wire [31:0] w_reads;
     ot_hbm3e_phy_v41x_aw30_e8p5 #(.MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .k_v(k_v), .k_rdy(k_rdy), .k_addr(k_addr),
@@ -19,6 +26,7 @@ module tb_s81_hbm;
         .kr_rdy(kr_rdy), .kr_tag(kr_tag), .kr_beat(kr_beat), .kr_data(kr_data), .w_v(1'b0), .w_rdy(w_rdy), .w_addr(24'd0),
         .w_len(6'd0), .w_tag(10'd0), .w_room(w_room), .wr_v(wr_v), .wr_rdy(8'hFF), .wr_tag(wr_tag), .wr_beat(wr_beat),
         .wr_data(wr_data), .k_oor(k_oor), .w_oor(w_oor), .refreshes(refreshes), .w_reads(w_reads));
+`endif
     // golden memory per channel: sector -> 256 b
     reg [255:0] gm [int];
     // expected read sectors per channel, in order: {tag, beat, data}

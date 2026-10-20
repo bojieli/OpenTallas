@@ -1,0 +1,670 @@
+{
+  "scope": "COMPONENT_ONLY productioncalendarNULL",
+  "files": [
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/README.md",
+      "bytes": 4655,
+      "sha256": "abfed0a678089859ec2df06902074ce0007d57caf1aac4c950eae38d7e5e947d"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/SOURCE_DEFAULT_DEPENDENCY.json",
+      "bytes": 19375,
+      "sha256": "42fcc7f406313191e15c59fc9a66e007b912219e3233b70ce1538a1a81afbf18"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_compile_manifest.json",
+      "bytes": 3219,
+      "sha256": "7d50b5981cbb5ae462e137a67b34100fdb3f843b4f33c474b048e358c6896f93"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/attempt1_invalid_j_option.log",
+      "bytes": 1107,
+      "sha256": "bc113e19c94c1503eb0b7a5961fcbcfd7a258c528bfa0e148afad81352ab6569"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/attempt2_mutant_witness.log",
+      "bytes": 291,
+      "sha256": "b4e0b94a77424f5b939b08c2cf4478718b3af7bf50ffaee4db503980705382a4"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/build.log",
+      "bytes": 1483,
+      "sha256": "2bad3614d643a6d7ec889fb53401f37ce96190cbc37b63d87b6254b776239679"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/initial_positive_trace.log",
+      "bytes": 2267,
+      "sha256": "274a00a25e3c401baeed224502e53dafabbdf4f9ab11b0a6bf7d2b4a4023693e"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/mut_build.log",
+      "bytes": 1507,
+      "sha256": "4171abca400306eceffb8515accc92a382cc95f2c63b7c766f8592179164a704"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/mut_ingress_bypass.log",
+      "bytes": 291,
+      "sha256": "b4e0b94a77424f5b939b08c2cf4478718b3af7bf50ffaee4db503980705382a4"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_evidence/trace.log",
+      "bytes": 2267,
+      "sha256": "0b5883e3dec4640bb2930dcf1510424794d4dad78dd1b8bb7a6e9c7204952576"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_files.txt",
+      "bytes": 1309,
+      "sha256": "14a6228265288f8a38dfcdf974fa45cf6caa88332131d63135ff9fb3c4c53458"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_receipt.json",
+      "bytes": 3185,
+      "sha256": "b9fdad4bc82384da79d407fc40439801aae6de1a46370be07bb9210e0ce3872b"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_run.sh",
+      "bytes": 1106,
+      "sha256": "b1b9f1410ced413fb48d694d0b504d31ef111206acfa3760767cf762c153a84c"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/actual_source/qkd_host_pin_channel.sv",
+      "bytes": 1094,
+      "sha256": "cadd51957dfe2c06c2d0e7d9ea26ec002ee3f12d1c0c9fc57ddc8194b29495c4"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_README.md",
+      "bytes": 4380,
+      "sha256": "db28254712f740e2c3331ecf3eaa347c6bfd7bc86970b428e82a5be11a373101"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_default_tb.sv",
+      "bytes": 3347,
+      "sha256": "783b25e31b96144c76a38b470b52021987e69403d14e434ad1e5c61d04fb046a"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/bridge_trace_0.tsv",
+      "bytes": 34537,
+      "sha256": "35acf6bbb5e852c041ae7013ab9686940498ce7093115490c75dcb3537dc2964"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/bridge_trace_1.tsv",
+      "bytes": 8055,
+      "sha256": "9ad5b20100f4f8f8ed5a63504480d3575419f472b291f9e257f09706f885c29c"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/bridge_trace_2.tsv",
+      "bytes": 6879,
+      "sha256": "34f6b3bdfc8e6bb406b465e7ec11b15d666cda400d416e915e2e0ebefa7a799d"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/bridge_trace_3.tsv",
+      "bytes": 6879,
+      "sha256": "1fea2a7509a7241820c42577cca3b8c9dfb86cd6f2cbdba7ef23388ccbda5922"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/bridge_trace_4.tsv",
+      "bytes": 11247,
+      "sha256": "1ab5c76847da3ea266fec51b93e296f336cce5124bba887d647fc41ecac29bc6"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/build_0.log",
+      "bytes": 20303,
+      "sha256": "815c9dd2612fb6b8d297fd712e89ad985f8c035e7668ed578310d589a8618f94"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/build_1.log",
+      "bytes": 20303,
+      "sha256": "ee42d0174f7762b5a7ab89986f253a848dbfdd4e65b7e894771d045d024c2d21"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/build_2.log",
+      "bytes": 20303,
+      "sha256": "061a7e19d325fd69472dea87c46e5a8ed32d54d3e4f2d481b507e6749b18e4d9"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/build_3.log",
+      "bytes": 20303,
+      "sha256": "d494ebaa4ef5f2eea606fb6627634be0d9b18ecc78806b8f834b30a3cf00fd58"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/build_4.log",
+      "bytes": 20303,
+      "sha256": "8c77aaa18c5ebcd1f6871fb7da1a285d9e76bd162671dad07d6ccc525d67f6aa"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/build_default.log",
+      "bytes": 517,
+      "sha256": "6bb5bbe591d279a6c3d2a98f66236733bd2385e3e8a1a7a0c11d81ee6a940ad5"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/version.log",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/witness_0.log",
+      "bytes": 591,
+      "sha256": "81b18a8547ec0762184a3e66a16d8f2d64a4749fcbdfbfaa35ad0b29eab11a54"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/witness_1.log",
+      "bytes": 172,
+      "sha256": "f2d3a1dde2e5924253d4d8c2334ede683d6138386c7da375b7720cb3b027f617"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/witness_2.log",
+      "bytes": 210,
+      "sha256": "a43f3b424a40a8211ec87d5ec3234e7b9e0049a98cec605cf4ab71df4c69bd55"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/witness_3.log",
+      "bytes": 209,
+      "sha256": "1e4962b7889afa27d3213dc3cd3fa661815da7581c118cd0641ef8c020cfcf10"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/witness_4.log",
+      "bytes": 241,
+      "sha256": "26847b58419ba93ed9a0890a67e1963f9936617dc22cb78f5bc03dacc3b55871"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_evidence/witness_default.log",
+      "bytes": 280,
+      "sha256": "f089e56c2d78661fc02b2d1a40f15b1dfda57cea7b1200b8efad773499e6b1da"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_failures/initial_oracle.log",
+      "bytes": 262,
+      "sha256": "a3efcc9a426a746c136caa0311c2702e5ebc13b8859ca981b2a97bb98b8e7b7d"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_failures/initial_oracle_tb.sv",
+      "bytes": 4226,
+      "sha256": "72920f6332166635e1b36352987310d82ab908e0d70a831ad3c4404ec60aa12b"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_model.json",
+      "bytes": 1328,
+      "sha256": "7ae8951b557e0aec7099a5198161fcecbfe41bc660e2dbe8f52e8b7b448acdf6"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_original.sv",
+      "bytes": 6651,
+      "sha256": "0c05ae5b59d242b4a99c937e47683224fe4e25d802b6543b8717e3d677c60767"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_run.sh",
+      "bytes": 1048,
+      "sha256": "cd5d99f701e98aeaa5a8317dbc70963a6358c27d309c742a31c292290aa5c175"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_tb.sv",
+      "bytes": 6740,
+      "sha256": "56996b6187f94e4b68e718daebf34385ce4cb0ba727f6d4da562646663e286b7"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/bridge_validation.json",
+      "bytes": 2338,
+      "sha256": "f7d60afc7fa553717fa5cddf4aaa172197376849e6a5f32ad6e7d9fa5ecc5fcf"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/component_model.json",
+      "bytes": 2058,
+      "sha256": "6664414291e8184e466e2fbfe62e9a35d2432ffa25c20f74e87d2fba2b563ae3"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/component_receipt.json",
+      "bytes": 2530,
+      "sha256": "eb50d94b0284c1a86cfa1587b8183464925eecedf839213db83458d06513f466"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_NOTES.md",
+      "bytes": 3522,
+      "sha256": "539b1b2bfa3058c18a91f7d348b27e3a5a722cc22c83171673c0b7aba8fa86b6"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_build_0.log",
+      "bytes": 15293,
+      "sha256": "1267d71076b0b36628a151d02ff99e798ebba498734a63966e23ae833e09500b"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_build_1.log",
+      "bytes": 15293,
+      "sha256": "7042a2099ae33c0ee2fd1ef197776bc6f94d44f932165393ee9405e54fb04925"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_build_2.log",
+      "bytes": 15293,
+      "sha256": "2efd66da76cf2e76912dfdc446caf789bfc84fd9901e59034f3e6492c189d23d"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_build_3.log",
+      "bytes": 15293,
+      "sha256": "32884525271f3d1bc0548cf5b89a26388d55e09721b4097b181c363fa623c013"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_build_4.log",
+      "bytes": 15293,
+      "sha256": "e94891e91d29126a70765305017258ecd3ae43fb0a41b4420ece06357a08e51a"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_build_5.log",
+      "bytes": 15293,
+      "sha256": "1c5e753074236a9beb3221eb6bbebea0d2e11a13bb254b97d70cba8b26af385f"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_oracle_initial_failure.log",
+      "bytes": 218,
+      "sha256": "46d5c18989ba1bbf6dcef49798516b38eb54fb3a8788628d38d53458d66f247f"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_original.sv",
+      "bytes": 6704,
+      "sha256": "bc26e6313215b8ae9f65163a7bfc1268b05078cd80b5f6988944f7b15b1072c7"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_receipt.json",
+      "bytes": 3436,
+      "sha256": "76898230a83806337a20b0480c82ba6f961816f15e7f8a747a3d8fd73898f56b"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_run.sh",
+      "bytes": 817,
+      "sha256": "a21034ec0e791ddb562e8129fa3b2954e70a92b8038c97220498b475ff37e403"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_run_0.log",
+      "bytes": 368,
+      "sha256": "29e52385c4babfad19ff136345f79b32568ff7110194a33958cc34e6be804b19"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_run_1.log",
+      "bytes": 141,
+      "sha256": "cfd9ed49d6342879ed6756c96cbe093d1b3ad68585c4305db6a3e7a95b00a5c7"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_run_2.log",
+      "bytes": 143,
+      "sha256": "ee08b14471dc65f73daeac1985ec0e6e8810d6e0dd7b1076dc9668615ad1c011"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_run_3.log",
+      "bytes": 245,
+      "sha256": "dd8b2e85f18c0de9d148a449b4bd86efd5590a1aef0acc78306443ea09157855"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_run_4.log",
+      "bytes": 271,
+      "sha256": "24b2ee0c1aa454f80f3e4f9dcb470634ccc1b3b6e38a6a3a80373c1c5f136408"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_run_5.log",
+      "bytes": 184,
+      "sha256": "0a99f450cc36aea0eda622d38eb3a683ce545fa6e08d9a1747c4bc420c81b50e"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_source_manifest.json",
+      "bytes": 551,
+      "sha256": "1a916299b02a9030be6f821914bfe1c121ecce4e8a31b73759b59b6373604508"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_tb.sv",
+      "bytes": 9062,
+      "sha256": "5faff4a5af87db645309bed9d5ca7f605495ce78d91f8355cb4b23e3adbe2f33"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/endpoint_verilator.txt",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/case0.log",
+      "bytes": 990,
+      "sha256": "cb0a754a36a6f304019a0275c21e8feed7ddc82ab41416699cf51b9d5d7394d5"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/case1.log",
+      "bytes": 1092,
+      "sha256": "0cb14023960c6da7d25546fc1917e862a77ab9286293009c06518ef7656eba67"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/case2.log",
+      "bytes": 1092,
+      "sha256": "2347f04f6019da8ff7c8731ee24ab795349ecfd004ca7cba14ad05b2894a7fdc"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/case3.log",
+      "bytes": 990,
+      "sha256": "b28e4388f0e7efa3f4983c1c7e697fc028390f7af58ce6133090ee63d0c69e14"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/case4.log",
+      "bytes": 990,
+      "sha256": "783cb5c977eac362886fb8533db775199747d9b6e844894ebb0d0be3af130872"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/compile.log",
+      "bytes": 62087,
+      "sha256": "cda106485face2a521f2b29ee6643bb2b33ab617a71129795426fb7ab3b1a6d5"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/inputs.sha256",
+      "bytes": 714,
+      "sha256": "d3c67565807fa5042d1319721db4cf53df15224cc7268b460c465dcff336f932"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/integrated_bench.sv",
+      "bytes": 14069,
+      "sha256": "a39dfa6f3d05ae9895bd8260b647982c7b6c77be44a833075f7617926a0a52ea"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/integrated_ot_host_if_pb2_observed_rc.sv",
+      "bytes": 51160,
+      "sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/integrated_ot_qfd_pkgctl.sv",
+      "bytes": 12871,
+      "sha256": "9dc960a01a40d7a4a873599bce8eeb11c12c16d454332e27dcc2533caad9b962"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/integrated_ot_qwen_host_ctl.sv",
+      "bytes": 3549,
+      "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/integrated_qkd_host_axi_packet_rc.sv",
+      "bytes": 9559,
+      "sha256": "4fafb0a72ddc6e71d0d0d1d0e29ef842940baddff2033c679867ea8a65ba4bd1"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/integrated_qkd_host_ctl_service_pins.sv",
+      "bytes": 1587,
+      "sha256": "c43934f9a6f4f13f9872475e9edf36a5b90e1b7a31787c31c0bd4c1b3e258cc8"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/integrated_qkd_host_native_token_endpoint_cancel_rc.sv",
+      "bytes": 8474,
+      "sha256": "56edccaf12a3dceea1072c884bd72700b31a88eabddb866a00aa3a9779a281b0"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/integrated_run.sh",
+      "bytes": 528,
+      "sha256": "2dca3948f18b954b290c16c611c0f64b228c108a6e4c1b70fc87faef1e7e5414"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/manifest_before_run.json",
+      "bytes": 2013,
+      "sha256": "b5715f0fa686f2e93f0b7ee32dce704e75593d3f66f5faa00cfa1645cf3386d0"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/integration_final/receipt.json",
+      "bytes": 4362,
+      "sha256": "a7e26bd1262112a0c345dcca3f54f43fbaa938d709045225e542218af234fb58"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/pll_observability.json",
+      "bytes": 1222,
+      "sha256": "8a44d3730a1fcb84a27efc225d1d87668e8f6f7df50df4026a70733d89886676"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/actual_ingress_reset_tb.sv",
+      "bytes": 6494,
+      "sha256": "8a4d72da871265f40ba205311aa2e2a271f71e852d91004a15d4428fb480a59c"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_NOTES.md",
+      "bytes": 5315,
+      "sha256": "1dcfed2f7c97db9ab8949d474ff8ed225de41077b3763461ef4c95af19144955"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_bench.sv",
+      "bytes": 14069,
+      "sha256": "a39dfa6f3d05ae9895bd8260b647982c7b6c77be44a833075f7617926a0a52ea"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_case0.log",
+      "bytes": 990,
+      "sha256": "e9bcb5a377930797b64564ee364e251322c88dfe15695ddbec15957f7e8c400d"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_case1.log",
+      "bytes": 1092,
+      "sha256": "6d8d0ef94a932a095bbcd654ac747f85bb1985671c0127242bfe2fc680629635"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_case2.log",
+      "bytes": 1092,
+      "sha256": "28dd57ca6c0a646f24994f3049b9336302c020765fe81897ef4416c86e53c535"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_case3.log",
+      "bytes": 990,
+      "sha256": "a731449bd2b90ac61a1810c5144507ddab69ac6626906e697d18f5ee641176a3"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_case4.log",
+      "bytes": 990,
+      "sha256": "2507842146ea84231325169358808fa227351d8a4a957ba1ca7c92c958aab4fc"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_compile.log",
+      "bytes": 61404,
+      "sha256": "9a562133c30a59e9d1dcb9d0832e7c597138db08fdee6cf0b2ab2ec671811941"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_compile_manifest.json",
+      "bytes": 1743,
+      "sha256": "3117baf5538609466a0dbe28c6867e99a41c3c6db6321cf9a5fd21d2de5f5a75"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_inputs.sha256",
+      "bytes": 714,
+      "sha256": "8dcbc4c28fe93ed1d62b1703b198111709881d035cf91c72cd9ad609dad3909c"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_ot_host_if_pb2_observed_rc.sv",
+      "bytes": 50433,
+      "sha256": "547f8188db0df993799272336b6745c1e2f56a8429107dc9d8d81d5d43bc4416"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_ot_qfd_pkgctl.sv",
+      "bytes": 12871,
+      "sha256": "9dc960a01a40d7a4a873599bce8eeb11c12c16d454332e27dcc2533caad9b962"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_ot_qwen_host_ctl.sv",
+      "bytes": 3549,
+      "sha256": "122c568729729d8c5ddcca8c5092cf985200c850cc9000962a2ad159674fb436"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_preserved_iterations.tar.gz",
+      "bytes": 197866,
+      "sha256": "61cc0e9c318de5c3f0cb89c5635d830b615cc172f9158d89469a30e88f5eabe6"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_qkd_host_axi_packet_rc.sv",
+      "bytes": 9559,
+      "sha256": "4fafb0a72ddc6e71d0d0d1d0e29ef842940baddff2033c679867ea8a65ba4bd1"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_qkd_host_ctl_service_pins.sv",
+      "bytes": 1587,
+      "sha256": "c43934f9a6f4f13f9872475e9edf36a5b90e1b7a31787c31c0bd4c1b3e258cc8"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_qkd_host_native_token_endpoint_cancel_rc.sv",
+      "bytes": 8474,
+      "sha256": "56edccaf12a3dceea1072c884bd72700b31a88eabddb866a00aa3a9779a281b0"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_run.sh",
+      "bytes": 528,
+      "sha256": "2dca3948f18b954b290c16c611c0f64b228c108a6e4c1b70fc87faef1e7e5414"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/integrated_validation.json",
+      "bytes": 4704,
+      "sha256": "4c638cb71b1ee1a44cc50bd5193ae301e8a9328dcede7458a5683fa0f44147a9"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/ot_host_if_pb2_observed_rc.sv",
+      "bytes": 51160,
+      "sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/qkd_host_axi_packet_rc.sv",
+      "bytes": 9559,
+      "sha256": "4fafb0a72ddc6e71d0d0d1d0e29ef842940baddff2033c679867ea8a65ba4bd1"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/private/qkd_host_native_token_endpoint_cancel_rc.sv",
+      "bytes": 8474,
+      "sha256": "56edccaf12a3dceea1072c884bd72700b31a88eabddb866a00aa3a9779a281b0"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_bench.sv",
+      "bytes": 15315,
+      "sha256": "c149df720fb87b3e83bdc0aae8450006e806c39c90c8b29506a06a1fbbbdd32b"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_bench_README.md",
+      "bytes": 5076,
+      "sha256": "5dd886702df935ad2b94c3f01f2f8908f3efa722a207316b7517759bbaec64d4"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_bench_contract.sv",
+      "bytes": 391,
+      "sha256": "21132f324e16250c0656ad378c1fcd3544e118a3ea19fa5ba5e59034e5911165"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_bench_default.sv",
+      "bytes": 24936,
+      "sha256": "c08306567ea87fee45c11af3dae1a3855b57566ee03f505024ccc424d7e28a97"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_component_contract.json",
+      "bytes": 2973,
+      "sha256": "1cac369877d1f2255ffe4d9e3bb63ef043e718b6dd4767e3475ede8c31cdfac4"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_README.md",
+      "bytes": 3931,
+      "sha256": "77e248e81247e59e84dec45e55fdfbb543cfeab86cad8954dcff462645fbb5a3"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_baseline.sv",
+      "bytes": 15329,
+      "sha256": "71d98574588d919d672ef7a317e727303b480fb3fbdc55939025ad248404209f"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_baseline_contract.sv",
+      "bytes": 405,
+      "sha256": "63d8e43b303ef768a69d1e09aa90990e6afb980d2c3686b51bb0f161a06fe647"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_baseline_default.sv",
+      "bytes": 24950,
+      "sha256": "16d0fc3d62abca30eea85200d455cd2f75258ea1587d6faa6514fa08b910b3d7"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_baseline_run.sh",
+      "bytes": 987,
+      "sha256": "132808bc956ce208bbaa894592912f66a0ed4751b5c62e29e4a32587566ecc6e"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_baseline_run_contract.py",
+      "bytes": 1090,
+      "sha256": "1776cacbebf2d07161fbe16e1796693e794b731284c2722571b87d891a6dee00"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_baseline_run_default.sh",
+      "bytes": 708,
+      "sha256": "001f934609a1b95c6e3070a507dfab0689531386b19f14a8782558d1112410a4"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_baseline_run_mutants.py",
+      "bytes": 2395,
+      "sha256": "4c86b52575e633ee6289a8da82a1272220aed55b3adb013f110f016e037f9c83"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_baseline_run_original.sv",
+      "bytes": 39228,
+      "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_bench.sv",
+      "bytes": 12597,
+      "sha256": "edb851f1d4be7f1a44ea83d332d7aecaa9ebd93046623d52b59d79f49958c4fe"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_collect.py",
+      "bytes": 3422,
+      "sha256": "62fc20afa15aaf7da9d6d06a67e6c4b66c32c2f37403057bd1db65c0f85cd67b"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_evidence.tar.gz",
+      "bytes": 241825,
+      "sha256": "92a158cf5864bccf07385bb85f8d8b330e57242c6a0ca22eb09239c28e66dd46"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_mutant.py",
+      "bytes": 2125,
+      "sha256": "9025afce8e5210f07a733c598957363ff9cbdddef0c4f5f22000e38ce18272a5"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_receipt.json",
+      "bytes": 20840,
+      "sha256": "25360c289c5ae48f824a3f133335579eeca0bc9c82b322bfd566b24219eaf4d9"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_descriptor_run.sh",
+      "bytes": 930,
+      "sha256": "d6c98af6a9031a6db39e6d93e3f0eb2a1515de6e4c858902638dd57cd73d52f2"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_notes.md",
+      "bytes": 5179,
+      "sha256": "47644c6c7fafd0d7f2f349a3fe969a37ddb2ab42437c8496ad190e5128de2c6a"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_run.sh",
+      "bytes": 771,
+      "sha256": "6d09cf85946098395b77abbcfe758b3d5737ec06599d579f1a54d59f72c19935"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_run_clients.log",
+      "bytes": 8798,
+      "sha256": "752b18505d944c526b710a3c2ccb79f1e09a9111ca40afc96ba18a9be6b27d5a"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_run_collect.py",
+      "bytes": 3204,
+      "sha256": "9070afe4d47b519d767b8792168affd1d9758b52064c6fe7f709786eef556614"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_run_contract.py",
+      "bytes": 1008,
+      "sha256": "ff3fefb7179165530d8f403f3f74b6755aa54ed784befc275cf65f264006867c"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_run_default.sh",
+      "bytes": 546,
+      "sha256": "cd28e936cd5c77bcbbbd3fdfb7a1a451c09639ff8eeffad824792ae5306b5739"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_run_evidence.tar.gz",
+      "bytes": 237479,
+      "sha256": "96b180c7cb22a78afeadebd73f8921a38cb3afe28723e0f63a82b70ae941e9e8"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_run_mutants.py",
+      "bytes": 2273,
+      "sha256": "c2c157bcd3b29828d3635644323bb0d3de759cfbb63578ee195a3c996d66226b"
+    },
+    {
+      "path": "results/arch/kv_retained_commit_component_1019/scheduler_run_receipt.json",
+      "bytes": 27930,
+      "sha256": "ba1316fae2444d58ec30ab7e90ce2845555205deb91bcb0b7f0c368d7cda3b23"
+    }
+  ]
+}

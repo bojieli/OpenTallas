@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job bfh_compact199_col_pinreg_prepabs_1019 bench bench_bfcol_txn_mutant_fxst host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/bfh_compact199_col_pinreg_prepabs_1019 log cl/bench_bfcol_txn_mutant_fxst.a1b1.log captured 2026-10-19T04:33:31-07:00
+# fail_regex '%Fatal: .*DIFF TXN lane='
+mutant_fxst ok ['[2249000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=13a076d0c0400010']
+[2249000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=13a076d0c0400010
+%Error: cand_ot_v41_pair_w17w10.sv:195: Verilog $stop
+Aborting...

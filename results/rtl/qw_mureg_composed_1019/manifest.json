@@ -1,0 +1,1488 @@
+{
+  "schema": "opentallas.qwen.mureg.classified.v1",
+  "original_source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+  "original_counts": {
+    "AS EXPECTED": 40,
+    "INVALID CAUSAL CONTROL": 3,
+    "STALE FIXTURE FAILURE": 1
+  },
+  "original_same_source_regression_pass": false,
+  "collection_complete": true,
+  "replacement_cohort": "SAFE hard faces + dv2f18dh2; e6b9c55f2 positive, 3ac055daa recipe + 5f5080c86 negative receipts",
+  "native_physical_qualified": false,
+  "full_token_qualified": false,
+  "rows": [
+    {
+      "leg": "amix_F0",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu1_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F0_nu1_ag.out"
+      ],
+      "client": "clients/legs/amix_F0.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F0_nu1_ag.out",
+          "receipt": "original/evidence/runs/amix/runs/F0_nu1_ag.out",
+          "sha256": "6bd65f9a834a21f7a4df2b1592928424562a1e4cde261b812f6d822484152e1b"
+        }
+      ]
+    },
+    {
+      "leg": "amix_F1",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F1_nu1_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F1_nu1_ag.out"
+      ],
+      "client": "clients/legs/amix_F1.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F1_nu1_ag.out",
+          "receipt": "original/evidence/runs/amix/runs/F1_nu1_ag.out",
+          "sha256": "c42e4021877746329563c25bf0373939b4d60d096143340baaa7bcb27850b887"
+        }
+      ]
+    },
+    {
+      "leg": "amix_F2",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F2_nu1_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F2_nu1_ag.out"
+      ],
+      "client": "clients/legs/amix_F2.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F2_nu1_ag.out",
+          "receipt": "original/evidence/runs/amix/runs/F2_nu1_ag.out",
+          "sha256": "96687a4da003e70a306e6f28ee8be299518f399a20645b754e20b3639310f805"
+        }
+      ]
+    },
+    {
+      "leg": "amix_FACES1",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "FACES_mut0_nu1.out: FACES MUT=0: PASS; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/FACES_mut0_nu1.out"
+      ],
+      "client": "clients/legs/amix_FACES1.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/FACES_mut0_nu1.out",
+          "receipt": "original/evidence/runs/amix/runs/FACES_mut0_nu1.out",
+          "sha256": "7380b83aa26af6053cdb3e16edc95c475296fec5ac59a39adece8f97dea22712"
+        }
+      ]
+    },
+    {
+      "leg": "amix_FACES4",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "FACES_mut0_nu4.out: FACES MUT=0: PASS; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/FACES_mut0_nu4.out"
+      ],
+      "client": "clients/legs/amix_FACES4.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/FACES_mut0_nu4.out",
+          "receipt": "original/evidence/runs/amix/runs/FACES_mut0_nu4.out",
+          "sha256": "7af2b7ff0db8047056a289fd47324bcfe079eb42ff540334467184c9b43a8398"
+        }
+      ]
+    },
+    {
+      "leg": "amix_G0",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0; F0_nu4_m_s21.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F0_nu4_m_s22.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F0_nu4_n.out: bench2 (n) MUT=0: PASS 2/2; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F0_nu4_ag.out",
+        "evidence/runs/amix/runs/F0_nu4_m_s21.out",
+        "evidence/runs/amix/runs/F0_nu4_m_s22.out",
+        "evidence/runs/amix/runs/F0_nu4_n.out"
+      ],
+      "client": "clients/legs/amix_G0.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F0_nu4_ag.out",
+          "receipt": "original/evidence/runs/amix/runs/F0_nu4_ag.out",
+          "sha256": "045164bdbd397cff415d07535a551e45c2cc1524b87f95c4e80ad6d1bcc7e0ec"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F0_nu4_m_s21.out",
+          "receipt": "original/evidence/runs/amix/runs/F0_nu4_m_s21.out",
+          "sha256": "69fb0db1cf3e41f3137500c91b0147f7dbcb77d7d942324701936671989ffcc2"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F0_nu4_m_s22.out",
+          "receipt": "original/evidence/runs/amix/runs/F0_nu4_m_s22.out",
+          "sha256": "86f95a5dc889041a0af37e6a9bb985b9b19d1852f11a62aad4c6021668f96d25"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F0_nu4_n.out",
+          "receipt": "original/evidence/runs/amix/runs/F0_nu4_n.out",
+          "sha256": "4057e5c878a060db3dc4435cc81782e96396cfe73a28f4e01d5c14e115fe08a3"
+        }
+      ]
+    },
+    {
+      "leg": "amix_G1",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F1_nu4_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0; F1_nu4_m_s21.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F1_nu4_m_s22.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F1_nu4_n.out: bench2 (n) MUT=0: PASS 2/2; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F1_nu4_ag.out",
+        "evidence/runs/amix/runs/F1_nu4_m_s21.out",
+        "evidence/runs/amix/runs/F1_nu4_m_s22.out",
+        "evidence/runs/amix/runs/F1_nu4_n.out"
+      ],
+      "client": "clients/legs/amix_G1.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F1_nu4_ag.out",
+          "receipt": "original/evidence/runs/amix/runs/F1_nu4_ag.out",
+          "sha256": "4c808879a5d94fb54b0fed22484aa826e4e07ec0ca6ef3d6f4b579ab44ceca2d"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F1_nu4_m_s21.out",
+          "receipt": "original/evidence/runs/amix/runs/F1_nu4_m_s21.out",
+          "sha256": "d730e0d17fa7917217a627866060ada06ce82472a5f733f4bfcce9e1bd6e1ce8"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F1_nu4_m_s22.out",
+          "receipt": "original/evidence/runs/amix/runs/F1_nu4_m_s22.out",
+          "sha256": "142d7824ed5c7f89e0a3228901f277295403a7a3cbfd00413854242868a15392"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F1_nu4_n.out",
+          "receipt": "original/evidence/runs/amix/runs/F1_nu4_n.out",
+          "sha256": "80a4d634e4c248d54dba2d7f4c6254156ac7494e50c0aa9c0d331493c1ff5445"
+        }
+      ]
+    },
+    {
+      "leg": "amix_G2",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F2_nu4_ag.out: bench2 (j) MUT=0: PASS 3/3; # exit 0; F2_nu4_m_s21.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F2_nu4_m_s22.out: bench2 (m) MUT=0: PASS 8/8; # exit 0; F2_nu4_n.out: bench2 (n) MUT=0: PASS 2/2; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F2_nu4_ag.out",
+        "evidence/runs/amix/runs/F2_nu4_m_s21.out",
+        "evidence/runs/amix/runs/F2_nu4_m_s22.out",
+        "evidence/runs/amix/runs/F2_nu4_n.out"
+      ],
+      "client": "clients/legs/amix_G2.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F2_nu4_ag.out",
+          "receipt": "original/evidence/runs/amix/runs/F2_nu4_ag.out",
+          "sha256": "47b22939a129cbcb1211a58672fa782a06b67b27bcb8fa5c6fe66cf90c4e5edb"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F2_nu4_m_s21.out",
+          "receipt": "original/evidence/runs/amix/runs/F2_nu4_m_s21.out",
+          "sha256": "5df770b2c4dbd72841ecfecb923b0f20f4d3c8d065d6e458de2cceaaa499850e"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F2_nu4_m_s22.out",
+          "receipt": "original/evidence/runs/amix/runs/F2_nu4_m_s22.out",
+          "sha256": "677fa1a12ad9beb0842cd35c030658e3b87be44f20443ca74ad6818dca27c98c"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F2_nu4_n.out",
+          "receipt": "original/evidence/runs/amix/runs/F2_nu4_n.out",
+          "sha256": "2f7f6c062dc33f822221b5e48f0fcfde815be6762c94382b8c035f2543d2190c"
+        }
+      ]
+    },
+    {
+      "leg": "amix_H1",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu1_h.out: bench2 (h) MUT=0: PASS 12/12; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F0_nu1_h.out"
+      ],
+      "client": "clients/legs/amix_H1.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F0_nu1_h.out",
+          "receipt": "original/evidence/runs/amix/runs/F0_nu1_h.out",
+          "sha256": "bf3b3cd58fdd77e0a1549f39b3dcd29257abfb6440dafdcfe5217279a26fb16c"
+        }
+      ]
+    },
+    {
+      "leg": "amix_H4",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_h.out: bench2 (h) MUT=0: PASS 12/12; # exit 0",
+      "evidence": [
+        "evidence/runs/amix/runs/F0_nu4_h.out"
+      ],
+      "client": "clients/legs/amix_H4.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/F0_nu4_h.out",
+          "receipt": "original/evidence/runs/amix/runs/F0_nu4_h.out",
+          "sha256": "4bc4f06613c12c79fc439573f2ff373b803bb89bdba2148010edf03590b252aa"
+        }
+      ]
+    },
+    {
+      "leg": "amix_N0",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_n_am7_f0.out: bench2 (n) MUT=0: FAIL 1/2; # exit 1",
+      "evidence": [
+        "evidence/runs/amix/runs/NEG_n_am7_f0.out"
+      ],
+      "client": "clients/legs/amix_N0.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/NEG_n_am7_f0.out",
+          "receipt": "original/evidence/runs/amix/runs/NEG_n_am7_f0.out",
+          "sha256": "ddef0d1a175376fec39a7f0d671ba1a9bdf80bf3418e66797e209955291f3f7e"
+        }
+      ]
+    },
+    {
+      "leg": "amix_N1",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_n_am7_f1.out: bench2 (n) MUT=0: FAIL 1/2; # exit 1",
+      "evidence": [
+        "evidence/runs/amix/runs/NEG_n_am7_f1.out"
+      ],
+      "client": "clients/legs/amix_N1.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/NEG_n_am7_f1.out",
+          "receipt": "original/evidence/runs/amix/runs/NEG_n_am7_f1.out",
+          "sha256": "dbcbe02c9898f2a44ad9878dc415b8b757031ef0fae812a3c53b925daeba6995"
+        }
+      ]
+    },
+    {
+      "leg": "amix_N2",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_n_am7_f2.out: bench2 (n) MUT=0: FAIL 1/2; # exit 1",
+      "evidence": [
+        "evidence/runs/amix/runs/NEG_n_am7_f2.out"
+      ],
+      "client": "clients/legs/amix_N2.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/amix/runs/NEG_n_am7_f2.out",
+          "receipt": "original/evidence/runs/amix/runs/NEG_n_am7_f2.out",
+          "sha256": "9017aa88e9c90ac71e662a57fc4a912be7870c3521e3289f080e4493c1f3157d"
+        }
+      ]
+    },
+    {
+      "leg": "coll_mu_bi",
+      "expect": "PASS, cases>0",
+      "status": "STALE FIXTURE FAILURE",
+      "actual": "coll_mu_bi.out: case mu_window_ref_user0 kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL mismatches=22512 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=22528 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=35227; COLL_TP8SL FAIL failed=mu_window,mu_window_ref_user0",
+      "evidence": [
+        "evidence/out/coll_mu_bi.out"
+      ],
+      "client": "clients/legs/coll_mu_bi.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Frozen dv2f14bi (non-release); source-bound failure retained",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/coll_mu_bi.out",
+          "receipt": "original/evidence/out/coll_mu_bi.out",
+          "sha256": "bea412ba11973f7b949ac88f9da490c5052e4dd457e0e8519ced44b0a152955f"
+        }
+      ]
+    },
+    {
+      "leg": "coll_mu_bi_mut_rank",
+      "expect": "negative-control PASS, cases>0, expected FAIL witnessed",
+      "status": "INVALID CAUSAL CONTROL",
+      "actual": "coll_mu_bi_mut_rank.out: case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=61432 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138; COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378; same baseline all-die fault makes this an invalid causal witness",
+      "evidence": [
+        "evidence/out/coll_mu_bi_mut_rank.out"
+      ],
+      "client": "clients/legs/coll_mu_bi_mut_rank.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Frozen dv2f14bi (non-release); source-bound failure retained",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/coll_mu_bi_mut_rank.out",
+          "receipt": "original/evidence/out/coll_mu_bi_mut_rank.out",
+          "sha256": "f3286ba2d54a9551005aba5dc6bde8ffb7021e2bf7805d66536d1a39dca4a546"
+        }
+      ]
+    },
+    {
+      "leg": "coll_mu_bi_mut_rlat",
+      "expect": "negative-control PASS, cases>0, expected FAIL witnessed",
+      "status": "INVALID CAUSAL CONTROL",
+      "actual": "coll_mu_bi_mut_rlat.out: case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RLAT FAIL (expected FAIL) mismatches=61432 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138; COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378; same baseline all-die fault makes this an invalid causal witness",
+      "evidence": [
+        "evidence/out/coll_mu_bi_mut_rlat.out"
+      ],
+      "client": "clients/legs/coll_mu_bi_mut_rlat.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Frozen dv2f14bi (non-release); source-bound failure retained",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/coll_mu_bi_mut_rlat.out",
+          "receipt": "original/evidence/out/coll_mu_bi_mut_rlat.out",
+          "sha256": "6d859007f20aa7956855c225af4c14b27e39d19c3093eaae63f8acb6942f30b9"
+        }
+      ]
+    },
+    {
+      "leg": "coll_mu_bi_neg_overlap",
+      "expect": "negative-control PASS, cases>0, expected FAIL witnessed",
+      "status": "INVALID CAUSAL CONTROL",
+      "actual": "coll_mu_bi_neg_overlap.out: case mu_window_neg_overlap kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=59384 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=11111111 die_fault=11111111 words_out=59392 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138; COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378; same baseline all-die fault makes this an invalid causal witness",
+      "evidence": [
+        "evidence/out/coll_mu_bi_neg_overlap.out"
+      ],
+      "client": "clients/legs/coll_mu_bi_neg_overlap.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Frozen dv2f14bi (non-release); source-bound failure retained",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/coll_mu_bi_neg_overlap.out",
+          "receipt": "original/evidence/out/coll_mu_bi_neg_overlap.out",
+          "sha256": "c543117851992830fdfc91bcf5983edf355b0e864f48303fe06fcfa5dfef0322"
+        }
+      ]
+    },
+    {
+      "leg": "ctlm_mu",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "ctlm_mu.out: MU_CTLM BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/ctlm_mu.out"
+      ],
+      "client": "clients/legs/ctlm_mu.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/ctlm_mu.out",
+          "receipt": "original/evidence/out/ctlm_mu.out",
+          "sha256": "f4321abf8c407cc88f14c590c6d33146be678a0a4cdc34d34c4240845a5e4e77"
+        }
+      ]
+    },
+    {
+      "leg": "ctlm_nsl12",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "ctlm_nsl12.out: MU_CTLM BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/ctlm_nsl12.out"
+      ],
+      "client": "clients/legs/ctlm_nsl12.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/ctlm_nsl12.out",
+          "receipt": "original/evidence/out/ctlm_nsl12.out",
+          "sha256": "d1b76c98bfbaaef2b978ed484ec6fd281ac960fa67c1c4bd628c71684365136a"
+        }
+      ]
+    },
+    {
+      "leg": "ctlm_rest",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "ctlm_rest.out: MU_CTLM BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/ctlm_rest.out"
+      ],
+      "client": "clients/legs/ctlm_rest.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/ctlm_rest.out",
+          "receipt": "original/evidence/out/ctlm_rest.out",
+          "sha256": "1bb42c91c1701e8911ace767a56af62a0ddb0d28da43f13db230e518918d4217"
+        }
+      ]
+    },
+    {
+      "leg": "head",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "head.out: user_pass_s2 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=2; overall rc=0",
+      "evidence": [
+        "evidence/out/head.out"
+      ],
+      "client": "clients/legs/head.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/head.out",
+          "receipt": "original/evidence/out/head.out",
+          "sha256": "d3ea478c0ee7ce5d0fbc72a8ecd34668ee911866a193d1054aaab847a409ba5a"
+        }
+      ]
+    },
+    {
+      "leg": "host",
+      "expect": "MU1 PASS; cm1-4/hm1-4/rm1-2 FAIL; 13 MU0 benches identical",
+      "status": "AS EXPECTED",
+      "actual": "host.out:   tb_qkd_host_prompt_ue identical; # exit 0",
+      "evidence": [
+        "evidence/out/host.out"
+      ],
+      "client": "clients/legs/host.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/host.out",
+          "receipt": "original/evidence/out/host.out",
+          "sha256": "0654c68598f8a0f8a8cebb4e5fcf16f05b50cb1ce9276c53f6ea55981b0f37b2"
+        }
+      ]
+    },
+    {
+      "leg": "hroot",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "hroot.out: MU_HROOT tb_mu_lprg_lockstep_s2 rc=0: PASS MU_LPRG_LOCKSTEP seed=1234 mu0_cmp=5102 mu1_cmp=5098 events=807 (MU0 == original; MU1 user 0 gap 0 == original); # exit 0",
+      "evidence": [
+        "evidence/out/hroot.out"
+      ],
+      "client": "clients/legs/hroot.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/hroot.out",
+          "receipt": "original/evidence/out/hroot.out",
+          "sha256": "bb3ea494e86fcb9c3b2da2e3070a1cd4aa66079275da11dd961f7e48b6f88613"
+        }
+      ]
+    },
+    {
+      "leg": "kv",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "kv.out: MU_KV tb_mu_kv_writer_rows rc=0: PASS MU_KV_WRITE_ROWS users4 x layers36 x positions8192 (stage-interleaved) words4718592 sectors9437184 unique alias0 inverse{user,layer,pos,kind,dim}+raw exact; MU1 == plain writer outside row[9:8]; MU0 wrapper == plain writer; # exit 0",
+      "evidence": [
+        "evidence/out/kv.out"
+      ],
+      "client": "clients/legs/kv.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/kv.out",
+          "receipt": "original/evidence/out/kv.out",
+          "sha256": "96f45ad3f8bd078f6931588f060830adeaeb111e19c08b4c3b3ce50cf9828881"
+        }
+      ]
+    },
+    {
+      "leg": "opseg_mut",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "opseg_mut.out: MU_OPSEG BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/opseg_mut.out"
+      ],
+      "client": "clients/legs/opseg_mut.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/opseg_mut.out",
+          "receipt": "original/evidence/out/opseg_mut.out",
+          "sha256": "1c9cd028892652a95fc43395825d1a76a01d281627f621ffd1f3080c89be98c5"
+        }
+      ]
+    },
+    {
+      "leg": "opseg_pass",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "opseg_pass.out: MU_OPSEG BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/opseg_pass.out"
+      ],
+      "client": "clients/legs/opseg_pass.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/opseg_pass.out",
+          "receipt": "original/evidence/out/opseg_pass.out",
+          "sha256": "fc24b79a047aa194bb5a004bc74d0a3a307ff8d1d9aced1f1495e40eb8e8b48a"
+        }
+      ]
+    },
+    {
+      "leg": "sl_DHUSER",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "dhuser_fieldmap.out: seq_dh field map OK (h_start [42], stage [41:36]); dhuser_mut1.out: TB_DHUSER FAIL MUT=1 3494 mismatches; # exit 0; dhuser_mut2_slip.out: TB_DHUSER FAIL slip not detected (det -1); # exit 0; dhuser_mut3.out: TB_DHUSER FAIL MUT=3 349 mismatches; # exit 0; dhuser_pass_s11.out: TB_DHUSER PASS MUT=0; # exit 0; dhuser_pass_s7.out: TB_DHUSER PASS MUT=0; # exit 0; dhuser_slip_pass.out: TB_DHUSER PASS slip detected 2 h_starts after the slip (NU1 err 0); # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/dhuser_fieldmap.out",
+        "evidence/runs/adopt_slice/runs/dhuser_mut1.out",
+        "evidence/runs/adopt_slice/runs/dhuser_mut2_slip.out",
+        "evidence/runs/adopt_slice/runs/dhuser_mut3.out",
+        "evidence/runs/adopt_slice/runs/dhuser_pass_s11.out",
+        "evidence/runs/adopt_slice/runs/dhuser_pass_s7.out",
+        "evidence/runs/adopt_slice/runs/dhuser_slip_pass.out"
+      ],
+      "client": "clients/legs/sl_DHUSER.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/dhuser_fieldmap.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/dhuser_fieldmap.out",
+          "sha256": "c07ee491d8451dd505815775926d0b10a67b639ee827426823e93fd0225c1108"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/dhuser_mut1.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/dhuser_mut1.out",
+          "sha256": "3b139096f2e7aa6e50e3637619e4817f55a779b3d7d5d96267611592745b41ac"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/dhuser_mut2_slip.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/dhuser_mut2_slip.out",
+          "sha256": "1f131691ff59da71d009cee49e7b289b99c63f6f8dcdc0ab252dc8cc43d1e1b9"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/dhuser_mut3.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/dhuser_mut3.out",
+          "sha256": "361ea9412cb7e2d483ab68d0280e220e808d8f56f430a82d9fb3440e38a17f68"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/dhuser_pass_s11.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/dhuser_pass_s11.out",
+          "sha256": "c5c3ee5a88ec1ee611836f3f61bf45cd4cf87837aac6b48305a188c8b5b0b705"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/dhuser_pass_s7.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/dhuser_pass_s7.out",
+          "sha256": "846bce8790d93a5911bcd2a375344c3ec10ffb6e5d2871de37fb93711efec487"
+        },
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/dhuser_slip_pass.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/dhuser_slip_pass.out",
+          "sha256": "1eba17e4b17b90b426846cbeeda91a53e440a5221c4a29bf95c419a41f6ebecd"
+        }
+      ]
+    },
+    {
+      "leg": "sl_F0_nu4_m_gap16",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_m_gap16.out: bench2 (m) MUT=0: PASS 8/8; # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/F0_nu4_m_gap16.out"
+      ],
+      "client": "clients/legs/sl_F0_nu4_m_gap16.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/F0_nu4_m_gap16.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/F0_nu4_m_gap16.out",
+          "sha256": "b0a111c54b1cf4703893eff0a7bd948c7e389213f2fce4a6c23bda83b5b9600d"
+        }
+      ]
+    },
+    {
+      "leg": "sl_F0_nu4_m_gap20",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_m_gap20.out: bench2 (m) MUT=0: PASS 8/8; # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/F0_nu4_m_gap20.out"
+      ],
+      "client": "clients/legs/sl_F0_nu4_m_gap20.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/F0_nu4_m_gap20.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/F0_nu4_m_gap20.out",
+          "sha256": "ea0d4b093709e34fa0796319f26fdaa1eac35ce3467cccd01d43f34405fc26d3"
+        }
+      ]
+    },
+    {
+      "leg": "sl_F0_nu4_m_gap24",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_m_gap24.out: bench2 (m) MUT=0: PASS 8/8; # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/F0_nu4_m_gap24.out"
+      ],
+      "client": "clients/legs/sl_F0_nu4_m_gap24.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/F0_nu4_m_gap24.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/F0_nu4_m_gap24.out",
+          "sha256": "acdd4f81469b0ae5ccad949f4a12fa8aefa12747aef58e5baf6080661d4d21de"
+        }
+      ]
+    },
+    {
+      "leg": "sl_F0_nu4_m_gap30",
+      "expect": "PASS",
+      "status": "AS EXPECTED",
+      "actual": "F0_nu4_m_gap30.out: bench2 (m) MUT=0: PASS 8/8; # exit 0",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/F0_nu4_m_gap30.out"
+      ],
+      "client": "clients/legs/sl_F0_nu4_m_gap30.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/F0_nu4_m_gap30.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/F0_nu4_m_gap30.out",
+          "sha256": "2d7a40b91d52b2653f8f8ce4def96e94a87d988251eca4ee0409356750b47ec9"
+        }
+      ]
+    },
+    {
+      "leg": "sl_FACES_mut11_nu4",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "FACES MUT=11: FAIL 1 at 162 ns; behavioral rc 1; outer rc 0",
+      "evidence": [],
+      "client": "clients/legs_r3/sl_FACES_mut11_nu4.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original MU_NU=4 r3; prior SIGTERM143 rejected",
+      "receipts": [
+        {
+          "commit": "cd660e13e109a606ff27c26a639a4b8ab864ad9e",
+          "path": "results/rtl/mu_qwen_1018/faces_terminal_1019/FACES_mut11_nu4.out",
+          "receipt": "evidence/sl_FACES_mut11_nu4.out",
+          "sha256": "9429d381608e957048f3db1c72775794e19f35189e53332b73717c6760f781fe"
+        }
+      ]
+    },
+    {
+      "leg": "sl_FACES_mut12_nu4",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "FACES MUT=12: FAIL 1 at 162 ns; behavioral rc 1; outer rc 0",
+      "evidence": [],
+      "client": "clients/legs_r3/sl_FACES_mut12_nu4.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original MU_NU=4 r3; prior SIGTERM143 rejected",
+      "receipts": [
+        {
+          "commit": "cd660e13e109a606ff27c26a639a4b8ab864ad9e",
+          "path": "results/rtl/mu_qwen_1018/faces_terminal_1019/FACES_mut12_nu4.out",
+          "receipt": "evidence/sl_FACES_mut12_nu4.out",
+          "sha256": "d7b2b4d0b8319ed4c3aa83fcbba911fc36b0894f16ff23e02c6fea17838558ec"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_i_mut11_nu4",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_i_mut11_nu4.out: bench2 (i) MUT=11: FAIL 1/3; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_i_mut11_nu4.out"
+      ],
+      "client": "clients/legs/sl_NEG_i_mut11_nu4.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_i_mut11_nu4.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_i_mut11_nu4.out",
+          "sha256": "1af710d039e7b371031fc7161555fc620c67e7300e24c38ccb15868cc8008f51"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_j_mut12_nu4",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_j_mut12_nu4.out: bench2 (j) MUT=12: FAIL 1/3; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_j_mut12_nu4.out"
+      ],
+      "client": "clients/legs/sl_NEG_j_mut12_nu4.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_j_mut12_nu4.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_j_mut12_nu4.out",
+          "sha256": "baaaa74b8c7d2471a7014f7e53fac57415edebef4626d0d9e0618dd8b313caae"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_m_am1",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am1.out: bench2 (m) MUT=0: FAIL 7/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am1.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am1.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_m_am1.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_m_am1.out",
+          "sha256": "cbb0c7211afe4f469d7d269a7c5e3617cd36b014b7a208c076093f648c27d40d"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_m_am2",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am2.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am2.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am2.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_m_am2.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_m_am2.out",
+          "sha256": "ba6addf8b2bd3aacc155781fac517720b92182deb25e394a8ab6f7c6b7569474"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_m_am2_e",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am2_e.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am2_e.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am2_e.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_m_am2_e.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_m_am2_e.out",
+          "sha256": "cc7315fe84f9f89c8939eccdc00cc44ce91322433e1b903fc790c9cce0bca21f"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_m_am3",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am3.out: bench2 (m) MUT=0: FAIL 6/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am3.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am3.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_m_am3.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_m_am3.out",
+          "sha256": "f4cef5dfebea892985e5cfbd5bbf9f8f4736ef918089faf32eb4725de0a918ce"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_m_am4",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am4.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am4.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am4.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_m_am4.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_m_am4.out",
+          "sha256": "9cd8d8c6c9bb53d1d42fbb291144dd7b17960f41d5f783e7b275cd56491d5391"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_m_am6_rootnoclr",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_am6_rootnoclr.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_am6_rootnoclr.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_am6_rootnoclr.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_m_am6_rootnoclr.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_m_am6_rootnoclr.out",
+          "sha256": "d60ad607f3541bdc1508ed250a6dffef71c57fd2f46417e00747cb692579b35d"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_m_gap12_stnpend",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_gap12_stnpend.out: bench2 (m) MUT=0: FAIL 1/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_gap12_stnpend.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_gap12_stnpend.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_m_gap12_stnpend.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_m_gap12_stnpend.out",
+          "sha256": "ca2cd3ee027fce4da6da03159d344fe72ad7539fc5497a58b0cec83be010ae72"
+        }
+      ]
+    },
+    {
+      "leg": "sl_NEG_m_nu1_w",
+      "expect": "FAIL with behavioral witness",
+      "status": "AS EXPECTED",
+      "actual": "NEG_m_nu1_w.out: bench2 (m) MUT=0: FAIL 2/8; # exit 1",
+      "evidence": [
+        "evidence/runs/adopt_slice/runs/NEG_m_nu1_w.out"
+      ],
+      "client": "clients/legs/sl_NEG_m_nu1_w.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/runs/adopt_slice/runs/NEG_m_nu1_w.out",
+          "receipt": "original/evidence/runs/adopt_slice/runs/NEG_m_nu1_w.out",
+          "sha256": "3ff74dffa30973b1aa885003c55a21d3aa16f975927b4cb0bfbb1c9e3dcef97e"
+        }
+      ]
+    },
+    {
+      "leg": "tok",
+      "expect": "positives PASS; defined mutants FAIL; suite succeeds",
+      "status": "AS EXPECTED",
+      "actual": "tok.out: MU_TOK_SMOKE BENCHES: PASS; # exit 0",
+      "evidence": [
+        "evidence/out/tok.out"
+      ],
+      "client": "clients/legs/tok.log",
+      "source_commit": "0e6795834c4aeab9537216c77473df6f6cfe2198",
+      "source_tree": "9ec5fbaa8afcfaa008765cb8d1fc630782a191a9",
+      "source_hash_scope": "Archived source commit; per-file fleet hash census not supplied for this leg",
+      "fixture": "Original frozen recipe; see original_launch.sh",
+      "receipts": [
+        {
+          "commit": "2a11b195b41f5b84e4e172ae40900b7e7c099761",
+          "path": "results/rtl/mu_qwen_1018/merge_reg_0e6795834/evidence/out/tok.out",
+          "receipt": "original/evidence/out/tok.out",
+          "sha256": "f402739d9cb10324f2fd548b3e8826847f2e7a66f76338f1ee9c1c149e49ea47"
+        }
+      ]
+    }
+  ],
+  "replacement_records": [
+    {
+      "case": "mu_bi",
+      "evidence": {
+        "commit": "e6b9c55f233effafeade307e664ebaf1462f64da",
+        "path": "results/rtl/mu_qwen_current_1019/out/record.json",
+        "receipt": "current/mu_bi.json",
+        "sha256": "e62d0f57e65c70fbb189078642106152d34864b23bc44a357d183da513087f92"
+      },
+      "source_sha256": {
+        "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+        "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+        "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+        "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+        "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+        "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a2b9c4041a6e49b2c632d3dcf6b3cbfea6f87ec9a2ce1e5589af3607fa52132",
+        "rtl/physical/ot_qfd_static_transport.sv": "1ce0011bd1adba3b44829431a34de3b93317ed94a5b0cb3f36021e3b92d7f0ee",
+        "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+        "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+        "rtl/physical/ot_qfd_coll_static_face.sv": "21fdffb42f686c7cbda3dd39965cdab3e69441005a6fd49a5619bafe040e4fe5",
+        "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+        "rtl/physical/ot_qfd_ucie_six_five.sv": "0fd88534e14d25675966684ea23489e09a2e3658cab25ad6c5c9e176bfd8e5f6",
+        "rtl/physical/ot_qfd_collective_static_io.sv": "580fecebe3ef3f8827a34bffcf944f6de0b79892cc8962fec946ac6094fab6a6",
+        "rtl/physical/ot_qfd_collective_static_io_production.sv": "e802fb62ed1060d777160f43d640348db04ee910ad03dff48efddcc2241775f5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "8c2e55b9df71313443349381db4b1d4415c6e52277f85aaa33c676ca6b0a6f2a",
+        "rtl/rom/ot_coll_tp8_static.sv": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336",
+        "rtl/physical/ot_qfd_io_collective_static.sv": "4f91ada708385c9ad80a6a9b03f0d70b8f5bae7ca2c0ce171c423cd0e1fccc8d",
+        "rtl/rom/ot_coll_static_linkcal.sv": "6562eaffb40c6e59bb0b68ba6c48a9649f71c7c3da4994a3b19ba160d200bad7",
+        "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+        "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+        "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+        "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+        "rtl/test/tb_coll_tp8_static_links.sv": "4e82d2d46d202b2637ea2095556a052329afa67fc1ed9eb022791668d1729a35",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_p_safe.sv": "7d0d41256445061cd6cf7fa59efec2529a734e7930fb59e679804c762e499770",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_r_safe.sv": "a934bea7252f9c73adb125e75349c29673a281d3e9ddfd6b231c7e0a98ce6a12",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s0_safe.sv": "8de8ffff7165f8b413f32b7c67082a52fe035c5d576d0ac2851e4294318a1e49",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s1_safe.sv": "17682e89a3f74d9ff834c7fe6e6189e3f19b2820a4e29c4f78e099298dbb4483",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s2_safe.sv": "94507c9b4f2dba0b7af617edc72f62f1f68301958ea34c56521794106b48f775"
+      },
+      "helper_sha256": {
+        "tools/qwen_coll_tp8_static_links_bench.py": "01e354edb0b3dddf6576bcbda1efd010e6757961da0510bff21ba00a6ef9bf1b",
+        "tools/qwen_coll_tp8_static_bench.py": "792ebb71e298265f206b9f09d403aaa216dd210b41e5ac0c2f8ae8e4fd45d84f",
+        "tools/qwen_coll_tp8_bench.py": "2e7afe167dfb5485615db26f9d8df023ad6f5612e67737f0f874e5dae4601f44",
+        "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+        "tools/qwen_split/lane_groups.py": "e5fb530c6a11afe603301b3be7000d46e996d713e915c0593be197e19f0cf8e7"
+      },
+      "executable_sha256": "1cf3f0183fd3e474c6ccd0962c79edd8f40072736acae1abd5bb5fb61d7618d2",
+      "cases": [
+        {
+          "name": "mu_window",
+          "passed": true,
+          "result": {
+            "mismatches": "0",
+            "extra": "0",
+            "out_err": "0",
+            "cmd_bad": "0",
+            "coll_fault": "00000000",
+            "issuer_fault": "00000000",
+            "die_fault": "00000000",
+            "words_out": "61440",
+            "meas_lu": "53",
+            "meas_ls": "378",
+            "pr_overlap": "0",
+            "issuer_done": "00000000"
+          }
+        },
+        {
+          "name": "mu_window_ref_user0",
+          "passed": true,
+          "result": {
+            "mismatches": "0",
+            "extra": "0",
+            "out_err": "0",
+            "cmd_bad": "0",
+            "coll_fault": "00000000",
+            "issuer_fault": "00000000",
+            "die_fault": "00000000",
+            "words_out": "22528",
+            "meas_lu": "53",
+            "meas_ls": "378",
+            "pr_overlap": "0",
+            "issuer_done": "00000000"
+          }
+        }
+      ]
+    },
+    {
+      "case": "mu_bi_mut_rank",
+      "evidence": {
+        "commit": "5f5080c8698e06344eb3a4a10cf0503700fbeae2",
+        "path": "results/rtl/mu_qwen_current_1019/qw_mureg_negatives/out_mu_bi_mut_rank/record.json",
+        "receipt": "current/mu_bi_mut_rank.json",
+        "sha256": "28ba31579c0f4b50766e16e82f5eee77b42f4793209cef014ed3ec575ea76b35"
+      },
+      "source_sha256": {
+        "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+        "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+        "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+        "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+        "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+        "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a2b9c4041a6e49b2c632d3dcf6b3cbfea6f87ec9a2ce1e5589af3607fa52132",
+        "rtl/physical/ot_qfd_static_transport.sv": "1ce0011bd1adba3b44829431a34de3b93317ed94a5b0cb3f36021e3b92d7f0ee",
+        "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+        "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+        "rtl/physical/ot_qfd_coll_static_face.sv": "21fdffb42f686c7cbda3dd39965cdab3e69441005a6fd49a5619bafe040e4fe5",
+        "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+        "rtl/physical/ot_qfd_ucie_six_five.sv": "0fd88534e14d25675966684ea23489e09a2e3658cab25ad6c5c9e176bfd8e5f6",
+        "rtl/physical/ot_qfd_collective_static_io.sv": "580fecebe3ef3f8827a34bffcf944f6de0b79892cc8962fec946ac6094fab6a6",
+        "rtl/physical/ot_qfd_collective_static_io_production.sv": "e802fb62ed1060d777160f43d640348db04ee910ad03dff48efddcc2241775f5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "8c2e55b9df71313443349381db4b1d4415c6e52277f85aaa33c676ca6b0a6f2a",
+        "rtl/rom/ot_coll_tp8_static.sv": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336",
+        "rtl/physical/ot_qfd_io_collective_static.sv": "4f91ada708385c9ad80a6a9b03f0d70b8f5bae7ca2c0ce171c423cd0e1fccc8d",
+        "rtl/rom/ot_coll_static_linkcal.sv": "6562eaffb40c6e59bb0b68ba6c48a9649f71c7c3da4994a3b19ba160d200bad7",
+        "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+        "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+        "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+        "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+        "rtl/test/tb_coll_tp8_static_links.sv": "4e82d2d46d202b2637ea2095556a052329afa67fc1ed9eb022791668d1729a35",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_p_safe.sv": "7d0d41256445061cd6cf7fa59efec2529a734e7930fb59e679804c762e499770",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_r_safe.sv": "a934bea7252f9c73adb125e75349c29673a281d3e9ddfd6b231c7e0a98ce6a12",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s0_safe.sv": "8de8ffff7165f8b413f32b7c67082a52fe035c5d576d0ac2851e4294318a1e49",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s1_safe.sv": "17682e89a3f74d9ff834c7fe6e6189e3f19b2820a4e29c4f78e099298dbb4483",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s2_safe.sv": "94507c9b4f2dba0b7af617edc72f62f1f68301958ea34c56521794106b48f775"
+      },
+      "helper_sha256": {
+        "tools/qwen_coll_tp8_static_links_bench.py": "01e354edb0b3dddf6576bcbda1efd010e6757961da0510bff21ba00a6ef9bf1b",
+        "tools/qwen_coll_tp8_static_bench.py": "792ebb71e298265f206b9f09d403aaa216dd210b41e5ac0c2f8ae8e4fd45d84f",
+        "tools/qwen_coll_tp8_bench.py": "2e7afe167dfb5485615db26f9d8df023ad6f5612e67737f0f874e5dae4601f44",
+        "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+        "tools/qwen_split/lane_groups.py": "e5fb530c6a11afe603301b3be7000d46e996d713e915c0593be197e19f0cf8e7"
+      },
+      "executable_sha256": "715b6bfed815fa36cf9203ec9b03d7455d4acc852aaae09a527cc325a128a2a3",
+      "cases": [
+        {
+          "name": "mu_window",
+          "passed": false,
+          "result": {
+            "mismatches": "42288",
+            "extra": "0",
+            "out_err": "0",
+            "cmd_bad": "0",
+            "coll_fault": "00000000",
+            "issuer_fault": "00000000",
+            "die_fault": "00000000",
+            "words_out": "61440",
+            "meas_lu": "53",
+            "meas_ls": "378",
+            "pr_overlap": "0",
+            "issuer_done": "00000000"
+          }
+        }
+      ]
+    },
+    {
+      "case": "mu_bi_mut_rlat",
+      "evidence": {
+        "commit": "5f5080c8698e06344eb3a4a10cf0503700fbeae2",
+        "path": "results/rtl/mu_qwen_current_1019/qw_mureg_negatives/out_mu_bi_mut_rlat/record.json",
+        "receipt": "current/mu_bi_mut_rlat.json",
+        "sha256": "b9753b7f1f26d9acde75e9ca2d7d007ac160cb939b71a2b438792ca4aca8737a"
+      },
+      "source_sha256": {
+        "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+        "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+        "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+        "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+        "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+        "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a2b9c4041a6e49b2c632d3dcf6b3cbfea6f87ec9a2ce1e5589af3607fa52132",
+        "rtl/physical/ot_qfd_static_transport.sv": "1ce0011bd1adba3b44829431a34de3b93317ed94a5b0cb3f36021e3b92d7f0ee",
+        "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+        "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+        "rtl/physical/ot_qfd_coll_static_face.sv": "21fdffb42f686c7cbda3dd39965cdab3e69441005a6fd49a5619bafe040e4fe5",
+        "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+        "rtl/physical/ot_qfd_ucie_six_five.sv": "0fd88534e14d25675966684ea23489e09a2e3658cab25ad6c5c9e176bfd8e5f6",
+        "rtl/physical/ot_qfd_collective_static_io.sv": "580fecebe3ef3f8827a34bffcf944f6de0b79892cc8962fec946ac6094fab6a6",
+        "rtl/physical/ot_qfd_collective_static_io_production.sv": "e802fb62ed1060d777160f43d640348db04ee910ad03dff48efddcc2241775f5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "8c2e55b9df71313443349381db4b1d4415c6e52277f85aaa33c676ca6b0a6f2a",
+        "rtl/rom/ot_coll_tp8_static.sv": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336",
+        "rtl/physical/ot_qfd_io_collective_static.sv": "4f91ada708385c9ad80a6a9b03f0d70b8f5bae7ca2c0ce171c423cd0e1fccc8d",
+        "rtl/rom/ot_coll_static_linkcal.sv": "6562eaffb40c6e59bb0b68ba6c48a9649f71c7c3da4994a3b19ba160d200bad7",
+        "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+        "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+        "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+        "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+        "rtl/test/tb_coll_tp8_static_links.sv": "4e82d2d46d202b2637ea2095556a052329afa67fc1ed9eb022791668d1729a35",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_p_safe.sv": "7d0d41256445061cd6cf7fa59efec2529a734e7930fb59e679804c762e499770",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_r_safe.sv": "a934bea7252f9c73adb125e75349c29673a281d3e9ddfd6b231c7e0a98ce6a12",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s0_safe.sv": "8de8ffff7165f8b413f32b7c67082a52fe035c5d576d0ac2851e4294318a1e49",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s1_safe.sv": "17682e89a3f74d9ff834c7fe6e6189e3f19b2820a4e29c4f78e099298dbb4483",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s2_safe.sv": "94507c9b4f2dba0b7af617edc72f62f1f68301958ea34c56521794106b48f775"
+      },
+      "helper_sha256": {
+        "tools/qwen_coll_tp8_static_links_bench.py": "01e354edb0b3dddf6576bcbda1efd010e6757961da0510bff21ba00a6ef9bf1b",
+        "tools/qwen_coll_tp8_static_bench.py": "792ebb71e298265f206b9f09d403aaa216dd210b41e5ac0c2f8ae8e4fd45d84f",
+        "tools/qwen_coll_tp8_bench.py": "2e7afe167dfb5485615db26f9d8df023ad6f5612e67737f0f874e5dae4601f44",
+        "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+        "tools/qwen_split/lane_groups.py": "e5fb530c6a11afe603301b3be7000d46e996d713e915c0593be197e19f0cf8e7"
+      },
+      "executable_sha256": "7657329e92dad8e6b48facd90109b9e5bc8321166ae85da05c9f6f3d3832886a",
+      "cases": [
+        {
+          "name": "mu_window",
+          "passed": false,
+          "result": {
+            "mismatches": "30720",
+            "extra": "0",
+            "out_err": "0",
+            "cmd_bad": "0",
+            "coll_fault": "00000000",
+            "issuer_fault": "00000000",
+            "die_fault": "00000000",
+            "words_out": "61440",
+            "meas_lu": "53",
+            "meas_ls": "378",
+            "pr_overlap": "0",
+            "issuer_done": "00000000"
+          }
+        }
+      ]
+    },
+    {
+      "case": "mu_bi_neg_overlap",
+      "evidence": {
+        "commit": "5f5080c8698e06344eb3a4a10cf0503700fbeae2",
+        "path": "results/rtl/mu_qwen_current_1019/qw_mureg_negatives/out_mu_bi_neg_overlap/record.json",
+        "receipt": "current/mu_bi_neg_overlap.json",
+        "sha256": "c355c417f8f8e5e6d5daac66453121572e5e8f2ec5f1abdbc62443c7bedcc2bc"
+      },
+      "source_sha256": {
+        "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+        "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+        "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+        "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+        "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+        "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a2b9c4041a6e49b2c632d3dcf6b3cbfea6f87ec9a2ce1e5589af3607fa52132",
+        "rtl/physical/ot_qfd_static_transport.sv": "1ce0011bd1adba3b44829431a34de3b93317ed94a5b0cb3f36021e3b92d7f0ee",
+        "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+        "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+        "rtl/physical/ot_qfd_coll_static_face.sv": "21fdffb42f686c7cbda3dd39965cdab3e69441005a6fd49a5619bafe040e4fe5",
+        "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+        "rtl/physical/ot_qfd_ucie_six_five.sv": "0fd88534e14d25675966684ea23489e09a2e3658cab25ad6c5c9e176bfd8e5f6",
+        "rtl/physical/ot_qfd_collective_static_io.sv": "580fecebe3ef3f8827a34bffcf944f6de0b79892cc8962fec946ac6094fab6a6",
+        "rtl/physical/ot_qfd_collective_static_io_production.sv": "e802fb62ed1060d777160f43d640348db04ee910ad03dff48efddcc2241775f5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "8c2e55b9df71313443349381db4b1d4415c6e52277f85aaa33c676ca6b0a6f2a",
+        "rtl/rom/ot_coll_tp8_static.sv": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336",
+        "rtl/physical/ot_qfd_io_collective_static.sv": "4f91ada708385c9ad80a6a9b03f0d70b8f5bae7ca2c0ce171c423cd0e1fccc8d",
+        "rtl/rom/ot_coll_static_linkcal.sv": "6562eaffb40c6e59bb0b68ba6c48a9649f71c7c3da4994a3b19ba160d200bad7",
+        "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+        "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+        "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+        "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+        "rtl/test/tb_coll_tp8_static_links.sv": "4e82d2d46d202b2637ea2095556a052329afa67fc1ed9eb022791668d1729a35",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_p_safe.sv": "7d0d41256445061cd6cf7fa59efec2529a734e7930fb59e679804c762e499770",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_r_safe.sv": "a934bea7252f9c73adb125e75349c29673a281d3e9ddfd6b231c7e0a98ce6a12",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s0_safe.sv": "8de8ffff7165f8b413f32b7c67082a52fe035c5d576d0ac2851e4294318a1e49",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s1_safe.sv": "17682e89a3f74d9ff834c7fe6e6189e3f19b2820a4e29c4f78e099298dbb4483",
+        "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s2_safe.sv": "94507c9b4f2dba0b7af617edc72f62f1f68301958ea34c56521794106b48f775"
+      },
+      "helper_sha256": {
+        "tools/qwen_coll_tp8_static_links_bench.py": "01e354edb0b3dddf6576bcbda1efd010e6757961da0510bff21ba00a6ef9bf1b",
+        "tools/qwen_coll_tp8_static_bench.py": "792ebb71e298265f206b9f09d403aaa216dd210b41e5ac0c2f8ae8e4fd45d84f",
+        "tools/qwen_coll_tp8_bench.py": "2e7afe167dfb5485615db26f9d8df023ad6f5612e67737f0f874e5dae4601f44",
+        "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+        "tools/qwen_split/lane_groups.py": "e5fb530c6a11afe603301b3be7000d46e996d713e915c0593be197e19f0cf8e7"
+      },
+      "executable_sha256": "dbe6182fb859cae0615705e845848713895fa039e23970651a01999ea60170ec",
+      "cases": [
+        {
+          "name": "mu_window_neg_overlap",
+          "passed": false,
+          "result": {
+            "mismatches": "58376",
+            "extra": "0",
+            "out_err": "0",
+            "cmd_bad": "0",
+            "coll_fault": "11111111",
+            "issuer_fault": "11111111",
+            "die_fault": "11111111",
+            "words_out": "59392",
+            "meas_lu": "53",
+            "meas_ls": "378",
+            "pr_overlap": "0",
+            "issuer_done": "00000000"
+          }
+        }
+      ]
+    },
+    {
+      "case": "mu_bi_dv2f14bi_diagnostic",
+      "evidence": {
+        "commit": "5f5080c8698e06344eb3a4a10cf0503700fbeae2",
+        "path": "results/rtl/mu_qwen_current_1019/qw_mureg_negatives/out_mu_bi_dv2f14bi_diagnostic/record.json",
+        "receipt": "current/mu_bi_dv2f14bi_diagnostic.json",
+        "sha256": "2ec7f3232464d4daf5394f9388fed8e268f9754786c4c948901dea61bbfa0046"
+      },
+      "source_sha256": {
+        "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+        "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+        "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+        "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+        "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+        "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+        "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+        "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a2b9c4041a6e49b2c632d3dcf6b3cbfea6f87ec9a2ce1e5589af3607fa52132",
+        "rtl/physical/ot_qfd_static_transport.sv": "1ce0011bd1adba3b44829431a34de3b93317ed94a5b0cb3f36021e3b92d7f0ee",
+        "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+        "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+        "rtl/physical/ot_qfd_coll_static_face.sv": "21fdffb42f686c7cbda3dd39965cdab3e69441005a6fd49a5619bafe040e4fe5",
+        "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+        "rtl/physical/ot_qfd_ucie_six_five.sv": "0fd88534e14d25675966684ea23489e09a2e3658cab25ad6c5c9e176bfd8e5f6",
+        "rtl/physical/ot_qfd_collective_static_io.sv": "580fecebe3ef3f8827a34bffcf944f6de0b79892cc8962fec946ac6094fab6a6",
+        "rtl/physical/ot_qfd_collective_static_io_production.sv": "e802fb62ed1060d777160f43d640348db04ee910ad03dff48efddcc2241775f5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "8c2e55b9df71313443349381db4b1d4415c6e52277f85aaa33c676ca6b0a6f2a",
+        "rtl/rom/ot_coll_tp8_static.sv": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336",
+        "rtl/physical/ot_qfd_io_collective_static.sv": "4f91ada708385c9ad80a6a9b03f0d70b8f5bae7ca2c0ce171c423cd0e1fccc8d",
+        "rtl/rom/ot_coll_static_linkcal.sv": "6562eaffb40c6e59bb0b68ba6c48a9649f71c7c3da4994a3b19ba160d200bad7",
+        "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+        "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+        "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+        "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+        "rtl/test/tb_coll_tp8_static_links.sv": "4e82d2d46d202b2637ea2095556a052329afa67fc1ed9eb022791668d1729a35"
+      },
+      "helper_sha256": {
+        "tools/qwen_coll_tp8_static_links_bench.py": "01e354edb0b3dddf6576bcbda1efd010e6757961da0510bff21ba00a6ef9bf1b",
+        "tools/qwen_coll_tp8_static_bench.py": "792ebb71e298265f206b9f09d403aaa216dd210b41e5ac0c2f8ae8e4fd45d84f",
+        "tools/qwen_coll_tp8_bench.py": "2e7afe167dfb5485615db26f9d8df023ad6f5612e67737f0f874e5dae4601f44",
+        "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+        "tools/qwen_split/lane_groups.py": "e5fb530c6a11afe603301b3be7000d46e996d713e915c0593be197e19f0cf8e7"
+      },
+      "executable_sha256": "d9cfff8f211d7c0be58b54fb7a2b370abe1050b28d7cbd855094ffaaba6c2388",
+      "cases": [
+        {
+          "name": "mu_window",
+          "passed": false,
+          "result": {
+            "mismatches": "61424",
+            "extra": "0",
+            "out_err": "0",
+            "cmd_bad": "0",
+            "coll_fault": "11111111",
+            "issuer_fault": "00000000",
+            "die_fault": "11111111",
+            "words_out": "61440",
+            "meas_lu": "53",
+            "meas_ls": "378",
+            "pr_overlap": "0",
+            "issuer_done": "00000000"
+          }
+        },
+        {
+          "name": "mu_window_ref_user0",
+          "passed": false,
+          "result": {
+            "mismatches": "22512",
+            "extra": "0",
+            "out_err": "0",
+            "cmd_bad": "0",
+            "coll_fault": "11111111",
+            "issuer_fault": "00000000",
+            "die_fault": "11111111",
+            "words_out": "22528",
+            "meas_lu": "53",
+            "meas_ls": "378",
+            "pr_overlap": "0",
+            "issuer_done": "00000000"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,221 @@
+{
+ "name": "qkd_kvs_attn_ba4",
+ "top": "qkd_kvs_attn_fl_ba4",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_service_root_b.sv",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_result_face_sb.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_pin_land.sv",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_native_attention_static_ctl_ba4.sv",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_native_attention_programme_ba4.sv",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_ba4.sv",
+  "rtl/lib/face_land/qkd_kvs_attn_fl_ba4.sv"
+ ],
+ "params": {},
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "d2d__srx",
+   "d2d__rx_payload",
+   "d2d__att_tx_slot",
+   "d2d__att_tx_kind",
+   "d2d__att_tx_beat"
+  ],
+  "E": [
+   "attn__tx_valid",
+   "attn__tx_payload",
+   "i_ctl"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "ufs_WS",
+   "ufs_WN",
+   "ufs_ES",
+   "ufs_EN",
+   "ufh",
+   "ufp0",
+   "ufp1",
+   "uff",
+   "ufk_WS",
+   "ufk_WN",
+   "ufk_ES",
+   "ufk_EN",
+   "fin"
+  ],
+  "W": [
+   "pvst",
+   "pvfst",
+   "ahs",
+   "prg",
+   "acal_WS",
+   "acal_WN",
+   "acal_ES",
+   "acal_EN",
+   "arh"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Generated wires-only parent of the static join: every tile <-> tile / die-master hop is priced in the compiled join ages with the die relays only (kv_relays, die_ages.json); a recipe-3 pin register would add an unpriced edge to every crossing.  The children land / launch their boundary nets in their own flops."
+ },
+ "kind": "tile",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 4,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 302.40000000000003,
+  "h": 302.40000000000003,
+  "exact": true
+ },
+ "structural_change": "ba4 source-level opt-in successor: unconditional same-edge TX data capture removes548 globalfault/event data-enable loads. Full-face actual IO groups and mid-S clock feed a physically balanced local spine; no added steady-state edge. See results/rtl/kv_attn_ba4_1019/MODEL.md. Earlier ba3 gates preserved.",
+ "job": {
+  "owner": "Codex:KV-ATTN-SAFE-TX",
+  "branch": "codex/kv-attn-safe-tx-1019",
+  "tag": "b4",
+  "purpose": "ba4 source-level opt-in successor: unconditional same-edge TX data capture removes548 globalfault/event data-enable loads. Full-face actual IO groups and mid-S clock feed a physically balanced local spine; no added steady-state edge. See results/rtl/kv_attn_ba4_1019/MODEL.md. Earlier ba3 gates preserved.",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_attn_fl_ba4 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv rtl/qwen_sys/kv_bootage_20261019/qkd_attn_service_root_b.sv rtl/qwen_sys/kv_bootage_20261019/qkd_attn_result_face_sb.sv rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_pin_land.sv rtl/qwen_sys/kv_bootage_20261019/qkd_native_attention_static_ctl_ba4.sv rtl/qwen_sys/kv_bootage_20261019/qkd_native_attention_programme_ba4.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_ba4.sv rtl/lib/face_land/qkd_kvs_attn_fl_ba4.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "codec_ba4_exact",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_ba4 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_CODEC_BA4 PASS"
+   },
+   {
+    "name": "codec_ba4_fault_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_mut4 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CODEC_BA4_MISMATCH",
+    "fail_witness": "results/rtl/kv_attn_ba4_1019/codec/codec4/sim.log"
+   },
+   {
+    "name": "programme_pair_ba4",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_pair_bench.sh {RUN}/pair_ba4 0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_LANDPAIR_ALL PASS"
+   },
+   {
+    "name": "codec_ba4_payload_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_mut7 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVBA_CODEC_BA4 FAIL",
+    "fail_witness": "results/rtl/kv_attn_ba4_1019/codec/codec7/sim.log"
+   },
+   {
+    "name": "codec_ba4_valid_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_mut8 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVBA_CODEC_BA4 FAIL",
+    "fail_witness": "results/rtl/kv_attn_ba4_1019/codec/codec8/sim.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die/kv_bootage_bench.sh",
+   "rtl/test/kv_bootage_1019",
+   "results/rtl/kv_bootage_1019",
+   "tools/qwen_kv_die/attn_ba4_codec_bench.sh",
+   "tools/qwen_kv_die/attn_ba4_pair_bench.sh",
+   "results/rtl/kv_attn_ba4_1019"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_attn_ba4/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_attn_ba4",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "ba4 source-level opt-in successor: unconditional same-edge TX data capture removes548 globalfault/event data-enable loads. Full-face actual IO groups and mid-S clock feed a physically balanced local spine; no added steady-state edge. See results/rtl/kv_attn_ba4_1019/MODEL.md. Earlier ba3 gates preserved."
+  }
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "ba4 source-level opt-in successor: unconditional same-edge TX data capture removes548 globalfault/event data-enable loads. Full-face actual IO groups and mid-S clock feed a physically balanced local spine; no added steady-state edge. See results/rtl/kv_attn_ba4_1019/MODEL.md. Earlier ba3 gates preserved."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "reset_relay_split": {
+  "max_loads": 256
+ },
+ "clock": "spine",
+ "pin_ranges": {
+  "ck": [
+   150.912,
+   151.392
+  ]
+ },
+ "slot_change_request": "Same302.4square; fullface S/W reassignment and centered clock require actual parent pin-coordinate/reach/age regrant before binding."
+}

@@ -1,0 +1,490 @@
+{
+  "scope": "STRUCTURAL MODEL ONLY: no RTL execution, reachability, mapped-parent or phase qualification",
+  "source_commit": "ceaed19c4",
+  "private_receipt_base": "edd84d4c3",
+  "source_sha256": {
+    "ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "ot_s81sl_slice.sv": "526a95589c304844c5757b257c37b08a8546586ce8ec713a3f50d9eb5eebe28b",
+    "ot_s81sl_vn.sv": "5a6683229d62201c9da5b1a0e0d132c75906d31afd07b5c3633018048932a69d",
+    "ot_s81sl_vp.sv": "a42280979ba82db0db0ea6753e4213aa155617d5b5d3f18fd40710e723ff21b7",
+    "ot_s81sl_vs.sv": "8f5ec8b78ae104de9268e26efcda699669d463bdec510a7f717290aab2d7dab6",
+    "ot_s81sl_xr.sv": "cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3"
+  },
+  "library_sha256": {
+    "TT": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "FF": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+  },
+  "actual_library_masters": {
+    "TT": {
+      "DFFHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.2916,
+        "CLK_fF": 0.474736
+      },
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.37908,
+        "CLK_fF": 0.462899,
+        "RESETN_fF": 0.73979,
+        "SETN_fF": 1.07945
+      }
+    },
+    "FF": {
+      "DFFHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.2916,
+        "CLK_fF": 0.52201
+      },
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.37908,
+        "CLK_fF": 0.503152,
+        "RESETN_fF": 0.802909,
+        "SETN_fF": 1.16446
+      }
+    }
+  },
+  "downlink": {
+    "DL": 4,
+    "leaves": 5,
+    "width": 594,
+    "valid_bit_offsets_lsb": {
+      "g_v": 34,
+      "rb_v": 67,
+      "cw_v[0]": 156,
+      "cw_v[1]": 157,
+      "sw_v": 432,
+      "c_v": 593
+    },
+    "authority_bits_per_stage": 6,
+    "existing_authority_ff": 120,
+    "payload_other_unreset_ff": 11760
+  },
+  "same_root_exhaustive_16_initial_states_x16_reset_masks": [
+    {
+      "reset_stages": [],
+      "same_root_calendar_no_stale_firstuse": false
+    },
+    {
+      "reset_stages": [
+        0
+      ],
+      "same_root_calendar_no_stale_firstuse": true
+    },
+    {
+      "reset_stages": [
+        1
+      ],
+      "same_root_calendar_no_stale_firstuse": false
+    },
+    {
+      "reset_stages": [
+        0,
+        1
+      ],
+      "same_root_calendar_no_stale_firstuse": true
+    },
+    {
+      "reset_stages": [
+        2
+      ],
+      "same_root_calendar_no_stale_firstuse": false
+    },
+    {
+      "reset_stages": [
+        0,
+        2
+      ],
+      "same_root_calendar_no_stale_firstuse": true
+    },
+    {
+      "reset_stages": [
+        1,
+        2
+      ],
+      "same_root_calendar_no_stale_firstuse": false
+    },
+    {
+      "reset_stages": [
+        0,
+        1,
+        2
+      ],
+      "same_root_calendar_no_stale_firstuse": true
+    },
+    {
+      "reset_stages": [
+        3
+      ],
+      "same_root_calendar_no_stale_firstuse": false
+    },
+    {
+      "reset_stages": [
+        0,
+        3
+      ],
+      "same_root_calendar_no_stale_firstuse": true
+    },
+    {
+      "reset_stages": [
+        1,
+        3
+      ],
+      "same_root_calendar_no_stale_firstuse": false
+    },
+    {
+      "reset_stages": [
+        0,
+        1,
+        3
+      ],
+      "same_root_calendar_no_stale_firstuse": true
+    },
+    {
+      "reset_stages": [
+        2,
+        3
+      ],
+      "same_root_calendar_no_stale_firstuse": false
+    },
+    {
+      "reset_stages": [
+        0,
+        2,
+        3
+      ],
+      "same_root_calendar_no_stale_firstuse": true
+    },
+    {
+      "reset_stages": [
+        1,
+        2,
+        3
+      ],
+      "same_root_calendar_no_stale_firstuse": false
+    },
+    {
+      "reset_stages": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "same_root_calendar_no_stale_firstuse": true
+    }
+  ],
+  "stopped_relay_exhaustive_16_initial_states_x16_reset_masks": [
+    {
+      "reset_stages": [],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        0
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        1
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        0,
+        1
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        2
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        0,
+        2
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        1,
+        2
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        0,
+        1,
+        2
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        3
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        0,
+        3
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        1,
+        3
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        0,
+        1,
+        3
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        2,
+        3
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        0,
+        2,
+        3
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        1,
+        2,
+        3
+      ],
+      "stopped_relay_then_restart_no_old_valid": false
+    },
+    {
+      "reset_stages": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "stopped_relay_then_restart_no_old_valid": true
+    }
+  ],
+  "zero_clock_pulse_no_repair_witness": [
+    {
+      "edge": 0,
+      "pre_q": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "consumer_eligible": false,
+      "stale_eligible": false
+    },
+    {
+      "edge": 1,
+      "pre_q": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "consumer_eligible": false,
+      "stale_eligible": false
+    },
+    {
+      "edge": 2,
+      "pre_q": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "consumer_eligible": false,
+      "stale_eligible": false
+    },
+    {
+      "edge": 3,
+      "pre_q": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "consumer_eligible": true,
+      "stale_eligible": true
+    },
+    {
+      "edge": 4,
+      "pre_q": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "consumer_eligible": true,
+      "stale_eligible": false
+    }
+  ],
+  "stage0_stopped_clock_counterexample": [
+    {
+      "edge": 0,
+      "pre_q": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "consumer_eligible": false,
+      "stale_eligible": false
+    },
+    {
+      "edge": 1,
+      "pre_q": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "consumer_eligible": false,
+      "stale_eligible": false
+    },
+    {
+      "edge": 2,
+      "pre_q": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "consumer_eligible": false,
+      "stale_eligible": false
+    },
+    {
+      "edge": 3,
+      "pre_q": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "consumer_eligible": true,
+      "stale_eligible": true
+    },
+    {
+      "edge": 4,
+      "pre_q": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "consumer_eligible": true,
+      "stale_eligible": true
+    }
+  ],
+  "variants": [
+    {
+      "name": "sw_stage0_phase_conditional",
+      "converted_existing_ff": 5,
+      "added_state_bits": 0,
+      "added_payload_ff": 0,
+      "data_edge_delta": 0,
+      "liberty_arithmetic": {
+        "TT": {
+          "area_delta_um2": 0.43739999999999973,
+          "clock_cap_delta_fF": -0.05918499999999993,
+          "new_RESETN_load_fF": 3.69895,
+          "new_SETN_tie_load_fF": 5.39725
+        },
+        "FF": {
+          "area_delta_um2": 0.43739999999999973,
+          "clock_cap_delta_fF": -0.09428999999999965,
+          "new_RESETN_load_fF": 4.014545,
+          "new_SETN_tie_load_fF": 5.8223
+        }
+      }
+    },
+    {
+      "name": "six_authority_stage0_phase_conditional",
+      "converted_existing_ff": 30,
+      "added_state_bits": 0,
+      "added_payload_ff": 0,
+      "data_edge_delta": 0,
+      "liberty_arithmetic": {
+        "TT": {
+          "area_delta_um2": 2.6243999999999983,
+          "clock_cap_delta_fF": -0.3551099999999996,
+          "new_RESETN_load_fF": 22.1937,
+          "new_SETN_tie_load_fF": 32.3835
+        },
+        "FF": {
+          "area_delta_um2": 2.6243999999999983,
+          "clock_cap_delta_fF": -0.5657399999999979,
+          "new_RESETN_load_fF": 24.08727,
+          "new_SETN_tie_load_fF": 34.933800000000005
+        }
+      }
+    },
+    {
+      "name": "sw_all_stages_local_only",
+      "converted_existing_ff": 20,
+      "added_state_bits": 0,
+      "added_payload_ff": 0,
+      "data_edge_delta": 0,
+      "liberty_arithmetic": {
+        "TT": {
+          "area_delta_um2": 1.749599999999999,
+          "clock_cap_delta_fF": -0.23673999999999973,
+          "new_RESETN_load_fF": 14.7958,
+          "new_SETN_tie_load_fF": 21.589
+        },
+        "FF": {
+          "area_delta_um2": 1.749599999999999,
+          "clock_cap_delta_fF": -0.3771599999999986,
+          "new_RESETN_load_fF": 16.05818,
+          "new_SETN_tie_load_fF": 23.2892
+        }
+      }
+    },
+    {
+      "name": "six_authority_all_stages",
+      "converted_existing_ff": 120,
+      "added_state_bits": 0,
+      "added_payload_ff": 0,
+      "data_edge_delta": 0,
+      "liberty_arithmetic": {
+        "TT": {
+          "area_delta_um2": 10.497599999999993,
+          "clock_cap_delta_fF": -1.4204399999999984,
+          "new_RESETN_load_fF": 88.7748,
+          "new_SETN_tie_load_fF": 129.534
+        },
+        "FF": {
+          "area_delta_um2": 10.497599999999993,
+          "clock_cap_delta_fF": -2.2629599999999916,
+          "new_RESETN_load_fF": 96.34908,
+          "new_SETN_tie_load_fF": 139.73520000000002
+        }
+      }
+    }
+  ],
+  "whole_parent_clock_phase_binding": null,
+  "actual_root_pulse_authority": null,
+  "selected_parent_native_master_census": null,
+  "physical_reset_distribution_and_ties": null,
+  "all841_extra_copy_firstuse_proof": false
+}

@@ -1,0 +1,50 @@
+{
+  "original_cells": 3446,
+  "original_by_type": {
+    "$_SDFF_PN0_": 1,
+    "$_SDFF_PP0_": 33,
+    "$_DFF_P_": 555,
+    "$_SDFF_PP1_": 1,
+    "$_SDFF_PN1_": 1,
+    "$_NOT_": 220,
+    "$_AND_": 790,
+    "$_XOR_": 222,
+    "$_OR_": 612,
+    "$_MUX_": 1011
+  },
+  "final_by_type": {
+    "$_SDFF_PN0_": 1,
+    "$_SDFF_PP0_": 33,
+    "$_DFF_P_": 565,
+    "$_SDFF_PP1_": 1,
+    "$_SDFF_PN1_": 1,
+    "$_NOT_": 220,
+    "$_AND_": 790,
+    "$_XOR_": 222,
+    "$_OR_": 616,
+    "$_MUX_": 1011
+  },
+  "unconsumed_cells_removed": 334,
+  "dropped_outputs": [
+    "valid_out"
+  ],
+  "unused_inputs_removed": [
+    "rst_n",
+    "valid_in"
+  ],
+  "final_cells": 3460,
+  "added_by_type": {
+    "$_DFF_P_": 10,
+    "$_OR_": 4
+  },
+  "passes": 1,
+  "input_sha256": "dbf3e28a0838dea5bf16896dc03e2f993bf05af460fb2aef50e1790b5b97c075",
+  "max_data_reset_loads": 32,
+  "clock_only_excluded": true,
+  "output_boundary_assumptions": {
+    "valid_rep_each": 16,
+    "valid_out": 5,
+    "data_error_each": 1
+  },
+  "qualification": "STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required"
+}

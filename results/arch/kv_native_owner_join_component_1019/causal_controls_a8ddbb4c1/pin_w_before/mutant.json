@@ -1,0 +1,14 @@
+{
+  "name": "pin_w_before",
+  "changed_source": "private/qkd_host_if_pins_observed_rc.sv",
+  "original_sha256": "a252f945409697bbd84dbf008a5fd06e2f0dcabe0840b3b753b3b84041f2795f",
+  "mutated_sha256": "ee09a2a0f73f2a6a100a43a9e4da8a48d77d554c77bf549fc946b45648bccdb5",
+  "old": ".out_d({m_wdata,m_wstrb,m_wlast})",
+  "new": ".out_d({mut_w_raw,m_wstrb,m_wlast})",
+  "case": 2,
+  "required_fail_regex": "OFFERED_W_CHANGED_BEFORE_ACCEPTANCE",
+  "extra_condition": null,
+  "verdict": "NOT_RUN",
+  "caught_requires": "baseline same negative/healthy case passes; mutated application fails named invariant with committed trace; timeout alone is not causal evidence",
+  "fixture_watchdog": 4194304
+}

@@ -1,0 +1,7 @@
+FAIL: early owner changed publication token=6 epoch=8 starts=2
+FAIL: sticky-fault context restarted publication token=7 epoch=9 starts=3
+FAIL tb_qkd_embedding_ctx_start: 2 errors
+- inputs/tb.sv:141: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.002 s; speed 1.196 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

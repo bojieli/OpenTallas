@@ -1,0 +1,26 @@
+{
+ "cell": "ot_qwen_tp8_pv_wide_ctl_tb",
+ "view": "physical/ref_tile/qkd_pv_ctl_tb1/views/ot_qwen_tp8_pv_wide_ctl_tb",
+ "lib_cell": "ot_qwen_tp8_pv_wide_ctl_tb",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 110.2,
+ "spread_ps": 15.9,
+ "outputs": 178,
+ "inputs": 353,
+ "launch_ps": 182.2,
+ "launch_pin": "out_age[13]",
+ "capture_ps": 137.8,
+ "capture_pin": "in_t[11]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 14.7,
+ "ff_launch_min_ps": 108.2,
+ "ff_hold_need_ps": -58.8,
+ "pass": true,
+ "fail_why": ""
+}

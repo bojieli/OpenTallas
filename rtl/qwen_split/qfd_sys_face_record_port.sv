@@ -6,7 +6,8 @@
 //   rst_rn[0] auth RX + TT descriptor-obs delay + slot fault   rst_rn[1] TT receipt (sink 0)   rst_rn[2] SU receipt (sink 1)
 //   rst_rn[3] commit join                                       rst_rn[4] host context RX      rst_rn[5] witness TX
 // All six are released on the same edge (qfd_sys_face ot_rst_relay), so the reset release is bit-identical.
-module qfd_sys_face_record_port(
+// MU_HEAD (MU-DQ-BOOTCTX 10-19, opt-in, 0 = unchanged): qfd_host_native_context_rx MU_HEAD (filler head contexts skipped).
+module qfd_sys_face_record_port #(parameter integer MU_HEAD = 0)(
  input wire ck,input wire[5:0]rst_rn,input wire auth_slot,context_slot,witness_slot,
  input wire rx_v,input wire[547:0]rx_record,
  input wire execution_active,
@@ -56,7 +57,7 @@ module qfd_sys_face_record_port(
  .sink_fusedcap(sink_fusedcap),.sink_epoch(sink_epoch),.sink_digest(sink_digest),
  .commit_v(commit_v),.ready(program_ready),.fault(jf),.installed_fusedcap(installed_fusedcap),
  .commit_epoch(program_epoch),.commit_digest(program_digest));
- qfd_host_native_context_rx u_context(.ck(ck),.rst_n(rst_rn[4]),.receive_slot(context_slot),.rx_v(rx_v&&context_slot),.rx_record(rx_record),
+ qfd_host_native_context_rx #(.MU_HEAD(MU_HEAD)) u_context(.ck(ck),.rst_n(rst_rn[4]),.receive_slot(context_slot),.rx_v(rx_v&&context_slot),.rx_record(rx_record),
  .program_begin_v(begin_v),.program_ready(program_ready),.installed_fusedcap(installed_fusedcap),.program_epoch(program_epoch),.program_digest(program_digest),
  .head_context_v(head_context_v),.head_stage(head_stage),.head_token(head_token),.head_position(head_position),.native_active(execution_active),
  .host_epoch_valid(host_epoch_valid),.host_epoch(host_epoch),.host_tag(host_tag),.host_gen(host_gen),

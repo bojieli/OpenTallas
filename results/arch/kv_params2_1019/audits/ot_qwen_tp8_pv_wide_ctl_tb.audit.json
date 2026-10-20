@@ -1,0 +1,150 @@
+{
+ "archive_run": "/srv/opentallas-scratch/claude/kv-params-1019/arch/ot_qwen_tp8_pv_wide_ctl_tb/qkd_pv_ctl_tb1-b1-cebb296c4",
+ "base": {
+  "cex": null,
+  "checked_steps": [
+   7,
+   10
+  ],
+  "error": null,
+  "free_replicas": 9,
+  "log_sha256": "929ba1789b799e9b0507b16c7bf34130b1aa58b426c24e5d77144be00a3826ab",
+  "paired_initial": 688,
+  "proven": true,
+  "rc": 0,
+  "reset_active": 0,
+  "reset_edges": 6,
+  "reset_port": "rst_n",
+  "seconds": 174.1
+ },
+ "closed": {
+  "commit": "cebb296c4663a1b5ff40dcd808dcb3500fa7813b",
+  "final_v_sha256": "2c8959105956f962c792ac2c478855e6fb0271f0ce3069daa093f8042e0ba33b",
+  "job": "qkd_pv_ctl_tb1-b1-cebb296c4",
+  "lef_sha256": "c7deb4350376382ea368fa993cf3383056c46e77c9201fcb88a86c7beb421116",
+  "physical_json_sha256": "c93da9698928a28f2721b1ce8f2e259537b1bbc249a0a46b196cb2e79506b937",
+  "spec_params": {
+   "FIRST_INPUT_AGE": 127,
+   "FLAG_D": 58,
+   "MUT": 0,
+   "RESET_PIN": 1,
+   "TRUNK_D": 54
+  },
+  "synth_sources": {
+   "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv": "707680841087a2a7ef3871e47541843863a1eaa60a9a23e144af266077ed4bba",
+   "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6"
+  },
+  "top": "ot_qwen_tp8_pv_wide_ctl_tb",
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "closed_spec_diff": {},
+ "equiv": {
+  "cells": 916,
+  "log_sha256": "dfdcad696bbcec1449fa8fdad71e3ad748b64d85a77ec0814320009e2670d29f",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct; reset base: 6 rst_n=0 edges, paired initial state, steps 7..10 (miter, sat -verify)",
+  "proven_cells": 916,
+  "rc": 0,
+  "seconds": [
+   0.3,
+   409.1
+  ],
+  "unproven_cells": 0,
+  "unproven_sample": []
+ },
+ "expect": "pass",
+ "gate": {
+  "flops": 697,
+  "macros": {},
+  "replicas": 9
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "b03566706dd85b5fc82f5818e042a7b765c5f59eec514b447dede617941743b5",
+   "child_lint.json": "dad643dc21f3cab1f135e62f95e2cef2995b4b0e61e231e0d0a56e2dd3da14b6",
+   "export_ff.log": "0911166aa9c7a240fd1f6e355c35573f5fecbb608b99f9996610c3b435138619",
+   "export_ff.tcl": "409a2c080c225fc9f23456456ec5c12d603d7453cbc8c4b973f4ea75a540b757",
+   "export_ss.log": "cf61ac636c4cec56b7bbb0b8e58c5a0d7fc8a2fa28ba6a9088a15fa51d2c2c43",
+   "export_ss.tcl": "f46db7fb669da485020b78016d201c80dfa6f3b766db754243ad2bf5026d6d7d",
+   "export_tt.log": "bdfb7ab17515ed03ad958792729305dfc7e99221515a1dff78174c71ff2e0958",
+   "export_tt.tcl": "cb6b4d401ad39c10ed0dd371b96b8b5e5b2bc45b53d0f54178942886cd46e769",
+   "insertion.json": "b40e635b9b74f4c00a4eeb5931b3d789e71e063e743c8f959b6fbd031c335e68",
+   "ot_qwen_tp8_pv_wide_ctl_tb.lef": "c7deb4350376382ea368fa993cf3383056c46e77c9201fcb88a86c7beb421116",
+   "ot_qwen_tp8_pv_wide_ctl_tb_ff.lib": "bb95a628b14a6c5c56c946c31374b5d23c8474b69ca2407ae96a326c3d6e1d10",
+   "ot_qwen_tp8_pv_wide_ctl_tb_ss.lib": "9d4ec45f9e705990430c1e611b778e9602b511357a0102b3125e8a5729aa0e4c",
+   "ot_qwen_tp8_pv_wide_ctl_tb_tt.lib": "02ee40e39f57d324ff9013929bcda0229b38fcf9a0e75e815a063e4369e06b57",
+   "provenance/abstract_pin_stub.json": "274b4d00b647fd84927e842c3f86e9d3d4cc1a55a40fdae709b95b0f1edf9878",
+   "provenance/raw/ot_qwen_tp8_pv_wide_ctl_tb.lef": "b190e3fdd9b451d410f6ecfbbbff815f75c8da25f625ece0b0957a18e477fdfa",
+   "provenance/view_export.abstract.json": "986b89c2ef82ec8896255ffa347b27d6b574ef11288a5358b4d06d9dfd505b92"
+  },
+  "rtl": {
+   "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv",
+   "sha256": "707680841087a2a7ef3871e47541843863a1eaa60a9a23e144af266077ed4bba"
+  },
+  "view": "physical/ref_tile/qkd_pv_ctl_tb1/views/ot_qwen_tp8_pv_wide_ctl_tb"
+ },
+ "module": "ot_qwen_tp8_pv_wide_ctl_tb",
+ "observe_zero": {
+  "regex": "^u_ot_pr_core\\.(state\\[3\\]|u_req\\.nq\\[[0-3]\\])$",
+  "signals": [
+   "u_ot_pr_core.state[3]",
+   "u_ot_pr_core.u_req.nq[0]",
+   "u_ot_pr_core.u_req.nq[1]",
+   "u_ot_pr_core.u_req.nq[2]",
+   "u_ot_pr_core.u_req.nq[3]"
+  ]
+ },
+ "parameters": {
+  "FIRST_INPUT_AGE": 127,
+  "FLAG_D": 58,
+  "MUT": 0,
+  "RESET_PIN": 1,
+  "TRUNK_D": 54
+ },
+ "proven": true,
+ "rtl": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv",
+ "schema": "opentallas.kv_param_native_audit.v1",
+ "sources": {
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv": "707680841087a2a7ef3871e47541843863a1eaa60a9a23e144af266077ed4bba",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6"
+ },
+ "sources_changed_since_closure": [],
+ "state": {
+  "gate_only": 0,
+  "gate_only_sample": [],
+  "gold_only": 116,
+  "gold_only_sample": [
+   "cmd[21]",
+   "cmd[22]",
+   "cmd[23]",
+   "cmd[24]",
+   "cmd[32]",
+   "cmd[33]",
+   "cmd[34]",
+   "cmd[35]",
+   "cmd[36]",
+   "cmd[37]",
+   "cmd[38]",
+   "cmd[39]",
+   "cmd[40]",
+   "cmd[41]",
+   "cmd[42]",
+   "cmd[43]",
+   "cmd[44]",
+   "cmd[45]",
+   "cmd[46]",
+   "cmd[47]"
+  ],
+  "gold_regs": 804,
+  "paired": 697
+ },
+ "view": "physical/ref_tile/qkd_pv_ctl_tb1/views/ot_qwen_tp8_pv_wide_ctl_tb",
+ "wrapper": {
+  "clock": "clk",
+  "kind": "reset_landing",
+  "reset_landing_sha256": "66d7e55f22c6977373a179b9a627281758b28144fc88d1007f76e83d20578723",
+  "reset_ports": [
+   "rst_n"
+  ],
+  "stages": 2
+ }
+}

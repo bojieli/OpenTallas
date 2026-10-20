@@ -1,0 +1,6 @@
+tools/qwen_layerbench/qwen_tp8_layer_gold.py: committed verbatim (sha256 5729c41dc4d1c59690f99a81daecd8ca3ce350ac6597eac58486b0388c7b4102) by QW-REALSTG 10-19 from the orphan, uncommitted
+copy ot-epyc5:/srv/opentallas-scratch/claude/tokpass-qwen-1018/fx/realmem_tp8/stage/tools/qwen_layerbench/qwen_tp8_layer_gold.py (written by QW-CLAYER-G 10-18, never committed).
+It must run with OT_GOLD_ROOT = a tree whose tools/ hold the emitter sources pinned by the TP8 images (that stage tree:
+/srv/opentallas-scratch/claude/tokpass-qwen-1018/fx/realmem_tp8/stage, hdc_qwen_fullshape_isa_w12.py add181198a34) -- see tp8_gold_run.sh (verbatim copy of /srv/opentallas-scratch/claude/tokpass-qwen-1018/fx/realmem_tp8/run.sh).
+Run by QW-REALSTG: ot-run on ot-epyc5, unit oth-ubuntu-2567282-1792392543, positions 8191, pc-dump 8191, layers 2,
+out /srv/opentallas-scratch/claude/qw-realstg/tp8gold/P8191 (log /home/ubuntu/scratch/qw-realstg/tp8gold.log); ~1.25 s / position.

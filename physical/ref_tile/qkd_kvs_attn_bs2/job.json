@@ -1,0 +1,195 @@
+{
+ "name": "qkd_kvs_attn_bs2-s2-COMMIT",
+ "block": "qkd_kvs_attn_fl",
+ "ref_tile": true,
+ "owner": "Claude:KV-ATTN",
+ "purpose": "SAFE ATTN (KV-ATTN 10-19): safe-control native source 6326ff81a (6040 FF, every non-clock driver <=24 loads, fin <=22) + pin registration (tools/qwen_kv_die/attn_pinreg_1019/pinreg.py: 17 RX zero-test flops retimed onto the existing RX landing flops, 2 ufk fault-root flops split per pin; every input pin -> flop D, every output <- flop (or tie constant), ZERO added edges; lockstep equivalence vs 6326ff81a on all outputs + all 6040 flop nets). Geometry: FALLBACK: the exact 302.4 um slot of ba1/ba4 (drop-in outline, ba4 face groups that gated GRT0 / spread 50.8/47.7); clock S-centre spine. Replaces ba4 805aa57cb (fin_q 1038 / codec 529 / i_ctl 436 loads, legacy reset 256).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-attn-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_sys/kv_bootage_20261019",
+   "rtl/lib/face_land",
+   "tools/qwen_kv_die/attn_pinreg_1019",
+   "results/arch/kv_attn_safe_control_1019/models.v.gz",
+   "results/rtl/kv_attn_pinreg_1019",
+   "tools/qwen_kv_die/kv_bootage_bench.sh",
+   "rtl/test/kv_bootage_1019",
+   "results/rtl/kv_bootage_1019",
+   "tools/qwen_kv_die/attn_ba4_codec_bench.sh",
+   "tools/qwen_kv_die/attn_ba4_pair_bench.sh",
+   "results/rtl/kv_attn_ba4_1019",
+   "rtl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && gzip -dc results/arch/kv_attn_safe_control_1019/models.v.gz > {RUN}/models.v && printf '%s\\n' 'module ot_lint_top; qkd_kvs_attn_fl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-PINMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv {RUN}/models.v rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_safe_pr.v rtl/lib/face_land/qkd_kvs_attn_fl_bs.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pinreg_equiv",
+    "cmd": "bash tools/qwen_kv_die/attn_pinreg_1019/eq_bench.sh {RUN}/eq0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PR_EQ PASS"
+   },
+   {
+    "name": "pinreg_raw_leaf_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_pinreg_1019/eq_bench.sh {RUN}/eq1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^PR_EQ_MISMATCH",
+    "fail_witness": "results/rtl/kv_attn_pinreg_1019/m1/sim.log"
+   },
+   {
+    "name": "pinreg_split_gate_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_pinreg_1019/eq_bench.sh {RUN}/eq2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^PR_EQ_MISMATCH",
+    "fail_witness": "results/rtl/kv_attn_pinreg_1019/m2/sim.log"
+   },
+   {
+    "name": "codec_ba4_exact",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_ba4 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVBA_CODEC_BA4 PASS"
+   },
+   {
+    "name": "codec_ba4_fault_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_mut4 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CODEC_BA4_MISMATCH",
+    "fail_witness": "results/rtl/kv_attn_ba4_1019/codec/codec4/sim.log"
+   },
+   {
+    "name": "programme_pair_ba4",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_pair_bench.sh {RUN}/pair_ba4 0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_LANDPAIR_ALL PASS"
+   },
+   {
+    "name": "codec_ba4_payload_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_mut7 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVBA_CODEC_BA4 FAIL",
+    "fail_witness": "results/rtl/kv_attn_ba4_1019/codec/codec7/sim.log"
+   },
+   {
+    "name": "codec_ba4_valid_mutant",
+    "cmd": "bash tools/qwen_kv_die/attn_ba4_codec_bench.sh {RUN}/codec_mut8 8",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVBA_CODEC_BA4 FAIL",
+    "fail_witness": "results/rtl/kv_attn_ba4_1019/codec/codec8/sim.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_attn_bs2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_attn_bs2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_attn_bs2 --out {RUN}/record/views/qkd_kvs_attn_fl  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_attn_bs2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_attn_bs2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_attn_bs2/qkd_kvs_attn_bs2-s2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "SAFE ATTN (KV-ATTN 10-19): safe-control native source 6326ff81a (6040 FF, every non-clock driver <=24 loads, fin <=22) + pin registration (tools/qwen_kv_die/attn_pinreg_1019/pinreg.py: 17 RX zero-test flops retimed onto the existing RX landing flops, 2 ufk fault-root flops split per pin; every input pin -> flop D, every output <- flop (or tie constant), ZERO added edges; lockstep equivalence vs 6326ff81a on all outputs + all 6040 flop nets). Geometry: FALLBACK: the exact 302.4 um slot of ba1/ba4 (drop-in outline, ba4 face groups that gated GRT0 / spread 50.8/47.7); clock S-centre spine. Replaces ba4 805aa57cb (fin_q 1038 / codec 529 / i_ctl 436 loads, legacy reset 256).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "SAFE ATTN (KV-ATTN 10-19): safe-control native source 6326ff81a (6040 FF, every non-clock driver <=24 loads, fin <=22) + pin registration (tools/qwen_kv_die/attn_pinreg_1019/pinreg.py: 17 RX zero-test flops retimed onto the existing RX landing flops, 2 ufk fault-root flops split per pin; every input pin -> flop D, every output <- flop (or tie constant), ZERO added edges; lockstep equivalence vs 6326ff81a on all outputs + all 6040 flop nets). Geometry: FALLBACK: the exact 302.4 um slot of ba1/ba4 (drop-in outline, ba4 face groups that gated GRT0 / spread 50.8/47.7); clock S-centre spine. Replaces ba4 805aa57cb (fin_q 1038 / codec 529 / i_ctl 436 loads, legacy reset 256)."
+ }
+}

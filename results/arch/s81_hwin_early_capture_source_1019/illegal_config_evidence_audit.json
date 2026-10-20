@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS",
+  "scope": "existing immutable original illegal NS2/full16 witnesses; no new simulation or changed expected input",
+  "records": [
+    {
+      "path": "run_original_matrix_01/ns2_illegal_original/run_seed1.log",
+      "sha256": "254cb13e7798dd2ccf9f0c7e9b96f3ea456567ffe092f27372c5d924ad03f7eb",
+      "expected_config_class_observed": true
+    },
+    {
+      "path": "run_original_matrix_01/ns2_illegal_original/run_seed19.log",
+      "sha256": "ebb7230d9c9834d967f7eec6188ffc68503c42a4fc5422753f59415416d10df0",
+      "expected_config_class_observed": true
+    },
+    {
+      "path": "run_original_matrix_01/ns2_illegal_original/run_seed313.log",
+      "sha256": "ad9b1e031611da4498da6468708634903b3b929b6048fa7072045101f4bc4968",
+      "expected_config_class_observed": true
+    }
+  ]
+}

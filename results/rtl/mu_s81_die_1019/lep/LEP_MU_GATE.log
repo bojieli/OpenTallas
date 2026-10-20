@@ -1,0 +1,11 @@
+mu_s1: PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted
+mu_s5: PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted
+mut_TAGDROP: FAIL lep_mu: recv A 440/280 B 240/240 mismatches 640 identity 0 main faults 0110011 F1 1 F2 1 F3 1
+mut_WRONGCOPY: FAIL lep_mu: recv A 280/280 B 0/240 mismatches 80 identity 1 main faults 0110011 F1 1 F2 1 F3 1
+mut_OVR: FAIL lep_mu: recv A 280/280 B 240/240 mismatches 0 identity 1 main faults 0000000 F1 0 F2 1 F3 1
+regr_lep s1: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_lep s7: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_nh s1: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+regr_host s3: PASS lep_host: H->A 233 ring + 84 HOST + 83 KS, A->H 592 frames (51 THOST incl. 1 merge, 52 TKD) bit-exact in order; f_lf live
+regr_swap: FAIL lep: mismatches 963 recv 482/1000 481/1000 fault_main 1 overflow_fault 1
+LEP_MU_GATE PASS

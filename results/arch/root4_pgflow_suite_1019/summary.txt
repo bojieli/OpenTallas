@@ -1,0 +1,15 @@
+= 126 failed, 1866 passed, 42 skipped, 1 deselected, 463 subtests passed in 399.64s (0:06:39) =
+= 128 failed, 1875 passed, 42 skipped, 1 deselected, 463 subtests passed in 408.28s (0:06:48) =
+tools/ref_tile/tests/test_pg_standard_bind.py::PgStandardBind::test_mutant_old_ordering_leaves_clkbuf_unbound PASSED [ 26%]
+tools/ref_tile/tests/test_pg_standard_bind.py::PgStandardBind::test_standard_mode_binds_before_protect PASSED [ 26%]
+tools/ref_tile/tests/test_spine_cts_rest.py::SpineCtsRest::test_mutant_all_clocks_rediscovers_spine PASSED [ 32%]
+tools/ref_tile/tests/test_spine_cts_rest.py::SpineCtsRest::test_rest_pass_builds_only_other_clocks PASSED [ 32%]
+tools/ref_tile/tests/test_spine_cts_rest.py::SpineCtsRest::test_two_spines_have_unique_names_and_no_triton_rest PASSED [ 33%]
+base rc=1 = 126 failed, 1866 passed, 42 skipped, 1 deselected, 463 subtests passed in 399.64s (0:06:39) =
+cand rc=1 = 128 failed, 1875 passed, 42 skipped, 1 deselected, 463 subtests passed in 408.28s (0:06:48) =
+NEW in cand:
+FAILED tools/landed_parent/test_takeover_helper_options.py::HelperOptions::test_default_bytes_match_main
+FAILED tools/landed_parent/test_takeover_helper_options.py::HelperOptions::test_sdff_folding_is_explicit_optin_and_before_prep
+FIXED in cand:
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2849115-1792470794): exit 0
+test_takeover_helper_options 2 NEW = env only (git show 799eebe53 needs .git; tar has none): 7/7 PASS in worktree /home/ubuntu/wt/root4-pgflow-1019

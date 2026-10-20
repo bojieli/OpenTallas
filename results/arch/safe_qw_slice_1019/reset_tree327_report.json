@@ -1,0 +1,11 @@
+{
+  "top": "qfd_dv_reset_tree",
+  "N": 327,
+  "kept_copies": 338,
+  "expected_copies": 338,
+  "max_internal_data_fanout": 32,
+  "root_reset_data_fanout": 11,
+  "flop_modules": 338,
+  "yosys": "0.68",
+  "qualification": "Kept hierarchy/copy retention after proc,opt,flatten,opt. Full-slice child reset sinks and physical timing remain separate obligations."
+}

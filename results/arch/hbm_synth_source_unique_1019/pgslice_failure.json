@@ -1,0 +1,22 @@
+{
+ "cell": "ot_hbm_su_static_pgslice_lg__pv0",
+ "rounds": [
+  {
+   "round": 0,
+   "rc": 1,
+   "host": "ot-epyc6",
+   "extra": [
+    "v16w/v16w_ot_hbm_su_static_pgslice_lg__pv0.sv",
+    "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+   ],
+   "prefer": [
+    "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv"
+   ],
+   "errors": [
+    "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv:3: ERROR: Re-definition of module `\\ot_hbm_su_static_ins__d4g_pgslice'!"
+   ]
+  }
+ ],
+ "ok": false,
+ "host": "ot-epyc6"
+}

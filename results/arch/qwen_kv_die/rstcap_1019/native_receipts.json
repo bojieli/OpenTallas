@@ -4886,39 +4886,33 @@
   "ref_src": [
    "insertion.json boundary mean"
   ],
-  "R_ps": 258.4,
-  "spread_ps": 29.3,
+  "R_ps": 264.1,
+  "spread_ps": 26.3,
   "outputs": 1582,
   "inputs": 681,
-  "launch_ps": 133.6,
-  "launch_pin": "chain_f[350]",
-  "capture_ps": 386.9,
-  "capture_pin": "host_rst_n",
+  "launch_ps": 132.8,
+  "launch_pin": "chain_f[1092]",
+  "capture_ps": 74.7,
+  "capture_pin": "u_rank__oa[24]",
   "launch_over": 0,
-  "capture_over": 1,
+  "capture_over": 0,
   "comb_pins": 0,
   "comb_first": [],
-  "ff_spread_ps": 27.0,
-  "ff_launch_min_ps": 60.1,
-  "ff_hold_need_ps": -11.4,
-  "pass": false,
-  "fail_why": "capture 386.91424 > 190 (1 pins)",
+  "ff_spread_ps": 24.6,
+  "ff_launch_min_ps": 56.2,
+  "ff_hold_need_ps": -14.8,
+  "pass": true,
+  "fail_why": "",
+  "audited_at": "7763b94327065e364a62eba117ee35198de11967",
+  "tool": "tools/hier_contract/native_pin_audit.py --view",
   "view_sha256": {
-   "qkd_hr_core_order.lef": "071d2cb559eb20fb1b56e8be3291f3c6fdca4f0d8a5f9fc7be304c83576b8ec1",
-   "qkd_hr_core_order_ff.lib": "ba3c1c797003bb6367522f31f816c35b42131d4c2cfc861a009004b82a2bef40",
-   "qkd_hr_core_order_ss.lib": "fbb0d468a33600320a6a88e33141c6ad3e8891321cc49aa9ad9ed8e5f022fa75",
-   "qkd_hr_core_order_tt.lib": "cd5eacab15c99da981e6480d18868c6caf42cbb78547d6972c462bf37c2ce3aa"
+   "qkd_hr_core_order.lef": "542f1abe9c138e723957ac414fb914751a9ab6eae23d7b20d1f13fbc6494746c",
+   "qkd_hr_core_order_ff.lib": "0e1d5daf1f30268095f470ed1c5f22621a0fb16bb6be34ff8b2f3c7ab5e1579c",
+   "qkd_hr_core_order_ss.lib": "856d86cf5e3c1b80d079a7b11459627b50e01995580498e43080018abd491478",
+   "qkd_hr_core_order_tt.lib": "1d3442da143f3ad2c556ee2f6ecca8111c365d21ebfbd31dd699c07a3b3707b0"
   },
-  "view_commit": "d6ea357c15c2a78ea0a2103082d909e7f05b532a",
-  "view_commit_subject": "closure-loop: qkd_hr_core_order CLOSED TT +40.42 / FF +21.17 ps DRC 0; SS sensitivity -330.79 ps under measured clock constraints (source aea9dd896, EPYC4 /srv",
-  "capture_over_pins": [
-   [
-    "host_rst_n",
-    386.9
-   ]
-  ],
-  "audited_at": "9753b97367818cd5748e79f3708895c59b523d29",
-  "tool": "tools/hier_contract/native_pin_audit.py --view"
+  "view_commit": "31fac4878ee584f2421c0e789a4e8b6f2eccfc11",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_order-r4-d9e4f6a44 (qkd_hr_core_order CLOSED)"
  },
  "qkd_hr_core_queue": {
   "cell": "qkd_hr_core_queue",
@@ -5346,5 +5340,150 @@
   "tool": "tools/hier_contract/native_pin_audit.py --view",
   "route": "qkd_astk_er_owner_st-v1-7fc9f17f8",
   "note": "TW4-KV-EROWN 10-19: CLOSED routed view (HKV-ERTAP gate probe had failed on the tool path bug fixed ae0bd344a). Native PASS: worst capture is rst_n 161.2 ps (<190), launch 178.8 (<220), spread TT/FF 24.1/24.5. No re-route."
+ },
+ "qkd_hr_core_queue_fl": {
+  "cell": "qkd_hr_core_queue_fl",
+  "view": "physical/ref_tile/qkd_hr_core_queue/views/qkd_hr_core_queue_fl",
+  "lib_cell": "qkd_hr_core_queue_fl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 204.3,
+  "spread_ps": 22.0,
+  "outputs": 687,
+  "inputs": 653,
+  "launch_ps": 125.2,
+  "launch_pin": "u_rank__u_bridge__qd[179]",
+  "capture_ps": 109.2,
+  "capture_pin": "u_rank__ing_v",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 21.5,
+  "ff_launch_min_ps": 57.8,
+  "ff_hold_need_ps": -11.8,
+  "pass": true,
+  "fail_why": "",
+  "audited_at": "7763b94327065e364a62eba117ee35198de11967",
+  "tool": "tools/hier_contract/native_pin_audit.py --view",
+  "view_sha256": {
+   "qkd_hr_core_queue_fl.lef": "3a21f77358951b1f270ac8b7d5e30b7a5401a28e49341783a0836b1f344824fe",
+   "qkd_hr_core_queue_fl_ff.lib": "1841c8fec73754896f1237d8faf03962578365dedc0942597627f28f5d378407",
+   "qkd_hr_core_queue_fl_ss.lib": "5a440a250a79789411f67a4eff7a55f0970fb10da2aea51a7a8b9560a4c4a291",
+   "qkd_hr_core_queue_fl_tt.lib": "d3df025d2dc2460686c43119bc07e5d6ceaf5b51fa02f9953fcfea61d3365edb"
+  },
+  "view_commit": "fd4fafa02adca40fc78aa9a7fba7da84185fcd5d",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_hr_core_queue-fl1-e1880062d (qkd_hr_core_queue_fl CLOSED)"
+ },
+ "qkd_kvs_attn_fl": {
+  "cell": "qkd_kvs_attn_fl",
+  "view": "physical/ref_tile/qkd_kvs_attn/views/qkd_kvs_attn_fl",
+  "lib_cell": "qkd_kvs_attn_fl",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 292.2,
+  "spread_ps": 43.2,
+  "outputs": 1418,
+  "inputs": 1183,
+  "launch_ps": 247.7,
+  "launch_pin": "ahs[0]",
+  "capture_ps": 158.3,
+  "capture_pin": "d2d__rx_payload[22]",
+  "launch_over": 1,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 39.5,
+  "ff_launch_min_ps": 103.6,
+  "ff_hold_need_ps": -60.6,
+  "pass": false,
+  "fail_why": "launch 247.7411 > 220 (1 pins)",
+  "port_max_capture_ps": {
+   "rst_n": {
+    "pin": "rst_n",
+    "ps": 124.1,
+    "n": 1
+   },
+   "fin": {
+    "pin": "fin[282]",
+    "ps": 149.1,
+    "n": 534
+   },
+   "i_ctl": {
+    "pin": "i_ctl[75]",
+    "ps": 141.9,
+    "n": 77
+   }
+  },
+  "previous_g3_capture_ps": {
+   "rst_n": 383.3,
+   "fin[0]": 372.4,
+   "i_ctl[2]": 338.0
+  },
+  "launch_top": [
+   [
+    "ahs[0]",
+    247.7
+   ],
+   [
+    "pvfst[24]",
+    194.6
+   ],
+   [
+    "pvst[11]",
+    192.1
+   ],
+   [
+    "pvst[30]",
+    191.5
+   ],
+   [
+    "pvst[25]",
+    190.5
+   ]
+  ],
+  "clock_rule": {
+   "clock": "ck",
+   "tt_spread_ps": 43.2,
+   "ff_spread_ps": 39.5,
+   "limit_ps": 80,
+   "pass": true,
+   "insertion_tt": {
+    "n": 2601,
+    "mean": 292.2,
+    "min": 275.8,
+    "max": 319.0
+   },
+   "insertion_ff": {
+    "n": 2601,
+    "mean": 238.0,
+    "min": 222.5,
+    "max": 262.0
+   }
+  },
+  "verdict": "capture PASS (rst_n 124.1 <= 190, was 383.3; fin 149.1, i_ctl 141.9 clear); clock rule PASS (single clock ck, TT/FF pin-flop spread 43.2/39.5 <= 80); guidance launch FAIL on ONE output ahs[0] 247.7 > 220 (= w_attn_root__start_qk, also the internal start strobe of u_attn_face; g3 view 185.6): die STA judges it, no re-route",
+  "launch_classification": {
+   "pin": "ahs[0]",
+   "signal": "u_attn_root.start_qk (assign ahs[0]=w_attn_root__start_qk)",
+   "tt_ck_to_out_ps_at_1.44fF": 539.9,
+   "g3_ps": 466.6,
+   "class": "shared-fanout output: the pin hangs off the start_qk strobe net that also feeds u_attn_face (no dedicated pin flop); the fl1 placement put the pin tap at the tail of that net",
+   "fix_plan": "die STA first (consumer of ahs[0] has 833-247.7 ps); only if die STA names ahs[0]: next attn kit revision adds a dedicated output copy flop for ahs[0] (pin_regs / io_flop_at_pins on output start_qk, 0 cycles if duplicated from the same D) -- no re-route now because the native rule that binds (TT/FF spread <=80) passes and the launch budget is guidance (owner 10-17 0dq)"
+  },
+  "view_sha256": {
+   "qkd_kvs_attn_fl.lef": "62cf17f599e00b5531e5a88e90bb2c9af85f9025dd00548e77afdb1e2acc5a07",
+   "qkd_kvs_attn_fl_ff.lib": "72bd2e4f59d26a157e01e5261034cfbd810025dacdd3374ec95dff3db57168ea",
+   "qkd_kvs_attn_fl_ss.lib": "1ccf1a82406bcd3d0d29ee0a8f30db01e6464289414392a4fcab083f774620f7",
+   "qkd_kvs_attn_fl_tt.lib": "3c8e2def476a6d64921b232518a3c359732b96d3b253a9f647fdc9232e6961d7"
+  },
+  "view_commit": "9b0854b11896a91ec65ccd57842e5c7d711b6b9e",
+  "view_commit_subject": "closure-loop AUTO-MERGE record qkd_kvs_attn-fl1-8e7ae12fb (qkd_kvs_attn_fl CLOSED)",
+  "route": "qkd_kvs_attn-fl1-8e7ae12fb CLOSED TT +11.05 / FF +21.88 ps DRC 0",
+  "audited_at": "7f35a3e4b178f0034f5c6f99f615111632170241",
+  "tool": "tools/hier_contract/native_pin_audit.py --view (own R)"
  }
 }

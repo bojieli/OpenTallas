@@ -1,0 +1,6 @@
+CTLM_PROG MUT=0 BMUT=3 DEFS=- HEAD=1 DECODE=3: FAIL 129/131  rom_go-issue [2] nat_go-issue [1] csr@1042
+    missing ISSUE at 24859 (28, 1)
+    missing ROM at 24861 None
+    unexpected ISSUE at 24860 (28, 1)
+    unexpected ROM at 24862 None
+rc=1

@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qkd_astk_rly_296_fl.lef",
-    "sha256": "090db5b33219ed4e0f0585249aca2b0e738a7e97c0839b3b37716f76eace1f8d"
+    "sha256": "e13b4224d333cdc977641fc4b6cb99e7665f6da439f132c1351e04adf65c9b87"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/qkd_astk_rly_296-fl1-bd369b99e/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_astk_rly_296-rc1-1b6976095/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/qkd_astk_rly_296-fl1-bd369b99e/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/qkd_astk_rly_296-fl1-bd369b99e/record/views/qkd_astk_rly_296_fl/provenance/raw/qkd_astk_rly_296_fl.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/qkd_astk_rly_296-fl1-bd369b99e/record/views/qkd_astk_rly_296_fl/provenance/qkd_astk_rly_296_fl.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_astk_rly_296-rc1-1b6976095/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_astk_rly_296-rc1-1b6976095/record/views/qkd_astk_rly_296_fl/provenance/raw/qkd_astk_rly_296_fl.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_astk_rly_296-rc1-1b6976095/record/views/qkd_astk_rly_296_fl/provenance/qkd_astk_rly_296_fl.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 19 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 14 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_astk_rly_296-fl1-bd369b99e/record/views/qkd_astk_rly_296_fl/provenance/qkd_astk_rly_296_fl.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_astk_rly_296-rc1-1b6976095/record/views/qkd_astk_rly_296_fl/provenance/qkd_astk_rly_296_fl.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qkd_astk_rly_296_fl 25.92 x 51.84: PG M5 VDD 8 stripes (73% spread, 100% cov) / VSS 8 stripes (73% spread, 100% cov); strap M6; face pins 594 blocked-above 0 blocked-same 0; clock ck insertion 80 ps; pockets M5 0 (closed)",
+    "summary": "qkd_astk_rly_296_fl 25.92 x 51.84: PG M5 VDD 8 stripes (73% spread, 100% cov) / VSS 8 stripes (73% spread, 100% cov); strap M6; face pins 594 blocked-above 0 blocked-same 0; clock ck insertion 81 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qkd_astk_rly_296_fl",
       "W": 25.92,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 594,
         "blocked_above": 0,
-        "covered_below": 209,
+        "covered_below": 36,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 79.53,
-          "min_ps": 65.84
+          "max_ps": 81.26,
+          "min_ps": 67.11
         }
       },
       "pockets": {
@@ -87,16 +87,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 19
+          "added": 14
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "qkd_astk_rly_296_fl.lef",
-    "sha256": "061494c716b15b60667ac01a288df27edef3fa23e28ed6705a9bf442855674e6"
+    "sha256": "5a75a96fc874a4ae98f38ddb4cc9bc08b0a90c826a747c9aff9a5c3ffd73e39c"
   }
 }

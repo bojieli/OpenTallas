@@ -1,0 +1,117 @@
+{
+ "name": "qfd_sys_face_mu_dhobs",
+ "top": "qfd_sys_face_mu_dhobs",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/mu/qfd_sys_face_mu_dhobs.sv",
+  "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 43.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "seq_dh",
+   "dh_user"
+  ],
+  "N": [
+   "ck",
+   "rst_n",
+   "res_user",
+   "mu_fault"
+  ],
+  "W": [],
+  "E": []
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "observer at the die's tt_ctlm dh pins, zero added edges by contract (dh_user names the h_start on the edge tt_ctlm's dh pin register samples it). With the compiled lists (USER_SEQ 0: OPSEG face starts are user 0) dh_user / res_user synthesise to constants; mu_fault is a flop (fault_q); seq_dh[42:36] feed the k counter / stage compare into flops (one compare level); seq_dh[186:44], [43], [35:0] unread (one die bus with tt_ctlm.dh). A pin-register wrapper would delay dh_user by 2 edges against dh."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.025
+ },
+ "structural_change": "NEW leaf (MU-DQ-DHUSER 10-19, COORD 0kg item 2): die-level tt_ctlm.dh_user observer qfd_sys_face_mu_dhobs = qfd_sys_face_mu_dhuser NU 4 OPSEG 0 (no ROM) with the compiled lists (NS 45, USER_SEQ 0, STG_SEQ 1..36/8x37/0, RES_SEQ bit 44) on the whole 187-b seq_dh; ~60 flops; 43.2 x 43.2; seq_dh + dh_user on S (toward tt_ctlm's N face), ck/rst_n/res_user/mu_fault on N.",
+ "slot_change_request": "none: die slot = dv_case.py mu_dhobs (tt_ctlm | native59 channel, 43.2 x 43.2)",
+ "job": {
+  "owner": "Claude:MU-DQ-DHUSER",
+  "branch": "claude/mu-dq-dhuser-1019",
+  "tag": "d1",
+  "cycles_added": 0,
+  "purpose": "Qwen compute MU die tt_ctlm.dh_user observer (OPSEG 0, compiled lists); bench tb_dhobs 1800 h_starts PASS, bad-stage detect PASS, MUT 2 (stage check dropped) FAIL.",
+  "views_to": "physical/ref_tile/qfd_sys_face_mu_dhobs/views",
+  "record_to": "results/rtl/ref_tile/qfd_sys_face_mu_dhobs",
+  "extra_paths": [
+   "rtl/qwen_split/mu",
+   "results/rtl/mu_qwen_1018/dhobs"
+  ],
+  "benches": [
+   {
+    "name": "dhobs_pass",
+    "cmd": "bash results/rtl/mu_qwen_1018/dhobs/run_dhobs.sh {RUN}/dhobs_pass",
+    "expect": "pass",
+    "pass_regex": "^TB_DHOBS PASS h_starts 1800 periods 40 ",
+    "pass_witness": "results/rtl/mu_qwen_1018/dhobs/runs/pass.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "dhobs_bad_stage",
+    "cmd": "bash results/rtl/mu_qwen_1018/dhobs/run_dhobs.sh {RUN}/dhobs_bad_stage +bad=50",
+    "expect": "pass",
+    "pass_regex": "^TB_DHOBS PASS \\(bad stage at h_start 50 detected on its edge\\)",
+    "pass_witness": "results/rtl/mu_qwen_1018/dhobs/runs/bad50.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "stage_check_mutant",
+    "cmd": "MUT=2 bash results/rtl/mu_qwen_1018/dhobs/run_dhobs.sh {RUN}/stage_check_mutant +bad=50",
+    "expect": "fail",
+    "fail_regex": "^TB_DHOBS FAIL \\(bad stage at 50 not detected",
+    "fail_witness": "results/rtl/mu_qwen_1018/dhobs/runs/m2.log",
+    "note": "leaf stage check dropped",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true
+}

@@ -1,0 +1,195 @@
+{
+ "die_sha256": "7006cbd0d11ffb755902c588eec474a1a7c27d7ad77212cebe3be1fcae5aae7e",
+ "pad_file": "/srv/opentallas-scratch/claude/kv-exact-padgap-1019/gen7_strict/output_pads.pv.json",
+ "pad_sha256": "11cfa277029360cb40b533b19cf8db4b92d7f9a13be44262e97222f915004242",
+ "strict_unread_expected": 45863,
+ "reproduced_unread_bits": 45863,
+ "by_master_port": [
+  {
+   "master": "qkd_astk_rly_296_fl",
+   "port": "b",
+   "bits": 22776,
+   "instances": 176
+  },
+  {
+   "master": "qkd_rlys_296",
+   "port": "b",
+   "bits": 17316,
+   "instances": 148
+  },
+  {
+   "master": "qkd_rlys_36",
+   "port": "b",
+   "bits": 2309,
+   "instances": 581
+  },
+  {
+   "master": "ot_qkh_head_stk_native",
+   "port": "kpv_o",
+   "bits": 1920,
+   "instances": 1920
+  },
+  {
+   "master": "qkd_ectl3_kiss_st",
+   "port": "so",
+   "bits": 384,
+   "instances": 32
+  },
+  {
+   "master": "qkd_landsh_36",
+   "port": "fault",
+   "bits": 267,
+   "instances": 267
+  },
+  {
+   "master": "qkd_astk_er_owner_st",
+   "port": "next_addr",
+   "bits": 176,
+   "instances": 4
+  },
+  {
+   "master": "qkd_astk_er_owner_st",
+   "port": "response_addr",
+   "bits": 176,
+   "instances": 4
+  },
+  {
+   "master": "qkd_landsh_36",
+   "port": "b",
+   "bits": 171,
+   "instances": 9
+  },
+  {
+   "master": "qkd_astk_ctl_s",
+   "port": "lt",
+   "bits": 84,
+   "instances": 4
+  },
+  {
+   "master": "ot_qwen_tp8_pv_wide_ctl_tb",
+   "port": "cmd",
+   "bits": 56,
+   "instances": 2
+  },
+  {
+   "master": "qkd_landsh_528",
+   "port": "fault",
+   "bits": 39,
+   "instances": 39
+  },
+  {
+   "master": "ot_qwen_tp8_pv_wide_ctl_tb",
+   "port": "out_age",
+   "bits": 32,
+   "instances": 2
+  },
+  {
+   "master": "qkd_landsh_36",
+   "port": "tie_hi",
+   "bits": 31,
+   "instances": 31
+  },
+  {
+   "master": "qkd_landsh_36",
+   "port": "tie_lo",
+   "bits": 23,
+   "instances": 23
+  },
+  {
+   "master": "qkd_astk_er_owner_st",
+   "port": "next_v",
+   "bits": 16,
+   "instances": 4
+  },
+  {
+   "master": "qkd_astk_er_owner_st",
+   "port": "response_v",
+   "bits": 16,
+   "instances": 4
+  },
+  {
+   "master": "qkd_landsh_1",
+   "port": "fault",
+   "bits": 16,
+   "instances": 16
+  },
+  {
+   "master": "qkd_landsh_296",
+   "port": "fault",
+   "bits": 16,
+   "instances": 16
+  },
+  {
+   "master": "qkd_landsh0_36",
+   "port": "fault",
+   "bits": 9,
+   "instances": 9
+  },
+  {
+   "master": "qkd_landsh_528",
+   "port": "tie_hi",
+   "bits": 8,
+   "instances": 8
+  },
+  {
+   "master": "qkd_landsh_1",
+   "port": "tie_lo",
+   "bits": 7,
+   "instances": 7
+  },
+  {
+   "master": "qkd_astk_ep_s",
+   "port": "zo",
+   "bits": 4,
+   "instances": 4
+  },
+  {
+   "master": "ot_qwen_tp8_pv_wide_ctl_tb",
+   "port": "busy",
+   "bits": 2,
+   "instances": 2
+  },
+  {
+   "master": "qkd_landsh_528",
+   "port": "tie_lo",
+   "bits": 2,
+   "instances": 2
+  },
+  {
+   "master": "qkd_landsh0_296",
+   "port": "fault",
+   "bits": 2,
+   "instances": 2
+  },
+  {
+   "master": "qkd_seq_core_static_s",
+   "port": "hs",
+   "bits": 1,
+   "instances": 1
+  },
+  {
+   "master": "qkd_landsh_1",
+   "port": "tie_hi",
+   "bits": 1,
+   "instances": 1
+  },
+  {
+   "master": "qkd_landsh0_528",
+   "port": "fault",
+   "bits": 1,
+   "instances": 1
+  },
+  {
+   "master": "qkd_landsh0_1",
+   "port": "fault",
+   "bits": 1,
+   "instances": 1
+  },
+  {
+   "master": "qkd_landsh_296",
+   "port": "tie_lo",
+   "bits": 1,
+   "instances": 1
+  }
+ ]
+}

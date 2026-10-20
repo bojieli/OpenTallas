@@ -1,0 +1,23 @@
+ISSUE edge=50 pos=0 identity=00000000000246880000
+ISSUE edge=66 pos=1 identity=00000000000246880001
+ISSUE edge=82 pos=2 identity=00000000000246880002
+ISSUE edge=98 pos=3 identity=00000000000246880003
+ISSUE edge=114 pos=4 identity=00000000000246880004
+ISSUE edge=130 pos=5 identity=00000000000246880005
+ISSUE edge=146 pos=6 identity=00000000000246880006
+ISSUE edge=162 pos=7 identity=00000000000246880007
+ISSUE edge=178 pos=8 identity=00000000000246880008
+ISSUE edge=194 pos=9 identity=00000000000246880009
+ISSUE edge=210 pos=10 identity=0000000000024688000a
+ISSUE edge=226 pos=11 identity=0000000000024688000b
+ISSUE edge=242 pos=12 identity=0000000000024688000c
+ISSUE edge=258 pos=13 identity=0000000000024688000d
+QUEUE_OBSERVED peak=14 issues=14 current=14
+WORD0 edge=456 data=002b000012340077
+COMMIT edge=458 status=7 pos=0 token=43
+FINAL_DEFAULT_SCHED_PASS outputs=70 case=21 edges=558 issues=14 rawdone=14 commits=1 writes=2
+- scheduler_compare.sv:312: Verilog $finish
+DEFAULT_ELIGIBILITY_COVER edges=558 low=0 high=14
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.000 s; speed 13.312 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

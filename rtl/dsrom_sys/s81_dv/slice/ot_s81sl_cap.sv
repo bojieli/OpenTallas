@@ -61,7 +61,13 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_cap #(
     parameter integer WIN = 2,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // TOK.DS.BENCH.1 calendar fix (LEAD2-S81/TOK 10-19): E-column static delay in edges before n6 (0 = none, the
+    // pre-fix netlist).  The QF six-frame calendar needs EDLY = 23 (ot_s81sl_cap_ed header); the compiler owns it.
+    parameter integer EDLY = 0,
+    // TOK2 10-19: static delay of W lane 3 (R01 in the QF vehicle) before the W tree (0 = none).  The QF six-frame calendar
+    // needs WL3DLY = 16 with EDLY = 24 (cap_ed_calendar/s_16_24.json; EDLY 23 alone cannot pack: the W tree holds 4 frames).
+    parameter integer WL3DLY = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -81,11 +87,25 @@ module ot_s81sl_cap #(
     localparam integer MUT_E = (MUT == 2 || MUT == 4) ? MUT : 0;
     localparam integer MUT_R = (MUT == 1 || MUT == 3) ? MUT : 0;
     wire w_v, w_e, w_f, e_v, e_e, e_f; wire [31:0] w_t, w_d, e_t, e_d;
+    wire [279:0] rt_wd;                                        // W lanes after the optional lane-3 static delay
+    generate if (WL3DLY != 0) begin : g_ld3
+        assign rt_wd[209:0] = rt_w[209:0];
+        ot_s81sl_cap_ld #(.D(WL3DLY)) u_ld3 (.clk(clk), .rst_n(rst_n), .i_w(rt_w[279:210]), .o_w(rt_wd[279:210]));
+    end else begin : g_nold3
+        assign rt_wd = rt_w;
+    end endgenerate
+    wire ex_v, ex_e, ex_f; wire [31:0] ex_t, ex_d;            // E tree output before the static delay
+    generate if (EDLY != 0) begin : g_ed
+        ot_s81sl_cap_ed #(.D(EDLY)) u_ed (.clk(clk), .rst_n(rst_n), .i_v(ex_v), .i_t(ex_t), .i_d(ex_d), .i_e(ex_e),
+            .i_f(ex_f), .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .o_f(e_f));
+    end else begin : g_noed
+        assign e_v = ex_v; assign e_t = ex_t; assign e_d = ex_d; assign e_e = ex_e; assign e_f = ex_f;
+    end endgenerate
     // the hardened leaves are instantiated WITHOUT parameter overrides (one master each; WIN = 2 is their default);
     // the bench mutants (MUT != 0) re-elaborate the RTL with the mutant parameter on the leaf that holds it
     generate if (MUT == 0) begin : g_hard
-        ot_s81sl_cap_tr u_tw (.clk(clk), .rst_n(rst_n), .rt(rt_w), .o_v(w_v), .o_t(w_t), .o_d(w_d), .o_e(w_e), .fault(w_f));
-        ot_s81sl_cap_tr u_te (.clk(clk), .rst_n(rst_n), .rt(rt_e), .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .fault(e_f));
+        ot_s81sl_cap_tr u_tw (.clk(clk), .rst_n(rst_n), .rt(rt_wd), .o_v(w_v), .o_t(w_t), .o_d(w_d), .o_e(w_e), .fault(w_f));
+        ot_s81sl_cap_tr u_te (.clk(clk), .rst_n(rst_n), .rt(rt_e), .o_v(ex_v), .o_t(ex_t), .o_d(ex_d), .o_e(ex_e), .fault(ex_f));
         ot_s81sl_cap_rt u_rt (.clk(clk), .rst_n(rst_n),
             .w_v(w_v), .w_t(w_t), .w_d(w_d), .w_e(w_e), .w_f(w_f), .e_v(e_v), .e_t(e_t), .e_d(e_d), .e_e(e_e), .e_f(e_f),
             .cfg_v(cfg_v), .cfg_d(cfg_d),
@@ -95,10 +115,10 @@ module ot_s81sl_cap #(
 `ifndef OT_HARD_CHILDREN
     // bench mutants only (the hardened build defines OT_HARD_CHILDREN: hard views carry no parameters)
     else begin : g_mut
-        ot_s81sl_cap_tr #(.MUT(MUT_W)) u_tw (.clk(clk), .rst_n(rst_n), .rt(rt_w),
+        ot_s81sl_cap_tr #(.MUT(MUT_W)) u_tw (.clk(clk), .rst_n(rst_n), .rt(rt_wd),
             .o_v(w_v), .o_t(w_t), .o_d(w_d), .o_e(w_e), .fault(w_f));
         ot_s81sl_cap_tr #(.MUT(MUT_E)) u_te (.clk(clk), .rst_n(rst_n), .rt(rt_e),
-            .o_v(e_v), .o_t(e_t), .o_d(e_d), .o_e(e_e), .fault(e_f));
+            .o_v(ex_v), .o_t(ex_t), .o_d(ex_d), .o_e(ex_e), .fault(ex_f));
         ot_s81sl_cap_rt #(.MUT(MUT_R)) u_rt (.clk(clk), .rst_n(rst_n),
             .w_v(w_v), .w_t(w_t), .w_d(w_d), .w_e(w_e), .w_f(w_f), .e_v(e_v), .e_t(e_t), .e_d(e_d), .e_e(e_e), .e_f(e_f),
             .cfg_v(cfg_v), .cfg_d(cfg_d),

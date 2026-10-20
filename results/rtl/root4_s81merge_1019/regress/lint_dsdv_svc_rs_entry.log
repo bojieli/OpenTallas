@@ -1,0 +1,193 @@
+%Warning-ALWNEVER: rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:70:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                            : ... note: In instance 'dsdv_svc_rs_entry.u.u_sms.u_smh.g_q[3].u_q.g_p[1].g_hard.u_smd.u_d.g_dv[1].u_d'
+                                                            : ... Suggest use 'always_comb'
+   70 |         always @* begin z_a = 32'd0; z_b = 32'd0; z_pa = 5'd0; z_pb = 5'd0; end
+      |         ^~~~~~
+                   ... For warning description see https://verilator.org/warn/ALWNEVER?v=5.050
+                   ... Use "/* verilator lint_off ALWNEVER */" and lint_on around source to disable this message.
+%Warning-ALWNEVER: rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv:88:9: 'always @*' will never execute as expression list is empty (no variables read)
+                                                            : ... note: In instance 'dsdv_svc_rs_entry.u.u_sms.u_smh.g_q[3].u_q.g_p[1].g_hard.u_smd.u_d.g_dv[1].u_d'
+                                                            : ... Suggest use 'always_comb'
+   88 |         always @* begin zz_ma = 24'd0; zz_mb = 24'd0; zz_sa = 3'd0; zz_sb = 3'd0; zz_ea = 10'd0; zz_eb = 10'd0; zz_sign = 1'b0; zz_zero = 1'b0; zz_bad = 1'b0; end
+      |         ^~~~~~
+%Warning-LATCH: rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv:67:5: Latch inferred for signal 'dsdv_svc_rs_entry.u.g_host.u_job.nend' (not all control paths of combinational always assign a value)
+                                                             : ... Suggest use of always_latch for intentional latches
+   67 |     always @* begin
+      |     ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:116:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.rs'
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:116:15: ... Location of async usage
+  116 |     reg [1:0] rs;
+      |               ^~
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:117:76: ... Location of sync usage
+  117 |     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+      |                                                                            ^~
+                       ... For warning description see https://verilator.org/warn/SYNCASYNCNET?v=5.050
+                       ... Use "/* verilator lint_off SYNCASYNCNET */" and lint_on around source to disable this message.
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.u_sx.g_r[3].g_h[1].u_hrow.rs'
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: ... Location of async usage
+   53 |     reg [1:0] rs;
+      |               ^~
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:54:76: ... Location of sync usage
+   54 |     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+      |                                                                            ^~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.u_sx.g_r[3].g_h[0].u_hrow.rs'
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: ... Location of async usage
+   53 |     reg [1:0] rs;
+      |               ^~
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:54:76: ... Location of sync usage
+   54 |     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+      |                                                                            ^~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.u_sx.g_r[2].g_h[1].u_hrow.rs'
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: ... Location of async usage
+   53 |     reg [1:0] rs;
+      |               ^~
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:54:76: ... Location of sync usage
+   54 |     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+      |                                                                            ^~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.u_sx.g_r[2].g_h[0].u_hrow.rs'
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: ... Location of async usage
+   53 |     reg [1:0] rs;
+      |               ^~
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:54:76: ... Location of sync usage
+   54 |     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+      |                                                                            ^~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.u_sx.g_r[1].g_h[1].u_hrow.rs'
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: ... Location of async usage
+   53 |     reg [1:0] rs;
+      |               ^~
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:54:76: ... Location of sync usage
+   54 |     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+      |                                                                            ^~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.u_sx.g_r[1].g_h[0].u_hrow.rs'
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: ... Location of async usage
+   53 |     reg [1:0] rs;
+      |               ^~
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:54:76: ... Location of sync usage
+   54 |     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+      |                                                                            ^~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.u_sx.g_r[0].g_h[1].u_hrow.rs'
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: ... Location of async usage
+   53 |     reg [1:0] rs;
+      |               ^~
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:54:76: ... Location of sync usage
+   54 |     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+      |                                                                            ^~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.u_sx.g_r[0].g_h[0].u_hrow.rs'
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:53:15: ... Location of async usage
+   53 |     reg [1:0] rs;
+      |               ^~
+                       rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:54:76: ... Location of sync usage
+   54 |     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+      |                                                                            ^~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_dv/sm_target/dsdv_sm_so_target.sv:37:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.g_smt.u_tgt.reset_landing'
+                       rtl/dsrom_sys/s81_dv/sm_target/dsdv_sm_so_target.sv:37:15: ... Location of async usage
+   37 |     reg [1:0] reset_landing;
+      |               ^~~~~~~~~~~~~
+                       rtl/dsrom_sys/s81_dv/sm_target/dsdv_sm_so_target.sv:40:32: ... Location of sync usage
+   40 |         else reset_landing <= {reset_landing[0],1'b1};
+      |                                ^~~~~~~~~~~~~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:30:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.g_pc[1].u_pc.rst_s'
+                       rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:30:15: ... Location of async usage
+   30 |     reg [1:0] rst_s;
+      |               ^~~~~
+                       rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:31:91: ... Location of sync usage
+   31 |     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+      |                                                                                           ^~~~~
+%Warning-SYNCASYNCNET: rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:30:15: Signal flopped as both synchronous and async: 'dsdv_svc_rs_entry.u.g_pc[0].u_pc.rst_s'
+                       rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:30:15: ... Location of async usage
+   30 |     reg [1:0] rst_s;
+      |               ^~~~~
+                       rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:31:91: ... Location of sync usage
+   31 |     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+      |                                                                                           ^~~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:142:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_di[0].p1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:144:74: ... Location of first driving block
+  144 |             else begin p0[0] <= dn_i[DW*f]; p0[513] <= dn_i[DW*f + 513]; p1[0] <= p0[0]; p1[513] <= p0[513]; end
+      |                                                                          ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:146:36: ... Location of other driving block
+  146 |                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
+      |                                    ^~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:142:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_di[1].p1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:144:74: ... Location of first driving block
+  144 |             else begin p0[0] <= dn_i[DW*f]; p0[513] <= dn_i[DW*f + 513]; p1[0] <= p0[0]; p1[513] <= p0[513]; end
+      |                                                                          ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:146:36: ... Location of other driving block
+  146 |                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:142:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_di[2].p1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:144:74: ... Location of first driving block
+  144 |             else begin p0[0] <= dn_i[DW*f]; p0[513] <= dn_i[DW*f + 513]; p1[0] <= p0[0]; p1[513] <= p0[513]; end
+      |                                                                          ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:146:36: ... Location of other driving block
+  146 |                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:142:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_di[3].p1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:144:74: ... Location of first driving block
+  144 |             else begin p0[0] <= dn_i[DW*f]; p0[513] <= dn_i[DW*f + 513]; p1[0] <= p0[0]; p1[513] <= p0[513]; end
+      |                                                                          ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:146:36: ... Location of other driving block
+  146 |                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:154:21: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_host.qp'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:156:24: ... Location of first driving block
+  156 |             else begin qp[0] <= q[0]; hp[0] <= hw[0]; end
+      |                        ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:157:36: ... Location of other driving block
+  157 |         always @(posedge ck) begin qp[514:1] <= q[514:1]; hp[291:1] <= hw[291:1]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:161:22: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_host.r1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:163:24: ... Location of first driving block
+  163 |             else begin r1[0] <= cq[0]; r1[513] <= hp[0]; end
+      |                        ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:164:36: ... Location of other driving block
+  164 |         always @(posedge ck) begin r1[512:1] <= cq[512:1]; r1[DW-1:514] <= hp[291:1]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:178:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_do[0].o1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:180:80: ... Location of first driving block
+  180 |             else begin o0[0] <= cs[0] && chm[f]; o0[513] <= cs[513] && chm[f]; o1[0] <= o0[0]; o1[513] <= o0[513]; end
+      |                                                                                ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:182:36: ... Location of other driving block
+  182 |                                    o1[512:1] <= o0[512:1]; o1[DW-1:514] <= o0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:178:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_do[1].o1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:180:80: ... Location of first driving block
+  180 |             else begin o0[0] <= cs[0] && chm[f]; o0[513] <= cs[513] && chm[f]; o1[0] <= o0[0]; o1[513] <= o0[513]; end
+      |                                                                                ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:182:36: ... Location of other driving block
+  182 |                                    o1[512:1] <= o0[512:1]; o1[DW-1:514] <= o0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:178:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_do[2].o1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:180:80: ... Location of first driving block
+  180 |             else begin o0[0] <= cs[0] && chm[f]; o0[513] <= cs[513] && chm[f]; o1[0] <= o0[0]; o1[513] <= o0[513]; end
+      |                                                                                ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:182:36: ... Location of other driving block
+  182 |                                    o1[512:1] <= o0[512:1]; o1[DW-1:514] <= o0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:178:26: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.g_do[3].o1'
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:180:80: ... Location of first driving block
+  180 |             else begin o0[0] <= cs[0] && chm[f]; o0[513] <= cs[513] && chm[f]; o1[0] <= o0[0]; o1[513] <= o0[513]; end
+      |                                                                                ^~
+                      rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv:182:36: ... Location of other driving block
+  182 |                                    o1[512:1] <= o0[512:1]; o1[DW-1:514] <= o0[DW-1:514]; end
+      |                                    ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:16:25: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.__Vcellout__g_pc[1].u_pc__rq'
+                      rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:44:9: ... Location of first driving block
+   44 |         rq[340:1] <= qrq[340:1];
+      |         ^~
+                      rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:36:13: ... Location of other driving block
+   36 |             rq[0] <= qrq[0]; qrk <= rk; qwd <= wd;
+      |             ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:16:25: Signal has multiple driving blocks with different clocking: 'dsdv_svc_rs_entry.u.__Vcellout__g_pc[0].u_pc__rq'
+                      rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:44:9: ... Location of first driving block
+   44 |         rq[340:1] <= qrq[340:1];
+      |         ^~
+                      rtl/dsrom_sys/s81_ph/svc/dsfd_svc_pc.sv:36:13: ... Location of other driving block
+   36 |             rq[0] <= qrq[0]; qrk <= rk; qwd <= wd;
+      |             ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 12.189 MB sources in 169 modules, into 750.054 MB in 813 C++ files needing 0.000 MB
+- Verilator: Walltime 418.634 s (elab=4.286, cvt=374.921, bld=0.000); cpu 406.761 s on 1 threads; allocated 27338.484 MB

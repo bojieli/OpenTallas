@@ -1,0 +1,23 @@
+test_matching_parameters_prove_and_receipt_is_strictly_admitted (test_kv_param_native_audit.AuditTest.test_matching_parameters_prove_and_receipt_is_strictly_admitted) ... ok
+test_unproven_or_drifted_audit_gives_no_receipt (test_kv_param_native_audit.AuditTest.test_unproven_or_drifted_audit_gives_no_receipt) ... ok
+test_view_from_another_run_refuses (test_kv_param_native_audit.AuditTest.test_view_from_another_run_refuses) ... ok
+test_constant_metadata_needs_joint_observation_and_reset_base (test_kv_param_native_audit.JointModeTest.test_constant_metadata_needs_joint_observation_and_reset_base) ... ok
+test_netlist_that_differs_after_reset_refuses (test_kv_param_native_audit.JointModeTest.test_netlist_that_differs_after_reset_refuses) ... ok
+test_other_vectors_refuse (test_kv_param_native_audit.ParserTest.test_other_vectors_refuse) ... ok
+test_unsigned_vector_parameter (test_kv_param_native_audit.ParserTest.test_unsigned_vector_parameter) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 26.471s
+
+OK
+t expect=pass: PROVEN 4/4 state 3/2 -> OK
+t expect=fail: NOT PROVEN 3/4 state 3/3 -> OK
+1 receipts / 1 audited modules
+t expect=pass: PROVEN 4/4 state 3/2 -> OK
+0 receipts / 1 audited modules
+t expect=pass: NOT PROVEN 1/4 state 3/2 -> UNEXPECTED
+t expect=pass: NOT PROVEN 4/6 state 4/8 -> UNEXPECTED
+t expect=pass: PROVEN 10/10 state 4/8 -> OK
+t expect=pass: PROVEN 10/10 state 4/8 -> OK
+1 receipts / 1 audited modules
+t expect=pass: NOT PROVEN 8/10 state 4/8 -> UNEXPECTED

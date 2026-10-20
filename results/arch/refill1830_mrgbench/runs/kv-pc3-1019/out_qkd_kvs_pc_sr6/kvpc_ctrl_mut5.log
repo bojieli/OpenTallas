@@ -1,0 +1,26 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=2 pll out ko 000000000/0fb873b6e
+MISMATCH t=3  ck out ko 000000000/0fb873b6e
+MISMATCH t=3 pll out ko 0fb873b6e/153ec18cd
+MISMATCH t=3 pll out fo 0/1
+MISMATCH t=4  ck out ko 0fb873b6e/153ec18cd
+MISMATCH t=4  ck out fo 0/1
+MISMATCH t=5  ck out ko 153ec18cd/0a577e1f8
+OUT co mismatches=18188
+OUT er mismatches=1461
+OUT po mismatches=36186
+OUT ko mismatches=36281
+OUT fo mismatches=2
+OUT native_commit_valid mismatches=287
+OUT native_commit_identity mismatches=130
+OUT native_commit_address mismatches=130
+OUT corrected_epoch mismatches=17787
+OUT completion_v mismatches=945
+OUT completion_we mismatches=13207
+OUT drain_fault_core mismatches=492
+KVPC_CTRL FAIL edges=20000 checks=580624 errors=125096 active_out=172267 mut=5
+- /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019/out_qkd_kvs_pc_sr6/kvpc_ctrl_mut5/bench/kvpc_ctrl_m5/tb.sv:156: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.528 s; speed 31.636 us/s
+- Verilator: cpu 0.527 s on 1 threads; allocated 7 MB
+

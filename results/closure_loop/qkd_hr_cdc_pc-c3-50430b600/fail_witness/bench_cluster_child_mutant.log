@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_hr_cdc_pc-c3-50430b600 bench bench_cluster_child_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_hr_cdc_pc-c3-50430b600 log cl/bench_cluster_child_mutant.a1b1.log captured 2026-10-19T06:43:48-07:00
+# fail_regex 'CLUSTER_GATE FAIL mutant'
+mutant: u_cdc_pc.host_rst_n inverted at the parent
+flat reference: 13 member instance(s) wrapped per flat_wraps.json [('qkd_host_axi_packet', 'qkd_host_axi_packet_rr'), ('qkd_host_control_prompt_observed', 'qkd_host_control_prompt_observed_rr'), ('qkd_host_hc_station', 'qkd_host_hc_station_rr'), ('qkd_host_program_loader_target', 'qkd_host_program_loader_target_rr'), ('qkd_host_program_rx_target', 'qkd_host_program_rx_target_rr'), ('qkd_host_record_port', 'qkd_host_record_port_rr'), ('qkd_host_rx_class_admission', 'qkd_host_rx_class_admission_rr'), ('qkd_host_tx_class', 'qkd_host_tx_class_rr')]
+seed=1 mode=0: MISMATCH phy_tx_flit t=39483504 fs core=47
+seed=1 mode=1: MISMATCH phy_tx_v t=70773504 fs core=84 flat=1 clu=0
+seed=2 mode=0: MISMATCH phy_tx_v t=8358451504 fs core=10029 flat=1 clu=0
+seed=2 mode=1: MISMATCH phy_tx_v t=116665504 fs core=139 flat=1 clu=0
+seed=3 mode=0: MISMATCH phy_tx_v t=40526504 fs core=48 flat=1 clu=0
+seed=3 mode=1: MISMATCH phy_tx_v t=175073504 fs core=209 flat=1 clu=0
+CLUSTER_GATE FAIL mutant child=cdc_pc runs_pass=0/6 core_cycles=20000

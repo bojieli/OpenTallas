@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits  1119 GB (avail 840, growth 50, headroom 0, waiters 0/0 GB) load 38/128 running 15 disk 431 GB 
+ot-run: ot-epyc5       admits   651 GB (avail 512, growth 19, headroom 0, waiters 0/0 GB) load 44/128 running 7 disk 909 GB 
+ot-run: ot-epyc6       admits  1218 GB (avail 909, growth 55, headroom 0, waiters 0/0 GB) load 27/128 running 14 disk 5715 GB 
+ot-run: ot-epyc7       admits  1074 GB (avail 804, growth 52, headroom 0, waiters 0/0 GB) load 20/96 running 14 disk 6267 GB 
+ot-run: ot-epyc8       admits  1324 GB (avail 984, growth 50, headroom 0, waiters 0/0 GB) load 19/128 running 14 disk 49 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/canonical-sdc-scene-load-fix-1019/native
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/canonical-sdc-scene-load-fix-1019/native
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-185510-1792450182 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[ERROR STA-0340] cannot open '/src/test/introspect.tcl'.
+STA-0340
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-185510-1792450182): exit 1
