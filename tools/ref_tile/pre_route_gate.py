@@ -1180,10 +1180,9 @@ class _BlobFiles(dict):
             self.proc.wait()
 
 
-def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
-    """The consumed-file record of a gate that predates it (snapshot v1 without "consumed"), derived by the same closure
-    from the gate's own staged bytes (manifest git blobs, read back from the object store) -- never from today's tree.
-    None when any needed staged blob is unavailable: the gate is then validated exactly as before (full snapshot)."""
+def _staged_closure(binding: dict, kd: Path, extra: bool = True):
+    """(kit, paths): the consumed closure over a gate's own staged manifest blobs (never today's tree), or None when any
+    needed staged blob is unavailable.  extra=False leaves out the job's source.extra_paths prefixes."""
     # kd may be the submit hook's materialised copy (a temp dir): the kit path is the staged spec.json path it ends with
     kits = sorted({e["path"][:-len("/spec.json")] for e in binding.get("files") or []
                    if e["path"].endswith(f"/{kd.name}/spec.json") and kd.as_posix().endswith(e["path"][:-len("/spec.json")])},
@@ -1196,16 +1195,58 @@ def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
         spec = json.loads(files[f"{kit}/spec.json"])
         fp = json.loads(files[f"{kit}/floorplan.json"]) if f"{kit}/floorplan.json" in files else {}
         job = json.loads(files[f"{kit}/job.json"]) if f"{kit}/job.json" in files else {}
-        extra = [str(x) for x in ((job.get("source") or {}).get("extra_paths") or [])]
+        more = [str(x) for x in ((job.get("source") or {}).get("extra_paths") or [])] if extra else []
         views = [it["view"] for it in list(spec.get("macros") or []) + list(spec.get("children") or []) if it.get("view")]
         seeds = list(spec.get("sources") or []) + list(fp.get("referenced") or []) + list(SB.GATE_TOOLS) + \
             list(binding.get("daemon_overlays") or [])
-        paths = SB.consumed_closure(files, seeds, [kit, *views, *extra], PATH_RE) - {f"{kit}/job.json"}
+        paths = SB.consumed_closure(files, seeds, [kit, *views, *more], PATH_RE) - {f"{kit}/job.json"}
     except (KeyError, ValueError, TypeError, OSError):
         return None
     finally:
         files.close()
-    return SB.consumed_record(paths, binding["files"], "reconstructed from the gate's staged manifest blobs")
+    return kit, paths
+
+
+def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
+    """The consumed-file record of a gate that predates it (snapshot v1 without "consumed"), derived by the same closure
+    from the gate's own staged bytes (manifest git blobs, read back from the object store) -- never from today's tree.
+    None when any needed staged blob is unavailable: the gate is then validated exactly as before (full snapshot)."""
+    got = _staged_closure(binding, kd)
+    if got is None:
+        return None
+    return SB.consumed_record(got[1], binding["files"], "reconstructed from the gate's staged manifest blobs")
+
+
+# GATE-EXECUTED TOOLS (ROOT8-CONSUMED 2026-10-20, owner 09:05 "no regates forced by unrelated tool changes"): the gate's
+# consumed record also holds every staged file under the job's source.extra_paths and their Python import closure (route
+# / bench inputs: a job naming tools/qwen_split swept ~390 tools/*.py into it), so any main commit to an unrelated tool
+# refused the submit (pv_join P216, lane8, sh_lk, sf7w: 1-4 h regates).  At submit the TOOL files (tools/**) are bound
+# only when the gate executed them: the closure over the gate-run seeds (kit directory and hooks, spec sources, floorplan
+# referenced, child/macro views, GATE_TOOLS, shipped overlays) from the gate's own staged blobs, without extra_paths.
+# Non-tool files keep the full record; a changed executed tool, its imports, a tool a kit hook names, or a changed
+# overlay still refuse.  Unresolvable closure (missing staged blob) or an inconsistent record: the record stands as is.
+def gate_executed_tools(binding: dict, kd: Path) -> set | None:
+    got = _staged_closure(binding, kd, extra=False) if isinstance(binding, dict) else None
+    return None if got is None else {p for p in got[1] if p.startswith("tools/")}
+
+
+def narrow_consumed_tools(binding: dict, executed: set | None) -> dict:
+    """binding with its consumed record narrowed to the gate-executed tool files (other paths unchanged); the binding
+    itself when there is nothing to narrow or the record is not intact (validate then judges it exactly as before)."""
+    c = binding.get("consumed") if isinstance(binding, dict) else None
+    if executed is None or not isinstance(c, dict) or c.get("schema") != SB.CONSUMED_SCHEMA \
+            or not isinstance(c.get("paths"), list) or SB.canonical_digest(c["paths"]) != c.get("digest"):
+        return binding
+    staged = {e.get("path"): e.get("sha256") for e in binding.get("files") or []}
+    if any(staged.get(q) != h for q, h in (c.get("sha256") or {}).items()) or set(c["paths"]) - staged.keys():
+        return binding
+    drop = {p for p in c["paths"] if p.startswith("tools/") and p not in executed}
+    if not drop:
+        return binding
+    rec = SB.consumed_record([p for p in c["paths"] if p not in drop], binding["files"],
+                             f"{c.get('basis')}; tools narrowed at submit to the gate-executed closure (ROOT8-CONSUMED)")
+    rec["tools_not_executed"] = len(drop)
+    return {**binding, "consumed": rec}
 
 
 def absent_working_inputs(seeds, spec=None):
@@ -2429,6 +2470,12 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             if rec is not None:
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
+        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and binding.get("files"):
+            try:
+                binding = narrow_consumed_tools(binding, gate_executed_tools(binding, kd))
+                d["source_binding"] = binding        # the relaxing-rule allowlist record is read from here
+            except Exception:  # noqa: BLE001 -- unresolvable: the recorded consumed set stands (strict)
+                pass
         tile = [kd.name, d.get("kit")]
         policy_spec = spec
         if policy_spec is None:
@@ -2458,6 +2505,9 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
                 ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit, clock=d.get("clock"))
         if not ok:
             return no(reason)
+        n_tools = ((binding.get("consumed") or {}).get("tools_not_executed") or 0) if isinstance(binding, dict) else 0
+        if n_tools:
+            reason += f"; {n_tools} staged tool file(s) outside the gate-executed closure not bound (ROOT8-CONSUMED)"
         if note is not None:
             note.append(reason)
         if binding.get("staged_remeasurement"):
