@@ -1,0 +1,17 @@
+        6 |      22204 |      6368 |     11855
+        7 |      22051 |      6359 |     11711
+        8 |      22000 |      6356 |     11663
+        9 |      21903 |      6351 |     11571
+       10 |      21939 |      6353 |     11605
+       15 |      21857 |      6347 |     11529
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 21857 for 3 consecutive iterations.
+Using old diamond search for 6347 remaining illegal cells.
+diamond recovery: recovered 4621/6347 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |      11716 |      1726 |      6776
+      403 |      11716 |      1726 |      6776
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 11716 for 3 consecutive iterations. Using diamond search for 1726 remaining illegal cells.
+diamond recovery: recovered 0/1726 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 1726
+[INFO DPL-0500] Runtime: 350.76s
+Placement Analysis

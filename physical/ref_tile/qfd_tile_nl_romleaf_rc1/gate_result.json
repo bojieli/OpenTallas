@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_tile_nl_romleaf_rc1",
  "verdict": "FAIL",
- "generated": "2026-10-19T17:13:45-0700",
- "host": "ot-epyc6",
+ "generated": "2026-10-19T17:36:19-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "4308e87ec25bd2b89d4b28f499f00b2d3b057524",
+  "start_commit": "354ab01231b40eda2270cbbe3c3f9547ad363166",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "ac6aed26335005e8674b66b857886536a6857f1a43855210d46728a380ab3034",
-  "manifest_sha256": "ac0aea29d6a83fafa7248f157e0ed60ca3afdaef1d15bbd169a567ef3dba4968",
+  "archive_sha256": "eab1bdb457a39b8ea45a5046c592cb8ad2eb9002d312e18f76eb83ada0b70a6f",
+  "manifest_sha256": "d625b43fd193ea5505058980cc99b63f4767892ad9e5fb11545a6ae4cdcb3a32",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.json",
@@ -49475,8 +49475,8 @@
    {
     "path": "tools/qwen_romleaf/rc1/gen_rc1.py",
     "kind": "file",
-    "sha256": "e1b32ca48a357d79e43a4e31caa56deaab9c877a63cb1b14d0a90c74685cac54",
-    "git_blob": "829fd3b98677c970a2a337b87faeac72b927f8a1",
+    "sha256": "adf282f7082000180fd0efdde5df47b22ba189570ab36499fdf964c602040219",
+    "git_blob": "9616a45b77924c6fffbc9554270ffbfe9114fec3",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -49491,8 +49491,8 @@
    {
     "path": "tools/qwen_romleaf/rc1/qfd_tile_nk_romleaf_rc1_regions.tcl",
     "kind": "file",
-    "sha256": "c8405c66abd1d2af2adaf8d92ac70c5ca36a9d02984b4109ed8a73bd6a5aeac9",
-    "git_blob": "0c836d59e309beb90801fa34098821996077fe7d",
+    "sha256": "33571b5e936363d8bd178135d03e554a99e086f73009e52a177d41940ba3bb3f",
+    "git_blob": "87d6ee75c704223e0b4c81c5c2bef74073b29ead",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -49515,8 +49515,8 @@
    {
     "path": "tools/qwen_romleaf/rc1/qfd_tile_nl_romleaf_rc1_regions.tcl",
     "kind": "file",
-    "sha256": "75690c2413294ffd1d0534f5a6331234dce43e7079b1cc6c42ba247b9986ddc7",
-    "git_blob": "31a33f74842c101857003d0131d81df5b6c06052",
+    "sha256": "4f2c33d94e4149aac51e88635fd462a96e60e5c85391ceff60dafb949892de2e",
+    "git_blob": "2ed5769a4b3eba8124e8cf42001502b3d32c27ed",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -94643,14 +94643,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 61597855,
+   "archive_bytes": 61598053,
    "unpacked_bytes": 269996032,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "2a78a3917676f9b973ace39a54001ffce509b3fe",
+   "origin_main": "df297bccdd32d2cc8dc15ecf509d9c39e71dc7f3",
    "content_sha256": "72acb0e92fdd8e3380f47594602730a940f875afd26224756c568240f63cb39a",
    "files": [
     {
@@ -95400,12 +95400,12 @@
     "tools/qwen_romleaf/parent_regions_nl_b1.tcl": "6bf2fde34cea7e02cf144e00e486e8ad8f8efe51556288a7eb3245f32aed1b5e",
     "tools/qwen_romleaf/parent_regions_nl_b2.tcl": "e2e22a02542236bd0b341dbb63fc5449a321c463142e8ef38a09cd5254521882",
     "tools/qwen_romleaf/parent_regions_nl_c1.tcl": "5c9d57d50e8f9fb5a8b348b9d5e5f016efcd2bc9d498aac3b45957fb2760f786",
-    "tools/qwen_romleaf/rc1/gen_rc1.py": "e1b32ca48a357d79e43a4e31caa56deaab9c877a63cb1b14d0a90c74685cac54",
+    "tools/qwen_romleaf/rc1/gen_rc1.py": "adf282f7082000180fd0efdde5df47b22ba189570ab36499fdf964c602040219",
     "tools/qwen_romleaf/rc1/qfd_tile_nk_romleaf_rc1_pins.tcl": "1e4a018af3184651c2bc373d16e2c95bb76e86d9774af4431815ab5637b08db9",
-    "tools/qwen_romleaf/rc1/qfd_tile_nk_romleaf_rc1_regions.tcl": "c8405c66abd1d2af2adaf8d92ac70c5ca36a9d02984b4109ed8a73bd6a5aeac9",
+    "tools/qwen_romleaf/rc1/qfd_tile_nk_romleaf_rc1_regions.tcl": "33571b5e936363d8bd178135d03e554a99e086f73009e52a177d41940ba3bb3f",
     "tools/qwen_romleaf/rc1/qfd_tile_nk_romleaf_rc1f_pins.tcl": "54a3b17e1fbe046654194c00d00f87846d45f9ad30cb49f41acb1628d5074ea3",
     "tools/qwen_romleaf/rc1/qfd_tile_nl_romleaf_rc1_pins.tcl": "40d7566cc561725584c1c0b7e9d83e70353dc57c8410adfcd2dce14f4ae142f1",
-    "tools/qwen_romleaf/rc1/qfd_tile_nl_romleaf_rc1_regions.tcl": "75690c2413294ffd1d0534f5a6331234dce43e7079b1cc6c42ba247b9986ddc7",
+    "tools/qwen_romleaf/rc1/qfd_tile_nl_romleaf_rc1_regions.tcl": "4f2c33d94e4149aac51e88635fd462a96e60e5c85391ceff60dafb949892de2e",
     "tools/qwen_romleaf/rc1/qfd_tile_nl_romleaf_rc1f_pins.tcl": "cef380dccf2991f6f9f3da912082f3ac2a6c836fd8c6ed9263e1dd854133bf9f",
     "tools/qwen_romleaf/region_adopt.tcl": "7514a704a582cce5f40d86de25a0ed4d6a9cd88defd3567136b777622332d836",
     "tools/ref_tile/keep_module_audit.py": "d99f269a508ad9e28d9c523a626c56be3a43ef6d3f4ee7f53705b0f3366b37a8",
@@ -95423,16 +95423,16 @@
    },
    "digest": "66d70eb243f9e1fa328ae69440ca483c96e3456c2057cbb2ee1f8708586d616f"
   },
-  "captured": "2026-10-19T17:10:14-0700",
+  "captured": "2026-10-19T17:15:56-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_tile_nl_romleaf_rc1/signoff.sdc"
   },
-  "remote_script_sha256": "0b92740d7c9ade8c07e16926fa1b86f4fae63725991a481ede633788125c2f84",
+  "remote_script_sha256": "da41e55703748eac1ab66925c66a0b03f62d093b7eaf3234c2102523b2066640",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc6",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_romleaf_rc1-20261019-171001",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_romleaf_rc1-20261019-171544",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -95516,7 +95516,7 @@
   {
    "severity": "FAIL",
    "check": "cts_run",
-   "message": "placement / CTS of the kit failed: ",
+   "message": "placement / CTS of the kit failed: [ERROR DPL-0033] detailed placement checks failed during check placement.",
    "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
   },
   {
