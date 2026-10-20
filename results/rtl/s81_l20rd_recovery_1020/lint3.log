@@ -1,0 +1,176 @@
+Verilator 5.050 2026-07-01 rev v5.050
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:70:56: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                         : ... note: In instance 'dsdv_idx_rg_r32.g_e1.u_e.u_t.g_key[3].g_lv[1].g_add[0].u_a'
+   70 |     ot_hdc_w11_cut #(.W(WA + 1), .CUT(CUT_A), .VB(DRST ? -1 : WA - 1)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
+      |                                                        ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:123:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'dsdv_idx_rg_r32.g_e1.u_e.u_t.g_key[3].g_lv[1].g_add[0].u_a'
+  123 |     ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B), .VB(DRST ? -1 : WB - 1)) u_cb (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:141:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'dsdv_idx_rg_r32.g_e1.u_e.u_t.g_key[3].g_lv[1].g_add[0].u_a'
+  141 |     ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D), .VB(DRST ? -1 : WD - 1)) u_cd (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:180:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'dsdv_idx_rg_r32.g_e1.u_e.u_t.g_key[3].g_lv[1].g_add[0].u_a'
+  180 |     ot_hdc_w11_cut #(.W(WC), .CUT(CUT_C), .VB(DRST ? -1 : WC - 1)) u_cc (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:225:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'dsdv_idx_rg_r32.g_e1.u_e.u_t.g_key[3].g_lv[1].g_add[0].u_a.u_ca'
+  225 |     generate if (CUT && VB < 0) begin : g_r
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:232:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'dsdv_idx_rg_r32.g_e1.u_e.u_t.g_key[3].g_lv[1].g_add[0].u_a.u_ca'
+  232 |     end else if (CUT) begin : g_rv
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv:232:13: Operator ASSIGNDLY expects 17 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                      : ... note: In instance 'dsdv_idx_rg_r32.g_e1.u_e.g_col[3].g_s[7].u_s.u_m'
+  232 |         s_q <= xr[32:17] ;
+      |             ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:465:65: Operator SUB expects 32 bits on the LHS, but LHS's ARRAYSEL generates 4 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  465 |                     else begin i_a[p] <= jb_ + 30'(4 * (rj_k[p] - 4'd1)); i_l[p] <= 4'd4;
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:465:65: Operator SUB expects 32 bits on the RHS, but RHS's CONST '4'h1' generates 4 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  465 |                     else begin i_a[p] <= jb_ + 30'(4 * (rj_k[p] - 4'd1)); i_l[p] <= 4'd4;
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:466:80: Operator SUB expects 32 bits on the LHS, but LHS's ARRAYSEL generates 4 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  466 |                                i_t[p] <= {2'b11, 1'b0, 3'(js), 4'(2 * (rj_k[p] - 4'd1)), 1'b0, 3'd0, 3'd0}; end
+      |                                                                                ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:466:80: Operator SUB expects 32 bits on the RHS, but RHS's CONST '4'h1' generates 4 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  466 |                                i_t[p] <= {2'b11, 1'b0, 3'(js), 4'(2 * (rj_k[p] - 4'd1)), 1'b0, 3'd0, 3'd0}; end
+      |                                                                                ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:650:67: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ocA' generates 5 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  650 |         al_e <= s4k[12] ? 6'd34 : (g_newk[3] ? 6'd3 : 6'(3 * (ocA + 5'd1)));
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:650:67: Operator ADD expects 32 bits on the RHS, but RHS's CONST '5'h1' generates 5 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  650 |         al_e <= s4k[12] ? 6'd34 : (g_newk[3] ? 6'd3 : 6'(3 * (ocA + 5'd1)));
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:699:31: Operator COND expects 9 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  699 |         iq_n <= iq_n + (ipush ? 1'b1 : 1'b0) - (c_v ? 1'b1 : 1'b0);
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:699:31: Operator COND expects 9 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  699 |         iq_n <= iq_n + (ipush ? 1'b1 : 1'b0) - (c_v ? 1'b1 : 1'b0);
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:699:53: Operator COND expects 9 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  699 |         iq_n <= iq_n + (ipush ? 1'b1 : 1'b0) - (c_v ? 1'b1 : 1'b0);
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:699:53: Operator COND expects 9 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  699 |         iq_n <= iq_n + (ipush ? 1'b1 : 1'b0) - (c_v ? 1'b1 : 1'b0);
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:750:31: Operator COND expects 9 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  750 |         im_n <= im_n + (ipush ? 1'b1 : 1'b0) - (ir_e ? 1'b1 : 1'b0);
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:750:31: Operator COND expects 9 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  750 |         im_n <= im_n + (ipush ? 1'b1 : 1'b0) - (ir_e ? 1'b1 : 1'b0);
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:750:54: Operator COND expects 9 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  750 |         im_n <= im_n + (ipush ? 1'b1 : 1'b0) - (ir_e ? 1'b1 : 1'b0);
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:750:54: Operator COND expects 9 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  750 |         im_n <= im_n + (ipush ? 1'b1 : 1'b0) - (ir_e ? 1'b1 : 1'b0);
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:883:30: Operator COND expects 11 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  883 |         sm_n <= sm_n + (o_v1 ? 1'b1 : 1'b0) - (s_re ? 1'b1 : 1'b0);
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:883:30: Operator COND expects 11 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  883 |         sm_n <= sm_n + (o_v1 ? 1'b1 : 1'b0) - (s_re ? 1'b1 : 1'b0);
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:883:53: Operator COND expects 11 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  883 |         sm_n <= sm_n + (o_v1 ? 1'b1 : 1'b0) - (s_re ? 1'b1 : 1'b0);
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:883:53: Operator COND expects 11 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  883 |         sm_n <= sm_n + (o_v1 ? 1'b1 : 1'b0) - (s_re ? 1'b1 : 1'b0);
+      |                                                     ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:909:29: Operator COND expects 7 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  909 |         infl <= infl + (c_v ? 1'b1 : 1'b0) - ((|pp_vm) ? 1'b1 : 1'b0);
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:909:29: Operator COND expects 7 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  909 |         infl <= infl + (c_v ? 1'b1 : 1'b0) - ((|pp_vm) ? 1'b1 : 1'b0);
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:909:56: Operator COND expects 7 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  909 |         infl <= infl + (c_v ? 1'b1 : 1'b0) - ((|pp_vm) ? 1'b1 : 1'b0);
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:909:56: Operator COND expects 7 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  909 |         infl <= infl + (c_v ? 1'b1 : 1'b0) - ((|pp_vm) ? 1'b1 : 1'b0);
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:973:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  973 |         hb_n[19:0] = ({20{ec[0]}} & bk(ik, 2'd0, 1'b0, 1'b1, {4'd1, tg}, 256'd0)) |
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:974:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  974 |                      ({20{ec[1]}} & bk(ik, 2'd1, 1'b0, 1'b1, {4'd1, tg}, 256'd0)) |
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:975:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  975 |                      ({20{ec[2]}} & bk(ik, 2'd1, 1'b0, 1'b0, {4'd2, tg}, 256'd0)) |
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:976:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  976 |                      ({20{ec[3]}} & bk(ik, 2'd1, 1'b1, 1'b0, 12'd0, 256'd0)) |
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:977:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  977 |                      ({20{ec[4]}} & bk(ik, 2'd2, 1'b0, 1'b1, {4'd1, tg}, 256'd0)) |
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:978:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  978 |                      ({20{ec[5]}} & bk(ik, 2'd2, 1'b0, 1'b0, {4'd2, tg}, 256'd0)) |
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:979:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  979 |                      ({20{ec[6]}} & bk(ik, 2'd2, 1'b1, 1'b0, 12'd0, 256'd0)) |
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:980:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  980 |                      ({20{ec[7]}} & bk(ik, 2'd3, 1'b0, 1'b1, {4'd1, tg}, 256'd0)) |
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:981:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  981 |                      ({20{ec[8]}} & bk(ik, 2'd3, 1'b0, 1'b0, {4'd2, tg}, 256'd0)) |
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:982:35: Operator AND expects 276 bits on the LHS, but LHS's REPLICATE generates 20 bits.
+                                                                        : ... note: In instance 'dsdv_idx_rg_r32'
+  982 |                      ({20{ec[9]}} & bk(ik, 2'd3, 1'b1, 1'b0, 12'd0, 256'd0));
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:973:20: Operator ASSIGN expects 20 bits on the Assign RHS, but Assign RHS's OR generates 276 bits.
+                                                                       : ... note: In instance 'dsdv_idx_rg_r32'
+  973 |         hb_n[19:0] = ({20{ec[0]}} & bk(ik, 2'd0, 1'b0, 1'b1, {4'd1, tg}, 256'd0)) |
+      |                    ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:1018:63: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 21 bits.
+                                                                         : ... note: In instance 'dsdv_idx_rg_r32'
+ 1018 |             (q_d[511] ? q_d[491:480] != 12'(64 + ((q_d[40:20] + 21'd15) >> 4)) : q_d[491:480] != 12'd64))) fc_set[6] <= 1'b1;
+      |                                                               ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg_r32.sv:1018:63: Operator ADD expects 32 bits on the RHS, but RHS's CONST '21'hf' generates 21 bits.
+                                                                         : ... note: In instance 'dsdv_idx_rg_r32'
+ 1018 |             (q_d[511] ? q_d[491:480] != 12'(64 + ((q_d[40:20] + 21'd15) >> 4)) : q_d[491:480] != 12'd64))) fc_set[6] <= 1'b1;
+      |                                                               ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.336 MB sources in 68 modules, into 69.218 MB in 89 C++ files needing 0.000 MB
+- Verilator: Walltime 24.623 s (elab=0.371, cvt=22.434, bld=0.000); cpu 24.505 s on 1 threads; allocated 1950.617 MB
