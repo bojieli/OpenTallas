@@ -94,7 +94,7 @@ class Occ:
                         return False
         return True
 
-    def site(self, v, cx, cy, rmax=400.0, step=4.32):
+    def site(self, v, cx, cy, rmax=400.0, step=4.32, ok=None):
         """lower-left of the free W x H node box whose centre is nearest (cx, cy) (Manhattan rings)."""
         for ring in range(0, int(rmax / step) + 1):
             st = ring * step
@@ -104,7 +104,7 @@ class Occ:
             for dx, dy in sorted(cand, key=lambda t: abs(t[0]) + abs(t[1])):
                 x0, y0 = v.dn(cx - W / 2 + dx, v.GX), v.dn(cy - H / 2 + dy, v.GY)
                 r = (x0, y0, x0 + W, y0 + H)
-                if self.free(r):
+                if (ok is None or ok(r)) and self.free(r):
                     self.add(r)
                     return x0, y0
         return None
@@ -148,6 +148,63 @@ def _reset_bus(rsx, inst):
     return cands[0][1] if cands else None
 
 
+def _near_reset(m, rsx, by, o, cj):
+    """owner without a class-'reset' bus (d2d_rom: forwarded reset lane): the class-'reset' bus of the nearest instance on
+    the SAME clock root, else of the nearest instance (the reset tree reaches the node; observation-only sticky)."""
+    same = {e[0] for e in m['buses'][cj][3]}
+    c0 = _ctr(by[o])
+    best = None
+    for (i, p), j in rsx.items():
+        if i not in by or i == o:
+            continue
+        d = (0 if i in same else 1, _man(c0, _ctr(by[i])))
+        if best is None or d < best[0]:
+            best = (d, j)
+    return best[1] if best else None
+
+
+class Zones:
+    """dv die routing zones of a node box (tools/qwen_rom_fulldie_b3r2.py _poly0, dv_gap_route): a field-to-field link
+    must run in ONE band row gap or in the W|E seam; a link with an end outside the tile field is routed normally."""
+
+    def __init__(self, v, m):
+        import re as _re
+        from qwen_split.relay_row_gaps import row_gaps
+        self.fields = [r['rect'] for r in m['regions'] if r['kind'] == 'tile_field']
+        self.corr = v.CORR
+        self.on = bool(m.get('dv_gap_route'))
+        self.gaps = row_gaps((it.y, it.y + it.h) for it in m['insts']
+                             if _re.fullmatch(r't_\d+_\d+|c16_\w+', it.name)) if self.on else []
+        self.seam = m.get('dv_seam')
+
+    def in_field(self, x, y):
+        return any(a - 1 <= x <= c + self.corr + 1 and b - 1 <= y <= d + 1 for a, b, c, d in self.fields)
+
+    def of_box(self, r):
+        cx, cy = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
+        if not self.on or not self.in_field(cx, cy):
+            return 'out'
+        if self.seam and self.seam[0] <= r[0] and r[2] <= self.seam[1]:
+            return 'seam'
+        for k, (a, b) in enumerate(self.gaps):
+            if a <= r[1] and r[3] <= b:
+                return f'gap{k}'
+        return None
+
+    def target(self, x, y):
+        """a field target moves to the middle of the nearest row gap (same x)."""
+        if not self.on or not self.in_field(x, y) or not self.gaps:
+            return x, y
+        if self.seam and self.seam[0] <= x <= self.seam[1]:
+            return x, y
+        a, b = min(self.gaps, key=lambda g: abs((g[0] + g[1]) / 2 - y))
+        return x, (a + b) / 2
+
+    @staticmethod
+    def linkable(z1, z2):
+        return z1 == 'out' or z2 == 'out' or z1 == z2
+
+
 def _join(m, j, ep):
     bid, cl, bits, eps = m['buses'][j]
     m['buses'][j] = (bid, cl, bits, list(eps) + [ep])
@@ -188,6 +245,7 @@ def pre(v, m, G):
         raise ValueError(f'fault emit: plan owners not on this GEN: {missing[:10]}')
     ckx, rsx = _bus_index(m, 'clock_trunk'), _reset_index(m)
     occ = Occ(m)
+    zn = Zones(v, m)
     q = make_master(v, FANIN)
     M[q.name] = q
     rec = m.setdefault('fault_emit', dict(schema='opentallas.qwen.fault-emit.v1', physical_qualification_eligible=False,
@@ -196,19 +254,25 @@ def pre(v, m, G):
     roots = {}
     for o, r in sorted(owners.items()):
         cj, rj = _clock_bus(ckx, o, None), _reset_bus(rsx, o)
+        if rj is None and cj is not None:
+            rj = _near_reset(m, rsx, by, o, cj)
+            rec.setdefault('borrowed_reset', {})[o] = m['buses'][rj][0] if rj is not None else None
         if cj is None or rj is None:
             raise ValueError(f'fault emit: owner {o} without clock ({cj}) / reset ({rj}) bus')
-        s = occ.site(v, *r['xy'])
+        tx, ty = zn.target(*r['xy'])
+        okz = lambda b: zn.of_box(b) is not None
+        s = occ.site(v, tx, ty, ok=okz) or occ.site(v, tx, ty, rmax=2000.0, step=17.28, ok=okz)
         if s is None:
             raise ValueError(f'fault emit: no free site for the region root of {o} near {r["xy"]}')
         nm = f'flt_root_{o}'
-        it = v.Inst(nm, q.name, s[0], s[1], W, H, orient='R0', kind='fault', region=by[o].region, domain=by[o].domain)
+        it = v.Inst(nm, q.name, s[0], s[1], W, H, orient='R0', kind='fault', region=by[o].region, domain='stream_1p2')
         m['insts'].append(it)
         by[nm] = it
         _join(m, cj, (nm, 'ck'))
         _join(m, rj, (nm, 'rs'))
         follow[(nm, 'ck')] = o
-        roots[o] = dict(inst=nm, xy=_ctr(it), clock=m['buses'][cj][0], reset=m['buses'][rj][0], children=[])
+        roots[o] = dict(inst=nm, xy=_ctr(it), clock=m['buses'][cj][0], reset=m['buses'][rj][0], children=[],
+                        zone=zn.of_box((it.x, it.y, it.x + W, it.y + H)))
     # degree-capped Prim MST from the sys_face root
     done, parent = {ROOT_OWNER}, {}
     left = set(roots) - done
@@ -216,13 +280,14 @@ def pre(v, m, G):
         best = None
         for c in left:
             for p in done:
-                if len(roots[p]['children']) >= TREE_DEG:
+                if len(roots[p]['children']) >= TREE_DEG or not Zones.linkable(roots[c]['zone'], roots[p]['zone']):
                     continue
                 d = _man(roots[c]['xy'], roots[p]['xy'])
                 if best is None or d < best[0]:
                     best = (d, c, p)
         if best is None:
-            raise ValueError('fault emit: MST degree cap exhausted')
+            raise ValueError(f'fault emit: MST: no linkable parent for {sorted(left)[:8]} (zones '
+                             f'{sorted({roots[c]["zone"] for c in left})})')
         _, c, p = best
         parent[c] = p
         roots[p]['children'].append(c)
@@ -236,6 +301,7 @@ def pre(v, m, G):
                                      src_ck=roots[c]['clock'], dst_ck=r['clock']))
     rec['roots'] = {o: dict(r, xy=[round(r['xy'][0], 3), round(r['xy'][1], 3)]) for o, r in roots.items()}
     rec['root_owner'] = ROOT_OWNER
+    rec['zones'] = dict(collections.Counter(r['zone'] for r in roots.values()))
     M_ = dict(M)
     v.masters = lambda model, k=1, port_bits=None: dict(M_)
     print(f'FAULT_EMIT pre: {len(roots)} region roots, {len(rec["edges"])} tree edges, '
@@ -311,13 +377,13 @@ def post(v, m, G):
     owner_of_root = {it.name: o for o, it in roots.items()}
 
     def new_node(kind, cx, cy, cj, rj, owner):
-        s = occ.site(v, cx, cy)
+        s = occ.site(v, cx, cy) or occ.site(v, cx, cy, rmax=1200.0, step=8.64)
         if s is None:
             raise ValueError(f'fault emit: no free site for a {kind} near ({cx:.1f}, {cy:.1f})')
         nm = f'flt_{kind}{nn[0]}'
         nn[0] += 1
         it = v.Inst(nm, q16.name, s[0], s[1], W, H, orient='R0', kind='fault', region=by[owner].region,
-                    domain=by[owner].domain)
+                    domain='stream_1p2')
         m['insts'].append(it)
         by[nm] = it
         _join(m, cj, (nm, 'ck'))
