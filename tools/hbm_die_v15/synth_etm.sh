@@ -8,12 +8,24 @@
 set -u
 SRC=$(readlink -f $1); OUT=$(readlink -f $2); NAME=$3
 TOP=$(grep -m1 -o 'hierarchy -check -top [A-Za-z0-9_]*' $OUT/$NAME.ys | awk '{print $NF}')
-python3 - "$OUT/$NAME.files.json" "$OUT/etm.tcl" "$TOP" "$NAME" <<'PY'
+python3 - "$OUT/$NAME.files.json" "$OUT/etm.tcl" "$TOP" "$NAME" "$SRC" <<'PY'
 import json, sys, os
 d = json.load(open(sys.argv[1])); tcl = sys.argv[2]; top = sys.argv[3]; name = sys.argv[4]
 macro_libs = {}
 for m in d['macros']:
     base = m['file'][:-len('_bb.v')] if m['file'].endswith('_bb.v') else m['file'].rsplit('.', 1)[0]
+    macro_libs[base] = 1
+# Existing owner-permitted analog reservation: no timing arcs / no PLL timing claim.
+# Keep the exact pinned LEF/libs in ETM source hashes, as for SRAM children.
+import pathlib, re
+netlist = pathlib.Path(sys.argv[2]).parent / f'{name}.netlist.v'
+if re.search(r'(?m)^\s*ot_hbm_pll_bb\s', netlist.read_text()):
+    if name not in ('hfd_ckgen', 'hfd_ckgen_nolink'):
+        raise ValueError('PLL reservation allowed only in clock-generator ETM')
+    base = 'physical/hbm_pll_views/ot_hbm_pll_bb/ot_hbm_pll_bb'
+    for ext in ('.lef', '_tt.lib', '_ff.lib'):
+        if not (pathlib.Path(sys.argv[5]) / (base + ext)).is_file():
+            raise ValueError('Missing pinned PLL reservation: ' + base + ext)
     macro_libs[base] = 1
 P = '/OpenROAD-flow-scripts/flow/platforms/asap7/lef'
 for c, C in (('tt', 'TT'), ('ff', 'FF')):
