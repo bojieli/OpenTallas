@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_dv_lane_h_safe2-safe2-e95c9709b bench bench_head_safe1_mut_tls_bank host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/qfd_dv_lane_h_safe2-safe2-e95c9709b log cl/bench_head_safe1_mut_tls_bank.a1b1.log captured 2026-10-19T18:09:05-07:00
+# fail_regex 'bench2 \\(e\\) MUT=0: FAIL'
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+bench2 (e) MUT=0: FAIL 0/1024
+    S0ST fault bits 1010001 (any,su,vm,stn,sc,stm,port)
+    silu*up: 1024/1024 mismatches, first [0] got None exp 0x0
