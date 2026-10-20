@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hbm_su_cx_ijq_1019t",
+ "reviewer": "LEAD2-HBM/L2H-SU (Claude) 2026-10-19",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T17:01:58-07:00",
+ "checklist": {
+  "lattice": "PASS: no macros",
+  "std_cell_band": "PASS: one full band; logic centred between the W/E pin faces (1019s density.png, identical outline/pins)",
+  "pin_spread": "PASS: full W/E faces split by port group, clock at the N-E corner; 6,293 pins pin-bound outline (util waiver in README)",
+  "clock_entry": "PASS: single root clk_q, unclustered CTS (w spread 33.9/33.2)",
+  "shape": "PASS: 216 x 388.8 exact closed-view sub-slot"
+ },
+ "notes": "Reviewed 1019s floorplan.png/density.png (same outline, pins, RTL); 1019t only splits the landed reset into 3 kept copies <=32 loads. Gate: PRE_ROUTE_GATE: WARN (0 fail, 5 warn)"
+}
