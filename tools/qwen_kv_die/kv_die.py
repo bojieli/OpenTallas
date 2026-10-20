@@ -874,22 +874,42 @@ SLICE_GAP = 21.6
 # subsystem (kv_static_boot_join.HOST_DIE_JOINS) when kv_die --split instantiates it (item 10); until then they are open.
 HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv'
 HOST_RT_MODULE = 'qkd_host_root_admission'
-# Default-off OBS/OBSX integration. With HOST_OBS=0 the existing main root selection is byte-for-byte unchanged.
-# OBS/OBSX use the generated MU root only when explicitly enabled on the MU die.
-HOST_RT_OBS = (os.environ.get('OT_KV_MU', '0') == '1' and os.environ.get('OT_KV_HOST_MU', '1') == '1'
-               and os.environ.get('OT_KV_HOST_OBS', '0') == '1')
-HOST_RT_OBSX = HOST_RT_OBS and os.environ.get('OT_KV_HOST_OBSX', '0') == '1'
+# KV-BIND4-GUARD 10-19 (OT_KV_MU=1, OT_KV_HOST_MU default 1 under MU): the frame binds the MU 1 release HOST root
+# qkd_host_root_admission_mu (tools/qwen_kv_die/mu_peer/gen_host_root_mu.py; same ports + parameters, MU default 1):
+# the RTL of the CLOSED guard core qkd_hr_core_guard-mu1s-d222ef261 (u_rank.u_native = endpoint_cancel_mu, guard
+# marker FIFO on one ot_sram_1r1w_128x64_m1_p192) + the MU 1 peer core (tp8_coordinator_mu POST_UID_SLOT 1,
+# ctrl_token_service_packet_collected_mu).  0 added edges (same 4-edge FIFO prefetch; private POST decode).  The guard
+# VIEW has no die instance until the host cluster parent (qkd_hr_cluster) replaces the qkd_host_rt frame.
+HOST_RT_MU = (os.environ.get('OT_KV_MU', '0') == '1'
+              and os.environ.get('OT_KV_HOST_MU', '1') == '1')
+if HOST_RT_MU:
+    HOST_RT_FILE = 'rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv'
+    HOST_RT_MODULE = 'qkd_host_root_admission_mu'
+# KV-BIND5-OBS 10-19 (OT_KV_HOST_OBS=1, needs the MU root): the HOST root with its observation window
+# qkd_host_root_admission_obs (tools/qwen_kv_die/mu_peer/gen_host_root_obs.py from the unchanged MU root): the 43 bind-v2
+# OUTPUT_OPEN observation outputs (hc, marker, issued/landed, participant_*, program_auth_*, admission certificates, host
+# fault / abort levels) are read by qkd_host_obs_csr = the HOST's CSR window 0x1800-0x19FF on the existing AXI4-Lite
+# register path (live snapshot + sticky fault vector, fixed 3-edge reads, off every token path, 0 calendar / STATUS
+# edges).  The frame's pin groups are unchanged (none of the 43 had a frame group); no hard child changes ports.
+HOST_RT_OBS = HOST_RT_MU and os.environ.get('OT_KV_HOST_OBS', '0') == '1'
 if HOST_RT_OBS:
     HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obs.sv'
     HOST_RT_MODULE = 'qkd_host_root_admission_obs'
+# KV-FRAMEPINS 10-20 (OT_KV_HOST_OBSX=1, needs OT_KV_HOST_OBS=1 + OT_KV_DCAL_BC4=1 + the static die; default off): the OBSX
+# root (gen_host_root_obs.py --ext) also reads the five die observations that had NO frame pin group (bind v2 OUTPUT_OPEN):
+# dcal adm_done / cal_ready / running (new dcal group dob, 3 b) + layer (existing group lay, 6 b) and the D2D end's
+# recovery_cycles (new d2ds group rcy, 32 b).  kv_static_die OBSX lays them as kv_oneway relayed buses to the HOST frame's
+# new groups odc / odl / odr, which feed the window snapshot above the 1,335 HOST bits (46 words, 0x1900-0x19B4).
+# Producers unchanged (closed bc4 / sfm2 view pins already exist); no tie, no stub.  Price: observation only -- 0 token /
+# calendar / STATUS edges; the snapshot sees each source (relay_stages + 1 window pin reg) edges late (all bits of a bus
+# equally late, so a multi-bit value is never torn).
+HOST_RT_OBSX = HOST_RT_OBS and os.environ.get('OT_KV_HOST_OBSX', '0') == '1'
 if HOST_RT_OBSX:
-    if not all(os.environ.get(v, '0') == '1' for v in ('OT_KV_STATIC_DIE','OT_KV_DCAL_BC','OT_KV_DCAL_BC4')):
-        raise SystemExit('OBSX diagnostic needs static die and bc4 dcal')
     HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv'
     HOST_RT_MODULE = 'qkd_host_root_admission_obsx'
-OBSX_HOST_GROUPS = dict(odc=['obs_dcal_adm_done','obs_dcal_cal_ready','obs_dcal_running'],odl=['obs_dcal_layer'],odr=['obs_d2d_recovery_cycles'])
-OBSX_DCAL_DOB = ['adm_done','cal_ready','running']
-# Physical word coherence is HOLD: current tests assume an ideal common clock edge.
+OBSX_HOST_GROUPS = dict(odc=['obs_dcal_adm_done', 'obs_dcal_cal_ready', 'obs_dcal_running'], odl=['obs_dcal_layer'],
+                        odr=['obs_d2d_recovery_cycles'])       # = gen_host_root_obs.OBSX_HOST_GROUPS
+OBSX_DCAL_DOB = ['adm_done', 'cal_ready', 'running']
 HOST_RT_PT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'     # qkd_host_ingest_chain_pt (child of the admission root)
 HOST_RT_RENAMED = dict(host_drained_local='host_interface_idle')          # die port -> admission RTL port
 SLICE_DIE_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv'
@@ -993,8 +1013,43 @@ def _ks_ntx():
     return _ks.d2d_ntx_k()
 
 
+# KV-BIND4 10-19: the KV-SRAM-D2D successor master qkd_d2d_static_sfm (ot_qwen_d2d_sfm.sv: right-sized 64x137 slot store,
+# registered RX CRC, 5-b recovery counter, first-epoch guard, 0 added cycles vs qkd_d2d_static by lockstep miter) is the
+# d2ds RTL whenever the selected view kit OT_KV_D2DS_KIT (with OT_KV_D2DS_VIEW != 0) was hardened from it (spec.json top):
+# the CLOSED qkd_d2d_static_r7w_sfm2-sfm2-1c6c02ed7 view.  Same 81 ports as qkd_d2d_static + OUTPUT rx_zero17[16:0]
+# (registered OR17 of rx_payload on the q_rx_payload edge, for the private Z17 attention receiver; declared a DUP face by
+# kv_open_tail_roles z17_dup until that receiver is hardened).  The kit's hardened params are bound exactly.
+D2DS_SFM_FILE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'
+D2DS_SFM_PARAMS = ('SAFE_RC', 'SRAMV', 'FEG')
+# KV-BIND7 10-20 (KV-D2D3): the native-census successor qkd_d2d_static_sfm3 (ot_qwen_d2d_sfm3.sv; same ports / pins /
+# outline as sfm2 incl. rx_zero17, 0 added cycles, TXDP 0x03030416) binds the same way when the selected kit's top is
+# sfm3 (kits qkd_d2d_static_r7w_sfm3 / ovl_sfm3; OT_KV_D2DS_KIT=qkd_d2d_static_r7w_sfm3).  The bound r7w_sfm2 view FAILS
+# the mandatory native census (72 roots > 32, max 152); sfm3 census PASS 32.
+D2DS_SFM_TOPS = {'qkd_d2d_static_sfm': D2DS_SFM_FILE,
+                 'qkd_d2d_static_sfm3': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv'}
+
+
+def d2ds_kit():
+    """(module, file, extra params) of the d2ds RTL selected by OT_KV_D2DS_KIT; qkd_d2d_static unless the kit's top is sfm"""
+    kit = os.environ.get('OT_KV_D2DS_KIT', '')
+    if os.environ.get('OT_KV_D2DS_VIEW', '0') in ('0', '', 'off') or not kit:
+        return 'qkd_d2d_static', D2DS_FILE, {}
+    sp = ROOT / 'physical/ref_tile' / kit / 'spec.json'
+    if not sp.is_file():
+        return 'qkd_d2d_static', D2DS_FILE, {}
+    spec = json.loads(sp.read_text())
+    if spec.get('top') not in D2DS_SFM_TOPS:
+        return 'qkd_d2d_static', D2DS_FILE, {}
+    pr = spec.get('params', {})
+    miss = [k for k in D2DS_SFM_PARAMS if k not in pr]
+    if miss:
+        raise SystemExit(f'kv_die: d2ds kit {kit} (sfm) lacks hardened params {miss}')
+    return spec['top'], D2DS_SFM_TOPS[spec['top']], {k: int(pr[k]) for k in D2DS_SFM_PARAMS}
+
+
 def d2ds_binding():
-    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k()),
+    mod, fil, extra = d2ds_kit()
+    return dict(module=mod, file=fil, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k(), **extra),
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
@@ -1140,7 +1195,7 @@ for _p in ('token_epoch_valid', 'program_ready', 'program_epoch', 'program_diges
 _hb['auth_lp'] = ['token_epoch_valid', 'program_ready', 'program_epoch', 'program_digest']
 BINDINGS['qkd_d2ds']['ports']['srx'] = list(SEQST_RX)
 RTL.update(qkd_seq_st=SEQST_FILE, qkd_lprg=LPRG_FILE)
-RTL.update(qkd_d2ds=D2DS_FILE)
+RTL.update(qkd_d2ds=d2ds_kit()[1])
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
 BINDINGS.update(qkd_hslice_dn=slice_die_binding())

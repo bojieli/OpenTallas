@@ -43,7 +43,7 @@ WIT_SR3 = 'results/rtl/qwen_kv_die/kvpc_sram_sr3_1019'   # KV-PC2 sr3+ receipts 
 UNITS = [('front', (1, 4, 5)), ('return', (1, 2)), ('cdc', (1, 2)), ('tq', (1,)), ('sched', (1,)), ('ctrl', (1, 2)),
          ('path', (2,))]
 FI_UNITS = ('sched', 'ctrl', 'path')     # KV-PC3 sr6+: mutant 5 = fault-chain input landing bypassed (OT_KVPC_FI_MUT)
-SR6 = ('sr6', 'sr6b')
+SR6 = ('sr6', 'sr6b', 'sr7', 'sr7b')
 
 
 def boundary_tcl(tile):
@@ -70,14 +70,30 @@ def boundary_tcl(tile):
                      [ln for ln in body if not ln.startswith(('set ot_cw_prop 0', 'catch {set ot_cw_prop'))]) + '\n'
 
 
+# KV-PC4 sr7 (variants c / d, 10-19 21:50): gate pc_sr6 180008 GRT overflow 1028 (974 congested gcells, all at
+# x 40-75 = over / beside column A, worst at the stack ends and the gaps between its stacks, y 180-300 and y 100; 599
+# of them capacity-0 gcells over the banks).  Cause: the bank's read side (rd_out 64 b, r/w addr, ce, rclk, wclk) is on
+# its W face (LEF: W 105 pins, E 103 = wd_in / w_mask_in), so in column A (R0) every read word (return read_data 288 b,
+# front out_q, tq) leaves toward the W wall and must cross the stack to reach ctrl / obs in the centre -- impossible
+# over the bank on M2/M4 (horizontal layers blocked, M5 cap), so it detours through the 23 um stack gaps and the stack
+# ends.  Column B (CDC, R0) reads westward into the centre and shows no congestion.  Fix: mirror column A (MY): read
+# pins face the centre logic, write pins face the W PHY side.
+#   c: column A mirrored in place (x=43.2).
+#   d: column A mirrored and moved one lattice step in (x=86.4): 86 um W region for the PHY landing logic, 54 um
+#      centre channel shared by both columns' read faces.
+V_MOVE = {'c': {'front': (43.2, 'MY'), 'return': (43.2, 'MY'), 'tq': (43.2, 'MY')},
+          'd': {'front': (86.4, 'MY'), 'return': (86.4, 'MY'), 'tq': (86.4, 'MY')}}
+
+
 def macros(variant='a'):
     out = []
     for name, glob, n, x, y in STACKS:
         if variant == 'b' and x > 100:
             x = 129.6            # fallback: CDC stacks in the centre column (E std-cell region 104 um for the E faces)
+        x, orient = V_MOVE.get(variant, {}).get(name, (x, 'R0'))
         for k in range(n):
             inst = glob.format(k=k, eo='eo'[k % 2])
-            out.append(dict(view=VIEW, count=1, inst=inst, at=[x, round(y + k * PITCH, 3)], orient='R0',
+            out.append(dict(view=VIEW, count=1, inst=inst, at=[x, round(y + k * PITCH, 3)], orient=orient,
                             at_exact=k > 0, stack=name))
     return out
 
@@ -163,7 +179,7 @@ def derive(tile, tag, variant):
     j['tag'] = tag
     j['purpose'] = why
     old = tag in ('sr1', 'sr2', 'sr2b')
-    wit = None if old else f"results/rtl/qwen_kv_die/kvpc_sram_{tag.rstrip('b')}_1019"
+    wit = None if old else f"results/rtl/qwen_kv_die/kvpc_sram_{tag.rstrip('b').replace('sr7', 'sr6')}_1019"   # sr7 = sr6 RTL
     j['benches'] = benches(tile, hfx=not old, wit=wit, fi=tag in SR6)
     if tag in SR6:
         bt = f'physical/qkd_kvs_kits/qkd_kvs_{tile}_sr6_hck_boundary.tcl'
@@ -180,6 +196,15 @@ def derive(tile, tag, variant):
             'cone, no kick-word or boot-ready input cone; +1 edge each, handed to the die schedule); (2) boundary_tcl re-applies the measured hck IO after '
             'every io_ref switch (the post-CTS io_ref_skew put the 419 hck-only inputs on core_clk: 505 fake CDC setup '
             'endpoints + ODB-0373 on the pc__pi[0] hold pad).  ' + why)
+        if variant in V_MOVE:
+            mv = ('in place (x=43.2)' if variant == 'c' else 'and moved in to x=86.4')
+            s['structural_change'] = s['purpose'] = j['purpose'] = (
+                f'KV-PC4 {tag} (variant {variant}, same RTL as sr6): column A banks (front / return / tag queue) mirrored '
+                f'(MY) {mv} so their read faces (rd_out / addr / clocks: the W face in R0) look at the centre logic; gate '
+                'pc_sr6 180008 overflowed GRT (1028: read words crossing column A through its stack gaps and ends; one '
+                'failed route = structural redesign).  ' + s['purpose'])
+        j['owner'] = 'Claude:KV-PC4' if variant in V_MOVE else j['owner']
+        j['branch'] = 'claude/kv-pc3-1019' if variant in V_MOVE else j['branch']
     j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {VIEW, WIT, WIT_SR3, 'rtl', 'tools/qwen_kv_die'} | ({wit} if wit else set()))
     j['views_to'] = f'physical/ref_tile/{kit}/views'
     j['record_to'] = f'results/rtl/ref_tile/{kit}'
@@ -209,7 +234,7 @@ def store_sdc(tag):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--tag', default='sr1')
-    ap.add_argument('--variant', default='a', choices=('a', 'b'))
+    ap.add_argument('--variant', default='a', choices=('a', 'b', 'c', 'd'))
     a = ap.parse_args()
     if a.tag in SR6:
         for tile in ('pc', 'pc_h'):

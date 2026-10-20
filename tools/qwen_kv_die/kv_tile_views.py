@@ -154,6 +154,8 @@ def judge(master, vm, kit, vdir, die_rtl, die_text, charge, KSD):
         return dict(r, verdict='REFUSE', why=f'kit spec absent at the view source {src[:9]}')
     spec = json.loads(spec_txt)
     tfile = [s for s in spec.get('sources', []) if re.search(r'/qkd_kvs_tiles\w*\.sv$', s)]
+    if not tfile and vm.endswith('_fl'):
+        return whole_tile(r, master, vm, kit, src, spec, charge, KSD)
     if len(tfile) != 1:
         return dict(r, verdict='REFUSE', why=f'kit tile file not unique in the spec sources: {tfile}')
     kmod = module_text(show(src, tfile[0]), master)
@@ -186,6 +188,49 @@ def judge(master, vm, kit, vdir, die_rtl, die_text, charge, KSD):
     if rst > KSD.FACE_LAND_RST_BUDGET:
         return dict(r, verdict='REFUSE', why=f'reset release +{rst} exceeds the region hold budget {KSD.FACE_LAND_RST_BUDGET}')
     return dict(r, verdict='PASS', why='tile RTL identical, sources unchanged, face edges = die charges')
+
+
+def whole_tile(r, master, vm, kit, src, spec, charge, KSD):
+    """KV-BIND4 10-19: a face-landed kit whose sources are a hand-written WHOLE tile (no generated qkd_kvs_tiles file, e.g.
+    qkd_kvs_attn_rv3 = qkd_kvs_attn_fl_r16 around qkd_kvs_attn_r16).  The die binds exactly that wrapper (kv_static_die
+    bindings: module <master>_fl, file = the kit's face_land source), so identity = (1) the die's selected face-land kit IS
+    this kit, (2) every kit source byte-identical (git blob) between the view source commit and HEAD, (3) the kit spec
+    parameters == the parameters the die binds on the instance, (4) the same face-edge rule as generated tiles."""
+    fk = next((k for k, v in KSD.FACE_LAND_TILES.items() if v['master'] == master), None)
+    if fk is None or KSD.FACE_LAND_TILES[fk]['kit'] != kit:
+        return dict(r, verdict='REFUSE', why=f'whole-tile kit {kit} is not the die face-land kit '
+                    f'{KSD.FACE_LAND_TILES.get(fk, {}).get("kit")} for {master}')
+    wf = [s for s in spec.get('sources', []) if s.startswith('rtl/lib/face_land/')]
+    if len(wf) != 1:
+        return dict(r, verdict='REFUSE', why=f'whole-tile kit {kit}: {len(wf)} face_land wrapper sources')
+    b = KSD.bindings().get(master) or {}
+    r.update(kit_tile_file=None, die_tile_file=b.get('file'), identity='whole_tile')
+    if b.get('module') != vm or b.get('file') != wf[0]:
+        return dict(r, verdict='REFUSE', why=f'die binds {b.get("module")} from {b.get("file")}, the view is {vm} from {wf[0]}')
+    changed = [s for s in spec.get('sources', []) if blob(src, s) is None or blob(src, s) != blob('HEAD', s)]
+    if changed:
+        return dict(r, verdict='REFUSE', why=f'kit sources changed since the view source {src[:9]}: {changed[:6]}')
+    kp = {k: str(v) for k, v in (spec.get('params') or spec.get('parameters') or {}).items()}
+    dp = {k: str(v) for k, v in (b.get('parameters') or {}).items()}
+    r['parameters'] = dict(kit=kp, die=dp)
+    if kp != dp:
+        return dict(r, verdict='REFUSE', why=f'kit parameters {kp} != die instance parameters {dp}')
+    eff = effective(spec)
+    wbuses, wrst = wrapper_edges(show(src, wf[0]))
+    got = dict(pin_in=eff['pin_in'], pin_out=eff['pin_out'], land=wbuses)
+    want = dict(pin_in=0, pin_out=0, land=charge.get('land', {}))
+    rst = wrst + eff['reset_landing_stages']
+    rr = KSD.FACE_LAND_TILES[fk]['rst_release']
+    r.update(edges=dict(view=got, die_charges=want, reset_release=dict(view=rst, face_land_relay=wrst,
+                                                                       reset_landing=eff['reset_landing_stages'],
+                                                                       die_charges=rr, budget=KSD.FACE_LAND_RST_BUDGET)))
+    if got != want:
+        return dict(r, verdict='REFUSE', why=f'closed view adds edges the die schedule does not charge: view {got} vs die {want}')
+    if rst != rr:
+        return dict(r, verdict='REFUSE', why=f'reset release: view +{rst} vs die startup charge +{rr}')
+    if rst > KSD.FACE_LAND_RST_BUDGET:
+        return dict(r, verdict='REFUSE', why=f'reset release +{rst} exceeds the region hold budget {KSD.FACE_LAND_RST_BUDGET}')
+    return dict(r, verdict='PASS', why='whole-tile kit: sources unchanged, parameters = die binding, face edges = die charges')
 
 
 def select():

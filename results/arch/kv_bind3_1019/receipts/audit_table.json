@@ -436,6 +436,33 @@
    "paired": 1151
   }
  },
+ "qkd_seq_xs_s": {
+  "closed": "qkd_seq_xs_s-x1-9c9c3d7b5",
+  "equiv": {
+   "cells": 6084,
+   "log_sha256": "c02a76a83260163e756b7e283f511a77406e1fa36fec8490714594f671093ade",
+   "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct; reset base: 6 rst_n=0 edges, paired initial state, steps 7..10 (miter, sat -verify)",
+   "proven_cells": 6084,
+   "rc": 0,
+   "seconds": [
+    0.5,
+    5706.5
+   ],
+   "unproven_cells": 0,
+   "unproven_sample": []
+  },
+  "identity_current": true,
+  "proven": true,
+  "spec_diff": {},
+  "state": {
+   "gate_only": 0,
+   "gate_only_sample": [],
+   "gold_only": 0,
+   "gold_only_sample": [],
+   "gold_regs": 5563,
+   "paired": 5819
+  }
+ },
  "qkh_head_gather_stage": {
   "closed": "qkh_head_gather_stage-n4r1-8801fc345",
   "equiv": {

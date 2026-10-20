@@ -28,6 +28,7 @@ import re
 import subprocess
 import sys
 import time
+from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -215,6 +216,56 @@ def gold_states(js, top):
     return regs
 
 
+def dup_witnesses(a, work, regs, bit_of, hit):
+    """KV-BIND4 10-19 (--dup-witness): a power-up WITNESS for gold-only registers, never an assumption about the netlist.
+
+    The reset base is an existential statement about the RTL: the routed netlist's one power-up state must be admitted by
+    SOME RTL power-up state.  Paired registers take the netlist's value.  A gold-only register is a register synthesis
+    removed: Yosys itself (opt_dff -sat + opt_merge -share_all on the elaborated gold, the same passes synthesis runs)
+    tells which ones are CONSTANT (D is a constant under every state: the owner-accepted shared power-up base, 10-19
+    18:16) and which ones are MERGED into a kept twin (identical D / clock / enable / reset after constant propagation).
+    Those take the constant resp. the twin's netlist value at step 1, and the witness is ALSO a compared miter output at
+    every checked step (gold dup == gate twin, gold const == const), so a wrong classification fails the proof; nothing is
+    masked.  Registers the passes leave alone (dead or live) stay FREE.  Returns
+    [(gold_name, twin_gold_name | None, const | None, why)]."""
+    (work / 'gold2.ys').write_text('\n'.join([
+        'read_rtlil gold1.il'] + ['opt_expr -full', 'opt_dff -sat', 'opt_merge -share_all', 'opt_clean'] * 4
+        + ['write_json gold2.json', '']))
+    rc, _t = run([a.yosys, '-q', '-s', 'gold2.ys'], work, 'gold2.log', a.timeout)
+    if rc:
+        raise SystemExit('dup-witness: gold opt failed: ' + (work / 'gold2.log').read_text()[-1500:])
+    m = json.loads((work / 'gold2.json').read_text())['modules']['gold']
+    ffq = set()
+    for c in m['cells'].values():
+        t = c['type']
+        if t in FF_TYPES or t.startswith(('$_DFF', '$_SDFF', '$_ALDFF', '$_DFFSR')):
+            ffq.update(b for b in c['connections'].get('Q', []) if isinstance(b, int))
+    bit2 = {}
+    for w, n in m['netnames'].items():
+        if w.startswith('$'):
+            continue
+        bits, off, upto = n['bits'], n.get('offset', 0), n.get('upto', 0)
+        for i, b in enumerate(bits):
+            idx = off + (len(bits) - 1 - i if upto else i)
+            bit2[w if len(bits) == 1 and off == 0 and not upto else f'{w}[{idx}]'] = b
+    kept = {}                            # gold2 Q bit -> a PAIRED gold1 register name aliasing it
+    for b_, ns in regs.items():
+        if b_ in hit:
+            for n in ns:
+                if isinstance(bit2.get(n), int) and bit2[n] in ffq:
+                    kept.setdefault(bit2[n], ns[0])
+    out = []
+    for b_, ns in regs.items():
+        if b_ in hit or not ns:
+            continue
+        v = next((bit2[n] for n in ns if n in bit2), None)
+        if v in ('0', '1'):
+            out.append((ns[0], None, int(v), 'constant (opt_dff -sat)'))
+        elif isinstance(v, int) and v in kept:
+            out.append((ns[0], kept[v], None, 'merged into ' + kept[v] + ' (opt_merge -share_all)'))
+    return out
+
+
 def run(cmd, work, log, timeout):
     t = time.time()
     p = subprocess.run(cmd, cwd=work, capture_output=True, text=True, timeout=timeout)
@@ -282,9 +333,56 @@ def audit(a):
         # the closed flow's reset landing (physical/common_flow/ot_pin_regs.tcl OT_RST_LAND): every declared reset port
         # lands in `stages` registered stages <port>__ot_rl<i> at the face; the core is u_ot_pr_core.  Gold rebuilds that
         # shell around the RTL at the profile parameters; the proof then covers shell AND core.
-        if rl.get('first_copies'):
-            raise SystemExit(f'{a.module}: reset_landing first_copies wrapper not modelled by this audit')
         ck, st = rl['clock'], int(rl['stages'])
+    if rl and rl.get('enable') and rl.get('first_copies'):
+        # KV-BIND4 10-19: the BALANCED landing (first_copies / copies, ROOT-RST a6d33cc98): gold is the flow's OWN
+        # wrapper -- physical/common_flow/ot_pin_regs.tcl (OT_RST_LAND=1) run under tclsh exactly as the gate run's
+        # synthesis does (stages, kept first-stage copies <port>__ot_rl0c, final copies <port>__ot_rlc), with the core
+        # <top>__ot_pr_core replaced by the RTL module at the profile parameters.  The flow script must be byte-identical
+        # to the closed commit's (else no proof: the shell would not be the one the routed netlist came from).
+        fl = root / 'physical/common_flow/ot_pin_regs.tcl'
+        closed_c = (arch / 'commit.txt').read_text().strip()
+        cb = subprocess.run(['git', '-C', str(root), 'rev-parse', f'{closed_c}:physical/common_flow/ot_pin_regs.tcl'],
+                            capture_output=True, text=True).stdout.strip()
+        hb = subprocess.run(['git', '-C', str(root), 'hash-object', str(fl)], capture_output=True, text=True).stdout.strip()
+        if not cb or cb != hb:
+            raise SystemExit(f'{a.module}: ot_pin_regs.tcl differs from the closed commit {closed_c[:9]} (balanced shell unproven)')
+        pl = []
+        for p_ in gmod.ports:
+            r_ = gmod.ranges.get(p_)
+            pl.append(f"{gmod.port_dirs[p_]} [{r_[0] if r_ else 0}:{r_[1] if r_ else 0}] {p_}")
+        rp = rl['reset_ports']
+        fc = ' '.join(f'{k}={v}' for k, v in sorted(rl['first_copies'].items()))
+        cp = ' '.join(f'{k}={v}' for k, v in sorted((rl.get('copies') or {}).items()))
+        pf = work / 'rl_ports.txt'
+        pf.write_text('\n'.join(pl) + '\n')
+        tcl = '\n'.join([
+            f'set ::env(DESIGN_NAME) {spec["top"]}', 'set ::env(OT_PIN_REGS) 0', 'set ::env(OT_RST_LAND) 1',
+            f'set ::env(OT_RST_LAND_STAGES) {st}', f'set ::env(OT_PIN_REGS_CLOCK) {ck}',
+            f'set ::env(OT_PIN_REGS_RESET_PORTS) {{{" ".join(rp)}}}', 'set ::env(OT_RST_COPIES_MAX) 32',
+            f'set ::env(OT_RST_LAND_COPIES) {{{cp}}}', f'set ::env(OT_RST_LAND_FIRST_COPIES) {{{fc}}}',
+            f'set ::env(RESULTS_DIR) {{{work}}}',
+            'proc yosys {args} { if {[lindex $args 0] eq "tee"} { file copy -force {' + str(pf) + '} [lindex $args 3] } }',
+            f'source {{{fl}}}', ''])
+        (work / 'rl_wrap.tcl').write_text(tcl)
+        p = subprocess.run(['tclsh', str(work / 'rl_wrap.tcl')], capture_output=True, text=True, cwd=work)
+        wf = work / 'ot_rst_land_wrapper.v'
+        if p.returncode or not wf.is_file():
+            raise SystemExit(f'{a.module}: flow reset-landing wrapper generation failed: {p.stderr[-800:]}')
+        wt = wf.read_text()
+        core = f'{spec["top"]}__ot_pr_core'
+        if wt.count(core + ' u_ot_pr_core') != 1:
+            raise SystemExit(f'{a.module}: flow wrapper has no unique {core} u_ot_pr_core')
+        wt = wt.replace(core + ' u_ot_pr_core', f'{a.module} #(' + ', '.join(f'.{k}({v})' for k, v in sorted(params.items()))
+                        + ') u_ot_pr_core', 1)
+        wt = re.sub(r'\bmodule\s+' + re.escape(spec['top']) + r'\b', 'module ot_kvp_wrap', wt, 1)
+        (work / 'gold_wrap.v').write_text(wt)
+        rd += ' ' + str(work / 'gold_wrap.v')
+        gtop, chp = 'ot_kvp_wrap', ''
+        res['wrapper'] = dict(kind='reset_landing_balanced', stages=st, clock=ck, reset_ports=rp,
+                              first_copies=rl['first_copies'], copies=rl.get('copies'), flow_script_blob=hb,
+                              reset_landing_sha256=sha(a.reset_landing))
+    elif rl and rl.get('enable'):
         W = ['module ot_kvp_wrap (' + ', '.join(gmod.ports) + ');']
         for p_ in gmod.ports:
             r_ = gmod.ranges.get(p_)
@@ -335,14 +433,37 @@ def audit(a):
     # (shared arbitrary initial memory, never zero-filled).  MODEL must define module CELL with reg arrays `arr` and
     # registered output `rd_out` (sram_gen behaviour); the words / read register are paired by instance name.
     mm = dict(x.split('=', 1) for x in (a.macro_model or []))
+    # --macro-cut CELL[=MODEL.v] (KV-PARAMS3 10-20, PV slice SRAM): the SAME hard macro sits on both sides, so instead of
+    # modelling its array as SAT state (32 words x 128 b per instance: the PV slice equiv timed out at 4 h) it becomes a
+    # CUT POINT: every macro input pin is a compared S__mc_<inst>_in_<pin> wire (proven equal every cycle, by the
+    # induction AND the reset base) and every output pin is ONE free primary input P__mc_<inst>_<pin> shared by gold and
+    # gate.  Over-approximation: any read data sequence is allowed, the real macro's is one of them (same macro, equal
+    # inputs every cycle, one physical power-up state), so a PROVEN result holds for the real macro.  The model is
+    # generated from the kit's blackbox *_bb.v port list (or given), its sha is recorded.
+    mc = {}
+    for x in (a.macro_cut or []):
+        cell, _, f = x.partition('=')
+        if not f:
+            bb = [root / b_ for b_ in bbs if re.search(r'module\s+' + re.escape(cell) + r'\b', (root / b_).read_text())]
+            if len(bb) != 1:
+                raise SystemExit(f'--macro-cut {cell}: need exactly one *_bb.v defining it among the closed sources, got {bb}')
+            f = str(work / f'{cell}_cut.v')
+            Path(f).write_text(cut_model(cell, bb[0].read_text()))
+        mc[cell] = f
+    if set(mc) & set(mm):
+        raise SystemExit(f'--macro-cut and --macro-model on the same cell: {sorted(set(mc) & set(mm))}')
+    mcut, mcin = [], []
     mstate = []
-    if mm:
-        unknown = sorted(set(mm) - set(macros.values()))
+    if mm or mc:
+        mm_all = dict(mm, **mc)
+        unknown = sorted(set(mm_all) - set(macros.values()))
         if unknown:
             raise SystemExit(f'--macro-model for cells not in the routed netlist: {unknown}')
         bbs_r = [b_ for b_ in bbs if not any(re.search(r'module\s+' + re.escape(c) + r'\b', (root / b_).read_text())
-                                             for c in mm)]
+                                             for c in mm_all)]
         res['macro_models'] = {c: dict(path=f, sha256=sha(f)) for c, f in mm.items()}
+        res['macro_cuts'] = {c: dict(path=f, sha256=sha(f), instances=sorted(i for i, c_ in macros.items() if c_ == c))
+                             for c, f in mc.items()}
         for inst, cell in sorted(macros.items()):
             if cell in mm:
                 m_ = re.search(r'reg\s*\[\s*(\d+)\s*:\s*0\s*\]\s*arr\s*\[\s*0\s*:\s*(\d+)\s*\]', Path(mm[cell]).read_text())
@@ -350,11 +471,20 @@ def audit(a):
                 tag = re.sub(r'[^A-Za-z0-9_]', '_', inst)
                 mstate += [(f'S__mm_{tag}_arr_{k}', f'{inst}.arr[{k}]', wbits) for k in range(words)]
                 mstate.append((f'S__mm_{tag}_rd_out', f'{inst}.rd_out', wbits))
+            if cell in mc:
+                tag = re.sub(r'[^A-Za-z0-9_]', '_', inst)
+                for d_, pin, w_ in cut_ports(Path(mc[cell]).read_text()):
+                    if d_ == 'input':
+                        mcin.append((f'S__mc_{tag}_in_{pin}', f'{inst}.cut_in_{pin}', w_))
+                    else:
+                        mcut.append((f'P__mc_{tag}_{pin}', f'{inst}.cut_out_{pin}', w_))
         pre = (['read_verilog -sv cells.v'] + [f'read_verilog -sv {root / b_}' for b_ in bbs_r]
-               + [f'read_verilog -sv {f}' for f in mm.values()] + ['proc', 'memory -nomap', 'memory_map', 'opt_clean'])
+               + [f'read_verilog -sv {f}' for f in mm_all.values()] + ['proc', 'memory -nomap', 'memory_map', 'opt_clean'])
         L = pre + ['read_verilog gate.v', f'rename {spec["top"]} gate', 'hierarchy -check -top gate', 'proc',
                    'read_rtlil gold1.il', 'flatten gate gold', 'cd gold']
         res['macro_state_pairs'] = len(mstate)
+        res['macro_cut_points'] = dict(compared_inputs=len(mcin), compared_input_bits=sum(w_ for *_x, w_ in mcin),
+                                       free_outputs=len(mcut), free_output_bits=sum(w_ for *_x, w_ in mcut))
     else:
         L = ['read_verilog -sv cells.v'] + [f'read_verilog -sv {root / b_}' for b_ in bbs] + ['read_verilog gate.v', f'rename {spec["top"]} gate', 'hierarchy -check -top gate',
              'proc', 'flatten gate', 'read_rtlil gold1.il', 'cd gold']
@@ -362,8 +492,37 @@ def audit(a):
         for side in ('gold', 'gate'):
             L += ['cd', f'cd {side}'] + [x for s_, w_, n_ in mstate for x in (f'add -wire {s_} {n_}', f'connect -set {s_} {w_}')]
         L += ['cd', 'cd gold']
+    if mcin or mcut:
+        for side in ('gold', 'gate'):
+            L += ['cd', f'cd {side}'] + [x for s_, w_, n_ in mcin for x in (f'add -wire {s_} {n_}', f'connect -set {s_} {w_}')]
+            L += [x for p_, w_, n_ in mcut for x in (f'add -input {p_} {n_}', f'connect -set {w_} {p_}')]
+        L += ['cd', 'cd gold']
     for s, n in sorted(pair.items()):
         L += [f'add -wire {s} 1', f'connect -set {s} {n}']
+    wit_lines, wit_sets, wit_rec, wit_at = [], [], [], len(L)
+    if a.dup_witness and a.reset_base:
+        swire = {}
+        for s_, n_ in pair.items():
+            if not states[s_][1]:
+                swire.setdefault(bit_of[n_], s_)
+        ws = dup_witnesses(a, work, regs, bit_of, hit)
+        gate_side = []
+        for i, (nm, twin, cst, why) in enumerate(ws):
+            if a.observe_zero_regex and re.search(a.observe_zero_regex, nm):
+                continue        # already an observe-zero comparison with its tied-0 power-up value
+            if cst is None and bit_of[twin] not in swire:
+                continue        # twin is a flow replica: stays free
+            w_ = f'S__wit_{i:04d}'
+            wit_lines += [f'add -wire {w_} 1', f'connect -set {w_} {nm}']
+            gate_side += [f'add -wire {w_} 1', f"connect -set {w_} " + (f"1'{cst}" if cst is not None else swire[bit_of[twin]])]
+            wit_sets.append(f'-set-at 1 gold.{w_} gate.{w_}')
+            wit_rec.append(dict(gold=nm, witness=(twin if cst is None else f"1'{cst}"), why=why))
+        if gate_side:   # the gate twin is ALSO a compared output at every checked step: dup == kept flop is proven
+            wit_lines += ['cd', 'cd gate'] + gate_side + ['cd', 'cd gold']
+        res['dup_witness'] = dict(count=len(wit_rec), merged=sum(1 for w in wit_rec if w['why'].startswith('merged')),
+                                  constant=sum(1 for w in wit_rec if w['why'].startswith('constant')),
+                                  gold2_log_sha256=sha(work / 'gold2.log'),
+                                  gold_only=len(gold_only), unwitnessed=len(gold_only) - len(wit_rec), list=wit_rec)
     # KV-PARAMS2 10-19 joint mode: source registers that synthesis removed as constants (e.g. the adder's unreset
     # *_err[1] metadata chain x->s1->t->w->s2->u, only E_NONE/E_NONFINITE upstream) are no invariant of an arbitrary
     # induction state.  --observe-zero-regex names gold-only registers whose ZERO value is then an extra comparison
@@ -387,8 +546,10 @@ def audit(a):
     L += ['cd', 'setattr -set keep 1 w:S__*']
     L += ['select -set keep w:S__* i:* o:*', 'rename -hide w:* @keep %d']
     prelude = list(L)
+    if wit_lines:   # base only: the gold-side witness wires (gold has no gate twin; equiv_make never sees them)
+        prelude = prelude[:wit_at] + wit_lines + prelude[wit_at:]
     L += ['async2sync',
-          'equiv_make gold gate equiv', 'hierarchy -top equiv', f'equiv_simple -seq {a.seq}', 'equiv_induct',
+          'equiv_make gold gate equiv', 'hierarchy -top equiv', f'equiv_simple -seq {a.seq}', f'equiv_induct -seq {a.induct_seq}',
           'equiv_status', 'equiv_status -assert', '']
     (work / 'equiv.ys').write_text('\n'.join(L))
     rc, t2 = run([a.yosys, '-l', 'equiv.log', '-q', '-s', 'equiv.ys'], work, 'equiv.out', a.timeout)
@@ -399,7 +560,8 @@ def audit(a):
                         proven_cells=int(m[-1][1]) if m else None, unproven_cells=int(m[-1][2]) if m else None,
                         log_sha256=sha(work / 'equiv.log') if log else None,
                         unproven_sample=re.findall(r'Unproven \$equiv [^\n]*', log)[:20],
-                        method=f'equiv_make (ports + routed-flop-name state), equiv_simple -seq {a.seq}, equiv_induct')
+                        method=f'equiv_make (ports + routed-flop-name state), equiv_simple -seq {a.seq}, '
+                               f'equiv_induct -seq {a.induct_seq}' + (f'; macro cut points {sorted(mc)}' if mc else ''))
     res['proven'] = rc == 0 and bool(m) and m[-1][2] == '0' and int(m[-1][0]) > 0
     if not log:
         res['error'] = (work / 'equiv.out').read_text()[-1500:]
@@ -409,10 +571,10 @@ def audit(a):
         # power-up state gives the RTL's unreset (X) register that value at step 1 (the gate side of S__proof_meta is
         # 1'0).  Range predicates (--observe-ge) are NOT paired: they would restrict real routed power-up states.
         res['base'] = reset_base(a, work, prelude, states, pair, [s_ for s_, _w, _n in mstate]
-                                 + [f'S__proof_meta_{i:03d}' for i in range(len(obs))])
+                                 + [f'S__proof_meta_{i:03d}' for i in range(len(obs))], wit_sets)
         res['proven'] = res['base']['proven']
         res['equiv']['method'] += (f'; reset base: {a.reset_base} {a.reset_port}={a.reset_active} edges, paired initial '
-                                   f'state, steps {a.reset_base + 1}..{a.reset_base + 4} (miter, sat -verify)')
+                                   f'state, steps {a.reset_base + 1}..{a.reset_base + a.induct_seq} (miter, sat -verify)')
     return res
 
 
@@ -439,7 +601,7 @@ def observe_ge_cells(specs, il):
     return out
 
 
-def reset_base(a, work, prelude, states, pair, extra=()):
+def reset_base(a, work, prelude, states, pair, extra=(), witness=()):
     """KV-PARAMS2 10-19: the reset base the induction needs (equiv_induct assumes its comparisons for 3 steps).
 
     The chip has ONE power-up state, the routed netlist's.  The RTL admits that state on the same registers, so every
@@ -448,24 +610,59 @@ def reset_base(a, work, prelude, states, pair, extra=()):
     words make two copies of the same unreset datapath disagree until it flushed -- RTL-vs-itself fails that way too
     (kv-native-comparator-replay 2c2bd3c92: 213 u_cc bits, kp_r 7 stages deep, 6 reset edges) -- so that formulation
     proves nothing about the netlist.  Every original comparison and observation stays a miter output; the reset port
-    is held active for N target edges, all other inputs arbitrary, steps N+1..N+4 checked."""
+    is held active for N target edges, all other inputs arbitrary, steps N+1..N+S checked, S = the equiv_induct -seq
+    depth (default 4): equiv_induct proves the circuits never diverge once they agree for S cycles, so S agreeing
+    cycles after reset are exactly the base it needs (--induct-seq 2 halves the unrolled checked window)."""
     n = a.reset_base
     paired = sorted(s_ for s_ in pair if not states[s_][1]) + list(extra)   # extra: macro-model array/read state
     sets = ' '.join(f'-set-at {i} in_{a.reset_port} {a.reset_active}' for i in range(1, n + 1))
     sets += ' ' + ' '.join(f'-set-at 1 gold.{s_} gate.{s_}' for s_ in paired)
+    if witness:
+        sets += ' ' + ' '.join(witness)
     B = prelude + ['async2sync', 'expose gold/w:S__* gate/w:S__*', 'miter -equiv -flatten -make_assert gold gate miter',
                    'hierarchy -top miter', 'opt_clean',
-                   f'sat -seq {n + 4} -prove-asserts -prove-skip {n} -set-def-inputs {sets} -dump_json base_cex.json '
+                   f'sat -seq {n + a.induct_seq} -prove-asserts -prove-skip {n} -set-def-inputs {sets} -dump_json base_cex.json '
                    '-verify', '']
     (work / 'base.ys').write_text('\n'.join(B))
     rc, t = run([a.yosys, '-l', 'base.log', '-q', '-s', 'base.ys'], work, 'base.out', a.timeout)
     log = (work / 'base.log').read_text() if (work / 'base.log').is_file() else ''
     ok = rc == 0 and 'no model found: SUCCESS!' in log
     return dict(rc=rc, seconds=t, proven=ok, reset_edges=n, reset_port=a.reset_port, reset_active=a.reset_active,
-                checked_steps=[n + 1, n + 4], paired_initial=len(paired), free_replicas=sum(1 for s_ in pair if states[s_][1]), macro_state=len(extra),
+                checked_steps=[n + 1, n + a.induct_seq], induct_seq=a.induct_seq, paired_initial=len(paired), witnesses=len(witness), free_replicas=sum(1 for s_ in pair if states[s_][1]), macro_state=len(extra),
                 log_sha256=sha(work / 'base.log') if log else None,
                 cex=str(work / 'base_cex.json') if (work / 'base_cex.json').is_file() else None,
                 error=None if log else (work / 'base.out').read_text()[-1500:])
+
+
+PORT_RE = re.compile(r'\b(input|output)\s+(?:wire\s+|reg\s+)?(?:\[\s*(\d+)\s*:\s*(\d+)\s*\]\s*)?(\w+)')
+
+
+def cut_ports(text):
+    """[(direction, pin, width)] of a macro (blackbox / cut model) module header."""
+    out = []
+    for d_, hi, lo, pin in PORT_RE.findall(text):
+        if pin.startswith(('cut_in_', 'cut_out_')):
+            continue
+        out.append((d_, pin, abs(int(hi) - int(lo)) + 1 if hi else 1))
+    if not out:
+        raise SystemExit('macro cut: no ports parsed')
+    return out
+
+
+def cut_model(cell, bb_text):
+    """Cut-point model of a hard macro from its blackbox: (* keep *) cut_in_<pin> = input, output = undriven cut_out_<pin>."""
+    ports = cut_ports(bb_text)
+    L = [f'// generated by kv_param_native_audit --macro-cut from the blackbox of {cell}', f'module {cell} (']
+    L.append(',\n'.join(f'    {d_} wire ' + (f'[{w_ - 1}:0] ' if w_ > 1 else '') + p_ for d_, p_, w_ in ports))
+    L.append(');')
+    for d_, p_, w_ in ports:
+        r_ = f'[{w_ - 1}:0] ' if w_ > 1 else ''
+        if d_ == 'input':
+            L += [f'  (* keep *) wire {r_}cut_in_{p_};', f'  assign cut_in_{p_} = {p_};']
+        else:
+            L += [f'  (* keep *) wire {r_}cut_out_{p_};', f'  assign {p_} = cut_out_{p_};']
+    L.append('endmodule')
+    return '\n'.join(L) + '\n'
 
 
 def receipts(a):
@@ -517,11 +714,17 @@ def main(argv=None):
     a1.add_argument('--reset-landing', help="the kit's reset_landing.json at the closed commit (flow landing shell)")
     a1.add_argument('--expect', choices=('pass', 'fail'), default='pass', help='fail = parameter mutant control')
     a1.add_argument('--seq', type=int, default=2)
+    a1.add_argument('--induct-seq', type=int, default=4,
+                    help='equiv_induct -seq S; the reset base then checks steps N+1..N+S (S agreeing cycles)')
+    a1.add_argument('--macro-cut', action='append', default=[],
+                    help='CELL[=MODEL.v]: hard macro as a cut point (inputs compared, outputs one shared free input)')
     a1.add_argument('--observe-zero-regex', help='gold-only registers proven ZERO jointly (see audit())')
     a1.add_argument('--macro-model', action='append', default=[], help='CELL=MODEL.v stateful SAT model, both sides')
     a1.add_argument('--observe-ge', action='append', default=[],
                     help="WIRE:LSB:WIDTH:CONST gold range predicate proven ZERO jointly (repeatable)")
     a1.add_argument('--reset-base', type=int, default=0, help='N: paired-initial reset base after N reset edges')
+    a1.add_argument('--dup-witness', action='store_true',
+                    help='reset base: merged-duplicate / constant gold-only registers take their kept twin / constant')
     a1.add_argument('--reset-port', default='rst_n')
     a1.add_argument('--reset-active', type=int, choices=(0, 1), default=0)
     a1.add_argument('--timeout', type=int, default=14400)

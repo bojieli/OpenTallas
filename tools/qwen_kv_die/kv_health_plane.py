@@ -14,6 +14,9 @@ Sources (generic rules on the laned case_kv/die.v + elements.lef; every rule nam
   * every landing qkd_landsh_<W> / qkd_landsh0_<W> `fault` (sticky ring-epoch fault, cleared by its receiving rs);
   * kc_<st>.kf (qkd_ctrl_kc, NOT sticky -> an explicit sticky latch beside it) once the die KC master exposes `kf`;
   * dcal fault (`flt` / `fault`) unless already consumed (OT_KV_DCAL_FLT: dcal flt -> afr d[8], priced by the contract);
+  * KV-BIND4 10-19 (K.STA.RETIRE.PCF): every sr6 PC / PC_H tile's pc__hfx[2:0] ({embr, es_merge, chain}, one registered
+    sticky ck stage in the tile, cleared only by the tile reset) -- three sticky sources a tile; the plane connects the
+    port to its own net n_hp_pchfx_<inst> when the laned case left it open (never tied, never dropped);
   * every other OUTPUT pin named fault / flt / kf / pcf / hfault / *_fault of a die master that has no reader is
     reported as an UNADMITTED source (never silently dropped);
   * existing_ufh: the old kvs_attn.ufh net (AHUB hf) becomes one leaf; the final sticky sink drives kvs_attn.ufh.
@@ -72,6 +75,8 @@ LAND = re.compile(r'qkd_landsh0?_(1|36|296|528)$')
 FAMILY = re.compile(r'qkd_(rlysh0?|landsh0?)_(1|36|296|528)$')
 FAULT_PORT = re.compile(r'^(fault|flt|kf|pcf|hfault|\w+_fault)$')
 INST = re.compile(r'^(\s*)(\w+)\s+(\\?\S+)\s*\((.*)\);\s*$')
+PC_MASTERS = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
+PC_HFX = ('pc__hfx', 3)
 PLACE = re.compile(r'findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)')
 
 
@@ -102,12 +107,19 @@ HP_DIRS = dict(qkd_hp_or2=dict(ck='INPUT', a='INPUT', b='INPUT', q='OUTPUT'),
                qkd_rlys_1=dict(ck='INPUT', a='INPUT', b='OUTPUT'),
                qkd_astk_fault_join=dict(ck='INPUT', rst_n='INPUT', a='INPUT', b='INPUT', q='OUTPUT'))
 HP_PIN = dict(a=[0.042, 10.812], b=[0.042, 10.956], q=[21.558, 10.812])
+# KV-BIND4 10-19: exported health sources (kv_static_die HEALTH_SRC buses) whose die-frame pin is INOUT / group-named: the RTL
+# direction (qkd_ctrl_strip.sv qkd_ctrl_kc `output kf`; qkd_d2d_cal_seq_bc4.sv `output reg fault` = die group flt, kv_die
+# dcal_binding) overrides the frame so the source's own pin is never counted as its reader; PIN_ALIAS = the LEF pin name.
+SRC_DIRS = dict(qkd_ctrl_kc=dict(kf='OUTPUT'), qkd_dcal=dict(flt='OUTPUT'))
+PIN_ALIAS = dict(qkd_dcal=dict(flt='fault'))
 
 
 def port_dirs(die, m):
     d = {p: {v['dir'] for v in pv} for p, pv in base_ports(die.macros.get(m, {}).get('pins', {})).items()}
     for p, v in HP_DIRS.get(m, {}).items():
         d.setdefault(p, {v})
+    for p, v in SRC_DIRS.get(m, {}).items():
+        d[p] = {v}
     return d
 
 
@@ -142,6 +154,9 @@ class Die:
         if m is None or i not in self.places:
             return None
         pin = m['pins'].get(port) or m['pins'].get(port + '[0]')
+        al = PIN_ALIAS.get(self.cells[i][0], {}).get(port)
+        if (pin is None or pin['xy'] is None) and al:
+            pin = m['pins'].get(al) or m['pins'].get(al + '[0]')
         if pin is None or pin['xy'] is None:
             return None
         (x, y), (w, h), pl = pin['xy'], m['size'], self.places[i]
@@ -228,8 +243,40 @@ def inventory(die):
                                         'flt; OT_KV_DCAL_FLT=1 routes it to afr d[8])'))
         else:
             add('dcal', port, 'ck', 'rst_n', True, owner='KV-DCAL2')
+    # KV-BIND4: PC fault export family (pc__hfx, sticky per bit)
+    pport, pw = PC_HFX
+    for i, (m, p, c) in sorted(die.cells.items()):
+        if m not in PC_MASTERS:
+            continue
+        pins = base_ports(die.macros.get(m, {}).get('pins', {}))
+        if pport not in pins:
+            if pport in c:
+                raise ValueError(f'{i}.{pport}: connected but the master {m} LEF has no such pin')
+            continue                     # pre-sr6 PC tile: no export (the census below never sees it either)
+        if pport in c:
+            bits = die.bits(c[pport])
+            if bits is None or len(bits) != pw or any(b[0] in ('CONST', 'Z') for b in bits):
+                raise ValueError(f'{i}.{pport}: not {pw} die signal bits')
+            bits = list(reversed(bits))   # die.bits is MSB first; index = port bit
+            connect = None
+        else:
+            net = f'n_hp_pchfx_{i}'
+            bits = [(net, b) for b in range(pw)]
+            connect = dict(inst=i, port=pport, net=net, width=pw)
+        for b in range(pw):
+            sid = f'{i}.{pport}[{b}]'
+            r = rd.get(bits[b], []) if connect is None else []
+            if r:
+                covered.append(dict(source=sid, readers=[f'{a}.{q}' for a, q in r]))
+                continue
+            sources.append(dict(id=sid, instance=i, master=m, port=pport, bit=b, signal=list(bits[b]),
+                                clock=die.scalar(c['ck']), reset=die.scalar(c['rst_n']), sticky=True,
+                                requires_sticky_latch=False, placement=die.places.get(i), pin_xy=die.point(i, pport),
+                                family='pc_hfx', **({'connect': connect} if connect else {})))
     # every other unread fault-like OUTPUT on any die master: reported, never dropped
     known = {s['id'] for s in sources} | {c['source'] for c in covered} | {b['source'] for b in blockers}
+    known |= {f"{s['instance']}.{PIN_ALIAS[s['master']][s['port']]}" for s in sources
+              if s.get('port') in PIN_ALIAS.get(s.get('master'), {})}      # the same pin under its LEF name
     for i, (m, p, c) in sorted(die.cells.items()):
         if LAND.fullmatch(m) or i.startswith('hp_'):
             continue
@@ -454,7 +501,8 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
         if port not in edits[i]:
             edits[i][port] = list(die.bits(die.cells[i][2][port]))
         return edits[i][port]
-    for t in plan['transports']:
+    transport_wires = []
+    for tn, t in enumerate(plan['transports']):
         lane = next(l for l in inv['lanes'] if l['id'] == t['lane_id'])
         chain, w, k = lane['stations'], lane['width'], t['payload_bit']
         src = sig[t['source']]
@@ -463,13 +511,23 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
         if a0[w - 1 - k] != ('CONST', 0):
             raise ValueError(f'{chain[0]}.a[{k}] is not a constant-0 spare')
         a0[w - 1 - k] = (nm, int(bi))
-        for j in range(1, len(chain)):
-            out = cur(chain[j - 1], 'b')[w - 1 - k]
-            aj = cur(chain[j], 'a')
-            if aj[w - 1 - k] == ('CONST', 0):
-                aj[w - 1 - k] = out
-            elif aj[w - 1 - k] != out:
-                raise ValueError(f'{chain[j]}.a[{k}] carries another signal')
+        # KV-BIND6 10-20: a transported health bit is a live functional payload, so every station output moves OFF the
+        # station's private n_<inst>__spare wire onto its own declared transport net n_hpt_<n>[j] (gen9d5p diag bind:
+        # kv_output_pads 'rly_pvin_WS_0_0__s1: private spare output has a dynamic/nonzero input'). The old spare bit is
+        # left undriven and unread; spare_lanes() already proved the next station was its only reader.
+        tw = f'n_hpt_{tn}'
+        transport_wires.append((tw, len(chain)))
+        for j in range(len(chain)):
+            bj = cur(chain[j], 'b')
+            old = bj[w - 1 - k]
+            new_bit = (tw, j)
+            bj[w - 1 - k] = new_bit
+            if j + 1 < len(chain):
+                aj = cur(chain[j + 1], 'a')
+                if aj[w - 1 - k] in (('CONST', 0), old):
+                    aj[w - 1 - k] = new_bit
+                else:
+                    raise ValueError(f'{chain[j + 1]}.a[{k}] carries another signal')
         for i in chain:
             padfree[i]['a'].add(k)
             padfree[i]['b'].add(k)
@@ -477,6 +535,10 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
         sig[t['id']] = f'{last[0]}[{last[1]}]'
     # the sink drives kvs_attn.ufh; the old ufh net is the existing_ufh leaf
     sink_net = sig[plan['sink']]
+    connects = {}
+    for s_ in inv['sources']:
+        if s_.get('connect'):
+            connects[s_['connect']['inst']] = s_['connect']
     out_lines, seen = [], set()
     for ln in lines:
         m = INST.match(ln)
@@ -493,14 +555,24 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
                 raise ValueError('kvs_attn.ufh connection not found exactly once')
             ln = f'{ind}{mst} {nm_} ({body2});'
             seen.add('kvs_attn')
+        if m and m.group(3) in connects:
+            cn = connects[m.group(3)]
+            if not ln.rstrip().endswith(');') or f'.{cn["port"]}(' in ln:
+                raise ValueError(f'{m.group(3)}: cannot connect {cn["port"]}')
+            ln = ln.rstrip()[:-2] + f', .{cn["port"]}({cn["net"]}));'
+            seen.add(m.group(3))
         out_lines.append(ln)
-    if seen != set(edits) | {'kvs_attn'}:
+    if seen != set(edits) | {'kvs_attn'} | set(connects):
         raise ValueError(f'instances not rewritten: {sorted(set(edits) | {"kvs_attn"} - seen)}')
     # new cells + wires before endmodule
     clock, reset = {}, {}
     for s in inv['sources']:
         clock[s['id']], reset[s['id']] = s['clock'], s['reset']
     new, wires, place = [], [], []
+    for tw, n_ in transport_wires:
+        wires.append(f'  wire [{n_ - 1}:0] {tw};')
+    for cn in connects.values():
+        wires.append(f'  wire [{cn["width"] - 1}:0] {cn["net"]};')
     for n in plan['nodes']:
         ck = n['clock']
         a, b = sig[n['a']], sig[n['b']]
@@ -603,6 +675,7 @@ def emit(die, inv, plan, profiles=None, diagnostic=False):
         (case / 'HEALTH_NETLIST_ONLY').write_text('kv_health_plane --netlist-only: masters without closed views: '
                                                   + ' '.join(missing_views) + '\n')
     return dict(cells=len(new), wires=len(wires), rewired_instances=len(edits), pad_bits_freed=removed,
+                connected_ports=sorted(f"{c['inst']}.{c['port']}" for c in connects.values()),
                 masters=sorted(views), missing_views=missing_views, sink_net=sink_net)
 
 

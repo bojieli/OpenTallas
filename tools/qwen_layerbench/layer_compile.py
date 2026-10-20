@@ -492,7 +492,8 @@ def main(argv=None):
         import kv_static_params as KSP
         ksp = KSP.run(json.load(open(a.kv_static_model)), docs['qwen_kv'],
                       json.load(open(a.kv_fwd_lanes)) if a.kv_fwd_lanes else None, attn=True,   # HKV-DIE3: + ATTN_CALENDAR
-                      die_v=a.kv_die_v, case_die_v=a.kv_case_die_v)       # KVR-DERIVE: bindings / straps / relay clocks
+                      die_v=a.kv_die_v, case_die_v=a.kv_case_die_v,       # KVR-DERIVE: bindings / straps / relay clocks
+                      boot_out=out / 'kv_boot_ages.json')   # KV-BIND8: boot image re-emitted from THIS table
         write_json(out / 'kv_static_params.json', ksp)
         for f in ksp['fails']:
             findings.append(dict(id=f'KV_STATIC_PARAMS {f["id"]}', severity='FAIL', owner='KV die lead (HKV-DIE)',
