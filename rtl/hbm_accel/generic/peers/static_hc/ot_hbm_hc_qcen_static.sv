@@ -59,16 +59,25 @@ module ot_hbm_hc_qcen_static #(
 
     localparam integer RCN = 32;
     wire [8:0] rn; wire rc;
-    ot_rst_relay #(.REGIONS((SAFE != 0) ? 8 : 9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn[((SAFE != 0) ? 7 : 8):0]));
+    if (SAFE >= 2) begin : g_rb2       // SAFE 2: kept-synchroniser relays (no shared synchroniser across the hub's relays)
+        ot_hc_rst_relay_k #(.REGIONS(8)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn[7:0]));
+    end else begin : g_rb1
+        ot_rst_relay #(.REGIONS((SAFE != 0) ? 8 : 9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn[((SAFE != 0) ? 7 : 8):0]));
+    end
     wire [3:0] rcn_t;                                    // SAFE 2: one kept relay copy per hard tree slice
     if (SAFE != 0) begin : g_rc
         wire [RCN-1:0] rcn;
-        ot_rst_relay #(.REGIONS(RCN)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rcn));
+        if (SAFE >= 2) begin : g_k
+            ot_hc_rst_relay_k #(.REGIONS(16)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rcn[15:0]));
+            assign rcn[RCN-1:16] = rcn[15:0];
+        end else begin : g_o
+            ot_rst_relay #(.REGIONS(RCN)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rcn));
+        end
         assign rc = rcn[0];
         assign rn[8] = 1'b1;
         if (SAFE >= 2) begin : g_rt
             wire [3:0] rtn;
-            ot_rst_relay #(.REGIONS(4)) u_rst_t (.clk(clk), .rst_n_in(rst_n), .rst_n(rtn));
+            ot_hc_rst_relay_k #(.REGIONS(4)) u_rst_t (.clk(clk), .rst_n_in(rst_n), .rst_n(rtn));
             assign rcn_t = rtn;
         end else begin : g_rt0
             assign rcn_t = 4'hf;
@@ -111,33 +120,73 @@ module ot_hbm_hc_qcen_static #(
     wire [9:0] dwaddr = 10'(in_slot * 256 + in_lo * R + drun);
     reg ing_fault;
     (* keep = "true" *) reg [3:0] c_wv, c_xv, c_j; (* keep = "true" *) reg [9:0] c_a [0:3];
-    always @(posedge clk or negedge rc) begin
-        if (!rc) begin in_act <= 0; in_ph <= 0; c_wv <= 0; c_xv <= 0; ing_fault <= 0; end
-        else begin
-            c_wv <= {4{due && in_kind}}; c_xv <= {4{due && !in_kind}};
-            if (xv_q && !due) ing_fault <= 1'b1;
-            if (due) begin
-                if (!xv_q || xw_q != in_word) ing_fault <= 1'b1;
-                in_word <= in_word + 1'b1;
-                in_left <= in_left - 1'b1;
-                if (in_left == 12'd1) in_act <= 1'b0;
+    if (SAFE < 2) begin : g_ing1
+        always @(posedge clk or negedge rc) begin
+            if (!rc) begin in_act <= 0; in_ph <= 0; c_wv <= 0; c_xv <= 0; ing_fault <= 0; end
+            else begin
+                c_wv <= {4{due && in_kind}}; c_xv <= {4{due && !in_kind}};
+                if (xv_q && !due) ing_fault <= 1'b1;
+                if (due) begin
+                    if (!xv_q || xw_q != in_word) ing_fault <= 1'b1;
+                    in_word <= in_word + 1'b1;
+                    in_left <= in_left - 1'b1;
+                    if (in_left == 12'd1) in_act <= 1'b0;
+                    if (in_w == 5'(WPRQ - 1)) begin
+                        in_w <= 5'd0;
+                        if (in_kind && in_lo == 5'd23) begin in_lo <= 5'd0; in_slot <= in_slot + 1'b1; end
+                        else in_lo <= in_lo + 1'b1;
+                    end else in_w <= in_w + 1'b1;
+                end
+                if (in_act) in_ph <= in_ph + 1'b1;
+                if (iv_q) begin
+                    if (in_act || ic_q == 0 || iw_q >= WPRQ || ilo_q >= (ik_q ? 24 : 8)) ing_fault <= 1'b1;
+                    in_act <= 1'b1; in_kind <= ik_q; in_ph <= 2'd0; in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q;
+                    in_left <= ic_q; in_word <= iwd_q;
+                end
+            end
+        end
+        always @(posedge clk) begin
+            c_j <= {4{dj}};
+            for (integer f = 0; f < 4; f = f + 1) c_a[f] <= in_kind ? dwaddr : dxaddr;
+        end
+    end else begin : g_ing2
+        // SAFE 2 (native32): kept copies of the event valid (3 load groups), of in_kind (one per face copy of c_a) and of
+        // the issue edge `due`, which is registered one edge early from the next state (same values on every edge)
+        (* keep = "true", dont_touch = "true" *) reg [2:0] iv_c;
+        (* keep = "true", dont_touch = "true" *) reg [3:0] du_c, ik_c;
+        wire n_act = iv_q ? 1'b1 : (due && in_left == 12'd1) ? 1'b0 : in_act;
+        wire [1:0] n_ph = iv_q ? 2'd0 : in_act ? in_ph + 2'd1 : in_ph;
+        wire due_n = n_act && n_ph == 2'd0;
+        always @(posedge clk or negedge rc)
+            if (!rc) begin iv_c <= 0; du_c <= 0; end
+            else begin iv_c <= {3{i_v}}; du_c <= {4{due_n}}; end
+        always @(posedge clk) ik_c <= {4{iv_q ? ik_q : in_kind}};
+        always @(posedge clk or negedge rc) begin
+            if (!rc) begin in_act <= 0; in_ph <= 0; c_wv <= 0; c_xv <= 0; ing_fault <= 0; end
+            else begin
+                c_wv <= {4{du_c[0] && in_kind}}; c_xv <= {4{du_c[0] && !in_kind}};
+                if (xv_q && !du_c[0]) ing_fault <= 1'b1;
+                if (du_c[0] && (!xv_q || xw_q != in_word)) ing_fault <= 1'b1;
+                in_act <= n_act; in_ph <= n_ph;
+                if (iv_q && (in_act || ic_q == 0 || iw_q >= WPRQ || ilo_q >= (ik_q ? 24 : 8))) ing_fault <= 1'b1;
+            end
+        end
+        always @(posedge clk) begin
+            if (iv_c[0]) begin in_kind <= ik_q; in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q; end
+            else if (du_c[3]) begin
                 if (in_w == 5'(WPRQ - 1)) begin
                     in_w <= 5'd0;
                     if (in_kind && in_lo == 5'd23) begin in_lo <= 5'd0; in_slot <= in_slot + 1'b1; end
                     else in_lo <= in_lo + 1'b1;
                 end else in_w <= in_w + 1'b1;
             end
-            if (in_act) in_ph <= in_ph + 1'b1;
-            if (iv_q) begin
-                if (in_act || ic_q == 0 || iw_q >= WPRQ || ilo_q >= (ik_q ? 24 : 8)) ing_fault <= 1'b1;
-                in_act <= 1'b1; in_kind <= ik_q; in_ph <= 2'd0; in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q;
-                in_left <= ic_q; in_word <= iwd_q;
-            end
+            if (iv_c[1]) in_left <= ic_q; else if (du_c[2]) in_left <= in_left - 1'b1;
+            if (iv_c[2]) in_word <= iwd_q; else if (du_c[1]) in_word <= in_word + 1'b1;
         end
-    end
-    always @(posedge clk) begin
-        c_j <= {4{dj}};
-        for (integer f = 0; f < 4; f = f + 1) c_a[f] <= in_kind ? dwaddr : dxaddr;
+        always @(posedge clk) begin
+            c_j <= {4{dj}};
+            for (integer f = 0; f < 4; f = f + 1) c_a[f] <= ik_c[f] ? dwaddr : dxaddr;
+        end
     end
     assign wc_w = {c_wv[0], c_xv[0], c_j[0], c_a[0]};
     assign wc_n = {c_wv[1], c_xv[1], c_j[1], c_a[1]};

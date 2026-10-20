@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.pre_gate_native_census.v1",
+ "top": "ot_hbm_hc_qhub_static",
+ "status": "FAIL",
+ "limit": 32,
+ "roots_examined": 43728,
+ "max_dynamic_loads": 85,
+ "violations": [
+  {
+   "driver": "rst_n",
+   "driver_role": "input_port",
+   "net": "rst_n",
+   "loads": 85,
+   "endpoints": "[[10515, 'RESETN', 0], [10517, 'RESETN', 0], [10519, 'RESETN', 0], [10521, 'RESETN', 0], [10523, 'RESETN', 0], [10525, 'RESETN', 0], [10527, 'RESETN', 0], [10529, 'RESETN', 0], [10531, 'RESETN', 0], ["
+  }
+ ],
+ "role_errors": [],
+ "note": "HBM-HC7-QHUB 10-20: mapped native32 census of ot_hbm_hc_qhub_static SAFE 2 (DRLY 2, CHX 11) glue, the 4 hard tree slices ot_hbm_hc_qtree16_static black-boxed (their own census: results census_qt16 PASS max 24), ASAP7 RVT TT libs, with the kit's reset_relay_split 32 (ot_rst_copies, spec regex) applied. The only violation is the rst_n PORT (85 = relay synchronisers + relay copies), which the kit's 2-stage reset_landing lands first (2 first / 8 final copies -> <= 11 a copy). Every other driver <= 32."
+}

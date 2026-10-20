@@ -36,10 +36,14 @@ module ot_hgi_hc_result_vm_f32_static #(parameter integer NWS=9)(
                 selected[b]=selected[b]|(wsel[(j*8+b)*NWS+NWS-1]&store_slot);
             end
     end
+    // lane data / address / mask bits are not reset (datapath; the LG write port qualifies them with local_write and each
+    // lane's valid bit 280, which stay reset): they load packed_wq on every edge, as the reset form does once out of reset
+    always @(posedge clk)
+        for(integer b=0;b<8;b=b+1)local_wq[b*281+:280]<=packed_wq[b*281+:280];
     always @(posedge clk or negedge rst_n)begin
-        if(!rst_n)begin local_wq<=0;local_write<=0;fault<=0;end
+        if(!rst_n)begin local_write<=0;fault<=0;for(integer b=0;b<8;b=b+1)local_wq[b*281+280]<=1'b0;end
         else begin
-            local_wq<=packed_wq;local_write<=selected;
+            local_write<=selected;for(integer b=0;b<8;b=b+1)local_wq[b*281+280]<=packed_wq[b*281+280];
             if(store_slot&&(!result_v||result_position!=store_position||({1'b0,base_sector}+store_position*3+3)>32768))fault<=1;
             if(result_v&&!store_slot)fault<=1;
         end

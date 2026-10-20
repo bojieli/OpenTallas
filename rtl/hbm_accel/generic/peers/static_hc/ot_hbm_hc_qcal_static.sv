@@ -42,6 +42,7 @@ module ot_hbm_hc_qcal_static #(
     // FAN32: kept copies of the gather-phase bit (calendar[21], GPC) and the result-store lane selects: wsel[(j*8+b)*NWS+k]
     // = (sector j of the store maps to LG lane b) for calendar fields base [75:60] / position [78:76] (k = copy)
     output wire [GPC-1:0] gp,
+    output wire [2:0] gr,               // FAN32: kept copies of calendar bit 0 (residual launch)
     output wire [24*NWS-1:0] wsel
 );
     initial if(W<1 || W>223)$fatal(1,"VM calendar width must fit protected programme payload");
@@ -127,6 +128,7 @@ module ot_hbm_hc_qcal_static #(
         end
         assign gl={GLC{calendar[22]}};
         assign gp={GPC{calendar[21]}};
+        assign gr={3{calendar[0]}};
         wire [2:0] f0_b=calendar[62:60], f0_p=calendar[78:76];
         for(genvar j=0;j<3;j=j+1)begin:g_ws0
             wire [2:0] s=3'(f0_b+f0_p*3+j);
@@ -135,30 +137,34 @@ module ot_hbm_hc_qcal_static #(
             end
         end
     end else begin:g_f32
-        (* keep = "true", dont_touch = "true" *) reg [3:0] wok_c,v1_c,sv_c;
+        (* keep = "true", dont_touch = "true" *) reg [7:0] wok_c,v1_c;   // 0..3 calendar groups, 4 gl, 5 gp, 6 wsel, 7 gr
+        (* keep = "true", dont_touch = "true" *) reg [3:0] sv_c;
         (* keep = "true", dont_touch = "true" *) reg [GLC-1:0] gl_c;
         wire wok_d=macro_data[255:240]==16'hc7a1 && macro_data[233:224]==pc0 && macro_data[239:234]==0 && macro_data[223:W]==0;
         always @(posedge clk)begin
             captured<=macro_data;
             pc0<=pc;pc1<=pc0;ord0<=issued;ord1<=ord0;
-            wok_c<={4{wok_d}};
+            wok_c<={8{wok_d}};
             for(integer i=0;i<W;i=i+1)calendar[i]<=v1_c[(i*4)/W]&&wok_c[(i*4)/W]&&captured[i];
-            gl_c<={GLC{v1_c[(22*4)/W]&&wok_c[(22*4)/W]&&captured[22]}};
+            gl_c<={GLC{v1_c[4]&&wok_c[4]&&captured[22]}};
             ordinal<=ord1;
             gb<=gb_d;
         end
         assign gl=gl_c;
         (* keep = "true", dont_touch = "true" *) reg [GPC-1:0] gp_c;
         (* keep = "true", dont_touch = "true" *) reg [24*NWS-1:0] ws_c;
-        wire okw=v1_c[3]&&wok_c[3];
+        wire okw=v1_c[6]&&wok_c[6];
         wire [2:0] cb=okw?captured[62:60]:3'd0, cpp=okw?captured[78:76]:3'd0;
         always @(posedge clk)begin
-            gp_c<={GPC{v1_c[(21*4)/W]&&wok_c[(21*4)/W]&&captured[21]}};
+            gp_c<={GPC{v1_c[5]&&wok_c[5]&&captured[21]}};
             for(integer j=0;j<3;j=j+1)
                 for(integer b=0;b<8;b=b+1)
                     ws_c[(j*8+b)*NWS+:NWS]<={NWS{3'(cb+cpp*3+j)==3'(b)}};
         end
         assign gp=gp_c;
+        (* keep = "true", dont_touch = "true" *) reg [2:0] gr_c;
+        always @(posedge clk) gr_c<={3{v1_c[7]&&wok_c[7]&&captured[0]}};
+        assign gr=gr_c;
         assign wsel=ws_c;
         wire [3:0] acc;
         for(genvar k=0;k<4;k=k+1)begin:g_acc
@@ -166,7 +172,7 @@ module ot_hbm_hc_qcal_static #(
         end
         always @(posedge clk or negedge rst_n)
             if(!rst_n)begin v1_c<=0;sv_c<=0;end
-            else begin v1_c<={4{valid0}};sv_c<={4{start_v}};end
+            else begin v1_c<={8{valid0}};sv_c<={4{start_v}};end
         always @(posedge clk or negedge rst_n)
             if(!rst_n)begin
                 running<=0;issued<=0;valid0<=0;valid1<=0;last0<=0;last1<=0;calendar_v<=0;active<=0;done<=0;fault<=0;

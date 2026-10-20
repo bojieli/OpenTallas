@@ -33,7 +33,10 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     initial if(RP<2||RP>23)$fatal(1,"f32 reader: RESP_PHASE 2..23 (two-edge response prediction)");
     initial if(GL!=11)$fatal(1,"f32 reader: GL 11 launch copies");
     reg active,streaming;
-    reg [15:0] issue_sector,return_sector,stride;
+    reg [15:0] return_sector,stride;
+    // HBM-HC7-QHUB 10-20 (native32 census: issue_sector[k] 39, request_slot 35 loads): two KEPT issue-sector copies (own
+    // next state each: copy 0 drives request lanes 0..3, copy 1 lanes 4..7) and four request-slot copies (see rq)
+    (* keep = "true", dont_touch = "true" *) reg [15:0] is_c0, is_c1;
     (* keep = "true", dont_touch = "true" *) reg [3*RSC-1:0] rs_c;
     reg [3:0] positions,issued,returned;
     reg [4:0] phase,next_row;
@@ -41,32 +44,35 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     wire bounds_ok=bounds_i;
     // launch accept, one per group: 0 issue_sector, 1 return_sector, 2 stride, 3..7 rs_c (15 b each), 8 phase/positions/
     // issued, 9 returned/next_row/output_pos/active/streaming/gathered_mix_*/streaming copies, 10 request prediction
+    (* keep = "true", dont_touch = "true" *) reg [1:0] act_c;           // copies of active (same D)
     wire [GL-1:0] la;
     for(genvar k=0;k<GL;k=k+1)begin:g_la
-        assign la[k]=launch_c[k]&&!active&&bounds_ok;
+        (* keep = "true" *) wire w=launch_c[k]&&!act_c[k%2]&&bounds_ok;   // kept: an ABC boundary per group select
+        assign la[k]=w;
     end
     // ---- response prediction (two edges early) and copies
     wire pred2=active&&phase==5'(RP-2)&&returned<positions;
-    (* keep = "true", dont_touch = "true" *) reg [1:0] ld1;
-    // ld2 copies: 0..45 landing rows 1..23 (2 x 16 b), 46..50 rs_c groups, 51 return_sector, 52/53 output data halves,
-    // 54 row-select state, 55 row-select copies, 56 control A (returned, gathered_mix_*), 57 control B (streaming, next_row)
-    localparam integer NLD=58;
+    (* keep = "true", dont_touch = "true" *) reg [2:0] ld1;
+    // ld2 copies: 0..45 landing rows 1..23 (2 x 16 b), 46..50 rs_c groups, 51 return_sector, 52..54 output data thirds,
+    // 55/60 row-select state halves, 56/61 copy a halves, 57/62 copy b halves, 58 control A (returned, gathered_mix_*),
+    // 59 control B (streaming)
+    localparam integer NLD=63;
     (* keep = "true", dont_touch = "true" *) reg [NLD-1:0] ld2;
     reg pred_late; always @(posedge clk) pred_late<=ld1[0];
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin ld1<=0;ld2<=0;end
         else begin
-            ld1<={2{pred2}};
-            for(integer k=0;k<NLD;k=k+1)ld2[k]<=(MUT==1)?pred_late:ld1[k/32];
+            ld1<={3{pred2}};
+            for(integer k=0;k<NLD;k=k+1)ld2[k]<=(MUT==1)?pred_late:ld1[k/30];
         end
-    wire response_slot=ld2[56];
+    wire response_slot=ld2[58];
     // ---- request prediction (one edge early)
-    (* keep = "true", dont_touch = "true" *) reg [1:0] rq;
+    (* keep = "true", dont_touch = "true" *) reg [3:0] rq;   // 0 is_c0 + issued, 1 lanes 0..3, 2 lanes 4..7, 3 is_c1
     wire rq_d=(la[10]&&npos!=4'd0)||(active&&phase==5'd23&&issued<positions);
-    always @(posedge clk or negedge rst_n) if(!rst_n)rq<=0; else rq<={2{rq_d}};
-    wire request_slot=rq[1];
+    always @(posedge clk or negedge rst_n) if(!rst_n)rq<=0; else rq<={4{rq_d}};
+    wire request_slot=rq[0];
     // ---- streaming copies (same next state as streaming)
-    (* keep = "true", dont_touch = "true" *) reg [5:0] st_c;
+    (* keep = "true", dont_touch = "true" *) reg [10:0] st_c;   // 0/8 rsel, 1/9 and 2/10 rsel copies, 3..5 data, 6 ctl A, 7 ctl B
     // ---- RSC return selects (as the RSC 24 reader: copy j*8+c selects chunk c of return sector j)
     wire [767:0] arr;
     for(genvar j=0;j<3;j=j+1)begin:g_j
@@ -86,9 +92,12 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
         local_rq=0;local_read=0;expected_valid=0;actual_valid=0;
         for(integer b=0;b<8;b=b+1)actual_valid[b]=local_rr[b*257+256];
         for(integer j=0;j<3;j=j+1)begin:sector
-            reg [15:0] q,r;
-            q=issue_sector+16'(j);r=return_sector+16'(j);
-            local_rq[q[2:0]*17+:17]={request_slot,q};local_read[q[2:0]]=request_slot;
+            reg [15:0] q0,q1,r;
+            q0=is_c0+16'(j);q1=is_c1+16'(j);r=return_sector+16'(j);
+            // the three sectors map to three distinct lanes (j = 0..2 mod 8): per-lane selects, lanes 0..3 from copy 0
+            for(integer b=0;b<8;b=b+1)
+                if(b<4 && q0[2:0]==3'(b))begin local_rq[b*17+:17]={rq[1],q0};local_read[b]=rq[1];end
+                else if(b>=4 && q1[2:0]==3'(b))begin local_rq[b*17+:17]={rq[2],q1};local_read[b]=rq[2];end
             expected_valid[r[2:0]]=response_slot;
         end
     end
@@ -100,10 +109,20 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     end
     reg [23:1] rsel;                                          // state: one-hot of next_row while streaming
     (* keep = "true", dont_touch = "true" *) reg [23:1] rsel_a,rsel_b;   // copies: 16 output bits each
-    wire sh0=st_c[0]&&!ld2[54], sh1=st_c[1]&&!ld2[55], sh2=st_c[2]&&!ld2[52], sh3=st_c[3]&&!ld2[53];
+    // shift selects (kept wires, <= 12 bits each): 0/6 state halves, 1/7 copy a halves, 2/8 copy b halves, 3..5 data thirds
+    wire [8:0] sh;
+    for(genvar k=0;k<9;k=k+1)begin:g_sh
+        localparam integer SC=(k<6)?k:(k-6)+8, LC=(k==0)?55:(k==1)?56:(k==2)?57:(k==3)?52:(k==4)?53:(k==5)?54:(k==6)?60:(k==7)?61:62;
+        (* keep = "true" *) wire w=st_c[SC]&&!ld2[LC];
+        assign sh[k]=w;
+    end
     always @(posedge clk)begin
-        if(ld2[54])rsel<=23'd1; else if(sh0)rsel<={rsel[22:1],1'b0};
-        if(ld2[55])begin rsel_a<=23'd1;rsel_b<=23'd1;end else if(sh1)begin rsel_a<={rsel[22:1],1'b0};rsel_b<={rsel[22:1],1'b0};end
+        if(ld2[55])rsel[11:1]<=11'd1; else if(sh[0])rsel[11:1]<={rsel[10:1],1'b0};
+        if(ld2[60])rsel[23:12]<=12'd0; else if(sh[6])rsel[23:12]<=rsel[22:11];
+        if(ld2[56])rsel_a[11:1]<=11'd1; else if(sh[1])rsel_a[11:1]<={rsel[10:1],1'b0};
+        if(ld2[61])rsel_a[23:12]<=12'd0; else if(sh[7])rsel_a[23:12]<=rsel[22:11];
+        if(ld2[57])rsel_b[11:1]<=11'd1; else if(sh[2])rsel_b[11:1]<={rsel[10:1],1'b0};
+        if(ld2[62])rsel_b[23:12]<=12'd0; else if(sh[8])rsel_b[23:12]<=rsel[22:11];
     end
     reg [31:0] sel;
     always @*begin
@@ -116,49 +135,55 @@ module ot_hgi_hc_gathered_mix_reader_f32_static #(parameter integer RESP_PHASE=2
     always @(posedge clk or negedge rst_n)
         if(!rst_n)gathered_mix_data<=0;
         else begin
-            if(ld2[52])gathered_mix_data[15:0]<=arr[15:0]; else if(sh2)gathered_mix_data[15:0]<=sel[15:0];
-            if(ld2[53])gathered_mix_data[31:16]<=arr[31:16]; else if(sh3)gathered_mix_data[31:16]<=sel[31:16];
+            if(ld2[52])gathered_mix_data[10:0]<=arr[10:0]; else if(sh[3])gathered_mix_data[10:0]<=sel[10:0];
+            if(ld2[53])gathered_mix_data[21:11]<=arr[21:11]; else if(sh[4])gathered_mix_data[21:11]<=sel[21:11];
+            if(ld2[54])gathered_mix_data[31:22]<=arr[31:22]; else if(sh[5])gathered_mix_data[31:22]<=sel[31:22];
         end
     // ---- control (same next state as the reader; response / request / streaming imply active)
-    wire respA=ld2[56], respB=ld2[57];
+    wire respA=ld2[58], respB=ld2[59];
+    wire active_n=la[9]?1'b1:(!respA && st_c[6] && next_row==23 && returned==positions)?1'b0:active;
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
-            active<=0;phase<=0;positions<=0;issued<=0;returned<=0;
+            active<=0;act_c<=0;phase<=0;positions<=0;issued<=0;returned<=0;
             gathered_mix_v<=0;gathered_mix_row<=0;gathered_mix_pos<=0;done<=0;fault<=0;
         end else begin
             gathered_mix_v<=0;done<=0;
+            active<=active_n;act_c<={2{active_n}};
             if(actual_valid!==expected_valid)fault<=1;
             if(active)phase<=phase==23?5'd0:phase+5'd1;
             if(request_slot)issued<=issued+1'b1;
             if(respA)begin
                 returned<=returned+1'b1;
                 gathered_mix_v<=1;gathered_mix_row<=0;gathered_mix_pos<=returned[2:0];
-            end else if(st_c[4])begin
+            end else if(st_c[6])begin
                 gathered_mix_v<=1;gathered_mix_row<=next_row;gathered_mix_pos<=output_pos;
-                if(next_row==23&&returned==positions)begin active<=0;done<=1;end
+                if(next_row==23&&returned==positions)done<=1;
             end
             if(launch&&(active||!bounds_ok))fault<=1;
             if(la[8])begin phase<=0;positions<=npos;issued<=0;end
-            if(la[9])begin active<=1;returned<=0;end
+            if(la[9])returned<=0;
         end
     end
+    // streaming and its copies: one next-state node
+    wire stream_n=la[9]?1'b0:respB?1'b1:(st_c[7] && next_row==23)?1'b0:streaming;
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin streaming<=0;st_c<=0;next_row<=0;output_pos<=0;end
         else begin
-            if(respB)begin
-                streaming<=1;st_c<=6'h3f;next_row<=1;output_pos<=returned[2:0];
-            end else if(st_c[5])begin
-                next_row<=next_row+1'b1;
-                if(next_row==23)begin streaming<=0;st_c<=6'h0;end
-            end
-            if(la[9])begin streaming<=0;st_c<=6'h0;next_row<=0;output_pos<=0;end
+            streaming<=stream_n;st_c<={11{stream_n}};
+            if(respB)begin next_row<=1;output_pos<=returned[2:0];end
+            else if(st_c[7])next_row<=next_row+1'b1;
+            if(la[9])begin next_row<=0;output_pos<=0;end
         end
     end
     // sector registers: per-group launch accept, response / request from their copies
     always @(posedge clk or negedge rst_n)
-        if(!rst_n)issue_sector<=0;
-        else if(la[0])issue_sector<=base_sector;
-        else if(rq[0])issue_sector<=issue_sector+stride;
+        if(!rst_n)is_c0<=0;
+        else if(la[0])is_c0<=base_sector;
+        else if(rq[0])is_c0<=is_c0+stride;
+    always @(posedge clk or negedge rst_n)        // copy 1: the same next state (la[10] = the request-prediction group)
+        if(!rst_n)is_c1<=0;
+        else if(la[10])is_c1<=base_sector;
+        else if(rq[3])is_c1<=is_c1+stride;
     always @(posedge clk or negedge rst_n)
         if(!rst_n)return_sector<=0;
         else if(la[1])return_sector<=base_sector;

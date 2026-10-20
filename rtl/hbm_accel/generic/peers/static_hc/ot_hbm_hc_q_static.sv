@@ -90,9 +90,19 @@ module ot_hbm_hc_q_static #(
     // release 3 clk edges later); each region resets its own flops from a relay copy placed beside it, so no net from
     // the port spans the 432 um tile. The F20 target already synchronises its own release (2 edges), the host programs
     // the target long after reset, and nothing in this master counts cycles from reset release.
-    localparam integer RQN=(SAFE!=0)?96:6;
+    // SAFE 2: the relay synchroniser drives every copy, so <= 31 copies a relay (kept-synchroniser ot_hc_rst_relay_k): u_rst
+    // (31 copies) resets the target / programme / residual / gathered / store blocks, u_rst_relay (16 copies) this level
+    // (done reservation, request register, pin registers, fault); the kit's reset_relay_split spreads each family's loads.
+    localparam integer RQN=(SAFE>=2)?31:(SAFE!=0)?96:6;
     wire [RQN-1:0] rr_n;
-    ot_rst_relay #(.REGIONS(RQN)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
+    wire [15:0] rm_n;
+    generate if(SAFE>=2)begin:g_rq2r
+        ot_hc_rst_relay_k #(.REGIONS(RQN)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
+        ot_hc_rst_relay_k #(.REGIONS(16)) u_rst_relay(.clk(clk),.rst_n_in(rst_n),.rst_n(rm_n));
+    end else begin:g_rq1r
+        ot_rst_relay #(.REGIONS(RQN)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rr_n));
+        assign rm_n={16{rr_n[5]}};
+    end endgenerate
     // ---- input pin registers
     reg [2055:0] rr_q;
     reg [7:0] w_done_q;
@@ -100,8 +110,8 @@ module ot_hbm_hc_q_static #(
     reg [2:0] result_pos_q;
     reg [767:0] result_q;
     always @(posedge clk)begin rr_q<=lg_rr;result_pos_q<=result_position;result_q<=result;end
-    always @(posedge clk or negedge rr_n[5])
-        if(!rr_n[5])begin w_done_q<=0;result_v_q<=0;end
+    always @(posedge clk or negedge rm_n[0])
+        if(!rm_n[0])begin w_done_q<=0;result_v_q<=0;end
         else begin w_done_q<=lg_w_done;result_v_q<=result_v;end
     // ---- F20 programme target (folded collar, pin-registered soft logic)
     wire cfg_we,start_v,tgt_fault;
@@ -119,20 +129,20 @@ module ot_hbm_hc_q_static #(
     wire [78:0] c;
     wire cal_v,cal_fault,gb;
     localparam integer GLC=11, GPC=11, NWS=9;
-    wire [GLC-1:0] gl; wire [GPC-1:0] gp; wire [24*NWS-1:0] wsel;
+    wire [GLC-1:0] gl; wire [GPC-1:0] gp; wire [24*NWS-1:0] wsel; wire [2:0] gr;
     generate if(SAFE!=0)begin:g_qcal
         ot_hbm_hc_qcal_static #(.W(79),.FAN32((SAFE>=2)?1:0),.GLC(GLC),.GPC(GPC),.NWS(NWS)) programme(
             .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
             .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
             .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault),.gb(gb),
-            .gl(gl),.gp(gp),.wsel(wsel));
+            .gl(gl),.gp(gp),.gr(gr),.wsel(wsel));
     end else begin:g_vcal
         ot_vms_calendar_static #(.W(79)) programme(
             .clk(clk),.rst_n(rr_n[1]),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
             .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
             .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault));
         assign gb=1'b0;
-        assign gl={GLC{c[22]}}; assign gp={GPC{c[21]}}; assign wsel={24*NWS{1'b0}};
+        assign gl={GLC{c[22]}}; assign gp={GPC{c[21]}}; assign wsel={24*NWS{1'b0}}; assign gr={3{c[0]}};
     end endgenerate
     wire residual_launch=c[0];
     wire [3:0] residual_npos=c[4:1];
@@ -160,7 +170,7 @@ module ot_hbm_hc_q_static #(
     end
     ot_hgi_hc_residual_vm_static #(.CAPTURE_LAT(RD_CAPTURE-((MUT==3)?1:0)),.MUT_POSITION((MUT==1)?1:0),.BEATS(XW_BEATS),
         .MUT_BEAT((MUT==4)?1:(MUT==5)?2:0),.SAFE(SAFE)) residual(
-        .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base),
+        .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.launch_c(gr),.npos(residual_npos),.base_sector(residual_base),
         .local_rq(res_rq),.local_read(res_read),.local_rr(rr_res),
         .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.done(residual_done),.fault(res_fault),
         .x_face_v(x_face_v),.x_face_beat(x_face_beat));
@@ -202,8 +212,8 @@ module ot_hbm_hc_q_static #(
         // 9 kept gather-phase copies, 16 request bits each (a 2:1 select is 2 loads a bit)
         for(genvar g=0;g<9;g=g+1)begin:g_q
             localparam integer LO=g*16, N=(g==8)?(136-128):16;
-            always @(posedge clk or negedge rr_n[5])
-                if(!rr_n[5])lg_rq[LO+:N]<=0;
+            always @(posedge clk or negedge rm_n[0])
+                if(!rm_n[0])lg_rq[LO+:N]<=0;
                 else lg_rq[LO+:N]<=gp[g]?gat_rq[LO+:N]:res_rq[LO+:N];
         end
     end else begin:g_rq1
@@ -214,8 +224,8 @@ module ot_hbm_hc_q_static #(
     // ---- write-done reservation: every store's banks return local_w_done exactly DONE_LAT edges later
     reg [7:0] done_cal[0:DONE_LAT-1];
     reg own_fault;
-    always @(posedge clk or negedge rr_n[5])
-        if(!rr_n[5])begin
+    always @(posedge clk or negedge rm_n[0])
+        if(!rm_n[0])begin
             own_fault<=0;fault<=0;
             for(integer i=0;i<DONE_LAT;i=i+1)done_cal[i]<=0;
         end else begin
