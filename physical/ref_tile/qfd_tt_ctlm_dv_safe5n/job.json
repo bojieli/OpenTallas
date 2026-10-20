@@ -3,7 +3,7 @@
  "block": "qfd_tt_ctlm_dv_lpf_lp",
  "ref_tile": true,
  "owner": "QW-CTLM5",
- "purpose": "QW-CTLM5 10-19 safe5n (no placement regions): safe4 + (a) program_obs / command_stage N -> E beside u_hr's E-face outputs (safe4 wire_reach 612 um, 85 stages), (b) D4 / K2 landings with the L5 multicycle (safe4 hr->core cross_clock -158.1 ps), (c) F16WTN / PRIVATE_CALR ports (f16_auth / f16_obs N, f16_st / table_req E; params 0), (d) pw from core (N x205 beside ck_core), (e) gate tools: ck_insertion measures past arc-less raw child clock pins.",
+ "purpose": "QW-CTLM5 10-19 safe5n (no placement regions): safe4 + (a) program_obs / command_stage N -> E beside u_hr's E-face outputs (safe4 wire_reach 612 um, 85 stages), (b) D4 / K2 landings with the L5 multicycle (safe4 hr->core cross_clock -158.1 ps), (c) F16WTN / PRIVATE_CALR ports (f16_auth / f16_obs N, f16_st / table_req E; params 0), (d) pw from core (S x334-350 after tl: the core pin flops stay one S band), (e) gate tools: ck_insertion measures past arc-less raw child clock pins.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
