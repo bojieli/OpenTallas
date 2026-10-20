@@ -1,0 +1,17 @@
+{
+  "source_rtl_commit": "e2e0a4482",
+  "source_rtl_sha256": "ebb8a1db04be94e4ae83cb023ca06b3d7c2959c6f6256801ebd799819557f4c3",
+  "gold": "0ae0a0d9c",
+  "status": "UNQUALIFIED_RUNNING",
+  "expected_added_ff_vs_R10": 400,
+  "new_token_edges": 0,
+  "new_boot_edges_vs_R10_shipping": 0,
+  "native_job": "ep7 unit2909436-1792508400/session41331",
+  "proof_job": "ep7 unit2909434-1792508400/session52650",
+  "remote": "/srv/opentallas-scratch/claude/codex-pvfin-shipping-r13-1020",
+  "native": "native/native_census.json",
+  "proof": "src/shipping_proof, src/cold, src/calendar_r13.log",
+  "prior_R11": "FAIL34/1/0roles",
+  "prior_R12": "FAIL40/3/0roles",
+  "gate_allowed": false
+}
