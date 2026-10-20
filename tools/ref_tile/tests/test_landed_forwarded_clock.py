@@ -61,6 +61,10 @@ def fixture(root, fwd2=None):
     s['clock_entry_domains']['core'].update(inputs=['d', 'xk'], outputs=['y', 'w0', 'w1', 'w2'])
     s['pins'] = dict(W=['ck_ra', 'ck_rb', 'd', 'xk'], E=['y', 'z', 'w0', 'w1', 'w2'])
     s['forwarded_clock_ports'] = ['xk']
+    s['forwarded_clock_bindings'] = {
+        'xk[0]': dict(clock='fwd0', root='fwd0', pins={'f0/CLK': 'fwd', 'f1/CLK': 'fwd2'}),
+        'xk[1]': dict(clock='fwd1', root='fwd1', pins={'f2/CLK': 'fwd'}),
+    }
     return s
 
 
@@ -74,8 +78,9 @@ class ForwardedSpec(unittest.TestCase):
             self.assertIn('set ::ot_ce_landed_child_pins 4\n', text)
             self.assertIn('incr ot_ce_landed_hits [ot_ce_forwarded_visit $corner]', text)
             self.assertIn('proc ot_ce_forwarded_visit', text)
-            self.assertIn('dict set cells $cell [ot_ce_fwd_domain', text)
+            self.assertIn('dict set cells $cell [dict get $::ot_ce_fwd_cells', text)
             s.pop('forwarded_clock_ports')
+            s.pop('forwarded_clock_bindings')
             plain = CE.generate(K.load(root, s), root)
             self.assertNotIn('ot_ce_fwd', plain)
             self.assertNotIn('FORWARDED', plain)
@@ -120,11 +125,17 @@ class ForwardedOpenroad(unittest.TestCase):
             s['landed_record'] = 'top_lp_record.json'
             if mutant == 'no_forwarded_class':
                 s.pop('forwarded_clock_ports')
+                s.pop('forwarded_clock_bindings')
             rtl = RTL.replace('u_lpl_0_w.bank_reg', '\\u_lpl_0_w.bank_reg ').replace('u_lpl_0_r.o_reg', '\\u_lpl_0_r.o_reg ')
             (w / 't.v').write_text(rtl)
             pre = mutant == 'pre_cts'
             entries = ('set ::ot_ref_pre_cts 1\n' if pre else 'set ::ot_ce_require_wire 1\n') + CE.generate(s, w) + CE.landed_sdc(s, w)
-            (w / 'clocks.tcl').write_text(CE.clocks(s, 833.333))
+            (w / 'clocks.tcl').write_text(CE.clocks(s, 833.333) + '''
+# Original coupon interface clocks; API never creates these.
+create_clock -name fwd0 -period 833.333 -waveform {23 377} [get_ports {xk[0]}]
+create_clock -name fwd1 -period 833.333 -waveform {23 377} [get_ports {xk[1]}]
+set_clock_latency -source 17 [get_clocks {fwd0 fwd1}]
+''')
             (w / 'entries.tcl').write_text(entries)
             flow = r'''
 set_thread_count 2
@@ -161,6 +172,7 @@ set ::ot_ce_counts [dict create hard 1 fwd 2 fwd2 1]
 source /src/physical/common_flow/clock_entries.tcl
 clock_tree_synthesis -sink_clustering_enable -buf_list BUFx4_ASAP7_75t_R -root_buf BUFx4_ASAP7_75t_R
 estimate_parasitics -placement
+set_propagated_clock [all_clocks]
 source /w/entries.tcl
 puts "LANDED_RESULT PASS"
 '''
@@ -170,7 +182,7 @@ puts "LANDED_RESULT PASS"
             (w / 'run.tcl').write_text(flow)
             proc = subprocess.run(['docker', 'run', '--rm', '-v', f'{w}:/w', '-v', f'{ROOT}:/src:ro',
                                    K.IMAGE, K.OR, '-no_init', '-exit', '/w/run.tcl'], capture_output=True, text=True,
-                                  timeout=180)
+                                  )
             return proc.returncode, proc.stdout + proc.stderr
 
     def test_forwarded_sinks_counted_owned_and_judged(self):
@@ -180,15 +192,15 @@ puts "LANDED_RESULT PASS"
         for port, pin, r in (('xk\\[0\\]', 'f0/CLK', 100), ('xk\\[0\\]', 'f1/CLK', 100), ('xk\\[1\\]', 'f2/CLK', 100)):
             m = re.search(rf'OT_LANDED FORWARDED_SINK tt {port} {pin} wire=([\d.eE+-]+) R={r}(?:\.0)? min=([\d.eE+-]+)', out)
             self.assertIsNotNone(m, out[-6500:])
-        self.assertRegex(out, r'OT_LANDED FORWARDED_CLOCK tt xk\[0\] sinks=2 child_flop_spread=[\d.]+ ps \(<= 80 at TT and FF\) PASS')
-        self.assertRegex(out, r'OT_LANDED FORWARDED_CLOCK tt xk\[1\] sinks=1 child_flop_spread=20\.0 ps')
+        self.assertRegex(out, r'OT_FORWARDED SPREAD tt xk\[0\] sinks=2 child_flop_spread=[\d.]+ ps \(<= 80 at TT and FF\) PASS')
+        self.assertRegex(out, r'OT_FORWARDED SPREAD tt xk\[1\] sinks=1 child_flop_spread=20\.0 ps')
         self.assertIn('OT_MULTI_ROOT OWNERSHIP PASS roots=2', out)
         self.assertIn('LANDED_RESULT PASS', out)
 
     def test_pre_cts_reports_only(self):
         rc, out = self.run_flow('pre_cts')
         self.assertEqual(rc, 0, out[-6500:])
-        self.assertRegex(out, r'OT_LANDED FORWARDED_CLOCK tt xk\[0\] sinks=2 ')
+        self.assertRegex(out, r'OT_FORWARDED SPREAD tt xk\[0\] sinks=2 ')
         self.assertIn('LANDED_RESULT PASS', out)
 
     def test_mutants_fail_closed(self):

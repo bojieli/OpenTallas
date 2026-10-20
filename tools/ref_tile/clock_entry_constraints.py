@@ -123,28 +123,44 @@ def landed_cluster(spec):
 
 
 def forwarded_clock_ports(spec):
-    """S81-FRAME4 10-19 (forwarded-clock class of a LANDED cluster): spec "forwarded_clock_ports" names the parent input
-    ports that carry a FORWARDED clock (a source-synchronous lane clock that travels with its data, e.g. the S81 frame
-    port xk feeding the crs4 landing write side and the dvrly xo relays).  Such a port is not a region CTS root: a
-    bound hard-child clock pin whose net traces structurally (ot_ce_net_root_port, through single-input standard cells)
-    to it is a FORWARDED sink, counted toward the landed coverage and judged per forwarded port bit at the child flops
-    (measured pin arrival + the child's insertion.json boundary min..max): spread <= 80 ps at TT and FF (post-CTS / routed,
-    fail closed; pre-CTS reported).  Opt-in: without the key the generated SDC is byte-identical.  [] / absent = none."""
+    """Private V2: declared bits assert existing native clocks, never create them."""
     ports = spec.get('forwarded_clock_ports')
-    if ports is None:
+    if ports is None or ports == []:
+        if spec.get('forwarded_clock_bindings'):
+            raise ValueError('forwarded bindings require forwarded_clock_ports')
         return []
     if not landed_cluster(spec):
-        raise ValueError('forwarded_clock_ports: only a landed cluster (kind cluster + multiple_cts_roots) has a forwarded class')
-    if (not isinstance(ports, list) or not all(isinstance(x, str) and re.fullmatch(r'[A-Za-z_]\w*', x) for x in ports)
-            or len(set(ports)) != len(ports)):
-        raise ValueError('forwarded_clock_ports: requires a list of distinct plain port names')
-    ins = {p for d in (spec.get('clock_entry_domains') or {}).values() if isinstance(d, dict) for p in d.get('inputs') or []}
-    if any(x not in ins for x in ports):
-        raise ValueError('forwarded_clock_ports: each forwarded port must be an input of a clock_entry_domains domain '
-                         '(its cells and data belong to that domain)')
-    if set(ports) & set(spec.get('clock_ports') or []):
-        raise ValueError('forwarded_clock_ports: a forwarded port cannot also be a region CTS root (clock_ports)')
+        raise ValueError('forwarded_clock_ports requires a landed cluster')
+    if not isinstance(ports, list) or not all(isinstance(x, str) and re.fullmatch(r'[A-Za-z_]\w*', x) for x in ports) or len(set(ports)) != len(ports):
+        raise ValueError('forwarded_clock_ports requires distinct base port names')
+    domains = spec.get('clock_entry_domains') or {}
+    for port in ports:
+        owners = [name for name, d in domains.items() if port in (d.get('inputs') or [])]
+        if len(owners) != 1 or port in (spec.get('clock_ports') or []):
+            raise ValueError('forwarded input needs one data-domain owner and cannot be a region CTS root')
+    bindings = spec.get('forwarded_clock_bindings')
+    if not isinstance(bindings, dict) or not bindings:
+        raise ValueError('forwarded_clock_ports needs native per-bit forwarded_clock_bindings; DATA input delay is not a clock')
+    pins = set()
+    safe = lambda x: isinstance(x, str) and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_./:\[\]$-]*', x)
+    for bit, row in bindings.items():
+        if not safe(bit) or re.sub(r'\[\d+\]$', '', bit) not in ports or not isinstance(row, dict) or set(row) != {'clock', 'root', 'pins'}:
+            raise ValueError('invalid scalar forwarded input binding')
+        if not safe(row['clock']) or not safe(row['root']) or not isinstance(row['pins'], dict) or not row['pins']:
+            raise ValueError('forwarded bit needs existing clock/root and exact sink pin/master bindings')
+        for pin, master in row['pins'].items():
+            if not safe(pin) or '/' not in pin or not safe(master) or pin in pins:
+                raise ValueError('invalid or duplicate forwarded pin ownership')
+            pins.add(pin)
     return list(ports)
+
+
+def forwarded_bindings_tcl(spec):
+    rows = []
+    for bit, row in sorted(spec['forwarded_clock_bindings'].items()):
+        pins = ' '.join('{' + p + '} {' + m + '}' for p, m in sorted(row['pins'].items()))
+        rows.append('{' + bit + '} {clock {' + row['clock'] + '} root {' + row['root'] + '} pins {' + pins + '}}')
+    return 'set ::ot_ce_fwd_bindings [dict create ' + ' '.join(rows) + ']\n'
 
 
 def landed_record(spec, root):
@@ -937,7 +953,7 @@ def _generate(spec, root):
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
             + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '')
             + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '')
-            + ('set ::ot_ce_fwd_ports {' + ' '.join('{' + p + '}' for p in fwd) + '}\n' if fwd else '')
+            + ('set ::ot_ce_fwd_ports {' + ' '.join('{' + p + '}' for p in fwd) + '}\n' + forwarded_bindings_tcl(spec) if fwd else '')
             + ('set ::ot_ce_landed_raw [dict create ' + ' '.join(
                 f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(raw.items())) + ']\n'
                if raw else '')
@@ -1883,107 +1899,197 @@ LEAF_BODY = _clock_family_body(LEAF_BODY)
 LANDED_BODY = _clock_family_body(LANDED_BODY)
 
 
-# S81-FRAME4 10-19: the FORWARDED-CLOCK class of a landed cluster (forwarded_clock_ports).  A forwarded port is a data
-# input of the parent SDC (no create_clock: the frame times it as a core-domain input, as the kit always did), so its
-# sinks carry DATA arrival tags, never "(clock prop)" ones: the pin arrival is the largest finite max data arrival in the
-# current scene.  Within one forwarded port bit the input-delay term is common, so the child-flop spread
-# max(arr + R_max) - min(arr + R_min) over its sinks is the forwarded tree's own skew at the child flops.
-FORWARDED_PROCS = r"""proc ot_ce_fwd_arrival {pin} {
-  set scene [get_property [sta::cmd_scene] name]
-  set best ""
+# Private native forwarded input class. Clocks come only from the original scene.
+FORWARDED_PROCS = r"""
+proc ot_ce_fwd_trace {pin} {
+  set block [ord::get_db_block]
+  set it [$block findITerm [get_full_name $pin]]
+  if {$it in {"" NULL} || [$it getIoType] ne "INPUT"} {error "OT_FORWARDED: missing physical sink [get_full_name $pin]"}
+  set net [$it getNet]; set parity 0; set seen {}
+  while {1} {
+    if {$net in {"" NULL} || $net in $seen} {error "OT_FORWARDED: disconnected/cyclic physical path"}
+    lappend seen $net
+    set ports [$net getBTerms]
+    set drivers {}; foreach p [$net getITerms] {if {[$p getIoType] eq "OUTPUT"} {lappend drivers $p}}
+    if {[llength $ports]} {
+      if {[llength $ports] != 1 || [llength $drivers] || [[lindex $ports 0] getIoType] ne "INPUT"} {error "OT_FORWARDED: aliased or internally driven boundary root"}
+      return [list [[lindex $ports 0] getName] $parity]
+    }
+    if {[llength $drivers] != 1} {error "OT_FORWARDED: physical path needs one driver"}
+    set out [lindex $drivers 0]; set inst [$out getInst]; set master [[$inst getMaster] getName]
+    if {[dict exists $::ot_ce_counts $master]} {error "OT_FORWARDED: unsupported hard-child clock transit"}
+    set inputs {}; set outputs {}
+    foreach p [$inst getITerms] {
+      if {[$p getIoType] eq "INPUT"} {lappend inputs $p}
+      if {[$p getIoType] eq "OUTPUT"} {lappend outputs $p}
+    }
+    if {[llength $inputs] != 1 || [llength $outputs] != 1} {error "OT_FORWARDED: physical driver is not unary BUF/INV"}
+    set input [lindex $inputs 0]; set ip [[$input getMTerm] getName]; set op [[$out getMTerm] getName]
+    set functions {}
+    foreach library [get_libs -quiet *] {
+      set cell [$library find_liberty_cell $master]
+      if {$cell in {"" NULL}} continue
+      set lp [$cell find_liberty_port $op]
+      if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {error "OT_FORWARDED: invalid Liberty output"}
+      dict set functions [string map {" " "" "\t" "" "\n" "" "(" "" ")" ""} [$lp function]] 1
+    }
+    if {[dict size $functions] != 1} {error "OT_FORWARDED: missing/ambiguous physical Liberty function"}
+    set fn [lindex [dict keys $functions] 0]
+    if {$fn eq $ip} {set inv 0} elseif {$fn in [list !$ip ~$ip ${ip}']} {set inv 1} else {error "OT_FORWARDED: physical Liberty function is not BUF/INV"}
+    set parity [expr {$parity ^ $inv}]; set net [$input getNet]
+  }
+}
+proc ot_ce_fwd_values {pin clock transition source_edge bound judged} {
+  set cn [get_full_name $clock]; set scene [get_property [sta::cmd_scene] name]
+  set marker [expr {$transition eq "rise" ? "^" : "v"}]; set want [expr {$source_edge eq "rise" ? "^" : "v"}]
+  set values {}
   foreach vertex [$pin vertices] {
     if {$vertex eq "NULL"} continue
-    foreach transition {rise fall} {
-      set paths [$vertex path_iterator $transition max]
-      while {[$paths has_next]} {
-        set path [$paths next]
-        set tag [$path tag]
-        if {[lindex $tag 1] ne $scene || ![string match *max [lindex $tag 2]]} continue
-        set a [sta::time_sta_ui [$path arrival]]
-        if {![ot_ce_finite $a]} continue
-        if {$best eq "" || $a > $best} {set best $a}
-      }
-      $paths finish
+    set paths [$vertex path_iterator $transition $bound]
+    while {[$paths has_next]} {
+      set path [$paths next]; set tag [$path tag]
+      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "${marker}${bound}" || [lindex $tag 3] ne $cn || [string first "(clock prop)" $tag] < 0} continue
+      if {[lindex $tag 4] ne $want} {$paths finish; error "OT_FORWARDED: physical Liberty/source phase mismatch [get_full_name $pin] $transition"}
+      set value [sta::time_sta_ui [$path arrival]]
+      if {![ot_ce_finite $value]} {$paths finish; error "OT_FORWARDED: nonfinite clock arrival"}
+      lappend values $value
     }
+    $paths finish
   }
-  return $best
+  if {[llength $values] != 1} {
+    if {!$judged && ![llength $values]} {return ""}
+    error "OT_FORWARDED: missing/ambiguous propagated $transition/$bound arrival [get_full_name $pin] clock=$cn"
+  }
+  return [lindex $values 0]
 }
-proc ot_ce_fwd_domain {port} {
-  # a forwarded clock travels with its data: its cells belong to the clock-entry domain that owns the port as an input
-  set base $port
-  regsub {\[[0-9]+\]$} $port {} base
-  dict for {domain info} $::ot_ce_domains {
-    foreach p [dict get $info inputs] { if {[string match $p $base] || [string match $p $port]} { return $domain } }
-  }
-  error "OT_LANDED: forwarded clock port $port is no input of a clock-entry domain"
+proc ot_ce_fwd_freeze {pin identity} {
+  if {![info exists ::ot_ce_fwd_identity]} {set ::ot_ce_fwd_identity {}}
+  if {[dict exists $::ot_ce_fwd_identity $pin] && [dict get $::ot_ce_fwd_identity $pin] ne $identity} {error "OT_FORWARDED: immutable pin/bit/clock/root/master/polarity ownership changed $pin"}
+  dict set ::ot_ce_fwd_identity $pin $identity
 }
 proc ot_ce_forwarded_visit {corner} {
-  # every bound hard-child clock pin whose net traces to a forwarded port: one FORWARDED sink (fail closed below)
-  set ::ot_ce_fwd_cells [dict create]
-  set groups [dict create]; set hits 0
+  ot_cf_refresh
+  set ::ot_ce_fwd_cells {}; set ::ot_ce_fwd_root_names {}; set ::ot_ce_fwd_inputs {}
   set judged [expr {!([info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts) || ([info exists ::ot_ce_require_wire] && $::ot_ce_require_wire)}]
+  set actual_bits {}
+  foreach port $::ot_ce_fwd_ports {
+    set found [get_ports -quiet $port -filter "direction == input"]
+    if {![llength $found]} {set found [get_ports -quiet [format {%s\[*\]} $port] -filter "direction == input"]}
+    if {![llength $found]} {error "OT_FORWARDED: missing actual input port $port"}
+    foreach p $found {lappend actual_bits [get_full_name $p]}
+  }
+  if {[lsort -unique $actual_bits] ne [lsort [dict keys $::ot_ce_fwd_bindings]]} {error "OT_FORWARDED: incomplete or foreign actual bit bindings"}
+  set expected_pins {}; set seen_pins {}; set groups {}; set hits 0
+  dict for {bit binding} $::ot_ce_fwd_bindings {
+    set port [get_ports -quiet $bit]; set source [sta::get_port_pin $port]
+    set clocks [get_property $source clocks]
+    if {[llength $clocks] != 1} {error "OT_FORWARDED: $bit lacks one actual source clock (DATA input delay is not a clock)"}
+    set clock [lindex $clocks 0]; set cn [get_full_name $clock]; set root [ot_cf_root $cn]
+    set rc [get_clocks -quiet $root]
+    if {$cn ne [dict get $binding clock] || $root ne [dict get $binding root] || [$rc is_virtual]} {error "OT_FORWARDED: wrong or virtual actual clock/root $bit"}
+    if {$judged && ![$clock is_propagated]} {error "OT_FORWARDED: ideal source clock cannot qualify $bit"}
+    set wave [$clock waveform]
+    if {[llength $wave] != 2 || [$clock period] <= 0} {error "OT_FORWARDED: invalid native clock waveform"}
+    foreach v $wave {if {![ot_ce_finite $v]} {error "OT_FORWARDED: nonfinite native waveform"}}
+    lappend ::ot_ce_fwd_root_names $root; lappend ::ot_ce_fwd_inputs $bit
+    set domain [ot_ce_fwd_domain $bit]
+    dict for {full master} [dict get $binding pins] {
+      if {[dict exists $expected_pins $full]} {error "OT_FORWARDED: duplicate bound pin $full"}
+      dict set expected_pins $full $bit
+      set pin [get_pins -quiet $full]
+      if {[llength $pin] != 1 || [get_property [get_cells -of_objects $pin] ref_name] ne $master} {error "OT_FORWARDED: actual sink/master mismatch $full"}
+      set key "$master/[get_property $pin lib_pin_name]"
+      if {![dict exists $::ot_ce_refs $key] || ![dict exists $::ot_ce_counts $master]} {error "OT_FORWARDED: sink lacks actual bound child insertion $full"}
+      if {[info exists ::ot_ce_landed_raw] && [dict exists $::ot_ce_landed_raw $key]} {error "OT_FORWARDED: raw SRAM entry requires its unchanged co-timed audit; cannot count as forwarded ETM sink"}
+      lassign [ot_ce_fwd_trace $pin] actual_bit parity
+      if {$actual_bit ne $bit} {error "OT_FORWARDED: bound pin has wrong actual root bit $full"}
+      set owners [get_property $pin clocks]
+      if {[llength $owners] != 1 || [get_full_name [lindex $owners 0]] ne $cn} {error "OT_FORWARDED: wrong/ambiguous sink clock or unsupported intermediate generated clock $full"}
+      ot_ce_fwd_freeze $full [list $bit $cn $root $master $parity]
+      set cell [get_full_name [get_cells -of_objects $pin]]
+      if {[dict exists $::ot_ce_fwd_cells $cell] && [dict get $::ot_ce_fwd_cells $cell] ne $domain} {error "OT_FORWARDED: conflicting hard-child domain ownership $cell"}
+      if {[dict exists $::ot_ce_landed_owner $cell] && [dict get $::ot_ce_landed_owner $cell] ne $domain} {error "OT_FORWARDED: conflicting region/forwarded ownership $cell"}
+      dict set ::ot_ce_fwd_cells $cell $domain
+      lassign [dict get $::ot_ce_refs $key $corner] clo mean chi
+      foreach v [list $clo $mean $chi] {if {![ot_ce_finite $v]} {error "OT_FORWARDED: nonfinite child insertion"}}
+      if {$clo < 0 || $clo > $mean || $mean > $chi} {error "OT_FORWARDED: invalid child insertion bounds"}
+      foreach edge {rise fall} {
+        set input_edge [expr {$parity ? ($edge eq "rise" ? "fall" : "rise") : $edge}]
+        set local {}
+        foreach bound {min max} {
+          set a [ot_ce_fwd_values $pin $clock $edge $input_edge $bound $judged]
+          set b [ot_ce_fwd_values $source $clock $input_edge $input_edge $bound $judged]
+          if {$a eq "" || $b eq ""} {set local {}; break}
+          lappend local [expr {$a-$b}]
+        }
+        if {![llength $local]} {puts "OT_FORWARDED UNMEASURED $corner $bit $full $edge pre-CTS";continue}
+        lassign $local early late
+        if {$early < 0 || $early > $late} {error "OT_FORWARDED: invalid local early/late transfer $full $edge"}
+        dict lappend groups [list $bit $input_edge] [list [expr {$early+$clo}] [expr {$late+$chi}]]
+        puts "OT_FORWARDED SINK $corner $bit $full clock=$cn root=$root parity=$parity edge=$edge input_edge=$input_edge local=$early..$late child=$clo..$chi"
+      }
+      dict set seen_pins $full 1; incr hits
+    }
+    # No source-family sequential clock sink may disappear from the binding census.
+    foreach c [all_clocks] {
+      set ancestor [get_full_name $c]
+      while {$ancestor ne $cn && [dict exists $::ot_cf_master $ancestor]} {set ancestor [dict get $::ot_cf_master $ancestor]}
+      if {$ancestor ne $cn} continue
+      foreach pin [all_registers -clock $c -clock_pins] {
+        set full [get_full_name $pin]
+        lassign [ot_ce_fwd_trace $pin] actual_bit ignored
+        if {$actual_bit eq $bit && ![dict exists $expected_pins $full]} {error "OT_FORWARDED: unbound true sequential clock sink $full"}
+      }
+    }
+  }
+  # Include actual bound check-only pins (not returned by all_registers) and preserve raw/SRAM audits.
   foreach cell [get_cells -quiet -hierarchical *] {
     set master [get_property $cell ref_name]
     if {![dict exists $::ot_ce_counts $master]} continue
     foreach pin [get_pins -quiet -of_objects $cell] {
       set key "$master/[get_property $pin lib_pin_name]"
       if {![dict exists $::ot_ce_refs $key]} continue
-      set port [ot_ce_net_root_port $pin]
-      if {$port eq ""} continue
-      set base $port
-      regsub {\[[0-9]+\]$} $port {} base
-      if {[lsearch -exact $::ot_ce_fwd_ports $base] < 0} continue
-      set full [get_full_name $pin]
-      set arr [ot_ce_fwd_arrival $pin]
-      if {$arr eq ""} {
-        if {$judged} { error "OT_LANDED: forwarded clock pin $full (port $port) has no measured arrival" }
-        set arr 0.0
-        puts "OT_LANDED FORWARDED_UNMEASURED $corner $port $full (pre-CTS: wire taken 0)"
-      }
-      lassign [dict get $::ot_ce_refs $key $corner] clo cmean chi
-      set lo [expr {$arr + $clo}]; set hi [expr {$arr + $chi}]
-      dict lappend groups $port [list $full $lo $hi]
-      dict set ::ot_ce_fwd_cells [get_full_name $cell] $port
-      puts "OT_LANDED FORWARDED_SINK $corner $port $full wire=$arr R=$cmean min=$lo max=$hi"
-      incr hits
+      set bit [ot_ce_net_root_port $pin]
+      if {[dict exists $::ot_ce_fwd_bindings $bit] && ![dict exists $seen_pins [get_full_name $pin]]} {error "OT_FORWARDED: unbound check-only/raw child clock pin [get_full_name $pin]"}
     }
   }
-  dict for {port rows} $groups {
-    set lo ""; set hi ""
-    foreach r $rows {
-      lassign $r full a b
-      if {$lo eq "" || $a < $lo} {set lo $a}
-      if {$hi eq "" || $b > $hi} {set hi $b}
-    }
-    set spread [expr {$hi - $lo}]
-    set verdict [expr {$spread <= 80.0 ? "PASS" : "FAIL"}]
-    puts "OT_LANDED FORWARDED_CLOCK $corner $port sinks=[llength $rows] child_flop_spread=[format %.1f $spread] ps (<= 80 at TT and FF) $verdict[expr {$judged ? {} : { (pre-CTS: reported)}}]"
-    if {$verdict eq "FAIL" && $judged && $corner in {tt ff}} {
-      error "OT_LANDED: forwarded clock $port child-flop spread [format %.1f $spread] ps > 80 at $corner ([llength $rows] sinks)"
-    }
+  dict for {key rows} $groups {
+    lassign $key bit edge
+    set lo [lindex [lindex $rows 0] 0]; set hi [lindex [lindex $rows 0] 1]
+    foreach row $rows {set lo [expr {min($lo,[lindex $row 0])}];set hi [expr {max($hi,[lindex $row 1])}]}
+    set span [expr {$hi-$lo}]
+    puts "OT_FORWARDED SPREAD $corner $bit input_edge=$edge sinks=[llength $rows] span=$span limit=80 judged=$judged"
+    if {$judged && $corner in {tt ff} && $span > 80.0} {error "OT_FORWARDED: $bit/$edge child-flop span $span exceeds80ps"}
   }
   return $hits
+}
+proc ot_ce_fwd_domain {port} {
+  regsub {\[[0-9]+\]$} $port {} base
+  set owners {}
+  dict for {domain info} $::ot_ce_domains {
+    foreach p [dict get $info inputs] {if {$p eq $base || $p eq $port} {lappend owners $domain;break}}
+  }
+  if {[llength $owners] != 1} {error "OT_FORWARDED: $port lacks one data-domain owner"}
+  return [lindex $owners 0]
 }
 """
 
 
 def forwarded_body(body):
-    """The landed body with the forwarded-clock class (forwarded_clock_ports): forwarded sinks are visited after the
-    region roots and count toward the landed coverage (a pin reached by neither a region root nor a forwarded port
-    still fails "N of M"); their cells are owned by the forwarded port (OT_MULTI_ROOT ownership); spread judged per port
-    bit at the child flops (FORWARDED_PROCS)."""
+    """Opt-in only: preserve complete native/IO/raw audits, add verified clock ownership."""
     substitutions = [
         ('  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins}',
-         '  incr ot_ce_landed_hits [ot_ce_forwarded_visit $corner]\n'
-         '  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins}'),
+         '  incr ot_ce_landed_hits [ot_ce_forwarded_visit $corner]\n  if {$ot_ce_landed_hits != $::ot_ce_landed_child_pins}'),
         ('    if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }\n',
-         '    if {![dict exists $cells $cell] && [info exists ::ot_ce_fwd_cells] && [dict exists $::ot_ce_fwd_cells $cell]} {\n'
-         '      dict set cells $cell [ot_ce_fwd_domain [dict get $::ot_ce_fwd_cells $cell]]\n'
-         '    }\n'
+         '    if {![dict exists $cells $cell] && [dict exists $::ot_ce_fwd_cells $cell]} {dict set cells $cell [dict get $::ot_ce_fwd_cells $cell]}\n'
          '    if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }\n'),
+        ('  if {[lsort $actual] ne [lsort $expected]}',
+         '  foreach name [lsort -unique $::ot_ce_fwd_root_names] {if {$name ni $expected} {lappend expected $name}}\n  if {[lsort $actual] ne [lsort $expected]}'),
+        ('[dict size $covered_in] != [llength [all_inputs -no_clocks]]',
+         '[dict size $covered_in] != [llength [lsort -unique [concat [lmap p [all_inputs -no_clocks] {get_full_name $p}] $::ot_ce_fwd_inputs]]]'),
     ]
     for old, new in substitutions:
         if body.count(old) != 1:
-            raise ValueError("landed body changed; revalidate the forwarded-clock extension")
+            raise ValueError('landed body changed; revalidate private forwarded-clock extension')
         body = body.replace(old, new)
     return FORWARDED_PROCS + body
