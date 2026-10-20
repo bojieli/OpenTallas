@@ -510,7 +510,7 @@ module qfd_native59_dr_landing #(parameter integer LAND_EDGES=8,LOCAL32=0)(
  output wire complete,output reg fault,
  // R3e (QW-N59-6 10-20) opt-in same-edge publications (LOCAL32; 0 ignores / aliases): request_pub[k] == request_slot,
  // emit_beat_pub == emit_beat on every edge; vm_commit_beat_pub is a kept copy of vm_commit_beat.
- input wire[3:0]request_pub,input wire[4:0]emit_beat_pub,output wire[4:0]vm_commit_beat_pub
+ input wire[7:0]request_pub,input wire[4:0]emit_beat_pub,output wire[4:0]vm_commit_beat_pub
 );
  reg active;reg[58:0]tag;reg[31:0]issued,covered;
  reg[LAND_EDGES-1:0]pending;reg[4:0]beat_pipe[0:LAND_EDGES-1];reg[58:0]tag_pipe[0:LAND_EDGES-1];
@@ -519,10 +519,12 @@ module qfd_native59_dr_landing #(parameter integer LAND_EDGES=8,LOCAL32=0)(
  assign complete=active&&(&covered)&&!fault;
  // R3e: kept copies of the last pipe stage (lb_c == beat_pipe[LAND_EDGES-1], pend_c[k] == pending[LAND_EDGES-1]: same D,
  // same reset) and of vm_commit_beat, so the commit capture (65 flops) and the covered decode each take their own driver.
- (* keep = "true" *) reg[4:0]lb_c;(* keep = "true" *) reg[2:0]pend_c;(* keep = "true" *) reg[4:0]vcb_c;
- wire[3:0]rp=LOCAL32?request_pub:{4{request_slot}};
+ // R3f: groups of <= 16 enable bits (2 mapped loads per DFFE bit): request_pub [0..3] tag quarters, [4]/[5] issued
+ // halves, [6]/[7] covered halves; pend_c [0..3] vm_commit_tag quarters, [4] vm_commit_v / beat, [5] covered decode.
+ (* keep = "true" *) reg[4:0]lb_c;(* keep = "true" *) reg[5:0]pend_c;(* keep = "true" *) reg[4:0]vcb_c;
+ wire[7:0]rp=LOCAL32?request_pub:{8{request_slot}};
  wire[4:0]ebp=LOCAL32?emit_beat_pub:emit_beat,lbc=LOCAL32?lb_c:lb;
- wire[2:0]pc=LOCAL32?pend_c:{3{pending[LAND_EDGES-1]}};
+ wire[5:0]pc=LOCAL32?pend_c:{6{pending[LAND_EDGES-1]}};
  assign vm_commit_beat_pub=LOCAL32?vcb_c:vm_commit_beat;
  wire commit_bad=!active||request_slot||tag_pipe[LAND_EDGES-1]!=tag||covered[lb];
  always @(posedge ck or negedge rst_n)
@@ -534,27 +536,31 @@ module qfd_native59_dr_landing #(parameter integer LAND_EDGES=8,LOCAL32=0)(
    vm_commit_v<=0;
    pending<={pending[LAND_EDGES-2:0],emit_v};
    beat_pipe[0]<=emit_beat;tag_pipe[0]<=emit_tag59;
-   lb_c<=beat_pipe[LAND_EDGES-2];pend_c<={3{pending[LAND_EDGES-2]}};
+   lb_c<=beat_pipe[LAND_EDGES-2];pend_c<={6{pending[LAND_EDGES-2]}};
    for(i=1;i<LAND_EDGES;i=i+1)begin beat_pipe[i]<=beat_pipe[i-1];tag_pipe[i]<=tag_pipe[i-1];end
    if(request_slot)begin
     if((active&&!(&covered))||(|pending)||emit_v)fault<=1;
     active<=1;
    end
-   if(rp[0])tag[29:0]<=request_tag59[29:0];
-   if(rp[1])tag[58:30]<=request_tag59[58:30];
-   if(rp[2])issued<=0;
-   if(rp[3])covered<=0;
+   if(rp[0])tag[14:0]<=request_tag59[14:0];
+   if(rp[1])tag[29:15]<=request_tag59[29:15];
+   if(rp[2])tag[44:30]<=request_tag59[44:30];
+   if(rp[3])tag[58:45]<=request_tag59[58:45];
+   if(rp[4])issued[15:0]<=0;
+   if(rp[5])issued[31:16]<=0;
+   if(rp[6])covered[15:0]<=0;
+   if(rp[7])covered[31:16]<=0;
    if(emit_v)begin
     if(!active||request_slot||emit_tag59!=tag||issued[emit_beat])fault<=1;
     issued[ebp]<=1;
    end
-   if(pending[LAND_EDGES-1])begin
-    if(commit_bad)fault<=1;
-    else covered[lbc]<=1;
-   end
-   if(pc[0]&&!commit_bad&&!fault)vm_commit_tag59[29:0]<=tag_pipe[LAND_EDGES-1][29:0];
-   if(pc[1]&&!commit_bad&&!fault)vm_commit_tag59[58:30]<=tag_pipe[LAND_EDGES-1][58:30];
-   if(pc[2]&&!commit_bad&&!fault)begin vm_commit_v<=1;vm_commit_beat<=lb;vcb_c<=lb;end
+   if(pending[LAND_EDGES-1]&&commit_bad)fault<=1;
+   if(pc[5]&&!commit_bad)covered[lbc]<=1;
+   if(pc[0]&&!commit_bad&&!fault)vm_commit_tag59[14:0]<=tag_pipe[LAND_EDGES-1][14:0];
+   if(pc[1]&&!commit_bad&&!fault)vm_commit_tag59[29:15]<=tag_pipe[LAND_EDGES-1][29:15];
+   if(pc[2]&&!commit_bad&&!fault)vm_commit_tag59[44:30]<=tag_pipe[LAND_EDGES-1][44:30];
+   if(pc[3]&&!commit_bad&&!fault)vm_commit_tag59[58:45]<=tag_pipe[LAND_EDGES-1][58:45];
+   if(pc[4]&&!commit_bad&&!fault)begin vm_commit_v<=1;vm_commit_beat<=lb;vcb_c<=lb;end
    if(visibility_slot&&(!active||!(&issued)||!(&covered)||(|pending)))fault<=1;
   end
 endmodule
@@ -591,9 +597,9 @@ module qfd_native59_command_context_mu #(parameter integer NU=4,LOCAL32=0)(
  output wire [19:0] result_base_word,output reg fault,
  // R3e (QW-N59-6 10-20) opt-in: context_v_pub[k] == context_v on every edge (parent kept pin copies); the 59-bit
  // context_tag capture halves take their own copy.  Unconnected / zero ports leave the original (default 0 = off).
- input wire [1:0] context_v_pub
+ input wire [3:0] context_v_pub
 );
- wire[1:0]cvp=LOCAL32?context_v_pub:{2{context_v}};
+ wire[3:0]cvp=LOCAL32?context_v_pub:{4{context_v}};
  localparam [379:0] TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
  reg valid,cap;reg [1:0] generation;reg [58:0] context_tag;reg [1:0] ctx_u;
  wire host0=ctx_user==2'd0;
@@ -611,8 +617,10 @@ module qfd_native59_command_context_mu #(parameter integer NU=4,LOCAL32=0)(
        service_active||!host_epoch_valid||!host_fused_capability||(valid&&begin_tag==context_tag)||context_stage<1||context_stage>36||context_token>=151936||context_position>=8192)fault<=1;
     valid<=1;cap<=host_fused_capability;generation<=host_generation;ctx_u<=ctx_user;
    end
-   if(cvp[0])context_tag[29:0]<=begin_tag[29:0];
-   if(cvp[1])context_tag[58:30]<=begin_tag[58:30];
+   if(cvp[0])context_tag[14:0]<=begin_tag[14:0];
+   if(cvp[1])context_tag[29:15]<=begin_tag[29:15];
+   if(cvp[2])context_tag[44:30]<=begin_tag[44:30];
+   if(cvp[3])context_tag[58:45]<=begin_tag[58:45];
    if(request_slot)begin
     if(host_tag[58:43]!=host_epoch||host_tag[42:37]!=0||host_tag[5:0]!=0||
        (ctx_u==2'd0&&(host_tag[36:19]!=context_tag[36:19]||host_tag[18:6]!=context_tag[18:6]||host_epoch!=context_tag[58:43]))||

@@ -29,11 +29,12 @@ module qfd_native59_static_service #(
  input wire complete_slot,output reg completed,output reg active,output reg fault,output wire [94:0] native_ret,
  // R3e (QW-N59-6 10-20) opt-in same-edge publications (LOCAL32; LOCAL32 0 ignores them): begin_pub[k] == begin_slot,
  // request_pub[k] == request_slot, *_beat_pub == the matching beat, on every edge (parent / landing kept copies).
- input wire[5:0]begin_pub,input wire[3:0]request_pub,
+ input wire[12:0]begin_pub,input wire[6:0]request_pub,
  input wire[4:0]q_slot_beat_pub,result_slot_beat_pub,vm_commit_beat_pub
 );
- wire[5:0]bp=LOCAL32?begin_pub:{6{begin_slot}};
- wire[3:0]rp=LOCAL32?request_pub:{4{request_slot}};
+ // R3f: groups of <= 16 enable bits (a DFFE enable costs 2 mapped loads per bit).
+ wire[12:0]bp=LOCAL32?begin_pub:{13{begin_slot}};
+ wire[6:0]rp=LOCAL32?request_pub:{7{request_slot}};
  wire[4:0]qsb_d=LOCAL32?q_slot_beat_pub:q_slot_beat,rsb_d=LOCAL32?result_slot_beat_pub:result_slot_beat,
           vcb_d=LOCAL32?vm_commit_beat_pub:vm_commit_beat;
  // Result payload holds use independently registered same-edge publications.
@@ -82,7 +83,7 @@ module qfd_native59_static_service #(
    else if(q_slot_pub[72])kernel_q_beat<=q_slot_beat;
   for(genvar c=0;c<24;c=c+1)begin:g_kreq
    (* keep = "true" *) reg q;
-   always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=rp[3]&&!fault&&!source_fault;   // R3e: == kreq_d
+   always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=rp[6]&&!fault&&!source_fault;   // R3e: == kreq_d
    assign kernel_request_pub[c]=q;
   end
   for(genvar c=0;c<25;c=c+1)begin:g_vmw
@@ -118,15 +119,25 @@ module qfd_native59_static_service #(
    // R3e: the accepted begin / request clears and captures are grouped per kept publication (<= 32 loads each); same
    // statements, same order, same conditions (bp[k] == begin_slot, rp[k] == request_slot).
    if(begin_slot&&(active||!legal_tag))fault<=1;
-   if(bp[0]&&!(active||!legal_tag))tag[29:0]<=begin_tag[29:0];
-   if(bp[1]&&!(active||!legal_tag))tag[58:30]<=begin_tag[58:30];
-   if(bp[2]&&!(active||!legal_tag))begin q_seen<=0;q_count<=0;end
-   if(bp[3]&&!(active||!legal_tag))begin result_seen<=0;result_count<=0;end
-   if(bp[4]&&!(active||!legal_tag))begin committed<=0;commit_count<=0;end
-   if(bp[5]&&!(active||!legal_tag))begin context_valid<=1;requested<=0;done_seen<=0;end
-   if(rp[0])kernel_request_tag[29:0]<=request_tag[29:0];
-   if(rp[1])kernel_request_tag[58:30]<=request_tag[58:30];
-   if(rp[2])base<=result_base_word;
+   if(bp[0]&&!(active||!legal_tag))tag[14:0]<=begin_tag[14:0];
+   if(bp[1]&&!(active||!legal_tag))tag[29:15]<=begin_tag[29:15];
+   if(bp[2]&&!(active||!legal_tag))tag[44:30]<=begin_tag[44:30];
+   if(bp[3]&&!(active||!legal_tag))tag[58:45]<=begin_tag[58:45];
+   if(bp[4]&&!(active||!legal_tag))q_seen[15:0]<=0;
+   if(bp[5]&&!(active||!legal_tag))q_seen[31:16]<=0;
+   if(bp[6]&&!(active||!legal_tag))q_count<=0;
+   if(bp[7]&&!(active||!legal_tag))result_seen[15:0]<=0;
+   if(bp[8]&&!(active||!legal_tag))result_seen[31:16]<=0;
+   if(bp[9]&&!(active||!legal_tag))result_count<=0;
+   if(bp[10]&&!(active||!legal_tag))committed[15:0]<=0;
+   if(bp[11]&&!(active||!legal_tag))committed[31:16]<=0;
+   if(bp[12]&&!(active||!legal_tag))begin commit_count<=0;context_valid<=1;requested<=0;done_seen<=0;end
+   if(rp[0])kernel_request_tag[14:0]<=request_tag[14:0];
+   if(rp[1])kernel_request_tag[29:15]<=request_tag[29:15];
+   if(rp[2])kernel_request_tag[44:30]<=request_tag[44:30];
+   if(rp[3])kernel_request_tag[58:45]<=request_tag[58:45];
+   if(rp[4])base[9:0]<=result_base_word[9:0];
+   if(rp[5])base[19:10]<=result_base_word[19:10];
    if(request_slot)begin
     if(!context_valid||active||requested||request_tag!=tag||!qr_committed||qr_tag!=tag||result_base_word>20'hfffe0)fault<=1;
     requested<=1;active<=1;

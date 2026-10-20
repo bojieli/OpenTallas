@@ -22,6 +22,7 @@ module ot_qfd_su_kv_static_posted #(
  output wire[39:0]word_ctl_pub,
  input wire[15:0] word_index_pub, // opt-in same-age source copies; LOCAL_CTL=0 ignores
  input wire[1:0] epoch_begin_pub, // R3d opt-in same-edge copies of epoch_begin (eb_r halves); LOCAL_CTL=0 ignores
+ input wire[1:0] word_slot_pub,   // R3f opt-in same-edge copies of word_slot (word_data group halves); LOCAL_CTL=0 ignores
  output reg fault,output reg [7:0] fault_code
 );
  // Every arriving face bit is captured before decode/arbitration.
@@ -47,6 +48,8 @@ module ot_qfd_su_kv_static_posted #(
  localparam integer VBASE=HEADS*65536, NBYTES=HEADS*256, NWORDS=HEADS*4;
  initial if(HEADS!=1||KV_FP8!=1)$fatal(1,"Static native formatter requires exact TP8 one-head FP8 profile");
  reg active;reg [12:0] pos;
+ localparam integer EBC=(LOCAL_CTL!=0)?32:16, NB=NBYTES/EBC;   // R3d: 32 epoch-begin copies under LOCAL_CTL (8 seats each)
+ (* keep = "true" *) reg [EBC-1:0] eb_r;
  reg [2:0] issued;
  reg [NBYTES-1:0] seen,seen_n;
  reg [NWORDS-1:0] sent,sent_n;
@@ -140,13 +143,15 @@ module ot_qfd_su_kv_static_posted #(
   // per lane, hv = dv && (seat address[7:4] == segment) and lo = one-hot(seat address[3:0]) at the edge that captured
   // di/dv, so hits[seat][lane] = hv[seat/16][lane] && lo[seat/16][lane][seat%16] == dv && (di == seat) on every edge
   // (reset: hv 0 == dv 0).  Exact; 0 added edges.  Loads: hv 16 seats, lo 1, dc 16 seats.
-  (* keep = "true" *) reg[7:0]hv[0:15];
-  (* keep = "true" *) reg[15:0]lo[0:15][0:7];
+  // R3f: ABC re-merged hv into the 8-bit value muxes (hv 113 census nets > 32), so the valid is folded into the one-hot:
+  // ht[seg][lane] = (dv && seat address[7:4] == seg) ? one-hot(seat address[3:0]) : 0, i.e. one registered hit bit per
+  // seat and lane (hits[seat][lane] = ht[seat/16][lane][seat%16] == dv && di == seat on every edge, reset 0).
+  (* keep = "true" *) reg[15:0]ht[0:15][0:7];
   (* keep = "true" *) reg[63:0]dc[0:15];reg[7:0]de;
   integer j,seg;reg[23:0]da;reg[19:0]aa;reg[16:0]ww;reg[12:0]dp;
   reg[7:0]ix;reg[8:0]co;reg[2:0]permit;
   always @(posedge clk or negedge rst_n)begin
-   if(!rst_n)begin for(seg=0;seg<16;seg=seg+1)begin hv[seg]<=0;dc[seg]<=0;for(j=0;j<8;j=j+1)lo[seg][j]<=0;end de<=0;end
+   if(!rst_n)begin for(seg=0;seg<16;seg=seg+1)begin dc[seg]<=0;for(j=0;j<8;j=j+1)ht[seg][j]<=0;end de<=0;end
    else begin
     de<=0;
     permit=issued;if(iv_q&&ik_q<3)permit[ik_q]=1;
@@ -157,7 +162,7 @@ module ot_qfd_su_kv_static_posted #(
      else begin ix={1'b1,ww[2:0],da[3:0]};dp=ww[15:3];end
      ix=ix^8'(MUT_LANE!=0);
      for(seg=0;seg<16;seg=seg+1)begin
-      hv[seg][j]<=we_q[j]&&(ix[7:4]==4'(seg));lo[seg][j]<=16'd1<<ix[3:0];dc[seg][8*j+:8]<=co[7:0];
+      ht[seg][j]<=(we_q[j]&&(ix[7:4]==4'(seg)))?(16'd1<<ix[3:0]):16'd0;dc[seg][8*j+:8]<=co[7:0];
      end
      if(we_q[j])begin
       if(!active||aa>=2*VBASE||(aa<VBASE?aa[16]:ww[16])||dp!=pos)de[0]<=1;
@@ -175,7 +180,7 @@ module ot_qfd_su_kv_static_posted #(
    for(seat=0;seat<NBYTES;seat=seat+1)begin
     hits=0;value=bytes_r[8*seat+:8];
     for(lane=0;lane<8;lane=lane+1)begin
-     hits[lane]=hv[seat/16][lane]&&lo[seat/16][lane][seat%16];
+     hits[lane]=ht[seat/16][lane][seat%16];
      if(hits[lane])value=dc[seat/16][8*lane+:8];
     end
     if(|hits)begin
@@ -191,13 +196,15 @@ module ot_qfd_su_kv_static_posted #(
  // R3d (LOCAL_CTL): 26 kept same-D copies of slot_q (D word_slot, async clear) -- 16 for the 4-byte word_data capture
  // groups, 10 for the KVN control publications -- so the emission predicate is one distinct gate per <= 32 capture
  // flops instead of one 528-load AND (R3c census).  cq[k] == slot_q == choose on every edge: exact.
- wire[25:0]cq;
+ // R3f: 32 data copies (2-byte word_data groups: a DFFE enable costs 2 mapped loads per bit), 16 from each parent
+ // word_slot publication, + 10 control copies from word_slot: cq[0..31] data, cq[32..41] control.
+ wire[41:0]cq;
  generate if(LOCAL_CTL)begin:g_choose_pub
-  (* keep = "true" *) reg[25:0]q;
-  always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<={26{word_slot}};
+  (* keep = "true" *) reg[41:0]q;
+  always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<={{10{word_slot}},{16{word_slot_pub[1]}},{16{word_slot_pub[0]}}};
   assign cq=q;
  end else begin:g_choose_alias
-  assign cq={26{slot_q}};
+  assign cq={42{slot_q}};
  end endgenerate
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin active<=0;pos<=0;issued<=0;sent<=0;word_v<=0;word_tag<=0;if(LOCAL_CTL==0)word_data<=0;fault<=0;fault_code<=0;end
@@ -238,7 +245,11 @@ module ot_qfd_su_kv_static_posted #(
     else sel<=4'b0001<<word_index_pub[2*(wb/8)+:2];
    always @(posedge clk or negedge rst_n)
     if(!rst_n)word_data[8*wb+:8]<=0;
-    else if(ENABLE!=0&&!eb_q&&!fault&&!(|err)&&cq[wb/4]&&(!word_v||take))begin
+    // R3f: the data capture takes only registered same-edge copies (cq[g] == choose, eb_r[g] == eb_q; (!word_v||take)
+    // is identically 1).  !fault / !(|err) are dropped from the DATA enable only: on such an edge word_v / every KVN
+    // control publication stays clear and the fault is sticky from the next edge, so these data are never pushed
+    // (the KVN seat captures word_data only under its word_v publication): output-exact, no shared enable net.
+    else if(ENABLE!=0&&!eb_r[wb/2]&&cq[wb/2])begin
      word_data[8*wb+:8]<=({8{sel[0]}}&bytes_r[8*wb+:8]) |
                         ({8{sel[1]}}&bytes_r[512+8*wb+:8]) |
                         ({8{sel[2]}}&bytes_r[1024+8*wb+:8]) |
@@ -254,7 +265,7 @@ module ot_qfd_su_kv_static_posted #(
    always @(posedge clk or negedge rst_n)begin
     if(!rst_n)q<=0;
     else if(ENABLE!=0&&!eb_q)begin
-     if(!fault&&!(|err)&&cq[16+cp]&&(!word_v||take))q<={1'b1,3'b010};
+     if(!fault&&!(|err)&&cq[32+cp]&&(!word_v||take))q<={1'b1,3'b010};
      else if(take||fault||(|err))q[3]<=0;
     end
    end
@@ -266,8 +277,7 @@ module ot_qfd_su_kv_static_posted #(
  // Epoch-begin broadcast replicated per byte segment (QW-N59 10-19): the 256-seat seen / bytes_r assembly bank took its
  // clear / hold select from one eb_q flop (synthesis merged it with the service's iss[0]: 4,826 loads > 3,000).  EBC kept
  // copies of the same register, one per NBYTES/EBC-byte segment; function unchanged (the same cycle and condition).
- localparam integer EBC=(LOCAL_CTL!=0)?32:16, NB=NBYTES/EBC;   // R3d: 32 copies under LOCAL_CTL (8 seats each)
- (* keep = "true" *) reg [EBC-1:0] eb_r;
+ // (EBC / NB / eb_r are declared with the assembly state above: the R3f data groups use eb_r.)
  genvar gs;
  // R3d: under LOCAL_CTL each half of the copies takes its own parent publication of epoch_begin (same value, same edge),
  // so no epoch_begin net drives more than 16 copy flops.
