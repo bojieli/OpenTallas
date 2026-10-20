@@ -1,0 +1,13 @@
+MISMATCH cyc=137 prg valids
+MISMATCH cyc=138 prg q
+MISMATCH cyc=139 prg valids
+MISMATCH cyc=139 prg q
+MISMATCH cyc=140 prg valids
+MISMATCH cyc=140 prg q
+MISMATCH cyc=141 prg valids
+MISMATCH cyc=141 prg q
+KVS_RVPAIR FAIL mode=8 mut=1 checks=12861 errors=8 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1
+- /srv/opentallas-scratch/codex/t3-kv-rv5-1019/rtl/test/kv_bootage_1019/tb_kvs_attn_rv_pair.sv:152: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 19us; walltime 0.002 s; speed 7.835 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

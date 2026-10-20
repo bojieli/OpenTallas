@@ -1,0 +1,5 @@
+KVS_RVPAIR PASS mode=6 mut=7 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+- /srv/opentallas-scratch/codex/t3-kv-rv5-1019/rtl/test/kv_bootage_1019/tb_kvs_attn_rv_pair.sv:152: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 19us; walltime 0.003 s; speed 6.343 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

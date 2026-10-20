@@ -1,0 +1,16 @@
+MISMATCH cyc=136 pvst
+MISMATCH cyc=136 pvfst
+MISMATCH cyc=136 ahs
+MISMATCH cyc=136 acal
+MISMATCH cyc=136 prg valids
+MISMATCH cyc=137 pvst
+MISMATCH cyc=137 pvfst
+MISMATCH cyc=137 ahs
+MISMATCH cyc=137 acal
+MISMATCH cyc=138 pvst
+MISMATCH B faulted on the legal stream
+KVS_RVPAIR FAIL mode=0 mut=2 checks=38766 errors=22347 cmds=3 req=3 Q=96 TX=99 faultA=0 faultB=1
+- /srv/opentallas-scratch/codex/t3-kv-rv5-1019/rtl/test/kv_bootage_1019/tb_kvs_attn_rv_pair.sv:152: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 56us; walltime 0.007 s; speed 7.972 ms/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 7 MB
