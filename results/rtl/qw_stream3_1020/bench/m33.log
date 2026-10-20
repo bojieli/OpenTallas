@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+81e02ae071db4739daed1988e105cfbc93b8763f0182a17999a876c2a8ff52f6  rtl/test/qwen_dv/static_stream/tb_stream_tile.sv
+83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69  rtl/qwen_dv/qfd_dv_stream.sv
+9a527d6050a60362d3a585e6c5e91d8246c391218149012fe71adc6ac401e863  rtl/qwen_dv/qfd_dv_stream_tile.sv
+[50386000] %Fatal: tb_stream_tile.sv:74: Assertion failed in tb_stream_tile: STREAM_TILE_MISMATCH so_e cycle5039 MUT33
+%Error: rtl/test/qwen_dv/static_stream/tb_stream_tile.sv:74: Verilog $stop
+Aborting...
+MUT33 sim exit 1
+MUT33 exit 1

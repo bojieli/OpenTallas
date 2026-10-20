@@ -1,0 +1,376 @@
+{
+ "name": "qfd_dv_stream_t3_1020",
+ "top": "qfd_dv_stream_tile",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_stream_tile.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "recipe": 4,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 28
+  },
+  "why": "2 registered face stages, last stage 28 kept copies (725 control reset loads in the yosys 0.68 keep-regs mapped census: roots, select leaves, P2 insertion leaves, open copies, config, valids, faults; <= 26 each); payload, derived pipeline words and held-word enables carry no reset"
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The RTL registers every pin: every input bit is captured at its face in qfd_dv_stream_tile (sw/se payload, sid, cfg, SU write ports; the valid / tap-hit / write-any / config-enable bits as (* keep *) ROOT copies, which feed kept 14-bit select LEAF banks one edge later), every output is driven directly by a register (so_e/so_w relay, tw_*/xt_* tap output registers after the interior tap relay, fault).  A flow pin stage would add a second edge and fold the kept select copies into one flop per pin (1,088-load relay select)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "outline": {
+  "w": 302.4,
+  "h": 380.16
+ },
+ "std_area_um2": 7100,
+ "fill_reason": {
+  "pin_bound": "6,946 external pins: W/E 2,176 each (1,088-bit relay in + out), S 1,482 (low tap halves + SU write ports), N 1,113; <= 6 pins/um needs >= 371 um on W/E, so a 40-60 % outline (~120 x 120 um) cannot carry them. 302.4 x 380.16 (aspect 1.26): W/E 5.85 pins/um, S 5.0, N 3.8; relay W->E 302 um, every tap / packer hop <= ~345 um. Pin-bound, waived (low util costs wire only)."
+ },
+ "pins": {
+  "W": [
+   "sw_lo",
+   "sw_v",
+   "sw_hi",
+   "so_w"
+  ],
+  "E": [
+   "so_e",
+   "se_lo",
+   "se_v",
+   "se_hi"
+  ],
+  "S": [
+   "tw_data_lo",
+   "xw_we",
+   "xw_addr",
+   "ck",
+   "rst_n",
+   "xw_data",
+   "xt_d_lo"
+  ],
+  "N": [
+   "tw_data_hi",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "sid",
+   "cfg_v",
+   "cfg_dir",
+   "cfg_tag",
+   "fault",
+   "xt_v",
+   "xt_a",
+   "xt_bad",
+   "xt_d_hi"
+  ]
+ },
+ "pin_ranges": {
+  "sw_lo": [
+   4.0,
+   96.827
+  ],
+  "sw_v": [
+   96.827,
+   97.851
+  ],
+  "sw_hi": [
+   97.851,
+   190.507
+  ],
+  "so_w": [
+   190.507,
+   376.16
+  ],
+  "so_e": [
+   4.0,
+   189.653
+  ],
+  "se_lo": [
+   189.653,
+   282.48
+  ],
+  "se_v": [
+   282.48,
+   283.504
+  ],
+  "se_hi": [
+   283.504,
+   376.16
+  ],
+  "tw_data_lo": [
+   4.0,
+   105.027
+  ],
+  "xw_we": [
+   105.027,
+   106.606
+  ],
+  "xw_addr": [
+   106.606,
+   144.491
+  ],
+  "ck": [
+   144.491,
+   145.675
+  ],
+  "rst_n": [
+   145.675,
+   146.859
+  ],
+  "xw_data": [
+   146.859,
+   197.373
+  ],
+  "xt_d_lo": [
+   197.373,
+   298.4
+  ],
+  "tw_data_hi": [
+   4.0,
+   135.3
+  ],
+  "tw_we": [
+   135.3,
+   136.839
+  ],
+  "tw_kind": [
+   136.839,
+   138.378
+  ],
+  "tw_addr": [
+   138.378,
+   144.532
+  ],
+  "sid": [
+   144.532,
+   146.071
+  ],
+  "cfg_v": [
+   146.071,
+   147.61
+  ],
+  "cfg_dir": [
+   147.61,
+   149.148
+  ],
+  "cfg_tag": [
+   149.148,
+   156.329
+  ],
+  "fault": [
+   156.329,
+   157.868
+  ],
+  "xt_v": [
+   157.868,
+   159.406
+  ],
+  "xt_a": [
+   159.406,
+   165.561
+  ],
+  "xt_bad": [
+   165.561,
+   167.1
+  ],
+  "xt_d_hi": [
+   167.1,
+   298.4
+  ]
+ },
+ "layer_cap": "M5",
+ "pg_layer": "M5",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  }
+ },
+ "structural_change": "QW-STREAM3 10-20: native-32 successor of qfd_dv_stream_t2_1019 (CLOSED s2/c2-49ac29c7e FAIL the actual mapped native census: 211 drivers > 32, max 69 -- 32-bit select groups at 2 mux pins per bit, raw valid pins, combinational tap predicates, the complete AND driving 69 copies, lane-1 decode): every wide select is a kept 14-bit LEAF (<= 28 pins), pass-side leaves fed by kept ROOT banks at the face (+1 pass / tap edge), own-write completion from 9 independent complete trees on kept mask / open / slot-hit copies (<= 27 leaves each), insertion from the assembly word directly (own path -1 edge vs t2), two decoder copies; yosys 0.68 keep-regs mapped census (14-bit leaves): 39,042 roots, max 30 apart from rst_n (397 drivers at 28, zero role errors), rst_n 725 loads -> 28 landed copies.",
+ "job": {
+  "owner": "Claude:LEAD4-QW/QW-STREAM3",
+  "branch": "claude/qw-stream3-1020",
+  "tag": "s3",
+  "purpose": "Qwen compute MU die Q-DV slice stream face (Q.SAFE.STREAM): relay + static x packer + table/x taps",
+  "record_to": "results/rtl/ref_tile/qfd_dv_stream_t3_1020",
+  "views_to": "physical/ref_tile/qfd_dv_stream_t3_1020/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "rtl/qwen_dv/qfd_dv_stream.sv",
+   "rtl/test/qwen_dv/static_stream/tb_stream_tile.sv",
+   "rtl/test/qwen_dv/static_stream/run_tile.sh",
+   "results/rtl/qw_stream3_1020/bench"
+  ],
+  "benches": [
+   {
+    "name": "stream_tile_m0",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m0 0",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "STREAM_TILE_EQ PASS edges10000",
+    "min_count_regex": "emits(\\d+)",
+    "pass_witness": "results/rtl/qw_stream3_1020/bench/m0.log"
+   },
+   {
+    "name": "stream_tile_m2",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m2 2",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m2.log",
+    "why": "BF16 truncation instead of RNE"
+   },
+   {
+    "name": "stream_tile_m21",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m21 21",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m21.log",
+    "why": "no highest-lane priority"
+   },
+   {
+    "name": "stream_tile_m22",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m22 22",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m22.log",
+    "why": "no duplicate-address fault"
+   },
+   {
+    "name": "stream_tile_m31",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m31 31",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m31.log",
+    "why": "relay leaf 17 selects on the E valid root"
+   },
+   {
+    "name": "stream_tile_m32",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m32 32",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m32.log",
+    "why": "table-tap leaf 5 drops the SID match"
+   },
+   {
+    "name": "stream_tile_m33",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m33 33",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m33.log",
+    "why": "insertion leaf E 9 stuck 0"
+   },
+   {
+    "name": "stream_tile_m34",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m34 34",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m34.log",
+    "why": "tree 3 write-any leaf stuck 0 (its open copy never updates)"
+   },
+   {
+    "name": "stream_tile_m35",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m35 35",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m35.log",
+    "why": "tree 5 mask copy never updates"
+   },
+   {
+    "name": "stream_tile_m37",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m37 37",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m37.log",
+    "why": "eword enable leaf 7 stuck 0 (held x-tap word)"
+   },
+   {
+    "name": "stream_tile_m38",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m38 38",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream3_1020/bench/m38.log",
+    "why": "tag high-half config leaf never enables"
+   }
+  ]
+ }
+}
