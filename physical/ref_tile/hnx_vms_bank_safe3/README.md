@@ -66,3 +66,10 @@ Bind whichever passes the checklist first.
 The other roots passed: clk_n 28-41, clk_s 45-65, clk 0.0. The clk_e sinks sit in the band between the macro rows, about 260 um
 of band to the right. Hypothesis: the obstruction-aware H-tree detours around the SRAM rows unevenly. Gate 3 adds
 -no_obstruction_aware: safe3 with auto clustering, safe3b with safe2's size 16 / dia 30.
+
+## Gate 3 (10-20 07:10, both variants, ot-pve1): CTS FAIL on clk_e again, collected 10-20 by HNX-UNITS/VM
+- safe3 (auto clustering, -no_obstruction_aware): clk_e 85.2 ps TT. safe3b (size 16 / dia 30, -no_obstruction_aware): 89.6 ps.
+  clk 0.0 (insertion 310-317), clk_n 28.3 / 69.4, clk_s 64.7 / 39.6. CTS stops at clk_e, so clk_w was not measured.
+- Classified from the gate3 3_place.odb: 95% of the 1,133 clk_e sinks sit at x >= 348. Timing-driven GPL pulled a 3% tail
+  (rr1 / eg output registers) to x 127..300. The clk_w sinks spread over x 2..459, with 300 of them at x 275..350. This is
+  placement, not CTS options. Successor: hnx_vms_bank_safe4 (face windows before DPL).
