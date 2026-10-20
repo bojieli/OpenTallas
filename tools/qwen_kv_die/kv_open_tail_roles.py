@@ -34,7 +34,11 @@ SFM = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'
 ACTL = 'rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv'
 SFM3 = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv'   # KV-BIND7 10-20: d2ds successor qkd_d2d_static_sfm3 (KV-D2D3)
 SOURCES = {
-    TILES: 'df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97',
+    # KV-BIND9 10-20: re-pinned (was df665451...).  KV-BIND8 5e5d76b87 regenerated the stale tile file from the current
+    # generator: the ctl's boot/lprg/own masters -> their _mu successors (MU=1) and explicit RETIRE_STATIC/STATUS_DELAY/
+    # NATIVE32/PIPE_JOIN params at their RTL defaults (== Codex regeneration_r.json, no port change); no PC / GRP text
+    # changed: ASSERT / GEN_ASSERT below re-check every chain-end string on this file.
+    TILES: '82693c8c3b3ac00d6760a298200917a3169263d04a7fc421f802022d5c8a9b83',
     'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv': '0b2f67cac099b0793473aec31e40a7e76eef2047b2e64ad8c75a8739036edfab',   # KV-BIND4: + KV-PC strap pin regs pc_sr / st_sr (0 cycles)
     'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv': 'f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a',
     'rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv': 'ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503',
@@ -66,7 +70,9 @@ SOURCES = {
 # squares + 345.6x475.2 portrait CTL frame, placement only); no PC / GRP chain-end text changed (GEN_ASSERT).
 # KV-BIND7 10-20 (2): re-pinned (was 00db4b8a...).  Change: merge kv-clkfix-hroot (default-off OT_KV_HROOT_LAND) + default-off
 # OT_KV_HROOT_S32 (stack root children swapped to the safe32 modules); no PC / GRP chain-end text changed (GEN_ASSERT).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '05d79ab22b9714322981ca30338b6bbe6f743792a46dc568308ed2a0502a430c')
+# KV-BIND9 10-20: re-pinned (was 05d79ab2...).  Change: main 6f5ecb234 (opt-in OT_KV_QKH_SAFE32 calendar D_QK via
+# kv_qkh_safe32; default byte-identical); no PC / GRP chain-end text changed (GEN_ASSERT).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '8175373cd511943e59af4dc33c97eb0cfdfcecf446f1dc4d91cc6df4f6189b26')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -144,7 +150,8 @@ ASSERT = {
                 (ACTL, 'qkd_native_attention_static_ctl', ['qkd_native_attention_record_ld', '.rx_payload(rx_payload)']),
                 ('rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv', 'qkd_native_attention_programme',
                  ['.rx_payload(rx_payload)']),
-                (TILES, 'qkd_kvs_attn', ['qkd_native_attention_programme #(.MUT(0), .LAND(1)) u_attn'])],
+                (TILES, 'qkd_kvs_attn', ['qkd_native_attention_programme #(.MUT(0), .LAND(1), .RETIRE_STATIC(0)) u_attn'])],
+                # KV-BIND9 10-20: the regenerated tile names RETIRE_STATIC(0) explicitly (= the RTL default, KV-RETIRE e4eb15c83)
 }
 # KV-BIND7 10-20: z17 DUP face on the sfm3 successor = the same checks with the sfm3 master text
 ASSERT['z17_dup_sfm3'] = [(SFM3, 'qkd_d2d_static_sfm3', ASSERT['z17_dup'][0][2])] + ASSERT['z17_dup'][1:]
@@ -206,6 +213,16 @@ WHY['z17_dup_sfm3'] = WHY['z17_dup'] + ' (sfm3 successor master)'
 # Same roles, same chain ends; the source assertions move to the clone modules (u_esm = qkd_kvpc_s_esm, the kc tap in
 # qkd_kvpc_s_sched; the tap's own o_v <= i_v / o_d <= i_d copy is unchanged, its input is the landed ki_q: +1 hck a tile,
 # kv_static_die.PC_SR_EDGES -- the tail copy stays a registered copy of the chain input).
+# KV-BIND9 10-20: the safe32 stack-root die point (OT_KV_HROOT_S32=1, kv_static_die tile suffix '_hs'): the die's tile file is
+# qkd_kvs_tiles_hroot_ff_k_hs_mu_ba.sv (KV-BIND8 6323c7df; differs from _k_mu_ba only inside qkd_kvs_hroot).  Same roles,
+# same chain ends: the ASSERT strings are checked on this file.
+if __import__('os').environ.get('OT_KV_HROOT_S32', '0') == '1' and __import__('os').environ.get('OT_KV_PC_SRAM', '0') != '1':
+    _T0 = TILES
+    TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hs_mu_ba.sv'
+    SOURCES[TILES] = '6323c7df88060cc83b84f4078667bd696a0b260e76255e2338956c7f7d9e197c'
+    SOURCES.pop(_T0)
+    for _k, _items in ASSERT.items():
+        ASSERT[_k] = [(TILES if r_ == _T0 else r_, m_, list(ss)) for r_, m_, ss in _items]
 if __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
     _T0 = TILES
     TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_ds_rl_sr.sv'
