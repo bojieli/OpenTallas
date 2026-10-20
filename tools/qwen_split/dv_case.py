@@ -414,7 +414,7 @@ def apply_dv(v, m):
     if os.environ.get('OT_SPLIT_DV_NATIVE_ORIGINS'):
         from qwen_split.native_origins import apply as apply_native_origins
         native_plan = json.loads(Path(os.environ['OT_SPLIT_DV_NATIVE_ORIGINS']).read_text())
-        m['native_origin_plan'] = apply_native_origins(m['insts'], native_plan)
+        m['native_origin_plan'] = apply_native_origins(m['insts'], native_plan, source_positions=DI)
         print('NATIVE_ORIGINS applied', len(m['native_origin_plan']['moved']), flush=True)
     M = v.masters(m, 1)
     if tall:

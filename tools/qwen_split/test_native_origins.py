@@ -30,3 +30,11 @@ def test_whole_plan_validated_before_mutating():
     i,p=fixture();other=copy.deepcopy(p['entries'][0]);other['instance']='missing';p['entries'].append(other)
     with pytest.raises(ValueError):apply([i],p)
     assert i.x==0
+
+
+def test_native_origins_survive_later_source_model_reinstantiation():
+    i,p=fixture();source={'phy':dict(x=i.x,y=i.y)}
+    apply([i],p,source_positions=source)
+    # apply_dv later rebuilds retained instances from DI; both representations agree.
+    retained=SimpleNamespace(name='phy',x=source['phy']['x'],y=source['phy']['y'])
+    assert (retained.x,retained.y)==(.216,14.12)
