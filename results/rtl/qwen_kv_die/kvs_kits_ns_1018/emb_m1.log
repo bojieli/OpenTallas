@@ -1,0 +1,7 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=5 out rowtx__emb_tx_v
+MISMATCH t=6 out rowtx__emb_tx_v
+MISMATCH t=7 out rowtx__emb_tx_v
+MISMATCH t=8 out rowtx__emb_tx_v
+MISMATCH t=11 out rowtx__emb_tx_v
+KVS_TILE FAIL tile=emb edges=4000 checks=103922 errors=1957 mut=1 (dropped w_rowtx__emb_tx_v in assign rowtx__emb_tx_v)
