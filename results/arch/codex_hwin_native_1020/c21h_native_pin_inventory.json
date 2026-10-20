@@ -1,0 +1,762 @@
+{
+ "schema": "opentallas.native_pin_boundary_inventory.v1",
+ "scope": "saved c21h GRT ODB d2e4d2ea7d5f5a0d; firstnonBUF/INV endpoint pin, reset included, clock excluded; no functional tied-input intent inferred",
+ "input_bits_with_nonflop_first_sinks": 0,
+ "input_violations": [],
+ "outputs_without_flop_root": 0,
+ "output_violations": [],
+ "over405_pairs": 549,
+ "over405_root_count": 150,
+ "over405_pairs_examples": [
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[10\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     41.267,
+     180.225
+    ],
+    "net": "_05922_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[15\\].g_early.u_payload.g_bank\\[0\\].u_m/wd_in[10]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     536.748,
+     347.244
+    ],
+    "net": "net35412"
+   },
+   "reach_um": 662.5000000000001
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[15\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     64.001,
+     173.205
+    ],
+    "net": "_05917_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[15\\].g_early.u_payload.g_bank\\[0\\].u_m/wd_in[15]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     536.748,
+     347.724
+    ],
+    "net": "net21411"
+   },
+   "reach_um": 647.2660000000001
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[13\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     56.495,
+     189.945
+    ],
+    "net": "_05919_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[15\\].g_early.u_payload.g_bank\\[0\\].u_m/wd_in[13]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     536.748,
+     347.532
+    ],
+    "net": "net21641"
+   },
+   "reach_um": 637.84
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[11\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     54.875,
+     195.615
+    ],
+    "net": "_05921_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[15\\].g_early.u_payload.g_bank\\[0\\].u_m/wd_in[11]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     536.748,
+     347.34
+    ],
+    "net": "net21609"
+   },
+   "reach_um": 633.598
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[14\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     66.485,
+     186.165
+    ],
+    "net": "_05918_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[15\\].g_early.u_payload.g_bank\\[0\\].u_m/wd_in[14]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     536.748,
+     347.628
+    ],
+    "net": "net25585"
+   },
+   "reach_um": 631.726
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[12\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     91.487,
+     197.235
+    ],
+    "net": "_05920_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[15\\].g_early.u_payload.g_bank\\[0\\].u_m/wd_in[12]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     536.748,
+     347.436
+    ],
+    "net": "net35557"
+   },
+   "reach_um": 595.462
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[19\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     43.157,
+     183.195
+    ],
+    "net": "_05913_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[14\\].g_early.u_payload.g_bank\\[1\\].u_m/wd_in[3]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     493.548,
+     44.172
+    ],
+    "net": "net35413"
+   },
+   "reach_um": 589.414
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[19\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     43.157,
+     183.195
+    ],
+    "net": "_05913_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[12\\].g_early.u_payload.g_bank\\[1\\].u_m/wd_in[3]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     450.348,
+     346.572
+    ],
+    "net": "net25584"
+   },
+   "reach_um": 570.568
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[21\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     70.481,
+     170.235
+    ],
+    "net": "_05911_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[12\\].g_early.u_payload.g_bank\\[1\\].u_m/wd_in[5]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     450.348,
+     346.764
+    ],
+    "net": "net35440"
+   },
+   "reach_um": 556.396
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_cfg_relay.g_copy\\[0\\].mw_r\\[11\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     551.945,
+     183.735
+    ],
+    "net": "_09986_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_broadcast\\[1\\].cfg_attr_r\\[1\\]$_DFF_PN0_/D",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     9.442,
+     169.965
+    ],
+    "net": "net20526"
+   },
+   "reach_um": 556.273
+  },
+  {
+   "driver": {
+    "pin": "_67374_/Y",
+    "master": "XNOR2x2_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     545.114,
+     187.515
+    ],
+    "net": "_31370_"
+   },
+   "sink": {
+    "pin": "_71676_/A2",
+    "master": "AO21x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     4.455,
+     174.537
+    ],
+    "net": "net20604"
+   },
+   "reach_um": 553.637
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_cfg_relay.g_copy\\[0\\].mw_r\\[1\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     545.789,
+     188.595
+    ],
+    "net": "_09976_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_broadcast\\[1\\].cfg_addr_r\\[1\\]$_DFF_PN0_/D",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     13.222,
+     169.695
+    ],
+    "net": "net25691"
+   },
+   "reach_um": 551.467
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[16\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     70.805,
+     192.105
+    ],
+    "net": "_05916_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[14\\].g_early.u_payload.g_bank\\[1\\].u_m/wd_in[0]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     475.212,
+     46.956
+    ],
+    "net": "net35484"
+   },
+   "reach_um": 549.556
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[21\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     70.481,
+     170.235
+    ],
+    "net": "_05911_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[14\\].g_early.u_payload.g_bank\\[1\\].u_m/wd_in[5]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     493.548,
+     44.364
+    ],
+    "net": "net25609"
+   },
+   "reach_um": 548.938
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_limit_input.payload_r\\[0\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     547.571,
+     179.145
+    ],
+    "net": "_09223_"
+   },
+   "sink": {
+    "pin": "_67414_/B",
+    "master": "NAND2x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     4.293,
+     173.493
+    ],
+    "net": "net24521"
+   },
+   "reach_um": 548.9300000000001
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_cfg_relay.g_copy\\[0\\].mw_r\\[2\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     547.895,
+     186.165
+    ],
+    "net": "_09977_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_broadcast\\[1\\].cfg_addr_r\\[2\\]$_DFF_PN0_/D",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     16.03,
+     169.155
+    ],
+    "net": "net25640"
+   },
+   "reach_um": 548.875
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_cfg_relay.g_copy\\[0\\].mw_r\\[0\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     545.033,
+     186.975
+    ],
+    "net": "_09975_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_broadcast\\[1\\].cfg_addr_r\\[0\\]$_DFF_PN0_/D",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     14.41,
+     169.155
+    ],
+    "net": "net25639"
+   },
+   "reach_um": 548.443
+  },
+  {
+   "driver": {
+    "pin": "_67366_/Y",
+    "master": "XNOR2x2_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     544.52,
+     182.385
+    ],
+    "net": "_31364_"
+   },
+   "sink": {
+    "pin": "_71670_/A2",
+    "master": "AO21x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     3.969,
+     174.537
+    ],
+    "net": "net20211"
+   },
+   "reach_um": 548.3989999999999
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_limit_input.payload_r\\[1\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     544.763,
+     180.495
+    ],
+    "net": "u_ot_pr_core.mc_limit_word\\[1\\]"
+   },
+   "sink": {
+    "pin": "_71678_/A1",
+    "master": "AO21x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     3.6745,
+     173.2195
+    ],
+    "net": "net24515"
+   },
+   "reach_um": 548.364
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_limit_input.payload_r\\[0\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     547.571,
+     179.145
+    ],
+    "net": "_09223_"
+   },
+   "sink": {
+    "pin": "_69597_/B",
+    "master": "NAND2x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     4.401,
+     183.213
+    ],
+    "net": "net24521"
+   },
+   "reach_um": 547.238
+  },
+  {
+   "driver": {
+    "pin": "_67354_/Y",
+    "master": "XNOR2x2_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     541.928,
+     181.305
+    ],
+    "net": "_31355_"
+   },
+   "sink": {
+    "pin": "_71666_/A2",
+    "master": "AO21x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     3.915,
+     172.683
+    ],
+    "net": "net20216"
+   },
+   "reach_um": 546.635
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[19\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     43.157,
+     183.195
+    ],
+    "net": "_05913_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[15\\].g_early.u_payload.g_bank\\[1\\].u_m/wd_in[3]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     536.748,
+     130.572
+    ],
+    "net": "net21720"
+   },
+   "reach_um": 546.214
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[11\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     54.875,
+     195.615
+    ],
+    "net": "_05921_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[14\\].g_early.u_payload.g_bank\\[0\\].u_m/wd_in[11]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     493.548,
+     88.14
+    ],
+    "net": "net21607"
+   },
+   "reach_um": 546.148
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_limit_input.payload_r\\[1\\]$_DFF_PN0_/QN",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     544.763,
+     180.495
+    ],
+    "net": "u_ot_pr_core.mc_limit_word\\[1\\]"
+   },
+   "sink": {
+    "pin": "_69594_/A1",
+    "master": "AO21x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     3.6745,
+     184.2605
+    ],
+    "net": "net24515"
+   },
+   "reach_um": 544.854
+  },
+  {
+   "driver": {
+    "pin": "_67441_/Y",
+    "master": "XNOR2x2_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     539.498,
+     188.055
+    ],
+    "net": "_31416_"
+   },
+   "sink": {
+    "pin": "_71658_/A2",
+    "master": "AO21x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     8.343,
+     174.537
+    ],
+    "net": "net19763"
+   },
+   "reach_um": 544.6730000000001
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[10\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     41.267,
+     180.225
+    ],
+    "net": "_05922_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[14\\].g_early.u_payload.g_bank\\[0\\].u_m/wd_in[10]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     493.548,
+     88.044
+    ],
+    "net": "net21590"
+   },
+   "reach_um": 544.462
+  },
+  {
+   "driver": {
+    "pin": "_67374_/Y",
+    "master": "XNOR2x2_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     545.114,
+     187.515
+    ],
+    "net": "_31370_"
+   },
+   "sink": {
+    "pin": "_69581_/A2",
+    "master": "AO21x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     4.563,
+     184.563
+    ],
+    "net": "net20604"
+   },
+   "reach_um": 543.503
+  },
+  {
+   "driver": {
+    "pin": "_67340_/Y",
+    "master": "XNOR2x2_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     540.038,
+     185.085
+    ],
+    "net": "_31344_"
+   },
+   "sink": {
+    "pin": "_71664_/A2",
+    "master": "AO21x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     7.101,
+     174.537
+    ],
+    "net": "net19969"
+   },
+   "reach_um": 543.485
+  },
+  {
+   "driver": {
+    "pin": "_67366_/Y",
+    "master": "XNOR2x2_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     544.52,
+     182.385
+    ],
+    "net": "_31364_"
+   },
+   "sink": {
+    "pin": "_69571_/A2",
+    "master": "AO21x1_ASAP7_75t_R",
+    "role": "comb",
+    "signal": "SIGNAL",
+    "xy": [
+     4.293,
+     185.337
+    ],
+    "net": "net20211"
+   },
+   "reach_um": 543.179
+  },
+  {
+   "driver": {
+    "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[3\\]$_DFF_P_/QN",
+    "master": "DFFHQNx1_ASAP7_75t_R",
+    "role": "ff",
+    "signal": "SIGNAL",
+    "xy": [
+     159.095,
+     181.845
+    ],
+    "net": "_05929_"
+   },
+   "sink": {
+    "pin": "u_ot_pr_core.g_event_mem\\[15\\].g_early.u_payload.g_bank\\[0\\].u_m/wd_in[3]",
+    "master": "ot_sram_1r1w_64x16_m1",
+    "role": "macro",
+    "signal": "SIGNAL",
+    "xy": [
+     536.748,
+     346.572
+    ],
+    "net": "net35436"
+   },
+   "reach_um": 542.38
+  }
+ ]
+}

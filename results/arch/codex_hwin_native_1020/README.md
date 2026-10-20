@@ -9,3 +9,9 @@ Binding23:45 pre-gate census applied to exact h mapped1_2_yosys.v using the curr
 Structural successor must preserve per8-bit current_hit logic (module keep in SYNTH_KEEP_MODULES), per-event kept wdata, split lw/gn consumer domains, and four due copies before synthesis/census. COUNT_STEP_SPLIT-only c21i was prepared before final h result and is insufficient to meet this audit. Preserve it as untested scratch, no layout gate.
 
 Script invocation: python3 mapped_census.py --tool textbook_lint.py --netlist 1_2_yosys.v --top TOP [--dump fp_dump.json] --out census.json. This does not establish <=405um reach, registered pin placement, SRAM storage semantics, or functional tie intent. These require their own native/source evidence.
+
+## Actual saved-GRT native endpoint check
+
+Read-only OpenROAD Python extraction reuses extract.py from15729fb15 with paths/output changed only; input ODB mounted read-only. Exact ODB SHA d2e4d2ea7d5f5a0d4be43463409342c6d42ac66ce3655122d938e72f9ae9da87. Native54,591 root pins,58 over32 (agrees mapped);150 nonclock roots/549 individual endpoint pairs exceed405um, worst662.5um shared wdata. Config relay0 mw_r reaches556um, global limit_input payload549um; source geometry estimates in inherited README were insufficient. Boundary firstnonBUF/INV inventory: zero input bits with nonFF first sinks, zero outputs without FF root (clock excluded, reset included).84 real SRAMs. No functional tie intent, fullstage path reach or native PG qualification inferred. Compressed allroots and boundary/reach examples are lossless evidence.
+
+Native-safe j R1 source fixes kept copies/fanout to10 over32, but physical placement constraints/landed distribution still required for remaining long controller wires even if R2 census clears. No gate or submit authorized by this packet alone.

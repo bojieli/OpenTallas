@@ -1,0 +1,895 @@
+{
+  "odb": "/work/results/asap7/opentallas_dsdv_mu_hwin_capture_1019_asap7_ref_gate/base/5_1_grt.odb",
+  "odb_sha256": "d2e4d2ea7d5f5a0d4be43463409342c6d42ac66ce3655122d938e72f9ae9da87",
+  "roots": 54591,
+  "roles": {
+    "comb": 41258,
+    "ff": 11818,
+    "macro": 1344,
+    "input": 171
+  },
+  "max_count_by_role": {
+    "macro": 1,
+    "comb": 126,
+    "ff": 84,
+    "input": 11929
+  },
+  "over32_nonclock": [
+    {
+      "driver": {
+        "pin": "_57100_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          506.855,
+          193.977
+        ],
+        "net": "_24356_"
+      },
+      "count": 125,
+      "reach_um": 140.798
+    },
+    {
+      "driver": {
+        "pin": "_57427_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          501.671,
+          175.617
+        ],
+        "net": "_24614_"
+      },
+      "count": 123,
+      "reach_um": 146.252
+    },
+    {
+      "driver": {
+        "pin": "_57726_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          474.401,
+          189.117
+        ],
+        "net": "_24844_"
+      },
+      "count": 119,
+      "reach_um": 115.65200000000002
+    },
+    {
+      "driver": {
+        "pin": "_58025_/Y",
+        "master": "NOR3x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          438.21,
+          189.117
+        ],
+        "net": "_25074_"
+      },
+      "count": 119,
+      "reach_um": 85.59499999999997
+    },
+    {
+      "driver": {
+        "pin": "_58324_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          418.403,
+          190.197
+        ],
+        "net": "_25304_"
+      },
+      "count": 121,
+      "reach_um": 52.20200000000003
+    },
+    {
+      "driver": {
+        "pin": "_58623_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          387.731,
+          175.077
+        ],
+        "net": "_25534_"
+      },
+      "count": 125,
+      "reach_um": 66.31800000000001
+    },
+    {
+      "driver": {
+        "pin": "_58922_/Y",
+        "master": "NOR3x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          354.564,
+          189.657
+        ],
+        "net": "_25764_"
+      },
+      "count": 124,
+      "reach_um": 55.053
+    },
+    {
+      "driver": {
+        "pin": "_59222_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          324.551,
+          189.423
+        ],
+        "net": "_25995_"
+      },
+      "count": 125,
+      "reach_um": 65.78800000000001
+    },
+    {
+      "driver": {
+        "pin": "_59521_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          258.995,
+          187.263
+        ],
+        "net": "_26225_"
+      },
+      "count": 121,
+      "reach_um": 44.40399999999997
+    },
+    {
+      "driver": {
+        "pin": "_59820_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          222.329,
+          189.423
+        ],
+        "net": "_26455_"
+      },
+      "count": 120,
+      "reach_um": 39.78200000000001
+    },
+    {
+      "driver": {
+        "pin": "_60121_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          193.547,
+          175.077
+        ],
+        "net": "_26687_"
+      },
+      "count": 123,
+      "reach_um": 60.49200000000002
+    },
+    {
+      "driver": {
+        "pin": "_60420_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          177.455,
+          195.057
+        ],
+        "net": "_26917_"
+      },
+      "count": 119,
+      "reach_um": 58.35800000000003
+    },
+    {
+      "driver": {
+        "pin": "_60720_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          134.957,
+          196.137
+        ],
+        "net": "_27148_"
+      },
+      "count": 123,
+      "reach_um": 85.75399999999998
+    },
+    {
+      "driver": {
+        "pin": "_61019_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          126.641,
+          193.203
+        ],
+        "net": "_27378_"
+      },
+      "count": 120,
+      "reach_um": 56.59400000000001
+    },
+    {
+      "driver": {
+        "pin": "_61318_/Y",
+        "master": "NOR3x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          48.719,
+          172.377
+        ],
+        "net": "_27608_"
+      },
+      "count": 120,
+      "reach_um": 89.816
+    },
+    {
+      "driver": {
+        "pin": "_61619_/Y",
+        "master": "AND4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          41.1535,
+          189.405
+        ],
+        "net": "_27839_"
+      },
+      "count": 126,
+      "reach_um": 45.2515
+    },
+    {
+      "driver": {
+        "pin": "_61900_/Y",
+        "master": "AND4x1_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          329.5135,
+          190.215
+        ],
+        "net": "_28055_"
+      },
+      "count": 64,
+      "reach_um": 49.38599999999994
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_control_regions.g_due_central.g_copy\\[0\\].u_due/_84_/Y",
+        "master": "AND5x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          365.834,
+          193.185
+        ],
+        "net": "u_ot_pr_core.event_due\\[0\\]"
+      },
+      "count": 42,
+      "reach_um": 374.98699999999997
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_control_regions.g_due_central.g_copy\\[1\\].u_due/_84_/Y",
+        "master": "AND5x2_ASAP7_75t_R",
+        "role": "comb",
+        "signal": "SIGNAL",
+        "xy": [
+          376.364,
+          192.105
+        ],
+        "net": "u_ot_pr_core.event_due\\[10\\]"
+      },
+      "count": 48,
+      "reach_um": 175.54300000000006
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[0\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          151.157,
+          191.025
+        ],
+        "net": "_05932_"
+      },
+      "count": 33,
+      "reach_um": 525.586
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[10\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          41.267,
+          180.225
+        ],
+        "net": "_05922_"
+      },
+      "count": 33,
+      "reach_um": 662.5000000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[11\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          54.875,
+          195.615
+        ],
+        "net": "_05921_"
+      },
+      "count": 33,
+      "reach_um": 633.598
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[12\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          91.487,
+          197.235
+        ],
+        "net": "_05920_"
+      },
+      "count": 33,
+      "reach_um": 595.462
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[13\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          56.495,
+          189.945
+        ],
+        "net": "_05919_"
+      },
+      "count": 33,
+      "reach_um": 637.84
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[14\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          66.485,
+          186.165
+        ],
+        "net": "_05918_"
+      },
+      "count": 33,
+      "reach_um": 631.726
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[15\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          64.001,
+          173.205
+        ],
+        "net": "_05917_"
+      },
+      "count": 33,
+      "reach_um": 647.2660000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[16\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          70.805,
+          192.105
+        ],
+        "net": "_05916_"
+      },
+      "count": 33,
+      "reach_um": 549.556
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[17\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          165.629,
+          189.675
+        ],
+        "net": "_05915_"
+      },
+      "count": 33,
+      "reach_um": 473.61400000000003
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[18\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          118.757,
+          188.325
+        ],
+        "net": "_05914_"
+      },
+      "count": 33,
+      "reach_um": 519.04
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[19\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          43.157,
+          183.195
+        ],
+        "net": "_05913_"
+      },
+      "count": 33,
+      "reach_um": 589.414
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[1\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          180.317,
+          191.565
+        ],
+        "net": "_05931_"
+      },
+      "count": 33,
+      "reach_um": 511.24600000000004
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[20\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          153.695,
+          190.215
+        ],
+        "net": "_05912_"
+      },
+      "count": 33,
+      "reach_um": 485.8
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[21\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          70.481,
+          170.235
+        ],
+        "net": "_05911_"
+      },
+      "count": 33,
+      "reach_um": 556.396
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[22\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          157.151,
+          190.755
+        ],
+        "net": "_05910_"
+      },
+      "count": 33,
+      "reach_um": 482.692
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[23\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          161.687,
+          189.945
+        ],
+        "net": "_05909_"
+      },
+      "count": 33,
+      "reach_um": 477.25
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[24\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          158.933,
+          189.945
+        ],
+        "net": "_05908_"
+      },
+      "count": 33,
+      "reach_um": 479.908
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[25\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          106.283,
+          179.145
+        ],
+        "net": "_05907_"
+      },
+      "count": 33,
+      "reach_um": 521.662
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[26\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          166.871,
+          188.865
+        ],
+        "net": "_05906_"
+      },
+      "count": 33,
+      "reach_um": 470.69800000000004
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[27\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          139.655,
+          185.625
+        ],
+        "net": "_05905_"
+      },
+      "count": 33,
+      "reach_um": 494.57800000000003
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[28\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          194.357,
+          173.745
+        ],
+        "net": "_05904_"
+      },
+      "count": 33,
+      "reach_um": 429.682
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[29\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          117.839,
+          170.505
+        ],
+        "net": "_05903_"
+      },
+      "count": 33,
+      "reach_um": 509.536
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[2\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          185.069,
+          189.135
+        ],
+        "net": "_05930_"
+      },
+      "count": 33,
+      "reach_um": 509.0200000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[30\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          126.857,
+          169.695
+        ],
+        "net": "_05902_"
+      },
+      "count": 33,
+      "reach_um": 501.424
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[3\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          159.095,
+          181.845
+        ],
+        "net": "_05929_"
+      },
+      "count": 33,
+      "reach_um": 542.38
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[4\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          152.291,
+          193.455
+        ],
+        "net": "_05928_"
+      },
+      "count": 33,
+      "reach_um": 537.6700000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[5\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          165.521,
+          179.685
+        ],
+        "net": "_05927_"
+      },
+      "count": 33,
+      "reach_um": 538.306
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[6\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          193.277,
+          195.345
+        ],
+        "net": "_05926_"
+      },
+      "count": 33,
+      "reach_um": 494.9860000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[7\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          171.947,
+          181.305
+        ],
+        "net": "_05925_"
+      },
+      "count": 33,
+      "reach_um": 530.452
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[8\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          169.517,
+          185.895
+        ],
+        "net": "_05924_"
+      },
+      "count": 33,
+      "reach_um": 528.388
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.g_event_mem\\[0\\].g_early.u_payload.wdata\\[9\\]$_DFF_P_/QN",
+        "master": "DFFHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          164.117,
+          188.865
+        ],
+        "net": "_05923_"
+      },
+      "count": 33,
+      "reach_um": 530.9140000000001
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.gn\\[0\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          374.609,
+          175.905
+        ],
+        "net": "_00762_"
+      },
+      "count": 34,
+      "reach_um": 374.57349999999997
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.gn\\[4\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          376.715,
+          176.445
+        ],
+        "net": "_00766_"
+      },
+      "count": 33,
+      "reach_um": 178.1215
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[0\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          507.935,
+          175.905
+        ],
+        "net": "u_ot_pr_core.nw\\[0\\]"
+      },
+      "count": 56,
+      "reach_um": 182.072
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[1\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          451.721,
+          176.175
+        ],
+        "net": "_03529_"
+      },
+      "count": 84,
+      "reach_um": 125.75
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[2\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          378.065,
+          174.555
+        ],
+        "net": "_03530_"
+      },
+      "count": 48,
+      "reach_um": 166.98399999999998
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[3\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          379.415,
+          174.825
+        ],
+        "net": "_03531_"
+      },
+      "count": 61,
+      "reach_um": 164.82999999999996
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[4\\]$_DFFE_PN0P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          508.745,
+          174.285
+        ],
+        "net": "_03532_"
+      },
+      "count": 60,
+      "reach_um": 190.01
+    },
+    {
+      "driver": {
+        "pin": "u_ot_pr_core.lw\\[5\\]$_DFFE_PN1P_/QN",
+        "master": "DFFASRHQNx1_ASAP7_75t_R",
+        "role": "ff",
+        "signal": "SIGNAL",
+        "xy": [
+          468.731,
+          175.635
+        ],
+        "net": "_01855_"
+      },
+      "count": 61,
+      "reach_um": 146.88599999999997
+    }
+  ],
+  "over405_nonclock": 150,
+  "macros": 84,
+  "macro_masters": {
+    "ot_sram_1r1w_64x16_m1": 84
+  },
+  "scope": "Exact saved GRT ODB, uncapped logical sink pins through BUF/INV; Manhattan endpoint reach is a geometric lower bound, not stage path or routed wire length; macro contacts report MPin objects, not detailed escape/PG connectivity qualification"
+}
