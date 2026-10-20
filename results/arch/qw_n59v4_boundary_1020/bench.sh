@@ -9,6 +9,8 @@ export N59_RECV=1 SPL_SOFF=3 SPL_BOFF=0 SPL_ROFF=4 N59_RECV_MUT=0 SPLIT_ONLY=rnd
 expect=0
 case "$case" in
  base_rnd) N59_RECV=0;SPL_ROFF=3;;
+ base_mu) N59_RECV=0;SPL_ROFF=3;SPLIT_ONLY=mu_ovl_positive;;
+ base_dv) N59_RECV=0;SPL_ROFF=3;SPLIT_ONLY=dv_positive;;
  recv_rnd) :;;
  recv_mu) SPLIT_ONLY=mu_ovl_positive;;
  recv_dv) SPLIT_ONLY=dv_positive;;
