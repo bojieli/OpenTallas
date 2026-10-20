@@ -32,6 +32,7 @@ ROOT = Path(__file__).resolve().parents[2]
 TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv'
 SFM = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'
 ACTL = 'rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv'
+SFM3 = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv'   # KV-BIND7 10-20: d2ds successor qkd_d2d_static_sfm3 (KV-D2D3)
 SOURCES = {
     TILES: 'df66545140a103b45170c9132cf19e521945c61c8fc649e836df4bb9c49e6e97',
     'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv': '0b2f67cac099b0793473aec31e40a7e76eef2047b2e64ad8c75a8739036edfab',   # KV-BIND4: + KV-PC strap pin regs pc_sr / st_sr (0 cycles)
@@ -48,6 +49,7 @@ SOURCES = {
     # recomputes the Z17 reserved-zero predicates from rx_payload (z17_dup)
     SFM: 'e17a16804b4125e5c171dc92e78366edb3d73a933195b3c0a4b619477ffb50d3',
     ACTL: 'f60cafbb806ceff8b24b84a1c4bc10f97343ac60afcfcfed17236e6690e5cc9e',
+    SFM3: 'd60d50cc5bdc8495ccb001beb89b20ad6960dfadc6457d8cd3b2afa31fa71db0',   # KV-BIND7 10-20 (claude/kv-d2d3-1020 3802573e7)
 }
 # the generator is a tool of the GEN7 tree (not of the binder's tools dir): pinned separately, checked by this prover only
 # KV-BIND3 10-19: re-pinned (was a7063e6b..., 60ff34e3d).  Changes since: default-off OT_KV_GRP_PRIVATE0 / OT_KV_DCAL_FLT
@@ -62,7 +64,9 @@ SOURCES = {
 # dcal dob/lay + d2d_kv rcy -> host odc/odl/odr); no PC / GRP chain-end text changed (GEN_ASSERT).
 # KV-BIND7 10-20: re-pinned (was 79939e3d...).  Change: default-off OT_KV_NATIVE_SLOTS (Codex 247c6bc58: 388.8 group
 # squares + 345.6x475.2 portrait CTL frame, placement only); no PC / GRP chain-end text changed (GEN_ASSERT).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '00db4b8a2a5980a96d5a555ecc0001576b5272be7899a0fbfe15de578125dbc8')
+# KV-BIND7 10-20 (2): re-pinned (was 00db4b8a...).  Change: merge kv-clkfix-hroot (default-off OT_KV_HROOT_LAND) + default-off
+# OT_KV_HROOT_S32 (stack root children swapped to the safe32 modules); no PC / GRP chain-end text changed (GEN_ASSERT).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '05d79ab22b9714322981ca30338b6bbe6f743792a46dc568308ed2a0502a430c')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -115,6 +119,19 @@ ASSERT = {
                     ('rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv', 'qkd_seq_core_static_s',
                      ['if (kvv != xk) f_arr <= 1;', "if (ktg[10:8] != 3'b010 || ktg[2:0] != ktag(kn_arr)) f_tag <= 1;",
                       'if (qv != q_exp) f_q <= 1;'])],
+    # KV-BIND7 10-20: the same DUP faces on the sfm3 successor (same role text, module names suffixed _sfm3)
+    'd2d_dup_sfm3': [('rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv', 'ot_qwen_d2d_kvn_rx',
+                      ['word_slot <= rx_slot; word_index <= rx_beat[1:0];',
+                       "if (rx_event != rx_slot || (rx_event && bad)) fault <= 1'b1;"]),
+                     (SFM3, 'qkd_d2d_static_core_sfm3',
+                      ['assign att_rx_v = rxe[0]; assign att_rx_slot = rxs[0];', 'assign fault = endf | s_f | kvn_f;',
+                       'ot_qwen_d2d_kvn_rx u_kvn']),
+                     (SFM3, 'ot_qwen_d2d_static_end_sfm3',
+                      ['rx_slot[i] <= r1v && r1p == i;', 'rx_event[k] = lrx_v && r2p == k;']),
+                     (SFM3, 'qkd_d2d_static_sfm3', ['assign att_rx_slot = PR ? q_att_rx_slot : c_att_rx_slot;']),
+                     ('rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv', 'qkd_seq_core_static_s',
+                      ['if (kvv != xk) f_arr <= 1;', "if (ktg[10:8] != 3'b010 || ktg[2:0] != ktag(kn_arr)) f_tag <= 1;",
+                       'if (qv != q_exp) f_q <= 1;'])],
     # rx_zero17 = registered OR17 of rx_payload on the SAME edge as the rx_payload pin register; the die's attention
     # tile reads rx_payload and its landed codec (record_ld) evaluates the same reserved-zero tests on it
     'z17_dup': [(SFM, 'qkd_d2d_static_sfm',
@@ -129,6 +146,8 @@ ASSERT = {
                  ['.rx_payload(rx_payload)']),
                 (TILES, 'qkd_kvs_attn', ['qkd_native_attention_programme #(.MUT(0), .LAND(1)) u_attn'])],
 }
+# KV-BIND7 10-20: z17 DUP face on the sfm3 successor = the same checks with the sfm3 master text
+ASSERT['z17_dup_sfm3'] = [(SFM3, 'qkd_d2d_static_sfm3', ASSERT['z17_dup'][0][2])] + ASSERT['z17_dup'][1:]
 GEN_ASSERT = {
     'pc_dup': ["            if BOOT:      # note s5.6", "                continue\n            bus(f'hes_{st}_{k}'",
                "bus(f'ler_{st}_{k}', 'kv_oneway', 261, [(pc, 'pc__er'), (s, 'ctrl_er')])"],
@@ -137,7 +156,7 @@ GEN_ASSERT = {
     'odn_tail': ["peer=ch[j + 1] if j + 1 < len(ch) else None,"],
     'kg_dup': ["kg['consumers'] = [c for c in kg['consumers'] if c[0] not in ects]", "union.append(('KG',))"],
     'tok_dup': ["(('d2d', 'engine_result_token', 0, 18), ('tok', ('kvs_emb', 'px_tok'), 18, 0, 18, None)),"],
-    'hsl_tail': [], 'd2d_dup': [], 'd2d_dup_sfm': [], 'z17_dup': [],
+    'hsl_tail': [], 'd2d_dup': [], 'd2d_dup_sfm': [], 'z17_dup': [], 'd2d_dup_sfm3': [], 'z17_dup_sfm3': [],
 }
 # (master, port) -> (role, kind)
 ROLES = {
@@ -151,6 +170,8 @@ ROLES = {
     **{('qkd_d2d_static', p): ('d2d_dup', 'DUP') for p in ('att_rx_slot', 'kvn_word_slot', 'kvn_word_index')},
     **{('qkd_d2d_static_sfm', p): ('d2d_dup_sfm', 'DUP') for p in ('att_rx_slot', 'kvn_word_slot', 'kvn_word_index')},
     ('qkd_d2d_static_sfm', 'rx_zero17'): ('z17_dup', 'DUP'),
+    **{('qkd_d2d_static_sfm3', p): ('d2d_dup_sfm3', 'DUP') for p in ('att_rx_slot', 'kvn_word_slot', 'kvn_word_index')},
+    ('qkd_d2d_static_sfm3', 'rx_zero17'): ('z17_dup_sfm3', 'DUP'),
 }
 WHY = {
     'pc_dup': 'BOOT die: er/completion are consumed in-tile by qkd_static_kv_pc_es_merge_b (embedding endpoint er_e, '
@@ -177,6 +198,8 @@ WHY = {
                'qkd_native_attention_record_ld evaluates the same reserved-zero tests (data[511:19]==0 / data[511:5]==0); '
                'the face is consumed only by the private Z17 receiver (codex/receiver-z17-private-1019, not hardened)',
 }
+WHY['d2d_dup_sfm3'] = WHY['d2d_dup_sfm'].replace('qkd_d2d_static_sfm (r7w_sfm2)', 'qkd_d2d_static_sfm3 (r7w_sfm3, KV-D2D3)')
+WHY['z17_dup_sfm3'] = WHY['z17_dup'] + ' (sfm3 successor master)'
 
 # KV-BIND4 10-19: the sr6 PC die point (OT_KV_PC_SRAM=1, with OT_KV_DOMSPLIT=1 / OT_KV_PC_RLAND=1): the die tile file is
 # qkd_kvs_tiles_hroot_ff_k_mu_ba_ds_rl_sr.sv and the PC tiles' u_pc is the SRAM clone chain (qkd_kvpc_sram_clones_1019.sv).
@@ -332,7 +355,7 @@ def derive(die_v, root=ROOT, existing=None, pins=None):
             ok = bool(rows) and all(c.get(port_x) and traces_to(P.expr_bits(c[port_x], nets), 'qkd_kvs_emb', src)
                                     for _, _, c in rows)
             why = 'x input does not trace through relays to qkd_kvs_emb.' + src
-        elif role == 'z17_dup':
+        elif role in ('z17_dup', 'z17_dup_sfm3'):
             # the duplicated source word itself must leave the d2d end and be read on the die
             ok = bool(rows) and all(connected_read(c, 'rx_payload') for _, _, c in rows)
             why = 'd2d rx_payload is open / unread on the die: rx_zero17 is not a duplicate of a consumed word'

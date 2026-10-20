@@ -28,7 +28,7 @@ sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 
 DEFAULT_KIT = 'qkd_d2d_static_r7v'
 TOP = 'qkd_d2d_static'
-TOPS = ('qkd_d2d_static', 'qkd_d2d_static_sfm')
+TOPS = ('qkd_d2d_static', 'qkd_d2d_static_sfm', 'qkd_d2d_static_sfm3')   # KV-BIND7 10-20: + sfm3 (KV-D2D3)
 
 
 def select(mode, kit=DEFAULT_KIT, root=ROOT, die_txdp=None, die_ntx=None):

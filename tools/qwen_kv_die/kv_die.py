@@ -1021,6 +1021,12 @@ def _ks_ntx():
 # kv_open_tail_roles z17_dup until that receiver is hardened).  The kit's hardened params are bound exactly.
 D2DS_SFM_FILE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'
 D2DS_SFM_PARAMS = ('SAFE_RC', 'SRAMV', 'FEG')
+# KV-BIND7 10-20 (KV-D2D3): the native-census successor qkd_d2d_static_sfm3 (ot_qwen_d2d_sfm3.sv; same ports / pins /
+# outline as sfm2 incl. rx_zero17, 0 added cycles, TXDP 0x03030416) binds the same way when the selected kit's top is
+# sfm3 (kits qkd_d2d_static_r7w_sfm3 / ovl_sfm3; OT_KV_D2DS_KIT=qkd_d2d_static_r7w_sfm3).  The bound r7w_sfm2 view FAILS
+# the mandatory native census (72 roots > 32, max 152); sfm3 census PASS 32.
+D2DS_SFM_TOPS = {'qkd_d2d_static_sfm': D2DS_SFM_FILE,
+                 'qkd_d2d_static_sfm3': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv'}
 
 
 def d2ds_kit():
@@ -1032,13 +1038,13 @@ def d2ds_kit():
     if not sp.is_file():
         return 'qkd_d2d_static', D2DS_FILE, {}
     spec = json.loads(sp.read_text())
-    if spec.get('top') != 'qkd_d2d_static_sfm':
+    if spec.get('top') not in D2DS_SFM_TOPS:
         return 'qkd_d2d_static', D2DS_FILE, {}
     pr = spec.get('params', {})
     miss = [k for k in D2DS_SFM_PARAMS if k not in pr]
     if miss:
         raise SystemExit(f'kv_die: d2ds kit {kit} (sfm) lacks hardened params {miss}')
-    return 'qkd_d2d_static_sfm', D2DS_SFM_FILE, {k: int(pr[k]) for k in D2DS_SFM_PARAMS}
+    return spec['top'], D2DS_SFM_TOPS[spec['top']], {k: int(pr[k]) for k in D2DS_SFM_PARAMS}
 
 
 def d2ds_binding():
