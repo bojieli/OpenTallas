@@ -12,11 +12,12 @@ from pathlib import Path
 
 GATES={'$_AND_':'A & B','$_OR_':'A | B','$_XOR_':'A ^ B','$_XNOR_':'~(A ^ B)',
        '$_NOT_':'~A','$_MUX_':'S ? B : A','$_NAND_':'~(A & B)','$_NOR_':'~(A | B)',
-       '$_ANDNOT_':'A & ~B','$_ORNOT_':'A | ~B'}
+       '$_ANDNOT_':'A & ~B','$_ORNOT_':'A | ~B',
+       '$_AO21_':'(A & B) | X','$_OA21_':'(A | B) & X'}
 FFS={'$_DFF_P_','$_DFF_PN0_','$_DFF_PP0_','$_DFF_PN1_','$_DFF_PP1_',
      '$_SDFF_PN0_','$_SDFF_PP0_','$_SDFF_PN1_','$_SDFF_PP1_'}
 
-def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False):
+def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=False,retain_mux=False,shared_helpers=False,retain_bits=(),retain_all_comb=False,fuse_ao=False):
  if not 1 <= load_cap <= 32:raise ValueError("load_cap must be1..32")
  design=json.loads(raw);m=copy.deepcopy(design['modules'][top]);cells=m['cells'];ports=m['ports']
  nextbit=max(b for c in cells.values() for bs in c['connections'].values() for b in bs if isinstance(b,int))+1
@@ -58,6 +59,34 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
  removed=len(cells)-len(live);cells={n:c for n,c in cells.items() if n in live}
  unused_inputs=[n for n,p in ports.items() if p['direction']=='input' and not any(b in seen for b in p['bits'])]
  for n in unused_inputs:del ports[n]
+ pre_fusion_cells=len(cells);ao_fusions=0
+ if fuse_ao:
+  # One-consumer boolean pairs become one retained complex operator. This
+  # permits native AO21/OA21 mapping without exposing a wide shared cone.
+  while True:
+   producer={};users=Counter()
+   for n,c in cells.items():
+    for p,bs in c['connections'].items():
+     for b in bs:
+      if c['port_directions'][p]=='output':producer[b]=n
+      else:users[b]+=1
+   for p in ports.values():
+    if p['direction']=='output':users.update(p['bits'])
+   fused=False
+   for n,c in list(cells.items()):
+    if n not in cells:continue
+    c=cells[n]
+    if c['type'] not in ('$_OR_','$_AND_'):continue
+    inner_type='$_AND_' if c['type']=='$_OR_' else '$_OR_'
+    for pin,other in (('A','B'),('B','A')):
+     bit=c['connections'][pin][0];sn=producer.get(bit)
+     if users[bit]!=1 or sn is None or sn not in cells or cells[sn]['type']!=inner_type:continue
+     sub=cells[sn]
+     cells[n]={'type':'$_AO21_' if c['type']=='$_OR_' else '$_OA21_',
+      'connections':{'A':sub['connections']['A'],'B':sub['connections']['B'],'X':c['connections'][other],'Y':c['connections']['Y']},
+      'port_directions':{'A':'input','B':'input','X':'input','Y':'output'}}
+     del cells[sn];ao_fusions+=1;fused=True;break
+   if not fused:break
  delay_chains=[];ring_groups=[]
  if collapse:
   users=defaultdict(list)
@@ -174,7 +203,7 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
   retain_driver=any(b in retain_bits for p,bs in c['connections'].items() if c['port_directions'][p]=='output' for b in bs)
   if typ in GATES and '__bounded_' not in n and not (retain_mux and typ=='$_MUX_') and not retain_driver and not retain_all_comb:
    expr=GATES[typ]
-   for p in ('A','B','S'):
+   for p in ('A','B','S','X'):
     if p in c['connections']:expr=expr.replace(p,'('+bus(c['connections'][p])+')')
    lines.append('assign '+bus(c['connections']['Y'])+' = '+expr+';');continue
   used.add(typ);mod='qfd_bmath_'+typ.strip('$_').lower()
@@ -195,9 +224,9 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    event='posedge C' if typ.startswith('$_SDFF') else f'posedge C or {edge} R'
    h.append(f"always @({event}) if({test}) Q<=1'b{val};else Q<=D;")
   h.append('endmodule');helpers.append('\n'.join(h))
- return '\n'.join(lines)+'\n',helpers,dict(original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,holding_chain_count=len(delay_chains),holding_ring_groups=ring_groups,actual_final_rings=[{'W':c['width'],'D':c['depth']} for c in cells.values() if c['type']=='$_QFD_RING_'],ring_input_load_contract='D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch',retention='FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping',transparent_inverters=transparent_inverters,retain_mux=retain_mux,shared_helpers=shared_helpers,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,internal_load_cap=load_cap,input_load_cap=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
+ return '\n'.join(lines)+'\n',helpers,dict(source_synth_cells_before_fusion=pre_fusion_cells,fused_ao_pairs=ao_fusions,original_cells=original,original_by_type=original_types,final_by_type=dict(Counter(c['type'] for c in cells.values())),unconsumed_cells_removed=removed,dropped_outputs=list(drop),unused_inputs_removed=unused_inputs,holding_chain_count=len(delay_chains),holding_ring_groups=ring_groups,actual_final_rings=[{'W':c['width'],'D':c['depth']} for c in cells.values() if c['type']=='$_QFD_RING_'],ring_input_load_contract='D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch',retention='FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping',transparent_inverters=transparent_inverters,retain_mux=retain_mux,shared_helpers=shared_helpers,final_cells=len(cells),added_by_type=dict(added),passes=iteration,input_sha256=hashlib.sha256(raw).hexdigest(),max_data_reset_loads=32,internal_load_cap=load_cap,input_load_cap=32,clock_only_excluded=True,output_boundary_assumptions={'valid_rep_each':16,'valid_out':5,'data_error_each':1},qualification='STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required')
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');a=p.parse_args()
- s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
+ p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--name',required=True);p.add_argument('--out',required=True);p.add_argument('--helpers',required=True);p.add_argument('--record',required=True);p.add_argument('--drop-output',action='append',default=[]);p.add_argument('--collapse-delays',action='store_true');p.add_argument('--load-cap',type=int,default=32);p.add_argument('--transparent-inverters',action='store_true');p.add_argument('--retain-mux',action='store_true');p.add_argument('--shared-helpers',action='store_true');p.add_argument('--retain-bit',type=int,action='append',default=[]);p.add_argument('--retain-all-comb',action='store_true');p.add_argument('--fuse-ao',action='store_true');a=p.parse_args()
+ s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
 if __name__=='__main__':main()
