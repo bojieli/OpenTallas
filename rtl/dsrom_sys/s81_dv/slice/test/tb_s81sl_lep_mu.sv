@@ -22,7 +22,8 @@
 //          +define+OT_S81SL_LEP_MUT_LANDCUT (RX side: dies A / B).
 // Verdict: "PASS lep_mu ..." or "FAIL lep_mu ...".
 module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, parameter integer R = 420,
-                         parameter integer SEED = 1, parameter integer WAIT = 8000);
+                         parameter integer RXSRAM = 0, parameter integer SEED = 1, parameter integer WAIT = 8000,
+                         parameter integer INPIPE = 0);   // LEPCAP: dies A / B with IN_PIPE (A/B ro + mu_c +1 edge)
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
     integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
@@ -34,7 +35,7 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     wire [3:0] plv, plr, piv, pir; wire [4*553-1:0] pld, pid; wire [11:0] pf; wire [3:0] prxv;
     wire [4*512-1:0] ptx, prx; wire [7:0] pst; wire [4*513-1:0] ppa; wire [3:0] pta;
     // MU-S81/KIT: die P = the hardened copy A/B master ot_s81sl_lep_mu_ab (kit s81sl_lepmu; = lep_mu HOST_EN 0 AB_EN 1)
-    ot_s81sl_lep_mu_ab #(.SRAM(1), .NB(NB)) lp (.clk(clk), .rst_n(rst_n), .ro(p_ro), .ri(p_ri),
+    ot_s81sl_lep_mu_ab #(.RX_SRAM(RXSRAM), .SRAM(1), .NB(NB)) lp (.clk(clk), .rst_n(rst_n), .ro(p_ro), .ri(p_ri),
         .lo0_v(plv[0]), .lo0_r(plr[0]), .lo0_d(pld[0 +: 553]), .lo1_v(plv[1]), .lo1_r(plr[1]), .lo1_d(pld[553 +: 553]),
         .li0_v(piv[0]), .li0_r(pir[0]), .li0_d(pid[0 +: 553]), .li1_v(piv[1]), .li1_r(pir[1]), .li1_d(pid[553 +: 553]),
         .rxv(prxv[1:0]), .sl_f(1'b0), .l0_f(pf[2:0]), .l1_f(pf[5:3]),
@@ -53,7 +54,7 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     `define TB_RXDIE(X, LP) \
     wire [1:0] X``lv, X``lr, X``iv, X``ir, X``rxv; wire [2*553-1:0] X``ld, X``id; wire [5:0] X``fl; \
     wire [1023:0] X``tx, X``rx; wire [3:0] X``st; wire X``mwv, X``mrv, X``mf; wire [1103:0] X``mwd, X``mrd; \
-    ot_s81sl_lep_mu_a #(.SRAM(1), .NB(NB)) l``X (.clk(clk), .rst_n(rst_n), .ro(X``_ro), .ri(X``_ri), \
+    ot_s81sl_lep_mu_a #(.RX_SRAM(RXSRAM), .SRAM(1), .NB(NB), .IN_PIPE(INPIPE)) l``X (.clk(clk), .rst_n(rst_n), .ro(X``_ro), .ri(X``_ri), \
         .lo0_v(X``lv[0]), .lo0_r(X``lr[0]), .lo0_d(X``ld[0 +: 553]), .lo1_v(X``lv[1]), .lo1_r(X``lr[1]), .lo1_d(X``ld[553 +: 553]), \
         .li0_v(X``iv[0]), .li0_r(X``ir[0]), .li0_d(X``id[0 +: 553]), .li1_v(X``iv[1]), .li1_r(X``ir[1]), .li1_d(X``id[553 +: 553]), \
         .rxv(X``rxv), .sl_f(1'b0), .l0_f(X``fl[2:0]), .l1_f(X``fl[5:3]), \
@@ -231,7 +232,11 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
         k = 0;
         while (k < 40) begin
             @(negedge clk); p_ro = 0; rp_ro = 0;
-            if (($urandom % 100) < 50) begin bt = xb(0); p_ro = bt; rp_ro = bt; eqa[na] = bt; eta[na] = 0; na = na + 1; k = k + 1; end
+            if (($urandom % 100) < 50) begin
+                bt = xb(0);
+                if (k % 2 == 1) begin bt[3:1] = 3'd3; bt[1103:1045] = {$urandom, $urandom}; end  // non-XB/XQ ring beat using the high bits: must pass bit-exact
+                p_ro = bt; rp_ro = bt; eqa[na] = bt; eta[na] = 0; na = na + 1; k = k + 1;
+            end
         end
         @(negedge clk); p_ro = 0; rp_ro = 0;
         T0 = cyc + 200;
