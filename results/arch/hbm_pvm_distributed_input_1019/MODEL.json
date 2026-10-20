@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.pvm.distributed_input_model.v1",
+  "source": "294ac70ddf02f3c897e2eb682bd42e003d0342ac",
+  "scope": "private source successor, no adoption",
+  "problem": {
+    "captured_ev_logical_terminal_fanout": 1587,
+    "old_census_complete": false,
+    "old_SAFE2_keeps_ev_tag_single": true
+  },
+  "architecture": {
+    "input_edges_old": 1,
+    "input_edges_new": 2,
+    "output_edges": 1,
+    "extra_edges_per_invocation": 1,
+    "barrel_entry_phase": "core reset release retimed by same one edge; must prove exact source first-use and bp alignment",
+    "ev_first_stage_copies": 4,
+    "ev_final_stage_copies": 97,
+    "ev_final_first_stage_distribution": [
+      25,
+      24,
+      24,
+      24
+    ],
+    "ev_terminal_groups": {
+      "operand_16bit_cohorts": 32,
+      "stack_write_8bit_cohorts": 64,
+      "control": 1
+    },
+    "tag_first_final_copies": 32,
+    "tag_first_first_stage_copies": 1,
+    "sum_bits": 512,
+    "tag_bits": 16,
+    "request_bits": 11,
+    "normal_input_bits_without_ev": 539,
+    "normal_pipeline_bits": 1078,
+    "extra_ev_and_first_metadata_bits": 134,
+    "input_state_total_bits": 1212,
+    "state_old_input_bits": 540,
+    "state_delta_bits": 672,
+    "output_state_delta_bits": 0,
+    "notes": "Counts exclude reset distribution added below; storage is fixed-age per-field capture, not indexed coherent memory. No adder or stack recurrence edge changes."
+  },
+  "unresolved": [
+    "native control cohort may exceed32 and requires splitting using real source equations",
+    "all roles including combinational/reset/ties/topinputs need mapped transparent census",
+    "exact release phase, first-use, reassertion and stopped-clock proof",
+    "reset ancestry and actual total-state reconciliation",
+    "real actual path reach PG complete binding/conductors/vias/short qualification",
+    "current 64x512 source own timing/contact authority"
+  ],
+  "physical_plan": {
+    "macro_count": 1,
+    "macro_family": "64x512 p192_mir",
+    "macro_lattice_um": 43.2,
+    "macro_contact_pitch_um": 0.192,
+    "keep_s4a_geometry_for_sizing_only": true,
+    "source_area_increment_um2_estimate": 48.9888,
+    "area_estimate_method": "672 extra FF *0.0729um2 excludes reset/capture logic, must replace by actual synthesis",
+    "native_engine_started": false
+  },
+  "throughput": {
+    "sustained_input_items_per_cycle": 1,
+    "compute_lanes": 16,
+    "per_lane_bits": 32,
+    "communication_input_payload_bits_per_cycle": 512,
+    "stack_ports": {
+      "read_bits_per_cycle": 512,
+      "write_bits_per_cycle": 512
+    },
+    "adder_latency": 7,
+    "barrel_revisit_edges": 8,
+    "extra_pipeline_edge_outside_recurrence": true,
+    "system_rate_credit": null
+  }
+}
