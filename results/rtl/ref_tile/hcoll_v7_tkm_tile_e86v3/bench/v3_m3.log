@@ -1,0 +1,10 @@
+MISMATCH t=360000 ovf 0/0 busy 1/1 tau 0000000000000000000000/000d03ff51078000000000 up_eq 1 ovfb_eq 1
+MISMATCH t=370000 ovf 0/0 busy 1/1 tau 0000000000000000000000/000d03ff51078000000000 up_eq 1 ovfb_eq 0
+MISMATCH t=380000 ovf 0/0 busy 1/1 tau 135001ca976ff0eb287678/135039ff976ff0eb287678 up_eq 1 ovfb_eq 0
+MISMATCH t=400000 ovf 0/0 busy 1/1 tau 0000000000000000000000/0000000000000000000000 up_eq 1 ovfb_eq 0
+MISMATCH t=430000 ovf 0/0 busy 1/1 tau 135001ca976ff0eb287678/135039ff976ff0eb287678 up_eq 1 ovfb_eq 1
+TKM_RG_CREP MUT3 cycles4000 ins2139 ovf2034 up173 tau1995 errors1252 FAIL
+- rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm_tile_rg_crep.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 71.380 s; speed 562.059 ns/s
+- Verilator: cpu 71.166 s on 1 threads; allocated 4870 MB
