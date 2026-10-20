@@ -187,7 +187,8 @@ module ot_s81sl_lep_core #(
     localparam integer PAYLOAD_RSTBASE=CTRL_RSTBASE+NL+8+PUSH_GROUPS+NL;
     localparam integer NRX_RST_OLD=NRX_MEMRST+NRX_OUTRST+NTX_MEMRST+NFRAME_RST+NHOST_RST+NCTRL_RST;
     localparam integer NATIVE32_RSTBASE=4+NRX_RST_OLD;
-    localparam integer NRX_RST=NRX_RST_OLD+((SAFE_CONTROL && HOST_EN!=0)?4:0);
+    localparam integer NATIVE32_RXRSTBASE=NATIVE32_RSTBASE+((SAFE_CONTROL && HOST_EN!=0)?4:0);
+    localparam integer NRX_RST=NRX_RST_OLD+((SAFE_CONTROL)?NL+((HOST_EN!=0)?4:0):0);
     wire [3+NRX_RST:0] rr;
     generate if(SAFE_FIFO) begin:g_reset_balanced
       ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
@@ -540,6 +541,7 @@ module ot_s81sl_lep_core #(
     wire [3:0] li_v = {li3_v, li2_v, li1_v, li0_v}; wire [4*(H+1)-1:0] li_d = {li3_d, li2_d, li1_d, li0_d};
     wire [NL-1:0] rne, rxf; wire [NL*(H+1)-1:0] rhd; wire [NL-1:0] lir;
     wire [NL*4-1:0] ring_meta_regions;
+    wire [NL-1:0] rne_addr,rne_meta,rne_return;
     wire [NL-1:0] rhostx,rksx;
     wire [NL-1:0] rnex, rhkx, rringx, rtagx;
     wire [NL-1:0] rhk;                                 // MU_EN 1: pre-decoded land bit of each lane's head row
@@ -586,6 +588,16 @@ module ot_s81sl_lep_core #(
                 wp <= wp_nx; rp <= rp_nx; n <= n_nx; nz <= n_nx != 0;
                 for (k = 0; k < DR; k = k + 1) we[k] <= (wp_nx == AR'(k)) && (n_nx != (AR+1)'(DR));
             end
+        if(SAFE_CONTROL) begin:g_nonempty_regions
+          (* keep=1 *) reg addr_nz,meta_nz,return_nz;
+          wire reset_c=rr[NATIVE32_RXRSTBASE+t];
+          always @(posedge clk or negedge reset_c)
+            if(!reset_c) begin addr_nz<=0;meta_nz<=0;return_nz<=0;end
+            else begin addr_nz<=n_nx!=0;meta_nz<=n_nx!=0;return_nz<=n_nx!=0;end
+          assign rne_addr[t]=addr_nz;assign rne_meta[t]=meta_nz;assign rne_return[t]=return_nz;
+        end else begin:g_nonempty_shared
+          assign rne_addr[t]=rne[t];assign rne_meta[t]=rne[t];assign rne_return[t]=rne[t];
+        end
         always @(posedge clk) dq<=li_d[t*(H+1)+:H+1];
         if(!SAFE_FIFO) begin:g_legacy_mem
             integer j;
@@ -615,12 +627,12 @@ module ot_s81sl_lep_core #(
             for(genvar mp=0;mp<3;mp=mp+1) begin:g_meta_ptr
               if((NATIVE32!=0 || SAFE_STD) && RX_SRAM!=0) begin:g_local
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
-                wire mb=(t==0)?1'b1:rne[2*(t/2)+1];
+                wire mb=(t==0)?1'b1:rne_meta[2*(t/2)+1];
 `else
-                wire mb=rne[2*(t/2)+1];
+                wire mb=rne_meta[2*(t/2)+1];
 `endif
                 (* keep=1 *) ot_sram_showahead_readptr #(.AW(AR),.DEPTH(DR)) u_ptr(
-                  .clk(clk),.rn(rx_state_reset),.advance_a(rne[2*(t/2)]),.advance_b(mb),
+                  .clk(clk),.rn(rr[NATIVE32_RXRSTBASE+t]),.advance_a(rne_meta[2*(t/2)]),.advance_b(mb),
                   .next_addr(meta_read_next[mp*AR+:AR]));
               end else begin:g_shared assign meta_read_next[mp*AR+:AR]=rp_nx;end
             end
@@ -657,11 +669,11 @@ module ot_s81sl_lep_core #(
 `endif
                 ot_sram_showahead_1r1w #(.W(H+1),.AW(AR),.LOCAL_HIT(1),.SB(8),.LOCAL_RA(NATIVE32+SAFE_STD),.DEPTH(DR)) u_rx_mem(
                     .clk(clk),.rst_n(rr[4+t*RX_NS+:RX_NS]),.we(wr),.wa(wp),.wd(dq),
-                    .ra(read_next),.q(head),.advance_a(rne[2*(t/2)]),
+                    .ra(read_next),.q(head),.advance_a(rne_addr[2*(t/2)]),
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
-                    .advance_b((t==0)?1'b1:rne[2*(t/2)+1]));
+                    .advance_b((t==0)?1'b1:rne_addr[2*(t/2)+1]));
 `else
-                    .advance_b(rne[2*(t/2)+1]));
+                    .advance_b(rne_addr[2*(t/2)+1]));
 `endif
                 assign rhd[t*(H+1)+:H+1]=head;
             end else begin:g_old_head
@@ -872,7 +884,8 @@ module ot_s81sl_lep_core #(
       wire [31:0] replay_tag={1'b1,mrd[TG+2+:10],mrd[TG+12+:21]};
       for(genvar rt=0;rt<4;rt=rt+1) begin:g_byte
         wire [7:0] next_tag;
-        (* keep=1 *) ot_s81sl_lep_return8 u_tag(.cut(rr_dlv),.ring_code({rb[TG],rb[3:1],active_ring_flags[2]}),
+        (* keep=1 *) ot_s81sl_lep_return8 u_tag(.ne({{(4-NL){1'b0}},rne_return}),
+          .ring({((NL==4)?ring_meta_regions[2*4+3]:1'b0),ring_meta_regions[3]}),.land({ldB,ldA}),.ring_code({rb[TG],rb[3:1],active_ring_flags[2]}),
           .replay_code({mrd[TG],mrd[3:0]}),.ring_data(ring_tag[rt*8+:8]),
           .replay_data(replay_tag[rt*8+:8]),.q(next_tag));
         always @(posedge clk) rtq[rt*8+:8]<=next_tag;
@@ -1485,8 +1498,16 @@ endmodule
  assign q=a && b;
 endmodule
 (* keep_hierarchy=1 *) module ot_s81sl_lep_return8(
- input wire cut,input wire [4:0] ring_code,replay_code,input wire [7:0] ring_data,replay_data,
+ input wire [3:0] ne,input wire [1:0] ring,land,
+ input wire [4:0] ring_code,replay_code,input wire [7:0] ring_data,replay_data,
  output wire [7:0] q);
+`ifdef OT_S81SL_LEP_MUT_NOPAIR
+ wire pa=ne[0];
+`else
+ wire pa=ne[0] && ne[1];
+`endif
+ wire pb=ne[2] && ne[3] && !pa;
+ wire cut=(pa && ring[0] && !land[0]) || (pb && ring[1] && !land[1]);
  wire [4:0] code=cut?ring_code:replay_code;
  wire has_tag=code[0] && (code[3:1]==3'd1 || code[3:1]==3'd2) && code[4];
  assign q=has_tag?(cut?ring_data:replay_data):8'd0;
