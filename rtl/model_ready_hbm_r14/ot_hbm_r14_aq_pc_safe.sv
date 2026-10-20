@@ -92,7 +92,7 @@ module ot_hbm_r14_aq_pc_safe #(
   // SRAM clk->q therefore ends at the head flops, outside column eligibility.
   // The two overlapped heads sustain one pop per edge, including ring wrap.
   (* keep="true",dont_touch="true" *) reg[WQW-1:0]q_rp_plus1,q_rp_plus2;
-  wire wr_ok_q, wr_ok_h, wr_ok_s;
+  wire wr_ok_q, wr_ok_h, wr_ok_s, wr_ok_p;
   wire [WQW-1:0] qread=wr_ok_q ? q_rp_plus2 : q_rp_plus1;
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
   reg [29:0] qhead;
@@ -131,6 +131,21 @@ module ot_hbm_r14_aq_pc_safe #(
     assign head_d[LO+:B]=head_capture_regions[g]?
        (head_push_regions[g]?pushed[LO+:B]:pref):held_word;
   end
+  // Four equivalent bank-next sources use the already kept regional
+  // forwarding identities. Each serves at most one quarter of ACT selectors;
+  // copying selector flops alone would overload the canonical head mux.
+  wire [4:0] head_bank_d_regions[0:3];
+  for(genvar g=0;g<4;g=g+1)begin:HEAD_BANK_NEXT_REGION
+    wire [4:0] pref=(fresh_local[g]&&fresh_addr_local[g]==successor_local[g])?
+      qfresh_data[29:25]:qm[29:25];
+    assign head_bank_d_regions[g]=head_capture_regions[g]?
+      (head_push_regions[g]?wr_bank:pref):head_bank_global;
+  end
+`ifndef SYNTHESIS
+  always @(negedge clk)if(rst_n)
+    for(integer g=0;g<4;g=g+1)
+      if(head_bank_d_regions[g]!==head_d[29:25])$fatal(1,"BW_AQ_BANK_NEXT_REGION_MISMATCH");
+`endif
   for(genvar g=0;g<8;g=g+1)begin:HEAD_LOCAL
     always @(posedge clk)
       `ifdef BW_AQ_MUT_HEAD
@@ -259,12 +274,18 @@ module ot_hbm_r14_aq_pc_safe #(
         blk_valid_regions[g]<=blk_clear?1'b0:(blk_set?1'b1:blk_valid);
       end
   end
+  (* keep="true",dont_touch="true" *) reg[4:0]command_bank_tail;
+  (* keep="true",dont_touch="true" *) reg command_valid_tail;
+  always @(posedge clk or negedge reset_regions[35])
+    if(!reset_regions[35])begin command_bank_tail<=0;command_valid_tail<=0;end
+    else begin command_bank_tail<=r_bank;command_valid_tail<=row_grant;end
   for(genvar b=0;b<32;b=b+1)begin:BANK_CONTROL_DECODE
     if(b/8==0)begin
       assign c_oh[b]=command_bank_valid&&command_bank_local==5'(b);
       assign blk[b]=blk_valid&&blk_bank==5'(b);
     end else begin
-      assign c_oh[b]=command_valid_regions[b/8]&&command_bank_regions[b/8]==5'(b);
+      assign c_oh[b]=b>=28?(command_valid_tail&&command_bank_tail==5'(b)):
+        (command_valid_regions[b/8]&&command_bank_regions[b/8]==5'(b));
       assign blk[b]=blk_valid_regions[b/8]&&blk_bank_regions[b/8]==5'(b);
     end
   end
@@ -329,12 +350,12 @@ module ot_hbm_r14_aq_pc_safe #(
   // low/high half, ac2_v/ac2_b + row copy 0, row copy 1) so no copy or decision drives > 32 endpoints.
   // Each eligibility lookup has its own kept bank capture; no 5-bit
   // selector drives three 32:1 muxes plus the destination decoder.
-  (* keep="true",dont_touch="true" *) reg [4:0] ah_local[0:6][0:2];
+  (* keep="true",dont_touch="true" *) reg [4:0] ah_local[0:6][0:3];
   (* keep="true",dont_touch="true" *) reg [RW_ROW-1:0] ahrow_local[0:1];
   wire [6:0] head_req; wire [31:0] aok_z;
   for(genvar k=0;k<7;k=k+1)begin:ACT_HEAD_REQ
-    for(genvar m=0;m<3;m=m+1)begin:SELECTOR
-      always @(posedge clk)ah_local[k][m]<=head_d[29:25];
+    for(genvar m=0;m<4;m=m+1)begin:SELECTOR
+      always @(posedge clk)ah_local[k][m]<=head_bank_d_regions[k%4];
     end
     assign head_req[k]=ACT_HEAD!=0&&q_n_local[k%4]!=0&&
       !open[ah_local[k][0]]&&!blk[ah_local[k][1]]&&aok_z[ah_local[k][2]]
@@ -402,8 +423,8 @@ module ot_hbm_r14_aq_pc_safe #(
         end
       end
       // ACT_HEAD override (last assignment wins); the head row equals look_row[head bank], so act_row_match holds
-      for(integer b=0;b<32;b=b+1)if(head_req[b/16])ac2_oh[b]<=(ah_local[b/16][0]==5'(b));
-      if(head_req[6])begin ac2_v<=1;ac2_b<=ah_local[6][0];end
+      for(integer b=0;b<32;b=b+1)if(head_req[b/16])ac2_oh[b]<=(ah_local[b/16][3]==5'(b));
+      if(head_req[6])begin ac2_v<=1;ac2_b<=ah_local[6][3];end
       for(integer k=0;k<2;k=k+1)
         for(integer bit_=0;bit_<RW_ROW;bit_=bit_+1)
           if(head_req[2+k*2+bit_/10])ac2_row_local[k][bit_]<=ahrow_local[k][bit_];
@@ -529,8 +550,11 @@ module ot_hbm_r14_aq_pc_safe #(
   wire cfg_bank_ready=q_ne&&|(hb_oh_cfg&open_column&head_timer_ready&~blk&~pre_fl&head_row_match);
   assign col_v_regions[0]=wr_ok;
   generate if(WROK_COPIES!=0)begin:g_wrok_copies
-    (* keep="true",dont_touch="true" *) reg [4:0] head_bank_q, head_bank_h, head_bank_s;
-    always @(posedge clk)begin head_bank_q<=head_d[29:25]; head_bank_h<=head_d[29:25]; head_bank_s<=head_d[29:25]; end
+    (* keep="true",dont_touch="true" *) reg [4:0] head_bank_q, head_bank_h, head_bank_s, head_bank_p;
+    always @(posedge clk)begin head_bank_q<=head_d[29:25]; head_bank_h<=head_d[29:25]; head_bank_s<=head_d[29:25]; head_bank_p<=head_bank_d_regions[2]; end
+    wire [31:0] hb_oh_p=32'b1<<head_bank_p;
+    (* keep="true" *) wire rdy_p=q_ne&&|(hb_oh_p&open&head_timer_ready&~blk&~pre_fl&head_row_match);
+    assign wr_ok_p=rdy_p&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
     wire [31:0] hb_oh_s=32'b1<<head_bank_s;
     (* keep="true" *) wire rdy_s=q_ne&&|(hb_oh_s&open&head_timer_ready&~blk&~pre_fl&head_row_match);
     assign wr_ok_s=rdy_s&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
@@ -540,14 +564,14 @@ module ot_hbm_r14_aq_pc_safe #(
     assign wr_ok_q=rdy_q&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
     assign wr_ok_h=rdy_h&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
   end else begin:g_wrok_one
-    assign wr_ok_q=wr_ok; assign wr_ok_h=wr_ok; assign wr_ok_s=wr_ok;
+    assign wr_ok_q=wr_ok; assign wr_ok_h=wr_ok; assign wr_ok_s=wr_ok; assign wr_ok_p=wr_ok;
   end endgenerate
   assign col_v_regions[1]=cfg_bank_ready&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
 `ifndef SYNTHESIS
   always @(negedge clk)if(rst_n)begin
     if(open_column!==open)$fatal(1,"BW_AQ_OPEN_REGION_MISMATCH");
     if(col_v_regions[1]!==col_v)$fatal(1,"BW_AQ_COLUMN_REGION_MISMATCH");
-    if(wr_ok_q!==wr_ok||wr_ok_h!==wr_ok||wr_ok_s!==wr_ok)$fatal(1,"BW_AQ_WROK_COPY_MISMATCH");
+    if(wr_ok_q!==wr_ok||wr_ok_h!==wr_ok||wr_ok_s!==wr_ok||wr_ok_p!==wr_ok)$fatal(1,"BW_AQ_WROK_COPY_MISMATCH");
   end
 `endif
 
@@ -669,7 +693,8 @@ module ot_hbm_r14_aq_pc_safe #(
       case({qpush,wr_ok})
         2'b10:q_n<=q_n+1'b1;2'b01:q_n<=q_n-1'b1;default:q_n<=q_n;
       endcase
-      if (wr_ok_q) begin q_rp<=q_rp_plus1;q_rp_plus1<=q_rp_plus1+1'b1;q_rp_plus2<=q_rp_plus2+1'b1;end
+      if (wr_ok_q) begin q_rp<=q_rp_plus1;q_rp_plus1<=q_rp_plus1+1'b1;end
+      if(wr_ok_p)q_rp_plus2<=q_rp_plus2+1'b1;
       if (col_aq) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
       if (col_we) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
       if (rrds_c != 0) rrds_c <= rrds_c - 1'b1;
