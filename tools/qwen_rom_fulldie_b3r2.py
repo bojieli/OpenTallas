@@ -2894,10 +2894,38 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     order = {'head_chain': -2, 'd2d_fdi': -1, 'corridor': 0, 'link_spine': 1, 'link_channel': 1, 'tree_spine': 2, 'tree_block': 3}
     buses = sorted(enumerate(m['buses']), key=lambda t: (order.get(t[1][1], 3), t[0]))
     keep = {}
-    def relay_frame(bits, cl):
+    # QW-G5STA 10-20 (opt-in OT_SPLIT_FWD_LAND_EW_MASTERS=<master prefix>[,...]): a 2-endpoint bus between two such
+    # masters placed side by side (the dv_slice2 row: E/W flow through the dv_xgap_plan slice landing channels) takes
+    # the TRANSPOSED landing-sized frame -- data faces E/W (>= bits / 6 um tall), width from the landing area -- so a
+    # 1088-b station is ~65 x 186 um and fits an 86.4-um channel (the N/S shape 186 x 60 did not: dv2f20g5l try 1
+    # 'tree pads: no free spot for dv_st_E2_st_u_st').  Default off: every other frame is unchanged.
+    _ewm = tuple(x_ for x_ in _os_r.environ.get('OT_SPLIT_FWD_LAND_EW_MASTERS', '').split(',') if x_)
+    _ew_bids = set()
+    if _ewm:
+        _mst_ew = {it.name: (str(it.master), it.x, it.y, it.w, it.h) for it in m['insts']}
+        for _b in m['buses']:
+            _eps = _b[3]
+            if len(_eps) != 2:
+                continue
+            _a, _c = _mst_ew.get(_eps[0][0]), _mst_ew.get(_eps[1][0])
+            if not _a or not _c or not _a[0].startswith(_ewm) or not _c[0].startswith(_ewm):
+                continue
+            _ov = min(_a[2] + _a[4], _c[2] + _c[4]) - max(_a[2], _c[2])     # y overlap: side by side -> E/W flow
+            if _ov > 0.5 * min(_a[4], _c[4]):
+                _ew_bids.add(_b[0])
+        m['fwd_land_ew'] = dict(masters=list(_ewm), buses=len(_ew_bids))
+        print(f'FWD_LAND_EW {list(_ewm)}: {len(_ew_bids)} side-by-side buses take E/W landing frames', flush=True)
+
+    def relay_frame(bits, cl, bid=None):
         """off-corridor relay frame: faces at one track; <= 512 b fits the 52.68 x 30.24 corridor relay, wider words
         take the face span (a link-spine relay is vertical flow only, N/S faces)."""
         span1 = bits * 0.048 + 4.0
+        if (bid is not None and bid in _ew_bids and _os_r.environ.get('OT_SPLIT_FWD_LANES', '0') == '1'
+                and bits > int(_os_r.environ.get('OT_SPLIT_FWD_LAND_BITS', '136'))):
+            face = bits / 6.0 + 4.0
+            h = max(v.up(face, v.GY), RELAY_V_H) - v.SHAVE
+            w = max(v.up(2.8 * bits / 0.55 / h, v.GX), v.CORR) - v.SHAVE
+            return w, h
         # Q-DIE11 10-18 (coordinator, qfwd_landh0_548_ew_65x60 GRT-0116): with OT_SPLIT_FWD_LANES the last frame of a
         # lane is a LANDING (ring D 4 = 5 W + 14 flops + the 4:1 read mux, ~2.8 um2 per bit), and every frame of a bus is
         # one size, so a wide bus (> OT_SPLIT_FWD_LAND_BITS, default 136) takes landing-sized frames: every data face
@@ -2940,7 +2968,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             idx = bidx0[bid]
             _, cl, bits, eps = m['buses'][idx]
             P0, P1 = pos(*eps[0]), pos(*eps[1])
-            w, h = relay_frame(bits, cl)
+            w, h = relay_frame(bits, cl, bid)
             sgn = 1 if P0[1] >= P1[1] else -1
             best = None
             for c_ in sorted(range(COLS), key=lambda c: abs(corr_x0[c] + v.CORR / 2 - P1[0]))[:2]:
@@ -3224,7 +3252,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             # Q-DIEPLAN6 10-17 (dv_case OT_SPLIT_DV_SEAM_LANE): a W0 | E0 seam chain word takes its own registered lane
             # station in the seam channel, on its own face rows (one relay, both hops ~ half the seam)
             xs_, ys_ = (m['dv_seam'][0] + m['dv_seam'][1]) / 2, (P0[1] + P1[1]) / 2
-            w_, h_ = relay_frame(bits, cl)
+            w_, h_ = relay_frame(bits, cl, bid)
             sp_ = place(xs_, ys_, w_ + v.SHAVE, h_ + v.SHAVE, None, 400.0)
             if sp_ is None:
                 raise ValueError(f'dv seam lane: no free station for {bid} near ({xs_:.0f}, {ys_:.0f})')
@@ -3252,7 +3280,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if bits <= RELAY_STD_BITS:
                     return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE
                 return v.CORR - v.SHAVE, max(v.up(min(span2, max(span1, BWP_H)), v.GY), BWP_H) - v.SHAVE
-            return relay_frame(bits, cl)
+            return relay_frame(bits, cl, bid)
 
         def _try(c, tol):
             w, h = frame(c)
@@ -3451,7 +3479,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def repair(idx, pl, gaps=False):
         hs = hops_of(pl)
         bits = pl['bits']
-        w, h = relay_frame(bits, pl['cl'])
+        w, h = relay_frame(bits, pl['cl'], pl.get('bid'))
         W, H = w + v.SHAVE, h + v.SHAVE
         # r8 (coordinator 2026-10-13): row-gap sites are legal for head chains (h_<c> sits at a row gap in the column
         # channel: head_24's W pin had no free site within reach once its neighbours were repaired)
@@ -4163,7 +4191,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                                   d=abs(P0[0] - P1[0]) + abs(P0[1] - P1[1]))
                 keep.pop(idx, None)
             pl = plans[idx]
-            w, h = relay_frame(pl['bits'], pl['cl'])
+            w, h = relay_frame(pl['bits'], pl['cl'], pl['bid'])
             x1, y1 = pl['P1']
             cc = corr_of(x1 - v.CORR / 2)
             got = []
