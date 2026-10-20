@@ -421,11 +421,25 @@ def audit(a):
             bit_of[n] = b_
     # older ORFS flattening spells hierarchy with '/', Yosys flatten with '.' (KV-PARAMS ep6 run copy, 10-19 12:30)
     pair = {s_: base.replace('/', '.') for s_, (base, _rep) in states.items() if base.replace('/', '.') in bit_of}
+    # KV-ATTN3 10-20: physical/common_flow/ot_rst_copies.py names copy k of a reset-copy family W by the alias wire
+    # `ot_rrs__<tag>__c<k>` (tag = W sanitised, last 60 chars), and Yosys may name the copy FLOP after that alias
+    # (rv3: 42 of the 48 rst_n__ot_rlv copies).  Pair such a routed flop with bit k of W in gold.  Only a naming hint:
+    # a wrong pair is an unprovable $equiv (NOT PROVEN), never a masked difference.
+    fam = {}
+    for n_ in bit_of:
+        m_ = re.fullmatch(r'(?P<w>.+?)(?:\[(?P<k>\d+)\])?', n_)
+        fam.setdefault((re.sub(r'[^A-Za-z0-9_]', '_', m_['w'])[-60:], int(m_['k'] or 0)), n_)
+    rrs = {}
+    for s_, (base, _rep) in states.items():
+        m_ = re.fullmatch(r'ot_rrs__(?P<t>.+)__c(?P<k>\d+)', base)
+        if s_ not in pair and m_ and (m_['t'], int(m_['k'])) in fam:
+            pair[s_] = rrs[base] = fam[(m_['t'], int(m_['k']))]
     hit = {bit_of[b_] for b_ in pair.values()}
     gold_only = sorted(ns[0] if ns else f'bit{b_}' for b_, ns in regs.items() if b_ not in hit)
     gate_only = sorted(base for s_, (base, _rep) in states.items() if s_ not in pair)
     res['gate']['replicas'] = sum(1 for _b, r in states.values() if r)
     res['state'] = dict(gold_regs=len(regs), paired=len(pair), gold_only=len(gold_only), gate_only=len(gate_only),
+                        rst_copy_alias_pairs=len(rrs),
                         gold_only_sample=gold_only[:20], gate_only_sample=gate_only[:20])
     # 4. equivalence: ports + paired state only
     # --macro-model CELL=MODEL.v (KV-PARAMS2 10-19, PV slice SRAM): a hard macro with no Liberty function gets the SAME
@@ -548,6 +562,14 @@ def audit(a):
     prelude = list(L)
     if wit_lines:   # base only: the gold-side witness wires (gold has no gate twin; equiv_make never sees them)
         prelude = prelude[:wit_at] + wit_lines + prelude[wit_at:]
+    if wit_lines and a.witness_joint:
+        # KV-ATTN3 10-20 (--witness-joint): the witnesses are ALSO $equiv points of the induction (gold dup == gate kept
+        # twin, gold const == const), like --observe-zero: an enabled register synthesis merged or proved constant holds
+        # an arbitrary value in a free induction state forever (rv3 root cal / calendar pipeline), so without them the
+        # step cannot close.  They are proven jointly by the induction AND the reset base (which then is required);
+        # a wrong classification fails the proof.  Nothing is assumed beyond equiv_induct's own N agreeing cycles.
+        L = L[:wit_at] + wit_lines + L[wit_at:]
+        res['dup_witness']['joint'] = True
     L += ['async2sync',
           'equiv_make gold gate equiv', 'hierarchy -top equiv', f'equiv_simple -seq {a.seq}', f'equiv_induct -seq {a.induct_seq}',
           'equiv_status', 'equiv_status -assert', '']
@@ -725,6 +747,8 @@ def main(argv=None):
     a1.add_argument('--reset-base', type=int, default=0, help='N: paired-initial reset base after N reset edges')
     a1.add_argument('--dup-witness', action='store_true',
                     help='reset base: merged-duplicate / constant gold-only registers take their kept twin / constant')
+    a1.add_argument('--witness-joint', action='store_true',
+                    help='with --dup-witness: the witnesses are also induction $equiv points (proven jointly)')
     a1.add_argument('--reset-port', default='rst_n')
     a1.add_argument('--reset-active', type=int, choices=(0, 1), default=0)
     a1.add_argument('--timeout', type=int, default=14400)
