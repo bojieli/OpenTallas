@@ -93,8 +93,8 @@
   "reason": "ot_hgi_coll_fj_core registers every input at its pin in RTL (HOST F20 cfg/desc/launch frames, issuer feedback, child faults, sync rst_n D-pin flop; coordinator native audit of fj_q2 54f035ca0) and every output is flop Q (programme target issuer_cfg/start/configured/init_busy/fault, sticky fault/fault_cause); the V5 lockstep bench fixes these edges (programme +1, issue +3, child faults +1). A synthesis pin stage would add a second, unbenched rung."
  },
  "job": {
-  "owner": "Claude:LEAD3-HBM/HBM-COLLFJ2",
-  "branch": "claude/collfj-1019",
+  "owner": "Codex:HBM-COLLFJ2-pickup",
+  "branch": "codex/collfj-reason-1020",
   "tag": "safe",
   "purpose": "SAFE successor of hcoll_fj3_r128w (LEAD3-HBM 10-19, no waiver): q3 parent u_fj body ot_hgi_coll_fj_core_s128 = 12 KEPT reset copies rst__ot_rlv (<=32 loads each via reset_relay_split), flow store in ONE ot_sram_1rw_128x64 (u.u_program.u_flow, read = scan lookahead, registered write), registered frame/descriptor decode; port/edge-identical (0 cycles)",
   "extra_paths": [
@@ -199,5 +199,10 @@
  "reset_relay_split": {
   "max_loads": 32
  },
- "floorplan_note": "macro u.u_program.u_flow at [23.76, 23.76]: W face (clk/ce/we/addr/wd/w_mask) and E face (rd_out/w_mask) each >= 20 um to the core edge, >= 21.5 um to S (issuer pins) and N (host frames); one connected std-cell band around it"
+ "floorplan_note": "macro u.u_program.u_flow at [23.76, 23.76]: W face (clk/ce/we/addr/wd/w_mask) and E face (rd_out/w_mask) each >= 20 um to the core edge, >= 21.5 um to S (issuer pins) and N (host frames); one connected std-cell band around it",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/rtl/hbm_coll_fj_1019/README.md",
+  "fix": "Unsafe r128w rst_q drives about 300 loads. SAFE s128 replaces flow flop table with SRAM and registered decode, plus twelve kept reset copies with at most 27 loads; parent EQ proves unchanged cycle behavior. r128w CLOSED is not bindable by LEAD3-HBM decision."
+ }
 }
