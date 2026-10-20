@@ -27,7 +27,10 @@ apart, refreshes interleaved), so block 28 (64 lines) landed at 4773 = 457 edges
 | xr_dsA_f200 / xr_dsB_f200 | xlr (+ x reuse) | PASS 42/42, 24/24, all GO exact | 17,987 / 21,679 |
 | mi4_dsA_f200 (MUTANT IMUT=4: RTL drops xb from the go context) | as xl_dsA_f200 | FAIL numeric 18/42 pass, GO exact, no fault (causal) | 18,429 |
 | ms0_dsA_f200 (MUTANT compiler xslot0: no slot separation) | as xl_dsA_f200 | FAIL numeric 41/42 pass, GO exact (causal) | 18,429 |
-Release c_dsA/B_g16_p80 (SAFE) were 26,726 / 27,484. Pending (ep6, pending_results): mi4_dsB_f200, xd_dsB_f200, x13_dsA/B_f200.
+| mi4_dsB_f200 (MUTANT IMUT=4) | as xl_dsB_f200 | FAIL numeric 12/24 pass, GO exact (causal) | 21,941 |
+| xd_dsB_f200 | die x loader, serial | PASS 24/24 | 22,868 |
+| x13_dsA_f200 / x13_dsB_f200 | bench13 at FETCH 200 (same-knob reference) | PASS | 26,518 / 27,380 |
+Release c_dsA/B_g16_p80 (SAFE) were 26,726 / 27,484. All runs complete.
 Witness logs: runs/*.witness.log (SMB_UNIT line).
 
 ## SM.MATVEC + token (census --measured info_banklat_all, --bw 98 --bridge 1)
