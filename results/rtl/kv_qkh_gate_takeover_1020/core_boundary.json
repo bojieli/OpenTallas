@@ -1,0 +1,5065 @@
+{
+  "scope": "READ_ONLY_VIRTUAL_CORE_CUT_NOT_NEW_KIT_QUALIFICATION",
+  "status": "PASS",
+  "netlist_sha256": "d85363720e59224c838a301439accd0f376a3ae6f8b4362138b935e9677d88b0",
+  "input_bits": 235,
+  "output_bits": 98,
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    }
+  ],
+  "ports": {
+    "c_in": {
+      "direction": "input",
+      "width": 4,
+      "bits": [
+        {
+          "bit": 0,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.gg[0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gg[1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gg[2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gg[3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gg[4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gg[5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gg[6]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gg[7]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.c3[1]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 2,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.c3[2]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 3,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.c3[3]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_d[0]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_d[1]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_d[2]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_d[3]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_d[4]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_d[5]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_d[6]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_d[7]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_v[0]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_v[1]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_v[2]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_v[3]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_v[4]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_v[5]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_v[6]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.gk_v[7]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "row_in": {
+      "direction": "input",
+      "width": 64,
+      "bits": [
+        {
+          "bit": 0,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 2,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 3,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 4,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 5,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 6,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[6]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 7,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[7]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 8,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[8]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 9,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[9]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 10,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[10]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 11,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[11]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 12,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[12]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 13,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[13]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 14,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[14]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 15,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[15]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 16,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[16]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 17,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[17]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 18,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[18]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 19,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[19]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 20,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[20]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 21,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[21]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 22,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[22]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 23,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[23]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 24,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[24]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 25,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[25]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 26,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[26]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 27,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[27]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 28,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[28]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 29,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[29]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 30,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[30]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 31,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[31]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 32,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[32]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 33,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[33]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 34,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[34]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 35,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[35]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 36,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[36]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 37,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[37]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 38,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[38]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 39,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[39]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 40,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[40]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 41,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[41]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 42,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[42]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 43,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[43]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 44,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[44]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 45,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[45]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 46,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[46]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 47,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[47]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 48,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[48]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 49,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[49]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 50,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[50]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 51,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[51]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 52,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[52]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 53,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[53]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 54,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[54]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 55,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[55]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 56,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[56]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 57,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[57]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 58,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[58]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 59,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[59]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 60,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[60]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 61,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[61]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 62,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[62]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 63,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.row3[63]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "e_in": {
+      "direction": "input",
+      "width": 16,
+      "bits": [
+        {
+          "bit": 0,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 2,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 3,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 4,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 5,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 6,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[6]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 7,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[7]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 8,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[8]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 9,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[9]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 10,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[10]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 11,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[11]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 12,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[12]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 13,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[13]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 14,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[14]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 15,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.e3[15]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "lt_in": {
+      "direction": "input",
+      "width": 12,
+      "bits": [
+        {
+          "bit": 0,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[0]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[1]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 2,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[2]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 3,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[3]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 4,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[4]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 5,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[5]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 6,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[6]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 7,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[7]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 8,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[8]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 9,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[9]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 10,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[10]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 11,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.lt3[11]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "hid": {
+      "direction": "input",
+      "width": 2,
+      "bits": [
+        {
+          "bit": 0,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.hdc[0][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[10][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[11][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[12][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[13][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[14][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[15][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[1][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[2][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[3][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[4][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[5][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[6][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[7][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[8][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[9][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.hdc[0][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[10][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[11][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[12][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[13][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[14][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[15][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[1][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[2][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[3][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[4][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[5][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[6][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[7][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[8][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.hdc[9][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "bsel": {
+      "direction": "input",
+      "width": 2,
+      "bits": [
+        {
+          "bit": 0,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.bsc[0][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[10][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[11][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[12][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[13][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[14][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[15][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[1][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[2][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[3][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[4][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[5][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[6][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[7][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[8][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[9][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.bsc[0][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[10][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[11][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[12][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[13][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[14][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[15][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[1][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[2][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[3][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[4][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[5][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[6][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[7][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[8][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.bsc[9][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "q_valid_in": {
+      "direction": "input",
+      "width": 1,
+      "bits": [
+        {
+          "bit": 0,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qvc[0]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[10]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[11]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[12]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[13]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[14]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[15]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[1]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[2]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[3]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[4]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[5]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[6]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[7]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[8]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qvc[9]$_DFF_PN0_",
+              "master": "DFFASRHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "q_beat_in": {
+      "direction": "input",
+      "width": 6,
+      "bits": [
+        {
+          "bit": 0,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qbc[0][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[10][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[11][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[12][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[13][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[14][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[15][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[1][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[2][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[3][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[4][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[5][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[6][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[7][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[8][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[9][0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qbc[0][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[10][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[11][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[12][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[13][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[14][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[15][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[1][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[2][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[3][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[4][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[5][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[6][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[7][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[8][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[9][1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 2,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qbc[0][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[10][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[11][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[12][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[13][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[14][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[15][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[1][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[2][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[3][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[4][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[5][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[6][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[7][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[8][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[9][2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 3,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qbc[0][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[10][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[11][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[12][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[13][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[14][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[15][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[1][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[2][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[3][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[4][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[5][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[6][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[7][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[8][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[9][3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 4,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qbc[0][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[10][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[11][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[12][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[13][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[14][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[15][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[1][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[2][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[3][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[4][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[5][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[6][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[7][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[8][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[9][4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 5,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qbc[0][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[10][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[11][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[12][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[13][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[14][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[15][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[1][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[2][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[3][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[4][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[5][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[6][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[7][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[8][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            },
+            {
+              "instance": "u_ot_pr_core.qbc[9][5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "q_data_in": {
+      "direction": "input",
+      "width": 128,
+      "bits": [
+        {
+          "bit": 0,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[0]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[1]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 2,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[2]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 3,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[3]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 4,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[4]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 5,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[5]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 6,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[6]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 7,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[7]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 8,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[8]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 9,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[9]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 10,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[10]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 11,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[11]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 12,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[12]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 13,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[13]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 14,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[14]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 15,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[15]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 16,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[16]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 17,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[17]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 18,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[18]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 19,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[19]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 20,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[20]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 21,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[21]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 22,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[22]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 23,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[23]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 24,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[24]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 25,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[25]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 26,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[26]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 27,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[27]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 28,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[28]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 29,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[29]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 30,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[30]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 31,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[31]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 32,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[32]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 33,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[33]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 34,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[34]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 35,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[35]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 36,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[36]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 37,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[37]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 38,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[38]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 39,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[39]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 40,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[40]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 41,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[41]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 42,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[42]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 43,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[43]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 44,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[44]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 45,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[45]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 46,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[46]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 47,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[47]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 48,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[48]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 49,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[49]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 50,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[50]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 51,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[51]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 52,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[52]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 53,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[53]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 54,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[54]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 55,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[55]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 56,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[56]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 57,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[57]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 58,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[58]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 59,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[59]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 60,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[60]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 61,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[61]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 62,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[62]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 63,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[63]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 64,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[64]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 65,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[65]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 66,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[66]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 67,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[67]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 68,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[68]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 69,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[69]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 70,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[70]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 71,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[71]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 72,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[72]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 73,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[73]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 74,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[74]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 75,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[75]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 76,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[76]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 77,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[77]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 78,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[78]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 79,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[79]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 80,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[80]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 81,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[81]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 82,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[82]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 83,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[83]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 84,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[84]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 85,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[85]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 86,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[86]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 87,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[87]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 88,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[88]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 89,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[89]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 90,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[90]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 91,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[91]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 92,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[92]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 93,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[93]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 94,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[94]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 95,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[95]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 96,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[96]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 97,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[97]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 98,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[98]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 99,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[99]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 100,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[100]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 101,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[101]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 102,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[102]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 103,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[103]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 104,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[104]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 105,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[105]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 106,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[106]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 107,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[107]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 108,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[108]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 109,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[109]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 110,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[110]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 111,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[111]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 112,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[112]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 113,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[113]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 114,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[114]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 115,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[115]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 116,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[116]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 117,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[117]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 118,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[118]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 119,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[119]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 120,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[120]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 121,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[121]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 122,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[122]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 123,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[123]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 124,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[124]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 125,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[125]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 126,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[126]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        },
+        {
+          "bit": 127,
+          "captures": [
+            {
+              "instance": "u_ot_pr_core.qd3[127]$_DFF_P_",
+              "master": "DFFHQNx1_ASAP7_75t_R",
+              "pin": "D",
+              "unary_hops": 0
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "kp": {
+      "direction": "output",
+      "width": 32,
+      "bits": [
+        {
+          "bit": 0,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[0]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[1]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 2,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[2]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 3,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[3]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 4,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[4]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 5,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[5]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 6,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[6]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 7,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[7]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 8,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[8]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 9,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[9]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 10,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[10]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 11,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[11]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 12,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[12]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 13,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[13]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 14,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[14]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 15,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[15]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 16,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[16]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 17,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[17]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 18,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[18]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 19,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[19]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 20,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[20]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 21,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[21]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 22,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[22]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 23,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[23]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 24,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[24]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 25,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[25]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 26,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[26]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 27,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[27]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 28,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[28]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 29,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[29]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 30,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[30]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 31,
+          "launch": {
+            "instance": "u_ot_pr_core.kp[31]$_DFF_P_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        }
+      ]
+    },
+    "kpv": {
+      "direction": "output",
+      "width": 1,
+      "bits": [
+        {
+          "bit": 0,
+          "launch": {
+            "instance": "u_ot_pr_core.kpv$_DFF_PN0_",
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        }
+      ]
+    },
+    "nb": {
+      "direction": "output",
+      "width": 64,
+      "bits": [
+        {
+          "bit": 0,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[0]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 1,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[1]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 2,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[2]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 3,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[3]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 4,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[4]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 5,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[5]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 6,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[6]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 7,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[7]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 8,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[8]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 9,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[9]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 10,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[10]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 11,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[11]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 12,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[12]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 13,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[13]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 14,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[14]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 15,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[15]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 16,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[16]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 17,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[17]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 18,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[18]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 19,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[19]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 20,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[20]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 21,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[21]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 22,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[22]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 23,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[23]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 24,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[24]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 25,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[25]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 26,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[26]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 27,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[27]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 28,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[28]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 29,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[29]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 30,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[30]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 31,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[31]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 32,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[32]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 33,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[33]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 34,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[34]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 35,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[35]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 36,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[36]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 37,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[37]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 38,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[38]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 39,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[39]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 40,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[40]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 41,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[41]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 42,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[42]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 43,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[43]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 44,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[44]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 45,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[45]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 46,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[46]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 47,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[47]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 48,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[48]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 49,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[49]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 50,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[50]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 51,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[51]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 52,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[52]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 53,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[53]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 54,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[54]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 55,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[55]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 56,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[56]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 57,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[57]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 58,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[58]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 59,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[59]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 60,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[60]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 61,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[61]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 62,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[62]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        },
+        {
+          "bit": 63,
+          "launch": {
+            "instance": "u_ot_pr_core.nb[63]$_DFFE_PP_",
+            "master": "DFFHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        }
+      ]
+    },
+    "gf": {
+      "direction": "output",
+      "width": 1,
+      "bits": [
+        {
+          "bit": 0,
+          "launch": {
+            "instance": "u_ot_pr_core.gf$_DFF_PN0_",
+            "master": "DFFASRHQNx1_ASAP7_75t_R",
+            "pin": "QN",
+            "unary_hops": 1
+          },
+          "errors": []
+        }
+      ]
+    }
+  },
+  "errors": [],
+  "still_required": [
+    "new exact mapped core census and complete physical top boundary audit",
+    "explicit source-registered kit approval",
+    "all pin flops anchored at full faces",
+    "TT/FF native capture/launch and clock spread",
+    "complete cold/LK schedule proof"
+  ]
+}

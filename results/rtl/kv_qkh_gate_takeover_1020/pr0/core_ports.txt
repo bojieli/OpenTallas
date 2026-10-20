@@ -1,0 +1,15 @@
+input [0:0] clk
+input [0:0] rst_n
+input [3:0] c_in
+input [63:0] row_in
+input [15:0] e_in
+input [11:0] lt_in
+input [1:0] hid
+input [1:0] bsel
+input [0:0] q_valid_in
+input [5:0] q_beat_in
+input [127:0] q_data_in
+output [31:0] kp
+output [0:0] kpv
+output [63:0] nb
+output [0:0] gf
