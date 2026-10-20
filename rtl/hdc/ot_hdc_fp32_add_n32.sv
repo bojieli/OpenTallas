@@ -153,15 +153,25 @@ module ot_hdc_fp32_add_n32 #(
     wire [27:0] w_dif;
     wire [5:0]  lz;
     assign {w_v, w_byp, w_sub, w_sign, w_err, w_code, w_exp, w_add, w_dif, lz, w_carry} = d2_in;
-    // Keep the normalization-shift count independent of the exponent count.
-    // With a D cut the existing registered count already bounds this stage.
-    wire [5:0] lz_shift;
-    generate if (CUT_D == 0) begin:g_shift_lzc
-        ot_hdc_lzc32_n32 u_lzc_shift (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_shift));
-    end else begin:g_shift_cut
-        assign lz_shift=lz;
-    end endgenerate
-    wire [26:0] sub_val = w_dif[26:0] << lz_shift[4:0];
+    // Each count bit feeds one 9-output mux group in each shift stage.
+    // The independent count trees are exact combinational copies, no new edge.
+    wire [5:0] shift_count [0:2];
+    wire [26:0] shift_data [0:5];
+    assign shift_data[0]=w_dif[26:0];
+    for(genvar g=0;g<3;g=g+1)begin:g_shift_count
+        if(CUT_D==0)begin:g_uncut
+            ot_hdc_lzc32_n32 u_count(.x({dif[26:0] | sentinel,5'b11111}),.n(shift_count[g]));
+        end else begin:g_cut
+            assign shift_count[g]=lz;
+        end
+    end
+    for(genvar st=0;st<5;st=st+1)begin:g_shift_stage
+        for(genvar g=0;g<3;g=g+1)begin:g_group
+            ot_hdc_shl27_group_n32 #(.LO(9*g),.SHIFT(1<<st)) u_shift(
+                .x(shift_data[st]),.sh(shift_count[g][st]),.y(shift_data[st+1][9*g+:9]));
+        end
+    end
+    wire [26:0] sub_val=shift_data[5];
     wire [7:0]  exp_sub, exp_add;
     wire exp_sub_c, exp_add_c;
     ot_hdc_ksadd_k #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
@@ -312,4 +322,13 @@ module ot_hdc_lzc32_n32 (
         end
     end
     assign n = v[0] ? {1'b0, c[4:0]} : 6'd32;
+endmodule
+
+// One bounded consumer group of one constant-distance barrel-shift stage.
+(* keep_hierarchy *)
+module ot_hdc_shl27_group_n32 #(parameter integer LO=0,SHIFT=1)(
+ input wire [26:0] x,input wire sh,output wire [8:0] y
+);
+ wire [26:0] displaced=x<<SHIFT;
+ assign y=sh?displaced[LO+:9]:x[LO+:9];
 endmodule

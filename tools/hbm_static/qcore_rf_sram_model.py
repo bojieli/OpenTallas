@@ -16,7 +16,7 @@ def model():
             physical_banks=banks,logical_bits=8192,allocated_bits=n*32768,
             capacity_amplification=n*4,macro_area_um2=n*meta['area']['macro_area_um2'],
             required_calendar_condition=condition,status='NOT RUN')
-    sources=['rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r9.sv',
+    sources=['tools/hbm_static/qcore_rf_sram_model.py','tools/uarch_model.py','rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r9.sv',
       'rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv',
       'physical/ref_tile/hbm_su_qcore_r6n_1019/spec.json',
       'tools/hbm_static/su_top_compile.py','tools/hbm_static/su_red_carry_calendar.py']
@@ -71,12 +71,46 @@ def model():
         planning_reach='outline exceeds405um; reject an unlanded global stage. Regional roots/registered seams need full transparent endpoint proof and explicit calendar price',
         clocks='30 new macro clocks require real-Lib clock roles and bound regional root inventory; no shared-root spread assumption',
         PG='fresh actual native PG census/protected/fixed/empty-net audit required; intermediate ordinary pre-global_connect nulls are not automatically defects'),
+      regional_transport=regional_model(),
       blockers=['Current production host-config/command image not source-bound; no reduced write concurrency admitted',
         'General30 macro area116747.3088um2 alone exceeds old78848.64um2 outline',
         'Every stage/all drivers <=32 including mask broadcasts/reset/owner readmux remains unmeasured',
         'Full405reach and any added physical stages not composed with compiler staticcalendar',
         'No actual full-band density, PG, clockspread, SS/FF timing or production throughput proof'],
       next='Bind actual current command inventory; choose/model regional macro architecture; prove exact same-edge/state semantics; then source RTL and standalone native only')
+
+def regional_model():
+    """Conservative fixed-edge budgets, not a globally minimal floorplan."""
+    variants=[]
+    for gap in [43.2,86.4]:
+        leaf=345.6; pitch=leaf+gap
+        axis_hops=math.ceil(pitch/405-1e-9)
+        outbound=2*axis_hops+1; inbound=outbound
+        outline=3*leaf+2*gap+86.4
+        variants.append(dict(name=f'six_read_local_leaves_gap{gap:g}',RF_macros=30,
+          hard_leaves=6,macros_per_leaf=5,leaf_outline_um=[leaf,leaf],
+          grid=[3,3],occupied_slots=[[0,0],[1,0],[2,0],[0,2],[1,2],[2,2]],owner_hub=[1,1],
+          persistent_owner_bits=768,owner_state_replication=1,
+          outline_um=[round(outline,6)]*2,interleaf_gap_um=gap,
+          max_grid_segment_um=pitch/axis_hops,axis_hops=axis_hops,local_face_hops=1,
+          command_transport_edges=outbound,return_segments=inbound,
+          external_read_edge=outbound+inbound+2,read_delta_edges=outbound+inbound-1,
+          write_commit_edge=outbound+1,write_delta_edges=outbound,
+          command_bits_per_leaf=489,owner_token_bits_total=39,return_bits_total=452,
+          transport_register_budget=6*489*outbound+452*(inbound-1)+39*outbound,
+          FF_budget_scope='Fixed-interval transport only; excludes pin/reset/branch/clock copies',
+          assumed_signal_layers=1,assumed_pitch_um=.048,assumed_usable_tracks_fraction=.5,
+          available_tracks_per_independent_corridor=math.floor(gap/.048)*.5,
+          channel_screen='FAIL' if math.floor(gap/.048)*.5<489 else 'PASS arithmetic only',
+          qualification=False))
+    return dict(status='MODEL_ONLY_NO_ENGINE',traffic_restrictions=False,
+      edge_formula='commandE; localcaptureE+Hc; macroE+Hc+1; selectedE+Hc+2; externalE+Hc+2+K; deltaHc+K-1 vsoldE+3',
+      distance_lower_bound='For a named pairD, segments>=ceil(ManhattanD/405); not proof that pair exists',
+      conservative_full_body_pair=dict(L1_um=1382.4,segments=4,command_edges=4,return_segments=4,read_delta=7,write_delta=4),
+      alternatives=variants,reticle_fit='NOT RUN: actual enlarged parent/die composition required',
+      density='NOT RUN: actual synthesis area determines full-width band; no lowfill waiver',
+      clock_PG_native='NOT RUN',rate_credit=0,
+      compiler_obligation='Bind exact data/metadata/owner/reset/fault edges and all coherent replicas before source engine')
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args()

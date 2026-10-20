@@ -29,5 +29,13 @@
     "added_cycles": 0,
     "extra_logic": "At most one duplicate32-bit5-level LZC tree (31 merge nodes,5 count bits/node before optimization); actual mapped area required",
     "qualification": "Full all-edge FP primitive bench+causal latency mutation+actual native required before any composition"
+  },
+  "fp6_shift_group_model": {
+    "trigger": "FP5 actualnative onlyLZCshiftoutputs bits0..3 drive75/52/50/39loads",
+    "method": "5one-bit barrelshiftstages, each3kept9-bit outputgroups;3independent exactLZCtrees supply one selectbit pergroup perstage; eachselectcontrols atmost9muxbits, rather than all27+intermediatemuxes",
+    "extra_ff": 0,
+    "extra_edges": 0,
+    "extra_logic": "two extraLZCtrees vsFP5 (three vsFP4); same135logicalshiftmuxbitpositions beforepruning;actual areaandallnative rolesmustbemeasured",
+    "scope": "privateprimitive only, no qcorecomposition/layout"
   }
 }

@@ -1,0 +1,198 @@
+{
+  "schema": "opentallas.hbm.qcore-rf-regional-latency-model.v1",
+  "status": "MODEL_ONLY_NO_ENGINE",
+  "source_model": "rf_sram_model.json",
+  "traffic_restriction": "None; all4relay+COLL writes and all6read classes every edge",
+  "layout_model_scope": "Illustrative source topology and conservative fixed-edge budgets; not a globally minimal placement or certified floorplan",
+  "clock": "serial clock only; no unpriced faster macro clock or multi-pumping",
+  "edge_accounting": "Root command captureE; addHc before localcapture; macro sample/writeE+Hc+1; selecteddataE+Hc+2; returnKsegments endsE+Hc+2+K. Relative tooldE+3, read deltaHc+K-1; write deltaHc.",
+  "generic_bound": {
+    "per_wire_Manhattan_limit_um": 405,
+    "formula": "For a named source/destination distanceD, transport has at leastceil(D/405)segments. Extra regs depend on which endpoint captures already exist; this is not proof any specific pair exists.",
+    "central_array_screen_um": [
+      604.8,
+      777.6
+    ],
+    "full_corner_L1_um": 1382.4,
+    "full_corner_segments": 4,
+    "conditional_command_budget_edges": 4,
+    "conditional_return_segments": 4,
+    "conditional_read_delta_edges": 7,
+    "conditional_write_delta_edges": 4,
+    "warning": "Conservative arbitrary-point budget, not an impossibility theorem; actual full transparent stage graph may permit tighter placement"
+  },
+  "alternatives": [
+    {
+      "name": "six_read_local_leaves_gap43.2",
+      "RF_macros": 30,
+      "leaf_count": 6,
+      "macros_per_leaf": 5,
+      "owner_table_location": "one central persistent768b table; no six-way state replication assumed",
+      "leaf_outline_um": [
+        345.6,
+        345.6
+      ],
+      "leaf_grid": [
+        3,
+        3
+      ],
+      "occupied_leaf_slots": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "owner_hub_slot": [
+        1,
+        1
+      ],
+      "interleaf_gap_um": 43.2,
+      "coarse_parent_outline_um": [
+        1209.6000000000004,
+        1209.6000000000004
+      ],
+      "parent_area_um2": 1463132.1600000008,
+      "root_to_corner_leaf_grid_L1_um": 777.6,
+      "max_grid_segment_um": 388.8,
+      "axis_hops": 1,
+      "far_grid_hops": 2,
+      "local_face_hops_budget": 1,
+      "command_transport_extra_edges": 3,
+      "return_segments": 3,
+      "external_read_edge": 8,
+      "read_delta_edges": 5,
+      "memory_write_commit_edge": 4,
+      "write_delta_edges": 3,
+      "normal_leaf_command_bits": 489,
+      "drain_leaf_command_bits": 489,
+      "separate_owner_token_bits_total": 39,
+      "leaf_return_data_bits_total": 416,
+      "returned_command_metadata_bits": 36,
+      "transport_register_budget": 9823,
+      "register_budget_scope": "Full-width fixed-interval pipeline budget; excludes source/pin regs, branch copies, reset/clock landing, priority controls and rebalancing",
+      "channel_screen": {
+        "assumed_usable_same_direction_signal_layers": 1,
+        "assumed_track_pitch_um": 0.048,
+        "assumed_usable_fraction": 0.5,
+        "tracks_reserved_per_independent_corridor": 450.0,
+        "tracks_demand_per_leaf": 489,
+        "status": "FAIL single-layer reserved capacity",
+        "caveat": "ASSUMED screen; actual layer direction/PG/obstruction/channel sharing/native pins not measured"
+      },
+      "qualification": false
+    },
+    {
+      "name": "six_read_local_leaves_gap86.4",
+      "RF_macros": 30,
+      "leaf_count": 6,
+      "macros_per_leaf": 5,
+      "owner_table_location": "one central persistent768b table; no six-way state replication assumed",
+      "leaf_outline_um": [
+        345.6,
+        345.6
+      ],
+      "leaf_grid": [
+        3,
+        3
+      ],
+      "occupied_leaf_slots": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "owner_hub_slot": [
+        1,
+        1
+      ],
+      "interleaf_gap_um": 86.4,
+      "coarse_parent_outline_um": [
+        1296.0000000000002,
+        1296.0000000000002
+      ],
+      "parent_area_um2": 1679616.0000000007,
+      "root_to_corner_leaf_grid_L1_um": 864.0,
+      "max_grid_segment_um": 216.0,
+      "axis_hops": 2,
+      "far_grid_hops": 4,
+      "local_face_hops_budget": 1,
+      "command_transport_extra_edges": 5,
+      "return_segments": 5,
+      "external_read_edge": 12,
+      "read_delta_edges": 9,
+      "memory_write_commit_edge": 6,
+      "write_delta_edges": 5,
+      "normal_leaf_command_bits": 489,
+      "drain_leaf_command_bits": 489,
+      "separate_owner_token_bits_total": 39,
+      "leaf_return_data_bits_total": 416,
+      "returned_command_metadata_bits": 36,
+      "transport_register_budget": 16673,
+      "register_budget_scope": "Full-width fixed-interval pipeline budget; excludes source/pin regs, branch copies, reset/clock landing, priority controls and rebalancing",
+      "channel_screen": {
+        "assumed_usable_same_direction_signal_layers": 1,
+        "assumed_track_pitch_um": 0.048,
+        "assumed_usable_fraction": 0.5,
+        "tracks_reserved_per_independent_corridor": 900.0,
+        "tracks_demand_per_leaf": 489,
+        "status": "PASS arithmetic capacity only",
+        "caveat": "ASSUMED screen; actual layer direction/PG/obstruction/channel sharing/native pins not measured"
+      },
+      "qualification": false
+    }
+  ],
+  "rejected_topology": {
+    "name": "five_writer_local_leaves",
+    "RF_macros": 30,
+    "output_data_to_global_collector_bits_per_edge": 7680,
+    "reason": "central5-way owner selection moves7680bits/edge; read-local leaves move416resultbits plus39ownerbits, at cost broadcasting writes6ways. No rejection by arbitrary area cap."
+  },
+  "reticle_fit": {
+    "status": "NOT RUN",
+    "reason": "No adopted enlarged parent slot/current full die outline supplied; six-leaf1296square cannot be assumed to fit old280.8square. DIE must recompose all replicas, channels and reticle envelope."
+  },
+  "native32": "NOT RUN; masked writes, owner table, read selects, reset/pin landing all require actual mapped census",
+  "density": "NOT RUN; actual std synthesis area determines one full-width band per hard leaf and exact exceptions, no lowfill waiver",
+  "throughput": "Target issue everyedge; no measured service/10%qualification; all edge changes require compiler/data+metadata+fault/staticcalendar rewrite and golden proof",
+  "next": "Select a traffic-independent topology only after actual die recompose; bind exact transport stages in compiler, then RTL/native before any physical gate"
+}
