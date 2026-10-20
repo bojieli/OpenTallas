@@ -24,7 +24,7 @@
      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib": "f08869109c2b5657c81d86d6fec22f4e5c8ce0811db8b551872fa85362e79258",
      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib": "267e994041e8d97e6ff1a470e618058a8c790b7e71be52d9ba83e94be9f5816a",
      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
-     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv": "3d3e7a5be43931bdb6cd70f10f167bc804037ff8dfb7cb74e0c2d613e61c99a7",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv": "2b3ba9325d4a43f115fd7026e944c88b5bd8ebf1876a3c3081e1dc1768718458",
      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_fault_cdc_rs.sv": "f7b445d2837f947a7748e7863ea7c411bef770cb9fab00a60a00b51d1b7d5a08",
      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_id.sv": "fff083411f4a7082f0afd2120afffaf28d04ff8ae39f79c5b63e0da4a14414bb",
@@ -189,7 +189,7 @@
     "tool": {
      "cdc_sync_constraints.py": "dbad0153f6038fb22766740110007f16e781ff3b5b7fe206ec59a4173da51506",
      "clock_entry_constraints.py": "7e184cb89837c924bbef6db763866e8dfb2c5a26b619ccd4847797bb9eb32351",
-     "gray_fifo_cdc_constraints.py": "adb87d298284a3f879853f58430f3e22eff93f54e89ad33dbaa49470f1f57d06",
+     "gray_fifo_cdc_constraints.py": "8c46e71852245d2bd4d9bd920d8544bd94443f8669f89ee19267ff20695f2f47",
      "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
     },
     "tool_data": {
@@ -197,9 +197,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-19T18:32:38-0700",
+   "created": "2026-10-19T18:53:59-0700",
    "host": "ot-epyc9",
-   "key": "9525a38518bcdd18d0492f292cfb5c2082e078a8166d7ae8947d63a0a114a6c5",
+   "key": "f8919551bb2521c3c80505d253e4c9e20d83623e937ff580b7a1dd0576fbac50",
    "record": {
     "counts": {
      "consumer": 0,
@@ -430,6 +430,30 @@
      }
     },
     "gated": {},
+    "launch_aliases": {
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_bin[3]": "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_bin[3]": "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_bin[3]": "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_bin[3]": "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_bin[3]": "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_bin[3]": "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_bin[3]": "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_bin[3]": "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_bin[3]": "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_bin[3]": "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_bin[3]": "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_bin[3]": "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_bin[3]": "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_bin[3]": "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[3]",
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_bin[3]": "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[3]",
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_bin[3]": "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[3]",
+     "feed.producer.u_descriptor.rd_bin[2]": "feed.producer.u_descriptor.rd_gray[2]",
+     "feed.producer.u_descriptor.wr_bin[2]": "feed.producer.u_descriptor.wr_gray[2]",
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_bin[2]": "feed.producer.u_hbm_fault_cdc.u_status.rd_gray[2]",
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_bin[2]": "feed.producer.u_hbm_fault_cdc.u_status.wr_gray[2]",
+     "feed.producer.u_stream_fault_cdc.u_status.rd_bin[2]": "feed.producer.u_stream_fault_cdc.u_status.rd_gray[2]",
+     "feed.producer.u_stream_fault_cdc.u_status.wr_bin[2]": "feed.producer.u_stream_fault_cdc.u_status.wr_gray[2]"
+    },
     "levels": {},
     "macros": {
      "feed.producer.ordinal_bank[0].u_bank.g_four.u_payload": "core",
@@ -638,6 +662,12 @@
       "pipe",
       1
      ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_bin[3]": [
+      "src",
+      "f0",
+      "rptr",
+      3
+     ],
      "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.rd_gray[0]": [
       "src",
       "f0",
@@ -776,6 +806,12 @@
       "pipe",
       1
      ],
+     "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_bin[3]": [
+      "src",
+      "f0",
+      "wptr",
+      3
+     ],
      "feed.producer.ordinal_bank[0].u_bank.g_rsram.u_response.wr_gray[0]": [
       "src",
       "f0",
@@ -889,6 +925,12 @@
       "r27",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_bin[3]": [
+      "src",
+      "f1",
+      "rptr",
+      3
      ],
      "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.rd_gray[0]": [
       "src",
@@ -1028,6 +1070,12 @@
       "pipe",
       1
      ],
+     "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_bin[3]": [
+      "src",
+      "f1",
+      "wptr",
+      3
+     ],
      "feed.producer.ordinal_bank[1].u_bank.g_rsram.u_response.wr_gray[0]": [
       "src",
       "f1",
@@ -1141,6 +1189,12 @@
       "r27",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_bin[3]": [
+      "src",
+      "f2",
+      "rptr",
+      3
      ],
      "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.rd_gray[0]": [
       "src",
@@ -1280,6 +1334,12 @@
       "pipe",
       1
      ],
+     "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_bin[3]": [
+      "src",
+      "f2",
+      "wptr",
+      3
+     ],
      "feed.producer.ordinal_bank[2].u_bank.g_rsram.u_response.wr_gray[0]": [
       "src",
       "f2",
@@ -1393,6 +1453,12 @@
       "r27",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_bin[3]": [
+      "src",
+      "f3",
+      "rptr",
+      3
      ],
      "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.rd_gray[0]": [
       "src",
@@ -1532,6 +1598,12 @@
       "pipe",
       1
      ],
+     "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_bin[3]": [
+      "src",
+      "f3",
+      "wptr",
+      3
+     ],
      "feed.producer.ordinal_bank[3].u_bank.g_rsram.u_response.wr_gray[0]": [
       "src",
       "f3",
@@ -1645,6 +1717,12 @@
       "r27",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_bin[3]": [
+      "src",
+      "f4",
+      "rptr",
+      3
      ],
      "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.rd_gray[0]": [
       "src",
@@ -1784,6 +1862,12 @@
       "pipe",
       1
      ],
+     "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_bin[3]": [
+      "src",
+      "f4",
+      "wptr",
+      3
+     ],
      "feed.producer.ordinal_bank[4].u_bank.g_rsram.u_response.wr_gray[0]": [
       "src",
       "f4",
@@ -1897,6 +1981,12 @@
       "r27",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_bin[3]": [
+      "src",
+      "f5",
+      "rptr",
+      3
      ],
      "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.rd_gray[0]": [
       "src",
@@ -2036,6 +2126,12 @@
       "pipe",
       1
      ],
+     "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_bin[3]": [
+      "src",
+      "f5",
+      "wptr",
+      3
+     ],
      "feed.producer.ordinal_bank[5].u_bank.g_rsram.u_response.wr_gray[0]": [
       "src",
       "f5",
@@ -2149,6 +2245,12 @@
       "r27",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_bin[3]": [
+      "src",
+      "f6",
+      "rptr",
+      3
      ],
      "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.rd_gray[0]": [
       "src",
@@ -2288,6 +2390,12 @@
       "pipe",
       1
      ],
+     "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_bin[3]": [
+      "src",
+      "f6",
+      "wptr",
+      3
+     ],
      "feed.producer.ordinal_bank[6].u_bank.g_rsram.u_response.wr_gray[0]": [
       "src",
       "f6",
@@ -2401,6 +2509,12 @@
       "r27",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_bin[3]": [
+      "src",
+      "f7",
+      "rptr",
+      3
      ],
      "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.rd_gray[0]": [
       "src",
@@ -2539,6 +2653,12 @@
       "r15",
       "pipe",
       1
+     ],
+     "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_bin[3]": [
+      "src",
+      "f7",
+      "wptr",
+      3
      ],
      "feed.producer.ordinal_bank[7].u_bank.g_rsram.u_response.wr_gray[0]": [
       "src",
@@ -2738,6 +2858,12 @@
       "pipe",
       1
      ],
+     "feed.producer.u_descriptor.rd_bin[2]": [
+      "src",
+      "f8",
+      "rptr",
+      2
+     ],
      "feed.producer.u_descriptor.rd_gray[0]": [
       "src",
       "f8",
@@ -2857,6 +2983,12 @@
       "r17",
       "pipe",
       1
+     ],
+     "feed.producer.u_descriptor.wr_bin[2]": [
+      "src",
+      "f8",
+      "wptr",
+      2
      ],
      "feed.producer.u_descriptor.wr_gray[0]": [
       "src",
@@ -2996,6 +3128,12 @@
       "pipe",
       1
      ],
+     "feed.producer.u_hbm_fault_cdc.u_status.rd_bin[2]": [
+      "src",
+      "f9",
+      "rptr",
+      2
+     ],
      "feed.producer.u_hbm_fault_cdc.u_status.rd_gray[0]": [
       "src",
       "f9",
@@ -3115,6 +3253,12 @@
       "r21",
       "pipe",
       1
+     ],
+     "feed.producer.u_hbm_fault_cdc.u_status.wr_bin[2]": [
+      "src",
+      "f9",
+      "wptr",
+      2
      ],
      "feed.producer.u_hbm_fault_cdc.u_status.wr_gray[0]": [
       "src",
@@ -3278,6 +3422,12 @@
       "pipe",
       1
      ],
+     "feed.producer.u_stream_fault_cdc.u_status.rd_bin[2]": [
+      "src",
+      "f10",
+      "rptr",
+      2
+     ],
      "feed.producer.u_stream_fault_cdc.u_status.rd_gray[0]": [
       "src",
       "f10",
@@ -3397,6 +3547,12 @@
       "r26",
       "pipe",
       1
+     ],
+     "feed.producer.u_stream_fault_cdc.u_status.wr_bin[2]": [
+      "src",
+      "f10",
+      "wptr",
+      2
      ],
      "feed.producer.u_stream_fault_cdc.u_status.wr_gray[0]": [
       "src",
@@ -3586,7 +3742,7 @@
      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
-     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv": "3d3e7a5be43931bdb6cd70f10f167bc804037ff8dfb7cb74e0c2d613e61c99a7",
+     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_sram.sv": "2b3ba9325d4a43f115fd7026e944c88b5bd8ebf1876a3c3081e1dc1768718458",
      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_fault_cdc_rs.sv": "f7b445d2837f947a7748e7863ea7c411bef770cb9fab00a60a00b51d1b7d5a08",
      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_id.sv": "fff083411f4a7082f0afd2120afffaf28d04ff8ae39f79c5b63e0da4a14414bb",
@@ -3609,7 +3765,7 @@
      "id_stack"
     ]
    },
-   "seconds": 113
+   "seconds": 151
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
