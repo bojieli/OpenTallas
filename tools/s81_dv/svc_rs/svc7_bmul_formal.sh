@@ -2,7 +2,7 @@
 set -euo pipefail
 G=$(cd "${1:?graph output directory}" && pwd)
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)
-O=$G/formal
+O=$G/${2:-formal}
 mkdir -p "$O"
 cat > "$O/miter.sv" <<'SV'
 module svc7_graph_miter(input clk,rst_n,pad,input [15:0] a,b,output bad);
@@ -14,7 +14,7 @@ module svc7_graph_miter(input clk,rst_n,pad,input [15:0] a,b,output bad);
 endmodule
 SV
 cat > "$O/proof.ys" <<'YS'
-read_verilog -formal -sv /graph/native.v /graph/verify/cells.v /out/miter.sv /src/rtl/hdc/v41x/ot_s81svc7_bmul_graph_input.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv /src/rtl/hdc/ot_hdc_prefix.sv
+read_verilog -formal -sv /graph/native.v /graph/mapped.v /graph/verify/cells.v /out/miter.sv
 hierarchy -check -top svc7_graph_miter
 proc
 flatten
@@ -22,6 +22,8 @@ opt_clean
 async2sync
 dffunmap
 opt_clean
+# This proves clone initialization/reset against the exact mapped baseline.
+# Golden RTL arithmetic is checked independently by both Verilator benches.
 # No set-init-* options: every initial state bit, including every clone, free.
 # Skip nine initial edges: two reset landing + seven arithmetic edges.
 # After step3 reset is unconstrained; all data and fault outputs compared even during in-flight reset.

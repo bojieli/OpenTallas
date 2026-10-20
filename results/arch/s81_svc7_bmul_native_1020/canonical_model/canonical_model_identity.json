@@ -1,0 +1,9 @@
+{
+ "canonical_SEQ_sha256": "6e63ff4b5587097a76bf395c6f2383035368d5c8d95dbf551ba324d3a9537fde",
+ "normalized_sha256": "70aeab088fe68a101a4509960957f1995a336a40958f678f7250948571d28122",
+ "udp_tb_sha256": "04ed39741ecbe4d9d1d6e94958a7da53bacd37b0a10b0d7dc7de6b6617a598b1",
+ "normalized_library_sha256": "f82f50259999b941e697c25e938a6fdde9e00199b3e0afae524191be4c5da840",
+ "checks": 32,
+ "domain": "all binary D, RESETN, SETN combinations with initialized q0/q1 and controls stable before edge; includes dual-assert clear priority; notifier/timing violations outside fault-free contract",
+ "iverilog": "Icarus Verilog version 12.0 (stable) ()"
+}

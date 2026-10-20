@@ -1,3 +1,9 @@
+# SCOPE UPDATE01:14
+
+ROOT /root/kv_takeover confirmed the defective imported cell is ONLY DFFASRHQNx1. This leaf's full sequential inventory contains305 DFFHQNx1_ASAP7_75t_R and zero ASR cells. Its normal QN=!D agrees in exact Liberty and canonical PDK. The broad hold below is superseded for this scope; a dedicated DFFHQN truth coupon remains pending from the unified coupon owner. Canonical SEQ source and modelidentity hashes are copied in canonical_model/ (the existing32case ASR coupon is not claimed as DFFHQN coverage).
+
+Original native simulation and directRTL simulation both PASS19991. The interrupted proof remains incomplete. Two fresh independent-state jobs continue: formal_verified compares originalRTL to clonegraph; formal_mapped isolates clone-state replication against exactmappedbaseline. Both keep all initial FFs unconstrained, assume reset onlysteps1..3, compare all outputbits unconditionallysteps10..18, and leave in-flight reset unconstrained. No opt_merge or ignore_unknown_cells is used. No adoption/layout before terminalproof and coupon receipt.
+
 # MODEL INTEGRITY HOLD
 
 COORD01:13: Liberty-to-Verilog DFFASRHQN functional model may be wrong; canonical QN/normal/clear/preset/both-active truth coupon is pending ROOT /root/kv_takeover. ALL native-cell simulation PASS/negative witnesses and unfinished SAT evidence below are PROVISIONAL and cannot qualify adoption. Exact own SAT YosysPID2342269 ep7 terminated by SIGTERM after preserving its incomplete log. No other process was stopped. Native area/fanout results remain valid. Rerun native graph exact/mutant/SAT with verified canonical cell models before adoption. Source-RTL versus golden bench separately launched, independent of native models.
