@@ -72,7 +72,27 @@ foreach bt [$ot_oh_blk getBTerms] {
   set y [expr {max([$ot_oh_ca yMin], min($y, [$ot_oh_ca yMax] - [$ot_oh_hb getHeight]))}]
   set hb $ot_oh_hb; set hbs [list $ot_oh_hb]
   if {$ot_oh_shb ne "NULL" && [regexp -- $ot_oh_sre [$bt getName]]} { set hb $ot_oh_shb; set hbs [lrepeat $ot_oh_sst $ot_oh_shb]; incr ot_oh_ns }
-  set pn [odb::dbNet_create $ot_oh_blk [format "ot_outhold_p%05d" $ot_oh_n]]
+  # OpenSTA write_verilog uses BTerm names for port expressions. Leaving the
+  # original internal net named after this output port makes its driver and
+  # the new pad driver appear shorted in the exported Verilog. Rename the
+  # internal net before moving the BTerm; all ITerm/BTerm connections remain
+  # unchanged. Reserve both net and port namespaces, including escaped/indexed
+  # names and another output sharing the same original net.
+  set ot_oh_src_stem [format "ot_outhold_src%05d" $ot_oh_n]
+  set ot_oh_src_name $ot_oh_src_stem; set ot_oh_src_suffix 0
+  while {[$ot_oh_blk findNet $ot_oh_src_name] ne "NULL" || [$ot_oh_blk findBTerm $ot_oh_src_name] ne "NULL"} {
+    incr ot_oh_src_suffix
+    set ot_oh_src_name ${ot_oh_src_stem}_${ot_oh_src_suffix}
+  }
+  $net rename $ot_oh_src_name
+  if {[$net getName] ne $ot_oh_src_name} { error "OUTHOLD: internal net rename failed" }
+  set ot_oh_p_stem [format "ot_outhold_p%05d" $ot_oh_n]
+  set ot_oh_p_name $ot_oh_p_stem; set ot_oh_p_suffix 0
+  while {[$ot_oh_blk findNet $ot_oh_p_name] ne "NULL" || [$ot_oh_blk findBTerm $ot_oh_p_name] ne "NULL"} {
+    incr ot_oh_p_suffix
+    set ot_oh_p_name ${ot_oh_p_stem}_${ot_oh_p_suffix}
+  }
+  set pn [odb::dbNet_create $ot_oh_blk $ot_oh_p_name]
   $bt disconnect
   $bt connect $pn
   set cur $net; set k 0
@@ -85,7 +105,13 @@ foreach bt [$ot_oh_blk getBTerms] {
     if {$k == $nst - 1} {
       [$i findITerm Y] connect $pn
     } else {
-      set n2 [odb::dbNet_create $ot_oh_blk [format "ot_outhold_n%05d_%d" $ot_oh_n $k]]
+      set ot_oh_n_stem [format "ot_outhold_n%05d_%d" $ot_oh_n $k]
+      set ot_oh_n_name $ot_oh_n_stem; set ot_oh_n_suffix 0
+      while {[$ot_oh_blk findNet $ot_oh_n_name] ne "NULL" || [$ot_oh_blk findBTerm $ot_oh_n_name] ne "NULL"} {
+        incr ot_oh_n_suffix
+        set ot_oh_n_name ${ot_oh_n_stem}_${ot_oh_n_suffix}
+      }
+      set n2 [odb::dbNet_create $ot_oh_blk $ot_oh_n_name]
       [$i findITerm Y] connect $n2
       set cur $n2
     }
