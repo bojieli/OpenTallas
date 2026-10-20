@@ -21,13 +21,13 @@ def bound(data, top, limit=24):
     removed=set()
     for name,c in m['cells'].items():
         typ=c['type']
-        if typ.startswith(('BUF','INV')):
+        if typ.startswith(('BUF','INV','CKINV','HB')):
             ins=[b for p,bs in c['connections'].items()
                  if c['port_directions'][p]=='input' for b in bs]
             outs=[b for p,bs in c['connections'].items()
                   if c['port_directions'][p]=='output' for b in bs]
             assert len(ins)==len(outs)==1,(name,typ)
-            aliases[outs[0]]=(ins[0],typ.startswith('INV'))
+            aliases[outs[0]]=(ins[0],typ.startswith(('INV','CKINV')))
             removed.add(name)
     def norm(b):
         inv=False; seen=set()

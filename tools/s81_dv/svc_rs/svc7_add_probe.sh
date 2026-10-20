@@ -30,6 +30,8 @@ elif [ "$MODE" = census ] || [ "$MODE" = graph ]; then
         echo 'opt_clean'
         echo 'stat -liberty /tmp/lib/SIMPLE.lib -liberty /tmp/lib/AO.lib -liberty /tmp/lib/OA.lib -liberty /tmp/lib/INVBUF.lib -liberty /tmp/lib/SEQ.lib'
         echo 'write_verilog -noattr /out/mapped.v'
+        for k in SIMPLE AO OA INVBUF SEQ; do echo "read_liberty -lib /tmp/lib/$k.lib"; done
+        printf 'hierarchy -check -top %s\n' "$TOP"
         echo 'write_json /out/mapped.json'
     } > "$OUT/probe.ys"
     docker run --rm -v "$PWD:/src:ro" -v "$OUT:/out" openroad/orfs:latest bash -lc '
