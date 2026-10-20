@@ -1,0 +1,45 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: ot-epyc7       admits   836 GB (avail 679, growth 94, headroom 0, waiters 0/0 GB) load 47/96 running 22 disk 5508 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3137678-1792494929 after 1 s
+{
+  "fifo": {
+    "sha256": "7e109c6ef028b8300f0363424f107987c346227d78c88b0ef83fbc4e5143bfb7",
+    "bytes": 59170
+  },
+  "extended": {
+    "sha256": "6839dec3237f95b59b1eacdab3581b65632fc0ee5bc105347b8e5d1190b1c79d",
+    "bytes": 58923
+  },
+  "events": {
+    "sha256": "c58602919ac65d8d24bbf1d66575d0c88ddecaf1d53a6e37ddf6dae70a6116ec",
+    "bytes": 56968
+  },
+  "ordinary": {
+    "sha256": "1f73410ad632521b6fcc95a1d33b4d33041839b5d2a95212c35631dbcd2ae2e0",
+    "bytes": 57158
+  }
+}
+{
+  "fifo": {
+    "sha256": "7e109c6ef028b8300f0363424f107987c346227d78c88b0ef83fbc4e5143bfb7",
+    "bytes": 59170
+  },
+  "extended": {
+    "sha256": "6839dec3237f95b59b1eacdab3581b65632fc0ee5bc105347b8e5d1190b1c79d",
+    "bytes": 58923
+  },
+  "events": {
+    "sha256": "c58602919ac65d8d24bbf1d66575d0c88ddecaf1d53a6e37ddf6dae70a6116ec",
+    "bytes": 56968
+  },
+  "ordinary": {
+    "sha256": "1f73410ad632521b6fcc95a1d33b4d33041839b5d2a95212c35631dbcd2ae2e0",
+    "bytes": 57158
+  }
+}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3137678-1792494929): exit 0
