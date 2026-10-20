@@ -648,6 +648,28 @@ module ot_tkm_lt_live #(parameter integer W = 85) (input wire [W-1:0] a, input w
 endmodule
 
 
+// ot_tkm_gn_leaf (HBM-E86-5 2026-10-20, e86 FAN32 V3): the GN next-state of one position from ITS OWN kept count
+// copies (cg/cv: gt / valid copies of positions d-0..d-4), the four-position compare outputs g2 (g2f of d-k) and the
+// group block compares gb. Logic = the FAN32 1 g_gn32 g_new block, verbatim; DMIN = min(d, 5) carries the d >= k and
+// d - k - 1 < 0 position conditions. Instantiated with keep_hierarchy at FAN32 2 so ABC cannot fold it into the copies.
+module ot_tkm_gn_leaf #(parameter integer DMIN = 5) (
+    input wire [19:0] cg, input wire [4:0] cv, input wire [19:0] g2, input wire [15:0] gb, output reg [3:0] gn);
+    wire [2:0] count [0:4];
+    for (genvar k = 0; k < 5; k = k + 1) begin : g_count
+        wire [3:0] v = cg[4*k +: 4];
+        assign count[k] = cv[k] ? (3'(v[0]) + 3'(v[1]) + 3'(v[2]) + 3'(v[3])) : 3'd0;
+    end
+    always @* begin
+        gn = 4'd0;
+        for (integer k = 0; k < 5; k = k + 1)
+            if (DMIN >= k && count[k] == 3'(k)) gn = gn | g2[4*k +: 4];
+        for (integer k = 0; k < 4; k = k + 1)
+            if (cv[0] && DMIN >= k && count[k] > 3'(k) && (k == DMIN || count[(k < 4) ? k + 1 : 4] <= 3'(k)))
+                gn = gn | gb[4*k +: 4];
+    end
+endmodule
+
+
 // ot_hgi_coll_tkm_tile_rg (TKM-2 2026-10-17, e86 successor of CDUP fab3f5eba): the same two-stage insertion tile,
 // cycle-identical to ot_hgi_coll_tkm_tile CDUP=1, with
 //  (1) ot_tkm_lt_live compares (no kept padding: removes the yosys insbuf storm), and
@@ -677,6 +699,7 @@ endmodule
 //   Same edges, same function as CREP 0 (cycle-identity bench tb_hgi_coll_tkm_tile_rg_crep.sv); each select copy drives
 //   one AND-OR leg per bit of its slice (<= 29 loads), each group decode feeds 24 copies.  q_*_g keep only gt / ovf_v.
 //   CMUT (bench only, CREP 1): 1 = position 13 slice 1 takes hold where it should shift (must FAIL the lockstep).
+//   CMUT 3 (bench only, FAN32 >= 2): variant-1 GN of position 20 drops its k=1 compare leg (must FAIL the lockstep).
 module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT = 64, parameter integer TW = 6,
                                  parameter integer LW = 7, parameter integer PRE = 0,
                                  parameter integer CREP = 0, parameter integer CMUT = 0, parameter integer FAN32 = 0) (
@@ -711,6 +734,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     (* keep *) reg [4*EW-1:0] q_bg [0:NGR-1];
     reg [3:0] gt [0:NP-1];
     wire i_clr, i_conv, i_v; wire [TW-1:0] i_tid, i_tt; wire [LW-1:0] i_tl; wire [4*EW-1:0] i_b;
+    wire i_clr2, i_conv2, i_v2;   // FAN32 >= 2: second kept pin-stage copy feeding only the CREP select copies
     genvar gp, gj, gk, gg;
     if (PRE != 0) begin : g_pre
         (* keep=FAN32, dont_touch=FAN32 *) reg s_clr, s_conv, s_v; reg [TW-1:0] s_tid, s_tt; reg [LW-1:0] s_tl; (* keep=FAN32, dont_touch=FAN32 *) reg [4*EW-1:0] s_b;
@@ -719,7 +743,15 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         end
         assign i_clr = s_clr; assign i_conv = s_conv; assign i_v = s_v; assign i_tid = s_tid; assign i_tt = s_tt;
         assign i_tl = s_tl; assign i_b = s_b;
+        if (FAN32 >= 2) begin : g_s2
+            (* keep="true", dont_touch="true" *) reg s_clr2, s_conv2, s_v2;
+            always @(posedge clk) begin s_clr2 <= clr; s_conv2 <= conv; s_v2 <= ins_v; end
+            assign i_clr2 = s_clr2; assign i_conv2 = s_conv2; assign i_v2 = s_v2;
+        end else begin : g_s1
+            assign i_clr2 = s_clr; assign i_conv2 = s_conv; assign i_v2 = s_v;
+        end
     end else begin : g_nopre
+        assign i_clr2 = clr; assign i_conv2 = conv; assign i_v2 = ins_v;
         assign i_clr = clr; assign i_conv = conv; assign i_v = ins_v; assign i_tid = tid; assign i_tt = tau_t;
         assign i_tl = tau_l; assign i_b = ins_b;
     end
@@ -758,41 +790,64 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         end
     end
     localparam integer FW = 20, FN = (EW + FW - 1) / FW;
-    wire [3:0] gt_copy [0:NP-1][0:FN][0:4];
-    wire valid_copy [0:NP-1][0:FN][0:4];
-    wire valid_gn [0:NP-1], clear_gn [0:NP-1], pvalid_forword [0:NP-1];
-    wire [3:0] flags_for_gn[0:NP-1];
+    // V3 (FAN32 >= 2, HBM-E86-5 2026-10-20; V2b mapped census FAIL 21 drivers / max 65): every GN bit was ONE
+    // combinational net feeding all 30 same-edge gc copies of its position (6 words x 5 k), and ABC pushed the GN OR
+    // and the compare outputs into those copy muxes (roots 33..65 loads). V3 computes GN NV = 3 times, each from its own
+    // kept count-copy word (GN words FN..FN+NV-1) inside a keep_hierarchy leaf (ot_tkm_gn_leaf: ABC cannot merge or push
+    // across it); variant v feeds only its own copies (v0: data words 0-1 + GN word 0; v1: 2-3 + GN 1; v2: 4 + GN 2),
+    // <= 15 loads per GN bit. The p-stage clear/valid/flags are per-variant kept copies (<= 15 q copies each) and the
+    // pin-stage copies cover PG = 9 positions (<= 27 loads). Same edges, same function (lockstep vs CREP 0 reference).
+    // FAN32 = 3: the same V3 structure without the keep_hierarchy leaf (flat fallback for the census).
+    localparam integer NV = (FAN32 >= 2) ? 3 : 1;
+    localparam integer NWD = FN + NV;
+    localparam integer PG = (FAN32 >= 2) ? 9 : 17;
+    localparam integer NPIN = (NP + PG - 1) / PG;
+    function automatic integer wv(input integer w); wv = (w >= FN) ? w - FN : (NV == 1) ? 0 : (w < 2) ? 0 : (w < 4) ? 1 : 2; endfunction
+    wire [3:0] gt_copy [0:NP-1][0:NWD-1][0:4];
+    wire valid_copy [0:NP-1][0:NWD-1][0:4];
+    wire valid_gn [0:NP-1], clear_gn [0:NP-1];
+    wire pclear_w [0:NP-1][0:NV-1], pvalid_w [0:NP-1][0:NV-1];
+    wire [3:0] pflags_w [0:NP-1][0:NV-1];
+    wire [3:0] gnv [0:NP-1][0:NV-1];
     if (FAN32 != 0) begin : g_fan32_state
-        // Keep every input-to-control provenance edge bounded: 4 pin copies,
-        // at most17 p-stage copies each, then <=26 q-stage copies per position.
-        (* keep="true",dont_touch="true" *) reg [3:0] pin_clr, pin_v;
-        (* keep="true",dont_touch="true" *) reg [3:0] pin_valid [0:3];
-        for(genvar k=0;k<4;k=k+1)begin:g_pin
+        // Keep every input-to-control provenance edge bounded: NPIN pin copies (PG positions x NV variants each),
+        // per-variant p-stage copies, then the q-stage copies of each (position, word).
+        (* keep="true",dont_touch="true" *) reg [NPIN-1:0] pin_clr, pin_v;
+        (* keep="true",dont_touch="true" *) reg [3:0] pin_valid [0:NPIN-1];
+        for(genvar k=0;k<NPIN;k=k+1)begin:g_pin
             always @(posedge clk)begin
                 pin_clr[k]<=clr;pin_v[k]<=ins_v;
                 for(integer b=0;b<4;b=b+1)pin_valid[k][b]<=ins_b[b*EW+EW-1];
             end
         end
-        (* keep="true",dont_touch="true" *) reg pclear [0:NP-1];
-        (* keep="true",dont_touch="true" *) reg pvalid [0:NP-1];
-        (* keep="true",dont_touch="true" *) reg [3:0] pflags [0:NP-1];
         for(genvar g=0;g<NP;g=g+1)begin:g_p
-            always @(posedge clk)pclear[g]<=pin_clr[g/17];
-            always @(posedge ckr[rg(g/GP)])begin pvalid[g]<=pin_v[g/17];pflags[g]<=pin_valid[g/17];end
-            (* keep="true",dont_touch="true" *) reg vg,cg;
-            always @(posedge ckr[rg(g/GP)])begin vg<=pvalid[g];cg<=pclear[g];end
-            assign valid_gn[g]=vg;assign clear_gn[g]=cg;assign pvalid_forword[g]=pvalid[g];assign flags_for_gn[g]=pflags[g];
+            for(genvar v=0;v<NV;v=v+1)begin:g_v
+                (* keep="true",dont_touch="true" *) reg pc, pv;
+                (* keep="true",dont_touch="true" *) reg [3:0] pf;
+                always @(posedge clk) pc<=pin_clr[g/PG];
+                always @(posedge ckr[rg(g/GP)])begin pv<=pin_v[g/PG];pf<=pin_valid[g/PG];end
+                assign pclear_w[g][v]=pc;assign pvalid_w[g][v]=pv;assign pflags_w[g][v]=pf;
+            end
+            if (NV == 1) begin : g_gnq
+                (* keep="true",dont_touch="true" *) reg vg,cg;
+                always @(posedge ckr[rg(g/GP)])begin vg<=pvalid_w[g][0];cg<=pclear_w[g][0];end
+                assign valid_gn[g]=vg;assign clear_gn[g]=cg;
+            end else begin : g_gnq0
+                // legacy gt / cp only (dead at FAN32 >= 2: GN feeds the copies, not gt)
+                assign valid_gn[g]=1'b0;assign clear_gn[g]=1'b0;
+            end
         end
         for(genvar d=0;d<NP;d=d+1)begin:g_d
-            for(genvar w=0;w<=FN;w=w+1)begin:g_w
+            for(genvar w=0;w<NWD;w=w+1)begin:g_w
                 for(genvar k=0;k<5;k=k+1)begin:g_k
                     localparam integer SRC=(d>=k)?d-k:0;
+                    localparam integer V=wv(w);
                     if(d>=k)begin:g_live
                     (* keep="true",dont_touch="true" *) reg qc,qv;
                     (* keep="true",dont_touch="true" *) reg [3:0] gc;
                     always @(posedge ckr[rg(SRC/GP)])begin
-                        qc<=pclear[SRC];qv<=pvalid[SRC];
-                        for(integer b=0;b<4;b=b+1)gc[b]<=(SRC>=PT)?pflags[SRC][b]:(qc?pflags[SRC][b]:gn[SRC][b]);
+                        qc<=pclear_w[SRC][V];qv<=pvalid_w[SRC][V];
+                        for(integer b=0;b<4;b=b+1)gc[b]<=(SRC>=PT)?pflags_w[SRC][V][b]:(qc?pflags_w[SRC][V][b]:gnv[SRC][V][b]);
                     end
                     assign gt_copy[d][w][k]=gc;assign valid_copy[d][w][k]=qv;
                     end else begin:g_absent
@@ -802,7 +857,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             end
         end
 `ifndef SYNTHESIS
-        initial if(PRE==0||NP>68)$fatal(1,"FAN32 provenance requires PRE1, NP<=68");
+        initial if(PRE==0||NP>68||(NV>1&&FN!=5))$fatal(1,"FAN32 provenance requires PRE1, NP<=68 (V3: FN 5)");
 `endif
     end else begin:g_old_state
         for(genvar g=0;g<NP;g=g+1)begin:g_g
@@ -839,7 +894,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     reg [EW-1:0] ins_legacy [0:NP-1];
     wire [EW-1:0] ins [0:NP-1];
     reg [3:0] gn_legacy[0:NP-1];
-    (* keep=FAN32 *) wire [3:0] gn[0:NP-1];
+    wire [3:0] gn[0:NP-1];
     always @* begin : bcins
         for (integer q = 0; q < NP; q = q + 1) begin
             ins_legacy[q] = {EW{1'b0}}; gn_legacy[q] = 4'd0;
@@ -860,24 +915,22 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     // data selectors. Each source GN bit reaches <=30 copy D muxes, plus its
     // original state at most; each local selector drives only four GN bits.
     for(genvar d=0;d<NP;d=d+1)begin:g_gn32
-        if(FAN32==0)begin:g_old assign gn[d]=gn_legacy[d];end
-        else if(d>=PT)begin:g_tail assign gn[d]=flags_for_gn[d];end
+        assign gn[d]=gnv[d][0];
+        for(genvar v=0;v<NV;v=v+1)begin:g_v
+        if(FAN32==0)begin:g_old assign gnv[d][v]=gn_legacy[d];end
+        else if(d>=PT)begin:g_tail assign gnv[d][v]=pflags_w[d][v];end
         else begin:g_new
-            (* keep *) wire [2:0] count[0:4];
-            for(genvar k=0;k<5;k=k+1)begin:g_count
-                wire[3:0] v=gt_copy[d][FN][k];
-                assign count[k]=valid_copy[d][FN][k]?(3'(v[0])+3'(v[1])+3'(v[2])+3'(v[3])):3'd0;
+            wire [19:0] cg_, g2_; wire [4:0] cv_;
+            for(genvar k=0;k<5;k=k+1)begin:g_in
+                assign cg_[4*k+:4]=gt_copy[d][FN+v][k];assign cv_[k]=valid_copy[d][FN+v][k];
+                assign g2_[4*k+:4]=(d>=k&&!(CMUT==3&&d==20&&v==1&&k==1))?g2f[4*((d>=k)?d-k:0)+:4]:4'd0;  // CMUT 3 (bench only): V3 variant-1 GN of position 20 drops its k=1 compare leg
             end
-            reg[3:0] value;
-            always @*begin
-                value=0;
-                for(integer k=0;k<5;k=k+1)
-                    if(d>=k&&count[k]==3'(k))value=value|g2f[4*((d>=k)?d-k:0)+:4];
-                for(integer k=0;k<4;k=k+1)
-                    if(valid_copy[d][FN][0]&&d>=k&&count[k]>3'(k)&&(d-k-1<0||count[k+1]<=3'(k)))
-                        value=value|gbf[16*(d/GP)+4*k+:4];
+            if(FAN32==2)begin:g_kh
+                (* keep_hierarchy *) ot_tkm_gn_leaf #(.DMIN((d<5)?d:5)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]));
+            end else begin:g_flat
+                ot_tkm_gn_leaf #(.DMIN((d<5)?d:5)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]));
             end
-            assign gn[d]=value;
+        end
         end
     end
     for (gp = 0; gp < NP; gp = gp + 1) begin : g_gt
@@ -952,7 +1005,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         for(genvar g=0;g<NGR;g=g+1)begin:g_g
             for(genvar c=0;c<2;c=c+1)begin:g_c
                 (* keep="true",dont_touch="true" *) reg c0,c1,v;
-                always @(posedge clk)begin c0<=i_clr;c1<=i_conv;v<=i_v;end
+                always @(posedge clk)begin c0<=i_clr2;c1<=i_conv2;v<=i_v2;end
                 assign dsel_position[g][c]={!c0&&!c1&&!v,!c0&&!c1&&v,!c0&&c1,c0};
             end
         end
