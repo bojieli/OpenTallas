@@ -28,7 +28,24 @@ Segments: DS schedules per layer segment (ds_mtp_verify.run), so no record prefe
 (conservative).  Exposed / base edges are reported per client and per layer (rp_added keys vme:<client>:<base|exposed>,
 vme_L<layer>:<client>:<base|exposed>).
 
+PER-CLIENT RULES (integration 10-19 ~22:00, sub-lanes HBM-VMEARLY-DMA bc57f015e / -IDX 0b423e28d; N >= 1 enables a rule):
+    xl, coll  the generic rule above (NBUF = N + 1 consumer operand slots; HBM-VMEARLY-XLCOLL builds them)
+    dma       the DMA-back controller holds ONE move (ISSUE_AHEAD 0 is the only calendar the RTL takes):
+              t_iss = min(t0, max(RAW, end(prev DMA record on the unit) - DMA_NEXT_CMD_K + DMA_CMD_LEAD))
+              = d4g_bank_latency.dma_min_next_issue (issue_at(i+1) >= drain_at(i) + nchunk(i) + 4, >= producer retire);
+              N is ignored beyond on/off.  bl_dma is charged only on VM-read DMA records (KVWB / STORE / swap-out);
+              DMA.LOAD / FENCE keep the plan_b VM_HBM request stage (d4g_bl_dma_split_1019 --mode kvwb).
+              OT_VME_BLDMA=all restores the committed every-DMA-record charge (LH-REPRICE3 reproduction).
+    idx       the n12 reader is fully pipelined and the query store is the one static slot (NBUF 1):
+              A_i = t_iss = min(t0, max(RAW_i, F_i - LB)), F_i = frame_start(i) = last use(i-1) + 1 (taken as
+              end(i-1) + 1 of the unit: conservative), LB = VM_RT_EXTRA + 12 = bl_idx + 2 (183 at 171, measured)
+LAYOUT (owner 10-19, HBM-MC2 89200325b): every HBM stream uses the ROTATED bank layout (blocks rotated across bank sets,
+expert copies alternated).  It is what the successor PC controller's 90.67 B/edge/SM (+ bridge 1) assumes; without it the
+successor gives 26-55 B/edge.  OT_VME_LAYOUT (default rotated) is recorded in the output; a run at a successor bandwidth
+(--bw > 59.08, above H9b's packed 59.08) with any other layout is REFUSED (fail closed).
+
     PYTHONPATH=tools OT_VME_N=1 python3 -m hgi_sim.d4g_vmearly_1019 --bw 45.03 --out vme_n1.json
+    PYTHONPATH=tools OT_VME_N=1 python3 -m hgi_sim.d4g_vmearly_1019 --bw 90.67 --bridge 1 --out vme_n1_succ.json
     OT_VME_N: issue-ahead N for every client, or per client "xl:1,coll:2,dma:1,idx:1" (missing client = 0).
 """
 from __future__ import annotations
@@ -41,6 +58,7 @@ from collections import defaultdict
 from hgi_sim import timing as T
 from hgi_sim import d4g_reprice_1019 as R
 from hgi_sim import ds_relay_latency as RL
+from hbm_die_v16 import d4g_bank_latency as BLAT
 
 BL_KEYS = ("SM_X", "COLL_VM", "VM_HBM")
 CLIENTS = ("xl", "coll", "dma", "idx")
@@ -60,6 +78,43 @@ def _n_of():
 
 
 N_OF = _n_of()
+
+BLDMA = os.environ.get("OT_VME_BLDMA", "kvwb").strip()
+LAYOUT = os.environ.get("OT_VME_LAYOUT", "rotated").strip()
+BW_H9B_MAX = 59.08                 # H9b packed: the highest bandwidth any layout reaches on the release H9b master
+IDX_LB_OVER_BL = 2                 # LB 183 = VM_RT_EXTRA 171 + 12; bl_idx 181 = 171 + 10 (HBM-VMEARLY-IDX bench)
+DMA_WIN = BLAT.DMA_CMD_LEAD - BLAT.DMA_NEXT_CMD_K     # dma_min_next_issue relative to the previous move's end_at
+
+
+def _install_bldma_split():
+    """bl_dma only on VM-read DMA records (HBM-VMEARLY-DMA, d4g_bl_dma_split_1019 --mode kvwb)"""
+    from hgi_sim import d4g_bl_dma_split_1019 as SP
+    orig_cross, orig_knob = RL.crossings, RL._knob
+
+    def crossings(r, upper=False):
+        c = orig_cross(r, upper)
+        op = getattr(r, "orig_op", f"{r.unit}.{r.op}")
+        u, o = op.split(".", 1)
+        if op == "DMA.SWAP":
+            o = "LOAD" if "in" in (r.tag or "").split()[-1] else "STORE"
+        if u == "DMA" and o in ("LOAD", "FENCE") and "VM_HBM" in c:
+            c = dict(c)
+            c["VM_HBM_RQ"] = c.pop("VM_HBM")
+        return c
+
+    def knob(b, o, only=None):
+        b2, o2 = dict(b), dict(o)
+        b2["VM_HBM_RQ"] = b.get("VM_HBM", 0.0)
+        ov = o.get("VM_HBM", 0.0)
+        o2["VM_HBM_RQ"] = SP.PLAN_B_VM_HBM if abs(ov - SP.BL_DMA) < 1e-9 else ov
+        return orig_knob(b2, o2, only)
+    RL.crossings, RL._knob = crossings, knob
+
+
+if BLDMA == "kvwb":
+    _install_bldma_split()
+elif BLDMA != "all":
+    raise SystemExit(f"OT_VME_BLDMA={BLDMA}: kvwb | all")
 
 _KNOB0 = RL._knob
 
@@ -131,8 +186,15 @@ def early(i, u, c, t0, vdi, deps, fps, end, ex, recs, ret_w, starts_u, ends_u):
     for j in deps[i]:
         if any(T.overlap(iv, w) for iv in rd for w in fps[j][1]):
             raw = max(raw, end[j] + ret_w[recs[ex[j][0]].unit])
-    win = starts_u[-N] if len(starts_u) >= N else 0.0
-    slot = (ends_u[-(N + 1)] - d) if len(ends_u) >= N + 1 else 0.0
+    if cl == "dma":                       # one move held: ISSUE_AHEAD 0 calendar (dma_min_next_issue)
+        win = (ends_u[-1] + DMA_WIN) if ends_u else 0.0
+        slot = 0.0
+    elif cl == "idx":                     # A_i = max(RAW_i, F_i - LB), F_i = end(i-1) + 1, LB = d + 2
+        win = 0.0
+        slot = (ends_u[-1] + 1.0 - (d + IDX_LB_OVER_BL)) if ends_u else 0.0
+    else:
+        win = starts_u[-N] if len(starts_u) >= N else 0.0
+        slot = (ends_u[-(N + 1)] - d) if len(ends_u) >= N + 1 else 0.0
     t_iss = min(t0, max(raw, win, slot))
     s = max(t0, t_iss + d)
     R._add(f"vme:{cl}:exposed", s - t0)
@@ -391,6 +453,11 @@ def main():
     import json
     from pathlib import Path
     from hgi_sim import d4g_reprice3b_1019 as R3B
+    a = sys.argv[1:]
+    bw = float(a[a.index("--bw") + 1]) if "--bw" in a else 45.03
+    if bw > BW_H9B_MAX and LAYOUT != "rotated":
+        raise SystemExit(f"--bw {bw} is a successor-controller price: it holds ONLY with the rotated bank layout "
+                         f"(owner 10-19, HBM-MC2 89200325b); OT_VME_LAYOUT={LAYOUT} refused")
     st = json.loads((R.ROOT / "results/arch/hbm_plan_study_1017/stages.json").read_text())
     _PLANB.update(st["plan_b"])
     argv = list(sys.argv[1:])
@@ -400,7 +467,7 @@ def main():
     doc = json.loads(out.read_text())
     doc["lane"] = "HBM-VMEARLY"
     doc["tool"] = "tools/hgi_sim/d4g_vmearly_1019.py (wraps d4g_reprice3b_1019 with an early-issue timing.schedule)"
-    doc["vme"] = dict(issue_ahead=N_OF, rule=__doc__)
+    doc["vme"] = dict(issue_ahead=N_OF, bl_dma=BLDMA, layout=LAYOUT, bw=bw, rule=__doc__)
     summ = {}
     for k, row in doc["table"].items():
         s = {}
