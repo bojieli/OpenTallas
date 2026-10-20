@@ -1,0 +1,28 @@
+======== ABC command line "read_aiger lec.aig; print_stats; strash; dprove -v -T 10800"
+[1;37mlec                           :[0m i/o = 4107/    1  lat =33308  and = 256401  lev = 33
+Running "bmc2". AIG:  PI/PO/Reg = 4107/1/33308.  Node = 256401. Lev =    33.
+Params: FramesMax = 20. NodesDelta = 2000. ConfMaxOne = 2000. ConfMaxAll = 0.
+   0 : F =   20. O =   0.  And =       0. Var =      24. Conf =      0.   26 MB     0.00 sec
+No output failed in 19 frames.  Time =     0.00 sec
+Reached limit on the number of timeframes (20).
+Original miter:       Latches = 33308. Nodes = 256401.
+Sequential cleanup:   Latches = 29195. Nodes = 256351. Time =     0.79 sec
+Forward retiming:     Latches = 17534. Nodes = 256111. Time =     0.42 sec
+Latch-corr (I= 21):   Latches = 16943. Nodes = 254190. Time =     5.15 sec
+Fraiging:             Latches = 16943. Nodes = 234155. Time =   131.68 sec
+Min-reg retiming:     Latches = 15024. Nodes = 234155. Time =     0.46 sec
+K-step (K= 1,I= 11):  Latches = 14980. Nodes = 230211. Time =   526.02 sec
+Min-reg retiming:     Latches = 14979. Nodes = 230211. Time =     0.22 sec
+Rewriting:            Latches = 14979. Nodes = 182173. Time =     7.32 sec
+Seq simulation  :     Latches = 14979. Nodes = 182173. Time =     0.67 sec
+K-step (K= 2,I= 11):  Latches = 14979. Nodes = 178716. Time =   536.53 sec
+Min-reg retiming:     Latches = 14821. Nodes = 178700. Time =     0.36 sec
+Rewriting:            Latches = 14821. Nodes = 174620. Time =     6.16 sec
+Seq simulation  :     Latches = 14821. Nodes = 174620. Time =     1.39 sec
+K-step (K= 4,I=  9):  Latches = 14821. Nodes = 174207. Time =   967.51 sec
+Min-reg retiming:     Latches = 14515. Nodes = 174207. Time =     0.26 sec
+Rewriting:            Latches = 14515. Nodes = 172850. Time =     5.40 sec
+Seq simulation  :     Latches = 14515. Nodes = 172850. Time =     3.01 sec
+Property DISPROVED in frame 31 using interpolation.  Time =    43.24 sec
+Networks are NOT EQUIVALENT.  Time =  2236.85 sec
+Output 0 of miter "lec" was asserted in frame 31.

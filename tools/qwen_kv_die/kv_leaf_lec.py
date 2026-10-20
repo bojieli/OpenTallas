@@ -100,6 +100,25 @@ def zero_state_model(text):
     return re.sub(r'\breg ' + re.escape(m[2]) + ';', f"reg {m[2]} = 1'b{1 if m[1] else 0};", text, count=1)
 
 
+def sram_model(cell, bb_text):
+    """Functional model of an sram_gen 1R1W macro (ot_sram_*.v semantics: registered read when r_ce_in, read-before-
+    write, masked write when w_ce_in), the SAME module on both sides; the array is state like any register."""
+    P = {p_: (d_, w_) for d_, p_, w_ in cut_ports(bb_text)}
+    need = {'clk', 'r_ce_in', 'r_addr_in', 'rd_out', 'w_ce_in', 'w_addr_in', 'wd_in', 'w_mask_in'}
+    if set(P) != need:
+        sys.exit(f'--macro-sram {cell}: not an sram_gen 1R1W port list: {sorted(P)}')
+    aw, b = P['r_addr_in'][1], P['rd_out'][1]
+    return '\n'.join([
+        f'// kv_leaf_lec functional model of {cell} (sram_gen 1R1W)',
+        f'module {cell} (input wire clk, input wire r_ce_in, input wire [{aw - 1}:0] r_addr_in, output reg [{b - 1}:0] rd_out,',
+        f'  input wire w_ce_in, input wire [{aw - 1}:0] w_addr_in, input wire [{b - 1}:0] wd_in, input wire [{b - 1}:0] w_mask_in);',
+        f'  reg [{b - 1}:0] arr [0:{(1 << aw) - 1}];',
+        '  always @(posedge clk) begin',
+        '    if (r_ce_in) rd_out <= arr[r_addr_in];',
+        '    if (w_ce_in) arr[w_addr_in] <= (arr[w_addr_in] & ~w_mask_in) | (wd_in & w_mask_in);',
+        '  end', 'endmodule', ''])
+
+
 def prepare_gate(netlist, top, cells, work):
     text = Path(netlist).read_text()
     mod = nl.read_module(Path(netlist), top)
@@ -143,7 +162,17 @@ def lec(a):
     res['gate_stats'] = dict(instances=len(gmod.instances), flops=gflops, macros=macros)
     # macro cut models (same model on both sides)
     cutf = {}
+    msram = {}
     for cell in sorted(set(macros.values())):
+        if cell in a.macro_sram:
+            bb = [s_ for s_ in srcs if s_.endswith('_bb.v') and re.search(r'module\s+' + re.escape(cell) + r'\b',
+                                                                           (src / s_).read_text())]
+            if len(bb) != 1:
+                sys.exit(f'--macro-sram {cell}: need one *_bb.v among the sources, got {bb}')
+            f = work / f'{cell}_model.v'
+            f.write_text(sram_model(cell, (src / bb[0]).read_text()))
+            msram[cell] = (f, bb[0])
+            continue
         if cell not in a.macro_cut:
             sys.exit(f'routed netlist has hard macro {cell} with no Liberty function: pass --macro-cut {cell}')
         bb = [s_ for s_ in srcs if s_.endswith('_bb.v') and re.search(r'module\s+' + re.escape(cell) + r'\b',
@@ -153,8 +182,11 @@ def lec(a):
         f = work / f'{cell}_cut.v'
         f.write_text(cut_model(cell, (src / bb[0]).read_text()))
         cutf[cell] = (f, bb[0])
-    cut_bb = {b_ for _f, b_ in cutf.values()}
-    rd = [str(src / s_) for s_ in srcs if s_ not in cut_bb] + [str(f) for f, _b in cutf.values()]
+    cut_bb = {b_ for _f, b_ in cutf.values()} | {b_ for _f, b_ in msram.values()}
+    rd = [str(src / s_) for s_ in srcs if s_ not in cut_bb] + [str(f) for f, _b in cutf.values()] + \
+        [str(f) for f, _b in msram.values()]
+    res['macro_models'] = {c: dict(model=str(f), sha256=sha(f), blackbox=b_) for c, (f, b_) in msram.items()}
+    macros_cut = {i: c for i, c in macros.items() if c in cutf}
     # 1. gold
     G = [f'read_verilog -sv -DSYNTHESIS {" ".join(rd)}']
     G += [f'chparam -set {k} {int(v)} {a.top}' for k, v in sorted(params.items())]
@@ -184,13 +216,15 @@ def lec(a):
         res['error'] = 'gold elaboration failed: ' + out[-1500:]
         return res
     # 2. miter + reset harness
-    L = ['read_verilog -sv cells.v'] + [f'read_verilog -sv {f}' for f, _b in cutf.values()]
-    L += ['read_verilog gate.v', f'hierarchy -check -top {a.gate_top}', 'proc', 'flatten', f'rename {a.gate_top} gate',
+    L = ['read_verilog -sv cells.v'] + [f'read_verilog -sv {f}' for f, _b in cutf.values()] + \
+        [f'read_verilog -sv {f}' for f, _b in msram.values()]
+    L += ['read_verilog gate.v', f'hierarchy -check -top {a.gate_top}', 'proc', 'flatten', 'memory -nomap', 'memory_map',
+          'opt_clean', f'rename {a.gate_top} gate',
           'read_rtlil gold.il']
     extra_in = []
     for side in ('gold', 'gate'):
         L += ['cd', f'cd {side}']
-        for inst, cell in sorted(macros.items()):
+        for inst, cell in sorted(macros_cut.items()):
             tag = re.sub(r'[^A-Za-z0-9_]', '_', inst)
             for d_, pin, w_ in cut_ports(cutf[cell][0].read_text()):
                 if d_ == 'input':
@@ -205,7 +239,7 @@ def lec(a):
         if gmod.port_dirs[p_] == 'output':
             r_ = gmod.ranges.get(p_)
             outs.append((p_, abs(r_[0] - r_[1]) + 1 if r_ else 1))
-    for inst, cell in sorted(macros.items()):
+    for inst, cell in sorted(macros_cut.items()):
         tag = re.sub(r'[^A-Za-z0-9_]', '_', inst)
         outs += [(f'S__mc_{tag}_{pin}', w_) for d_, pin, w_ in cut_ports(cutf[cell][0].read_text()) if d_ == 'input']
     ports = []
@@ -289,6 +323,7 @@ def main(argv=None):
     ap.add_argument('--gate-top', required=True)
     ap.add_argument('--wrapper', help="closed flow's generated shell (ot_pin_regs_wrapper.v / ot_rst_land_wrapper.v)")
     ap.add_argument('--macro-cut', action='append', default=[])
+    ap.add_argument('--macro-sram', action='append', default=[], help='sram_gen 1R1W cell: same functional model both sides')
     ap.add_argument('--clock', default='clk')
     ap.add_argument('--reset', default='rst_n')
     ap.add_argument('--reset-active', type=int, choices=(0, 1), default=0)
