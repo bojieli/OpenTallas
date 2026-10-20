@@ -22,7 +22,8 @@
 //   * histogram: per-lane (lane, bin-quarter) match flags + 4-bit bin copies feed the 64 bin counters; clears per 2 bins,
 //     adds per 4 bins; the 64:1 read is a registered one-hot bin select (4 kept address copies, 16 decodes each);
 //   * the histogram path has its own kept copy of each lane's valid + key (rawh), s1_pass is copied per lane, the
-//     pack prefix network is a kept module (ot_hidx_s3_pfx) per chunk copy;
+//     pack prefix network is a kept module (ot_hidx_s3_pfx) per chunk copy, the compare path
+//     has its own kept valid + key copy (rawc), the last-valid-lane one-hot is a kept module (ot_hidx_s3_pri);
 //   * reset: ot_rst_relay with 15 regional leaves (2 sync + region stage = the 2-stage landing), <= 31 loads per leaf.
 // DMUT (bench only, 0 in every kit): 1 tie compare >= ; 3 lane-5 SRAM write-data select one edge late; 5 histogram read
 //   returned one edge later than its op tags.
@@ -42,6 +43,16 @@ module ot_hidx_s3_pfx(input wire [15:0] ch,output wire [79:0] pos,output wire [4
   assign pos[5*l+:5]=5'(p_gb[l/4])+5'(p_loc[l]);
  end
  assign cnt=(5'(p_gt[0])+5'(p_gt[1]))+(5'(p_gt[2])+5'(p_gt[3]));
+endmodule
+// Last-valid-lane one-hot (kept hierarchy, SYNTH_KEEP_MODULES): the source-id order check takes the id of the highest
+// valid lane; as its own module the priority chain cannot be flattened into the 20-bit id select (up to 46 loads on the
+// top lanes' valid bits).
+module ot_hidx_s3_pri(input wire [15:0] v,output wire [15:0] oh,output wire any);
+ for(genvar l=0;l<16;l=l+1)begin:gl
+  if(l==15)begin:gt assign oh[l]=v[l];end
+  else begin:gn assign oh[l]=v[l]&&!(|v[15:l+1]);end
+ end
+ assign any=|v;
 endmodule
 module ot_hidx_s3_q #(parameter integer DMUT=0)(
  input wire clk,
@@ -182,11 +193,11 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  end
  reg [7:0] s1_addr;
  (* keep *) reg [LW-1:0] rawr;             // kept: else opt_merge folds it into the identical rawh bits
- wire [16:0] rawh[0:15];               // kept histogram-path copy of each lane's valid + key (compare path: rawr)
+ wire [16:0] rawh[0:15],rawc[0:15];    // kept histogram-path / compare-path copies of each lane's valid + key
  for(genvar l=0;l<16;l=l+1)begin:grh
-  (* keep *) reg [16:0] q;
-  always @(posedge clk)q<=raw[l*EW+:17];
-  assign rawh[l]=q;
+  (* keep *) reg [16:0] q,c;
+  always @(posedge clk)begin q<=raw[l*EW+:17];c<=raw[l*EW+:17];end
+  assign rawh[l]=q;assign rawc[l]=c;
  end
  always @(posedge clk)begin
   rop<=qop;rpass<=qpass;raddr<=qaddr;
@@ -200,10 +211,10 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  reg [15:0] c_gt,c_eq;reg [15:0] c_ky;reg [1:0] c_loc[0:15];reg [2:0] c_gtot[0:3];reg [4:0] c_ecnt;
  always @*begin
   for(integer l=0;l<W;l=l+1)begin
-   c_ky=orderkey(rawr[l*EW+1+:16]);
-   c_gt[l]=rawr[l*EW]&&(c_ky>thq[l/4]);
-   c_eq[l]=rawr[l*EW]&&(c_ky==thq[l/4]);
-   if(DMUT==1)begin c_gt[l]=rawr[l*EW]&&(c_ky>=thq[l/4]);c_eq[l]=0;end
+   c_ky=orderkey(rawc[l][16:1]);
+   c_gt[l]=rawc[l][0]&&(c_ky>thq[l/4]);
+   c_eq[l]=rawc[l][0]&&(c_ky==thq[l/4]);
+   if(DMUT==1)begin c_gt[l]=rawc[l][0]&&(c_ky>=thq[l/4]);c_eq[l]=0;end
   end
   for(integer g=0;g<4;g=g+1)begin
    c_loc[4*g]=2'd0;
@@ -393,11 +404,12 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
  for(genvar l=0;l<16;l=l+1)begin:gid
   assign rv_l[l]=rawr[l*EW];assign rid[l]=rawr[l*EW+17+:20];
  end
- wire anyv=|rv_l;
+ wire anyv;wire [15:0] hsel;
+ ot_hidx_s3_pri u_pri(.v(rv_l),.oh(hsel),.any(anyv));
  reg [19:0] ln;
  always @*begin
   ln=20'd0;
-  for(integer l=0;l<W;l=l+1)if(rv_l[l]&&((rv_l>>(l+1))==16'd0))ln=ln|rid[l];
+  for(integer l=0;l<W;l=l+1)if(hsel[l])ln=ln|rid[l];
  end
  wire [19:0] lid[0:3];
  for(genvar g=0;g<4;g=g+1)begin:glid
