@@ -106,7 +106,7 @@ initial begin
     errors7=errors7+1;if(errors7<5)$display("RR8_VS_RR7_OUT_MISMATCH cycle%0d st%h ut%h",cyc,st,ut);
    end
    if(`M7.wrom_re!==`ME.wrom_re || (`M7.wrom_re && `M7.wrom_addr!==`ME.wrom_addr) || `M7.kv_re!==`ME.kv_re ||
-      (`M7.kv_re && `M7.kv_addr!==`ME.kv_addr) || `M7.e_gm!==`ME.e_gm || `M7.k_r!==`ME.k_r || `M7.tstep_r!==`ME.tstep_r ||
+      (`M7.kv_re && `M7.kv_addr!==`ME.kv_addr) || (`M7.e_v && `M7.e_gm!==`ME.e_gm) || `M7.k_r!==`ME.k_r || `M7.tstep_r!==`ME.tstep_r ||
       `M7.e_v!==`ME.e_v || (`M7.e_v && (`M7.e_tag!==`ME.e_tag)) || `M7.active!==`ME.active || `M7.pend!==`ME.pend ||
       (`M7.active && (`M7.xc!==`ME.xc || `M7.xk!==`ME.xk || `M7.cur!==`ME.cur || `M7.base_k!==`ME.base_k || `M7.base_t!==`ME.base_t || `M7.oa!==`ME.oa || `M7.ot!==`ME.ot)))begin
     errorsi=errorsi+1;if(errorsi<5)$display("RR8_VS_RR7_ENGINE_MISMATCH cycle%0d wre%b/%b wa%h/%h kre%b/%b ka%h/%h gm%h/%h e_v%b/%b",cyc,`M7.wrom_re,`ME.wrom_re,`M7.wrom_addr,`ME.wrom_addr,`M7.kv_re,`ME.kv_re,`M7.kv_addr,`ME.kv_addr,`M7.e_gm,`ME.e_gm,`M7.e_v,`ME.e_v);

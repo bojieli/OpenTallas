@@ -386,7 +386,7 @@ module ot_qwen_w12_matvec_part #(
         assign gbc = {G{gb}};
     end endgenerate
     //: REGROOT 8 descriptor load enables: ldv[l] = go copy & kept idle copy (assigned in g_ctl_rr8)
-    localparam integer NLDD = 57;          // descriptor-register load groups (<= 16 bits: 2 mux loads per bit)
+    localparam integer NLDD = 75;          // descriptor-register load groups (<= 12 bits: ~2 mux loads per bit)
     localparam integer NLD  = NLDD + 6;    // + 4 split-copy tiers, wsrc copies, ktot copies
     wire [NLD-1:0] ldv;
     wire [4*AW-1:0] tsc, wcc;      // REGROOT 8: per-group KV-offset copies of ts / wcs (descriptor load groups)
@@ -448,7 +448,7 @@ module ot_qwen_w12_matvec_part #(
     localparam integer SPB = 45;          // REGROOT 8: twin of split copy c is c + SPB
     localparam integer NSPC = (REGROOT >= 8) ? 2*SPB : (REGROOT >= 7) ? 45 : 27;
     wire [4*NSPC-1:0] spc;
-    wire [3:0]        wsc;
+    wire [4:0]        wsc;        // REGROOT 8: copy 4 = kc_a high half
     wire [5*NW-1:0]   ktc;        // ktot copies: 0 kpad/kc_a, 1..4 K-limit group 0..3 (REGROOT 7; else ktot_r)
     wire [4:0]        acc;        // active copies (assigned in the issue block)
     wire              klc;        // k_last copy (assigned in the issue block)
@@ -475,13 +475,13 @@ module ot_qwen_w12_matvec_part #(
             end
             assign spc[4*sc +: 4] = q;
         end
-        for (sc = 0; sc < 4; sc = sc + 1) begin : g_ws
-            if (sc < 3 || REGROOT >= 7) begin : g_w
+        for (sc = 0; sc < 5; sc = sc + 1) begin : g_ws
+            if (sc < 3 || (sc == 3 && REGROOT >= 7) || (sc == 4 && REGROOT >= 8)) begin : g_w
                 (* keep *) reg q;
                 always @(posedge clk) q <= wsrc_nx;
                 assign wsc[sc] = q;
             end else begin : g_wa
-                assign wsc[sc] = wsc[1];
+                assign wsc[sc] = wsc[(sc == 4) ? 0 : 1];
             end
         end
         if (REGROOT >= 7) begin : g_ktc
@@ -496,7 +496,7 @@ module ot_qwen_w12_matvec_part #(
         end
     end else begin : g_rr_alias
         assign spc = {NSPC{split_r}};
-        assign wsc = {4{wsrc_r}};
+        assign wsc = {5{wsrc_r}};
         assign ktc = {5{ktot_r}};
     end endgenerate
 
@@ -672,13 +672,14 @@ end else begin : g_issue_fast
         assign tsh_flat[tb*(AW+PRW) +: AW+PRW] = tsh[tb];
         assign osh_flat[tb*(AW+PRW) +: AW+PRW] = osh[tb];
     end
+    //: REGROOT 8: kc_a halves from one-hot split copies 8 (low) / 9 (high) and wsrc copies 0 / 4
+    wire [36:0] kc_ls = shro({{(37-NW){1'b0}}, kpad_a[NW-1:0]}, sph[16*8 +: 16]);
+    wire [36:0] kc_hs = shro({{(37-NW){1'b0}}, kpad_a[NW-1:0]}, sph[16*9 +: 16]);
     always @(posedge clk) begin
         tsg_a <= tsum; otsg_a <= osum;
         if (REGROOT >= 8)
             //: quarters: 9 / 9+SPB the low half, 44 / 44+SPB the high half
-            kc_a <= wsc[0] ? ((shro({{(37-NW){1'b0}}, kpad_a[NW-1:0]}, sph[16*8 +: 16]) & {(NW/2){1'b1}})
-                            | (shro({{(37-NW){1'b0}}, kpad_a[NW-1:0]}, sph[16*9 +: 16]) & ~{(NW/2){1'b1}}))
-                           : ktc[0 +: NW];
+            kc_a <= {wsc[4] ? kc_hs[NW-1:NW/2] : ktc[NW-1:NW/2], wsc[0] ? kc_ls[NW/2-1:0] : ktc[NW/2-1:0]};
         else
         kc_a <= wsc[0] ? {kpad_a[NW-1:0] >> spc[4*((REGROOT >= 7) ? 44 : 9) +: 4]} & {{(NW-NW/2){1'b1}}, {(NW/2){1'b0}}}
                        | {kpad_a[NW-1:0] >> spc[4*9 +: 4]} & {(NW/2){1'b1}} : ktc[0 +: NW];   // ceil(K/S) (K + S - 1 < 2^NW)
@@ -906,7 +907,7 @@ end else begin : g_issue_fast
         //: drivers > 32, max 262 / 291 = the shared go-load enable rst_n & !pend & !active & go over ~400 descriptor
         //: bits).  Same values on the same edges, 0 cycles:
         //:  (1) the go-latched descriptor (plus per-group KV-offset copies of ts / wcs and 22 one-hot split copies) is
-        //:      NLDD load groups of <= 16 bits; group l loads on ldv[l] = go_cp[NGOF + l/4] & idle copy l/3 (kept,
+        //:      NLDD load groups of <= 12 bits; group l loads on ldv[l] = go_cp[NGOF + l%14] & idle copy l/14 (kept,
         //:      async reset 1, D = !act_nx & !pend_nx), i.e. exactly rst_n & !pend & !active & go (go_cp is reset like
         //:      go, so nothing loads in reset);
         //:  (2) every loop address field is cut into <= 12-bit chunks (oa / ot thirds; cur / base_k / base_t /
@@ -1000,15 +1001,17 @@ end else begin : g_issue_fast
             assign klc = kl;
         end
         //: descriptor load groups
-        //: idle copy l/3 and go copy NGOF + l/4 qualify load group l (each copy drives <= 4 enable gates)
-        wire [(NLD+2)/3-1:0] idc;
-        for (fg = 0; fg < (NLD + 2) / 3; fg = fg + 1) begin : g_ld
+        //: load group l = go copy NGOF + l % NLG AND idle copy l / NLG: a distinct (go, idle) pair per group, so no two
+        //: groups share an enable gate (rc8 r2: groups with the same pair were merged, 48-82 loads)
+        localparam integer NLG = 14;
+        wire [(NLD+NLG-1)/NLG-1:0] idc;
+        for (fg = 0; fg < (NLD + NLG - 1) / NLG; fg = fg + 1) begin : g_ld
             (* keep *) reg i;
             always @(posedge clk or negedge rst_n) if (!rst_n) i <= 1'b1; else i <= idle_nx;
             assign idc[fg] = i;
         end
         for (fg = 0; fg < NLD; fg = fg + 1) begin : g_le
-            assign ldv[fg] = go_cp[NGOF + fg / 4] && idc[fg / 3];
+            assign ldv[fg] = go_cp[NGOF + fg % NLG] && idc[fg / NLG];
         end
         wire [AW-1:0] sbase_in = (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? i_wcs : i_wbase;
         localparam integer DW = 3*NW + 5 + 1 + 4 + 3 + 12*AW + 8*AW + 16*NOH;
