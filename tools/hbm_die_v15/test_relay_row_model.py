@@ -1,9 +1,23 @@
 import unittest
 import copy
-from relay_row_model import layout, evaluate, Reservations, exact_contract_cost
+from relay_row_model import layout, evaluate, Reservations, exact_contract_cost,translation_window
 
 
 class RowModel(unittest.TestCase):
+    def test_exact_translation_window_infeasible_and_boundary(self):
+        v=dict(w=1,h=1,pins={'i':(0,0),'o':(0,0)},directions={'i':'INPUT','o':'OUTPUT'})
+        views={'V':v};masters={n:'V'for n in ['s','m','t']}
+        pl={n:dict(x=0,y=0,orient='R0')for n in masters};pl['t']['x']=1000
+        widths={(n,p):1for n in masters for p in ['i','o']}
+        edges=[dict(source=['s','o',0,1],sink=['m','i',0,1],bits=1),dict(source=['m','o',0,1],sink=['t','i',0,1],bits=1)]
+        r=translation_window(edges,pl,masters,views,widths,{'m'})
+        self.assertEqual(r['minimum_max_span_um'],500)
+        self.assertFalse(r['nonempty'])
+        pl['t']['x']=800
+        r=translation_window(edges,pl,masters,views,widths,{'m'},reach=400)
+        self.assertEqual(r['u_interval'],[400,400]);self.assertEqual(r['v_interval'],[400,400])
+        self.assertTrue(r['nonempty'])
+
     def test_nonfinite_and_malformed_geometry_fail_closed(self):
         v = dict(w=10, h=10, pins={'p': (1, 2)}, directions={'p': 'OUTPUT'})
         views = {'S': v, 'T': dict(v, directions={'p': 'INPUT'})}

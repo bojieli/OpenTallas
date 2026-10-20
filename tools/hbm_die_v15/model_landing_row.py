@@ -5,7 +5,7 @@ Never runs GEN or writes a contract. SYNTH LEF coordinates remain estimates.
 import argparse,hashlib,json,math
 from pathlib import Path
 from case_reach import lef,xf
-from relay_row_model import layout,exact_contract_cost,Reservations
+from relay_row_model import layout,exact_contract_cost,Reservations,translation_window
 
 
 def main():
@@ -67,17 +67,34 @@ def main():
     if len(wh)!=1: raise ValueError('coupon requires equal exact tile dimensions')
     wh=wh.pop();x=min(placements[n]['x']for n in names);y=min(placements[n]['y']for n in names)
     occupied=[(n,v['x'],v['y'],v['x']+v['w'],v['y']+v['h'])for n,v in m['placement'].items()if n not in nameset]
-    candidates=[]
+    candidates=[];translation_windows=[]
     for columns in (1,3,6,9,len(names)):
         bank=layout(names,wh,columns)
-        for dx in (-86.4,0,86.4):
-            for dy in (-86.4,0,86.4):
+        local=dict(placements)
+        for n,(ox,oy)in bank['offsets'].items():local[n]=dict(x=ox,y=oy,orient='R0')
+        window=translation_window(edges,local,masters,views,widths,nameset)
+        translation_windows.append(dict(columns=columns,**window))
+        origins=[(x+dx,y+dy)for dx in (-86.4,0,86.4)for dy in (-86.4,0,86.4)]
+        if window['nonempty']:
+            u0,u1=window['u_interval'];v0,v1=window['v_interval']
+            for u,v in [(u0,v0),(u0,v1),(u1,v0),(u1,v1),((u0+u1)/2,(v0+v1)/2)]:
+                origins.append(((u+v)/2,(u-v)/2))
+        # Explicit hard-parent side corridors from actual endpoint footprint,
+        # rather than a blanket channel shift or invented nominal center.
+        parents={e[k][0]for e in edges for k in ('source','sink')if e[k][0]not in nameset and not c['instances'][e[k][0]]['master'].startswith('hbfd')}
+        for n in sorted(parents):
+            v=m['placement'][n]
+            origins.extend([(v['x']+v['w']+10.8,v['y']+(v['h']-bank['height'])/2),
+                (v['x']-bank['width']-10.8,v['y']+(v['h']-bank['height'])/2),
+                (v['x']+(v['w']-bank['width'])/2,v['y']+v['h']+10.8),
+                (v['x']+(v['w']-bank['width'])/2,v['y']-bank['height']-10.8)])
+        for base_x,base_y in dict.fromkeys(origins):
                 pl=dict(placements)
-                for n,(ox,oy)in bank['offsets'].items():pl[n]=dict(x=x+dx+ox,y=y+dy+oy,orient='R0')
+                for n,(ox,oy)in bank['offsets'].items():pl[n]=dict(x=base_x+ox,y=base_y+oy,orient='R0')
                 reserve=Reservations(m['die_um'],occupied)
                 ok,conflict=reserve.reserve({n:pl[n]for n in names},views,masters)
                 cost=exact_contract_cost(edges,pl,masters,views,widths)
-                candidates.append(dict(columns=columns,offset=[dx,dy],width=bank['width'],height=bank['height'],
+                candidates.append(dict(columns=columns,offset=[base_x-x,base_y-y],origin=[base_x,base_y],width=bank['width'],height=bank['height'],
                     nonoverlap=ok,conflict=conflict,max_um=cost['max_span_um'],over405=len(cost['over_reach']),
                     all_data_forward_edges_fit=cost['feasible']and ok))
     result=dict(status='MODEL ONLY / rawclock-reset qualification OPEN / no GEN or binding',row=args.row,
@@ -86,11 +103,12 @@ def main():
         baseline_max_um=baseline['max_span_um'],baseline_over405=len(baseline['over_reach']),
         clock_reset_ports=cr,raw_clock_reset_max_um=clock_reset['max_span_um'],raw_clock_reset_over405=len(clock_reset['over_reach']),
         typed_bit_costs=typed,raw_root_costs=root_types,
+        exact_translation_windows=translation_windows,
         LEFsha256={master:hashlib.sha256((case/'views'/(master+'.lef')).read_bytes()).hexdigest()for master in views},
         candidates=candidates,feasible_data_candidates=sum(r['all_data_forward_edges_fit']for r in candidates),
         qualification='Frozen generated SYNTH per-bit pins, not hardened native pins. No source, stage/depth, schedule or production phase change.')
     Path(args.out).write_text(json.dumps(result,indent=2)+'\n')
-    print(json.dumps({k:v for k,v in result.items()if k not in ['inputs','clock_reset_ports','candidates']}))
+    print(json.dumps({k:v for k,v in result.items()if k not in ['inputs','clock_reset_ports','candidates','typed_bit_costs','raw_root_costs','LEFsha256']}))
 
 
 if __name__=='__main__':main()

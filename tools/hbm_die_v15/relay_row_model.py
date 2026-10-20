@@ -67,7 +67,7 @@ class Reservations:
         return True, None
 
 
-def exact_contract_cost(edges, placements, masters, views, port_widths, reach=405.0, escape_um=None):
+def exact_contract_cost(edges, placements, masters, views, port_widths, reach=405.0, escape_um=None, details=False):
     """Bit-exact cost, including reset/clock; no bus centroid or rectangle fallback.
 
     Endpoint shape is production [instance, port, low_bit, high_bit_exclusive]. Every
@@ -120,12 +120,44 @@ def exact_contract_cost(edges, placements, masters, views, port_widths, reach=40
             b, be, bk = pin(t, bit, 'INPUT')
             span = abs(a[0]-b[0])+abs(a[1]-b[1])+ae+be
             _number(span, nonnegative=True)
-            costs.append(dict(source=ak, sink=bk, span_um=span))
+            pair=dict(source=ak, sink=bk, span_um=span)
+            if details:
+                pair.update(source_xy=a,sink_xy=b)
+            costs.append(pair)
     if not costs:
         raise ValueError('no contract edges')
     over = [c for c in costs if c['span_um'] > reach]
-    return dict(bits_checked=len(costs), max_span_um=max(c['span_um'] for c in costs),
+    result=dict(bits_checked=len(costs), max_span_um=max(c['span_um'] for c in costs),
                 over_reach=over, feasible=not over)
+    if details: result['bit_costs']=costs
+    return result
+
+
+def translation_window(edges, placements, masters, views, port_widths, moving, reach=405.0):
+    """Exact fixed-neighbor L1 window for translating a rigid row at localorigin0.
+
+    L1 distance is max(abs(delta_u),abs(delta_v)), u=x+y,v=x-y. Every
+    per-bit pin edge gives intervals in u/v. Occupancy, local escapes and
+    production clock phase are separate obligations; a window is not closure.
+    """
+    cost=exact_contract_cost(edges,placements,masters,views,port_widths,reach,details=True)
+    us,vs,internal=[],[],[]
+    for e in cost['bit_costs']:
+        sm,tm=e['source'][0]in moving,e['sink'][0]in moving
+        if sm and tm:
+            internal.append(e['span_um']);continue
+        if not(sm or tm): raise ValueError('edge has no moving endpoint')
+        local,fixed=(e['source_xy'],e['sink_xy'])if sm else(e['sink_xy'],e['source_xy'])
+        u=fixed[0]+fixed[1]-local[0]-local[1]
+        v=fixed[0]-fixed[1]-local[0]+local[1]
+        _number(u);_number(v);us.append(u);vs.append(v)
+    if not us: raise ValueError('no fixed external endpoint constraints')
+    low_u,high_u=max(us)-reach,min(us)+reach
+    low_v,high_v=max(vs)-reach,min(vs)+reach
+    minimum=max((max(us)-min(us))/2,(max(vs)-min(vs))/2,max(internal,default=0))
+    return dict(u_interval=[low_u,high_u],v_interval=[low_v,high_v],
+                minimum_max_span_um=minimum,nonempty=minimum<=reach,
+                source_scope='Exact point-to-point pin geometry only; excludes occupancy, escapes and phase')
 
 
 def layout(names, tile_wh, columns, gap=0.0):
