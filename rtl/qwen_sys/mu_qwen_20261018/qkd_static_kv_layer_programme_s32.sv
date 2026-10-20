@@ -19,7 +19,7 @@
 //   * per-context counters: explicit next-state (start / wait / run / stage-end priority of the mus process, unchanged);
 //     the 4:1 output metadata muxes are one-hot AND-OR on per-slice gated selects; c_X[k] + 1 is formed per context.
 module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter integer MU=1,parameter integer CTLSRAM=0,
- parameter integer RCOPIES=4,parameter integer RS=32,parameter integer FC=16)(
+ parameter integer RCOPIES=4,parameter integer RS=32,parameter integer FC=24)(
  input wire ck,rst_n,
  input wire cfg_we,input wire[8:0]cfg_addr,input wire[63:0]cfg_data,
  input wire start,authority_valid,programme_authorized,
@@ -85,7 +85,7 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
   if(duration_sum+{5'b0,data_q[31:0]}>37'h0ffffffff)bad_row=1;
  end
  // write pipeline (one edge after the accept, as the original's wq): stage words -> P = r - 2; gap words j >= 1 -> rowb
- reg wq,wg;reg[5:0]w_row;reg[7:0]w_field;reg w_end;reg[1:0]w_u;reg[31:0]w_data;reg w_zero,w_one;
+ (* keep = "true" *) reg wq;reg wg;reg[5:0]w_row;reg[7:0]w_field;reg w_end;reg[1:0]w_u;reg[31:0]w_data;reg w_zero,w_one;
  wire row_acc=accept_cfg&&addr_q<324;
  // KV-CTL3 census: w_data select behind two kept-hierarchy leaves (row_acc was folded into every bit with the
  // bound_epoch hold: 38 loads); bound_epoch is a sliced register below
