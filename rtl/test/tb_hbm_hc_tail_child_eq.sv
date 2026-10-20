@@ -15,7 +15,12 @@ module tb_hbm_hc_tail_child_eq;
     wire rv_r, rv_c, f_r, f_c; wire [767:0] y_r, y_c;
     ot_hbm_hc_tail_unit_static u_ref (.clk(clk), .rst_n(rst_n), .launch(launch), .mixes(mixes), .bases(bases),
         .scales(scales), .result_v(rv_r), .result(y_r), .fault(f_r));
-    ot_hbm_hc_tail_child_static #(.MUT(`MUT)) u_dut (.clk(clk), .rst_n(rst_n), .launch(launch), .mixes(mixes),
+`ifdef NATIVE_DUT   // gate-level cloned netlist (no parameters; mutants are RTL-only)
+    ot_hbm_hc_tail_child_static u_dut (
+`else
+    ot_hbm_hc_tail_child_static #(.MUT(`MUT)) u_dut (
+`endif
+                                       .clk(clk), .rst_n(rst_n), .launch(launch), .mixes(mixes),
         .bases(bases), .scales(scales), .result_v(rv_c), .result(y_c), .fault(f_c));
     integer N, seed, cyc = 0, errs = 0, done_r = 0, done_c = 0, nf = 0;
     reg [31:0] lf;
