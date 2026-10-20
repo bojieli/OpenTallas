@@ -38,9 +38,12 @@ def lp_offsets(root):
     c = _j.load(open(root / 'results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json'))['compiler']
     ii = c['input_port_offset_edges']
     ins = {v for k, v in ii.items() if v and k != 'pw'}
-    outs = {v for k, v in c['output_port_offset_edges'].items() if k != 'tl'}
+    # QW-CTLM6 10-20: control_stores_ready leaves through the named readiness landing u_lpo_control_stores_ready
+    # (lp out_regs) and has its own record offset; returned last (= the common output offset without out_regs)
+    outs = {v for k, v in c['output_port_offset_edges'].items() if k not in ('tl', 'control_stores_ready')}
     assert len(ins) <= 1 and len(outs) == 1 and c['reset_release_added_edges'] == 3, ('lp record offsets', ins, outs, c['reset_release_added_edges'])
-    return outs.pop(), c['output_port_offset_edges']['tl'], ii['pw'], (ins.pop() if ins else 0)
+    o = outs.pop()
+    return o, c['output_port_offset_edges']['tl'], ii['pw'], (ins.pop() if ins else 0), c['output_port_offset_edges'].get('control_stores_ready', o)
 
 def slice_fields(gi_hr):
     """hr[452:73] as qfd_dv_slice2 / the tiles decode it (tools/qwen_split/hr_contract.py FIELDS)"""
@@ -159,7 +162,7 @@ def run(a):
                '-Wno-TIMESCALEMOD', '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0',
                '--top-module', 'tb_qfd_tt_ctlm_prog', '--prefix', 'Vtb', f'-GMUT={a.mut}', f'-GHRA={a.hra}',
                f'-GXPF_EDGES={img["xpf_transport_edges"]}', '-GSTAGE_ME=1', f'-GHARD_HR={a.hard}', *(['+define+TB_HARD'] if a.hard else []),
-               *(['+define+TB_LANDED', f'-GLMUT={a.lmut}', f'-GLOFF={lp_offsets(ROOT)[0]}', f'-GLIN_PW={lp_offsets(ROOT)[2]}', f'-GLIN={lp_offsets(ROOT)[3]}'] if a.landed else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
+               *(['+define+TB_LANDED', f'-GLMUT={a.lmut}', f'-GLOFF={lp_offsets(ROOT)[0]}', f'-GLIN_PW={lp_offsets(ROOT)[2]}', f'-GLIN={lp_offsets(ROOT)[3]}', f'-GLOFF_CSR={lp_offsets(ROOT)[4]}'] if a.landed else []), '-Mdir', str(obj), str(HERE / 'main2.cpp')] + srcs
         p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
         (work / f'build_m{a.mut}.log').write_text(p.stdout + p.stderr)
         if p.returncode:

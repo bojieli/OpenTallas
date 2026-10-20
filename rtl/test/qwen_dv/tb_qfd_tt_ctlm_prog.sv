@@ -90,6 +90,12 @@ module tb_qfd_tt_ctlm_prog (input wire ck);
     // QW-CTLM5 10-19: offsets from the lp record (tt_ctlm_prog_bench.py passes -GLOFF/-GLIN from the record's compiler
     // offsets; QW-CTLM3 D2/K1 rings made them 4 / 4 -- the hard-coded 6 / 6 gave LANDED_LOCKSTEP 1254/18068).
     parameter integer LOFF = 6, LIN = 6, LIN_PW = 6;   // QW-CTLM5: pw has its own offset (pw lands from core)
+    // QW-CTLM6 10-20: control_stores_ready (v bit 1214) has its own record offset (named readiness landing, lp out_regs):
+    // compared separately against its own history; masked out of the common-offset vector compare.
+    parameter integer LOFF_CSR = 6;
+    localparam integer LOFF_MAX = (LOFF_CSR > LOFF) ? LOFF_CSR : LOFF;
+    wire [1290:0] csr_mask = ~({{1290{1'b0}}, 1'b1} << 1214);
+    reg csr_h [0:LOFF_CSR-1];
     reg [74:0] pw_dl [0:LIN_PW-1]; reg [94:0] nret_dl [0:LIN-1]; reg [1:0] kk_dl [0:LIN-1];
     integer pj;
     initial begin for (pj = 0; pj < LIN; pj = pj + 1) begin nret_dl[pj] = 95'd1; kk_dl[pj] = 2'd0; end
@@ -115,9 +121,9 @@ module tb_qfd_tt_ctlm_prog (input wire ck);
     integer l_nc = 0, l_bad = 0, l_act = 0, hj;
     always @(negedge ck) begin
         if (pre >= 1) rst_early = 1'b1;
-        if (pre >= 4 && cyc > LOFF + 2) begin
+        if (pre >= 4 && cyc > LOFF_MAX + 2) begin
             l_nc = l_nc + 1;
-            if (v_l !== v_h[LOFF-1]) begin l_bad = l_bad + 1;
+            if ((v_l & csr_mask) !== (v_h[LOFF-1] & csr_mask) || l_csr !== csr_h[LOFF_CSR-1]) begin l_bad = l_bad + 1;
                 if (l_bad <= 5) $fdisplay(lg, "%0d LANDED_MISMATCH dc %h/%h cmd %h/%h hr_lo %h/%h", cyc, v_h[LOFF-1][1024:969],
                     v_l[1024:969], v_h[LOFF-1][135:20], v_l[135:20], v_h[LOFF-1][208:136], v_l[208:136]); end
             if (v_h[LOFF-1] !== v_h[LOFF-2]) l_act = l_act + 1;
@@ -126,6 +132,8 @@ module tb_qfd_tt_ctlm_prog (input wire ck);
         end
         for (hj = LOFF - 1; hj > 0; hj = hj - 1) v_h[hj] = v_h[hj - 1];
         v_h[0] = v_d;
+        for (hj = LOFF_CSR - 1; hj > 0; hj = hj - 1) csr_h[hj] = csr_h[hj - 1];
+        csr_h[0] = csr;
     end
 `endif
     always @(posedge ck) if (pre >= 4) cyc <= cyc + 1;

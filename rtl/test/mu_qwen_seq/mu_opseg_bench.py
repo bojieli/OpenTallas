@@ -98,9 +98,12 @@ def lp_offsets(root):
     c = _j.load(open(root / 'results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/qfd_tt_ctlm_dv_lpf_lp_record.json'))['compiler']
     ii = c['input_port_offset_edges']
     ins = {v for k, v in ii.items() if v and k != 'pw'}
-    outs = {v for k, v in c['output_port_offset_edges'].items() if k != 'tl'}
+    # QW-CTLM6 10-20: control_stores_ready leaves through the named readiness landing u_lpo_control_stores_ready
+    # (lp out_regs) and has its own record offset; returned last (= the common output offset without out_regs)
+    outs = {v for k, v in c['output_port_offset_edges'].items() if k not in ('tl', 'control_stores_ready')}
     assert len(ins) <= 1 and len(outs) == 1 and c['reset_release_added_edges'] == 3, ('lp record offsets', ins, outs, c['reset_release_added_edges'])
-    return outs.pop(), c['output_port_offset_edges']['tl'], ii['pw'], (ins.pop() if ins else 0)
+    o = outs.pop()
+    return o, c['output_port_offset_edges']['tl'], ii['pw'], (ins.pop() if ins else 0), c['output_port_offset_edges'].get('control_stores_ready', o)
 
 
 def build(work, vl, nu, opseg, mut, jobs):
@@ -116,7 +119,7 @@ def build(work, vl, nu, opseg, mut, jobs):
     dmut, cxmut = (0, 1) if mut == 34 else (mut, 0)
     cmd = [vl, '--binary', '--timing', '-O2', '-j', str(jobs), '-Wno-fatal', '-Wno-lint', '-Wno-style', '-Wno-TIMESCALEMOD',
            '-Wno-WIDTHCONCAT', '--x-assign', '0', '--x-initial', '0', '--top-module', 'tb_mu_opseg_dv',
-           f'-GNU={nu}', f'-GMUT={dmut}', f'-GOPSEG={opseg}', f'-GCTX_SRC={opseg}', f'-GFCTX={opseg}', f'-GCLMUT={cxmut}', *(['+define+TB_LANDED', f'-GLMUT={LANDED}', *(f'-G{n}={v}' for n, v in zip(('LOFF', 'LOFF_TL', 'LIN_PW'), lp_offsets(ROOT)[:3]))] if land else []), '-Mdir', str(d)] + srcs + [str(TB)]
+           f'-GNU={nu}', f'-GMUT={dmut}', f'-GOPSEG={opseg}', f'-GCTX_SRC={opseg}', f'-GFCTX={opseg}', f'-GCLMUT={cxmut}', *(['+define+TB_LANDED', f'-GLMUT={LANDED}', *(f'-G{n}={v}' for n, v in zip(('LOFF', 'LOFF_TL', 'LIN_PW'), lp_offsets(ROOT)[:3])), f'-GLOFF_CSR={lp_offsets(ROOT)[4]}'] if land else []), '-Mdir', str(d)] + srcs + [str(TB)]
     d.mkdir(parents=True, exist_ok=True)
     r = subprocess.run(cmd, capture_output=True, text=True)
     (d / 'build.log').write_text(r.stdout + r.stderr)

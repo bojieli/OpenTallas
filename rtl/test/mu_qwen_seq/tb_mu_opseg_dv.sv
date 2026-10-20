@@ -143,6 +143,11 @@ module tb_mu_opseg_dv;
     // QW-CTLM5 10-19: the offsets come from the lp record (mu_opseg_bench.py passes -GLOFF/-GLOFF_TL/-GLIN_PW from
     // results/arch/landed_parent_1018/qfd_tt_ctlm_dv_lpf/..._lp_record.json compiler offsets; QW-CTLM3 D2/K1: 4 / 2 / 4).
     parameter integer LOFF = 6, LOFF_TL = 3, LIN_PW = 6;
+    // QW-CTLM6 10-20: control_stores_ready (v bit 1214) has its own record offset (named readiness landing, lp out_regs)
+    parameter integer LOFF_CSR = 6;
+    localparam integer LOFF_MAX = (LOFF_CSR > LOFF) ? LOFF_CSR : LOFF;
+    wire [1290:0] csr_mask = ~({{1290{1'b0}}, 1'b1} << 1214);
+    reg csr_h [0:LOFF_CSR-1];
     reg [74:0] pw_dl [0:LIN_PW-1];
     integer pj;
     always @(posedge ck) begin
@@ -168,9 +173,10 @@ module tb_mu_opseg_dv;
     always @(negedge ck) begin
         lpre = lpre + 1;
         if (lpre >= 1) rst_early = 1'b1;
-        if (pre >= 4 && cyc > LOFF + 2) begin
+        if (pre >= 4 && cyc > LOFF_MAX + 2) begin
             l_nc = l_nc + 1;
-            if ({v_l[2378:1291]} !== v_h[LOFF_TL-1][2378:1291] || v_l[1290:0] !== v_h[LOFF-1][1290:0]) begin l_bad = l_bad + 1;
+            if ({v_l[2378:1291]} !== v_h[LOFF_TL-1][2378:1291] || (v_l[1290:0] & csr_mask) !== (v_h[LOFF-1][1290:0] & csr_mask)
+                || l_csr !== csr_h[LOFF_CSR-1]) begin l_bad = l_bad + 1;
                 if (l_bad <= 5) $fdisplay(lg, "%0d LANDED_MISMATCH dc %h/%h cmd %h/%h tl_nz %0d/%0d", cyc, v_h[LOFF-1][1024:969],
                     v_l[1024:969], v_h[LOFF-1][135:20], v_l[135:20], v_h[LOFF-1][2378:1291] != 0, l_tl != 0); end
             if (v_h[LOFF-1] !== v_h[LOFF-2]) l_act = l_act + 1;
@@ -179,6 +185,8 @@ module tb_mu_opseg_dv;
         end
         for (hj = LOFF - 1; hj > 0; hj = hj - 1) v_h[hj] = v_h[hj - 1];
         v_h[0] = v_d;
+        for (hj = LOFF_CSR - 1; hj > 0; hj = hj - 1) csr_h[hj] = csr_h[hj - 1];
+        csr_h[0] = csr;
     end
 `endif
 endmodule
