@@ -8,7 +8,7 @@ The adjacent records/specs are exact copies. `inventory.json` binds their SHA256
 
 |Consumer|D / K / E|Readers / writers|Sum reader widths|All-reader-copy 32x64 macros / area um2|Only >2048-bit reader copies: macros / area um2|
 |---|---|---|---:|---:|---:|
-|HBM PGLG|2 / 1 / 1|16 / 16|14002|230 / 127325.60|134 / 74180.999|
+|HBM PGLG|2 / 1 / 1|16 / 16|14002|230 / 127325.60|134 / 74181.00|
 |S81 lpk4|4 / 2 / 2|17 / 17|3604|69 / 38197.68|54 / 29893.84|
 |QW slice6|4 / 2 / 2|183 / 154|28312|564 / 312224.52|322 / 178255.84|
 
@@ -39,3 +39,5 @@ Model centre distances: HBM max691.2um; S81 max832.2um (one of17 pairs>810); QW 
 For long pairs, place the memory near one clock region and add explicit data/valid/epoch pipeline hops under a related clock, or partition the parent into intermediate registered regions. Minimum purely geometric data hops is ceil(distance/405), before macro footprint/channels. The source or destination pipeline cost must enter the generated dependency graph and compiler calendar, followed by balanced joins. D/E/K must be re-solved for the new write/read schedule; existing D4/K2 or D8/K4 is not assumed to absorb those hops for free. Required SRAM width/clock-tree area plus extra register area and per-operation latency must be charged before proposing a rate.
 
 Next concrete deliverable is a per-consumer pair/phase/reset certificate and priced opt-in contract, then a direct RTL+real macro-model coupon with causal mutants. Only after that: actual mapped all-driver<=32, >2kb SRAM inventory, registered boundary/reach checks, physical kit/PNG review and gate. This packet authorizes neither generation nor physical build.
+
+Owner follow-up: S81 frame-link and QW slice6 explicitly confirmed no hardware-backed allowed regional phase interval or per-pair reset first-active order is currently available. QW additionally reports its D8 lab reset cone has K[4,3], not an immutable K certificate, and its clock-bump ROM lacks production package/PLL correlation. Nominal reset depth and frequency remain inventory facts only. The phase admission status is BLOCKED until concrete hardware evidence arrives; no source build follows from the cost model.
