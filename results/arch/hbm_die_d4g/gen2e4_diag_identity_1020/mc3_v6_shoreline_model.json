@@ -50,11 +50,11 @@
   1036.8,
   637.2
  ],
- "two_row_tile_height_um": 691.2,
+ "two_row_tile_height_um": 777.6,
  "old_svg_height_um": 228.96,
- "minimum_strip_height_um": 920.1600000000001,
- "minimum_growth_without_gaps_um": 282.96000000000004,
- "status": "candidate model only; actualfaces/landedlinks/clockregion/reprice owed",
+ "minimum_strip_height_um": 1006.56,
+ "minimum_growth_without_gaps_um": 369.36,
+ "status": "candidate geometry model only; latest square footprint from MC3 owner; no slot/latency/binding adoption",
  "phy_lef_sha256": "5112c676cb94ece49c98092fad8612c142e3ee7124788ab1d42229ba4ab568cf",
  "contract_sha256": "9d1a3f207588adfca70b21075df2f9ef1c394d0a191909c8eae9bb65f8a0abb8",
  "controllers": [
@@ -829,10 +829,18 @@
    ]
   }
  ],
- "upper_row_sface_vertical_um": 378.0,
- "upper_row_lateral_budget_at405_um": 27.0,
- "upper_row_relay_requirement": "not automatic; actual final controller/PHY pin pairs must be measured",
+ "upper_row_sface_vertical_um": 421.2,
+ "upper_row_lateral_budget_at405_um": -16.2,
+ "upper_row_relay_requirement": "At least one registered parent hop per upper-row command/return direction with this placement and S-face binding; tentative +2 HBM read roundtrip edges, exact pin/calendar price owed",
  "clock_period_table_ps": 1024.0,
  "clock_implementation_qualification": "OPEN: PLL interface/model only; no implemented divider/configuration/phase proof in inspected source; no 1024 physical qualification from PERIOD table alone",
- "compiler_hbm_budget_conversion": "not yet source-certified in this packet"
+ "compiler_hbm_budget_conversion": "not yet source-certified in this packet",
+ "controller_outline_um": [
+  388.8,
+  388.8
+ ],
+ "supersedes_outline_um": [
+  388.8,
+  345.6
+ ]
 }
