@@ -332,13 +332,21 @@ module ot_hgi_coll_static_program_target_s128 #(
         (* keep = "true" *) reg [3:0] scan_addr[0:3];
         (* keep = "true" *) reg [3:0] write_addr[0:3];
         wire [7:0] cfg_bits,scan_bits;
+        (* keep = "true" *) reg [1:0] checking_copy;
+        for(genvar cc=0;cc<2;cc=cc+1)begin:g_check_copy
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)checking_copy[cc]<=0;
+                else begin
+                    if(checking && check_row==127)checking_copy[cc]<=0;
+                    if(dacc)checking_copy[cc]<=1;
+                end
+        end
         for(genvar ac=0;ac<4;ac=ac+1)begin:g_addr
             always @(posedge clk or negedge rst_n)
                 if(!rst_n)begin scan_addr[ac]<=1;write_addr[ac]<=0;end
                 else begin
-                    if(dacc)scan_addr[ac]<=1;
-                    else if(checking && check_row!=127)scan_addr[ac]<=check_row[3:0]+4'd2;
-                    else scan_addr[ac]<=check_row[3:0]+1'b1;
+                    if(checking_copy[ac/2] && check_row!=127)scan_addr[ac]<=check_row[3:0]+4'd2;
+                    else scan_addr[ac]<=1;
                     if(frame && !frame_bad)write_addr[ac]<=a_row[3:0];
                 end
         end
