@@ -33,6 +33,14 @@
 // Band port B (BIND mu4 10-19): B is point-to-point to the svc_rs ENTRY q port, which consumes {pk[511:0], valid} only, so
 // bo is 513 b = {pk[511:0], 1'b1} (no header, no upper pack words: they had no consumer anywhere).  A send config with
 // dir B and pairs > 2 (body[42] = 1) cannot be carried and is a sticky fault (the compiler must never emit one).
+// S81-SMWIRE (10-19): SO gather words on B (C3 only).  The svc entry's P.V lane also carries, in the compiler's booked
+// gather window, the SO target beats as 3 words each (lo 512, hi 512, header {magic 5A, owner, head, group, idx}); the
+// landing dsfd_dvland_pvrd hands them over as B words of kind 2 (o[4] header flag, o[6:5] route).  xr assembles one XB
+// ring beat {v, kind XB, hops 0, src sid, idx [19:13], data [21 +: 1024]} and injects it on ci on the edge after the
+// header: route 1 = tier line E + W (line default hops; ot_s81sl_rstop also delivers it to its own x streamer), route 2
+// = V (rstop sends it as the 4-fragment V train; the column partner delivers it and fans it out on its line).  Faults
+// (sticky): a word out of order (lo / hi with the header flag, a header without it), a bad magic, route 0 / 3, an SO
+// injection in the same ci slot as a CTL re-injection / send / SC relay.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_xr #(
     parameter integer HB = 0,
@@ -122,7 +130,8 @@ module ot_s81sl_xr #(
     always @(posedge clk) sid_oh <= 16'd1 << sid_c;          // sid is a strap: static from reset
     wire e_ctl = ev && eb[3:1] == K_CTL, w_ctl = wv && wb[3:1] == K_CTL, v_ctl = vv && vb[3:1] == K_CTL;
     wire e_rd = ev && (eb[3:1] == K_RD || eb[3:1] == K_CL), w_rd = wv && (wb[3:1] == K_RD || wb[3:1] == K_CL);
-    wire b_rd = bv;
+    wire b_so = bv && bb[3:1] == 3'd2;                            // S81-SMWIRE: SO gather word (landing kind 2)
+    wire b_rd = bv && !b_so;
     wire e_sc = ev && eb[3:1] == K_SC, w_sc = wv && wb[3:1] == K_SC;
     wire [185:0] pe = eb[21 +: 186], pw = wb[21 +: 186], pvv = vb[21 +: 186];
     wire mine_e = |(pe[15:0] & sid_oh), mine_w = |(pw[15:0] & sid_oh), mine_v = |(pvv[15:0] & sid_oh);
@@ -193,17 +202,42 @@ module ot_s81sl_xr #(
         snd[0] = 1'b1; snd[3:1] = s_kind; snd[8:4] = s_hops; snd[12:9] = sid_c; snd[20:13] = 8'd0;
         snd[21 +: 16] = s_mask; snd[37 +: 3] = s_leaf; snd[40 +: 10] = s_row; snd[50 +: 2] = s_np; snd[52 +: 1024] = pk;
     end
+    // S81-SMWIRE: SO gather words -> one XB ring beat (assembled from the B input flops; injected on the next edge)
+    reg [1:0] so_n; reg [511:0] so_lo, so_hi; reg so_go, so_f; reg [6:0] so_idx; reg [1:0] so_rt;
+    always @(posedge clk or negedge rs_s)
+        if (!rs_s) begin so_n <= 2'd0; so_go <= 1'b0; so_f <= 1'b0; end
+        else begin
+            so_go <= 1'b0;
+            if (b_so) begin
+                if (so_n == 2'd2) begin
+                    so_n <= 2'd0;
+                    if (!bb[4] || bb[52 + 32 +: 8] != 8'h5A || bb[6:5] == 2'd0 || bb[6:5] == 2'd3) so_f <= 1'b1;
+                    else so_go <= 1'b1;
+                end else begin
+                    so_n <= so_n + 2'd1;
+                    if (bb[4]) so_f <= 1'b1;
+                end
+            end
+        end
+    always @(posedge clk) if (b_so) begin
+        if (so_n == 2'd0) so_lo <= bb[52 +: 512];
+        if (so_n == 2'd1) so_hi <= bb[52 +: 512];
+        if (so_n == 2'd2) begin so_idx <= bb[52 +: 7]; so_rt <= bb[6:5]; end
+    end
+    wire [W-1:0] so_b = {{(W - 1045){1'b0}}, so_hi, so_lo, 1'b0, so_idx, sid_c, 5'd0, 3'd2, 1'b1};
     // V-from-G-unit CTL re-injection on the tier line (both sides, hops 0 = line default), SC relay to V
     wire sc_rel = s_scv && (esc || wsc);
     reg ci_v; reg [W-2:0] ci_r;
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin ci_dir <= 3'd0; ci_v <= 1'b0; end
         else begin
-            ci_dir <= vct ? 3'b011 : pk_go ? s_dir[2:0] : sc_rel ? 3'b100 : 3'b000;
-            ci_v <= vct || (pk_go && |s_dir[2:0]) || sc_rel;
+            ci_dir <= vct ? 3'b011 : pk_go ? s_dir[2:0] : sc_rel ? 3'b100 : so_go ? ((so_rt == 2'd1) ? 3'b011 : 3'b100) :
+                      3'b000;
+            ci_v <= vct || (pk_go && |s_dir[2:0]) || sc_rel || so_go;
         end
     assign ci_b = {ci_r, ci_v};
-    always @(posedge clk) ci_r <= (pk_go && !vct) ? snd[W-1:1] : {{(W - V){1'b0}}, cix};
+    always @(posedge clk) ci_r <= (pk_go && !vct) ? snd[W-1:1] : (so_go && !vct && !sc_rel) ? so_b[W-1:1] :
+                                  {{(W - V){1'b0}}, cix};
     generate if (HB != 0) begin : g_bo
         reg [BW-1:0] bo_r;
         always @(posedge clk or negedge rs_s) if (!rs_s) bo_r <= {BW{1'b0}}; else bo_r <= (pk_go && s_dir[3]) ? {pk[BW-2:0], 1'b1} : {BW{1'b0}};
@@ -320,7 +354,8 @@ module ot_s81sl_xr #(
         if (!rs_o) fault <= 1'b0;
         else fault <= fault | f1 | ucol | ((|pv) && pv != 5'b11111) | ((|pv) && prun) | (vct && (pk_go || sc_rel)) |
                       (pk_go && sc_rel) | (s_scv && esc && wsc) | (tg[4] && (|lov1)) |
-                      ebad | ((|ev_c) && (erun || prun || (|pv))) | ((|pv) && erun) | f_bw;
+                      ebad | ((|ev_c) && (erun || prun || (|pv))) | ((|pv) && erun) | f_bw |
+                      so_f | (so_go && (vct || pk_go || sc_rel));
 endmodule
 
 // C1 (14 slices): ring E/W + V.  C3 (s_1S, s_6S): + band port B (attention q / P.V).  Hardened masters, no parameters.

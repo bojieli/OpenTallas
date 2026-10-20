@@ -144,7 +144,30 @@ def build(ab):
                                job=r.split('closure-record-', 1)[1]) for m, (r, c, _) in LAND_VIEWS.items()}
     T['landing_reset_stages'] = {m: rl for m, (_, _, rl) in LAND_VIEWS.items() if rl}
     band_b_513(T)
+    smwire(T)
     return T
+
+
+# S81-SMWIRE (10-19): the SM face w_* of the 16 svc_rs is INTERNAL (the per-head SO target dsdv_sm_so_target inside
+# dsdv_svc_rs_c; the die wrappers expose w_* only under RS_OBS, a bench define) -> the 10 strict OUTPUT_OPEN entries are
+# removed at the source.  The entry's SO gather words leave on the existing 562-b pv lane: pv_x[47:0] (the stamp) fills
+# the lane's 48 spare bits 514..561 (dsfd_dvland_pvrd passes stamped words to the C3 band port B as kind-2 SO words).
+# The 4 SRAM 32x64 macros per target (physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1, b65718325 views).
+def smwire(T):
+    m = T['masters']['dsdv_svc_rs']
+    m['ports']['pv.o'] = {'lanes': [{'split': [['pv_v', 0, 0, 1], ['pv_d', 0, 1, 513], ['pv_x', 0, 514, 48]]}]}
+    for k in ('dsdv_svc_rs', 'dsdv_svc_rs_entry'):
+        w = T['rtl_widths'].get(k)
+        if w is not None:
+            for x in ('w_v', 'w_a', 'w_m', 'w_d', 'w_st'):
+                w.pop(x, None)
+            if k == 'dsdv_svc_rs_entry':
+                w['pv_x'] = 48
+    m['port_note'] = m.get('port_note', '') + ('; S81-SMWIRE: SM face internal (SO target in dsdv_svc_rs_c), entry pv_x '
+                                               '-> pv lane bits 514..561')
+    f = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v'
+    if f not in T['rtl_files']:
+        T['rtl_files'] = T['rtl_files'] + [f]
 
 
 # BIND mu4 (10-19): the C3 band port B is 513 b = {pk[511:0], valid} at the source (ot_s81sl_xr BW 513; a B send with

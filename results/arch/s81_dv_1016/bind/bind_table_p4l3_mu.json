@@ -243,11 +243,7 @@
    "r_data": 512,
    "r_tag": 34,
    "r_beat": 8,
-   "hs": 2,
-   "w_v": 1,
-   "w_a": 14,
-   "w_m": 16,
-   "w_d": 512
+   "hs": 2
   },
   "dsdv_svc_rs_entry": {
    "ck": 1,
@@ -284,10 +280,7 @@
    "hs": 2,
    "pv_v": 1,
    "pv_d": 513,
-   "w_v": 1,
-   "w_a": 14,
-   "w_m": 16,
-   "w_d": 512
+   "pv_x": 48
   },
   "ot_s81sl_slice_lepw": {
    "clk": 1,
@@ -2191,6 +2184,12 @@
          0,
          1,
          513
+        ],
+        [
+         "pv_x",
+         0,
+         514,
+         48
         ]
        ]
       }
@@ -2254,7 +2253,7 @@
      ]
     }
    },
-   "port_note": "p4k: faces dn 805 / up 14 / ri,ro 514 / gather 2132+v / scatter 1076+v bound per face (index N0 E1 S2 W3); entry q (2 x 276 landed, q[514:513] pad), pv (562 lane), j/hw (2 x 276 landed), jd/hc (276 lane); the W entry jd / hc have no seqhost input (RTL owed: S81U-SEQ / S81U-SVC)",
+   "port_note": "p4k: faces dn 805 / up 14 / ri,ro 514 / gather 2132+v / scatter 1076+v bound per face (index N0 E1 S2 W3); entry q (2 x 276 landed, q[514:513] pad), pv (562 lane), j/hw (2 x 276 landed), jd/hc (276 lane); the W entry jd / hc have no seqhost input (RTL owed: S81U-SEQ / S81U-SVC); S81-SMWIRE: SM face internal (SO target in dsdv_svc_rs_c), entry pv_x -> pv lane bits 514..561",
    "mode_unused": [
     {
      "port": "dn_i",
@@ -4167,7 +4166,8 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
-  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v"
  ],
  "child_views": {
   "ot_s81_su_smq": {

@@ -30,6 +30,8 @@
 //               [15:0] PO = the p-feed start, [31:16] PVO = the P.V drain base, both in cycles after the share's start
 //    9 SMJ      (new) SM head job / rows: [0] start, [4:1] kind, [12:5] jid, [13] operand rows (else parameter rows,
 //               r_j = payload index), [29:14] head mask (operand rows only)
+//   14 SOT      (S81-SMWIRE 10-19, len 2) the SO target config of the job: parsed by dsdv_svc_sot beside this share
+//               (tools/s81_dv/sm_target/dsdv_sm_wire.sv); a legal frame type here, no state in the attention share
 //
 // Static schedule (owner rule; no credit / ready on the on-die production path): from GO + gd the engine share runs a
 // fixed program: job at cycle 0, q heads at 1 .. 16, row beats c at 1 + c (4 rows a beat, the job's row order: window
@@ -536,7 +538,7 @@ module dsdv_svc_att #(
                 sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx); sm_rd <= q_d;
             end
             // ---- other frame checks
-            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd3, 4'd5, 4'd6, 4'd7, 4'd9, 4'd12, 4'd13})) fc[16] <= 1'b1;
+            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd3, 4'd5, 4'd6, 4'd7, 4'd9, 4'd12, 4'd13, 4'd14})) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd1 && h_len != 12'd128) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd3 && h_len != 12'd16) fc[16] <= 1'b1;
             if (hdr_mine && (h_type inside {4'd1, 4'd5, 4'd6, 4'd7}) && !job_open) fc[17] <= 1'b1;
