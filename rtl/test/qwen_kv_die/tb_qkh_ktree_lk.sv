@@ -37,7 +37,9 @@ module tb_qkh_ktree_lk;
         kp = 0; kpv = 0; gf = 0;
         repeat (6) @(posedge clk);
         #0.1 rst_n = 1;
-        repeat (8) @(posedge clk);
+        // reset-release window: the lk tile lands rst_n 2 edges later than ot_qkh_ktree (rst_l0/rst_l1); idle (kp 0, kpv 0)
+        // for the full K pipe depth (4 x ADD 7 + MUL 6 + regs < 64) so both unreset data pipes hold the same words
+        repeat (64) @(posedge clk);
         // phase 1: lockstep miter
         for (i = 0; i < 4000; i = i + 1) begin
             #0.1 drive_rand(1);

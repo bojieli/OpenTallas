@@ -24,7 +24,14 @@ module ot_qkh_ktree_lk #(
     output wire          g_f
 );
     wire [15:0] lk = (MUT == 1) ? 16'd0 : ({16{kpv_in[0]}} ^ kpv_in);
+    // gate lk1 (FAIL reset_landing: rst_n reached the 17-region relay's 19 flops directly): land rst_n at the face in 2
+    // registered stages (async assert, synchronous release) and feed the closed relay from the landed net only.
+    // +2 release edges on this tile's reset (reset window only; no data / schedule cycle).
+    (* keep *) reg rst_l0, rst_l1;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rst_l0 <= 1'b0; rst_l1 <= 1'b0; end
+        else begin rst_l0 <= 1'b1; rst_l1 <= rst_l0; end
     ot_qkh_ktree #(.ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE)) u_kt (
-        .clk(clk), .rst_n(rst_n), .kp_in(kp_in), .kpv_in(kpv_in[0]), .gf_in(gf_in | lk),
+        .clk(clk), .rst_n(rst_l1), .kp_in(kp_in), .kpv_in(kpv_in[0]), .gf_in(gf_in | lk),
         .sc_d(sc_d), .sc_f(sc_f), .g_f(g_f));
 endmodule

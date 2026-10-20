@@ -51,7 +51,7 @@
  },
  "reset_landing": {
   "enable": false,
-  "reason": "The RTL owns the landing: ot_rst_relay REGIONS 17 / SYNC_STAGES 2 / TREE_STAGES 1 lands rst_n in 2 registered stages and gives one kept copy per adder + one for control (closed ot_qkh_ktree structure, one copy drove 1,004 before idle1012). A flow landing would add 2 release edges."
+  "reason": "The RTL owns the landing: rst_n -> rst_l0 -> rst_l1 (2 registered stages at the face, async assert / sync release; 2 rst_n sinks), then the closed ot_rst_relay REGIONS 17 / SYNC_STAGES 2 gives one kept copy per adder + control. gate lk1 FAILED reset_landing without the RTL landing (19 sinks); fixed structurally."
  },
  "route": {
   "pd": 0.55,
@@ -63,9 +63,9 @@
  },
  "structural_change": "KV-DCAL2 10-19 K.STA.ECTL KPV_LOCKSTEP (ROOT: no blanket lockstep admission, apply misc_b): ot_qkh_ktree_lk = the closed ot_qkh_ktree (ot_qkh_ktree_m5, same RTL + the m5 fastfp snapshot) wrapped so all 16 lane kpv are read: lane mismatch vs lane 0 -> lane fault into the existing gf_r -> g_f path (XOR16 + OR, 2 gate levels before an existing input flop). Same outline 151.2 x 97.2 (die slot unchanged), 15 new N-face pins (544 on 151.2 um = 3.6/um). +0 cycles, +0 flops.",
  "safe_design_checklist": {
-  "1_pins": "PASS: every input lands on the existing RTL input flops (kp_r/kv_r/gf_r; kpv_in[15:1] via XOR+OR into gf_r), every output is a register; rst_n lands in 2 RTL stages (ot_rst_relay SYNC_STAGES 2) with 17 kept regional copies",
+  "1_pins": "fixed (gate lk1): every input lands on the existing RTL input flops (kp_r/kv_r/gf_r; kpv_in[15:1] via XOR+OR into gf_r), every output is a register; rst_n now lands in 2 RTL face stages (rst_l0/rst_l1) before the 17-region relay",
   "2_reach": "PASS: 151.2 x 97.2 um tile, every wire < 405 um",
-  "3_fanout": "PASS: kpv_in[0] drives kv_r + 15 XOR (16 loads); reset copies one per adder (closed structure)",
+  "3_fanout": "PASS functional (kpv_in[0] 16 loads); reset copy u_rr.rst_n[15] 369 flops (closed m5 multiplier err/valid structure, buffered reset tree, in->reg reset slack ~397 ps) = WARN kept: the closed shared ot_qkh_ktree is not modified",
   "4_depth": "PASS: unchanged closed adder/multiplier stages; the new logic is XOR + OR (2 levels) before gf_r; no comb in->out",
   "5_storage": "PASS: no storage beyond pipeline registers",
   "6_floorplan": "PASS: no macros; outline = the closed m5 outline (die slot unchanged), full std-cell band, N face 544 pins / 151.2 um = 3.6/um <= 6; aspect 1.56",
@@ -75,7 +75,7 @@
  "job": {
   "owner": "Claude:KV-DCAL2",
   "branch": "claude/kv-dcal2-1019",
-  "tag": "lk1",
+  "tag": "lk2",
   "purpose": "Per-lane KPV lockstep K-tree for the KV MU release die heads (OT_KV_KPV_LK=1 -> ot_qkh_head_native_r4_s_lk / _ft_s_lk): closed ot_qkh_ktree + all 16 lane kpv read, lane mismatch = lane fault on the existing g_f path. Replaces the KPV_LOCKSTEP unused-output classification (ROOT HOLD) by a hardware check. Static, +0 cycles.",
   "extra_paths": [
    "rtl/hdc",
