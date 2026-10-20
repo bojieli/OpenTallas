@@ -1,0 +1,10 @@
+{
+ "outline": {
+  "w": 1080.0,
+  "h": 950.4,
+  "exact": true
+ },
+ "macros": [],
+ "clock_port": "clk",
+ "structural_change": "r11 (HBM-ELEMOWN3/SFUPS 10-19) after the r10 cluster --cts gate FAIL (ref_gate/hbm_sfu_programme_store_r10_cl-20261018-180939: post-GRT repair_timing stuck at SS WNS -256 ps on pr_base[0][4]/D, 468 endpoints; the single per-row launch relay spanned ~1.5 mm from the E-face start pins to three leaves 830 um apart). Same 11 closed r10n2 leaves, same 1080 x 950.4 outline / leaf positions / pin faces; the head is redesigned as FORWARDED MULTI-STAGE RELAYS sized from the floorplan, one kept copy per destination (reset KR=3, IO launch KI=2, programme launch KL=4, config chain heads P0 1 / P3 3 / P6 4 / IO0 2, per-leaf write strobes depth(l), per-leaf status KS=2 + 2 pads, outputs KO=4), every stage placed FIRM at its channel point by relay_place.tcl (relay_place_gen.py; longest register-to-register leg 382 um <= 405 reach; 11,843 relay flops). All leaves of a calendar stay in lockstep (equal launch depth), every head function is computed at its consuming site with an equal-depth reset copy. Priced: D 5 -> 10, status 3 -> 8, arith_start advance 2 -> 5, first write 7 edges after reset."
+}
