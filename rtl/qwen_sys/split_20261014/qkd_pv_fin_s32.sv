@@ -214,6 +214,11 @@ module qkd_pv_fin_s32 #(
  (* keep="true",dont_touch="true" *) reg [47:0] command_cal[0:9];
  (* keep="true",dont_touch="true" *) reg [9:0] command_start,command_active;
  wire [9:0] command_accept;
+ // R14 (KV-PARAMS6): R13 native census FAIL 48/4 = command_accept[2..5] each enabled 24 payload flops (P0/P1 8 +
+ // ADD/SUM date 8 + product date 8, 2 mux contacts per bit). Each of the three 8-bit payload groups now has its own
+ // acceptance node: P0/P1 keep command_start[cg]; the dates use same-phase kept start_lane[8..15] images (start_lane[k]
+ // <= start on the same edge as command_start[cg], so every acceptance value is unchanged: no new stage, no new edge).
+ wire [5:2] command_accept_d,command_accept_r;
  wire [15:0] command_mulage[0:9];
  (* keep="true",dont_touch="true" *) reg [47:0] command_payload[0:1];
  generate for(genvar pc=0;pc<2;pc=pc+1)begin:g_command_payload
@@ -226,6 +231,10 @@ module qkd_pv_fin_s32 #(
   wire [15:0] x0=command_cal[cg][15:0],x1=command_cal[cg][31:16],xr=command_cal[cg][47:32];
   wire xb=cal_bad_f(x0,x1,xr);
   assign command_accept[cg]=command_start[cg]&&!command_active[cg]&&!xb;
+  if(cg>=2&&cg<=5)begin:g_accept_split
+   assign command_accept_d[cg]=start_lane[8+2*(cg-2)]&&!command_active[cg]&&!xb;
+   assign command_accept_r[cg]=start_lane[9+2*(cg-2)]&&!command_active[cg]&&!xb;
+  end
   if(cg>=8)begin:g_value
    (* keep_hierarchy="yes" *) ot_qkd_pvfin_calendar_value #(.C(ADD_LAT+2),.IGNORE_R(MUT==3)) u_value(
     .p0(command_payload[cg-8][15:0]),.p1(command_payload[cg-8][31:16]),.r(command_payload[cg-8][47:32]),
@@ -245,9 +254,9 @@ module qkd_pv_fin_s32 #(
   .p0(date_cal[1][15:0]),.p1(date_cal[1][31:16]),.r(16'd0),.y(date_sum));
  generate for(genvar dh=0;dh<2;dh=dh+1)begin:g_date_capture
   always @(posedge ck or negedge rr[485])if(!rr[485])ADD_AGE[8*dh+:8]<=0;
-   else if(command_accept[2+dh])ADD_AGE[8*dh+:8]<=date_add[8*dh+:8];
+   else if(command_accept_d[2+dh])ADD_AGE[8*dh+:8]<=date_add[8*dh+:8];
   always @(posedge ck or negedge rr[486])if(!rr[486])SUM_AGE[8*dh+:8]<=8'(ADD_LAT>>(8*dh));
-   else if(command_accept[4+dh])SUM_AGE[8*dh+:8]<=date_sum[8*dh+:8];
+   else if(command_accept_d[4+dh])SUM_AGE[8*dh+:8]<=date_sum[8*dh+:8];
  end endgenerate
  // Distinct observation/prediction dates avoid carry redistribution
  // through one global live MUL_AGE register. Original unsummed selection.
@@ -260,9 +269,9 @@ module qkd_pv_fin_s32 #(
  end
  for(genvar ph=0;ph<2;ph=ph+1)begin:g_product_date_capture
   always @(posedge ck or negedge rr[488])if(!rr[488])PRODUCT_AGE_PRED[8*ph+:8]<=8'((MUL_LAT-1)>>(8*ph));
-   else if(command_accept[2+ph])PRODUCT_AGE_PRED[8*ph+:8]<=product_date[0][8*ph+:8];
+   else if(command_accept_r[2+ph])PRODUCT_AGE_PRED[8*ph+:8]<=product_date[0][8*ph+:8];
   always @(posedge ck or negedge rr[489])if(!rr[489])PRODUCT_AGE[8*ph+:8]<=8'((MUL_LAT-1)>>(8*ph));
-   else if(command_accept[4+ph])PRODUCT_AGE[8*ph+:8]<=product_date[1][8*ph+:8];
+   else if(command_accept_r[4+ph])PRODUCT_AGE[8*ph+:8]<=product_date[1][8*ph+:8];
  end endgenerate
  reg active_d;
  reg [15:0] age_d;
