@@ -92,6 +92,83 @@ module qfd_dv_lane_h_safe1 #(parameter integer CONTROL_SAFE=1) (
         .sx_rsq_v(sx_rsq_v), .sx_rsq_x(sx_rsq_x), .sy_rsq_y(sy_rsq_y), .sy_rsq_f(sy_rsq_f));
 endmodule
 
+// safe2 = safe1 with every fixed-age ring (all < 2 kb) in flops: qfd_dv_s1_flop_ring (16-bit slices, own pointer,
+// N = D - 1 slots, write and read the same slot each edge = age D), no 32x64 macros; TLS 128x64 natives kept.
+module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire              emit0,
+    input  wire              live,
+    input  wire [17:0]       i,
+    input  wire [18:0]       fin_th,
+    input  wire              i_last_r,
+    input  wire [23:0]       cura0, curb0, curc0, curd0, rrow,
+    input  wire [23:0]       asi, bsi, csi, dsi,
+    input  wire              asrc, bsrc, csrc, mc, md, redsq,
+    input  wire [1:0]        ma, mb, dst, red,
+    input  wire [2:0]        ad,
+    input  wire [31:0]       imm1, imm2,
+    input  wire [2:0]        cls,
+    input  wire              accept,
+    input  wire [2:0]        i_sfu,
+    output wire              va_re,
+    output wire [23:0]       va_addr,
+    input  wire [31:0]       va_q,
+    output wire              vb_re,
+    output wire [23:0]       vb_addr,
+    input  wire [31:0]       vb_q,
+    output wire              vc_re,
+    output wire [23:0]       vc_addr,
+    input  wire [31:0]       vc_q,
+    output wire              wrom_re,
+    output wire [23:0]       wrom_addr,
+    input  wire [255:0]      wrom_q,
+    output wire              crom_re,
+    output wire [23:0]       crom_addr,
+    input  wire [63:0]       crom_q,
+    output wire              vm_we,
+    output wire [23:0]       vm_waddr,
+    output wire [31:0]       vm_wdata,
+    output wire              kv_we,
+    output wire [23:0]       kv_waddr,
+    output wire [31:0]       kv_wdata,
+    output wire              l_ov,
+    output wire [31:0]       l_out,
+    output wire [1:0]        l_red,
+    output wire              l_redsq,
+    output wire [23:0]       l_raddr,
+    output wire              l_last,
+    output wire              retire,
+    output wire              l_fault,
+    output wire              sx_exp_v,
+    output wire [31:0]       sx_exp_x,
+    input  wire [31:0]       sy_exp_y,
+    input  wire              sy_exp_vo,
+    input  wire              sy_exp_f,
+    output wire              sx_rcp_v,
+    output wire [31:0]       sx_rcp_x,
+    input  wire [31:0]       sy_rcp_y,
+    input  wire              sy_rcp_f,
+    output wire              sx_rsq_v,
+    output wire [31:0]       sx_rsq_x,
+    input  wire [31:0]       sy_rsq_y,
+    input  wire              sy_rsq_f
+);
+    qfd_dv_safe1_head #(.FLOP(1)) u_h (
+        .clk(clk), .rst_n(rst_n), .emit0(emit0), .live(live), .i(i), .fin_th(fin_th), .i_last_r(i_last_r),
+        .cura0(cura0), .curb0(curb0), .curc0(curc0), .curd0(curd0), .rrow(rrow), .asi(asi), .bsi(bsi), .csi(csi),
+        .dsi(dsi), .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq), .ma(ma), .mb(mb),
+        .dst(dst), .red(red), .ad(ad), .imm1(imm1), .imm2(imm2), .cls(cls), .accept(accept), .i_sfu(i_sfu),
+        .va_re(va_re), .va_addr(va_addr), .va_q(va_q), .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q), .vc_re(vc_re),
+        .vc_addr(vc_addr), .vc_q(vc_q), .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q), .crom_re(crom_re),
+        .crom_addr(crom_addr), .crom_q(crom_q), .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata),
+        .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .l_ov(l_ov), .l_out(l_out), .l_red(l_red),
+        .l_redsq(l_redsq), .l_raddr(l_raddr), .l_last(l_last), .retire(retire), .l_fault(l_fault),
+        .sx_exp_v(sx_exp_v), .sx_exp_x(sx_exp_x), .sy_exp_y(sy_exp_y), .sy_exp_vo(sy_exp_vo), .sy_exp_f(sy_exp_f),
+        .sx_rcp_v(sx_rcp_v), .sx_rcp_x(sx_rcp_x), .sy_rcp_y(sy_rcp_y), .sy_rcp_f(sy_rcp_f),
+        .sx_rsq_v(sx_rsq_v), .sx_rsq_x(sx_rsq_x), .sy_rsq_y(sy_rsq_y), .sy_rsq_f(sy_rsq_f));
+endmodule
+
 // ---- reset: face landing (two registered stages) + balanced relay tree, kept hierarchy ----------------------
 (* keep_hierarchy *)
 module qfd_dv_s1_rst_land (input wire clk, input wire arst_n, output wire q);
@@ -118,7 +195,7 @@ module qfd_dv_s1_cp5 (input wire clk, input wire [4:0] d, output reg [4:0] q);
 endmodule
 
 module qfd_dv_safe1_head #(
-    parameter integer WR = 16, AW = 24, NW = 18, KV_FP8 = 1, ML = 5, RD = 2, QLA = 4, QLM = 5
+    parameter integer WR = 16, AW = 24, NW = 18, KV_FP8 = 1, ML = 5, RD = 2, QLA = 4, QLM = 5, FLOP = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -182,11 +259,11 @@ module qfd_dv_safe1_head #(
     // ---- reset: face landing (2 stages) -> 3 branch relays -> 11 leaf relays (all leaves at depth 4) ----
     localparam integer NL = 11;
     wire r_land;
-    wire [2:0] r_br;
+    wire [3:0] r_br;      // r_br[3]: the flop rings' own leaf relays (FLOP 1)
     wire [NL-1:0] rl;
     qfd_dv_s1_rst_land u_rland (.clk(clk), .arst_n(rst_n), .q(r_land));
     genvar gb;
-    for (gb = 0; gb < 3; gb = gb + 1) begin : g_rbr
+    for (gb = 0; gb < 4; gb = gb + 1) begin : g_rbr
         qfd_dv_s1_rst_relay u_r (.clk(clk), .arst_n(r_land), .q(r_br[gb]));
     end
     for (gb = 0; gb < NL; gb = gb + 1) begin : g_rlf
@@ -236,8 +313,8 @@ module qfd_dv_safe1_head #(
     wire [1:0]    n_red;
     wire [AW-1:0] n_raddr;
     qfd_dv_safe1_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML + 2 + 2 * RD), .QLA(QLA), .QLM(QLM),
-                        .NL(NL)) u_lane (
-        .clk(clk), .rl(rl), .ron(q_ron), .coh(q_coh),
+                        .NL(NL), .FLOP(FLOP)) u_lane (
+        .clk(clk), .rl(rl), .rbr(r_br[3]), .ron(q_ron), .coh(q_coh),
         .emit0(q_emit0), .live(q_live), .i(q_i), .fin_th(q_fin_th), .i_last_r(q_ilast),
         .cura0(q_cura), .curb0(q_curb), .curc0(q_curc), .curd0(q_curd), .rrow(q_rrow),
         .asi(q_asi), .bsi(q_bsi), .csi(q_csi), .dsi(q_dsi),
@@ -290,10 +367,11 @@ module qfd_dv_s1_qadd #(parameter integer L = 4) (
 endmodule
 
 module qfd_dv_safe1_lane #(
-    parameter integer WR = 16, AW = 24, NW = 18, LANE = 0, KV_FP8 = 1, ML = 11, QLA = 4, QLM = 5, NL = 11
+    parameter integer WR = 16, AW = 24, NW = 18, LANE = 0, KV_FP8 = 1, ML = 11, QLA = 4, QLM = 5, NL = 11, FLOP = 0
 ) (
     input  wire              clk,
     input  wire [NL-1:0]     rl,          // reset leaves (each <= 32 sinks)
+    input  wire              rbr,         // reset branch for the flop rings' own leaves (FLOP 1)
     input  wire [4:0]        ron,         // ring_on, registered at the face (kept copies)
     input  wire [4:0]        coh,         // class one-hot, registered at the face
     input  wire              emit0,
@@ -450,13 +528,13 @@ module qfd_dv_safe1_lane #(
     wire [TT-1:0] e_tail = {e_mc, e_md, e_dst, e_daddr, e_red, e_redsq, e_raddr, e_ifirst, e_first8, e_final, e_last, e_p};
     wire packed_ml_v, m_asrc, m_bsrc, m_csrc;
     wire [LW-1:0] m_lane;
-    qfd_dv_s1_sram_delay #(.W(HW), .D(ML)) u_ml_head (.clk(clk), .rst_n(r_ml),
+    qfd_dv_s1_delay #(.W(HW), .D(ML), .FLOP(FLOP)) u_ml_head (.clk(clk), .rbr(rbr), .rst_n(r_ml),
         .d({e_v, e_asrc, e_bsrc, e_csrc, e_lane}), .q({packed_ml_v, m_asrc, m_bsrc, m_csrc, m_lane}));
     wire [31:0] r2_imm1, r2_imm2;
     wire [1:0]  r2_ma, r2_mb;
     wire [2:0]  r2_ad;
     wire [TT-1:0] r2_tail;
-    qfd_dv_s1_sram_delay #(.W(SW), .D(ML + 2)) u_ml_s2 (.clk(clk), .rst_n(r_ml),
+    qfd_dv_s1_delay #(.W(SW), .D(ML + 2), .FLOP(FLOP)) u_ml_s2 (.clk(clk), .rbr(rbr), .rst_n(r_ml),
         .d({e_imm1, e_ma, e_mb, e_ad, e_imm2, e_tail}), .q({r2_imm1, r2_ma, r2_mb, r2_ad, r2_imm2, r2_tail}));
     wire e_v_m = packed_ml_v && valid_boot_age >= ML;
     reg s1_v, s2_v, s3_v;
@@ -520,7 +598,7 @@ module qfd_dv_safe1_lane #(
     wire [1:0]  ma8;
     wire [2:0]  ad8;
     wire packed_v3;
-    qfd_dv_s1_sram_delay #(.W(32*4 + 2 + 3 + 1), .D(LM)) u_d38 (.clk(clk), .rst_n(r_d38),
+    qfd_dv_s1_delay #(.W(32*4 + 2 + 3 + 1), .D(LM), .FLOP(FLOP)) u_d38 (.clk(clk), .rbr(rbr), .rst_n(r_d38),
         .d({s3_v, s3_a, s3_blo, s3_c, s3_imm2, s3_ma, s3_ad}), .q({packed_v3, a8, blo8, c8, imm2_8, ma8, ad8}));
     reg final_v;
     always @(posedge clk or negedge r_ctl) if (!r_ctl) final_v <= 0; else final_v <= packed_v3 && valid_boot_age >= LM;
@@ -544,7 +622,7 @@ module qfd_dv_safe1_lane #(
     qfd_dv_s1_qadd #(.L(LA)) u_ad (clk, r_fad, v3[LM+1] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
     wire packed_v9;
     wire [2:0] ad14;
-    qfd_dv_s1_sram_delay #(.W(36), .D(LA)) u_d914 (.clk(clk), .rst_n(r_d38), .d({v3[LM+1], ad_x, ad9}),
+    qfd_dv_s1_delay #(.W(36), .D(LA), .FLOP(FLOP)) u_d914 (.clk(clk), .rbr(rbr), .rst_n(r_d38), .d({v3[LM+1], ad_x, ad9}),
         .q({packed_v9, px14, ad14}));
     wire [LA:0] v9 = {(packed_v9 && valid_boot_age >= LA), {LA{1'b0}}};
     wire [31:0] r14 = (ad14 == AD_BYP) ? px14 : r_add;
@@ -586,7 +664,7 @@ module qfd_dv_safe1_lane #(
     localparam integer LT = 32 + 32 + TT;
     wire packed_tap0_v, packed_tls_v;
     wire [LT-1:0] t0;
-    qfd_dv_s1_sram_delay #(.W(LT + 1), .D(TAP0)) u_tap0_ring (.clk(clk), .rst_n(r_tls),
+    qfd_dv_s1_delay #(.W(LT + 1), .D(TAP0), .FLOP(FLOP)) u_tap0_ring (.clk(clk), .rbr(rbr), .rst_n(r_tls),
         .d({(s3_v && !valid_class_clear), s3_blo, s3_c, s3_tail}), .q({packed_tap0_v, t0}));
     reg [7:0] dsel;
     always @(*) begin
@@ -661,7 +739,7 @@ module qfd_dv_safe1_lane #(
     wire [TT-1:0] c_tail;
     wire packed_vmc, c_mc_dup;
     // spare column 127 carries a second copy of the mc flag (the md_x select's high half)
-    qfd_dv_s1_sram_delay #(.W(64 + TT + 2), .D(LM)) u_dmc (.clk(clk), .rst_n(r_dmx),
+    qfd_dv_s1_delay #(.W(64 + TT + 2), .D(LM), .FLOP(FLOP)) u_dmc (.clk(clk), .rbr(rbr), .rst_n(r_dmx),
         .d({mc_tail[TT-1], mc_v, mc_x, mc_b, mc_tail}), .q({c_mc_dup, packed_vmc, byp5, b5, c_tail}));
     wire [LM:0] vmc = {(packed_vmc && valid_boot_age >= LM), {LM{1'b0}}};
     reg [31:0] md_x, md_y;
@@ -685,10 +763,10 @@ module qfd_dv_safe1_lane #(
     wire [TN-1:0] md_tail_n = {md_tail[TT-1 -: 4], md_tail[TT-5-AW:0]};      // {mc, md, dst} + {red ... p}
     wire [TN-1:0] o_tail_n;
     wire packed_vmd;
-    qfd_dv_s1_sram_delay #(.W(32 + TN + 1), .D(LM)) u_dmd (.clk(clk), .rst_n(r_dmx), .d({md_v, md_x, md_tail_n}),
+    qfd_dv_s1_delay #(.W(32 + TN + 1), .D(LM), .FLOP(FLOP)) u_dmd (.clk(clk), .rbr(rbr), .rst_n(r_dmx), .d({md_v, md_x, md_tail_n}),
         .q({packed_vmd, dbyp5, o_tail_n}));
     wire [AW-1:0] w_daddr;
-    qfd_dv_s1_sram_delay #(.W(AW), .D(LM + 1)) u_dadr (.clk(clk), .rst_n(r_dmx), .d(md_tail[TT-5 -: AW]), .q(w_daddr));
+    qfd_dv_s1_delay #(.W(AW), .D(LM + 1), .FLOP(FLOP)) u_dadr (.clk(clk), .rbr(rbr), .rst_n(r_dmx), .d(md_tail[TT-5 -: AW]), .q(w_daddr));
     wire [LM:0] vmd = {(packed_vmd && valid_boot_age >= LM), {LM{1'b0}}};
     wire          o_mc, o_md;
     wire [1:0]    o_dst, o_red;
@@ -792,4 +870,58 @@ module qfd_dv_s1_valid_guards #(parameter integer LIMIT = 136, W = $clog2(LIMIT+
             else if (epoch < LIMIT) epoch <= epoch + 1'b1;
         end
     end
+endmodule
+
+// fixed-age delay: native SRAM ring (FLOP 0) or flop ring (FLOP 1), same age D
+module qfd_dv_s1_delay #(parameter integer W = 32, D = 3, FLOP = 0) (
+    input wire clk, rbr, rst_n, input wire [W-1:0] d, output wire [W-1:0] q
+);
+    generate if (FLOP != 0) begin : g_f
+        qfd_dv_s1_flop_ring #(.W(W), .D(D)) u (.clk(clk), .rbr(rbr), .d(d), .q(q));
+    end else begin : g_s
+        qfd_dv_s1_sram_delay #(.W(W), .D(D)) u (.clk(clk), .rst_n(rst_n), .d(d), .q(q));
+    end endgenerate
+endmodule
+// flop ring: 16-bit slices (each pointer drives N slot compares; each slot select drives <= 32 loads), own leaf
+// relays fed by the reset branch rbr (leaves at depth 4 like every other leaf, <= 32 pointer sinks each)
+module qfd_dv_s1_flop_ring #(parameter integer W = 32, D = 3) (
+    input wire clk, rbr, input wire [W-1:0] d, output wire [W-1:0] q
+);
+    localparam integer N = D - 1, PB = (N < 2) ? 1 : $clog2(N);
+    localparam integer NS = (W + 15) / 16, SPL = 32 / PB, NLF = (NS + SPL - 1) / SPL;
+    wire [NLF-1:0] lf;
+    genvar k;
+    for (k = 0; k < NLF; k = k + 1) begin : g_lf
+        qfd_dv_s1_rst_relay u_r (.clk(clk), .arst_n(rbr), .q(lf[k]));
+    end
+    for (k = 0; k < NS; k = k + 1) begin : g_sl
+        localparam integer SW = (W - 16 * k < 16) ? W - 16 * k : 16;
+        qfd_dv_s1_ring_slice #(.W(SW), .N(N)) u_s (.clk(clk), .rst_n(lf[k / SPL]), .d(d[16*k +: SW]), .q(q[16*k +: SW]));
+    end
+`ifndef SYNTHESIS
+    initial if (D < 3 || D > 33 || W * (D - 1) > 2048) $fatal(1, "S1_FLOP_RING unsupported shape W %0d D %0d", W, D);
+`endif
+endmodule
+(* keep_hierarchy *)
+module qfd_dv_s1_ring_slice #(parameter integer W = 16, N = 4) (
+    input wire clk, rst_n, input wire [W-1:0] d, output reg [W-1:0] q
+);
+    localparam integer PB = (N < 2) ? 1 : $clog2(N);
+    reg [PB-1:0] p;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) p <= 0; else p <= (p == N - 1) ? {PB{1'b0}} : p + 1'b1;
+    reg [W*N-1:0] slot;
+    wire [W*(N+1)-1:0] rd;
+    assign rd[W-1:0] = {W{1'b0}};
+    genvar j;
+    for (j = 0; j < N; j = j + 1) begin : g_slot
+        wire sel = (p == j);
+        always @(posedge clk) if (sel) slot[W*j +: W] <= d;
+        assign rd[W*(j+1) +: W] = rd[W*j +: W] | ({W{sel}} & slot[W*j +: W]);
+    end
+`ifdef OT_HS1_RING_AGE_MUT
+    always @(posedge clk) q <= rd[W*N +: W] ^ {{(W-1){1'b0}}, (p == 0)};
+`else
+    always @(posedge clk) q <= rd[W*N +: W];
+`endif
 endmodule

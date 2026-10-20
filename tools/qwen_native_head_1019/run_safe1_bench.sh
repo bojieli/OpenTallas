@@ -3,6 +3,7 @@
 #   m0: full production W10 (a c f g k q m o n) + numeric e        -> must PASS
 #   mutants (numeric e, each must FAIL): TLS bank swap, TLS slot (read one word late), ring_on copy 1 (new copy mutant)
 set -uo pipefail
+export HS1_TOP="${HS1_TOP:-safe1}"; echo "HS1_TOP=$HS1_TOP"
 export PATH="$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH"
 verilator --version
 F="+define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1"
