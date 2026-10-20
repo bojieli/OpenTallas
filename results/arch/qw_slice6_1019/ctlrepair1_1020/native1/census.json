@@ -1,0 +1,56 @@
+{
+  "top": "qfd_dv_s5_ctl_repair1",
+  "sha256": "3ba0f58eef7a6193010d7b7b5f290a49c5d43f56f7c134d79092f61dfc4fbbd4",
+  "nonclock_drivers_over32": 1,
+  "flop_drivers_over32": 0,
+  "raw_ports_over32": 0,
+  "max_nonclock_loads": 35,
+  "rst_n_loads": 2,
+  "metrics": {
+    "clock_roots": [
+      {
+        "root": "port:ck[0]",
+        "ff": 7206,
+        "icg": 0,
+        "macro_pins": 0,
+        "example": "u_0._2_"
+      }
+    ],
+    "hier_subblocks": 0,
+    "clock_max_root_sinks": 7206,
+    "clock_max_root": "port:ck[0]",
+    "high_fanout_top": [],
+    "hf_max_port": 0,
+    "hf_max_reset": 0,
+    "hf_max_net": 0,
+    "reset_landing": [
+      {
+        "port": "rst_n[0]",
+        "sinks": 2,
+        "flops": 2,
+        "macros": 0
+      }
+    ],
+    "in_to_out_bits": 0,
+    "in_to_reg_levels": 0,
+    "reg_to_out_levels": 0,
+    "icg_enable_from_port": 0,
+    "depth_ps": 486.8,
+    "depth_path": [
+      "u_2995._2_",
+      "u_22281._2_/D"
+    ],
+    "depth_levels": 16
+  },
+  "violations": [
+    {
+      "driver": "n_14070",
+      "loads": 35,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    }
+  ],
+  "verdict": "FAIL",
+  "qualification": "Mapped fanout census only; reset landing/pins/reach/storage still require their own proof"
+}
