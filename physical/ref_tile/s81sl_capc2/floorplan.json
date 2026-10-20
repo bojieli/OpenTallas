@@ -159,6 +159,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/common_flow/max_wire_repeat.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/ref_tile/s81sl_capc2/pre_gpl.tcl",
@@ -186,6 +187,10 @@
   "physical/ref_tile/s81sl_cap_ld/views/ot_s81sl_cap_ld/ot_s81sl_cap_ld_ss.lib",
   "physical/ref_tile/s81sl_cap_ld/views/ot_s81sl_cap_ld/ot_s81sl_cap_ld_ff.lib",
   "physical/ref_tile/s81sl_cap_ld/views/ot_s81sl_cap_ld/ot_s81sl_cap_ld_tt.lib",
-  "physical/ref_tile/s81sl_capc2/place.tcl"
+  "physical/ref_tile/s81sl_capc2/place.tcl",
+  "physical/common_flow/native_pg_binding.tcl",
+  "physical/common_flow/native_pg_bootstrap.tcl",
+  "physical/common_flow/audit_native_pg.tcl",
+  "tools/closure_loop/pg_receipt.py"
  ]
 }
