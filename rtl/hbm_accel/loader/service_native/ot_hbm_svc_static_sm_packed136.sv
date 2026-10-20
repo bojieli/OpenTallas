@@ -47,6 +47,14 @@ module ot_hbm_svc_static_sm_packed136 #(parameter integer PACKED136=0)(
   end
   assign block_ready=ready;assign bank_owned=owned;assign busy=running;assign fault=sticky;
   assign out_packet={out_valid&&!sticky,out_tag,cache_data[4][63:0],cache_data[3],cache_data[2],cache_data[1],cache_data[0]};
+`ifdef CACHE_TRACE
+  // Diagnostic only: report the exact violated existing predicate, never change it.
+  always @(posedge clk)if(rst_n)begin
+   if(open_v)$display("CACHE_OPEN bank=%0d epoch=%0d count=%0d ok=%0d running=%0d owned=%b emitted=%0d rows=%0d received=%0d total=%0d",open_bank,open_epoch,open_count,open_ok,running,owned,emitted,load_rows,received,total_sectors);
+   if(read_v&&!read_ok)$display("CACHE_READ_BAD bank=%0d ready=%b epoch=%0d expected_epoch=%0d row=%0d count=%0d tag=%0d expected_tag=%0d sticky=%0d retire_collision=%0d",read_bank,ready,read_epoch,epoch[read_bank],read_row,count[read_bank],read_tag,tags[read_addr],sticky,retire_v&&retire_bank==read_bank);
+   if(retire_v)$display("CACHE_RETIRE bank=%0d epoch=%0d expected=%0d owned=%b running=%0d load_bank=%0d read_collision=%0d open_collision=%0d",retire_bank,retire_epoch,epoch[retire_bank],owned,running,load_bank,read_v&&read_bank==retire_bank,open_v&&open_bank==retire_bank);
+  end
+`endif
   integer i;
   always @(posedge clk or negedge rst_n)begin
    if(!rst_n)begin
