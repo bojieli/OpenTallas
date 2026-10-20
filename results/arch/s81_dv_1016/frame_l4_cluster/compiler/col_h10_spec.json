@@ -43,7 +43,11 @@
   "clk",
   "cr",
   "cr_s",
-  "xk"
+  "xk",
+  "io_clk",
+  "io_n",
+  "io_w",
+  "io_e"
  ],
  "reset_port": "rst_n",
  "reset_net": "n257",

@@ -493,6 +493,9 @@ def kit(master, r, spec, soft=()):
         clock_entry_domains=dom,
         landed_record=f'{REC}/compiler/{master}_l4_lp_record.json',
         reset_ports=['rst_n'], static_ports=['lk'],
+        # S81-FRAME4 10-19: xk[3:0] is the forwarded x lane clock (crs4 write side + dvrly u_xo* relays), not a region
+        # root: ref_tile clock entries judge its 8 child clock pins as the forwarded class (per bit, child flops, <=80)
+        forwarded_clock_ports=['xk'],
         reset_landing={'enable': False, 'reason': 'the RTL lands it: rst_n -> dsfd_cfifo_crs4 rst (2-stage rsync_q on cr) -> crs4 rs = n257 -> lp.py regional reset runs (ot_pl_pad chains per region, reach 405 hops from the measured centres); rst_n also reaches the 4 xo forwarded-clock relays u_xo* (.rs, async assert, their own RSREG). A kit landing would shift the crs4 release against the lane hop-0 gate the frame calendar is benched on'},
         outline=dict(w=r['W'], h=r['H'], exact=True), cluster_level=2,
         cluster_level_why='children include the q element (PG top M7, legacy closed view): two-level cluster contract (PG M8 aligned to the die grid, signals M2-M7)',
@@ -509,12 +512,13 @@ def kit(master, r, spec, soft=()):
                        c26l_height=r['c26l_height'], y_scale=r['y_scale']),
                    stand_ins={'ot_v41_rom_elem_q_qxpq_w10': 'non-RSTP efs view (COORD 0gs) until the RSTP ob2 re-route closes',
                               'ot_v41_bf_col': 'compact199 closed view; pin-band re-route (same outline / pins) being submitted'},
-                   xk_note='xk (forwarded x clock, preserved port) feeds crs4 only; timed as a core input in this gate'),
+                   xk_note='xk (forwarded x clock, preserved port) feeds crs4 xk[0..3] + dvrly u_xo0..3/ck; data-timed as a core input, '
+                   'its child clock pins judged as the forwarded-clock class (forwarded_clock_ports)'),
         soft_children=dict(patterns=list(soft), why=('the 1-283 b frame relays are plain register stages (ot_s81_rly); as '
                            'hard 15-56 um tiles under the 20-um channel rule they set the frame height (hard-relay '
                            'legalisation needs 3.67 mm vs 3.20 mm soft, p4l slot 2.70): synthesised in the frame, placed '
                            'by the placer on their region tree') if soft else None),
-        job=dict(owner='Claude:TW3-S81-FRAMEGATE', branch='claude/tw3-framegate-1019', tag='fg1',
+        job=dict(owner='Claude:S81-FRAME4', branch='claude/s81-frame4-1019', tag='fg4',
                  purpose=f'S81 {master} landed frame cluster (COORD 0jy, landed-regions standard) -- physical gate',
                  no_bench_reason='frame lockstep + plan benches: frame_l4_cluster/compiler/bench_lp_1019; gate only (critical review)',
                  extra_paths=['results/arch/s81_dv_1016/frame_l4_cluster/compiler'],

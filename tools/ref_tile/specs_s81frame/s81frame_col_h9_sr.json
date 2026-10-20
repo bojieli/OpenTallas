@@ -85,11 +85,20 @@
  "static_ports": [
   "lk"
  ],
+ "forwarded_clock_ports": [
+  "xk"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rst_n -> dsfd_cfifo_crs4 rst (2-stage rsync_q on cr) -> crs4 rs = n257 -> lp.py regional reset runs (ot_pl_pad chains per region, reach 405 hops from the measured centres); rst_n also reaches the 4 xo forwarded-clock relays u_xo* (.rs, async assert, their own RSREG). A kit landing would shift the crs4 release against the lane hop-0 gate the frame calendar is benched on"
+ },
  "outline": {
   "w": 1436.832,
   "h": 3369.6,
   "exact": true
  },
+ "cluster_level": 2,
+ "cluster_level_why": "children include the q element (PG top M7, legacy closed view): two-level cluster contract (PG M8 aligned to the die grid, signals M2-M7)",
  "children": [
   {
    "view": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
@@ -2138,7 +2147,7 @@
  "structural_change": "TW3-S81-FRAMEGATE 10-19 (COORD 0jy option A): col_h9 landed frame (3 regions r0/r1/r2, every crossing landed as a compiler re-schedule, 3017 landings, reset hops {'r0': 0, 'r1': 3, 'r2': 6} at reach 405 from measured region centres {'r0': [629.1, 493.4], 'r1': [619.4, 1588.5], 'r2': [601.5, 2805.5]}); hard children legalised from the c26l GEN placement (tools/s81_dv/frame_kit.py)",
  "frame": {
   "lp_rtl": "rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv",
-  "lp_rtl_sha256": "4fd9147f3f384c5e439b313ef897a57755cd638e584cc3a8472ca2b057f8da42",
+  "lp_rtl_sha256": "31e028976cf287ca75fdcd31e134f0fdbf085d6a296e209dfcf58932b11bab08",
   "bench": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/bench_lp_1019 (claude/tw3-frame-1019 2911edcc2)",
   "placement": {
    "worst_disp_um": [
@@ -2155,7 +2164,7 @@
    "ot_v41_rom_elem_q_qxpq_w10": "non-RSTP efs view (COORD 0gs) until the RSTP ob2 re-route closes",
    "ot_v41_bf_col": "compact199 closed view; pin-band re-route (same outline / pins) being submitted"
   },
-  "xk_note": "xk (forwarded x clock, preserved port) feeds crs4 only; timed as a core input in this gate"
+  "xk_note": "xk (forwarded x clock, preserved port) feeds crs4 xk[0..3] + dvrly u_xo0..3/ck; data-timed as a core input, its child clock pins judged as the forwarded-clock class (forwarded_clock_ports)"
  },
  "soft_children": {
   "patterns": [
@@ -2164,22 +2173,16 @@
   "why": "the 1-283 b frame relays are plain register stages (ot_s81_rly); as hard 15-56 um tiles under the 20-um channel rule they set the frame height (hard-relay legalisation needs 3.67 mm vs 3.20 mm soft, p4l slot 2.70): synthesised in the frame, placed by the placer on their region tree"
  },
  "job": {
-  "owner": "Claude:TW3-S81-FRAMEGATE",
-  "branch": "claude/tw3-framegate-1019",
-  "tag": "fg1",
+  "owner": "Claude:S81-FRAME4",
+  "branch": "claude/s81-frame4-1019",
+  "tag": "fg4",
   "purpose": "S81 col_h9 landed frame cluster (COORD 0jy, landed-regions standard) -- physical gate",
   "no_bench_reason": "frame lockstep + plan benches: frame_l4_cluster/compiler/bench_lp_1019; gate only (critical review)",
-  "views_to": "physical/ref_tile/s81frame_col_h9_sr/views",
-  "record_to": "results/rtl/ref_tile/s81frame_col_h9_sr",
   "extra_paths": [
    "results/arch/s81_dv_1016/frame_l4_cluster/compiler"
-  ]
+  ],
+  "views_to": "physical/ref_tile/s81frame_col_h9_sr/views",
+  "record_to": "results/rtl/ref_tile/s81frame_col_h9_sr"
  },
- "slot_change_request": "frame height 3369.6 > p4l slot 2695.68: the c26l arrangement under the ref_tile 20-um channel rule needs it; die plan frame pitch must grow (coordinator)",
- "cluster_level": 2,
- "cluster_level_why": "children include the q element (PG top M7, legacy closed view): two-level cluster contract (PG M8 aligned to the die grid, signals M2-M7)",
- "reset_landing": {
-  "enable": false,
-  "reason": "the RTL lands it: rst_n -> dsfd_cfifo_crs4 rst (2-stage rsync_q on cr) -> crs4 rs = n257 -> lp.py regional reset runs (ot_pl_pad chains per region, reach 405 hops from the measured centres); rst_n also reaches the 4 xo forwarded-clock relays u_xo* (.rs, async assert, their own RSREG). A kit landing would shift the crs4 release against the lane hop-0 gate the frame calendar is benched on"
- }
+ "slot_change_request": "frame height 3369.6 > p4l slot 2695.68: the c26l arrangement under the ref_tile 20-um channel rule needs it; die plan frame pitch must grow (coordinator)"
 }
