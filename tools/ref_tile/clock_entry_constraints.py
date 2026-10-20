@@ -140,7 +140,10 @@ def landed_record(spec, root):
     if spec.get("cdc_synchronizers") is not None:
         raise ValueError("landed cluster: CDC synchronizers are leaf-tile features")
     rec = json.loads((Path(root) / path).read_text())
-    if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
+    if rec.get("generator") != "tools/landed_parent/lp.py":
+        from derived_landed_record import validate
+        validate(spec, root, rec)
+    if rec.get("top") != spec.get("top"):
         raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')
     regions = rec.get("regions")
     if not isinstance(regions, dict) or not regions:
