@@ -64,3 +64,40 @@ RAW-bound.
   2. Producer -> consumer forwarding: the SU output goes straight into the x-store or COLL operand slot (dataflow level 2)
      instead of a VM write and a read-back.
 - Hand-off: TOKSIM-HBM (lanes/TOKSIM-HBM.md).
+
+## Integration 10-19 ~22:00 (int_1019/): DMA + IDX rules in the model, rotated layout, N=1 for every client
+
+The tool now carries the per-client rules from the sub-lanes (tool docstring):
+
+- **DMA** (HBM-VMEARLY-DMA bc57f015e): `dma_min_next_issue`, an ISSUE_AHEAD 0 calendar, because the controller holds one
+  move. bl_dma is charged on VM-read DMA records only (KVWB/STORE/swap-out). `OT_VME_BLDMA=all` reproduces LH-REPRICE3.
+- **IDX** (HBM-VMEARLY-IDX 0b423e28d): `A_i = max(RAW_i, F_i - LB)` with LB = bl_idx + 2 = 183. NBUF 1: the query store is
+  the static slot.
+- **x-load / COLL**: NBUF 2 (the slots are built by HBM-VMEARLY-XLCOLL).
+- **Layout**: rotated bank layout for every stream (`OT_VME_LAYOUT=rotated`). A successor-bandwidth run with any other layout
+  is refused.
+
+Composed row `info_banklat_all`, N=1 for all clients:
+
+| controller | N=0, bl_dma every record (LH-REPRICE3) | N=0 + bl_dma split | **N=1, all rules** | `all` (no bank-latency term) |
+|---|---:|---:|---:|---:|
+| H9b current, 45.03 B/edge/SM: DS / Qwen tok/s | 1,206.3 / 407.0 | 1,217.6 / 407.2 | **1,276.6 / 408.4** (+5.8 % / +0.3 %) | 1,338.1 / 410.1 |
+| successor PC (release, rotated), 90.67 + bridge 1 | 1,406.9 / 746.7 | 1,422.3 / 747.2 | **1,494.3 / 751.4** (+6.2 % / +0.6 %) | 1,596.8 / 757.0 |
+
+DS exposed bank-latency edges per token, base -> N=1, at 45.03:
+
+- x-load: 52,499 -> 11,955
+- COLL: 30,449 -> 13,514
+- DMA: 1,112 -> 632
+- IDX: 8,763 -> 7,872 (RAW-bound)
+
+At 90.67 the x-load figure is 14,721 at N=1.
+
+What is left is RAW-bound: producer -> VM -> consumer dependences. Early issue cannot hide it. The levers are GEN2d placement
+(shorter IDX/COLL round trips) and producer -> consumer forwarding.
+
+Even with all bank-latency removed, the successor only reaches DS 1,596.8, still below the owner's 1,600-1,700. So the
+bank-latency term alone does not close the gap.
+
+The IDX bench `tb_idx_vme_n12` needs the n12 `#(171)` RTL from `claude/hbm-banklat-idx-1019`, which is not on main yet.
+Its committed evidence stands either way.
