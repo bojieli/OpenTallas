@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-gen3-takeover3-currentbind
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-gen3-takeover3-currentbind
+ot-run: ot-epyc6       admits  1136 GB (avail 909, growth 113, headroom 0, waiters 0/0 GB) load 72/128 running 35 disk 5502 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-gen3-takeover3-currentbind
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-gen3-takeover3-currentbind
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-gen3-takeover3-currentbind
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-gen3-takeover3-currentbind
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2330215-1792457066 after 0 s

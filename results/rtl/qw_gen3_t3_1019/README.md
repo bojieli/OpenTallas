@@ -48,3 +48,20 @@ source overlay of the frozen predecessor; no place/PDN/route. SOURCE_COMMIT's
 literal text accidentally says "2Tcl"; only dv_case.py and qwen_rom_fulldie_b3r2.py
 are executable changes (two Python files). The authoritative exact commit and
 content hashes, not that descriptive typo, identify the source.
+
+Handback at explicit CLAUDE IS BACK: finish this record and stop; no new launch.
+GEN unit1181378/Python1182671 continues, last3m24s/RSS206056KiB/102%CPU,
+P2R emitted through dvw_dr_wi; no terminal status yet. Native source-only,
+no placement/PG/clock/GRT job was submitted. Current-main799eebe53 strict binder
+on existing GEN2 A was already independently launched before handback, ep6unit
+2330215/Python2331473, 8GB1thread2GB, source untouched via read-only symlink view.
+Its result is pending in /srv/opentallas-scratch/claude/qw-gen3-takeover3-currentbind/
+{bind.log,result.json,result.rc}; no new strict PASS yet. The earlier legacy
+binder PASS on GEN2 must not erase current main's known137-open defect.
+
+Next owner: collect both terminal results; classify actual opens/unread/fault
+ownership. Any contact successor must price actual .192um local pins, axes,
+whole-ring geometry and pin reach; no face-average substitution. Then rederive
+this die's compiled transport/OVL/BOOTCTX schedule, pair source/view contracts,
+and provide actual PNG/checklist to root before physical submission. Private
+source branch may be reviewed as engineering; it is not ready for release/adoption.
