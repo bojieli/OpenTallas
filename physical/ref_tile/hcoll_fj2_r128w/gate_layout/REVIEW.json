@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hcoll_fj2_r128w",
+ "reviewer": "HBM-COLLFJ sub-lane of LEAD3-HBM (not on critical_tiles.txt; 0 earlier failed routes)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T23:40:00-07:00",
+ "gate_commit": "d54533489",
+ "checklist": {
+  "lattice": "PASS: no macros (std-cell only tile)",
+  "std_cell_band": "PASS: full-width std-cell rows, PD 0.50, util 52%; top band near the N pin face denser (pin flops), no hotspot, GRT overflow 0",
+  "pin_spread": "PASS: N cfg/desc/status, S issuer, E/W faults on full faces <= 6/um; pin geometry 461/461 on track",
+  "clock_entry": "PASS: clk N face; TT/FF insertion 147.0/117.8 ps, pin-flop spread 9.3/8.4 ps (<= 80)",
+  "shape": "PASS: 82.08 x 77.76 (1.06:1); placement setup +4.7 ps (marginal -> parallel fallback r128x 90.72x86.4), hold +46 ps"
+ },
+ "notes": "v7-branch re-gate (programme target ROWS 128 start_pc at descriptor accept). WARN only textbook.high_fanout on the landed reset rst_q (~300 loads), waived in README item 3."
+}
