@@ -1,0 +1,2 @@
+CASE topk_cr35_rl WRITE 8 differs WRITE 9 differs TOPK_LAT VM_RT_M=65 CR_RT_M=36 VM_RT_P=65 CR_RT_P=35 AMMUT=0 requests 5103 writes 1136 events 240 (done 186 fault 27 illegal 27) max_row 3 share_fault 0/0 errors 1019 IDX_AM_TOPK_LAT FAIL 
+RC 1

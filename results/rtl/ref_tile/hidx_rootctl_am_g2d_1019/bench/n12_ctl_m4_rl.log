@@ -1,0 +1,2 @@
+CASE n12_ctl_m4_rl IDX_VM_QUERY_N12_LAT MUT4 via_ctl1 vmrt171 dut171 ctl1 bank_lanes64..64 commits514 reads514 blocks64 quant16 errors80 fault1 share_fault0 firstblock371 IDX_VM_QUERY_N12_LAT FAIL FATAL: rtl/test/hbm_idx_static/tb_vm_query_n12_lat.sv:128: n12 at the d4g budget: query/weight/quant/latency mismatch        Time: 6410000000  Scope: tb_vm_query_n12_lat 
+RC 1
