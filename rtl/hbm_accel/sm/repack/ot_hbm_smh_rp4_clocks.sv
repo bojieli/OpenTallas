@@ -93,6 +93,13 @@ module ot_hbm_smh_rp4_leafh #(
 
 
 
+`ifdef OT_SMH_G1_CAPTURE
+    // Source capture replaces the 98-load BDC ov mux cone. +1 leaf result edge.
+    ot_rp4_g1_capture #(.TAGW(TAGW)) u_g1_capture (
+        .clk(clk), .rst_n(g_n), .bov(bov), .fov(fov),
+        .bfault(bfault), .ffault(ffault), .by(by), .fy(fy),
+        .btag(btag), .ftag(ftag), .gv(gv), .gf(gf), .gy(gy), .gt(gt));
+`else
     reg gv_q, gf_q;
     reg [31:0] gy_q;
     reg [TAGW-1:0] gt_q;
@@ -101,6 +108,7 @@ module ot_hbm_smh_rp4_leafh #(
         else begin gv_q <= bov | fov; gf_q <= bfault | ffault | (bov & fov); end
     always @(posedge clk) begin gy_q <= bov ? by : fy; gt_q <= bov ? btag : ftag; end
     assign gv = gv_q; assign gf = gf_q; assign gy = gy_q; assign gt = gt_q;
+`endif
 endmodule
 module ot_hbm_smh_rp4_core #(
     parameter integer SUB = 4,
