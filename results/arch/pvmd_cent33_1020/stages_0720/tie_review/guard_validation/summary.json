@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "rc": 0,
+  "matched": true,
+  "source_sha256": {
+    "tie_detach_audit.py": "378b3a6d537d2b10033d4259456a492008789597f2bbbe8ca92de7dd1972abf4",
+    "audit_persisted.tcl": "2b8fcc47a72d9e823ac6e41ed45b77d9d37513b9480b97219ae0f7128e56b4f5",
+    "pre_synth.tcl": "c33c113bd6971268b053a8ebd6ad7526fa91b4adc51964ac98108e0910e5b2a9",
+    "export_expected.tcl": "1760725be89ffeee0f8912927ae5640fe37df19646c693ae225ca69bcd21c210",
+    "post_synth.tcl": "5714b23b74af00fd5e0a626d8b90a5659e950971dfb872cc9dfd18710114a001",
+    "stage_guard.tcl": "b04209b3a97206b45f053b39aa0bf88ec5b94f948384312d453a3c38003cf691",
+    "graph_guard.tcl": "8aba48acaa6367b10a6d3207f3cbf83d745337a7eaae8a0b30e59a91ca72cbd6"
+  },
+  "physical_stage_launched": false
+}

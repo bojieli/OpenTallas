@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "scope": "exactROOTreviewedglobalTIEexternaldetach only; no physicalresume yet",
+  "positive": {
+    "kernel_cells": 56000,
+    "all_pins_including_pg": "EXACT",
+    "loaded_liberties": 12,
+    "kernel_setn": 112,
+    "same_original_constant_driver": true,
+    "distinct_unprotected_constant1_clones": 1643
+  },
+  "causal_negatives": {
+    "constant_flip": "DETACHED_CONSTANT_VALUE",
+    "outside_add": "TIE_EXTERNAL_ADD_OR_RETAIN",
+    "extra_driver": "TIE_NEW_DRIVER",
+    "kernel_pin_rewire_prebirth": {
+      "status": "PASS",
+      "rc": 1,
+      "expected": "PVM_BF_GRAPH_DRIFT prebirth_kernel_rewire",
+      "matched": true,
+      "phase": "fresh postlink before PG/protection",
+      "mutated_pin": "u_core.g_safe.g_madd[0].g_fan32.u_m.genblk1.g_native7.u_native.c2602/SETN",
+      "old_net": "_18312_",
+      "new_net": "clk",
+      "original_mapped_sha256": "888516a8887c716be924fff09efe4b8fbdddaf638189919c180c1aa583da2651",
+      "mutant_mapped_sha256": "ff7c47634055ff5ffcce8924720160962ae74612a5ed43fee0befc523d936151",
+      "guard_sha256": "8aba48acaa6367b10a6d3207f3cbf83d745337a7eaae8a0b30e59a91ca72cbd6"
+    }
+  },
+  "integrated_tcl_guard": {
+    "status": "PASS",
+    "rc": 0,
+    "matched": true,
+    "source_sha256": {
+      "tie_detach_audit.py": "378b3a6d537d2b10033d4259456a492008789597f2bbbe8ca92de7dd1972abf4",
+      "audit_persisted.tcl": "2b8fcc47a72d9e823ac6e41ed45b77d9d37513b9480b97219ae0f7128e56b4f5",
+      "pre_synth.tcl": "c33c113bd6971268b053a8ebd6ad7526fa91b4adc51964ac98108e0910e5b2a9",
+      "export_expected.tcl": "1760725be89ffeee0f8912927ae5640fe37df19646c693ae225ca69bcd21c210",
+      "post_synth.tcl": "5714b23b74af00fd5e0a626d8b90a5659e950971dfb872cc9dfd18710114a001",
+      "stage_guard.tcl": "b04209b3a97206b45f053b39aa0bf88ec5b94f948384312d453a3c38003cf691",
+      "graph_guard.tcl": "8aba48acaa6367b10a6d3207f3cbf83d745337a7eaae8a0b30e59a91ca72cbd6"
+    },
+    "physical_stage_launched": false
+  },
+  "ordinary_pg": "3918 terminals on1959ordinarynewunprotectedties PENDING beforePDN, NOTQUALIFIED",
+  "preserved_failed_diagnostics": [
+    "firstmatrix protectedkernelrewire rejectedODB-0369 before guard; neverclearedDNT",
+    "outsideadd orchestration readwrongreceiptdirectory AFTER actualguardrefusal; rawguardreport/log retained"
+  ],
+  "files_sha256": {
+    "run_tie_matrix.py": "367e68ed759e14c4e7b18869f3b4079f961f864238ce79f31259dc3831f1d3f4",
+    "run_guard_validation.py": "58d153a4d05f287dc4612c85524f1ed5aa27f20b41715c2ca135ff46ade5c6c0",
+    "prebirth_negative.tcl": "5420a8b24c61963738e94a4b9092aa270f0b99b48855d617d915d19f55109231",
+    "run_tie_newdriver.py": "4b784d1f8ace62e396df85eea5356567dd3408a132ca8c097c199b7c5933d377",
+    "validate_guard.tcl": "0b0ecbbed4d6b3a31c5fa7b0ed6555447479793ebdcc68aa55de0e5c73c082c6",
+    "run_tie_remaining.py": "92a68e9c65d490b7a9cec67bd71c3faa522319cd4a92a15776a30cabaeea41cb",
+    "run_prebirth_negative.py": "aeca0ec08450bacfd1fe2f3315d2dc18a94d950ad6a74f9a917cc3ddbfe35adf",
+    "prebirth_kernel/graph_guard.tcl": "8aba48acaa6367b10a6d3207f3cbf83d745337a7eaae8a0b30e59a91ca72cbd6",
+    "prebirth_kernel/witness.log": "2b96da4bbdc1ce1dc1600602d8cb2a0b3886e4ba7c0c6fc100fdfce1d0de2205",
+    "prebirth_kernel/summary.json": "4c5b90fce6f9c2f3b7b97c99a5fcaab386b27c8931ca90b8ce00a41a6ff67d7c",
+    "guard_validation/validation.log": "247efc68867a41f3e74c59f0ffda558083b4af7537a58a84ef7866972623a6e8",
+    "guard_validation/summary.json": "f60c5248647d7bda922373556a4cbc4d75e9b195746642244401321922ee0750",
+    "guard_validation/proof/post_floorplan.graph.tcllist": "bb64ca331cd64153ed2ac3e80b7311a2921c0b2656d7800dad6b58fea505e1c5",
+    "guard_validation/proof/post_floorplan.pg_classification.tcllist": "97ac299438aa102c137019f1743f910e7e1686ff65a2d70c69a076dd7029fb8e",
+    "guard_validation/proof/post_floorplan.tie_detach.json": "d2e58ab99b100c2c766c0e1bb58578c0966338a0e0cde52f043f0ef458230342",
+    "guard_validation/proof/private_data_nets.tcllist": "58d8b367e7a0bea43afbcd5325366a62df0d4591651348839de70b3bd8755616",
+    "newdriver/new_driver.log": "a7096c051fef1b62ed70573da4541477a6b9277d0a0bdbed9157107ce5034cdb",
+    "newdriver/new_driver.json": "101bd6eead6e32ffc2c5539b74d5779e10ed3225f7d068dd19bb22ec25ff98e1",
+    "newdriver/summary.json": "79301f0e1283fd69de225220b8e8dd62fa5c11aa92ed10242bdd119957936a32",
+    "outside_add_orchestration/extra_outside.log": "b721202ca97fc8f9dc26a59aa232cfd52dc9e5d2495f104e18a4ca27882f6788",
+    "first_matrix/positive.json": "d2e58ab99b100c2c766c0e1bb58578c0966338a0e0cde52f043f0ef458230342",
+    "first_matrix/extra_outside.json": "2f542c1d60f030f139581425998e041541dcef100f71537e6e165c42d28f75eb",
+    "first_matrix/kernel_rewire.log": "a0d1e748750324bf53c5ad183b74b1da494d5ec5c52a21151c983ce5ee5c9af4",
+    "first_matrix/positive.log": "314fbd65803896588692f12f779e22eaaf2b74fa1b428646e23e98bd68a25d28",
+    "first_matrix/constant_flip.json": "7a66761dc81d53ef2e493ca81d9df3cee80e3902e6e48850685d75c02eb82e46",
+    "first_matrix/constant_flip.log": "85bba2d6ffa30840d2b96b1d3a857c0aa1e019791fbf164b7be0880242225eeb"
+  }
+}

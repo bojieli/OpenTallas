@@ -36,7 +36,33 @@ proc pvm_bf_guard {stage} {
   if {![info exists ::env(PVM_BF_EXPECTED)] || ![info exists ::env(PVM_BF_RECEIPTS)]} {error PVM_BF_MISSING_PROOF_PATHS}
   set f [open $::env(PVM_BF_EXPECTED) r]; set expected [read $f]; close $f
   set actual [pvm_bf_graph [ord::get_db_block]]
-  if {$actual ne [string trimright $expected "\n"]} {
+  set expected [string trimright $expected "\n"]
+  set accepted [expr {$actual eq $expected}]; set reviewed_tie 0
+  if {!$accepted && [info exists ::env(PVM_BF_REVIEWED_TIE_DETACH)] && $::env(PVM_BF_REVIEWED_TIE_DETACH) eq "1"} {
+    # ROOT reviewed only this global-TIE external detach. Every cell and every
+    # other touching net retains exact identity, including clock/reset/data.
+    set scope_ok [expr {[lindex $actual 0] eq [lindex $expected 0]}]
+    set oldnets [dict create]; set newnets [dict create]
+    foreach row [lindex $expected 1] {dict set oldnets [lindex $row 0] $row}
+    foreach row [lindex $actual 1] {dict set newnets [lindex $row 0] $row}
+    if {[dict keys $oldnets] ne [dict keys $newnets]} {set scope_ok 0}
+    dict for {name row} $oldnets {
+      if {$name ne "_18312_" && (![dict exists $newnets $name] || $row ne [dict get $newnets $name])} {set scope_ok 0}
+    }
+    if {$scope_ok} {
+      set ::env(PVM_BF_AUDIT_ODB) [file join $::env(PVM_BF_RECEIPTS) "$stage.tie_candidate.odb"]
+      set ::env(PVM_BF_TIE_REPORT) [file join $::env(PVM_BF_RECEIPTS) "$stage.tie_detach.json"]
+      set libraries {}
+      foreach corner $::env(CORNERS) {lappend libraries {*}$::env([string toupper $corner]_LIB_FILES)}
+      set ::env(PVM_BF_TIE_LIBRARIES) [join [lsort -unique $libraries] "\n"]
+      write_db $::env(PVM_BF_AUDIT_ODB)
+      set helper $::env(PVM_BF_TIE_HELPER)
+      set rc [catch {exec [info nameofexecutable] -exit -python $helper 2>@1} message]
+      puts $message
+      if {!$rc} {set accepted 1; set reviewed_tie 1; puts "PVM_BF_REVIEWED_TIE_DETACH_PASS $stage"}
+    }
+  }
+  if {!$accepted} {
     # Preserve the first rejected state without changing any flag or graph.
     set out [open [file join $::env(PVM_BF_RECEIPTS) "$stage.failed.graph.tcllist"] {WRONLY CREAT EXCL}]
     puts $out $actual; close $out
@@ -45,7 +71,7 @@ proc pvm_bf_guard {stage} {
   }
   set out [open [file join $::env(PVM_BF_RECEIPTS) "$stage.graph.tcllist"] {WRONLY CREAT EXCL}]
   puts $out $actual; close $out
-  puts "PVM_BF_GRAPH_PASS $stage cells=56000 nets=[llength [lindex $actual 1]]"
+  puts "PVM_BF_GRAPH_PASS $stage cells=56000 nets=[llength [lindex $actual 1]] reviewed_global_tie_external_detach=$reviewed_tie"
 }
 proc pvm_bf_private_data_nets {block} {
   set ids [dict create]; set nets [dict create]

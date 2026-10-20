@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "rc": 1,
+  "expected": "PVM_BF_GRAPH_DRIFT prebirth_kernel_rewire",
+  "matched": true,
+  "phase": "fresh postlink before PG/protection",
+  "mutated_pin": "u_core.g_safe.g_madd[0].g_fan32.u_m.genblk1.g_native7.u_native.c2602/SETN",
+  "old_net": "_18312_",
+  "new_net": "clk",
+  "original_mapped_sha256": "888516a8887c716be924fff09efe4b8fbdddaf638189919c180c1aa583da2651",
+  "mutant_mapped_sha256": "ff7c47634055ff5ffcce8924720160962ae74612a5ed43fee0befc523d936151",
+  "guard_sha256": "8aba48acaa6367b10a6d3207f3cbf83d745337a7eaae8a0b30e59a91ca72cbd6"
+}
