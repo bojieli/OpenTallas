@@ -341,6 +341,10 @@ def source_native_reset_landing(s: dict, rl: dict) -> dict | None:
     if not isinstance(key, str) or key not in SOURCE_NATIVE_RESET_LANDINGS:
         raise SpecError("spec: reset_landing.source_native must name a reviewed source fingerprint")
     entry = SOURCE_NATIVE_RESET_LANDINGS[key]
+    if type(rl.get("stages", 2)) is not int or any(
+            not isinstance(rl.get(k), dict) or any(type(n) is not int for n in rl[k].values())
+            for k in ("first_copies", "copies")):
+        raise SpecError("spec: source-native reset stages and copy counts must be exact integers")
     if (s.get("top") != entry["top"] or s.get("params", {}) != {} or s.get("defines", []) != []
             or s.get("reset_ports") != entry["reset_ports"] or rl.get("enable") is not True
             or rl.get("stages", 2) != 2 or rl.get("clock", entry["clock"]) != entry["clock"]
@@ -358,7 +362,8 @@ def source_native_reset_landing(s: dict, rl: dict) -> dict | None:
         raise SpecError("spec: source-native reset requires existing source pin registers")
     closure = {entry["source"]: entry["sha256"], **entry.get("source_dependencies", {})}
     sources = s.get("sources", [])
-    if not isinstance(sources, list) or len(sources) != len(closure) or set(sources) != set(closure):
+    if (not isinstance(sources, list) or any(not isinstance(p, str) for p in sources)
+            or len(sources) != len(closure) or set(sources) != set(closure)):
         raise SpecError("spec: source-native reset complete source closure differs from reviewed source")
     for path, digest in closure.items():
         source = ROOT / path

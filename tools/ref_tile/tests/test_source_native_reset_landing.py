@@ -87,5 +87,28 @@ class SourceNative(unittest.TestCase):
         self.assertTrue(R.pin_wrapper(s))
         self.assertIn('--orfs-var OT_RST_LAND=1', R.reset_landing_vars(s))
 
+    def test_exact_typed_counts_at_admission_and_plan_boundaries(self):
+        # The real PROMPT entry has one first copy: Python's True == 1 and
+        # 1.0 == 1 must not make a malformed registry request valid.
+        self.entry['first_copies'] = {'rst_n': 1}
+        self.entry['copies'] = {'rst_n': 4}
+        self.spec['reset_landing'].update(first_copies={'rst_n': 1}, copies={'rst_n': 4})
+        self.assertEqual(R.reset_landing_plan(self.spec)['copies'], {'rst_n': 4})
+        changes = [dict(stages=v) for v in (True, False, 2.0, '2')]
+        changes += [dict(first_copies={'rst_n': v}) for v in (True, 1.0, '1')]
+        changes += [dict(copies={'rst_n': v}) for v in (False, 4.0, '4')]
+        for change in changes:
+            s = copy.deepcopy(self.spec)
+            s['reset_landing'].update(change)
+            for call in (lambda: R.source_native_reset_landing(s, s['reset_landing']),
+                         lambda: R.reset_landing_plan(s)):
+                with self.subTest(change=change), self.assertRaises(R.SpecError): call()
+
+    def test_malformed_or_duplicate_source_closure_refused(self):
+        for sources in ([self.source, {}], [self.source, ['rtl/macro_bb.v']],
+                        [self.source, self.source], self.source):
+            with self.subTest(sources=sources), self.assertRaises(R.SpecError):
+                R.reset_landing_plan(dict(self.spec, sources=sources))
+
 
 if __name__ == '__main__': unittest.main()
