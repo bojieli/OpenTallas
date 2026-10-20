@@ -97,7 +97,11 @@ module tb_n59_split_random #(parameter integer SAFE=2,EMBR=1,SEED=1,CYCLES=40000
  wire[BW_-1:0]pb_spl={`N59_SH.u_qb.qctx,`N59_SH.u_qb.qrow};
  reg[PW-1:0]pr_d[1:SPL_ROFF];
  always @(posedge clk)begin pr_d[1]<=pr_ref;for(integer j=2;j<=SPL_ROFF;j=j+1)pr_d[j]<=pr_d[j-1];end
- localparam integer PBO=SPL_BOFF+1;
+ `ifndef N59_QB_STAGE
+ `define N59_QB_STAGE 0
+`endif
+// qbank10 (QB_STAGE 1): the bank's internals sit one more edge behind its ports (the input capture stage)
+localparam integer PBO=SPL_BOFF+1+`N59_QB_STAGE;
  reg[BW_-1:0]pb_d[1:PBO];
  always @(posedge clk)begin pb_d[1]<=pb_ref;for(integer j=2;j<=PBO;j=j+1)pb_d[j]<=pb_d[j-1];end
  wire[BW_-1:0]pb_dl=pb_d[PBO];

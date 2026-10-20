@@ -104,14 +104,16 @@ endmodule
 
 // ----------------------------------------------------------------------------------------------------------------------
 // Q-seat store (v2): 16 lane slices + the 8 masked-writer SRAMs + the read gather (function of qfd_native59_qseat_sram).
-module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0)(
+module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0,M546=0)(
  input wire ck,rst_n,clear,
  input wire[7:0]write_v,input wire[71:0]write_element,input wire[255:0]write_data,
  input wire[1151:0]elem_l,input wire[127:0]valid_l,input wire[15:0]seen_clear_l,
  input wire[511:0]valid_s_l,input wire[63:0]seen_clear_s_l,input wire[127:0]valid_override_l,input wire[1279:0]elem_hi_s_l,input wire[71:0]write_element_bp,   // per lane slice replicas
  input wire[15:0]read_v_l,input wire[511:0]read_oh_l,input wire[79:0]read_beat_l,   // per lane slice read copies
  input wire[7:0]read_v_m,input wire[39:0]read_beat_m,input wire[39:0]bypass_beat_c,
- output wire[511:0]read_data,output wire[15:0]seen_rd_l,output wire[15:0]all_seen_l,output wire[15:0]dup_l
+ input wire[71:0]write_element_nx,   // M546: the next-edge write_element (source of the kept lane-15 mask copies)
+ output wire[511:0]read_data,output wire[15:0]seen_rd_l,output wire[15:0]all_seen_l,output wire[15:0]dup_l,
+ output wire[1023:0]read_part   // qbank10: {writers 4..7 partial, writers 0..3 partial}; read_data = their OR
 );
  wire[127:0]select_q;wire[383:0]select_pub;wire[383:0]bypass_hit_pub;
  genvar l,w;
@@ -121,6 +123,7 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0)
    .select_q(select_q[8*l+:8]),.select_pub(select_pub[24*l+:24]),.seen_rd(seen_rd_l[l]),.all_seen(all_seen_l[l]),.dup(dup_l[l]));
  end endgenerate
  wire[511:0]bank_data[0:7];
+ wire[71:0]wex_q=write_element_nx;
  reg[7:0]bypass_v;reg[31:0]bypass_lane;reg[255:0]bypass_data;
  always @(posedge ck)begin
   bypass_data<=write_data;
@@ -134,9 +137,22 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0)
   for(l=0;l<16;l=l+1)begin:g_mask
    assign mask[32*l+:32]={32{write_element[9*w+:4]==4'(l)}};
   end
+  if(M546)begin:g_m546
+   // qbank10: 32 x 546 p192 macro (5.15 pins/um per E/W face, legal 43.2 lattice origins).  Columns 512..545 carry a copy
+   // of lane 15's column (data bits 0..31, 0..1) under KEPT same-edge copies of the lane-15 write hit (each <= 17 loads):
+   // every macro pin is driven by a real, registered-source signal (no tie cells); rd_out[545:512] is never read.
+   (* keep = "true" *) reg[1:0]xm;
+   always @(posedge ck)xm<={2{(wex_q[9*w+:4]==4'd15)}};
+   wire[545:0]rd546;
+   ot_sram_1r1w_32x546_m1_p192_mir u_mem(.clk(ck),.r_ce_in(read_v_m[w]),.r_addr_in(read_beat_m[5*w+:5]),.rd_out(rd546),
+    .w_ce_in(write_v[w]&&!clear),.w_addr_in(write_element[9*w+4+:5]),
+    .wd_in({write_data[32*w+:2],write_data[32*w+:32],{16{write_data[32*w+:32]}}}),.w_mask_in({{17{xm[1]}},{17{xm[0]}},mask}));
+   assign bank_data[w]=rd546[511:0];
+  end else begin:g_m512
   ot_sram_1r1w_32x512_m1 u_mem(.clk(ck),.r_ce_in(read_v_m[w]),.r_addr_in(read_beat_m[5*w+:5]),.rd_out(bank_data[w]),
    .w_ce_in(write_v[w]&&!clear),.w_addr_in(write_element[9*w+4+:5]),
    .wd_in({16{write_data[32*w+:32]}}),.w_mask_in(mask));
+  end
  end endgenerate
  generate if(LOCAL32)begin:g_bypass_local
   for(genvar bl=0;bl<16;bl=bl+1)begin:g_l
@@ -151,7 +167,7 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0)
   end
  end endgenerate
  generate for(l=0;l<16;l=l+1)begin:g_read
-  wire[31:0]tree[0:8];assign tree[0]=32'd0;
+  wire[31:0]tree[0:8];assign tree[0]=32'd0;wire[31:0]tree_hi[4:8];assign tree_hi[4]=32'd0;
   for(w=0;w<8;w=w+1)begin:g_gather
    for(genvar pg=0;pg<3;pg=pg+1)begin:g_word
     localparam integer LO=15*pg, W=(pg<2)?15:2;
@@ -159,9 +175,11 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0)
     wire sel=LOCAL32?select_pub[24*l+8*pg+w]:select_q[8*l+w];
     wire[W-1:0]d=bh?bypass_data[32*w+LO+:W]:bank_data[w][32*l+LO+:W];
     assign tree[w+1][LO+:W]=tree[w][LO+:W]|({W{sel}}&d);
+    if(w>=4)begin:g_hi assign tree_hi[w+1][LO+:W]=tree_hi[w][LO+:W]|({W{sel}}&d); end
    end
   end
   assign read_data[32*l+:32]=tree[8];
+  assign read_part[32*l+:32]=tree[4];assign read_part[512+32*l+:32]=tree_hi[8];
  end endgenerate
 endmodule
 
@@ -170,24 +188,40 @@ endmodule
 // qfd_native59_dv_service then runs on them exactly as it ran on the raw pins (one edge later), with its kept same-edge
 // replicas now per LANE SLICE.  Outputs registered (see the file header).
 // QB_MUT (split-only mutants, lockstep must FAIL): 1 qb_row leaves unregistered (one edge early), 2 dd_o relay one stage short.
-module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0)(
+module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0,QB_STAGE=0,QB_M546=0)(
  input wire ck,rst_n,
  input wire[547:0]dd_i,input wire layer_context_v,input wire[5:0]command_stage,
  input wire q_slot,input wire[4:0]q_slot_beat,
- output reg[547:0]dd_o,output reg lcv_o,output reg[5:0]stage_o,
- output reg qb_v,output reg[4:0]qb_beat,output wire[511:0]qb_row,output reg qb_full,output reg qb_committed,output reg qb_bad
+ output wire[547:0]dd_o,output wire lcv_o,output wire[5:0]stage_o,
+ output wire qb_v,output wire[4:0]qb_beat,output wire[511:0]qb_row,output wire qb_full,output wire qb_committed,output wire qb_bad
 );
+ // ---------------------------------------------------------------- QB_STAGE (qbank10, QW-CB16A0-3 10-20)
+ // Codex 6507f9b64 necessary 380-um endpoint model: +561 uniform input capture FFs (every input port, +1 edge), the 512-b
+ // stage-A row split into two 4-writer partials (+512 FF, merged by the existing qrow_r with +512 OR2, 0 edges) and +1076
+ // uniform output FFs (every output port, +1 edge).  Every port relation is unchanged; the whole bank is +2 edges
+ // (flat bench SOFF 3 -> 5, ROFF 4 -> 6).  QB_STAGE 0 = the qbank9 RTL bit for bit.
+ wire[547:0]dd_x;wire lcv_x;wire[5:0]stage_x;wire qs_x;wire[4:0]qsb_x;
+ reg[547:0]dd_o_n;reg lcv_o_n;reg[5:0]stage_o_n;reg qb_v_n;reg[4:0]qb_beat_n;wire[511:0]qb_row_n;reg qb_full_n,qb_committed_n,qb_bad_n;
  // reset copy forest (kept; ot_rst_copies <= 32 loads each): pin 472 + read copies ~700 + relays 7, seen 512 + controls
  (* keep = "true" *) reg[39:0]rst_cp_bp;(* keep = "true" *) reg[19:0]rst_cp_bs;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin rst_cp_bp<='0;rst_cp_bs<='0;end
-  else begin rst_cp_bp<='1;rst_cp_bs<='1;end
+ // QB_STAGE: the reset enters through the same +1-edge input stage as every data port (rst_q, sampled, no async path),
+ // so the whole bank, reset included, is the qbank9 bank one edge later.
+ wire rst_x,rst_x1,rst_x2;   // three kept copies (20 / 20 / 20 reset-copy loads each)
+ always @(posedge ck or negedge rst_x)
+  if(!rst_x)rst_cp_bp[19:0]<='0;
+  else rst_cp_bp[19:0]<='1;
+ always @(posedge ck or negedge rst_x1)
+  if(!rst_x1)rst_cp_bp[39:20]<='0;
+  else rst_cp_bp[39:20]<='1;
+ always @(posedge ck or negedge rst_x2)
+  if(!rst_x2)rst_cp_bs<='0;
+  else rst_cp_bs<='1;
  wire rst_pin=rst_cp_bp[0],rst_top=rst_cp_bs[0];
  // ---------------------------------------------------------------- face registers (the only flops on the input pins)
  // NO reset on the face registers: they stand for the raw pins, which the flat block's kept replicas sample on every edge
  // (also in reset); the p_* stage below carries the flat block's pin-register reset.
  reg[547:0]f_dd;reg f_lcv;reg[5:0]f_stage;reg f_qs;reg[4:0]f_qb;
- always @(posedge ck)begin f_dd<=dd_i;f_lcv<=layer_context_v;f_stage<=command_stage;f_qs<=q_slot;f_qb<=q_slot_beat;end
+ always @(posedge ck)begin f_dd<=dd_x;f_lcv<=lcv_x;f_stage<=stage_x;f_qs<=qs_x;f_qb<=qsb_x;end
  // v5: bounded face beat publications; each copy feeds eight destination captures.
  wire[19:0]qb_face_pub;wire[71:0]bp_element;wire[119:0]elem_hi_face_pub;
  generate if(QB_LOCAL32)begin:g_face_local
@@ -195,13 +229,13 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
   for(genvar ahg=0;ahg<3;ahg=ahg+1)begin:g_hi_face
    (* keep = "true" *) reg[39:0]q;
    always @(posedge ck)begin
-    for(integer aw=0;aw<8;aw=aw+1)q[5*aw+:5]<=dd_i[345+24*aw+4+:5];
+    for(integer aw=0;aw<8;aw=aw+1)q[5*aw+:5]<=dd_x[345+24*aw+4+:5];
    end
    assign elem_hi_face_pub[40*ahg+:40]=q;
   end
   for(genvar fg=0;fg<4;fg=fg+1)begin:g_beat
    (* keep = "true" *) reg[4:0]q;
-   always @(posedge ck)q<=q_slot_beat;
+   always @(posedge ck)q<=qsb_x;
    assign qb_face_pub[5*fg+:5]=q;
   end
   for(genvar ew=0;ew<8;ew=ew+1)begin:g_bp_elem
@@ -218,13 +252,13 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
  reg[547:0]dd_m;reg lcv_m;reg[5:0]stage_m;
  always @(posedge ck)dd_m<=f_dd;
  generate if(QB_MUT!=2)begin:g_relay
-  always @(posedge ck)dd_o<=dd_m;
+  always @(posedge ck)dd_o_n<=dd_m;
  end else begin:g_m2
-  always @*dd_o=dd_m;
+  always @*dd_o_n=dd_m;
  end endgenerate
  always @(posedge ck or negedge rst_pin)
-  if(!rst_pin)begin lcv_m<=0;stage_m<=0;lcv_o<=0;stage_o<=0;end
-  else begin lcv_m<=f_lcv;stage_m<=f_stage;lcv_o<=lcv_m;stage_o<=stage_m;end
+  if(!rst_pin)begin lcv_m<=0;stage_m<=0;lcv_o_n<=0;stage_o_n<=0;end
+  else begin lcv_m<=f_lcv;stage_m<=f_stage;lcv_o_n<=lcv_m;stage_o_n<=stage_m;end
  // ---------------------------------------------------------------- the flat block's Q-seat section (SAFE 2), on f_*
  reg[547:89]p_dd;reg p_lcv;reg[5:0]p_stage;reg p_qs;reg[4:0]p_qb;
  always @(posedge ck or negedge rst_pin)
@@ -251,7 +285,7 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
    end
    // Different kept face Q sources bound the predecode D fanout as well as its publications.
    (* keep = "true" *) reg[17:0]face;
-   always @(posedge ck)face<={layer_context_v,command_stage,dd_i[547:537]};
+   always @(posedge ck)face<={lcv_x,stage_x,dd_x[547:537]};
    wire clear_now=face[17]&&face[16:11]>=1&&face[16:11]<=36;
    wire q_now=(face[10:8]==3'b100)&&!clear_now;
    (* keep = "true" *) reg[31:0]wv;
@@ -307,12 +341,17 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
  always @(posedge ck or negedge rst_top)
   if(!rst_top)qctx<=0;
   else if(begin_slot)qctx<=1;
- wire[511:0]qrow;wire[15:0]seen_rd_l,all_seen_l,dup_l;
- qfd_native59_qseat_lanes #(.MUT(MUT),.LOCAL32(QB_LOCAL32),.LOCAL_MUT(QB_LOCAL_MUT)) u_qseat(
+ wire[511:0]qrow;wire[15:0]seen_rd_l,all_seen_l,dup_l;wire[1023:0]qrow_part;
+ // next-edge write element: the f_dd field that p_dd (-> qe_all) loads on the coming edge.  Differs from qe_all only while
+ // p_dd is held in reset, when no write can fire (dd_q = p_dd[547] = 0); it only steers never-read columns 512..545.
+ wire[71:0]qe_nx;
+ generate for(gl=0;gl<8;gl=gl+1)begin:g_qe_nx assign qe_nx[9*gl+:9]=f_dd[345+24*gl+:9]^((MUT==1)?9'd1:9'd0); end endgenerate
+ qfd_native59_qseat_lanes #(.MUT(MUT),.LOCAL32(QB_LOCAL32),.LOCAL_MUT(QB_LOCAL_MUT),.M546(QB_M546)) u_qseat(
   .ck(ck),.rst_n(rst_top),.clear(begin_slot),.write_v(qhit_any),.write_element(qe_all),.write_data(p_dd[344:89]),
   .elem_l(elem_l),.valid_l(valid_l),.seen_clear_l(clr_l),
   .valid_s_l(valid_s_l),.seen_clear_s_l(clear_s_l),.valid_override_l(valid_override_l),.elem_hi_s_l(elem_hi_s_l),.write_element_bp(bp_element),.read_v_l(rv_l),.read_oh_l(roh_l),.read_beat_l(rb_l),
   .read_v_m(rv_m),.read_beat_m(rb_m),.bypass_beat_c(bb_c),
+  .write_element_nx(qe_nx),.read_part(qrow_part),
   .read_data(qrow),.seen_rd_l(seen_rd_l),.all_seen_l(all_seen_l),.dup_l(dup_l));
  reg q_read_valid;reg[4:0]q_read_beat;
  always @(posedge ck or negedge rst_pin)
@@ -323,26 +362,49 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
  // stage B, at the N face: the final 16-way reductions and the output flops.  Every output = the flat block's value of
  // the corresponding edge, one edge later than v2 (uniform: the service runs three edges behind the bank ports).
  reg[511:0]qrow_a;reg[15:0]sr_a,as_a,dup_a;reg beg_a,qctx_a,qhi_a,qv_a;reg[4:0]qbt_a;
- always @(posedge ck)begin qrow_a<=qrow;sr_a<=seen_rd_l;beg_a<=begin_slot;end
+ reg[511:0]qrow_a0,qrow_a1;   // QB_STAGE: the two 4-writer partials (qrow_a = their OR, used only by QB_MUT 1)
+ always @(posedge ck)begin qrow_a<=qrow;sr_a<=seen_rd_l;beg_a<=begin_slot;qrow_a0<=qrow_part[511:0];qrow_a1<=qrow_part[1023:512];end
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin as_a<=0;dup_a<=0;qctx_a<=0;qhi_a<=0;qv_a<=0;qbt_a<=0;end
   else begin as_a<=all_seen_l;dup_a<=dup_l;qctx_a<=qctx;qhi_a<=|qhi_bad;qv_a<=q_read_valid;qbt_a<=q_read_beat;end
  reg full_q;   // the flat block's full_q (seats of the read beat all seen, not on a begin edge), one edge later
  always @(posedge ck)full_q<=!beg_a&&(&sr_a);
  reg[511:0]qrow_r;
- always @(posedge ck)qrow_r<=qrow_a;
- assign qb_row=(QB_MUT==1)?qrow_a:qrow_r;
+ always @(posedge ck)qrow_r<=(QB_STAGE!=0)?(qrow_a0|qrow_a1):qrow_a;
+ assign qb_row_n=(QB_MUT==1)?((QB_STAGE!=0)?(qrow_a0|qrow_a1):qrow_a):qrow_r;
  reg qv_b;reg[4:0]qbt_b;
  always @(posedge ck or negedge rst_top)
-  if(!rst_top)begin qv_b<=0;qbt_b<=0;qb_v<=0;qb_beat<=0;qb_full<=0;qb_committed<=0;qb_bad<=0;end
+  if(!rst_top)begin qv_b<=0;qbt_b<=0;qb_v_n<=0;qb_beat_n<=0;qb_full_n<=0;qb_committed_n<=0;qb_bad_n<=0;end
   else begin
    qv_b<=qv_a;qbt_b<=qbt_a;
    // v4 opt-in: validity/beat use the same A->B output pipeline as qrow_a->qrow_r.
    // v3 additionally sampled qv_b/qbt_b, so valid/beat arrived one edge after the row.
-   qb_v<=(QB_ALIGN!=0)?qv_a:qv_b;qb_beat<=(QB_ALIGN!=0)?qbt_a:qbt_b;qb_full<=full_q;
-   qb_committed<=qctx_a&&(&as_a);
-   qb_bad<=qhi_a||(|dup_a);
+   qb_v_n<=(QB_ALIGN!=0)?qv_a:qv_b;qb_beat_n<=(QB_ALIGN!=0)?qbt_a:qbt_b;qb_full_n<=full_q;
+   qb_committed_n<=qctx_a&&(&as_a);
+   qb_bad_n<=qhi_a||(|dup_a);
   end
+
+ generate if(QB_STAGE!=0)begin:g_stage
+  // input capture (S face, no reset: they stand for the raw pins exactly as the f_* face registers did)
+  reg[547:0]i_dd;reg i_lcv;reg[5:0]i_stage;reg i_qs;reg[4:0]i_qsb;
+  always @(posedge ck)begin i_dd<=dd_i;i_lcv<=layer_context_v;i_stage<=command_stage;i_qs<=q_slot;i_qsb<=q_slot_beat;end
+  assign dd_x=i_dd;assign lcv_x=i_lcv;assign stage_x=i_stage;assign qs_x=i_qs;assign qsb_x=i_qsb;
+  // output stage (N face): a pure one-edge delay of every output (no reset: the source registers carry the reset, so
+  // the port shows the reset value exactly one edge after the qbank9 port does)
+  (* keep = "true" *) reg[2:0]rst_q;
+  always @(posedge ck)rst_q<={3{rst_n}};
+  assign rst_x=rst_q[0];assign rst_x1=rst_q[1];assign rst_x2=rst_q[2];
+  reg[547:0]o_dd;reg[511:0]o_row;reg o_lcv;reg[5:0]o_stage;reg o_v,o_full,o_comm,o_bad;reg[4:0]o_beat;
+  always @(posedge ck)begin o_dd<=dd_o_n;o_row<=qb_row_n;o_lcv<=lcv_o_n;o_stage<=stage_o_n;
+   o_v<=qb_v_n;o_beat<=qb_beat_n;o_full<=qb_full_n;o_comm<=qb_committed_n;o_bad<=qb_bad_n;end
+  assign dd_o=o_dd;assign lcv_o=o_lcv;assign stage_o=o_stage;assign qb_v=o_v;assign qb_beat=o_beat;assign qb_row=o_row;
+  assign qb_full=o_full;assign qb_committed=o_comm;assign qb_bad=o_bad;
+ end else begin:g_nostage
+  assign rst_x=rst_n;assign rst_x1=rst_n;assign rst_x2=rst_n;
+  assign dd_x=dd_i;assign lcv_x=layer_context_v;assign stage_x=command_stage;assign qs_x=q_slot;assign qsb_x=q_slot_beat;
+  assign dd_o=dd_o_n;assign lcv_o=lcv_o_n;assign stage_o=stage_o_n;assign qb_v=qb_v_n;assign qb_beat=qb_beat_n;assign qb_row=qb_row_n;
+  assign qb_full=qb_full_n;assign qb_committed=qb_committed_n;assign qb_bad=qb_bad_n;
+ end endgenerate
  initial if(QB_LOCAL_MUT<0||QB_LOCAL_MUT>2||(QB_LOCAL_MUT!=0&&QB_LOCAL32==0))$fatal(1,"QB_LOCAL_MUT requires local publications (0 clean,1 write-mask,2 select-word)");
  initial if(MUT!=0&&MUT!=1&&MUT!=7)$fatal(1,"qfd_native59_qbank: MUT %0d (bank mutants 1 Q lane packing, 7 owner)",MUT);
 endmodule

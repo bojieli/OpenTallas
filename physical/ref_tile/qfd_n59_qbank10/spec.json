@@ -1,0 +1,382 @@
+{
+ "kind": "tile",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "recipe": 4,
+ "layer_cap": "M5",
+ "hold_budget": "die",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is flop-first at every pin (QW-N59-4 split children: every input lands in a p_* pin register, every output is a flop or a 2-slot AND-OR of slot flops as in the r1 block; the split edge contract is benched with these edges); OT_PIN_REGS would add a second edge and break it"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 32
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)rst_cp_[a-z0-9]+$"
+ },
+ "name": "qfd_n59_qbank10",
+ "top": "qfd_native59_qbank",
+ "sources": [
+  "rtl/qwen_split/qfd_native59_qbank.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v"
+ ],
+ "params": {
+  "QB_ALIGN": 1,
+  "QB_LOCAL32": 1,
+  "QB_STAGE": 1,
+  "QB_M546": 1
+ },
+ "outline": {
+  "w": 907.2,
+  "h": 475.2,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "qb_row",
+   "qb_v",
+   "qb_beat",
+   "qb_full",
+   "qb_committed",
+   "qb_bad",
+   "lcv_o",
+   "stage_o",
+   "dd_o"
+  ],
+  "S": [
+   "dd_i",
+   "layer_context_v",
+   "command_stage",
+   "ck",
+   "rst_n",
+   "q_slot",
+   "q_slot_beat"
+  ],
+  "E": [],
+  "W": []
+ },
+ "pin_ranges": {
+  "ck": [
+   452.1,
+   455.1
+  ],
+  "qb_row": [
+   325.6,
+   447.505
+  ],
+  "qb_v": [
+   447.605,
+   448.605
+  ],
+  "qb_beat": [
+   448.705,
+   449.895
+  ],
+  "qb_full": [
+   449.995,
+   450.995
+  ],
+  "qb_committed": [
+   451.095,
+   452.095
+  ],
+  "qb_bad": [
+   452.195,
+   453.195
+  ],
+  "lcv_o": [
+   453.295,
+   454.295
+  ],
+  "stage_o": [
+   454.395,
+   455.824
+  ],
+  "dd_o": [
+   455.924,
+   586.4
+  ],
+  "dd_i": [
+   325.6,
+   452.0
+  ],
+  "layer_context_v": [
+   456.15,
+   458.15
+  ],
+  "command_stage": [
+   458.25,
+   461.25
+  ],
+  "rst_n": [
+   461.35,
+   469.35
+  ],
+  "q_slot": [
+   469.45,
+   471.45
+  ],
+  "q_slot_beat": [
+   471.55,
+   474.05
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?0?*u_mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?1?*u_mem",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?2?*u_mem",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?3?*u_mem",
+   "at": [
+    259.2,
+    259.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?4?*u_mem",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?5?*u_mem",
+   "at": [
+    475.2,
+    259.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?6?*u_mem",
+   "at": [
+    691.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?7?*u_mem",
+   "at": [
+    691.2,
+    259.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "slot_change_request": {
+  "reason": "QW-N59-4 hardened split: Q-seat bank child of native59 (8 x 167.4 x 76.14 SRAMs, two N-S stacks of 4 abutted at the 76.176 um track-legal pitch (0.036 um gap, no pins on the touching faces); column 0 mirrored MY so both columns' rd_out faces the 91.8 um middle gather channel, write faces outward); sits in the S part of the 518.4 x 648 native59 slot under the service child | QW-N59-6 v8: N-face pins 131.2-392.0 and S-face pins 131.2-~277 um (same outline, same faces, same order); parent lp.py regen adopts the child pins (top-down pin assignment)",
+  "requested_outline_um": [
+   518.4,
+   388.8
+  ]
+ },
+ "job": {
+  "owner": "Claude:QW-CB16A0-3",
+  "branch": "claude/qw-n59-qb10-1020",
+  "tag": "qb10",
+  "purpose": "QW-CB16A0-3 qbank10 (10-20): structural successor of qbank9 (geometry HARD HOLD 03267fbf0: 0.036-um channels, off-lattice macros, legacy macro 10.18 pins/um; stage FAIL 84 spans > 405; clock 155-170 ps from ONE late S-face west CTS branch). QB_STAGE=1: Codex 6507f9b64 necessary 380-um model (+561 input FF, qrow_a split into two 4-writer partials, +1076 output FF; bank +2 edges, flat SOFF5/BOFF1/ROFF6; reset enters through the same stage). QB_M546=1: 8 x ot_sram_1r1w_32x546_m1_p192_mir (5.15 pins/um, 32 deep, no ties: spare columns driven by kept lane-15 copies) in a 4x2 grid at literal 43.2 origins, 38.2-um column / 55.6-um row channels, outline 907.2 x 475.2 (footprint 431,101 um2 vs 201,554 qbank9 = 2.14x; macro 228,100 um2 = 52.9 %).",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "results/rtl/mu_qwen_1018/n59_split4v2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "results/arch/qw_n59_qbank10_1020"
+  ],
+  "benches": [
+   {
+    "name": "qb10_rnd",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh rnd {RUN}/bench/rnd",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS rnd$"
+   },
+   {
+    "name": "qb10_rnd_s2",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh rnd_s2 {RUN}/bench/rnd_s2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS rnd_s2$"
+   },
+   {
+    "name": "qb10_reset8",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh reset8 {RUN}/bench/reset8",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS reset8$"
+   },
+   {
+    "name": "qb10_dv",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh dv {RUN}/bench/dv",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS dv$"
+   },
+   {
+    "name": "qb10_mu",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mu {RUN}/bench/mu",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS mu$"
+   },
+   {
+    "name": "qb10_q9_rnd",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh q9_rnd {RUN}/bench/q9_rnd",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS q9_rnd$"
+   },
+   {
+    "name": "qb10_mut_old_offsets",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_old_offsets {RUN}/bench/mut_old_offsets",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_old_offsets$"
+   },
+   {
+    "name": "qb10_mut_qb1",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_qb1 {RUN}/bench/mut_qb1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_qb1$"
+   },
+   {
+    "name": "qb10_mut_mask",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_mask {RUN}/bench/mut_mask",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_mask$"
+   },
+   {
+    "name": "qb10_mut_select",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_select {RUN}/bench/mut_select",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_select$"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_n59_qbank10/views",
+  "record_to": "results/rtl/ref_tile/qfd_n59_qbank10"
+ },
+ "structural_change": "QW-CB16A0-3 qbank10 (10-20): structural successor of qbank9 (geometry HARD HOLD 03267fbf0: 0.036-um channels, off-lattice macros, legacy macro 10.18 pins/um; stage FAIL 84 spans > 405; clock 155-170 ps from ONE late S-face west CTS branch). QB_STAGE=1: Codex 6507f9b64 necessary 380-um model (+561 input FF, qrow_a split into two 4-writer partials, +1076 output FF; bank +2 edges, flat SOFF5/BOFF1/ROFF6; reset enters through the same stage). QB_M546=1: 8 x ot_sram_1r1w_32x546_m1_p192_mir (5.15 pins/um, 32 deep, no ties: spare columns driven by kept lane-15 copies) in a 4x2 grid at literal 43.2 origins, 38.2-um column / 55.6-um row channels, outline 907.2 x 475.2 (footprint 431,101 um2 vs 201,554 qbank9 = 2.14x; macro 228,100 um2 = 52.9 %)."
+}

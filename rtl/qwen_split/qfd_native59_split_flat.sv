@@ -5,7 +5,7 @@
 // the bank, 2..6 -> the service), QB_MUT = split-only bank mutants; both 0 in every kit.
 module qfd_native59_split_flat #(
  parameter integer SMUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
- parameter integer NU=4,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=1,EMB_RELAY=1,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0,SVC_RECV=0,SVC_RECV_MUT=0
+ parameter integer NU=4,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=1,EMB_RELAY=1,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0,SVC_RECV=0,SVC_RECV_MUT=0,QB_STAGE=0,QB_M546=0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
@@ -28,7 +28,7 @@ module qfd_native59_split_flat #(
 );
  wire[547:0]rl_dd;wire rl_lcv;wire[5:0]rl_stage;
  wire qb_v;wire[4:0]qb_beat;wire[511:0]qb_row;wire qb_full,qb_committed,qb_bad;
- qfd_native59_qbank #(.MUT((SMUT==1||SMUT==7)?SMUT:0),.QB_MUT(QB_MUT),.QB_ALIGN(QB_ALIGN),.QB_LOCAL32(QB_LOCAL32),.QB_LOCAL_MUT(QB_LOCAL_MUT)) u_qb(
+ qfd_native59_qbank #(.MUT((SMUT==1||SMUT==7)?SMUT:0),.QB_MUT(QB_MUT),.QB_ALIGN(QB_ALIGN),.QB_LOCAL32(QB_LOCAL32),.QB_LOCAL_MUT(QB_LOCAL_MUT),.QB_STAGE(QB_STAGE),.QB_M546(QB_M546)) u_qb(
   .ck(ck),.rst_n(rst_n),.dd_i(dd_i),.layer_context_v(layer_context_v),.command_stage(command_stage),
   .q_slot(q_slot),.q_slot_beat(q_slot_beat),.dd_o(rl_dd),.lcv_o(rl_lcv),.stage_o(rl_stage),
   .qb_v(qb_v),.qb_beat(qb_beat),.qb_row(qb_row),.qb_full(qb_full),.qb_committed(qb_committed),.qb_bad(qb_bad));
