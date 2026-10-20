@@ -17,35 +17,27 @@ def number(expr):
 
 
 def record():
-    d=json.loads((INPUT/'qkd_ahub_static_dw_g3_lp_record.json').read_text())
-    d.update(lane='KV-AHUB6',generator='tools/qwen_kv_die/ahub6/mk_source.py',top='qkd_ahub_static_dw_g6_lp')
-    d['landing_implementation']['chunk_bits']=2
-    total=0
-    for l in d['landings']:
-        # Existing source/destination/bank timing is unchanged.
-        width=l.get('width')
-        if isinstance(width,int):total+=(width+1)//2
-    ff=d['reset']['same_depth_forest']
-    leaves=branches=0
-    for name,r in ff['regions'].items():
-        r['terms']=[s.replace('+8-1)/8','+2-1)/2') for s in r['terms']]
-        r['leaves']=sum(number(s) for s in r['terms'])
-        r['branches']=(r['leaves']+31)//32
-        r['FFs']=r['leaves']+r['branches']
-        leaves+=r['leaves'];branches+=r['branches']
-        for b in r['bindings']:
-            for k in ('first_expr','chunks_expr'):b[k]=b[k].replace('+8-1)/8','+2-1)/2')
-            b['first_leaf']=number(b['first_expr']);b['chunks']=number(b['chunks_expr'])
-    ff['root_D_loads']=7
-    ff['regional_root_copies']=7
-    d['reset']['note']='Seven same-edge root copies; per-region branches <=32; child/reset and D4/K2 ages unchanged.'
-    # Fifteen vectors total1805 data bits; two-bit chunks total903. Each kept
-    # local writer/reader has33 metadata flops including the kept epoch ports.
-    d['flops'].update(landing=5*1805+33*903,reset=leaves+branches+7+52)
-    d['flops']['model_scope']='Outer LP implementation; private core/io copies counted separately in mapped native census.'
-    d['flops']['kept_epoch_ports_included']=True
-    d['regions']['c']['children'].append('g_lpr_root')
-    d['warnings']=['Native admission and current physical review required; no old gate/closure is inherited.']
+    import sys
+    sys.path.insert(0,str(ROOT/'tools/ref_tile'))
+    from derived_landed_record import expected_record, SCHEMA
+    import hashlib
+    def identity(path):
+        return dict(path=path,sha256=hashlib.sha256((ROOT/path).read_bytes()).hexdigest())
+    canonical='results/arch/kv_ahub6_1020/canonical_lp/qkd_ahub_static_dw_g6_lp'
+    d=expected_record(json.loads((ROOT/(canonical+'_record.json')).read_text()))
+    cs=json.loads((ROOT/'tools/qwen_kv_die/ahub6/canonical_spec.json').read_text())
+    base=json.loads((INPUT/'qkd_ahub_g4a_spec.json').read_text())
+    sources=[p for p in base['sources'] if not p.endswith('qkd_ahub_static_dw_safe.sv')]
+    sources=[p.replace('qkd_ahub_static_dw_g3_lp.sv','qkd_ahub_static_dw_g6_lp.sv') for p in sources]
+    sources.insert(1,'rtl/hdc/nearhbm/qkd_ahub6_controls.sv')
+    d['derived_lp']=dict(schema=SCHEMA,
+        canonical_record=identity(canonical+'_record.json'),canonical_rtl=identity(canonical+'.sv'),
+        canonical_spec=identity('tools/qwen_kv_die/ahub6/canonical_spec.json'),
+        canonical_generator=identity('tools/landed_parent/lp.py'),
+        postprocessor=identity('tools/qwen_kv_die/ahub6/mk_source.py'),
+        inputs=[identity(p) for p in sorted(set(cs['sources']+cs['child_sources']+[
+            'tools/qwen_kv_die/ahub6/mk_controls.py','tools/qwen_kv_die/ahub6/mk_kits.py']))],
+        outputs=[identity(p) for p in sources],params=cs['params'])
     OUT.mkdir(parents=True,exist_ok=True)
     (ROOT/RECORD).write_text(json.dumps(d,indent=1)+'\n')
 
@@ -62,7 +54,7 @@ def main():
         s['sources'].insert(1,'rtl/hdc/nearhbm/qkd_ahub6_controls.sv')
         s['pin_hook_before_flops']=[f'physical/ref_tile/{name}/lp_fences.tcl']
         s['pre_dpl_extra']=[f'physical/ref_tile/{name}/lp_fences_release.tcl']
-        j=s['job'];j.update(owner='Codex:KV-AHUB6',branch='codex/kv-ahub6-1020',tag='g6',purpose='AHUB6 native-safe local control/state and complete regional ownership; no added cycles vs g3.')
+        j=s['job'];j.update(owner='Codex:KV-AHUB6',branch='codex/kv-ahub6-current-1020',tag='g6',purpose='AHUB6 native-safe local control/state and complete regional ownership; no added cycles vs g3.')
         j['benches']=[]
         for m in (0,1,19):
             b=dict(name=f'ahub_g6_m{m}',cmd=f'bash tools/qwen_kv_die/ahub6/bench.sh {{RUN}}/bench/m{m} {m}',expect='pass' if m==0 else 'fail',threads=4,peak_ram_gb=12,needs=['verilator'],pass_regex='^AHUB_DW PASS')

@@ -7,17 +7,18 @@ import re
 import subprocess
 import sys
 ROOT=Path(__file__).resolve().parents[3]
-src=ROOT/'tools/qwen_kv_die/ahub6/inputs/qkd_ahub_static_dw_g3_lp.sv'
+src=ROOT/'results/arch/kv_ahub6_1020/canonical_lp/qkd_ahub_static_dw_g6_lp.sv'
 dst=ROOT/'rtl/hdc/nearhbm/lp/qkd_ahub_static_dw_g6_lp.sv'
 s=src.read_text()
-assert s.count('module qkd_ahub_static_dw_g3_lp #(')==1
+assert s.count('module qkd_ahub_static_dw_g6_lp #(')==1
 assert s.count('.CHUNK_BITS(8)')==30
-s=s.replace('module qkd_ahub_static_dw_g3_lp #(', 'module qkd_ahub_static_dw_g6_lp #(')
 s=s.replace('.CHUNK_BITS(8)', '.CHUNK_BITS(2)').replace('+8-1)/8', '+2-1)/2')
 # Seven same-edge root copies avoid one root driving the sum of all regional
 # branch counts. The primary reset pin sees seven D pins, each copy <=32.
 old="wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_c), .d(rst_n), .q(lpr_root));"
-new="wire [6:0] lpr_root_region;\n    for(genvar r=0;r<7;r=r+1) begin:g_lpr_root\n        (* keep_hierarchy=\"yes\" *) ot_pl_land_field_copy_bit #(.ID(8192+r)) u_ff (.ck(ck_c),.d(rst_n),.q(lpr_root_region[r]));\n    end"
+new="wire [6:0] lpr_root_region;\n" + "\n".join(
+    f'    (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID({8192+r})) u_lpr_root_r{r} (.ck(ck_c),.d(rst_n),.q(lpr_root_region[{r}]));'
+    for r in range(7))
 assert s.count(old)==1
 s=s.replace(old,new)
 regions=('c','w','e','z0','z1','z2','z3')

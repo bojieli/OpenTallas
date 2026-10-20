@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-epyc9       admits   296 GB (avail 433, growth 225, headroom 0, waiters 0/0 GB) load 68/128 running 34 disk 164 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kv-ahub6
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-472810-1792485217 after 0 s
+qkd_ahub_static_dw_g6_lp: 15 landings, 0 pads, reset depth 3, flops {'landing': 13876, 'pads': 0, 'reset': 538}, audit PASS; outputs in /srv/opentallas-scratch/codex/kv-ahub6/canonical_lp/src/results/arch/kv_ahub6_1020/canonical_lp
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-472810-1792485217): exit 0
