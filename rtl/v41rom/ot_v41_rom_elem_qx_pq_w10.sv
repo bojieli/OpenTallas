@@ -485,13 +485,15 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             for (genvar g = 0; g < 4; g = g + 1) begin : g_d
                 ot_v41_kreg #(.W(48)) u_d (.clk(clk), .arst_n(1'b1), .d(cfg_d_x), .q(sh_d[g]));
             end
-            // NP: two kept enable copies per entry (each the write enable of 24 bits)
+            // NP: three kept enable copies per entry (each the write enable of 16 bits; TILES-C q4_w8, was 2 x 24 -> 46)
             if (NP != 0) begin : g_np2
-                wire [RPW-1:0] eb;
+                wire [RPW-1:0] eb, ec;
                 ot_v41_kreg #(.W(RPW)) u_e (.clk(clk), .arst_n(1'b1), .d(sh_en_d), .q(eb));
+                ot_v41_kreg #(.W(RPW)) u_f (.clk(clk), .arst_n(1'b1), .d(sh_en_d), .q(ec));
                 always @(posedge clk) for (int k = 0; k < RPW; k++) begin
-                    if (sh_en[k]) sh_w[k][23:0] <= sh_d[(4 * k) / RPW][23:0];
-                    if (eb[k]) sh_w[k][47:24] <= sh_d[(4 * k) / RPW][47:24];
+                    if (sh_en[k]) sh_w[k][15:0] <= sh_d[(4 * k) / RPW][15:0];
+                    if (eb[k]) sh_w[k][31:16] <= sh_d[(4 * k) / RPW][31:16];
+                    if (ec[k]) sh_w[k][47:32] <= sh_d[(4 * k) / RPW][47:32];
                 end
             end else begin : g_np2n
             always @(posedge clk) for (int k = 0; k < RPW; k++)
@@ -1904,8 +1906,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         wire [6*NSEG-1:0] a0 = sbf(4'd0, 2'd3, nu_p, base_go), b0 = sbf(4'd1, 2'd3, nu_p, base_go);
         wire adv_c = w_step && ((QX != 0) ? qx_adv : (w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q));
         wire [2:0] dd = wen ? {go_ew, !go_ew && w_restart, !go_ew && !w_restart && adv_c} : 3'b000;
-        wire [2:0] dak [0:2], dbk [0:2];
-        for (genvar k = 0; k < 3; k = k + 1) begin : g_d
+        localparam integer DKN = (6 * NSEG + 7) / 8;   // TILES-C q4_w8: one decision copy per 8 bits (was 16 -> 54 loads)
+        wire [2:0] dak [0:DKN-1], dbk [0:DKN-1];
+        for (genvar k = 0; k < DKN; k = k + 1) begin : g_d
             ot_v41_kreg #(.W(3)) u_a (.clk(wclk), .arst_n(1'b1), .d(dd), .q(dak[k]));
             ot_v41_kreg #(.W(3)) u_b (.clk(wclk), .arst_n(1'b1), .d(dd), .q(dbk[k]));
         end
@@ -1920,11 +1923,11 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             wA_s <= wAx; wB_s <= wBx; f0_d <= f0_go; f1_d <= f1_go; q2_d <= wQ2;
         end
         for (genvar b = 0; b < 6 * NSEG; b = b + 1) begin : g_b
-            assign wA_np[b] = dak[b / 16][2] ? f0_d[b] : dak[b / 16][1] ? fF0[b] : dak[b / 16][0] ? wB_s[b] : wA_s[b];
+            assign wA_np[b] = dak[b / 8][2] ? f0_d[b] : dak[b / 8][1] ? fF0[b] : dak[b / 8][0] ? wB_s[b] : wA_s[b];
 `ifdef OT_NP_TOP_MUT_W
-            assign wB_np[b] = dbk[b / 16][2] ? f1_d[b] : dbk[b / 16][1] ? fF0[b] : dbk[b / 16][0] ? q2_d[b] : wB_s[b];   // negative control: restart from fF0
+            assign wB_np[b] = dbk[b / 8][2] ? f1_d[b] : dbk[b / 8][1] ? fF0[b] : dbk[b / 8][0] ? q2_d[b] : wB_s[b];   // negative control: restart from fF0
 `else
-            assign wB_np[b] = dbk[b / 16][2] ? f1_d[b] : dbk[b / 16][1] ? fF1[b] : dbk[b / 16][0] ? q2_d[b] : wB_s[b];
+            assign wB_np[b] = dbk[b / 8][2] ? f1_d[b] : dbk[b / 8][1] ? fF1[b] : dbk[b / 8][0] ? q2_d[b] : wB_s[b];
 `endif
         end
         if (WRT == 0) begin : g_bad
@@ -1991,12 +1994,18 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         wire [531:0]  fw_d = {fw_q0, fw_e0, fw_q1, fw_e1};
         for (genvar g = 0; g < FNS; g = g + 1) begin : g_s
             localparam integer LO = 32 * g, HI = (32 * (g + 1) < 532) ? 32 * (g + 1) : 532;
-            wire [XF-1:0] wk, rk_;
-            wire          vk;
-            ot_v41_kreg #(.W(XF)) u_w (.clk(wclk), .arst_n(1'b1), .d(wr_nx), .q(wk));
+            // TILES-C q4_w8: the slice write enable is ONE kept register per entry (= fw_v && wr[e], loaded from the
+            // next states one cycle early, exact), so each enable drives only its own <=32 bits (was vk 132 / wk 33)
+            // q4_w9: two copies per entry, each enabling 16 bits (an enable mux is 2 pins/flop: 32 bits -> 64 loads)
+            localparam integer MD = (LO + 16 < HI) ? LO + 16 : HI;
+            wire [XF-1:0] wek, wek2, rk_;
+            ot_v41_kreg #(.W(XF)) u_we (.clk(wclk), .arst_n(1'b1), .d(wr_nx & {XF{fv_nx}}), .q(wek));
+            ot_v41_kreg #(.W(XF)) u_wf (.clk(wclk), .arst_n(1'b1), .d(wr_nx & {XF{fv_nx}}), .q(wek2));
             ot_v41_kreg #(.W(XF)) u_r (.clk(wclk), .arst_n(1'b1), .d(rd_nx), .q(rk_));
-            ot_v41_kreg #(.W(1)) u_v (.clk(wclk), .arst_n(1'b1), .d(fv_nx), .q(vk));
-            always @(posedge wclk) for (int e = 0; e < XF; e++) if (vk && wk[e]) fn[e][HI-1:LO] <= fw_d[HI-1:LO];
+            always @(posedge wclk) for (int e = 0; e < XF; e++) begin
+                if (wek[e]) fn[e][MD-1:LO] <= fw_d[MD-1:LO];
+                if (wek2[e] && MD < HI) fn[e][HI-1:MD] <= fw_d[HI-1:MD];
+            end
             reg [HI-LO-1:0] rdv;
             always @* begin
                 rdv = '0;
