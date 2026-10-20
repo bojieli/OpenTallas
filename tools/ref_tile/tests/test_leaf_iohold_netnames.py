@@ -43,8 +43,15 @@ open(sys.argv[2],'w').write(json.dumps(r,indent=2)+'\n')
 
 @unittest.skipUnless(Path(OR).exists(),'requires pinned OpenROAD image')
 class HoldNetNames(unittest.TestCase):
- def test_native_roundtrip_shared_escaped_indexed_and_collisions(self):
+ def test_hold_native_roundtrip(self):
+  self.run_case(False)
+
+ def test_pin_split_hold_native_roundtrip(self):
+  self.run_case(True)
+
+ def run_case(self,pin_split):
   base=Path(os.environ.get('TEST_WORK',tempfile.mkdtemp(prefix='hold-netnames-')))
+  base=base/('pin_split' if pin_split else 'hold')
   base.mkdir(parents=True,exist_ok=True)
   (base/'coupon.v').write_text(RTL);(base/'dump.py').write_text(DUMP)
   setup='\n'.join('read_liberty '+p for p in LIBS)+'\n'+f'''
@@ -58,8 +65,10 @@ read_lef {P}/lef/asap7sc7p5t_28_R_1x_220121a.lef
   # using those names. Shared y bits exercise processing the same source twice.
   collisions=''
   for n in range(8):
-   for stem in (f'ot_outhold_src{n:05d}',f'ot_outhold_p{n:05d}',f'ot_outhold_n{n:05d}_0',f'ot_outhold_n{n:05d}_1'):
+   for stem in (f'ot_outhold_src{n:05d}',f'ot_outhold_p{n:05d}',f'ot_outhold_n{n:05d}_0',f'ot_outhold_n{n:05d}_1',f'ot_prs_{n:05d}_src',f'ot_prs_{n:05d}_q',f'ot_prs_{n:05d}_n0'):
     collisions+=f'if {{[$b findNet {stem}] eq "NULL"}} {{odb::dbNet_create $b {stem}}}\n'
+  pg='add_global_connection -net VDD -inst_pattern .* -pin_pattern ^VDD$ -power\nadd_global_connection -net VSS -inst_pattern .* -pin_pattern ^VSS$ -ground\nglobal_connect\n'
+  prs=f'source {ROOT}/physical/common_flow/pin_reg_split.tcl\nglobal_connect\n' if pin_split else ''
   flow=setup+f'''
 read_verilog {base}/coupon.v
 link_design top
@@ -83,10 +92,16 @@ foreach bt [$b getBTerms] {{
  incr k
 }}
 {collisions}
+{pg}
+{prs}
 set ::env(RESULTS_DIR) {base}
 set ::env(OT_INHOLD_MASTER) HB2xp67_ASAP7_75t_R
 set ::env(OT_INHOLD_DRV) BUFx4f_ASAP7_75t_R
 source {ROOT}/physical/dsrom_window_source/leaf_iohold.tcl
+global_connect
+source {ROOT}/physical/common_flow/native_pg_binding.tcl
+set native_pg_map [ot_pg_prepare $b]
+ot_pg_assert_all_native $b $native_pg_map
 if {{$bindings ne [list [obj_names [all_inputs -no_clocks]] [obj_names [all_outputs]] [llength [all_clocks]]]}} {{error {{port constraint binding changed}}}}
 if {{[llength [get_nets internal_payload]] != 1}} {{error {{unrelated explicit net name changed}}}}
 if {{![[$b findNet internal_payload] isDoNotTouch]}} {{error {{existing net dont_touch lost}}}}
@@ -95,7 +110,7 @@ write_db {base}/actual.odb
 write_verilog {base}/export.v
 '''
   (base/'flow.tcl').write_text(flow);run(['-exit',str(base/'flow.tcl')],'flow.log')
-  (base/'readback.tcl').write_text(setup+f'\nread_verilog {base}/export.v\nlink_design top\nwrite_db {base}/readback.odb\n')
+  (base/'readback.tcl').write_text(setup+f'\nread_verilog {base}/export.v\nlink_design top\n{pg}\nsource {ROOT}/physical/common_flow/native_pg_binding.tcl\nset native_pg_map [ot_pg_prepare [ord::get_db_block]]\not_pg_assert_all_native [ord::get_db_block] $native_pg_map\nwrite_db {base}/readback.odb\n')
   run(['-exit',str(base/'readback.tcl')],'readback.log')
   for stem in ('actual','readback'):
    run(['-python',str(base/'dump.py'),str(base/f'{stem}.odb'),str(base/f'{stem}.json')],stem+'_dump.log')
@@ -105,7 +120,7 @@ write_verilog {base}/export.v
   self.assertTrue(any(x.startswith('ot_outhold_src') and x.endswith('_1') for x in a['nets']))
   self.assertTrue(any(x.startswith('ot_outhold_p') and x.endswith('_1') for x in a['nets']))
   self.assertTrue(any(x.startswith('ot_outhold_n') and x.endswith('_1') for x in a['nets']))
-  (base/'receipt.json').write_text(json.dumps(dict(status='PASS',ports=len(a['ports']),cells=len(a['cells']),edges=len(a['edges']),cases=['shared_output_source','indexed_ports','escaped_identifier','existing_net_names','existing_BTerm_names','unrelated_explicit_get_nets','dont_touch','clock_and_delay_port_bindings','exact_native_Verilog_roundtrip']),indent=2)+'\n')
+  (base/'receipt.json').write_text(json.dumps(dict(status='PASS',ports=len(a['ports']),cells=len(a['cells']),edges=len(a['edges']),cases=['shared_output_source','indexed_ports','escaped_identifier','existing_net_names','existing_BTerm_names','unrelated_explicit_get_nets','dont_touch','clock_and_delay_port_bindings','exact_native_Verilog_roundtrip','all_actual_PG_pins_bound',str(pin_split)+'_pin_reg_split']),indent=2)+'\n')
 
 
 if __name__=='__main__':unittest.main()

@@ -83,7 +83,12 @@ foreach pr [lsort -index 0 $ot_ps_bts] {
     set n2 [$it getNet]; if {$n2 eq "NULL" || $n2 eq ""} continue
     [$cf findITerm [$mt getName]] connect $n2
   }
-  set cur [odb::dbNet_create $ot_ps_blk [format "ot_prs_%05d_q" $ot_ps_n]]
+  set ot_ps_q_stem [format "ot_prs_%05d_q" $ot_ps_n]
+  set ot_ps_q_name $ot_ps_q_stem; set ot_ps_q_suffix 0
+  while {[$ot_ps_blk findNet $ot_ps_q_name] ne "NULL" || [$ot_ps_blk findBTerm $ot_ps_q_name] ne "NULL"} {
+    incr ot_ps_q_suffix; set ot_ps_q_name ${ot_ps_q_stem}_${ot_ps_q_suffix}
+  }
+  set cur [odb::dbNet_create $ot_ps_blk $ot_ps_q_name]
   [$cf findITerm $q] connect $cur
   incr ot_ps_cells
   # buffers, flop side first
@@ -91,9 +96,25 @@ foreach pr [lsort -index 0 $ot_ps_bts] {
   foreach ci [lreverse $chain] {
     set cc [odb::dbInst_create $ot_ps_blk [$ci getMaster] [format "ot_prs_%05d_b%d" $ot_ps_n $k]]
     [$cc findITerm A] connect $cur
-    set cur [odb::dbNet_create $ot_ps_blk [format "ot_prs_%05d_n%d" $ot_ps_n $k]]
+    set ot_ps_n_stem [format "ot_prs_%05d_n%d" $ot_ps_n $k]
+    set ot_ps_n_name $ot_ps_n_stem; set ot_ps_n_suffix 0
+    while {[$ot_ps_blk findNet $ot_ps_n_name] ne "NULL" || [$ot_ps_blk findBTerm $ot_ps_n_name] ne "NULL"} {
+      incr ot_ps_n_suffix; set ot_ps_n_name ${ot_ps_n_stem}_${ot_ps_n_suffix}
+    }
+    set cur [odb::dbNet_create $ot_ps_blk $ot_ps_n_name]
     [$cc findITerm Y] connect $cur
     incr ot_ps_cells; incr k
+  }
+  # Preserve distinct native nets in ordinary write_verilog: after the BTerm
+  # moves, its old port-named net is internal and must not alias the port.
+  if {[$ot_ps_blk findBTerm [$net getName]] ne "NULL"} {
+    set ot_ps_src_stem [format "ot_prs_%05d_src" $ot_ps_n]
+    set ot_ps_src_name $ot_ps_src_stem; set ot_ps_src_suffix 0
+    while {[$ot_ps_blk findNet $ot_ps_src_name] ne "NULL" || [$ot_ps_blk findBTerm $ot_ps_src_name] ne "NULL"} {
+      incr ot_ps_src_suffix; set ot_ps_src_name ${ot_ps_src_stem}_${ot_ps_src_suffix}
+    }
+    $net rename $ot_ps_src_name
+    if {[$net getName] ne $ot_ps_src_name} { error "OT_PRS: internal net rename failed" }
   }
   $bt disconnect
   $bt connect $cur
