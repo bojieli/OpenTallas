@@ -23,6 +23,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import smb_unit as S  # noqa: E402
+import hbm_bank_layout as BL  # noqa: E402  HBM-ROTLAYOUT: the one HBM bank layout + refusal check
 
 ROOT = S.ROOT
 TB = "rtl/test/hbm_accel/svg_rel/tb_toksim_smhbm.sv"
@@ -223,6 +224,15 @@ def compile_qwen(tags, seed=20261019):
     kd["d1"] = len(descs)
     if len(descs) > S.TBL:
         raise SystemExit(f"descriptor table overflow: {len(descs)} > {S.TBL}")
+    # HBM-ROTLAYOUT (owner rule 10-19): the Qwen weight blocks are ONE static stream in descriptor (= fetch) order,
+    # laid out rotated across bank sets by hbm_bank_layout.static_run (never desc index x BSCALE: BSCALE 8 put every
+    # block on bank set 0 = 26 B/edge on the successor controller) and refused unless the check passes (R1/R2/R3 +
+    # wrap into the next stream's head).
+    addrs, nadj = BL.static_run(0, [b["n_lines"] for b in descs], "weights", "qwen compile_qwen")
+    for b, a in zip(descs, addrs):
+        b.update(row_base=a, dram_row=a, bank_set=a & 7)
+    kd["rotlayout"] = dict(BL.check_addrs("weights", addrs, [BL.words(b["n_lines"]) for b in descs], "qwen weights"),
+                           phase_steps=nadj, sets=[a & 7 for a in addrs])
     for b in descs:
         raw = b"".join(int(x).to_bytes(136, "little") for x in b["lines"])
         total = ((len(b["lines"]) * 136 + 127) // 128) * 4
@@ -293,7 +303,8 @@ def compile_qwen(tags, seed=20261019):
     assert len({e[0] for e in xw_ev}) == len(xw_ev), "two x beats on one edge"
     n_end = cur_abs + S.DRAIN
     budget = dict(descriptors=len(descs), table_rows=S.TBL, programme_words_matvec=store.top - S.ATT_RESERVED,
-                  store_top=store.top, distinct_programmes=len(store.progs), qwen_tags=tags)
+                  store_top=store.top, distinct_programmes=len(store.progs), qwen_tags=tags,
+                  rotlayout=dict(kd["rotlayout"], all_rotated=kd["rotlayout"]["verdict"] == "ROTATED"))
     kinds = [kd]
     return dict(ing=ing, xw=xw_ev, ids=[], mem=mem, ops=ops_out, kinds=kinds, n_end=n_end, budget=budget, descs=descs)
 
@@ -354,7 +365,7 @@ def main(argv=None):
                         "tb_toksim_smhbm.sv, Verilator 5.050 (GEN2e3 die composition)")
             d["static_schedule"] = dict(first_go=S.FIRST_GO, op_gap=S.OP_GAP, x_gap=S.X_GAP, pace_num=S.PACE_NUM,
                                         pace_den=S.PACE_DEN, pace_add=S.PACE_ADD, fetch=S.FETCH, expert_first=S.EXP_FIRST,
-                                        ids_lag=S.IDS_LAG, bscale=S.BSCALE, pc=PC_MODE)
+                                        ids_lag=S.IDS_LAG, bscale=S.BSCALE, layout="hbm_bank_layout.static_run (rotated)", pc=PC_MODE)
             d["source_revision"] = (ROOT / "REV").read_text().strip() if (ROOT / "REV").exists() else None
             out.write_text(json.dumps(d, indent=1, default=str) + "\n")
     return rc
