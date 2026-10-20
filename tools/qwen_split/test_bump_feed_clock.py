@@ -61,3 +61,11 @@ def test_region_reconstruction_preserves_feed_hop0():
     actual = {(i, p): b for b, _, _, es in m['buses'] for i, p in es}
     assert actual['h0', 'ck'] == 'pll_fwd'
     assert actual['land', 'ck'] == actual['dst', 'ck']
+
+
+def test_epoch_fanout_to_sys_face_anchor():
+    # QW-GEN5: lnk_fwd_epoch__fo1 ends on sys_face.fwd_epoch (the run anchor), an actual static-link capture
+    lane = dict(bid='lnk_fwd_epoch__fo1', src_ck='clk_r55')
+    assert bind_source(fixture(), lane, [('bump_fwd_epoch', 'o'), ('sys_face', 'fwd_epoch')])
+    with pytest.raises(ValueError):
+        source_clock(fixture(), 'lnk_fwd_lrst', [('bump_fwd_lrst', 'o'), ('sys_face', 'fwd_epoch')])

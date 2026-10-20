@@ -12,8 +12,10 @@ def source_clock(model, bid, eps):
         return None
     kind = match[1]
     source = ('bump_fwd_' + kind, 'o')
-    destination = ('d2d_rom', 'fwd_epoch' if kind == 'epoch' else 'fwd_link_rst_n')
-    if list(eps) != [source, destination]:
+    # QW-GEN5 g5 first GEN: the epoch strobe fans out to d2d_rom AND (lnk_fwd_epoch__fo1) to sys_face's run anchor
+    # (sys_face_bind.py 'fwd_epoch'); both are actual static-link captures of the bump signal
+    allowed = {('d2d_rom', 'fwd_epoch'), ('sys_face', 'fwd_epoch')} if kind == 'epoch' else {('d2d_rom', 'fwd_link_rst_n')}
+    if len(eps) != 2 or tuple(eps[0]) != source or tuple(eps[1]) not in allowed:
         raise ValueError(f'bump feed clock {bid}: wrong source/destination {eps}')
     by = {i.name: i for i in model['insts']}
     for name, master in [('bump_fwd_' + kind, 'qfd_sigbump'), ('ckb_rom', 'qfd_ckbump'),
