@@ -20,12 +20,21 @@ module tb_idx_chunk_rt_equiv;
 `ifndef QLATE
 `define QLATE 0
 `endif
+`ifdef OT_CHUNK_RT_C
+ ot_hbm_idx_chunk_rt_c #(.QLATE(`QLATE)
+`ifdef OT_IDX_GLUE_F32
+ ,.RESET_F32(1)
+`endif
+ ) dut(                    // HBM-IDX6 10-20: column split + native32 successor
+  .clk(clk),.rst_n(rst_n),.hb(8'd8),
+`else
 `ifdef OT_CHUNK_RT_L
  ot_hbm_idx_chunk_rt_l #(.QLATE(`QLATE)) dut(                    // L2H-IDXSCORE 10-19: landed-reset / ring-buffer successor
 `else
  ot_hbm_idx_chunk_rt #(.QLATE(`QLATE)) dut(
 `endif
   .clk(clk),.clk_pair({16{clk}}),.rst_n(rst_n),.hb(8'd8),
+`endif
   .ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.k_v(k_v),.k_kv(k_kv),.k_key(k_key),
   .c_v(b_v),.c_kv(b_kv),.c_sum(b_s),.c_fault(b_f),.online(b_on));
  integer seed=20261017, gapk=2, gapq=120, frames=6, nkeys=200;
@@ -35,9 +44,18 @@ module tb_idx_chunk_rt_equiv;
   integer j; begin for(j=0;j<NB*4;j=j+1) c[32*j+:32]=$random(seed); for(j=0;j<NB;j=j+1) s[8*j+:8]=scale(seed); end
  endtask
  reg [NB*128-1:0] tc; reg [NB*8-1:0] ts;
+`ifdef OT_IDX_GLUE_F32
+ // Only online boot release gains one edge. Data valid/numeric results retain
+ // their exact active-operation edge after the bench waits for both online.
+ reg a_on_d=0;
+ always @(posedge clk or negedge rst_n)if(!rst_n)a_on_d<=0;else a_on_d<=a_on;
+ wire a_on_expected=a_on_d;
+`else
+ wire a_on_expected=a_on;
+`endif
  always @(negedge clk) if (rst_n) begin
   cyc=cyc+1;
-  if (a_on!==b_on || a_v!==b_v || (a_v && (a_kv!==b_kv || a_s!==b_s || a_f!==b_f))) begin
+  if (a_on_expected!==b_on || a_v!==b_v || (a_v && (a_kv!==b_kv || a_s!==b_s || a_f!==b_f))) begin
    errs=errs+1; if(errs<6) $display("MISMATCH cyc%0d on%b/%b v%b/%b kv%h/%h f%h/%h sum %h / %h",cyc,a_on,b_on,a_v,b_v,a_kv,b_kv,a_f,b_f,a_s,b_s);
   end
   checks=checks+1; if (a_v) begin vouts=vouts+1; if (|a_s) nzs=nzs+1; end
