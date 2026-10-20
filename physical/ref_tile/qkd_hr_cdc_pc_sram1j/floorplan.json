@@ -1,0 +1,192 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qkd_hr_cdc_pc_sram1j",
+ "top": "qkd_hr_cdc_pc_sram",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  475.2,
+  540.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  473.03999999999996,
+  537.84
+ ],
+ "why": "spec outline",
+ "std_area_um2": 2931.761156,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "E": [
+   "u_rank__physical_tx_d",
+   "u_rank__raw_rx_d",
+   "ck_core",
+   "u_rank__raw_rx_cr",
+   "u_rank__raw_rx_v",
+   "u_rank__physical_tx_cr",
+   "u_rank__physical_tx_v",
+   "service_faults_core"
+  ],
+  "W": [
+   "u_rank__u_phy__pad_d",
+   "u_rank__d_cd",
+   "ck_phy_fam",
+   "u_rank__u_phy__pad_cr",
+   "u_rank__u_phy__pad_v",
+   "u_rank__d_ccr",
+   "u_rank__d_cv",
+   "service_faults_phy"
+  ],
+  "N": [
+   "host_rst_n"
+  ],
+  "S": []
+ },
+ "clock_port": "ck_core",
+ "clock_ports": [
+  "ck_core",
+  "ck_phy_fam"
+ ],
+ "blocks": [
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+   "inst": "u_rank__u_phy__u_rx.g_ib_mem.g_32.u_ib",
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 177.768,
+   "h": 160.392,
+   "orient": "MY",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir",
+   "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+   "inst": "u_rank__u_phy__u_rx.g_afw.u_af.g_mm.g_pad32.u_m",
+   "idx": 0,
+   "x": 43.2,
+   "y": 345.6,
+   "w": 177.768,
+   "h": 160.392,
+   "orient": "MY",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "master": "ot_sram_1r1w_32x546_m1_p192_mir",
+   "inst": "u_rank__u_phy__u_tx.g_ib_mem.g_32.u_ib",
+   "idx": 0,
+   "x": 259.2,
+   "y": 43.2,
+   "w": 177.768,
+   "h": 160.392,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir",
+   "master": "ot_sram_1r1w2c_32x546_m1_p192_mir",
+   "inst": "u_rank__u_phy__u_tx.g_afw.u_af.g_mm.g_pad32.u_m",
+   "idx": 0,
+   "x": 259.2,
+   "y": 345.6,
+   "w": 177.768,
+   "h": 160.392,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "fill 46% = (macros/children 114050 + std 2932) / outline 256608 um2 < 50%",
+   ""
+  ]
+ ],
+ "referenced": [
+  "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc_sram.v",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/physical/ot_qwen_async_fifo_w.sv",
+  "rtl/physical/ot_qwen_die_cdc_ch.sv",
+  "rtl/physical/ot_host_async_fifo_sram.sv",
+  "rtl/physical/ot_host_die_cdc_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v",
+  "physical/qkd_host_pc_band_1020/band_sram1j.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/kit.env",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/clock.sdc",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/signoff.sdc",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/pdn.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/pre_cts.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/post_cts.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/post_grt.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/pre_drt.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/pre_fill.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/post_fill.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/pre_grt.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/pre_gpl.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/clock_entry.sdc",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_tt.lib",
+  "physical/ref_tile/qkd_hr_cdc_pc_sram1j/place.tcl",
+  "tools/ref_tile/raw_macro_clocks.py",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_tt.lib"
+ ]
+}
