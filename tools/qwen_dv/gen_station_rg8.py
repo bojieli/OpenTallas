@@ -75,7 +75,7 @@ OPTOUT = {"pin_regs": {"enable": False, "reason": "the RTL registers every data/
 
 
 def job(name, purpose, mem):
-    return {"owner": "Claude:QW-SLICE3", "branch": "claude/qw-slice3-1019", "tag": "g2", "purpose": purpose,
+    return {"owner": "Claude:QW-SLICE3", "branch": "claude/qw-slice3-1019", "tag": "g3", "purpose": purpose,
             "extra_paths": ["rtl/qwen_dv", "rtl/hdc", "rtl/common/landed_parent", "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1"],
             "benches": [
                 {"name": "station_regional_eq", "cmd": "PIN=1 bash rtl/test/qwen_dv/safe_storage/run_station_regional.sh {RUN}/bench/rg 0 0",
@@ -85,6 +85,22 @@ def job(name, purpose, mem):
             "views_to": f"physical/ref_tile/{name}/views", "record_to": f"results/rtl/ref_tile/{name}"}
 
 
+REGION_W = {"ck": 1, "rst_n": 1, "cfg_v_p": 1, "cfg_mode_p": 2, "cfg_wsrc_p": 1, "cfg_nwords_p": 8, "cfg_sbase_p": 9,
+            "cfg_kcm1_p": 8, "rs_s_lo_p": 64, "rs_s_hi_p": 64, "rs_n_lo_p": 64, "rs_n_hi_p": 64, "rs_s_c_p": 4, "rs_n_c_p": 4,
+            "nb_d_p": 64, "nb_c_p": 2, "bt_q_p": 32, "flt_bank_i": 4, "flt_vld_i": 4, "nb_od": 64, "nb_oc": 2, "bt_re": 1,
+            "bt_word": 9, "r_v": 1, "r_idx": 8, "r_last": 1, "r_d": 64, "flt_bank_o": 4, "flt_vld_o": 4, "fault": 1}
+
+
+def spread(names, widths, lo, hi, ranges):
+    """pin_ranges: the face segment [lo, hi] shared by names in proportion to their bit widths (full-face spread)"""
+    tot = sum(widths[n] for n in names)
+    x = lo
+    for n in names:
+        w = (hi - lo) * widths[n] / tot
+        ranges[n] = [round(x, 3), round(max(x + 0.25, x + w - 0.25), 3)]
+        x += w
+
+
 def specs(rw, rh):
     region_pins = {"W": ["ck", "rst_n", "cfg_v_p", "cfg_mode_p", "cfg_wsrc_p", "cfg_nwords_p", "cfg_sbase_p", "cfg_kcm1_p",
                          "rs_s_lo_p", "rs_s_hi_p", "rs_s_c_p", "flt_bank_i", "flt_vld_i"],
@@ -92,10 +108,14 @@ def specs(rw, rh):
                    "S": ["bt_re", "bt_word", "bt_q_p", "r_v", "r_idx", "r_last", "r_d"],
                    "E": ["nb_od", "nb_oc", "flt_bank_o", "flt_vld_o", "fault"]}
     route = {"pd": 0.5, "threads": 16, "peak_ram_gb": 64, "hold_margin_ns": 0.03, "macro_halo_um": 5.4, "io_hold_margin_ns": 0.03}
+    ra = {}
+    for f, names in region_pins.items():
+        spread(names, REGION_W, 4.32, (rh if f in "WE" else rw) - 4.32, ra)
     a = {"name": "qfd_dv_slice2_stnrg", "top": "qfd_dv_redstn2_region", "kind": "tile", "diagnostic": True,
          "sources": [s for s in SRCS if not s.endswith("_rg8.sv")], "params": {"PIN_IN": 1, "BT_LAT": 1, "MUT": 0},
          "clock_port": "ck", "reset_ports": ["rst_n"], "outline": {"w": rw, "h": rh},
-         "macros": [{"view": SRAM, "count": 5}], "pins": region_pins, "route": dict(route),
+         "macros": [{"view": SRAM, "count": 5}], "pins": region_pins, "pin_ranges": ra,
+         "route": dict(route, pin_balance={"group_max": 1, "h": "M4", "v": "M5"}),
          "safe_design_checklist": CHECKLIST, **OPTOUT,
          "job": job("qfd_dv_slice2_stnrg", "QW-SLICE3: one SU-lane region of the slice2 station (8 per station, own clock root)", 64)}
     # stn8: 2x4 regions; region r column c = r//2, row top (N) for even r, bottom (S) for odd r
@@ -109,10 +129,8 @@ def specs(rw, rh):
         if r == 0:
             names += [n for n, _ in R0_OUT]
         pins[face] += names
-        lo, hi = c * rw + 4.32, (c + 1) * rw - 4.32
-        step = (hi - lo) / len(names)
-        for k, n in enumerate(names):
-            ranges[n] = [round(lo + k * step, 3), round(lo + (k + 1) * step - 0.25, 3)]
+        wd = {f"ck_r{r}": 1, f"rst_n_r{r}": 1, **{f"{n}_r{r}": w for n, w in IN_W + OUT_W}, **dict(R0_OUT)}
+        spread(names, wd, c * rw + 4.32, (c + 1) * rw - 4.32, ranges)
     pins = {k: v for k, v in pins.items() if v}
     doms = {}
     for r in range(8):

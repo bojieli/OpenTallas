@@ -76,13 +76,140 @@
    "fault"
   ]
  },
+ "pin_ranges": {
+  "ck": [
+   4.32,
+   4.904
+  ],
+  "rst_n": [
+   5.154,
+   5.737
+  ],
+  "cfg_v_p": [
+   5.987,
+   6.571
+  ],
+  "cfg_mode_p": [
+   6.821,
+   8.238
+  ],
+  "cfg_wsrc_p": [
+   8.488,
+   9.072
+  ],
+  "cfg_nwords_p": [
+   9.322,
+   15.742
+  ],
+  "cfg_sbase_p": [
+   15.992,
+   23.245
+  ],
+  "cfg_kcm1_p": [
+   23.495,
+   29.914
+  ],
+  "rs_s_lo_p": [
+   30.164,
+   83.27
+  ],
+  "rs_s_hi_p": [
+   83.52,
+   136.626
+  ],
+  "rs_s_c_p": [
+   136.876,
+   139.961
+  ],
+  "flt_bank_i": [
+   140.211,
+   143.295
+  ],
+  "flt_vld_i": [
+   143.545,
+   146.63
+  ],
+  "rs_n_lo_p": [
+   4.32,
+   50.15
+  ],
+  "rs_n_hi_p": [
+   50.4,
+   96.23
+  ],
+  "rs_n_c_p": [
+   96.48,
+   99.11
+  ],
+  "nb_d_p": [
+   99.36,
+   145.19
+  ],
+  "nb_c_p": [
+   145.44,
+   146.63
+  ],
+  "bt_re": [
+   4.32,
+   5.299
+  ],
+  "bt_word": [
+   5.549,
+   16.36
+  ],
+  "bt_q_p": [
+   16.61,
+   55.687
+  ],
+  "r_v": [
+   55.937,
+   56.916
+  ],
+  "r_idx": [
+   57.166,
+   66.747
+  ],
+  "r_last": [
+   66.997,
+   67.976
+  ],
+  "r_d": [
+   68.226,
+   146.63
+  ],
+  "nb_od": [
+   4.32,
+   125.721
+  ],
+  "nb_oc": [
+   125.971,
+   129.523
+  ],
+  "flt_bank_o": [
+   129.773,
+   137.126
+  ],
+  "flt_vld_o": [
+   137.376,
+   144.729
+  ],
+  "fault": [
+   144.979,
+   146.63
+  ]
+ },
  "route": {
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 64,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
  },
  "safe_design_checklist": {
   "1_pins": "PASS: PIN_IN=1 one pin register on every data/control input; outputs are flop Q; rst_n lands in 2 registered stages (rst_l0/rst_l1) then kept 32-ary trees",
@@ -105,7 +232,7 @@
  "job": {
   "owner": "Claude:QW-SLICE3",
   "branch": "claude/qw-slice3-1019",
-  "tag": "g2",
+  "tag": "g3",
   "purpose": "QW-SLICE3: one SU-lane region of the slice2 station (8 per station, own clock root)",
   "extra_paths": [
    "rtl/qwen_dv",
