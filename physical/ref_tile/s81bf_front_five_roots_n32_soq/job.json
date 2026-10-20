@@ -50,15 +50,17 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "MUTANT BF6 mroh FAIL: DIFF TXN"
+    "fail_regex": "MUTANT BF6 mroh FAIL: DIFF TXN",
+    "fail_witness": "results/rtl/s81_bf6_1020/bench/txn_mroh.log"
    },
    {
-    "name": "mutant_n32_write_select_lost",
-    "cmd": "python3 tools/s81/bf6_front_n32_bench.py --case mwsel --work {RUN}/mwsel",
+    "name": "mutant_n32_fp8_write_select_lost",
+    "cmd": "python3 tools/s81/bf6_front_n32_bench.py --case mwself --work {RUN}/mwself",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
-    "fail_regex": "MUTANT BF6 mwsel FAIL: DIFF TXN"
+    "fail_regex": "MUTANT BF6 mwself FAIL: DIFF TXN",
+    "fail_witness": "results/rtl/s81_bf6_1020/bench/txn_mwself.log"
    }
   ],
   "calibrate": {
