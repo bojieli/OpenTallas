@@ -55,62 +55,62 @@ module ot_s81sl_capc5 #(
     wire lpr_rt;  ot_pl_pad #(.W(1), .N(1)) u_lpr_rt (.ck(ck_rt), .d(lpr_root), .q(lpr_rt));   // 1 hop(s) from core
     // ---- LANDING 0: w_v core -> rt, 1 b (u_rt.w_v)
     wire [4*1-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_0_vld;  wire  w_v__l_rt, lpl_0_o;
-    ot_pl_land_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_core), .rsi(lpr_core), .i(w_v), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
+    ot_pl_land_n32_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_core), .rsi(lpr_core), .i(w_v), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
     ot_pl_land_chunk_r #(.W(1), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
     assign w_v__l_rt = (MUT == 1) ? w_v : lpl_0_o;
     // ---- LANDING 1: w_t core -> rt, 32 b (u_rt.w_t)
     wire [4*((31) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*(((((31) - (0) + 1))+24-1)/24)-1:0] lpl_1_vld;  wire [31:0] w_t__l_rt, lpl_1_o;
-    ot_pl_land_chunk_w #(.W(((31) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_core), .rsi(lpr_core), .i(w_t), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
+    ot_pl_land_n32_chunk_w #(.W(((31) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_core), .rsi(lpr_core), .i(w_t), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
     ot_pl_land_chunk_r #(.W(((31) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
     assign w_t__l_rt = lpl_1_o;
     // ---- LANDING 2: w_d core -> rt, 32 b (u_rt.w_d)
     wire [4*((31) - (0) + 1)-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*(((((31) - (0) + 1))+24-1)/24)-1:0] lpl_2_vld;  wire [31:0] w_d__l_rt, lpl_2_o;
-    ot_pl_land_chunk_w #(.W(((31) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_2_w (.ck(ck_core), .rsi(lpr_core), .i(w_d), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
+    ot_pl_land_n32_chunk_w #(.W(((31) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_2_w (.ck(ck_core), .rsi(lpr_core), .i(w_d), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
     ot_pl_land_chunk_r #(.W(((31) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_2_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
     assign w_d__l_rt = lpl_2_o;
     // ---- LANDING 3: w_e core -> rt, 1 b (u_rt.w_e)
     wire [4*1-1:0] lpl_3_bank;  wire [11:0] lpl_3_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_3_vld;  wire  w_e__l_rt, lpl_3_o;
-    ot_pl_land_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_3_w (.ck(ck_core), .rsi(lpr_core), .i(w_e), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));
+    ot_pl_land_n32_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_3_w (.ck(ck_core), .rsi(lpr_core), .i(w_e), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));
     ot_pl_land_chunk_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_3_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld), .o(lpl_3_o));
     assign w_e__l_rt = lpl_3_o;
     // ---- LANDING 4: w_f core -> rt, 1 b (u_rt.w_f)
     wire [4*1-1:0] lpl_4_bank;  wire [11:0] lpl_4_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_4_vld;  wire  w_f__l_rt, lpl_4_o;
-    ot_pl_land_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_4_w (.ck(ck_core), .rsi(lpr_core), .i(w_f), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
+    ot_pl_land_n32_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_4_w (.ck(ck_core), .rsi(lpr_core), .i(w_f), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
     ot_pl_land_chunk_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_4_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld), .o(lpl_4_o));
     assign w_f__l_rt = lpl_4_o;
     // ---- LANDING 5: e_v core -> rt, 1 b (u_rt.e_v)
     wire [4*1-1:0] lpl_5_bank;  wire [11:0] lpl_5_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_5_vld;  wire  e_v__l_rt, lpl_5_o;
-    ot_pl_land_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_5_w (.ck(ck_core), .rsi(lpr_core), .i(e_v), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld));
+    ot_pl_land_n32_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_5_w (.ck(ck_core), .rsi(lpr_core), .i(e_v), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld));
     ot_pl_land_chunk_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_5_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld), .o(lpl_5_o));
     assign e_v__l_rt = lpl_5_o;
     // ---- LANDING 6: e_t core -> rt, 32 b (u_rt.e_t)
     wire [4*((31) - (0) + 1)-1:0] lpl_6_bank;  wire [11:0] lpl_6_epo;  wire [4*(((((31) - (0) + 1))+24-1)/24)-1:0] lpl_6_vld;  wire [31:0] e_t__l_rt, lpl_6_o;
-    ot_pl_land_chunk_w #(.W(((31) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_6_w (.ck(ck_core), .rsi(lpr_core), .i(e_t), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld));
+    ot_pl_land_n32_chunk_w #(.W(((31) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_6_w (.ck(ck_core), .rsi(lpr_core), .i(e_t), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld));
     ot_pl_land_chunk_r #(.W(((31) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_6_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld), .o(lpl_6_o));
     assign e_t__l_rt = lpl_6_o;
     // ---- LANDING 7: e_d core -> rt, 32 b (u_rt.e_d)
     wire [4*((31) - (0) + 1)-1:0] lpl_7_bank;  wire [11:0] lpl_7_epo;  wire [4*(((((31) - (0) + 1))+24-1)/24)-1:0] lpl_7_vld;  wire [31:0] e_d__l_rt, lpl_7_o;
-    ot_pl_land_chunk_w #(.W(((31) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_7_w (.ck(ck_core), .rsi(lpr_core), .i(e_d), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld));
+    ot_pl_land_n32_chunk_w #(.W(((31) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_7_w (.ck(ck_core), .rsi(lpr_core), .i(e_d), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld));
     ot_pl_land_chunk_r #(.W(((31) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_7_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld), .o(lpl_7_o));
     assign e_d__l_rt = lpl_7_o;
     // ---- LANDING 8: e_e core -> rt, 1 b (u_rt.e_e)
     wire [4*1-1:0] lpl_8_bank;  wire [11:0] lpl_8_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_8_vld;  wire  e_e__l_rt, lpl_8_o;
-    ot_pl_land_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_8_w (.ck(ck_core), .rsi(lpr_core), .i(e_e), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld));
+    ot_pl_land_n32_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_8_w (.ck(ck_core), .rsi(lpr_core), .i(e_e), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld));
     ot_pl_land_chunk_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_8_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld), .o(lpl_8_o));
     assign e_e__l_rt = lpl_8_o;
     // ---- LANDING 9: e_f core -> rt, 1 b (u_rt.e_f)
     wire [4*1-1:0] lpl_9_bank;  wire [11:0] lpl_9_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_9_vld;  wire  e_f__l_rt, lpl_9_o;
-    ot_pl_land_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_9_w (.ck(ck_core), .rsi(lpr_core), .i(e_f), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld));
+    ot_pl_land_n32_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_9_w (.ck(ck_core), .rsi(lpr_core), .i(e_f), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld));
     ot_pl_land_chunk_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_9_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld), .o(lpl_9_o));
     assign e_f__l_rt = lpl_9_o;
     // ---- LANDING 10: cq_v core -> rt, 1 b (u_rt.cfg_v)
     wire [4*1-1:0] lpl_10_bank;  wire [11:0] lpl_10_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_10_vld;  wire  cq_v__l_rt, lpl_10_o;
-    ot_pl_land_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_10_w (.ck(ck_core), .rsi(lpr_core), .i(cq_v), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld));
+    ot_pl_land_n32_chunk_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_10_w (.ck(ck_core), .rsi(lpr_core), .i(cq_v), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld));
     ot_pl_land_chunk_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_10_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld), .o(lpl_10_o));
     assign cq_v__l_rt = lpl_10_o;
     // ---- LANDING 11: cq_d core -> rt, 160 b (u_rt.cfg_d)
     wire [4*((159) - (0) + 1)-1:0] lpl_11_bank;  wire [11:0] lpl_11_epo;  wire [4*(((((159) - (0) + 1))+24-1)/24)-1:0] lpl_11_vld;  wire [159:0] cq_d__l_rt, lpl_11_o;
-    ot_pl_land_chunk_w #(.W(((159) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_11_w (.ck(ck_core), .rsi(lpr_core), .i(cq_d), .bank(lpl_11_bank), .epo(lpl_11_epo), .vld(lpl_11_vld));
+    ot_pl_land_n32_chunk_w #(.W(((159) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_11_w (.ck(ck_core), .rsi(lpr_core), .i(cq_d), .bank(lpl_11_bank), .epo(lpl_11_epo), .vld(lpl_11_vld));
     ot_pl_land_chunk_r #(.W(((159) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_11_r (.ck(ck_rt), .rsi(lpr_rt), .bank(lpl_11_bank), .epo(lpl_11_epo), .vld(lpl_11_vld), .o(lpl_11_o));
     assign cq_d__l_rt = lpl_11_o;
     wire lpr_c_u_ld3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ld3 (.ck(ck_core), .d(lpr_core), .q(lpr_c_u_ld3));   // t(u_ld3) = 0

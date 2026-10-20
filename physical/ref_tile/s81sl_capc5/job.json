@@ -32,7 +32,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_capc5 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_HARD_CHILDREN --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_capc5 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_HARD_CHILDREN --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_n32.sv rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay_rf.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
