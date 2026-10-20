@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.kv_health_status_price.v1",
+ "method": "kv_retirement_contract.link_price (kv_static_programme.link_calendar -> tools/qwen_split/d2d_link_calendar.py --status-delay), per-layer 36 tails",
+ "reserved_status": 1998,
+ "rows": [
+  {
+   "status_delay": 197,
+   "status_age": 1982,
+   "base_padded": 249600,
+   "tail_padded": 257280,
+   "tail_unpadded": 256553,
+   "slot_tables_unchanged": true,
+   "per_layer_loss_pct": 2.985
+  },
+  {
+   "status_delay": 198,
+   "status_age": 1983,
+   "base_padded": 249600,
+   "tail_padded": 257280,
+   "tail_unpadded": 256589,
+   "slot_tables_unchanged": true,
+   "per_layer_loss_pct": 2.985
+  },
+  {
+   "status_delay": 213,
+   "status_age": 1998,
+   "base_padded": 249600,
+   "tail_padded": 257280,
+   "tail_unpadded": 257129,
+   "slot_tables_unchanged": true,
+   "per_layer_loss_pct": 2.985
+  },
+  {
+   "status_delay": 217,
+   "status_age": 2002,
+   "base_padded": 249600,
+   "tail_padded": 257280,
+   "tail_unpadded": 257273,
+   "slot_tables_unchanged": true,
+   "per_layer_loss_pct": 2.985
+  },
+  {
+   "status_delay": 218,
+   "status_age": 2003,
+   "base_padded": 249600,
+   "tail_padded": 258048,
+   "tail_unpadded": 257309,
+   "slot_tables_unchanged": true,
+   "per_layer_loss_pct": 3.274
+  }
+ ]
+}
