@@ -73,18 +73,34 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
  while True:
   nested=[(n,c) for n,c in cells.items() if c['type'] in design['modules'] and not macro(c)]
   if not nested:break
+  aliases={}
+  def canonical(bit):
+   seen=set()
+   while bit in aliases:
+    if bit in seen:raise ValueError('cyclic source output alias')
+    seen.add(bit);bit=aliases[bit]
+   return bit
+  def output_alias(dst,src):
+   dst,src=canonical(dst),canonical(src)
+   if dst==src:return
+   if not isinstance(dst,int):raise ValueError('conflicting source constant output terminals')
+   aliases[dst]=src
   for n,c in nested:
    sub=design['modules'][c['type']];mapping={}
    assert not int(sub.get('attributes',{}).get('blackbox','0'),2),c['type']
-   for p,v in sub['ports'].items():
+   for p,v in sorted(sub['ports'].items(),key=lambda item:item[1]['direction']!='input'):
     if p not in c['connections']:raise ValueError(f'{n}.{p}: expanded child port missing from source connection metadata')
     con=c['connections'].get(p,[])
     if len(v['bits'])!=len(con) and not (v['direction']=='output' and not con):
      raise ValueError(f'{n}.{p}: expanded child input/partial-output width mismatch')
     for b,d in zip(v['bits'],con):
-     if b in mapping and mapping[b]!=d:
-      raise ValueError(f'{n}.{p}: conflicting aliased child port terminals')
-     mapping[b]=d
+     if not isinstance(b,int):
+      if v['direction']!='output':raise ValueError(f'{n}.{p}: constant input port metadata unsupported')
+      output_alias(d,b)
+     elif b in mapping and mapping[b]!=d:
+      if v['direction']!='output':raise ValueError(f'{n}.{p}: conflicting aliased child input terminals')
+      output_alias(d,mapping[b])
+     else:mapping[b]=d
    for sc in sub['cells'].values():
     for bs in sc['connections'].values():
      for b in bs:
@@ -92,6 +108,13 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    del cells[n]
    for sn,sc in sub['cells'].items():
     cc=copy.deepcopy(sc);cc['connections']={p:[mapping[b] if isinstance(b,int) else b for b in bs] for p,bs in sc['connections'].items()};cells[n+'/'+sn]=cc
+  # A retained child can expose constant or duplicate output bits through
+  # different outer nets. They are actual source assignments, not new ties.
+  # Substitute the complete graph before pruning/replication; never leave
+  # those outer nets undriven after expanding the hierarchy.
+  for c in cells.values():
+   c['connections']={p:[canonical(b) for b in bs] for p,bs in c['connections'].items()}
+  for p in ports.values():p['bits']=[canonical(b) for b in p['bits']]
  cells={n:c for n,c in cells.items() if c['type']!='$scopeinfo'}
  # Lower only explicitly supported positive-clock asynchronous enabled FFs.
  # The mux feeds D; the asynchronous reset pin and its priority are untouched.

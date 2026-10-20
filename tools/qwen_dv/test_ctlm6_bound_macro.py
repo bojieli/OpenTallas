@@ -81,6 +81,19 @@ def main():
       'port_directions':{'C':'input','D':'input','Q':'output','UNUSED':'output'}}
     _,_,nrc=run(nested,contracts)
     assert nrc['unconsumed_cells_removed']==1
+    constant=copy.deepcopy(nested)
+    constant['modules']['logical']['ports']['Q']['bits']=['0']
+    constant['modules']['logical']['cells'].pop('q')
+    cr,_,_=run(constant,contracts)
+    assert '.D(1\'b0)' in cr
+    alias=copy.deepcopy(nested)
+    alias['modules']['logical']['ports']['Q']['bits']=[2]
+    alias['modules']['logical']['ports']['UNUSED']['bits']=[2]
+    alias['modules']['logical']['cells']={}
+    alias['modules']['top']['cells']['data_root']['connections']['UNUSED']=[6]
+    alias['modules']['top']['ports']['alias_observe']={'direction':'output','bits':[6]}
+    ar,_,_=run(alias,contracts)
+    assert 'assign alias_observe = n_3;' in ar
     strings, string_contracts = copy.deepcopy(design), copy.deepcopy(contracts)
     string_values={'VIAMAP':'', 'INSTANCE':'die/rom_"quoted"\\literal\nline', 'BINARY_TEXT':'0011'}
     strings['modules']['top']['cells']['u_gi.u_mem']['parameters'].update(string_values)
