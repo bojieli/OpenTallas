@@ -13,7 +13,9 @@
 #   island (tile centre) for pq / pr / status / flt and the client ports.  Each bit keeps its place in the bus: the anchor
 #   point of bit i is offset along the pin face by OT_RL_SPREAD x (pin_i - pin centroid).
 # Placement only: no cells, nets or edges change (0 cycles).
-global rl_blk rl_dbu rl_list
+# ORFS sources step hooks inside a proc (global_place.tcl): bind every script-level name the procs below read to the global
+# namespace (g7 r1 gates: "can't read rl_base")
+global rl_blk rl_dbu rl_list rl_pin rl_base rl_inset rl_spread rl_cx0 rl_cx1 rl_cy0 rl_cy1 rl_ring_e rl_core rl_anchor rl_db rl_dd rl_dc
 set rl_blk [ord::get_db_block]
 set rl_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set rl_inset [expr {[info exists ::env(OT_RL_INSET)] ? $::env(OT_RL_INSET) : 25.0}]
