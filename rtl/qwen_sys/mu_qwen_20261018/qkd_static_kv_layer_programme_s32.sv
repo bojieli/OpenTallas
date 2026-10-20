@@ -374,7 +374,10 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  wire[3:0]os={owner==2'd3,owner==2'd2,owner==2'd1,owner==2'd0};
  // KV-CTL3 census: the slice selects read the priority one-hot of e_any (= fs whenever |e_any, the only time they are
  // used) instead of fs: fs[k] also feeds the control process's fire_u muxes (one net, 36 loads)
- wire[3:0]fsp={e_any[3]&&!(|e_any[2:0]),e_any[2]&&!(|e_any[1:0]),e_any[1]&&!e_any[0],e_any[0]};
+ // A kept combinational boundary prevents ABC sharing this priority decode with the
+ // control/owner feedback cone (exact gate map: 36 loads); no extra state or edges.
+ wire[3:0]fsp;
+ qkd_kv_ctl_s32_priority4 u_meta_priority(.e(e_any),.p(fsp));
  wire ebf=|(fs&e_begin);
  wire aw=|(os&c_act&~c_wait),ao=|(os&c_act);
  wire[67:0]mq={gen_q,14'(pos_q+1),pos_q,token_q,epoch_q};
@@ -424,4 +427,12 @@ module qkd_static_kv_layer_programme_s32 #(parameter integer MUT=0,parameter int
  initial if(MU!=1)$fatal(1,"qkd_static_kv_layer_programme_s32: MU must be 1");
  initial if(FC<2||RS<24||RC<2)$fatal(1,"qkd_static_kv_layer_programme_s32: FC >= 2, RS >= 24, RCOPIES >= 2");
 `endif
+endmodule
+
+// Metadata and control consume the same priority function in separate synthesis cones.
+// Keeping this boundary preserves the original truth table for every input, including
+// collisions; the control process retains its original fault and priority behavior.
+(* keep_hierarchy *)
+module qkd_kv_ctl_s32_priority4(input wire[3:0]e, output wire[3:0]p);
+ assign p={e[3]&&!(|e[2:0]),e[2]&&!(|e[1:0]),e[1]&&!e[0],e[0]};
 endmodule
