@@ -65,6 +65,23 @@ FETCH = int(os.environ.get('SMB_FETCH', 200))       # measured HBM boundary: one
 EXP_FIRST = int(os.environ.get('SMB_EXP_FIRST', 260))  # ids -> first routed block resident + copied
 IDS_LAG = int(os.environ.get('SMB_IDS_LAG', 200))     # router gate last command -> top-k ids broadcast
 BUSY = 6                  # calendar done -> issuer go_busy clear -> next go
+# HBM-SMXL 10-19: the SM x-store load model + x-load early issue (needs the RTL XSLOT 1: descriptor [206:200] = xb).
+#   bench13 (default, as TOKSIM-HBM measured): every x word = all NBEAT 13 beats at one beat an edge, no load latency,
+#           the load starts 32 edges after the previous op's last command (single-buffered x at slot 0).
+#   die    : the die x loader's beat set (ot_hgi_sm_xload*: beats b < ceil(P XC / 2,048) = 2 for P = 1) at its MEASURED
+#           cadence (HBM-VMEARLY-XL ctlx bench, RD_LAT budget RLM 55, GEN2c NE lanes: first beat F after launch, then
+#           one beat every CAD edges; XLAT below), still serial at slot 0.
+#   xl     : die + ISSUE_AHEAD 1: a record whose x is not produced after the previous SM record (RAW rule on the fixture's
+#           VM descriptors) loads while the previous record runs, into a static ring slot xb over the 128-word x store;
+#           a slot word is rewritten only XRD edges after the last command that reads it (liveness check, never a stall).
+#   xlr    : xl + x REUSE (smmv 3a XR): a record whose A (VM descriptor + format) equals a resident slot's, with no
+#           writer of A in between and the slot not overwritten, issues no load and reads that slot.
+XMODE = os.environ.get("SMB_XMODE", "bench13")
+assert XMODE in ("bench13", "die", "xl", "xlr"), XMODE
+XRING = 128
+XRD = int(os.environ.get("SMB_XRD", 16))
+XNB = -(-MV.XC // 2048) if hasattr(MV, "XC") else 2       # beats per x word on the die (P = 1)
+XLAT = {1: (84, 2), 2: (88, 3), 0: (81, 1)}               # fmt -> (first beat after launch F, edges per beat CAD), RL55
 
 
 def put(v, lo, w, x, name):
@@ -96,7 +113,7 @@ def prog_row(addr, payload, w):
 
 
 def desc_row(i, *, row_base, landing, epoch, rows, tag_base, prog_base, prog_limit, go_at, layer_stride=0,
-             expert_stride=0, id_sel=0, row_off=0, loops=1, lstep=0, mode=0, mrel=0, fl=0):
+             expert_stride=0, id_sel=0, row_off=0, loops=1, lstep=0, mode=0, mrel=0, fl=0, xb=0):
     """ot_hbm_svc_sm_issuer_rel descriptor (layout in the RTL header; identity [239:232])."""
     if not 1 <= rows <= 64:
         raise ValueError(f"rows={rows}")
@@ -120,6 +137,7 @@ def desc_row(i, *, row_base, landing, epoch, rows, tag_base, prog_base, prog_lim
     v = put(v, 195, 3, mode, "mode")
     v = put(v, 198, 1, mrel, "mrel")
     v = put(v, 199, 1, fl, "fl")
+    v = put(v, 200, 7, xb, "xb")                    # HBM-SMXL: x-store slot base (issuer_rel XSLOT 1; 0 otherwise)
     v = put(v, 232, 8, i, "identity")
     return v | (MAGIC_DESC << 240)
 
@@ -167,6 +185,41 @@ def layer_records(fix: Path, smw: Path):
         m = len(o)
         R = -(-(-(-m // 2)) // 16)
         out.append(dict(k=k, rec=rec, fmt=fmt, w=w, x=x, o=o, acc=acc, ofmt=ofmt, gok=gok, slot=slot, eid=eid, m=m, R=R))
+    return out
+
+
+def _ranges(d):
+    base, n, m, stride = int(d[0]), int(d[1]), int(d[2]), int(d[3])
+    return [(base + i * stride, base + i * stride + n) for i in range(max(m, 1))] if stride else [(base, base + n * max(m, 1))]
+
+
+def _fk(r):
+    """fixture position of an SM record (records.json k = program order; weights.json k is the layer-local index)"""
+    return r["rec"].get("k", r["k"])
+
+
+def x_producers(fix: Path, recs):
+    """HBM-SMXL RAW rule: for every SM record (by k) the index of the LAST earlier fixture record whose VM output O
+    overlaps the record's A (None = produced before the layer).  Qwen (no fixture): every x is produced just before."""
+    f = fix / "records.json"
+    if not f.exists():
+        return {r["k"]: _fk(r) - 0.5 for r in recs}
+    allr = json.loads(f.read_text())["records"]["0"]
+    out = {}
+    for r in recs:
+        a = r["rec"].get("desc", {}).get("A")
+        if not a or a[5] != "VM":
+            out[r["k"]] = _fk(r) - 0.5
+            continue
+        ar = _ranges(a)
+        pj = None
+        for q in allr:
+            if q["k"] == _fk(r):
+                break
+            o = q.get("desc", {}).get("O")
+            if o and o[5] == "VM" and any(lo < h2 and l2 < hi for lo, hi in ar for l2, h2 in _ranges(o)):
+                pj = q["k"]
+        out[r["k"]] = pj
     return out
 
 
@@ -319,20 +372,67 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         prev_go, prev_len, prev_lines = None, 0, 0
         cur_abs = last_cmd_abs
         ids_rc, n_after = None, 0
+        prod = x_producers(fix_root / kd["name"], recs)
+        xptr, wbusy, wown = 0, [0] * XRING, [None] * XRING     # ring pointer, last read edge + owner of every x word
+        x_free, prev_r, prev_first = 0, None, None
+        install_end = desc_install_t + 2 * len(descs) + 4
         for r in recs:
-            nx = len(r["xw"]) * MV.NBEAT
-            x0 = max(cur_abs + 32, desc_install_t + 2 * len(descs) + 4)
-            x_end = x0 + nx
-            for a, word in enumerate(r["xw"]):
-                for g in range(MV.NBEAT):
-                    xw_ev.append((x0 + a * MV.NBEAT + g, (1 << 2062) | (a << 2055) | (g << 2048) |
+            fp = len(r["xw"])
+            raw = prev_r is None or (prod[r["k"]] is not None and prod[r["k"]] > _fk(prev_r))
+            reuse = None
+            if XMODE == "xlr" and prev_r is not None:
+                a_r = (json.dumps(r["rec"].get("desc", {}).get("A")), r["fmt"])
+                for q in reversed(recs[:recs.index(r)]):
+                    if "xload_k" not in q:
+                        continue
+                    if (json.dumps(q["rec"].get("desc", {}).get("A")), q["fmt"]) == a_r and q["xw"] == r["xw"] and \
+                            (prod[r["k"]] is None or prod[r["k"]] < _fk(q)) and \
+                            all(wown[(q["xb"] + i) % XRING] == q["xload_k"] for i in range(fp)):
+                        reuse = q
+                        break
+            if reuse is not None:
+                x0 = x_end = reuse["x_end"]
+                r.update(xb=reuse["xb"], xload_k=reuse["xload_k"], xreuse_of=reuse["k"], raw=raw, x_end=x_end, x0=x0)
+            else:
+                if XMODE in ("xl", "xlr"):
+                    xb = 0 if (mut == "xslot0" or raw) else xptr
+                else:
+                    xb = 0
+                words = [(xb + i) % XRING for i in range(fp)]
+                if XMODE in ("xl", "xlr") and not raw:
+                    x0 = max(install_end, x_free, prev_first, max(wbusy[w] for w in words) + XRD if mut != "xslot0" else 0)
+                else:
+                    x0 = max(cur_abs + 32, install_end)
+                beats = []
+                if XMODE == "bench13":
+                    for a, word in enumerate(r["xw"]):
+                        for g in range(MV.NBEAT):
+                            beats.append((x0 + a * MV.NBEAT + g, a, g, word))
+                else:
+                    F_, cad = XLAT[r["fmt"]]
+                    i = 0
+                    for a, word in enumerate(r["xw"]):
+                        for g in range(XNB):
+                            beats.append((x0 + F_ + cad * i, a, g, word))
+                            i += 1
+                for t_, a, g, word in beats:
+                    xw_ev.append((t_, (1 << 2062) | (((xb + a) % XRING) << 2055) | (g << 2048) |
                                   ((word >> (2048 * g)) & ((1 << 2048) - 1))))
+                x_end = beats[-1][0] + 1
+                x_free = x_end
+                for w in words:
+                    wown[w] = r["k"]
+                xptr = (xb + fp) % XRING
+                r.update(xb=xb, xload_k=r["k"], xreuse_of=None, raw=raw, x_end=x_end, x0=x0)
             op = dict(layer=kd["name"], k=r["k"], tag=r["rec"]["tag"], fmt=MV.FMT_NAME[r["fmt"]], O_fmt=r["ofmt"], m=r["m"],
                       R=r["R"], Gn=r["Gn"], slot=r["slot"], eid=r["eid"], blocks=len(r["blocks"]),
                       lines=sum(b["n_lines"] for b in r["blocks"]),
-                      priced=(r["rec"].get("priced") or [{}])[0].get("base_cost"))
+                      priced=(r["rec"].get("priced") or [{}])[0].get("base_cost"),
+                      xmode=XMODE, xb=r["xb"], x_raw=bool(r["raw"]), x_reuse_of=r["xreuse_of"], x0=x0, x_end=x_end,
+                      x_footprint=fp)
             for bi, b in enumerate(r["blocks"]):
                 P = 0
+                b["xb"] = r["xb"]
                 lo = rc
                 if prev_go is not None:
                     lo = max(lo, prev_go + prev_len + BUSY, prev_go + (PACE_NUM * prev_lines + PACE_DEN - 1) // PACE_DEN + PACE_ADD)
@@ -356,6 +456,11 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 cur_abs = rc0 + lo + LAT_GO + b["nwords"] - 1
             op["first_cmd_abs"] = r["blocks"][0]["first_cmd_abs"]
             op["last_cmd_abs"] = cur_abs
+            for i in range(fp):                                # the slot is read until this record's last command
+                w = (r["xb"] + i) % XRING
+                if wown[w] == r["xload_k"]:
+                    wbusy[w] = max(wbusy[w], cur_abs)
+            prev_r, prev_first = r, op["first_cmd_abs"]
             if r["rec"]["tag"].startswith("router") and kd["exp"]:
                 ids_rc = cur_abs - rc0 + IDS_LAG                # router result -> top-k -> broadcast (modelled lag)
             ops_out.append(op)
@@ -379,7 +484,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         d = desc_row(i, row_base=b["row_base"], landing=b["landing"], epoch=b["epoch"], rows=b["n_lines"],
                      tag_base=b["tag_base"], prog_base=b["prog"][0], prog_limit=b["prog"][1], go_at=b["go_at"],
                      layer_stride=b["layer_stride"], expert_stride=b["expert_stride"], id_sel=b["id_sel"], row_off=b["r0"],
-                     loops=C8, lstep=b["lstep"], mode=b["fmt"], mrel=1, fl=int(b["head"]))
+                     loops=C8, lstep=b["lstep"], mode=b["fmt"], mrel=1, fl=int(b["head"]), xb=b.get("xb", 0))
         for j, tgt in enumerate((SVG_TGT, XC_TGT)):
             ing.append((desc_install_t + 2 * i + j, ingress(cfg=(1 << 10 | i, d), target=tgt)))
     ing.sort(key=lambda e: e[0])
@@ -477,15 +582,28 @@ def parse(log):
 
 def check(c, res):
     """every op: rows 0..R-1 exactly once in [first command, next op's first command), FP32 accumulator + O vs the
-    fixture (sm_mv_unit.check_run semantics)."""
+    fixture (sm_mv_unit.check_run semantics).  HBM-SMXL: when ops overlap (the next op's commands start before this
+    op's last result, x early issue / short op gap), results are attributed IN ORDER (the SM retires rows in command
+    order): op i takes the next R_i result rows at or after its first command."""
     out, ok_all = [], True
     recs = {(k["name"], r["k"]): r for k in c["kinds"] for r in k["recs"]}
     ops = c["ops"]
+    seq = os.environ.get("SMB_CHECK", "seq" if XMODE != "bench13" else "window") == "seq"
+    rs = sorted(res)
+    pos = 0
     for i, op in enumerate(ops):
         r = recs[(op["layer"], op["k"])]
         lo, hi = op["first_cmd_abs"], ops[i + 1]["first_cmd_abs"] if i + 1 < len(ops) else 1 << 40
+        if seq:
+            while pos < len(rs) and rs[pos][0] < lo:
+                pos += 1
+            mine = rs[pos:pos + r["R"]]
+            pos += len(mine)
+            hi = (mine[-1][0] + 1) if mine else lo + 1
+        else:
+            mine = [x for x in res if lo <= x[0] < hi]
         e = dict(name="sm0", rows=list(range(r["R"])), first_line=lo, window_end=hi)
-        ro, ok = MV.check_run([e], [x for x in res if lo <= x[0] < hi], r["acc"], r["o"], r["ofmt"])
+        ro, ok = MV.check_run([e], mine, r["acc"], r["o"], r["ofmt"])
         ro = ro[0]
         out.append(dict(op, verdict=ro["verdict"], results=ro["results"], n_bad=ro["n_bad"], bad=ro["bad"][:4],
                         n_missing=ro["n_missing"], span_first_cmd_to_last_result=ro["cycles_first_line_to_last_result"]))
@@ -553,7 +671,7 @@ def main(argv=None):
         p.add_argument("--fix", required=True)
         p.add_argument("--smw", required=True)
         p.add_argument("--layers", default="L00:0,L02:2,L14:14,head:0")
-        p.add_argument("--mut", default="", choices=["", "late_ids"])
+        p.add_argument("--mut", default="", choices=["", "late_ids", "xslot0"])
         if nm == "compile":
             p.add_argument("--out", required=True)
         else:

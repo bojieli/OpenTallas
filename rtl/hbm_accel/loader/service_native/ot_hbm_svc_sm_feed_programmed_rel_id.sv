@@ -11,11 +11,15 @@
 //       cache retire: bank = ctx bank, epoch = ctx epoch                               (only with retire_v [117])
 //     A word without those flags passes unchanged (format launch, idle).  PREL=0 = absolute words (old envelope) through
 //     the same +1 stage.
+// HBM-SMXL 2026-10-19 XSLOT (default 0 = unchanged): the context carries the record's x-store slot base xb7 on top
+//   ({xb7, ctx46}, from ot_hbm_svc_sm_issuer_rel XSLOT 1); every valid issue word's xaddr [6:0] += xb (mod 128, in the
+//   same R-stage add as the looped + iteration term: no added edge).  The die's SM op_xb comes from the static programme.
 // Everything else (four-PC producer, landing/cache SRAMs, packed136 rows, S1 consumer copy, faults) is the _id feed.
 module ot_hbm_svc_sm_feed_programmed_rel_id #(
  parameter integer PAW=11,PREL=1,
  parameter integer OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=4,
- parameter integer LB=(LBANKS>2)?2:1
+ parameter integer LB=(LBANKS>2)?2:1,
+ parameter integer XSLOT=0,parameter integer CTXW=(XSLOT!=0)?53:46
 )(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
@@ -28,7 +32,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
  input wire start_v,input wire[LB-1:0]start_bank,input wire[15:0]start_epoch,
  input wire program_cfg_we,input wire[PAW-1:0]program_cfg_addr,input wire[255:0]program_cfg_data,
  input wire program_start_v,input wire[PAW-1:0]program_start_base,input wire[PAW:0]program_start_limit,input wire[15:0]program_start_loops,
- input wire[45:0]program_start_ctx,
+ input wire[CTXW-1:0]program_start_ctx,
  output wire program_active,program_done,output wire fault,
  output wire[42:0]expected_request,output wire[1081:0]lt0,lt1,output wire[569:0]lb0,lb1,output wire[11:0]fm,
  output wire[1098:0]packet_observe,output wire[134:0]programme_observe,output wire programme_v,
@@ -70,8 +74,8 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
  for(genvar l=0;l<4;l=l+1)begin:metadata
   assign indices[l*24+:24]=out_ordinal+l;assign epochs[l*16+:16]=out_epoch;
  end
- wire[134:0]word;wire[45:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;wire cache_busy;
- ot_smh_calendar_static_x #(.W(135),.AW(PAW),.XW(46)) programme_leaf(
+ wire[134:0]word;wire[CTXW-1:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;wire cache_busy;
+ ot_smh_calendar_static_x #(.W(135),.AW(PAW),.XW(CTXW)) programme_leaf(
   .clk(stream_clk),.rst_n(stream_rst_n),.cfg_we(program_cfg_we),.cfg_addr(program_cfg_addr),.cfg_data(program_cfg_data),
   .start_v(program_start_v),.start_base(program_start_base),.start_limit(program_start_limit),.start_loops(program_start_loops),
   .start_ctx(program_start_ctx),.calendar(word),.calendar_ctx(wctx),.calendar_iter(wit),.calendar_lastit(wlast),
@@ -88,6 +92,9 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
  wire[11:0]c_roff=wctx[45:34];wire[9:0]c_tag=wctx[33:24];wire[15:0]c_ep=wctx[23:8];wire c_bank=wctx[7];
  wire[3:0]c_lstep=wctx[6:3];wire c_fl=wctx[2];wire[1:0]c_fmt=wctx[1:0];
  wire looped=c_lstep!=0;
+ wire[6:0]c_xb;
+ generate if(XSLOT!=0)begin:g_xs assign c_xb=wctx[52:46];end else begin:g_nx assign c_xb=7'd0;end endgenerate
+ wire[6:0]c_xit=looped?wit[6:0]:7'd0;
  wire[9:0]c_lofs=wit[5:0]*c_lstep;
  reg[51:0]rd_r;reg rd_v_r;           // {read_v, bank, epoch16, row6, tag10, retire-free} of the R stage -> bits [116:83]
  reg[82:0]cmd_r,cmd_c;reg ret_r,ret_c;reg[16:0]retf_r,retf_c;reg inj_f;
@@ -101,7 +108,8 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
    if(PREL!=0)begin
     if(word[25])begin
      cmd_r[22:11]<=word[22:11]+c_roff;cmd_r[9:7]<=word[9:7]+c_roff[2:0];
-     if(looped)begin cmd_r[6:0]<=word[6:0]+wit[6:0];cmd_r[24]<=word[24]|(wit==0);cmd_r[23]<=word[23]|wlast;end
+     cmd_r[6:0]<=word[6:0]+c_xit+c_xb;
+     if(looped)begin cmd_r[24]<=word[24]|(wit==0);cmd_r[23]<=word[23]|wlast;end
     end
     if(word[29])cmd_r[39:30]<=word[39:30]+c_tag+c_lofs;
     if(word[83])begin rd_r[1]<=c_bank;rd_r[17:2]<=c_ep;rd_r[23:18]<=word[106:101]+c_lofs[5:0];rd_r[33:24]<=word[116:107]+c_tag+c_lofs;end

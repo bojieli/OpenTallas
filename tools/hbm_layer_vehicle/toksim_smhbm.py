@@ -68,6 +68,8 @@ PC_DEFINES = {"h9b": [], "safe": ["TOKSIM_SAFE_PC"], "mc3": ["TOKSIM_SAFE_PC", "
 
 def build(work: Path, bundle, defines):
     defines = list(defines) + [d for d in PC_DEFINES if d not in defines]
+    # HBM-SMXL: TOKSIM_DEFINES=XSLOT[,IMUT=4] (the RTL x-slot relocation and its mutant)
+    defines += [d for d in os.environ.get("TOKSIM_DEFINES", "").split(",") if d and d not in defines]
     tag = "_".join(d.replace("=", "") for d in defines) or "base"
     files = []
     for p in SM_FILES + SVC_FILES + (SAFE_FILES if PC_DEFINES else []) + [TB]:
@@ -365,7 +367,9 @@ def main(argv=None):
                         "tb_toksim_smhbm.sv, Verilator 5.050 (GEN2e3 die composition)")
             d["static_schedule"] = dict(first_go=S.FIRST_GO, op_gap=S.OP_GAP, x_gap=S.X_GAP, pace_num=S.PACE_NUM,
                                         pace_den=S.PACE_DEN, pace_add=S.PACE_ADD, fetch=S.FETCH, expert_first=S.EXP_FIRST,
-                                        ids_lag=S.IDS_LAG, bscale=S.BSCALE, layout="hbm_bank_layout.static_run (rotated)", pc=PC_MODE)
+                                        ids_lag=S.IDS_LAG, bscale=S.BSCALE, xmode=S.XMODE, xrd=S.XRD, defines_env=os.environ.get("TOKSIM_DEFINES", ""),
+                                        x_beats_per_word=(S.MV.NBEAT if S.XMODE == "bench13" else S.XNB),
+                                        xlat=(None if S.XMODE == "bench13" else S.XLAT), layout="hbm_bank_layout.static_run (rotated)", pc=PC_MODE)
             d["source_revision"] = (ROOT / "REV").read_text().strip() if (ROOT / "REV").exists() else None
             out.write_text(json.dumps(d, indent=1, default=str) + "\n")
     return rc
