@@ -1,0 +1,14 @@
+CENSUS total>32 984 flops 49654 cells 306318
+  565 max    136 net   u_ot_pr_core.u_cen.g_lvl[*]
+  277 max    121 net   anon
+    1 max     96 net   u_ot_pr_core.u_cen.iv_q$_DFF_PN0_/QN
+    8 max     90 net   u_ot_pr_core.u_q.c[*]$_DFF_P_/QN
+   68 max     66 net   u_ot_pr_core.u_q.residual
+   23 max     64 net   u_ot_pr_core.u_q.gather
+    1 max     55 reset u_ot_pr_core.u_q.target
+    1 max     53 net   u_ot_pr_core.u_q.c[*]$_SDFF_PN0_/QN
+    1 max     42       anon
+    7 max     37 reset anon
+    8 max     37 net   u_ot_pr_core.u_q.programme
+   24 max     33 reset u_ot_pr_core.u_q.gather
+UQ_MAX 90 ANON_MAX 121 RESET_MAX 55

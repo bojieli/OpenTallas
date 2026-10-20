@@ -58,6 +58,24 @@ PARALLEL variant (same RTL, 432 band): `hnx_hcq_hub_safe2b_1020`. Bind whichever
   Bundle b_b72f6e65f: see pending_results.
 - The ring lockstep s0/s5/e1 (qcen + bank ring) touches qcen only through the relay rename: the safe1019 witnesses stand.
 
-## Pre-gate census (fill in before the --cts gate)
+## Pre-gate census (10-20 07:01, synthesis gate @a8b354d73 on ot-epyc9; results/arch/hbm_next_1019/units/hc/census_safe2/)
 
-- pending: synthesis-only gate of hnx_hcq_hub_safe2_1020, then `textbook_lint check --netlist 1_2_yosys.v --set hf_report=32 hf_max=32`.
+The floorplan native census (tools/ref_tile/native_census.py, limit 32, no waivers) REFUSED: 984 drivers > 32, max 136.
+hc_q went from 4,129 max to 90. The --cts gates were NOT launched.
+
+Remaining violations (next RTL step):
+
+- **qcen fp32 adders: 565 drivers.** Cut-stage registers u_ca rd (189, max 136), u_cd (155, 61), u_cc (126, 59), u_cb (95, 63).
+  Fix: main's qualified `ot_hdc_fp32_add_lat_fan32 #(.SAFE_DIST(1))` (520dbea3a). It covers LAT 7 / DRST 0 only, so the
+  SIREG level-1 LAT 6 adder needs either a LAT-6 native or SIREG level 1 at LAT 7. The second option is +1 edge on ps,
+  which must be priced to the root / compiler.
+- **qcen iv_q: 96.** Kept copies.
+- **hc_q:**
+  - c[24] 90 and c[1] 70: the npos fields feed the launch-time bound multipliers. Register the launch check one edge
+    later (fault only).
+  - residual.valid[21] 66: drives the 64 vc_c copies. Use two pre-copies.
+  - vc_c 64 and gather rs_c 64: a 32-b enable maps to about 2 loads a bit. Use 16-b groups (128 / 16 copies).
+  - programme 37.
+  - Reset copies 33-55 (ot_rrs_* split copies; target reset_live 55): raise REGIONS.
+  - Anonymous nets 121 and 74.
+- **runtime_partselect WARN:** residual BEATS1 assembly (not instantiated at BEATS 4).
