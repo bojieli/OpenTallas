@@ -278,6 +278,7 @@ module ot_hgi_coll_static_program_target_s128 #(
     input wire cfg_v,
     input wire [7:0] cfg_target,
     input wire [11:0] cfg_addr,
+    input wire [31:0] cfg_lookup_addr,
     input wire [255:0] cfg_data,
     input wire desc_v,
     input wire [11:0] desc_base,
@@ -316,6 +317,33 @@ module ot_hgi_coll_static_program_target_s128 #(
     integer k;
     wire [PW-1:0] c_row=cfg_addr[PW+2:3];
     wire drain_done=draining && step==6'd53;
+    wire cfg_loaded;
+    wire scan_loaded;
+    wire [6:0] scan_next=check_row+1'b1;
+    generate if(ASSEMBLY_PIPE!=0)begin:g_loaded_banks
+        (* keep = "true" *) reg [3:0] scan_addr[0:7];
+        (* keep = "true" *) reg [3:0] write_addr[0:7];
+        wire [7:0] cfg_bits,scan_bits;
+        for(genvar bk=0;bk<8;bk=bk+1)begin:g_bank
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)begin scan_addr[bk]<=1;write_addr[bk]<=0;end
+                else begin
+                    if(dacc)scan_addr[bk]<=1;
+                    else if(checking && check_row!=127)scan_addr[bk]<=check_row[3:0]+4'd2;
+                    if(frame && !frame_bad)write_addr[bk]<=a_row[3:0];
+                end
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)loaded[bk*16+:16]<=0;
+                else if(drain_done && row[6:4]==3'(bk))loaded[bk*16+write_addr[bk]]<=1;
+            assign cfg_bits[bk]=loaded[bk*16+cfg_lookup_addr[bk*4+:4]];
+            assign scan_bits[bk]=loaded[bk*16+scan_addr[bk]];
+        end
+        assign cfg_loaded=cfg_bits[c_row[6:4]];
+        assign scan_loaded=scan_bits[scan_next[6:4]];
+    end else begin:g_loaded_binary
+        assign cfg_loaded=loaded[c_row];
+        assign scan_loaded=loaded[scan_next];
+    end endgenerate
     always @(posedge clk)begin
         addr_q<=cfg_addr;data_q<=cfg_data;base_q<=desc_base;limit_q<=desc_limit;
         tm_q<=(cfg_target==TARGET);
@@ -324,9 +352,9 @@ module ot_hgi_coll_static_program_target_s128 #(
         dsp_q<=(cfg_data[255:64]!=0) || ((cfg_data[63:51]&MSPARE)!=0);
         dbad_q<=(desc_base>=ROWS) || (desc_limit>ROWS) || (desc_limit<={1'b0,desc_base}) || (desc_loops!=1);
 `ifdef OT_PT_MUT_LDH_NOFWD
-        ldh_q<=loaded[c_row];                                      // mutant: same-edge drain completion not forwarded
+        ldh_q<=cfg_loaded;                                      // mutant: same-edge drain completion not forwarded
 `else
-        ldh_q<=loaded[c_row] || (drain_done && row==c_row);
+        ldh_q<=cfg_loaded || (drain_done && row==c_row);
 `endif
     end
     wire [PW-1:0] a_row=addr_q[PW+2:3];
@@ -354,6 +382,14 @@ module ot_hgi_coll_static_program_target_s128 #(
         (* keep = "true" *) reg [47:0] we_copy;
         reg [255:0] payload;
         always @(posedge clk) payload<=data_q;
+        (* keep = "true" *) reg [3:0] meta_we;
+        for(genvar mc=0;mc<4;mc=mc+1)begin:g_metadata
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)meta_we[mc]<=0;
+                else meta_we[mc]<=frame && !frame_bad && seg_q[6];
+            always @(posedge clk)
+                if(meta_we[mc])metadata[mc*16+:16]<=payload[mc*16+:16];
+        end
         for(genvar sg=0;sg<6;sg=sg+1)begin:g_seg
             for(genvar ch=0;ch<8;ch=ch+1)begin:g_chunk
                 always @(posedge clk or negedge rst_n)
@@ -411,7 +447,7 @@ module ot_hgi_coll_static_program_target_s128 #(
         if(!rst_n)begin
             cv<=0;dv<=0;lv<=0;issuer_cfg<=0;issuer_start<=0;
             issuer_start_pc<=0;configured<=0;init_busy<=0;fault<=0;
-            seen<=0;loaded<=0;row<=0;draining<=0;step<=0;
+            seen<=0;if(ASSEMBLY_PIPE==0)loaded<=0;row<=0;draining<=0;step<=0;
             base<=0;limit<=0;checking<=0;check_bad<=0;check_row<=0;ld_la<=0;fw_q<=0;
         end else begin
             cv<=cfg_v;dv<=desc_v;lv<=launch_v;
@@ -426,7 +462,7 @@ module ot_hgi_coll_static_program_target_s128 #(
                 end else begin
                     check_row<=check_row+1'b1;
 `ifndef OT_PT_MUT_LA_STALE
-                    ld_la<=loaded[PW'(check_row+1'b1)];
+                    ld_la<=scan_loaded;
 `endif
                 end
             end
@@ -439,14 +475,14 @@ module ot_hgi_coll_static_program_target_s128 #(
                 else if(step==52)issuer_cfg<={1'b1,4'd3,metadata[63:32]};
                 // step53 ensures the issuer has sampled its final metadata.
                 if(step==53)begin
-                    draining<=0;loaded[row]<=1;seen<=0;init_busy<=0;
+                    draining<=0;if(ASSEMBLY_PIPE==0)loaded[row]<=1;seen<=0;init_busy<=0;
                 end else step<=step+1'b1;
             end
             if(frame)begin
                 if(frame_bad)fault<=1;
                 else begin
                     row<=a_row;seen<=seen | seg_q[6:0];init_busy<=1;
-                    if(seg_q[6])metadata<=data_q[63:0];
+                    if(ASSEMBLY_PIPE==0 && seg_q[6])metadata<=data_q[63:0];
                     if(ASSEMBLY_PIPE==0)for(k=0;k<6;k=k+1) if(seg_q[k]) assembly[k*256+:256]<=data_q;
                     if((seen | seg_q[6:0])==7'h7f)begin draining<=1;step<=0;end
                 end
@@ -518,6 +554,8 @@ module ot_hgi_coll_fj_core_s128 #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,RC
  wire rst_q=rst__ot_rlv[0];
  reg cv_q,dv_q,lv_q,act_q,ibusy_q,ifault_q,iuv_q;
  reg [7:0] tgt_q;reg [1:0] qid_q;reg [11:0] addr_q,base_q;reg [255:0] data_q;reg [12:0] limit_q;reg [15:0] loops_q;
+ (* keep = "true" *) reg [31:0] cfg_lookup_addr;
+ always @(posedge clk)cfg_lookup_addr<={8{cfg_addr[6:3]}};
  reg [PW-1:0] iupc_q;
  reg prot_q,ring_q,writer_q,reduce_q,arg_q,tkm_q,argcap_q,tkmstart_q;
  reg [NS-1:0] cap_q;reg [NSL-1:0] sel_q,unav_q;reg [NPT-1:0] lk_q;reg [3:0] tdel_q,tdest_q;
@@ -538,7 +576,7 @@ module ot_hgi_coll_fj_core_s128 #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,RC
  wire [7:0] target_eff=(tgt_q==(8'd52+{6'd0,qid_q}))?8'd52:8'd0;
  ot_hgi_coll_static_program_target_s128 #(.TARGET(8'd52),.ASSEMBLY_PIPE(1)) u_program(
   .clk(clk),.rst_n(rst_q),.cfg_v(cv_q),.cfg_target(target_eff),
-  .cfg_addr(addr_q),.cfg_data(data_q),.desc_v(dv_q),.desc_base(base_q),
+  .cfg_addr(addr_q),.cfg_lookup_addr(cfg_lookup_addr),.cfg_data(data_q),.desc_v(dv_q),.desc_base(base_q),
   .desc_limit(limit_q),.desc_loops(loops_q),.launch_v(lv_q),
   .program_active(act_q),.issuer_busy(ibusy_q),.issuer_fault(ifault_q),
   .issuer_uop_v(iuv_q),.issuer_uop_pc(iupc_q),

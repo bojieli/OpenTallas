@@ -19,7 +19,7 @@ module tb_hgi_coll_pt_s128_miter;
         .issuer_busy(issuer_busy),.issuer_fault(issuer_fault),.issuer_uop_v(issuer_uop_v),.issuer_uop_pc(issuer_uop_pc),
         .issuer_cfg(r_cfg),.issuer_start(r_st),.issuer_start_pc(r_spc),.configured(r_conf),.init_busy(r_ib),.fault(r_f));
     ot_hgi_coll_static_program_target_s128 #(.TARGET(8'd52),.ASSEMBLY_PIPE(1)) u_dut(.clk(clk),.rst_n(rst_n),.cfg_v(cfg_v),
-        .cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),
+        .cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_lookup_addr({8{cfg_addr[6:3]}}),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),
         .desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),.program_active(program_active),
         .issuer_busy(issuer_busy),.issuer_fault(issuer_fault),.issuer_uop_v(issuer_uop_v),.issuer_uop_pc(issuer_uop_pc),
         .issuer_cfg(d_cfg),.issuer_start(d_st),.issuer_start_pc(d_spc),.configured(d_conf),.init_busy(d_ib),.fault(d_f));
