@@ -1,0 +1,1620 @@
+{
+  "schema": "opentallas.placed_net_diameter.v1",
+  "scope": "all non-PG non-CLOCK net terminal centers, all pairs Manhattan diameter; direct nets only, not full sequential cone path length",
+  "odb": "/frozen/routes/hbm_su_pg_stream_b_safe3_1019_s3_a160833f0/work/orfs/results/asap7/opentallas_ot_hbm_su_static_pg_stream_split_safe3_asap7_ref_hbm_su_pg_stream_b_safe3_1019_s3_a160833f0/base/6_final.odb",
+  "odb_sha256": "2165f7b24272ea157de43b1b1659ec77f0e70d2a5ea52f0dfd47873eba90bc30",
+  "limit_um": 405,
+  "net_type_counts": {
+    "SIGNAL": 51018,
+    "CLOCK": 639,
+    "POWER": 1,
+    "GROUND": 1
+  },
+  "checked_nets": 50886,
+  "missing_pin_geometry": [],
+  "max_um": 175.068,
+  "over_limit_count": 0,
+  "top": [
+    {
+      "net": "u_ot_pr_core.u_brt.a\\[0\\]",
+      "type": "SIGNAL",
+      "diameter_um": 175.068,
+      "a": [
+        22.5,
+        37.935,
+        "hold14418/A"
+      ],
+      "z": [
+        60.138,
+        175.365,
+        "place11982/A"
+      ],
+      "term_points": 9
+    },
+    {
+      "net": "net12099",
+      "type": "SIGNAL",
+      "diameter_um": 165.726,
+      "a": [
+        69.048,
+        164.565,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.u_ret_l/q\\[137\\]$_DFF_P_/D"
+      ],
+      "z": [
+        74.664,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[137\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12053",
+      "type": "SIGNAL",
+      "diameter_um": 163.944,
+      "a": [
+        49.77,
+        155.655,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.u_ret_l/q\\[91\\]$_DFF_P_/D"
+      ],
+      "z": [
+        61.434,
+        3.375,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[91\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12093",
+      "type": "SIGNAL",
+      "diameter_um": 163.401,
+      "a": [
+        72.99,
+        3.645,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[131\\]$_DFF_P_/D"
+      ],
+      "z": [
+        75.201,
+        164.835,
+        "place12094/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12094",
+      "type": "SIGNAL",
+      "diameter_um": 163.185,
+      "a": [
+        73.368,
+        3.915,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[132\\]$_DFF_P_/D"
+      ],
+      "z": [
+        75.093,
+        165.375,
+        "place12095/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12935",
+      "type": "SIGNAL",
+      "diameter_um": 163.13,
+      "a": [
+        45.181,
+        142.155,
+        "_07756_/A"
+      ],
+      "z": [
+        208.041,
+        142.425,
+        "place12936/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12096",
+      "type": "SIGNAL",
+      "diameter_um": 162.375,
+      "a": [
+        73.635,
+        166.455,
+        "place12097/Y"
+      ],
+      "z": [
+        73.53,
+        4.185,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[134\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12095",
+      "type": "SIGNAL",
+      "diameter_um": 162.267,
+      "a": [
+        74.769,
+        165.105,
+        "place12096/Y"
+      ],
+      "z": [
+        73.152,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[133\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12574",
+      "type": "SIGNAL",
+      "diameter_um": 162.058,
+      "a": [
+        110.413,
+        90.585,
+        "_09081_/A"
+      ],
+      "z": [
+        110.355,
+        252.585,
+        "place12575/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[16\\].u_copy/net11615",
+      "type": "SIGNAL",
+      "diameter_um": 161.511,
+      "a": [
+        8.514,
+        240.975,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[16\\].u_copy/u_q.serial_rr\\[2\\]$_SDFF_PN0_/D"
+      ],
+      "z": [
+        169.485,
+        240.435,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[16\\].u_copy/place11616/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12911",
+      "type": "SIGNAL",
+      "diameter_um": 161.186,
+      "a": [
+        50.095,
+        143.505,
+        "_07734_/A"
+      ],
+      "z": [
+        211.011,
+        143.775,
+        "place12912/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12091",
+      "type": "SIGNAL",
+      "diameter_um": 161.133,
+      "a": [
+        73.257,
+        164.025,
+        "place12092/Y"
+      ],
+      "z": [
+        72.234,
+        3.915,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[129\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12052",
+      "type": "SIGNAL",
+      "diameter_um": 160.434,
+      "a": [
+        50.85,
+        154.845,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.u_ret_l/q\\[90\\]$_DFF_P_/D"
+      ],
+      "z": [
+        61.164,
+        4.725,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[90\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[15\\].u_copy/net11627",
+      "type": "SIGNAL",
+      "diameter_um": 160.431,
+      "a": [
+        3.384,
+        240.975,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[15\\].u_copy/u_q.serial_rr\\[14\\]$_SDFF_PN0_/D"
+      ],
+      "z": [
+        163.275,
+        241.515,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[15\\].u_copy/place11628/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12087",
+      "type": "SIGNAL",
+      "diameter_um": 160.161,
+      "a": [
+        71.208,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[125\\]$_DFF_P_/D"
+      ],
+      "z": [
+        72.069,
+        163.755,
+        "place12088/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12907",
+      "type": "SIGNAL",
+      "diameter_um": 159.512,
+      "a": [
+        52.579,
+        148.095,
+        "_07731_/A"
+      ],
+      "z": [
+        212.091,
+        148.095,
+        "place12908/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12111",
+      "type": "SIGNAL",
+      "diameter_um": 158.973,
+      "a": [
+        78.009,
+        163.215,
+        "place12112/Y"
+      ],
+      "z": [
+        77.796,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[149\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12909",
+      "type": "SIGNAL",
+      "diameter_um": 158.918,
+      "a": [
+        51.499,
+        147.285,
+        "_07733_/A"
+      ],
+      "z": [
+        209.877,
+        147.825,
+        "place12910/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12576",
+      "type": "SIGNAL",
+      "diameter_um": 158.54,
+      "a": [
+        109.383,
+        251.235,
+        "place12577/Y"
+      ],
+      "z": [
+        109.333,
+        92.745,
+        "_09088_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12559",
+      "type": "SIGNAL",
+      "diameter_um": 158.008,
+      "a": [
+        114.085,
+        93.825,
+        "_09127_/A"
+      ],
+      "z": [
+        114.027,
+        251.775,
+        "place12560/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12563",
+      "type": "SIGNAL",
+      "diameter_um": 157.954,
+      "a": [
+        113.005,
+        93.825,
+        "_09136_/A"
+      ],
+      "z": [
+        113.001,
+        251.775,
+        "place12564/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12090",
+      "type": "SIGNAL",
+      "diameter_um": 157.95,
+      "a": [
+        71.1,
+        161.325,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.u_ret_l/q\\[128\\]$_DFF_P_/D"
+      ],
+      "z": [
+        71.91,
+        4.185,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[128\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12570",
+      "type": "SIGNAL",
+      "diameter_um": 157.792,
+      "a": [
+        111.709,
+        93.285,
+        "_09157_/A"
+      ],
+      "z": [
+        111.597,
+        250.965,
+        "place12571/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12548",
+      "type": "SIGNAL",
+      "diameter_um": 157.36,
+      "a": [
+        117.109,
+        95.445,
+        "_09181_/A"
+      ],
+      "z": [
+        116.619,
+        252.315,
+        "place12549/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12558",
+      "type": "SIGNAL",
+      "diameter_um": 157.244,
+      "a": [
+        114.081,
+        250.425,
+        "place12559/Y"
+      ],
+      "z": [
+        113.977,
+        93.285,
+        "_09123_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12552",
+      "type": "SIGNAL",
+      "diameter_um": 157.144,
+      "a": [
+        115.597,
+        94.905,
+        "_09190_/A"
+      ],
+      "z": [
+        115.593,
+        252.045,
+        "place12553/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12082",
+      "type": "SIGNAL",
+      "diameter_um": 156.975,
+      "a": [
+        69.966,
+        3.915,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[120\\]$_DFF_P_/D"
+      ],
+      "z": [
+        70.611,
+        160.245,
+        "place12083/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12086",
+      "type": "SIGNAL",
+      "diameter_um": 156.921,
+      "a": [
+        71.046,
+        3.915,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[124\\]$_DFF_P_/D"
+      ],
+      "z": [
+        72.717,
+        159.165,
+        "place12087/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net13482",
+      "type": "SIGNAL",
+      "diameter_um": 156.765,
+      "a": [
+        14.724,
+        103.005,
+        "place13482/A"
+      ],
+      "z": [
+        9.969,
+        255.015,
+        "place13483/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12079",
+      "type": "SIGNAL",
+      "diameter_um": 156.597,
+      "a": [
+        68.724,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[117\\]$_DFF_P_/D"
+      ],
+      "z": [
+        70.341,
+        159.435,
+        "place12080/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12551",
+      "type": "SIGNAL",
+      "diameter_um": 156.434,
+      "a": [
+        115.863,
+        251.235,
+        "place12552/Y"
+      ],
+      "z": [
+        115.759,
+        94.905,
+        "_09187_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12035",
+      "type": "SIGNAL",
+      "diameter_um": 156.381,
+      "a": [
+        55.656,
+        4.185,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[66\\]$_DFF_P_/D"
+      ],
+      "z": [
+        65.697,
+        150.525,
+        "place12036/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12083",
+      "type": "SIGNAL",
+      "diameter_um": 156.381,
+      "a": [
+        69.804,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[121\\]$_DFF_P_/D"
+      ],
+      "z": [
+        71.205,
+        159.435,
+        "place12084/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12549",
+      "type": "SIGNAL",
+      "diameter_um": 156.334,
+      "a": [
+        116.299,
+        95.175,
+        "_09184_/A"
+      ],
+      "z": [
+        116.295,
+        251.505,
+        "place12550/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12089",
+      "type": "SIGNAL",
+      "diameter_um": 156.276,
+      "a": [
+        70.884,
+        158.895,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.u_ret_l/q\\[127\\]$_DFF_P_/D"
+      ],
+      "z": [
+        71.91,
+        3.645,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[127\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12059",
+      "type": "SIGNAL",
+      "diameter_um": 156.222,
+      "a": [
+        60.246,
+        158.085,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.u_ret_l/q\\[97\\]$_DFF_P_/D"
+      ],
+      "z": [
+        62.838,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[97\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12076",
+      "type": "SIGNAL",
+      "diameter_um": 156.165,
+      "a": [
+        68.775,
+        159.975,
+        "place12077/Y"
+      ],
+      "z": [
+        67.86,
+        4.725,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[114\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12544",
+      "type": "SIGNAL",
+      "diameter_um": 155.902,
+      "a": [
+        117.973,
+        96.255,
+        "_09169_/A"
+      ],
+      "z": [
+        117.861,
+        252.045,
+        "place12545/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12084",
+      "type": "SIGNAL",
+      "diameter_um": 155.898,
+      "a": [
+        69.264,
+        159.165,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.u_ret_l/q\\[122\\]$_DFF_P_/D"
+      ],
+      "z": [
+        70.182,
+        4.185,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[122\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12540",
+      "type": "SIGNAL",
+      "diameter_um": 155.74,
+      "a": [
+        119.269,
+        97.065,
+        "_09241_/A"
+      ],
+      "z": [
+        119.049,
+        252.585,
+        "place12541/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12072",
+      "type": "SIGNAL",
+      "diameter_um": 155.679,
+      "a": [
+        66.51,
+        4.185,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[110\\]$_DFF_P_/D"
+      ],
+      "z": [
+        68.829,
+        157.545,
+        "place12073/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12543",
+      "type": "SIGNAL",
+      "diameter_um": 155.678,
+      "a": [
+        117.969,
+        251.775,
+        "place12544/Y"
+      ],
+      "z": [
+        117.811,
+        96.255,
+        "_09165_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12064",
+      "type": "SIGNAL",
+      "diameter_um": 155.625,
+      "a": [
+        65.805,
+        158.895,
+        "place12065/Y"
+      ],
+      "z": [
+        64.89,
+        4.185,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[102\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12569",
+      "type": "SIGNAL",
+      "diameter_um": 155.578,
+      "a": [
+        111.493,
+        93.015,
+        "_09154_/A"
+      ],
+      "z": [
+        111.435,
+        248.535,
+        "place12570/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12546",
+      "type": "SIGNAL",
+      "diameter_um": 155.578,
+      "a": [
+        117.109,
+        97.065,
+        "_09175_/A"
+      ],
+      "z": [
+        117.051,
+        252.585,
+        "place12547/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12557",
+      "type": "SIGNAL",
+      "diameter_um": 155.578,
+      "a": [
+        114.463,
+        94.095,
+        "_08266_/A"
+      ],
+      "z": [
+        114.405,
+        249.615,
+        "place12558/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12560",
+      "type": "SIGNAL",
+      "diameter_um": 155.57,
+      "a": [
+        113.703,
+        249.885,
+        "place12561/Y"
+      ],
+      "z": [
+        113.653,
+        94.365,
+        "_09130_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12545",
+      "type": "SIGNAL",
+      "diameter_um": 155.524,
+      "a": [
+        117.433,
+        96.255,
+        "_09172_/A"
+      ],
+      "z": [
+        117.429,
+        251.775,
+        "place12546/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12070",
+      "type": "SIGNAL",
+      "diameter_um": 155.517,
+      "a": [
+        66.24,
+        3.645,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[108\\]$_DFF_P_/D"
+      ],
+      "z": [
+        67.587,
+        157.815,
+        "place12071/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12553",
+      "type": "SIGNAL",
+      "diameter_um": 155.416,
+      "a": [
+        115.705,
+        95.985,
+        "_09193_/A"
+      ],
+      "z": [
+        115.539,
+        251.235,
+        "place12554/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12061",
+      "type": "SIGNAL",
+      "diameter_um": 155.301,
+      "a": [
+        63.432,
+        3.375,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[99\\]$_DFF_P_/D"
+      ],
+      "z": [
+        65.643,
+        156.465,
+        "place12062/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12556",
+      "type": "SIGNAL",
+      "diameter_um": 155.254,
+      "a": [
+        115.003,
+        94.905,
+        "_09202_/A"
+      ],
+      "z": [
+        114.729,
+        249.885,
+        "place12557/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12541",
+      "type": "SIGNAL",
+      "diameter_um": 155.2,
+      "a": [
+        118.729,
+        97.335,
+        "_09244_/A"
+      ],
+      "z": [
+        118.509,
+        252.315,
+        "place12542/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12068",
+      "type": "SIGNAL",
+      "diameter_um": 154.977,
+      "a": [
+        65.7,
+        3.105,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[106\\]$_DFF_P_/D"
+      ],
+      "z": [
+        67.587,
+        156.195,
+        "place12069/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12062",
+      "type": "SIGNAL",
+      "diameter_um": 154.815,
+      "a": [
+        63.81,
+        4.185,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[100\\]$_DFF_P_/D"
+      ],
+      "z": [
+        64.725,
+        158.085,
+        "place12063/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/net11644",
+      "type": "SIGNAL",
+      "diameter_um": 154.761,
+      "a": [
+        3.222,
+        234.495,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/u_q.serial_rr\\[1\\]$_SDFF_PN0_/D"
+      ],
+      "z": [
+        157.713,
+        234.225,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/place11645/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12813",
+      "type": "SIGNAL",
+      "diameter_um": 154.598,
+      "a": [
+        120.075,
+        252.855,
+        "place12814/Y"
+      ],
+      "z": [
+        119.917,
+        98.415,
+        "_09226_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12065",
+      "type": "SIGNAL",
+      "diameter_um": 154.275,
+      "a": [
+        65.535,
+        158.085,
+        "place12066/Y"
+      ],
+      "z": [
+        65.43,
+        3.915,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[103\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12058",
+      "type": "SIGNAL",
+      "diameter_um": 153.897,
+      "a": [
+        64.023,
+        157.005,
+        "place12059/Y"
+      ],
+      "z": [
+        63.216,
+        3.915,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[96\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12555",
+      "type": "SIGNAL",
+      "diameter_um": 153.85,
+      "a": [
+        115.381,
+        96.255,
+        "_09199_/A"
+      ],
+      "z": [
+        114.891,
+        249.615,
+        "place12556/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12055",
+      "type": "SIGNAL",
+      "diameter_um": 153.843,
+      "a": [
+        63.321,
+        157.005,
+        "place12056/Y"
+      ],
+      "z": [
+        62.298,
+        4.185,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[93\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12060",
+      "type": "SIGNAL",
+      "diameter_um": 153.789,
+      "a": [
+        63.324,
+        4.725,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[98\\]$_DFF_P_/D"
+      ],
+      "z": [
+        64.563,
+        157.275,
+        "place12061/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12067",
+      "type": "SIGNAL",
+      "diameter_um": 153.735,
+      "a": [
+        64.998,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[105\\]$_DFF_P_/D"
+      ],
+      "z": [
+        66.183,
+        157.005,
+        "place12068/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12817",
+      "type": "SIGNAL",
+      "diameter_um": 153.688,
+      "a": [
+        119.323,
+        98.415,
+        "_09238_/A"
+      ],
+      "z": [
+        119.265,
+        252.045,
+        "place12818/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12547",
+      "type": "SIGNAL",
+      "diameter_um": 153.68,
+      "a": [
+        116.727,
+        250.155,
+        "place12548/Y"
+      ],
+      "z": [
+        116.677,
+        96.525,
+        "_09178_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[11\\].u/net13720",
+      "type": "SIGNAL",
+      "diameter_um": 153.664,
+      "a": [
+        162.556,
+        188.325,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[11\\].u/wire13721/Y"
+      ],
+      "z": [
+        88.812,
+        108.405,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[11\\].u/place13158/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12815",
+      "type": "SIGNAL",
+      "diameter_um": 153.634,
+      "a": [
+        119.593,
+        98.415,
+        "_09232_/A"
+      ],
+      "z": [
+        119.589,
+        252.045,
+        "place12816/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12054",
+      "type": "SIGNAL",
+      "diameter_um": 153.627,
+      "a": [
+        62.349,
+        156.735,
+        "place12055/Y"
+      ],
+      "z": [
+        61.812,
+        3.645,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[92\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12063",
+      "type": "SIGNAL",
+      "diameter_um": 153.573,
+      "a": [
+        64.131,
+        157.815,
+        "place12064/Y"
+      ],
+      "z": [
+        63.918,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[101\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12071",
+      "type": "SIGNAL",
+      "diameter_um": 153.519,
+      "a": [
+        66.456,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[109\\]$_DFF_P_/D"
+      ],
+      "z": [
+        68.505,
+        155.925,
+        "place12072/Y"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_rs\\[0\\].u/net13687",
+      "type": "SIGNAL",
+      "diameter_um": 153.502,
+      "a": [
+        128.32,
+        144.315,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_rs\\[0\\].u/wire13688/Y"
+      ],
+      "z": [
+        62.298,
+        56.835,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_rs\\[0\\].u/place13168/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12554",
+      "type": "SIGNAL",
+      "diameter_um": 153.364,
+      "a": [
+        115.381,
+        97.335,
+        "_09196_/A"
+      ],
+      "z": [
+        115.377,
+        250.695,
+        "place12555/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12814",
+      "type": "SIGNAL",
+      "diameter_um": 153.256,
+      "a": [
+        120.025,
+        97.875,
+        "_09229_/A"
+      ],
+      "z": [
+        119.859,
+        250.965,
+        "place12815/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12109",
+      "type": "SIGNAL",
+      "diameter_um": 153.195,
+      "a": [
+        76.929,
+        156.735,
+        "place12110/Y"
+      ],
+      "z": [
+        76.824,
+        3.645,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[147\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12542",
+      "type": "SIGNAL",
+      "diameter_um": 153.194,
+      "a": [
+        118.239,
+        250.695,
+        "place12543/Y"
+      ],
+      "z": [
+        118.135,
+        97.605,
+        "_08269_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12040",
+      "type": "SIGNAL",
+      "diameter_um": 152.766,
+      "a": [
+        51.228,
+        151.605,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.u_ret_l/q\\[71\\]$_DFF_P_/D"
+      ],
+      "z": [
+        56.034,
+        3.645,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[71\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/net11652",
+      "type": "SIGNAL",
+      "diameter_um": 152.763,
+      "a": [
+        4.572,
+        236.385,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/u_q.serial_rr\\[9\\]$_SDFF_PN0_/D"
+      ],
+      "z": [
+        157.065,
+        236.115,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/place11653/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[18\\].u/net13715",
+      "type": "SIGNAL",
+      "diameter_um": 152.637,
+      "a": [
+        159.64,
+        195.345,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[18\\].u/wire13716/Y"
+      ],
+      "z": [
+        87.733,
+        114.615,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[18\\].u/_2_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12051",
+      "type": "SIGNAL",
+      "diameter_um": 152.601,
+      "a": [
+        62.295,
+        155.655,
+        "place12052/Y"
+      ],
+      "z": [
+        60.894,
+        4.455,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[89\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12816",
+      "type": "SIGNAL",
+      "diameter_um": 152.6,
+      "a": [
+        119.211,
+        250.965,
+        "place12817/Y"
+      ],
+      "z": [
+        119.161,
+        98.415,
+        "_09235_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[13\\].u/net13718",
+      "type": "SIGNAL",
+      "diameter_um": 152.53,
+      "a": [
+        174.328,
+        197.505,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[13\\].u/wire13719/Y"
+      ],
+      "z": [
+        108.468,
+        110.835,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[13\\].u/place13154/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12057",
+      "type": "SIGNAL",
+      "diameter_um": 152.439,
+      "a": [
+        63.051,
+        155.925,
+        "place12058/Y"
+      ],
+      "z": [
+        62.892,
+        3.645,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[95\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_rs\\[1\\].u/net13722",
+      "type": "SIGNAL",
+      "diameter_um": 152.422,
+      "a": [
+        170.116,
+        198.045,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_rs\\[1\\].u/wire13723/Y"
+      ],
+      "z": [
+        100.854,
+        114.885,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_rs\\[1\\].u/place13166/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/net11650",
+      "type": "SIGNAL",
+      "diameter_um": 152.385,
+      "a": [
+        5.976,
+        235.845,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/u_q.serial_rr\\[7\\]$_SDFF_PN0_/D"
+      ],
+      "z": [
+        158.361,
+        235.845,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/place11651/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/net11645",
+      "type": "SIGNAL",
+      "diameter_um": 152.331,
+      "a": [
+        4.95,
+        234.765,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/u_q.serial_rr\\[2\\]$_SDFF_PN0_/D"
+      ],
+      "z": [
+        156.741,
+        234.225,
+        "u_ot_pr_core.u_q.g_br\\[1\\].u_bq.ret\\[14\\].u_copy/place11646/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12050",
+      "type": "SIGNAL",
+      "diameter_um": 152.331,
+      "a": [
+        61.377,
+        155.925,
+        "place12051/Y"
+      ],
+      "z": [
+        61.056,
+        3.915,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[88\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[8\\].u/net13685",
+      "type": "SIGNAL",
+      "diameter_um": 152.313,
+      "a": [
+        118.33,
+        126.495,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[8\\].u/wire13686/Y"
+      ],
+      "z": [
+        50.797,
+        41.715,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[8\\].u/_2_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12049",
+      "type": "SIGNAL",
+      "diameter_um": 152.277,
+      "a": [
+        61.269,
+        155.385,
+        "place12050/Y"
+      ],
+      "z": [
+        60.732,
+        3.645,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[87\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net13462",
+      "type": "SIGNAL",
+      "diameter_um": 152.229,
+      "a": [
+        8.622,
+        103.815,
+        "place13462/A"
+      ],
+      "z": [
+        7.863,
+        255.285,
+        "place13463/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12812",
+      "type": "SIGNAL",
+      "diameter_um": 152.176,
+      "a": [
+        120.781,
+        98.145,
+        "_09223_/A"
+      ],
+      "z": [
+        120.615,
+        250.155,
+        "place12813/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12809",
+      "type": "SIGNAL",
+      "diameter_um": 152.068,
+      "a": [
+        121.105,
+        100.575,
+        "_09214_/A"
+      ],
+      "z": [
+        121.047,
+        252.585,
+        "place12810/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12069",
+      "type": "SIGNAL",
+      "diameter_um": 152.061,
+      "a": [
+        66.723,
+        155.925,
+        "place12070/Y"
+      ],
+      "z": [
+        66.672,
+        3.915,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[107\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "net12805",
+      "type": "SIGNAL",
+      "diameter_um": 152.06,
+      "a": [
+        121.857,
+        252.045,
+        "place12806/Y"
+      ],
+      "z": [
+        121.807,
+        100.035,
+        "_08272_/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[0\\].u/net13686",
+      "type": "SIGNAL",
+      "diameter_um": 151.99,
+      "a": [
+        133.396,
+        151.065,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[0\\].u/wire13687/Y"
+      ],
+      "z": [
+        61.056,
+        71.415,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[0\\].u/place13162/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12804",
+      "type": "SIGNAL",
+      "diameter_um": 151.96,
+      "a": [
+        122.995,
+        100.845,
+        "_09286_/A"
+      ],
+      "z": [
+        122.775,
+        252.585,
+        "place12805/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net11704",
+      "type": "SIGNAL",
+      "diameter_um": 151.905,
+      "a": [
+        60.243,
+        47.115,
+        "place11705/Y"
+      ],
+      "z": [
+        211.878,
+        46.845,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.near_wq\\[158\\]$_DFF_P_/D"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12056",
+      "type": "SIGNAL",
+      "diameter_um": 151.899,
+      "a": [
+        62.403,
+        156.465,
+        "place12057/Y"
+      ],
+      "z": [
+        62.244,
+        4.725,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.return_d\\[94\\]$_DFF_P_/D"
+      ],
+      "term_points": 3
+    },
+    {
+      "net": "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[15\\].u/net13716",
+      "type": "SIGNAL",
+      "diameter_um": 151.828,
+      "a": [
+        176.11,
+        202.635,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[15\\].u/wire13717/Y"
+      ],
+      "z": [
+        111.762,
+        115.155,
+        "u_ot_pr_core.u_s.g_tap\\[0\\].u_tap.g_ws\\[15\\].u/place13150/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12811",
+      "type": "SIGNAL",
+      "diameter_um": 151.798,
+      "a": [
+        120.673,
+        98.955,
+        "_09220_/A"
+      ],
+      "z": [
+        120.615,
+        250.695,
+        "place12812/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net12810",
+      "type": "SIGNAL",
+      "diameter_um": 151.79,
+      "a": [
+        120.777,
+        251.505,
+        "place12811/Y"
+      ],
+      "z": [
+        120.727,
+        99.765,
+        "_09217_/A"
+      ],
+      "term_points": 2
+    }
+  ],
+  "over_limit": []
+}

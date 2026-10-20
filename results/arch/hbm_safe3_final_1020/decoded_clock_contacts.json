@@ -1,0 +1,578 @@
+[
+  {
+    "driver": "clk_ctl",
+    "driver_role": "input_port",
+    "net": "clk_ctl",
+    "loads": 168,
+    "contacts": [
+      {
+        "master": "CKINVDCx20_ASAP7_75t_R",
+        "instance": "clkload0",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx8_ASAP7_75t_R",
+        "instance": "clkload1",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx5_ASAP7_75t_R",
+        "instance": "clkload10",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload100",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx6_ASAP7_75t_R",
+        "instance": "clkload101",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload102",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload103",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx4f_ASAP7_75t_R",
+        "instance": "clkload104",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "instance": "clkload105",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload106",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx4f_ASAP7_75t_R",
+        "instance": "clkload107",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx5p33_ASAP7_75t_R",
+        "instance": "clkload108",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx5_ASAP7_75t_R",
+        "instance": "clkload109",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx5_ASAP7_75t_R",
+        "instance": "clkload11",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx5p33_ASAP7_75t_R",
+        "instance": "clkload110",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "instance": "clkload111",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx8_ASAP7_75t_R",
+        "instance": "clkload112",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx5_ASAP7_75t_R",
+        "instance": "clkload113",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload114",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx6_ASAP7_75t_R",
+        "instance": "clkload115",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx8_ASAP7_75t_R",
+        "instance": "clkload116",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx4_ASAP7_75t_R",
+        "instance": "clkload117",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx5_ASAP7_75t_R",
+        "instance": "clkload118",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx2_ASAP7_75t_R",
+        "instance": "clkload119",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload12",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload120",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx2_ASAP7_75t_R",
+        "instance": "clkload121",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx4f_ASAP7_75t_R",
+        "instance": "clkload122",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "instance": "clkload123",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload124",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx4f_ASAP7_75t_R",
+        "instance": "clkload125",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx2_ASAP7_75t_R",
+        "instance": "clkload126",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx4f_ASAP7_75t_R",
+        "instance": "clkload127",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "instance": "clkload128",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx12_ASAP7_75t_R",
+        "instance": "clkload129",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload13",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx2_ASAP7_75t_R",
+        "instance": "clkload130",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload131",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx2_ASAP7_75t_R",
+        "instance": "clkload132",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx8_ASAP7_75t_R",
+        "instance": "clkload133",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      }
+    ]
+  },
+  {
+    "driver": "pg_clk",
+    "driver_role": "input_port",
+    "net": "pg_clk",
+    "loads": 334,
+    "contacts": [
+      {
+        "master": "CKINVDCx20_ASAP7_75t_R",
+        "instance": "clkload168",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx24_ASAP7_75t_R",
+        "instance": "clkload169",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx11_ASAP7_75t_R",
+        "instance": "clkload170",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx11_ASAP7_75t_R",
+        "instance": "clkload171",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx8_ASAP7_75t_R",
+        "instance": "clkload172",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx8_ASAP7_75t_R",
+        "instance": "clkload173",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx8_ASAP7_75t_R",
+        "instance": "clkload174",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx8_ASAP7_75t_R",
+        "instance": "clkload175",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx11_ASAP7_75t_R",
+        "instance": "clkload176",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx24_ASAP7_75t_R",
+        "instance": "clkload177",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx11_ASAP7_75t_R",
+        "instance": "clkload178",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx8_ASAP7_75t_R",
+        "instance": "clkload179",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx11_ASAP7_75t_R",
+        "instance": "clkload180",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx20_ASAP7_75t_R",
+        "instance": "clkload181",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx11_ASAP7_75t_R",
+        "instance": "clkload182",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx20_ASAP7_75t_R",
+        "instance": "clkload183",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx2_ASAP7_75t_R",
+        "instance": "clkload184",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx24_ASAP7_75t_R",
+        "instance": "clkload185",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx4f_ASAP7_75t_R",
+        "instance": "clkload186",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx4_ASAP7_75t_R",
+        "instance": "clkload187",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "instance": "clkload188",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx6_ASAP7_75t_R",
+        "instance": "clkload189",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "instance": "clkload190",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx5p33_ASAP7_75t_R",
+        "instance": "clkload191",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx24_ASAP7_75t_R",
+        "instance": "clkload192",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx4_ASAP7_75t_R",
+        "instance": "clkload193",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx9p33_ASAP7_75t_R",
+        "instance": "clkload194",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx12_ASAP7_75t_R",
+        "instance": "clkload195",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx8_ASAP7_75t_R",
+        "instance": "clkload196",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx12_ASAP7_75t_R",
+        "instance": "clkload197",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx13_ASAP7_75t_R",
+        "instance": "clkload198",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "CKINVDCx5p33_ASAP7_75t_R",
+        "instance": "clkload199",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx24_ASAP7_75t_R",
+        "instance": "clkload200",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx5_ASAP7_75t_R",
+        "instance": "clkload201",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx24_ASAP7_75t_R",
+        "instance": "clkload202",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx3_ASAP7_75t_R",
+        "instance": "clkload203",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx4f_ASAP7_75t_R",
+        "instance": "clkload204",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx8_ASAP7_75t_R",
+        "instance": "clkload205",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "BUFx2_ASAP7_75t_R",
+        "instance": "clkload206",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': 'A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      },
+      {
+        "master": "INVx2_ASAP7_75t_R",
+        "instance": "clkload207",
+        "pin": "A",
+        "bit": 0,
+        "actual_liberty_role": "{'pins': {'Y': {'direction': 'output', 'clock': False, 'function': '!A'}, 'A': {'direction': 'input', 'clock': False, 'function': None}}, 'sequential': False, 'bus_order': {}}"
+      }
+    ]
+  }
+]
