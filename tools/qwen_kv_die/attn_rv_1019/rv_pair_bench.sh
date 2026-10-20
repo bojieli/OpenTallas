@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # KV-ATTN2 2026-10-19: whole-tile pair lockstep tb_kvs_attn_rv_pair (A = qkd_kvs_attn_fl_ba5, B = qkd_kvs_attn_fl rv, B = A + 1 edge).
 #   rv_pair_bench.sh RUN_DIR MUT [MODES] [NAME=VALUE ...]     (MODES default "0 1 2 3 4 5 6 7 8 9 10")
+# B variant: RVB=rv (default, qkd_kvs_attn_rv.sv / qkd_kvs_attn_fl_rv.sv) | r16 (qkd_kvs_attn_r16.sv / qkd_kvs_attn_fl_r16.sv).
 # Verilator 5.050 (the closure daemon's pinned version).  One line per mode, then
 #   KVS_RVPAIR_ALL PASS|FAIL mut=M modes=N checks=C fails=F
 # exit 0 only on ALL PASS.
@@ -13,11 +14,11 @@ SRC="$S/qkd_native_attention_programme.sv $S/qkd_native_attention_static_ctl.sv 
  $B/qkd_attn_service_root_b.sv $B/qkd_attn_result_face_sc.sv $K/qkd_attn_fault_root.sv $B/qkd_attn_cal_gen_b.sv
  $B/qkd_native_attention_static_ctl_ba4.sv $B/qkd_native_attention_programme_ba4.sv $B/qkd_kvs_attn_ba5.sv
  $ROOT/rtl/lib/face_land/qkd_kvs_attn_fl_ba5.sv $ROOT/rtl/lib/ot_rst_relay.sv $ROOT/rtl/lib/ot_pin_land.sv
- $B/qkd_kvs_attn_rv.sv $ROOT/rtl/lib/face_land/qkd_kvs_attn_fl_rv.sv $ROOT/rtl/test/kv_bootage_1019/tb_kvs_attn_rv_pair.sv"
+ $B/qkd_kvs_attn_${RVB:-rv}.sv $ROOT/rtl/lib/face_land/qkd_kvs_attn_fl_${RVB:-rv}.sv $ROOT/rtl/test/kv_bootage_1019/tb_kvs_attn_rv_pair.sv"
 G=(-GMUT="$MUT"); for kv in "$@"; do G+=(-G"$kv"); done
-TAG=$(printf '%s_' "m$MUT" "$@" | tr -c 'A-Za-z0-9_\n' '_')
+TAG=$(printf '%s_' "${RVB:-rv}" "m$MUT" "$@" | tr -c 'A-Za-z0-9_\n' '_')
 mkdir -p "$RUN"; OBJ="$RUN/obj_$TAG"
-echo "KVS_RVPAIR build mut=$MUT $* verilator $(verilator --version)"
+echo "KVS_RVPAIR build B=${RVB:-rv} mut=$MUT $* verilator $(verilator --version)"
 verilator --binary -j 8 --build-jobs 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTH -Wno-SELRANGE -Wno-MULTIDRIVEN \
   --top-module tb_kvs_attn_rv_pair "${G[@]}" -Mdir "$OBJ" $SRC > "$RUN/build_$TAG.log" 2>&1 \
   || { tail -40 "$RUN/build_$TAG.log"; echo "KVS_RVPAIR_ALL FAIL build mut=$MUT"; exit 1; }

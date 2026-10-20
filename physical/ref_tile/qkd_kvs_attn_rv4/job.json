@@ -1,0 +1,189 @@
+{
+ "name": "qkd_kvs_attn_rv4-rv4-COMMIT",
+ "block": "qkd_kvs_attn_fl",
+ "ref_tile": true,
+ "owner": "Claude:KV-ATTN2",
+ "purpose": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-attn2b-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die/attn_rv_1019",
+   "results/rtl/kv_attn_rv_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_attn_fl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv rtl/lib/ot_pin_land.sv rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rv_pair_ba5",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_RVPAIR_ALL PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "rv_mut1_fields_early",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m1/verdict.log"
+   },
+   {
+    "name": "rv_mut2_check_misaligned",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m2/verdict.log"
+   },
+   {
+    "name": "rv_mut3_admission_no_check",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m3/verdict.log"
+   },
+   {
+    "name": "rv_mut4_tx_shift0",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m4 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m4/verdict.log"
+   },
+   {
+    "name": "rv_mut5_status_copy_early",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m5/verdict.log"
+   },
+   {
+    "name": "rv_mut6_face_stale_beat",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m6 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m6/verdict.log"
+   },
+   {
+    "name": "rv_mut7_fault_root_one_pin",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16_pair_m7 7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16_m7/verdict.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_attn_rv4/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_attn_rv4/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_attn_rv4 --out {RUN}/record/views/qkd_kvs_attn_fl  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_attn_rv4/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_attn_rv4/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_attn_rv4/qkd_kvs_attn_rv4-rv4-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term."
+ }
+}
