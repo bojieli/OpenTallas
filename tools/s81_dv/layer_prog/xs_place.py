@@ -364,7 +364,8 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     phases = []
     if p0['rows']:
         mats, gidx = LX.frame_mats(fxa, p0['rows'])
-        _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'])
+        _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'], rank_rows=p0['rows'],
+                                cap_cfg=LX.aproj_capture_contract(die, sl, fxa, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
     else:
         qa = q[:NPAIRS]
     if NPAIRS == 12:

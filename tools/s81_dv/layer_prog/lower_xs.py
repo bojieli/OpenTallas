@@ -242,7 +242,7 @@ def land_e(lk):
 
 
 # ------------------------------------------------------------------------------------------------ one frame programme
-def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None):
+def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, rank_rows=None, cap_cfg=None):
     """legalise + place one a_proj phase on one frame (field phase 0); returns (field, ph, plan, pairs)"""
     import frame_bench as B
     import frame_return_plan as P
@@ -250,15 +250,39 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None):
     import v41_rom_ksplit_bankmap as S
     q, _bf = B.frame_pairs(base_master(master))
     assert len(mats) == 1, 'a frame phase mixing wq_a and wkv rows: plan_phase takes one matrix (not needed at 28 / slice)'
+    ret_score = None
+    if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1':
+        assert aproj_rank_tags_enabled() and rank_rows is not None and cap_cfg is not None
+        sys.path.insert(0, str(ROOT / 'tools/s81_slice'))
+        import cap_model as CM
+        cache = {}
+        def ret_score(ret):
+            key = tuple(tuple(w) for w in ret)
+            if key not in cache:
+                # One-frame FIN obligations are invariant under the parent's
+                # common input/tree/output time shift. This does NOT admit
+                # simultaneous other-frame traffic or current physical ages.
+                mapped = rank_plan(dict(ret=ret, rows_vals={}), rank_rows)['ret']
+                lanes = [{} for _ in range(8)]
+                lanes[0] = {edge: (tag, data, err, [(master, i)]) for i, (edge, tag, data, err) in enumerate(mapped)}
+                finish = CM.model(lanes, [(0, cap_cfg)])
+                count = len(finish['writes'])
+                cache[key] = len(finish['faults']) + abs(len(rank_rows) - count)
+            return cache[key]
     best = None
     for cand in ([pairs] if pairs else [q[:NPAIRS], q[len(q) - NPAIRS:], q[1:1 + NPAIRS]]):
-        plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters, land_e=land_e(lk))
-        key = (plan['faults'], plan['ret_words'])
+        plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters, land_e=land_e(lk), ret_score=ret_score)
+        finish_faults = ret_score(plan['ret']) if ret_score is not None else 0
+        key = (plan['faults'] + finish_faults, plan['ret_words'])
         if best is None or key < best[0]:
             best = (key, cand, plan)
-        if plan['faults'] == 0 and pairs is None:
+        if plan['faults'] == 0 and finish_faults == 0 and pairs is None:
             break
     _, qa, plan = best
+    if ret_score is not None:
+        plan['single_frame_cap_score'] = ret_score(plan['ret'])
+        plan['single_frame_cap_scope'] = 'logical FIN only; simultaneous frames and physical ages unadmitted'
+        assert plan['single_frame_cap_score'] == 0, ('no single-frame CAP-safe assignment found', master, plan['single_frame_cap_score'])
     seg_units = {S.unit_range('fp8', a0, el)[1] - S.unit_range('fp8', a0, el)[0] for a0, el in S.segments(mats[0].K, NSEG)}
     cls = (seg_units.pop(), 2)
     assert not seg_units and cls in ELEM_EXTRA, ('no measured element-work term for segment class', cls)
@@ -351,7 +375,8 @@ def lower(die, op, ctx):
             frames.append(dict(p, phase=None, note='no a_proj rows (28 rows / slice = 7 frames x 4)'))
             continue
         mats, gidx = frame_mats(fx, p['rows'])
-        field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'])
+        field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
+                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
         frames.append(dict(p, out_index=gidx, pairs=qa, nseg=NSEG, faults=plan['faults'], ret_words=plan['ret_words'],
                            merges=plan['merges'], ret=plan['ret'], placement=plan['placement'],
                            cfg_words={str(k): [f'{w:012x}' for w in field.cfg[0][s]] for s, k in enumerate(qa)},
@@ -383,7 +408,8 @@ def cmd_gen(a):
     p = next(x for x in pl if x['frame'] == a.frame)
     assert p['rows'], f'{a.frame}: no a_proj rows'
     mats, gidx = frame_mats(fx, p['rows'])
-    field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'])
+    field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
+                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
     names, tmp = field_images(field, qa, q, bf, a.frame, out, p['rows'])
     xsn = xs_roms(tmp, out)
     # the frame bench instantiates the master with INSTANCE "f": the same images under the bench name
