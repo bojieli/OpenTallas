@@ -15,11 +15,25 @@ ot_pg_install_unsupported_birth_guards
 # change.
 proc ot_icg_dont_touch {} {
   set blk [ord::get_db_block]
-  set pg_mapping [ot_pg_prepare $blk]
+  ot_pg_require_cts_source_context
+  set targets {}
+  foreach inst [$blk getInsts] {
+    if {![string match "ICG*" [[$inst getMaster] getName]]} continue
+    lappend targets $inst
+    set enable [$inst findITerm ENA]
+    if {$enable eq "NULL" || $enable eq ""} continue
+    set net [$enable getNet]
+    if {$net eq "NULL" || $net eq ""} continue
+    set driver [$net getFirstOutput]
+    if {$driver eq "NULL" || $driver eq ""} continue
+    set source [$driver getInst]
+    if {[[$source getMaster] isSequential]} {lappend targets $source}
+  }
+  ot_pg_bind_batch_before_protect $blk [lsort -unique $targets]
   set ng 0; set nf 0
   foreach i [$blk getInsts] {
     if {![string match "ICG*" [[$i getMaster] getName]]} continue
-    if {![$i isDoNotTouch]} { ot_pg_bind_before_protect $pg_mapping $i; $i setDoNotTouch 1; incr ng }
+    if {![$i isDoNotTouch]} { $i setDoNotTouch 1; incr ng }
     set ena [$i findITerm ENA]
     if {$ena eq "NULL" || $ena eq ""} continue
     set n [$ena getNet]
@@ -27,7 +41,7 @@ proc ot_icg_dont_touch {} {
     set d [$n getFirstOutput]
     if {$d eq "NULL" || $d eq ""} continue
     set di [$d getInst]
-    if {[[$di getMaster] isSequential] && ![$di isDoNotTouch]} { ot_pg_bind_before_protect $pg_mapping $di; $di setDoNotTouch 1; incr nf }
+    if {[[$di getMaster] isSequential] && ![$di isDoNotTouch]} { $di setDoNotTouch 1; incr nf }
   }
   puts "OT_ICG_DONT_TOUCH gates=$ng enable_flops=$nf"
 }

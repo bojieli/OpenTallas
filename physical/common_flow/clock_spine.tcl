@@ -456,6 +456,9 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
   }
   if {$bt eq "NULL" || $bt eq ""} { puts "OT_SPINE skipped: no port $port"; return 0 }
   ot_pg_require_cts_placement_or_empty_context
+  # Existing port buffers must also be bound before this source-owned estimator.
+  ot_pg_bind_batch_before_protect $::ot_sp_blk [$::ot_sp_blk getInsts]
+  ot_pg_assert_all_native $::ot_sp_blk [ot_pg_prepare $::ot_sp_blk]
   set net0 [$bt getNet]
   # OT_SPINE_THROUGH_ICG=1 (el1011-hbm-smt 2026-10-12): the port clock enters ONE tile clock gate (ICG*, e.g. the SM tile's
   # ot_cg_tile) that clocks everything else.  A spine on the port net would see only the ICG and its few enable flops and
