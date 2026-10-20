@@ -47,7 +47,7 @@ case_run() {  # name variant expect(PASS|FAIL) program args...
     mutvasm) link mutvasm "+define+OT_S81SL_RSTOP_MUT_VASM";; mutgswap) link mutgswap "+define+OT_S81SL_RSTOP_MUT_GSWAP";;
     mutbank) link mutbank "+define+OT_S81SL_XS_MUT_BANK";; mutoff) link mutoff "+define+OT_S81SL_XS_MUT_OFF";;
     mutwcopy) link mutwcopy "+define+OT_S81SL_XS4_MUT_WCOPY";; mutexp) link mutexp "+define+OT_S81SL_XS4_MUT_EXP";;
-    mutslice) link mutslice "+define+OT_S81SL_RS_MUT_SLICE";; esac
+    esac   # RS_MUT_SLICE (capture-slice copy) is not observable at the xg lockstep; it stays on rs_equiv (rs_equiv_mutslice)
   python3 tools/s81_slice/xs_program.py --out $w --s0-stride 2 "$@" > $w.prog.log 2>&1 || { echo "XG_CASE $n SETUP_FAILED"; tail -3 $w.prog.log; ALL=0; return; }
   (cd $w && $O/tb_$v +work=$w +OT_ROM_DIR=$w +dextra=2 > $w/run.log 2>&1)
   local got=FAIL; grep -q '^PASS xg_lockstep' $w/run.log && got=PASS
@@ -72,5 +72,4 @@ case_run L0_mutbank   mutbank  FAIL $L0 --order near --slice 5
 case_run L0_mutoff    mutoff   FAIL $L0 --order near --slice 5
 case_run L0_mutwcopy  mutwcopy FAIL $L0 --order near --slice 5
 case_run L0_mutexp    mutexp   FAIL $L0 --order near --slice 5
-case_run L0_mutslice  mutslice FAIL $L0 --order near --slice 5
 [ $ALL = 1 ] && { echo "XG5_BENCH PASS"; exit 0; }; echo "XG5_BENCH FAIL"; exit 1
