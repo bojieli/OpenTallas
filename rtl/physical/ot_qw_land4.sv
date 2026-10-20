@@ -33,14 +33,14 @@ module ot_qw_lw #(
         (* keep *) reg rq;
         (* keep *) reg [D-1:0] woh;
         reg [D-1:0] v;
-        reg [CW-1:0] data [0:D-1];
         always @(posedge ck) rq <= rr;
         always @(posedge ck)
             if (!rq) begin woh <= {{(D-1){1'b0}}, 1'b1}; v <= {D{1'b0}}; end
             else     begin woh <= {woh[D-2:0], woh[D-1]}; v <= v | woh; end
         for (s = 0; s < D; s = s + 1) begin : g_s
-            always @(posedge ck) if (rq && woh[s]) data[s] <= i[c*CB +: CW];
-            assign bank[s*W + c*CB +: CW] = data[s];
+            reg [CW-1:0] dq;                                   // one slot (no memory array: plain kept-name flops)
+            always @(posedge ck) if (rq && woh[s]) dq <= i[c*CB +: CW];
+            assign bank[s*W + c*CB +: CW] = dq;
         end
         assign vld[c*D +: D] = v;
     end endgenerate
@@ -120,20 +120,22 @@ module ot_qw_ring_delay #(
             localparam integer CW = (W - c*CB < CB) ? W - c*CB : CB;
             (* keep *) reg rq;
             (* keep *) reg [S-1:0] p;
-            reg [CW-1:0] slot [0:S-1];
+            wire [CW*S-1:0] slot;
             reg [CW-1:0] sel;
             reg [CW-1:0] qq;
             integer j;
             always @* begin
                 sel = {CW{1'b0}};
-                for (j = 0; j < S; j = j + 1) sel = sel | (slot[j] & {CW{p[j]}});
+                for (j = 0; j < S; j = j + 1) sel = sel | (slot[j*CW +: CW] & {CW{p[j]}});
             end
             always @(posedge clk) rq <= rr;
             always @(posedge clk)
                 if (!rq) p <= {{(S-1){1'b0}}, 1'b1};
                 else     p <= (S == 1) ? p : {p[S-2:0], p[S-1]};
             for (s = 0; s < S; s = s + 1) begin : g_s
-                always @(posedge clk) if (p[s] || !rq) slot[s] <= d[c*CB +: CW];   // reset fills every slot
+                reg [CW-1:0] sq;
+                always @(posedge clk) if (p[s] || !rq) sq <= d[c*CB +: CW];   // reset fills every slot
+                assign slot[s*CW +: CW] = sq;
             end
             always @(posedge clk) qq <= sel;
             assign q[c*CB +: CW] = qq;
