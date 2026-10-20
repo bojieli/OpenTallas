@@ -126,7 +126,7 @@ module ot_s81ph_coll_lane_safe4 #(
     end endgenerate
     ot_s81ph_link_ep_safe4 #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(REACH != 0 ? 5 : 3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
         .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(1), .PIPE(2), .RXPIPE(1), .TOREG(1), .MWR(1),
-        .DNR(1), .OLDREAD(1), .RN(EP_RN), .ORN(3)) u_ep (
+        .DNR(1), .OLDREAD(1), .RN(EP_RN), .ORN(3), .FCOPY(REACH)) u_ep (
         .clk(clk), .rst_v(rr[R_EP +: EP_RN]), .mem_rst_n(rr[R_MEM +: MEM_RST]), .ch_b(ch_b),
         .in_valid(iv && up), .in_ready(ir), .in_data(id), .in_last(il),
         .out_valid(ov), .out_ready_v(orr), .out_data(od), .out_last(ol),

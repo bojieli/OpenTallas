@@ -81,7 +81,11 @@ module ot_s81ph_link_ep_safe4 #(
     parameter integer RFW_P = 1 + SEQW + $clog2(CREDITS + 1) + 32,
     parameter integer ARS = 24,               // a_rep copy slice
     parameter integer RN = 12,                // reset leaves
-    parameter integer ORN = 3                 // out_ready copies
+    parameter integer ORN = 3,                // out_ready copies
+    // FCOPY (S81-TILES-E 10-20, opt-in, default 0 = unchanged netlist): the freed-count snapshot enable (fr_seen <= rr_fr)
+    // takes its own kept copy of ok_f (ok_f3, same d / edge), so ok_f keeps <= 32 loads when the lane REACH=1 netlist
+    // shifts ABC's mapping (s7 pre-gate census: ok_f 39).  0 cycles.
+    parameter integer FCOPY = 0
 ) (
     input  wire                     clk,
     input  wire [RN-1:0]            rst_v,
@@ -325,6 +329,15 @@ module ot_s81ph_link_ep_safe4 #(
 `else
     wire ok_f2 = ok_f; wire [SEQW-1:0] nxt_rw2 = nxt_rw, una_rw2 = una_rw;
 `endif
+    wire ok_f3;
+    generate if (FCOPY != 0) begin : g_fcopy
+        ot_s81ph_kff4_1 u_k_ok_f3 (.clk(clk), .rst_n(rst_v[RN-1]), .d(p_take), .q(ok_f3));
+`ifndef SYNTHESIS
+        always @(posedge clk) if (rst_v[0] && ok_f3 !== ok_f) $fatal(1, "COLL FCOPY ok_f3 copy differs");
+`endif
+    end else begin : g_nofcopy
+        assign ok_f3 = ok_f;
+    end endgenerate
 `else
     wire ok_ready=ok_c;
 `endif
@@ -801,7 +814,7 @@ module ot_s81ph_link_ep_safe4 #(
 `else
             credits <= accept_b ? cred_1 : cred_r;
 `endif
-            if (ok_f) fr_seen <= rr_fr;
+            if (ok_f3) fr_seen <= rr_fr;
         end
     always @(posedge clk or negedge rst_v[6])
         if (!rst_v[6]) begin timer <= 0; at_lim <= 1'b0; retry <= 0; end
