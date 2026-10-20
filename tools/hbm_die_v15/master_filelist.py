@@ -13,8 +13,8 @@ import argparse, json, os, re, sys
 from pathlib import Path
 
 ROOT_GLOBS = ("rtl/**/*.sv", "rtl/**/*.v", "physical/hbm_accel_die_views/**/rtl/*.sv", "physical/hbm_accel_die_views/common/*.sv", "physical/hbm_accel_die_views/**/rtl/*.v",
-              "physical/asap7_memory_macros_v2/*/*_bb.v", "physical/hbm_generic/**/rtl/*.sv", "physical/hbm_generic/**/rtl/*.v", "physical/hbm_mtp/**/rtl/*.sv", "physical/hbm_cp_mtp_native/**/rtl/*.sv")
-SKIP = re.compile(r"(^|/)(test|tb|bench|sim|evidence|experimental|formal)(/|$)|^rtl/model_ready[^/]*/|_tb\.s?v$|_mutant\.s?v$")
+              "physical/asap7_memory_macros_v2/*/*_bb.v", "physical/asap7_memory_macros/*/*_bb.v", "physical/hbm_generic/**/rtl/*.sv", "physical/hbm_generic/**/rtl/*.v", "physical/hbm_mtp/**/rtl/*.sv", "physical/hbm_cp_mtp_native/**/rtl/*.sv")
+SKIP = re.compile(r"(^|/)(test|tb|bench|sim|evidence|experimental|formal)(/|$)|^rtl/model_ready[^/]*/|(^|/)tb_|_tb\.s?v$|_mutant\.s?v$")
 ATTR = r"(?:\(\*.*?\*\)\s*)*"
 DEF = re.compile(r"^\s*" + ATTR + r"(module|package|interface)\s+(?:automatic\s+)?([A-Za-z_]\w*)", re.M)
 KW = set("""module endmodule input output inout wire reg logic assign always always_ff always_comb always_latch initial
@@ -32,12 +32,12 @@ def strip(t):
     return re.sub(r"//[^\n]*", "", t)
 
 
-def index(root):
+def index(root, prefer=()):
     defs = {}
     for g in ROOT_GLOBS:
         for p in root.glob(g):
             rel = str(p.relative_to(root))
-            if SKIP.search(rel):
+            if SKIP.search(rel) and not (rel.startswith('rtl/model_ready') and rel in prefer):
                 continue
             try:
                 t = strip(p.read_text(errors="replace"))
@@ -55,7 +55,7 @@ def body(root, rel, name):
 
 
 def resolve(root, top, bb=(), prefer=()):
-    defs = index(root)
+    defs = index(root, prefer)
     files, pkgs, seen, unresolved, dup = [], [], set(), [], {}
     macros = []
     prefer = list(prefer)
