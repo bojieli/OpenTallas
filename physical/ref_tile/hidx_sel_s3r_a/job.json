@@ -1,5 +1,5 @@
 {
- "name": "hidx_sel_s3r_a-s3ra-afc4f4d5d",
+ "name": "hidx_sel_s3r_a-s3ra-fd3effc65",
  "block": "ot_hidx_s3_q",
  "ref_tile": true,
  "owner": "Claude HBM-IDX6/IDX6-SEL",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-idx6-sel-1020",
-  "commit": "afc4f4d5d",
+  "commit": "fd3effc65",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
    "rtl/lib",
@@ -230,7 +230,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hidx_sel_s3r_a/hidx_sel_s3r_a-s3ra-afc4f4d5d"
+   "to": "results/rtl/ref_tile/hidx_sel_s3r_a/hidx_sel_s3r_a-s3ra-fd3effc65"
   }
  ],
  "cycles_added": 0,
