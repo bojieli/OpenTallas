@@ -1,0 +1,31 @@
+{
+  "source_commit": "16c53cf70",
+  "sha256": {
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_link.sv": "38adeed382b29377a8c627fbd049a02d30358cb7a2100100e31eab2c926b77ff",
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_sram_head.sv": "59e728256e4546627d094ccb72f37bf2bd34191831915acacbe715a3c3b743bf",
+    "rtl/test/host_peer_safe_1020/original.sv": "a5eb20dde9367de3c33404c74ad5d49473a7fc46a981280f2ed6152a85dc6bbb",
+    "rtl/test/host_peer_safe_1020/tb.sv": "781c76da47f188370ac87101c5327ba1bfcf66dcde759cdcd1635c13727d7d5a",
+    "rtl/test/host_peer_safe_1020/synth.sh": "7a8e0e8c9c841c15bf9c01d16173812c3e0548293486fc0b05c7e0ab9df848b7",
+    "physical/common_flow/ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+  },
+  "census_prototype_commit": "94de8573f",
+  "census_prototype_sha256": "392f30a033a6c3c4f7790a9e51c6521406bdda2096b6661e57980325eb619a6c",
+  "census_textbook_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+  "verilator": "5.050",
+  "bench": "100000 samecycle",
+  "normal_tx": 22438,
+  "peer_rx": 27960,
+  "peer_tx": 18705,
+  "mutant_bypass_first_difference": 5,
+  "mutant_addr_first_difference": 7,
+  "added_edges": 0,
+  "native_status": "FAIL",
+  "native_roots": 10257,
+  "native_max": 1639,
+  "native_violation_count": 5,
+  "queue_named_driver_max": 32,
+  "queue_named_driver_count": 2187,
+  "remote": "ot-epyc6:/srv/opentallas-scratch/claude/codex-kv-host-peer-safe-1020",
+  "bench_unit": "oth-ubuntu-2635177-1792484420",
+  "synth_unit": "oth-ubuntu-2637416-1792484458"
+}
