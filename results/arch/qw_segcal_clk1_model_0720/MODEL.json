@@ -33,11 +33,13 @@
     "proposed_head_port": "one scalar ck_head; wrapper binds all3 existing body clocks to that physical root",
     "data_edges_added": 0,
     "arithmetic_MACs_per_cycle": 0,
-    "native_standard_clock_sinks": 8068,
+    "native_standard_clock_sinks": "proposed8069; actual mapped inventory owed",
     "real_SRAM_clock_pins": 8,
-    "complete_root_sink_count": 8076,
+    "complete_root_sink_count": 8077,
     "required_complete_TT_FF_envelope_ps": 80,
-    "no_gate_mode_relabel": "New one-input leaf-owned mixed standard+SRAM physical tree, all macros separate real leaves; original multiple_cts_roots contract retired. Source alias identity is valid only under actual samePLL1:1 phase0 parent feed."
+    "no_gate_mode_relabel": "New one-input leaf-owned mixed standard+SRAM physical tree, all macros separate real leaves; original multiple_cts_roots contract retired. Source alias identity is valid only under actual samePLL1:1 phase0 parent feed.",
+    "baseline_standard_clock_sinks": 8068,
+    "sink_count_basis": "Baseline8068 standardFF+8SRAM; preferred newresetforest adds1FF, so proposed8069+8=8077."
   },
   "memory": {
     "instances": [
@@ -501,12 +503,43 @@
     "delta_area_um2": 46842.62400000001,
     "measured_base_standard_area_um2": 8820,
     "measured_macro_area_um2": 33051,
-    "new_clock_area": "Model formula only: 2033 coarse leaf/internal buffers plus at most2034 fine pads; charge actual pinned cell areas before RTL/gate. No measured clock-area claim.",
+    "new_clock_area": "Model budget from actual pinned cell areas, not a measured new clock tree:2033 BUFx24 +2034 BUFx2; source-only reset delta1DFFASRHQN. No timing/area guarantee from these counts.",
     "clock_leaf_budget": 1017,
     "clock_coarse_buffer_budget": 2033,
     "clock_fine_pad_budget": 2034,
     "source_fanout_limit": 32,
-    "channels_um_min": 20
+    "channels_um_min": 20,
+    "pinned_cell_area_inventory": {
+      "DFFASRHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.37908,
+        "lib_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "lib_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      "DFFHQNx1_ASAP7_75t_R": {
+        "area_um2": 0.2916,
+        "lib_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "lib_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      },
+      "BUFx24_ASAP7_75t_R": {
+        "area_um2": 0.4374,
+        "lib_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "lib_sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      "BUFx2_ASAP7_75t_R": {
+        "area_um2": 0.0729,
+        "lib_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "lib_sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      "BUFx4_ASAP7_75t_R": {
+        "area_um2": 0.10206,
+        "lib_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "lib_sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      }
+    },
+    "modeled_clock_buffer_area_um2": 1037.5128,
+    "modeled_extra_reset_FF_area_um2": 0.37908,
+    "modeled_total_standard_area_um2": 9857.891880000001,
+    "modeled_total_fill": 0.41057431634883884
   },
   "parent_fit": {
     "old_outline_um": [
