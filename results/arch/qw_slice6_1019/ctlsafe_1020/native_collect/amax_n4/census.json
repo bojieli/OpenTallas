@@ -1,0 +1,581 @@
+{
+  "top": "qfd_dv_amax_csafe_n4m0",
+  "sha256": "b8321fddaa76a9cd86723b5fce46e7970acca6c19096d4fc1b59d02adbac91e6",
+  "nonclock_drivers_over32": 76,
+  "flop_drivers_over32": 23,
+  "raw_ports_over32": 5,
+  "max_nonclock_loads": 64,
+  "rst_n_loads": null,
+  "metrics": {
+    "clock_roots": [
+      {
+        "root": "port:ck[0]",
+        "ff": 2106,
+        "icg": 0,
+        "macro_pins": 0,
+        "example": "u_0._2_"
+      }
+    ],
+    "hier_subblocks": 0,
+    "clock_max_root_sinks": 2106,
+    "clock_max_root": "port:ck[0]",
+    "high_fanout_top": [],
+    "hf_max_port": 0,
+    "hf_max_reset": 0,
+    "hf_max_net": 0,
+    "reset_landing": [
+      {
+        "port": "rst[0]",
+        "sinks": 5,
+        "flops": 5,
+        "macros": 0
+      }
+    ],
+    "in_to_out_bits": 0,
+    "in_to_reg_levels": 11,
+    "reg_to_out_levels": 5,
+    "icg_enable_from_port": 0,
+    "depth_ps": 410.1,
+    "depth_path": [
+      "u_1896._2_",
+      "u_716._2_/D"
+    ],
+    "depth_levels": 13
+  },
+  "violations": [
+    {
+      "driver": "_07918_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_08213_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_08510_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_08807_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_09324_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_09638_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_09955_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_10272_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_10590_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_10908_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_11227_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_11539_/Y (O2A1O1Ixp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_11856_/Y (O2A1O1Ixp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_12171_/Y (NOR2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_12485_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_12796_/Y (A2O1A1Ixp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_13117_/Y (A2O1A1O1Ixp25_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_13438_/Y (A2O1A1Ixp33_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_13750_/Y (OA21x2_ASAP7_75t_R)",
+      "loads": 64,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_08968_/Y (NOR2xp33_ASAP7_75t_R)",
+      "loads": 59,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_08974_/Y (NOR2xp33_ASAP7_75t_R)",
+      "loads": 58,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_08976_/Y (NOR2xp33_ASAP7_75t_R)",
+      "loads": 58,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_1399._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 54,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "port r_addr[18]",
+      "loads": 53,
+      "flop_loads": 1,
+      "port_driver": true,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13438",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13439",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13440",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13441",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13442",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13448",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13451",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13454",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13457",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13460",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13463",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13466",
+      "loads": 50,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13469",
+      "loads": 48,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13472",
+      "loads": 48,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13475",
+      "loads": 48,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13478",
+      "loads": 48,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13481",
+      "loads": 48,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13484",
+      "loads": 48,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13487",
+      "loads": 48,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "n_13490",
+      "loads": 48,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "port r_addr[14]",
+      "loads": 37,
+      "flop_loads": 1,
+      "port_driver": true,
+      "flop_driver": false
+    },
+    {
+      "driver": "port r_addr[10]",
+      "loads": 37,
+      "flop_loads": 1,
+      "port_driver": true,
+      "flop_driver": false
+    },
+    {
+      "driver": "port r_addr[16]",
+      "loads": 36,
+      "flop_loads": 1,
+      "port_driver": true,
+      "flop_driver": false
+    },
+    {
+      "driver": "port r_addr[8]",
+      "loads": 36,
+      "flop_loads": 1,
+      "port_driver": true,
+      "flop_driver": false
+    },
+    {
+      "driver": "_13846_/Y (AND2x2_ASAP7_75t_R)",
+      "loads": 35,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_1811._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 35,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "_08970_/Y (NOR2xp33_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_1114._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_1228._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_162._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_3._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_324._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_56._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_601._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_772._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_943._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 34,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "_07914_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_08209_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_08507_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "_08803_/Y (NAND2xp33_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": false
+    },
+    {
+      "driver": "u_1171._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_1342._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_1457._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_1515._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_1758._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_1864._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_1917._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_270._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_378._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_545._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_715._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    },
+    {
+      "driver": "u_829._2_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+      "loads": 33,
+      "flop_loads": 0,
+      "port_driver": false,
+      "flop_driver": true
+    }
+  ],
+  "verdict": "FAIL",
+  "qualification": "Mapped fanout census only; reset landing/pins/reach/storage still require their own proof"
+}
