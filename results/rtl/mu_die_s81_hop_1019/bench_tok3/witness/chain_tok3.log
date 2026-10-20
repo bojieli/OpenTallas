@@ -1,0 +1,6 @@
+19:39 out_base all  rc 0 | EPCHECK_SCOPE all consumer_checks 564 errors 1128 verdict FAIL
+19:39 out_base hop  rc 0 | EPCHECK_SCOPE hop consumer_checks 480 errors 960 verdict FAIL
+19:39 out_base_tagdrop hop --expect-fail rc 0 | EPCHECK_MUTANT CAUGHT (720 consumer errors)
+19:39 out_base_wrongcopy hop --expect-fail rc 0 | EPCHECK_MUTANT CAUGHT (961 consumer errors)
+19:39 out_rtl_tagdrop hop --expect-fail rc 0 | EPCHECK_MUTANT CAUGHT (480 consumer errors)
+CHAIN_DONE

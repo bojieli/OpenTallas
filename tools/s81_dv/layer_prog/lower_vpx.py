@@ -87,6 +87,13 @@ LO_AFTER_CTL = 16
 SEND_AFTER_GO = 3
 RX_WR_AFTER_PIN = 6          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> unpacker
                              # XR2 classify flop (1) -> busy flop (1) -> sw row-pair write flop (1); pair j one edge later each
+# SEND frame (TOK4 10-19, die cut_7 L0 epcheck): leg_program / hop_leg cycles are SLICE-PIN cycles (bench_vpx frame), but
+# ctl_path()['edges'] and every CTL 'in' event are compiler EVENT edges = landed slice pin + RSTOP_HOP (dv_cut_replay lands
+# a CTL event e on the slice pin at e - RSTOP_HOP).  So a CTL issued at t0 + c - first is on the pin at
+# t0 + c - first + lat - RSTOP_HOP, and its pin-relative send lands RSTOP_HOP edges before t0 + s - first + lat.  The old
+# CFG_AT 3 / LO 15 were 2 low and hid this (cut_7 HOP 480/480); with 4 / 16 every compiled send was 2 late
+# (564/564 beats observed, all at gold - 2).
+RSTOP_HOP = 2                # ot_s81sl_rstop: line in pin -> line out pin (= dv_cut_replay / dv_layer_compile RSTOP_HOP)
 PAIRS = 4                    # row pairs per RD beat (the 1,024-b payload)
 
 
@@ -267,7 +274,7 @@ def lower_hop(die, op, t0):
                                    dir='in', kind='CTL', tag=f'{name}.{c["tag"]}', payload=f'template {tj}'))
             hdr = rd_beat(sid, 1, 0, 0, 0, HOP_PAIRS, 0, kind=K_XB)
             for s_ in progs[src]['sends']:
-                ce = t0 + s_['cycle'] - first + lat
+                ce = t0 + s_['cycle'] - first + lat - RSTOP_HOP   # TOK4: lat is an event edge (pin + RSTOP_HOP)
                 events.append(dict(cycle=ce, inst=src, port='lep (outward line port)', dir='out', kind='XB',
                                    tag=f'{name} h beat {s_["beat"]} rows {s_["rows"][0]}..{s_["rows"][-1]}', hop=name,
                                    beat=s_['beat'], payload='h share (stand-in leaf rows)', boundary='offdie',
@@ -340,7 +347,7 @@ def lower(die, op, ctx):
                 # The outward port is INSIDE the end-slice lep master: at the die cut it continues as the reliable
                 # link lanes lt_lk_* (seq / CRC / credits: flow control at the off-die boundary, owner 10-14), so no
                 # cut sees this word at a fixed cycle -> boundary 'offdie' (bench_vpx checks it through the real lep)
-                ce = t0 + s['cycle'] - first + lat
+                ce = t0 + s['cycle'] - first + lat - RSTOP_HOP    # TOK4: see SEND frame note at RSTOP_HOP
                 hdr = rd_beat(s['src'], 1, s['dst_mask'], s['leaf'], s['dst_row'], s['pairs'], 0)
                 events.append(dict(cycle=ce, inst=src, port='lep (outward line port)', dir='out', kind='RD',
                                    tag=f'rows {s["rows"][0]}..{s["rows"][-1]} -> sid {psid}',
