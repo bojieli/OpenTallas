@@ -254,11 +254,18 @@ module ot_s81sl_xr #(
     end
     // S81-SMWIRE x XR7: sos_c[g] = so_go && !vct && !sc_rel && !pk_go (the SO beat owns ci_r), registered from next state;
     // reset-free (so_n is reset, so so_go_nx is 0 one clock into reset).
-    (* keep *) reg [NCI-1:0] sos_c;
+    // C1 (HB = 0) has no B port, so no SO beat: no sos_c flops there (the C1 netlist keeps its closed XR7 structure).
+    wire [NCI-1:0] sos_c;
     wire so_go_nx;
     wire sc_rel_nx = (tg[4] ? body[43] : s_scv) && (e_sc || w_sc);
-    always @(posedge clk)
-        for (k = 0; k < NCI; k = k + 1) sos_c[k] <= so_go_nx && !v_ctl && !sc_rel_nx && !pk_go_nx;
+    generate if (HB != 0) begin : g_sos
+        (* keep *) reg [NCI-1:0] sos_r;
+        always @(posedge clk)
+            for (k = 0; k < NCI; k = k + 1) sos_r[k] <= so_go_nx && !v_ctl && !sc_rel_nx && !pk_go_nx;
+        assign sos_c = sos_r;
+    end else begin : g_nosos
+        assign sos_c = {NCI{1'b0}};
+    end endgenerate
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin s_dir <= 4'd0; pn <= 2'd0; pk_go <= 1'b0; s_scv <= 1'b0; end
         else begin
